@@ -204,6 +204,10 @@ def _finite_number(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
+def _gate_scalar(value: Any) -> bool:
+    return isinstance(value, bool) or _finite_number(value)
+
+
 def _has_compute_marker(payload: Mapping[str, Any]) -> bool:
     text = json.dumps(payload, sort_keys=True, default=str)
     return any(marker in text for marker in COMPUTE_BOUND_MARKERS)
@@ -284,7 +288,7 @@ def normalize_artifact(
 
     for gate in gate_fields:
         if gate in normalized:
-            if not isinstance(normalized[gate], bool):
+            if not _gate_scalar(normalized[gate]):
                 _add_rejection(
                     unsafe_rejections,
                     "nonboolean_gate_value",
@@ -296,13 +300,13 @@ def normalize_artifact(
         if not candidates:
             _add_rejection(unsafe_rejections, "missing_gate_boolean", gate, "no source value")
             continue
-        nonbool = [row for row in candidates if not isinstance(row["value"], bool)]
-        if nonbool:
+        nonscalar = [row for row in candidates if not _gate_scalar(row["value"])]
+        if nonscalar:
             _add_rejection(
                 unsafe_rejections,
                 "nonboolean_gate_value",
                 gate,
-                f"non-boolean values at {[row['path'] for row in nonbool]}",
+                f"non-scalar values at {[row['path'] for row in nonscalar]}",
             )
             continue
         values = {row["value"] for row in candidates}
@@ -314,8 +318,14 @@ def normalize_artifact(
                 f"conflicting values at {[row['path'] for row in candidates]}",
             )
             continue
-        normalized[gate] = values.pop()
-        safe_repairs.append({"kind": "unambiguous_gate_boolean_extracted", "field": gate})
+        extracted = values.pop()
+        normalized[gate] = extracted
+        kind = (
+            "unambiguous_gate_boolean_extracted"
+            if isinstance(extracted, bool)
+            else "unambiguous_gate_scalar_extracted"
+        )
+        safe_repairs.append({"kind": kind, "field": gate})
 
     substrate = normalized.get("inference_substrate")
     if require_inference_substrate and (not isinstance(substrate, str) or not substrate.strip()):
@@ -369,7 +379,9 @@ def _corrigendum_kinds(payload: Mapping[str, Any]) -> list[str]:
     rows = payload.get("corrigendum_pending")
     if not isinstance(rows, list):
         return []
-    return sorted({str(row.get("kind")) for row in rows if isinstance(row, Mapping) and row.get("kind")})
+    return sorted(
+        {str(row.get("kind")) for row in rows if isinstance(row, Mapping) and row.get("kind")}
+    )
 
 
 def _verify_normalized_copy(normalized: Mapping[str, Any]) -> JsonDict:
@@ -440,9 +452,7 @@ def build_artifact(
         "artifact_normalizer_ready": True,
         "artifact_normalizer_ready_principle": FIELD_PRINCIPLES["artifact_normalizer_ready"],
         "safe_repairs_supported": _wrap("safe_repairs_supported", list(SAFE_REPAIRS_SUPPORTED)),
-        "unsafe_repairs_rejected": _wrap(
-            "unsafe_repairs_rejected", list(UNSAFE_REPAIRS_REJECTED)
-        ),
+        "unsafe_repairs_rejected": _wrap("unsafe_repairs_rejected", list(UNSAFE_REPAIRS_REJECTED)),
         "duration_policy_preserved": _wrap("duration_policy_preserved", True),
         "conductor_modified": _wrap("conductor_modified", False),
         "tests_run": [dict(row) for row in tests_run],
@@ -479,9 +489,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("inference_substrate must be cached_fixture_replay_no_llm")
     if artifact.get("artifact_normalizer_ready") is not True:
         raise ValueError("artifact_normalizer_ready must be bare true")
-    if artifact.get("artifact_normalizer_ready_principle") != FIELD_PRINCIPLES[
-        "artifact_normalizer_ready"
-    ]:
+    if (
+        artifact.get("artifact_normalizer_ready_principle")
+        != FIELD_PRINCIPLES["artifact_normalizer_ready"]
+    ):
         raise ValueError("artifact_normalizer_ready_principle mismatch")
     if _wrapped_value(artifact, "duration_policy_preserved") is not True:
         raise ValueError("duration_policy_preserved must be true")
@@ -541,7 +552,11 @@ def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wr
         tests_run=tests_run,
         duration_s=time.monotonic() - started,
     )
-    print(json.dumps({"result_path": str(args.output), "checksum": artifact["reproducibility_checksum"]}))
+    print(
+        json.dumps(
+            {"result_path": str(args.output), "checksum": artifact["reproducibility_checksum"]}
+        )
+    )
     return 0
 
 

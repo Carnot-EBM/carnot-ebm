@@ -1301,6 +1301,71 @@ SCENARIO-BENCH-5616-CONTROLS
 |---|---|---|
 | REQ-BENCH-5616 | Planned (`python/carnot/experiment_5616_exact_nonstationary_constraint_stream.py`) | Planned (`tests/python/test_experiment_5616_exact_nonstationary_constraint_stream.py`) |
 
+### REQ-BENCH-5757: Exp5746 Proposal Benchmark Scalar Bridge
+
+Carnot MUST provide a read-only scalar bridge for the sealed Exp5746 exact
+proposal-utility benchmark. The bridge MUST reuse the canonical Exp5746 JSON
+artifact and JSONL manifest by hash/reference only; it MUST NOT regenerate rows,
+change train/dev/science split membership, or replace exact receipts with model
+or prose judgments.
+
+The bridge MUST verify the Exp5746 manifest hash, every row hash, split hashes,
+generator version, primary and independent solver versions, exact structure
+receipts, exact solution receipts, validator-disagreement count, held-out split
+disjointness, and adversarial controls before emitting any downstream readiness
+score. It MUST derive top-level bare scalar fields
+`benchmark_ready_score`, `structure_receipt_failure_count`,
+`solution_receipt_failure_count`, `validator_disagreement_count`,
+`heldout_partition_disjoint_score`, `adversarial_verification_clean_score`, and
+`benchmark_bridge_ready_score`.
+
+`benchmark_bridge_ready_score` MUST equal `1.0` only when the upstream
+`benchmark_ready_score` is `1.0`, both receipt failure counts are zero,
+`validator_disagreement_count` is zero, held-out partition disjointness is
+`1.0`, adversarial verification cleanliness is `1.0`, all hashes reproduce,
+and the planned Exp5759 conductor gates pass on the emitted artifact. Missing
+fields, object-wrapped gate values, altered hashes, ambiguous nested values, and
+false readiness MUST fail closed.
+
+Required field principles:
+
+- `benchmark_manifest_path`: principle "sealed manifest is reused by reference"
+- `benchmark_manifest_hash`: principle "manifest bytes replay exactly"
+- `split_manifest_hash`: principle "train/dev/science split commitment is immutable"
+- `row_hash_count`: principle "all 180 row hashes are replayed"
+- `benchmark_ready_score`: principle "upstream exact benchmark readiness is copied only after replay"
+- `structure_receipt_failure_count`: principle "structure omissions block proposal utility"
+- `solution_receipt_failure_count`: principle "missing feasibility/objective receipts block proposal utility"
+- `validator_disagreement_count`: principle "exact validators must agree"
+- `heldout_partition_disjoint_score`: principle "science split must stay disjoint"
+- `adversarial_verification_clean_score`: principle "adversarial controls must all be detected"
+- `benchmark_bridge_ready_score`: principle "downstream GPU panels unlock only after hash and gate replay"
+
+#### SCENARIO-BENCH-5757: Sealed Benchmark Replays Without Row Mutation
+
+**Given** the Exp5746 artifact and JSONL manifest are present
+**When** the scalar bridge verifies the benchmark
+**Then** every manifest row hash and split hash reproduces, the row count is
+180, the science split remains unchanged, exact receipt failure counts are
+zero, adversarial controls are clean, and the bridge readiness score is `1.0`.
+
+#### SCENARIO-BENCH-5757-NEGATIVE-CONTROLS: Broken Evidence Cannot Unlock The Panel
+
+**Given** a missing gate field, wrapper-object gate value, altered upstream or
+manifest hash, ambiguous nested scalar value, or false readiness score
+**When** benchmark bridge validation or conductor-gate replay runs
+**Then** the condition fails closed and cannot satisfy the Exp5759 benchmark
+gate.
+
+**Spec traces:** REQ-BENCH-5757, SCENARIO-BENCH-5757,
+SCENARIO-BENCH-5757-NEGATIVE-CONTROLS
+
+## Implementation Status (REQ-BENCH-5757)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5757 | Planned (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`) | Planned (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.

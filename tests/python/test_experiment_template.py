@@ -6,6 +6,7 @@ Spec coverage:
   REQ-VERIFY-083  — Experiment scaffolding template eliminates cold-start boilerplate
   REQ-VERIFY-084  — BatchedInferenceRunner groups questions and enforces batch timeout
   REQ-REPORT-5267 — Producer-side strict artifact normalizer adoption
+  REQ-REPORT-5757 — Proposal benchmark scalar bridge preserves numeric gate scalars
   SCENARIO-VERIFY-109 — ExperimentTemplate instantiates with required fields
   SCENARIO-VERIFY-110 — setup_gpu() returns health_status dict from pre-warm
   SCENARIO-VERIFY-111 — checkpoint_save/resume round-trips correctly
@@ -16,6 +17,7 @@ Spec coverage:
   SCENARIO-VERIFY-116 — run_with_timeout returns partial result dict on timeout
   SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION — template boundary normalizes safe shapes
   SCENARIO-REPORT-5267-UNSAFE-REJECTION — template boundary does not invent evidence
+  SCENARIO-REPORT-5757-GATE-REPLAY — numeric bridge gate fields stay bare
 """
 
 from __future__ import annotations
@@ -458,6 +460,39 @@ class TestProducerArtifactNormalizer:
 
         assert artifact["producer_normalizer_ready"] is True
         assert "unambiguous_gate_boolean_extracted" in self._receipt_kinds(artifact, "safe_repairs")
+
+    def test_scenario_report_5757_numeric_gate_scalars_are_preserved(self, tmp_path: Path) -> None:
+        """SCENARIO-REPORT-5757-GATE-REPLAY: numeric gate scalars stay bare."""
+
+        t = ExperimentTemplate(5757, "Scalar bridge", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": "complete: scalar bridge fixture",
+                "inference_substrate": "cached_fixture_replay_no_llm",
+                "benchmark_bridge_ready_score": 1.0,
+                "structure_receipt_failure_count": 0,
+                "validator_disagreement_count": 0,
+                "field_principles": {
+                    "benchmark_bridge_ready_score": "ready score is a numeric conductor gate",
+                    "structure_receipt_failure_count": "structure failures are counted",
+                    "validator_disagreement_count": "validator disagreements are counted",
+                },
+            },
+            status="complete",
+            producer_gate_fields=(
+                "benchmark_bridge_ready_score",
+                "structure_receipt_failure_count",
+                "validator_disagreement_count",
+            ),
+        )
+
+        assert artifact["benchmark_bridge_ready_score"] == 1.0
+        assert artifact["structure_receipt_failure_count"] == 0
+        assert artifact["validator_disagreement_count"] == 0
+        assert not isinstance(artifact["benchmark_bridge_ready_score"], dict)
+        receipts = artifact.get(PRODUCER_NORMALIZER_RECEIPTS_FIELD, {})
+        assert receipts.get("unsafe_rejections", []) == []
 
     def test_scenario_report_5267_unsafe_missing_receipts_are_not_synthesized(
         self, tmp_path: Path

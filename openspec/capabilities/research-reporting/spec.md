@@ -42576,3 +42576,126 @@ checksum is populated and stable, and `honest_verdict` has a terminal prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5756 | Planned (`python/carnot/experiment_5756_v514_source_delta_ingestion.py`, `results/experiment_5756_v514_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5756_v514_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5757: Proposal Benchmark Scalar Bridge Preserves Exp5746 Evidence
+
+The Exp5757 workflow SHALL read the canonical
+`results/experiment_5746_exact_proposal_utility_benchmark.json`,
+`results/experiment_5746_exact_proposal_utility_benchmark.instances.jsonl`,
+`results/experiment_5746_exact_proposal_utility_benchmark.preflight.json`,
+and the prior Exp5747 blocked artifact. It SHALL write
+`results/experiment_5757_proposal_benchmark_scalar_bridge.json`, SHALL NOT
+modify any Exp5746 artifact, SHALL NOT regenerate benchmark rows, SHALL NOT
+move train/dev/science splits, SHALL NOT run an LLM, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The bridge SHALL hash-verify the upstream artifact and benchmark manifest,
+replay the Exp5746 row hashes and split manifest, check the generator and exact
+solver versions, confirm exact structure and solution receipts, confirm clean
+adversarial controls, and confirm current free RAM and disk preconditions before
+emitting a complete artifact. It SHALL derive only unambiguous top-level bare
+scalars for `benchmark_ready_score`, `structure_receipt_failure_count`,
+`solution_receipt_failure_count`, `validator_disagreement_count`,
+`heldout_partition_disjoint_score`, `adversarial_verification_clean_score`, and
+`benchmark_bridge_ready_score`; explanations SHALL live only in
+`field_principles`.
+
+The workflow SHALL use `ExperimentTemplate` producer normalization and SHALL
+pass every downstream gate field through `producer_gate_fields` without wrapping
+any gate field in `{value, principle}`. It SHALL replay the planned Exp5759
+conductor predicates with `scripts/conductor_gates.evaluate_gates()` and SHALL
+set `benchmark_bridge_ready_score=1.0` only when upstream readiness is `1.0`,
+both receipt failure counts and validator disagreements are zero, the held-out
+partition is disjoint, adversarial controls are clean, every hash reproduces,
+and every gate comparison passes.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `spec_refs`, `upstream_artifact_path`,
+`upstream_artifact_hash`, `benchmark_manifest_path`,
+`benchmark_manifest_hash`, `split_manifest_hash`, `row_hash_count`,
+bare `benchmark_ready_score`, bare `structure_receipt_failure_count`,
+bare `solution_receipt_failure_count`, bare
+`validator_disagreement_count`, bare `heldout_partition_disjoint_score`,
+bare `adversarial_verification_clean_score`, `derivation_receipts`,
+`producer_normalizer_receipts`, `gate_replay_receipts`,
+`unsafe_synthesis_count`, bare `benchmark_bridge_ready_score`,
+`upstream_modified`, `llm_inference_used`, `verifier_is_oracle`,
+`inference_substrate`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every top-level field SHALL
+have a non-empty `field_principles` entry, and `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `field_principles`: principle "Maps every bridge field to the evidence boundary that justifies it."
+- `status`: principle "Bare terminal state supports machine checks without parsing prose."
+- `preconditions_checked`: principle "Records upstream, manifest, preflight, resource, hash, receipt, and protected-file checks before the bridge is trusted."
+- `spec_refs`: principle "Binds the bridge to REQ-REPORT-5757 and REQ-BENCH-5757."
+- `upstream_artifact_path`: principle "Names the canonical Exp5746 artifact read without mutation."
+- `upstream_artifact_hash`: principle "Binds the upstream artifact to exact bytes."
+- `benchmark_manifest_path`: principle "Names the sealed Exp5746 JSONL manifest reused by reference."
+- `benchmark_manifest_hash`: principle "Binds the benchmark manifest to exact bytes."
+- `split_manifest_hash`: principle "Binds the train/dev/science split commitment without moving rows."
+- `row_hash_count`: principle "Records the exact row-hash denominator replayed from the manifest."
+- `benchmark_ready_score`: principle "Copies the upstream readiness scalar only after hash and receipt replay."
+- `structure_receipt_failure_count`: principle "Bare count guards against omitted formulation structure."
+- `solution_receipt_failure_count`: principle "Bare count guards against missing feasibility or objective receipts."
+- `validator_disagreement_count`: principle "Bare count guards against exact-validator disagreement."
+- `heldout_partition_disjoint_score`: principle "Derived only from sealed split hashes, science row hashes, and v512 disjointness receipts."
+- `adversarial_verification_clean_score`: principle "Derived only from Exp5746 adversarial controls being present and detected."
+- `derivation_receipts`: principle "Records how each bridge scalar was derived from existing hashes and receipts."
+- `producer_normalizer_receipts`: principle "Records ExperimentTemplate producer normalization without inventing methodology receipts."
+- `gate_replay_receipts`: principle "Records the exact Exp5759 conductor comparisons on the bridge artifact."
+- `unsafe_synthesis_count`: principle "Must remain zero because the bridge never fabricates missing evidence."
+- `benchmark_bridge_ready_score`: principle "Bare gate scalar is true only when upstream replay and conductor gate replay both pass."
+- `upstream_modified`: principle "Must remain false because Exp5746 artifacts are read-only inputs."
+- `llm_inference_used`: principle "Must remain false because the bridge replays cached fixtures only."
+- `verifier_is_oracle`: principle "Must remain true because exact validators are the acceptance authority."
+- `inference_substrate`: principle "Must be cached_fixture_replay_no_llm because no model, solver generation, or hardware inference is run."
+- `test_commands`: principle "Verification commands are preserved exactly."
+- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
+- `reproducibility_checksum`: principle "Stable content checksum detects bridge artifact drift."
+- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not inflate proposal utility."
+
+#### SCENARIO-REPORT-5757: Hash-Verified Exp5746 Emits Bare Scalars
+
+**Given** the canonical Exp5746 artifact, preflight receipt, and JSONL manifest
+are readable and hash-consistent
+**And** all structure receipts, solution receipts, validator agreements,
+held-out split receipts, and adversarial controls replay cleanly
+**When** the Exp5757 bridge runs
+**Then** it writes
+`results/experiment_5757_proposal_benchmark_scalar_bridge.json`, keeps
+`upstream_modified=false`, sets the seven bridge gate fields as bare scalars,
+sets `benchmark_bridge_ready_score=1.0`, and emits a `complete:` verdict.
+
+#### SCENARIO-REPORT-5757-GATE-REPLAY: Planned Exp5759 Predicates Pass Or Fail On Bare Fields
+
+**Given** an Exp5757 bridge artifact
+**When** the planned Exp5759 conductor gates are evaluated with
+`evaluate_gates()`
+**Then** the complete bridge passes all gates, while missing fields,
+wrapper-object gate values, and false readiness controls fail closed.
+
+#### SCENARIO-REPORT-5757-AMBIGUITY: Hash Drift Or Ambiguous Nested Values Block
+
+**Given** an upstream artifact hash mismatch, manifest hash mismatch, altered
+row hash, ambiguous nested value for a derived bridge scalar, or readiness set
+true without clean receipts
+**When** the bridge validates the evidence
+**Then** it raises a blocked validation error or emits a `blocked:` verdict
+instead of synthesizing scalar evidence.
+
+#### SCENARIO-REPORT-5757-FIELD-PRINCIPLES: Every Bridge Field Is Annotated
+
+**Given** the Exp5757 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, every gate field is bare, the checksum is populated and stable, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5757)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5757 | Planned (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
