@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (51 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (55 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,17 +16,42 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
 
 ## Hostile LLM review
 
-**TL;DR: Both artifacts are `OUTER_LOOP_RE`; zero live self-discovery advances.** They are reachable, but only as hand-adapter-driven offline replays. Both are also stale and now subsumed by deeper registry entries.
+**TL;DR: REJECT all 7 as evidence of new live self-discovery: 0 `SELF_DISCOVERY_ADVANCE`; 5 `OUTER_LOOP_RE`, 1 `OFF_PATH`, 1 `DUPLICATE`.**
+
+- `results/arc_loop_solve_sk48.json`
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Declares `development_proxy` and `standing_arc_loop_offline_no_quota`. The entrypoint admits this mode uses a hand-registered adapter, not hidden-game discovery ([arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:212)). `_sk48` feeds frozen L1/L2 action tails, reads private game fields, and uses a hand verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2529)). It is also stale versus registry depth 8.
+  - **Recommended action:** Regression fixture only. Exclude from live-capability accounting; require a fresh adapter-free run emitted by the scored policy.
 
 - `results/arc_loop_solve_ar25.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly declares `development_proxy` and `standing_arc_loop_offline_no_quota` ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:616)). The entrypoint itself says this path uses a “hand-registered GameAdapter” and is not hidden-game self-discovery ([arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:212)). `_ar25` feeds frozen L1–L3 action tails, reads opaque game internals, hard-codes target coordinates, and supplies a hand verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2093)). No runtime discovery trace or `honest_verdict` exists. Historically it banked L3 over L2, so it was not originally a duplicate; today the registry already has L8 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)).
-  - **Recommended action:** Exclude from live-capability accounting. Retain only as a regression/reproduction fixture. Require a fresh `live_agent_self_discovery` artifact from the scored policy with no per-game adapter, frozen tail, or internal-state access.
+  - **Evidence:** Same explicit development-proxy/offline declaration. `_ar25` serves predetermined L1–L3 tails, reads hidden undo/internal sprite state, hard-codes goal coordinates, and supplies a hand verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2093)). No discovery trace exists. Registry is already at L8.
+  - **Recommended action:** Keep only for replay testing; do not count as self-discovery.
 
 - `results/arc_loop_solve_lf52.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Same explicit `development_proxy`/offline mode declaration ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584)). `_lf52` emits a predetermined coordinate/action sequence, introspects obfuscated internal objects and flags, and uses a hand-written peg-count verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2745)). The registry itself identifies this as a GameAdapter solve and says it banked L2 over prior L1 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2257)); current registry depth is L6. Empty `outer_loop_inputs_declared` is contradicted by the implementation.
-  - **Recommended action:** Exclude from self-discovery metrics; keep as a deterministic replay test only. Re-attempt through the live policy with attempt-by-attempt runtime evidence and adapter/internal-state access disabled.
+  - **Evidence:** `development_proxy`, offline mode, frozen L1/L2 tails, private obfuscated-object introspection, and a hand-written peg-count verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2745)). Registry is already at L10.
+  - **Recommended action:** Quarantine as a deterministic adapter regression.
 
-**Pattern watch:** Severe drift toward calling an offline deterministic dev twin “standing live/self-play.” Reachability proves only that the live entrypoint can call the machinery—not that the agent discovered anything. The recent-artifact scan also appears mtime-driven: both files were last changed in Git on June 28 but surfaced as recent after July 13 filesystem touches. Provenance gates should reject `development_proxy` before counting solves.
+- `results/outer_loop_lf52_l8plus_probe_20260717.json`
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Explicitly switched to reading `environment_files/.../lf52.py`, then used a bespoke per-game source planner after offline graph exploration failed ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l8plus_probe_20260717.json:164)). That is textbook source-assisted outer-loop solving.
+  - **Recommended action:** Preserve as public-game analysis only; remove L8–L10 from live self-discovery metrics.
+
+- `results/outer_loop_round26_bp35_probe_l9_20260717.json`
+  - **Verdict:** `OFF_PATH`
+  - **Evidence:** The public-frame-only attempt trail is credible, but the claimed provenance is not. Discovery was conducted by `gpt-5.6-sol-max-effort` through 174,508 offline steps, then encoded in a standalone experiment with a banked prefix and fixed 68-action tail ([probe](/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/bp35_round26_live_probe.py:28)). Neither live entrypoint references this probe. The orphan lint misses it because it scans only selected `python/carnot/agentic/arc_*.py` surfaces—not experiment scripts ([lint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py:116)).
+  - **Recommended action:** Port the generic runtime exploration capability—not the bp35 route—into the competition agent, then demonstrate a fresh discovery through that entrypoint.
+
+- `results/outer_loop_round14_lf52_probe_20260716.json`
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Explicitly says it reread the public source and a hand-built source-faithful simulator, audited prior proof searches, and manually constructed the missing leapfrog relay ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_round14_lf52_probe_20260716.json:23)).
+  - **Recommended action:** Development note only; no live-agent credit.
+
+- `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
+  - **Verdict:** `DUPLICATE`
+  - **Evidence:** The artifact explicitly says `new_levels_banked: 0`, “ALREADY-banked route,” and “not a new solve” ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json:8)). It repairs live parity using source-derived camera knowledge and a bespoke Python model; useful validation, zero new capability.
+  - **Recommended action:** Record as route-validation/engineering evidence only, never as a solve advance.
+
+**Pattern watch:** Serious drift: frozen adapters, private-state verifiers, source-derived per-game planners, and outer-loop coding-agent investigations are being wrapped in replay gates and live-sounding labels. `reproduce()` proves that a sequence works; it does not prove the live agent discovered it. Reachability auditing must cover artifact-generating experiment scripts and require an entrypoint-emitted discovery trace, not merely reachable helper modules.
 

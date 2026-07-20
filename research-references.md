@@ -30036,3 +30036,119 @@ Execution-time sweep on 2026-07-19 after the V511 planner marker. Only sources w
 
 <!-- V511-EXECUTION-REFRESH-20260719-END -->
 
+## V512 Planner Refresh - 20260719
+
+Planning-time sweep for milestone `.512` after the terminal `.511` conductor run. The
+search covered 2025-2026 arXiv work on EBM verification and reasoning, neural
+constraint satisfaction, Ising sampling, hallucination mitigation, KANs, constrained
+generation, hardware-accelerated sampling, and continual/online constraint learning.
+It also checked OpenReview, Hugging Face Papers, GitHub discovery, Extropic writing,
+Logical Intelligence's public Kona/Aleph material, and live Semantic Scholar citation
+routes for EBT `2507.02092` and ARM-EBM `2512.15605`. Only post-V511 non-duplicate
+deltas or explicit dispositions are recorded below.
+
+### New actionable deltas
+
+- **Generative Compilation: On-the-Fly Compiler Feedback as AI Generates Code** -
+  arXiv:2607.13921, https://arxiv.org/abs/2607.13921. The paper turns an incomplete
+  artifact into a checkable completion and rejects only semantically dead prefixes,
+  keeping an exact compiler as authority. Carnot hook: replace the repeatedly failed
+  free-form `FINAL:` channel with a sealed finite-choice proposal interface whose
+  candidate identities and one-token labels are preregistered. The GGUF distribution
+  may choose a proposal, but an exact finite-domain validator alone admits the row.
+  This motivates Exp5733/Exp5734; it does not reopen JSON grammar, external scoring,
+  or token/logit authority.
+- **Gate-Zero Growth: A Geometric Framework for Function-Preserving Continual
+  Learning** - arXiv:2607.14571, https://arxiv.org/abs/2607.14571. Zero-initialized
+  gates add capacity while leaving the old function unchanged at insertion, then bound
+  drift as gates open. Carnot hook: add zero-gated residual spline components to the
+  existing KAN constraint sidecar, never to immutable GGUF weights, and require exact
+  pre-insertion equivalence plus chronological prefix retention before any gate opens.
+  This motivates Exp5735 and gives FR-11 a non-cascading exact-stream path independent
+  of the failed `.511` SOTA channel.
+- **SMC-ES: Automated synthesis of formally verified control policies** -
+  arXiv:2607.15003, https://arxiv.org/abs/2607.15003. The useful local idea is an
+  explicit `(epsilon, delta)` release certificate from statistical model checking, not
+  its evolutionary-strategy training loop. Carnot hook: the zero-gated sidecar's
+  lifecycle canary must preregister allowed regression probability and confidence,
+  while exact per-row validators and rollback state hashes remain authoritative. This
+  sharpens Exp5735/Exp5736 without authorizing RL or model-weight writes.
+- **Campaign Diagrams: Visualizing the March Through the Phases of a Workload** -
+  arXiv:2607.15225, https://arxiv.org/abs/2607.15225. Phase-level latency, compute,
+  memory traffic, and utilization can reveal bottlenecks hidden by aggregate rooflines
+  and event traces. Carnot hook: decompose the one-axis `SamplerBackend` path into
+  serialization, PyO3 crossing, kernel update, validation, and restart phases before
+  designing a batched Rust boundary. Exp5738 may optimize only the measured dominant
+  phase; Exp5739 must report end-to-end matched-quality throughput and cannot infer a
+  hardware speedup.
+- **Bridge Evidence: Static Retrieval Utility Does Not Predict Causal Utility in
+  Multi-Step Agentic Search** - arXiv:2607.15253,
+  https://arxiv.org/abs/2607.15253. Deletion-and-replay counterfactuals distinguish
+  causally useful intermediate evidence from evidence that merely looks relevant.
+  Carnot hook: Exp5740 must score game-blind ARC action-effect primitives by removing
+  each primitive and replaying the same recorded live trajectory, then harden only a
+  primitive with positive counterfactual trajectory utility in Exp5741. This is generic
+  live-path induction, not a learned cross-game value head or a per-game solve.
+
+### Boundary-setting deltas
+
+- **Verification of a DPLL Transition System in Rocq** - arXiv:2607.14999,
+  https://arxiv.org/abs/2607.14999. Its rule-based transition, well-foundedness, and
+  strategy separation support Carnot's typed update/supersede/rollback ledger. A Rocq
+  port is not justified for `.512`; Exp5736 uses deterministic state-transition and
+  state-hash tests inside the existing Python/Rust stack.
+- **Is the Statistical Advantage Worth the Cost? An Empirical Comparison of KANs and
+  MLPs for Structured Data Classification** - arXiv:2607.13413,
+  https://arxiv.org/abs/2607.13413. The reported KAN benefit comes with materially
+  higher parameter and compute cost. Exp5735 therefore records added parameters,
+  update latency, memory growth, and a no-growth baseline; accuracy alone cannot
+  promote zero-gated growth.
+- **Photonic Ising machines toward and beyond a million spins** - arXiv:2607.13446,
+  https://arxiv.org/abs/2607.13446. The perspective emphasizes unresolved
+  connectivity, reconfigurability, scaling, and time-to-solution constraints. Carnot
+  has no local photonic substrate, so `.512` makes no photonic execution or speedup
+  claim and keeps its sampler experiments on matched CPU/Rust software paths.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct EBT and ARM-EBM citation routes were reachable. EBT's
+  visible trail still ends at arXiv:2607.11555 plus the already-indexed fixed-point,
+  LoopUS, causal-energy, NRGPT, and workload papers. ARM-EBM still exposes the
+  already-indexed path-measure, distributional-EBM, LoopUS, ontology, graph-energy,
+  false-first-step, and safe-distillation papers. No new citation creates a stronger
+  executable `.512` dependency.
+- **OpenReview:** the public ICLR/ICML/NeurIPS surfaces add no reproducible local EBM
+  or constraint-system result stronger than the newly indexed arXiv deltas. Full model
+  fine-tuning and broad RL remain outside the milestone.
+- **Hugging Face Papers:** constrained-decoding, verification, and continual-learning
+  pages surfaced finite-automaton diffusion decoding, self-verification, and speculative
+  decoding work already represented in Carnot's references or requiring non-local
+  runtimes. None supplies a drop-in parse-safe GGUF answer channel.
+- **GitHub:** repository/trending discovery found no new reproducible EBM, CSP, KAN,
+  ARC, or sampler repository that supersedes Carnot's exact validators, active-spline
+  controller, live E3 policy, or one-axis Rust kernel.
+- **Extropic:** the writing index still ends with the October 2025 X0/XTR-0/TSU launch
+  material. `thrml` simulation does not authenticate local TSU hardware, so `.512`
+  makes no TSU execution, power, or speedup claim.
+- **Logical Intelligence:** public Kona/Aleph pages strengthen the strategic split
+  between a learned search surrogate and a machine-checkable proof boundary, but no
+  local weights, API receipt, or reproducible Kona comparator is available. Kona and
+  Aleph remain architecture context only.
+
+### V512 planning impact
+
+- Retire further free-form answer-envelope repair. Test one materially different,
+  finite-choice proposal boundary on disjoint controls, then build a sealed SOTA stream
+  only if every candidate/label receipt and exact-validator check passes.
+- Run FR-11 on an already promoted exact chronological stream so continuous learning
+  cannot cascade behind the SOTA channel. Add capacity through zero-gated KAN residuals,
+  require exact function preservation at insertion, and exercise supersession,
+  forgetting, conflict rejection, and exact rollback under an `(epsilon, delta)` canary.
+- Address the PRD Rust-throughput gap by profiling the existing large-size reversal,
+  adding a parity-tested batched boundary only where the evidence points, and requiring
+  matched-quality end-to-end evidence before a 10x software claim.
+- Satisfy the ARC generalization floor through game-blind, deletion-tested primitive
+  mining and one generic live-path hardening attempt. Do not read game source, build
+  adapters, train a cross-game value head, or claim duplicate registry levels.
+
+<!-- V512-PLANNER-REFRESH-20260719-END -->

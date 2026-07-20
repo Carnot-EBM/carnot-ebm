@@ -1,0 +1,708 @@
+milestone: "2026.07.512"
+milestone_title: "Finite-Choice Exact Proposals, Function-Preserving Self-Learning, Batched Rust Sampling, and ARC Causal Primitives"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp5731-transition-v512
+    milestone: "2026.07.512"
+    title: "Transition terminal .511 evidence, preserve retirements, and allocate .512"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5731_transition_v512.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 30
+    estimated_wall_time_min: 120
+    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one evidence-preserving transition task per milestone."
+    prior_failures:
+      - experiment_id: exp5728-v511-capstone-reconciliation
+        verdict: "blocked: v511 reconciled; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; arc_solve_credited=false"
+        addressed_by: "This archives terminal .511 without promoting its failures, separates FR-11 from the SOTA gate, and allocates a collision-free Exp5731-Exp5742 graph with materially different proposal, KAN-growth, Rust-batch, and ARC-causal scopes."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.07.511 is terminal. The free-form GGUF answer channel did not qualify, its exact stream and FR-11 chain did not run, the Rust one-axis SamplerBackend integration passed but the large-size crossover was null, the ARC epistemic ledger A/B was null, and the all-game live/oracle measurement found 4 of 183 levels with a gap of 179. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5719_sota_answer_channel_forensics.json
+      - {project_root}/results/experiment_5720_sota_attested_exact_envelope_canary.json
+      - {project_root}/results/experiment_5723_one_axis_rust_samplerbackend_integration.json
+      - {project_root}/results/experiment_5724_one_axis_rust_python_matched_crossover.json
+      - {project_root}/results/experiment_5726_arc_epistemic_ledger_live_ab.json
+      - {project_root}/results/experiment_5727_arc_generalization_live_oracle_gap_v511.json
+      - {project_root}/results/experiment_5728_v511_capstone_reconciliation.json
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/research-complete.yaml
+
+      TASK:
+      Archive terminal .511 evidence, preserve every negative/null/retired boundary, collision-check the next graph, and emit results/experiment_5731_transition_v512.json.
+
+      CONCRETE STEPS:
+      1. Read every Exp5717-Exp5728 artifact plus conductor outcome. Record the missing Exp5721 artifact, gate skips, adversarial duration flag, blocked states, complete nulls, and promoted Rust integration exactly.
+      2. Preserve Exp5719's root evidence: all three required GGUFs resolved, no qualified protocol, positive-control parse rate 0, 41 truncations, 82 missing answers, 10 repetitions, and unauthenticated CUDA-offload score. Do not reopen free-form answer-envelope repair.
+      3. Preserve Exp5723 production-backend readiness and Exp5724's 178 quality-matched pairs, null consecutive-large-size crossover, and CPU-software-only timing boundary. Keep two-axis exchange retired.
+      4. Preserve Exp5726 as a safe epistemic-ledger null and Exp5727 as a development measurement with 25 games, live 4, oracle 183, gap 179, and no new solve. Do not promote or retry the ledger.
+      5. Collision-scan results, roadmaps, scripts, tests, history, and outer-loop artifacts before setting current_task_range=exp5731-exp5742. Emit dependency and gate maps with no chain to retired experiment IDs.
+      6. Reconcile transition-only entries in research-complete.yaml, ops/status.md, ops/changelog.md, and ops/conductor-log.md without changing scientific verdicts. Do not rewrite historical records.
+      7. REQUIRED ARTIFACT FIELDS: `field_principles` with one non-empty scientific principle for every field named here; `preconditions_checked`; `source_capstone_hash`; `v511_task_verdicts`; `v511_conductor_outcomes`; `answer_channel_ready=false`; `stream_ready=false`; `continuous_self_learning_credited=false`; `rust_samplerbackend_ready=true`; `rust_python_crossover_null=true`; `arc_live_levels=4`; `arc_oracle_levels=183`; `arc_gap=179`; `arc_registry_delta=0`; `preserved_scopes`; `retired_scopes`; `current_task_range=exp5731-exp5742`; `dependency_map`; `gate_map`; `timing_claimed=false`; `hardware_speedup_claimed=false`; `inference_substrate=artifact_reconciliation_only`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict`.
+      8. Run YAML, roadmap-schema, prior-failure, exclusion-manifest, gate, conductor-preflight, adversarial, spec-coverage, and root-clutter checks. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5732-v512-source-delta-ingestion
+    milestone: "2026.07.512"
+    title: "Ingest post-V512 source deltas with duplicate and retirement guards"
+    priority: high
+    track: infrastructure
+    deliverable: results/experiment_5732_v512_source_delta_ingestion.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 20
+    estimated_wall_time_min: 90
+    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one bounded source-delta task after each planner marker."
+    prior_failures:
+      - experiment_id: exp5718-v511-source-delta-ingestion
+        verdict: "complete: accepted 1 non-duplicate actionable V511 source delta; no roadmap ID or gate change"
+        addressed_by: "This starts strictly after the V512 planner marker, treats zero findings as complete, forbids compute-duration claims, and maps only genuinely new evidence to the already allocated graph."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The V512 planner already indexes Generative Compilation, Gate-Zero Growth, SMC-ES, Campaign Diagrams, Bridge Evidence, verified DPLL transitions, KAN cost evidence, and the photonic-Ising boundary. This bounded freshness pass must not silently redesign the graph or claim benchmark compute from web search. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/research-complete.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+
+      TASK:
+      Search the mandated 2025-2026 sources for post-V512-marker deltas, append only non-duplicate actionable findings, and emit results/experiment_5732_v512_source_delta_ingestion.json.
+
+      CONCRETE STEPS:
+      1. Search arXiv for EBM verification/reasoning, neural CSPs, Ising ML, hallucination mitigation, KANs, constrained generation, hardware sampling, and continual constraint learning. Also check OpenReview, Extropic, Semantic Scholar citations of EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers, GitHub discovery/trending, and Logical Intelligence.
+      2. Accept only items after `V512-PLANNER-REFRESH-20260719-END`. Deduplicate arXiv IDs, titles, techniques, repositories, citations, and Carnot experiment hooks against the full reference and completion history.
+      3. For each accepted finding, state target Exp5733-Exp5741 task, local substrate, exact authority boundary, and falsifiable metric. Record duplicate, watch-only, inaccessible, and excluded findings separately.
+      4. Reject any finding that reopens free-form answer repair, JSON grammar, external generated-text scoring, token/logit semantic authority, model-weight writes, broad RL, PTRM generation, two-axis exchange, learned ARC value transfer, per-game adapters, or unsupported hardware speedups.
+      5. A no-op is a complete result. Do not change IDs or gates; set roadmap_change_required=true and block for operator review if a real scope expansion is necessary.
+      6. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `search_timestamp_utc`; `planner_marker`; `sources_checked`; `queries`; `accepted_findings`; `duplicate_findings`; `watch_only_findings`; `excluded_findings`; `semantic_scholar_status`; `extropic_status`; `logical_intelligence_status`; `huggingface_status`; `github_status`; `target_experiment_map`; `roadmap_change_required`; `references_updated`; `benchmark_compute_claimed=false`; `inference_substrate=web_and_bibliographic_search_only`; `reproducibility_checksum`; `honest_verdict`.
+      7. Run reference-marker, URL, duplicate-ID, YAML, exclusion-manifest, artifact-schema, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5733-sota-finite-choice-proposal-channel
+    milestone: "2026.07.512"
+    title: "Qualify a finite-choice proposal channel across the mandated SOTA GGUF families"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5733_sota_finite_choice_proposal_channel.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 360
+    prior_failures:
+      - experiment_id: exp5719-sota-answer-channel-forensics
+        verdict: "blocked: no_qualified_protocol,fewer_than_two_qualified_models,positive_control_parse_rate_below_one,cuda_offload_unauthenticated"
+        addressed_by: "This removes free-form generation entirely: preregistered candidates map to unique one-token labels, next-token scores select only a proposal, and an independent exact validator remains the sole authority."
+        retire_if_same_verdict: true
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "No answer envelope is parsed or repaired; sealed finite candidate sets and model-specific tokenizer receipts replace the failed completion protocol on disjoint controls."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Two consecutive milestones failed at free-form answer parsing even though the required GGUF files were present. Generative Compilation motivates validator feedback at the partial-artifact boundary. This task tests a materially different interface: the model scores a sealed set of one-token labels that refer to preregistered candidate answers; exact validators alone decide truth. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/model_cache.py
+      - {project_root}/results/experiment_5708_sota_exact_constraint_canary.json
+      - {project_root}/results/experiment_5719_sota_answer_channel_forensics.json
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Build and qualify a sealed finite-choice GGUF proposal channel on disjoint exact controls, and emit results/experiment_5733_sota_finite_choice_proposal_channel.json.
+
+      CONCRETE STEPS:
+      1. Add/extend the relevant OpenSpec capability with REQ-* before implementation. Declare `MODEL_SPECS` for `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Resolve cached immutable `.gguf` files; never use transformers for GGUF loading or tokenization.
+      2. Precondition-check file hashes, quantizations, llama.cpp build, CUDA device visibility, positive layer offload, before/during/after GPU memory, free VRAM, and model-specific `vocab_only=True` tokenizer load. CPU runs are smoke-only and cannot qualify.
+      3. Build at least 30 positive exact controls and 12 negative controls across finite-state reachability, finite-domain arithmetic, SAT/CSP, hard/soft preference, candidate omission, duplicate candidates, invalid labels, tokenizer collisions, and non-finite scores. No science rows from Exp5734 may appear.
+      4. For every model/control, enumerate the complete bounded answer domain with an exact generator, create plausible hard distractors, randomly permute candidate-to-label mappings under sealed seeds, and require every label to tokenize to one unique token in that model's tokenizer. Do not leak which candidate is exact through ordering, label frequency, whitespace, token length, or prompt wording.
+      5. Run one next-token scoring step and preserve the full candidate-label score vector. The argmax label selects a proposal only. Do not use free-form completion, a `FINAL:` parser, JSON/GBNF grammar, XGrammar, llguidance, an external scorer, an LLM judge, or a token/logit threshold as semantic authority.
+      6. Run independent exact validators over selected candidates and double-check a stratified sample with enumeration. Set `verifier_is_oracle=true`; any validator disagreement, incomplete domain, label collision, missing/non-finite score, or provenance break blocks qualification.
+      7. Qualify the channel only if all required controls have complete receipts, at least Qwen3.6-35B-A3B and Gemma-4-31B qualify, CUDA offload is authenticated, receipt_failure_count=0, and no retired runtime ran. Model accuracy is descriptive and not a verifier promotion gate.
+      8. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `MODEL_SPECS`; `resolved_model_receipts`; `model_hashes`; `gguf_filenames`; `quantizations`; `llama_cpp_version`; `llama_cpp_build_info`; `cuda_device_receipts`; `n_gpu_layers_offloaded`; `gpu_memory_receipts`; `cuda_offload_authenticated`; `control_manifest`; `candidate_domain_receipts`; `label_token_receipts`; `label_permutation_hashes`; `score_vector_manifest_path`; `non_finite_score_count`; `label_collision_count`; `candidate_omission_count`; `receipt_failure_count`; `validator_versions`; `validator_disagreement_count`; `verifier_is_oracle=true`; `qualified_model_ids`; `qualified_flagship_model_count`; `proposal_channel_ready_score`; `freeform_generation_used=false`; `grammar_runtime_used=false`; `external_scorer_used=false`; `token_scores_are_semantic_authority=false`; `inference_substrate=local_llama_cpp_python_cuda_gguf_finite_choice_proposals`; `random_seeds`; `reproducibility_checksum`; `honest_verdict`.
+      REQUIRED GATE SCALAR: `cuda_offload_authenticated_score` is 1.0 only when both flagship families have positive offload and memory-delta receipts; otherwise 0.0.
+      9. Run model, tokenizer, CUDA, candidate-completeness, leakage, exact-validator, independent-validator, schema, adversarial, spec-coverage, and root-clutter tests. Release every model and GPU allocation on all paths.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5734-sota-exact-proposal-stream
+    milestone: "2026.07.512"
+    title: "Gated on Exp5733 readiness: build a sealed exact-attested SOTA proposal stream"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5734_sota_exact_proposal_stream.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 420
+    prior_failures:
+      - experiment_id: exp5720-sota-attested-exact-envelope-canary
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This consumes a newly qualified finite-choice channel rather than the failed free-form envelope protocol and seals candidate, label, score, and exact-validator receipts for every row."
+        retire_if_same_verdict: true
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "The new stream has no model-authored answer syntax to parse; selection is a sealed candidate ID and exact validators mint all admitted labels."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5733-sota-finite-choice-proposal-channel
+        artifact_field: proposal_channel_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Science rows are inadmissible until the disjoint finite-choice interface passes every control receipt."
+      - upstream: exp5733-sota-finite-choice-proposal-channel
+        artifact_field: qualified_flagship_model_count
+        op: ">="
+        value: 2
+        principle: "The headline stream requires both flagship model families."
+      - upstream: exp5733-sota-finite-choice-proposal-channel
+        artifact_field: cuda_offload_authenticated_score
+        op: ">="
+        value: 1.0
+        principle: "CPU fallback cannot support the mandated local-SOTA stream claim."
+      - upstream: exp5733-sota-finite-choice-proposal-channel
+        artifact_field: receipt_failure_count
+        op: "=="
+        value: 0
+        principle: "Every candidate, label, score, and validator control receipt must be complete."
+    prompt: |
+      CONTEXT:
+      Exp5733 must qualify a finite-choice proposal interface on disjoint controls. This task uses that frozen interface to create a chronological SOTA-proposal stream. The GGUF only chooses a candidate; exact validators remain the sole label authority. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/results/experiment_5733_sota_finite_choice_proposal_channel.json
+      - {project_root}/python/carnot/model_cache.py
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Generate a sealed chronological exact-constraint stream from flagship GGUF finite-choice proposals, and emit results/experiment_5734_sota_exact_proposal_stream.json.
+
+      CONCRETE STEPS:
+      1. Enforce every structured gate and verify the Exp5733 artifact, channel hash, tokenizer receipts, and model hashes. Add/extend REQ-* before implementation.
+      2. Declare `MODEL_SPECS` with `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. Resolve immutable local `.gguf` files and run through llama.cpp only; legacy small models are optional CPU smoke tests and cannot enter headline rows.
+      3. Preregister and seal at least 96 balanced chronological rows across finite-state, finite-domain arithmetic, SAT/CSP, hard/soft preference, contradiction, abstention, and shortcut-trap families. Balance families and model assignments before inference.
+      4. For every row, seal the complete candidate domain, adversarial distractors, model-specific one-token label permutation, prompt, seed, model hash, and expected exact-validator version before scoring. Use only the frozen Exp5733 interface.
+      5. Preserve full candidate-label score vectors and selected proposal IDs. Independent deterministic FSM/arithmetic/SAT-or-MaxSAT validators mint the admitted label and exact conflict receipts. Set `verifier_is_oracle=true`; never treat score magnitude, margin, or proposal identity as truth.
+      6. Double-check a stratified sample with independent enumeration. Any missing row, incomplete domain, non-finite score, label collision, validator disagreement, or attestation/provenance break blocks the stream; do not impute or repair.
+      7. Commit row order before learner access. Seal a prospective prefix and untouched suffix with row/model/family strata, candidate/label/score/proposal/validator hashes, split hashes, and stream-root commitment.
+      8. Set `sota_proposal_stream_ready_score=1.0` only when both models have authenticated CUDA, every row and receipt exists, all commitments verify, disagreement is zero, and no retired runtime/external scorer ran.
+      9. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `MODEL_SPECS`; `resolved_model_receipts`; `model_hashes`; `gguf_filenames`; `quantizations`; `llama_cpp_runtime_receipt`; `cuda_device_receipts`; `n_gpu_layers_offloaded`; `gpu_memory_receipts`; `cuda_offload_authenticated`; `qualified_channel_hash`; `preregistered_panel`; `family_counts`; `model_family_counts`; `row_manifest_path`; `candidate_domain_hashes`; `label_permutation_hashes`; `score_vector_hashes`; `proposal_ids`; `exact_validator_versions`; `conflict_receipts`; `missing_row_count`; `non_finite_score_count`; `label_collision_count`; `validator_disagreement_count`; `verifier_is_oracle=true`; `prospective_prefix_hash`; `sealed_suffix_hash`; `stream_root_commitment`; `headline_model_count=2`; `sota_proposal_stream_ready_score`; `model_weight_mutation=false`; `freeform_generation_used=false`; `grammar_runtime_used=false`; `external_scorer_used=false`; `token_scores_are_semantic_authority=false`; `inference_substrate=local_llama_cpp_python_cuda_gguf_exact_proposal_stream`; `random_seeds`; `reproducibility_checksum`; `honest_verdict`.
+      10. Run gate, model, CUDA, candidate/label, exact/conflict/independent-validator, commitment, schema, adversarial, spec-coverage, and root-clutter tests. Release GPU resources on every path.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5735-zero-gate-kan-continuous-self-learning
+    milestone: "2026.07.512"
+    title: "Run non-cascading zero-gated KAN continuous self-learning on the promoted exact stream"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5735_zero_gate_kan_continuous_self_learning.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    continuous_self_learning_task: true
+    prior_failures:
+      - experiment_id: exp5721-fr11-memops-lifecycle-shadow-stream
+        verdict: "missing: no honest_verdict artifact; V511 capstone status=missing after the upstream exact-stream gate skip"
+        addressed_by: "This task is independent of every SOTA-stream gate, uses the promoted Exp5616 exact stream, and adds function-preserving zero-gated KAN residual growth rather than replaying the missing lifecycle task."
+        retire_if_same_verdict: true
+      - experiment_id: exp5709-fr11-prospective-shadow-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The retired parse-failed prospective stream is not reused; this consumes an existing sealed exact nonstationary stream with deterministic labels and a new zero-gate capacity mechanism."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the milestone's mandatory continuous self-learning experiment and must run independently of Exp5733/Exp5734. Exp5616 provides a promoted exact nonstationary stream; Exp5628 provides the active-spline conformal KAN controller; Exp5639 provides anytime-valid audit machinery. Gate-Zero Growth motivates exact function preservation at capacity insertion, and SMC-ES motivates an explicit probabilistic release certificate. GGUF weights are not involved. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/python/carnot/experiment_5616_exact_nonstationary_constraint_stream.py
+      - {project_root}/results/experiment_5616_exact_nonstationary_constraint_stream.json
+      - {project_root}/python/carnot/experiment_5628_conformal_active_spline_kan_csl.py
+      - {project_root}/results/experiment_5628_conformal_active_spline_kan_csl.json
+      - {project_root}/python/carnot/experiment_5639_anytime_valid_csl_independent_audit.py
+      - {project_root}/results/experiment_5639_anytime_valid_csl_independent_audit.json
+      - {project_root}/python/carnot/verify
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Add and evaluate function-preserving zero-gated residual spline growth in the KAN constraint sidecar, and emit results/experiment_5735_zero_gate_kan_continuous_self_learning.json.
+
+      CONCRETE STEPS:
+      1. Add/extend OpenSpec REQ-* before implementation. Precondition-check upstream hashes, sealed chronological order, exact labels, random seeds, CPU/RAM/disk, and the absence of any production-default or GGUF-weight mutation.
+      2. Add a minimal zero-gated residual spline component to the existing active-spline controller. At insertion the gate is exactly zero; prove output equivalence on the full protected prefix by bitwise equality where deterministic and a preregistered strict tolerance elsewhere.
+      3. Process the committed stream once in chronological order. Record every pre-label prediction, exact label receipt, update decision, gate state, parameter/state hash, and post-update protected-prefix check. Never tune split/order after outcomes.
+      4. Compare zero-gated growth with no-growth active spline, always-open residual, parameter-matched MLP residual, frozen controller, and corrupted-order controls under identical streams/seeds. The MLP control is a sidecar only.
+      5. Preregister epsilon, delta, old-prefix retention margin, minimum new-suffix improvement, maximum parameter/memory growth, maximum update latency, and unsafe-update definition. Use N>=30 independent stream/seed sessions for percentage-point claims.
+      6. Reject or roll back any gate opening that violates exact constraints or the protected-prefix certificate. Model weights and production defaults remain unchanged.
+      7. Set `zero_gate_csl_ready_score=1.0` only if insertion equivalence passes, new-suffix improvement is positive, old-prefix retention stays within margin, unsafe_update_count=0, statistical certificate passes, and all checkpoints replay exactly.
+      8. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `upstream_artifact_hashes`; `stream_root_hash`; `stream_order_hash`; `exact_label_receipts`; `controller_versions`; `zero_gate_definition`; `insertion_equivalence_receipts`; `pre_insertion_output_hash`; `post_insertion_output_hash`; `gate_trajectory`; `operation_ledger_path`; `arm_configs`; `random_seeds`; `session_count`; `epsilon`; `delta`; `suffix_improvement`; `prefix_retention_delta`; `unsafe_update_count`; `parameter_growth`; `peak_memory_growth_mb`; `update_latency_distribution`; `statistical_model_check_receipt`; `checkpoint_hashes`; `restart_equivalence`; `model_weight_mutation=false`; `production_default_enabled=false`; `zero_gate_csl_ready_score`; `verifier_is_oracle=true`; `inference_substrate=cpu_exact_stream_online_kan_sidecar`; `test_commands`; `reproducibility_checksum`; `honest_verdict`.
+      REQUIRED GATE SCALAR: `function_preserving_insertion_score` is 1.0 only when every protected-prefix equivalence check passes before any learning update; otherwise 0.0.
+      9. Run zero-gate, equivalence, chronological-order, exact-label, baseline, statistical, rollback, restart, schema, adversarial, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5736-csl-lifecycle-conflict-rollback
+    milestone: "2026.07.512"
+    title: "Gated on Exp5735 safety: exercise typed CSL lifecycle, conflict, and rollback"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5736_csl_lifecycle_conflict_rollback.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    continuous_self_learning_task: true
+    prior_failures:
+      - experiment_id: exp5722-fr11-compliance-recovery-rollback-canary
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prerequisite now runs on an independent exact stream and a function-preserving zero-gate mechanism; this task exercises typed state transitions and crash recovery rather than waiting on the failed SOTA envelope chain."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5735-zero-gate-kan-continuous-self-learning
+        artifact_field: function_preserving_insertion_score
+        op: ">="
+        value: 1.0
+        principle: "Lifecycle mutation is inadmissible unless capacity insertion preserves the prior safe function."
+      - upstream: exp5735-zero-gate-kan-continuous-self-learning
+        artifact_field: suffix_improvement
+        op: ">"
+        value: 0.0
+        principle: "A lifecycle canary requires positive chronological adaptation, not merely safe no-op behavior."
+      - upstream: exp5735-zero-gate-kan-continuous-self-learning
+        artifact_field: prefix_retention_delta
+        op: ">="
+        value: -0.01
+        principle: "Old exact behavior may not regress beyond the preregistered one-point margin."
+      - upstream: exp5735-zero-gate-kan-continuous-self-learning
+        artifact_field: unsafe_update_count
+        op: "=="
+        value: 0
+        principle: "No unsafe update may enter the lifecycle state machine."
+    prompt: |
+      CONTEXT:
+      Exp5735 must prove function-preserving insertion and safe positive adaptation. MemOps motivates explicit lifecycle operations, Compliance Trap motivates Entry-Propagation-Recovery under stale/conflicting state, and verified DPLL transition systems motivate typed, terminating state transitions. This remains an isolated sidecar canary. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5735_zero_gate_kan_continuous_self_learning.json
+      - {project_root}/python/carnot/verify
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Implement and stress a typed remember/update/supersede/forget/reject/rollback/recover lifecycle over the zero-gated KAN sidecar, and emit results/experiment_5736_csl_lifecycle_conflict_rollback.json.
+
+      CONCRETE STEPS:
+      1. Enforce all structured gates and validate Exp5735 hashes. Add/extend REQ-* before implementation; preregister the untouched chronological suffix and all failure-injection points.
+      2. Define deterministic typed transitions for remember, update, supersede, forget, conflict reject, rollback, and recover. Every transition carries trigger, target, scope, evidence, predecessor hash, successor hash, and exact-validator receipt.
+      3. Run at least 30 sessions with clean, stale, contradictory, superseded, forgotten, and reordered constraint events. Record first changed decision, propagation depth, protected-prefix effect, and recovery latency.
+      4. Inject crashes before write, after state write, after ledger write, and before commit; inject corrupted checkpoints, orphan ledger entries, duplicate event IDs, and replayed stale advice. All invalid transitions must fail closed.
+      5. Require exact rollback to the prior state/controller/ledger hashes, zero propagation from rejected constraints, and suffix utility without prefix regression. Do not permit exact rejection to be overridden by learned state.
+      6. Set `csl_lifecycle_ready_score=1.0` only when every valid operation replays, every invalid operation rejects, rollback restores exact hashes, unsafe_propagation_count=0, retention stays within margin, and the preregistered epsilon/delta certificate passes.
+      7. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `upstream_gate_receipts`; `upstream_hash`; `suffix_commitment`; `transition_schema`; `operation_ledger_path`; `operation_counts`; `entry_receipts`; `propagation_receipts`; `recovery_receipts`; `conflict_cases`; `crash_injection_matrix`; `corruption_controls`; `rejected_transition_count`; `unsafe_propagation_count`; `prefix_retention_delta`; `suffix_improvement`; `rollback_state_hash_matches`; `ledger_replay_equivalence`; `epsilon`; `delta`; `statistical_model_check_receipt`; `model_weight_mutation=false`; `production_default_enabled=false`; `csl_lifecycle_ready_score`; `verifier_is_oracle=true`; `inference_substrate=cpu_exact_stream_kan_lifecycle`; `random_seeds`; `test_commands`; `reproducibility_checksum`; `honest_verdict`.
+      8. Run gate, lifecycle-transition, conflict, crash, corruption, rollback, retention, statistical, schema, adversarial, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5737-sota-stream-csl-shadow-ingress
+    milestone: "2026.07.512"
+    title: "Gated on Exp5734 and Exp5736: admit the sealed SOTA stream to CSL shadow mode"
+    priority: high
+    track: continuous-learning
+    deliverable: results/experiment_5737_sota_stream_csl_shadow_ingress.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    prior_failures:
+      - experiment_id: exp5721-fr11-memops-lifecycle-shadow-stream
+        verdict: "missing: no honest_verdict artifact; V511 capstone status=missing after the upstream exact-stream gate skip"
+        addressed_by: "Both prerequisites are now independently qualified: Exp5734 supplies a parse-free exact-attested proposal stream and Exp5736 supplies a lifecycle proven on a separate exact stream."
+        retire_if_same_verdict: true
+      - experiment_id: exp5722-fr11-compliance-recovery-rollback-canary
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This is shadow-only ingress after exact lifecycle qualification, not the failed act-on-advice canary; no production or GGUF-weight mutation is allowed."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5734-sota-exact-proposal-stream
+        artifact_field: sota_proposal_stream_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Only a complete exact-attested SOTA stream may enter the learner."
+      - upstream: exp5734-sota-exact-proposal-stream
+        artifact_field: validator_disagreement_count
+        op: "=="
+        value: 0
+        principle: "The learning label must have unambiguous exact authority."
+      - upstream: exp5736-csl-lifecycle-conflict-rollback
+        artifact_field: csl_lifecycle_ready_score
+        op: ">="
+        value: 1.0
+        principle: "SOTA ingress requires an independently qualified lifecycle and rollback boundary."
+      - upstream: exp5736-csl-lifecycle-conflict-rollback
+        artifact_field: unsafe_propagation_count
+        op: "=="
+        value: 0
+        principle: "No rejected or stale constraint may propagate before SOTA ingress."
+    prompt: |
+      CONTEXT:
+      This optional integration joins two independent positives: the exact-attested SOTA proposal stream and the qualified zero-gated lifecycle. It is not the milestone's sole continuous-learning evidence and remains shadow-only. No new LLM inference is needed; consume the sealed Exp5734 artifact. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5734_sota_exact_proposal_stream.json
+      - {project_root}/results/experiment_5735_zero_gate_kan_continuous_self_learning.json
+      - {project_root}/results/experiment_5736_csl_lifecycle_conflict_rollback.json
+      - {project_root}/python/carnot/verify
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Consume the sealed SOTA stream through the qualified lifecycle in shadow mode, measure prospective utility and controls, and emit results/experiment_5737_sota_stream_csl_shadow_ingress.json.
+
+      CONCRETE STEPS:
+      1. Enforce every gate and validate all channel, stream, split, lifecycle, controller, and validator hashes. Add/extend REQ-* before implementation if the ingress contract is not specified.
+      2. Consume the committed prefix exactly once in chronological order. Store pre-label decision, model proposal, exact-validator label, lifecycle operation, gate state, and pre/post state hashes for every row.
+      3. Compare exact-validator-label updates against model-proposal-label, no-update, corrupted-order, and stale/conflict controls. The model-proposal arm is diagnostic and may never alter the protected controller.
+      4. Measure suffix improvement, prefix retention, unsafe updates, family/model strata, rollback equivalence, and first changed decisions with N>=30 sessions. Do not tune the suffix or controls after viewing outcomes.
+      5. Set `sota_csl_ingress_ready_score=1.0` only if chronological exact-label learning improves the suffix, retains the prefix, accepts no unsafe update, restores every rollback hash, and outperforms corrupted/model-proposal controls without production mutation.
+      6. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `upstream_gate_receipts`; `stream_root_commitment`; `prefix_hash`; `suffix_hash`; `lifecycle_hash`; `validator_hashes`; `ingress_ledger_path`; `arm_configs`; `model_family_counts`; `constraint_family_counts`; `prelabel_decisions`; `operation_counts`; `suffix_improvement`; `prefix_retention_delta`; `unsafe_update_count`; `rollback_state_hash_matches`; `proposal_label_control_results`; `corrupted_order_results`; `model_weight_mutation=false`; `production_default_enabled=false`; `sota_csl_ingress_ready_score`; `verifier_is_oracle=true`; `inference_substrate=cpu_shadow_csl_on_attested_sota_stream`; `random_seeds`; `reproducibility_checksum`; `honest_verdict`.
+      7. Run gate, commitment, chronological-ingress, control-isolation, retention, rollback, schema, adversarial, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5738-one-axis-rust-batched-backend
+    milestone: "2026.07.512"
+    title: "Profile the large-size Rust reversal and add a parity-tested batched SamplerBackend"
+    priority: critical
+    track: sampling
+    deliverable: results/experiment_5738_one_axis_rust_batched_backend.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    prior_failures:
+      - experiment_id: exp5724-one-axis-rust-python-matched-crossover
+        verdict: "complete: terminal null; no consecutive larger-size matched-quality Rust/Python CPU crossover proven; timing claimed without GPU, FPGA, TSU, or hardware claim"
+        addressed_by: "This first reproduces and phase-profiles the n=48/n=96 reversal, then adds a deterministic multi-chain batch boundary only for the measured dominant bottleneck; it makes no speed promotion itself."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5723 made the promoted one-axis corrected-cDLS Rust kernel production reachable. Exp5724 found 178 quality-matched pairs but no consecutive larger-size crossover: Rust loses at n=48 and n=96. Campaign Diagrams motivates phase-level attribution before optimization. This task changes the boundary, not the sampler topology, and keeps two-axis exchange retired. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5723_one_axis_rust_samplerbackend_integration.json
+      - {project_root}/results/experiment_5724_one_axis_rust_python_matched_crossover.json
+      - {project_root}/python/carnot/sampling
+      - {project_root}/rust/carnot-samplers
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+      - {project_root}/tests/rust
+
+      TASK:
+      Reproduce and attribute the large-size Rust reversal, implement a deterministic batched one-axis SamplerBackend path where justified, and emit results/experiment_5738_one_axis_rust_batched_backend.json.
+
+      CONCRETE STEPS:
+      1. Add/extend OpenSpec REQ-* before implementation. Precondition-check the release Rust/PyO3 build, CPU topology, physical/logical cores, affinity controls, RAM, compiler versions, and exact Exp5723/Exp5724 hashes.
+      2. Reproduce the n=48 and n=96 workload cells with identical seeds/work/checkpoints. Profile serialization, Python allocation, PyO3 crossing, Rust allocation, energy update, proposal, exchange, validation, checkpoint, restart, and end-to-end phases. Record memory traffic or defensible proxies and peak RSS.
+      3. Identify the dominant measured phase and state a falsifiable optimization hypothesis before editing. If evidence does not support a batch-boundary fix, emit an honest blocked/null artifact without speculative optimization.
+      4. When justified, add a backward-compatible `sample_batch` path for independent chains/workloads through the production SamplerBackend and Rust/PyO3 binding. Preserve the existing scalar API and exact Python fallback.
+      5. Match Python/Rust energy traces, proposals, accepted transitions, temperature-label exchanges, scheduler positions, checkpoints, restart suffixes, and result order across normal, empty, singleton, mixed-size, corrupted-checkpoint, broken-binding, and exception controls.
+      6. Run MCMC distributional parity with at least 10,000 samples for n>=64 plus multiple-comparison correction. This task makes no timing promotion and no hardware claim.
+      7. Set `batch_backend_ready_score=1.0` only if semantic/distributional/restart parity pass, fallback equivalence passes, result ordering is deterministic, and production factory wiring is real.
+      8. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `upstream_artifact_hashes`; `software_receipt`; `build_profile`; `cpu_topology`; `cpu_affinity`; `thread_receipts`; `reproduction_workloads`; `phase_timing_receipts`; `memory_phase_receipts`; `large_size_reversal_reproduced`; `dominant_phase`; `optimization_hypothesis`; `batch_api_contract`; `batch_factory_receipts`; `scalar_api_unchanged`; `python_fallback_receipts`; `parity_manifest`; `energy_trace_mismatch_count`; `proposal_mismatch_count`; `exchange_mismatch_count`; `checkpoint_mismatch_count`; `restart_mismatch_count`; `result_order_mismatch_count`; `distributional_parity_receipts`; `batch_backend_ready_score`; `timing_claimed=false`; `software_speedup_claimed=false`; `hardware_speedup_claimed=false`; `fpga_or_tsu_used=false`; `inference_substrate=local_cpu_rust_pyo3_one_axis_batched_sampler`; `random_seeds`; `reproducibility_checksum`; `honest_verdict`.
+      9. Run Rust unit, Python unit, PyO3 integration, scalar/batch/fallback, parity, checkpoint/restart, distributional, schema, adversarial, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5739-one-axis-batched-10x-crossover
+    milestone: "2026.07.512"
+    title: "Gated on Exp5738 parity: measure a matched batched Rust/Python 10x crossover or null"
+    priority: critical
+    track: sampling
+    deliverable: results/experiment_5739_one_axis_batched_10x_crossover.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    prior_failures:
+      - experiment_id: exp5724-one-axis-rust-python-matched-crossover
+        verdict: "complete: terminal null; no consecutive larger-size matched-quality Rust/Python CPU crossover proven; timing claimed without GPU, FPGA, TSU, or hardware claim"
+        addressed_by: "The new benchmark uses the parity-qualified batched production boundary, reports single-core and fixed multi-core regimes, and requires a 10x lower confidence bound at two consecutive larger sizes rather than repeating scalar timing."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5738-one-axis-rust-batched-backend
+        artifact_field: batch_backend_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Performance is inadmissible until the production batched backend is semantically qualified."
+      - upstream: exp5738-one-axis-rust-batched-backend
+        artifact_field: energy_trace_mismatch_count
+        op: "=="
+        value: 0
+        principle: "Matched timing requires identical energy semantics."
+      - upstream: exp5738-one-axis-rust-batched-backend
+        artifact_field: checkpoint_mismatch_count
+        op: "=="
+        value: 0
+        principle: "Checkpoint semantics must match before throughput can be compared."
+      - upstream: exp5738-one-axis-rust-batched-backend
+        artifact_field: restart_mismatch_count
+        op: "=="
+        value: 0
+        principle: "Restarted workloads must remain semantically identical."
+    prompt: |
+      CONTEXT:
+      Exp5738 must supply a production-reachable, parity-qualified batched one-axis backend. The PRD's Rust target is 10x throughput, but Exp5724's scalar path was null at larger sizes. Measure end-to-end software performance with matched quality and work; a null is terminal and honest. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5724_one_axis_rust_python_matched_crossover.json
+      - {project_root}/results/experiment_5738_one_axis_rust_batched_backend.json
+      - {project_root}/python/carnot/sampling
+      - {project_root}/rust/carnot-samplers
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+      - {project_root}/tests/rust
+
+      TASK:
+      Benchmark the batched Rust and exact Python one-axis production paths under matched work and quality, and emit results/experiment_5739_one_axis_batched_10x_crossover.json.
+
+      CONCRETE STEPS:
+      1. Enforce every gate and validate the Exp5738 backend/build hashes. Preregister workloads, topology families, sizes including 48/96/192 where feasible, batch sizes, seeds, ladders, transition budgets, checkpoints, warmups, repetition count, quality margins, and 10x claim rule.
+      2. Compare Python exact fallback and Rust PyO3 batch on identical inputs in two regimes: one physical core and a fixed recorded physical-core allocation. Match thread counts and disclose any implementation asymmetry; do not compare against an artificially serialized or weakened baseline.
+      3. Run at least 30 independent batches per cell. Measure end-to-end latency and throughput without subtracting serialization, validation, PyO3, allocation, checkpoint, or restart costs. Preserve phase receipts and peak RSS.
+      4. Require identical work, energy accounting, sample counts, seed schedules, restart behavior, and preregistered quality metrics. Exclude mismatches visibly; never relabel them as speed results.
+      5. Report paired speedup distributions and confidence intervals with multiple-comparison correction. A qualified 10x result requires matched quality and a lower confidence bound >=10.0 at two consecutive larger sizes in the same thread regime.
+      6. Set `rust_batched_10x_ready_score=1.0` only if the strict rule passes. Otherwise set 0.0 and record the terminal null plus bottleneck evidence. This is a CPU software claim only, never a GPU/FPGA/TSU or energy-efficiency claim.
+      7. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `upstream_gate_receipts`; `software_receipt`; `build_profile`; `cpu_topology`; `thread_receipts`; `cpu_affinity`; `preregistered_protocol`; `workload_manifest`; `arm_configs`; `batch_sizes`; `problem_sizes`; `random_seeds`; `warmup_count`; `measured_batch_count`; `matched_work_receipts`; `quality_metrics_by_pair`; `quality_matched_pair_count`; `excluded_pair_reasons`; `end_to_end_times`; `throughput_distributions`; `phase_times`; `peak_rss_by_arm`; `paired_speedup_ratios`; `paired_speedup_intervals`; `qualified_10x_sizes`; `qualified_10x_thread_regime`; `rust_batched_10x_ready_score`; `timing_claimed`; `software_speedup_claimed`; `gpu_speedup_claimed=false`; `hardware_speedup_claimed=false`; `fpga_or_tsu_used=false`; `inference_substrate=matched_cpu_python_rust_batched_sampler_benchmark`; `reproducibility_checksum`; `honest_verdict`.
+      8. Run gate, workload-match, quality, timing, confidence-interval, resource-leak, schema, adversarial, spec-coverage, applicable E2E, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5740-arc-game-blind-primitive-causal-audit
+    milestone: "2026.07.512"
+    title: "Audit game-blind ARC action-effect primitives with deletion-and-replay causal utility"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5740_arc_game_blind_primitive_causal_audit.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    operator_override: "Standing 2026-07-17 ARC generalization directive authorizes game-blind causal primitive auditing; learned value-transfer heads remain retired."
+    prior_failures:
+      - experiment_id: exp4342-self-learning-action-role-cross-game-encoder
+        verdict: "complete: action_role_encoder_transfer_no_improvement_positive_control_passed"
+        addressed_by: "This is a non-learned causal deletion audit over all 25 registry traces, not an action-role encoder or value-transfer head; it strips game identities and makes no solve or promotion claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The ARC public registry contains 25 completed games, so this milestone must improve hidden-game generalization rather than re-solve them. Exp5727 measured a live/oracle gap of 179 levels, with induction quality worst on lf52, bp35, and su15. Bridge Evidence motivates deletion-and-replay causal utility instead of static relevance. The learned value-transfer family from Exp4342 stays retired. No LLM inference is needed. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5727_arc_generalization_live_oracle_gap_v511.json
+      - {project_root}/results/arc_live_oracle_gap.json
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/verifier-gaps.md
+      - {project_root}/python/carnot/arc_solver_kit.py
+      - {project_root}/python/carnot/arc_competition_agent.py
+      - {project_root}/scripts/arc_loop_solve.py
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Mine game-blind action-effect primitives from agent-owned traces, measure their counterfactual trajectory utility by deletion replay, and emit results/experiment_5740_arc_game_blind_primitive_causal_audit.json.
+
+      CONCRETE STEPS:
+      1. Registry-precheck all 25 public games and hash the registry. Add/extend REQ-* before implementation. Declare this a diagnostic with `solve_provenance=development_proxy` and no solve/registry credit.
+      2. Use only existing live-agent frame/action/transition/decision receipts. Do not read game source, solution code, hidden state, per-game adapters, outer-loop BFS, or hand-authored game models. Strip game IDs, names, and source-derived metadata from learner-visible inputs.
+      3. Define a small generic primitive vocabulary from observable action-effect relations: object displacement, reversible/no-op action, boundary/collision, inventory or state toggle, agent-relative motion, repeated-action loop, and delayed effect. Do not encode game-specific constants.
+      4. Mine candidate primitives from training traces under leave-one-game-out splits. For each candidate, delete it from the runtime-induction replay and rerun the same recorded decision trajectory under identical budgets/seeds.
+      5. Measure counterfactual changes in next-action validity, world-model transition accuracy, planned-state reachability, repeated-action rate, invalid-action rate, time/budget to first progress event, and downstream decision hashes. Static frequency or plausibility alone cannot qualify.
+      6. Include negative controls: shuffled primitive, game-ID leak, per-game constant, future-frame leak, source-derived rule, orphan primitive, and no-op deletion. Every leak control must be detected and rejected.
+      7. Set `positive_causal_primitive_count` from preregistered effect/retention thresholds with N>=30 paired trace replays and corrected intervals. No policy code or registry is modified.
+      8. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `registry_hash`; `registry_game_count`; `trace_manifest`; `trace_hashes`; `games_measured`; `leave_one_game_out_splits`; `primitive_schema`; `primitive_candidates`; `game_identity_stripping_receipts`; `deletion_replay_manifest`; `counterfactual_receipt_coverage`; `counterfactual_trajectory_utility`; `next_action_validity_delta`; `world_model_accuracy_delta`; `planning_reachability_delta`; `repeat_rate_delta`; `invalid_action_delta`; `progress_budget_delta`; `negative_controls`; `source_leak_count`; `game_identity_leak_count`; `positive_causal_primitive_count`; `policy_modified=false`; `registry_modified=false`; `solve_provenance=development_proxy`; `verifier_is_oracle=true`; `inference_substrate=offline_arc_trace_counterfactual_development_proxy`; `random_seeds`; `reproducibility_checksum`; `honest_verdict`.
+      9. Run registry, provenance, identity/source-leak, leave-one-game-out, deletion-replay, statistical, schema, adversarial, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5741-arc-generic-primitive-live-ab
+    milestone: "2026.07.512"
+    title: "Gated on Exp5740 causal utility: harden one generic ARC primitive in the live path"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5741_arc_generic_primitive_live_ab.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 420
+    operator_override: "Standing 2026-07-17 ARC generalization directive authorizes one game-blind primitive hardening attempt; learned value-transfer heads and per-game adapters remain retired."
+    prior_failures:
+      - experiment_id: exp4342-self-learning-action-role-cross-game-encoder
+        verdict: "complete: action_role_encoder_transfer_no_improvement_positive_control_passed"
+        addressed_by: "This uses one deletion-qualified symbolic action-effect primitive with no learned value head, all 25 traces, game-blind inputs, and the current live E3 world-model path."
+        retire_if_same_verdict: true
+      - experiment_id: exp5726-arc-epistemic-ledger-live-ab
+        verdict: "complete: epistemic_ledger_live_ab_null_no_promotion"
+        addressed_by: "The epistemic ledger is not retried; this changes the mechanism to a generic action-effect induction primitive selected by causal deletion evidence."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5740-arc-game-blind-primitive-causal-audit
+        artifact_field: positive_causal_primitive_count
+        op: ">="
+        value: 1
+        principle: "Live-path code may change only for a primitive with positive counterfactual trajectory utility."
+      - upstream: exp5740-arc-game-blind-primitive-causal-audit
+        artifact_field: source_leak_count
+        op: "=="
+        value: 0
+        principle: "No source-derived rule may enter the submitted agent."
+      - upstream: exp5740-arc-game-blind-primitive-causal-audit
+        artifact_field: game_identity_leak_count
+        op: "=="
+        value: 0
+        principle: "The primitive must be game blind."
+      - upstream: exp5740-arc-game-blind-primitive-causal-audit
+        artifact_field: counterfactual_receipt_coverage
+        op: "=="
+        value: 1.0
+        principle: "Every qualifying primitive requires complete deletion-replay evidence."
+    prompt: |
+      CONTEXT:
+      Exp5740 must identify at least one game-blind action-effect primitive with positive deletion-replay causal utility and zero leakage. Implement at most one such primitive in the existing live E3 world-model/induction path. This is a generalization experiment across the full registry, not a target-game solve. No LLM inference is needed. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5727_arc_generalization_live_oracle_gap_v511.json
+      - {project_root}/results/experiment_5740_arc_game_blind_primitive_causal_audit.json
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/verifier-gaps.md
+      - {project_root}/python/carnot/arc_competition_agent.py
+      - {project_root}/python/carnot/arc_solver_kit.py
+      - {project_root}/scripts/arc_loop_solve.py
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Add one causally qualified generic action-effect primitive to the live ARC induction path, run a matched full-registry A/B, and emit results/experiment_5741_arc_generic_primitive_live_ab.json.
+
+      CONCRETE STEPS:
+      1. Enforce every gate, validate Exp5740 hashes, and registry-precheck all games/levels before code changes. Add/extend REQ-* before implementation. Do not choose a specific unsolved public level as the task target.
+      2. Select exactly one primitive using only preregistered Exp5740 causal utility. Implement it generically in E3AgentPolicy's agent-reachable world-model/induction path with no game names, IDs, constants, source, adapters, offline solves, learned value heads, or per-game routing.
+      3. Prove live reachability with synthetic controls plus leave-one-game-out known-trace controls. Include orphan-solver, future-frame, game-ID, source-rule, per-game constant, and unreachable-helper negative controls.
+      4. Run baseline and primitive arms on all 25 registry games with identical 400-action budgets, seeds, reset policy, proposal policy, and verifier settings. Preserve every frame/action/transition/decision receipt and exact registry precheck.
+      5. Compare total and per-game live levels, actions to first progress, transition accuracy, planned-state reachability, repeated/invalid actions, regressions, unsafe routes, and compute cost. A known registry level reproduction is diagnostic only.
+      6. A new level may be credited only beyond the precheck registry and only when reproduced from the live agent's own observations/actions/runtime induction with `solve_provenance=live_agent_self_discovery`. Source, hand RE, adapters, development proxies, and outer-loop solvers cannot receive credit.
+      7. Set `generic_primitive_live_ready_score=1.0` only for a preregistered full-registry benefit with no level regression, unsafe route, leakage, or off-path dependency. A safe null is complete and must not be promoted.
+      8. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `upstream_gate_receipts`; `registry_hash_before`; `registry_count_before`; `registry_precheck`; `selected_primitive`; `selection_receipt`; `implementation_hash`; `live_reachability_receipts`; `negative_controls`; `harness_used`; `policy_kind=e3`; `model_specs=null`; `llm_inference_used=false`; `games_measured=25`; `budget_per_game=400`; `arm_configs`; `random_seeds`; `per_game_metrics`; `live_levels_baseline`; `live_levels_primitive`; `live_level_delta`; `transition_accuracy_delta`; `planning_reachability_delta`; `repeat_rate_delta`; `invalid_action_delta`; `level_regression_count`; `unsafe_route_count`; `source_leak_count`; `game_identity_leak_count`; `new_level_evidence`; `solve_provenance=live_agent_self_discovery`; `registry_hash_after`; `registry_delta`; `generic_primitive_live_ready_score`; `verifier_is_oracle=true`; `inference_substrate=matched_arc_live_policy_generic_primitive_no_llm`; `reproducibility_checksum`; `honest_verdict`.
+      9. Run gate, registry, live-reachability, leak/orphan, matched-budget, policy, exact-verifier, solve-provenance, schema, adversarial, spec-coverage, applicable ARC E2E, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5742-v512-capstone-reconciliation
+    milestone: "2026.07.512"
+    title: "Reconcile .512 evidence, retire repeated failures, and emit the next-decision capstone"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5742_v512_capstone_reconciliation.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 180
+    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one evidence-preserving capstone reconciliation per milestone."
+    prior_failures:
+      - experiment_id: exp5728-v511-capstone-reconciliation
+        verdict: "blocked: v511 reconciled; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; arc_solve_credited=false"
+        addressed_by: "This reconciles four independent .512 branches, credits FR-11 from the non-cascading exact-stream task, and mechanically retires only repeated same-verdict scopes with complete evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This capstone closes milestone 2026.07.512. The SOTA proposal, continuous-learning, Rust batch, and ARC primitive branches are independent; a failure in one must not erase evidence from another. Missing, gate-skipped, blocked, null, flagged, and complete states must remain distinguishable. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5731_transition_v512.json
+      - {project_root}/results/experiment_5732_v512_source_delta_ingestion.json
+      - {project_root}/results/experiment_5733_sota_finite_choice_proposal_channel.json
+      - {project_root}/results/experiment_5734_sota_exact_proposal_stream.json
+      - {project_root}/results/experiment_5735_zero_gate_kan_continuous_self_learning.json
+      - {project_root}/results/experiment_5736_csl_lifecycle_conflict_rollback.json
+      - {project_root}/results/experiment_5737_sota_stream_csl_shadow_ingress.json
+      - {project_root}/results/experiment_5738_one_axis_rust_batched_backend.json
+      - {project_root}/results/experiment_5739_one_axis_batched_10x_crossover.json
+      - {project_root}/results/experiment_5740_arc_game_blind_primitive_causal_audit.json
+      - {project_root}/results/experiment_5741_arc_generic_primitive_live_ab.json
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/research-complete.yaml
+
+      TASK:
+      Reconcile all .512 artifacts and conductor outcomes, apply any mechanical same-verdict retirements, update specs/ops evidence, and emit results/experiment_5742_v512_capstone_reconciliation.json.
+
+      CONCRETE STEPS:
+      1. Load every Exp5731-Exp5741 artifact and conductor outcome. Preserve missing, gate-skipped, blocked, flagged, null, and complete states exactly; never synthesize a missing scientific artifact.
+      2. Recompute the finite-choice, SOTA-stream, zero-gate CSL, lifecycle, optional ingress, Rust batch, 10x, ARC causal-audit, and ARC live A/B readiness scalars from direct artifacts and hashes.
+      3. Credit continuous self-learning from Exp5735/Exp5736 independently of Exp5733/Exp5734/Exp5737. GGUF weights and production defaults must remain unchanged.
+      4. Apply `retire_if_same_verdict` only when a task repeated its cited prior verdict with matching scope. Preserve nonmatching techniques and successful upstream capabilities. Never create a `requires:` chain to a retired ID.
+      5. Update research-complete.yaml, openspec specs, _bmad/traceability.md, ops/status.md, ops/changelog.md, ops/conductor-log.md, ops/exclusion_manifest.yaml, ops/known-issues.md, ops/verifier-gaps.md, ops/north-star.md, ops/metrics.md, and hardware status only where direct evidence requires it. Append or minimally patch; do not rewrite history.
+      6. Update the ARC registry only from reproduced `live_agent_self_discovery` evidence beyond the precheck. Development-proxy audits and known-level reproductions cannot change the registry.
+      7. Run all relevant unit, lint, YAML, roadmap schema, prior-failure, exclusion-manifest, gate-cascade, spec-coverage, adversarial, and applicable end-to-end checks from ops/e2e-test-plan.md. Record commands and exit codes; planning-only or unavailable checks need explicit reasons.
+      8. REQUIRED ARTIFACT FIELDS: `field_principles` with a principle for every field; `preconditions_checked`; `task_artifact_hashes`; `task_statuses`; `task_honest_verdicts`; `conductor_outcomes`; `gate_skip_receipts`; `missing_artifacts`; `flagged_artifacts`; `proposal_channel_ready`; `sota_proposal_stream_ready`; `zero_gate_csl_ready`; `csl_lifecycle_ready`; `sota_csl_ingress_ready`; `batch_backend_ready`; `rust_batched_10x_ready`; `arc_causal_primitive_ready`; `arc_generic_primitive_live_ready`; `continuous_self_learning_credited`; `model_weight_mutation=false`; `production_default_enabled=false`; `arc_registry_count_before`; `arc_registry_count_after`; `arc_registry_delta`; `arc_solve_credited`; `solve_provenance_summary`; `retirements_required`; `retirements_applied`; `preserved_scopes`; `closed_scopes_reopened=false`; `timing_claimed`; `software_speedup_claimed`; `hardware_speedup_claimed=false`; `spec_files_updated`; `ops_files_updated`; `e2e_commands`; `e2e_exit_codes`; `inference_substrate=artifact_reconciliation_only`; `reproducibility_checksum`; `honest_verdict`.
+      9. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged and no root scratch file was created.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
