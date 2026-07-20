@@ -1,0 +1,845 @@
+{
+  "c1_auroc": {
+    "offline_cross_game_loo": 0.548854,
+    "online_prefix_causal": 0.710638
+  },
+  "c2_auroc": {
+    "offline_cross_game_loo": {
+      "max": 0.437104,
+      "mean": 0.418613,
+      "min": 0.403077,
+      "n_seeds": 5,
+      "per_seed": {
+        "123": 0.437104,
+        "2024": 0.403077,
+        "4547": 0.404139,
+        "7": 0.418781,
+        "99": 0.429965
+      },
+      "std": 0.013577
+    },
+    "online_prefix_causal_note": "C2 (learned object-property MLP) has no online analogue; the online eval's second baseline is C1 (click-bucket memory)."
+  },
+  "corpus_summary": {
+    "corpus_examples_loaded": 165542,
+    "distinct_frames_decomposed": 1894,
+    "game_count": 24,
+    "heldout_examples": 31963,
+    "train_examples": 133579,
+    "within_frame_group_diagnostics": {
+      "click_frames": 42171,
+      "contrast_groups": 1894,
+      "dropped_no_target": 0,
+      "featurized_clicks": 7347,
+      "total_pairs": 32518
+    }
+  },
+  "duration_s": 805.24,
+  "experiment": "experiment_5732_object_centric_click_affordance",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "c1_auroc": "control C1 -- action-type + click-bucket base rate within-frame grouped AUROC; the free per-16px-bucket signal the live agent already has (PersistentAEM). Seed-free.",
+    "c2_auroc": "control C2 -- object-property-only (color, area, is_rect) model, SAME within-frame ranking objective as the object model; isolates the lift of patch/shape/topology over bare object salience so a ColorBlobSaliencePrior re-derivation cannot pass.",
+    "duration_s": "wall-clock of corpus load + featurize + multi-seed LOO + online eval; no LLM/GPU, 1s floor.",
+    "gate_passed": "bool per eval (offline / online): object adds > 0.05 over max(C1,C2) on the WORST seed AND beats the untrained control AND positive control passes AND pairs >= min.",
+    "honest_verdict": "terminal prefix; complete: object features add over BOTH base rates (learned interaction signal) / partial win (cross-game null + online positive) / retire (neither eval clears the gate on the worst seed), or success: on a clean win.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- segments cached replay frames + trains/scores a small CPU MLP over object features; no GGUF/LLM/GPU (1s floor).",
+    "marginal_cancellation_check": "the structural claim, verified: a constant-per-candidate scorer gets within-frame grouped AUROC == 0.5 exactly (the marginal cannot rank within a frame), so the objective cannot be minimized by a per-action-type base rate -- unlike exp5727/5730.",
+    "model_specs": "the real compute substrate actually run -- a small torch MLP over object features (no LLM); required so a third party can re-run the exact model under audit.",
+    "n_within_frame_pairs": "held-out within-frame (changed x inert) pair count -- the effective sample size for the grouped-AUROC claim; below the pre-registered minimum the result is a coverage collapse (design Sec.6), reported honestly, not a claim.",
+    "object_features_add_over_baselines": "THE HEADLINE -- (object-model within-frame grouped AUROC) minus max(C1, C2 AUROC), reported for BOTH the offline cross-game LOO and the online prefix-causal eval; positive means object structure adds a real interaction signal over the base rates exp5727/exp5730 found were all that the frame-only representations had.",
+    "object_model_auroc_over_seeds": "the object model's within-frame grouped AUROC min/max/mean/std over 5 seeds; the gate is applied on the WORST seed (kills the exp5730 seed-luck mirage).",
+    "positive_control_passed": "in-sample within-frame grouped AUROC (train==test) > 0.5 -- the harness can learn the objective when structure exists; a null is informative only if this passed.",
+    "preconditions_checked": "records resources verified (torch, corpus cached) before the run.",
+    "prior_work_extended": "exp5727 + exp5730 -- the two base-rate-mirage nulls this representation+objective change is built to break; cited by id + verdict + the exact number that motivated the redesign.",
+    "random_seed": "primary determinism seed (exp5730's 4547); full seed set in `seeds`.",
+    "random_seeds_used": "the 5 seeds; every learned metric is reported across all of them.",
+    "recommendation": "full win (name the live-path-eligible scorer) / partial win (route the live path from click-buckets to object identity) / retire the object-centric offline lineage to the exclusion manifest (operator-only) and close the gap with the online-only bound.",
+    "reproducibility_checksum": "content hash of inputs+metrics; catches silent corpus/model drift.",
+    "solve_provenance": "representation/verifier-building INFRASTRUCTURE work, not a game solve; it does NOT fit the live_agent_self_discovery / development_proxy / outer_loop_re solve taxonomy (no game level is claimed), so it is declared explicitly as such.",
+    "untrained_structural_control_over_seeds": "same object-model architecture, random init, no training -- a real learned signal must beat random weights on the worst seed, not just chance (exp5730 discipline).",
+    "verifier_is_oracle": "false -- the label is raw pixel-change ground truth, oracle-DISTINCT from the LEARNED MLP scoring the object features; no moat/gate claim is made."
+  },
+  "gate_passed": {
+    "add_margin_threshold": 0.05,
+    "both": false,
+    "neither": false,
+    "offline_cross_game_loo": false,
+    "online_prefix_causal": true
+  },
+  "honest_verdict": "complete: object_centric_partial_win_cross_game_null_offline_minus0p032_but_online_within_game_positive_plus0p133",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "marginal_cancellation_check": {
+    "constant_scorer_within_frame_grouped_auroc": 0.5,
+    "n_pairs": 32518,
+    "note": "binary_auroc returns 0.5 for tied scores; a constant score ties every candidate in every frame, so the within-frame grouped AUROC is exactly 0.5. A per-action-type base rate is constant within action-6, hence structurally cannot rank within a frame -- the escape hatch exp5727/exp5730's pointwise objective left open is closed.",
+    "passes": true
+  },
+  "missing_verifier_gaps": [],
+  "model_specs": [
+    {
+      "architecture": "Linear(in->16) -> ReLU -> Linear(16->1), within-frame pairwise logistic (BPR) ranking loss",
+      "c2_feature_dim": 19,
+      "device": "cpu",
+      "features": "object_hash context (color one-hot, area, is_rect), height/width/aspect/area_fraction/color_rarity, is_status_bar_like, is_button_like, containment_depth, adjacency_degree, normalized-shape hash buckets, 5x5 color-index centroid patch, local_density",
+      "framework": "torch",
+      "name": "RankMLP",
+      "no_llm": true,
+      "note": "no GGUF/LLM invoked; object features are computed by classical connected-component segmentation (arc_color_blob_salience) over cached replay frames.",
+      "object_feature_dim": 70,
+      "train_steps": 400
+    }
+  ],
+  "n_within_frame_pairs": {
+    "coverage_collapsed": false,
+    "minimum_required": 100,
+    "offline_cross_game_loo": 32518,
+    "online_prefix_causal": 24356493
+  },
+  "object_features_add_over_baselines": {
+    "offline_cross_game_loo": {
+      "mean": -0.014047,
+      "per_seed": {
+        "123": -0.026505,
+        "2024": -0.03169,
+        "4547": -0.006052,
+        "7": -0.004433,
+        "99": -0.001554
+      },
+      "worst_seed": -0.03169
+    },
+    "online_prefix_causal": 0.133369
+  },
+  "object_model_auroc_over_seeds": {
+    "offline_cross_game_loo": {
+      "max": 0.5473,
+      "mean": 0.534807,
+      "min": 0.517164,
+      "n_seeds": 5,
+      "per_seed": {
+        "123": 0.522349,
+        "2024": 0.517164,
+        "4547": 0.542802,
+        "7": 0.544421,
+        "99": 0.5473
+      },
+      "std": 0.012481
+    },
+    "online_prefix_causal_object_hash_memory_auroc": 0.844006
+  },
+  "offline_cross_game_loo": {
+    "aggregation": "unweighted_mean_over_qualifying_games",
+    "c1_auroc": 0.548854,
+    "c1_auroc_pair_weighted": 0.295165,
+    "c2_auroc_over_seeds": {
+      "max": 0.437104,
+      "mean": 0.418613,
+      "min": 0.403077,
+      "n_seeds": 5,
+      "per_seed": {
+        "123": 0.437104,
+        "2024": 0.403077,
+        "4547": 0.404139,
+        "7": 0.418781,
+        "99": 0.429965
+      },
+      "std": 0.013577
+    },
+    "eval": "offline_cross_game_loo",
+    "min_game_pairs_to_qualify": 30,
+    "n_games": 16,
+    "n_qualifying_games": 13,
+    "n_qualifying_within_frame_pairs": 32496,
+    "n_within_frame_pairs": 32518,
+    "object_beats_untrained_worst_seed": false,
+    "object_features_add_over_baselines_over_seeds": {
+      "max": -0.001554,
+      "mean": -0.014047,
+      "min": -0.03169,
+      "per_seed": {
+        "123": -0.026505,
+        "2024": -0.03169,
+        "4547": -0.006052,
+        "7": -0.004433,
+        "99": -0.001554
+      },
+      "std": 0.012481
+    },
+    "object_model_auroc_over_seeds": {
+      "max": 0.5473,
+      "mean": 0.534807,
+      "min": 0.517164,
+      "n_seeds": 5,
+      "per_seed": {
+        "123": 0.522349,
+        "2024": 0.517164,
+        "4547": 0.542802,
+        "7": 0.544421,
+        "99": 0.5473
+      },
+      "std": 0.012481
+    },
+    "per_game": [
+      {
+        "c1_auroc": 0.5393,
+        "c2_auroc_per_seed": {
+          "123": 0.376404,
+          "2024": 0.404494,
+          "4547": 0.365169,
+          "7": 0.44382,
+          "99": 0.337079
+        },
+        "game": "ar25",
+        "object_auroc_per_seed": {
+          "123": 0.426966,
+          "2024": 0.314607,
+          "4547": 0.382022,
+          "7": 0.393258,
+          "99": 0.370787
+        },
+        "qualifies": true,
+        "test_pairs": 89,
+        "untrained_auroc_per_seed": {
+          "123": 0.533708,
+          "2024": 0.505618,
+          "4547": 0.561798,
+          "7": 0.58427,
+          "99": 0.696629
+        }
+      },
+      {
+        "c1_auroc": 0.4468,
+        "c2_auroc_per_seed": {
+          "123": 0.574468,
+          "2024": 0.574468,
+          "4547": 0.574468,
+          "7": 0.531915,
+          "99": 0.531915
+        },
+        "game": "cd82",
+        "object_auroc_per_seed": {
+          "123": 0.531915,
+          "2024": 0.510638,
+          "4547": 0.510638,
+          "7": 0.680851,
+          "99": 0.489362
+        },
+        "qualifies": true,
+        "test_pairs": 47,
+        "untrained_auroc_per_seed": {
+          "123": 0.457447,
+          "2024": 0.617021,
+          "4547": 0.521277,
+          "7": 0.361702,
+          "99": 0.404255
+        }
+      },
+      {
+        "c1_auroc": 0.4374,
+        "c2_auroc_per_seed": {
+          "123": 0.389571,
+          "2024": 0.368712,
+          "4547": 0.403067,
+          "7": 0.40184,
+          "99": 0.407975
+        },
+        "game": "dc22",
+        "object_auroc_per_seed": {
+          "123": 0.62638,
+          "2024": 0.607362,
+          "4547": 0.588344,
+          "7": 0.651534,
+          "99": 0.588344
+        },
+        "qualifies": true,
+        "test_pairs": 815,
+        "untrained_auroc_per_seed": {
+          "123": 0.559509,
+          "2024": 0.699387,
+          "4547": 0.433742,
+          "7": 0.426994,
+          "99": 0.469939
+        }
+      },
+      {
+        "c1_auroc": 0.453,
+        "c2_auroc_per_seed": {
+          "123": 0.394802,
+          "2024": 0.345297,
+          "4547": 0.248762,
+          "7": 0.216584,
+          "99": 0.456683
+        },
+        "game": "ft09",
+        "object_auroc_per_seed": {
+          "123": 0.789604,
+          "2024": 0.799505,
+          "4547": 0.75495,
+          "7": 0.799505,
+          "99": 0.799505
+        },
+        "qualifies": true,
+        "test_pairs": 404,
+        "untrained_auroc_per_seed": {
+          "123": 0.081683,
+          "2024": 0.777228,
+          "4547": 0.913366,
+          "7": 0.329208,
+          "99": 0.193069
+        }
+      },
+      {
+        "c1_auroc": 0.5,
+        "c2_auroc_per_seed": {
+          "123": 0.509091,
+          "2024": 0.518182,
+          "4547": 0.527273,
+          "7": 0.5,
+          "99": 0.490909
+        },
+        "game": "ka59",
+        "object_auroc_per_seed": {
+          "123": 0.372727,
+          "2024": 0.290909,
+          "4547": 0.4,
+          "7": 0.581818,
+          "99": 0.490909
+        },
+        "qualifies": true,
+        "test_pairs": 55,
+        "untrained_auroc_per_seed": {
+          "123": 0.663636,
+          "2024": 0.372727,
+          "4547": 0.381818,
+          "7": 0.545455,
+          "99": 0.5
+        }
+      },
+      {
+        "c1_auroc": 0.8,
+        "c2_auroc_per_seed": {},
+        "game": "lf52",
+        "object_auroc_per_seed": {},
+        "qualifies": false,
+        "test_pairs": 5,
+        "untrained_auroc_per_seed": {}
+      },
+      {
+        "c1_auroc": 0.2349,
+        "c2_auroc_per_seed": {
+          "123": 0.463461,
+          "2024": 0.479975,
+          "4547": 0.459132,
+          "7": 0.435161,
+          "99": 0.483322
+        },
+        "game": "lp85",
+        "object_auroc_per_seed": {
+          "123": 0.946001,
+          "2024": 0.915973,
+          "4547": 0.93436,
+          "7": 0.988414,
+          "99": 0.930905
+        },
+        "qualifies": true,
+        "test_pairs": 27491,
+        "untrained_auroc_per_seed": {
+          "123": 0.311975,
+          "2024": 0.949856,
+          "4547": 0.753574,
+          "7": 0.253447,
+          "99": 0.130115
+        }
+      },
+      {
+        "c1_auroc": 0.5379,
+        "c2_auroc_per_seed": {
+          "123": 0.704545,
+          "2024": 0.575758,
+          "4547": 0.674242,
+          "7": 0.712121,
+          "99": 0.689394
+        },
+        "game": "m0r0",
+        "object_auroc_per_seed": {
+          "123": 0.439394,
+          "2024": 0.606061,
+          "4547": 0.613636,
+          "7": 0.44697,
+          "99": 0.5
+        },
+        "qualifies": true,
+        "test_pairs": 66,
+        "untrained_auroc_per_seed": {
+          "123": 0.55303,
+          "2024": 0.507576,
+          "4547": 0.621212,
+          "7": 0.606061,
+          "99": 0.636364
+        }
+      },
+      {
+        "c1_auroc": 0.5216,
+        "c2_auroc_per_seed": {
+          "123": 0.510536,
+          "2024": 0.486111,
+          "4547": 0.481801,
+          "7": 0.4909,
+          "99": 0.498563
+        },
+        "game": "s5i5",
+        "object_auroc_per_seed": {
+          "123": 0.508142,
+          "2024": 0.484674,
+          "4547": 0.479406,
+          "7": 0.487069,
+          "99": 0.461207
+        },
+        "qualifies": true,
+        "test_pairs": 1044,
+        "untrained_auroc_per_seed": {
+          "123": 0.477969,
+          "2024": 0.521073,
+          "4547": 0.443008,
+          "7": 0.452586,
+          "99": 0.461207
+        }
+      },
+      {
+        "c1_auroc": 0.7323,
+        "c2_auroc_per_seed": {
+          "123": 0.416667,
+          "2024": 0.399718,
+          "4547": 0.416667,
+          "7": 0.388418,
+          "99": 0.420904
+        },
+        "game": "sb26",
+        "object_auroc_per_seed": {
+          "123": 0.507768,
+          "2024": 0.310028,
+          "4547": 0.340395,
+          "7": 0.433616,
+          "99": 0.424435
+        },
+        "qualifies": true,
+        "test_pairs": 708,
+        "untrained_auroc_per_seed": {
+          "123": 0.49435,
+          "2024": 0.551554,
+          "4547": 0.425141,
+          "7": 0.307203,
+          "99": 0.40678
+        }
+      },
+      {
+        "c1_auroc": 0.8259,
+        "c2_auroc_per_seed": {
+          "123": 0.183706,
+          "2024": 0.051118,
+          "4547": 0.049521,
+          "7": 0.20607,
+          "99": 0.207668
+        },
+        "game": "sc25",
+        "object_auroc_per_seed": {
+          "123": 0.386581,
+          "2024": 0.396166,
+          "4547": 0.496805,
+          "7": 0.372204,
+          "99": 0.400958
+        },
+        "qualifies": true,
+        "test_pairs": 626,
+        "untrained_auroc_per_seed": {
+          "123": 0.351438,
+          "2024": 0.739617,
+          "4547": 0.164537,
+          "7": 0.376997,
+          "99": 0.923323
+        }
+      },
+      {
+        "c1_auroc": 0.3333,
+        "c2_auroc_per_seed": {},
+        "game": "sk48",
+        "object_auroc_per_seed": {},
+        "qualifies": false,
+        "test_pairs": 9,
+        "untrained_auroc_per_seed": {}
+      },
+      {
+        "c1_auroc": 0.75,
+        "c2_auroc_per_seed": {},
+        "game": "sp80",
+        "object_auroc_per_seed": {},
+        "qualifies": false,
+        "test_pairs": 8,
+        "untrained_auroc_per_seed": {}
+      },
+      {
+        "c1_auroc": 0.9327,
+        "c2_auroc_per_seed": {
+          "123": 0.423562,
+          "2024": 0.395512,
+          "4547": 0.347826,
+          "7": 0.42216,
+          "99": 0.41655
+        },
+        "game": "su15",
+        "object_auroc_per_seed": {
+          "123": 0.430575,
+          "2024": 0.514727,
+          "4547": 0.706872,
+          "7": 0.40533,
+          "99": 0.68864
+        },
+        "qualifies": true,
+        "test_pairs": 713,
+        "untrained_auroc_per_seed": {
+          "123": 0.631136,
+          "2024": 0.401122,
+          "4547": 0.984572,
+          "7": 0.85554,
+          "99": 0.356241
+        }
+      },
+      {
+        "c1_auroc": 0.4655,
+        "c2_auroc_per_seed": {
+          "123": 0.198276,
+          "2024": 0.181034,
+          "4547": 0.181034,
+          "7": 0.198276,
+          "99": 0.198276
+        },
+        "game": "tn36",
+        "object_auroc_per_seed": {
+          "123": 0.327586,
+          "2024": 0.37931,
+          "4547": 0.293103,
+          "7": 0.327586,
+          "99": 0.431034
+        },
+        "qualifies": true,
+        "test_pairs": 116,
+        "untrained_auroc_per_seed": {
+          "123": 0.599138,
+          "2024": 0.232759,
+          "4547": 0.288793,
+          "7": 0.724138,
+          "99": 0.836207
+        }
+      },
+      {
+        "c1_auroc": 0.5078,
+        "c2_auroc_per_seed": {
+          "123": 0.537267,
+          "2024": 0.459627,
+          "4547": 0.524845,
+          "7": 0.496894,
+          "99": 0.450311
+        },
+        "game": "vc33",
+        "object_auroc_per_seed": {
+          "123": 0.496894,
+          "2024": 0.593168,
+          "4547": 0.555901,
+          "7": 0.509317,
+          "99": 0.53882
+        },
+        "qualifies": true,
+        "test_pairs": 322,
+        "untrained_auroc_per_seed": {
+          "123": 0.39441,
+          "2024": 0.579193,
+          "4547": 0.621118,
+          "7": 0.273292,
+          "99": 0.591615
+        }
+      }
+    ],
+    "untrained_structural_control_over_seeds": {
+      "max": 0.573441,
+      "mean": 0.51355,
+      "min": 0.468992,
+      "n_seeds": 5,
+      "per_seed": {
+        "123": 0.469956,
+        "2024": 0.573441,
+        "4547": 0.547227,
+        "7": 0.468992,
+        "99": 0.508134
+      },
+      "std": 0.04156
+    }
+  },
+  "online_prefix_causal": {
+    "aggregation": "unweighted_mean_over_qualifying_games",
+    "click_bucket_memory_auroc": 0.710638,
+    "eval": "online_prefix_causal",
+    "hash_covered_fraction": 0.9317,
+    "n_games": 16,
+    "n_qualifying_games": 16,
+    "n_scored": 47883,
+    "n_within_frame_pairs": 24356493,
+    "note": "Both memories are count-based (Laplace-smoothed) and deterministic given the trajectory order, so the online eval is seed-invariant (worst==mean==best). Only the KEY differs: object_hash identity vs 16px click bucket. The DELTA is the apples-to-apples 'does object identity rank better than the click-bucket base rate'. hash_covered_fraction is how often the object_hash memory was non-empty at scoring time -- low coverage means object identity rarely recurs before the causal test point.",
+    "object_features_add_over_baselines": 0.133369,
+    "object_hash_memory_auroc": 0.844006,
+    "pair_weighted_click_bucket_memory_auroc": 0.662943,
+    "pair_weighted_object_hash_memory_auroc": 0.902841,
+    "per_game": [
+      {
+        "click_bucket_memory_auroc": 0.5222,
+        "delta_hash_minus_bucket": 0.3878,
+        "game": "sp80",
+        "hash_covered_fraction": 0.8897,
+        "hash_memory_auroc": 0.91,
+        "n": 562,
+        "n_changed": 545,
+        "pairs": 9265,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.6637,
+        "delta_hash_minus_bucket": 0.3261,
+        "game": "lp85",
+        "hash_covered_fraction": 0.9972,
+        "hash_memory_auroc": 0.9898,
+        "n": 14054,
+        "n_changed": 12849,
+        "pairs": 15483045,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.5191,
+        "delta_hash_minus_bucket": 0.2406,
+        "game": "ka59",
+        "hash_covered_fraction": 0.8384,
+        "hash_memory_auroc": 0.7598,
+        "n": 297,
+        "n_changed": 233,
+        "pairs": 14912,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.696,
+        "delta_hash_minus_bucket": 0.2355,
+        "game": "ft09",
+        "hash_covered_fraction": 0.9686,
+        "hash_memory_auroc": 0.9316,
+        "n": 1052,
+        "n_changed": 863,
+        "pairs": 163107,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.5614,
+        "delta_hash_minus_bucket": 0.2192,
+        "game": "ar25",
+        "hash_covered_fraction": 0.6484,
+        "hash_memory_auroc": 0.7807,
+        "n": 364,
+        "n_changed": 150,
+        "pairs": 32100,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.6559,
+        "delta_hash_minus_bucket": 0.194,
+        "game": "m0r0",
+        "hash_covered_fraction": 0.8555,
+        "hash_memory_auroc": 0.8499,
+        "n": 422,
+        "n_changed": 350,
+        "pairs": 25200,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.7072,
+        "delta_hash_minus_bucket": 0.1918,
+        "game": "dc22",
+        "hash_covered_fraction": 0.9694,
+        "hash_memory_auroc": 0.899,
+        "n": 3035,
+        "n_changed": 2233,
+        "pairs": 1790866,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.603,
+        "delta_hash_minus_bucket": 0.1545,
+        "game": "vc33",
+        "hash_covered_fraction": 0.9631,
+        "hash_memory_auroc": 0.7575,
+        "n": 4500,
+        "n_changed": 4254,
+        "pairs": 1046484,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.6463,
+        "delta_hash_minus_bucket": 0.1232,
+        "game": "lf52",
+        "hash_covered_fraction": 0.962,
+        "hash_memory_auroc": 0.7694,
+        "n": 4418,
+        "n_changed": 4405,
+        "pairs": 57265,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.854,
+        "delta_hash_minus_bucket": 0.113,
+        "game": "sk48",
+        "hash_covered_fraction": 0.8907,
+        "hash_memory_auroc": 0.967,
+        "n": 567,
+        "n_changed": 185,
+        "pairs": 70670,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.7685,
+        "delta_hash_minus_bucket": 0.0743,
+        "game": "sb26",
+        "hash_covered_fraction": 0.9417,
+        "hash_memory_auroc": 0.8428,
+        "n": 2298,
+        "n_changed": 1875,
+        "pairs": 793125,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.5725,
+        "delta_hash_minus_bucket": 0.0548,
+        "game": "s5i5",
+        "hash_covered_fraction": 0.9851,
+        "hash_memory_auroc": 0.6273,
+        "n": 6385,
+        "n_changed": 5681,
+        "pairs": 3999424,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.9397,
+        "delta_hash_minus_bucket": 0.0545,
+        "game": "sc25",
+        "hash_covered_fraction": 0.9817,
+        "hash_memory_auroc": 0.9942,
+        "n": 2187,
+        "n_changed": 2053,
+        "pairs": 275102,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.7887,
+        "delta_hash_minus_bucket": 0.0196,
+        "game": "cd82",
+        "hash_covered_fraction": 0.8971,
+        "hash_memory_auroc": 0.8083,
+        "n": 544,
+        "n_changed": 490,
+        "pairs": 26460,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.8788,
+        "delta_hash_minus_bucket": -0.0569,
+        "game": "tn36",
+        "hash_covered_fraction": 0.983,
+        "hash_memory_auroc": 0.822,
+        "n": 3828,
+        "n_changed": 3761,
+        "pairs": 251987,
+        "qualifies": true
+      },
+      {
+        "click_bucket_memory_auroc": 0.9932,
+        "delta_hash_minus_bucket": -0.1984,
+        "game": "su15",
+        "hash_covered_fraction": 0.4006,
+        "hash_memory_auroc": 0.7948,
+        "n": 3370,
+        "n_changed": 3273,
+        "pairs": 317481,
+        "qualifies": true
+      }
+    ],
+    "seed_invariant": true
+  },
+  "positive_control": {
+    "in_sample_within_frame_grouped_auroc": 0.962974,
+    "n_pairs": 32518,
+    "passes": true
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "corpus_cached": true,
+    "torch_import": true
+  },
+  "prior_failures": [
+    {
+      "addressed_by": "object-centric per-candidate representation + WITHIN-FRAME contrastive ranking that structurally cancels the action-type marginal (constant scorer -> AUROC 0.5) + action-6-only restriction (the only channel with a real negative class) + a second control (object-property-only) + an online prefix-causal eval the prior runs lacked. This is a genuine representation+objective change, NOT a retrain/re-tune of the falsified scorer.",
+      "diagnosed_root_cause": "pointwise changed/no-op objective (minimizable by the per-action-type marginal) over a global/frame-only representation with no object localization, on a survivorship-biased corpus (no negative class outside action-6).",
+      "experiment_id": "exp5727",
+      "retire_if_same_verdict": true,
+      "verdict": "frame_adds_over_action_id_-0.039_base_rate_mirage"
+    },
+    {
+      "addressed_by": "object-localized features (a within-frame difference between two objects is representable, which a global pool cannot resolve) + the worst-of-5-seeds gate + the untrained-control requirement retained verbatim so a seed-luck value cannot pass.",
+      "diagnosed_root_cause": "same base-rate collapse for a learned global-pooled conv; the one within-action click signal was a lone-seed artifact that lost to its untrained control.",
+      "experiment_id": "exp5730",
+      "retire_if_same_verdict": true,
+      "verdict": "frame_adds_over_action_id_-0.010_and_within_action_click_discrimination_seed_luck_null"
+    }
+  ],
+  "prior_work_extended": {
+    "exp5727_perception_action_effect_adequacy": {
+      "number": "frame_adds_over_action_id = -0.039 (hand-crafted linear features SUBTRACT)",
+      "role": "the base-rate control this extends; motivated the object-centric + within-frame redesign.",
+      "verdict": "complete: action_effect_above_chance_but_driven_by_action_base_rate_not_frame_representation_honest_null_on_perception"
+    },
+    "exp5730_cnn_baserate_audit": {
+      "number": "frame_adds_over_action_id = -0.010 (global-pooled conv SUBTRACTS); the click discrimination win was 5-seed seed luck (mean 0.570, untrained 0.580).",
+      "role": "the harness skeleton reused here (corpus/split/5-seed/untrained control); the seed-luck null this experiment's worst-seed gate is designed to not repeat.",
+      "verdict": "complete: cnn_held_out_auroc_is_action_id_base_rate_and_seed_luck_mirage_frame_adds_-0.010_no_robust_within_action_signal_matching_exp5727_null"
+    }
+  },
+  "random_seed": 4547,
+  "random_seeds_used": [
+    4547,
+    7,
+    99,
+    123,
+    2024
+  ],
+  "recommendation": "PARTIAL WIN (design Sec.5): no UNIVERSAL cross-game object->effect prior (LOO null, as the benchmark's shared-nothing design makes plausible), but object IDENTITY beats the click-bucket base rate WITHIN a game online. Redirect the live online memory from click-buckets to object_hash identity (generalize ObjectHistorySaliencePrior as the PersistentAEM-equivalent key). Do NOT ship a cross-game-trained offline scorer.",
+  "reproducibility_checksum": "sha256:48a605e396852f76d94c74355a762da673d1e381de0235de1ff65ed6ae8b3b78",
+  "requirements": [
+    "REQ-ARC-FCP-5732"
+  ],
+  "scenarios": [
+    "SCENARIO-ARC-FCP-5732-WITHIN-FRAME-CANCELS-MARGINAL",
+    "SCENARIO-ARC-FCP-5732-TWO-CONTROL-GATE",
+    "SCENARIO-ARC-FCP-5732-RETIRE-OR-PARTIAL"
+  ],
+  "schema": "carnot.arc_object_centric_click_affordance_5732.v1",
+  "solve_provenance": "not_a_game_solve_representation_verifier_infrastructure",
+  "target": "does an OBJECT-CENTRIC within-frame contrastive representation add a non-base-rate click action-effect signal over the action-type+click-bucket (C1) and object-property (C2) base rates",
+  "untrained_structural_control_over_seeds": {
+    "max": 0.573441,
+    "mean": 0.51355,
+    "min": 0.468992,
+    "n_seeds": 5,
+    "per_seed": {
+      "123": 0.469956,
+      "2024": 0.573441,
+      "4547": 0.547227,
+      "7": 0.468992,
+      "99": 0.508134
+    },
+    "std": 0.04156
+  },
+  "verifier_is_oracle": false
+}

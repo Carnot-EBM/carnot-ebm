@@ -1,13 +1,14 @@
 """Exp5732: ingest the V512 execution-time source delta.
 
 Spec refs: REQ-REPORT-5732, SCENARIO-REPORT-5732-NOOP,
+SCENARIO-REPORT-5732-ACCEPT-BOUNDED-DELTA,
 SCENARIO-REPORT-5732-BLOCKED-MARKER,
 SCENARIO-REPORT-5732-FIELD-PRINCIPLES.
 
 The public web search itself is intentionally not replayed in tests. Search
 indexes, citation APIs, and daily paper feeds drift. This module captures the
-durable part of the work: which source families were checked, why no
-post-marker source became an executable Carnot task, which routes were
+durable part of the work: which source families were checked, which
+post-marker sources sharpened existing V512 tasks, which routes were
 duplicate/watch-only/inaccessible/excluded, and the explicit boundary that no
 benchmark compute or hardware speedup was claimed.
 """
@@ -53,6 +54,8 @@ TERMINAL_PREFIXES = ("complete:", "blocked:")
 PLANNER_HEADING = "## V512 Planner Refresh - 20260719"
 PLANNER_MARKER = "V512-PLANNER-REFRESH-20260719-END"
 PLANNER_END_MARKER = f"<!-- {PLANNER_MARKER} -->"
+EXECUTION_REFRESH_HEADING = "## V512 Execution Refresh - 20260720"
+EXECUTION_REFRESH_END_MARKER = "<!-- V512-EXECUTION-REFRESH-20260720-END -->"
 
 ALLOWED_TARGET_EXPERIMENTS = {
     "exp5733-sota-finite-choice-proposal-channel",
@@ -119,7 +122,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
     "roadmap_change_required": (
         "Scope expansion blocks for operator review instead of mutating the roadmap."
     ),
-    "references_updated": "Reference-file mutation is declared and must be false for a no-op.",
+    "references_updated": "Reference-file mutation is declared; no-op runs keep this false.",
     "benchmark_compute_claimed": "Bibliographic search cannot claim benchmark compute.",
     "inference_substrate": "The run used web and bibliographic search only.",
     "reproducibility_checksum": "The stable artifact payload can be checked for drift.",
@@ -153,6 +156,7 @@ FIELD_PRINCIPLES: dict[str, str] = {
 SPEC_REFS = (
     "REQ-REPORT-5732",
     "SCENARIO-REPORT-5732-NOOP",
+    "SCENARIO-REPORT-5732-ACCEPT-BOUNDED-DELTA",
     "SCENARIO-REPORT-5732-BLOCKED-MARKER",
     "SCENARIO-REPORT-5732-FIELD-PRINCIPLES",
 )
@@ -224,8 +228,9 @@ SOURCES_CHECKED: tuple[JsonDict, ...] = (
         "surface": "arXiv",
         "status": "recent_category_pages_checked; export_api_rate_limited_429",
         "decision": (
-            "latest public recent pages exposed Fri 17 Jul 2026 items already inside "
-            "the V512 planner block or outside scope; no post-marker arXiv item accepted"
+            "Mon 20 Jul 2026 recent pages exposed three non-duplicate sources that "
+            "sharpen existing Exp5733/Exp5734, Exp5736/Exp5737, and Exp5740/Exp5741 "
+            "tasks; other hits were duplicate, watch-only, or excluded"
         ),
     },
     {
@@ -240,8 +245,8 @@ SOURCES_CHECKED: tuple[JsonDict, ...] = (
     },
     {
         "surface": "Hugging Face Papers",
-        "status": "daily_papers_api_checked_for_2026_07_20_empty",
-        "decision": "no post-marker secondary-feed source accepted",
+        "status": "daily_papers_api_checked_for_2026_07_20_count_3",
+        "decision": "secondary feed mirrored reasoning/code/recommender items; no HF-only dependency promoted",
     },
     {
         "surface": "GitHub discovery",
@@ -273,22 +278,40 @@ SOURCE_LINK_CHECKS: tuple[JsonDict, ...] = (
     {
         "source_id": "arxiv_cs_ai_recent",
         "url": "https://arxiv.org/list/cs.AI/recent",
-        "status": "http_200_latest_public_day_2026_07_17_no_post_marker_acceptance",
+        "status": "http_200_latest_public_day_2026_07_20_accepted_and_disposed",
     },
     {
         "source_id": "arxiv_cs_lg_recent",
         "url": "https://arxiv.org/list/cs.LG/recent",
-        "status": "http_200_latest_public_day_2026_07_17_no_post_marker_acceptance",
+        "status": "http_200_latest_public_day_2026_07_20_accepted_and_disposed",
     },
     {
         "source_id": "arxiv_cs_cl_recent",
         "url": "https://arxiv.org/list/cs.CL/recent",
-        "status": "http_200_latest_public_day_2026_07_17_no_post_marker_acceptance",
+        "status": "http_200_latest_public_day_2026_07_20_excluded_or_watch_only",
     },
     {
         "source_id": "arxiv_stat_ml_recent",
         "url": "https://arxiv.org/list/stat.ML/recent",
-        "status": "http_200_latest_public_day_2026_07_17_no_post_marker_acceptance",
+        "status": "http_200_latest_public_day_2026_07_20_no_local_v512_dependency",
+    },
+    {
+        "source_id": "urlcheck_hard_rules_soft_preferences_2607_15562",
+        "linked_source_id": "hard_rules_soft_preferences_2607_15562",
+        "url": "https://arxiv.org/abs/2607.15562",
+        "status": "primary_arxiv_opened_accepted_non_duplicate",
+    },
+    {
+        "source_id": "urlcheck_presentation_not_mechanism_2607_16019",
+        "linked_source_id": "presentation_not_mechanism_2607_16019",
+        "url": "https://arxiv.org/abs/2607.16019",
+        "status": "primary_arxiv_opened_accepted_non_duplicate",
+    },
+    {
+        "source_id": "urlcheck_arc_ewm_ablation_2607_15439",
+        "linked_source_id": "arc_ewm_ablation_2607_15439",
+        "url": "https://arxiv.org/abs/2607.15439",
+        "status": "primary_arxiv_opened_accepted_non_duplicate_with_public_set_boundary",
     },
     {
         "source_id": "arxiv_export_api_429",
@@ -308,7 +331,7 @@ SOURCE_LINK_CHECKS: tuple[JsonDict, ...] = (
     {
         "source_id": "huggingface_daily_2026_07_20",
         "url": "https://huggingface.co/api/daily_papers?date=2026-07-20",
-        "status": "http_200_empty_array",
+        "status": "http_200_count_3_no_hf_only_dependency_promoted",
     },
     {
         "source_id": "github_recent_energy_constraint_query",
@@ -334,6 +357,93 @@ SOURCE_LINK_CHECKS: tuple[JsonDict, ...] = (
         "source_id": "openreview_browser_challenge",
         "url": "https://openreview.net/",
         "status": "browser_challenge_no_primary_post_marker_promotion",
+    },
+)
+
+ACCEPTED_FINDINGS: tuple[JsonDict, ...] = (
+    {
+        "source_id": "hard_rules_soft_preferences_2607_15562",
+        "title": (
+            "Hard Rules, Soft Preferences: Bridging Reasoning, Learning, and "
+            "Optimization for Personalized Packing Checklist Generation"
+        ),
+        "url": "https://arxiv.org/abs/2607.15562",
+        "arxiv_id": "2607.15562",
+        "timestamp_utc": "2026-07-20T12:00:00Z",
+        "post_marker_basis": "announced on the Mon 20 Jul 2026 arXiv recent page after the V512 marker",
+        "target_experiments": [
+            "exp5733-sota-finite-choice-proposal-channel",
+            "exp5734-sota-exact-proposal-stream",
+        ],
+        "local_substrate": "finite-domain hard/soft exact-control rows with deterministic feasibility validators",
+        "substrate": "finite-domain hard/soft exact-control rows with deterministic feasibility validators",
+        "authority_boundary": (
+            "exact finite-domain and CP-SAT-style feasibility validators admit rows; "
+            "GGUF label scores remain proposal signals only"
+        ),
+        "carnot_hook": (
+            "Add a hard-rule/soft-preference control family where each candidate must satisfy "
+            "hard feasibility while exact validators score preference tradeoffs independently "
+            "of model prose."
+        ),
+        "falsifiable_metric": (
+            "candidate_domain_complete=true, hard_constraint_satisfaction_rate=1.0, "
+            "validator_disagreement_count=0, and no row is credited from model-written text"
+        ),
+    },
+    {
+        "source_id": "presentation_not_mechanism_2607_16019",
+        "title": "Presentation, Not Mechanism: A Render Confound in Deprecation-Aware Memory Evaluation",
+        "url": "https://arxiv.org/abs/2607.16019",
+        "arxiv_id": "2607.16019",
+        "timestamp_utc": "2026-07-20T12:00:00Z",
+        "post_marker_basis": "announced on the Mon 20 Jul 2026 arXiv recent page after the V512 marker",
+        "target_experiments": [
+            "exp5736-csl-lifecycle-conflict-rollback",
+            "exp5737-sota-stream-csl-shadow-ingress",
+        ],
+        "local_substrate": "typed lifecycle memory ledger with matched render and deprecation-disabled controls",
+        "substrate": "typed lifecycle memory ledger with matched render and deprecation-disabled controls",
+        "authority_boundary": (
+            "exact lifecycle state transitions, state hashes, rollback receipts, and exact row "
+            "validators remain authoritative; no LLM judge or text-score residual is accepted"
+        ),
+        "carnot_hook": (
+            "Add a render-matched control for supersede/forget/conflict tests so lifecycle "
+            "credit requires mechanism residual rather than easier memory presentation."
+        ),
+        "falsifiable_metric": (
+            "deprecation-enabled lifecycle must beat render-matched deprecation-disabled control "
+            "on exact current-state rows while rejected-update propagation stays 0 and rollback "
+            "hash restoration remains exact"
+        ),
+    },
+    {
+        "source_id": "arc_ewm_ablation_2607_15439",
+        "title": "Do Coding Agents Need Executable World Models, Simplification, and Verification to Solve ARC-AGI-3?",
+        "url": "https://arxiv.org/abs/2607.15439",
+        "arxiv_id": "2607.15439",
+        "timestamp_utc": "2026-07-20T12:00:00Z",
+        "post_marker_basis": "announced on the Mon 20 Jul 2026 arXiv recent page after the V512 marker",
+        "target_experiments": [
+            "exp5740-arc-game-blind-primitive-causal-audit",
+            "exp5741-arc-generic-primitive-live-ab",
+        ],
+        "local_substrate": "agent-owned ARC traces, exact replay verification, and deletion-tested generic primitives",
+        "substrate": "agent-owned ARC traces, exact replay verification, and deletion-tested generic primitives",
+        "authority_boundary": (
+            "live E3 observation/action receipts, exact replay reproduction, game-blind deletion "
+            "tests, and registry provenance remain authoritative; public-set saturation claims are not imported"
+        ),
+        "carnot_hook": (
+            "Use the ablation result as a boundary: simplification and executable artifacts only count "
+            "when exact replay verification and deletion utility survive on Carnot-owned traces."
+        ),
+        "falsifiable_metric": (
+            "primitive deletion must reduce matched live-trajectory utility before hardening, exact "
+            "observation replay mismatches remain 0, and any registry credit must be newly found by "
+            "the submitted live path"
+        ),
     },
 )
 
@@ -374,6 +484,15 @@ DUPLICATE_FINDINGS: tuple[JsonDict, ...] = (
         "url": "https://arxiv.org/abs/2607.13446",
         "reason": "Already indexed as the V512 watch-only photonic boundary.",
     },
+    {
+        "source_id": "causal_audit_2607_15281",
+        "title": "Causal-Audit: Explicit and Auditable Graph-based Reasoning via Target-Aware Causal Chain Construction",
+        "url": "https://arxiv.org/abs/2607.15281",
+        "reason": (
+            "Its target-aware causal graph and auditable-chain idea is covered by the "
+            "V512 Bridge Evidence deletion/replay plan and the source was submitted before the marker."
+        ),
+    },
 )
 
 WATCH_ONLY_FINDINGS: tuple[JsonDict, ...] = (
@@ -397,6 +516,26 @@ WATCH_ONLY_FINDINGS: tuple[JsonDict, ...] = (
         "url": "https://github.com/trending",
         "classification": "watch_only_no_local_dependency",
         "reason": "Discovery route produced no reproducible Carnot EBM/CSP/KAN/sampler replacement.",
+    },
+    {
+        "source_id": "nhmc_2607_15682",
+        "title": "Neural Non-Equilibrium Hamiltonian Monte Carlo for Corrected Boltzmann Sampling",
+        "url": "https://arxiv.org/abs/2607.15682",
+        "classification": "watch_only_sampler_scope_expansion",
+        "reason": (
+            "The learned continuous-path sampler would redesign the V512 one-axis Rust parity lane; "
+            "it supplies no local matched-quality software or hardware receipt for Exp5738/Exp5739."
+        ),
+    },
+    {
+        "source_id": "understanding_reasoning_2607_16097",
+        "title": "Understanding Reasoning from Pretraining to Post-Training",
+        "url": "https://arxiv.org/abs/2607.16097",
+        "classification": "watch_only_weight_training_context",
+        "reason": (
+            "Hugging Face surfaced the item, but the V512 graph forbids model-weight writes and "
+            "needs exact validators rather than broad pretraining/post-training analysis."
+        ),
     },
 )
 
@@ -455,6 +594,18 @@ EXCLUDED_FINDINGS: tuple[JsonDict, ...] = (
         "source_id": "unsupported_hardware_speedups",
         "title": "Unsupported hardware speedup claims",
         "reason": "Exp5732 performed bibliographic search only and has no local hardware timing receipt.",
+    },
+    {
+        "source_id": "toolsciver_2607_16131",
+        "title": "ToolSciVer: Multimodal Scientific Claim Verification with Visual Tool Augmented Reinforcement Learning",
+        "url": "https://arxiv.org/abs/2607.16131",
+        "reason": "Visual-tool RL verification reopens broad RL and external generated-text/tool scoring scope.",
+    },
+    {
+        "source_id": "lazy_arithmetic_2607_15328",
+        "title": "Lazy Arithmetic using Systolic Arrays for Closing the Verification Gap on Embedded Systems",
+        "url": "https://arxiv.org/abs/2607.15328",
+        "reason": "Hardware is work-in-progress and would invite unsupported hardware speedup or correctness claims.",
     },
 )
 
@@ -620,9 +771,13 @@ def huggingface_status() -> JsonDict:
         "route": "https://huggingface.co/api/daily_papers?date=2026-07-20",
         "http_status": 200,
         "dates_checked": ["2026-07-20"],
-        "api_result_count_for_2026_07_20": 0,
-        "latest_visible_page_date": "2026-07-17",
-        "honest_status": "daily API returned an empty array for 2026-07-20; no post-marker source accepted",
+        "api_result_count_for_2026_07_20": 3,
+        "source_ids": ["2607.16097", "2607.13196", "2607.15591"],
+        "latest_visible_page_date": "2026-07-20",
+        "honest_status": (
+            "daily API returned three items for 2026-07-20; none supplied an HF-only "
+            "dependency beyond the primary arXiv dispositions"
+        ),
         "roadmap_delta": False,
     }
 
@@ -647,7 +802,7 @@ def github_status() -> JsonDict:
 def accepted_findings(planner_found: bool) -> list[JsonDict]:
     if not planner_found:
         return []
-    return []
+    return clone_json(ACCEPTED_FINDINGS)
 
 
 def target_experiment_map(findings: list[JsonDict]) -> list[JsonDict]:
@@ -669,7 +824,10 @@ def honest_verdict(planner_found: bool, findings: list[JsonDict]) -> str:
         return "blocked: V512 planner refresh marker missing; source-delta append refused"
     if not findings:
         return "complete: no new non-duplicate actionable V512 source deltas; references left unchanged"
-    return f"complete: accepted {len(findings)} non-duplicate actionable V512 source delta"
+    return (
+        f"complete: accepted {len(findings)} non-duplicate actionable V512 source "
+        "deltas; no roadmap ID, gate, benchmark, or hardware claim changed"
+    )
 
 
 def preconditions_checked(root: Path, marker_found: bool) -> JsonDict:
@@ -697,6 +855,9 @@ def preconditions_checked(root: Path, marker_found: bool) -> JsonDict:
 
 def duplicate_checks() -> JsonDict:
     arxiv_ids = [
+        "2607.15562",
+        "2607.16019",
+        "2607.15439",
         "2607.13921",
         "2607.14571",
         "2607.15003",
@@ -706,8 +867,14 @@ def duplicate_checks() -> JsonDict:
         "2607.14952",
         "2607.14777",
         "2607.15200",
+        "2607.15281",
+        "2607.15682",
+        "2607.16097",
+        "2607.16131",
+        "2607.15328",
     ]
     source_ids = [
+        *(row["source_id"] for row in ACCEPTED_FINDINGS),
         *(row["source_id"] for row in DUPLICATE_FINDINGS),
         *(row["source_id"] for row in WATCH_ONLY_FINDINGS),
         *(row["source_id"] for row in INACCESSIBLE_FINDINGS),
@@ -725,6 +892,83 @@ def duplicate_checks() -> JsonDict:
     }
 
 
+def execution_refresh_block(findings: list[JsonDict]) -> str:
+    lines = [
+        "",
+        EXECUTION_REFRESH_HEADING,
+        "",
+        (
+            "Execution-time sweep on 2026-07-20 after the V512 planner marker. "
+            "Only non-duplicate sources that sharpen already-allocated Exp5733-Exp5741 "
+            "work are listed here; duplicate, watch-only, inaccessible, and excluded "
+            "findings are recorded in `results/experiment_5732_v512_source_delta_ingestion.json`."
+        ),
+        "",
+        "### New actionable deltas",
+        "",
+    ]
+    for finding in findings:
+        targets = ", ".join(finding["target_experiments"])
+        lines.append(
+            f"- **{finding['title']}** - arXiv:{finding['arxiv_id']}, "
+            f"{finding['url']}. Carnot hook: {finding['carnot_hook']} "
+            f"Target: {targets}. Substrate: {finding['substrate']}. "
+            f"Authority boundary: {finding['authority_boundary']}. "
+            f"Falsifiable metric: {finding['falsifiable_metric']}. "
+            "This sharpens existing V512 work only and does not authorize free-form "
+            "answer repair, JSON grammar, external scoring, model-weight writes, "
+            "ARC adapters, or unsupported hardware speedups."
+        )
+    lines.extend(
+        [
+            "",
+            "### V512 execution impact",
+            "",
+            (
+                "- Preserve the Exp5733-Exp5741 graph and gates. The accepted deltas only "
+                "add bounded controls for hard/soft exact choices, render-matched lifecycle "
+                "memory evaluation, and exact-replay ARC primitive attribution."
+            ),
+            "",
+            EXECUTION_REFRESH_END_MARKER,
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def insert_after_planner_block(references_text: str, block: str) -> str:
+    end_index = references_text.find(PLANNER_END_MARKER)
+    if end_index >= 0:
+        insert_at = end_index + len(PLANNER_END_MARKER)
+        return references_text[:insert_at] + "\n" + block + references_text[insert_at:]
+    marker_index = references_text.find(PLANNER_HEADING)
+    if marker_index < 0:
+        return references_text + block
+    next_heading = references_text.find("\n## ", marker_index + 1)
+    insert_at = len(references_text) if next_heading < 0 else next_heading + 1
+    prefix = references_text[:insert_at]
+    suffix = references_text[insert_at:]
+    if not prefix.endswith("\n"):
+        prefix += "\n"
+    return prefix + block + suffix
+
+
+def append_execution_refresh_if_needed(
+    root: Path,
+    marker_found: bool,
+    findings: list[JsonDict],
+) -> bool:
+    if not marker_found or not findings:
+        return False
+    references_path = root / RESEARCH_REFERENCES_RELATIVE_PATH
+    references_text = read_text_if_present(references_path)
+    if EXECUTION_REFRESH_HEADING in references_text:
+        return False
+    updated = insert_after_planner_block(references_text, execution_refresh_block(findings))
+    references_path.write_text(updated, encoding="utf-8")
+    return True
+
+
 def field_principles_for(payload: Mapping[str, Any]) -> JsonDict:
     principles: JsonDict = {"field_principles": FIELD_PRINCIPLES["field_principles"]}
     for key in payload:
@@ -738,10 +982,14 @@ def build_artifact(
     search_timestamp_utc: str | None = None,
     run_date: str = RUN_DATE,
     duration_s: float = 0.0,
+    references_updated: bool | None = None,
+    references_mutated_this_run: bool = False,
 ) -> JsonDict:
     references_text = read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
     marker_found = planner_marker_found(references_text)
     findings = accepted_findings(marker_found)
+    if references_updated is None:
+        references_updated = bool(marker_found and findings)
     roadmap_change_required = any(
         bool(finding.get("roadmap_change_required_if_pursued")) for finding in findings
     )
@@ -771,6 +1019,8 @@ def build_artifact(
             "planner_marker_found": marker_found,
             "planner_marker_line": planner_marker_line(references_text),
             "search_window": "strictly_after_V512_PLANNER_REFRESH_20260719_END",
+            "execution_refresh_heading": EXECUTION_REFRESH_HEADING,
+            "execution_refresh_present": EXECUTION_REFRESH_HEADING in references_text,
         },
         "duplicate_checks": duplicate_checks(),
         "accepted_findings": findings,
@@ -787,8 +1037,8 @@ def build_artifact(
         "closed_scope_review": closed_scope_review(),
         "roadmap_context": roadmap_context(root),
         "roadmap_change_required": roadmap_change_required,
-        "references_updated": False,
-        "references_mutated_this_run": False,
+        "references_updated": references_updated,
+        "references_mutated_this_run": references_mutated_this_run,
         "benchmark_compute_claimed": False,
         "inference_substrate": INFERENCE_SUBSTRATE,
         "duration_s": round(float(duration_s), 6),
@@ -880,10 +1130,21 @@ def build_and_write_artifact(
 ) -> JsonDict:
     started = time.perf_counter()
     elapsed = 0.0 if duration_s is None else duration_s
+    references_text = read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
+    marker_found = planner_marker_found(references_text)
+    findings = accepted_findings(marker_found)
+    references_mutated_this_run = append_execution_refresh_if_needed(
+        root,
+        marker_found,
+        findings,
+    )
+    references_updated = bool(marker_found and findings)
     artifact = build_artifact(
         root=root,
         search_timestamp_utc=search_timestamp_utc,
         duration_s=elapsed,
+        references_updated=references_updated,
+        references_mutated_this_run=references_mutated_this_run,
     )
     if duration_s is None:
         artifact["duration_s"] = round(time.perf_counter() - started, 6)

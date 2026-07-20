@@ -41887,7 +41887,7 @@ Required field principles:
 - `github_status`: principle "Repository discovery is separated from executable local dependencies."
 - `target_experiment_map`: principle "Each accepted source must map to Exp5733-Exp5741 without changing ids or gates."
 - `roadmap_change_required`: principle "Scope expansion blocks for operator review instead of mutating the roadmap."
-- `references_updated`: principle "Reference-file mutation is declared and must be false for a no-op."
+- `references_updated`: principle "Reference-file mutation is declared; no-op runs keep this false."
 - `benchmark_compute_claimed`: principle "Bibliographic search cannot claim benchmark compute."
 - `inference_substrate`: principle "The run used web and bibliographic search only."
 - `reproducibility_checksum`: principle "The stable artifact payload can be checked for drift."
@@ -41907,6 +41907,20 @@ in duplicate, watch-only, inaccessible, and excluded findings, sets
 `benchmark_compute_claimed=false`, declares
 `inference_substrate=web_and_bibliographic_search_only`, and emits a terminal
 complete no-op artifact.
+
+#### SCENARIO-REPORT-5732-ACCEPT-BOUNDED-DELTA: Post-Marker Deltas Append Without Changing Gates
+
+**Given** `research-references.md` contains the
+`V512-PLANNER-REFRESH-20260719-END` marker
+**And** public searches expose post-marker sources that are non-duplicate and
+actionable only inside already allocated Exp5733-Exp5741 work
+**When** the Exp5732 workflow runs
+**Then** it appends one V512 execution refresh block to
+`research-references.md`, records each accepted source with target task, local
+substrate, exact authority boundary, and falsifiable metric, keeps
+`roadmap_change_required=false`, keeps `benchmark_compute_claimed=false`,
+does not change roadmap ids or gates, and makes the append idempotent on
+rerun.
 
 #### SCENARIO-REPORT-5732-BLOCKED-MARKER: Missing V512 Marker Blocks Mutation
 
@@ -41933,4 +41947,4 @@ prefix.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-5732 | Planned (`python/carnot/experiment_5732_v512_source_delta_ingestion.py`, `results/experiment_5732_v512_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5732_v512_source_delta_ingestion.py`) |
+| REQ-REPORT-5732 | Implemented (`python/carnot/experiment_5732_v512_source_delta_ingestion.py`, `results/experiment_5732_v512_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5732_v512_source_delta_ingestion.py`) |
