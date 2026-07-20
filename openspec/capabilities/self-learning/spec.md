@@ -22992,6 +22992,133 @@ block `fr11_independent_promotion_ready_score`.
 |---|---|---|
 | REQ-LEARN-5639 | Implemented (`python/carnot/experiment_5639_anytime_valid_csl_independent_audit.py`, `results/experiment_5639_anytime_valid_csl_independent_audit.json`) | Implemented (`tests/python/test_experiment_5639_anytime_valid_csl_independent_audit.py`) |
 
+## REQ-LEARN-5735: Function-Preserving Zero-Gated Residual Spline Growth
+
+The self-learning tier SHALL provide Exp 5735, a CPU-only KAN sidecar
+experiment that adds residual spline capacity behind an exactly zero scalar
+gate before any post-insertion learning update. Exp 5735 MUST run
+independently of Exp 5733 and Exp 5734. It SHALL precondition-check the
+immutable Exp 5616 exact stream, the promoted Exp 5628 active-spline conformal
+controller evidence, and the Exp 5639 anytime-valid audit evidence by source
+hash before scoring or updating any row. It MUST also record sealed
+chronological stream order, exact label validation, the preregistered random
+seed set, CPU/RAM/disk availability, `production_default_enabled=false`, and
+`model_weight_mutation=false`.
+
+The zero-gated residual spline SHALL be inserted into the active-spline KAN
+sidecar with gate scalar exactly `0.0`. At insertion time, the pre-insertion
+and post-insertion outputs on the full protected prefix SHALL be bitwise equal
+where deterministic and within the preregistered `epsilon` otherwise. The
+required scalar `function_preserving_insertion_score` SHALL be exactly `1.0`
+only when every protected-prefix equivalence receipt passes before any
+post-insertion learning update; otherwise it SHALL be `0.0`.
+
+Exp 5735 SHALL process the sealed exact stream sessions once in chronological
+order. For each zero-gated headline row it SHALL record, in an append-only
+operation ledger, the pre-label prediction, exact label receipt, update
+decision, gate state, parameter/state hash, and post-update protected-prefix
+certificate. Split, order, protected prefix, suffix, thresholds, and seed set
+SHALL be frozen before outcomes are used. Gate opening or residual update SHALL
+be rejected or rolled back when it violates exact labels, the protected-prefix
+certificate, or the preregistered unsafe-update definition.
+
+The experiment SHALL compare zero-gated residual spline growth with
+no-growth active spline, always-open residual, parameter-matched MLP residual,
+frozen controller, and corrupted-order controls under identical stream sessions
+and random seeds. The MLP residual is a sidecar only. Percentage-point claims
+SHALL use at least 30 independent stream/seed sessions and a preregistered
+statistical certificate with `delta`.
+
+The terminal artifact MUST be written to
+`results/experiment_5735_zero_gate_kan_continuous_self_learning.json` and
+include the following top-level required fields with field principles:
+`field_principles` -- every field explains why it exists;
+`preconditions_checked` -- missing upstream or local resources block the run;
+`upstream_artifact_hashes` -- prerequisite evidence is immutable;
+`stream_root_hash` and `stream_order_hash` -- chronological rows are sealed;
+`exact_label_receipts` -- exact labels are the only learning authority;
+`controller_versions` -- inherited controller machinery is explicit;
+`zero_gate_definition` -- the inserted capacity contract is inspectable;
+`insertion_equivalence_receipts` -- protected-prefix equality is witnessed;
+`function_preserving_insertion_score` -- capacity insertion is mechanically
+gated; `pre_insertion_output_hash` and `post_insertion_output_hash` -- output
+equivalence is content-addressed; `gate_trajectory` -- gate opening is
+auditable; `operation_ledger_path` -- row-level decisions can replay;
+`arm_configs` -- controls and sidecars are explicit; `random_seeds` and
+`session_count` -- evidence supports percentage-point claims; `epsilon` --
+equivalence threshold is preregistered; `delta` -- statistical threshold is
+preregistered;
+`suffix_improvement` -- new-domain learning is measured;
+`prefix_retention_delta` -- old-prefix retention is bounded;
+`unsafe_update_count` -- exact safety is scalar; `parameter_growth` and
+`peak_memory_growth_mb` -- capacity cost is bounded;
+`update_latency_distribution` -- online update cost is visible;
+`statistical_model_check_receipt` -- probabilistic release evidence is explicit;
+`checkpoint_hashes` and `restart_equivalence` -- checkpoints replay exactly;
+`model_weight_mutation` -- model weights remain unchanged;
+`production_default_enabled` -- the sidecar is not a production default;
+`zero_gate_csl_ready_score` -- downstream readiness is mechanical;
+`verifier_is_oracle` -- exact verifier circularity is declared;
+`inference_substrate` -- no LLM inference occurred; `test_commands` --
+verification commands are recorded; `reproducibility_checksum` -- artifact
+bytes replay; and `honest_verdict` -- terminal status starts with `complete:`
+or `blocked:` (terminal status starts with complete: or blocked:).
+`inference_substrate` SHALL equal
+`cpu_exact_stream_online_kan_sidecar`.
+
+`zero_gate_csl_ready_score` SHALL be exactly `1.0` only when insertion
+equivalence passes, `function_preserving_insertion_score=1.0`,
+`suffix_improvement` is positive, `prefix_retention_delta` stays within the
+old-prefix retention margin, `unsafe_update_count=0`, parameter/memory/latency
+growth stay within preregistered maxima, the statistical certificate passes,
+and all checkpoints replay exactly. Otherwise it SHALL be `0.0` with a
+terminal `blocked:` verdict.
+
+### SCENARIO-LEARN-5735-ZERO-GATE: Insertion Preserves The Protected Prefix
+
+**Given** the active-spline KAN sidecar has learned only the protected prefix
+**When** the residual spline capacity is inserted with gate scalar exactly
+`0.0`
+**Then** every protected-prefix output SHALL match the pre-insertion output by
+bitwise equality or within `epsilon`
+**And** `function_preserving_insertion_score` SHALL be `1.0` only before any
+post-insertion update.
+
+### SCENARIO-LEARN-5735-CHRONOLOGY: Exact Stream Rows Replay Once In Order
+
+**Given** the sealed Exp 5616 chronological rows and 30 preregistered seeds
+**When** Exp 5735 processes the zero-gated headline arm
+**Then** every pre-label prediction, exact label receipt, update decision, gate
+state, parameter/state hash, and protected-prefix check SHALL be written to the
+operation ledger
+**And** corrupted-order controls SHALL be detected without changing the
+headline stream order.
+
+### SCENARIO-LEARN-5735-BASELINES: Controls Share Streams And Seeds
+
+**Given** zero-gated growth, no-growth active spline, always-open residual,
+parameter-matched MLP residual, frozen controller, and corrupted-order controls
+**When** Exp 5735 evaluates suffix improvement and old-prefix retention
+**Then** every arm SHALL use identical stream sessions and seeds
+**And** the zero-gated ready score SHALL be blocked unless suffix improvement is
+positive and prefix retention stays within the preregistered margin.
+
+### SCENARIO-LEARN-5735-RELEASE: Statistical, Rollback, Restart, And Schema Gates Fail Closed
+
+**Given** the preregistered epsilon, delta, unsafe-update definition, capacity
+limits, latency limit, checkpoints, and operation ledger
+**When** Exp 5735 validates the artifact
+**Then** unsafe updates, failed statistical certificate, checkpoint replay
+drift, production default enablement, model-weight mutation, missing field
+principles, bad checksums, or stale verdicts SHALL block
+`zero_gate_csl_ready_score`.
+
+## Implementation Status (Exp 5735)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5735 | Planned (`python/carnot/experiment_5735_zero_gate_kan_continuous_self_learning.py`, `results/experiment_5735_zero_gate_kan_continuous_self_learning.json`) | Planned (`tests/python/test_experiment_5735_zero_gate_kan_continuous_self_learning.py`) |
+
 ## REQ-LEARN-5640: Opt-In FR-11 Shadow Adapter In Verify/Repair Path
 
 The verify/repair pipeline SHALL expose an opt-in, fail-closed FR-11 shadow
