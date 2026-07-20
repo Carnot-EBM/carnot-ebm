@@ -2600,21 +2600,65 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   score-drivers — the EBM thesis's one genuinely load-bearing ARC slot, verifier_is_oracle: false)
 
 ### GAP-ARCH-FRAME-CHANGE-PREDICTOR: learned CNN action-effect / clickability model for action efficiency
-- status: open
-- evidence: leaderboard competitive intel 2026-06-20 -- the leader (Tufa StochasticGoose, 1.21) + 2nd
-  (Blind Squirrel ResNet18) win on a CNN that predicts which actions cause a frame change; the 30-day
-  report shows StochasticGoose wasted ~350 no-op clicks before learning clickability. Our explorer
-  (`arc_graph_explore.py:44 rich_action_candidates`) enumerates centroid-clicks + keys with NO effect
-  prioritization -> action-inefficient (the scoring lever min(human/agent,1)^2; we are at 0.08).
-- failure mode: every candidate action is equally likely to be a no-op; the explorer burns its action
-  budget on no-effect actions, collapsing the squared efficiency term even on solved levels.
-- missing discriminator: a CNN predict(frame) -> (click-heatmap, directional-change-probs) that ranks
-  candidates by predicted frame-change; trained self-supervised on the (frame, action, next_frame)
-  transitions we already generate, pooled across games (the PersistentAEM cross-game idea).
-- candidate design: small conv net over 64x64 color-onehot (CBAM attention only if plain CNN underperforms);
-  rank rich_action_candidates by predicted change. Full spec: docs/research-notes/arc-frame-change-predictor-spec.md.
-- priority: high (action efficiency is the score metric and we have NONE; the most direct steal from the
-  leaderboard leader; complements -- does not replace -- the verifier-energy thesis)
+- status: attempted_and_falsified (2026-07-19) -- candidate design WAS built and shipped
+  (`SmallFrameChangeCNN` / `FrameChangeScorer` / `LiveActionEffectScorer`, `python/carnot/agentic/
+  arc_frame_change_predictor.py`, live-default-on since REQ-ARC-FCP-4490/4629), then rigorously
+  A/B'd across 4 experiments in one session and found to carry NO robust non-base-rate signal. Not
+  filled -- the underlying need (action-efficient candidate ranking) remains genuinely open; this
+  specific candidate design is the part that's closed.
+- evidence (original, 2026-06-20): leaderboard competitive intel -- the leader (Tufa StochasticGoose,
+  1.21) + 2nd (Blind Squirrel ResNet18) win on a CNN that predicts which actions cause a frame change;
+  the 30-day report shows StochasticGoose wasted ~350 no-op clicks before learning clickability. Our
+  explorer (`arc_graph_explore.py:44 rich_action_candidates`) enumerates centroid-clicks + keys with NO
+  effect prioritization -> action-inefficient (the scoring lever min(human/agent,1)^2; we are at 0.08).
+- failure mode (original): every candidate action is equally likely to be a no-op; the explorer burns
+  its action budget on no-effect actions, collapsing the squared efficiency term even on solved levels.
+- **falsification chain (2026-07-19, 4 experiments, all adversarial_verify-clean, 0 flags each):**
+  - REQ-ARC-FCP-5590 fixed a real dict-candidate crash that silently zeroed the CNN term in live
+    ranking -- clean null (byte-identical control/treatment across an 11-game roster).
+  - REQ-ARC-FCP-5728 swept the CNN's blend weight 0.05->2.0 (40x range, memory_weight fixed at 1.0) --
+    clean null (`any_weight_beats_baseline_levels: false`), but localized WHY: a validation gate
+    (`GroundTruthValidatedFrameChangeScorer`) returns 0.0 upstream of the weight multiply on 7/11 games,
+    so the CNN was rarely-to-never consulted regardless of magnitude.
+  - REQ-ARC-FCP-5729 tested loosening that gate (rate-tolerance + reset-on-levelup vs baseline) --
+    the gate loosening is SAFE (no states_expanded regression, genuinely miscalibrated scorers still
+    correctly blocked) and DOES turn the scorer on (3/11 -> 9-10/11 games validated, ranking consults
+    ~3x), but STILL zero level gain -- even consulted ~27,000 times on lp85, search was byte-identical
+    to not having the CNN at all. Localized the blocker one layer further: the scorer's own
+    discriminative quality, not the gate admitting it.
+  - REQ-ARC-FCP-5730 went straight at that: applied REQ-ARC-WMTE-5727's action-id-only base-rate
+    control (the SAME adversarial control that found the hand-crafted linear dynamics features were a
+    base-rate mirage, `frame_adds_over_action_id = -0.039`) to the CNN's own held-out AUROC. Result:
+    the CNN's headline 0.709 AUROC (exp4547, stale corpus) does not reproduce on the current
+    ~11.8x-larger corpus (0.539 mean over 5 seeds); an action-id-only baseline scores HIGHER (0.549,
+    `frame_adds_over_action_id = -0.010`). The one promising sub-finding (click-location discrimination
+    within a fixed action-id, 0.918 AUROC on one seed -- the one thing a base-rate baseline structurally
+    cannot explain) did not survive a 5-seed re-run (0.444-0.918) or its own untrained/random-init
+    structural control (mean 0.580 untrained > 0.570 trained) -- seed luck, not a learned signal.
+- missing discriminator (revised): what's still missing is a representation that captures WHICH
+  specific action, at WHICH specific frame location/state, will produce a change -- i.e. a genuine
+  action x frame INTERACTION term. Both tested representations (REQ-ARC-WMTE-5727's hand-crafted
+  linear features, and this CNN's learned conv features) reduce to the SAME degenerate structure: a
+  per-action-TYPE base rate that the `PersistentAEM` memory term already captures for free, making the
+  CNN redundant with a signal the live agent already has. A fix needs to break that redundancy, not
+  retrain the same frame-only architecture on more data or tune its weight/gate.
+- candidate design (revised, NOT yet built or tested -- open): (a) an explicit local-neighborhood /
+  patch-level interaction feature (what's immediately AROUND a click target, not just the global frame)
+  rather than global-pooled conv features feeding a single sigmoid per action-id; (b) a
+  contrastive/pairwise training objective that specifically penalizes base-rate-only prediction (forces
+  the model to discriminate WITHIN an action-id, not just across them) instead of the current pointwise
+  changed/no-op classification loss, which a base-rate-matching model can trivially minimize; (c) more
+  history than a single before/after frame pair -- multi-step context so the model can condition on
+  what's already been tried/observed at a specific location, closer to what a real "is this clickable"
+  judgment needs. None of these are validated; they are candidate directions for a genuinely new
+  representation, not incremental tuning of the falsified design.
+- priority: high (the underlying need -- action-efficient candidate ranking, the scoring lever
+  min(human/agent,1)^2 -- is unaddressed by anything currently live; this is the most direct steal from
+  the leaderboard leader and remains open) but LOWER urgency for immediate re-attempt than the priority
+  tag alone suggests: per the Failed-Experiment Rerun Discipline, any follow-up MUST target one of the
+  revised candidate designs above (a genuine representation change), NOT a retrain/re-tune of
+  `SmallFrameChangeCNN` on the same frame-only architecture -- that specific path is now closed by 4
+  independent, adversarially-verified negative results in one session.
 
 ---
 
