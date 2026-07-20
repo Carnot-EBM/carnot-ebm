@@ -13820,3 +13820,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 05:14 UTC | Gated on Exp5740 causal utility: harden one generi | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-au |
 | 2026-07-20 05:16 UTC | Gated on Exp5740 causal utility: harden one generi | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-au |
 | 2026-07-20 05:18 UTC | Gated on Exp5740 causal utility: harden one generi | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-au |
+| 2026-07-20 05:36 UTC | Reconcile .512 evidence, retire repeated failures, | OK | 86 passed, 1 warning in 7.15s |
