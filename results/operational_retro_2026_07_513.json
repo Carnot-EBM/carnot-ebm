@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.513",
+  "generated_at": "2026-07-20T10:56:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 223.3,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile .513 proposal, CSL, Rust, ARC, specification, and operations evidence",
+      "duration_minutes": 81.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5745 clean scalar gate: run generic primitive live-registry A/B",
+      "duration_minutes": 24.37,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Ingest post-V513 source deltas with honest bibliographic timing",
+      "duration_minutes": 22.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Normalize the Exp5740 ARC causal gate without changing causal evidence",
+      "duration_minutes": 22.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Build a disjoint dual-receipt exact benchmark for proposal utility",
+      "duration_minutes": 21.23,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 223.3 minutes, with 4 compute-bound experiments. The 81.7-minute synthesis-only reconciliation was the longest recorded path, while the only compute-bound entry in the bounded top-five list was the 21.23-minute dual-receipt benchmark; the locked task-conditioned GPU-idle indicator is false.",
+  "bottlenecks_identified": [
+    "The synthesis-only reconciliation consumed 81.7 minutes and was the longest recorded path; the data does not isolate which reconciliation phase caused the delay.",
+    "The bounded top-five list names only one compute-bound path, the 21.23-minute dual-receipt benchmark; durations and phase causes for the other compute-bound experiments are not available, limiting diagnosis.",
+    "The GPU snapshot is not correlated to an active experiment or phase, so it cannot explain compute-bound runtime; the locked task-conditioned GPU-idle indicator remains false.",
+    "No concurrent multi-model compute task or failure to engage DualGPURunner is established by the supplied data."
+  ],
+  "improvements_suggested": [
+    "Emit structured phase-level timing receipts for setup, dependency waits, execution, validation, and reconciliation on every experiment.",
+    "Assemble and validate reconciliation evidence incrementally as terminal artifacts arrive, then make final closeout consume the prepared evidence index.",
+    "Attach task-scoped GPU utilization samples to compute-bound execution intervals so an aggregate idle snapshot cannot be mistaken for task-time idling.",
+    "Record model concurrency and runner selection in each compute receipt, automatically selecting DualGPURunner only when at least two models run in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Build an incremental reconciliation evidence index and validate each input when it arrives.",
+    "Add structured per-phase timing receipts to every experiment and capstone.",
+    "Add task-correlated GPU telemetry plus model-concurrency-aware runner selection."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The durations show where time accumulated but not why: neither the 81.7-minute synthesis reconciliation nor the 21.23-minute compute benchmark has a phase breakdown. Because the locked GPU-idle indicator is false and no concurrent multi-model task is identified, the evidence supports telemetry and reconciliation tooling changes but not a GPU-idle or DualGPURunner-failure claim; no measured counterfactual supports a nonzero savings estimate."
+}
