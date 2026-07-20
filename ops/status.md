@@ -1,6 +1,87 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-16 (REQ-ARC-FCP-5699-14 through -23: first-contact induction diagnostic chain)
+**Last Updated:** 2026-07-20 (REQ-ARC-FCP-5590/5728/5729/5730/5732/5740/5756/5757/5758, REQ-ARC-WMTE-5726/5760: induction-quality convergence + click-ranking/perception dead-ends)
+
+## Session 2026-07-19/20 - ARC Wiring-Layer Exhaustion → Induction-Quality Convergence (REQ-ARC-FCP-5590 through 5758, REQ-ARC-WMTE-5720/5724/5725/5726/5760)
+
+Outer-loop session running ~14 hours across two threads: (1) an exhaustive live-path A/B sweep of
+every peripheral component between perception and search, and (2) once that sweep converged on a
+null, a deep architectural investigation into WHY, ending on a single, well-diagnosed root cause
+and a concrete, literature-grounded, ready-to-run next experiment. **Net effect on the live
+submission: none — every fix stayed gated behind an unset-by-default flag, matching this
+project's standing discipline. No live default was flipped.**
+
+**Thread 1 — the wiring-layer sweep (8 experiments, ALL clean nulls on live-path components):**
+
+1. REQ-ARC-FCP-5590: fixed a real dict-candidate crash bug in `SmallFrameChangeCNN`'s live scorer — null (byte-identical before/after).
+2. REQ-ARC-FCP-5728: swept `cnn_weight` 0.05→2.0 (40x) — null; localized the real blocker to `GroundTruthValidatedFrameChangeScorer`'s validation gate returning 0.0 upstream of the weight multiply on 7/11 games.
+3. REQ-ARC-FCP-5729: loosened that gate (rate-tolerance + reset-on-levelup) — safe (no search-cost regression, bad scorers still correctly blocked), turns the scorer on 3x more often, still zero level gain.
+4. REQ-ARC-FCP-5730: applied an action-id-only base-rate control (mirroring REQ-ARC-WMTE-5727's finding on hand-crafted features) to the CNN's own held-out AUROC — confirmed it's a base-rate + seed-luck mirage (`frame_adds_over_action_id = -0.010`).
+5. REQ-ARC-FCP-5732: object-centric within-frame click-affordance test (grounded in a fresh deep-read of Duck Harness's actual segmentation code) — cross-game null, but a genuine ONLINE partial win (object-identity memory beats click-bucket base rate within-game, AUROC 0.844 vs 0.711).
+6. REQ-ARC-FCP-5740: live-wired that online object-identity memory (`ObjectHistorySaliencePrior`) into an 11-game live A/B, properly isolated against a `blob_only` control — real marginal effect exists but is small (9 arm-game divergences) and banks no level.
+7. REQ-ARC-FCP-5756: live A/B of `InertClickSigPruner` (built+wired 2026-07-13, never validated) — engages correctly, never suppresses a winnable click (the safety property holds), but `states_expanded` went UP not down — no efficiency win either.
+8. REQ-ARC-FCP-5757 (the decisive measurement): a structural attribution — not another delta A/B — classifying all 92 real winning-path actions across 9 stalled games against the live candidate generator. Generation is 98.9%/100% correct (exact/tolerant); the search/lookahead hypothesis got a fair, pre-registered, fire-once test and found **zero** support (`GAP-ARCH-NO-HIERARCHICAL-SEARCH` down-weighted on this evidence — see `ops/verifier_gaps.md`); the only real residual (6/92 actions) is click-ranking.
+9. REQ-ARC-FCP-5758: built and live-A/B'd a targeted fix for that click-ranking residual (`CARNOT_ARC_SMALL_OBJECT_FIRST`, gated off) — diagnosed the exact cause (tiny 1-pixel winning targets buried under large decorative regions AND under many visually-identical same-size decoy pixels), confirmed the fix cannot work in principle (no perceptual feature distinguishes the winning pixel from its decoys) — a third consecutive null re-ranking approach, logged as `GAP-ARC-CLICK-SELECTION-5758` (a missing-verifier gap for a learned/goal-conditioned discriminator).
+
+Also: a fresh deep-read of the actual Milestone-1-winning agents' source (`external/duck-harness`,
+`arc-m1-2nd-reki`, `arc-m1-3rd-forge`, all cloned locally) — `docs/research-notes/arc-top-project-search-architecture-audit-2026-07-20.md` — found all three winners are greedy single-step generators with **no** lookahead/tree-search/MCTS; Carnot already has strictly more search machinery than any of them. This independently corroborates REQ-ARC-FCP-5757's b==0 finding rather than contradicting the initial hypothesis that search depth was the gap.
+
+**Thread 2 — induction-quality diagnosis (the convergent root cause):**
+
+`docs/research-notes/arc-world-model-induction-quality-diagnosis-2026-07-20.md`: across 37 measured
+world-model inductions tonight (ThinkingCap-27B + Qwen-9B, generous token budgets), 29/37 scored
+`heldout_accuracy=0.0` even with decent `cell_recall` and near-perfect `goal_predicate_accuracy`.
+Reading actual induced code (not just metrics) found six concrete failure patterns: identity
+functions, hardcoded single-click-recolor rules, confabulated-plausible-wrong mechanics, literal
+**window/coordinate memorization** (hardcoding specific observed pixel positions instead of
+inferring a rule — directly reproducing what the 2026-07-15/16 session's chain (`5699-22`) had
+already found for a capped-transitions-view variant of the same bug), degenerate goal predicates,
+and near-perfect induction only when the mechanic matched a template the LLM already knew.
+
+**The load-bearing correction, and the concrete next action.** The 2026-07-15/16 session (above)
+had already queued, as an explicit unaddressed follow-up: *"checking whether the existing
+refactor/repair-loop path could self-correct the bug class 5699-23 found"* — that question sat
+open for 5 days. Tonight's design doc
+(`docs/research-notes/arc-induction-quality-improvement-design-2026-07-20.md`, commit `3d227f9b1`)
+finally answered it: the live agent's CEGIS-style refinement loop
+(`execute_bounded_llm_reinduction`, `arc_llm_reinduction.py:654`) is real, built, and wired into
+BOTH live call sites (`arc_competition_agent.py:3885,4005`) — but **tonight's own offline test
+harness (`run_seeded_progress`) bypasses it entirely**, calling single-shot `induce()` and
+hardcoding `n_refinement_rounds=0` (`arc_actions_to_progress.py:764`). So the 29/37-near-zero
+number is a single-shot number; whether the live agent's actual refinement loop fixes this has
+**never been measured**. A follow-up diagnosis (`docs/research-notes/arc-sp80-execute-stage-anomaly-2026-07-20.md`,
+commit `d3641468f`) ruled out a separate execute-stage bug as an alternative explanation for the
+one apparent success case (sp80) — it decomposes into the same induction-quality problem plus an
+unrelated stub-metric artifact affecting 4 games' progress readings.
+
+**Concrete next action (fully scoped, ready to launch, not yet run):** re-run the same
+games/windows/budgets through the existing CEGIS loop instead of single-shot, on both
+ThinkingCap-27B and Qwen-9B (to locate the model-size threshold two competing literature results
+disagree on — WorldCoder/arXiv:2402.12275 and E3/arXiv:2605.05138 predict refinement helps; the
+placebo-controlled "Falsification, Not Exposure" arXiv:2606.31511, independently verified against
+its own abstract, predicts refinement may NOT help small frozen models — Carnot's 9B sits exactly
+on that disputed boundary). Falsifiable gate, pre-registered branches, and full adversarial
+self-critique are in the design doc. Estimated substrate: live LLM inference, ~1 day — this is why
+it was NOT launched tonight at the tail of an already ~14-hour session; it deserves fresh
+oversight when it runs, not a rushed launch-and-abandon.
+
+**Two real infrastructure fixes shipped along the way** (both `ops/known-issues.md`, both
+verified independently before landing): (1) the conductor's failure-cleanup paths were running
+`git clean -fd` — a repo-wide destructive op that had silently deleted a concurrently-running
+agent's untracked work — fixed to use the existing checkpoint-commit pattern instead
+(`174b31b28`); a SECOND, unrelated file-loss incident later the same night was investigated and
+found NOT to be a recurrence of this bug (the fix confirmed active/working throughout), but its
+own mechanism was never identified — documented honestly as unresolved. (2) `adversarial_verify.py`
+was flagging legitimate fast literature-search tasks as fabrication (`DURATION_TOO_SHORT`) for
+lacking a recognized substrate value — added `web_and_bibliographic_search_only` as a proper
+substrate with test coverage (`7b3596636`).
+
+**Handoff for next session:** the induction-quality CEGIS-refinement-loop experiment (above) is
+the clear, unambiguous next step — fully designed, grounded in real code citations and verified
+literature, with nothing else queued ahead of it. The conductor was stopped mid-session at
+operator request (to avoid it fighting over the same live-path files) and was still stopped at
+session end — **restart it** (`systemctl --user start carnot-conductor.service`) unless the next
+session is going to continue hand-driving ARC live-path work directly.
 
 ## Session 2026-07-15/16 - ARC-AGI-3 First-Contact Induction Diagnostic Chain (REQ-ARC-FCP-5699-14 through -23)
 
