@@ -13,7 +13,8 @@
     descriptors, two-axis requests, corrupt checkpoints, and seed mismatches
     stop at the boundary instead of changing algorithms silently.
 
-Spec: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723
+Spec: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723, REQ-SAMPLE-5738,
+SCENARIO-SAMPLE-5738
 """
 
 from __future__ import annotations
@@ -42,6 +43,7 @@ ACTIVE_PYTHON_FALLBACK = "python_exact_fallback"
 
 DEFAULT_ONE_AXIS_BACKEND_SEED = 5723
 ONE_AXIS_BACKEND_SPEC_REFS = ["REQ-SAMPLE-5723", "SCENARIO-SAMPLE-5723"]
+BATCH_BACKEND_SPEC_REFS = ["REQ-SAMPLE-5738", "SCENARIO-SAMPLE-5738"]
 
 
 def canonical_json(value: Any) -> str:
@@ -139,7 +141,7 @@ class OneAxisRustBackend:
     same samples plus receipts, decision logs, and a portable checkpoint for
     audit and restart workflows.
 
-    Spec: REQ-SAMPLE-5723
+    Spec: REQ-SAMPLE-5723, REQ-SAMPLE-5738
     """
 
     seed: int = DEFAULT_ONE_AXIS_BACKEND_SEED
@@ -147,6 +149,7 @@ class OneAxisRustBackend:
     rust_module_loader: Callable[[], Any] | None = None
     last_receipt: JsonDict | None = field(default=None, init=False)
     last_checkpoint: JsonDict | None = field(default=None, init=False)
+    last_batch_receipt: JsonDict | None = field(default=None, init=False)
     last_run: JsonDict | None = field(default=None, init=False, repr=False)
 
     @property
@@ -180,6 +183,56 @@ class OneAxisRustBackend:
             self.run_descriptor(biases, couplings, n_samples=n_samples, config=config)["samples"],
             dtype=np.bool_,
         )
+
+    def sample_batch(self, workloads: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
+        """Run independent one-axis workloads in deterministic input order.
+
+        Each workload mapping must contain ``biases``, ``couplings``,
+        ``n_samples``, and ``config``. The return value preserves input order
+        and uses the same full result shape as ``run_descriptor``.
+
+        Spec: REQ-SAMPLE-5738
+        """
+
+        if not isinstance(workloads, Sequence) or isinstance(workloads, (str, bytes)):
+            raise ValueError("batch workloads must be a sequence of mappings")
+        results: list[JsonDict] = []
+        ordered_ids: list[str] = []
+        active_backends: list[str | None] = []
+        for batch_index, item in enumerate(workloads):
+            if not isinstance(item, Mapping):
+                raise ValueError("batch workload must be a mapping")
+            missing = {"biases", "couplings", "n_samples", "config"} - set(item)
+            if missing:
+                raise ValueError(f"batch workload missing required fields: {sorted(missing)}")
+            workload_id = str(item.get("workload_id", f"batch-{batch_index}"))
+            result = self.run_descriptor(
+                item["biases"],
+                item["couplings"],
+                int(item["n_samples"]),
+                item["config"],
+            )
+            result["workload_id"] = workload_id
+            result["receipt"] = {
+                **result["receipt"],
+                "batch_index": int(batch_index),
+                "workload_id": workload_id,
+                "batch_item_count": len(workloads),
+            }
+            ordered_ids.append(workload_id)
+            active_backends.append(result["receipt"].get("active_backend"))
+            results.append(result)
+        self.last_batch_receipt = {
+            "backend_name": self.backend_name,
+            "method": "sample_batch",
+            "item_count": len(workloads),
+            "ordered_workload_ids": ordered_ids,
+            "active_backends": active_backends,
+            "result_order_deterministic": True,
+            "empty_batch": len(workloads) == 0,
+            "spec_refs": list(BATCH_BACKEND_SPEC_REFS),
+        }
+        return results
 
     def run_descriptor(
         self,
@@ -422,6 +475,29 @@ class OneAxisRustBackend:
         n_samples: int,
         descriptor: _NormalizedDescriptor,
     ) -> JsonDict:
+        bulk_runner = getattr(core, "run_sweeps", None)
+        if callable(bulk_runner):
+            return self._advance_rust_bulk(
+                bulk_runner=bulk_runner,
+                state=state,
+                n_samples=n_samples,
+                descriptor=descriptor,
+            )
+        return self._advance_scalar(
+            core=core,
+            state=state,
+            n_samples=n_samples,
+            descriptor=descriptor,
+        )
+
+    def _advance_scalar(
+        self,
+        *,
+        core: Any,
+        state: exp5714.OneAxisState,
+        n_samples: int,
+        descriptor: _NormalizedDescriptor,
+    ) -> JsonDict:
         if n_samples <= 0:
             raise ValueError("n_samples must be positive")
         states = np.array(state.states, dtype=np.int8)
@@ -509,6 +585,39 @@ class OneAxisRustBackend:
         return {
             "samples_spin": samples_spin,
             "samples_bool": samples_bool,
+            "decision_log": decision_log,
+            "final_state": final_state,
+        }
+
+    def _advance_rust_bulk(
+        self,
+        *,
+        bulk_runner: Callable[..., Mapping[str, Any]],
+        state: exp5714.OneAxisState,
+        n_samples: int,
+        descriptor: _NormalizedDescriptor,
+    ) -> JsonDict:
+        if n_samples <= 0:
+            raise ValueError("n_samples must be positive")
+        try:
+            raw = bulk_runner(
+                state.states.astype(int).tolist(),
+                list(state.labels),
+                int(state.rng_state),
+                int(state.sweep),
+                int(descriptor.burn_in_sweeps),
+                int(n_samples),
+            )
+        except ValueError:
+            raise
+        except Exception as exc:  # noqa: BLE001 - fail closed at the batch boundary.
+            raise ValueError(f"rust bulk one-axis run failed: {type(exc).__name__}:{exc}") from exc
+        samples_spin = [[int(value) for value in row] for row in raw["samples_spin"]]
+        decision_log = [_normalize_decision_event(event) for event in raw["decision_log"]]
+        final_state = exp5714.OneAxisState.from_checkpoint(raw["final_state"])
+        return {
+            "samples_spin": samples_spin,
+            "samples_bool": [[value == 1 for value in sample] for sample in samples_spin],
             "decision_log": decision_log,
             "final_state": final_state,
         }
@@ -725,3 +834,41 @@ def _default_initial_states(seed: int, replica_count: int, n_spins: int) -> list
 
 def _stable_float(value: Any) -> float:
     return round(float(value), 12)
+
+
+def _normalize_decision_event(event: Mapping[str, Any]) -> JsonDict:
+    normalized: JsonDict = {}
+    float_keys = {
+        "beta",
+        "uniform",
+        "current_energy",
+        "proposed_energy",
+        "proposal_log_forward",
+        "proposal_log_reverse",
+        "log_acceptance",
+        "log_ratio",
+        "acceptance_probability",
+    }
+    list_int_keys = {
+        "label_pair",
+        "labels_after",
+        "labels_before",
+        "proposed_labels",
+        "proposed_state",
+        "state_after",
+        "state_before",
+    }
+    for key, value in event.items():
+        if key in float_keys:
+            normalized[key] = _stable_float(value)
+        elif key == "uniforms":
+            normalized[key] = [_stable_float(item) for item in value]
+        elif key in list_int_keys:
+            normalized[key] = [int(item) for item in value]
+        elif key in {"beta_label", "physical_index", "sweep"}:
+            normalized[key] = int(value)
+        elif key == "accepted":
+            normalized[key] = bool(value)
+        else:
+            normalized[key] = value
+    return normalized

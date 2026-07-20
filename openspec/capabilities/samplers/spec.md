@@ -1323,6 +1323,268 @@ consecutive larger-size crossover, or any GPU/FPGA/TSU/hardware claim appears
 |---|---|---|
 | REQ-SAMPLE-5724 | Implemented (`python/carnot/experiment_5724_one_axis_rust_python_matched_crossover.py`, `results/experiment_5724_one_axis_rust_python_matched_crossover.json`) | Implemented (`tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py`) |
 
+### REQ-SAMPLE-5738: One-Axis Batched Rust SamplerBackend Boundary
+
+Carnot MUST provide Exp 5738 at
+`python/carnot/experiment_5738_one_axis_rust_batched_backend.py` and write
+`results/experiment_5738_one_axis_rust_batched_backend.json` without modifying
+`scripts/research_conductor.py`. Exp 5738 SHALL reproduce the Exp5724 large
+size reversal cells at `n=48` and `n=96` with identical workload descriptors,
+seeds, checkpoint budgets, and production `SamplerBackend` semantics, then
+attribute time and memory proxies by phase before deciding whether a batched
+boundary is justified. The phase receipts SHALL cover serialization, Python
+allocation, PyO3 crossing, Rust allocation, energy update, proposal, exchange,
+validation, checkpoint, restart, and end-to-end work. If the measured dominant
+phase is not the scalar Python/PyO3 call boundary or another batch-removable
+boundary cost, Exp5738 SHALL emit an honest null or blocked artifact and SHALL
+NOT add speculative optimization code.
+
+When justified, the production one-axis backend SHALL add a backward-compatible
+`sample_batch` path for independent workloads. The scalar `sample()` API SHALL
+remain unchanged, the exact Python fallback SHALL remain byte-for-byte
+equivalent to scalar fallback replay, result ordering SHALL be deterministic,
+and the production factory SHALL expose the batched-capable
+`OneAxisRustBackend` under the existing explicit `one_axis_rust` name. The
+batch API SHALL handle normal, empty, singleton, mixed-size,
+corrupted-checkpoint, broken-binding, and exception controls without changing
+the retired two-axis exchange topology.
+
+Batch parity SHALL match Python/Rust energy traces, proposal diagnostics,
+accepted transitions, temperature-label exchanges, scheduler positions,
+checkpoints, restart suffixes, and result order. Distributional parity SHALL
+run at least 10000 retained samples for `n>=64` and apply a multiple-comparison
+correction before any readiness gate is set. `batch_backend_ready_score` SHALL
+equal exactly `1.0` only when semantic/distributional/restart parity pass,
+fallback equivalence passes, ordering is deterministic, production factory
+wiring is real, and all timing/software/hardware speedup claims remain false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `preconditions_checked`, `upstream_artifact_hashes`,
+`software_receipt`, `build_profile`, `cpu_topology`, `cpu_affinity`,
+`thread_receipts`, `reproduction_workloads`, `phase_timing_receipts`,
+`memory_phase_receipts`, `large_size_reversal_reproduced`, `dominant_phase`,
+`optimization_hypothesis`, `batch_api_contract`, `batch_factory_receipts`,
+`scalar_api_unchanged`, `python_fallback_receipts`, `parity_manifest`,
+`energy_trace_mismatch_count`, `proposal_mismatch_count`,
+`exchange_mismatch_count`, `checkpoint_mismatch_count`,
+`restart_mismatch_count`, `result_order_mismatch_count`,
+`distributional_parity_receipts`, `batch_backend_ready_score`,
+`timing_claimed`, `software_speedup_claimed`, `hardware_speedup_claimed`,
+`fpga_or_tsu_used`, `inference_substrate`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`. `timing_claimed`,
+`software_speedup_claimed`, and `hardware_speedup_claimed` SHALL be false,
+`fpga_or_tsu_used` SHALL be false, and `inference_substrate` SHALL equal
+`local_cpu_rust_pyo3_one_axis_batched_sampler`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every Exp5738 artifact field exists before batch readiness can be trusted."
+- `preconditions_checked`: principle "Records release Rust/PyO3 build, CPU topology, affinity, RAM, compiler, and upstream-hash checks before measurement or optimization."
+- `upstream_artifact_hashes`: principle "Pins Exp5723 and Exp5724 inputs so reversal attribution cannot drift with stale artifacts."
+- `software_receipt`: principle "Records Python, NumPy, Rust extension, compiler, and source hashes needed to replay batch semantics."
+- `build_profile`: principle "Freezes release/debug and PyO3 ABI state before interpreting boundary evidence."
+- `cpu_topology`: principle "Separates physical/logical core topology from any speed or hardware claim."
+- `cpu_affinity`: principle "Shows scheduler placement controls used during reproduction and profiling."
+- `thread_receipts`: principle "Records thread environment so scalar and batch paths share the same CPU policy."
+- `reproduction_workloads`: principle "Lists the exact n=48 and n=96 workload cells used to reproduce the reversal."
+- `phase_timing_receipts`: principle "Attributes observed time to measurable phases before any batch-boundary edit is justified."
+- `memory_phase_receipts`: principle "Reports peak RSS and memory-traffic proxies so allocation pressure is not hidden by aggregate time."
+- `large_size_reversal_reproduced`: principle "States whether the Exp5724 Rust loss at n=48 and n=96 was reproduced under this run's preconditions."
+- `dominant_phase`: principle "Names the measured phase that controls the optimization hypothesis."
+- `optimization_hypothesis`: principle "States a falsifiable batch-boundary hypothesis or an honest null before implementation."
+- `batch_api_contract`: principle "Defines result ordering, independent workload semantics, controls, and compatibility for sample_batch."
+- `batch_factory_receipts`: principle "Proves the production factory returns the batched-capable explicit one-axis backend."
+- `scalar_api_unchanged`: principle "Prevents batch support from mutating the existing sample() behavior."
+- `python_fallback_receipts`: principle "Proves the exact Python fallback remains equivalent for scalar and batch calls."
+- `parity_manifest`: principle "Lists semantic, checkpoint, restart, fallback, ordering, and adversarial controls in one replayable manifest."
+- `energy_trace_mismatch_count`: principle "Counts energy-trace mismatches instead of burying them in a pass boolean."
+- `proposal_mismatch_count`: principle "Counts proposal diagnostic mismatches across scalar, batch, Rust, and fallback paths."
+- `exchange_mismatch_count`: principle "Counts temperature-label exchange mismatches so retired two-axis behavior cannot reappear silently."
+- `checkpoint_mismatch_count`: principle "Counts checkpoint mismatches across scalar and batch runs."
+- `restart_mismatch_count`: principle "Counts restart suffix mismatches after checkpoint handoff."
+- `result_order_mismatch_count`: principle "Counts deterministic result-order mismatches for independent workloads."
+- `distributional_parity_receipts`: principle "Records >=10000-sample n>=64 parity and multiple-comparison correction evidence."
+- `batch_backend_ready_score`: principle "Equals 1.0 only when semantic, distributional, restart, fallback, ordering, and factory gates pass with no speed claims."
+- `timing_claimed`: principle "Bare false prevents phase attribution from becoming a timing promotion."
+- `software_speedup_claimed`: principle "Bare false prevents the batched boundary from claiming Rust/Python software speedup."
+- `hardware_speedup_claimed`: principle "Bare false prevents local CPU work from becoming a board or TSU claim."
+- `fpga_or_tsu_used`: principle "Bare false records that no FPGA or TSU participated."
+- `inference_substrate`: principle "Declares local CPU Rust/PyO3 one-axis batched sampling, not LLM, GPU, FPGA, or TSU inference."
+- `random_seeds`: principle "Records replay seeds for reproduction, parity, restart, fallback, and distributional checks."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether batched backend readiness is proven or honestly null."
+
+### SCENARIO-SAMPLE-5738: Exp5738 Emits Batched Boundary Evidence Or Honest Null
+
+**Given** Exp5723 production one-axis SamplerBackend readiness and Exp5724
+matched crossover evidence are hash-pinned
+**When** Exp5738 reproduces the n=48 and n=96 cells, profiles the required
+phases, and identifies a batch-removable dominant boundary phase
+**Then** `OneAxisRustBackend.sample_batch` returns deterministic independent
+workload results through the existing explicit factory path while preserving
+scalar `sample()` and exact Python fallback behavior
+**And** scalar/batch Rust/fallback runs match energy traces, proposals,
+accepted transitions, temperature-label exchanges, scheduler positions,
+checkpoints, restart suffixes, result order, and >=10000-sample n>=64
+distributional parity with multiple-comparison correction
+**And** `results/experiment_5738_one_axis_rust_batched_backend.json` is written
+with `batch_backend_ready_score=1.0`, all mismatch counts equal zero,
+`timing_claimed=false`, `software_speedup_claimed=false`,
+`hardware_speedup_claimed=false`, and `fpga_or_tsu_used=false`.
+
+**If** preconditions fail, the reversal is not reproduced, phase evidence does
+not justify a batch-boundary fix, or any semantic/distributional/restart/
+fallback/ordering/factory gate fails
+**Then** the artifact SHALL still emit terminal evidence with
+`batch_backend_ready_score=0.0`, all overclaim booleans false, and an
+`honest_verdict` starting with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5738)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5738 | Planned (`python/carnot/samplers/one_axis_rust_backend.py`, `python/carnot/experiment_5738_one_axis_rust_batched_backend.py`, `results/experiment_5738_one_axis_rust_batched_backend.json`) | Planned (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5738_one_axis_rust_batched_backend.py`) |
+
+### REQ-SAMPLE-5739: One-Axis Batched Rust/Python 10x Crossover
+
+Carnot MUST provide Exp 5739 at
+`python/carnot/experiment_5739_one_axis_batched_10x_crossover.py` and write
+`results/experiment_5739_one_axis_batched_10x_crossover.json` without modifying
+`scripts/research_conductor.py`. Exp 5739 SHALL benchmark the Exp5738
+production-reachable, parity-qualified batched Rust/PyO3 one-axis backend
+against the exact Python one-axis fallback under matched CPU work and quality.
+The claim is only an end-to-end CPU software throughput claim. A null result is
+terminal and honest when matched quality or the 10x interval gate fails.
+
+The protocol SHALL freeze upstream gates, Exp5738 backend and build hashes,
+workloads, topology families, problem sizes including `48`, `96`, and `192`
+where feasible, batch sizes, seeds, beta ladders, transition budgets,
+checkpoints, warmups, measured batch count, quality margins, thread regimes,
+CPU affinity, and the 10x claim rule before timing. It SHALL compare two
+thread regimes: one physical-core placement and a fixed recorded physical-core
+allocation. Both arms SHALL run with the same thread policy in each regime and
+the artifact SHALL disclose any implementation asymmetry, including the fact
+that Rust uses the PyO3 batched path while Python uses the exact fallback path.
+The baseline SHALL NOT be artificially serialized, slept, throttled, or
+otherwise weakened outside the preregistered one-core regime requested by this
+experiment.
+
+Each `(thread_regime, size, topology_family, batch_size)` cell SHALL execute at
+least thirty independent measured batches per arm on identical batch inputs.
+The primary latency and throughput SHALL be end-to-end and SHALL NOT subtract
+serialization, validation, PyO3 crossing, allocation, checkpoint, or restart
+costs. Phase receipts and peak RSS SHALL be preserved as evidence, not used to
+subtract overhead from the primary speedup.
+
+Quality SHALL be matched before speedups are interpreted. Matching SHALL require
+identical Hamiltonians, transition budgets, energy accounting, sample counts,
+seed schedules, checkpoint/restart behavior, result ordering, and
+preregistered quality metrics. Mismatched pairs SHALL be excluded visibly with
+predeclared reasons and SHALL NOT enter speed distributions. Speedups SHALL be
+paired Python/Rust end-to-end ratios with bootstrap confidence intervals and a
+multiple-comparison correction across thread-regime and size comparisons.
+`rust_batched_10x_ready_score` SHALL equal exactly `1.0` only when matched
+quality holds and the adjusted lower confidence bound is at least `10.0` for
+two consecutive larger sizes in the same thread regime. Otherwise it SHALL
+equal `0.0`, `software_speedup_claimed` SHALL be false, and the artifact SHALL
+record a terminal null plus bottleneck evidence.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`schema`, `experiment`, `experiment_id`, `milestone`, `run_date`, `spec_refs`,
+`duration_s`, `field_principles`, `preconditions_checked`,
+`upstream_gate_receipts`, `software_receipt`, `build_profile`, `cpu_topology`,
+`thread_receipts`, `cpu_affinity`, `preregistered_protocol`,
+`workload_manifest`, `arm_configs`, `batch_sizes`, `problem_sizes`,
+`random_seeds`, `warmup_count`, `measured_batch_count`,
+`matched_work_receipts`, `quality_metrics_by_pair`,
+`quality_matched_pair_count`, `excluded_pair_reasons`, `end_to_end_times`,
+`throughput_distributions`, `phase_times`, `peak_rss_by_arm`,
+`paired_speedup_ratios`, `paired_speedup_intervals`, `qualified_10x_sizes`,
+`qualified_10x_thread_regime`, `rust_batched_10x_ready_score`,
+`timing_claimed`, `software_speedup_claimed`, `gpu_speedup_claimed`,
+`hardware_speedup_claimed`, `fpga_or_tsu_used`, `inference_substrate`,
+`reproducibility_checksum`, and `honest_verdict`. `timing_claimed` SHALL be
+true. `gpu_speedup_claimed`, `hardware_speedup_claimed`, and
+`fpga_or_tsu_used` SHALL be false. `inference_substrate` SHALL equal
+`matched_cpu_python_rust_batched_sampler_benchmark`.
+
+Required field principles:
+
+- `schema`: principle "Names the artifact contract so downstream validators do not infer fields from experiment number alone."
+- `experiment`: principle "Keeps the numeric experiment identifier explicit for corpus indexing without turning it into a metric."
+- `experiment_id`: principle "Provides a stable human-readable artifact identity for cross-run provenance."
+- `milestone`: principle "Records the conductor milestone without letting milestone status substitute for benchmark evidence."
+- `run_date`: principle "Anchors the local CPU software measurement to the requested 2026-07-20 run date."
+- `spec_refs`: principle "Binds the artifact to REQ-SAMPLE-5739 and SCENARIO-SAMPLE-5739."
+- `duration_s`: principle "Records real wall-clock artifact construction time for fabrication and reproducibility review."
+- `field_principles`: principle "Explains why every Exp5739 field exists before a reviewer trusts the JSON shape."
+- `preconditions_checked`: principle "Shows every upstream, build, topology, affinity, thread, and workload gate checked before timing interpretation."
+- `upstream_gate_receipts`: principle "Pins Exp5724 null timing evidence and Exp5738 batched backend readiness plus source hashes."
+- `software_receipt`: principle "Records Python, NumPy, Rust extension, compiler, and source hashes needed to replay the two production arms."
+- `build_profile`: principle "Freezes release/debug, PyO3 ABI, bulk-run symbol, and feature state before any 10x timing claim."
+- `cpu_topology`: principle "Separates physical and logical CPU evidence from accelerator or board claims."
+- `thread_receipts`: principle "Records matched thread policy for both arms in each regime and discloses implementation asymmetry."
+- `cpu_affinity`: principle "Shows the one-core and fixed-core placements used for timing."
+- `preregistered_protocol`: principle "Freezes workloads, sizes, batches, seeds, ladders, budgets, checkpoints, warmups, repetitions, quality margins, and 10x null rule."
+- `workload_manifest`: principle "Lists every size and topology Hamiltonian shared by Python and Rust batch arms."
+- `arm_configs`: principle "Names the Rust PyO3 batch and exact Python fallback batch configurations under one production API."
+- `batch_sizes`: principle "Makes the amount of independent work per batch explicit instead of implying unmeasured amortization."
+- `problem_sizes`: principle "Makes the 48/96/192 large-size panel explicit, including any infeasible-size blocker."
+- `random_seeds`: principle "Records the independent batch seed schedule for exact replay."
+- `warmup_count`: principle "Prevents cold-start effects from entering primary measurements."
+- `measured_batch_count`: principle "Proves every qualified cell has at least thirty independent measured batches."
+- `matched_work_receipts`: principle "Proves identical work, energy accounting, samples, transitions, checkpoints, and restart behavior."
+- `quality_metrics_by_pair`: principle "Reports matched quality before any speedup ratio enters a distribution."
+- `quality_matched_pair_count`: principle "Counts only pairs that passed quality gates before timing intervals."
+- `excluded_pair_reasons`: principle "Keeps mismatches visible instead of silently relabeling them as speed evidence."
+- `end_to_end_times`: principle "Preserves primary latency evidence including serialization, validation, PyO3, allocation, checkpoint, and restart costs."
+- `throughput_distributions`: principle "Reports samples-per-second distributions from the same end-to-end measurements."
+- `phase_times`: principle "Preserves bottleneck evidence without subtracting phases from primary timing."
+- `peak_rss_by_arm`: principle "Records memory pressure by arm and thread regime so speed is not traded for hidden RSS growth."
+- `paired_speedup_ratios`: principle "Reports paired Python/Rust ratios on identical batches rather than unrelated aggregate means."
+- `paired_speedup_intervals`: principle "Uses adjusted confidence intervals so a 10x claim cannot rest on noisy multiple comparisons."
+- `qualified_10x_sizes`: principle "Lists only consecutive larger sizes whose adjusted lower confidence bound is at least 10.0."
+- `qualified_10x_thread_regime`: principle "Names the single thread regime, if any, where the strict consecutive-size 10x rule passed."
+- `rust_batched_10x_ready_score`: principle "Equals 1.0 only when matched quality and adjusted intervals prove the strict 10x CPU software rule."
+- `timing_claimed`: principle "Bare true declares this is a timing benchmark, unlike Exp5738 readiness-only evidence."
+- `software_speedup_claimed`: principle "Bare true is allowed only when the strict 10x CPU software rule passes."
+- `gpu_speedup_claimed`: principle "Bare false prevents this CPU benchmark from reopening GPU claims."
+- `hardware_speedup_claimed`: principle "Bare false prevents local CPU software timing from becoming a board or TSU claim."
+- `fpga_or_tsu_used`: principle "Bare false records that no FPGA, TSU, or board participated."
+- `inference_substrate`: principle "Declares matched CPU Python/Rust batched one-axis sampler benchmarking, not LLM inference or accelerator timing."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether the strict 10x rule passed or terminally failed."
+
+### SCENARIO-SAMPLE-5739: Exp5739 Emits Matched Batched 10x Evidence Or Terminal Null
+
+**Given** Exp5738 batched one-axis backend readiness and Exp5724 terminal
+Rust/Python CPU crossover null are hash-pinned
+**When** Exp5739 runs identical batched workloads through the Rust PyO3
+`sample_batch` path and exact Python fallback `sample_batch` path in the
+one-core and fixed-core regimes
+**Then** it records matched work counters, quality metrics, phase receipts,
+peak RSS, end-to-end latency, throughput, paired speedup distributions,
+adjusted intervals, and writes
+`results/experiment_5739_one_axis_batched_10x_crossover.json`
+**And** `rust_batched_10x_ready_score=1.0` only when the adjusted lower
+confidence bound is at least `10.0` at two consecutive larger sizes in the same
+thread regime with matched quality.
+
+**If** upstream gates fail, work or quality mismatches, fewer than thirty
+independent measured batches exist in any qualified cell, the adjusted 10x
+consecutive-size rule fails, or any GPU/FPGA/TSU/hardware claim appears
+**Then** the artifact SHALL still emit terminal evidence with
+`rust_batched_10x_ready_score=0.0`, `software_speedup_claimed=false`,
+`timing_claimed=true`, `gpu_speedup_claimed=false`,
+`hardware_speedup_claimed=false`, `fpga_or_tsu_used=false`, and an
+`honest_verdict` starting with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5739)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5739 | Planned (`python/carnot/experiment_5739_one_axis_batched_10x_crossover.py`, `results/experiment_5739_one_axis_batched_10x_crossover.json`) | Planned (`tests/python/test_experiment_5739_one_axis_batched_10x_crossover.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`

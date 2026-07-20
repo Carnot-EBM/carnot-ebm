@@ -1,0 +1,2195 @@
+{
+  "batch_api_contract": {
+    "broken_binding_policy": "exact_python_fallback",
+    "corrupt_checkpoint_policy": "fail_closed",
+    "empty_batch": "returns []",
+    "exception_policy": "fail_closed_without_partial_success_claim",
+    "input": "ordered sequence of independent workload mappings",
+    "method": "OneAxisRustBackend.sample_batch",
+    "mixed_size_allowed": true,
+    "output": "ordered list of run_descriptor result mappings",
+    "required_workload_fields": [
+      "biases",
+      "couplings",
+      "n_samples",
+      "config"
+    ],
+    "scalar_sample_unchanged": true,
+    "singleton_equivalent_to_scalar": true,
+    "two_axis_exchange": false
+  },
+  "batch_backend_ready_score": 1.0,
+  "batch_factory_receipts": {
+    "bulk_rust_path_available": true,
+    "default_backend_class": "CpuBackend",
+    "default_backend_name": "cpu",
+    "default_backend_preserved": true,
+    "explicit_backend_class": "OneAxisRustBackend",
+    "explicit_backend_name": "one_axis_rust",
+    "sample_batch_callable": true
+  },
+  "build_profile": {
+    "abi3_forward_compatibility": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1",
+    "build_mode": "existing_local_pyo3_extension",
+    "bulk_run_sweeps_symbol_present": true,
+    "conductor_modified": false,
+    "extension_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+    "extension_present": true,
+    "features": {
+      "fpga_or_tsu": false,
+      "gpu": false,
+      "one_axis_tempering": true,
+      "penalty_axis_exchange": false
+    },
+    "path_precondition_note": "User prompt mentioned rust/carnot-samplers; actual crate path is crates/carnot-samplers.",
+    "release_profile_required": true
+  },
+  "checkpoint_mismatch_count": 0,
+  "cpu_affinity": {
+    "current_cpus": [
+      0
+    ],
+    "freeze_requested": true,
+    "observable": true,
+    "previous_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "status": "frozen"
+  },
+  "cpu_topology": {
+    "affinity_current_cpus": [
+      0
+    ],
+    "cpu_model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M",
+    "logical_cores": 24,
+    "physical_cores": 12,
+    "ram": {
+      "mem_available_kib": 85598124,
+      "mem_total_kib": 131157064,
+      "observable": true
+    }
+  },
+  "distributional_parity_receipts": [
+    {
+      "adjusted_alpha": 0.016666666667,
+      "comparison_count": 3,
+      "energy_histogram_tv": 0.0,
+      "familywise_alpha": 0.05,
+      "multiple_comparison_correction": "bonferroni",
+      "n_samples": 10000,
+      "n_spins": 64,
+      "passed": true,
+      "sample_hash_match": true,
+      "workload_id": "ferromagnetic_ring_easy_n64_c495bb1803"
+    }
+  ],
+  "dominant_phase": {
+    "batch_removable": true,
+    "dominance_scope": "exp5724_sample_call_phases_restart_is_control_only",
+    "mean_scalar_s": 0.000327570015,
+    "phase": "pyo3_crossing",
+    "share_of_attributed_phase_time": 0.109606979544
+  },
+  "energy_trace_mismatch_count": 0,
+  "exchange_mismatch_count": 0,
+  "experiment": 5738,
+  "experiment_id": "exp5738-one-axis-rust-batched-backend",
+  "field_principles": {
+    "batch_api_contract": "Defines result ordering, independent workload semantics, controls, and compatibility for sample_batch.",
+    "batch_backend_ready_score": "Equals 1.0 only when semantic, distributional, restart, fallback, ordering, and factory gates pass with no speed claims.",
+    "batch_factory_receipts": "Proves the production factory returns the batched-capable explicit one-axis backend.",
+    "build_profile": "Freezes release/debug and PyO3 ABI state before interpreting boundary evidence.",
+    "checkpoint_mismatch_count": "Counts checkpoint mismatches across scalar and batch runs.",
+    "cpu_affinity": "Shows scheduler placement controls used during reproduction and profiling.",
+    "cpu_topology": "Separates physical/logical core topology from any speed or hardware claim.",
+    "distributional_parity_receipts": "Records >=10000-sample n>=64 parity and multiple-comparison correction evidence.",
+    "dominant_phase": "Names the measured phase that controls the optimization hypothesis.",
+    "energy_trace_mismatch_count": "Counts energy-trace mismatches instead of burying them in a pass boolean.",
+    "exchange_mismatch_count": "Counts temperature-label exchange mismatches so retired two-axis behavior cannot reappear silently.",
+    "field_principles": "Explains why every Exp5738 artifact field exists before batch readiness can be trusted.",
+    "fpga_or_tsu_used": "Bare false records that no FPGA or TSU participated.",
+    "hardware_speedup_claimed": "Bare false prevents local CPU work from becoming a board or TSU claim.",
+    "honest_verdict": "Starts complete: or blocked: and states whether batched backend readiness is proven or honestly null.",
+    "inference_substrate": "Declares local CPU Rust/PyO3 one-axis batched sampling, not LLM, GPU, FPGA, or TSU inference.",
+    "large_size_reversal_reproduced": "States whether the Exp5724 Rust loss at n=48 and n=96 was reproduced under this run's preconditions.",
+    "memory_phase_receipts": "Reports peak RSS and memory-traffic proxies so allocation pressure is not hidden by aggregate time.",
+    "optimization_hypothesis": "States a falsifiable batch-boundary hypothesis or an honest null before implementation.",
+    "parity_manifest": "Lists semantic, checkpoint, restart, fallback, ordering, and adversarial controls in one replayable manifest.",
+    "phase_timing_receipts": "Attributes observed time to measurable phases before any batch-boundary edit is justified.",
+    "preconditions_checked": "Records release Rust/PyO3 build, CPU topology, affinity, RAM, compiler, and upstream-hash checks before measurement or optimization.",
+    "proposal_mismatch_count": "Counts proposal diagnostic mismatches across scalar, batch, Rust, and fallback paths.",
+    "python_fallback_receipts": "Proves the exact Python fallback remains equivalent for scalar and batch calls.",
+    "random_seeds": "Records replay seeds for reproduction, parity, restart, fallback, and distributional checks.",
+    "reproducibility_checksum": "Content-addresses the complete artifact after blanking the self-checksum field.",
+    "reproduction_workloads": "Lists the exact n=48 and n=96 workload cells used to reproduce the reversal.",
+    "restart_mismatch_count": "Counts restart suffix mismatches after checkpoint handoff.",
+    "result_order_mismatch_count": "Counts deterministic result-order mismatches for independent workloads.",
+    "scalar_api_unchanged": "Prevents batch support from mutating the existing sample() behavior.",
+    "software_receipt": "Records Python, NumPy, Rust extension, compiler, and source hashes needed to replay batch semantics.",
+    "software_speedup_claimed": "Bare false prevents the batched boundary from claiming Rust/Python software speedup.",
+    "thread_receipts": "Records thread environment so scalar and batch paths share the same CPU policy.",
+    "timing_claimed": "Bare false prevents phase attribution from becoming a timing promotion.",
+    "upstream_artifact_hashes": "Pins Exp5723 and Exp5724 inputs so reversal attribution cannot drift with stale artifacts."
+  },
+  "fpga_or_tsu_used": false,
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete: one-axis sample_batch backend is semantically and distributionally ready; no timing, software speedup, hardware, FPGA, or TSU claim",
+  "inference_substrate": "local_cpu_rust_pyo3_one_axis_batched_sampler",
+  "large_size_reversal_reproduced": true,
+  "memory_phase_receipts": [
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "serialization",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "python_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "pyo3_crossing",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "rust_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "energy_update",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "proposal",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "exchange",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "validation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "checkpoint",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "restart",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "end_to_end",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "serialization",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "python_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "pyo3_crossing",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "rust_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "energy_update",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "proposal",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "exchange",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "validation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "checkpoint",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "restart",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "end_to_end",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "serialization",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "python_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "pyo3_crossing",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "rust_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "energy_update",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "proposal",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "exchange",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "validation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "checkpoint",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "restart",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "end_to_end",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 48,
+      "traffic_proxy_bytes": 18816,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "serialization",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "python_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "pyo3_crossing",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "rust_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "energy_update",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "proposal",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "exchange",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "validation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "checkpoint",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "restart",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "ferromagnetic_ring_easy",
+      "peak_rss_kib": 170952,
+      "phase": "end_to_end",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "serialization",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "python_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "pyo3_crossing",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "rust_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "energy_update",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "proposal",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "exchange",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "validation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "checkpoint",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "restart",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "frustrated_chord_moderate",
+      "peak_rss_kib": 170952,
+      "phase": "end_to_end",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "serialization",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "python_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "pyo3_crossing",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "rust_allocation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "energy_update",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "proposal",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "exchange",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "validation",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "checkpoint",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "restart",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "family": "planted_basin_hard",
+      "peak_rss_kib": 170952,
+      "phase": "end_to_end",
+      "proxy": "array_bytes_plus_process_peak_rss",
+      "size": 96,
+      "traffic_proxy_bytes": 74496,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    }
+  ],
+  "milestone": "2026.07.538",
+  "optimization_hypothesis": {
+    "dominant_phase": "pyo3_crossing",
+    "falsifiable_gate": "all scalar/batch/fallback traces and restart suffixes must match with zero mismatches",
+    "hypothesis": "Batching independent workloads behind sample_batch removes repeated scalar boundary work while preserving one-axis traces.",
+    "justified": true
+  },
+  "parity_manifest": {
+    "adversarial_controls": [
+      {
+        "control_id": "corrupted_checkpoint",
+        "passed": true,
+        "policy": "fail_closed"
+      },
+      {
+        "control_id": "exception",
+        "passed": true,
+        "policy": "fail_closed"
+      }
+    ],
+    "checkpoint_match": true,
+    "energy_trace_match": true,
+    "exchange_match": true,
+    "fallback_controls": [
+      {
+        "case_id": "empty",
+        "equivalent": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case_id": "fallback:ferromagnetic_ring_easy_n48_e82a17202d",
+        "equivalent": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case_id": "fallback:frustrated_chord_moderate_n48_04fbfecd24",
+        "equivalent": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case_id": "broken_binding",
+        "equivalent": true,
+        "fallback_reason": "rust_symbol_missing:RustOneAxisTemperingConfig,RustOneAxisTemperingCore,RustOneAxisTemperingState"
+      }
+    ],
+    "proposal_match": true,
+    "restart_match": true,
+    "result_order_match": true,
+    "rust_batch_active_backend": [
+      "rust_pyo3",
+      "rust_pyo3"
+    ],
+    "semantic_controls": [
+      "normal",
+      "empty",
+      "singleton",
+      "mixed_size",
+      "corrupted_checkpoint",
+      "broken_binding",
+      "exception"
+    ],
+    "two_axis_exchange": false
+  },
+  "phase_timing_receipts": [
+    {
+      "batch_mean_s": 1.3019482e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "serialization",
+      "proxy": true,
+      "samples_s": [
+        1.3374956e-05,
+        1.2664008e-05
+      ],
+      "scalar_mean_s": 1.3019482e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 6.55942e-07,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "python_allocation",
+      "proxy": true,
+      "samples_s": [
+        7.00937e-07,
+        6.10948e-07
+      ],
+      "scalar_mean_s": 6.55942e-07,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 6.3920044e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "pyo3_crossing",
+      "proxy": true,
+      "samples_s": [
+        6.7336019e-05,
+        6.050407e-05
+      ],
+      "scalar_mean_s": 6.3920044e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 5.3575961e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "rust_allocation",
+      "proxy": true,
+      "samples_s": [
+        5.4953969e-05,
+        5.2197953e-05
+      ],
+      "scalar_mean_s": 5.3575961e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 1.9622035e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "energy_update",
+      "proxy": true,
+      "samples_s": [
+        2.9445975e-05,
+        9.798096e-06
+      ],
+      "scalar_mean_s": 1.9622035e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 5.5513985e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "proposal",
+      "proxy": true,
+      "samples_s": [
+        7.1774935e-05,
+        3.9253035e-05
+      ],
+      "scalar_mean_s": 5.5513985e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 4.3035485e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "exchange",
+      "proxy": true,
+      "samples_s": [
+        5.1706913e-05,
+        3.4364057e-05
+      ],
+      "scalar_mean_s": 4.3035485e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 2.8543465e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "validation",
+      "proxy": true,
+      "samples_s": [
+        4.0034996e-05,
+        1.7051934e-05
+      ],
+      "scalar_mean_s": 2.8543465e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 4.7524518e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "checkpoint",
+      "proxy": true,
+      "samples_s": [
+        4.8912014e-05,
+        4.6137022e-05
+      ],
+      "scalar_mean_s": 4.7524518e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 0.000282941561,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "restart",
+      "proxy": true,
+      "samples_s": [
+        0.000288552023,
+        0.000277331099
+      ],
+      "scalar_mean_s": 0.000282941561,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 0.000758669514,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "end_to_end",
+      "proxy": true,
+      "samples_s": [
+        0.000790714985,
+        0.000726624043
+      ],
+      "scalar_mean_s": 0.000758669514,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "batch_mean_s": 1.240347e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "serialization",
+      "proxy": true,
+      "samples_s": [
+        1.203292e-05,
+        1.277402e-05
+      ],
+      "scalar_mean_s": 1.240347e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 5.31028e-07,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "python_allocation",
+      "proxy": true,
+      "samples_s": [
+        5.21075e-07,
+        5.40982e-07
+      ],
+      "scalar_mean_s": 5.31028e-07,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 6.5087515e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "pyo3_crossing",
+      "proxy": true,
+      "samples_s": [
+        6.3820044e-05,
+        6.6354987e-05
+      ],
+      "scalar_mean_s": 6.5087515e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 5.1947427e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "rust_allocation",
+      "proxy": true,
+      "samples_s": [
+        5.2648946e-05,
+        5.1245908e-05
+      ],
+      "scalar_mean_s": 5.1947427e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 9.062001e-06,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "energy_update",
+      "proxy": true,
+      "samples_s": [
+        9.758049e-06,
+        8.365954e-06
+      ],
+      "scalar_mean_s": 9.062001e-06,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 3.8467464e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "proposal",
+      "proxy": true,
+      "samples_s": [
+        3.9063976e-05,
+        3.7870952e-05
+      ],
+      "scalar_mean_s": 3.8467464e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 3.3924007e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "exchange",
+      "proxy": true,
+      "samples_s": [
+        3.4475001e-05,
+        3.3373013e-05
+      ],
+      "scalar_mean_s": 3.3924007e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 1.551403e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "validation",
+      "proxy": true,
+      "samples_s": [
+        1.6631093e-05,
+        1.4396966e-05
+      ],
+      "scalar_mean_s": 1.551403e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 4.4057961e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "checkpoint",
+      "proxy": true,
+      "samples_s": [
+        4.4974964e-05,
+        4.3140957e-05
+      ],
+      "scalar_mean_s": 4.4057961e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 0.000282620953,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "restart",
+      "proxy": true,
+      "samples_s": [
+        0.000287008937,
+        0.000278232968
+      ],
+      "scalar_mean_s": 0.000282620953,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 0.000725186488,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "end_to_end",
+      "proxy": true,
+      "samples_s": [
+        0.000729969935,
+        0.000720403041
+      ],
+      "scalar_mean_s": 0.000725186488,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "batch_mean_s": 1.187704e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "serialization",
+      "proxy": true,
+      "samples_s": [
+        1.171208e-05,
+        1.2042001e-05
+      ],
+      "scalar_mean_s": 1.187704e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 4.46045e-07,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "python_allocation",
+      "proxy": true,
+      "samples_s": [
+        4.21074e-07,
+        4.71016e-07
+      ],
+      "scalar_mean_s": 4.46045e-07,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 5.9756974e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "pyo3_crossing",
+      "proxy": true,
+      "samples_s": [
+        5.9450977e-05,
+        6.0062972e-05
+      ],
+      "scalar_mean_s": 5.9756974e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 5.1446434e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "rust_allocation",
+      "proxy": true,
+      "samples_s": [
+        5.1767915e-05,
+        5.1124953e-05
+      ],
+      "scalar_mean_s": 5.1446434e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 8.440984e-06,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "energy_update",
+      "proxy": true,
+      "samples_s": [
+        8.635921e-06,
+        8.246046e-06
+      ],
+      "scalar_mean_s": 8.440984e-06,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 3.8061466e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "proposal",
+      "proxy": true,
+      "samples_s": [
+        3.8892962e-05,
+        3.7229969e-05
+      ],
+      "scalar_mean_s": 3.8061466e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 3.3978489e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "exchange",
+      "proxy": true,
+      "samples_s": [
+        3.4413999e-05,
+        3.354298e-05
+      ],
+      "scalar_mean_s": 3.3978489e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 1.5679456e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "validation",
+      "proxy": true,
+      "samples_s": [
+        1.6530976e-05,
+        1.4827936e-05
+      ],
+      "scalar_mean_s": 1.5679456e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 4.3631997e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "checkpoint",
+      "proxy": true,
+      "samples_s": [
+        4.4213026e-05,
+        4.3050968e-05
+      ],
+      "scalar_mean_s": 4.3631997e-05,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 0.000290365482,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "restart",
+      "proxy": true,
+      "samples_s": [
+        0.000282961992,
+        0.000297768973
+      ],
+      "scalar_mean_s": 0.000290365482,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 0.000719616015,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "end_to_end",
+      "proxy": true,
+      "samples_s": [
+        0.000727785984,
+        0.000711446046
+      ],
+      "scalar_mean_s": 0.000719616015,
+      "size": 48,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "batch_mean_s": 1.7502985e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "serialization",
+      "proxy": true,
+      "samples_s": [
+        1.7161947e-05,
+        1.7844024e-05
+      ],
+      "scalar_mean_s": 1.7502985e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 4.50993e-07,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "python_allocation",
+      "proxy": true,
+      "samples_s": [
+        4.20958e-07,
+        4.81028e-07
+      ],
+      "scalar_mean_s": 4.50993e-07,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 0.000310263073,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "pyo3_crossing",
+      "proxy": true,
+      "samples_s": [
+        0.000310203061,
+        0.000310323085
+      ],
+      "scalar_mean_s": 0.000310263073,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 0.000187732978,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "rust_allocation",
+      "proxy": true,
+      "samples_s": [
+        0.000189897022,
+        0.000185568933
+      ],
+      "scalar_mean_s": 0.000187732978,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 1.1762022e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "energy_update",
+      "proxy": true,
+      "samples_s": [
+        1.2323027e-05,
+        1.1201017e-05
+      ],
+      "scalar_mean_s": 1.1762022e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 6.0358492e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "proposal",
+      "proxy": true,
+      "samples_s": [
+        6.0744002e-05,
+        5.9972983e-05
+      ],
+      "scalar_mean_s": 6.0358492e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 4.3235486e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "exchange",
+      "proxy": true,
+      "samples_s": [
+        4.3891952e-05,
+        4.257902e-05
+      ],
+      "scalar_mean_s": 4.3235486e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 1.7768471e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "validation",
+      "proxy": true,
+      "samples_s": [
+        1.7362996e-05,
+        1.8173945e-05
+      ],
+      "scalar_mean_s": 1.7768471e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 6.1029976e-05,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "checkpoint",
+      "proxy": true,
+      "samples_s": [
+        6.150594e-05,
+        6.0554012e-05
+      ],
+      "scalar_mean_s": 6.1029976e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 0.000778371468,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "restart",
+      "proxy": true,
+      "samples_s": [
+        0.000779012917,
+        0.00077773002
+      ],
+      "scalar_mean_s": 0.000778371468,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 0.001727524039,
+      "family": "ferromagnetic_ring_easy",
+      "measurement_repetitions": 2,
+      "phase": "end_to_end",
+      "proxy": true,
+      "samples_s": [
+        0.001729137031,
+        0.001725911046
+      ],
+      "scalar_mean_s": 0.001727524039,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "batch_mean_s": 1.783343e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "serialization",
+      "proxy": true,
+      "samples_s": [
+        1.7532962e-05,
+        1.8133898e-05
+      ],
+      "scalar_mean_s": 1.783343e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 4.41039e-07,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "python_allocation",
+      "proxy": true,
+      "samples_s": [
+        4.3097e-07,
+        4.51109e-07
+      ],
+      "scalar_mean_s": 4.41039e-07,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 0.000327570015,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "pyo3_crossing",
+      "proxy": true,
+      "samples_s": [
+        0.000327544985,
+        0.000327595044
+      ],
+      "scalar_mean_s": 0.000327570015,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 0.000185528479,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "rust_allocation",
+      "proxy": true,
+      "samples_s": [
+        0.000186109915,
+        0.000184947043
+      ],
+      "scalar_mean_s": 0.000185528479,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 1.175201e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "energy_update",
+      "proxy": true,
+      "samples_s": [
+        1.2292992e-05,
+        1.1211028e-05
+      ],
+      "scalar_mean_s": 1.175201e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 6.0769031e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "proposal",
+      "proxy": true,
+      "samples_s": [
+        6.2156003e-05,
+        5.9382059e-05
+      ],
+      "scalar_mean_s": 6.0769031e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 4.3316453e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "exchange",
+      "proxy": true,
+      "samples_s": [
+        4.3451902e-05,
+        4.3181004e-05
+      ],
+      "scalar_mean_s": 4.3316453e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 1.7537968e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "validation",
+      "proxy": true,
+      "samples_s": [
+        1.8605031e-05,
+        1.6470905e-05
+      ],
+      "scalar_mean_s": 1.7537968e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 6.1139523e-05,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "checkpoint",
+      "proxy": true,
+      "samples_s": [
+        6.0582999e-05,
+        6.1696046e-05
+      ],
+      "scalar_mean_s": 6.1139523e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 0.000830264064,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "restart",
+      "proxy": true,
+      "samples_s": [
+        0.000801225076,
+        0.000859303051
+      ],
+      "scalar_mean_s": 0.000830264064,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 0.001732407429,
+      "family": "frustrated_chord_moderate",
+      "measurement_repetitions": 2,
+      "phase": "end_to_end",
+      "proxy": true,
+      "samples_s": [
+        0.00173056894,
+        0.001734245918
+      ],
+      "scalar_mean_s": 0.001732407429,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "batch_mean_s": 1.7232029e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "serialization",
+      "proxy": true,
+      "samples_s": [
+        1.6911072e-05,
+        1.7552986e-05
+      ],
+      "scalar_mean_s": 1.7232029e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 4.9104e-07,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "python_allocation",
+      "proxy": true,
+      "samples_s": [
+        4.01051e-07,
+        5.81029e-07
+      ],
+      "scalar_mean_s": 4.9104e-07,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 0.000302763481,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "pyo3_crossing",
+      "proxy": true,
+      "samples_s": [
+        0.000307537033,
+        0.000297989929
+      ],
+      "scalar_mean_s": 0.000302763481,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 0.000182192016,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "rust_allocation",
+      "proxy": true,
+      "samples_s": [
+        0.00018574798,
+        0.000178636052
+      ],
+      "scalar_mean_s": 0.000182192016,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 1.1781987e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "energy_update",
+      "proxy": true,
+      "samples_s": [
+        1.252396e-05,
+        1.1040014e-05
+      ],
+      "scalar_mean_s": 1.1781987e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 5.9907034e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "proposal",
+      "proxy": true,
+      "samples_s": [
+        6.1986037e-05,
+        5.7828031e-05
+      ],
+      "scalar_mean_s": 5.9907034e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 4.1969004e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "exchange",
+      "proxy": true,
+      "samples_s": [
+        4.3081003e-05,
+        4.0857005e-05
+      ],
+      "scalar_mean_s": 4.1969004e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 1.7357466e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "validation",
+      "proxy": true,
+      "samples_s": [
+        1.8374994e-05,
+        1.6339938e-05
+      ],
+      "scalar_mean_s": 1.7357466e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 5.9176004e-05,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "checkpoint",
+      "proxy": true,
+      "samples_s": [
+        6.1155064e-05,
+        5.7196943e-05
+      ],
+      "scalar_mean_s": 5.9176004e-05,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 0.000764300465,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "restart",
+      "proxy": true,
+      "samples_s": [
+        0.000786887947,
+        0.000741712982
+      ],
+      "scalar_mean_s": 0.000764300465,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    },
+    {
+      "batch_mean_s": 0.001636602974,
+      "family": "planted_basin_hard",
+      "measurement_repetitions": 2,
+      "phase": "end_to_end",
+      "proxy": true,
+      "samples_s": [
+        0.00169824902,
+        0.001574956928
+      ],
+      "scalar_mean_s": 0.001636602974,
+      "size": 96,
+      "timing_claimed": false,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "details": {
+        "abi3_forward_compatibility": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1",
+        "build_mode": "existing_local_pyo3_extension",
+        "bulk_run_sweeps_symbol_present": true,
+        "conductor_modified": false,
+        "extension_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+        "extension_present": true,
+        "features": {
+          "fpga_or_tsu": false,
+          "gpu": false,
+          "one_axis_tempering": true,
+          "penalty_axis_exchange": false
+        },
+        "path_precondition_note": "User prompt mentioned rust/carnot-samplers; actual crate path is crates/carnot-samplers.",
+        "release_profile_required": true
+      },
+      "resource": "release_rust_pyo3_build"
+    },
+    {
+      "available": true,
+      "details": {
+        "affinity_current_cpus": [
+          0
+        ],
+        "cpu_model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M",
+        "logical_cores": 24,
+        "physical_cores": 12,
+        "ram": {
+          "mem_available_kib": 85598124,
+          "mem_total_kib": 131157064,
+          "observable": true
+        }
+      },
+      "resource": "cpu_topology"
+    },
+    {
+      "available": true,
+      "details": {
+        "current_cpus": [
+          0
+        ],
+        "freeze_requested": true,
+        "observable": true,
+        "previous_cpus": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        "status": "frozen"
+      },
+      "resource": "cpu_affinity_controls"
+    },
+    {
+      "available": true,
+      "details": {
+        "mem_available_kib": 85598124,
+        "mem_total_kib": 131157064,
+        "observable": true
+      },
+      "resource": "ram"
+    },
+    {
+      "available": true,
+      "resource": "rustc"
+    },
+    {
+      "available": true,
+      "resource": "cargo"
+    },
+    {
+      "available": true,
+      "resource": "exp5723_hash",
+      "sha256": "70f2f15c0c105e9a2f2b05e81286eb5720668e73f9f7ccccaafb66fec2131c35"
+    },
+    {
+      "available": true,
+      "resource": "exp5724_hash",
+      "sha256": "722d03aa830158fa6994e991148f5cf081147e3a7dc4cb8a4f4fb8aca4183044"
+    }
+  ],
+  "proposal_mismatch_count": 0,
+  "python_fallback_receipts": [
+    {
+      "case_id": "empty",
+      "equivalent": true
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "fallback:ferromagnetic_ring_easy_n48_e82a17202d",
+      "equivalent": true
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "fallback:frustrated_chord_moderate_n48_04fbfecd24",
+      "equivalent": true
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "broken_binding",
+      "equivalent": true,
+      "fallback_reason": "rust_symbol_missing:RustOneAxisTemperingConfig,RustOneAxisTemperingCore,RustOneAxisTemperingState"
+    }
+  ],
+  "random_seeds": [
+    5738,
+    5739,
+    5740,
+    5741
+  ],
+  "reproducibility_checksum": "def77e66c2623091d51d4d9b400d58182f29f24071d0bc0aedd212dc6374a073",
+  "reproduction_workloads": [
+    {
+      "checkpoint_budget": {
+        "burn_in_sweeps": 1,
+        "timing_sample_sweeps": 2
+      },
+      "descriptor_hash": "e82a17202db4976dad3725ffaf98f23c318f461de3f15da581d35a05a77c4c29",
+      "exp5724_python_mean_s": 0.002124582111,
+      "exp5724_rust_mean_s": 0.003226489023,
+      "family": "ferromagnetic_ring_easy",
+      "rust_lost_in_exp5724": true,
+      "seed_set": [
+        5724,
+        5725,
+        5726,
+        5727,
+        5728,
+        5729,
+        5730,
+        5731,
+        5732,
+        5733
+      ],
+      "size": 48,
+      "workload_id": "ferromagnetic_ring_easy_n48_e82a17202d"
+    },
+    {
+      "checkpoint_budget": {
+        "burn_in_sweeps": 1,
+        "timing_sample_sweeps": 2
+      },
+      "descriptor_hash": "04fbfecd24de45b9f0a11b0a2967ef1ce465ae950fdc5fc30d57042657cf9417",
+      "exp5724_python_mean_s": 0.002129996979,
+      "exp5724_rust_mean_s": 0.003234485533,
+      "family": "frustrated_chord_moderate",
+      "rust_lost_in_exp5724": true,
+      "seed_set": [
+        5724,
+        5725,
+        5726,
+        5727,
+        5728,
+        5729,
+        5730,
+        5731,
+        5732,
+        5733
+      ],
+      "size": 48,
+      "workload_id": "frustrated_chord_moderate_n48_04fbfecd24"
+    },
+    {
+      "checkpoint_budget": {
+        "burn_in_sweeps": 1,
+        "timing_sample_sweeps": 2
+      },
+      "descriptor_hash": "caab836506d5ee6c5dc1ac594a6cb0b790065398925cf861e3c26da781fe081b",
+      "exp5724_python_mean_s": 0.002118971979,
+      "exp5724_rust_mean_s": 0.003210958222,
+      "family": "planted_basin_hard",
+      "rust_lost_in_exp5724": true,
+      "seed_set": [
+        5724,
+        5725,
+        5726,
+        5727,
+        5728,
+        5729,
+        5730,
+        5731,
+        5732,
+        5733
+      ],
+      "size": 48,
+      "workload_id": "planted_basin_hard_n48_caab836506"
+    },
+    {
+      "checkpoint_budget": {
+        "burn_in_sweeps": 1,
+        "timing_sample_sweeps": 2
+      },
+      "descriptor_hash": "a28f46def3e5d691b9cc460ec595631f12b15885211e79deb759dcfc511b12af",
+      "exp5724_python_mean_s": 0.003797695739,
+      "exp5724_rust_mean_s": 0.010349038298,
+      "family": "ferromagnetic_ring_easy",
+      "rust_lost_in_exp5724": true,
+      "seed_set": [
+        5724,
+        5725,
+        5726,
+        5727,
+        5728,
+        5729,
+        5730,
+        5731,
+        5732,
+        5733
+      ],
+      "size": 96,
+      "workload_id": "ferromagnetic_ring_easy_n96_a28f46def3"
+    },
+    {
+      "checkpoint_budget": {
+        "burn_in_sweeps": 1,
+        "timing_sample_sweeps": 2
+      },
+      "descriptor_hash": "1283a0475462c970b5b7d661dcadeaec3cdadbd27dae9ec50d49c5c41ededf71",
+      "exp5724_python_mean_s": 0.003821143263,
+      "exp5724_rust_mean_s": 0.010399311467,
+      "family": "frustrated_chord_moderate",
+      "rust_lost_in_exp5724": true,
+      "seed_set": [
+        5724,
+        5725,
+        5726,
+        5727,
+        5728,
+        5729,
+        5730,
+        5731,
+        5732,
+        5733
+      ],
+      "size": 96,
+      "workload_id": "frustrated_chord_moderate_n96_1283a04754"
+    },
+    {
+      "checkpoint_budget": {
+        "burn_in_sweeps": 1,
+        "timing_sample_sweeps": 2
+      },
+      "descriptor_hash": "dcaa94d7a00c62028112aa2570c98a56776e29100d3e4d33add7a9e8dd6a76fe",
+      "exp5724_python_mean_s": 0.003934626402,
+      "exp5724_rust_mean_s": 0.010640547661,
+      "family": "planted_basin_hard",
+      "rust_lost_in_exp5724": true,
+      "seed_set": [
+        5724,
+        5725,
+        5726,
+        5727,
+        5728,
+        5729,
+        5730,
+        5731,
+        5732,
+        5733
+      ],
+      "size": 96,
+      "workload_id": "planted_basin_hard_n96_dcaa94d7a0"
+    }
+  ],
+  "restart_mismatch_count": 0,
+  "result_order_mismatch_count": 0,
+  "run_date": "2026-07-20",
+  "scalar_api_unchanged": true,
+  "schema": "carnot.experiment_5738.one_axis_rust_batched_backend.v1",
+  "software_receipt": {
+    "cargo": {
+      "available": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "cargo 1.97.0 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.0-1.1)"
+    },
+    "numpy": "2.5.1",
+    "pyo3_version": "0.24",
+    "python": "3.12.13",
+    "rust_extension": {
+      "importable": true,
+      "one_axis_symbols_present": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so"
+    },
+    "rustc": {
+      "available": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "rustc 1.97.0 (2d8144b78 2026-07-07) (Arch Linux rust 1:1.97.0-1.1)"
+    },
+    "source_hashes": {
+      "experiment_5724": "56979b4eb33757e2b34d6e201ca3b71400091547bc0e0853ad73e799839a9050",
+      "experiment_5738": "f6f48c42fae344348d85a57260ac104ddb3ec70ea4bedb15ff6c611fe1ddf206",
+      "one_axis_backend": "1f1b6aa5b7934d381625a0654ba9673b118b7d12df2433e4bd95bb3926ef05e1",
+      "rust_one_axis_core": "95df0b7e873a81fe5d39caeb3fd087e85f7dd8fb82ffd874d7c3bd3fbd42f8b7",
+      "sampler_backend_factory": "0223c46e71979cfc8f3d720dbfe03151e5f6258b7fee7291d2ce86f735b4e3e8"
+    }
+  },
+  "software_speedup_claimed": false,
+  "spec_refs": [
+    "REQ-SAMPLE-5738",
+    "SCENARIO-SAMPLE-5738"
+  ],
+  "tests_added_or_reused": [],
+  "thread_receipts": {
+    "observed_threadpools": [
+      {
+        "architecture": "SkylakeX",
+        "filepath": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-017048f4.so",
+        "internal_api": "openblas",
+        "num_threads": 24,
+        "prefix": "libscipy_openblas",
+        "threading_layer": "pthreads",
+        "user_api": "blas",
+        "version": "0.3.33.112.0"
+      }
+    ],
+    "thread_env_after": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "thread_env_before": {
+      "MKL_NUM_THREADS": null,
+      "NUMEXPR_NUM_THREADS": null,
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "RAYON_NUM_THREADS": null
+    },
+    "thread_env_frozen_to_one_when_unset": true
+  },
+  "timing_claimed": false,
+  "upstream_artifact_hashes": {
+    "exp5723": {
+      "available": true,
+      "blocked_reason": null,
+      "honest_verdict": "complete: one-axis Rust/PyO3 kernel is exposed through SamplerBackend with exact fallback, restart receipts, and no timing or hardware claim",
+      "inference_substrate": "production_python_samplerbackend_plus_rust_pyo3_one_axis",
+      "path": "results/experiment_5723_one_axis_rust_samplerbackend_integration.json",
+      "ready": true,
+      "ready_field": "one_axis_samplerbackend_ready_score",
+      "ready_value": 1.0,
+      "sha256": "70f2f15c0c105e9a2f2b05e81286eb5720668e73f9f7ccccaafb66fec2131c35",
+      "valid": true
+    },
+    "exp5724": {
+      "available": true,
+      "blocked_reason": null,
+      "honest_verdict": "complete: terminal null; no consecutive larger-size matched-quality Rust/Python CPU crossover proven; timing claimed without GPU, FPGA, TSU, or hardware claim",
+      "inference_substrate": "matched_cpu_python_vs_rust_pyo3_production_samplerbackend",
+      "path": "results/experiment_5724_one_axis_rust_python_matched_crossover.json",
+      "ready": true,
+      "ready_field": "rust_crossover_ready_score",
+      "ready_value": 0.0,
+      "sha256": "722d03aa830158fa6994e991148f5cf081147e3a7dc4cb8a4f4fb8aca4183044",
+      "valid": true
+    }
+  }
+}

@@ -7,12 +7,15 @@
 //! Spec: REQ-SAMPLE-5714, SCENARIO-SAMPLE-5714
 
 use carnot_samplers::one_axis_tempering::{
-    CorrectedStepOutcome, OneAxisTemperingConfig, OneAxisTemperingCore,
-    OneAxisTemperingState, SwapOutcome,
+    CorrectedStepOutcome, OneAxisTemperingConfig, OneAxisTemperingCore, OneAxisTemperingState,
+    SwapOutcome,
 };
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
-use pyo3::types::PyDict;
+use pyo3::types::{PyDict, PyList};
+
+const LCG_A: u64 = 6364136223846793005;
+const LCG_C: u64 = 1442695040888963407;
 
 fn value_error(error: String) -> PyErr {
     PyValueError::new_err(error)
@@ -42,6 +45,28 @@ fn swap_to_dict<'py>(py: Python<'py>, outcome: SwapOutcome) -> PyResult<Bound<'p
     d.set_item("acceptance_probability", outcome.acceptance_probability)?;
     d.set_item("accepted", outcome.accepted)?;
     Ok(d)
+}
+
+fn state_to_checkpoint<'py>(
+    py: Python<'py>,
+    state: &OneAxisTemperingState,
+) -> PyResult<Bound<'py, PyDict>> {
+    let d = PyDict::new(py);
+    d.set_item("states", state.states.clone())?;
+    d.set_item("labels", state.labels.clone())?;
+    d.set_item("rng_state", state.rng_state)?;
+    d.set_item("sweep", state.sweep)?;
+    Ok(d)
+}
+
+fn next_uniform(rng_state: &mut u64) -> f64 {
+    *rng_state = rng_state.wrapping_mul(LCG_A).wrapping_add(LCG_C);
+    let bits = *rng_state >> 11;
+    (bits as f64) * (1.0 / ((1_u64 << 53) as f64))
+}
+
+fn draw_uniforms(rng_state: &mut u64, count: usize) -> Vec<f64> {
+    (0..count).map(|_| next_uniform(rng_state)).collect()
 }
 
 /// Validated one-axis tempering configuration.
@@ -208,6 +233,106 @@ impl PyOneAxisTemperingCore {
         Ok(PyOneAxisTemperingState {
             inner: self.inner.step(&state.inner).map_err(value_error)?,
         })
+    }
+
+    #[pyo3(signature = (states, labels, rng_state, sweep, burn_in_sweeps, n_samples))]
+    fn run_sweeps<'py>(
+        &self,
+        py: Python<'py>,
+        states: Vec<Vec<i8>>,
+        labels: Vec<usize>,
+        rng_state: u64,
+        sweep: usize,
+        burn_in_sweeps: usize,
+        n_samples: usize,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        if n_samples == 0 {
+            return Err(PyValueError::new_err("n_samples must be positive"));
+        }
+        let mut state =
+            OneAxisTemperingState::new(states, labels, rng_state, sweep).map_err(value_error)?;
+        let total_sweeps = burn_in_sweeps
+            .checked_add(n_samples)
+            .ok_or_else(|| PyValueError::new_err("sweep count overflow"))?;
+        let replica_count = self.inner.config.beta_ladder.len();
+        let n_spins = self.inner.config.n_spins();
+        let decision_log = PyList::empty(py);
+        let mut samples_spin: Vec<Vec<i8>> = Vec::with_capacity(n_samples);
+
+        for local_sweep in 0..total_sweeps {
+            let completed_sweep = state.sweep + 1;
+            for physical_index in 0..replica_count {
+                let beta_label = state.labels[physical_index];
+                let beta = self.inner.config.beta_ladder[beta_label];
+                let before = state.states[physical_index].clone();
+                let uniforms = draw_uniforms(&mut state.rng_state, n_spins + 1);
+                let outcome = self
+                    .inner
+                    .corrected_step(&before, beta, &uniforms)
+                    .map_err(value_error)?;
+                let after = outcome.state.clone();
+                state.states[physical_index] = after.clone();
+
+                let event = PyDict::new(py);
+                event.set_item("kind", "within")?;
+                event.set_item("sweep", completed_sweep)?;
+                event.set_item("physical_index", physical_index)?;
+                event.set_item("beta_label", beta_label)?;
+                event.set_item("beta", beta)?;
+                event.set_item("uniforms", uniforms)?;
+                event.set_item("state_before", before)?;
+                event.set_item("state_after", after)?;
+                event.set_item("proposed_state", outcome.proposed_state)?;
+                event.set_item("current_energy", outcome.current_energy)?;
+                event.set_item("proposed_energy", outcome.proposed_energy)?;
+                event.set_item("proposal_log_forward", outcome.proposal_log_forward)?;
+                event.set_item("proposal_log_reverse", outcome.proposal_log_reverse)?;
+                event.set_item("log_acceptance", outcome.log_acceptance)?;
+                event.set_item("accepted", outcome.accepted)?;
+                decision_log.append(event)?;
+            }
+
+            for left in 0..(replica_count - 1) {
+                let before_labels = state.labels.clone();
+                let uniform = next_uniform(&mut state.rng_state);
+                let label_pair = vec![left, left + 1];
+                let outcome = self
+                    .inner
+                    .swap_decision(&state.states, &state.labels, &label_pair, uniform)
+                    .map_err(value_error)?;
+                state.labels = outcome.labels.clone();
+
+                let event = PyDict::new(py);
+                event.set_item("kind", "swap")?;
+                event.set_item("sweep", completed_sweep)?;
+                event.set_item("label_pair", label_pair)?;
+                event.set_item("uniform", uniform)?;
+                event.set_item("labels_before", before_labels)?;
+                event.set_item("labels_after", state.labels.clone())?;
+                event.set_item("proposed_labels", outcome.proposed_labels)?;
+                event.set_item("log_ratio", outcome.log_ratio)?;
+                event.set_item("acceptance_probability", outcome.acceptance_probability)?;
+                event.set_item("accepted", outcome.accepted)?;
+                decision_log.append(event)?;
+            }
+
+            state.sweep = completed_sweep;
+            if local_sweep >= burn_in_sweeps {
+                let cold_label = replica_count - 1;
+                let position = state
+                    .labels
+                    .iter()
+                    .position(|label| *label == cold_label)
+                    .ok_or_else(|| PyValueError::new_err("cold label missing from state"))?;
+                samples_spin.push(state.states[position].clone());
+            }
+        }
+
+        let d = PyDict::new(py);
+        d.set_item("samples_spin", samples_spin)?;
+        d.set_item("decision_log", decision_log)?;
+        d.set_item("final_state", state_to_checkpoint(py, &state)?)?;
+        Ok(d)
     }
 
     fn target_state(&self, state: &PyOneAxisTemperingState) -> PyResult<Vec<i8>> {

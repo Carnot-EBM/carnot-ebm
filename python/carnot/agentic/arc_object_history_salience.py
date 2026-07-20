@@ -55,6 +55,7 @@ from typing import Any
 from carnot.agentic.arc_color_blob_salience import (
     ColorBlobSaliencePrior,
     _as_grid,
+    _cached_blobs_and_counts,
     blob_at_click,
     connected_color_blobs,
     object_hash,
@@ -148,7 +149,15 @@ class ObjectHistorySaliencePrior:
             x, y = int(data["x"]), int(data["y"])
         except Exception:
             return base
-        blobs = connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0)
+        # Route the per-candidate blob decomposition through the SAME module-level
+        # per-frame cache ColorBlobSaliencePrior.score() uses (REQ-ARC-FCP-5699 item-2,
+        # 2026-07-16). ``self.base_prior.score(frame, candidate)`` above already warmed
+        # that cache for this exact (grid, min_pixels=1, max_component_fraction=1.0) key
+        # -- these params match ColorBlobSaliencePrior's default cached call
+        # (large_flat_deprioritization=True -> max_component_fraction=1.0, min_pixels=1) --
+        # so this is a cache HIT, not the raw per-candidate flood-fill that the 8176-calls-
+        # for-500-actions profiling eliminated everywhere else. Identical blobs, no re-run.
+        blobs, _ = _cached_blobs_and_counts(grid, min_pixels=1, max_component_fraction=1.0)
         blob = blob_at_click(blobs, x, y)
         if blob is None:
             return base

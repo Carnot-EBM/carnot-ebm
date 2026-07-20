@@ -1,6 +1,7 @@
 """Tests for the one-axis Rust SamplerBackend adapter.
 
-Spec coverage: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723
+Spec coverage: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723, REQ-SAMPLE-5738,
+SCENARIO-SAMPLE-5738
 """
 
 from __future__ import annotations
@@ -13,6 +14,7 @@ import numpy as np
 import pytest
 
 from carnot import experiment_5714_one_axis_tempering_rust_parity as exp5714
+from carnot import experiment_5724_one_axis_rust_python_matched_crossover as exp5724
 from carnot.samplers.backend import CpuBackend, SamplerBackend, get_backend
 from carnot.samplers.one_axis_rust_backend import (
     ONE_AXIS_ALGORITHM,
@@ -70,6 +72,27 @@ def test_req_sample_5723_spec_declares_production_backend_contract() -> None:
         "timing_claimed=false",
         "hardware_speedup_claimed=false",
         "production_python_samplerbackend_plus_rust_pyo3_one_axis",
+    ):
+        assert marker in section or marker in normalized
+
+
+def test_req_sample_5738_spec_declares_batched_backend_contract() -> None:
+    """REQ-SAMPLE-5738: OpenSpec anchors batch API, controls, and no-speed scope."""
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-SAMPLE-5738") : spec.index("### REQ-SAMPLE-1746")]
+    normalized = " ".join(section.split())
+
+    for marker in (
+        "OneAxisRustBackend.sample_batch",
+        "normal, empty, singleton, mixed-size",
+        "corrupted-checkpoint, broken-binding, and exception controls",
+        "energy traces, proposal diagnostics",
+        "temperature-label exchanges",
+        "at least 10000 retained samples for `n>=64`",
+        "multiple-comparison correction",
+        "batch_backend_ready_score",
+        "`timing_claimed`, `software_speedup_claimed`, and",
+        "local_cpu_rust_pyo3_one_axis_batched_sampler",
     ):
         assert marker in section or marker in normalized
 
@@ -361,3 +384,92 @@ def test_req_sample_5723_invalid_inputs_and_energy_sign_control_fail_closed() ->
         backend.run_descriptor(biases, couplings, 0, descriptor)
 
     assert backend.energy_sign_control(biases, couplings, descriptor)["rejected"] is True
+
+
+def _batch_workload(size: int, seed: int, family: str = "ferromagnetic_ring_easy") -> dict:
+    workload = exp5724.build_workload_manifest(
+        problem_sizes=(size,),
+        topology_families=(family,),
+    )[0]
+    fields, couplings = exp5724.arrays_from_workload(workload)
+    return {
+        "workload_id": workload["workload_id"],
+        "biases": fields,
+        "couplings": couplings,
+        "n_samples": 2,
+        "config": descriptor_for_run(
+            seed=seed,
+            initial_states=exp5724.initial_states_for(workload, seed),
+            initial_labels=list(range(len(exp5714.BETA_LADDER))),
+            burn_in_sweeps=1,
+        ),
+    }
+
+
+def test_req_sample_5738_sample_batch_matches_scalar_for_singleton_and_mixed_size() -> None:
+    """REQ-SAMPLE-5738: sample_batch preserves scalar semantics and result order."""
+    workloads = [_batch_workload(3, 5738), _batch_workload(6, 5739)]
+    backend = OneAxisRustBackend(seed=5738)
+
+    batch = backend.sample_batch(workloads)
+    scalar = [
+        OneAxisRustBackend(seed=int(item["config"]["seed"])).run_descriptor(
+            item["biases"],
+            item["couplings"],
+            item["n_samples"],
+            item["config"],
+        )
+        for item in workloads
+    ]
+
+    assert [row["workload_id"] for row in batch] == [row["workload_id"] for row in workloads]
+    assert backend.sample_batch([]) == []
+    assert backend.last_batch_receipt["item_count"] == 0
+    for batch_row, scalar_row in zip(batch, scalar, strict=True):
+        assert batch_row["receipt"]["batch_index"] in (0, 1)
+        assert batch_row["receipt"]["active_backend"] == scalar_row["receipt"]["active_backend"]
+        np.testing.assert_array_equal(batch_row["samples"], scalar_row["samples"])
+        assert batch_row["samples_spin"] == scalar_row["samples_spin"]
+        assert batch_row["decision_log"] == scalar_row["decision_log"]
+        assert batch_row["checkpoint"]["state"] == scalar_row["checkpoint"]["state"]
+
+
+def test_req_sample_5738_batch_fallback_broken_binding_is_exact() -> None:
+    """REQ-SAMPLE-5738: batch broken-binding control falls back exactly."""
+    workloads = [_batch_workload(3, 5740), _batch_workload(6, 5741)]
+    broken = OneAxisRustBackend(seed=5740, rust_module_loader=lambda: SimpleNamespace())
+    fallback = OneAxisRustBackend(seed=5740, prefer_rust=False)
+
+    broken_rows = broken.sample_batch(workloads)
+    fallback_rows = fallback.sample_batch(workloads)
+
+    assert len(broken_rows) == len(fallback_rows) == 2
+    assert broken.last_batch_receipt["ordered_workload_ids"] == [
+        item["workload_id"] for item in workloads
+    ]
+    for broken_row, fallback_row in zip(broken_rows, fallback_rows, strict=True):
+        assert broken_row["receipt"]["active_backend"] == "python_exact_fallback"
+        assert "rust_symbol_missing" in broken_row["receipt"]["fallback_reason"]
+        np.testing.assert_array_equal(broken_row["samples"], fallback_row["samples"])
+        assert broken_row["decision_log"] == fallback_row["decision_log"]
+
+
+def test_req_sample_5738_batch_corrupt_checkpoint_and_exception_controls_fail_closed() -> None:
+    """REQ-SAMPLE-5738: batch corrupt-checkpoint and malformed-item controls reject."""
+    item = _batch_workload(3, 5742)
+    backend = OneAxisRustBackend(seed=5742)
+    prefix = backend.run_descriptor(
+        item["biases"],
+        item["couplings"],
+        item["n_samples"],
+        item["config"],
+    )
+    corrupt = deepcopy(prefix["checkpoint"])
+    corrupt["state"]["sweep"] = int(corrupt["state"]["sweep"]) + 1
+    bad_checkpoint = deepcopy(item)
+    bad_checkpoint["config"] = {**item["config"], "checkpoint": corrupt}
+
+    with pytest.raises(ValueError, match="checksum"):
+        OneAxisRustBackend(seed=5742).sample_batch([bad_checkpoint])
+    with pytest.raises(ValueError, match="batch workload"):
+        OneAxisRustBackend(seed=5742).sample_batch([{"biases": item["biases"]}])
