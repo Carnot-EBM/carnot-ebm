@@ -1,0 +1,57 @@
+{
+  "experiment": 5741,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-20",
+  "started_at": "2026-07-20T05:14:31.834551+00:00",
+  "finished_at": "2026-07-20T05:14:31.834551+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5740 causal utility: harden one generic ARC primitive in the live path",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-audit.source_leak_count (actual=1 == expected=0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5740-arc-game-blind-primitive-causal-audit",
+      "artifact_field": "positive_causal_primitive_count",
+      "op": ">=",
+      "expected": 1,
+      "actual": 7,
+      "passed": true,
+      "reason": "actual=7 >= expected=1"
+    },
+    {
+      "upstream": "exp5740-arc-game-blind-primitive-causal-audit",
+      "artifact_field": "source_leak_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 1,
+      "passed": false,
+      "reason": "actual=1 == expected=0"
+    },
+    {
+      "upstream": "exp5740-arc-game-blind-primitive-causal-audit",
+      "artifact_field": "game_identity_leak_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 2,
+      "passed": false,
+      "reason": "actual=2 == expected=0"
+    },
+    {
+      "upstream": "exp5740-arc-game-blind-primitive-causal-audit",
+      "artifact_field": "counterfactual_receipt_coverage",
+      "op": "==",
+      "expected": 1.0,
+      "actual": {
+        "candidate_count": 7,
+        "meets_minimum_n": true,
+        "minimum_positive_candidate_paired_replay_count": 322,
+        "paired_replay_count": 20759,
+        "trace_step_count": 9975
+      },
+      "passed": false,
+      "reason": "actual={'candidate_count': 7, 'meets_minimum_n': True, 'minimum_positive_candidate_paired_replay_count': 322, 'paired_replay_count': 20759, 'trace_step_count': 9975} == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
