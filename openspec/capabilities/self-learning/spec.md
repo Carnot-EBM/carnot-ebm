@@ -23354,6 +23354,153 @@ model-weight mutation, or stale verdicts SHALL block
 |---|---|---|
 | REQ-LEARN-5737 | Planned (`python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py`, `results/experiment_5737_sota_stream_csl_shadow_ingress.json`) | Planned (`tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py`) |
 
+## REQ-LEARN-5749: FR-11 Render-Matched CSL Mechanism Residual Audit
+
+The self-learning tier SHALL provide Exp 5749, a CPU-only deterministic audit
+of the `.512` chronological continuous-self-learning streams. Before selecting
+or interpreting any control hyperparameters, Exp 5749 MUST freeze stream order,
+prefix/suffix split, exact-label authority, lifecycle operation set, update
+count, optimizer budget, parameter budget, stopping rule, render view contract,
+and random seed set. It SHALL precondition-check and hash-verify every upstream
+artifact, stream manifest, operation ledger, checkpoint receipt, exact-label
+receipt, Python environment requirement, free RAM/disk floor, and deterministic
+replay seed before replay. If any sealed stream, ledger, checkpoint, or exact
+label cannot be reproduced exactly, the run SHALL fail closed with a `blocked:`
+verdict and SHALL NOT emit a scale-up-ready KAN claim.
+
+Exp 5749 SHALL replay the `.512` chronological streams under matched controls:
+zero-gated spline growth, parameter-matched MLP residual, no-growth active
+spline, always-open residual, and frozen controller. Each arm SHALL share the
+same labels, chronology, prefix/suffix split, update count, optimizer budget,
+parameter budget, and stopping rule. The parameter-matched receipt SHALL identify
+the KAN headline arm and the best non-KAN matched control before outcomes are
+interpreted. The signed `kan_mechanism_residual` definition MUST be
+preregistered before replay as:
+
+`best_matched_non_kan_suffix_error - kan_suffix_error_after_all_safety_and_retention_gates`
+
+A value greater than zero SHALL favor the KAN mechanism. A value of zero or less
+SHALL close KAN-specific scale-up readiness without erasing generic FR-11 safety
+evidence from the exact-label, retention, rejection, and rollback gates.
+
+Exp 5749 SHALL add render-matched deprecation-enabled and deprecation-disabled
+ledger views. Those views SHALL have identical text length, ordering, field set,
+status-marker set, and candidate-availability set so deprecation-aware memory
+presentation cannot imitate a mechanism gain. It SHALL also run corrupted-order
+and rejected-update propagation controls. Corrupted-order controls SHALL be
+detected before credit. Rejected updates SHALL keep propagation count at zero and
+SHALL not change protected prefix or lifecycle state.
+
+The audit SHALL recompute prefix/suffix exact error, forward transfer, recovery
+time, dynamic regret, old-prefix retention, unsafe updates, rejected propagation,
+update latency, memory/parameter growth, and exact rollback hashes over at least
+30 chronological sessions. It SHALL require a CerCE-style exact non-forgetting
+certificate over every protected prefix and lifecycle state. No GGUF weight,
+production default, or exact-validator rule SHALL change.
+
+The terminal artifact MUST be written to
+`results/experiment_5749_csl_render_matched_mechanism_audit.json` and include
+the following top-level required fields with field principles:
+`field_principles` -- every field explains why it exists;
+`preconditions_checked` -- missing upstream, replay, environment, RAM, or disk
+evidence blocks the run; `spec_refs` -- OpenSpec anchors are visible;
+`upstream_artifact_hashes` -- source artifacts are content-addressed;
+`stream_hashes` -- chronological prefix/suffix/order commitments are sealed;
+`operation_ledger_hash` -- replay ledger bytes are content-addressed;
+`control_definitions` -- arm matching and stopping rules are preregistered;
+`render_match_receipts` -- deprecation views cannot leak mechanism signal;
+`parameter_match_receipts` -- KAN and non-KAN parameter budgets are matched;
+`update_count_match_receipts` -- every active arm consumes the same update
+budget; `chronology_receipts` -- rows replay once in committed order;
+`session_count` -- the denominator supports percentage-point claims;
+`arm_metrics` -- per-arm prefix/suffix, transfer, retention, cost, and safety
+metrics are inspectable; `prefix_retention_delta` -- protected-prefix retention
+is bounded; `prefix_retention_pass_score` -- retention release gating is
+mechanical; `suffix_error_by_arm` -- signed residual inputs are visible;
+`dynamic_regret_by_arm` -- per-arm regret is explicit;
+`recovery_time_by_arm` -- recovery latency is visible;
+`unsafe_update_count` -- exact safety is scalar;
+`rejected_update_propagation_count` -- rejected updates cannot spread;
+`rollback_hash_mismatch_count` -- rollback equivalence is exact;
+`kan_mechanism_residual_definition` -- signed residual math is frozen before
+replay; `kan_mechanism_residual` -- KAN-specific mechanism credit is signed;
+`nonforgetting_certificate` -- protected prefixes and lifecycle states are
+certified; `continuous_self_learning_target` -- the task is an FR-11 target;
+`continuous_self_learning_credited` -- generic FR-11 safety credit is separated
+from KAN scale-up credit; `kan_scaleup_ready_score` -- KAN-specific downstream
+readiness is mechanical; `model_weight_mutation` -- model weights remain
+unchanged; `production_default_enabled` -- the audit is not a production
+default; `inference_substrate` -- no new LLM inference occurred; `random_seeds`
+-- deterministic replay seeds are visible; `test_commands` -- verification
+commands are recorded; `test_exit_codes` -- executed verification outcomes are
+recorded; `reproducibility_checksum` -- artifact bytes replay; and
+`honest_verdict` -- terminal status starts with `complete:` or `blocked:`
+(terminal status starts with complete: or blocked:).
+`continuous_self_learning_target` SHALL equal `true`.
+`model_weight_mutation` SHALL equal `false`.
+`production_default_enabled` SHALL equal `false`.
+`inference_substrate` SHALL equal
+`exact_chronological_stream_external_sidecar_replay`.
+
+`kan_scaleup_ready_score` SHALL be exactly `1.0` only when preconditions pass,
+all upstream hashes/ledgers/checkpoints replay exactly, render matching passes,
+parameter/update/chronology matching passes, corrupted-order controls detect
+order corruption, rejected updates have zero propagation, unsafe update count is
+zero, rollback hash mismatches are zero, non-forgetting certificates pass, model
+weights and production defaults remain unchanged, and
+`kan_mechanism_residual > 0.0`. If `kan_mechanism_residual <= 0.0`, the audit
+SHALL still set `continuous_self_learning_credited=true` when generic FR-11
+safety and retention evidence passes, but SHALL set `kan_scaleup_ready_score=0.0`
+with an honest complete null/negative verdict.
+
+### SCENARIO-LEARN-5749-MATCHED-CONTROLS: Matched Replay Defines The Signed Residual
+
+**Given** the `.512` chronological stream commitments and upstream Exp 5735,
+Exp 5736, and Exp 5737 artifacts verify exactly
+**When** Exp 5749 replays zero-gated spline growth, parameter-matched MLP,
+no-growth active spline, always-open residual, and frozen controller
+**Then** each active arm SHALL share identical labels, chronology, update count,
+optimizer budget, parameter budget, and stopping rule
+**And** `kan_mechanism_residual` SHALL equal best matched non-KAN suffix error
+minus gated KAN suffix error.
+
+### SCENARIO-LEARN-5749-RENDER: Deprecation Views Are Presentation-Matched
+
+**Given** deprecation-enabled and deprecation-disabled ledger views over the same
+committed chronological rows
+**When** Exp 5749 builds render-match receipts
+**Then** text length, ordering, field set, status-marker set, and
+candidate-availability set SHALL be identical
+**And** any corrupted-order or rejected-update propagation control SHALL fail
+closed before mechanism credit.
+
+### SCENARIO-LEARN-5749-NONFORGETTING: CerCE Certificate Covers Prefix And Lifecycle State
+
+**Given** protected prefix rows, lifecycle states, rollback targets, and rejected
+updates from the upstream FR-11 sidecars
+**When** Exp 5749 builds its non-forgetting certificate
+**Then** every protected prefix and lifecycle state SHALL have exact before/after
+hash equality or an explicit zero-propagation rejected-update receipt
+**And** rollback hash mismatches, unsafe updates, model-weight mutation,
+production-default enablement, or exact-validator mutation SHALL block KAN
+scale-up readiness.
+
+### SCENARIO-LEARN-5749-RELEASE: Negative Residual Closes KAN Scale-Up But Preserves FR-11 Safety
+
+**Given** the parameter-matched non-KAN MLP suffix error is lower than the gated
+KAN suffix error after all safety and retention gates
+**When** Exp 5749 validates the terminal artifact
+**Then** `kan_mechanism_residual` SHALL be negative
+**And** `kan_scaleup_ready_score` SHALL be `0.0`
+**And** `continuous_self_learning_credited` SHALL remain `true` only if generic
+FR-11 exact-label, retention, rejection, and rollback evidence passes.
+
+## Implementation Status (Exp 5749)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5749 | Planned (`python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py`, `results/experiment_5749_csl_render_matched_mechanism_audit.json`) | Planned (`tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py`) |
+
 ## REQ-LEARN-5640: Opt-In FR-11 Shadow Adapter In Verify/Repair Path
 
 The verify/repair pipeline SHALL expose an opt-in, fail-closed FR-11 shadow

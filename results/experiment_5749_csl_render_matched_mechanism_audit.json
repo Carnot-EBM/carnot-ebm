@@ -1,0 +1,468 @@
+{
+  "arm_metrics": {
+    "always_open_residual": {
+      "dynamic_regret": 0.078651,
+      "forward_transfer": 0.859551,
+      "mechanism_family": "kan_always_open_negative_control",
+      "old_prefix_retention_pass": true,
+      "parameter_growth": 1.0,
+      "peak_memory_growth_mb": 0.0,
+      "prefix_exact_error": 0.166667,
+      "recovery_time_sessions": 5,
+      "suffix_exact_error": 0.140449,
+      "unsafe_update_count": 0,
+      "update_count": 208,
+      "update_latency_ms": {
+        "count": 208,
+        "max": 0.067,
+        "mean": 0.014495,
+        "p50": 0.0,
+        "p95": 0.067
+      }
+    },
+    "frozen_controller": {
+      "dynamic_regret": 0.938202,
+      "forward_transfer": 0.0,
+      "mechanism_family": "non_kan_frozen",
+      "old_prefix_retention_pass": true,
+      "parameter_growth": 1.0,
+      "peak_memory_growth_mb": 0.0,
+      "prefix_exact_error": 1.0,
+      "recovery_time_sessions": 30,
+      "suffix_exact_error": 1.0,
+      "unsafe_update_count": 0,
+      "update_count": 0,
+      "update_latency_ms": {
+        "count": 208,
+        "max": 0.067,
+        "mean": 0.014495,
+        "p50": 0.0,
+        "p95": 0.067
+      }
+    },
+    "no_growth_active_spline": {
+      "dynamic_regret": 0.691011,
+      "forward_transfer": 0.247191,
+      "mechanism_family": "kan_no_growth",
+      "old_prefix_retention_pass": true,
+      "parameter_growth": 1.0,
+      "peak_memory_growth_mb": 0.0,
+      "prefix_exact_error": 0.733333,
+      "recovery_time_sessions": 30,
+      "suffix_exact_error": 0.752809,
+      "unsafe_update_count": 0,
+      "update_count": 208,
+      "update_latency_ms": {
+        "count": 208,
+        "max": 0.067,
+        "mean": 0.014495,
+        "p50": 0.0,
+        "p95": 0.067
+      }
+    },
+    "parameter_matched_mlp_residual": {
+      "dynamic_regret": 0.0,
+      "forward_transfer": 0.938202,
+      "mechanism_family": "non_kan_mlp",
+      "old_prefix_retention_pass": true,
+      "parameter_growth": 1.03125,
+      "peak_memory_growth_mb": 0.00025177,
+      "prefix_exact_error": 0.066667,
+      "recovery_time_sessions": 2,
+      "suffix_exact_error": 0.061798,
+      "unsafe_update_count": 0,
+      "update_count": 208,
+      "update_latency_ms": {
+        "count": 208,
+        "max": 0.067,
+        "mean": 0.014495,
+        "p50": 0.0,
+        "p95": 0.067
+      }
+    },
+    "zero_gated_residual_spline_growth": {
+      "dynamic_regret": 0.084269,
+      "forward_transfer": 0.853933,
+      "mechanism_family": "kan",
+      "old_prefix_retention_pass": true,
+      "parameter_growth": 1.03125,
+      "peak_memory_growth_mb": 0.00025177,
+      "prefix_exact_error": 1.0,
+      "recovery_time_sessions": 5,
+      "suffix_exact_error": 0.146067,
+      "unsafe_update_count": 0,
+      "update_count": 208,
+      "update_latency_ms": {
+        "count": 208,
+        "max": 0.067,
+        "mean": 0.014495,
+        "p50": 0.0,
+        "p95": 0.067
+      }
+    }
+  },
+  "chronology_receipts": {
+    "all_headline_rows_replayed_once": true,
+    "chronology_hash": "sha256:a69ce5941bc63b446db826f8f66b1d174a0adc2cff871bac86d50ecdc61c780f",
+    "corrupted_order_detected": true,
+    "exp5735_chronology_preserved": true,
+    "ingress_consumed_once": 48,
+    "ingress_prefix_row_count": 48
+  },
+  "continuous_self_learning_credited": true,
+  "continuous_self_learning_target": true,
+  "control_definitions": {
+    "always_open_residual": {
+      "chronology": "identical_chronological_order",
+      "labels": "identical_exact_labels",
+      "optimizer_budget": "one_pass_matched_cpu_sidecar_update_budget",
+      "parameter_budget": "32_residual_parameters_for_kan_and_mlp; zero_for_no_growth_or_frozen",
+      "source_arm_config": {
+        "description": "residual spline opened at insertion as a negative control",
+        "initial_gate_scalar": 1.0,
+        "residual_parameter_count": 32,
+        "sidecar_only": true
+      },
+      "stopping_rule": "single_sealed_chronological_pass_no_posthoc_tuning"
+    },
+    "frozen_controller": {
+      "chronology": "identical_chronological_order",
+      "labels": "identical_exact_labels",
+      "optimizer_budget": "one_pass_matched_cpu_sidecar_update_budget",
+      "parameter_budget": "32_residual_parameters_for_kan_and_mlp; zero_for_no_growth_or_frozen",
+      "source_arm_config": {
+        "description": "frozen controller with no sidecar update",
+        "residual_parameter_count": 0,
+        "sidecar_only": true
+      },
+      "stopping_rule": "single_sealed_chronological_pass_no_posthoc_tuning"
+    },
+    "no_growth_active_spline": {
+      "chronology": "identical_chronological_order",
+      "labels": "identical_exact_labels",
+      "optimizer_budget": "one_pass_matched_cpu_sidecar_update_budget",
+      "parameter_budget": "32_residual_parameters_for_kan_and_mlp; zero_for_no_growth_or_frozen",
+      "source_arm_config": {
+        "description": "active-spline KAN without residual capacity growth",
+        "residual_parameter_count": 0,
+        "sidecar_only": true
+      },
+      "stopping_rule": "single_sealed_chronological_pass_no_posthoc_tuning"
+    },
+    "parameter_matched_mlp_residual": {
+      "chronology": "identical_chronological_order",
+      "labels": "identical_exact_labels",
+      "optimizer_budget": "one_pass_matched_cpu_sidecar_update_budget",
+      "parameter_budget": "32_residual_parameters_for_kan_and_mlp; zero_for_no_growth_or_frozen",
+      "source_arm_config": {
+        "description": "parameter-matched MLP residual sidecar control",
+        "parameter_count": 32,
+        "sidecar_only": true
+      },
+      "stopping_rule": "single_sealed_chronological_pass_no_posthoc_tuning"
+    },
+    "zero_gated_residual_spline_growth": {
+      "chronology": "identical_chronological_order",
+      "labels": "identical_exact_labels",
+      "optimizer_budget": "one_pass_matched_cpu_sidecar_update_budget",
+      "parameter_budget": "32_residual_parameters_for_kan_and_mlp; zero_for_no_growth_or_frozen",
+      "source_arm_config": {
+        "description": "active-spline KAN with zero-gated residual spline growth",
+        "initial_gate_scalar": 0.0,
+        "residual_parameter_count": 32,
+        "sidecar_only": true
+      },
+      "stopping_rule": "single_sealed_chronological_pass_no_posthoc_tuning"
+    }
+  },
+  "dynamic_regret_by_arm": {
+    "always_open_residual": 0.078651,
+    "frozen_controller": 0.938202,
+    "no_growth_active_spline": 0.691011,
+    "parameter_matched_mlp_residual": 0.0,
+    "zero_gated_residual_spline_growth": 0.084269
+  },
+  "experiment": 5749,
+  "experiment_id": "experiment_5749_csl_render_matched_mechanism_audit",
+  "field_principles": {
+    "arm_metrics": "per-arm prefix/suffix, transfer, retention, cost, and safety metrics are inspectable",
+    "chronology_receipts": "rows replay once in committed order",
+    "continuous_self_learning_credited": "generic FR-11 safety credit is separated from KAN scale-up credit",
+    "continuous_self_learning_target": "the task is an FR-11 target",
+    "control_definitions": "arm matching and stopping rules are preregistered",
+    "dynamic_regret_by_arm": "per-arm regret is explicit",
+    "experiment": "numeric identifier prevents artifact ambiguity",
+    "experiment_id": "stable identifier prevents artifact ambiguity",
+    "field_principles": "every field explains why it exists",
+    "honest_verdict": "terminal status starts with complete: or blocked:",
+    "inference_substrate": "no new LLM inference occurred",
+    "kan_mechanism_residual": "KAN-specific mechanism credit is signed",
+    "kan_mechanism_residual_definition": "signed residual math is frozen before replay",
+    "kan_scaleup_ready_score": "KAN-specific downstream readiness is mechanical",
+    "milestone": "milestone context is explicit",
+    "model_weight_mutation": "model weights remain unchanged",
+    "nonforgetting_certificate": "protected prefixes and lifecycle states are certified",
+    "operation_ledger_hash": "replay ledger bytes are content-addressed",
+    "parameter_match_receipts": "KAN and non-KAN parameter budgets are matched",
+    "preconditions_checked": "missing upstream, replay, environment, RAM, or disk evidence blocks the run",
+    "prefix_retention_delta": "protected-prefix retention is bounded",
+    "prefix_retention_pass_score": "retention release gating is mechanical",
+    "production_default_enabled": "the audit is not a production default",
+    "random_seed": "legacy scalar seed for methodology readers",
+    "random_seeds": "deterministic replay seeds are visible",
+    "recovery_time_by_arm": "recovery latency is visible",
+    "rejected_update_propagation_count": "rejected updates cannot spread",
+    "render_match_receipts": "deprecation views cannot leak mechanism signal",
+    "reproducibility_checksum": "artifact bytes replay",
+    "result_path": "result location is explicit",
+    "rollback_hash_mismatch_count": "rollback equivalence is exact",
+    "run_date": "run date is concrete",
+    "schema": "schema names the artifact contract",
+    "session_count": "the denominator supports percentage-point claims",
+    "source_file_checksums": "artifact traces to source bytes",
+    "source_files": "artifact traces to source files",
+    "spec_refs": "OpenSpec anchors are visible",
+    "stream_hashes": "chronological prefix/suffix/order commitments are sealed",
+    "suffix_error_by_arm": "signed residual inputs are visible",
+    "task_id": "task identifier links conductor work to evidence",
+    "test_commands": "verification commands are recorded",
+    "test_exit_codes": "executed verification outcomes are recorded",
+    "unsafe_update_count": "exact safety is scalar",
+    "update_count_match_receipts": "every active arm consumes the same update budget",
+    "upstream_artifact_hashes": "source artifacts are content-addressed"
+  },
+  "honest_verdict": "complete: kan_mechanism_residual_negative_fr11_safety_retained",
+  "inference_substrate": "exact_chronological_stream_external_sidecar_replay",
+  "kan_mechanism_residual": -0.084269,
+  "kan_mechanism_residual_definition": "best_matched_non_kan_suffix_error - kan_suffix_error_after_all_safety_and_retention_gates",
+  "kan_scaleup_ready_score": 0.0,
+  "milestone": "2026.07.513",
+  "model_weight_mutation": false,
+  "nonforgetting_certificate": {
+    "all_passed": true,
+    "certificate_hash": "sha256:213073f61bef0d182f5c5867e56217108b115258f0e4fc979c1a41823fc93966",
+    "certificate_style": "CerCE_exact_nonforgetting",
+    "exact_validator_rule_mutation": false,
+    "lifecycle_state_count": 74,
+    "lifecycle_state_mismatch_count": 0,
+    "protected_prefix_count": 48,
+    "protected_prefix_mismatch_count": 0,
+    "rejected_update_zero_propagation": true,
+    "rollback_hash_mismatch_count": 0
+  },
+  "operation_ledger_hash": "sha256:d5cb35a5584584a40da83894601ef622ff65977c0d79bffb1c4a8313db0e4dd5",
+  "parameter_match_receipts": {
+    "best_matched_non_kan_arm": "parameter_matched_mlp_residual",
+    "best_matched_non_kan_suffix_error": 0.061798,
+    "best_non_kan_parameter_count": 32,
+    "kan_headline_arm": "zero_gated_residual_spline_growth",
+    "kan_parameter_count": 32,
+    "kan_suffix_error_after_all_safety_and_retention_gates": 0.146067,
+    "matched_budget_hash": "sha256:5b9c4ffb7ace70192eaf34c6083ecd85aa6161075ee33dd77d22c1283dd8ff69",
+    "parameter_budget_matched": true
+  },
+  "preconditions_checked": {
+    "all_passed": true,
+    "deterministic_replay_seed": 5749001,
+    "deterministic_replay_seed_frozen": true,
+    "free_disk_available": true,
+    "free_disk_floor_mb": 64,
+    "free_ram_available": true,
+    "free_ram_floor_mb": 256,
+    "python_environment": {
+      "pytest_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "pytest_executable_available": true,
+      "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "python_executable_available": true,
+      "runtime_major_minor": [
+        3,
+        12
+      ],
+      "runtime_supported": true
+    },
+    "python_environment_available": true,
+    "upstream_artifacts_replayed": true
+  },
+  "prefix_retention_delta": 0.0,
+  "prefix_retention_pass_score": 1.0,
+  "production_default_enabled": false,
+  "random_seed": 5749001,
+  "random_seeds": {
+    "control_freeze_seed": 5749003,
+    "render_match_seed": 5749002,
+    "replay_seed": 5749001,
+    "upstream_exp5734_panel_seed": 5734001,
+    "upstream_exp5735_first_seed": 5735000,
+    "upstream_exp5737_ingress_seed": 5737001
+  },
+  "recovery_time_by_arm": {
+    "always_open_residual": 5,
+    "frozen_controller": 30,
+    "no_growth_active_spline": 30,
+    "parameter_matched_mlp_residual": 2,
+    "zero_gated_residual_spline_growth": 5
+  },
+  "rejected_update_propagation_count": 0,
+  "render_match_receipts": {
+    "all_passed": true,
+    "deprecation_disabled": {
+      "candidate_availability_hash": "sha256:7f82e35a4c53fe6e0f3e6093a5b13d7a4a83135ee073a15030505fdcf2bf7195",
+      "deprecation_enabled": false,
+      "field_order_hash": "sha256:b0cdf9ebdd0a78f1a6eb2e4b68d6a08b542cc974fe07bb01c66e95f225fc0d94",
+      "ordering_hash": "sha256:2de3df23a95183649c4c2ea34146e9f65276aaf45a855761f7dde11d70f7d0ec",
+      "status_marker_hash": "sha256:7842e34c43be10dd633e6779a073b4b3422aea13c2da35c415f04d2dea6f34f2",
+      "text_length": 3196,
+      "view_hash": "sha256:b7477e7292c67d36e6115fde6facdb82b08ec2e54777c7bc0fe604ef4c4f413b",
+      "view_row_count": 48
+    },
+    "deprecation_enabled": {
+      "candidate_availability_hash": "sha256:7f82e35a4c53fe6e0f3e6093a5b13d7a4a83135ee073a15030505fdcf2bf7195",
+      "deprecation_enabled": true,
+      "field_order_hash": "sha256:b0cdf9ebdd0a78f1a6eb2e4b68d6a08b542cc974fe07bb01c66e95f225fc0d94",
+      "ordering_hash": "sha256:2de3df23a95183649c4c2ea34146e9f65276aaf45a855761f7dde11d70f7d0ec",
+      "status_marker_hash": "sha256:7842e34c43be10dd633e6779a073b4b3422aea13c2da35c415f04d2dea6f34f2",
+      "text_length": 3196,
+      "view_hash": "sha256:b7477e7292c67d36e6115fde6facdb82b08ec2e54777c7bc0fe604ef4c4f413b",
+      "view_row_count": 48
+    },
+    "matched_keys": [
+      "text_length",
+      "ordering_hash",
+      "field_order_hash",
+      "status_marker_hash",
+      "candidate_availability_hash",
+      "view_hash"
+    ],
+    "matched_receipt_hash": "sha256:49fbf8f509f4fa6a246fefc1de7810925755003a9cf35075a8d85481de116be9"
+  },
+  "reproducibility_checksum": "sha256:01582d7f7708c176ce107271521deda4bfce778e97ab1a7f61b1e4d7c843f054",
+  "result_path": "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+  "rollback_hash_mismatch_count": 0,
+  "run_date": "20260720",
+  "schema": "carnot.experiment_5749.csl_render_matched_mechanism_audit.v1",
+  "session_count": 30,
+  "source_file_checksums": {
+    "openspec/capabilities/self-learning/spec.md": "sha256:c22ad2fa4e70e9491413014f507fd39683f04530b53f09740abec29963094ca8",
+    "python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py": "sha256:25d77a2215df7b813bc1b71818c09b2c4d669100a5c91334ed72e90bd0f183ff",
+    "tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py": "sha256:3ab68f233ce9da5c7b0d52fb7cec12582bb0c9029603e7a880b6a709f26ccdbe"
+  },
+  "source_files": [
+    "python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py",
+    "tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py",
+    "openspec/capabilities/self-learning/spec.md"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5749",
+    "SCENARIO-LEARN-5749-MATCHED-CONTROLS",
+    "SCENARIO-LEARN-5749-RENDER",
+    "SCENARIO-LEARN-5749-NONFORGETTING",
+    "SCENARIO-LEARN-5749-RELEASE"
+  ],
+  "stream_hashes": {
+    "combined_stream_hash": "sha256:bd1ee479c23d6cc2257370176a071797c4768c5b26710d61c93a2474b22a0503",
+    "exp5734_prefix_hash": "sha256:b5e5c98f1bb2061f24997275da5049ff3c597945538fe3abf6a149ab53fcd6b0",
+    "exp5734_stream_root_commitment": "sha256:b98722650a94dc1a1534aac4272dd9ecb73fe7316ebedb0a1d36e4fd67c9cfd3",
+    "exp5734_suffix_hash": "sha256:fa5148c10358f8a4a6f855d8a898015263fdc82e89875e0378563a081ad1e35c",
+    "exp5735_stream_order_hash": "sha256:01b89fc28d2cb35394ef54b873f49e3cecbe86c597d909cbc56018e4e6ee1a6a",
+    "exp5735_stream_root_hash": "sha256:9dd00b78a0d0c6ed26fe680141f27bd85582c0832a6547dd8c2ef623d0baacc1",
+    "exp5737_prefix_hash": "sha256:b5e5c98f1bb2061f24997275da5049ff3c597945538fe3abf6a149ab53fcd6b0",
+    "exp5737_stream_root_commitment": "sha256:b98722650a94dc1a1534aac4272dd9ecb73fe7316ebedb0a1d36e4fd67c9cfd3",
+    "exp5737_suffix_hash": "sha256:fa5148c10358f8a4a6f855d8a898015263fdc82e89875e0378563a081ad1e35c"
+  },
+  "suffix_error_by_arm": {
+    "always_open_residual": 0.140449,
+    "frozen_controller": 1.0,
+    "no_growth_active_spline": 0.752809,
+    "parameter_matched_mlp_residual": 0.061798,
+    "zero_gated_residual_spline_growth": 0.146067
+  },
+  "task_id": "exp5749-csl-render-matched-mechanism-audit",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py -m pytest tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5749_csl_render_matched_mechanism_audit.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --include=python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py -m pytest tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5749_csl_render_matched_mechanism_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "unsafe_update_count": 0,
+  "update_count_match_receipts": {
+    "active_arm_update_counts": {
+      "always_open_residual": 208,
+      "no_growth_active_spline": 208,
+      "parameter_matched_mlp_residual": 208,
+      "zero_gated_residual_spline_growth": 208
+    },
+    "all_active_arms_matched": true,
+    "frozen_controller_update_count": 0,
+    "ingress_prefix_update_count": 48,
+    "update_budget_hash": "sha256:ed1c49f8486bdc12ea216e14ed8ff9e274e27d5a951ba43b879245446b814e3c"
+  },
+  "upstream_artifact_hashes": {
+    "exact_label_receipts": {
+      "path": "results/experiment_5734_sota_exact_proposal_stream.rows.jsonl",
+      "sha256": "sha256:619a5d36a748cfd81d95a582cf0bb966becd67823484f98b47f967f22623e4e7",
+      "verified": true
+    },
+    "exp5734_artifact": {
+      "expected_sha256": "sha256:6e495447bee03edcc3c8f200115739afd43d3b6cd188ba4d049bd4189fe6d778",
+      "path": "results/experiment_5734_sota_exact_proposal_stream.json",
+      "sha256": "sha256:6e495447bee03edcc3c8f200115739afd43d3b6cd188ba4d049bd4189fe6d778",
+      "verified": true
+    },
+    "exp5734_row_manifest": {
+      "expected_sha256": "sha256:6f3046355cb54b1755b324d6d59640b23470ebdbdff2662d6e63dc76e62faff1",
+      "path": "results/experiment_5734_sota_exact_proposal_stream.rows.jsonl",
+      "sha256": "sha256:6f3046355cb54b1755b324d6d59640b23470ebdbdff2662d6e63dc76e62faff1",
+      "verified": true
+    },
+    "exp5735_artifact": {
+      "expected_sha256": "sha256:0b0a76aed8549cdfba2be941ffe3836fd53edb5313c8f69fc42a4080c56d8b88",
+      "path": "results/experiment_5735_zero_gate_kan_continuous_self_learning.json",
+      "sha256": "sha256:0b0a76aed8549cdfba2be941ffe3836fd53edb5313c8f69fc42a4080c56d8b88",
+      "verified": true
+    },
+    "exp5735_checkpoints": {
+      "path": "results/experiment_5735_zero_gate_kan_continuous_self_learning_checkpoints",
+      "sha256": "sha256:7454b28f649e4a0ba11367f28e3684ef4088c53c70894e9eaca02df013349449",
+      "verified": true
+    },
+    "exp5735_operation_ledger": {
+      "file_sha256": "sha256:a1acb471234b41d67a32b0f779ca3f2d82c75e31212eb251bb1476d8b05cc823",
+      "path": "results/experiment_5735_zero_gate_kan_continuous_self_learning_ledger.jsonl",
+      "sha256": "sha256:3e9f956ddc7ef6ab61c6388716a3376698285dc2c16d8cb9e72778d495e5315e",
+      "verified": true
+    },
+    "exp5736_artifact": {
+      "expected_sha256": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb",
+      "path": "results/experiment_5736_csl_lifecycle_conflict_rollback.json",
+      "sha256": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb",
+      "verified": true
+    },
+    "exp5736_operation_ledger": {
+      "file_sha256": "sha256:28059771d63c1a3e70fa7650f3708da3c305a85175224f22e2fcff5dc52718c0",
+      "path": "results/experiment_5736_csl_lifecycle_conflict_rollback_ledger.jsonl",
+      "sha256": "sha256:3e01a043c366f52a37e7d46d9fda911d5715dbaa2c427c4c22acacadc9a9467d",
+      "verified": true
+    },
+    "exp5737_artifact": {
+      "path": "results/experiment_5737_sota_stream_csl_shadow_ingress.json",
+      "sha256": "sha256:1d7ce562da7af6fff1ce725067fe75eae22c124520747d99edaf37466c1fe6b9",
+      "verified": true
+    },
+    "exp5737_ingress_ledger": {
+      "file_sha256": "sha256:6c3d198f64bffb9edff267360281aadcc85a5d15344ead5f45b3b7ba3194bdb7",
+      "path": "results/experiment_5737_sota_stream_csl_shadow_ingress_ledger.jsonl",
+      "sha256": "sha256:cab4a909cb95b44c18dad15c8f55d31c9646695bee9c128b4ff631b168e425ca",
+      "verified": true
+    }
+  }
+}
