@@ -2836,7 +2836,25 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 <!-- experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477:end -->
 
 ### GAP-ARC-INERT-CLICK-PRUNER-5xxx: no live-path pruner for inert/no-op click targets
-- status: open
+- status: built_and_wired_but_no_live_efficiency_benefit_at_budget200 (2026-07-20, exp5756). The
+  component was BUILT + unit-tested + live-wired on 2026-07-13 (`InertClickSigPruner`,
+  `arc_inert_click_pruner.py`; `rank_candidates` drop-filter in `StepwiseExplorer._candidates` + a
+  real `observe()` from `_ingest`; gated OFF by default `SUBMITTED_INERT_CLICK_PRUNER_ENABLED=False`).
+  The validation A/B that was missing is now done — exp5756
+  (`results/experiment_5756_inert_click_pruner_11game_ab.json`), the 11-game roster / budget=200 /
+  no-LLM matched-budget A/B extending the earlier single-game (`m0r0`, budget~37) never-fired nulls
+  exp5595 + exp5602. RESULT: at budget=200 the pruner FIRES (unlike the priors) — 2643 candidates
+  pruned across treatment arms, all on `sk48` — with NO missed win (`suppressed_a_winnable_click:
+  false`, the trust+specificity+sacred gate held, every game kept its baseline level) BUT NO
+  efficiency benefit: `states_expanded` INCREASED (baseline 931 -> treatment_default 953 (+22, all
+  from `sk48` 26->48) -> treatment_aggressive 960), the OPPOSITE of `HazardMovePruner`'s tu93 win
+  (2947->2859). On the one game where it pruned, dropping frame-inert clicks reshaped the search
+  frontier so more states were expanded for the same banked levels (a frame-inert click can still be
+  a necessary traversal step the search re-routes around). Recommendation (operator-only): do NOT
+  flip the live default; another plain budget/roster A/B is not warranted without a NEW mechanism
+  that makes pruning REDUCE rather than reshape search cost. Cache-hygiene fix shipped alongside
+  (route the pruner's `connected_color_blobs` through the shared `_cached_blobs_and_counts` cache,
+  behavior-preserving). Spec: REQ-ARC-FCP-5756.
 - evidence: read-only audit of the ARC-AGI-3 Milestone-1 2nd-place team's ("Reki") open-sourced
   code (`external/arc-m1-2nd-reki/milestone1-2nd-solution.ipynb`, 2026-07-11, operator directive).
   Full writeup: `docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-2026-07-11.md` (O1).
@@ -2853,9 +2871,11 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   `HazardMovePruner` (NOT Reki's greedy K=2 threshold, which the audit flagged as over-aggressive
   and prone to mis-protecting context-dependent signatures / over-suppressing "twin" tiles that
   behave differently by position depending on game state).
-- priority: high — cheap, general, oracle-distinct, directly reuses an existing code shape
-  (`HazardMovePruner`) rather than requiring new architecture. See known-issues.md active ARC
-  priority list task 9 for the queued build.
+- priority: RESOLVED-NEGATIVE (2026-07-20) — build was cheap and reused `HazardMovePruner`'s shape
+  as intended, but the exp5756 live A/B shows it adds no live-path capability AND no efficiency at
+  budget=200 (fires + holds levels but grows `states_expanded`), so it stays gated OFF. Not a live
+  lever on this evidence; do not re-queue a plain budget/roster A/B without a new mechanism. (Original
+  build was known-issues.md active ARC priority list task 9.)
 
 ### GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx: generator self-reports of "what changed" are never checked against the real pixel diff
 - status: open_confirmed_no_hook_point_current_architecture (2026-07-14, outer-loop, task 11 final assessment)

@@ -1,0 +1,1325 @@
+{
+  "experiment": "experiment_5756_inert_click_pruner_11game_ab",
+  "schema": "carnot.exp5756.inert_click_pruner_11game_ab.v1",
+  "result_path": "results/experiment_5756_inert_click_pruner_11game_ab.json",
+  "honest_verdict": "complete: inert_click_pruner_fires_at_budget200_prunes_2643_candidates_holds_levels_at_1_no_missed_win_but_states_expanded_did_not_decrease_delta_+22_no_efficiency_benefit",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a level win, a search-behavior-only change (pruning fires and diverges but banks no extra level), a never-fired null (no signature crosses the evidence floor), and a missed-win regression are distinct real outcomes -- enabling the pruner only earns a live-default flip if it holds or raises banked levels on the same roster+budget WITHOUT suppressing a winnable click and WITHOUT a states blow-up"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- CARNOT_ARC_DISABLE_INDUCTION=1 guarantees no GGUF/LLM load; the pruner affects only the candidate-filter + frontier path, isolated from tier-3 induction"
+    },
+    "verifier_is_oracle": {
+      "principle": "False -- a learned inert-click predictor fit from the search's OWN observed transitions (per-signature obs/inert/leveled tally), never the executable oracle that defines correctness"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline-arcade live-path move-pruner A/B on the dev twin; does NOT fit the game-solve taxonomy (a component measurement, not a self-discovery solve), NO new level is banked (any level reached is a pre-existing registry solve reached incidentally), offline_reproduced is deliberately NOT claimed"
+    },
+    "arms_tested": {
+      "principle": "baseline (shipped default, pruner OFF) + treatment_default (the faithful live flip at min_observations=4) + treatment_aggressive (min_observations=2, Reki's original K=2 floor) -- the aggressive arm tests whether the shipped default's higher evidence floor is WHY the pruner never fired in exp5595/exp5602"
+    },
+    "per_arm_results": {
+      "principle": "per-arm levels/states/efficiency totals + per-game level deltas vs baseline so a third party can re-derive every headline number"
+    },
+    "per_arm_game_rows": {
+      "principle": "full per-game rows (levels, states_expanded, actions, pruner stats, trajectory sha) so the capability comparison, the pruner-engagement diagnostics, and the divergence secondary are all independently auditable"
+    },
+    "levels_gained_total_by_arm": {
+      "principle": "the raw capability answer: total banked levels per arm across the roster; the primary comparison is treatment_default vs baseline"
+    },
+    "states_expanded_total_by_arm": {
+      "principle": "total search cost per arm; a pruner that drops candidates should REDUCE or hold states, mirroring HazardMovePruner's tu93 A/B (2947 -> 2859) -- a states INCREASE from a pruner would itself be a red flag"
+    },
+    "n_signatures_reaching_evidence_floor_per_game": {
+      "principle": "the load-bearing engagement diagnostic: how many (color,size,is_rect,twin_count) signatures accumulated >= min_observations observations per game at budget=200. exp5595/exp5602 found 0 at budget~37 on m0r0; a null here is only meaningful (FALSE_NEGATIVE_RISK) if SOME signature crossed the floor somewhere -- else the pruner simply never had the evidence to fire and the A/B cannot distinguish 'inert-click pruning does not help' from 'the floor was never reached'"
+    },
+    "n_candidates_pruned_per_game": {
+      "principle": "how many click candidates the pruner actually dropped per game (pruner.pruned) -- 0 everywhere means treatment is byte-identical to baseline by construction (a never-fired guard), a positive count means the capability delta is a REAL pruning effect"
+    },
+    "trajectories_diverge_per_game": {
+      "principle": "SECONDARY interpretation aid: if pruned=0 the treatment trajectory is byte-identical to baseline (confirming the null is a never-fired floor, not a fired-but-neutral prune); if it diverges but levels are equal, pruning fired and changed search without changing banked levels"
+    },
+    "blob_cache_perf_fix": {
+      "principle": "documents the cache-hygiene change (route InertClickSigPruner's raw connected_color_blobs through the shared _cached_blobs_and_counts cache), the before/after per-frame timing, the behavior-preservation assertion (identical signatures), and WHY this is NOT exp5740's per-candidate flood (the pruner already decomposes once per frame, not per candidate) and cannot confound an action-budget A/B either way"
+    },
+    "levels_gained_headroom_present": {
+      "principle": "FALSE_NEGATIVE_RISK discipline -- a no-delta result is only interpretable if some arm banks a nonzero level somewhere, else the null may just mean the roster had no level headroom for any candidate-filter at this budget"
+    },
+    "any_config_beats_baseline_levels": {
+      "principle": "the load-bearing capability boolean: True iff some arm banks strictly more levels than baseline on the same roster+budget (a pruner is not EXPECTED to raise levels -- its job is efficiency -- so the key safety property is that it does not LOSE levels)"
+    },
+    "safety_regression_check": {
+      "principle": "exp5729/exp5740 discipline PLUS the pruner-specific missed-win check -- a config that suppresses a winnable click (banks FEWER levels than baseline on any game) is the specific risk this component's trust+specificity gate exists to prevent, verified empirically via per-game level deltas, not assumed; a states_expanded inflation is also flagged"
+    },
+    "prior_work_extended": {
+      "principle": "Failed-Experiment Rerun Discipline -- names exp5595 and exp5602 (the prior m0r0 nulls this re-tests) by id+verdict+root cause AND states precisely what is different (11-game roster + budget=200 vs their single-game budget~37 + real capability metrics on the actual live-wired E3 path, not the OfflineSolver arm where the pruner was never exercised), plus exp5740 (the harness precedent), with a retire condition"
+    },
+    "recommendation": {
+      "principle": "reports whether to flip the live default (SUBMITTED_INERT_CLICK_PRUNER_ENABLED); the agent never self-authorizes flipping the live-stack default -- operator-only"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    },
+    "duration_s": {
+      "principle": "real wall-clock of the search A/B; the no-LLM substrate floor is 0.01s and this runs sequentially over 3 arms x 11 games, so a plausible multi-hundred-second total is expected"
+    },
+    "preconditions_checked": {
+      "principle": "records the resources verified (offline arcade builds an env, the live policy + pruner + cache-fix import resolve) before the sweep, per Pre-Launch Preconditions Discipline"
+    }
+  },
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "roster": [
+    "cd82",
+    "cn04",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "sk48",
+    "sp80",
+    "su15",
+    "tu93",
+    "wa30"
+  ],
+  "budget": 200,
+  "arms_tested": [
+    "baseline",
+    "treatment_default",
+    "treatment_aggressive"
+  ],
+  "baseline_arm": "baseline",
+  "baseline_levels_total": 1,
+  "baseline_states_expanded_total": 931,
+  "per_arm_results": [
+    {
+      "arm": "baseline",
+      "is_baseline": true,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 931,
+      "states_delta_vs_baseline": 0,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 57.086,
+      "candidates_pruned_total": 0,
+      "signatures_reaching_evidence_floor_total": 0,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 18,
+        "cn04": 99,
+        "lp85": 181,
+        "ls20": 187,
+        "m0r0": 45,
+        "r11l": 148,
+        "sk48": 26,
+        "sp80": 41,
+        "su15": 12,
+        "tu93": 39,
+        "wa30": 135
+      }
+    },
+    {
+      "arm": "treatment_default",
+      "is_baseline": false,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 953,
+      "states_delta_vs_baseline": 22,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 61.795,
+      "candidates_pruned_total": 1122,
+      "signatures_reaching_evidence_floor_total": 48,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 18,
+        "cn04": 99,
+        "lp85": 181,
+        "ls20": 187,
+        "m0r0": 45,
+        "r11l": 148,
+        "sk48": 48,
+        "sp80": 41,
+        "su15": 12,
+        "tu93": 39,
+        "wa30": 135
+      }
+    },
+    {
+      "arm": "treatment_aggressive",
+      "is_baseline": false,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 960,
+      "states_delta_vs_baseline": 29,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 61.718,
+      "candidates_pruned_total": 1521,
+      "signatures_reaching_evidence_floor_total": 83,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 18,
+        "cn04": 100,
+        "lp85": 181,
+        "ls20": 187,
+        "m0r0": 45,
+        "r11l": 148,
+        "sk48": 54,
+        "sp80": 41,
+        "su15": 12,
+        "tu93": 39,
+        "wa30": 135
+      }
+    }
+  ],
+  "per_arm_game_rows": {
+    "baseline": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 18,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "ba87caf3dd1a06b0",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 5.219
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 99,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "e4186ab9c44c0a08",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 4.624
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "baseline",
+        "levels": 1,
+        "reached": 1,
+        "actions": 195,
+        "states_expanded": 181,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 11,
+        "gap_signature": null,
+        "trajectory_len": 193,
+        "trajectory_sha": "5dfc4297cc5965a5",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 6.894
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 5.69
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 45,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "d397c87edf58d595",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 5.032
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 148,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "e6420a85824d35b6",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 6.892
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 26,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "8573a591b70dc789",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 4.764
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 41,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "1ac1e292fbde60de",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 4.666
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 12,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "a166f9fe180c0df1",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 4.358
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 4.45
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "baseline",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "pruner": {
+          "pruner_present": false,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": null,
+          "min_specificity": null
+        },
+        "duration_s": 4.497
+      }
+    },
+    "treatment_default": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 18,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "ba87caf3dd1a06b0",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 159,
+          "pruned": 0,
+          "signatures_tracked": 27,
+          "signatures_reaching_evidence_floor": 13,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.599
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 99,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "e4186ab9c44c0a08",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 123,
+          "pruned": 0,
+          "signatures_tracked": 15,
+          "signatures_reaching_evidence_floor": 4,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.668
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "treatment_default",
+        "levels": 1,
+        "reached": 1,
+        "actions": 195,
+        "states_expanded": 181,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 11,
+        "gap_signature": null,
+        "trajectory_len": 193,
+        "trajectory_sha": "5dfc4297cc5965a5",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 194,
+          "pruned": 0,
+          "signatures_tracked": 12,
+          "signatures_reaching_evidence_floor": 2,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 7.996
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 6.181
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 45,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "d397c87edf58d595",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 107,
+          "pruned": 0,
+          "signatures_tracked": 17,
+          "signatures_reaching_evidence_floor": 5,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.362
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 148,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "e6420a85824d35b6",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 194,
+          "pruned": 0,
+          "signatures_tracked": 8,
+          "signatures_reaching_evidence_floor": 2,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 7.742
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 48,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "f1a59df74c088fac",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 134,
+          "pruned": 1122,
+          "signatures_tracked": 31,
+          "signatures_reaching_evidence_floor": 14,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 14,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.342
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 41,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "1ac1e292fbde60de",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 113,
+          "pruned": 0,
+          "signatures_tracked": 25,
+          "signatures_reaching_evidence_floor": 5,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.275
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 12,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "a166f9fe180c0df1",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 192,
+          "pruned": 0,
+          "signatures_tracked": 13,
+          "signatures_reaching_evidence_floor": 3,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.282
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.307
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "treatment_default",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 4,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.041
+      }
+    },
+    "treatment_aggressive": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 18,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "ba87caf3dd1a06b0",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 159,
+          "pruned": 0,
+          "signatures_tracked": 27,
+          "signatures_reaching_evidence_floor": 16,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.652
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 100,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "c75dbdcbb2d7719f",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 123,
+          "pruned": 16,
+          "signatures_tracked": 24,
+          "signatures_reaching_evidence_floor": 10,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.214
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "treatment_aggressive",
+        "levels": 1,
+        "reached": 1,
+        "actions": 195,
+        "states_expanded": 181,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 11,
+        "gap_signature": null,
+        "trajectory_len": 193,
+        "trajectory_sha": "5dfc4297cc5965a5",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 194,
+          "pruned": 180,
+          "signatures_tracked": 12,
+          "signatures_reaching_evidence_floor": 8,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 4,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 8.324
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 6.073
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 45,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "d397c87edf58d595",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 107,
+          "pruned": 0,
+          "signatures_tracked": 17,
+          "signatures_reaching_evidence_floor": 17,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.379
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 148,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "e6420a85824d35b6",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 194,
+          "pruned": 0,
+          "signatures_tracked": 8,
+          "signatures_reaching_evidence_floor": 4,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 7.928
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 54,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "d43e0f76fda0d3a4",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 125,
+          "pruned": 1325,
+          "signatures_tracked": 31,
+          "signatures_reaching_evidence_floor": 18,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 18,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 5.465
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 41,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "1ac1e292fbde60de",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 113,
+          "pruned": 0,
+          "signatures_tracked": 25,
+          "signatures_reaching_evidence_floor": 7,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.772
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 12,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "a166f9fe180c0df1",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 192,
+          "pruned": 0,
+          "signatures_tracked": 13,
+          "signatures_reaching_evidence_floor": 3,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.113
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.923
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "treatment_aggressive",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "pruner": {
+          "pruner_present": true,
+          "observed": 0,
+          "pruned": 0,
+          "signatures_tracked": 0,
+          "signatures_reaching_evidence_floor": 0,
+          "signatures_ever_leveled": 0,
+          "pruned_signatures": 0,
+          "min_observations": 2,
+          "min_specificity": 0.9
+        },
+        "duration_s": 4.875
+      }
+    }
+  },
+  "levels_gained_total_by_arm": {
+    "baseline": 1,
+    "treatment_default": 1,
+    "treatment_aggressive": 1
+  },
+  "states_expanded_total_by_arm": {
+    "baseline": 931,
+    "treatment_default": 953,
+    "treatment_aggressive": 960
+  },
+  "candidates_pruned_total_by_arm": {
+    "baseline": 0,
+    "treatment_default": 1122,
+    "treatment_aggressive": 1521
+  },
+  "signatures_reaching_evidence_floor_total_by_arm": {
+    "baseline": 0,
+    "treatment_default": 48,
+    "treatment_aggressive": 83
+  },
+  "n_signatures_reaching_evidence_floor_per_game": {
+    "baseline": {
+      "cd82": 0,
+      "cn04": 0,
+      "lp85": 0,
+      "ls20": 0,
+      "m0r0": 0,
+      "r11l": 0,
+      "sk48": 0,
+      "sp80": 0,
+      "su15": 0,
+      "tu93": 0,
+      "wa30": 0
+    },
+    "treatment_default": {
+      "cd82": 13,
+      "cn04": 4,
+      "lp85": 2,
+      "ls20": 0,
+      "m0r0": 5,
+      "r11l": 2,
+      "sk48": 14,
+      "sp80": 5,
+      "su15": 3,
+      "tu93": 0,
+      "wa30": 0
+    },
+    "treatment_aggressive": {
+      "cd82": 16,
+      "cn04": 10,
+      "lp85": 8,
+      "ls20": 0,
+      "m0r0": 17,
+      "r11l": 4,
+      "sk48": 18,
+      "sp80": 7,
+      "su15": 3,
+      "tu93": 0,
+      "wa30": 0
+    }
+  },
+  "n_candidates_pruned_per_game": {
+    "baseline": {
+      "cd82": 0,
+      "cn04": 0,
+      "lp85": 0,
+      "ls20": 0,
+      "m0r0": 0,
+      "r11l": 0,
+      "sk48": 0,
+      "sp80": 0,
+      "su15": 0,
+      "tu93": 0,
+      "wa30": 0
+    },
+    "treatment_default": {
+      "cd82": 0,
+      "cn04": 0,
+      "lp85": 0,
+      "ls20": 0,
+      "m0r0": 0,
+      "r11l": 0,
+      "sk48": 1122,
+      "sp80": 0,
+      "su15": 0,
+      "tu93": 0,
+      "wa30": 0
+    },
+    "treatment_aggressive": {
+      "cd82": 0,
+      "cn04": 16,
+      "lp85": 180,
+      "ls20": 0,
+      "m0r0": 0,
+      "r11l": 0,
+      "sk48": 1325,
+      "sp80": 0,
+      "su15": 0,
+      "tu93": 0,
+      "wa30": 0
+    }
+  },
+  "trajectories_diverge_per_game": {
+    "treatment_vs_baseline": {
+      "treatment_default": {
+        "per_game": {
+          "cd82": false,
+          "cn04": false,
+          "lp85": false,
+          "ls20": false,
+          "m0r0": false,
+          "r11l": false,
+          "sk48": true,
+          "sp80": false,
+          "su15": false,
+          "tu93": false,
+          "wa30": false
+        },
+        "n_games_diverged": 1,
+        "games_diverged": [
+          "sk48"
+        ]
+      },
+      "treatment_aggressive": {
+        "per_game": {
+          "cd82": false,
+          "cn04": true,
+          "lp85": false,
+          "ls20": false,
+          "m0r0": false,
+          "r11l": false,
+          "sk48": true,
+          "sp80": false,
+          "su15": false,
+          "tu93": false,
+          "wa30": false
+        },
+        "n_games_diverged": 2,
+        "games_diverged": [
+          "cn04",
+          "sk48"
+        ]
+      }
+    },
+    "note": "If a treatment arm's pruner fired (n_candidates_pruned > 0), its trajectory should diverge from baseline on those games; if pruned=0, the trajectory is byte-identical (equal trajectory_sha) -- confirming the null is a never-fired evidence floor, not a fired-but-neutral prune."
+  },
+  "any_pruner_fired": true,
+  "pruner_reduced_states_expanded": false,
+  "best_fired_arm_states_delta_vs_baseline": 22,
+  "any_signature_reached_evidence_floor": true,
+  "any_treatment_diverges_from_baseline": true,
+  "blob_cache_perf_fix": {
+    "note": "InertClickSigPruner's live path decomposes ONCE per rank_candidates call (then loops candidates via cheap blob_at_click) and ONCE per observe() transition -- NOT once per candidate. So it does NOT have exp5740's severe per-candidate flood (O(candidates x grid_cells)). This is a cache-sharing hygiene fix, not a capability-confound fix.",
+    "bug": "_signature_for_click and rank_candidates called connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0) RAW, bypassing the shared per-frame LRU cache (_cached_blobs_and_counts, arc_color_blob_salience.py) that ColorBlobSaliencePrior.score uses with the identical key. Repeated same-frame decomposition (observe after rank_candidates, or a co-active blob prior) recomputed the O(grid-cells) flood from scratch instead of reusing the warm cache entry.",
+    "fix": "Added InertClickSigPruner._frame_blobs(grid) routing through _cached_blobs_and_counts (int16-normalized to match ColorBlobSaliencePrior's cache key); _signature_for_click and rank_candidates now call it. Behavior-preserving: the cache stores exactly connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0)'s output.",
+    "timing_probe_game": "lp85",
+    "grid_shape": [
+      64,
+      64
+    ],
+    "n_decompositions": 400,
+    "raw_uncached_us_per_call": 1143.64,
+    "cache_routed_us_per_call": 10.82,
+    "raw_vs_cached_slowdown_ratio": 105.654,
+    "fixed_signatures_identical_to_raw": true,
+    "fix_behavior_preserving": true,
+    "does_not_confound_capability": "run_game's budget is ACTION-count (for step_index in range(budget)), not wall-clock, and the no-induction search path has no wall-clock cutoff, so this per-frame timing change alters total runtime but never levels/states -- the capability read is invariant to it either way."
+  },
+  "levels_gained_headroom_present": true,
+  "any_config_beats_baseline_levels": false,
+  "safety_regression_check": {
+    "baseline_states_expanded_total": 931,
+    "states_regression_relative_threshold": 0.2,
+    "per_config": {
+      "baseline": {
+        "states_expanded_total": 931,
+        "states_delta_vs_baseline": 0,
+        "states_rel_change_vs_baseline": 0.0,
+        "states_expanded_regression": false,
+        "missed_win_games": [],
+        "suppressed_a_winnable_click": false
+      },
+      "treatment_default": {
+        "states_expanded_total": 953,
+        "states_delta_vs_baseline": 22,
+        "states_rel_change_vs_baseline": 0.0236,
+        "states_expanded_regression": false,
+        "missed_win_games": [],
+        "suppressed_a_winnable_click": false
+      },
+      "treatment_aggressive": {
+        "states_expanded_total": 960,
+        "states_delta_vs_baseline": 29,
+        "states_rel_change_vs_baseline": 0.0311,
+        "states_expanded_regression": false,
+        "missed_win_games": [],
+        "suppressed_a_winnable_click": false
+      }
+    },
+    "any_config_states_regression": false,
+    "any_config_suppressed_a_winnable_click": false,
+    "interpretation": "The pruner's job is EFFICIENCY (drop clicks that never change the frame), not raising levels; the load-bearing safety property is that it never suppresses a WINNABLE click. suppressed_a_winnable_click is measured empirically: a treatment arm banking FEWER levels than baseline on any game means the pruner dropped a click that led to progress -- the exact failure its trust+specificity+sacred-if-ever-leveled gate exists to prevent. A states_expanded INCREASE from a drop-filter would itself be anomalous (a pruner should reduce or hold search cost)."
+  },
+  "prior_work_extended": {
+    "experiments_extended": [
+      {
+        "experiment_id": "exp5595 (experiment_5595_inert_click_sig_pruner_offline_sim_prototype)",
+        "prior_verdict": "complete: inert_click_sig_pruner_prototype_ran_but_no_signature_cleared_evidence_floor",
+        "diagnosed_root_cause": "The offline prototype ran the pruner over a single game (m0r0, explore_budget=6, total_budget=40): 32 click transitions, 12 signatures tracked, 0 confidently inert. At that budget no (color,size,is_rect,twin_count) signature accumulated the min_observations=4 inert observations at min_specificity>=0.9 needed to fire a prune. An honest null from insufficient evidence at a low single-game budget.",
+        "retire_if_same_verdict": true
+      },
+      {
+        "experiment_id": "exp5602 (experiment_5602_inert_click_pruner_matched_budget_ab)",
+        "prior_verdict": "complete: inert_click_pruner_ab_no_op_offline_and_live_at_this_budget_on_m0r0",
+        "diagnosed_root_cause": "A matched-budget A/B on m0r0 target_level=2 with states_expanded_reduction=0. Its OfflineSolver arm's pruner observed=0 (the directed verifier-guided OfflineSolver search never EXERCISED the pruner -- structurally uninformative for a live-path capability read). Its live E3 supplementary check observed 32 clicks / 9 signatures but pruned 0 (no signature crossed the evidence floor at m0r0's ~37-transition budget). Same root cause as exp5595: single game (m0r0) at a low budget never accumulates enough repeated inert observations of one signature to fire. NOT re-litigated the same way -- exp5602 already settled that the OfflineSolver arm never engages the pruner, so this re-test targets the LIVE E3 path (rank_candidates + observe) exclusively, at a much larger budget, across the full roster.",
+        "retire_if_same_verdict": true
+      },
+      {
+        "experiment_id": "exp5740 (experiment_5740_object_history_salience_11game_ab)",
+        "prior_verdict": "complete: object_history_bonus_inert_over_colorblob_prior... (an 11-game live A/B of a sibling gated-off live-wired action_prior)",
+        "role": "THE HARNESS PRECEDENT (most recent, most refined). Solved the 'matched-budget A/B a live-path component with real levels/states metrics on the 11-game roster' problem: drive E3AgentPolicy/StepwiseExplorer directly via arc_leaderboard_eval.run_game, per-game fixed seed, states_expanded = len(policy.explorer.graph), the safety-regression discipline, the embedded cache-hygiene timing check. This script reuses that skeleton for the pruner (a rank_candidates drop-filter) instead of an action_prior (a score)."
+      }
+    ],
+    "what_is_different_here": "exp5595 and exp5602 both tested ONE game (m0r0) at a LOW budget (~37 transitions), where the min_observations=4 evidence floor was never crossed (0 signatures confidently inert / 0 pruned). This tests the SAME 11-game roster exp5729/exp5732/exp5740 used, at budget=200 (~5x m0r0's transition count), with REAL capability metrics (levels_gained_total, states_expanded_total, per-game breakdown) on the ACTUAL live-wired E3 path (rank_candidates + observe) -- NOT exp5602's OfflineSolver arm where the pruner was never exercised. It adds a min_observations=2 sensitivity arm to test whether the shipped default's higher floor is WHY the pruner never fired, and an EMPIRICAL missed-win safety check (per-game level regression). This is a roster-breadth + budget-increase + real-metric re-measurement, not a re-run of the same single-game low-budget setup.",
+    "retire_if_same_verdict": "If at budget=200 across the full 11-game roster STILL no signature crosses the evidence floor in ANY arm (0 pruned everywhere, treatment byte-identical to baseline) -- reproducing exp5595/exp5602's never-fired null with full roster breadth and a real budget -- then the inert-click-signature mechanism does not engage at reachable live-agent budgets and adds no live-path capability: recommend the operator retire the live-default flip consideration for SUBMITTED_INERT_CLICK_PRUNER_ENABLED (operator-only; it stays False) and close the gap per Missing-Verifier Gap Logging. Do NOT re-propose another InertClickSigPruner budget/roster A/B without a NEW mechanism change (e.g. a different signature keying that accumulates evidence faster)."
+  },
+  "recommendation": "At budget=200 the pruner ENGAGES (pruned 2643 candidates across treatment arms, on game(s) ['cn04', 'lp85', 'sk48']) and HOLDS banked levels at baseline's 1 with NO missed win -- the trust+specificity+sacred gate correctly avoided suppressing any winnable click. HOWEVER, states_expanded did NOT decrease (best fired arm delta +22); on the game(s) where it actually pruned, dropping click candidates reshaped the search frontier so the search expanded MORE states for the same banked levels -- the OPPOSITE of HazardMovePruner's tu93 efficiency win. So at this budget the inert-click pruner buys no capability AND no efficiency: do NOT flip SUBMITTED_INERT_CLICK_PRUNER_ENABLED. Operator-only whether to investigate why pruning these signatures grows the frontier (a click that is frame-inert may still be a necessary traversal step the search re-routes around), but on this evidence the live default should stay False. Per the retire condition, another plain budget/roster A/B is not warranted without a NEW mechanism that makes pruning reduce rather than reshape search cost.",
+  "random_seed": 5756,
+  "duration_s": 183.285,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "inert_click_pruner_import": true,
+    "blob_cache_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "856ea941bc78718e6747ce1601d655d93d95a9b0398d13f947bf6a19496f572d"
+}
