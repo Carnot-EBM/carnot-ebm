@@ -1,0 +1,616 @@
+{
+  "accepted_findings": [],
+  "benchmark_compute_claimed": false,
+  "bibliographic_elapsed_s": 668.0,
+  "closed_scope_review": {
+    "broad_rl_reopened": false,
+    "external_text_scoring_reopened": false,
+    "graph_redesign_reopened": false,
+    "headline_scorer_reopened": false,
+    "llm_judges_reopened": false,
+    "model_weight_writes_reopened": false,
+    "operator_authorized_scope_expansion": null,
+    "retired_arc_value_scope_reopened": false,
+    "unauthenticated_hardware_claims_reopened": false
+  },
+  "dedupe_corpus_checked": [
+    {
+      "exists": true,
+      "path": "research-references.md",
+      "sha256": "sha256:16baec5ff93adb8b5210438888e614afec116102a3e280e448d925eedaab045e"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml",
+      "sha256": "sha256:023ed31e7ef072719b47a9e75fbe2141cf6226d54dcce1caea6f77fe28ae5906"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:a01c6568a8768eae8e64218c9e2f8cc8e25f7ab8c1aac526153d0ad2b3885d3a"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:9e4d5f5d1b41ebb1f87ba0a2fbc5ee0edc66dfdffbbcc5c60f799819e2d68938"
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:a42efacc1caa4bb4d1fd7a0f23008348bf8265bfff13b350c05e91686415c9ff"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2"
+    },
+    {
+      "exists": true,
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:9add43ff84036949ea613efd2be7f0fbd4817e2e42c6806646711b572143eb95"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5732_v512_source_delta_ingestion.json",
+      "sha256": "sha256:fb2f17ebb91ead2825f1480f21634d75bfb138bf7eae6086bae3a0e25c0ef7cf"
+    }
+  ],
+  "duplicate_checks": {
+    "arxiv_ids_checked": [
+      "2607.12711",
+      "2607.15328",
+      "2605.29556",
+      "2606.19808",
+      "2607.14530",
+      "2607.15901",
+      "2607.15330",
+      "2607.15314",
+      "2607.15686",
+      "2607.16051"
+    ],
+    "arxiv_ids_unique": true,
+    "carnot_hooks_checked_against_exp5746_exp5753": true,
+    "citations_checked_against_local_ledgers": true,
+    "repositories_checked_against_local_ledgers": true,
+    "source_ids_unique": true,
+    "techniques_checked_against_local_ledgers": true,
+    "titles_checked_against_local_ledgers": true
+  },
+  "duplicate_findings": [
+    {
+      "reason": "Already indexed by V511/Exp5718 and present in research-references.md; its MaxSAT hard/soft constraint hook is covered by existing selective exact-feedback planning",
+      "source_id": "maxsat_vlm_sudoku_2607_12711",
+      "title": "MaxSAT-Based Feedback for Guiding Vision-Language Models in Sudoku",
+      "url": "https://arxiv.org/abs/2607.12711"
+    },
+    {
+      "reason": "Already disposed by V512/Exp5732 as unauthenticated in-progress hardware work that cannot support a local Carnot timing or correctness receipt",
+      "source_id": "lazy_arithmetic_2607_15328",
+      "title": "Lazy Arithmetic using Systolic Arrays for Closing the Verification Gap on Embedded Systems",
+      "url": "https://arxiv.org/abs/2607.15328"
+    },
+    {
+      "reason": "Already indexed by the V513 planner for continual self-learning certificate context.",
+      "source_id": "cerce_openreview_Anh6VfNM22",
+      "title": "CerCE: Certifiable Continual Learning",
+      "url": "https://openreview.net/forum?id=Anh6VfNM22"
+    },
+    {
+      "reason": "Already indexed by the V513 planner for Exp5746/Exp5747 exact proposal utility.",
+      "source_id": "opt_verifier_2605_29556",
+      "title": "Opt-Verifier",
+      "url": "https://arxiv.org/abs/2605.29556"
+    },
+    {
+      "reason": "Already indexed by the V513 planner for selective exact feedback search.",
+      "source_id": "selective_verification_2606_19808",
+      "title": "Think Again or Think Longer? Test-time Scaling with Selective Verification",
+      "url": "https://arxiv.org/abs/2606.19808"
+    }
+  ],
+  "excluded_findings": [
+    {
+      "reason": "Residual-stream architecture expansion and pretraining reopen model-weight scope.",
+      "source_id": "xhc_2607_14530",
+      "title": "xHC: Enhancing LLM Reasoning by Expanding Hyper-Connections",
+      "url": "https://arxiv.org/abs/2607.14530"
+    },
+    {
+      "reason": "LLM simulator and RL/search world-model redesign are outside the Exp5746-Exp5753 graph.",
+      "source_id": "dsworld_2607_15901",
+      "title": "DSWorld: A Data Science World Model for Logical and Efficient Agentic Reasoning",
+      "url": "https://arxiv.org/abs/2607.15901"
+    },
+    {
+      "reason": "Robotics foundation-model training and post-training are model-weight and robotics scopes.",
+      "source_id": "xiaomi_robotics_1_2607_15330",
+      "title": "Xiaomi-Robotics-1: A High-Performance Vision-Language-Action Model",
+      "url": "https://arxiv.org/abs/2607.15330"
+    },
+    {
+      "reason": "Healthcare self-evolution and trillion-parameter training reopen model-weight-write scope.",
+      "source_id": "cura_1t_2607_15314",
+      "title": "Cura: An Open 1T Parameter Medical Reasoning Model",
+      "url": "https://arxiv.org/abs/2607.15314"
+    },
+    {
+      "reason": "Unified scientific model training supplies no local exact-validator or sidecar authority.",
+      "source_id": "s1_omni_2607_15686",
+      "title": "S1-Omni: A Unified Scientific Foundation Model",
+      "url": "https://arxiv.org/abs/2607.15686"
+    },
+    {
+      "reason": "Transformer training and post-training are outside the closed V513 local sidecar scope.",
+      "source_id": "loop_the_loopies_2607_16051",
+      "title": "Loop the Loopies: Training Long-Context Looping Transformers",
+      "url": "https://arxiv.org/abs/2607.16051"
+    }
+  ],
+  "experiment": "experiment_5744_v513_source_delta_ingestion",
+  "experiment_id": "exp5744-v513-source-delta-ingestion",
+  "extropic_status": {
+    "authenticated_hardware_claim": false,
+    "honest_status": "public material reachable through search; no authenticated Carnot TSU path",
+    "http_status": "public_search_result_available",
+    "local_execution_available": false,
+    "roadmap_delta": false,
+    "route": "Extropic public search and writing"
+  },
+  "field_principles": {
+    "accepted_findings": "Accepted work must have a post-marker, local, falsifiable Exp5746-Exp5753 home.",
+    "benchmark_compute_claimed": "Bibliographic search cannot claim benchmark, model, solver, or hardware compute.",
+    "bibliographic_elapsed_s": "Measures source-search wall time only, preventing bibliographic work from masquerading as benchmark compute.",
+    "closed_scope_review": "Documents that banned research scopes remain closed.",
+    "dedupe_corpus_checked": "Lists local files hashed for duplicate and boundary review.",
+    "duplicate_checks": "Summarizes id, title, repository, citation, and hook dedupe checks.",
+    "duplicate_findings": "Already-indexed material stays visible but cannot create duplicate work.",
+    "excluded_findings": "Closed scopes remain closed by explicit disposition.",
+    "experiment": "Provides the stable module-level experiment slug.",
+    "experiment_id": "Binds this receipt to the Exp5744 roadmap task.",
+    "extropic_status": "Thermodynamic hardware context is bounded to authenticated local execution availability.",
+    "field_principles": "Explains every top-level artifact field so downstream readers know why the field exists.",
+    "github_status": "Repository discovery is separated from executable local dependencies.",
+    "honest_verdict": "The terminal result states complete or blocked without claim inflation.",
+    "huggingface_status": "Secondary paper-feed status is separated from primary authority.",
+    "inaccessible_findings": "Separates access failures from scientific exclusions.",
+    "inference_substrate": "The run used web and bibliographic search only.",
+    "logical_intelligence_status": "Kona/Aleph context is bounded to public pages unless local receipts exist.",
+    "marker_checks": "Records heading and marker details for reference-marker validation.",
+    "milestone": "Prevents this V513 receipt from being reused for another milestone.",
+    "planner_marker": "Binds the search window to the post-V513 planner boundary.",
+    "planner_marker_found": "Shows whether the source window was anchored before any mutation.",
+    "preconditions_checked": "Records instruction, spec, marker, ledger, exclusion, and protected-file checks before source findings are trusted.",
+    "queries": "Makes search intent reconstructable without rerunning mutable indexes.",
+    "random_seed": "Keeps deterministic receipt metadata aligned with experiment id.",
+    "references_mutated_this_run": "Separates durable references_updated status from this invocation.",
+    "references_updated": "Reference-file mutation is declared; zero-finding and blocked runs keep this false.",
+    "reproducibility_checksum": "The stable artifact payload can be checked for drift.",
+    "result_path": "Records where the JSON receipt is written.",
+    "roadmap_change_required": "Scope expansion blocks for operator review instead of silently mutating the roadmap.",
+    "roadmap_context": "Records which roadmap queue was available without recreating files.",
+    "run_date": "Records the operator-requested execution date in compact form.",
+    "schema": "Names the artifact schema used by downstream validators.",
+    "search_cutoff": "Records the calendar date through which public sources were checked.",
+    "search_finished_at_utc": "Records the instant after final source disposition so elapsed time is honest.",
+    "search_started_at_utc": "Records the instant immediately before mutable external querying starts.",
+    "semantic_scholar_status": "Citation-route access and citation-count limitations are reported honestly.",
+    "source_link_checks": "Records the specific public URLs or APIs checked.",
+    "sources_checked": "Makes source coverage reconstructable without trusting prose.",
+    "spec_refs": "Links the artifact to its OpenSpec requirement and scenarios.",
+    "status": "Machine-readable terminal state derived from marker and scope checks.",
+    "target_experiment_map": "Every accepted source maps to an existing Exp5746-Exp5753 task without changing ids or gates.",
+    "watch_only_findings": "Non-local or non-executable material cannot support Carnot claims."
+  },
+  "github_status": {
+    "accepted_support_repository": null,
+    "honest_status": "repository route supplied no new executable V513 dependency",
+    "http_status": 200,
+    "recent_repository_searches": {
+      "constrained_generation_verifier_created_after_2026_07_20": 0,
+      "energy_based_reasoning_constraint_created_after_2026_07_20": 0,
+      "ising_sampler_created_after_2026_07_20": 0,
+      "kan_constraint_learning_created_after_2026_07_20": 0
+    },
+    "roadmap_delta": false,
+    "route": "GitHub repository search and trending",
+    "trending_checked": true
+  },
+  "honest_verdict": "complete: no new non-duplicate actionable V513 source deltas; references left unchanged",
+  "huggingface_status": {
+    "dates_checked": [
+      "2026-07-20"
+    ],
+    "honest_status": "daily API returned visible 2026-07-20 papers; none supplied an HF-only dependency beyond duplicate or excluded primary dispositions",
+    "http_status": 200,
+    "latest_visible_page_date": "2026-07-20",
+    "roadmap_delta": false,
+    "route": "https://huggingface.co/api/daily_papers?date=2026-07-20",
+    "sample_source_ids": [
+      "2607.14530",
+      "2607.15330",
+      "2607.15314",
+      "2607.16051",
+      "2607.15901",
+      "2607.15686"
+    ]
+  },
+  "inaccessible_findings": [
+    {
+      "classification": "inaccessible_timeout_or_rate_limit",
+      "reason": "Broad export queries timed out or returned HTTP 429; arXiv category pages were used as fallback.",
+      "source_id": "arxiv_export_api_timeout_or_429",
+      "title": "arXiv export API broad query set",
+      "url": "https://export.arxiv.org/api/query"
+    },
+    {
+      "classification": "inaccessible_browser_challenge",
+      "reason": "Search results were visible, but primary pages required browser verification.",
+      "source_id": "openreview_browser_challenge",
+      "title": "OpenReview primary forum pages",
+      "url": "https://openreview.net/"
+    }
+  ],
+  "inference_substrate": "web_and_bibliographic_search_only",
+  "logical_intelligence_status": {
+    "honest_status": "public Kona/Aleph context only; no local weights, API receipt, or comparator",
+    "http_status": "public_search_result_available",
+    "local_execution_available": false,
+    "local_weights_or_api_receipt": false,
+    "roadmap_delta": false,
+    "route": "Logical Intelligence public search results"
+  },
+  "marker_checks": {
+    "execution_refresh_heading": "## V513 Execution Refresh - 20260720",
+    "execution_refresh_present": false,
+    "planner_end_marker": "<!-- V513-PLANNER-REFRESH-20260720-END -->",
+    "planner_heading": "## V513 Planner Refresh - 20260720",
+    "planner_marker": "V513-PLANNER-REFRESH-20260720-END",
+    "planner_marker_found": true,
+    "planner_marker_line": 30246,
+    "search_window": "strictly_after_V513_PLANNER_REFRESH_20260720_END"
+  },
+  "milestone": "2026.07.513",
+  "planner_marker": "V513-PLANNER-REFRESH-20260720-END",
+  "planner_marker_found": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "claude_md_read": true,
+    "codex_md_read": true,
+    "exclusion_manifest_read": true,
+    "known_issues_read": true,
+    "ops_changelog_modified": false,
+    "ops_status_modified": false,
+    "planner_marker_found": true,
+    "prior_v512_artifact_read": true,
+    "research_complete_yaml_read": true,
+    "research_program_read": true,
+    "research_references_read": true,
+    "research_roadmap_next_yaml_present": false,
+    "research_roadmap_yaml_read": true,
+    "roadmap_fallback_allowed_if_next_absent": true,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_report_5744": true,
+    "traceability_modified": false,
+    "vnext_proposal_read": true
+  },
+  "queries": [
+    {
+      "queries": [
+        "all:\"energy based\" OR all:EBM",
+        "all:\"energy-based verification\" AND all:reasoning",
+        "all:\"neural CSP\" OR all:\"constraint satisfaction\"",
+        "all:Ising AND all:machine-learning",
+        "all:\"hallucination mitigation\"",
+        "all:KAN",
+        "all:\"constrained generation\"",
+        "all:\"hardware sampling\"",
+        "all:\"continual learning\" AND all:constraint",
+        "cs.AI new",
+        "cs new",
+        "cs.LG new"
+      ],
+      "surface": "arXiv",
+      "timestamp_window_utc": "strictly_after_V513-PLANNER-REFRESH-20260720-END"
+    },
+    {
+      "queries": [
+        "energy-based reasoning",
+        "constrained generation",
+        "continual learning constraint",
+        "certifiable continual learning",
+        "CerCE Anh6VfNM22"
+      ],
+      "surface": "OpenReview"
+    },
+    {
+      "queries": [
+        "arXiv:2507.02092 citations",
+        "arXiv:2512.15605 citations"
+      ],
+      "surface": "Semantic Scholar"
+    },
+    {
+      "queries": [
+        "daily_papers 2026-07-20"
+      ],
+      "surface": "Hugging Face Papers"
+    },
+    {
+      "queries": [
+        "repo search \"energy-based\" reasoning constraint created:>2026-07-20",
+        "repo search KAN constraint learning created:>2026-07-20",
+        "repo search constrained generation verifier created:>2026-07-20",
+        "repo search Ising sampler created:>2026-07-20",
+        "github trending 2026-07-20"
+      ],
+      "surface": "GitHub discovery"
+    },
+    {
+      "queries": [
+        "TSU",
+        "XTR-0",
+        "X0",
+        "THRML"
+      ],
+      "surface": "Extropic writing"
+    },
+    {
+      "queries": [
+        "Kona",
+        "Aleph",
+        "Energy-Based Reasoning Models",
+        "verified reasoning"
+      ],
+      "surface": "Logical Intelligence public pages"
+    },
+    {
+      "queries": [
+        "research-references.md after V513 marker",
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml if present",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_5732_v512_source_delta_ingestion.json",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md"
+      ],
+      "surface": "local Carnot ledgers"
+    }
+  ],
+  "random_seed": 5744,
+  "references_mutated_this_run": false,
+  "references_updated": false,
+  "reproducibility_checksum": "sha256:7a3bb54141fdc33a68b39aa78f1e95104c32e1957ccea7880aea1177c3813cf5",
+  "result_path": "results/experiment_5744_v513_source_delta_ingestion.json",
+  "roadmap_change_required": false,
+  "roadmap_context": {
+    "milestone": "2026.07.513",
+    "source": "research-roadmap.yaml",
+    "task_ids": [
+      "exp5743-transition-v513",
+      "exp5744-v513-source-delta-ingestion",
+      "exp5745-arc-causal-gate-schema-corrigendum",
+      "exp5746-exact-proposal-utility-benchmark",
+      "exp5747-sota-exact-proposal-utility-panel",
+      "exp5748-selective-exact-feedback-search",
+      "exp5749-csl-render-matched-mechanism-audit",
+      "exp5750-dependent-task-continuous-self-learning",
+      "exp5751-rust-restart-parity-repair",
+      "exp5752-one-axis-allocation-free-10x-crossover",
+      "exp5753-arc-generic-primitive-live-registry-ab",
+      "exp5754-v513-capstone-reconciliation"
+    ]
+  },
+  "run_date": "20260720",
+  "schema": "carnot.experiment_5744.v513_source_delta_ingestion.v1",
+  "search_cutoff": "2026-07-20",
+  "search_finished_at_utc": "2026-07-20T07:26:12Z",
+  "search_started_at_utc": "2026-07-20T07:15:04Z",
+  "semantic_scholar_status": {
+    "access": "checked",
+    "citation_count_claimed": false,
+    "honest_status": "direct citation routes were reachable and exposed no citation after the V513 marker",
+    "http_status": 200,
+    "latest_arm_ebm_citation_publication_date": "2026-07-02",
+    "latest_ebt_citation_publication_date": "2026-07-13",
+    "papers": [
+      "arXiv:2507.02092",
+      "arXiv:2512.15605"
+    ],
+    "post_marker_citation_count": 0,
+    "roadmap_delta": false,
+    "route": "Semantic Scholar Graph API"
+  },
+  "source_link_checks": [
+    {
+      "source_id": "arxiv_cs_ai_recent",
+      "status": "http_200_checked_no_new_non_duplicate_actionable_v513_delta",
+      "url": "https://arxiv.org/list/cs.AI/new"
+    },
+    {
+      "source_id": "arxiv_cs_recent",
+      "status": "http_200_checked_no_new_non_duplicate_actionable_v513_delta",
+      "url": "https://arxiv.org/list/cs/new"
+    },
+    {
+      "source_id": "arxiv_cs_lg_recent",
+      "status": "http_200_checked_no_new_non_duplicate_actionable_v513_delta",
+      "url": "https://arxiv.org/list/cs.LG/new"
+    },
+    {
+      "linked_source_id": "maxsat_vlm_sudoku_2607_12711",
+      "source_id": "urlcheck_maxsat_vlm_sudoku_2607_12711",
+      "status": "primary_arxiv_opened_duplicate_v511_exp5718",
+      "url": "https://arxiv.org/abs/2607.12711"
+    },
+    {
+      "linked_source_id": "lazy_arithmetic_2607_15328",
+      "source_id": "urlcheck_lazy_arithmetic_2607_15328",
+      "status": "primary_arxiv_opened_duplicate_v512_exclusion",
+      "url": "https://arxiv.org/abs/2607.15328"
+    },
+    {
+      "linked_source_id": "xhc_2607_14530",
+      "source_id": "urlcheck_xhc_2607_14530",
+      "status": "primary_arxiv_opened_excluded_model_weight_architecture_scope",
+      "url": "https://arxiv.org/abs/2607.14530"
+    },
+    {
+      "linked_source_id": "dsworld_2607_15901",
+      "source_id": "urlcheck_dsworld_2607_15901",
+      "status": "primary_arxiv_opened_excluded_world_model_rl_scope",
+      "url": "https://arxiv.org/abs/2607.15901"
+    },
+    {
+      "source_id": "arxiv_export_api_queries",
+      "status": "timeout_or_http_429_recorded_as_inaccessible_not_accepted",
+      "url": "https://export.arxiv.org/api/query"
+    },
+    {
+      "source_id": "semantic_scholar_ebt_route",
+      "status": "http_200_no_post_marker_citation_delta",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations"
+    },
+    {
+      "source_id": "semantic_scholar_arm_ebm_route",
+      "status": "http_200_no_post_marker_citation_delta",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations"
+    },
+    {
+      "source_id": "huggingface_daily_2026_07_20",
+      "status": "http_200_no_hf_only_dependency_promoted",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-07-20"
+    },
+    {
+      "source_id": "github_recent_energy_constraint_query",
+      "status": "http_200_total_count_0",
+      "url": "https://api.github.com/search/repositories?q=%22energy-based%22+reasoning+constraint+created:%3E2026-07-20"
+    },
+    {
+      "source_id": "github_recent_kan_constraint_query",
+      "status": "http_200_total_count_0",
+      "url": "https://api.github.com/search/repositories?q=KAN+constraint+learning+created:%3E2026-07-20"
+    },
+    {
+      "source_id": "github_recent_constrained_generation_query",
+      "status": "http_200_total_count_0",
+      "url": "https://api.github.com/search/repositories?q=constrained+generation+verifier+created:%3E2026-07-20"
+    },
+    {
+      "source_id": "github_recent_ising_sampler_query",
+      "status": "http_200_total_count_0",
+      "url": "https://api.github.com/search/repositories?q=Ising+sampler+created:%3E2026-07-20"
+    },
+    {
+      "source_id": "github_trending",
+      "status": "http_200_no_reproducible_local_carnot_dependency_promoted",
+      "url": "https://github.com/trending"
+    },
+    {
+      "source_id": "extropic_public_search",
+      "status": "public_material_watch_only_no_local_tsu",
+      "url": "https://extropic.ai/"
+    },
+    {
+      "source_id": "logical_intelligence_public_search",
+      "status": "public_material_watch_only_no_local_weights_or_receipts",
+      "url": "https://logicalintelligence.com/"
+    },
+    {
+      "source_id": "openreview_browser_challenge",
+      "status": "browser_challenge_no_primary_post_marker_promotion",
+      "url": "https://openreview.net/"
+    }
+  ],
+  "sources_checked": [
+    {
+      "decision": "Post-marker category pages and API attempts exposed no non-duplicate actionable Exp5746-Exp5753 source; all visible items were duplicate, watch-only, inaccessible, or excluded",
+      "status": "category_pages_checked; export_api_timeout_and_rate_limit_recorded",
+      "surface": "arXiv"
+    },
+    {
+      "decision": "no OpenReview-only post-marker dependency promoted",
+      "status": "search_snippets_checked; primary_pages_browser_challenged",
+      "surface": "OpenReview"
+    },
+    {
+      "decision": "no citation after the V513 marker changed the task graph",
+      "status": "graph_api_http_200_for_EBT_and_ARM_EBM_citation_routes",
+      "surface": "Semantic Scholar"
+    },
+    {
+      "decision": "secondary feed supplied no non-duplicate local Exp5746-Exp5753 dependency",
+      "status": "daily_papers_api_checked_for_2026_07_20",
+      "surface": "Hugging Face Papers"
+    },
+    {
+      "decision": "no new reproducible local repository displaced Carnot substrates",
+      "status": "repository_search_api_http_200_and_trending_html_http_200",
+      "surface": "GitHub discovery"
+    },
+    {
+      "decision": "watch-only; no authenticated local TSU execution route",
+      "status": "public_search_results_checked",
+      "surface": "Extropic writing"
+    },
+    {
+      "decision": "watch-only; no local weights, API receipt, or reproducible comparator",
+      "status": "public_search_results_checked",
+      "surface": "Logical Intelligence public pages"
+    },
+    {
+      "decision": "V513 already indexed Opt-Verifier, selective verification, hard/soft controls, render confounds, ARC EWM ablation, Adaptive Generate-Rank-Verify, CerCE, and ARM-EBM v4",
+      "status": "checked",
+      "surface": "local Carnot ledgers"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5744",
+    "SCENARIO-REPORT-5744-ZERO-FINDING",
+    "SCENARIO-REPORT-5744-ACCEPT-BOUNDED-DELTA",
+    "SCENARIO-REPORT-5744-BLOCKED-MARKER",
+    "SCENARIO-REPORT-5744-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "target_experiment_map": [],
+  "watch_only_findings": [
+    {
+      "classification": "watch_only_non_local_hardware",
+      "reason": "Public thermodynamic-sampling context only; no authenticated Carnot hardware, SDK, timing, or correctness route exists",
+      "source_id": "extropic_x0_xtr0_tsu_public_material",
+      "title": "Extropic X0, XTR-0, TSU, and THRML public material",
+      "url": "https://extropic.ai/"
+    },
+    {
+      "classification": "watch_only_proprietary_comparator",
+      "reason": "Public/proprietary context only; no local weights, API receipt, or reproducible comparator.",
+      "source_id": "logical_intelligence_kona_aleph_public_material",
+      "title": "Logical Intelligence Kona and Aleph public pages",
+      "url": "https://logicalintelligence.com/"
+    },
+    {
+      "classification": "watch_only_no_local_dependency",
+      "reason": "Repository discovery produced no reproducible Carnot EBM/CSP/KAN/sampler dependency.",
+      "source_id": "github_trending_2026_07_20",
+      "title": "GitHub trending and discovery queries",
+      "url": "https://github.com/trending"
+    },
+    {
+      "classification": "watch_only_no_post_marker_citation_delta",
+      "reason": "Both citation routes were reachable, but visible citations predated the V513 marker.",
+      "source_id": "semantic_scholar_ebt_arm_citation_routes",
+      "title": "Semantic Scholar citation routes for EBT and ARM-EBM",
+      "url": "https://api.semanticscholar.org/"
+    }
+  ]
+}
