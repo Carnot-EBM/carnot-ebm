@@ -30244,3 +30244,96 @@ promoted below.
   the same benchmark or solve already-complete public games.
 
 <!-- V513-PLANNER-REFRESH-20260720-END -->
+
+## V514 Planner Refresh - 20260720
+
+Planning-time sweep for milestone `.514` after the terminal `.513` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint satisfaction, Ising sampling, hallucination detection and mitigation, KANs,
+constrained generation, hardware-accelerated sampling, and continual/online constraint
+learning. It also checked OpenReview, Hugging Face Papers, GitHub discovery, Extropic
+writing, Logical Intelligence's public Kona material, and direct Semantic Scholar citation
+routes for EBT (`2507.02092`) and ARM-EBM (`2512.15605`). Existing entries already cover
+LLM-as-a-Verifier, The Verification Horizon, Distributional EBMs, V1, selective
+verification, KAN-CL, fixed-point reasoners, REASON, Extropic X0/XTR-0, and Kona 1.0;
+those are not relabeled as new findings below.
+
+### New actionable deltas
+
+- **Overcoming Over-Fitting in Constraint Acquisition via Query-Driven Interactive
+  Refinement** - arXiv:2509.24489, https://arxiv.org/abs/2509.24489. The paper combines
+  passive constraint proposals with confidence-guided discriminating queries, explicitly
+  tests suspected over-fit constraints, and recovers valid substructure from rejected
+  candidates. Carnot hook: replace the negative KAN-render continuation with a materially
+  different Tier-1 learner that adds typed constraints from exact failure evidence, asks
+  bounded solver-authoritative membership queries, and promotes, refines, quarantines, or
+  rolls back each constraint under exact prefix-retention receipts. The GGUF weights remain
+  immutable and the solver labels remain authority. This does not reopen parameter
+  reweighting, KAN scale-up, broad RL, or LLM-judge authority.
+- **Constraint acquisition needs better benchmarks / MPMMine** - arXiv:2605.26279,
+  https://arxiv.org/abs/2605.26279. The paper argues that solver benchmarks alone do not
+  evaluate constraint acquisition and proposes a uniform corpus containing multiple models
+  per problem, natural-language domain artifacts, and both solutions and non-solutions.
+  Carnot hook: derive a sealed local CA evaluation from Exp5746's exact finite-domain
+  manifest with paired incomplete/over-fit/faithful models, positive and negative examples,
+  discriminating-query receipts, and independent exact validators. MPMMine is methodology
+  guidance, not imported evidence; `.514` must keep local row hashes and validator receipts.
+
+### Reused recent deltas with unfinished experimental implications
+
+- **LLM-as-a-Verifier** - arXiv:2607.05391 remains useful context for the benchmark that
+  `.513` built but never ran. Its verifier-scaling axes motivate reporting family,
+  repetition, and ranking-budget sensitivity, but Carnot's retired PHASE-D
+  generated-text/logprob scorer is not reopened. `.514` uses only the already-qualified
+  sealed finite-choice proposal channel; exact feasibility and objective validators remain
+  authority, and no local GGUF score can admit a candidate.
+- **The Verification Horizon** - arXiv:2606.26300 remains the robustness boundary: report
+  proposal utility separately by mandated Qwen/Gemma generator family, include shortcut and
+  adversarial controls, and treat any model-identity residual as a co-evolution warning
+  rather than a verification result.
+- **Think Again or Think Longer?** - arXiv:2606.19808 remains the downstream allocation
+  control. Selective verification may run only after positive one-shot utility and must beat
+  always-verify and matched-budget longer-proposal baselines without increasing harmful
+  flips.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct API queries returned 28 visible EBT citation records and 8
+  visible ARM-EBM records at planning time. The relevant entries were the already-indexed
+  Fixed-Point Reasoners, LoopUS, causal-energy parameterization, System-2 workload,
+  Distributional EBM, ontology, graph-energy, and false-first-step lines. No newly visible
+  citation supplied a stronger open local implementation than the two constraint-acquisition
+  deltas above; the returned record counts are a time-stamped query receipt, not a stable
+  citation-count claim.
+- **OpenReview / Hugging Face Papers:** current verifier pages reinforce probabilistic
+  scoring, pairwise tournaments, selective allocation, and verifier co-evolution. These are
+  proposal signals only in Carnot; none supersedes exact structure- and solution-side
+  validators.
+- **GitHub:** trending and EBM/CSP/KAN discovery did not surface a reproducible repository
+  that supersedes Carnot's exact validators, promoted sidecar lifecycle, ARC live path, or
+  one-axis Rust sampler.
+- **Extropic:** the writing index still ends with the October 2025 X0/XTR-0/TSU launch
+  material. No authenticated Carnot-local hardware route exists, so `.514` makes no TSU
+  execution, energy, or speedup claim.
+- **Logical Intelligence:** the January 2026 Kona architecture post confirms a
+  non-autoregressive, globally scored continuous trace with local edits and LLM
+  orchestration, but no local weights, API receipt, or reproducible comparator is public.
+  Kona remains architecture context, not executable evidence.
+
+### V514 planning impact
+
+- Repair the producer-to-conductor boundary with lossless scalar bridge artifacts before
+  dispatching the exact proposal-utility panel or Rust crossover benchmark. Do not rebuild
+  the already-sealed benchmark or repeat the already-passing restart-parity work.
+- Run the sealed proposal panel with all three mandated local GGUFs through the already-qualified
+  finite-choice channel and compare its ordering with random, deterministic energy, and exact-order
+  controls under matched candidate and validator budgets. Do not reopen PHASE-D text scoring.
+- Satisfy FR-11 with solver-certified constraint acquisition and lifecycle repair, a new
+  mechanism that changes the constraint set rather than reweighting the negative KAN
+  residual. Require exact chronological retention, rollback, and no immutable-GGUF writes.
+- Close the Rust NFR-01 branch with one parity-gated, allocation-profiled crossover run and
+  retire the 10x claim if it remains below threshold. Meet the ARC generalization floor with
+  held-out component attribution and one game-blind live-path hardening attempt, without
+  re-solving any registered public level.
+
+<!-- V514-PLANNER-REFRESH-20260720-END -->
