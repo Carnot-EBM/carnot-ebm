@@ -10353,3 +10353,60 @@ BEFORE the buckets are computed.
 #### SCENARIO-ARC-FCP-5757-GATE-AND-RETIRE-DECISION-MATRIX
 - **WHEN** the pooled bucket fractions are known (with a bootstrap 95% CI)
 - **THEN** the gate SHALL fire `a_perception_generation` if fraction(a) > 0.5, `b_lookahead_reopened` if fraction(b) > 0.3 AND (b) is well-powered, `c_selection_ranking` if fraction(c) > 0.3, else report the dominant GAP bucket among a/b/c via the gap-only conditional distribution when bucket-(d) handled dilutes all three below their thresholds; the recommendation SHALL name the specific live-path consumer the dominant bucket points at (segmentation/click-generation for a, `plan_in_model`/induction for b, `candidate_router`/value-head + click-cap for c) and SHALL be operator-only. (Observed: 98.9% exact / 100% tolerant coverage, `b == 0`, all gap actions bucket-(c) object-click ranking misses -> the SELECTION/RANKING branch, which also empirically down-weights `GAP-ARCH-NO-HIERARCHICAL-SEARCH`.)
+
+### REQ-ARC-FCP-5758: Small-Object-First Click-Reorder -- Live A/B Against the exp5757 Selection/Ranking Gap
+
+REQ-ARC-FCP-5757 localized the ONLY residual single-action gap to SELECTION/RANKING of
+object clicks (bucket c: 6 action-6 clicks in-set + frame-changing but rank >= 12; r11l
+x1, su15 x4). This REQ attacks exactly that gap. The root-cause diagnosis (reproducing the
+gap frames and dumping per-object salience features) is that the low-ranked winning clicks
+are consistently VERY SMALL objects (r11l's rank-22 winner is a single pixel area=1; su15's
+repeatedly-clicked winner is area=1; r11l's others are area 4 and 12), and the shipped
+default orders object clicks by `area * (1 + 1/(1 + global_color_pixels))`, which is
+AREA-DOMINATED so a 1-pixel target always loses to large decorative regions. The HONEST
+nuance: for the single-pixel-field cases the winner is ALSO outranked by many EQUAL-size,
+rarer-coloured pixels, so no monotonic-in-area formula can surface it -- part of the gap is
+a discriminating-SIGNAL absence (a Missing-Verifier Gap), not a formula bug.
+
+`python/carnot/agentic/arc_graph_explore.py` SHALL provide an opt-in, gated-OFF-by-default
+reorder (`CARNOT_ARC_SMALL_OBJECT_FIRST=1` -> `_small_object_first_click_points`) that
+reorders the SAME object-click candidate set into two bands -- a SMALL band (object area
+<= 8) ordered by colour-rarity (rarest first) tried FIRST, then all remaining objects in
+the proven salience order -- adding/dropping no click and being byte-identical when the flag
+is off. `python/carnot/experiment_5758_click_ranking_fix_ab.py` SHALL run a matched-budget
+(200-action) live A/B on the same 11-game roster as REQ-ARC-FCP-5740, per-game fixed seed,
+`CARNOT_ARC_DISABLE_INDUCTION=1` (no-LLM), two byte-identical `E3AgentPolicy(game)` arms
+differing ONLY in the flag, reporting real capability metrics (`levels_gained_total_by_arm`,
+`states_expanded_total_by_arm`), an offline `rank_shift_offline` diagnostic (winning-click
+rank under default vs the reorder on the exact r11l/su15 gap frames), an
+`r11l_su15_specifically_fixed` decisive boolean, a `safety_regression_check` (>20% states
+growth flagged), and a `prior_work_extended` block naming REQ-ARC-FCP-5757 (the motivating
+gap), exp4556 (the learned-router null on colour-variant first-contact), and the
+`CARNOT_ARC_TIER_SCHEDULE` null (`proto_tier_ab.json`) by id + verdict + what is different.
+The artifact SHALL carry `inference_substrate:
+offline_arcade_live_agent_runtime_self_discovery_no_llm`, `verifier_is_oracle: false`,
+`solve_provenance: development_proxy`, `random_seed`, and `reproducibility_checksum`, and
+the recommendation to flip the live default SHALL be operator-only.
+
+**Implementation Status (measured 2026-07-20): DONE -- clean NULL, reframed as a
+Missing-Verifier Gap.** Both arms bank 1 level (lp85 L1, incidental -- headroom present, so
+the null is interpretable, not a no-headroom artifact); r11l and su15 stay at 0 in BOTH
+arms (`r11l_su15_specifically_fixed: false` -- the decisive negative); the reorder changes
+the search trajectory on 7 of 11 games yet banks no additional level; and it actually
+LOWERS search cost (`states_expanded` 931 -> 807, -13.3%, no regression). The offline
+rank-shift is a WASH (0 of 2 decisive games reduce their low-rank count): the reorder
+reshuffles the single-pixel field without picking THE winning pixel, confirming the
+signal-absence diagnosis. `adversarial_verify.py`: 0 flags. The flag stays OFF; the gap is
+logged as a Missing-Verifier Gap for a learned / goal-conditioned click discriminator.
+
+#### SCENARIO-ARC-FCP-5758-ELEVEN-GAME-CAPABILITY-AB
+- **WHEN** the live A/B runs the two arms (`baseline` flag-off vs `small_object_first` flag-on) over the 11-game roster at a matched 200-action budget with per-game fixed seeds and no LLM
+- **THEN** the artifact SHALL report `levels_gained_total_by_arm`, `states_expanded_total_by_arm`, per-game level/states rows, `any_config_beats_baseline_levels`, `levels_gained_headroom_present`, and a `safety_regression_check` flagging any arm whose `states_expanded` grows > 20% vs baseline; and a level win SHALL NOT be reported without its search cost. (Observed: baseline 1 / treatment 1 level, states 931 -> 807, no regression, `any_config_beats_baseline_levels: false`, headroom present via lp85.)
+
+#### SCENARIO-ARC-FCP-5758-R11L-SU15-DECISIVE
+- **WHEN** the decisive test is evaluated on the two games exp5757 localized the click-ranking gap to
+- **THEN** the artifact SHALL carry `r11l_su15_specifically_fixed` = true iff r11l and/or su15 completes an ADDITIONAL level under the reorder within budget that baseline does not, with a per-game `baseline_levels` / `treatment_levels` / `gained_additional_level` breakdown. (Observed: false -- both games 0 levels in both arms; the reorder does not convert to a level on the target games.)
+
+#### SCENARIO-ARC-FCP-5758-RANK-SHIFT-OFFLINE-IS-A-WASH
+- **WHEN** the offline `rank_shift_offline` diagnostic recomputes each winning object-click's rank at the exact r11l/su15 gap frame under default vs the reorder
+- **THEN** the artifact SHALL report per-game the winning-click ranks and the low-rank (rank >= 12) count under each ordering, and summarise `games_low_rank_reduced` vs `games_low_rank_worsened`; a reduction of 0 SHALL be interpreted as the reorder NOT surfacing the bucket-c winners (they are buried under a field of equal-size rarer pixels), confirming the discriminating-signal-absence (Missing-Verifier) framing rather than a formula bug the reorder can close. (Observed: 0 of 2 games reduced -- a wash; the flag stays OFF and the gap is logged for a learned/goal-conditioned click discriminator.)

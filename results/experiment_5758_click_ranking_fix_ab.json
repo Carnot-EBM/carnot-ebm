@@ -1,0 +1,874 @@
+{
+  "experiment": "experiment_5758_click_ranking_fix_ab",
+  "schema": "carnot.exp5758.click_ranking_fix_ab.v1",
+  "result_path": "results/experiment_5758_click_ranking_fix_ab.json",
+  "requirements": [
+    "REQ-ARC-FCP-5758",
+    "SCENARIO-ARC-FCP-5758-ELEVEN-GAME-CAPABILITY-AB",
+    "SCENARIO-ARC-FCP-5758-R11L-SU15-DECISIVE",
+    "SCENARIO-ARC-FCP-5758-RANK-SHIFT-OFFLINE"
+  ],
+  "honest_verdict": "complete: small_object_first_click_reorder_changes_search_on_7_arm_games_but_no_level_gain_over_baseline_1_and_offline_rank_shift_is_a_wash_reduced_0_of_2_decisive_games_missing_verifier_gap",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a level win, a search-behaviour change with no level gain, and a total no-op are distinct real outcomes -- the reorder earns a live-default flip only if it raises banked levels on the same roster+budget WITHOUT a states_expanded blow-up"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- CARNOT_ARC_DISABLE_INDUCTION=1 guarantees no GGUF/LLM load; the reorder affects only the candidate ordering the search expands, isolated from tier-3 induction"
+    },
+    "verifier_is_oracle": {
+      "principle": "False -- the win oracle is the env level counter (frame.levels_completed); the small-object-first reorder is a perceptual heuristic over object candidates, never the check that defines a win (no CIRCULAR_MOAT_OVERCLAIM)"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline-arcade live-path candidate-ordering A/B on the dev twin; NOT a self-discovery solve, NO new level banked (any lp85 L1 is a pre-existing registry solve reached incidentally), so offline_reproduced is deliberately NOT claimed"
+    },
+    "random_seed": {
+      "principle": "determinism precondition; per-game seed = RANDOM_SEED + game_index so baseline-game-X and treatment-game-X start from an identical RNG state -- any delta isolates the reorder, not RNG drift"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash over the arms x roster capability rows; catches silent corpus/harness drift on replay"
+    },
+    "duration_s": {
+      "principle": "real wall-clock of the search A/B; the no-LLM substrate floor is 0.01s and this runs 2 arms x 11 games sequentially, so a multi-hundred-second total is expected"
+    },
+    "prior_work_extended": {
+      "principle": "Failed-Experiment Rerun Discipline -- names REQ-ARC-FCP-5757 (the motivating gap) + exp4556 (the learned-router null) + the tier-schedule null by id+verdict, and states precisely what is different (a NEW small-object-first reorder, tested on the base gap games with real level/states metrics, not colour-variant first-contact)"
+    },
+    "diagnosed_ranking_failure_mode": {
+      "principle": "the step-1 root-cause finding stated honestly even where inconclusive -- area-dominance buries tiny targets AND the single-pixel-field winners have no clean discriminating feature (a Missing-Verifier Gap)"
+    },
+    "fix_description": {
+      "principle": "the ONE minimal opt-in fix, its flag/default/mechanism/threshold and why it is genuinely different from the two already-NULL reorders"
+    },
+    "levels_gained_total_by_arm": {
+      "principle": "the raw capability answer: total banked levels per arm across the roster + per-game breakdown so a third party re-derives every headline number"
+    },
+    "r11l_su15_specifically_fixed": {
+      "principle": "THE decisive test -- do the two games exp5757 localized the click-ranking gap to actually complete an ADDITIONAL level under the reorder within budget that baseline does not; a bool + per-game detail"
+    },
+    "safety_regression_check": {
+      "principle": "exp5729 discipline -- a reorder that banks a level while materially inflating states_expanded (>20% vs baseline) is flagged; a level win is never reported without its search cost, and a reorder that REGRESSES search elsewhere is surfaced"
+    },
+    "any_config_beats_baseline_levels": {
+      "principle": "the load-bearing capability boolean: True iff the reorder banks strictly more levels than baseline on the same roster+budget"
+    },
+    "recommendation": {
+      "principle": "reports whether to flip the live default (SUBMITTED_* / the flag); the agent never self-authorizes flipping the live-stack default -- operator-only"
+    },
+    "rank_shift_offline": {
+      "principle": "mechanistic evidence: the winning-click rank under default vs the reorder on the exact r11l/su15 gap frames -- shows whether the fix even moves the target up, independent of whether that converts to a level"
+    },
+    "levels_gained_headroom_present": {
+      "principle": "FALSE_NEGATIVE_RISK discipline -- a no-delta result is interpretable only if some arm banks a nonzero level somewhere, else the roster had no level headroom for any reorder at this budget"
+    },
+    "trajectories_diverge_per_game": {
+      "principle": "did the reorder change the search trajectory at all per game -- distinguishes 'inert' from 'changed search but no level gain'"
+    },
+    "per_arm_game_rows": {
+      "principle": "full per-game rows (levels, states_expanded, actions, trajectory sha) so the capability comparison is independently auditable"
+    },
+    "preconditions_checked": {
+      "principle": "records the resources verified (offline arcade builds an env, E3AgentPolicy + the reorder helper import) before the sweep, per Pre-Launch Preconditions"
+    }
+  },
+  "roster": [
+    "cd82",
+    "cn04",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "sk48",
+    "sp80",
+    "su15",
+    "tu93",
+    "wa30"
+  ],
+  "budget": 200,
+  "arms_tested": [
+    "baseline",
+    "small_object_first"
+  ],
+  "baseline_arm": "baseline",
+  "baseline_levels_total": 1,
+  "baseline_states_expanded_total": 931,
+  "diagnosed_ranking_failure_mode": {
+    "summary": "AREA-DOMINANCE buries tiny interactive targets. The low-ranked winning object-clicks on r11l/su15 are consistently VERY SMALL objects (r11l rank-22 winner area=1; su15's repeatedly-clicked winner area=1 color=3; r11l others area 4 and 12). The shipped default orders clicks by area*(1+1/(1+global_color_pixels)), which is area-dominated, so a 1-pixel target (salience ~1) always loses to large decorative regions (salience up to ~240) -- the winners sink to ranks 13-22 of ~27-34 and are rarely tried within budget.",
+    "honest_nuance_not_a_tidy_story": "It is NOT purely 'small button lost to big decoration'. For the single-pixel-field cases the winner is ALSO outranked by MANY equal-size, rarer-coloured single pixels (r11l idx0: 11 larger + 12 equal-area rarer pixels rank above it). No monotonic-in-area formula can surface a 1-pixel winner above a 240-pixel region, and colour-rarity does not identify THE winning pixel among the single-pixel field. So part of this gap is a discriminating-SIGNAL ABSENCE (a Missing-Verifier Gap), not a ranking-formula bug -- stated plainly per the task's instruction not to force a tidy story onto noisy data.",
+    "per_gap_action_features": {
+      "r11l": [
+        {
+          "idx": 0,
+          "rank": 22,
+          "n": 34,
+          "win_area": 1,
+          "win_color": 15,
+          "note": "single pixel; 11 larger + 12 equal-area rarer pixels ranked above"
+        },
+        {
+          "idx": 1,
+          "rank": 6,
+          "n": 26,
+          "win_area": 12,
+          "win_color": 3,
+          "note": "already handled (rank<12)"
+        },
+        {
+          "idx": 2,
+          "rank": 8,
+          "n": 26,
+          "win_area": 4,
+          "win_color": 1,
+          "note": "already handled (rank<12)"
+        }
+      ],
+      "su15": [
+        {
+          "idx": 0,
+          "rank": 7,
+          "n": 28,
+          "win_area": 5,
+          "win_color": 0,
+          "note": "already handled"
+        },
+        {
+          "idx": 1,
+          "rank": 22,
+          "n": 27,
+          "win_area": 1,
+          "win_color": 3,
+          "note": "single-pixel winner, bucket c"
+        },
+        {
+          "idx": 2,
+          "rank": 19,
+          "n": 27,
+          "win_area": 1,
+          "win_color": 3,
+          "note": "same pixel; bucket c"
+        },
+        {
+          "idx": 3,
+          "rank": 16,
+          "n": 27,
+          "win_area": 1,
+          "win_color": 3,
+          "note": "same pixel; bucket c"
+        },
+        {
+          "idx": 4,
+          "rank": 13,
+          "n": 27,
+          "win_area": 1,
+          "win_color": 3,
+          "note": "same pixel; bucket c"
+        },
+        {
+          "idx": 5,
+          "rank": 10,
+          "n": 27,
+          "win_area": 1,
+          "win_color": 3,
+          "note": "climbs as distractor pixels are consumed"
+        },
+        {
+          "idx": 6,
+          "rank": 7,
+          "n": 27,
+          "win_area": 1,
+          "win_color": 3,
+          "note": "already handled by now"
+        }
+      ]
+    }
+  },
+  "fix_description": {
+    "flag": "CARNOT_ARC_SMALL_OBJECT_FIRST",
+    "default": "off (byte-identical to the shipped salience order)",
+    "function": "arc_graph_explore._small_object_first_click_points",
+    "mechanism": "Reorder the SAME object-click candidate set into two bands: (1) a SMALL band (object area <= 8) ordered by colour-rarity (rarest colour first, larger-within-small breaks ties), tried FIRST; (2) all remaining objects in the PROVEN area*rarity salience order. No click is added or dropped; the recorded trajectory is still a valid deterministic replay.",
+    "small_area_max": 8,
+    "why_area_8": "single-digit-pixel = 'tiny interactive target'; covers 3 of the 4 observed winner sizes (1,4,5); a principled cutoff, not tuned to hit a gate.",
+    "genuinely_different_from": "CARNOT_ARC_TIER_SCHEDULE (front-loads MEDIUM-width w,h in [2,32] objects -- EXCLUDES the 1x1 winners here; already A/B-NULL in results/proto_tier_ab.json) and the exp4556 learned DiscriminativeVerifier candidate_router (tested on colour-variant first-contact, no value)."
+  },
+  "rank_shift_offline": {
+    "note": "Winning object-click rank at the exact gap frame under default vs the reorder. low_rank = rank>=12 (exp5757 bucket-c threshold). This measures whether the fix even moves the target up, independent of whether it converts to a level.",
+    "r11l": {
+      "default": {
+        "per_step": [
+          {
+            "idx": 0,
+            "rank": 22,
+            "n_candidates": 34
+          },
+          {
+            "idx": 1,
+            "rank": 6,
+            "n_candidates": 26
+          },
+          {
+            "idx": 2,
+            "rank": 8,
+            "n_candidates": 26
+          }
+        ],
+        "n_low_rank_ge12": 1
+      },
+      "small_object_first": {
+        "per_step": [
+          {
+            "idx": 0,
+            "rank": 21,
+            "n_candidates": 34
+          },
+          {
+            "idx": 1,
+            "rank": 10,
+            "n_candidates": 26
+          },
+          {
+            "idx": 2,
+            "rank": 5,
+            "n_candidates": 26
+          }
+        ],
+        "n_low_rank_ge12": 1
+      }
+    },
+    "su15": {
+      "default": {
+        "per_step": [
+          {
+            "idx": 0,
+            "rank": 7,
+            "n_candidates": 28
+          },
+          {
+            "idx": 1,
+            "rank": 22,
+            "n_candidates": 27
+          },
+          {
+            "idx": 2,
+            "rank": 19,
+            "n_candidates": 27
+          },
+          {
+            "idx": 3,
+            "rank": 16,
+            "n_candidates": 27
+          },
+          {
+            "idx": 4,
+            "rank": 13,
+            "n_candidates": 27
+          },
+          {
+            "idx": 5,
+            "rank": 10,
+            "n_candidates": 27
+          },
+          {
+            "idx": 6,
+            "rank": 7,
+            "n_candidates": 27
+          }
+        ],
+        "n_low_rank_ge12": 4
+      },
+      "small_object_first": {
+        "per_step": [
+          {
+            "idx": 0,
+            "rank": 21,
+            "n_candidates": 28
+          },
+          {
+            "idx": 1,
+            "rank": 5,
+            "n_candidates": 27
+          },
+          {
+            "idx": 2,
+            "rank": 8,
+            "n_candidates": 27
+          },
+          {
+            "idx": 3,
+            "rank": 11,
+            "n_candidates": 27
+          },
+          {
+            "idx": 4,
+            "rank": 14,
+            "n_candidates": 27
+          },
+          {
+            "idx": 5,
+            "rank": 17,
+            "n_candidates": 27
+          },
+          {
+            "idx": 6,
+            "rank": 20,
+            "n_candidates": 27
+          }
+        ],
+        "n_low_rank_ge12": 4
+      }
+    },
+    "summary": {
+      "games_low_rank_reduced": 0,
+      "games_low_rank_worsened": 0,
+      "interpretation": "0 reduced means the reorder does NOT surface the bucket-c winners: they are buried under a field of equal-size rarer pixels, so promoting small objects reshuffles that field without picking THE winning pixel -- a wash, confirming the Missing-Verifier framing."
+    }
+  },
+  "per_arm_results": [
+    {
+      "arm": "baseline",
+      "is_baseline": true,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 931,
+      "states_delta_vs_baseline": 0,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 18,
+        "cn04": 99,
+        "lp85": 181,
+        "ls20": 187,
+        "m0r0": 45,
+        "r11l": 148,
+        "sk48": 26,
+        "sp80": 41,
+        "su15": 12,
+        "tu93": 39,
+        "wa30": 135
+      }
+    },
+    {
+      "arm": "small_object_first",
+      "is_baseline": false,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 807,
+      "states_delta_vs_baseline": -124,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 18,
+        "cn04": 98,
+        "lp85": 8,
+        "ls20": 187,
+        "m0r0": 46,
+        "r11l": 195,
+        "sk48": 26,
+        "sp80": 41,
+        "su15": 14,
+        "tu93": 39,
+        "wa30": 135
+      }
+    }
+  ],
+  "per_arm_game_rows": {
+    "baseline": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 18,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "ba87caf3dd1a06b0",
+        "duration_s": 3.429
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 99,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "e4186ab9c44c0a08",
+        "duration_s": 3.585
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 1,
+        "reached": 1,
+        "actions": 195,
+        "states_expanded": 181,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 11,
+        "gap_signature": null,
+        "trajectory_len": 193,
+        "trajectory_sha": "5dfc4297cc5965a5",
+        "duration_s": 6.116
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "duration_s": 5.035
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 45,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "d397c87edf58d595",
+        "duration_s": 4.309
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 148,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "e6420a85824d35b6",
+        "duration_s": 6.752
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 26,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "8573a591b70dc789",
+        "duration_s": 4.443
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 41,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "1ac1e292fbde60de",
+        "duration_s": 4.485
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 12,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "a166f9fe180c0df1",
+        "duration_s": 3.795
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "duration_s": 4.437
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "baseline",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "duration_s": 4.893
+      }
+    },
+    "small_object_first": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 18,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "ed97670c3921b5ee",
+        "duration_s": 4.346
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 98,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "dc027f19c0fc8d5a",
+        "duration_s": 4.172
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 1,
+        "reached": 1,
+        "actions": 181,
+        "states_expanded": 8,
+        "efficiency": 0.6194,
+        "actions_to_first_levelup": 36,
+        "gap_signature": null,
+        "trajectory_len": 178,
+        "trajectory_sha": "0a3c58994b142ee5",
+        "duration_s": 4.43
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "duration_s": 5.168
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 46,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "de614f54f0192982",
+        "duration_s": 5.092
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 195,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "e66057d8003ccdbf",
+        "duration_s": 7.564
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 26,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "85e9fbaff2279c68",
+        "duration_s": 4.999
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 41,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "1ac1e292fbde60de",
+        "duration_s": 4.832
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 14,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "f55a2e315b25bd70",
+        "duration_s": 4.259
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "duration_s": 4.943
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "small_object_first",
+        "explorer_present": true,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "duration_s": 4.55
+      }
+    }
+  },
+  "levels_gained_total_by_arm": {
+    "baseline": 1,
+    "small_object_first": 1
+  },
+  "states_expanded_total_by_arm": {
+    "baseline": 931,
+    "small_object_first": 807
+  },
+  "trajectories_diverge_per_game": {
+    "small_object_first": {
+      "per_game": {
+        "cd82": true,
+        "cn04": true,
+        "lp85": true,
+        "ls20": false,
+        "m0r0": true,
+        "r11l": true,
+        "sk48": true,
+        "sp80": false,
+        "su15": true,
+        "tu93": false,
+        "wa30": false
+      },
+      "n_games_diverged": 7,
+      "games_diverged": [
+        "cd82",
+        "cn04",
+        "lp85",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "su15"
+      ]
+    }
+  },
+  "r11l_su15_specifically_fixed": {
+    "fixed": false,
+    "per_game": {
+      "r11l": {
+        "baseline_levels": 0,
+        "treatment_levels": 0,
+        "gained_additional_level": false
+      },
+      "su15": {
+        "baseline_levels": 0,
+        "treatment_levels": 0,
+        "gained_additional_level": false
+      }
+    },
+    "detail": "True iff r11l and/or su15 completes an ADDITIONAL level under the reorder within budget that baseline does not -- the direct point of fixing click-ranking."
+  },
+  "levels_gained_headroom_present": true,
+  "any_config_beats_baseline_levels": false,
+  "any_config_beats_baseline_without_safety_regression": false,
+  "safety_regression_check": {
+    "baseline_states_expanded_total": 931,
+    "states_regression_relative_threshold": 0.2,
+    "per_config": {
+      "baseline": {
+        "states_expanded_total": 931,
+        "states_delta_vs_baseline": 0,
+        "states_rel_change_vs_baseline": 0.0,
+        "states_expanded_regression": false
+      },
+      "small_object_first": {
+        "states_expanded_total": 807,
+        "states_delta_vs_baseline": -124,
+        "states_rel_change_vs_baseline": -0.1332,
+        "states_expanded_regression": false
+      }
+    },
+    "any_config_states_regression": false,
+    "interpretation": "states_expanded is the search cost; a reorder that banks a level while materially inflating states may be luck-under-noise, not a real capability gain. It only earns a live-default recommendation if it raises levels WITHOUT tripping the >20% regression."
+  },
+  "prior_work_extended": {
+    "motivating_gap": {
+      "experiment_id": "REQ-ARC-FCP-5757 (experiment_5757_candidate_coverage_attribution)",
+      "verdict": "complete_attribution_gate_no_threshold_crossed_dominant_gap_c_n92_games9",
+      "role": "THE MOTIVATION. Localized the ONLY residual single-action gap to SELECTION/RANKING of object clicks (bucket c: 6 action-6 clicks in-set + frame-changing but rank>=12; r11l x1, su15 x4). This experiment attacks exactly that gap on exactly those games."
+    },
+    "prior_reorder_nulls": [
+      {
+        "experiment_id": "exp4556 (experiment_4556_verifier_router_generic_transfer)",
+        "prior_verdict": "complete: verifier_router_no_value_added_honest_null_gap_sharpened",
+        "diagnosed_root_cause": "The learned DiscriminativeVerifier candidate_router added no transfer value (delta 0.0 vs 0.04 baseline; random-router control 0.08 > verifier, so the control FAILED).",
+        "what_is_different_here": "exp4556 tested a LEARNED cross-game router on COLOUR-VARIANT first-contact (generic_solver_offline_variant_env, variant_signature=game~color01) -- NOT the base r11l/su15 games, and NOT a hand-designed perceptual reorder. THIS is a cheap, hand-designed small-object-first reorder measured on the BASE gap games with real level/states metrics. Different roster/corpus + different mechanism -> a legitimate new test, not a rerun of the learned-router null.",
+        "retire_if_same_verdict": false
+      },
+      {
+        "experiment_id": "proto_tier_ab (CARNOT_ARC_TIER_SCHEDULE grafted just-explore 5-tier salience)",
+        "prior_verdict": "TIER_NULL_no_win (tier never beats flat at budget 1000 AND 4000, zero regression)",
+        "diagnosed_root_cause": "just-explore's 5-tier schedule front-loads MEDIUM-width (w,h in [2,32]) salient objects. It EXCLUDES the 1x1 winners this gap is about (they are not medium-width), so it could never have surfaced them -- candidate ORDERING via that schedule is not the edge.",
+        "what_is_different_here": "small_object_first targets the OPPOSITE size band -- the single-pixel / area<=8 objects the tier schedule excludes -- so it is a genuinely different reorder, not a re-run of the tier-schedule null.",
+        "retire_if_same_verdict": false
+      }
+    ],
+    "harness_precedent": {
+      "experiment_id": "exp5740 (experiment_5740_object_history_salience_11game_ab) / exp5729",
+      "role": "THE HARNESS PRECEDENT. Reuses its skeleton: drive E3AgentPolicy/StepwiseExplorer directly via arc_leaderboard_eval.run_game, 11-game roster, budget 200, per-game fixed seed, states_expanded = len(policy.explorer.graph), the >20% states-regression discipline."
+    },
+    "retire_if_same_verdict": "If the reorder banks NO additional level on r11l/su15 (or roster-wide) at this budget AND the offline rank-shift is a wash (the winner not reliably surfaced), then a hand-designed perceptual click reorder is not the live-path lever for this gap -- the residual is a discriminating-SIGNAL absence (Missing-Verifier Gap). Recommend the operator keep the flag OFF and log the gap for a learned/goal-conditioned click discriminator; do NOT re-propose another static perceptual click-reorder without a NEW signal."
+  },
+  "recommendation": "NO arm banks more levels than baseline (1); r11l/su15 do NOT gain a level under the reorder; and the offline rank-shift is a WASH (the bucket-c winners are not surfaced -- reduced low-rank on 0 of 2 decisive games). Keep the live default OFF (CARNOT_ARC_SMALL_OBJECT_FIRST stays unset / a SUBMITTED_SMALL_OBJECT_FIRST_ENABLED gate stays False). The click-ranking gap is a discriminating-SIGNAL absence (a single winning pixel indistinguishable within the equal-size pixel field), NOT a formula bug a static perceptual reorder can close -- log it as a Missing-Verifier Gap for a learned / goal-conditioned click discriminator (the deeper world-model INDUCTION lever exp5757 named). Operator-only whether to act.",
+  "random_seed": 5758,
+  "duration_s": 106.785,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "reorder_helper_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "4e3f98ad4f7b7ecfc25425f463661e38c23e7b2a9fc6f77fa9a31afbc46f9882"
+}
