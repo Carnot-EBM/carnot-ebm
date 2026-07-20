@@ -45,6 +45,7 @@ from carnot.agentic.arc_program_synthesis_filter import (
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
+from carnot.agentic.arc_generic_causal_primitives import coerce_generic_causal_primitive
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     GroundTruthValidatedFrameChangeScorer,
@@ -735,6 +736,7 @@ class StepwiseExplorer:
         similarity_bucket_width: float = MATM_SIMILARITY_BUCKET_WIDTH,
         similarity_max_candidates: int = MATM_SIMILARITY_MAX_CANDIDATES,
         transition_cycle_verifier: Any | None = None,
+        generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any | bool | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
@@ -901,6 +903,7 @@ class StepwiseExplorer:
         )
         self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         self.inert_click_pruner = coerce_inert_click_pruner(inert_click_pruner)
+        self.generic_causal_primitive = coerce_generic_causal_primitive(generic_causal_primitive)
         self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
             amortized_first_contact_prior
         )
@@ -1472,6 +1475,11 @@ class StepwiseExplorer:
                 rows = self.inert_click_pruner.rank_candidates(frame, rows)
             except Exception:
                 pass
+        if self.generic_causal_primitive is not None and rows:
+            try:
+                rows = self.generic_causal_primitive.rank_candidates(frame, rows)
+            except Exception:
+                pass
         if self.goal_candidate_guidance is not None and rows:
             try:
                 rows = self.goal_candidate_guidance.rank_candidates(frame, rows)
@@ -1763,6 +1771,18 @@ class StepwiseExplorer:
                     inert_click_pruner.observe(
                         o.get("previous_frame") or o.get("grid"),
                         {"action": int(o["action"]), "data": o.get("data")},
+                        latest,
+                        leveled_up=bool(level_increased),
+                    )
+                except Exception:
+                    pass
+            generic_causal_primitive = getattr(self, "generic_causal_primitive", None)
+            if generic_causal_primitive is not None and o.get("previous_frame") is not None:
+                try:
+                    generic_causal_primitive.observe_transition(
+                        o.get("previous_frame") or o.get("grid"),
+                        int(o["action"]),
+                        o.get("data"),
                         latest,
                         leveled_up=bool(level_increased),
                     )
@@ -2746,6 +2766,7 @@ class E3AgentPolicy:
         active_probe_concentration_threshold: float = 0.9,
         goal_guidance_lambda: float = SUBMITTED_GOAL_GUIDANCE_LAMBDA,
         transition_cycle_verifier: Any | None = None,
+        generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any = _DEFAULT_EPISTEMIC_LEDGER,
     ) -> None:
         import os
@@ -2855,6 +2876,7 @@ class E3AgentPolicy:
             amortized_first_contact_prior=amortized_first_contact_prior,
             go_explore_archive=go_explore_archive,
             similarity_retrieval=similarity_retrieval,
+            generic_causal_primitive=generic_causal_primitive,
             epistemic_ledger=self.epistemic_ledger,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected

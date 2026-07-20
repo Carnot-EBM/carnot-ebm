@@ -7893,6 +7893,139 @@ Then the artifact hash-links the exact Exp5740 source/effects, records
 `live_policy_modified=false`, and leaves `scripts/research_conductor.py`
 unchanged.
 
+### REQ-ARC-WMTE-5753: Frozen Generic Primitive Live-Registry A/B
+
+Experiment 5753 SHALL consume the normalized Exp5745 causal gate, the exact
+checked-in Exp5740 source artifact, Exp5741's blocked receipt, Exp5727's
+submitted-live oracle-gap receipt, and the current ARC solve registry before
+running any live work. The workflow SHALL fail closed before any ARC episode if
+source, corrigendum, trace, registry, environment, budget, seed, RAM, disk,
+submitted live policy path, or normalized-gate provenance checks fail. The
+registry precheck SHALL explicitly confirm the public 25-game / 183-level
+saturation and SHALL state that no public level can be credited as new.
+
+Experiment 5753 SHALL select at most one frozen primitive from Exp5740 using a
+pre-registered game-blind rule over frozen Exp5740 causal utility: choose the
+retained primitive with the largest `composite_utility_delta`, tie-break by
+larger corrected-interval lower bound, then larger paired replay count, then
+lexicographic primitive id. The selected primitive SHALL be hash-linked to the
+frozen Exp5740 effect payload and SHALL be implemented as a game-blind reusable
+live-path component reachable from `E3AgentPolicy` / `StepwiseExplorer`. The
+implementation SHALL NOT encode game names, game ids, source code, hand
+`GameAdapter`s, exhaustive/offline BFS, oracle actions, per-game calibration,
+learned cross-game value heads, or outer-loop transition models. Static and
+runtime leak canaries SHALL be present, and any admitted source or game-identity
+leak SHALL block or retire the experiment.
+
+The matched A/B SHALL run the submitted baseline live policy path versus the
+same path plus the selected primitive across all 25 public registry games using
+identical seeds, observations, resets, fixed 400-action budgets, timeouts, and
+evaluation. It SHALL preserve every live observation, action, reward, and state
+receipt needed to replay or audit each arm. It SHALL measure live levels
+reproduced, action-effect prediction accuracy, valid-action rate,
+repeated-action rate, unique-state coverage, planning reachability, actions and
+time per reproduced level, crashes, and budget exhaustion. It SHALL report
+paired confidence intervals and per-game results, including honest nulls and
+blocked gate failures. If the failure mode repeats
+`blocked_gate_check_failed`, the artifact SHALL emit a retirement signal rather
+than patching the conductor or weakening the normalized gate.
+
+The terminal artifact
+`results/experiment_5753_arc_generic_primitive_live_registry_ab.json` SHALL
+include top-level `field_principles` covering every required field, plus
+`preconditions_checked`, `spec_refs`, `upstream_artifact_hashes`,
+`registry_precheck`, `public_game_count=25`, `registry_level_count=183`,
+`selected_primitive_id`, `selected_primitive_hash`, `selection_rule`,
+`live_policy_path`, `primitive_live_reachable`, `game_blind_receipts`,
+`source_leak_count`, `game_identity_leak_count`, `paired_trial_manifest`,
+`per_game_metrics`, `baseline_live_levels_reproduced`,
+`primitive_live_levels_reproduced`, `live_level_reproduction_delta`,
+`action_effect_prediction_delta`, `valid_action_rate_delta`,
+`repeated_action_rate_delta`, `unique_state_coverage_delta`,
+`planning_reachability_delta`, `budget_exhaustion_delta`,
+`confidence_intervals`, `solve_provenance="development_proxy"`,
+`arc_registry_delta=0`, `arc_solve_credited=false`,
+`outer_loop_re_used=false`, `per_game_adapter_used=false`,
+`production_default_enabled=false`, `retirement_signal`, `random_seeds`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles SHALL include:
+
+- `field_principles`: principle "every Exp5753 field carries its audit rationale so the live-registry A/B is schema-stable."
+- `preconditions_checked`: principle "structured gates fail closed before live work on provenance, registry saturation, environment reachability, budgets, seeds, resources, and submitted path."
+- `spec_refs`: principle "REQ/SCENARIO anchors make the measurement traceable to OpenSpec."
+- `upstream_artifact_hashes`: principle "Exp5740/5741/5745/5727 and registry inputs are content-addressed before use."
+- `registry_precheck`: principle "confirms 25 public games and 183 levels were already complete, so no public level is new credit."
+- `public_game_count`: principle "fixed denominator for the full public registry."
+- `registry_level_count`: principle "fixed saturated level denominator; used only as context."
+- `selected_primitive_id`: principle "at most one frozen Exp5740 primitive is selected by the pre-registered utility rule."
+- `selected_primitive_hash`: principle "hash-links the selected primitive to its frozen Exp5740 effect payload."
+- `selection_rule`: principle "deterministic utility and tie-break rule prevents post-hoc primitive choice."
+- `live_policy_path`: principle "names the submitted E3/StepwiseExplorer path rather than an orphan solver."
+- `primitive_live_reachable`: principle "true only when the primitive is installed through the live E3 policy/explorer route."
+- `game_blind_receipts`: principle "static and runtime canaries prove no game identity, source, adapter, or oracle signal entered the primitive."
+- `source_leak_count`: principle "admitted source leaks must be zero; detected rejected canaries are reported separately."
+- `game_identity_leak_count`: principle "admitted game-identity leaks must be zero; detected rejected canaries are reported separately."
+- `paired_trial_manifest`: principle "baseline and primitive arms share games, seeds, observations, resets, budgets, and stopping rules."
+- `per_game_metrics`: principle "per-game rows expose levels, prediction accuracy, valid/repeat rates, coverage, planning, crashes, exhaustion, actions, time, and receipts."
+- `baseline_live_levels_reproduced`: principle "submitted-path baseline known-level live reproduction count, not new solve credit."
+- `primitive_live_levels_reproduced`: principle "primitive-arm known-level live reproduction count, not new solve credit."
+- `live_level_reproduction_delta`: principle "primitive minus baseline; any increase is reachability evidence only."
+- `action_effect_prediction_delta`: principle "measures whether the primitive improves transition prediction rather than replay credit."
+- `valid_action_rate_delta`: principle "validity change is explicit so pruning/ranking failures are visible."
+- `repeated_action_rate_delta`: principle "looping behavior is measured separately from validity."
+- `unique_state_coverage_delta`: principle "exploration coverage movement is reported even on level-null outcomes."
+- `planning_reachability_delta`: principle "planned-state reachability is the live induction target."
+- `budget_exhaustion_delta`: principle "400-action exhaustion changes are reported directly."
+- `confidence_intervals`: principle "paired uncertainty is reported for every aggregate delta."
+- `solve_provenance`: principle "development_proxy -- known public-registry live A/B, not hidden-game self-discovery credit."
+- `arc_registry_delta`: principle "zero prevents public solve-registry inflation."
+- `arc_solve_credited`: principle "false keeps live reproduction gains as generalization evidence only."
+- `outer_loop_re_used`: principle "false excludes off-path exhaustive reverse engineering."
+- `per_game_adapter_used`: principle "false excludes hand GameAdapter routes."
+- `production_default_enabled`: principle "false keeps the unpromoted primitive out of submitted defaults."
+- `retirement_signal`: principle "repeated normalized-gate blocking retires the line rather than weakening gates."
+- `random_seeds`: principle "paired trials are deterministic only under fixed seeds."
+- `test_commands`: principle "records verification commands used for the artifact."
+- `test_exit_codes`: principle "records command exit codes rather than prose-only verification."
+- `reproducibility_checksum`: principle "content-addressed artifact catches silent metric or receipt drift."
+- `honest_verdict`: principle "terminal complete:/blocked:/retired: verdict accepts safe nulls and blocked gates."
+
+#### SCENARIO-ARC-WMTE-5753-GATE-AND-SELECTION
+
+Given Exp5740, Exp5741, Exp5745, Exp5727, and the ARC registry are present
+with matching hashes and the normalized gate admits zero source and game-identity
+leaks
+When Exp5753 evaluates preconditions and selects a primitive
+Then live work is allowed only after all structured gates pass, the registry
+precheck records 25 games and 183 levels already complete, the selected
+primitive is the utility-maximal retained Exp5740 primitive under the
+pre-registered tie-break, and no public level is eligible for new credit.
+
+#### SCENARIO-ARC-WMTE-5753-LIVE-REACHABILITY-AND-LEAK-CANARIES
+
+Given the selected primitive is wired into the live `E3AgentPolicy` /
+`StepwiseExplorer` path
+When static and runtime leak canaries are evaluated
+Then the primitive is reachable through the submitted policy path, game/source
+canaries are detected and rejected, admitted source and game-identity leak
+counts remain zero, no per-game adapter or outer-loop reverse engineering path
+is used, and the production default remains disabled.
+
+#### SCENARIO-ARC-WMTE-5753-FULL-REGISTRY-PAIRED-AB
+
+Given preconditions pass and the full public registry roster is available
+When Exp5753 runs paired baseline-versus-primitive trials with identical seeds,
+observations, resets, 400-action budgets, timeouts, and evaluation
+Then the artifact contains one per-game metric row for each of the 25 games,
+preserves live observation/action/reward/state receipt manifests, reports
+aggregate deltas and paired confidence intervals, sets
+`solve_provenance="development_proxy"`, `arc_registry_delta=0`,
+`arc_solve_credited=false`, `outer_loop_re_used=false`,
+`per_game_adapter_used=false`, and emits an honest complete, blocked, or retired
+verdict without modifying `scripts/research_conductor.py`.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
