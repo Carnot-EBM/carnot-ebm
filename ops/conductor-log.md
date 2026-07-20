@@ -13810,3 +13810,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 01:48 UTC | Transition terminal .511 evidence, preserve retire | OK | 86 passed, 1 warning in 16.09s |
 | 2026-07-20 02:19 UTC | Ingest post-V512 source deltas with duplicate and  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-20 02:44 UTC | Qualify a finite-choice proposal channel across th | OK | 86 passed, 1 warning in 9.90s |
+| 2026-07-20 03:09 UTC | Gated on Exp5733 readiness: build a sealed exact-a | OK | 85 passed, 1 warning in 10.66s |
