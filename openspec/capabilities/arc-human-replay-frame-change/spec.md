@@ -9866,6 +9866,71 @@ prerequisite before any deployment consideration of the 27B.
 - **WHEN** the artifact reports the completion-rate comparison
 - **THEN** it SHALL disclose that N>=30 UNIQUE games is mathematically unreachable (only 25 public games exist, of which 20 supply a valid seeded window), state the exact N used and whether it was further bounded by conductor downtime (a downtime bound, NOT a fresh statistical ceiling), use the Wilcoxon signed-rank on per-game deltas as the primary paired test (with the sign test + fragility alongside), and disclose that trials-per-game add per-game stability but are NOT independent game-level degrees of freedom.
 
+### REQ-ARC-FCP-5728: CNN-Blend-Weight Sweep, Matched-Budget A/B
+
+`arc_frame_change_predictor.LiveActionEffectScorer` combines two signals
+additively for live frontier-priority scoring: `memory_weight (=1.0) *
+PersistentAEM.candidate_score(...)` plus `cnn_weight (=0.05) *
+SmallFrameChangeCNN`-backed `FrameChangeScorer.candidate_score(...)`.
+REQ-ARC-FCP-5590 fixed a dict-candidate crash that silently zeroed the CNN
+term, then found a clean null (byte-identical control/treatment across the
+11-game roster) -- the fix alone did not change search behavior. The
+hypothesis this REQ tests: is that null explained by `cnn_weight` being 20x
+smaller than `memory_weight`, so even a now-correct CNN signal is too small
+to ever flip a frontier tie-break?
+
+`python/carnot/experiment_5728_cnn_weight_sweep.py` SHALL sweep `cnn_weight`
+across at least 5 values (0.05 baseline, 0.25, 0.5, 1.0, 2.0 -- a 40x range
+over the shipped default) with `memory_weight` held fixed at `1.0`, on the
+SAME 11-game roster + `budget=200` + `CARNOT_ARC_DISABLE_INDUCTION=1`
+no-LLM harness as exp5590, so results are directly comparable. For each
+weight the artifact SHALL report `levels_gained_total`,
+`states_expanded_total`, `per_game_levels_delta_vs_baseline`, and a
+`cnn_calibration_summary` distinguishing "the CNN's raw outputs are
+non-discriminating" from "the CNN's raw outputs vary but are never
+consulted" -- specifically `ranking_scorer_nonzero_returns_total` (how many
+times the wrapping `GroundTruthValidatedFrameChangeScorer.candidate_score`
+returned nonzero, the ONLY moments `cnn_weight` can influence frontier
+order) versus `cnn_raw_nonzero_total`/`baseline_cnn_raw_variance_mean_over_games`
+(whether the underlying CNN forward pass itself produces varied,
+non-degenerate output). A `prior_work_extended` block SHALL cite exp5590
+by id + verdict + what is different here (the weight, not the bug).
+
+**RESOLUTION (2026-07-19).** Ran cleanly on the full 11-game roster,
+budget=200/game, 5 weights x 11 games. No tested weight (0.05..2.0) banks
+more levels than the 0.05 baseline (`baseline_levels_total: 1`,
+`best_weight: 0.05`, `any_weight_beats_baseline_levels: false`) --
+`levels_gained_headroom_present: true` (interpretable null: 1 level, `lp85`
+L1, in every arm). `cnn_calibration_summary` localized WHY: 7/11 games
+(`cd82, cn04, lp85, m0r0, sk48, su15, wa30`) never reach `validated=True`
+in `GroundTruthValidatedFrameChangeScorer` by end of run, so its
+`candidate_score` returns `0.0` UPSTREAM of the `cnn_weight` multiply on
+those games regardless of magnitude -- `n_games_gtv_never_validated: 7`. On
+2 of those (`lp85`, `su15`) `ranking_scorer_nonzero_returns_total` was
+`0` for the entire run: the blended scorer was consulted zero times, so no
+weight could possibly have mattered. Meanwhile `baseline_cnn_raw_variance_
+mean_over_games: 0.0115` confirms the CNN's raw forward-pass outputs ARE
+non-trivially varied -- this is a GATE problem, not a dead/non-discriminating-
+CNN problem. Verdict:
+`complete: cnn_weight_sweep_headroom_present_weight_change_yields_same_levels`.
+Recommendation (operator-only): do NOT change the live default `cnn_weight`
+on a capability basis; the next lever is the `GroundTruthValidatedFrameChange
+Scorer` validation gate itself (root-caused and tested in REQ-ARC-FCP-5729).
+
+Required field principles:
+
+- `weight_sweep_results`: principle "per-weight levels/states/efficiency -- levels is the capability answer; without it a weight change could look meaningful on a proxy metric while banking nothing real."
+- `cnn_calibration_summary`: principle "distinguishes a non-discriminating CNN from a gated-off CNN -- conflating them would misdirect the next experiment at the wrong layer (retraining the model vs fixing the gate)."
+- `any_weight_beats_baseline_levels`: principle "the load-bearing recommendation boolean -- a weight change only justifies touching the live default if it beats baseline on the decisive metric, not a proxy."
+
+#### SCENARIO-ARC-FCP-5728-WEIGHT-INERT-WHEN-GATE-UNVALIDATED
+- **WHEN** a game's `GroundTruthValidatedFrameChangeScorer` never reaches `validated=True` during a run (e.g. `lp85`, `su15`: zero nonzero ranking-scorer consults across the entire episode)
+- **THEN** every tested `cnn_weight` value SHALL produce byte-identical `states_expanded` and `levels_gained` on that game, because the wrapping gate returns `0.0` before the weight multiply is ever applied -- the artifact SHALL report this as a gate-localization finding, not attribute the null to the CNN's own discriminative quality.
+
+#### SCENARIO-ARC-FCP-5728-RAW-CNN-OUTPUT-VARIED-DESPITE-NULL
+- **WHEN** the sweep's headline result shows no weight beats baseline levels
+- **THEN** the artifact SHALL separately report the CNN's raw (pre-gate) output variance across the roster, so a reader cannot mistake "the weight sweep found no capability delta" for "the CNN produces degenerate/constant output" -- these are different failure modes requiring different fixes.
+
 ### REQ-ARC-FCP-5729: GroundTruth-Validation-Gate Tolerance Matched-Budget A/B
 
 `arc_frame_change_predictor.GroundTruthValidatedFrameChangeScorer` gates its
