@@ -1,0 +1,130 @@
+{
+  "admitted_game_identity_leak_count": 0,
+  "admitted_source_leak_count": 0,
+  "arc_registry_delta": 0,
+  "arc_solve_credited": false,
+  "counterfactual_receipt_coverage_score": 1.0,
+  "detected_game_identity_leak_canary_count": 2,
+  "detected_source_leak_canary_count": 1,
+  "field_principles": {
+    "admitted_game_identity_leak_count": "counts only game-identity leakage that entered credited primitives or live state, never rejected canaries.",
+    "admitted_source_leak_count": "counts only source leakage that entered credited primitives or live state, never rejected canaries.",
+    "arc_registry_delta": "zero prevents schema repair from inflating the public solve registry.",
+    "arc_solve_credited": "false prevents a gate corrigendum from claiming a solve.",
+    "counterfactual_receipt_coverage_score": "equals 1.0 only when all credited primitives meet paired-replay and trace-receipt existence gates.",
+    "detected_game_identity_leak_canary_count": "counts game-identity canaries that the negative-control harness detected and rejected.",
+    "detected_source_leak_canary_count": "counts source leak canaries that the negative-control harness detected and rejected.",
+    "field_principles": "every normalized field carries its own audit rationale so the corrigendum is schema-stable and principle-grounded.",
+    "frozen_effect_hash": "content-addresses the retained deletion effects so no effect size can be silently changed.",
+    "frozen_primitive_ids": "freezes the credited primitive identities in deterministic order for downstream live hardening.",
+    "honest_verdict": "terminal complete: or blocked: verdict states whether the lossless scalar schema repair is usable.",
+    "live_policy_modified": "false keeps schema normalization out of the submitted policy path.",
+    "normalization_rules": "documents the deterministic object-to-scalar and detected-vs-admitted leak transformations.",
+    "normalized_schema_version": "names the scalar gate contract consumed by downstream conductor gates.",
+    "original_counterfactual_receipt_coverage": "preserves the complete Exp5740 coverage object losslessly while adding a scalar gate field.",
+    "positive_causal_primitive_count": "copies the Exp5740 retained primitive count without re-mining or effect edits.",
+    "preconditions_checked": "fail-closed checks prove the source artifact, trace receipts, effects, registry state, and code immutability before normalization.",
+    "registry_precheck": "records that all 25 public games and all 183 registry levels were already complete before the corrigendum.",
+    "reproducibility_checksum": "content-addresses the normalized artifact while excluding its self-checksum.",
+    "science_rerun": "false proves the artifact did not rerun mining, replay science, or live games.",
+    "solve_provenance": "development_proxy marks this as schema repair evidence, not live hidden-game self-discovery.",
+    "source_artifact_hash": "the corrigendum is valid only for the exact checked-in Exp5740 bytes.",
+    "source_artifact_path": "the normalized gate is explicitly tied to the Exp5740 source JSON rather than an inferred experiment number.",
+    "source_schema_version": "records the legacy object-valued gate shape being normalized.",
+    "test_commands": "records the verification commands used to validate the corrigendum.",
+    "test_exit_codes": "records the exit code of every verification command instead of relying on prose."
+  },
+  "frozen_effect_hash": "sha256:669d865183509414339a7406c16dbf7c332c78e35906045244078d7a48f6949b",
+  "frozen_primitive_ids": [
+    "object_displacement",
+    "reversible_or_noop_action",
+    "boundary_or_collision",
+    "inventory_or_state_toggle",
+    "agent_relative_motion",
+    "repeated_action_loop",
+    "delayed_effect"
+  ],
+  "honest_verdict": "complete: exp5740_lossless_scalar_gate_corrigendum_positive_count_7_admitted_leaks_0_registry_delta_0",
+  "live_policy_modified": false,
+  "normalization_rules": [
+    {
+      "description": "Normalize only the exact checked-in Exp5740 bytes.",
+      "input": "results/experiment_5740_arc_game_blind_primitive_causal_audit.json",
+      "output": "source_artifact_hash",
+      "rule": "source_hash_gate"
+    },
+    {
+      "description": "Emit 1.0 only when every retained primitive and trace receipt passes.",
+      "input": "counterfactual_receipt_coverage",
+      "output": "counterfactual_receipt_coverage_score",
+      "rule": "coverage_object_to_scalar"
+    },
+    {
+      "description": "Rejected canaries stay visible but do not count as admitted leakage.",
+      "input": "negative_controls and retained primitive rows",
+      "output": "detected_*_canary_count and admitted_*_leak_count",
+      "rule": "detected_vs_admitted_leaks"
+    },
+    {
+      "description": "Hash retained effect payloads without changing any effect size.",
+      "input": "counterfactual_trajectory_utility for retained primitive IDs",
+      "output": "frozen_effect_hash",
+      "rule": "effect_freeze"
+    },
+    {
+      "description": "Schema repair cannot bank a public-game or hidden-game solve.",
+      "input": "ops/arc_solve_registry.yaml",
+      "output": "development_proxy, arc_registry_delta=0, arc_solve_credited=false",
+      "rule": "no_credit"
+    }
+  ],
+  "normalized_schema_version": "carnot.experiment_5745.arc_causal_gate_schema_corrigendum.v1",
+  "original_counterfactual_receipt_coverage": {
+    "candidate_count": 7,
+    "meets_minimum_n": true,
+    "minimum_positive_candidate_paired_replay_count": 322,
+    "paired_replay_count": 20759,
+    "trace_step_count": 9975
+  },
+  "positive_causal_primitive_count": 7,
+  "preconditions_checked": {
+    "deletion_effect_hash_verified": true,
+    "exact_replay_receipt_hash": "sha256:34eac441cb3c13d429b02220fab29ec493b12af5fe0a8ecb6be651af6a13ddda",
+    "exact_replay_receipts_verified": true,
+    "frozen_primitive_ids_verified": true,
+    "live_policy_modified": false,
+    "negative_controls_verified": true,
+    "paired_replay_count": 20759,
+    "paired_replay_count_verified": true,
+    "primitive_count_verified": true,
+    "registry_precheck_passed": true,
+    "retained_candidates_hash": "sha256:8c541284bca553ad35bef66d01a56adc7de951cf62aca1dfc5a61ed71de57221",
+    "retained_candidates_hash_verified": true,
+    "science_rerun": false,
+    "scripts_research_conductor_modified": false,
+    "source_artifact_hash_verified": true,
+    "source_artifact_reproducibility_checksum_verified": true,
+    "trace_manifest_hashes_verified": true,
+    "trace_manifest_receipt_count": 3
+  },
+  "registry_precheck": {
+    "all_public_games_complete": true,
+    "arc_solve_credit_allowed": false,
+    "completed_levels": 183,
+    "full_game_clear_count": 25,
+    "public_game_count": 25,
+    "registry_delta_allowed": 0,
+    "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "reproducible_total_games": 25,
+    "reproducible_total_levels": 183
+  },
+  "reproducibility_checksum": "sha256:0c14754ba1fc248a83a606de1ff40ee074d672ef80e4ee7c8dfc1b170512949f",
+  "science_rerun": false,
+  "solve_provenance": "development_proxy",
+  "source_artifact_hash": "sha256:c38b1f700a8c253c87ef69a90571836a94383f84c53fb7708b89a795650400e4",
+  "source_artifact_path": "results/experiment_5740_arc_game_blind_primitive_causal_audit.json",
+  "source_schema_version": "carnot.experiment_5740.game_blind_primitive_causal_audit.legacy_object_gate.v1",
+  "test_commands": [],
+  "test_exit_codes": {}
+}

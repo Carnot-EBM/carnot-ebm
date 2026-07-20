@@ -7793,6 +7793,106 @@ Then `policy_modified=false`, `registry_modified=false`,
 `solve_provenance="development_proxy"`, no solve or registry credit is claimed,
 and the registry hash in the artifact still matches the checked precondition.
 
+### REQ-ARC-WMTE-5745: Lossless Exp5740 Causal Gate Schema Corrigendum
+
+Experiment 5745 SHALL produce a lossless, hash-linked scalar gate
+corrigendum for the checked-in Exp5740 ARC primitive causal audit without rerunning primitive mining,
+changing deletion effects, modifying live policy, running an ARC game, editing
+`scripts/research_conductor.py`, or crediting a solve. The normalized artifact SHALL read
+`results/experiment_5740_arc_game_blind_primitive_causal_audit.json`, verify
+its source artifact hash, trace manifest hashes, retained primitive count,
+retained primitive IDs, deletion effect payload, total paired replay count,
+and replay receipt coverage, and fail closed on any mismatch.
+
+The corrigendum SHALL distinguish detected-and-rejected leakage canaries from
+admitted leakage. `detected_source_leak_canary_count` and
+`detected_game_identity_leak_canary_count` SHALL count leak-class negative
+controls that were detected and rejected. `admitted_source_leak_count` and
+`admitted_game_identity_leak_count` SHALL count only leakage that entered a
+credited primitive or live state; rejected negative controls SHALL NOT be
+counted as admitted leakage.
+
+The normalized scalar gate SHALL set
+`counterfactual_receipt_coverage_score=1.0` only when every credited primitive
+meets the preregistered paired-replay minimum and every referenced trace
+receipt exists with the exact hash listed by Exp5740. The complete original
+Exp5740 `counterfactual_receipt_coverage` object SHALL be copied unchanged
+into `original_counterfactual_receipt_coverage`. Frozen primitive IDs and
+effect payloads SHALL be copied by hash, not recomputed.
+
+The artifact
+`results/experiment_5745_arc_causal_gate_schema_corrigendum.json` SHALL include
+top-level `field_principles` covering every artifact field, plus
+`preconditions_checked`, `source_artifact_path`, `source_artifact_hash`,
+`source_schema_version`, `normalized_schema_version`,
+`positive_causal_primitive_count`, `frozen_primitive_ids`,
+`frozen_effect_hash`, `original_counterfactual_receipt_coverage`,
+`counterfactual_receipt_coverage_score`,
+`detected_source_leak_canary_count`,
+`detected_game_identity_leak_canary_count`, `admitted_source_leak_count`,
+`admitted_game_identity_leak_count`, `normalization_rules`,
+`registry_precheck`, `solve_provenance="development_proxy"`,
+`arc_registry_delta=0`, `arc_solve_credited=false`,
+`science_rerun=false`, `live_policy_modified=false`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL include:
+
+- `field_principles`: principle "every normalized field carries its own audit rationale so the corrigendum is schema-stable and principle-grounded."
+- `preconditions_checked`: principle "fail-closed checks prove the source artifact, trace receipts, effects, registry state, and code immutability before normalization."
+- `source_artifact_path`: principle "the normalized gate is explicitly tied to the Exp5740 source JSON rather than an inferred experiment number."
+- `source_artifact_hash`: principle "the corrigendum is valid only for the exact checked-in Exp5740 bytes."
+- `source_schema_version`: principle "records the legacy object-valued gate shape being normalized."
+- `normalized_schema_version`: principle "names the scalar gate contract consumed by downstream conductor gates."
+- `positive_causal_primitive_count`: principle "copies the Exp5740 retained primitive count without re-mining or effect edits."
+- `frozen_primitive_ids`: principle "freezes the credited primitive identities in deterministic order for downstream live hardening."
+- `frozen_effect_hash`: principle "content-addresses the retained deletion effects so no effect size can be silently changed."
+- `original_counterfactual_receipt_coverage`: principle "preserves the complete Exp5740 coverage object losslessly while adding a scalar gate field."
+- `counterfactual_receipt_coverage_score`: principle "equals 1.0 only when all credited primitives meet paired-replay and trace-receipt existence gates."
+- `detected_source_leak_canary_count`: principle "counts source leak canaries that the negative-control harness detected and rejected."
+- `detected_game_identity_leak_canary_count`: principle "counts game-identity canaries that the negative-control harness detected and rejected."
+- `admitted_source_leak_count`: principle "counts only source leakage that entered credited primitives or live state, never rejected canaries."
+- `admitted_game_identity_leak_count`: principle "counts only game-identity leakage that entered credited primitives or live state, never rejected canaries."
+- `normalization_rules`: principle "documents the deterministic object-to-scalar and detected-vs-admitted leak transformations."
+- `registry_precheck`: principle "records that all 25 public games and all 183 registry levels were already complete before the corrigendum."
+- `solve_provenance`: principle "development_proxy marks this as schema repair evidence, not live hidden-game self-discovery."
+- `arc_registry_delta`: principle "zero prevents schema repair from inflating the public solve registry."
+- `arc_solve_credited`: principle "false prevents a gate corrigendum from claiming a solve."
+- `science_rerun`: principle "false proves the artifact did not rerun mining, replay science, or live games."
+- `live_policy_modified`: principle "false keeps schema normalization out of the submitted policy path."
+- `test_commands`: principle "records the verification commands used to validate the corrigendum."
+- `test_exit_codes`: principle "records the exit code of every verification command instead of relying on prose."
+- `reproducibility_checksum`: principle "content-addresses the normalized artifact while excluding its self-checksum."
+- `honest_verdict`: principle "terminal complete: or blocked: verdict states whether the lossless scalar schema repair is usable."
+
+#### SCENARIO-ARC-WMTE-5745-NEGATIVE-CONTROL-NORMALIZATION
+
+Given the Exp5740 negative controls include detected and rejected source and
+game-identity leak canaries
+When Exp5745 derives the normalized gate fields
+Then the detected canary counts are positive, the admitted leak counts are zero,
+and any unrejected leak-class control fails validation.
+
+#### SCENARIO-ARC-WMTE-5745-SCALAR-COVERAGE-GATE
+
+Given the Exp5740 coverage field is an object and all retained primitives meet
+the preregistered paired-replay threshold with existing trace receipts
+When Exp5745 normalizes coverage
+Then `original_counterfactual_receipt_coverage` equals the Exp5740 object
+unchanged and `counterfactual_receipt_coverage_score` deterministically equals
+`1.0`.
+
+#### SCENARIO-ARC-WMTE-5745-HASH-LINKED-NO-CREDIT-CONTRACT
+
+Given the public registry already records 25 complete games and 183 of 183
+levels
+When Exp5745 writes its terminal artifact
+Then the artifact hash-links the exact Exp5740 source/effects, records
+`solve_provenance="development_proxy"`, `arc_registry_delta=0`,
+`arc_solve_credited=false`, `science_rerun=false`,
+`live_policy_modified=false`, and leaves `scripts/research_conductor.py`
+unchanged.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
