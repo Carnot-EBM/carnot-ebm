@@ -42184,3 +42184,143 @@ checksum is populated and stable, and `honest_verdict` has a terminal prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5744 | Planned (`python/carnot/experiment_5744_v513_source_delta_ingestion.py`, `results/experiment_5744_v513_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5744_v513_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5754: V513 Capstone Reconciliation Preserves Gate Outcomes
+
+The Exp5754 workflow SHALL read and hash every expected Exp5743 through
+Exp5753 artifact, including `results/experiment_5746_exact_proposal_utility_benchmark.preflight.json`
+when present, and SHALL record missing artifacts without reconstructing them
+from downstream prose. It SHALL read the conductor log for task outcomes and
+SHALL separately record any preflight or adversarial outcome artifacts found in
+the task range. It SHALL write
+`results/experiment_5754_v513_capstone_reconciliation.json` and SHALL NOT
+modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The capstone SHALL keep proposal transport readiness, exact benchmark
+readiness, SOTA proposal decision utility, and selective exact-feedback value
+as separate claims. Exp5746's structural and solution exact-authority receipts
+may make `proposal_benchmark_ready=true`, but parseability, score margin, CUDA
+offload, or solver availability SHALL NOT be promoted to proposal reasoning
+quality. Exp5747 gate-blockage SHALL make `proposal_utility_ready=false`, and a
+missing or gate-skipped Exp5748 SHALL make `selective_feedback_ready=false`.
+
+The capstone SHALL keep generic FR-11 continuous-self-learning safety separate
+from the KAN mechanism residual. Exp5749's
+`continuous_self_learning_credited=true` SHALL be preserved while its signed
+`kan_mechanism_residual` controls only KAN scale-up. A non-positive residual or
+gate-skipped Exp5750 SHALL make `dependent_task_csl_ready=false` without
+erasing earlier chronological learning or rollback evidence.
+
+The capstone SHALL keep restart parity separate from throughput. Exp5751 may
+make `rust_restart_parity_ready=true` only for parity, not speed. Exp5752 may
+make `rust_batched_10x_ready=true` only through the strict matched-quality 10x
+rule; if Exp5752 merely gate-blocks, the capstone SHALL NOT apply a new
+`retire_if_same_verdict` retirement, and SHALL keep
+`software_speedup_claimed=false` and `hardware_speedup_claimed=false`.
+
+The capstone SHALL keep the ARC schema corrigendum separate from the live
+registry A/B. Exp5745 may make `arc_gate_schema_corrected=true` while keeping
+`arc_registry_delta=0` and `arc_solve_credited=false`. Exp5753 SHALL be
+reported as `solve_provenance=development_proxy`; all public levels were
+already registry-complete, so `arc_live_level_reproduction_delta=0` and
+`arc_registry_delta=0` SHALL NOT become solve credit.
+
+The artifact SHALL include, at minimum, `field_principles`,
+`preconditions_checked`, `task_artifact_hashes`, `task_verdicts`,
+`conductor_outcomes`, `gate_skip_manifest`, `missing_artifact_manifest`,
+`proposal_benchmark_ready`, `proposal_utility_ready`,
+`selective_feedback_ready`, `continuous_self_learning_credited`,
+`kan_mechanism_residual`, `dependent_task_csl_ready`,
+`rust_restart_parity_ready`, `rust_batched_10x_ready`, `rust_10x_retired`,
+`arc_gate_schema_corrected`, `arc_live_ab_completed`,
+`arc_live_level_reproduction_delta`, `solve_provenance`,
+`arc_registry_delta`, `arc_solve_credited`, `spec_reconciliation`,
+`traceability_reconciliation`, `ops_reconciliation`,
+`exclusion_manifest_updates`, `known_issue_updates`,
+`verifier_gap_updates`, `hardware_status`, `e2e_receipts`, `test_commands`,
+`test_exit_codes`, `timing_claimed`, `software_speedup_claimed`,
+`hardware_speedup_claimed`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry. The artifact SHOULD also include source context
+hashes, exact-authority receipt counts, and protected-file receipts when those
+make the required fields more auditable.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every top-level capstone field exists."
+- `preconditions_checked`: principle "Records source, instruction, artifact, gate, ops, and protected-file checks before reconciliation."
+- `task_artifact_hashes`: principle "Binds every expected Exp5743-Exp5753 artifact to exact bytes or a missing state."
+- `task_verdicts`: principle "Copies terminal verdicts and gate states from direct artifacts without strengthening them."
+- `conductor_outcomes`: principle "Preserves conductor, preflight, and adversarial outcome evidence separately from science artifacts."
+- `gate_skip_manifest`: principle "Gate-blocked tasks remain explicit denominator entries."
+- `missing_artifact_manifest`: principle "Missing expected deliverables remain missing and cannot be reconstructed."
+- `proposal_benchmark_ready`: principle "Only exact structural and solution receipts can make the benchmark ready."
+- `proposal_utility_ready`: principle "Only a completed SOTA utility panel can make proposal utility ready."
+- `selective_feedback_ready`: principle "Only a completed selective-feedback search can claim exact-feedback value."
+- `continuous_self_learning_credited`: principle "Generic FR-11 safety credit is independent of KAN mechanism superiority."
+- `kan_mechanism_residual`: principle "Signed KAN-specific residual controls only KAN scale-up."
+- `dependent_task_csl_ready`: principle "Dependent-task readiness requires the positive KAN residual gate to have run and passed."
+- `rust_restart_parity_ready`: principle "Restart parity is semantic/replay evidence, not throughput."
+- `rust_batched_10x_ready`: principle "Strict 10x readiness requires matched-quality throughput evidence."
+- `rust_10x_retired`: principle "Retirement is applied only for a same-verdict Exp5752 terminal null, not a gate skip."
+- `arc_gate_schema_corrected`: principle "Scalar gate repair is separate from new ARC live solve credit."
+- `arc_live_ab_completed`: principle "The live A/B completion is development-proxy reachability evidence."
+- `arc_live_level_reproduction_delta`: principle "Known-level reproduction delta is not registry credit."
+- `solve_provenance`: principle "development_proxy prevents public-registry A/B evidence from becoming hidden-game self-discovery."
+- `arc_registry_delta`: principle "The public registry count must remain unchanged in reconciliation."
+- `arc_solve_credited`: principle "No ARC solve is credited without direct eligible provenance."
+- `spec_reconciliation`: principle "OpenSpec changes are recorded separately from ops docs."
+- `traceability_reconciliation`: principle "Traceability doc handling is explicit and does not silently mutate operator-owned files."
+- `ops_reconciliation`: principle "Ops doc handling is explicit and preserves deferred reconciler ownership when instructed."
+- `exclusion_manifest_updates`: principle "Retirement or exclusion edits are listed or explicitly absent."
+- `known_issue_updates`: principle "Known-issue edits are listed or explicitly absent."
+- `verifier_gap_updates`: principle "Verifier-gap edits are listed or explicitly absent."
+- `hardware_status`: principle "FPGA terminal lanes and TSU/Kona watch-only lanes cannot become speedup claims."
+- `e2e_receipts`: principle "Applicable end-to-end checks or skipped reasons are replayable."
+- `test_commands`: principle "Verification commands are preserved exactly."
+- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
+- `timing_claimed`: principle "Artifact reconciliation makes no benchmark timing claim."
+- `software_speedup_claimed`: principle "Parity, allocation, or gate skips cannot claim CPU speedup."
+- `hardware_speedup_claimed`: principle "No GPU, FPGA, TSU, Kona, or other hardware speedup is claimed."
+- `reproducibility_checksum`: principle "Content-addressed payload detects capstone drift."
+- `honest_verdict`: principle "Terminal verdict summarizes completion without claim inflation."
+
+#### SCENARIO-REPORT-5754: V513 Capstone Separates Independent Evidence Branches
+
+**Given** Exp5743 through Exp5753 artifacts are present, missing, or
+gate-skipped according to local files and conductor evidence
+**When** the Exp5754 workflow runs
+**Then** it writes the capstone artifact, sets `proposal_benchmark_ready=true`
+only from Exp5746 exact receipts, keeps `proposal_utility_ready=false` when
+Exp5747 is gate-blocked, keeps `selective_feedback_ready=false` when Exp5748 is
+missing or skipped, preserves `continuous_self_learning_credited=true` with
+`kan_mechanism_residual=-0.084269`, keeps `dependent_task_csl_ready=false`,
+sets `rust_restart_parity_ready=true`, keeps `rust_batched_10x_ready=false`,
+applies no new `rust_10x_retired` retirement for a gate-skipped Exp5752, sets
+`arc_gate_schema_corrected=true`, records Exp5753 as
+`solve_provenance=development_proxy`, keeps `arc_registry_delta=0`,
+keeps `arc_solve_credited=false`, and keeps all timing and speedup claims
+false.
+
+#### SCENARIO-REPORT-5754-MISSING-AND-GATE-SKIPPED: Missing Inputs Stay Visible
+
+**Given** Exp5748 has no direct artifact and Exp5747, Exp5750, or Exp5752 may
+exist only as conductor pre-gate blocked artifacts
+**When** the capstone builds task manifests
+**Then** missing artifacts appear in `missing_artifact_manifest`, blocked gate
+artifacts appear in `gate_skip_manifest`, and neither class is reconstructed
+from roadmap prose or downstream summaries.
+
+#### SCENARIO-REPORT-5754-FIELD-PRINCIPLES: Every Capstone Field Is Annotated
+
+**Given** the Exp5754 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, `reproducibility_checksum` is populated and stable, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5754)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5754 | Planned (`python/carnot/experiment_5754_v513_capstone_reconciliation.py`, `results/experiment_5754_v513_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5754_v513_capstone_reconciliation.py`) |

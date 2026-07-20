@@ -1,0 +1,734 @@
+{
+  "arc_gate_schema_corrected": true,
+  "arc_live_ab_completed": true,
+  "arc_live_level_reproduction_delta": 0,
+  "arc_reconciliation": {
+    "all_public_levels_already_registry_complete": true,
+    "baseline_live_levels_reproduced": 1,
+    "primitive_live_levels_reproduced": 1,
+    "public_game_count": 25,
+    "registry_level_count": 183
+  },
+  "arc_registry_delta": 0,
+  "arc_solve_credited": false,
+  "conductor_outcomes": {
+    "adversarial_artifacts": [],
+    "preflight_artifacts": [
+      {
+        "honest_verdict": null,
+        "path": "results/experiment_5746_exact_proposal_utility_benchmark.preflight.json",
+        "present": true,
+        "sha256": "sha256:86a8511a4026fc6881810499b9d46abc98b96e5b5fb9e0fbc67679a471edde2e",
+        "status": null
+      }
+    ],
+    "tasks": {
+      "exp5743-transition-v513": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 07:06 UTC | Transition terminal .512 evidence, preserve mixed  | OK | 87 passed, 1 warning in 6.57s |",
+        "outcome": "OK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5744-v513-source-delta-ingestion": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 07:29 UTC | Ingest post-V513 source deltas with honest bibliog | OK | 88 passed, 2 warnings in 8.78s |",
+        "outcome": "OK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5745-arc-causal-gate-schema-corrigendum": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 07:51 UTC | Normalize the Exp5740 ARC causal gate without chan | OK | 89 passed, 1 warning in 9.55s |",
+        "outcome": "OK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5746-exact-proposal-utility-benchmark": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 08:18 UTC | Gated on Exp5746 readiness: measure SOTA proposal  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.b |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5747-sota-exact-proposal-utility-panel": {
+        "artifact_status": "gate_skipped",
+        "evidence_line": "| 2026-07-20 08:39 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5748-selective-exact-feedback-search": {
+        "artifact_status": "missing",
+        "evidence_line": "| 2026-07-20 08:39 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5749-csl-render-matched-mechanism-audit": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 08:41 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5750-dependent-task-continuous-self-learning": {
+        "artifact_status": "gate_skipped",
+        "evidence_line": "| 2026-07-20 08:41 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5751-rust-restart-parity-repair": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 09:04 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5752-one-axis-allocation-free-10x-crossover": {
+        "artifact_status": "gate_skipped",
+        "evidence_line": "| 2026-07-20 09:04 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |",
+        "outcome": "GATE_BLOCK",
+        "source": "ops/conductor-log.md"
+      },
+      "exp5753-arc-generic-primitive-live-registry-ab": {
+        "artifact_status": "complete",
+        "evidence_line": "| 2026-07-20 09:28 UTC | Gated on Exp5745 clean scalar gate: run generic pr | OK | 109 passed, 1 warning in 9.03s |",
+        "outcome": "OK",
+        "source": "ops/conductor-log.md"
+      }
+    }
+  },
+  "continuous_self_learning_credited": true,
+  "csl_reconciliation": {
+    "dependent_task_gate_status": "gate_skipped",
+    "generic_fr11_safety_retained": true,
+    "kan_scaleup_closed": true
+  },
+  "dependent_task_csl_ready": false,
+  "e2e_receipts": [
+    {
+      "plan": "ops/e2e-test-plan.md",
+      "reason": "Exp5754 is artifact_reconciliation_only; no training, sampler, PyO3, or hardware runtime path is exercised.",
+      "status": "skipped_not_applicable"
+    }
+  ],
+  "exclusion_manifest_updates": {
+    "reason": "no Exp5752 same-verdict terminal null and no new exclusion entry required",
+    "updates": []
+  },
+  "experiment": "experiment_5754_v513_capstone_reconciliation",
+  "experiment_id": "exp5754-v513-capstone-reconciliation",
+  "field_principles": {
+    "arc_gate_schema_corrected": "Scalar gate repair is separate from new ARC live solve credit.",
+    "arc_live_ab_completed": "The live A/B completion is development-proxy reachability evidence.",
+    "arc_live_level_reproduction_delta": "Known-level reproduction delta is not registry credit.",
+    "arc_reconciliation": "Separates schema repair, live A/B, registry saturation, and solve provenance.",
+    "arc_registry_delta": "The public registry count must remain unchanged in reconciliation.",
+    "arc_solve_credited": "No ARC solve is credited without direct eligible provenance.",
+    "conductor_outcomes": "Preserves conductor, preflight, and adversarial outcome evidence separately from science artifacts.",
+    "continuous_self_learning_credited": "Generic FR-11 safety credit is independent of KAN mechanism superiority.",
+    "csl_reconciliation": "Summarizes FR-11 safety, residual sign, and dependent-task gate handling.",
+    "dependent_task_csl_ready": "Dependent-task readiness requires the positive KAN residual gate to have run and passed.",
+    "e2e_receipts": "Applicable end-to-end checks or skipped reasons are replayable.",
+    "exclusion_manifest_updates": "Retirement or exclusion edits are listed or explicitly absent.",
+    "experiment": "Stable local experiment slug for result indexing.",
+    "experiment_id": "Conductor task id for the capstone.",
+    "field_principles": "Explains why every top-level capstone field exists.",
+    "gate_skip_manifest": "Gate-blocked tasks remain explicit denominator entries.",
+    "hardware_speedup_claimed": "No GPU, FPGA, TSU, Kona, or other hardware speedup is claimed.",
+    "hardware_status": "FPGA terminal lanes and TSU/Kona watch-only lanes cannot become speedup claims.",
+    "honest_verdict": "Terminal verdict summarizes completion without claim inflation.",
+    "inference_substrate": "artifact_reconciliation_only because the workflow reads evidence only.",
+    "kan_mechanism_residual": "Signed KAN-specific residual controls only KAN scale-up.",
+    "known_issue_updates": "Known-issue edits are listed or explicitly absent.",
+    "milestone": "Binds the artifact to milestone 2026.07.513.",
+    "missing_artifact_manifest": "Missing expected deliverables remain missing and cannot be reconstructed.",
+    "operator_constraints": "Records no-push and no-conductor-edit constraints.",
+    "ops_reconciliation": "Ops doc handling is explicit and preserves deferred reconciler ownership when instructed.",
+    "preconditions_checked": "Records source, instruction, artifact, gate, ops, and protected-file checks before reconciliation.",
+    "proposal_benchmark_ready": "Only exact structural and solution receipts can make the benchmark ready.",
+    "proposal_exact_authority_receipts": "Structural and solution exact-authority counts that justify benchmark readiness.",
+    "proposal_transport_ready": "Exp5743 parse-safe proposal transport is separate from decision utility.",
+    "proposal_utility_ready": "Only a completed SOTA utility panel can make proposal utility ready.",
+    "protected_files": "Confirms research-roadmap.yaml and scripts/research_conductor.py were not modified.",
+    "random_seed": "Deterministic metadata even though no stochastic science is run.",
+    "reproducibility_checksum": "Content-addressed payload detects capstone drift.",
+    "result_path": "Records the emitted deliverable path.",
+    "run_date": "Absolute operator date used for the run.",
+    "rust_10x_retired": "Retirement is applied only for a same-verdict Exp5752 terminal null, not a gate skip.",
+    "rust_batched_10x_ready": "Strict 10x readiness requires matched-quality throughput evidence.",
+    "rust_reconciliation": "Keeps parity, blocked throughput, and retirement decisions separate.",
+    "rust_restart_parity_ready": "Restart parity is semantic/replay evidence, not throughput.",
+    "schema": "Names the versioned Exp5754 artifact schema.",
+    "selective_feedback_ready": "Only a completed selective-feedback search can claim exact-feedback value.",
+    "software_speedup_claimed": "Parity, allocation, or gate skips cannot claim CPU speedup.",
+    "solve_provenance": "development_proxy prevents public-registry A/B evidence from becoming hidden-game self-discovery.",
+    "source_context_hashes": "Hashes the instruction, spec, roadmap, ops, registry, and hardware context read.",
+    "spec_reconciliation": "OpenSpec changes are recorded separately from ops docs.",
+    "spec_refs": "OpenSpec anchors for this artifact's behavior.",
+    "status": "Machine-readable terminal state for this reconciliation.",
+    "task_artifact_hashes": "Binds every expected Exp5743-Exp5753 artifact to exact bytes or a missing state.",
+    "task_verdicts": "Copies terminal verdicts and gate states from direct artifacts without strengthening them.",
+    "test_commands": "Verification commands are preserved exactly.",
+    "test_exit_codes": "Observed exit codes are recorded without relabeling failures.",
+    "timing_claimed": "Artifact reconciliation makes no benchmark timing claim.",
+    "traceability_reconciliation": "Traceability doc handling is explicit and does not silently mutate operator-owned files.",
+    "verifier_gap_updates": "Verifier-gap edits are listed or explicitly absent."
+  },
+  "gate_skip_manifest": {
+    "exp5746-exact-proposal-utility-benchmark": {
+      "artifact_present": true,
+      "artifact_status": "complete",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 08:18 UTC | Gated on Exp5746 readiness: measure SOTA proposal  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.b |",
+      "gate_check_summary": null,
+      "honest_verdict": "complete: exact_proposal_utility_benchmark_ready",
+      "path": "results/experiment_5746_exact_proposal_utility_benchmark.json"
+    },
+    "exp5747-sota-exact-proposal-utility-panel": {
+      "artifact_present": true,
+      "artifact_status": "gate_skipped",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 08:39 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |",
+      "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.benchmark_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5747_sota_exact_proposal_utility_panel.json"
+    },
+    "exp5748-selective-exact-feedback-search": {
+      "artifact_present": false,
+      "artifact_status": "missing",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 08:39 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |",
+      "gate_check_summary": null,
+      "honest_verdict": null,
+      "path": "results/experiment_5748_selective_exact_feedback_search.json"
+    },
+    "exp5749-csl-render-matched-mechanism-audit": {
+      "artifact_present": true,
+      "artifact_status": "complete",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 08:41 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |",
+      "gate_check_summary": null,
+      "honest_verdict": "complete: kan_mechanism_residual_negative_fr11_safety_retained",
+      "path": "results/experiment_5749_csl_render_matched_mechanism_audit.json"
+    },
+    "exp5750-dependent-task-continuous-self-learning": {
+      "artifact_present": true,
+      "artifact_status": "gate_skipped",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 08:41 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |",
+      "gate_check_summary": "1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit.kan_mechanism_residual (actual=-0.084269 > expected=0.0)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5750_dependent_task_continuous_self_learning.json"
+    },
+    "exp5751-rust-restart-parity-repair": {
+      "artifact_present": true,
+      "artifact_status": "complete",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 09:04 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |",
+      "gate_check_summary": null,
+      "honest_verdict": "complete: restart parity repaired for the reproduced Exp5739 n=96 failure and interruption-injected n=48/n=96/n=192 production sample_batch cases; no timing or hardware claim",
+      "path": "results/experiment_5751_rust_restart_parity_repair.json"
+    },
+    "exp5752-one-axis-allocation-free-10x-crossover": {
+      "artifact_present": true,
+      "artifact_status": "gate_skipped",
+      "conductor_outcome": "GATE_BLOCK",
+      "evidence_line": "| 2026-07-20 09:04 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |",
+      "gate_check_summary": "3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distributional_parity (actual={'passed': True, 'scope': 'bounded repair replay uses identical samples; large n=96/192 non-enumerable cases report energy histogram TV on repaired replay, no timing promotion', 'cases': [{'size': 48, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 96, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 192, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}]} == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5752_one_axis_allocation_free_10x_crossover.json"
+    }
+  },
+  "hardware_speedup_claimed": false,
+  "hardware_status": {
+    "fpga_lanes": {
+      "gatemate": {
+        "claim_boundary": "terminal/no-speedup-claim",
+        "status": "terminal"
+      },
+      "kv260": {
+        "claim_boundary": "terminal/no-speedup-claim",
+        "status": "terminal"
+      },
+      "polarfire": {
+        "claim_boundary": "terminal/no-speedup-claim",
+        "status": "terminal"
+      }
+    },
+    "hardware_speedup_claimed": false,
+    "kona": {
+      "authenticated_local_execution": false,
+      "status": "watch_only"
+    },
+    "source_files_read": [
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "ops/status.md",
+      "ops/north-star.md",
+      "results/experiment_2907_operator_hardware_portfolio_status_v1.json"
+    ],
+    "tsu": {
+      "authenticated_local_execution": false,
+      "status": "watch_only"
+    }
+  },
+  "honest_verdict": "complete: v513 reconciled; proposal_benchmark_ready=true; proposal_utility_ready=false; selective_feedback_ready=false; continuous_self_learning_credited=true; kan_mechanism_residual=-0.084269; dependent_task_csl_ready=false; rust_restart_parity_ready=true; rust_batched_10x_ready=false; rust_10x_retired=false; arc_gate_schema_corrected=true; arc_live_level_reproduction_delta=0; solve_provenance=development_proxy; arc_registry_delta=0; arc_solve_credited=false",
+  "inference_substrate": "artifact_reconciliation_only",
+  "kan_mechanism_residual": -0.084269,
+  "known_issue_updates": {
+    "reason": "deferred_to_reconciler",
+    "updates": []
+  },
+  "milestone": "2026.07.513",
+  "missing_artifact_manifest": [
+    {
+      "path": "results/experiment_5748_selective_exact_feedback_search.json",
+      "reason": "expected_artifact_missing",
+      "task_id": "exp5748-selective-exact-feedback-search"
+    }
+  ],
+  "operator_constraints": {
+    "do_not_push": true,
+    "research_conductor_modified": false
+  },
+  "ops_reconciliation": {
+    "files_modified": [],
+    "files_read": [
+      "ops/status.md",
+      "ops/changelog.md",
+      "ops/conductor-log.md",
+      "ops/exclusion_manifest.yaml",
+      "ops/known-issues.md",
+      "ops/verifier_gaps.md",
+      "ops/arc_solve_registry.yaml",
+      "research-complete.yaml",
+      "ops/north-star.md"
+    ],
+    "mode": "deferred_to_reconciler",
+    "reason": "operator stop rule reserves ops/status/changelog/traceability updates for the following reconciler"
+  },
+  "preconditions_checked": {
+    "expected_task_count": 11,
+    "gate_skip_count": 7,
+    "missing_artifact_count": 1,
+    "research_conductor_unchanged": true,
+    "research_roadmap_unchanged": true,
+    "roadmap_next_present": false,
+    "source_context_missing": [
+      "research-roadmap-next.yaml",
+      "ops/verifier_gaps.yaml"
+    ],
+    "task_artifacts_read": 10
+  },
+  "proposal_benchmark_ready": true,
+  "proposal_exact_authority_receipts": {
+    "candidate_domain_incomplete_count": 0,
+    "exact_optimum_receipt_count": 180,
+    "llm_inference_used": false,
+    "solution_receipt_count": 180,
+    "solution_receipt_failure_count": 0,
+    "structure_receipt_count": 180,
+    "structure_receipt_failure_count": 0,
+    "validator_disagreement_count": 0
+  },
+  "proposal_transport_ready": true,
+  "proposal_utility_ready": false,
+  "protected_files": {
+    "research-roadmap.yaml": {
+      "check_source": "git_status",
+      "modified_by_exp5754": false,
+      "present": true,
+      "sha256": "sha256:a01c6568a8768eae8e64218c9e2f8cc8e25f7ab8c1aac526153d0ad2b3885d3a"
+    },
+    "scripts/research_conductor.py": {
+      "check_source": "git_status",
+      "modified_by_exp5754": false,
+      "present": true,
+      "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    }
+  },
+  "random_seed": 5754,
+  "reproducibility_checksum": "sha256:c90eca0ee885491770295de62d0d82ebe148e07c00d20f51882c80fd48e010d3",
+  "result_path": "results/experiment_5754_v513_capstone_reconciliation.json",
+  "run_date": "2026-07-20",
+  "rust_10x_retired": false,
+  "rust_batched_10x_ready": false,
+  "rust_reconciliation": {
+    "restart_parity_claimed": true,
+    "retire_if_same_verdict_applied": false,
+    "retirement_reason": "not_applied_exp5752_gate_skipped_before_benchmark",
+    "throughput_benchmark_status": "gate_skipped"
+  },
+  "rust_restart_parity_ready": true,
+  "schema": "carnot.experiment_5754.v513_capstone_reconciliation.v1",
+  "selective_feedback_ready": false,
+  "software_speedup_claimed": false,
+  "solve_provenance": "development_proxy",
+  "source_context_hashes": {
+    "AGENTS.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+    },
+    "CODEX.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "_bmad/architecture.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8"
+    },
+    "_bmad/prd.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    "_bmad/traceability.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:339e9d4bb83c1a7683da37bc66ba9d0c2d24016e753f79222995f8aa823795f6"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:a671c596197246a55e7aa9bbfaec2d9147bb51f945c339319416c40d5c97abde"
+    },
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:9e4d5f5d1b41ebb1f87ba0a2fbc5ee0edc66dfdffbbcc5c60f799819e2d68938"
+    },
+    "ops/arc_solve_registry.yaml": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+    },
+    "ops/changelog.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:c6822b5461a15a9387921b07a0e0051b7705de28dc791d42772a8f8d6cb65629"
+    },
+    "ops/conductor-log.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:5adc38f769c549fefff458bdf01e806ac06ee7244ec6272a487e2bf9b8ed6745"
+    },
+    "ops/e2e-test-plan.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2"
+    },
+    "ops/known-issues.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:9add43ff84036949ea613efd2be7f0fbd4817e2e42c6806646711b572143eb95"
+    },
+    "ops/north-star.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+    },
+    "ops/status.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:cf4d4d571917cc86e9f6d59c7480e0e287d732c6b299953b55b581aa48ddb67d"
+    },
+    "ops/verifier_gaps.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:73c1bf354bbae88d256d8d5f8315a030efde8ac66d8187ab5175bf906086ec27"
+    },
+    "ops/verifier_gaps.yaml": {
+      "present": false,
+      "read_only": true,
+      "sha256": null
+    },
+    "research-complete.yaml": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:023ed31e7ef072719b47a9e75fbe2141cf6226d54dcce1caea6f77fe28ae5906"
+    },
+    "research-program.md": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research-roadmap-next.yaml": {
+      "present": false,
+      "read_only": true,
+      "sha256": null
+    },
+    "research-roadmap.yaml": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:a01c6568a8768eae8e64218c9e2f8cc8e25f7ab8c1aac526153d0ad2b3885d3a"
+    },
+    "results/experiment_2907_operator_hardware_portfolio_status_v1.json": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:d71baedcdfa119d48fa6009f14dcd3e2044239cb3c6e7817a2b807082d3687cd"
+    },
+    "scripts/research_conductor.py": {
+      "present": true,
+      "read_only": true,
+      "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    }
+  },
+  "spec_reconciliation": {
+    "files_modified": [
+      "openspec/capabilities/research-reporting/spec.md"
+    ],
+    "mode": "updated",
+    "requirements_added": [
+      "REQ-REPORT-5754"
+    ]
+  },
+  "spec_refs": [
+    "REQ-REPORT-5754",
+    "SCENARIO-REPORT-5754",
+    "SCENARIO-REPORT-5754-MISSING-AND-GATE-SKIPPED",
+    "SCENARIO-REPORT-5754-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "task_artifact_hashes": {
+    "exp5743-transition-v513": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5743_transition_v513.json",
+      "present": true,
+      "sha256": "sha256:fe2621d5fc1c4cc09912419079df7ba1abb4f44bca2d689040e0bc6bd1216cbb",
+      "status": "complete"
+    },
+    "exp5744-v513-source-delta-ingestion": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5744_v513_source_delta_ingestion.json",
+      "present": true,
+      "sha256": "sha256:ab40613558f2068491e809ce1cbee5bd9d4b5cb882b69dc733c666a5dabbabb3",
+      "status": "complete"
+    },
+    "exp5745-arc-causal-gate-schema-corrigendum": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5745_arc_causal_gate_schema_corrigendum.json",
+      "present": true,
+      "sha256": "sha256:36da49146faa24a2a2284f069af129892311c8d027c6b11e5c557dd97b3c30a0",
+      "status": "complete"
+    },
+    "exp5746-exact-proposal-utility-benchmark": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5746_exact_proposal_utility_benchmark.json",
+      "present": true,
+      "sha256": "sha256:a3d15a65b9d5b603ca37aa0dda8b0fa16bafb71db5c41da0d6c15195a1d3533f",
+      "status": "complete"
+    },
+    "exp5747-sota-exact-proposal-utility-panel": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5747_sota_exact_proposal_utility_panel.json",
+      "present": true,
+      "sha256": "sha256:42dc10032df6f365398773ee766232a4d9e2e3dda88f1d5ad2d1dfa6215a2df5",
+      "status": "gate_skipped"
+    },
+    "exp5748-selective-exact-feedback-search": {
+      "error": "missing",
+      "loadable": false,
+      "path": "results/experiment_5748_selective_exact_feedback_search.json",
+      "present": false,
+      "sha256": null,
+      "status": "missing"
+    },
+    "exp5749-csl-render-matched-mechanism-audit": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+      "present": true,
+      "sha256": "sha256:bbdf6a4db864b27037dd469dd313d9e459d1b4fcd2155e95763e5ea59c52e082",
+      "status": "complete"
+    },
+    "exp5750-dependent-task-continuous-self-learning": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5750_dependent_task_continuous_self_learning.json",
+      "present": true,
+      "sha256": "sha256:fccf0d65b29b4df92b4a3bb3371b302bbad74b4e18069e19c69e4e9686c0153d",
+      "status": "gate_skipped"
+    },
+    "exp5751-rust-restart-parity-repair": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5751_rust_restart_parity_repair.json",
+      "present": true,
+      "sha256": "sha256:d69c72ac75c5ad3f67b0367d5c6643b1f2a1be3e0683db030b46d1c4d8344202",
+      "status": "complete"
+    },
+    "exp5752-one-axis-allocation-free-10x-crossover": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5752_one_axis_allocation_free_10x_crossover.json",
+      "present": true,
+      "sha256": "sha256:c123e77faab50a0bb486e5f552027185c2530c927ad73979effc6cfffb685006",
+      "status": "gate_skipped"
+    },
+    "exp5753-arc-generic-primitive-live-registry-ab": {
+      "error": null,
+      "loadable": true,
+      "path": "results/experiment_5753_arc_generic_primitive_live_registry_ab.json",
+      "present": true,
+      "sha256": "sha256:20b0ac04377039bb191c26633f10768953d68037883ebca46d727ce2cd83adcf",
+      "status": "complete"
+    }
+  },
+  "task_verdicts": {
+    "exp5743-transition-v513": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: archived terminal .512 evidence into .513; proposal_channel_ready=true; sota_proposal_stream_ready=true; continuous_self_learning_credited=true; batch_backend_ready=true; rust_batched_10x_ready=false; arc_registry_delta=0; arc_solve_credited=false; current_task_range=exp5743-exp5754",
+      "path": "results/experiment_5743_transition_v513.json",
+      "schema": "carnot.experiment_5743.transition_v513.v1",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5744-v513-source-delta-ingestion": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: no new non-duplicate actionable V513 source deltas; references left unchanged",
+      "path": "results/experiment_5744_v513_source_delta_ingestion.json",
+      "schema": "carnot.experiment_5744.v513_source_delta_ingestion.v1",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5745-arc-causal-gate-schema-corrigendum": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: exp5740_lossless_scalar_gate_corrigendum_positive_count_7_admitted_leaks_0_registry_delta_0",
+      "path": "results/experiment_5745_arc_causal_gate_schema_corrigendum.json",
+      "schema": null,
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5746-exact-proposal-utility-benchmark": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: exact_proposal_utility_benchmark_ready",
+      "path": "results/experiment_5746_exact_proposal_utility_benchmark.json",
+      "schema": "carnot.experiment_5746.exact_proposal_utility_benchmark.v1",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5747-sota-exact-proposal-utility-panel": {
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.benchmark_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5747_sota_exact_proposal_utility_panel.json",
+      "schema": "blocked_gate_check_v1",
+      "status": "gate_skipped",
+      "supports_positive_claim": false
+    },
+    "exp5748-selective-exact-feedback-search": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": null,
+      "path": "results/experiment_5748_selective_exact_feedback_search.json",
+      "schema": null,
+      "status": "missing",
+      "supports_positive_claim": false
+    },
+    "exp5749-csl-render-matched-mechanism-audit": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: kan_mechanism_residual_negative_fr11_safety_retained",
+      "path": "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+      "schema": "carnot.experiment_5749.csl_render_matched_mechanism_audit.v1",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5750-dependent-task-continuous-self-learning": {
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit.kan_mechanism_residual (actual=-0.084269 > expected=0.0)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5750_dependent_task_continuous_self_learning.json",
+      "schema": "blocked_gate_check_v1",
+      "status": "gate_skipped",
+      "supports_positive_claim": false
+    },
+    "exp5751-rust-restart-parity-repair": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: restart parity repaired for the reproduced Exp5739 n=96 failure and interruption-injected n=48/n=96/n=192 production sample_batch cases; no timing or hardware claim",
+      "path": "results/experiment_5751_rust_restart_parity_repair.json",
+      "schema": null,
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5752-one-axis-allocation-free-10x-crossover": {
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distributional_parity (actual={'passed': True, 'scope': 'bounded repair replay uses identical samples; large n=96/192 non-enumerable cases report energy histogram TV on repaired replay, no timing promotion', 'cases': [{'size': 48, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 96, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 192, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}]} == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5752_one_axis_allocation_free_10x_crossover.json",
+      "schema": "blocked_gate_check_v1",
+      "status": "gate_skipped",
+      "supports_positive_claim": false
+    },
+    "exp5753-arc-generic-primitive-live-registry-ab": {
+      "blocked_at_layer": null,
+      "gate_check_summary": null,
+      "honest_verdict": "complete: generic_primitive_live_registry_ab_delta_0_registry_credit_0",
+      "path": "results/experiment_5753_arc_generic_primitive_live_registry_ab.json",
+      "schema": null,
+      "status": "complete",
+      "supports_positive_claim": true
+    }
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5754_v513_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5754_v513_capstone_reconciliation.py -m pytest tests/python/test_experiment_5754_v513_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --include=python/carnot/experiment_5754_v513_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/ruff check python/carnot/experiment_5754_v513_capstone_reconciliation.py tests/python/test_experiment_5754_v513_capstone_reconciliation.py",
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/arc_solve_registry.yaml').read_text()); print('YAML parse OK')\"",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    "bash scripts/validate-phase-gate.sh python/carnot/experiment_5754_v513_capstone_reconciliation.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5754_v513_capstone_reconciliation.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --include=python/carnot/experiment_5754_v513_capstone_reconciliation.py --fail-under=100": 0,
+    ".venv/bin/coverage run --include=python/carnot/experiment_5754_v513_capstone_reconciliation.py -m pytest tests/python/test_experiment_5754_v513_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": {
+      "code": 2,
+      "interrupted": true
+    },
+    ".venv/bin/pytest tests/python/test_experiment_5754_v513_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/arc_solve_registry.yaml').read_text()); print('YAML parse OK')\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5754_v513_capstone_reconciliation.json": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 1,
+    ".venv/bin/ruff check python/carnot/experiment_5754_v513_capstone_reconciliation.py tests/python/test_experiment_5754_v513_capstone_reconciliation.py": 0,
+    "bash scripts/validate-phase-gate.sh python/carnot/experiment_5754_v513_capstone_reconciliation.py": 0,
+    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py": 0
+  },
+  "timing_claimed": false,
+  "traceability_reconciliation": {
+    "files_modified": [],
+    "files_read": [
+      "_bmad/traceability.md"
+    ],
+    "mode": "deferred_to_reconciler"
+  },
+  "verifier_gap_updates": {
+    "reason": "no verifier behavior changed",
+    "updates": []
+  }
+}
