@@ -3278,10 +3278,21 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         return True
     else:
         logger.warning("Operational retrospective failed — continuing")
-        # Clean up any partial changes
+        # Preserve any partial changes as a checkpoint instead of destroying them.
+        # `git checkout .` + `git clean -fd` used to be used here to discard the
+        # retro's own partial work, but `git clean -fd` deletes ALL untracked files
+        # repo-wide, not just ones the retro touched -- including in-progress
+        # deliverables from concurrently-running outer-loop agents (confirmed data
+        # loss 2026-07-19/20: an outer-loop agent's untracked experiment script was
+        # deleted mid-write by this exact call, recovered only because the agent
+        # still had the content in its own context). Same fix philosophy as the
+        # checkpoint-commit block above (see its comment) -- commit, never delete.
         if git_has_changes():
-            run_cmd(["git", "checkout", "."])
-            run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
+            git_commit_and_push(
+                "[conductor] Checkpoint: preserve uncommitted work "
+                "(operational retrospective failed)",
+                push=push,
+            )
         return False
 
 
@@ -5018,10 +5029,16 @@ def research_step(
                 )
 
         if not healed:
-            # Revert any partial self-heal changes and abort
+            # Preserve any partial self-heal changes as a checkpoint, then abort.
+            # See the matching fix + comment in _run_operational_retrospective's
+            # failure path -- `git clean -fd` here previously deleted ALL untracked
+            # files repo-wide (not just the self-heal's own edits), including
+            # concurrently-running outer-loop agents' in-progress deliverables.
             if git_has_changes():
-                run_cmd(["git", "checkout", "."])
-                run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
+                git_commit_and_push(
+                    "[conductor] Checkpoint: preserve uncommitted work (self-heal failed)",
+                    push=push,
+                )
             logger.error("Self-heal failed after %d attempts — aborting", MAX_HEAL_ATTEMPTS)
             log_step(task["title"], "SKIP", f"Pre-tests failing, self-heal failed: {test_summary}")
             return False
