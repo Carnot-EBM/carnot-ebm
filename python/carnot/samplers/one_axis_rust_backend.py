@@ -833,7 +833,8 @@ def _default_initial_states(seed: int, replica_count: int, n_spins: int) -> list
 
 
 def _stable_float(value: Any) -> float:
-    return round(float(value), 12)
+    rounded = round(float(value), 12)
+    return 0.0 if rounded == 0.0 else rounded
 
 
 def _normalize_decision_event(event: Mapping[str, Any]) -> JsonDict:

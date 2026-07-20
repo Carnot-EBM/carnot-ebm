@@ -1,12 +1,13 @@
 """Tests for the one-axis Rust SamplerBackend adapter.
 
 Spec coverage: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723, REQ-SAMPLE-5738,
-SCENARIO-SAMPLE-5738
+SCENARIO-SAMPLE-5738, REQ-SAMPLE-5751, SCENARIO-SAMPLE-5751
 """
 
 from __future__ import annotations
 
 from copy import deepcopy
+import math
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -15,6 +16,7 @@ import pytest
 
 from carnot import experiment_5714_one_axis_tempering_rust_parity as exp5714
 from carnot import experiment_5724_one_axis_rust_python_matched_crossover as exp5724
+from carnot import experiment_5739_one_axis_batched_10x_crossover as exp5739
 from carnot.samplers.backend import CpuBackend, SamplerBackend, get_backend
 from carnot.samplers.one_axis_rust_backend import (
     ONE_AXIS_ALGORITHM,
@@ -24,6 +26,7 @@ from carnot.samplers.one_axis_rust_backend import (
     canonical_json,
     checkpoint_checksum,
     descriptor_for_run,
+    sha256_json,
 )
 
 
@@ -93,6 +96,28 @@ def test_req_sample_5738_spec_declares_batched_backend_contract() -> None:
         "batch_backend_ready_score",
         "`timing_claimed`, `software_speedup_claimed`, and",
         "local_cpu_rust_pyo3_one_axis_batched_sampler",
+    ):
+        assert marker in section or marker in normalized
+
+
+def test_req_sample_5751_spec_declares_restart_parity_repair_contract() -> None:
+    """REQ-SAMPLE-5751: OpenSpec anchors restart repair and no-speed scope."""
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-SAMPLE-5751") : spec.index("### REQ-SAMPLE-1746")]
+    normalized = " ".join(section.split())
+
+    for marker in (
+        "Exp5739",
+        "`restart_match` exclusion at `n=96` or `n=192`",
+        "signed-zero cases",
+        "interruption/resume checks",
+        "`n=48`, `n=96`, and `n=192`",
+        "corrupted-checkpoint rejection",
+        "results/experiment_5751_rust_restart_parity_repair.json",
+        "first_divergence_receipt",
+        "restart_parity_ready_score",
+        "`timing_claimed=false`",
+        "`hardware_speedup_claimed=false`",
     ):
         assert marker in section or marker in normalized
 
@@ -473,3 +498,96 @@ def test_req_sample_5738_batch_corrupt_checkpoint_and_exception_controls_fail_cl
         OneAxisRustBackend(seed=5742).sample_batch([bad_checkpoint])
     with pytest.raises(ValueError, match="batch workload"):
         OneAxisRustBackend(seed=5742).sample_batch([{"biases": item["biases"]}])
+
+
+def _exp5739_first_restart_failure_item() -> dict:
+    protocol = exp5739.preregistered_protocol()
+    workload = [
+        row
+        for row in exp5739.build_workload_manifest()
+        if row["size"] == 96 and row["family"] == "ferromagnetic_ring_easy"
+    ][0]
+    return exp5739.batch_items_for(protocol, workload, batch_size=1, batch_index=8)[0]
+
+
+def _negative_zero_paths(value: object, prefix: str = "") -> list[str]:
+    if isinstance(value, float) and value == 0.0 and math.copysign(1.0, value) < 0:
+        return [prefix]
+    if isinstance(value, list):
+        paths: list[str] = []
+        for index, item in enumerate(value):
+            paths.extend(_negative_zero_paths(item, f"{prefix}[{index}]"))
+        return paths
+    if isinstance(value, dict):
+        paths = []
+        for key, item in value.items():
+            paths.extend(_negative_zero_paths(item, f"{prefix}.{key}" if prefix else str(key)))
+        return paths
+    return []
+
+
+def test_req_sample_5751_reproduced_exp5739_restart_hash_matches_after_repair() -> None:
+    """REQ-SAMPLE-5751: repaired n=96 restart suffix hashes match exactly."""
+    item = _exp5739_first_restart_failure_item()
+
+    rust_rows = OneAxisRustBackend(seed=int(item["config"]["seed"])).sample_batch([item])
+    python_rows = OneAxisRustBackend(
+        seed=int(item["config"]["seed"]),
+        prefer_rust=False,
+    ).sample_batch([item])
+
+    assert rust_rows[0]["samples_spin"] == python_rows[0]["samples_spin"]
+    assert rust_rows[0]["decision_log"] == python_rows[0]["decision_log"]
+    assert rust_rows[0]["checkpoint"]["state"] == python_rows[0]["checkpoint"]["state"]
+    assert rust_rows[0]["checkpoint"]["payload_checksum"] == checkpoint_checksum(
+        rust_rows[0]["checkpoint"],
+    )
+    assert python_rows[0]["checkpoint"]["payload_checksum"] == checkpoint_checksum(
+        python_rows[0]["checkpoint"],
+    )
+
+    rust_restart = exp5739.restart_receipt_for_rows([item], rust_rows, prefer_rust=True)
+    python_restart = exp5739.restart_receipt_for_rows([item], python_rows, prefer_rust=False)
+
+    assert rust_restart["restart_count"] == python_restart["restart_count"] == 1
+    assert rust_restart["suffix_hash"] == python_restart["suffix_hash"]
+
+
+def test_req_sample_5751_restart_decision_log_canonical_json_has_no_signed_zero() -> None:
+    """SCENARIO-SAMPLE-5751: signed-zero diagnostics cannot split restart hashes."""
+    item = _exp5739_first_restart_failure_item()
+    prefix = OneAxisRustBackend(seed=int(item["config"]["seed"])).run_descriptor(
+        item["biases"],
+        item["couplings"],
+        item["n_samples"],
+        item["config"],
+    )
+    restart_config = {**item["config"], "checkpoint": prefix["checkpoint"], "burn_in_sweeps": 0}
+
+    rust_suffix = OneAxisRustBackend(seed=int(item["config"]["seed"])).run_descriptor(
+        item["biases"],
+        item["couplings"],
+        1,
+        restart_config,
+    )
+    python_suffix = OneAxisRustBackend(
+        seed=int(item["config"]["seed"]),
+        prefer_rust=False,
+    ).run_descriptor(item["biases"], item["couplings"], 1, restart_config)
+
+    rust_payload = {
+        "samples_spin": rust_suffix["samples_spin"],
+        "decision_log": rust_suffix["decision_log"],
+        "checkpoint_state": rust_suffix["checkpoint"]["state"],
+    }
+    python_payload = {
+        "samples_spin": python_suffix["samples_spin"],
+        "decision_log": python_suffix["decision_log"],
+        "checkpoint_state": python_suffix["checkpoint"]["state"],
+    }
+
+    assert rust_suffix["samples_spin"] == python_suffix["samples_spin"]
+    assert rust_suffix["checkpoint"]["state"] == python_suffix["checkpoint"]["state"]
+    assert canonical_json(rust_payload) == canonical_json(python_payload)
+    assert _negative_zero_paths(rust_suffix["decision_log"]) == []
+    assert sha256_json(rust_payload) == sha256_json(python_payload)
