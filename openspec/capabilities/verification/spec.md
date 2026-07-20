@@ -30272,6 +30272,174 @@ precise blockers, and an `honest_verdict` starting with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5733 | Planned (`python/carnot/experiment_5733_sota_finite_choice_proposal_channel.py`, `results/experiment_5733_sota_finite_choice_proposal_channel.json`) | Planned (`tests/python/test_experiment_5733_sota_finite_choice_proposal_channel.py`) |
 
+### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
+
+The repository SHALL provide Exp 5734 at
+`python/carnot/experiment_5734_sota_exact_proposal_stream.py` and write
+`results/experiment_5734_sota_exact_proposal_stream.json` plus
+`results/experiment_5734_sota_exact_proposal_stream.rows.jsonl` without
+modifying `scripts/research_conductor.py`, without pushing, without free-form
+generation, without JSON/GBNF grammar, without XGrammar, without llguidance,
+without an external scorer, without an LLM judge, without a retired runtime,
+without mutating model weights, and without treating token scores, score
+magnitude, score margin, or proposal identity as semantic authority.
+
+Exp 5734 SHALL consume the frozen Exp 5733 finite-choice proposal channel only
+when `results/experiment_5733_sota_finite_choice_proposal_channel.json` has
+`proposal_channel_ready_score=1.0`, `qualified_flagship_model_count >= 2`,
+`cuda_offload_authenticated_score=1.0`, `receipt_failure_count=0`,
+`verifier_is_oracle=true`, clean one-token GGUF label receipts for
+`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`, and matching
+model hashes, resolved GGUF filenames, quantizations, CUDA device receipts,
+positive offloaded-layer receipts, and before/during/after GPU memory receipts.
+The Exp 5733 artifact SHALL be sealed by a `qualified_channel_hash` in Exp 5734.
+CPU-only or legacy small-model rows MAY appear only as smoke tests and SHALL NOT
+enter headline rows.
+
+Exp 5734 SHALL declare `MODEL_SPECS` for exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. It SHALL
+preregister and seal at least 96 chronological rows before scoring, balanced by
+family and model assignment, across finite-state reachability,
+finite-domain arithmetic, SAT/CSP, hard/soft preference, contradiction,
+abstention, and shortcut-trap families. For every row it SHALL seal the complete
+candidate domain, adversarial distractors, model-specific one-token label
+permutation, prompt, seed, model hash, and expected exact-validator version
+before learner access or score-vector access.
+The sealed family identifiers SHALL include `finite_state_reachability`,
+`finite_domain_arithmetic`, `sat_csp`, `hard_soft_preference`,
+`contradiction`, `abstention`, and `shortcut_trap`.
+
+For every row, the GGUF score vector SHALL choose only a candidate proposal.
+The artifact and row manifest SHALL preserve the full candidate-label score
+vector, selected proposal id, admitted exact label, deterministic primary
+validator receipt, deterministic independent validator receipt, stratified
+enumeration receipt, and exact conflict receipt. Independent deterministic
+finite-state, arithmetic, SAT/MaxSAT-style, preference, contradiction,
+abstention, and shortcut-trap validators SHALL mint the admitted label.
+`verifier_is_oracle` SHALL be true. Any missing row, incomplete candidate
+domain, non-finite score, label collision, validator disagreement, split
+commitment mismatch, stream commitment mismatch, upstream attestation break, or
+provenance break SHALL block the stream and SHALL NOT be imputed or repaired.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `preconditions_checked`, `MODEL_SPECS`,
+`resolved_model_receipts`, `model_hashes`, `gguf_filenames`, `quantizations`,
+`llama_cpp_runtime_receipt`, `cuda_device_receipts`,
+`n_gpu_layers_offloaded`, `gpu_memory_receipts`,
+`cuda_offload_authenticated`, `qualified_channel_hash`,
+`preregistered_panel`, `family_counts`, `model_family_counts`,
+`row_manifest_path`, `candidate_domain_hashes`,
+`label_permutation_hashes`, `score_vector_hashes`, `proposal_ids`,
+`exact_validator_versions`, `conflict_receipts`, `missing_row_count`,
+`non_finite_score_count`, `label_collision_count`,
+`validator_disagreement_count`, `verifier_is_oracle`,
+`prospective_prefix_hash`, `sealed_suffix_hash`,
+`stream_root_commitment`, `headline_model_count`,
+`sota_proposal_stream_ready_score`, `model_weight_mutation`,
+`freeform_generation_used`, `grammar_runtime_used`,
+`external_scorer_used`, `token_scores_are_semantic_authority`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `headline_model_count` SHALL equal `2`.
+`inference_substrate` SHALL equal
+`local_llama_cpp_python_cuda_gguf_exact_proposal_stream`.
+`model_weight_mutation`, `freeform_generation_used`,
+`grammar_runtime_used`, `external_scorer_used`, and
+`token_scores_are_semantic_authority` SHALL be false.
+`sota_proposal_stream_ready_score` SHALL be `1.0` only when both headline
+models have authenticated CUDA, every row and receipt exists, all
+candidate/label/score/proposal/validator/split/stream commitments verify,
+validator disagreement is zero, and no retired runtime or external scorer ran.
+
+Required field principles:
+
+- `schema`: principle "names the artifact schema version for downstream validators."
+- `experiment`: principle "numeric experiment id for conductor and result indexing."
+- `experiment_id`: principle "stable experiment slug for traceability."
+- `milestone`: principle "milestone accountability for this GGUF stream run."
+- `run_date`: principle "absolute run date prevents relative-date ambiguity."
+- `spec_refs`: principle "binds the artifact to REQ-VERIFY-5734 and SCENARIO-VERIFY-5734."
+- `result_path`: principle "records where the terminal artifact is expected to live."
+- `field_principles`: principle "every stream field declares the gate or provenance boundary it protects."
+- `preconditions_checked`: principle "records upstream channel, GGUF, tokenizer, CUDA, and split preconditions before stream scoring."
+- `MODEL_SPECS`: principle "declares exactly the two headline GGUF identities used for stream rows."
+- `resolved_model_receipts`: principle "binds each headline model to the immutable local GGUF receipt inherited from Exp5733."
+- `model_hashes`: principle "keeps model-weight provenance fixed to authenticated Exp5733 hashes."
+- `gguf_filenames`: principle "names the concrete GGUF files used by the local llama.cpp path."
+- `quantizations`: principle "records the observed GGUF quantization for each headline model."
+- `llama_cpp_runtime_receipt`: principle "records the llama.cpp CUDA runtime inherited by the frozen channel."
+- `cuda_device_receipts`: principle "preserves CUDA device provenance for both headline models."
+- `n_gpu_layers_offloaded`: principle "requires positive layer offload before any headline stream credit."
+- `gpu_memory_receipts`: principle "authenticates non-CPU execution through before/peak/after memory evidence."
+- `cuda_offload_authenticated`: principle "per-model CUDA gate copied from the qualified proposal channel."
+- `qualified_channel_hash`: principle "seals the exact Exp5733 artifact consumed by the stream."
+- `preregistered_panel`: principle "freezes chronological rows, domains, labels, prompts, seeds, model hashes, and validator versions before scores."
+- `family_counts`: principle "proves the row panel is balanced across required exact families."
+- `model_family_counts`: principle "proves each family is balanced across the two headline model assignments."
+- `row_manifest_path`: principle "points to the full chronological row, score, proposal, and validator receipt manifest."
+- `candidate_domain_hashes`: principle "seals every complete candidate domain before model scores are interpreted."
+- `label_permutation_hashes`: principle "seals model-specific one-token label permutations."
+- `score_vector_hashes`: principle "seals the full finite-choice score vector for each row."
+- `proposal_ids`: principle "records model proposal identities without promoting them to truth."
+- `exact_validator_versions`: principle "pins primary, independent, and enumeration validator implementations."
+- `conflict_receipts`: principle "records selected-proposal versus exact-oracle conflicts without changing labels."
+- `missing_row_count`: principle "blocks incomplete chronological streams."
+- `non_finite_score_count`: principle "blocks NaN or infinity from proposal selection."
+- `label_collision_count`: principle "blocks ambiguous one-token label receipts."
+- `validator_disagreement_count`: principle "blocks when independent exact validators disagree."
+- `verifier_is_oracle`: principle "bare true records exact validators as the only label authority."
+- `prospective_prefix_hash`: principle "seals the learner-visible chronological prefix before use."
+- `sealed_suffix_hash`: principle "seals the untouched chronological suffix before use."
+- `stream_root_commitment`: principle "binds upstream, row, score, proposal, validator, prefix, and suffix commitments."
+- `headline_model_count`: principle "records the two-model headline denominator."
+- `sota_proposal_stream_ready_score`: principle "strict readiness scalar, not model accuracy."
+- `model_weight_mutation`: principle "bare false proves GGUF weights were not changed."
+- `freeform_generation_used`: principle "bare false keeps the stream on finite-choice proposals."
+- `grammar_runtime_used`: principle "bare false keeps grammar runtimes out of the stream claim."
+- `external_scorer_used`: principle "bare false prevents judges or external scorers from deciding rows."
+- `token_scores_are_semantic_authority`: principle "bare false keeps token scores as proposal signals only."
+- `inference_substrate`: principle "declares local llama.cpp CUDA GGUF exact proposal-stream scoring."
+- `random_seed`: principle "legacy scalar seed for methodology linters that do not unwrap random_seeds."
+- `random_seeds`: principle "records deterministic panel, label, split, and runner seeds."
+- `reproducibility_checksum`: principle "hashes the artifact with the checksum field blanked."
+- `honest_verdict`: principle "terminal state starts complete: or blocked: and names the readiness boundary."
+- `row_count`: principle "records the expected chronological stream length."
+- `model_counts`: principle "proves the row panel is globally balanced across headline models."
+- `missing_score_count`: principle "blocks incomplete finite-choice score vectors."
+- `incomplete_domain_count`: principle "blocks rows whose finite candidate domain is not complete."
+- `receipt_failure_count`: principle "single mechanical blocker count for row, score, tokenizer, validator, and provenance failures."
+- `proposal_conflict_count`: principle "counts wrong model proposals while keeping exact labels authoritative."
+- `upstream_gate_receipts`: principle "records the Exp5733 gates consumed by this stream."
+- `forbidden_runtime_receipts`: principle "records forbidden runtime families as absent."
+- `tests_added_or_reused`: principle "names focused unit, coverage, full-test, spec, adversarial, and clutter commands."
+- `blocked_reasons`: principle "lists mechanical blockers when the stream is not ready."
+
+### SCENARIO-VERIFY-5734: Chronological Stream Commits Proposals Under Exact Oracle Authority
+
+Given Exp 5733 is qualified and both headline GGUF models have authenticated
+CUDA receipts, when Exp 5734 scores its preregistered chronological finite-choice
+panel, then every row has a complete candidate-domain hash, one-token
+model-specific label permutation hash, full score-vector hash, selected proposal
+id, primary and independent exact-validator receipts, stratified enumeration
+receipt, exact conflict receipt, and row hash. The artifact seals a prospective
+prefix, an untouched suffix, and a root commitment over upstream channel,
+candidate, label, score, proposal, validator, split, and row-manifest hashes.
+The stream qualifies only when every gate and commitment replays exactly and
+all forbidden runtime booleans are false.
+
+If Exp 5733 is not qualified, a required headline GGUF receipt is missing or
+changed, a row is missing, a candidate domain is incomplete, a label collides,
+a score is missing or non-finite, a validator disagrees, a split or stream
+commitment fails to replay, a retired runtime or external scorer appears, or
+any model-weight mutation is recorded, then Exp 5734 SHALL write or expose a
+blocked artifact with `sota_proposal_stream_ready_score=0.0`, precise blockers,
+and an `honest_verdict` beginning with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5734)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5734 | Planned (`python/carnot/experiment_5734_sota_exact_proposal_stream.py`, `results/experiment_5734_sota_exact_proposal_stream.json`) | Planned (`tests/python/test_experiment_5734_sota_exact_proposal_stream.py`) |
+
 ### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
 
 The repository SHALL provide Exp 5615 at
