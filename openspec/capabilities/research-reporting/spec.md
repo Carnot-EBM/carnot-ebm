@@ -42324,3 +42324,133 @@ entry, `reproducibility_checksum` is populated and stable, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5754 | Planned (`python/carnot/experiment_5754_v513_capstone_reconciliation.py`, `results/experiment_5754_v513_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5754_v513_capstone_reconciliation.py`) |
+
+### REQ-REPORT-5755: V514 Transition Archives Terminal V513 Evidence Once
+
+The Exp5755 workflow SHALL read `results/experiment_5743_transition_v513.json`
+through `results/experiment_5754_v513_capstone_reconciliation.json`, treating
+the absent `results/experiment_5748_selective_exact_feedback_search.json` as a
+visible missing/preemptively skipped task rather than reconstructing it from
+downstream prose. It SHALL hash every present canonical artifact, read
+`ops/conductor-log.md` for the latest Exp5743-Exp5754 outcomes, read
+`research-complete.yaml` to confirm milestone `2026.07.513` is archived at
+most once, read `research-roadmap.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md` to confirm milestone
+`2026.07.514`, and write
+`results/experiment_5755_transition_v514.json`. It SHALL NOT modify
+`research-roadmap.yaml` or `scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="cached_artifact_reconciliation_no_llm"`.
+
+The transition SHALL preserve blocked-versus-scientific-null distinctions from
+the terminal `.513` evidence. Exp5746 SHALL be recorded as positive benchmark
+readiness. Exp5747 SHALL be recorded as a gate-shape block, not proposal
+utility evidence. Exp5748 SHALL remain missing/preemptively skipped. Exp5749
+SHALL preserve `kan_mechanism_residual=-0.084269` as a negative result.
+Exp5750 SHALL remain a gate block caused by the negative KAN residual. Exp5751
+SHALL be recorded as repaired restart parity, not throughput. Exp5752 SHALL be
+recorded as a gate-shape block on object-valued fields, not a scientific 10x
+null. Exp5753 SHALL preserve `arc_live_delta=0` as a scientific zero with no
+registry credit.
+
+The workflow SHALL collision-scan Exp5755 through Exp5768 across scripts,
+tests, result paths, OpenSpec content, change proposals, roadmap files, and
+completed research. Planned references in `research-roadmap.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md` are allowed as allocation
+evidence, but pre-existing implementation files, test files, result artifacts,
+or completed-research blocks for the next range SHALL be recorded as collisions.
+Any ambiguous milestone, duplicate `.513` completion block, protected-file
+mutation, or pre-existing next-range implementation/result collision SHALL emit
+a terminal blocked artifact instead of a complete transition.
+
+The artifact SHALL include, at minimum, `field_principles`,
+`preconditions_checked`, `milestone_from`, `milestone_to`,
+`archived_task_ids`, `artifact_hashes`, `conductor_outcomes`,
+`blocked_task_ids`, `scientific_null_task_ids`, `negative_result_task_ids`,
+`positive_result_task_ids`, `proposal_benchmark_ready`,
+`proposal_utility_measured`, `kan_mechanism_residual`,
+`rust_restart_parity_ready`, `rust_10x_measured`,
+`arc_live_delta_measured`, `arc_live_delta`, `collision_scan`,
+`next_task_range`, `docs_reconciled`, `research_roadmap_unchanged`,
+`conductor_unchanged`, `inference_substrate`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+top-level field SHALL have a non-empty `field_principles` entry, and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `field_principles`: principle "Maps every artifact field to the evidence boundary that justifies it."
+- `preconditions_checked`: principle "Records artifact, ledger, roadmap, vNEXT, collision, and protected-file checks before transition claims are trusted."
+- `milestone_from`: principle "Names the terminal milestone whose evidence is archived."
+- `milestone_to`: principle "Names the newly active milestone receiving the archived evidence."
+- `archived_task_ids`: principle "Lists exactly the Exp5743-Exp5754 denominator carried from the terminal milestone."
+- `artifact_hashes`: principle "Binds every present canonical artifact to exact bytes and every absent artifact to an explicit missing state."
+- `conductor_outcomes`: principle "Preserves latest conductor OK, GATE_BLOCK, and preemptive-skip evidence separately from science artifacts."
+- `blocked_task_ids`: principle "Gate-blocked or missing tasks stay blocked and cannot be counted as scientific measurements."
+- `scientific_null_task_ids`: principle "Scientific zero/null outcomes are reported only for tasks that actually ran."
+- `negative_result_task_ids`: principle "Negative measured results remain distinct from blocked tasks."
+- `positive_result_task_ids`: principle "Positive readiness results remain bounded to their direct evidence."
+- `proposal_benchmark_ready`: principle "Only the sealed Exp5746 benchmark receipts make the benchmark ready."
+- `proposal_utility_measured`: principle "Blocked Exp5747 and skipped Exp5748 mean proposal utility was not measured."
+- `kan_mechanism_residual`: principle "The signed Exp5749 residual controls KAN-specific claims only."
+- `rust_restart_parity_ready`: principle "Exp5751 parity repair is semantic readiness, not throughput."
+- `rust_10x_measured`: principle "A gate-shaped Exp5752 block means no final 10x measurement happened."
+- `arc_live_delta_measured`: principle "Exp5753 ran a development-proxy live A/B and measured its delta."
+- `arc_live_delta`: principle "The measured zero delta remains a scientific null with no registry credit."
+- `collision_scan`: principle "Next-range allocation is valid only when pre-existing implementation/result collisions are absent."
+- `next_task_range`: principle "Records the Exp5755-Exp5768 range allocated for the destination milestone."
+- `docs_reconciled`: principle "Records whether research-complete already contains exactly one terminal .513 block without rewriting history."
+- `research_roadmap_unchanged`: principle "Bare boolean must remain true because this workflow is record-only."
+- `conductor_unchanged`: principle "Bare boolean must remain true by operator instruction."
+- `inference_substrate`: principle "This transition reads cached artifacts and ledgers only; no LLM, solver, benchmark, or hardware run is performed."
+- `test_commands`: principle "Verification commands are preserved exactly."
+- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
+- `reproducibility_checksum`: principle "Stable content checksum detects artifact drift."
+- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not inflate blocked work into science."
+
+#### SCENARIO-REPORT-5755: Terminal V513 Evidence Is Archived Into V514 Once
+
+**Given** the Exp5743-Exp5754 artifacts and conductor evidence are readable
+**And** milestone `2026.07.513` appears exactly once in `research-complete.yaml`
+**And** `research-roadmap.yaml` and the vNEXT document name `2026.07.514`
+**And** the Exp5755-Exp5768 scan finds no pre-existing implementation,
+test, result, spec, proposal, or completed-research collision outside planned
+roadmap references
+**When** the Exp5755 workflow runs
+**Then** it writes the transition artifact, records
+`proposal_benchmark_ready=true`, `proposal_utility_measured=false`,
+`kan_mechanism_residual=-0.084269`, `rust_restart_parity_ready=true`,
+`rust_10x_measured=false`, `arc_live_delta_measured=true`,
+`arc_live_delta=0`, `research_roadmap_unchanged=true`,
+`conductor_unchanged=true`, and a `complete:` verdict.
+
+#### SCENARIO-REPORT-5755-BLOCKED-VERSUS-NULL: Gate Blocks Do Not Become Scientific Nulls
+
+**Given** Exp5747, Exp5750, or Exp5752 is gate-blocked and Exp5748 is missing
+or preemptively skipped
+**When** the transition classifies task ids
+**Then** those tasks appear in `blocked_task_ids`, not
+`scientific_null_task_ids`, while Exp5753 alone is preserved as the scientific
+zero live-delta task.
+
+#### SCENARIO-REPORT-5755-COLLISION-BLOCK: Next-Range Collisions Fail Closed
+
+**Given** a pre-existing implementation, test, result, spec, proposal, or
+completed-research collision for Exp5755 through Exp5768
+**When** the transition performs its precondition scan
+**Then** it records the collision in `collision_scan`, emits
+`status=blocked`, keeps `research_roadmap_unchanged=true`, keeps
+`conductor_unchanged=true`, and starts `honest_verdict` with `blocked:`.
+
+#### SCENARIO-REPORT-5755-FIELD-PRINCIPLES: Every Transition Field Is Annotated
+
+**Given** the Exp5755 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, `reproducibility_checksum` is populated and stable, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5755)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5755 | Implemented (`python/carnot/experiment_5755_transition_v514.py`, `results/experiment_5755_transition_v514.json`) | Implemented (`tests/python/test_experiment_5755_transition_v514.py`) |
