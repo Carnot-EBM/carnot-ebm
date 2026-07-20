@@ -23119,6 +23119,145 @@ principles, bad checksums, or stale verdicts SHALL block
 |---|---|---|
 | REQ-LEARN-5735 | Planned (`python/carnot/experiment_5735_zero_gate_kan_continuous_self_learning.py`, `results/experiment_5735_zero_gate_kan_continuous_self_learning.json`) | Planned (`tests/python/test_experiment_5735_zero_gate_kan_continuous_self_learning.py`) |
 
+## REQ-LEARN-5736: Typed CSL Lifecycle Conflict Rollback Over Zero-Gated KAN Sidecar
+
+The self-learning tier SHALL provide Exp 5736, an isolated CPU-only sidecar
+canary that extends Exp 5735's zero-gated KAN sidecar with a deterministic
+typed lifecycle for constraint memory. Exp 5736 MUST validate the immutable Exp
+5735 artifact byte hash, operation-ledger hash commitment, checkpoint hashes,
+`zero_gate_csl_ready_score=1.0`, `function_preserving_insertion_score=1.0`,
+`model_weight_mutation=false`, and `production_default_enabled=false` before
+any lifecycle transition is scored. Because Exp 5736 extends this OpenSpec file,
+Exp 5736 SHALL treat Exp 5735's recorded source-file checksums as historical
+metadata and SHALL instead gate on Exp 5735 artifact bytes, ledger rows,
+checkpoint receipts, and terminal ready fields.
+
+The experiment SHALL preregister the untouched chronological suffix from the
+Exp 5616 stream rows inherited through Exp 5735 before applying lifecycle
+updates. The preregistration SHALL include the protected-prefix row IDs, suffix
+row IDs, suffix-order hash, 30 random seeds, `epsilon`, `delta`, and every
+failure-injection point: crash before write, crash after state write, crash
+after ledger write, crash before commit, corrupted checkpoint, orphan ledger
+entry, duplicate event ID, and replayed stale advice.
+
+Exp 5736 SHALL define deterministic typed transitions for `remember`, `update`,
+`supersede`, `forget`, conflict `reject`, `rollback`, and `recover`. Every
+transition receipt SHALL carry `trigger`, `target`, `scope`, `evidence`,
+`predecessor_hash`, `successor_hash`, and `exact_validator_receipt`. The
+transition schema SHALL also include event ID, operation, claimed predecessor
+hash, acceptance flag, rejection reason, propagation depth,
+protected-prefix-effect receipt, first changed decision, and row hash. The
+exact validator remains the sole authority: exact rejection MUST NOT be
+overridden by any learned sidecar state.
+
+The stress panel SHALL run at least 30 stream/seed sessions with clean, stale,
+contradictory, superseded, forgotten, and reordered constraint events. For each
+session Exp 5736 SHALL record the first changed suffix decision, propagation
+depth, protected-prefix effect, and recovery latency. Valid remember/update/
+supersede operations MAY update the sidecar only after exact validation and a
+protected-prefix certificate. Valid forget operations SHALL remove lifecycle
+reachability without opening propagation. Rejected constraints SHALL have zero
+propagation depth, unchanged state/controller/ledger hashes, and no protected
+prefix effect.
+
+Crash and corruption controls SHALL fail closed. Exp 5736 SHALL inject crashes
+before write, after state write, after ledger write, and before commit. It
+SHALL also inject corrupted checkpoints, orphan ledger entries, duplicate event
+IDs, and replayed stale advice. Recovery SHALL restore the exact prior
+state/controller/ledger hash triple for rollback targets, reject orphan or
+corrupted material before commit, and report recovery latency.
+
+The terminal artifact MUST be written to
+`results/experiment_5736_csl_lifecycle_conflict_rollback.json` and include the
+following top-level required fields with field principles:
+`field_principles` -- every field explains why it exists;
+`preconditions_checked` -- missing upstream, suffix, seed, or local resources
+block the run; `upstream_gate_receipts` -- Exp 5735 structured gates are
+checked before lifecycle work; `upstream_hash` -- Exp 5735 bytes are sealed;
+`suffix_commitment` -- the untouched chronological suffix and injection plan
+are preregistered; `transition_schema` -- typed lifecycle rows can be replayed;
+`operation_ledger_path` -- transition rows can be inspected; `operation_counts`
+-- lifecycle coverage is scalar; `entry_receipts` -- accepted memory-entry
+effects are visible; `propagation_receipts` -- rejected constraints have zero
+propagation; `recovery_receipts` -- rollback and crash recovery are audited;
+`conflict_cases` -- stale, contradictory, superseded, forgotten, reordered, and
+duplicate cases are explicit; `crash_injection_matrix` -- crash points fail
+closed; `corruption_controls` -- corrupted and orphaned state is rejected;
+`rejected_transition_count` -- invalid transitions are counted;
+`unsafe_propagation_count` -- exact safety is scalar; `prefix_retention_delta`
+-- old-prefix retention is bounded; `suffix_improvement` -- suffix utility is
+measured; `rollback_state_hash_matches` -- rollback restores exact hashes;
+`ledger_replay_equivalence` -- valid rows replay and invalid rows reject;
+`epsilon` -- equivalence threshold is preregistered; `delta` -- statistical
+threshold is preregistered; `statistical_model_check_receipt` -- suffix utility
+and retention are certified; `model_weight_mutation` -- model weights remain
+unchanged; `production_default_enabled` -- the sidecar is not a production
+default; `csl_lifecycle_ready_score` -- downstream readiness is mechanical;
+`verifier_is_oracle` -- exact verifier circularity is declared;
+`inference_substrate` -- no LLM inference occurred; `random_seeds` -- evidence
+supports percentage-point claims; `test_commands` -- verification commands are
+recorded; `reproducibility_checksum` -- artifact bytes replay; and
+`honest_verdict` -- terminal status starts with `complete:` or `blocked:`
+(terminal status starts with complete: or blocked:).
+`model_weight_mutation` SHALL be exactly `false`.
+`production_default_enabled` SHALL be exactly `false`.
+`verifier_is_oracle` SHALL be exactly `true`.
+`inference_substrate` SHALL equal
+`cpu_exact_stream_kan_lifecycle`.
+
+`csl_lifecycle_ready_score` SHALL be exactly `1.0` only when every valid
+operation replays, every invalid operation rejects, rollback restores exact
+state/controller/ledger hashes, `unsafe_propagation_count=0`,
+`prefix_retention_delta` stays within the preregistered margin,
+`suffix_improvement` is positive, the preregistered epsilon/delta certificate
+passes, `model_weight_mutation=false`, and `production_default_enabled=false`.
+Otherwise it SHALL be `0.0` with a terminal `blocked:` verdict.
+
+### SCENARIO-LEARN-5736-LIFECYCLE: Typed Operations Replay Deterministically
+
+**Given** the Exp 5735 zero-gated sidecar gates are valid and the Exp 5616
+suffix is preregistered
+**When** Exp 5736 processes remember, update, supersede, forget, reject,
+rollback, and recover events
+**Then** every transition SHALL carry the typed schema fields, exact-validator
+receipt, predecessor hash, successor hash, and row hash
+**And** ledger replay SHALL reproduce the final lifecycle hash.
+
+### SCENARIO-LEARN-5736-CONFLICT: Stale And Conflicting Advice Fails Closed
+
+**Given** stale, contradictory, superseded, forgotten, reordered, duplicate,
+and replayed-stale events
+**When** the lifecycle controller evaluates each event
+**Then** invalid transitions SHALL be rejected before commit
+**And** rejected transitions SHALL keep state/controller/ledger hashes
+unchanged with `propagation_depth=0`.
+
+### SCENARIO-LEARN-5736-ROLLBACK: Rollback And Recover Restore Exact Hashes
+
+**Given** a valid prior lifecycle checkpoint and injected crashes before write,
+after state write, after ledger write, and before commit
+**When** rollback or recover is invoked
+**Then** state, controller, and ledger hashes SHALL exactly match the prior
+target
+**And** corrupted checkpoints and orphan ledger rows SHALL be rejected before
+commit.
+
+### SCENARIO-LEARN-5736-RELEASE: Lifecycle Readiness Gates Fail Closed
+
+**Given** the required artifact fields, field principles, epsilon, delta,
+prefix-retention margin, suffix-utility threshold, upstream receipts, ledger
+replay receipt, crash controls, and corruption controls
+**When** Exp 5736 validates the artifact
+**Then** missing fields, stale verdicts, bad checksums, unsafe propagation,
+failed rollback equivalence, failed ledger replay, model-weight mutation, or
+production default enablement SHALL block `csl_lifecycle_ready_score`.
+
+## Implementation Status (Exp 5736)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5736 | Planned (`python/carnot/experiment_5736_csl_lifecycle_conflict_rollback.py`, `results/experiment_5736_csl_lifecycle_conflict_rollback.json`) | Planned (`tests/python/test_experiment_5736_csl_lifecycle_conflict_rollback.py`) |
+
 ## REQ-LEARN-5640: Opt-In FR-11 Shadow Adapter In Verify/Repair Path
 
 The verify/repair pipeline SHALL expose an opt-in, fail-closed FR-11 shadow
