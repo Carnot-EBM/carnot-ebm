@@ -13849,3 +13849,4 @@ web search: site:extropic.ai/writing XT |
 + |
 | 2026-07-20 13:52 UTC | Transition terminal .513 evidence, preserve blocke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5755_transit |
 | 2026-07-20 14:06 UTC | Transition terminal .513 evidence, preserve blocke | FAIL | No file changes produced |
+| 2026-07-20 14:42 UTC | Ingest post-V514 source deltas with bounded biblio | OK | 89 passed, 2 warnings in 9.97s |
