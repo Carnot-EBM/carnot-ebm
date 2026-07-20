@@ -30127,6 +30127,151 @@ grammar runs, an external scorer runs, or a retired runtime is used, then Exp
 |---|---|---|
 | REQ-VERIFY-5719 | Planned (`python/carnot/experiment_5719_sota_answer_channel_forensics.py`, `results/experiment_5719_sota_answer_channel_forensics.json`) | Planned (`tests/python/test_experiment_5719_sota_answer_channel_forensics.py`) |
 
+### REQ-VERIFY-5733: Sealed Finite-Choice GGUF Proposal Channel
+
+The repository SHALL provide Exp 5733 at
+`python/carnot/experiment_5733_sota_finite_choice_proposal_channel.py` and
+write `results/experiment_5733_sota_finite_choice_proposal_channel.json` plus
+`results/experiment_5733_sota_finite_choice_proposal_channel.score_vectors.jsonl`
+without modifying `scripts/research_conductor.py`, without pushing, without
+using transformers to load or tokenize GGUF models, without free-form
+completion parsing, without `FINAL:` parsing, without JSON/GBNF grammar,
+without XGrammar, without llguidance, without an external scorer, without an
+LLM judge, and without treating token scores or logit thresholds as semantic
+authority.
+
+Exp 5733 SHALL declare `MODEL_SPECS` for exactly these mandated local GGUF
+models: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve immutable cached `.gguf`
+files, record hashes, filenames, observed quantizations, llama.cpp version and
+build info, CUDA device visibility, free VRAM, positive requested/offloaded
+layer counts, before/during/after GPU memory, model-specific
+`vocab_only=True` tokenizer load receipts, and a bare
+`cuda_offload_authenticated_score` equal to `1.0` only when both flagship
+families (`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-31B-it-GGUF`) have positive offload and memory-delta
+receipts. CPU-only runs SHALL be smoke-only and SHALL NOT qualify the proposal
+channel.
+
+The experiment SHALL build at least 30 positive exact controls and at least 12
+negative/adversarial exact controls, disjoint from any Exp5734 science rows,
+covering finite-state reachability, finite-domain arithmetic, SAT/CSP,
+hard/soft preference, candidate-omission adversarial checks, duplicate
+candidate adversarial checks, invalid-label adversarial checks, tokenizer
+collision adversarial checks, and non-finite-score adversarial checks. For
+every model/control pair, it SHALL enumerate the complete bounded answer
+domain with an exact generator, add plausible hard distractors, randomly
+permute candidate-to-label mappings under sealed seeds, require each visible
+label to tokenize to one unique token in that model's embedded GGUF tokenizer,
+run one next-token scoring step, and preserve the full candidate-label score
+vector. Candidate labels SHALL be balanced so the exact candidate is not leaked
+through ordering, label frequency, whitespace, token length, or prompt wording.
+
+The argmax label SHALL select only a proposal candidate. Independent exact
+validators SHALL decide whether the selected candidate is true, and a
+stratified sample SHALL be double-checked by explicit enumeration.
+`verifier_is_oracle` SHALL be true. Any validator disagreement, incomplete
+domain, label collision, missing candidate, missing score, non-finite score,
+or provenance break SHALL set `receipt_failure_count > 0` and SHALL block
+qualification. Model accuracy is descriptive and SHALL NOT be a verifier
+promotion gate.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `preconditions_checked`, `MODEL_SPECS`,
+`resolved_model_receipts`, `model_hashes`, `gguf_filenames`, `quantizations`,
+`llama_cpp_version`, `llama_cpp_build_info`, `cuda_device_receipts`,
+`n_gpu_layers_offloaded`, `gpu_memory_receipts`,
+`cuda_offload_authenticated`, `cuda_offload_authenticated_score`,
+`control_manifest`, `candidate_domain_receipts`, `label_token_receipts`,
+`label_permutation_hashes`, `score_vector_manifest_path`,
+`non_finite_score_count`, `label_collision_count`,
+`candidate_omission_count`, `receipt_failure_count`, `validator_versions`,
+`validator_disagreement_count`, `verifier_is_oracle`,
+`qualified_model_ids`, `qualified_flagship_model_count`,
+`proposal_channel_ready_score`, `freeform_generation_used`,
+`grammar_runtime_used`, `external_scorer_used`,
+`token_scores_are_semantic_authority`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`local_llama_cpp_python_cuda_gguf_finite_choice_proposals`.
+`freeform_generation_used`, `grammar_runtime_used`, `external_scorer_used`,
+and `token_scores_are_semantic_authority` SHALL be false.
+`proposal_channel_ready_score` SHALL be `1.0` only when all required controls
+and all required models have complete score-vector receipts, both flagship
+families qualify, CUDA offload is authenticated, `receipt_failure_count=0`, no
+retired runtime ran, and the exact-validator gates above hold.
+
+Required field principles:
+
+- `field_principles`: principle "every gate field states the evidence boundary it protects."
+- `preconditions_checked`: principle "records cache, hash, tokenizer, CUDA, free-VRAM, and llama.cpp checks before qualification."
+- `MODEL_SPECS`: principle "declares the three mandated GGUF identities so the run cannot drift to tiny or non-GGUF models."
+- `resolved_model_receipts`: principle "binds each model id to an immutable local GGUF path and presence receipt."
+- `model_hashes`: principle "hashes weight bytes so model provenance cannot float."
+- `gguf_filenames`: principle "names the concrete GGUF file used by llama.cpp."
+- `quantizations`: principle "records observed quantization from the filename and receipt."
+- `llama_cpp_version`: principle "pins the Python llama.cpp runtime version."
+- `llama_cpp_build_info`: principle "records CUDA build support instead of assuming GPU offload."
+- `cuda_device_receipts`: principle "preserves visible GPU, driver, free VRAM, and worker return evidence."
+- `n_gpu_layers_offloaded`: principle "separates positive GPU layer offload from requested offload."
+- `gpu_memory_receipts`: principle "before/during/after memory deltas authenticate non-CPU execution."
+- `cuda_offload_authenticated`: principle "per-model bare gate for positive offload plus memory delta."
+- `cuda_offload_authenticated_score`: principle "mechanical flagship CUDA scalar; 1.0 only when Qwen and Gemma31 both authenticate."
+- `control_manifest`: principle "freezes exact controls, polarity, category, prompt, and expected answer before model scores."
+- `candidate_domain_receipts`: principle "proves the bounded answer domain is complete and the exact candidate is present."
+- `label_token_receipts`: principle "proves every visible label is one unique embedded-tokenizer token per model."
+- `label_permutation_hashes`: principle "binds sealed random candidate-to-label mappings without leaking the answer."
+- `score_vector_manifest_path`: principle "points to full per-model/control label-score rows."
+- `non_finite_score_count`: principle "blocks NaN or infinity from selecting proposals."
+- `label_collision_count`: principle "blocks tokenizer label collisions from ambiguous scoring."
+- `candidate_omission_count`: principle "blocks missing exact candidates from a finite-choice receipt."
+- `receipt_failure_count`: principle "single mechanical blocker count for any provenance, domain, score, or validator failure."
+- `validator_versions`: principle "versions primary, independent, and enumeration validators."
+- `validator_disagreement_count`: principle "blocks when exact validators disagree."
+- `verifier_is_oracle`: principle "bare true records that exact validators, not model scores, decide truth."
+- `qualified_model_ids`: principle "names models whose score-vector and CUDA receipts are complete."
+- `qualified_flagship_model_count`: principle "counts Qwen and Gemma31 qualification for the flagship gate."
+- `proposal_channel_ready_score`: principle "strict channel-readiness scalar, not an accuracy metric."
+- `freeform_generation_used`: principle "bare false preserves the no-free-form boundary."
+- `grammar_runtime_used`: principle "bare false preserves the no-grammar-runtime boundary."
+- `external_scorer_used`: principle "bare false prevents judges or external scorers from deciding rows."
+- `token_scores_are_semantic_authority`: principle "bare false keeps logits as proposal scores only."
+- `inference_substrate`: principle "declares local llama.cpp CUDA GGUF finite-choice scoring."
+- `random_seeds`: principle "records deterministic control and label-permutation seeds."
+- `reproducibility_checksum`: principle "hashes artifact fields and score-vector commitment."
+- `honest_verdict`: principle "terminal status starts complete: or blocked: and names the qualification boundary."
+
+### SCENARIO-VERIFY-5733: Sealed Labels Produce Proposals Under Exact Oracle Authority
+
+Given all three mandated GGUF files are cached and llama-cpp-python reports CUDA
+offload support, when Exp 5733 scores the sealed finite-choice controls, then
+each model/control row has a complete candidate-domain receipt, balanced
+single-token labels, a sealed candidate-to-label permutation hash, a full
+candidate-label score vector, an argmax-selected proposal, primary and
+independent exact-validator decisions, and stratified enumeration double-checks.
+The terminal artifact writes the required fields, sets
+`verifier_is_oracle=true`, sets `freeform_generation_used=false`, sets
+`grammar_runtime_used=false`, sets `external_scorer_used=false`, sets
+`token_scores_are_semantic_authority=false`, records descriptive per-model
+accuracy, and qualifies the proposal channel only from receipt completeness,
+CUDA authentication, and exact-validator agreement.
+
+If any required GGUF is absent, a GGUF tokenizer is checked through
+transformers instead of `llama_cpp.Llama(..., vocab_only=True)`, any label
+tokenizes to zero/multiple/colliding tokens for a model, any exact candidate is
+omitted, any score is missing or non-finite, any validator disagrees, CUDA
+offload is not authenticated for both flagship families, any retired runtime is
+used, or any forbidden free-form/grammar/external-scorer path appears, then Exp
+5733 SHALL write the same result path with `proposal_channel_ready_score=0.0`,
+precise blockers, and an `honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5733)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5733 | Planned (`python/carnot/experiment_5733_sota_finite_choice_proposal_channel.py`, `results/experiment_5733_sota_finite_choice_proposal_channel.json`) | Planned (`tests/python/test_experiment_5733_sota_finite_choice_proposal_channel.py`) |
+
 ### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
 
 The repository SHALL provide Exp 5615 at
