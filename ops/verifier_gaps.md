@@ -2992,3 +2992,42 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   candidate design (a) is cheap and should be paired with any future goal_bias work regardless of
   priority tier, since it is a general robustness fix (fail-safe on ANY out-of-distribution game),
   not sp80-specific.
+
+### GAP-OBJECT-HISTORY-SALIENCE-ONLINE-SIGNAL-DOES-NOT-REACH-LIVE-FRONTIER: object-identity change-history is real online but does not convert to a live-path level
+- status: open
+- evidence: `results/experiment_5740_object_history_salience_11game_ab.json` (REQ-ARC-FCP-5740).
+  A properly-powered 4-arm 11-game live A/B of `ObjectHistorySaliencePrior` (the `object_hash`-keyed
+  change-history `action_prior`) found NO capability gain: baseline/`blob_only`/`treatment_default`/
+  `treatment_rescaled` all bank exactly `1` level (`lp85` L1), `any_config_beats_baseline_levels:
+  false`, no safety regression (states 931 -> 812). Isolated against a `blob_only` (ColorBlob prior,
+  no bonus) control, the object-history bonus's TRUE marginal behavioral effect is small -- it
+  reorders search on only 4 games at default weight / 5 at the rescaled weight (vs the ColorBlob
+  prior's own 8-game effect) -- and banks no level anywhere. This is the LIVE-path counterpart to
+  exp5732 (REQ-ARC-FCP-5732), which measured a genuinely predictive ONLINE prefix-causal
+  `object_hash`-keyed memory (within-game AUROC 0.844 vs click-bucket 0.711, +0.133).
+- failure mode: the object-identity change-history signal is real and predictive as an OFFLINE/online
+  reranking key (exp5732), but wiring it as a live `action_prior` frontier-ordering bonus does not
+  convert that predictive signal into a banked level at budget=200 on the 11-game roster -- the search
+  re-orders a few candidates (4-5 games) but the re-ordering never reaches a solve. The existing
+  action_prior families (ColorBlob tier/score, this bonus) rank WHICH click to try, but ranking is not
+  the binding constraint here: even a perfect object-affordance ranking does not close a level if the
+  path to level-up needs multi-step planning the frontier order alone cannot supply.
+- missing discriminator: a mechanism that converts a per-object change-affordance PREDICTION into
+  multi-step level-progress, not just a single-candidate frontier bonus -- e.g. an object-affordance-
+  conditioned world-model/plan step (`plan_in_model` consuming the object_hash change-rate as an
+  action-effect prior) rather than a myopic score bump, OR an online object-affordance memory consumed
+  by the SCORED `E3AgentPolicy.plan_in_model` path (per ARC Live-Path Reachability Discipline) instead
+  of only the `StepwiseExplorer` frontier order.
+- candidate design: (a) route exp5732's `object_hash`-memory as an action-effect prior INTO the
+  world-model planning step (`e3.plan_in_model`), where a predicted-change object gets tried as part
+  of a multi-step plan, not a single-frontier reorder; (b) a deeper-budget / per-game-headroom probe
+  to test whether the small live divergence ever converts on games with real level headroom beyond
+  budget=200 (the 11-game roster's only banked level, `lp85` L1, is reached by all arms, so this
+  roster has little level headroom to reveal a conversion). Both are NEW mechanisms, not another
+  `ObjectHistorySaliencePrior` weight/roster A/B (which the exp5740 retire condition closes).
+- priority: low-medium -- the underlying object-identity signal is real (exp5732), so this is not a
+  dead direction, but exp5740 shows the current frontier-bonus wiring is not the live-path lever;
+  do NOT re-run the same action_prior A/B, and do NOT flip `SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED`
+  (operator-only) on this evidence. The exclusion decision (retire the object-history LIVE-PATH
+  action_prior lineage vs keep it for a future world-model consumer) is operator-only; this entry is
+  the falsification record, NOT an edit to `ops/exclusion_manifest.yaml`.

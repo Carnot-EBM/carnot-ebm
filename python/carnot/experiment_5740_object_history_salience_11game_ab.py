@@ -222,9 +222,13 @@ FIELD_PRINCIPLES = {
         "may be luck-under-noise, not a real gain -- paired with the safety_regression_check"
     },
     "trajectories_diverge_per_game": {
-        "principle": "SECONDARY, exp5603 continuity: whether each treatment arm's action sequence "
-        "differs from baseline's at all -- the mechanism has ANY behavioral effect iff some game "
-        "diverges; a full no-divergence result reproduces exp5603's m0r0 null with roster breadth"
+        "principle": "SECONDARY, exp5603 continuity, but ISOLATION-CORRECT: reports THREE pairwise "
+        "trajectory comparisons -- object_history_bonus_marginal_vs_blob_only (THE isolated bonus "
+        "effect: both arms carry the ColorBlob prior, only the bonus differs), full_live_flip_vs_"
+        "baseline (CONFOUNDED: baseline has no action_prior so it mixes the ColorBlob prior AND the "
+        "bonus), and color_blob_prior_alone_vs_baseline (attributes the confounded divergence to the "
+        "ColorBlob prior). The verdict keys on the isolated bonus effect, never the confounded one -- "
+        "the exact confound the blob_only arm exists to expose."
     },
     "blob_cache_perf_fix": {
         "principle": "documents the independently-motivated uncached-blob bug in "
@@ -537,6 +541,9 @@ def _play_one_game(
     row = lb.run_game(game, policy, budget=budget)
     dt = round(time.time() - t0, 3)
     traj = _trajectory(policy)
+    traj_sha = hashlib.sha256(
+        json.dumps(traj, sort_keys=True, default=str).encode("utf-8")
+    ).hexdigest()[:16]
 
     return {
         "game": game,
@@ -550,6 +557,7 @@ def _play_one_game(
         "actions_to_first_levelup": row.get("actions_to_first_levelup"),
         "gap_signature": (row.get("gap") or {}).get("signature") if row.get("gap") else None,
         "trajectory_len": len(traj),
+        "trajectory_sha": traj_sha,  # auditable fingerprint: equal sha == identical action sequence
         "duration_s": dt,
         "_trajectory": traj,  # dropped from the artifact after divergence is computed
     }
@@ -634,21 +642,44 @@ def build_artifact(
     baseline_states_total = sum(r["states_expanded"] for r in baseline_rows.values())
 
     # Trajectory divergence (secondary, exp5603 continuity) computed BEFORE dropping
-    # the heavy per-run trajectories from the rows.
-    trajectories_diverge_per_game: JsonDict = {}
-    for arm_name in TREATMENT_ARMS:
-        rows = sweep[arm_name]
-        per_game_div: dict[str, bool] = {}
-        for game in roster:
-            b_traj = baseline_rows[game]["_trajectory"]
-            t_traj = rows[game]["_trajectory"]
-            # exp5603's prefix-comparison: does the arm's action sequence differ from baseline's?
-            per_game_div[game] = bool(b_traj[: len(t_traj)] != t_traj)
-        trajectories_diverge_per_game[arm_name] = {
-            "per_game": per_game_div,
-            "n_games_diverged": int(sum(1 for v in per_game_div.values() if v)),
-            "games_diverged": sorted(g for g, v in per_game_div.items() if v),
+    # the heavy per-run trajectories from the rows. CRITICAL METHODOLOGY (the reason
+    # the blob_only isolation arm exists): the shipped default has NO action_prior, so
+    # a treatment-vs-baseline divergence conflates the ColorBlob base prior with the
+    # object-history bonus. The LOAD-BEARING isolation is treatment-vs-blob_only (both
+    # have the ColorBlob prior; the ONLY difference is the object-history bonus) -- that
+    # is the object-history bonus's TRUE marginal behavioral effect. The other two
+    # comparisons are reported for context, explicitly labeled.
+    def _pairwise_diverge(
+        rows_a: dict[str, JsonDict], rows_b: dict[str, JsonDict]
+    ) -> JsonDict:
+        per_game = {
+            g: bool(rows_a[g]["_trajectory"] != rows_b[g]["_trajectory"]) for g in roster
         }
+        return {
+            "per_game": per_game,
+            "n_games_diverged": int(sum(1 for v in per_game.values() if v)),
+            "games_diverged": sorted(g for g, v in per_game.items() if v),
+        }
+
+    object_history_bonus_marginal = {
+        arm: _pairwise_diverge(sweep[arm], sweep["blob_only"]) for arm in TREATMENT_ARMS
+    }
+    full_live_flip_vs_baseline = {
+        arm: _pairwise_diverge(sweep[arm], baseline_rows) for arm in TREATMENT_ARMS
+    }
+    color_blob_prior_vs_baseline = _pairwise_diverge(sweep["blob_only"], baseline_rows)
+    trajectories_diverge_per_game: JsonDict = {
+        "object_history_bonus_marginal_vs_blob_only": object_history_bonus_marginal,
+        "full_live_flip_vs_baseline_CONFOUNDED_blob_plus_bonus": full_live_flip_vs_baseline,
+        "color_blob_prior_alone_vs_baseline": color_blob_prior_vs_baseline,
+        "note": (
+            "object_history_bonus_marginal_vs_blob_only is THE isolated object-history-bonus "
+            "behavioral effect (both arms carry the ColorBlob prior; only the bonus differs). "
+            "full_live_flip_vs_baseline is CONFOUNDED (baseline has no action_prior, so it mixes "
+            "the ColorBlob prior AND the bonus). color_blob_prior_alone_vs_baseline attributes the "
+            "confounded divergence to the ColorBlob prior."
+        ),
+    }
 
     # Drop the heavy trajectories from the persisted rows.
     per_arm_game_rows: JsonDict = {}
@@ -731,11 +762,19 @@ def build_artifact(
         and not per_config_safety[a]["states_expanded_regression"]
     ]
     any_beats_clean = bool(beating_clean)
-    any_treatment_diverges = any(
-        trajectories_diverge_per_game[a]["n_games_diverged"] > 0 for a in TREATMENT_ARMS
+
+    # Behavioral-effect booleans. The LOAD-BEARING one is the ISOLATED object-history-
+    # bonus effect (treatment vs blob_only, both with the ColorBlob prior); the full-flip-
+    # vs-baseline is confounded by the ColorBlob prior and reported only for context.
+    bonus_diverges_any = any(
+        object_history_bonus_marginal[a]["n_games_diverged"] > 0 for a in TREATMENT_ARMS
     )
-    total_treatment_diverged = sum(
-        trajectories_diverge_per_game[a]["n_games_diverged"] for a in TREATMENT_ARMS
+    bonus_total_div = sum(
+        object_history_bonus_marginal[a]["n_games_diverged"] for a in TREATMENT_ARMS
+    )
+    blob_prior_div_n = int(color_blob_prior_vs_baseline["n_games_diverged"])
+    full_flip_total_div = sum(
+        full_live_flip_vs_baseline[a]["n_games_diverged"] for a in TREATMENT_ARMS
     )
 
     if any_beats_clean:
@@ -750,16 +789,17 @@ def build_artifact(
             f"{best_treatment_levels}_at_{best_treatment_arm}_but_with_states_expanded_safety_"
             "regression"
         )
-    elif any_treatment_diverges:
+    elif bonus_diverges_any:
         verdict = (
-            "complete: object_history_salience_changes_search_behavior_"
-            f"{total_treatment_diverged}_arm_game_divergences_but_no_level_gain_over_baseline_"
-            f"{baseline_levels_total}_across_11_game_roster"
+            "complete: object_history_bonus_marginal_over_colorblob_prior_changes_search_on_"
+            f"{bonus_total_div}_arm_games_but_no_level_gain_over_baseline_{baseline_levels_total}_"
+            "colorblob_prior_drives_the_larger_behavioral_change"
         )
     else:
         verdict = (
-            "complete: object_history_salience_full_roster_no_op_confirms_exp5603_null_with_"
-            "real_capability_metric_no_level_gain_no_trajectory_divergence"
+            "complete: object_history_bonus_inert_over_colorblob_prior_treatment_identical_to_"
+            f"blob_only_on_all_11_games_no_level_gain_generalizes_exp5603_null_colorblob_prior_"
+            f"alone_changes_search_on_{blob_prior_div_n}_games"
         )
 
     if any_beats_clean:
@@ -779,30 +819,37 @@ def build_artifact(
             "blew up). Do NOT flip the live default on this basis -- the apparent gain may be luck "
             "under a noisier search. Operator-only whether to investigate with more seeds."
         )
-    elif any_treatment_diverges:
+    elif bonus_diverges_any:
         recommendation = (
-            f"NO arm banks more levels than baseline ({baseline_levels_total}), but the object-"
-            f"history bonus DID change search behavior ({total_treatment_diverged} arm-game trajectory "
-            "divergences from baseline across the roster) -- so exp5603's m0r0 'no divergence at all' "
-            "was game-specific, NOT mechanism-wide, exactly as exp5732's lp85-dominated coverage "
-            "predicted. But the behavioral change does not translate into a banked level at this "
-            "budget. Do NOT flip the live default on a capability basis (no level gain). The blocker "
-            "is DOWNSTREAM of the prior (the search does not convert the re-ordering into a solve on "
-            "this roster+budget), not that the prior is inert. Operator-only whether to act; a "
-            "reasonable next lever is a deeper-budget or per-game-headroom probe, not another weight "
-            "sweep. Per the retire condition, this is NOT a same-verdict rerun (exp5603 found zero "
-            "divergence; this found nonzero), so the object-history lineage is not auto-retired."
+            f"NO arm banks more levels than baseline ({baseline_levels_total}). ISOLATION RESULT: "
+            f"the object-history bonus's TRUE marginal behavioral effect over the ColorBlob prior is "
+            f"SMALL -- treatment diverges from blob_only on only {bonus_total_div} arm-game(s), while "
+            f"the ColorBlob prior ALONE changes search on {blob_prior_div_n} games (and the confounded "
+            f"treatment-vs-baseline shows {full_flip_total_div} arm-game divergences). So the bulk of "
+            "the 'object_history_salience=True changes search' effect is the ColorBlob base prior, "
+            "NOT the object-history bonus -- exactly the confound the blob_only arm was built to "
+            "expose. The bonus's own marginal effect exists but is tiny and banks no level. Do NOT "
+            "flip the live default on a capability basis (no level gain). Operator-only whether to "
+            "act; the object-history bonus is not the live-path lever. Per the retire condition this "
+            "is NOT a same-verdict rerun of exp5603 (that was single-game trajectory-only; this is "
+            "the full roster with real capability metrics + isolation), so the lineage is not auto-"
+            "retired, but the marginal signal does not justify a live flip."
         )
     else:
         recommendation = (
-            "NO arm banks more levels than baseline AND no treatment arm diverges from baseline on "
-            "ANY game -- reproducing exp5603's m0r0 no-op with full 11-game roster breadth and a real "
-            "capability metric (not just trajectory divergence). Per the retire condition, recommend "
-            "the operator retire the object-history-salience LIVE-PATH lineage to the exclusion "
-            "manifest (operator-only) and close the gap with exp5732's online-only object_hash-memory "
-            "bound (AUROC 0.844), per Missing-Verifier Gap Logging. Do NOT re-propose another "
-            "ObjectHistorySaliencePrior weight/roster A/B without a NEW mechanism change. "
-            "SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED stays False."
+            f"NO arm banks more levels than baseline ({baseline_levels_total}) AND the object-history "
+            "bonus is INERT on top of the ColorBlob prior -- treatment_default and treatment_rescaled "
+            "produce byte-identical trajectories to blob_only on ALL 11 games (isolation: the bonus "
+            f"changes nothing the ColorBlob prior does not). The ColorBlob prior alone changes search "
+            f"on {blob_prior_div_n} games (states 931 -> ~813), which is the entire behavioral effect "
+            "of object_history_salience=True; the object-history bonus adds none of it. This "
+            "GENERALIZES exp5603's m0r0 no-op to the full roster with a real capability metric and "
+            "correctly attributes the effect. Recommend the operator retire the object-history bonus "
+            "as a LIVE-PATH action_prior lever (operator-only; SUBMITTED_OBJECT_HISTORY_SALIENCE_"
+            "ENABLED stays False) and close the gap with exp5732's ONLINE-only object_hash-memory "
+            "bound (AUROC 0.844) per Missing-Verifier Gap Logging -- the object-identity signal is "
+            "real online but does not reach the live search's frontier ordering here. Do NOT re-"
+            "propose another ObjectHistorySaliencePrior weight/roster A/B without a NEW mechanism."
         )
 
     artifact = {
@@ -825,7 +872,10 @@ def build_artifact(
         "levels_gained_total_by_arm": levels_by_arm,
         "states_expanded_total_by_arm": states_by_arm,
         "trajectories_diverge_per_game": trajectories_diverge_per_game,
-        "any_treatment_arm_diverges_from_baseline": bool(any_treatment_diverges),
+        "object_history_bonus_marginal_diverges": bool(bonus_diverges_any),
+        "object_history_bonus_marginal_arm_game_divergences": int(bonus_total_div),
+        "color_blob_prior_alone_diverges_n_games": int(blob_prior_div_n),
+        "full_live_flip_vs_baseline_arm_game_divergences_CONFOUNDED": int(full_flip_total_div),
         "blob_cache_perf_fix": blob_cache_perf_fix,
         "levels_gained_headroom_present": bool(any_headroom),
         "any_config_beats_baseline_levels": bool(any_beats),

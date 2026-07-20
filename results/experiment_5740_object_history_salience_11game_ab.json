@@ -1,0 +1,1195 @@
+{
+  "experiment": "experiment_5740_object_history_salience_11game_ab",
+  "schema": "carnot.exp5740.object_history_salience_11game_ab.v1",
+  "result_path": "results/experiment_5740_object_history_salience_11game_ab.json",
+  "honest_verdict": "complete: object_history_bonus_marginal_over_colorblob_prior_changes_search_on_9_arm_games_but_no_level_gain_over_baseline_1_colorblob_prior_drives_the_larger_behavioral_change",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a level win, a behavior-only change (search diverges but no level gain), and a total no-op are distinct real outcomes -- enabling the prior only earns a live-default flip if it raises banked levels on the same roster+budget WITHOUT a search-cost blow-up"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- CARNOT_ARC_DISABLE_INDUCTION=1 guarantees no GGUF/LLM load; the action_prior affects only the search/frontier-priority path, isolated from tier-3 induction"
+    },
+    "verifier_is_oracle": {
+      "principle": "False -- a learned per-object-hash change-rate bonus fit from the search's OWN observed transitions, never the executable oracle that defines correctness"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline-arcade live-path action_prior A/B on the dev twin; does NOT fit the game-solve taxonomy (a component measurement, not a self-discovery solve), NO new level is banked (lp85 L1 is a pre-existing registry solve reached incidentally), offline_reproduced is deliberately NOT claimed"
+    },
+    "arms_tested": {
+      "principle": "baseline (shipped default, action_prior=None) + blob_only isolation control + treatment_default (the faithful live flip) + treatment_rescaled (exp5603 continuity) -- the isolation arm is required because the shipped default has NO action_prior, so the live-flip treatment adds BOTH the ColorBlob prior AND the object-history bonus"
+    },
+    "per_arm_results": {
+      "principle": "per-arm levels/states/efficiency totals + per-game level deltas vs baseline so a third party can re-derive every headline number"
+    },
+    "per_arm_game_rows": {
+      "principle": "full per-game rows (levels, states_expanded, actions, action_prior type, trajectory length) so the capability comparison and the divergence secondary are both independently auditable"
+    },
+    "levels_gained_total_by_arm": {
+      "principle": "the raw capability answer: total banked levels per arm across the roster; the primary comparison is treatment_default vs baseline"
+    },
+    "states_expanded_total_by_arm": {
+      "principle": "total search cost per arm; a prior that banks a level while blowing up states may be luck-under-noise, not a real gain -- paired with the safety_regression_check"
+    },
+    "trajectories_diverge_per_game": {
+      "principle": "SECONDARY, exp5603 continuity, but ISOLATION-CORRECT: reports THREE pairwise trajectory comparisons -- object_history_bonus_marginal_vs_blob_only (THE isolated bonus effect: both arms carry the ColorBlob prior, only the bonus differs), full_live_flip_vs_baseline (CONFOUNDED: baseline has no action_prior so it mixes the ColorBlob prior AND the bonus), and color_blob_prior_alone_vs_baseline (attributes the confounded divergence to the ColorBlob prior). The verdict keys on the isolated bonus effect, never the confounded one -- the exact confound the blob_only arm exists to expose."
+    },
+    "blob_cache_perf_fix": {
+      "principle": "documents the independently-motivated uncached-blob bug in ObjectHistorySaliencePrior.score(), the minimal cache-routing fix, the before/after per-candidate timing verification (behavior-preserving, identical scores), and WHY the residual object_hash cost does NOT confound an action-budget A/B"
+    },
+    "levels_gained_headroom_present": {
+      "principle": "FALSE_NEGATIVE_RISK discipline -- a no-delta result is only interpretable if some arm banks a nonzero level somewhere, else the null may just mean the roster had no level headroom for any action_prior at this budget"
+    },
+    "any_config_beats_baseline_levels": {
+      "principle": "the load-bearing capability boolean: True iff some arm banks strictly more levels than baseline on the same roster+budget"
+    },
+    "safety_regression_check": {
+      "principle": "exp5729 discipline -- a config that banks a level while materially inflating states_expanded (>20% vs baseline) is flagged; a level win is never reported without its search cost"
+    },
+    "prior_work_extended": {
+      "principle": "Failed-Experiment Rerun Discipline -- names exp5603 (the prior null this re-tests) by id+verdict+root cause AND states precisely what is different (roster breadth + real capability metric, not single-game trajectory-only), plus exp5732 (the motivating signal) and exp5729 (the harness precedent), with a retire condition"
+    },
+    "recommendation": {
+      "principle": "reports whether to flip the live default (SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED); the agent never self-authorizes flipping the live-stack default -- operator-only"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    },
+    "duration_s": {
+      "principle": "real wall-clock of the search A/B; the no-LLM substrate floor is 0.01s and this runs sequentially over 4 arms x 11 games, so a plausible multi-hundred-second total is expected (treatment arms carry the object_hash per-candidate cost)"
+    },
+    "preconditions_checked": {
+      "principle": "records the resources verified (offline arcade builds an env, the live policy + prior + cache-fix import resolve) before the sweep, per Pre-Launch Preconditions Discipline"
+    }
+  },
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "roster": [
+    "cd82",
+    "cn04",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "sk48",
+    "sp80",
+    "su15",
+    "tu93",
+    "wa30"
+  ],
+  "budget": 200,
+  "arms_tested": [
+    "baseline",
+    "blob_only",
+    "treatment_default",
+    "treatment_rescaled"
+  ],
+  "baseline_arm": "baseline",
+  "baseline_levels_total": 1,
+  "baseline_states_expanded_total": 931,
+  "per_arm_results": [
+    {
+      "arm": "baseline",
+      "is_baseline": true,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 931,
+      "states_delta_vs_baseline": 0,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 57.983,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 18,
+        "cn04": 99,
+        "lp85": 181,
+        "ls20": 187,
+        "m0r0": 45,
+        "r11l": 148,
+        "sk48": 26,
+        "sp80": 41,
+        "su15": 12,
+        "tu93": 39,
+        "wa30": 135
+      }
+    },
+    {
+      "arm": "blob_only",
+      "is_baseline": false,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 813,
+      "states_delta_vs_baseline": -118,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 64.871,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 21,
+        "cn04": 80,
+        "lp85": 159,
+        "ls20": 187,
+        "m0r0": 20,
+        "r11l": 105,
+        "sk48": 11,
+        "sp80": 44,
+        "su15": 12,
+        "tu93": 39,
+        "wa30": 135
+      }
+    },
+    {
+      "arm": "treatment_default",
+      "is_baseline": false,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 812,
+      "states_delta_vs_baseline": -119,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 70.725,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 21,
+        "cn04": 80,
+        "lp85": 163,
+        "ls20": 187,
+        "m0r0": 20,
+        "r11l": 105,
+        "sk48": 11,
+        "sp80": 37,
+        "su15": 14,
+        "tu93": 39,
+        "wa30": 135
+      }
+    },
+    {
+      "arm": "treatment_rescaled",
+      "is_baseline": false,
+      "levels_gained_total": 1,
+      "levels_delta_vs_baseline": 0,
+      "states_expanded_total": 812,
+      "states_delta_vs_baseline": -119,
+      "efficiency_sum": 2.7778,
+      "wall_clock_total_s": 71.618,
+      "per_game_levels": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_levels_delta_vs_baseline": {
+        "cd82": 0,
+        "cn04": 0,
+        "lp85": 0,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "sk48": 0,
+        "sp80": 0,
+        "su15": 0,
+        "tu93": 0,
+        "wa30": 0
+      },
+      "per_game_states_expanded": {
+        "cd82": 21,
+        "cn04": 80,
+        "lp85": 163,
+        "ls20": 187,
+        "m0r0": 20,
+        "r11l": 105,
+        "sk48": 11,
+        "sp80": 37,
+        "su15": 14,
+        "tu93": 39,
+        "wa30": 135
+      }
+    }
+  ],
+  "per_arm_game_rows": {
+    "baseline": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 18,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "ba87caf3dd1a06b0",
+        "duration_s": 4.785
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 99,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 195,
+        "trajectory_sha": "e4186ab9c44c0a08",
+        "duration_s": 4.358
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 1,
+        "reached": 1,
+        "actions": 195,
+        "states_expanded": 181,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 11,
+        "gap_signature": null,
+        "trajectory_len": 193,
+        "trajectory_sha": "5dfc4297cc5965a5",
+        "duration_s": 7.009
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "duration_s": 5.57
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 45,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "d397c87edf58d595",
+        "duration_s": 5.228
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 148,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "e6420a85824d35b6",
+        "duration_s": 7.289
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 26,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "8573a591b70dc789",
+        "duration_s": 5.093
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 41,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "1ac1e292fbde60de",
+        "duration_s": 5.023
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 12,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "a166f9fe180c0df1",
+        "duration_s": 4.192
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "duration_s": 4.883
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "baseline",
+        "action_prior_type": null,
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "duration_s": 4.553
+      }
+    },
+    "blob_only": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 21,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "0c6eecf957f33d31",
+        "duration_s": 4.92
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 196,
+        "states_expanded": 80,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 194,
+        "trajectory_sha": "d9f96ed2c048644d",
+        "duration_s": 5.268
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 1,
+        "reached": 1,
+        "actions": 196,
+        "states_expanded": 159,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 7,
+        "gap_signature": null,
+        "trajectory_len": 194,
+        "trajectory_sha": "7fd7269d38470e7e",
+        "duration_s": 9.697
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "duration_s": 6.618
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 20,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "13b18a7c4cefc7fb",
+        "duration_s": 4.826
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 105,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1edbc05b4b32e78",
+        "duration_s": 7.531
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 11,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "0603a226bc160224",
+        "duration_s": 5.209
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 44,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "3e7624f204d6b958",
+        "duration_s": 5.457
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 12,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "ca54a503b122e421",
+        "duration_s": 4.477
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "duration_s": 5.464
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "blob_only",
+        "action_prior_type": "ColorBlobSaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "duration_s": 5.404
+      }
+    },
+    "treatment_default": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 21,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "1f19e51f3b4b6295",
+        "duration_s": 5.399
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 196,
+        "states_expanded": 80,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 194,
+        "trajectory_sha": "d9f96ed2c048644d",
+        "duration_s": 6.156
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 1,
+        "reached": 1,
+        "actions": 196,
+        "states_expanded": 163,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 7,
+        "gap_signature": null,
+        "trajectory_len": 194,
+        "trajectory_sha": "c95e19e3f811af3a",
+        "duration_s": 10.648
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "duration_s": 7.001
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 20,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "13b18a7c4cefc7fb",
+        "duration_s": 5.503
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 105,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1edbc05b4b32e78",
+        "duration_s": 8.595
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 11,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "0603a226bc160224",
+        "duration_s": 5.642
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 37,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "0711684aa207dad7",
+        "duration_s": 6.1
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 14,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "cf7ef2551ac1a92c",
+        "duration_s": 4.718
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "duration_s": 5.473
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "treatment_default",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "duration_s": 5.49
+      }
+    },
+    "treatment_rescaled": {
+      "cd82": {
+        "game": "cd82",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 197,
+        "states_expanded": 21,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "deb83ec14397d305",
+        "duration_s": 5.531
+      },
+      "cn04": {
+        "game": "cn04",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 196,
+        "states_expanded": 80,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 194,
+        "trajectory_sha": "d9f96ed2c048644d",
+        "duration_s": 6.131
+      },
+      "lp85": {
+        "game": "lp85",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 1,
+        "reached": 1,
+        "actions": 196,
+        "states_expanded": 163,
+        "efficiency": 2.7778,
+        "actions_to_first_levelup": 7,
+        "gap_signature": null,
+        "trajectory_len": 194,
+        "trajectory_sha": "c95e19e3f811af3a",
+        "duration_s": 10.835
+      },
+      "ls20": {
+        "game": "ls20",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 187,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1622cd71ad5f820",
+        "duration_s": 7.042
+      },
+      "m0r0": {
+        "game": "m0r0",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 198,
+        "states_expanded": 20,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 196,
+        "trajectory_sha": "3c9c635fa0b8bf7b",
+        "duration_s": 5.569
+      },
+      "r11l": {
+        "game": "r11l",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 105,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "d1edbc05b4b32e78",
+        "duration_s": 8.766
+      },
+      "sk48": {
+        "game": "sk48",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 199,
+        "states_expanded": 11,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 197,
+        "trajectory_sha": "0603a226bc160224",
+        "duration_s": 5.611
+      },
+      "sp80": {
+        "game": "sp80",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 193,
+        "states_expanded": 37,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 191,
+        "trajectory_sha": "e2b2772396a18648",
+        "duration_s": 6.288
+      },
+      "su15": {
+        "game": "su15",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 14,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "cf7ef2551ac1a92c",
+        "duration_s": 4.957
+      },
+      "tu93": {
+        "game": "tu93",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 194,
+        "states_expanded": 39,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 192,
+        "trajectory_sha": "621d2694fe47e177",
+        "duration_s": 5.538
+      },
+      "wa30": {
+        "game": "wa30",
+        "arm": "treatment_rescaled",
+        "action_prior_type": "ObjectHistorySaliencePrior",
+        "levels": 0,
+        "reached": 0,
+        "actions": 195,
+        "states_expanded": 135,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": null,
+        "gap_signature": "no_level_up_within_budget",
+        "trajectory_len": 193,
+        "trajectory_sha": "acc1f38610378949",
+        "duration_s": 5.35
+      }
+    }
+  },
+  "levels_gained_total_by_arm": {
+    "baseline": 1,
+    "blob_only": 1,
+    "treatment_default": 1,
+    "treatment_rescaled": 1
+  },
+  "states_expanded_total_by_arm": {
+    "baseline": 931,
+    "blob_only": 813,
+    "treatment_default": 812,
+    "treatment_rescaled": 812
+  },
+  "trajectories_diverge_per_game": {
+    "object_history_bonus_marginal_vs_blob_only": {
+      "treatment_default": {
+        "per_game": {
+          "cd82": true,
+          "cn04": false,
+          "lp85": true,
+          "ls20": false,
+          "m0r0": false,
+          "r11l": false,
+          "sk48": false,
+          "sp80": true,
+          "su15": true,
+          "tu93": false,
+          "wa30": false
+        },
+        "n_games_diverged": 4,
+        "games_diverged": [
+          "cd82",
+          "lp85",
+          "sp80",
+          "su15"
+        ]
+      },
+      "treatment_rescaled": {
+        "per_game": {
+          "cd82": true,
+          "cn04": false,
+          "lp85": true,
+          "ls20": false,
+          "m0r0": true,
+          "r11l": false,
+          "sk48": false,
+          "sp80": true,
+          "su15": true,
+          "tu93": false,
+          "wa30": false
+        },
+        "n_games_diverged": 5,
+        "games_diverged": [
+          "cd82",
+          "lp85",
+          "m0r0",
+          "sp80",
+          "su15"
+        ]
+      }
+    },
+    "full_live_flip_vs_baseline_CONFOUNDED_blob_plus_bonus": {
+      "treatment_default": {
+        "per_game": {
+          "cd82": true,
+          "cn04": true,
+          "lp85": true,
+          "ls20": false,
+          "m0r0": true,
+          "r11l": true,
+          "sk48": true,
+          "sp80": true,
+          "su15": true,
+          "tu93": false,
+          "wa30": false
+        },
+        "n_games_diverged": 8,
+        "games_diverged": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15"
+        ]
+      },
+      "treatment_rescaled": {
+        "per_game": {
+          "cd82": true,
+          "cn04": true,
+          "lp85": true,
+          "ls20": false,
+          "m0r0": true,
+          "r11l": true,
+          "sk48": true,
+          "sp80": true,
+          "su15": true,
+          "tu93": false,
+          "wa30": false
+        },
+        "n_games_diverged": 8,
+        "games_diverged": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15"
+        ]
+      }
+    },
+    "color_blob_prior_alone_vs_baseline": {
+      "per_game": {
+        "cd82": true,
+        "cn04": true,
+        "lp85": true,
+        "ls20": false,
+        "m0r0": true,
+        "r11l": true,
+        "sk48": true,
+        "sp80": true,
+        "su15": true,
+        "tu93": false,
+        "wa30": false
+      },
+      "n_games_diverged": 8,
+      "games_diverged": [
+        "cd82",
+        "cn04",
+        "lp85",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15"
+      ]
+    },
+    "note": "object_history_bonus_marginal_vs_blob_only is THE isolated object-history-bonus behavioral effect (both arms carry the ColorBlob prior; only the bonus differs). full_live_flip_vs_baseline is CONFOUNDED (baseline has no action_prior, so it mixes the ColorBlob prior AND the bonus). color_blob_prior_alone_vs_baseline attributes the confounded divergence to the ColorBlob prior."
+  },
+  "object_history_bonus_marginal_diverges": true,
+  "object_history_bonus_marginal_arm_game_divergences": 9,
+  "color_blob_prior_alone_diverges_n_games": 8,
+  "full_live_flip_vs_baseline_arm_game_divergences_CONFOUNDED": 16,
+  "blob_cache_perf_fix": {
+    "bug": "ObjectHistorySaliencePrior.score() called connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0) RAW per candidate, bypassing the per-frame LRU cache (_cached_blobs_and_counts, arc_color_blob_salience.py) that ColorBlobSaliencePrior.score -- its own base_prior -- already uses with identical params. This reintroduced the exact per-candidate flood-fill cost the 2026-07-16 REQ-ARC-FCP-5699 item-2 fix eliminated elsewhere (profiled 8176 uncached calls for 500 actions on lp85).",
+    "fix": "Route score()'s blob decomposition through _cached_blobs_and_counts(grid, min_pixels=1, max_component_fraction=1.0) -- the same key the base_prior.score() call one line above already warmed. Behavior-preserving: identical blobs, so identical scores.",
+    "timing_probe_game": "lp85",
+    "grid_shape": [
+      64,
+      64
+    ],
+    "n_candidates": 400,
+    "baseline_blob_only_us_per_candidate": 14.96,
+    "fixed_cached_us_per_candidate": 703.38,
+    "raw_prefix_flood_us_per_candidate": 2807.41,
+    "raw_vs_fixed_slowdown_ratio": 3.991,
+    "fixed_vs_baseline_overhead_ratio": 47.019,
+    "fixed_scores_identical_to_raw": true,
+    "residual_cost_source": "The residual fixed-vs-baseline overhead is object_hash(blob) per candidate (inherent to the object-history mechanism, NOT the flood-fill and NOT introduced by this fix). It does NOT confound the capability A/B: run_game's budget is ACTION-count (for step_index in range(budget)), not wall-clock, and the no-induction search path has no wall-clock cutoff (verified: only CARNOT_ARC_INDUCE_TIMEOUT exists, disabled here), so per-candidate timing changes total runtime but never levels/states.",
+    "fix_behavior_preserving": true
+  },
+  "levels_gained_headroom_present": true,
+  "any_config_beats_baseline_levels": false,
+  "any_config_beats_baseline_without_safety_regression": false,
+  "safety_regression_check": {
+    "baseline_states_expanded_total": 931,
+    "states_regression_relative_threshold": 0.2,
+    "per_config": {
+      "baseline": {
+        "states_expanded_total": 931,
+        "states_delta_vs_baseline": 0,
+        "states_rel_change_vs_baseline": 0.0,
+        "states_expanded_regression": false
+      },
+      "blob_only": {
+        "states_expanded_total": 813,
+        "states_delta_vs_baseline": -118,
+        "states_rel_change_vs_baseline": -0.1267,
+        "states_expanded_regression": false
+      },
+      "treatment_default": {
+        "states_expanded_total": 812,
+        "states_delta_vs_baseline": -119,
+        "states_rel_change_vs_baseline": -0.1278,
+        "states_expanded_regression": false
+      },
+      "treatment_rescaled": {
+        "states_expanded_total": 812,
+        "states_delta_vs_baseline": -119,
+        "states_rel_change_vs_baseline": -0.1278,
+        "states_expanded_regression": false
+      }
+    },
+    "any_config_states_regression": false,
+    "interpretation": "states_expanded is the search cost; an action_prior that banks a level while materially inflating states may be luck-under-noise, not a real capability gain. A prior only earns a live-default recommendation if it raises levels WITHOUT tripping states_expanded_regression."
+  },
+  "prior_work_extended": {
+    "experiments_extended": [
+      {
+        "experiment_id": "exp5603 (experiment_5603_object_history_salience_matched_budget_ab)",
+        "prior_verdict": "complete: object_history_salience_ab_no_op_at_either_weight",
+        "diagnosed_root_cause": "Tested exactly ONE game (m0r0, 37 transitions) with the ONLY available metric being TRAJECTORY DIVERGENCE (self-documented: 'no OfflineSolver-equivalent states_expanded metric exists for action_prior; trajectory divergence is the honest substitute'). Both the default weight (10.0) and a rescaled weight (2000.0) produced action sequences identical to baseline on m0r0 -- a single-game null on a weak proxy. It DID already rule out the naive 'weight too small' hypothesis (both weights null), so this re-test does NOT re-litigate the weight question the same way.",
+        "retire_if_same_verdict": true
+      },
+      {
+        "experiment_id": "exp5732 (experiment_5732_object_centric_click_affordance)",
+        "prior_verdict": "complete: object_centric_partial_win_cross_game_null_offline_minus0p032_but_online_within_game_positive_plus0p133",
+        "role": "THE MOTIVATING SIGNAL. Measured an ONLINE prefix-causal object_hash-keyed memory AUROC of 0.844 vs a click-bucket baseline's 0.711 (+0.133), pointing at ObjectHistorySaliencePrior as the natural live-path home. Its own coverage probe showed the aggregate online signal was heavily lp85-dominated (27,491 of 32,518 within-frame pairs), so the m0r0 null exp5603 found is plausibly game-specific, not a mechanism-wide null -- the justification for this roster-breadth re-test."
+      },
+      {
+        "experiment_id": "exp5729 (experiment_5729_gtv_gate_fix_ab)",
+        "prior_verdict": "complete: gtv_gate_loosening_turns_scorer_on_3_to_10_of_11_games_validated_but_no_level_gain_scorer_signal_is_the_blocker_not_the_gate",
+        "role": "THE HARNESS PRECEDENT. Solved exactly the 'matched-budget A/B a live-path component with real levels/states metrics on the 11-game roster' problem exp5603 was stuck on. This script reuses its skeleton: drive E3AgentPolicy/StepwiseExplorer directly via arc_leaderboard_eval.run_game, per-game fixed seed, states_expanded = len(policy.explorer.graph), the safety-regression discipline."
+      }
+    ],
+    "what_is_different_here": "exp5603 tested ONE game (m0r0) with trajectory-divergence ONLY -- no capability metric. This tests the SAME 11-game roster exp5729/exp5732 used, with REAL capability metrics (levels_gained_total, states_expanded_total, per-game breakdown) via the exp5729 harness pattern, PLUS an isolation control (blob_only) that disentangles the ColorBlob base prior from the object-history bonus (necessary because the shipped default has no action_prior). Trajectory divergence is retained only as a secondary continuity signal. This is NOT a weight re-tune (exp5603 already settled that both tested weights are null); it is a roster-breadth + real-metric re-measurement.",
+    "retire_if_same_verdict": "If NO arm banks more levels than baseline AND no treatment arm diverges from baseline on ANY game (reproducing exp5603's m0r0 no-op with full roster breadth and a real capability metric), then ObjectHistorySaliencePrior adds no live-path capability at this budget: recommend the operator retire the object-history-salience live-path lineage to the exclusion manifest (operator-only) and close the gap with exp5732's online-only object_hash-memory bound, per Missing-Verifier Gap Logging. Do NOT re-propose another ObjectHistorySaliencePrior weight/roster A/B without a NEW mechanism change."
+  },
+  "recommendation": "NO arm banks more levels than baseline (1). ISOLATION RESULT: the object-history bonus's TRUE marginal behavioral effect over the ColorBlob prior is SMALL -- treatment diverges from blob_only on only 9 arm-game(s), while the ColorBlob prior ALONE changes search on 8 games (and the confounded treatment-vs-baseline shows 16 arm-game divergences). So the bulk of the 'object_history_salience=True changes search' effect is the ColorBlob base prior, NOT the object-history bonus -- exactly the confound the blob_only arm was built to expose. The bonus's own marginal effect exists but is tiny and banks no level. Do NOT flip the live default on a capability basis (no level gain). Operator-only whether to act; the object-history bonus is not the live-path lever. Per the retire condition this is NOT a same-verdict rerun of exp5603 (that was single-game trajectory-only; this is the full roster with real capability metrics + isolation), so the lineage is not auto-retired, but the marginal signal does not justify a live flip.",
+  "random_seed": 5740,
+  "duration_s": 270.343,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "blob_cache_import": true,
+    "object_history_prior_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "db585b47e40fcd35bc0b6abb9beaf108640665ea9b6d3eede04c4f44fbde935b"
+}
