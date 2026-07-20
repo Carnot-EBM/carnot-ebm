@@ -13847,3 +13847,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 11:54 UTC | Milestone 2026.07.514 activated | OK | 14 tasks queued |
 | 2026-07-20 13:17 UTC | Transition terminal .513 evidence, preserve blocke | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: uild_report(
 + |
+| 2026-07-20 13:52 UTC | Transition terminal .513 evidence, preserve blocke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5755_transit |
