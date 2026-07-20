@@ -30152,3 +30152,20 @@ deltas or explicit dispositions are recorded below.
   adapters, train a cross-game value head, or claim duplicate registry levels.
 
 <!-- V512-PLANNER-REFRESH-20260719-END -->
+
+## V512 Execution Refresh - 20260720
+
+Execution-time sweep on 2026-07-20 after the V512 planner marker. Only non-duplicate sources that sharpen already-allocated Exp5733-Exp5741 work are listed here; duplicate, watch-only, inaccessible, and excluded findings are recorded in `results/experiment_5732_v512_source_delta_ingestion.json`.
+
+### New actionable deltas
+
+- **Hard Rules, Soft Preferences: Bridging Reasoning, Learning, and Optimization for Personalized Packing Checklist Generation** - arXiv:2607.15562, https://arxiv.org/abs/2607.15562. Carnot hook: Add a hard-rule/soft-preference control family where each candidate must satisfy hard feasibility while exact validators score preference tradeoffs independently of model prose. Target: exp5733-sota-finite-choice-proposal-channel, exp5734-sota-exact-proposal-stream. Substrate: finite-domain hard/soft exact-control rows with deterministic feasibility validators. Authority boundary: exact finite-domain and CP-SAT-style feasibility validators admit rows; GGUF label scores remain proposal signals only. Falsifiable metric: candidate_domain_complete=true, hard_constraint_satisfaction_rate=1.0, validator_disagreement_count=0, and no row is credited from model-written text. This sharpens existing V512 work only and does not authorize free-form answer repair, JSON grammar, external scoring, model-weight writes, ARC adapters, or unsupported hardware speedups.
+- **Presentation, Not Mechanism: A Render Confound in Deprecation-Aware Memory Evaluation** - arXiv:2607.16019, https://arxiv.org/abs/2607.16019. Carnot hook: Add a render-matched control for supersede/forget/conflict tests so lifecycle credit requires mechanism residual rather than easier memory presentation. Target: exp5736-csl-lifecycle-conflict-rollback, exp5737-sota-stream-csl-shadow-ingress. Substrate: typed lifecycle memory ledger with matched render and deprecation-disabled controls. Authority boundary: exact lifecycle state transitions, state hashes, rollback receipts, and exact row validators remain authoritative; no LLM judge or text-score residual is accepted. Falsifiable metric: deprecation-enabled lifecycle must beat render-matched deprecation-disabled control on exact current-state rows while rejected-update propagation stays 0 and rollback hash restoration remains exact. This sharpens existing V512 work only and does not authorize free-form answer repair, JSON grammar, external scoring, model-weight writes, ARC adapters, or unsupported hardware speedups.
+- **Do Coding Agents Need Executable World Models, Simplification, and Verification to Solve ARC-AGI-3?** - arXiv:2607.15439, https://arxiv.org/abs/2607.15439. Carnot hook: Use the ablation result as a boundary: simplification and executable artifacts only count when exact replay verification and deletion utility survive on Carnot-owned traces. Target: exp5740-arc-game-blind-primitive-causal-audit, exp5741-arc-generic-primitive-live-ab. Substrate: agent-owned ARC traces, exact replay verification, and deletion-tested generic primitives. Authority boundary: live E3 observation/action receipts, exact replay reproduction, game-blind deletion tests, and registry provenance remain authoritative; public-set saturation claims are not imported. Falsifiable metric: primitive deletion must reduce matched live-trajectory utility before hardening, exact observation replay mismatches remain 0, and any registry credit must be newly found by the submitted live path. This sharpens existing V512 work only and does not authorize free-form answer repair, JSON grammar, external scoring, model-weight writes, ARC adapters, or unsupported hardware speedups.
+
+### V512 execution impact
+
+- Preserve the Exp5733-Exp5741 graph and gates. The accepted deltas only add bounded controls for hard/soft exact choices, render-matched lifecycle memory evaluation, and exact-replay ARC primitive attribution.
+
+<!-- V512-EXECUTION-REFRESH-20260720-END -->
+
