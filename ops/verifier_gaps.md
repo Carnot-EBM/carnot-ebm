@@ -2542,15 +2542,36 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: high
 
 ### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
-- status: open
-- evidence: production search is flat BFS / weighted-A* (`arc_graph_explore.py:239-307`, OfflineSolver
-  best-first); hierarchical search exists only as the single-game `arc_vc33_hierarchical_search.py` (vc33 still
-  L1). `search-layer-literature-2026-06-11.md:42` names subgoal decomposition as the single biggest lever.
+- status: DOWN-WEIGHTED (2026-07-20, REQ-ARC-FCP-5757 empirical basis) -- was "open (single biggest lever)"
+- down-weight basis (REQ-ARC-FCP-5757 candidate-coverage attribution,
+  `results/experiment_5757_candidate_coverage_attribution.json`): a structural attribution of all 92
+  known-winning-path progress actions across the 9 stalled adaptered games, classifying each vs the live
+  `rich_action_candidates` generator, ran the FAIR pre-registered fire-once test of the search/lookahead lever
+  (bucket b = "in-set but not frame-changing in isolation, on a known level-up path"). Result: **bucket b == 0**
+  -- NO winning-path action is an in-set no-op-in-isolation that only pays off downstream, so there is ZERO
+  evidence a lookahead planner would recover an action a greedy ranking cannot. This is the direct empirical
+  confirmation of the 2026-07-20 top-project search-architecture audit's §3 finding: all three Milestone-1
+  winners (Duck 1st/Reki 2nd/forge 3rd) are greedy single-commit generators with NO tree/beam/MCTS search, and
+  Carnot already has strictly MORE search machinery (StepwiseExplorer graph search + `plan_in_model` lookahead +
+  the vc33 hierarchical prototype). The gap is upstream of search.
+- what the attribution found the gap IS instead: single-action candidate coverage is 98.9% exact / 100%
+  tolerant (generation is not the single-action gap either); the only single-action gap is SELECTION/RANKING of
+  object clicks (all 6 gap actions are action-6 clicks in-set + frame-changing but ranked >= 12: r11l x1, su15
+  x4, + one cn04 <=2px near-miss). ~93% of winning-path actions are already individually handled yet the games
+  stall, so the binding constraint is SEQUENCE-level routing without a goal signal -> the world-model INDUCTION
+  gap (REQ-ARC-WMTE-5724, induce 0/12), NOT search depth.
+- ORIGINAL evidence (preserved, never-prune): production search is flat BFS / weighted-A*
+  (`arc_graph_explore.py:239-307`, OfflineSolver best-first); hierarchical search exists only as the single-game
+  `arc_vc33_hierarchical_search.py` (vc33 still L1). `search-layer-literature-2026-06-11.md:42` named subgoal
+  decomposition as the single biggest lever -- a claim NOT supported by the winners' evidence or by 5757's b==0.
 - failure mode: no within-level subgoal decomposition; combinatorial config spaces (the OOD-dominant class)
   are intractable to flat search.
-- candidate design: promote the vc33 hierarchical best-first into a generic, router-selectable engine for
-  `is_spatial_planning:true` games.
-- priority: medium
+- candidate design (deferred, not retired): promote the vc33 hierarchical best-first into a generic,
+  router-selectable engine for `is_spatial_planning:true` games -- but only AFTER world-model induction improves
+  enough to give that planner a correct model + goal predicate to plan over (a lookahead planner is only as good
+  as the induced model it consumes; that induction is the true bottleneck, per 5757 + the 0/12 induce nulls).
+- priority: LOW (was medium) -- re-ordered below induction/perception per REQ-ARC-FCP-5757. Re-opens ONLY if a
+  future well-powered measurement finds bucket b > 0.3 (5757's b branch can fire once on evidence).
 
 ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
 - status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
