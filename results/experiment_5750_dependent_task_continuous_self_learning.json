@@ -1,0 +1,42 @@
+{
+  "experiment": 5750,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-20",
+  "started_at": "2026-07-20T08:37:04.421736+00:00",
+  "finished_at": "2026-07-20T08:37:04.421736+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5749 KAN residual>0: scale continuous learning to dependent tasks",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit.kan_mechanism_residual (actual=-0.084269 > expected=0.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5749-csl-render-matched-mechanism-audit",
+      "artifact_field": "kan_mechanism_residual",
+      "op": ">",
+      "expected": 0.0,
+      "actual": -0.084269,
+      "passed": false,
+      "reason": "actual=-0.084269 > expected=0.0"
+    },
+    {
+      "upstream": "exp5749-csl-render-matched-mechanism-audit",
+      "artifact_field": "prefix_retention_pass_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 >= expected=1.0"
+    },
+    {
+      "upstream": "exp5749-csl-render-matched-mechanism-audit",
+      "artifact_field": "unsafe_update_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
