@@ -42074,3 +42074,113 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5743 | Planned (`python/carnot/experiment_5743_transition_v513.py`, `results/experiment_5743_transition_v513.json`) | Planned (`tests/python/test_experiment_5743_transition_v513.py`) |
+
+### REQ-REPORT-5744: V513 Source Delta Ingestion With Bibliographic Timing
+
+The Exp5744 workflow SHALL search only after the
+`V513-PLANNER-REFRESH-20260720-END` marker and SHALL write
+`results/experiment_5744_v513_source_delta_ingestion.json`. The workflow SHALL
+declare `inference_substrate="web_and_bibliographic_search_only"` and
+`benchmark_compute_claimed=false`. It SHALL record `search_started_at_utc`
+immediately before the first external source query, `search_finished_at_utc`
+after the final source disposition, and `bibliographic_elapsed_s` as the
+elapsed bibliographic search time rather than benchmark duration, model
+inference time, hardware execution time, or fabricated minimum runtime.
+
+The workflow SHALL check the mandated 2025-2026 source families: arXiv for EBM
+verification/reasoning, neural CSPs, Ising ML, hallucination mitigation, KANs,
+constrained generation, sampling hardware, and continual constraint learning;
+OpenReview; Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`; Hugging Face Papers; GitHub trending/discovery; Extropic writing;
+Logical Intelligence public pages; and local Carnot ledgers. It SHALL
+deduplicate IDs, titles, techniques, repositories, citation trails, and Carnot
+hooks against `research-references.md`, `research-complete.yaml`, roadmap
+files, prior source-delta artifacts, `ops/exclusion_manifest.yaml`, and
+`ops/known-issues.md`.
+
+The workflow MAY complete with zero accepted findings. Any accepted finding
+SHALL be post-marker, non-duplicate, actionable inside the existing
+Exp5746-Exp5753 target range, and SHALL state the existing target experiment,
+local substrate, exact authority boundary, and falsifiable metric. Duplicate,
+watch-only, inaccessible, and excluded findings SHALL remain separately
+dispositioned. The workflow SHALL reject graph redesign, external text scoring,
+LLM judges, model-weight writes, broad RL, retired ARC/value/headline-scorer
+scopes, and unauthenticated hardware claims. If a real scope expansion is
+required, it SHALL set `roadmap_change_required=true`, emit a blocked verdict,
+and avoid mutating the roadmap.
+
+The artifact SHALL include the required fields below, with a non-empty
+`field_principles` entry for every top-level field:
+
+- `field_principles`: principle "Explains every top-level artifact field so downstream readers know why the field exists."
+- `preconditions_checked`: principle "Records instruction, spec, marker, ledger, exclusion, and protected-file checks before source findings are trusted."
+- `planner_marker`: principle "Binds the search window to the post-V513 planner boundary."
+- `search_started_at_utc`: principle "Records the instant immediately before mutable external querying starts."
+- `search_finished_at_utc`: principle "Records the instant after final source disposition so elapsed time is honest."
+- `bibliographic_elapsed_s`: principle "Measures source-search wall time only, preventing bibliographic work from masquerading as benchmark compute."
+- `sources_checked`: principle "Makes source coverage reconstructable without trusting prose."
+- `queries`: principle "Makes search intent reconstructable without rerunning mutable indexes."
+- `accepted_findings`: principle "Accepted work must have a post-marker, local, falsifiable Exp5746-Exp5753 home."
+- `duplicate_findings`: principle "Already-indexed material stays visible but cannot create duplicate work."
+- `watch_only_findings`: principle "Non-local or non-executable material cannot support Carnot claims."
+- `excluded_findings`: principle "Closed scopes remain closed by explicit disposition."
+- `semantic_scholar_status`: principle "Citation-route access and citation-count limitations are reported honestly."
+- `extropic_status`: principle "Thermodynamic hardware context is bounded to authenticated local execution availability."
+- `logical_intelligence_status`: principle "Kona/Aleph context is bounded to public pages unless local receipts exist."
+- `huggingface_status`: principle "Secondary paper-feed status is separated from primary authority."
+- `github_status`: principle "Repository discovery is separated from executable local dependencies."
+- `target_experiment_map`: principle "Every accepted source maps to an existing Exp5746-Exp5753 task without changing ids or gates."
+- `roadmap_change_required`: principle "Scope expansion blocks for operator review instead of silently mutating the roadmap."
+- `references_updated`: principle "Reference-file mutation is declared; zero-finding and blocked runs keep this false."
+- `benchmark_compute_claimed`: principle "Bibliographic search cannot claim benchmark, model, solver, or hardware compute."
+- `inference_substrate`: principle "The run used web and bibliographic search only."
+- `reproducibility_checksum`: principle "The stable artifact payload can be checked for drift."
+- `honest_verdict`: principle "The terminal result states complete or blocked without claim inflation."
+
+#### SCENARIO-REPORT-5744-ZERO-FINDING: Post-V513 Search May Complete With No Accepted Findings
+
+**Given** the V513 planner marker is present
+**And** the external-source dispositions contain no non-duplicate actionable
+post-marker findings
+**When** the Exp5744 workflow runs
+**Then** it writes `results/experiment_5744_v513_source_delta_ingestion.json`,
+sets `accepted_findings=[]`, `target_experiment_map=[]`,
+`roadmap_change_required=false`, `references_updated=false`,
+`benchmark_compute_claimed=false`,
+`inference_substrate=web_and_bibliographic_search_only`, and a complete
+`honest_verdict` without fabricating an accepted count, citation count, local
+execution receipt, benchmark duration, or minimum runtime.
+
+#### SCENARIO-REPORT-5744-ACCEPT-BOUNDED-DELTA: Accepted Findings Stay Inside Exp5746-Exp5753
+
+**Given** a post-marker source is non-duplicate and sharpens an already planned
+Exp5746-Exp5753 experiment
+**When** the source is accepted
+**Then** the artifact and reference append record the source id, title, URL,
+existing target experiment, local substrate, exact authority boundary, Carnot
+hook, and falsifiable metric, while keeping `roadmap_change_required=false`,
+`benchmark_compute_claimed=false`, and all banned scopes closed.
+
+#### SCENARIO-REPORT-5744-BLOCKED-MARKER: Missing V513 Marker Fails Closed
+
+**Given** `research-references.md` lacks
+`V513-PLANNER-REFRESH-20260720-END`
+**When** the Exp5744 workflow runs
+**Then** it emits a blocked artifact, leaves references unchanged, sets
+`accepted_findings=[]`, records `planner_marker_found=false`, and keeps
+`roadmap_change_required=false`.
+
+#### SCENARIO-REPORT-5744-FIELD-PRINCIPLES: Every Source-Delta Field Is Annotated
+
+**Given** the Exp5744 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, `search_started_at_utc < search_finished_at_utc`,
+`bibliographic_elapsed_s` matches the timestamp delta within rounding, the
+checksum is populated and stable, and `honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5744)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5744 | Planned (`python/carnot/experiment_5744_v513_source_delta_ingestion.py`, `results/experiment_5744_v513_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5744_v513_source_delta_ingestion.py`) |
