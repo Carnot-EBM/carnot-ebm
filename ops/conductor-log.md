@@ -13816,3 +13816,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 04:10 UTC | Gated on Exp5734 and Exp5736: admit the sealed SOT | OK | 89 passed, 1 warning in 9.03s |
 | 2026-07-20 04:35 UTC | Profile the large-size Rust reversal and add a par | OK | Deliverable already exists in repo |
 | 2026-07-20 04:55 UTC | Gated on Exp5738 parity: measure a matched batched | OK | 151 passed, 1 warning in 24.56s |
+| 2026-07-20 05:12 UTC | Audit game-blind ARC action-effect primitives with | OK | 85 passed, 1 warning in 6.79s |
