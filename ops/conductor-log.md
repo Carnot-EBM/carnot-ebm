@@ -13827,3 +13827,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 07:29 UTC | Ingest post-V513 source deltas with honest bibliog | OK | 88 passed, 2 warnings in 8.78s |
 | 2026-07-20 07:51 UTC | Normalize the Exp5740 ARC causal gate without chan | OK | 89 passed, 1 warning in 9.55s |
 | 2026-07-20 08:12 UTC | Build a disjoint dual-receipt exact benchmark for  | OK | 87 passed, 1 warning in 10.11s |
+| 2026-07-20 08:14 UTC | Gated on Exp5746 readiness: measure SOTA proposal  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.b |
