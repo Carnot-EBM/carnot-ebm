@@ -3072,3 +3072,43 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   (operator-only) on this evidence. The exclusion decision (retire the object-history LIVE-PATH
   action_prior lineage vs keep it for a future world-model consumer) is operator-only; this entry is
   the falsification record, NOT an edit to `ops/exclusion_manifest.yaml`.
+
+### GAP-ARC-CLICK-SELECTION-5758: the winning object-click is unselectable within a dense single-pixel field — no perceptual salience feature discriminates it
+- status: open
+- evidence: `results/experiment_5758_click_ranking_fix_ab.json` (REQ-ARC-FCP-5758) + the motivating
+  attribution `results/experiment_5757_candidate_coverage_attribution.json` (REQ-ARC-FCP-5757). exp5757
+  localized Carnot's ONLY residual single-action gap to SELECTION/RANKING of object clicks (bucket c: 6
+  action-6 clicks that ARE generated + frame-changing but rank >= 12 of ~27-34; r11l x1, su15 x4). exp5758
+  diagnosed the frames and A/B-tested a fix: the low-ranked winning clicks are consistently VERY SMALL
+  objects (r11l's rank-22 winner is a single pixel area=1; su15's repeatedly-clicked winner is area=1
+  color=3; r11l's others area 4/12), and the shipped default salience `area*(1+1/(1+global_color_px))` is
+  AREA-DOMINATED so a 1-pixel target always loses to large decorative regions.
+- failure mode: an opt-in small-object-first reorder (`CARNOT_ARC_SMALL_OBJECT_FIRST`; small band area<=8
+  by colour-rarity first, then the proven salience order) was A/B-tested on the 11-game roster at budget=200
+  and is a clean NULL: both arms bank 1 level (lp85, incidental — headroom present), r11l/su15 stay at 0 in
+  BOTH arms (`r11l_su15_specifically_fixed: false`), search re-orders on 7/11 games but banks no extra level,
+  and search cost actually DROPS 931->807 states (no regression). The offline rank-shift is a WASH (0 of 2
+  decisive games reduce their low-rank count): promoting small objects reshuffles the single-pixel field
+  WITHOUT picking THE winning pixel, because the winner is outranked by many EQUAL-size, rarer-coloured
+  pixels — no monotonic-in-area (or rarity) formula surfaces it. This extends the two prior reorder nulls
+  (`CARNOT_ARC_TIER_SCHEDULE`/`proto_tier_ab.json` TIER_NULL_no_win, which front-loads MEDIUM-width objects
+  and EXCLUDES the 1x1 winners; exp4556's learned DiscriminativeVerifier `candidate_router`, no value on
+  colour-variant first-contact): STATIC PERCEPTUAL click ordering is not the binding constraint.
+- missing discriminator: a GOAL-CONDITIONED / LEARNED click discriminator that identifies THE
+  progress-making object among a field of perceptually-identical small objects — i.e. a signal keyed on the
+  object's ROLE in reaching the goal (predicted level-progress under a world model), not its static
+  appearance (area/colour-rarity/size-band, all of which are at chance here). This is the click-selection
+  specialisation of the world-model INDUCTION bottleneck exp5757's recommendation named (the deeper lever):
+  the winner is distinguished by what it DOES, which requires the induced action-effect/goal model, not the
+  frame alone.
+- candidate design: (a) consume a learned action-effect / goal-satisfaction prediction (the induced world
+  model) as the click SELECTOR inside the SCORED `E3AgentPolicy.plan_in_model` path (per ARC Live-Path
+  Reachability Discipline), so a click is ranked by predicted multi-step progress, not appearance; (b) a
+  per-object change-affordance memory keyed to goal-progress rather than mere frame-change (extends the
+  exp5732 `object_hash` signal past the exp5740/exp5756 frontier-bonus nulls); NOT another static perceptual
+  reorder (that class is now falsified across tier-schedule, learned-router, and small-object-first).
+- priority: medium — this is Carnot's ONLY measured residual single-action gap on the stalled roster, but
+  exp5758 shows it is a discriminating-SIGNAL absence (a verifier we NEED), not a ranking-formula bug, so
+  closing it is a world-model/goal-conditioned build, not a cheap salience tweak. Keep
+  `CARNOT_ARC_SMALL_OBJECT_FIRST` OFF (operator-only whether to flip); this entry is the falsification
+  record, NOT an edit to `ops/exclusion_manifest.yaml`.

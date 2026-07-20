@@ -114,6 +114,53 @@ def _tier_ordered_click_points(grid) -> list:
     return [(int(c["centroid"][0]), int(c["centroid"][1])) for c in comps_sorted]
 
 
+def _small_object_first_click_points(grid, *, small_area_max: int = 8) -> list[tuple[int, int]]:
+    """REQ-ARC-FCP-5758: surface TINY interactive targets ahead of large decoration.
+
+    Diagnosis (exp5757 attribution + exp5758 per-object dump): on the stalled games
+    the winning object-clicks are consistently very SMALL objects -- r11l's low-ranked
+    winner is a single pixel (area=1), su15's repeatedly-clicked winner is a single
+    pixel (area=1, color=3), r11l's other winners are area 4 and 12. The shipped default
+    orders object clicks by VISUAL SALIENCE = ``area * (1 + 1/(1 + global_color_pixels))``
+    which is AREA-DOMINATED: a 240-pixel decorative region (salience ~240) always outranks
+    a 1-pixel interactive target (salience ~1) regardless of colour rarity, so the winning
+    clicks sink to ranks 13-22 of ~27-34 candidates and rarely get tried within budget.
+
+    This orders object clicks in TWO bands so the tiny targets are NOT buried:
+      1. a SMALL band (object area <= ``small_area_max``) ordered by colour-rarity
+         (rarest colour first; larger-within-small breaks ties), tried FIRST;
+      2. every remaining object in the PROVEN salience order (large decorations last).
+
+    Pure reordering of the SAME candidate set (no new clicks, no dropped clicks) -- the
+    trajectory the explorer ultimately records is still a valid deterministic replay; it
+    just reaches the small-target clicks within a smaller budget. This is genuinely
+    DIFFERENT from ``CARNOT_ARC_TIER_SCHEDULE`` (that front-loads MEDIUM-width w,h in
+    [2,32] objects, which EXCLUDES the 1x1 winners here -- and it was already A/B-NULL,
+    results/proto_tier_ab.json) and from the area*rarity default (which buries them)."""
+    from collections import Counter
+
+    from carnot.agentic.arc_solver_kit import object_centric_digest
+
+    color_cells = Counter(int(v) for v in grid.flatten().tolist())
+    small: list[tuple[float, int, int, int]] = []  # (rarity_key, -area, x, y)
+    rest: list[tuple[float, int, int]] = []  # (-salience, x, y)
+    for comp in object_centric_digest(grid)["components"]:
+        cx, cy = comp["centroid"]
+        x, y = int(cx), int(cy)
+        area = int(comp["area"])
+        color = int(comp["color"])
+        gpc = color_cells.get(color, 0)
+        rarity = 1.0 / (1.0 + gpc)  # larger = rarer colour
+        if area <= small_area_max:
+            small.append((-rarity, -area, x, y))  # rarest first, larger-within-small first
+        else:
+            salience = area * (1.0 + rarity)
+            rest.append((-salience, x, y))
+    small.sort()
+    rest.sort()
+    return [(x, y) for _r, _a, x, y in small] + [(x, y) for _s, x, y in rest]
+
+
 def rich_action_candidates(
     frame: Any,
     max_click: int = 48,
@@ -168,6 +215,17 @@ def rich_action_candidates(
                 pts = (
                     _tier_ordered_click_points(grid) or None
                 )  # None -> fall back to the flat order
+            except Exception:
+                pts = None
+        # CARNOT_ARC_SMALL_OBJECT_FIRST=1 (REQ-ARC-FCP-5758) surfaces TINY interactive
+        # targets (single-pixel / area<=8 objects) ahead of the large decorative regions
+        # the area-dominated default salience buries them under -- the exp5757-diagnosed
+        # click-ranking gap on r11l/su15. Default off -> byte-identical to the proven order
+        # (the SUBMITTED agent is unchanged until an A/B greenlights it). A failure falls
+        # back to the flat order (no-regression).
+        if pts is None and os.environ.get("CARNOT_ARC_SMALL_OBJECT_FIRST") == "1":
+            try:
+                pts = _small_object_first_click_points(grid) or None
             except Exception:
                 pts = None
         if pts is None:
