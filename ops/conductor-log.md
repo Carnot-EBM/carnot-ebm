@@ -13813,3 +13813,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 03:09 UTC | Gated on Exp5733 readiness: build a sealed exact-a | OK | 85 passed, 1 warning in 10.66s |
 | 2026-07-20 03:32 UTC | Run non-cascading zero-gated KAN continuous self-l | OK | 88 passed, 1 warning in 14.11s |
 | 2026-07-20 03:53 UTC | Gated on Exp5735 safety: exercise typed CSL lifecy | OK | 90 passed, 1 warning in 10.04s |
+| 2026-07-20 04:10 UTC | Gated on Exp5734 and Exp5736: admit the sealed SOT | OK | 89 passed, 1 warning in 9.03s |
