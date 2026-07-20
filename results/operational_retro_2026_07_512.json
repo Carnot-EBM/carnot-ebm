@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.512",
+  "generated_at": "2026-07-20T05:42:51Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 244.5,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "Transition terminal .511 evidence, preserve retirements, and allocate .512",
+      "duration_minutes": 55.28,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Profile the large-size Rust reversal and add a parity-tested batched SamplerBack",
+      "duration_minutes": 45.63,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5733 readiness: build a sealed exact-attested SOTA proposal stream",
+      "duration_minutes": 24.7,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Run non-cascading zero-gated KAN continuous self-learning on the promoted exact ",
+      "duration_minutes": 23.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify a finite-choice proposal channel across the mandated SOTA GGUF families",
+      "duration_minutes": 22.72,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 244.5 minutes, with 6 compute-bound. The longest recorded compute-bound task was 55.28 minutes; the locked task-conditioned indicator reports no GPU-idle condition during compute-bound work.",
+  "bottlenecks_identified": [
+    "The compute-bound transition, evidence-preservation, and allocation task formed the largest recorded long tail at 55.28 minutes, but the supplied timing receipt has no phase breakdown, so its runtime cause cannot be assigned.",
+    "The parity-tested batched SamplerBack synthesis task was second-longest overall at 45.63 minutes; its synthesis-only classification makes GPU inactivity expected, and the supplied evidence does not show whether profiling, coding, parity testing, or artifact finalization dominated.",
+    "Three other compute-bound entries in the supplied slowest-five list took 24.7, 23.1, and 22.72 minutes; their labels identify gated proposal-stream, continuous-learning, and GGUF-family work, but the aggregate durations do not separate setup, model loading, compute, verification, or artifact finalization.",
+    "Per-task accelerator efficiency cannot be quantified because the GPU snapshot is not correlated with experiment intervals; the locked idle-on-compute indicator is false.",
+    "No supplied evidence identifies a compute-bound task that loaded 2+ models in parallel, so no DualGPURunner selection failure can be established."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic per-phase timings for setup, gate waiting, model loading, compute, verification, and artifact finalization in every experiment receipt.",
+    "Attach task-scoped GPU telemetry to compute-bound receipts, including the sampling window, device utilization, process-to-model mapping, and selected runner.",
+    "Declare expected model concurrency before launch and select DualGPURunner only when 2+ models are actually loaded in parallel; keep single-model jobs on one GPU.",
+    "Cache and incrementally assemble terminal evidence, retirement state, and milestone allocation inputs, then use phase receipts to verify whether this shortens the 55.28-minute transition path."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument every experiment with phase-level timing receipts so the next long task has an attributable cause.",
+    "Add incremental, cached assembly for transition evidence and allocation inputs, targeting the longest recorded compute-bound workflow.",
+    "Correlate GPU telemetry and model concurrency with each compute task, automatically choosing DualGPURunner only for declared parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective can rank the slow paths but cannot explain them because milestone evidence aggregates each experiment into one duration and provides only a terminal GPU snapshot. Task-correlated phase and accelerator receipts are prerequisites for a defensible nonzero savings estimate next milestone."
+}

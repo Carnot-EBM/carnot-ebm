@@ -5943,3 +5943,9 @@ The critical path for milestone .250:
 - theme: compute-heavy long-tail execution with incomplete task-correlated telemetry
 - key result: honest operational negative -- the longest compute-bound paths were the generalization gap sweep and cross-area reconciliation, but phase-level causes, task-correlated GPU efficiency, and any concurrent-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.512
+- exp_range: no data available this milestone
+- theme: transition-led compute runtime without phase-level attribution
+- key result: honest operational result -- compute work has a ranked long tail, but the task-conditioned evidence does not identify GPU idle or a parallel-model runner miss, and aggregate durations do not explain the slow phases
+- acceptance: no data available this milestone
