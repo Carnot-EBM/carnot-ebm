@@ -41827,3 +41827,110 @@ terminal prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5718 | Implemented (`python/carnot/experiment_5718_v511_source_delta_ingestion.py`, `results/experiment_5718_v511_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5718_v511_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5732: V512 Source Delta Ingestion Artifact
+
+The Exp5732 workflow SHALL perform a bounded source-delta check strictly after
+the `V512-PLANNER-REFRESH-20260719-END` marker and SHALL write
+`results/experiment_5732_v512_source_delta_ingestion.json`. It SHALL search
+2025-2026 sources for EBM verification/reasoning, neural CSPs, Ising ML,
+hallucination mitigation, KANs, constrained generation, hardware sampling, and
+continual constraint learning; SHALL also check OpenReview, Extropic, Semantic
+Scholar citation routes for EBT `2507.02092` and ARM-EBM `2512.15605`, Hugging
+Face Papers, GitHub discovery/trending, and Logical Intelligence; and SHALL
+deduplicate arXiv ids, titles, techniques, repositories, citations, and Carnot
+experiment hooks against the full local reference and completion history.
+
+Accepted findings SHALL be post-marker, non-duplicate, actionable inside
+Exp5733-Exp5741, and SHALL contain the target task, local substrate, exact
+authority boundary, and falsifiable metric. The workflow SHALL record duplicate,
+watch-only, inaccessible, and excluded findings separately. It SHALL reject any
+candidate that reopens free-form answer repair, JSON grammar, external
+generated-text scoring, token/logit semantic authority, model-weight writes,
+broad RL, PTRM generation, two-axis exchange, learned ARC value transfer,
+per-game adapters, or unsupported hardware speedups. It SHALL set
+`roadmap_change_required=true` and block for operator review if accepting a
+real source would require scope expansion. A no-op with zero accepted findings
+is a complete result. It SHALL declare
+`inference_substrate="web_and_bibliographic_search_only"` and SHALL set
+`benchmark_compute_claimed=false`.
+
+The artifact SHALL include required fields `field_principles`,
+`preconditions_checked`, `search_timestamp_utc`, `planner_marker`,
+`sources_checked`, `queries`, `accepted_findings`, `duplicate_findings`,
+`watch_only_findings`, `excluded_findings`, `semantic_scholar_status`,
+`extropic_status`, `logical_intelligence_status`, `huggingface_status`,
+`github_status`, `target_experiment_map`, `roadmap_change_required`,
+`references_updated`, `benchmark_compute_claimed`, `inference_substrate`,
+`reproducibility_checksum`, and `honest_verdict`. It SHOULD also record
+`planner_marker_found`, `source_link_checks`, `dedupe_corpus_checked`,
+`marker_checks`, `duplicate_checks`, `inaccessible_findings`,
+`closed_scope_review`, `duration_s`, `random_seed`, and `spec_refs` so the
+sweep remains auditable without rerunning public searches.
+
+Required field principles:
+
+- `field_principles`: principle "Explains every top-level artifact field so downstream readers know why the field exists."
+- `preconditions_checked`: principle "Records the instruction, spec, marker, and local ledger checks that bound the run."
+- `search_timestamp_utc`: principle "Anchors public-source freshness to an exact UTC time."
+- `planner_marker`: principle "Binds the search window to the post-V512 planner boundary."
+- `sources_checked`: principle "Makes source coverage reconstructable without trusting prose."
+- `queries`: principle "Makes search intent reconstructable without rerunning mutable indexes."
+- `accepted_findings`: principle "Accepted work must have a post-marker, local, falsifiable home."
+- `duplicate_findings`: principle "Already-indexed material stays visible but cannot create duplicate work."
+- `watch_only_findings`: principle "Non-local or non-executable material cannot support claims."
+- `excluded_findings`: principle "Closed scopes remain closed by explicit disposition."
+- `semantic_scholar_status`: principle "Citation-route access is reported honestly."
+- `extropic_status`: principle "Thermodynamic hardware access is bounded to what Carnot can execute."
+- `logical_intelligence_status`: principle "Kona/Aleph access is bounded to public context unless local receipts exist."
+- `huggingface_status`: principle "Secondary paper-feed status is separated from primary authority."
+- `github_status`: principle "Repository discovery is separated from executable local dependencies."
+- `target_experiment_map`: principle "Each accepted source must map to Exp5733-Exp5741 without changing ids or gates."
+- `roadmap_change_required`: principle "Scope expansion blocks for operator review instead of mutating the roadmap."
+- `references_updated`: principle "Reference-file mutation is declared and must be false for a no-op."
+- `benchmark_compute_claimed`: principle "Bibliographic search cannot claim benchmark compute."
+- `inference_substrate`: principle "The run used web and bibliographic search only."
+- `reproducibility_checksum`: principle "The stable artifact payload can be checked for drift."
+- `honest_verdict`: principle "The terminal result states complete or blocked without claim inflation."
+
+#### SCENARIO-REPORT-5732-NOOP: No Post-Marker Deltas Leave References Unchanged
+
+**Given** `research-references.md` contains the
+`V512-PLANNER-REFRESH-20260719-END` marker
+**And** public searches expose no post-marker source that is both
+non-duplicate and executable for existing Exp5733-Exp5741 work
+**When** the Exp5732 workflow runs
+**Then** it leaves `research-references.md` unchanged, records the dispositions
+in duplicate, watch-only, inaccessible, and excluded findings, sets
+`accepted_findings=[]`, sets `target_experiment_map=[]`, sets
+`references_updated=false`, keeps `roadmap_change_required=false`, sets
+`benchmark_compute_claimed=false`, declares
+`inference_substrate=web_and_bibliographic_search_only`, and emits a terminal
+complete no-op artifact.
+
+#### SCENARIO-REPORT-5732-BLOCKED-MARKER: Missing V512 Marker Blocks Mutation
+
+**Given** `research-references.md` lacks the
+`V512-PLANNER-REFRESH-20260719-END` marker
+**When** the Exp5732 workflow runs
+**Then** it leaves `research-references.md` unchanged, sets
+`planner_marker_found=false`, keeps `accepted_findings=[]`, keeps
+`roadmap_change_required=false`, and writes a terminal blocked artifact rather
+than appending an unanchored source block.
+
+#### SCENARIO-REPORT-5732-FIELD-PRINCIPLES: Every Artifact Field Is Annotated
+
+**Given** the Exp5732 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a `field_principles` entry,
+`planner_marker` is `V512-PLANNER-REFRESH-20260719-END`,
+`inference_substrate` is `web_and_bibliographic_search_only`,
+`benchmark_compute_claimed` is false, `search_timestamp_utc` is populated,
+`reproducibility_checksum` is populated, and `honest_verdict` has a terminal
+prefix.
+
+## Implementation Status (REQ-REPORT-5732)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5732 | Planned (`python/carnot/experiment_5732_v512_source_delta_ingestion.py`, `results/experiment_5732_v512_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5732_v512_source_delta_ingestion.py`) |

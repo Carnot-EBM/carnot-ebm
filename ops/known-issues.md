@@ -12651,4 +12651,55 @@ action needed). The capstone (E) should NOT discard the keep-value_weight=0 conc
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
 
+### 2026-07-19/20 (outer-loop, FIXED same session): conductor's failure-cleanup `git clean -fd` was deleting concurrent agents' untracked work
+
+**Incident.** `object-affordance-impl-agent` (running REQ-ARC-FCP-5732, an outer-loop-spawned
+implementation task, unrelated to any conductor task) reported mid-run that its untracked
+`experiment_5732_object_centric_click_affordance.py` vanished from disk — only the gitignored
+`.pyc` in `__pycache__` survived. The agent recovered by recreating the file from its own context
+and committing it immediately, so no real work was lost, but the mechanism was worth root-causing
+since it could just as easily hit an artifact/spec file with no surviving copy.
+
+**Root cause.** `scripts/research_conductor.py` had two failure-cleanup paths —
+`_run_operational_retrospective`'s failure branch and `research_step`'s self-heal-exhausted
+branch — that ran `git checkout .` (revert tracked changes) followed by
+`git clean -fd --exclude=.coverage*` (force-delete untracked files/dirs) to discard that specific
+operation's own partial changes. `git clean -fd` is REPO-WIDE and has no concept of "only the
+files this operation touched" — it deletes every untracked, non-gitignored file in the tree at the
+moment it runs. Since the conductor's own subprocess model and multiple outer-loop agents all
+share the same working tree concurrently (the whole day's session ran 6+ parallel agents), any
+untracked file another agent had mid-write at the exact moment a retro or self-heal attempt failed
+was silently, irrecoverably deleted — with zero relationship to what actually failed.
+
+**Why this wasn't already covered by the existing fix.** `research_step` already has a
+"Preserve any dirty state from previous interrupted runs by committing it" checkpoint block a few
+hundred lines earlier, whose own comment explicitly documents fixing this EXACT bug class for a
+different call site: *"Previous behavior (`git checkout -- .`) destroyed uncommitted experiment
+deliverables when `claude -p` was killed mid-run. Now we commit everything as a checkpoint so
+nothing is lost."* That fix was never rolled out to the retrospective-failure and
+self-heal-failure paths, which kept the old destroy-on-failure pattern (and made it worse by adding
+`git clean -fd`, which the original checkpoint fix didn't even need to touch since committing
+already covers untracked files via `git add -A`).
+
+**Fix (commit `174b31b28`).** Both failure paths now call the existing `git_commit_and_push`
+helper (`git add -A` + `git commit --no-verify`, the same no-stash-risk pattern already used
+elsewhere) instead of `git checkout .` + `git clean -fd`. A failed retro or self-heal attempt's
+partial state becomes a checkpoint commit, exactly like any other interrupted run — nothing is
+silently discarded, matching CLAUDE.md's Never-Stash-Commit-First discipline applied project-wide,
+not just at the one call site it already covered.
+
+**Deployment note.** The conductor is one long-lived process; editing the `.py` file on disk does
+NOT hot-reload (same class of gotcha as the 2026-07-19 stale-import entry above — Python caches
+imports for the life of the process). The conductor was restarted (`systemctl --user restart
+carnot-conductor.service`) immediately after landing the fix so it took effect same-session rather
+than waiting for the next natural restart, given the active data-loss risk to other in-flight
+agents' work.
+
+**Lesson for future conductor failure-cleanup logic.** Never add a repo-wide destructive git
+operation (`git clean`, `git checkout .`, `git reset --hard`) to any failure/abort path. The
+working tree is shared with concurrently-running outer-loop agents that have no way to signal
+"don't touch my files." Preserve via commit, always — the checkpoint-commit pattern already
+established in this file is the correct universal template for every failure-cleanup path, not
+just the one it currently covers.
+
 
