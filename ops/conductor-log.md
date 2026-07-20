@@ -13842,3 +13842,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 09:02 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |
 | 2026-07-20 09:04 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |
 | 2026-07-20 09:28 UTC | Gated on Exp5745 clean scalar gate: run generic pr | OK | 109 passed, 1 warning in 9.03s |
+| 2026-07-20 10:50 UTC | Reconcile .513 proposal, CSL, Rust, ARC, specifica | OK | 85 passed, 1 warning in 6.05s |
