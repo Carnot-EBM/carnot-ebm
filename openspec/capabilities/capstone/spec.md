@@ -2817,3 +2817,84 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5728 | Planned (`python/carnot/experiment_5728_v511_capstone_reconciliation.py`, `results/experiment_5728_v511_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5728_v511_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5731: The `.512` transition workflow
+  `exp5731-transition-v512` in
+  `python/carnot/experiment_5731_transition_v512.py` SHALL read every
+  expected Exp5717 through Exp5728 `.511` artifact, the same-range
+  Exp5717-Exp5728 result artifacts that are present in `results/`, the
+  conductor outcome log, `research-roadmap.yaml`, `research-roadmap-next.yaml`
+  when present, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+  `research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+  `ops/arc_solve_registry.yaml`. It SHALL write
+  `results/experiment_5731_transition_v512.json` without modifying
+  `research-roadmap.yaml`, `scripts/research_conductor.py`,
+  `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`. It SHALL
+  declare `inference_substrate=artifact_reconciliation_only` and SHALL NOT run
+  model inference, retry free-form answer repair, retry the epistemic ledger,
+  mutate model weights, edit the ARC registry, claim timing promotion, or claim
+  hardware speedup.
+- SCENARIO-CAPSTONE-5731: The artifact
+  `results/experiment_5731_transition_v512.json` must emit top-level fields
+  `field_principles`, `preconditions_checked`, `source_capstone_hash`,
+  `v511_task_verdicts`, `v511_conductor_outcomes`,
+  `answer_channel_ready`, `stream_ready`,
+  `continuous_self_learning_credited`, `rust_samplerbackend_ready`,
+  `rust_python_crossover_null`, `arc_live_levels`, `arc_oracle_levels`,
+  `arc_gap`, `arc_registry_delta`, `preserved_scopes`, `retired_scopes`,
+  `current_task_range`, `dependency_map`, `gate_map`, `timing_claimed`,
+  `hardware_speedup_claimed`, `inference_substrate`, `test_commands`,
+  `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. The
+  default `.512` transition must preserve Exp5719's root evidence exactly:
+  all three mandated GGUFs resolved, no qualified protocol, positive-control
+  parse rate `0.0`, `41` truncations, `82` missing answers, `10` repetitions,
+  and unauthenticated `cuda_offload_authenticated_score=0.0`. It must preserve
+  Exp5720 and Exp5722 gate skips, the missing Exp5721 lifecycle artifact,
+  Exp5718's adversarial duration flag, Exp5723's production
+  `SamplerBackend` readiness, Exp5724's `178` quality-matched pairs with null
+  consecutive large-size crossover and CPU-software-only timing boundary,
+  Exp5726's safe epistemic-ledger null, and Exp5727's development measurement
+  of `25` games, `4` live levels, `183` oracle levels, gap `179`, and no new
+  solve. It must set `current_task_range=exp5731-exp5742` only after scanning
+  results, roadmaps, scripts, tests, git history context, and outer-loop
+  artifacts for collisions, and its `dependency_map` and `gate_map` must not
+  depend on retired experiment IDs.
+- SCENARIO-CAPSTONE-5731-MISSING-MALFORMED: If an expected `.511` artifact is
+  missing or malformed, the workflow must still write the transition artifact,
+  list the affected path, keep every dependent promotion false, preserve the
+  missing Exp5721 lifecycle artifact as an absent upstream rather than
+  recreating it, and start `honest_verdict` with `blocked:` while preserving
+  unrelated completed/null evidence.
+- SCENARIO-CAPSTONE-5731-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "Every artifact field records why the field exists so downstream readers cannot detach a number from its scientific boundary.",
+  `preconditions_checked` = "Records source artifacts, roadmap state, and protected-file context before a transition claim is emitted.",
+  `source_capstone_hash` = "Binds the transition to the terminal Exp5728 capstone bytes instead of a rewritten summary.",
+  `v511_task_verdicts` = "Separates complete, blocked, gate-skipped, flagged, null, and missing .511 task outcomes before any .512 allocation.",
+  `v511_conductor_outcomes` = "Preserves conductor OK, FLAGGED, GATE_BLOCK, and missing states as operational evidence.",
+  `answer_channel_ready` = "Bare false preserves Exp5719's failed free-form protocol and blocks stream promotion.",
+  `stream_ready` = "Bare false preserves Exp5720's gate skip and prevents stream-dependent claims.",
+  `continuous_self_learning_credited` = "Bare false preserves the missing Exp5721 lifecycle evidence and blocked Exp5722 recovery gate.",
+  `rust_samplerbackend_ready` = "Bare true is scoped to Exp5723 production one-axis SamplerBackend integration only.",
+  `rust_python_crossover_null` = "Bare true preserves Exp5724's null consecutive large-size crossover.",
+  `arc_live_levels` = "Carries Exp5727 live reproduced-level count without treating it as new solve credit.",
+  `arc_oracle_levels` = "Carries the registry oracle denominator used to compute the generalization gap.",
+  `arc_gap` = "Carries the exact live/oracle gap so downstream ARC work targets the measured deficit.",
+  `arc_registry_delta` = "Bare zero blocks any new ARC solve credit in this transition.",
+  `preserved_scopes` = "Non-retired scopes remain usable only within their observed boundaries.",
+  `retired_scopes` = "Terminal failed or same-verdict scopes stay closed and narrowly named.",
+  `current_task_range` = "Allocates only exp5731-exp5742 after collision checks.",
+  `dependency_map` = "Current milestone dependencies are reconstructable and contain no retired experiment upstreams.",
+  `gate_map` = "Current milestone gates are explicit and contain no retired experiment upstreams.",
+  `timing_claimed` = "Bare false because this transition performs no benchmark timing.",
+  `hardware_speedup_claimed` = "Bare false because no hardware run or speedup claim occurs.",
+  `inference_substrate` = "artifact_reconciliation_only because the workflow reads artifacts and metadata only.",
+  `test_commands` = "Lists replayable verification commands.",
+  `test_exit_codes` = "Records observed command exits without converting failures to success.",
+  `reproducibility_checksum` = "Content-addresses the transition artifact after excluding the checksum field.",
+  and `honest_verdict` = "One-line terminal summary that preserves negative and null .511 evidence."
+
+## Implementation Status (REQ-CAPSTONE-5731)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5731 | Implemented (`python/carnot/experiment_5731_transition_v512.py`, `results/experiment_5731_transition_v512.json`) | Implemented (`tests/python/test_experiment_5731_transition_v512.py`) |
