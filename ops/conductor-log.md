@@ -13829,3 +13829,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 08:12 UTC | Build a disjoint dual-receipt exact benchmark for  | OK | 87 passed, 1 warning in 10.11s |
 | 2026-07-20 08:14 UTC | Gated on Exp5746 readiness: measure SOTA proposal  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.b |
 | 2026-07-20 08:16 UTC | Gated on Exp5746 readiness: measure SOTA proposal  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.b |
+| 2026-07-20 08:18 UTC | Gated on Exp5746 readiness: measure SOTA proposal  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.b |
+| 2026-07-20 08:20 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |
