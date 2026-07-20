@@ -30440,6 +30440,139 @@ and an `honest_verdict` beginning with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5734 | Planned (`python/carnot/experiment_5734_sota_exact_proposal_stream.py`, `results/experiment_5734_sota_exact_proposal_stream.json`) | Planned (`tests/python/test_experiment_5734_sota_exact_proposal_stream.py`) |
 
+### REQ-VERIFY-5746: Exact Proposal Utility Hard/Soft Benchmark
+
+The repository SHALL provide Exp 5746 at
+`python/carnot/experiment_5746_exact_proposal_utility_benchmark.py` and write
+`results/experiment_5746_exact_proposal_utility_benchmark.json` plus a sealed
+benchmark manifest at
+`results/experiment_5746_exact_proposal_utility_benchmark.instances.jsonl`
+without modifying `scripts/research_conductor.py`, without pushing, without
+live LLM inference, without an LLM judge, and without treating proposal order,
+text, token score, or wall-clock as correctness authority.
+
+Before dataset generation, Exp 5746 SHALL emit a preflight receipt that checks
+the required Python and Rust environments, exact solver availability and
+versions, free RAM and disk thresholds, and absence of experiment id or row-id
+collisions with Exp 5733/Exp 5734 artifacts. If a required exact solver is not
+available, the runner SHALL write a blocked terminal artifact with
+`benchmark_ready_score=0.0`, preserved diagnostics, and an `honest_verdict`
+starting with `blocked:` rather than fabricating labels.
+
+Exp 5746 SHALL deterministically generate at least 180 balanced held-out
+instances across `finite_domain_csp`, `weighted_maxsat`, `hard_soft_packing`,
+and `finite_state_planning`, with fixed seeds and a train/dev/science split
+manifest. Each instance SHALL seal the natural-language specification,
+canonical typed formulation, complete bounded candidate pool, hard constraints,
+soft objective, exact feasible set, exact optimum, solver-native candidate
+ordering, random permutation seed, random ordering, deterministic non-learned
+energy heuristic ordering, and independent manifest hashes before any
+downstream GGUF run is allowed.
+
+For every instance, Exp 5746 SHALL emit independent structure-side and
+solution-side receipts. The structure receipt SHALL prove that every declared
+variable, domain value, hard constraint, soft preference, and finite-state
+transition is represented in the canonical typed formulation and candidate
+domain. The solution receipt SHALL prove hard feasibility and soft-objective
+value for every candidate, not merely record solver exit success. Exact
+optimum receipts SHALL identify all optimal feasible candidates and the exact
+objective value. A stratified sample SHALL be double-checked by an independent
+enumeration validator, and any incomplete domain or validator disagreement
+SHALL block readiness.
+
+Exp 5746 SHALL include adversarial controls for omitted constraints, omitted
+candidates, duplicate candidates, infeasible-best-score rankings, shortcut
+answers, and objective-sign inversions. These controls SHALL be scored by the
+same receipt validators and SHALL be reported as detected controls rather than
+included as valid benchmark instances. Downstream metrics SHALL be preregistered
+before any GGUF run: top-1/top-k feasible discovery, nodes-to-first-valid,
+nodes-to-optimal, verifier calls, hard-violation count, normalized optimality
+gap, and wall-clock as descriptive only.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `preconditions_checked`, `spec_refs`,
+`generator_version`, `solver_versions`, `random_seeds`, `instance_count`,
+`family_counts`, `split_manifest`, `science_row_hashes`,
+`disjoint_from_v512_score`, `candidate_pool_receipts`,
+`structure_receipts`, `solution_receipts`, `hard_constraint_receipts`,
+`soft_objective_receipts`, `exact_optimum_receipts`, `baseline_orderings`,
+`adversarial_controls`, `candidate_domain_incomplete_count`,
+`structure_receipt_failure_count`, `solution_receipt_failure_count`,
+`validator_disagreement_count`, `benchmark_manifest_path`,
+`benchmark_manifest_hash`, `benchmark_ready_score`, `llm_inference_used`,
+`verifier_is_oracle`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. `llm_inference_used` SHALL be false.
+`verifier_is_oracle` SHALL be true, and `benchmark_ready_score` SHALL be
+`1.0` only when all required instances, split commitments, candidate domains,
+structure receipts, solution receipts, independent checks, adversarial controls,
+manifest hashes, preconditions, and v512 disjointness checks pass with zero
+failures.
+
+Required field principles:
+
+- `field_principles`: principle "every artifact field states the receipt boundary or preregistered metric it protects."
+- `preconditions_checked`: principle "records Python, Rust, solver, RAM, disk, and v512 disjointness checks before dataset generation."
+- `spec_refs`: principle "binds the artifact to REQ-VERIFY-5746 and SCENARIO-VERIFY-5746."
+- `generator_version`: principle "pins the deterministic benchmark generator implementation."
+- `solver_versions`: principle "pins primary and independent exact solver implementations and host tool versions."
+- `random_seeds`: principle "records dataset, split, permutation, and control seeds."
+- `random_seed`: principle "legacy scalar seed for methodology linters that do not unwrap random_seeds."
+- `model_specs`: principle "declares that no LLM model was invoked and names the exact offline generator instead."
+- `instance_count`: principle "records the held-out benchmark denominator."
+- `family_counts`: principle "proves balanced coverage across finite CSP, MaxSAT, packing, and planning families."
+- `split_manifest`: principle "seals train/dev/science separation and split row hashes."
+- `science_row_hashes`: principle "exposes the held-out science split commitment for future GGUF runs."
+- `disjoint_from_v512_score`: principle "blocks row or experiment collisions with Exp5733/Exp5734."
+- `candidate_pool_receipts`: principle "proves every bounded candidate pool is complete and duplicate-free."
+- `structure_receipts`: principle "proves every declared variable, domain, hard constraint, soft preference, and transition is represented."
+- `solution_receipts`: principle "proves feasibility and objective value for every candidate."
+- `hard_constraint_receipts`: principle "separates hard feasibility receipts from soft preference scoring."
+- `soft_objective_receipts`: principle "separates soft objective receipts from hard feasibility."
+- `exact_optimum_receipts`: principle "records exact feasible sets, optimum values, and optimal candidate ids."
+- `baseline_orderings`: principle "freezes solver-native, random, and deterministic energy-heuristic orderings before model use."
+- `adversarial_controls`: principle "records omitted-constraint, omitted-candidate, duplicate, infeasible-best, shortcut, and objective-sign control detection."
+- `candidate_domain_incomplete_count`: principle "blocks any incomplete finite candidate domain."
+- `structure_receipt_failure_count`: principle "blocks formulation-structure omissions independent of solver success."
+- `solution_receipt_failure_count`: principle "blocks candidate feasibility or objective receipt failures."
+- `validator_disagreement_count`: principle "blocks primary versus independent exact-validator disagreements."
+- `benchmark_manifest_path`: principle "points to the full sealed instance manifest."
+- `benchmark_manifest_hash`: principle "seals the full manifest bytes."
+- `benchmark_ready_score`: principle "strict benchmark-readiness scalar, not proposal accuracy."
+- `llm_inference_used`: principle "bare false proves no GGUF or other LLM run contaminated benchmark generation."
+- `verifier_is_oracle`: principle "bare true records exact validators as the only authority."
+- `test_commands`: principle "records the focused, coverage, full-suite, spec, adversarial, and root-clutter commands."
+- `test_exit_codes`: principle "records observed or preregistered zero exit codes for verification commands."
+- `reproducibility_checksum`: principle "hashes the artifact with its checksum field blanked."
+- `honest_verdict`: principle "terminal state starts complete: or blocked: and names the readiness boundary."
+
+### SCENARIO-VERIFY-5746: Held-Out Hard/Soft Utility Rows Have Dual Receipts
+
+Given the local Python/Rust environment and exact in-process solvers pass
+preflight, when Exp 5746 generates the held-out proposal-utility benchmark,
+then it writes 180 deterministic instances balanced 45/45/45/45 across the
+four required families, seals train/dev/science split hashes, writes a full
+manifest, reports no row-id collisions with Exp 5733/Exp 5734, and records
+complete candidate-pool, structure-side, solution-side, hard-feasibility,
+soft-objective, and exact-optimum receipts for every instance. The artifact
+sets `llm_inference_used=false`, `verifier_is_oracle=true`,
+`candidate_domain_incomplete_count=0`, `structure_receipt_failure_count=0`,
+`solution_receipt_failure_count=0`, `validator_disagreement_count=0`, and
+`benchmark_ready_score=1.0`.
+
+If preflight fails, a candidate is omitted or duplicated, a declared structure
+element is unrepresented, a selected hard-infeasible candidate receives best
+score, a shortcut row bypasses hard constraints, an objective sign inversion
+changes the optimum, a manifest hash does not replay, or primary and
+independent validators disagree, then Exp 5746 SHALL preserve the failure
+receipt, set `benchmark_ready_score=0.0`, and emit an `honest_verdict`
+beginning with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5746)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5746 | Implemented (`python/carnot/experiment_5746_exact_proposal_utility_benchmark.py`, `results/experiment_5746_exact_proposal_utility_benchmark.json`) | Implemented (`tests/python/test_experiment_5746_exact_proposal_utility_benchmark.py`) |
+
 ### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
 
 The repository SHALL provide Exp 5615 at
