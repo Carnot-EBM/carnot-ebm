@@ -13818,3 +13818,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 04:55 UTC | Gated on Exp5738 parity: measure a matched batched | OK | 151 passed, 1 warning in 24.56s |
 | 2026-07-20 05:12 UTC | Audit game-blind ARC action-effect primitives with | OK | 85 passed, 1 warning in 6.79s |
 | 2026-07-20 05:14 UTC | Gated on Exp5740 causal utility: harden one generi | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-au |
+| 2026-07-20 05:16 UTC | Gated on Exp5740 causal utility: harden one generi | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-au |
