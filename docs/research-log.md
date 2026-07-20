@@ -5949,3 +5949,9 @@ The critical path for milestone .250:
 - theme: transition-led compute runtime without phase-level attribution
 - key result: honest operational result -- compute work has a ranked long tail, but the task-conditioned evidence does not identify GPU idle or a parallel-model runner miss, and aggregate durations do not explain the slow phases
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.513
+- exp_range: exp5740-exp5745 (only IDs present in the authoritative timing data; the complete milestone range is not available)
+- theme: synthesis-heavy closeout with bounded compute-runtime attribution
+- key result: honest operational result -- the 81.7-minute synthesis reconciliation was the longest recorded path, while the only compute-bound top-five entry was the 21.23-minute dual-receipt benchmark; task-conditioned GPU idle is false, and no concurrent multi-model runner miss is established
+- acceptance: no data available this milestone
