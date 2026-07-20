@@ -12702,4 +12702,52 @@ working tree is shared with concurrently-running outer-loop agents that have no 
 established in this file is the correct universal template for every failure-cleanup path, not
 just the one it currently covers.
 
+### 2026-07-20 (outer-loop, UNRESOLVED — second, distinct file-loss incident, mechanism unknown)
+
+**Incident.** `candidate-coverage-attribution-agent` (running REQ-ARC-FCP-5757) reported its two
+untracked files (`python/carnot/experiment_5757_candidate_coverage_attribution.py` and the
+matching `results/` artifact) vanished between a confirmed-present read and the very next tool
+call, in the window ~10:40–10:50 EDT on 2026-07-20. It initially attributed this to the SAME
+`git clean -fd` bug fixed earlier that night (174b31b28) — a reasonable first inference from the
+symptom shape, but WRONG.
+
+**Why it is confirmed NOT the same bug.** The outer-loop session independently verified, before
+accepting the agent's diagnosis: (1) the conductor process running at the time of loss started at
+00:35 EDT, well AFTER both the fix commit (174b31b28) and the restart that loaded it (22:02 EDT
+the prior night) — the fixed code was active; (2) the new checkpoint-commit mechanism was
+observably firing correctly and repeatedly in the reflog throughout the incident window (4 times
+in the surrounding hour, each preserving real uncommitted work rather than deleting it); (3) a
+repo-wide re-audit found no OTHER `git clean`/`git checkout .`/`git reset --hard` call site
+anywhere in the codebase, in `scripts/research_conductor.py` or elsewhere.
+
+**What was ruled out on further investigation (by the affected agent, self-correcting its own
+initial diagnosis).** The agent later retracted its "same bug recurred" claim and investigated
+further: it ran zero git/rm/clean/checkout/reset/stash commands itself before the loss; the two
+external janitor scripts on this box (`~/.carnot/orphan-cleanup.sh`, a systemd timer that only
+reaps `/tmp/pytest-*` and stale >2h processes, and `scripts/root_clutter_sweep.py`, confirmed via
+direct read to iterate only `REPO.iterdir()` — repo ROOT level, non-recursive, never touching
+`python/carnot/` or `results/`) are both structurally incapable of reaching the deleted paths; the
+reflog shows no stash/checkout/clean operation anywhere in the loss window, only ordinary commits.
+It offered `python/carnot/experiment_5598_generator_size_multiseed_ab.py` surviving the same
+window as corroborating evidence of no blanket-deletion — **this specific piece of evidence was
+independently checked and found to be MISTAKEN**: that file was not untracked at the time: it was
+committed a week earlier (`1576f4dd1`, 2026-07-13), so it was never at risk from `git clean -fd`
+in the first place and doesn't actually test what the agent thought it tested. This correction
+does not overturn the broader retraction (the reflog absence-of-destructive-commands and the
+janitor-script scoping are independently verified and still hold) — it only means the "other
+untracked files survived" argument specifically should not be relied on as evidence.
+
+**Net honest status: unresolved.** Two specific files were genuinely deleted, uncommitted,
+outside any commit history, in a narrow ~10-minute window, by a mechanism neither the outer-loop
+audit nor the affected agent's own investigation could identify. The leading unconfirmed
+hypothesis (from the affected agent, not independently checked further this session) is a
+targeted deletion by another concurrently-running agent sharing the same working tree — several
+outer-loop agents were active on this repo simultaneously that night. No active systemic risk was
+found (the specific bug already fixed is confirmed inactive as a cause), and the conductor has
+since been stopped entirely at operator request for unrelated reasons, so this is not an
+in-progress threat as of this writing. **Mitigation adopted going forward:** `git add` immediately
+after `Write`-ing a new file, before any long-running step, so pre-commit's checkpoint/stash
+machinery has a chance to protect it regardless of the still-unknown mechanism. Re-open this entry
+if the pattern recurs with enough detail to actually pin down a cause.
+
 
