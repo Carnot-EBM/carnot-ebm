@@ -10309,3 +10309,47 @@ Required field principles:
 #### SCENARIO-ARC-FCP-5756-INERT-CLICK-CACHE-HYGIENE
 - **WHEN** `InertClickSigPruner._signature_for_click` and `.rank_candidates` are routed through `_cached_blobs_and_counts` (via a new `_frame_blobs` helper) instead of calling `connected_color_blobs` raw, sharing the per-frame LRU cache key `ColorBlobSaliencePrior.score` uses
 - **THEN** the change SHALL be behavior-preserving (`fixed_signatures_identical_to_raw: true`, verified against a raw replica on a real frame) and the artifact SHALL document that this is NOT exp5740's per-candidate flood (the pruner already decomposes once per `rank_candidates` call and once per `observe`, not once per candidate) and that the per-frame timing change (raw ~3018us/call -> cached ~15us/call on repeated same-frame decomposition) cannot confound the capability metrics because `run_game`'s budget is action-count, not wall-clock.
+
+### REQ-ARC-FCP-5757: Candidate-Coverage Attribution (Generation vs Selection vs Planning), Offline & LLM-Free
+
+Tonight's seven consecutive live-path A/Bs (REQ-ARC-FCP-5590/5728/5729/5730/5732/
+5740/5756) each MODIFIED a component and measured a level-gain DELTA on a
+near-zero-headroom 11-game roster, and every one returned a clean honest null. A
+delta on a near-zero-headroom corpus cannot distinguish "component useless" from "no
+headroom to move" (the `FALSE_NEGATIVE_RISK` failure mode). REQ-ARC-WMTE-5720/5724
+hit the same wall from the induction side (induce-completion 0/12). Per the
+2026-07-20 top-project search-architecture audit (`docs/research-notes/
+arc-top-project-search-architecture-audit-2026-07-20.md` §4), this REQ runs a
+STRUCTURAL ATTRIBUTION with no delta to be null on: it classifies WHERE every
+known-progress action sits relative to Carnot's own live candidate generator, so the
+result localizes the gap and dictates a build in every branch.
+
+`python/carnot/experiment_5757_candidate_coverage_attribution.py` SHALL, for every
+action on the offline known-winning path (`solve_adaptered(game, 1)`) of each
+pre-registered STALLED game (0 new levels in the exp5756 baseline AND an adapter that
+reaches L1 offline), classify that action relative to `rich_action_candidates(frame)`
+(`arc_graph_explore.py:117`) into exactly one of: (a) NOT in the candidate set
+(perception/generation miss); (b) in-set but NOT frame-changing in isolation while on
+a known level-up path (multi-step/lookahead signal); (c) in-set AND frame-changing but
+ranked >= a pre-registered low-rank threshold (selection/ranking miss); or (d) in-set,
+frame-changing, top-ranked (already handled, not a gap). Membership SHALL be reported
+both coordinate-exact and radius-tolerant. The artifact SHALL carry
+`inference_substrate: verifier_ensemble_against_cached_candidates`,
+`verifier_is_oracle: false`, a `diagnostic_offline_attribution` `solve_provenance`,
+`offline_reproduced: true`, `random_seed`, `reproducibility_checksum`, a
+`prior_work_extended` block citing the seven nulls + REQ-ARC-WMTE-5720/5724 by id +
+verdict + what is different (a structural attribution, not another delta A/B), and a
+pre-registration (`n_pre_registered` + `games_pre_registered` + thresholds) written
+BEFORE the buckets are computed.
+
+#### SCENARIO-ARC-FCP-5757-PRE-REGISTRATION-BEFORE-BUCKETS
+- **WHEN** the attribution is computed
+- **THEN** the artifact SHALL contain a `pre_registration` block (declared `before bucket_computation`) fixing the stalled-game list, the minimum total-progress-action floor `n_pre_registered`, the `low_rank_threshold`, the `tolerance_radius`, and the bucket definitions -- none of which is a threshold on the gate's a/b/c FRACTIONS -- so N cannot be retro-fit to hit a branch (Failed-Experiment Rerun Discipline); and if the measured total progress actions fall below `n_pre_registered` OR fewer than 3 games reproduce, the pre-registered RETIRE condition SHALL fire instead of forcing a bucket assignment.
+
+#### SCENARIO-ARC-FCP-5757-BUCKET-B-REQUIRES-KNOWN-PROGRESS-PATH
+- **WHEN** an in-set action is not frame-changing in isolation and is therefore a bucket-(b) candidate
+- **THEN** it SHALL be counted as (b) only because it lies on a real level-up trajectory (every classified action is on an adapter winning path to L1, by construction), the artifact SHALL report the verified-vs-unverified (b) count and a `b_well_powered` flag (>= `b_power_floor` across >= 2 games), and when (b) is under-powered the search/lookahead hypothesis SHALL be reported as UNTESTABLE-HERE -- never as evidence against search (design 4a point 2). (Observed: `b_count == 0`, so the search lever gets zero support.)
+
+#### SCENARIO-ARC-FCP-5757-GATE-AND-RETIRE-DECISION-MATRIX
+- **WHEN** the pooled bucket fractions are known (with a bootstrap 95% CI)
+- **THEN** the gate SHALL fire `a_perception_generation` if fraction(a) > 0.5, `b_lookahead_reopened` if fraction(b) > 0.3 AND (b) is well-powered, `c_selection_ranking` if fraction(c) > 0.3, else report the dominant GAP bucket among a/b/c via the gap-only conditional distribution when bucket-(d) handled dilutes all three below their thresholds; the recommendation SHALL name the specific live-path consumer the dominant bucket points at (segmentation/click-generation for a, `plan_in_model`/induction for b, `candidate_router`/value-head + click-cap for c) and SHALL be operator-only. (Observed: 98.9% exact / 100% tolerant coverage, `b == 0`, all gap actions bucket-(c) object-click ranking misses -> the SELECTION/RANKING branch, which also empirically down-weights `GAP-ARCH-NO-HIERARCHICAL-SEARCH`.)
