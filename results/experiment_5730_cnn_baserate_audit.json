@@ -59,7 +59,7 @@
     },
     "within_action_floor": 0.55
   },
-  "duration_s": 403.309,
+  "duration_s": 427.705,
   "exp4547_reported_cnn_held_out_delta_auroc": 0.7092359400538687,
   "experiment": "experiment_5730_cnn_baserate_audit",
   "false_negative_risk_checked": true,
@@ -73,6 +73,7 @@
     "frame_adds_over_action_id": "THE HEADLINE -- mean cnn_auroc minus the action-id base rate. Near-zero/negative means the CNN AUROC is a per-action-type base rate, NOT frame-content discrimination.",
     "honest_verdict": "terminal prefix; complete: base-rate mirage (frame adds ~0, no robust within-action signal across seeds) matching exp5727, OR complete: a head carries robust learned signal.",
     "inference_substrate": "verifier_ensemble_against_cached_candidates -- trains/scores a small CPU CNN against cached replay transitions, no GGUF/LLM load (1s floor).",
+    "model_specs": "names the real compute substrate actually run -- the SmallFrameChangeCNN torch CNN (no LLM); required so a third party can re-run the exact model under audit.",
     "positive_control_passed": "the AUROC harness is functional (training reduces loss AND the machinery can produce above-chance AUROCs when structure exists) -- guards against a null from a broken harness.",
     "preconditions_checked": "records resources verified (torch, corpus cached) before the run.",
     "random_seed": "primary determinism seed (exp4547's 4547); full seed set in `seeds`.",
@@ -145,6 +146,20 @@
   "honest_verdict": "complete: cnn_held_out_auroc_is_action_id_base_rate_and_seed_luck_mirage_frame_adds_-0.010_no_robust_within_action_signal_matching_exp5727_null",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "missing_verifier_gaps": [],
+  "model_specs": [
+    {
+      "architecture": "3x Conv2d(3x3) feature stack -> click_head (1x1 conv per-pixel heatmap) + directional_head (adaptive-avg-pool -> Linear, 5 outputs)",
+      "device": "cpu",
+      "frame_size": 64,
+      "framework": "torch",
+      "hidden_channels": 8,
+      "name": "SmallFrameChangeCNN",
+      "no_llm": true,
+      "note": "no GGUF/LLM invoked; this IS the cached-candidate CNN scorer whose held-out AUROC is under audit (the substrate is verifier_ensemble_against_cached_candidates, not model inference).",
+      "num_colors": 16,
+      "trained_on": "balanced 4096-example subset of the current human-replay corpus, 1 epoch, Adam lr=0.01, retrained per seed"
+    }
+  ],
   "per_seed_results": [
     {
       "click_head_auroc_trained": 0.9180567213175909,
@@ -261,7 +276,7 @@
   },
   "random_seed": 4547,
   "recommendation": "NO robust, non-base-rate signal anywhere in the CNN. (1) frame_adds_over_action_id is ~0/negative (mean -0.010): the held-out AUROC does not beat the action-id base rate, same finding as exp5727's linear classifier. (2) The click_head's within-action AUROC is seed-UNSTABLE (min 0.44399, max 0.918057 across 5 seeds) and does not reliably beat its own untrained structural baseline (max 0.737648) -- any lone high seed is seed luck, not learned signal. (3) The directional_head is at/below chance. So the CNN is redundant with the memory term (PersistentAEM already encodes per-action-id base rates), which is mechanically why exp5729 saw the CNN never reorder search. Do NOT retrain SmallFrameChangeCNN on the same frame-only representation or tune its blend weight/gate again -- the ceiling is the representation, not the model, the weight, or the gate. The next lever per Missing-Verifier Gap Logging is a richer state-grounded representation (the exp5727 gap), not another pass on this scorer.",
-  "reproducibility_checksum": "sha256:b1ca6de6c1d621d73df93694769aa1f643a1f7cdaa39a4de1a277b3f5e744d1a",
+  "reproducibility_checksum": "sha256:582cfea3c86f58990dfb0183c5d051f4a7b63b96d020ac0c449dfd7438cdd18c",
   "requirements": [
     "REQ-ARC-FCP-5730"
   ],

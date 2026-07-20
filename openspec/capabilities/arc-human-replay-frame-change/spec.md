@@ -10021,3 +10021,82 @@ Required field principles:
 #### SCENARIO-ARC-FCP-5729-RESET-ON-LEVELUP
 - **WHEN** the reset-on-level-up gate config runs a game that banks a level, triggering `reset(reset_to_prior=True)`
 - **THEN** the gate SHALL clear its own agreement/contradiction/observed counters (giving the next level a fresh validation window) while an ordinary `reset()` without `reset_to_prior` SHALL NOT clear them, and the artifact SHALL report that on a roster where no game reaches a 2nd level this config is byte-identical to baseline (the mechanism is correct but has no lever to pull), never fabricating a difference.
+
+### REQ-ARC-FCP-5730: CNN Held-Out AUROC Action-ID-Base-Rate + Seed-Robustness Audit
+
+exp5729 localized the live-search inertness of the `SmallFrameChangeCNN`-backed
+action-effect scorer to the scorer's OWN discriminative quality (loosening the
+`GroundTruthValidatedFrameChangeScorer` gate turned it on ~27,000 times on
+`lp85` yet search was byte-identical). `SmallFrameChangeCNN` has a prior
+held-out evaluation in exp4547 (`cnn_held_out_delta_auroc = 0.7092`), but that
+number is compared only against a HARDCODED chance constant (0.5) on a ~95%-
+"changed"-skewed held-out set -- never against an action-id-only base-rate
+control. exp5727 found that exactly this control refuted the apparent signal of
+a DIFFERENT (linear `cross_game_features_v3`) classifier on the same
+action-effect target (`frame_adds_over_action_id = -0.039`: the "signal" was a
+per-action-type base rate, not frame content). This REQ applies exp5727's
+control to the CNN.
+
+`python/carnot/experiment_5730_cnn_baserate_audit.py` SHALL IMPORT exp4547's
+corpus/split/training building blocks verbatim (not re-implement them), and
+SHALL (a) re-measure `cnn_held_out_delta_auroc` on the current corpus (the
+human-replay corpus was regenerated ~11.8x larger since exp4547, so exp4547's
+0.7092 is CITED as the prior-corpus number, not reproduced), (b) add an
+ACTION-ID-ONLY baseline (per-action-id empirical `changed` rate from TRAIN,
+Laplace-smoothed, applied to HELDOUT) scored through the SAME `binary_auroc`
+helper and report `frame_adds_over_action_id = cnn_auroc - action_id_only_auroc`
+(exp5727's naming/sign convention), and (c) probe WITHIN-ACTION-ID
+discrimination for the `click_head` (action_id==6 fixed, per-pixel) and the
+`directional_head` (each action id 1..5 fixed, per-frame) where the action-id
+base rate is constant and cannot explain any lift. Because a single CNN training
+run is stochastic, every within-action-id number SHALL be reported ACROSS >=5
+seeds (mean/min/max/std) against a per-seed UNTRAINED-CNN structural baseline; a
+head SHALL be declared to carry a real learned signal ONLY if its WORST seed
+clears the 0.55 floor AND beats its untrained baseline. A `prior_work_extended`
+block SHALL cite exp4547, exp4568, exp5727, exp5728, and exp5729 by id + verdict.
+
+**RESOLUTION (2026-07-19).** Ran cleanly across 5 seeds on the current corpus
+(165,542 examples, 31,687 held-out trainable). `positive_control_passed: true`
+(training reduced loss; the AUROC machinery reaches 0.918 when structure aligns).
+The CNN carries NO robust, non-base-rate signal:
+
+- **Base-rate mirage.** `action_id_only_auroc = 0.549` is HIGHER than the CNN's
+  mean `cnn_held_out_delta_auroc = 0.539` (per-seed 0.485..0.576), so
+  `frame_adds_over_action_id = -0.010` mean (range -0.064..+0.027, std 0.032) --
+  near-zero/negative, the SAME finding as exp5727's linear classifier (-0.039).
+  The held-out AUROC is the trivial per-action-type base rate, not frame content.
+- **The apparent click_head win was seed luck.** During scoping, seed 4547 alone
+  gave a click_head within-action AUROC of 0.918 (N=2973; 2553 changed / 420
+  no-op) -- in isolation a strong positive. Across 5 seeds it is `min 0.444,
+  max 0.918, mean 0.570`, and the UNTRAINED (random-init) structural baseline is
+  actually HIGHER on average (`mean 0.580`): training does not reliably add click
+  discrimination over random weights. `click_head_robust_learned_signal: false`.
+- **The directional_head is at/below chance.** Trained within-action
+  `mean 0.498, min 0.402, max 0.616`; `directional_head_robust_learned_signal:
+  false`.
+
+Verdict: `complete: cnn_held_out_auroc_is_action_id_base_rate_and_seed_luck_
+mirage_frame_adds_-0.010_no_robust_within_action_signal_matching_exp5727_null`.
+This closes the exp5590->5728->5729 chain: the CNN is redundant with the memory
+term (`PersistentAEM` already encodes per-action-id base rates), which is
+mechanically why loosening the blend weight (exp5728) and the gate (exp5729)
+banked no levels. Recommendation (operator-only): do NOT retrain
+`SmallFrameChangeCNN` on the same frame-only representation, nor re-tune its
+blend weight/gate -- the ceiling is the representation, not the model, weight, or
+gate. The next lever per Missing-Verifier Gap Logging is a richer state-grounded
+representation (the exp5727 gap), not another pass on this scorer.
+
+Required field principles:
+
+- `frame_adds_over_action_id`: principle "the headline -- mean cnn_auroc minus the action-id base rate; near-zero/negative means the held-out AUROC is a per-action-type base rate, not frame-content discrimination (guards the exp4547 0.709-vs-chance overclaim)."
+- `seed_robustness`: principle "a within-action AUROC is only a real learned signal if the WORST seed clears the floor AND beats the untrained structural baseline; a lone high seed is seed luck, not signal (the exact trap the Adversarial Verification cross-check rule guards)."
+- `click_head_within_action_discrimination`: principle "the one signal a per-action-type base rate structurally cannot explain (action_id fixed) -- reported across seeds vs an untrained control so a stochastic high value is not mistaken for a learned discriminator."
+- `positive_control_passed`: principle "the AUROC harness is functional (loss drops; machinery reaches above-chance when structure aligns) -- a null is informative only if the harness could have detected signal."
+
+#### SCENARIO-ARC-FCP-5730-BASE-RATE-CONTROL
+- **WHEN** the CNN's held-out `changed`-vs-`no-op` AUROC is measured on a held-out set that is ~91% "changed" and an action-id-only baseline (per-action-id empirical change rate from TRAIN) is scored on the SAME held-out examples through the SAME `binary_auroc` helper
+- **THEN** the artifact SHALL report `action_id_only_auroc` and `frame_adds_over_action_id = cnn_auroc - action_id_only_auroc`, and SHALL NOT claim the CNN carries frame-content signal when `frame_adds_over_action_id` is near-zero/negative (here -0.010 mean, action-id baseline 0.549 exceeding the CNN's 0.539) -- the held-out AUROC is attributed to the trivial per-action base rate, matching exp5727's linear-classifier finding.
+
+#### SCENARIO-ARC-FCP-5730-WITHIN-ACTION-ID-SEED-ROBUST
+- **WHEN** a within-action-id head (e.g. `click_head` with action_id fixed at 6) produces a high AUROC on one training seed (0.918 on seed 4547) but is re-measured across >=5 seeds against a per-seed untrained-CNN structural baseline
+- **THEN** the artifact SHALL report the trained AUROC distribution (mean/min/max) AND the untrained baseline distribution, and SHALL declare `..._robust_learned_signal: false` when the worst seed does not clear the 0.55 floor or does not beat the untrained baseline (here trained min 0.444 vs untrained mean 0.580) -- never headlining the lone lucky-seed value as evidence of a learned discriminator.
