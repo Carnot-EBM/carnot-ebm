@@ -23258,6 +23258,102 @@ production default enablement SHALL block `csl_lifecycle_ready_score`.
 |---|---|---|
 | REQ-LEARN-5736 | Planned (`python/carnot/experiment_5736_csl_lifecycle_conflict_rollback.py`, `results/experiment_5736_csl_lifecycle_conflict_rollback.json`) | Planned (`tests/python/test_experiment_5736_csl_lifecycle_conflict_rollback.py`) |
 
+## REQ-LEARN-5737: SOTA Exact Stream CSL Shadow Ingress
+
+The self-learning tier SHALL provide Exp 5737, a CPU-only shadow ingress that
+joins the sealed Exp 5734 exact-attested SOTA proposal stream with the qualified
+Exp 5735 zero-gated sidecar and Exp 5736 typed lifecycle. Exp 5737 MUST NOT run
+new LLM inference. It SHALL consume only the committed Exp 5734 prefix in
+chronological row-manifest order, exactly once per row, and SHALL leave model
+weights and production defaults unchanged.
+
+Exp 5737 SHALL validate all upstream gates and hash commitments before any
+shadow update: Exp 5734 readiness, row-manifest replay, channel hash,
+`stream_root_commitment`, prefix hash, suffix hash, split sizes, exact-validator
+versions, Exp 5735 ready score and controller/ledger commitments, and Exp 5736
+lifecycle ready score and rollback commitments. The ingress ledger SHALL record
+for every committed-prefix row: pre-label decision, model proposal, exact
+validator label, lifecycle operation, gate state, pre-update state hash, and
+post-update state hash.
+
+The headline arm SHALL learn only from exact-validator labels. It SHALL compare
+that arm against no-update, model-proposal-label, corrupted-order, and
+stale/conflict controls under preregistered arm configs. The model-proposal arm
+is diagnostic only and MUST NOT alter the protected controller. Stale or
+conflicting lifecycle events SHALL be rejected before commit. Rollback controls
+SHALL restore the exact pre-update state hash.
+
+The terminal artifact MUST be written to
+`results/experiment_5737_sota_stream_csl_shadow_ingress.json` and include the
+following top-level required fields with field principles: `field_principles`;
+`preconditions_checked`; `upstream_gate_receipts`; `stream_root_commitment`;
+`prefix_hash`; `suffix_hash`; `lifecycle_hash`; `validator_hashes`;
+`ingress_ledger_path`; `arm_configs`; `model_family_counts`;
+`constraint_family_counts`; `prelabel_decisions`; `operation_counts`;
+`suffix_improvement`; `prefix_retention_delta`; `unsafe_update_count`;
+`rollback_state_hash_matches`; `proposal_label_control_results`;
+`corrupted_order_results`; `model_weight_mutation`;
+`production_default_enabled`; `sota_csl_ingress_ready_score`;
+`verifier_is_oracle`; `inference_substrate`; `random_seeds`;
+`reproducibility_checksum`; and `honest_verdict`.
+`model_weight_mutation` SHALL be exactly `false`.
+`production_default_enabled` SHALL be exactly `false`.
+`verifier_is_oracle` SHALL be exactly `true`.
+`inference_substrate` SHALL equal
+`cpu_shadow_csl_on_attested_sota_stream`.
+
+`sota_csl_ingress_ready_score` SHALL be exactly `1.0` only when chronological
+exact-label learning improves the sealed suffix versus no-update, retains the
+committed prefix, accepts no unsafe update, restores every rollback hash,
+outperforms corrupted-order and model-proposal controls, validates every
+upstream hash/receipt, and performs no production or model-weight mutation.
+Otherwise it SHALL be `0.0` with a terminal `blocked:` verdict.
+
+### SCENARIO-LEARN-5737-CHRONOLOGICAL-INGRESS: Prefix Rows Are Consumed Once In Order
+
+**Given** the Exp 5734 row manifest replays to the recorded stream root,
+prefix hash, and suffix hash
+**When** Exp 5737 processes the committed prefix
+**Then** each prefix row SHALL appear in the ingress ledger exactly once in
+chronological order
+**And** each row SHALL include pre-label decision, model proposal, exact label,
+lifecycle operation, gate state, and pre/post state hashes.
+
+### SCENARIO-LEARN-5737-CONTROLS: Exact Labels Beat Diagnostic And Corrupted Controls
+
+**Given** exact-validator-label, no-update, model-proposal-label,
+corrupted-order, and stale/conflict arms share the same frozen stream split
+**When** suffix utility is measured after committed-prefix ingress
+**Then** exact-validator-label learning SHALL improve suffix accuracy versus
+no-update
+**And** it SHALL outperform model-proposal-label and corrupted-order controls
+without allowing the model-proposal arm to alter protected controller state.
+
+### SCENARIO-LEARN-5737-ROLLBACK: Stale, Conflict, And Rollback Controls Fail Closed
+
+**Given** stale predecessor hashes, conflicting labels, and rollback probes are
+injected after the exact-label prefix ingress
+**When** the lifecycle shadow controller evaluates those controls
+**Then** stale and conflicting events SHALL reject before commit
+**And** rollback SHALL restore the exact target state hash.
+
+### SCENARIO-LEARN-5737-RELEASE: Shadow Ingress Artifact Is Mechanically Gated
+
+**Given** the required artifact fields, field principles, upstream receipts,
+row-manifest replay, lifecycle hash, control results, rollback receipts, and
+immutability fields
+**When** Exp 5737 validates the artifact
+**Then** missing fields, bad principles, bad hashes, unsafe updates, suffix
+non-improvement, prefix regression, failed rollback, production enablement,
+model-weight mutation, or stale verdicts SHALL block
+`sota_csl_ingress_ready_score`.
+
+## Implementation Status (Exp 5737)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5737 | Planned (`python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py`, `results/experiment_5737_sota_stream_csl_shadow_ingress.json`) | Planned (`tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py`) |
+
 ## REQ-LEARN-5640: Opt-In FR-11 Shadow Adapter In Verify/Repair Path
 
 The verify/repair pipeline SHALL expose an opt-in, fail-closed FR-11 shadow

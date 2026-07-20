@@ -1,0 +1,461 @@
+{
+  "arm_configs": {
+    "chronological_exact_validator_label_updates": {
+      "label_source": "exp5734_exact_validator_label",
+      "lifecycle": "qualified_exp5736_shadow_remember_update",
+      "prefix_order": "chronological",
+      "protected_controller_mutation": false
+    },
+    "corrupted_order_control": {
+      "expected_to_fail": true,
+      "label_source": "exp5734_exact_validator_label",
+      "prefix_order": "reverse_chronological",
+      "protected_controller_mutation": false
+    },
+    "model_proposal_label_diagnostic": {
+      "diagnostic_only": true,
+      "label_source": "model_proposal_label",
+      "protected_controller_mutation": false
+    },
+    "no_update_control": {
+      "label_source": "none",
+      "lifecycle_updates": false,
+      "prediction_source": "sealed_model_proposal",
+      "protected_controller_mutation": false
+    },
+    "stale_conflict_control": {
+      "accepted_update_count": 0,
+      "label_source": "stale_or_conflicting_exact_event",
+      "protected_controller_mutation": false
+    }
+  },
+  "constraint_family_counts": {
+    "abstention": 13,
+    "contradiction": 14,
+    "finite_domain_arithmetic": 14,
+    "finite_state_reachability": 14,
+    "hard_soft_preference": 14,
+    "sat_csp": 14,
+    "shortcut_trap": 13
+  },
+  "corrupted_order_results": {
+    "arm": "corrupted_order_control",
+    "chronological_order_preserved": false,
+    "detected": true,
+    "exact_arm_outperformed": true,
+    "suffix_accuracy": 0.0
+  },
+  "exact_label_update_results": {
+    "accepted_update_count": 48,
+    "arm": "chronological_exact_validator_label_updates",
+    "learned_cycle": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ],
+    "prefix_accuracy": 1.0,
+    "suffix_accuracy": 1.0
+  },
+  "experiment": 5737,
+  "experiment_id": "experiment_5737_sota_stream_csl_shadow_ingress",
+  "family_model_strata": [
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "abstention",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.666667
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "abstention",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    },
+    {
+      "count": 4,
+      "exact_accuracy": 1.0,
+      "family": "contradiction",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.5
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "contradiction",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "finite_domain_arithmetic",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.666667
+    },
+    {
+      "count": 4,
+      "exact_accuracy": 1.0,
+      "family": "finite_domain_arithmetic",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    },
+    {
+      "count": 4,
+      "exact_accuracy": 1.0,
+      "family": "finite_state_reachability",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.75
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "finite_state_reachability",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "hard_soft_preference",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.666667
+    },
+    {
+      "count": 4,
+      "exact_accuracy": 1.0,
+      "family": "hard_soft_preference",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    },
+    {
+      "count": 4,
+      "exact_accuracy": 1.0,
+      "family": "sat_csp",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.75
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "sat_csp",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    },
+    {
+      "count": 3,
+      "exact_accuracy": 1.0,
+      "family": "shortcut_trap",
+      "model_family": "gemma-4-31b-it",
+      "proposal_accuracy": 0.666667
+    },
+    {
+      "count": 4,
+      "exact_accuracy": 1.0,
+      "family": "shortcut_trap",
+      "model_family": "qwen3-6-35b-a3b",
+      "proposal_accuracy": 0.0
+    }
+  ],
+  "field_principles": {
+    "arm_configs": "headline and control arms are explicit before scores",
+    "constraint_family_counts": "constraint-family strata from the attested stream remain visible",
+    "corrupted_order_results": "order-corruption control proves chronology matters",
+    "exact_label_update_results": "headline-arm utility is inspectable",
+    "experiment": "numeric identifier prevents artifact ambiguity",
+    "experiment_id": "stable identifier prevents artifact ambiguity",
+    "family_model_strata": "family/model utility strata are inspectable",
+    "field_principles": "every field explains why it exists",
+    "first_changed_decisions": "first decision changes are auditable",
+    "honest_verdict": "terminal status starts with complete: or blocked:",
+    "inference_substrate": "no new LLM inference occurred",
+    "ingress_ledger_hash": "ledger rows are content-addressed",
+    "ingress_ledger_path": "row-level shadow decisions can replay",
+    "lifecycle_hash": "the qualified lifecycle artifact bytes are immutable",
+    "milestone": "milestone context is explicit",
+    "model_family_counts": "model strata from the attested stream remain visible",
+    "model_weight_mutation": "model weights remain unchanged",
+    "no_update_control_results": "no-learning baseline is inspectable",
+    "operation_counts": "prefix rows and lifecycle operations are counted mechanically",
+    "preconditions_checked": "missing upstream, stream, split, lifecycle, controller, or validator evidence blocks the run",
+    "prefix_hash": "the committed learner-visible prefix is sealed before ingress",
+    "prefix_retention_delta": "committed-prefix retention is bounded",
+    "prefix_row_count": "the committed-prefix denominator is explicit",
+    "prelabel_decisions": "pre-update decisions are measured before exact labels are applied",
+    "production_default_enabled": "shadow ingress is not a production default",
+    "proposal_label_control_results": "model proposals stay diagnostic and non-authoritative",
+    "random_seeds": "deterministic seeds make controls replayable",
+    "reproducibility_checksum": "artifact bytes replay",
+    "result_path": "result location is explicit",
+    "rollback_receipts": "rollback targets and restored hashes are visible",
+    "rollback_state_hash_matches": "rollback restores exact state hashes",
+    "run_date": "run date is concrete",
+    "schema": "schema names the artifact contract",
+    "session_count": "the N for percentage-point claims is explicit",
+    "sota_csl_ingress_ready_score": "downstream readiness is mechanical",
+    "source_file_checksums": "artifact traces to source bytes",
+    "source_files": "artifact traces to source files",
+    "spec_refs": "OpenSpec anchors are visible",
+    "stale_conflict_control_results": "stale and conflicting lifecycle controls are explicit",
+    "stream_root_commitment": "the SOTA stream root is inherited exactly from Exp5734",
+    "suffix_hash": "the untouched evaluation suffix is sealed before outcome measurement",
+    "suffix_improvement": "prospective held-out utility is measured against no-update",
+    "suffix_row_count": "the sealed-suffix denominator is explicit",
+    "task_id": "task identifier links conductor work to evidence",
+    "test_commands": "verification commands are recorded",
+    "unsafe_update_count": "exact safety is scalar",
+    "upstream_artifact_hashes": "source artifacts are content-addressed",
+    "upstream_gate_receipts": "Exp5734, Exp5735, and Exp5736 gates are checked before shadow ingress",
+    "validator_hashes": "exact validator and controller code/receipts are content-addressed",
+    "verifier_is_oracle": "exact validator circularity is declared"
+  },
+  "first_changed_decisions": {
+    "corrupted_order": {
+      "after_label": "F",
+      "arm": "corrupted_order_control",
+      "before_label": "A",
+      "exact_label": "A",
+      "row_id": "stream-048-shortcut-trap-qwen3-6-35b-a3b",
+      "sequence_index": 48,
+      "suffix_index": 0
+    },
+    "exact_label_updates": {
+      "after_label": "B",
+      "arm": "chronological_exact_validator_label_updates",
+      "before_label": "D",
+      "exact_label": "B",
+      "row_id": "stream-049-finite-state-reachability-gemma-4-31b-it",
+      "sequence_index": 49,
+      "suffix_index": 1
+    },
+    "model_proposal_label": {
+      "after_label": "E",
+      "arm": "model_proposal_label_diagnostic",
+      "before_label": "A",
+      "exact_label": "A",
+      "row_id": "stream-048-shortcut-trap-qwen3-6-35b-a3b",
+      "sequence_index": 48,
+      "suffix_index": 0
+    }
+  },
+  "honest_verdict": "complete: sota_stream_csl_shadow_ingress_ready",
+  "inference_substrate": "cpu_shadow_csl_on_attested_sota_stream",
+  "ingress_ledger_hash": "sha256:cab4a909cb95b44c18dad15c8f55d31c9646695bee9c128b4ff631b168e425ca",
+  "ingress_ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5737_sota_stream_csl_shadow_ingress_ledger.jsonl",
+  "lifecycle_hash": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb",
+  "milestone": "2026.07.512",
+  "model_family_counts": {
+    "abstention": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 6,
+      "unsloth/gemma-4-31B-it-GGUF": 7
+    },
+    "contradiction": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 7,
+      "unsloth/gemma-4-31B-it-GGUF": 7
+    },
+    "finite_domain_arithmetic": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 7,
+      "unsloth/gemma-4-31B-it-GGUF": 7
+    },
+    "finite_state_reachability": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 7,
+      "unsloth/gemma-4-31B-it-GGUF": 7
+    },
+    "hard_soft_preference": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 7,
+      "unsloth/gemma-4-31B-it-GGUF": 7
+    },
+    "sat_csp": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 7,
+      "unsloth/gemma-4-31B-it-GGUF": 7
+    },
+    "shortcut_trap": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 7,
+      "unsloth/gemma-4-31B-it-GGUF": 6
+    }
+  },
+  "model_weight_mutation": false,
+  "no_update_control_results": {
+    "arm": "no_update_control",
+    "lifecycle_updates": false,
+    "prefix_accuracy": 0.416667,
+    "suffix_accuracy": 0.479167
+  },
+  "operation_counts": {
+    "accepted": 48,
+    "by_operation": {
+      "remember": 6,
+      "update": 42
+    },
+    "consumed_once": 48,
+    "rejected": 0,
+    "total": 48
+  },
+  "preconditions_checked": {
+    "all_passed": true,
+    "exp5734_artifact_valid": true,
+    "exp5734_ready_score": true,
+    "exp5734_row_manifest_replay": true,
+    "exp5735_artifact_valid": true,
+    "exp5735_controller_hash_present": true,
+    "exp5735_ledger_hash_present": true,
+    "exp5735_zero_gate_ready": true,
+    "exp5736_artifact_valid": true,
+    "exp5736_ledger_replay": true,
+    "exp5736_lifecycle_ready": true,
+    "exp5736_rollback_hash_match": true,
+    "model_weight_immutable_upstream": true,
+    "prefix_hash_valid": true,
+    "production_default_disabled_upstream": true,
+    "session_count_minimum": true,
+    "split_sizes_valid": true,
+    "stream_root_commitment_valid": true,
+    "suffix_hash_valid": true
+  },
+  "prefix_hash": "sha256:b5e5c98f1bb2061f24997275da5049ff3c597945538fe3abf6a149ab53fcd6b0",
+  "prefix_retention_delta": -0.583333,
+  "prefix_row_count": 48,
+  "prelabel_decisions": {
+    "accuracy": 0.916667,
+    "by_label": {
+      "A": 8,
+      "B": 8,
+      "C": 7,
+      "D": 10,
+      "E": 8,
+      "F": 7
+    },
+    "by_source": {
+      "learned_chronological_cycle": 42,
+      "proposal_fallback_before_cycle": 6
+    },
+    "correct_count": 44,
+    "total": 48
+  },
+  "production_default_enabled": false,
+  "proposal_label_control_results": {
+    "arm": "model_proposal_label_diagnostic",
+    "diagnostic_only": true,
+    "exact_arm_outperformed": true,
+    "protected_controller_mutated": false,
+    "suffix_accuracy": 0.333333
+  },
+  "random_seeds": {
+    "control_seed": 5737002,
+    "ingress_seed": 5737001,
+    "rollback_seed": 5737003,
+    "source_stream_seed": 5734001
+  },
+  "reproducibility_checksum": "sha256:e65698cfb61b4c0866dd6aed7556b0ed64a57c89d7b7d4f4ebcdf56d51348ae9",
+  "result_path": "results/experiment_5737_sota_stream_csl_shadow_ingress.json",
+  "rollback_receipts": [
+    {
+      "control": "rollback_known_bad_shadow_update",
+      "mutated_state_hash": "sha256:5df2f32b997d65ad5c9321865c20b0bbf2324b900eb48b1e3ebd044e9cd6c111",
+      "restored_state_hash": "sha256:b322cf80fb57af3abbb74737fbce086c9a9b471d6e784f7ce133a47ed28f343a",
+      "state_hash_match": true,
+      "target_state_hash": "sha256:b322cf80fb57af3abbb74737fbce086c9a9b471d6e784f7ce133a47ed28f343a"
+    }
+  ],
+  "rollback_state_hash_matches": true,
+  "run_date": "20260720",
+  "schema": "carnot.experiment_5737.sota_stream_csl_shadow_ingress.v1",
+  "session_count": 48,
+  "sota_csl_ingress_ready_score": 1.0,
+  "source_file_checksums": {
+    "openspec/capabilities/self-learning/spec.md": "sha256:49d474bf16175b3bede3f1ce2695436a84cf801bb69a7977bb57d5b853daf3fd",
+    "python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py": "sha256:96ca4b08e56559e4ca3797e93fb017be7a9d11a1032efcd29b6628fcfe8b2b4d",
+    "tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py": "sha256:902f7a502dbc159db340af56a55cac092ea77f00930c1efa04b2733916fe21cc"
+  },
+  "source_files": [
+    "python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py",
+    "tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py",
+    "openspec/capabilities/self-learning/spec.md"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5737",
+    "SCENARIO-LEARN-5737-CHRONOLOGICAL-INGRESS",
+    "SCENARIO-LEARN-5737-CONTROLS",
+    "SCENARIO-LEARN-5737-ROLLBACK",
+    "SCENARIO-LEARN-5737-RELEASE"
+  ],
+  "stale_conflict_control_results": {
+    "accepted_update_count": 0,
+    "arm": "stale_conflict_control",
+    "conflict_rejected": true,
+    "rejected_update_count": 2,
+    "stale_rejected": true,
+    "suffix_accuracy": 0.479167
+  },
+  "stream_root_commitment": "sha256:b98722650a94dc1a1534aac4272dd9ecb73fe7316ebedb0a1d36e4fd67c9cfd3",
+  "suffix_hash": "sha256:fa5148c10358f8a4a6f855d8a898015263fdc82e89875e0378563a081ad1e35c",
+  "suffix_improvement": 0.520833,
+  "suffix_row_count": 48,
+  "task_id": "exp5737-sota-stream-csl-shadow-ingress",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py -m pytest tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5737_sota_stream_csl_shadow_ingress.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "unsafe_update_count": 0,
+  "upstream_artifact_hashes": {
+    "exp5734_artifact": "sha256:6e495447bee03edcc3c8f200115739afd43d3b6cd188ba4d049bd4189fe6d778",
+    "exp5734_row_manifest": "sha256:6f3046355cb54b1755b324d6d59640b23470ebdbdff2662d6e63dc76e62faff1",
+    "exp5735_artifact": "sha256:0b0a76aed8549cdfba2be941ffe3836fd53edb5313c8f69fc42a4080c56d8b88",
+    "exp5736_artifact": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb"
+  },
+  "upstream_gate_receipts": {
+    "all_passed": true,
+    "exp5734": {
+      "artifact_hash": "sha256:6e495447bee03edcc3c8f200115739afd43d3b6cd188ba4d049bd4189fe6d778",
+      "qualified_channel_hash": "sha256:24171be73058819f6f7ab4916dce2a92f6db56f23ccf4c1b4f93fe127f9c2a00",
+      "ready_score": 1.0,
+      "row_manifest_hash": "sha256:6f3046355cb54b1755b324d6d59640b23470ebdbdff2662d6e63dc76e62faff1",
+      "stream_root_commitment": "sha256:b98722650a94dc1a1534aac4272dd9ecb73fe7316ebedb0a1d36e4fd67c9cfd3"
+    },
+    "exp5735": {
+      "artifact_hash": "sha256:0b0a76aed8549cdfba2be941ffe3836fd53edb5313c8f69fc42a4080c56d8b88",
+      "controller_versions_hash": "sha256:4ac33bf065bd7e620ad67121f8b65a657b6ec5baa247b7d5f9308b768c305c5e",
+      "function_preserving_insertion_score": 1.0,
+      "operation_ledger_hash": "sha256:3e9f956ddc7ef6ab61c6388716a3376698285dc2c16d8cb9e72778d495e5315e",
+      "ready_score": 1.0
+    },
+    "exp5736": {
+      "artifact_hash": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb",
+      "ledger_replay_equivalence": {
+        "all_invalid_operations_rejected": true,
+        "all_valid_operations_replayed": true,
+        "final_hash": {
+          "combined_hash": "sha256:5dbece498da739283522fe87a6f7720a0a6e3dcef4a0bc99eb519c33aa849b14",
+          "controller_hash": "sha256:04af68231add1bc351e5c69f036eb9f01645718aef57aad021a9052ffb27f8b2",
+          "ledger_hash": "sha256:a921a0a84ab162c589557a03c693801845bfedf1ff63dc5ace5a9d8133cb1e5e",
+          "state_hash": "sha256:fe2b021c06904ca8a00110984d8b5d27244c6be2d5ccd8e23ec940d8accd6d43"
+        },
+        "invalid_operation_rejection_count": 26,
+        "passed": true,
+        "transition_count": 74,
+        "valid_operation_replay_count": 48
+      },
+      "operation_ledger_hash": "sha256:3e01a043c366f52a37e7d46d9fda911d5715dbaa2c427c4c22acacadc9a9467d",
+      "ready_score": 1.0,
+      "rollback_state_hash_matches": true
+    }
+  },
+  "validator_hashes": {
+    "all_validated": true,
+    "exp5734_exact_validator_versions_hash": "sha256:90ec1e8a71ee3ff5b12e4e1ad0456834bfc76e3c18fe3fe503bf6c3971c2a77a",
+    "exp5734_module_hash": "sha256:f116273b3c3c399cba8d036b169616bbdcab4349ca7df385e435ac7f804e7d1a",
+    "exp5735_controller_versions_hash": "sha256:4ac33bf065bd7e620ad67121f8b65a657b6ec5baa247b7d5f9308b768c305c5e",
+    "exp5735_module_hash": "sha256:a651ea36ca591e7ee4eb7cd08664e543177d67f02f2d154d2e0bf3fc47ffc3e5",
+    "exp5736_module_hash": "sha256:b0c693aae7718175d136f3fe5c5f25140839729aeb3202f2cb51679f47daf0dc",
+    "exp5736_transition_schema_hash": "sha256:c8e4de4a83805754ffda0eb6175b3e5d0376ed50cf0c18d7ea40762bcac7bfb9"
+  },
+  "verifier_is_oracle": true
+}
