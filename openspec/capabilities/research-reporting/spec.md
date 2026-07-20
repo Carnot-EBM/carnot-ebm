@@ -41948,3 +41948,129 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5732 | Implemented (`python/carnot/experiment_5732_v512_source_delta_ingestion.py`, `results/experiment_5732_v512_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5732_v512_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5743: V513 Transition Locks Terminal V512 Evidence
+
+The Exp5743 workflow SHALL archive the terminal `.512` evidence from
+Exp5731-Exp5742, preserve positive, null, flagged, and gate-skipped outcomes
+without changing upstream artifacts, collision-check the active `.513` task
+range, and write `results/experiment_5743_transition_v513.json`. It SHALL read
+`AGENTS.md`, `CODEX.md`, `CLAUDE.md`, `research-program.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/conductor-log.md`,
+`research-complete.yaml`, `ops/exclusion_manifest.yaml`,
+`ops/arc_solve_registry.yaml`, and every expected terminal `.512` artifact from
+`results/experiment_5731_transition_v512.json` through
+`results/experiment_5742_v512_capstone_reconciliation.json`. If
+`research-roadmap-next.yaml` is absent because the conductor already activated
+`.513`, the workflow SHALL record the absence and SHALL NOT recreate the file.
+It SHALL NOT modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The transition SHALL preserve Exp5732's duration/adversarial flag exactly;
+SHALL treat Exp5733 and Exp5734 as parse-safe exact-authority evidence only;
+SHALL record 96 science rows, 53 proposal conflicts, zero validator
+disagreements, and the observed model-accuracy range without converting those
+figures into search utility; SHALL preserve Exp5735 and Exp5736 as safety
+evidence, including the parameter-matched control result where KAN suffix error
+is `0.146067` and MLP suffix error is `0.061798`; SHALL preserve Exp5738 batch
+readiness and Exp5739's terminal strict-10x null, 728 quality-matched pairs,
+one qualified large size, and 352 restart exclusions; SHALL preserve all seven
+Exp5740 causal effects; and SHALL describe Exp5741 as a conductor pre-gate skip
+caused by representation mismatch, not as a live run or ARC solve.
+
+The artifact SHALL include required fields `field_principles`,
+`preconditions_checked`, `source_capstone_hash`, `v512_task_verdicts`,
+`v512_conductor_outcomes`, `proposal_channel_ready`,
+`sota_proposal_stream_ready`, `continuous_self_learning_credited`,
+`batch_backend_ready`, `rust_batched_10x_ready`, `arc_registry_delta`,
+`arc_solve_credited`, `proposal_conflict_count`, `kan_suffix_error`,
+`mlp_suffix_error`, `restart_exclusion_count`, `arc_gate_schema_issue`,
+`completion_ledger_duplicate_blocks_preserved`, `current_task_range`,
+`dependency_map`, `gate_map`, `timing_claimed`,
+`hardware_speedup_claimed`, `inference_substrate`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+top-level field SHALL have a non-empty `field_principles` entry, and the
+transition-only artifact SHALL set `timing_claimed=false`,
+`hardware_speedup_claimed=false`, and
+`inference_substrate=artifact_reconciliation_only`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains every top-level artifact field so downstream readers know why the field exists."
+- `preconditions_checked`: principle "Records instruction, source, ledger, roadmap, gate, and protected-file checks before a transition claim is emitted."
+- `source_capstone_hash`: principle "Binds the transition to the terminal Exp5742 capstone bytes instead of a rewritten summary."
+- `v512_task_verdicts`: principle "Preserves complete, null, flagged, and gate-skipped `.512` task outcomes before `.513` allocation."
+- `v512_conductor_outcomes`: principle "Preserves conductor OK, FLAGGED, and GATE_BLOCK states as operational evidence."
+- `proposal_channel_ready`: principle "Readiness is limited to parse-safe finite-choice transport, not proposal utility."
+- `sota_proposal_stream_ready`: principle "The exact-attested stream is ready as transport only, not as a search improvement."
+- `continuous_self_learning_credited`: principle "Safe continuous self-learning mechanics are credited without claiming KAN superiority."
+- `batch_backend_ready`: principle "Batch backend readiness is semantic/distributional API evidence, not timing evidence."
+- `rust_batched_10x_ready`: principle "The strict 10x CPU software claim remains false after the terminal benchmark null."
+- `arc_registry_delta`: principle "No registry count may change during artifact reconciliation."
+- `arc_solve_credited`: principle "The gate-skipped live A/B cannot credit an ARC solve."
+- `proposal_conflict_count`: principle "Conflict count stays visible and cannot become a utility claim."
+- `kan_suffix_error`: principle "The KAN suffix error is carried for matched-control comparison."
+- `mlp_suffix_error`: principle "The parameter-matched MLP control remains visible to block a KAN superiority claim."
+- `restart_exclusion_count`: principle "Restart-mismatch exclusions stay visible and block strict 10x promotion."
+- `arc_gate_schema_issue`: principle "The gate skip is attributed to representation semantics without altering Exp5740 science."
+- `completion_ledger_duplicate_blocks_preserved`: principle "Historical duplicated completion blocks are preserved rather than rewritten."
+- `current_task_range`: principle "The `.513` task range is allocated only after collision checks."
+- `dependency_map`: principle "Current dependencies are auditable and do not depend on retired upstream chains."
+- `gate_map`: principle "Structured gates are explicit so skipped tasks can be interpreted correctly."
+- `timing_claimed`: principle "The transition reads artifacts only and makes no benchmark timing claim."
+- `hardware_speedup_claimed`: principle "Artifact reconciliation cannot claim hardware acceleration."
+- `inference_substrate`: principle "The run used artifact reconciliation only."
+- `test_commands`: principle "Verification commands are listed for replay."
+- `test_exit_codes`: principle "Observed verification exits are recorded without relabeling failures as passes."
+- `reproducibility_checksum`: principle "The stable artifact payload can be checked for drift."
+- `honest_verdict`: principle "The terminal result states complete or blocked without claim inflation."
+
+#### SCENARIO-REPORT-5743: V513 Transition Preserves Mixed V512 Outcomes
+
+**Given** the Exp5731-Exp5742 artifacts and conductor log are present
+**When** the Exp5743 workflow runs
+**Then** it emits `results/experiment_5743_transition_v513.json`, sets
+`proposal_channel_ready=true`, `sota_proposal_stream_ready=true`,
+`continuous_self_learning_credited=true`, `batch_backend_ready=true`,
+`rust_batched_10x_ready=false`, `arc_registry_delta=0`,
+`arc_solve_credited=false`, `proposal_conflict_count=53`,
+`kan_suffix_error=0.146067`, `mlp_suffix_error=0.061798`,
+`restart_exclusion_count=352`, `current_task_range=exp5743-exp5754`,
+`timing_claimed=false`, `hardware_speedup_claimed=false`, and
+`inference_substrate=artifact_reconciliation_only`.
+
+#### SCENARIO-REPORT-5743-DEPENDENCY-MAP: V513 Gates Stay Auditable
+
+**Given** the active roadmap contains Exp5743-Exp5754
+**When** the dependency and gate maps are built
+**Then** every current roadmap task appears, gated tasks expose their upstream
+field/op/value rows, no dependency or gate points to a retired upstream chain,
+and `research-roadmap.yaml` and `scripts/research_conductor.py` are reported
+unchanged.
+
+#### SCENARIO-REPORT-5743-ARC-GATE-SCHEMA: Exp5741 Is A Gate Skip, Not A Solve
+
+**Given** Exp5740 contains seven positive retained primitives but reports
+rejected canaries in `source_leak_count` and `game_identity_leak_count`, and
+stores `counterfactual_receipt_coverage` as an object
+**When** the transition records the ARC lane
+**Then** it preserves the seven causal effects, records the schema issue,
+keeps `arc_solve_credited=false`, keeps `arc_registry_delta=0`, and records
+Exp5741's `blocked_gate_check_failed` outcome without pretending a live A/B
+ran.
+
+#### SCENARIO-REPORT-5743-FIELD-PRINCIPLES: Every Transition Field Is Annotated
+
+**Given** the Exp5743 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, `completion_ledger_duplicate_blocks_preserved=true`,
+`reproducibility_checksum` is populated, and `honest_verdict` has a terminal
+prefix.
+
+## Implementation Status (REQ-REPORT-5743)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5743 | Planned (`python/carnot/experiment_5743_transition_v513.py`, `results/experiment_5743_transition_v513.json`) | Planned (`tests/python/test_experiment_5743_transition_v513.py`) |
