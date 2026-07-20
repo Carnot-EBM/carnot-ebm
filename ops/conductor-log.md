@@ -13835,3 +13835,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 08:37 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |
 | 2026-07-20 08:37 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |
 | 2026-07-20 08:39 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |
+| 2026-07-20 08:39 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |
