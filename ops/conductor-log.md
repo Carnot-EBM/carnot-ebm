@@ -13838,3 +13838,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 08:39 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |
 | 2026-07-20 08:41 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |
 | 2026-07-20 08:57 UTC | Localize and repair one-axis Rust batch restart mi | OK | 125 passed, 1 warning in 11.58s |
+| 2026-07-20 08:59 UTC | Gated on Exp5751 parity: run allocation-free Rust/ | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distrib |
