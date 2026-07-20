@@ -1,0 +1,664 @@
+{
+  "arc_causal_primitive_ready": false,
+  "arc_generic_primitive_live_ready": false,
+  "arc_registry_count_after": 183,
+  "arc_registry_count_before": 183,
+  "arc_registry_delta": 0,
+  "arc_solve_credited": false,
+  "artifact_metadata": {
+    "exp5731-transition-v512": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: v512 transition archived terminal .511 evidence; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; current_task_range=exp5731-exp5742",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5731_transition_v512.json",
+      "schema": "carnot.experiment_5731.transition_v512.v1",
+      "sha256": "sha256:b2950c958552cbcb6796b375a2beb11f0d35f7adcc987c32bc79936cb1236d82",
+      "status": "complete"
+    },
+    "exp5732-v512-source-delta-ingestion": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: accepted 3 non-duplicate actionable V512 source deltas; no roadmap ID, gate, benchmark, or hardware claim changed",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5732_v512_source_delta_ingestion.json",
+      "schema": "carnot.experiment_5732.v512_source_delta_ingestion.v1",
+      "sha256": "sha256:fb2f17ebb91ead2825f1480f21634d75bfb138bf7eae6086bae3a0e25c0ef7cf",
+      "status": "flagged"
+    },
+    "exp5733-sota-finite-choice-proposal-channel": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sealed_finite_choice_proposal_channel_qualified",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5733_sota_finite_choice_proposal_channel.json",
+      "schema": "carnot.experiment_5733.sota_finite_choice_proposal_channel.v1",
+      "sha256": "sha256:24171be73058819f6f7ab4916dce2a92f6db56f23ccf4c1b4f93fe127f9c2a00",
+      "status": "complete"
+    },
+    "exp5734-sota-exact-proposal-stream": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sealed_chronological_sota_exact_proposal_stream_ready",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5734_sota_exact_proposal_stream.json",
+      "schema": "carnot.experiment_5734.sota_exact_proposal_stream.v1",
+      "sha256": "sha256:6e495447bee03edcc3c8f200115739afd43d3b6cd188ba4d049bd4189fe6d778",
+      "status": "complete"
+    },
+    "exp5735-zero-gate-kan-continuous-self-learning": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: zero_gated_residual_spline_kan_csl_ready",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5735_zero_gate_kan_continuous_self_learning.json",
+      "schema": "carnot.experiment_5735.zero_gate_kan_continuous_self_learning.v1",
+      "sha256": "sha256:0b0a76aed8549cdfba2be941ffe3836fd53edb5313c8f69fc42a4080c56d8b88",
+      "status": "complete"
+    },
+    "exp5736-csl-lifecycle-conflict-rollback": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: csl_lifecycle_conflict_rollback_ready",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5736_csl_lifecycle_conflict_rollback.json",
+      "schema": "carnot.experiment_5736.csl_lifecycle_conflict_rollback.v1",
+      "sha256": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb",
+      "status": "complete"
+    },
+    "exp5737-sota-stream-csl-shadow-ingress": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_stream_csl_shadow_ingress_ready",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5737_sota_stream_csl_shadow_ingress.json",
+      "schema": "carnot.experiment_5737.sota_stream_csl_shadow_ingress.v1",
+      "sha256": "sha256:1d7ce562da7af6fff1ce725067fe75eae22c124520747d99edaf37466c1fe6b9",
+      "status": "complete"
+    },
+    "exp5738-one-axis-rust-batched-backend": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: one-axis sample_batch backend is semantically and distributionally ready; no timing, software speedup, hardware, FPGA, or TSU claim",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5738_one_axis_rust_batched_backend.json",
+      "schema": "carnot.experiment_5738.one_axis_rust_batched_backend.v1",
+      "sha256": "sha256:da591f5f8b930365141a64755d5f1e2d6f99b7e36b893e93f9a36906ba707dd4",
+      "status": "complete"
+    },
+    "exp5739-one-axis-batched-10x-crossover": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: terminal null; matched batched Rust/Python CPU evidence did not prove the strict consecutive larger-size 10x lower-bound rule",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5739_one_axis_batched_10x_crossover.json",
+      "schema": "carnot.experiment_5739.one_axis_batched_10x_crossover.v1",
+      "sha256": "sha256:fd80805dcf9da5a39801c55c8da5d7bd138b9ae22010258eb4be32b372e10352",
+      "status": "complete"
+    },
+    "exp5740-arc-game-blind-primitive-causal-audit": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: game_blind_primitive_causal_audit_positive_count_7_no_policy_or_registry_credit",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5740_arc_game_blind_primitive_causal_audit.json",
+      "schema": null,
+      "sha256": "sha256:c38b1f700a8c253c87ef69a90571836a94383f84c53fb7708b89a795650400e4",
+      "status": "complete"
+    },
+    "exp5741-arc-generic-primitive-live-ab": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5741_arc_generic_primitive_live_ab.json",
+      "schema": "blocked_gate_check_v1",
+      "sha256": "sha256:a531a63f1ffdeb721c591adad643dd8ff71772f1d881e790620d3825f85f8eda",
+      "status": "gate_skipped"
+    }
+  },
+  "batch_backend_ready": true,
+  "closed_scopes_reopened": false,
+  "conductor_outcomes": {
+    "exp5731-transition-v512": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 01:48 UTC | Transition terminal .511 evidence, preserve retire | OK | 86 passed, 1 warning in 16.09s |",
+      "outcome": "OK"
+    },
+    "exp5732-v512-source-delta-ingestion": {
+      "artifact_status": "flagged",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 02:19 UTC | Ingest post-V512 source deltas with duplicate and  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+      "outcome": "FLAGGED"
+    },
+    "exp5733-sota-finite-choice-proposal-channel": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 02:44 UTC | Qualify a finite-choice proposal channel across th | OK | 86 passed, 1 warning in 9.90s |",
+      "outcome": "OK"
+    },
+    "exp5734-sota-exact-proposal-stream": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 03:09 UTC | Gated on Exp5733 readiness: build a sealed exact-a | OK | 85 passed, 1 warning in 10.66s |",
+      "outcome": "OK"
+    },
+    "exp5735-zero-gate-kan-continuous-self-learning": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 03:32 UTC | Run non-cascading zero-gated KAN continuous self-l | OK | 88 passed, 1 warning in 14.11s |",
+      "outcome": "OK"
+    },
+    "exp5736-csl-lifecycle-conflict-rollback": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 03:53 UTC | Gated on Exp5735 safety: exercise typed CSL lifecy | OK | 90 passed, 1 warning in 10.04s |",
+      "outcome": "OK"
+    },
+    "exp5737-sota-stream-csl-shadow-ingress": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 04:10 UTC | Gated on Exp5734 and Exp5736: admit the sealed SOT | OK | 89 passed, 1 warning in 9.03s |",
+      "outcome": "OK"
+    },
+    "exp5738-one-axis-rust-batched-backend": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 04:35 UTC | Profile the large-size Rust reversal and add a par | OK | Deliverable already exists in repo |",
+      "outcome": "OK"
+    },
+    "exp5739-one-axis-batched-10x-crossover": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 04:55 UTC | Gated on Exp5738 parity: measure a matched batched | OK | 151 passed, 1 warning in 24.56s |",
+      "outcome": "OK"
+    },
+    "exp5740-arc-game-blind-primitive-causal-audit": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 05:12 UTC | Audit game-blind ARC action-effect primitives with | OK | 85 passed, 1 warning in 6.79s |",
+      "outcome": "OK"
+    },
+    "exp5741-arc-generic-primitive-live-ab": {
+      "artifact_status": "gate_skipped",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-20 05:18 UTC | Gated on Exp5740 causal utility: harden one generi | GATE_BLOCK | 3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-au |",
+      "outcome": "GATE_BLOCK"
+    }
+  },
+  "continuous_self_learning_credited": true,
+  "csl_lifecycle_ready": true,
+  "e2e_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5742_v512_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5742_v512_capstone_reconciliation.py -m pytest tests/python/test_experiment_5742_v512_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --include=python/carnot/experiment_5742_v512_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); print('research-roadmap.yaml YAML parse OK')\"",
+    ".venv/bin/pytest tests/python/test_roadmap_schema.py -q --no-cov -n 0",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    "bash scripts/validate-phase-gate.sh python/carnot/experiment_5742_v512_capstone_reconciliation.py",
+    ".venv/bin/python scripts/conductor_pre_flight.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5742_v512_capstone_reconciliation.json",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "e2e_exit_codes": {
+    ".venv/bin/coverage report --include=python/carnot/experiment_5742_v512_capstone_reconciliation.py --fail-under=100": null,
+    ".venv/bin/coverage run --include=python/carnot/experiment_5742_v512_capstone_reconciliation.py -m pytest tests/python/test_experiment_5742_v512_capstone_reconciliation.py -q --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/pytest tests/python/test_experiment_5742_v512_capstone_reconciliation.py -q --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python/test_roadmap_schema.py -q --no-cov -n 0": null,
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); print('research-roadmap.yaml YAML parse OK')\"": null,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5742_v512_capstone_reconciliation.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py": null,
+    ".venv/bin/python scripts/conductor_pre_flight.py": null,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": null,
+    ".venv/bin/python scripts/root_clutter_sweep.py": null,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": null,
+    "bash scripts/validate-phase-gate.sh python/carnot/experiment_5742_v512_capstone_reconciliation.py": null
+  },
+  "expected_task_ids": [
+    "exp5731-transition-v512",
+    "exp5732-v512-source-delta-ingestion",
+    "exp5733-sota-finite-choice-proposal-channel",
+    "exp5734-sota-exact-proposal-stream",
+    "exp5735-zero-gate-kan-continuous-self-learning",
+    "exp5736-csl-lifecycle-conflict-rollback",
+    "exp5737-sota-stream-csl-shadow-ingress",
+    "exp5738-one-axis-rust-batched-backend",
+    "exp5739-one-axis-batched-10x-crossover",
+    "exp5740-arc-game-blind-primitive-causal-audit",
+    "exp5741-arc-generic-primitive-live-ab"
+  ],
+  "experiment": "experiment_5742_v512_capstone_reconciliation",
+  "experiment_id": "exp5742-v512-capstone-reconciliation",
+  "field_principles": {
+    "arc_causal_primitive_ready": "records Exp5740 development-proxy causal primitives while denying live or registry credit when leakage gates fail.",
+    "arc_generic_primitive_live_ready": "true only from Exp5741 live A/B readiness; gate-blocked artifacts remain false.",
+    "arc_registry_count_after": "registry count after reconciliation, unchanged without live self-discovery evidence.",
+    "arc_registry_count_before": "registry baseline before any directly creditable Exp5741 live self-discovery update.",
+    "arc_registry_delta": "solve credit requires a positive reproduced live-agent-self-discovery registry delta.",
+    "arc_solve_credited": "bare false unless direct live_agent_self_discovery evidence beyond precheck exists.",
+    "batch_backend_ready": "true only from Exp5738 batched backend readiness and parity mismatch counts.",
+    "closed_scopes_reopened": "bare false confirms retired IDs were not reopened by dependencies.",
+    "conductor_outcomes": "conductor OK, FLAGGED, GATE_BLOCK, and fallback states are retained as operations evidence.",
+    "continuous_self_learning_credited": "credits Exp5735 and Exp5736 independently of the SOTA proposal branch.",
+    "csl_lifecycle_ready": "true only from Exp5736 typed lifecycle replay, rollback, and zero unsafe propagation evidence.",
+    "e2e_commands": "verification commands are replayable and include planning-only or blocked reasons where applicable.",
+    "e2e_exit_codes": "observed exits are recorded without laundering failures.",
+    "field_principles": "one-line reason for every required Exp5742 field.",
+    "flagged_artifacts": "flagged artifacts are quarantined from success credit while their existence remains visible.",
+    "gate_skip_receipts": "blocked gate artifacts keep their failed upstream fields instead of disappearing from the denominator.",
+    "hardware_speedup_claimed": "bare false because no GPU, FPGA, TSU, or board speedup is reconciled.",
+    "honest_verdict": "terminal summary starting with complete: or blocked:.",
+    "inference_substrate": "artifact_reconciliation_only because this capstone reads evidence only.",
+    "missing_artifacts": "missing expected deliverables stay visible and cannot promote.",
+    "model_weight_mutation": "bare false preserves immutable GGUF and sidecar boundaries.",
+    "ops_files_updated": "records stop-rule delegation instead of silently editing ops ledgers.",
+    "preconditions_checked": "source artifacts, roadmap state, registry state, conductor log, and protected-file checks are recorded before reconciliation.",
+    "preserved_scopes": "nonmatching techniques and successful branch capabilities remain available.",
+    "production_default_enabled": "bare false keeps CSL and proposal work out of production defaults.",
+    "proposal_channel_ready": "true only from Exp5733 ready score, receipt integrity, qualified flagship coverage, and clean status.",
+    "reproducibility_checksum": "content-addressed checksum catches silent capstone drift.",
+    "retirements_applied": "mechanical retirements are narrow and never retire successful upstream capabilities.",
+    "retirements_required": "same-verdict candidates are named only when current verdict and cited prior scope match.",
+    "rust_batched_10x_ready": "true only if Exp5739 proves the strict 10x rule; a timing null remains false.",
+    "software_speedup_claimed": "bare false unless the Exp5739 strict speedup gate passes.",
+    "solve_provenance_summary": "development proxies, gate skips, and live self-discovery are separated by task.",
+    "sota_csl_ingress_ready": "optional Exp5737 ingress readiness is independent of the Exp5735/Exp5736 CSL credit.",
+    "sota_proposal_stream_ready": "true only from Exp5734 stream ready score, commitments, zero missing rows, and zero validator disagreements.",
+    "spec_files_updated": "lists only OpenSpec files directly edited for this capstone.",
+    "task_artifact_hashes": "each expected task is bound to the exact bytes read, or to a missing/malformed state.",
+    "task_honest_verdicts": "terminal verdict text is copied from direct artifacts without reinterpretation.",
+    "task_statuses": "complete, flagged, blocked, gate-skipped, missing, malformed, and unknown statuses remain distinct.",
+    "timing_claimed": "true only for observed CPU timing benchmark evidence, not for readiness-only artifacts.",
+    "zero_gate_csl_ready": "true only from Exp5735 function-preserving zero-gate readiness and safety fields."
+  },
+  "flagged_artifacts": [
+    "results/experiment_5732_v512_source_delta_ingestion.json"
+  ],
+  "gate_skip_receipts": {
+    "exp5741-arc-generic-primitive-live-ab": {
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-audit.source_leak_count (actual=1 == expected=0)",
+      "gates_evaluated": [
+        {
+          "actual": 7,
+          "artifact_field": "positive_causal_primitive_count",
+          "expected": 1,
+          "op": ">=",
+          "passed": true,
+          "reason": "actual=7 >= expected=1",
+          "upstream": "exp5740-arc-game-blind-primitive-causal-audit"
+        },
+        {
+          "actual": 1,
+          "artifact_field": "source_leak_count",
+          "expected": 0,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=1 == expected=0",
+          "upstream": "exp5740-arc-game-blind-primitive-causal-audit"
+        },
+        {
+          "actual": 2,
+          "artifact_field": "game_identity_leak_count",
+          "expected": 0,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=2 == expected=0",
+          "upstream": "exp5740-arc-game-blind-primitive-causal-audit"
+        },
+        {
+          "actual": {
+            "candidate_count": 7,
+            "meets_minimum_n": true,
+            "minimum_positive_candidate_paired_replay_count": 322,
+            "paired_replay_count": 20759,
+            "trace_step_count": 9975
+          },
+          "artifact_field": "counterfactual_receipt_coverage",
+          "expected": 1.0,
+          "op": "==",
+          "passed": false,
+          "reason": "actual={'candidate_count': 7, 'meets_minimum_n': True, 'minimum_positive_candidate_paired_replay_count': 322, 'paired_replay_count': 20759, 'trace_step_count': 9975} == expected=1.0",
+          "upstream": "exp5740-arc-game-blind-primitive-causal-audit"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5741_arc_generic_primitive_live_ab.json"
+    }
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete: v512 reconciled; proposal_channel_ready=true; sota_proposal_stream_ready=true; continuous_self_learning_credited=true; batch_backend_ready=true; rust_batched_10x_ready=false; arc_registry_delta=0; arc_solve_credited=false",
+  "inference_substrate": "artifact_reconciliation_only",
+  "malformed_artifacts": [],
+  "milestone": "2026.07.512",
+  "missing_artifacts": [],
+  "model_weight_mutation": false,
+  "ops_files_updated": [
+    {
+      "path": "research-complete.yaml",
+      "reason": "stop_rule_delegated",
+      "updated": false
+    },
+    {
+      "path": "ops/status.md",
+      "reason": "stop_rule_delegated",
+      "updated": false
+    },
+    {
+      "path": "ops/changelog.md",
+      "reason": "stop_rule_delegated",
+      "updated": false
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "reason": "stop_rule_delegated",
+      "updated": false
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "reason": "stop_rule_delegated",
+      "updated": false
+    },
+    {
+      "path": "ops/exclusion_manifest.yaml",
+      "reason": "no_direct_retirement_required",
+      "updated": false
+    },
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "reason": "no_live_self_discovery_delta",
+      "updated": false
+    }
+  ],
+  "preconditions_checked": {
+    "dependency_retired_id_check": {
+      "retired_references": [],
+      "valid": true
+    },
+    "protected_files": {
+      "research-roadmap.yaml": {
+        "exists": true,
+        "modified_by_capstone": false,
+        "sha256": "sha256:ba867eff6fb76b5fde68edaf07ebe29c7298c51ded715a2df44fc3a63a39f79e"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "modified_by_capstone": false,
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      }
+    },
+    "registry_present": true,
+    "registry_reproducible_total_levels": 183,
+    "roadmap_milestone": "2026.07.512",
+    "roadmap_present": true,
+    "roadmap_task_count": 12,
+    "root_scratch_files_created": false,
+    "run_date": "2026-07-20",
+    "source_files": {
+      "AGENTS.md": {
+        "exists": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "exists": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+      },
+      "CODEX.md": {
+        "exists": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "exists": true,
+        "sha256": "sha256:574f64e8352520d4e4b9281e7176d5548238015731c4b506b4db1af885037fbc"
+      },
+      "ops/arc_solve_registry.yaml": {
+        "exists": true,
+        "sha256": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+      },
+      "ops/conductor-log.md": {
+        "exists": true,
+        "sha256": "sha256:d3426d9947d9b84413cfc8320a190d9bd18cd92e4a39416bc7c253605b8f3c0c"
+      },
+      "ops/e2e-test-plan.md": {
+        "exists": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "sha256": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2"
+      },
+      "research-complete.yaml": {
+        "exists": true,
+        "sha256": "sha256:ac5f7453ef69cc0be223ce9e4b9a6a35b00161f59a55f03f6975a4ea479a3d50"
+      },
+      "research-program.md": {
+        "exists": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "research-roadmap-next.yaml": {
+        "exists": false,
+        "sha256": null
+      },
+      "research-roadmap.yaml": {
+        "exists": true,
+        "sha256": "sha256:ba867eff6fb76b5fde68edaf07ebe29c7298c51ded715a2df44fc3a63a39f79e"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      }
+    }
+  },
+  "preserved_scopes": [
+    {
+      "boundary": "Exp5733 complete",
+      "scope": "finite_choice_proposal_channel"
+    },
+    {
+      "boundary": "Exp5734 complete",
+      "scope": "exact_sota_proposal_stream"
+    },
+    {
+      "boundary": "Exp5735 independent credit",
+      "scope": "zero_gated_kan_csl"
+    },
+    {
+      "boundary": "Exp5736 independent credit",
+      "scope": "typed_csl_lifecycle"
+    },
+    {
+      "boundary": "Exp5737 optional integration",
+      "scope": "sota_csl_shadow_ingress"
+    },
+    {
+      "boundary": "Exp5738 ready",
+      "scope": "batched_samplerbackend_contract"
+    },
+    {
+      "boundary": "Exp5739 null preserved",
+      "scope": "batched_10x_timing_null_evidence"
+    },
+    {
+      "boundary": "Exp5740 no registry credit",
+      "scope": "arc_causal_primitive_development_proxy"
+    },
+    {
+      "boundary": "only live_agent_self_discovery can credit",
+      "scope": "arc_live_attempts"
+    }
+  ],
+  "production_default_enabled": false,
+  "proposal_channel_ready": true,
+  "random_seed": 5742,
+  "reproducibility_checksum": "sha256:23d182aa8e554797a2dfca9279e25e20fef3fe783725b269b2b9bb4765076e7b",
+  "result_path": "results/experiment_5742_v512_capstone_reconciliation.json",
+  "retirements_applied": [],
+  "retirements_required": [],
+  "run_date": "2026-07-20",
+  "rust_batched_10x_ready": false,
+  "schema": "carnot.experiment_5742.v512_capstone_reconciliation.v1",
+  "software_speedup_claimed": false,
+  "solve_provenance_summary": {
+    "exp5740-arc-game-blind-primitive-causal-audit": {
+      "development_proxy_positive": true,
+      "game_identity_leak_count": 2,
+      "registry_modified": false,
+      "solve_provenance": "development_proxy",
+      "source_leak_count": 1,
+      "status": "complete"
+    },
+    "exp5741-arc-generic-primitive-live-ab": {
+      "gate_check_summary": "3 of 4 gate(s) failed; first failure: exp5740-arc-game-blind-primitive-causal-audit.source_leak_count (actual=1 == expected=0)",
+      "new_level_evidence": [],
+      "registry_delta": 0,
+      "solve_provenance": null,
+      "status": "gate_skipped"
+    }
+  },
+  "sota_csl_ingress_ready": true,
+  "sota_proposal_stream_ready": true,
+  "spec_files_updated": [
+    "openspec/capabilities/capstone/spec.md"
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5742",
+    "SCENARIO-CAPSTONE-5742",
+    "SCENARIO-CAPSTONE-5742-MISSING-MALFORMED",
+    "SCENARIO-CAPSTONE-5742-FIELD-PRINCIPLES"
+  ],
+  "task_artifact_hashes": {
+    "exp5731-transition-v512": "sha256:b2950c958552cbcb6796b375a2beb11f0d35f7adcc987c32bc79936cb1236d82",
+    "exp5732-v512-source-delta-ingestion": "sha256:fb2f17ebb91ead2825f1480f21634d75bfb138bf7eae6086bae3a0e25c0ef7cf",
+    "exp5733-sota-finite-choice-proposal-channel": "sha256:24171be73058819f6f7ab4916dce2a92f6db56f23ccf4c1b4f93fe127f9c2a00",
+    "exp5734-sota-exact-proposal-stream": "sha256:6e495447bee03edcc3c8f200115739afd43d3b6cd188ba4d049bd4189fe6d778",
+    "exp5735-zero-gate-kan-continuous-self-learning": "sha256:0b0a76aed8549cdfba2be941ffe3836fd53edb5313c8f69fc42a4080c56d8b88",
+    "exp5736-csl-lifecycle-conflict-rollback": "sha256:8c9b349656e0557c426d64cf1a81af87972031e1e44ae11c88bb40ae9691c2fb",
+    "exp5737-sota-stream-csl-shadow-ingress": "sha256:1d7ce562da7af6fff1ce725067fe75eae22c124520747d99edaf37466c1fe6b9",
+    "exp5738-one-axis-rust-batched-backend": "sha256:da591f5f8b930365141a64755d5f1e2d6f99b7e36b893e93f9a36906ba707dd4",
+    "exp5739-one-axis-batched-10x-crossover": "sha256:fd80805dcf9da5a39801c55c8da5d7bd138b9ae22010258eb4be32b372e10352",
+    "exp5740-arc-game-blind-primitive-causal-audit": "sha256:c38b1f700a8c253c87ef69a90571836a94383f84c53fb7708b89a795650400e4",
+    "exp5741-arc-generic-primitive-live-ab": "sha256:a531a63f1ffdeb721c591adad643dd8ff71772f1d881e790620d3825f85f8eda"
+  },
+  "task_honest_verdicts": {
+    "exp5731-transition-v512": "complete: v512 transition archived terminal .511 evidence; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; current_task_range=exp5731-exp5742",
+    "exp5732-v512-source-delta-ingestion": "complete: accepted 3 non-duplicate actionable V512 source deltas; no roadmap ID, gate, benchmark, or hardware claim changed",
+    "exp5733-sota-finite-choice-proposal-channel": "complete: sealed_finite_choice_proposal_channel_qualified",
+    "exp5734-sota-exact-proposal-stream": "complete: sealed_chronological_sota_exact_proposal_stream_ready",
+    "exp5735-zero-gate-kan-continuous-self-learning": "complete: zero_gated_residual_spline_kan_csl_ready",
+    "exp5736-csl-lifecycle-conflict-rollback": "complete: csl_lifecycle_conflict_rollback_ready",
+    "exp5737-sota-stream-csl-shadow-ingress": "complete: sota_stream_csl_shadow_ingress_ready",
+    "exp5738-one-axis-rust-batched-backend": "complete: one-axis sample_batch backend is semantically and distributionally ready; no timing, software speedup, hardware, FPGA, or TSU claim",
+    "exp5739-one-axis-batched-10x-crossover": "complete: terminal null; matched batched Rust/Python CPU evidence did not prove the strict consecutive larger-size 10x lower-bound rule",
+    "exp5740-arc-game-blind-primitive-causal-audit": "complete: game_blind_primitive_causal_audit_positive_count_7_no_policy_or_registry_credit",
+    "exp5741-arc-generic-primitive-live-ab": "blocked_gate_check_failed"
+  },
+  "task_statuses": {
+    "exp5731-transition-v512": "complete",
+    "exp5732-v512-source-delta-ingestion": "flagged",
+    "exp5733-sota-finite-choice-proposal-channel": "complete",
+    "exp5734-sota-exact-proposal-stream": "complete",
+    "exp5735-zero-gate-kan-continuous-self-learning": "complete",
+    "exp5736-csl-lifecycle-conflict-rollback": "complete",
+    "exp5737-sota-stream-csl-shadow-ingress": "complete",
+    "exp5738-one-axis-rust-batched-backend": "complete",
+    "exp5739-one-axis-batched-10x-crossover": "complete",
+    "exp5740-arc-game-blind-primitive-causal-audit": "complete",
+    "exp5741-arc-generic-primitive-live-ab": "gate_skipped"
+  },
+  "timing_claimed": true,
+  "validation_results": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5742_v512_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5742_v512_capstone_reconciliation.py -m pytest tests/python/test_experiment_5742_v512_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5742_v512_capstone_reconciliation.py --fail-under=100",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); print('research-roadmap.yaml YAML parse OK')\"",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_roadmap_schema.py -q --no-cov -n 0",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": "bash scripts/validate-phase-gate.sh python/carnot/experiment_5742_v512_capstone_reconciliation.py",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python scripts/conductor_pre_flight.py",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_5742_v512_capstone_reconciliation.json",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": null,
+      "status": "not_run"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": null,
+      "status": "not_run"
+    }
+  ],
+  "zero_gate_csl_ready": true
+}
