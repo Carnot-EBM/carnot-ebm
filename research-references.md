@@ -30169,3 +30169,78 @@ Execution-time sweep on 2026-07-20 after the V512 planner marker. Only non-dupli
 
 <!-- V512-EXECUTION-REFRESH-20260720-END -->
 
+## V513 Planner Refresh - 20260720
+
+This sweep was run after milestone `.512` completed. It searched arXiv first, then OpenReview,
+Hugging Face Papers, Semantic Scholar citation routes for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), GitHub trending/topic surfaces, Extropic writing, and Logical Intelligence's
+public Kona pages. Only non-duplicate findings that change an executable Carnot experiment are
+promoted below.
+
+### New actionable deltas
+
+- **Opt-Verifier: Unleashing the Power of LLMs for Optimization Modeling via Dual-Side
+  Verification** - arXiv:2605.29556, https://arxiv.org/abs/2605.29556; OpenReview/ICML 2026,
+  https://openreview.net/forum?id=L7NsVVUm9H. The paper separates structure-side verification
+  from solution-side validity checking instead of treating successful solver execution as proof
+  that a generated formulation is faithful. Carnot hook: the `.513` proposal-utility panel must
+  independently score (a) whether the sealed candidate domain encodes every declared hard and
+  soft constraint and (b) whether the selected candidate is exactly feasible/optimal. LLM
+  interpretation and prose are not authority; deterministic benchmark manifests and exact
+  validators provide both checks. This motivates Exp5746-Exp5748 and does not authorize an
+  LLM-as-judge, generated-text scorer, model-weight update, or proprietary solver claim.
+- **Think Again or Think Longer? Selective Verification for Budget-Aware Reasoning** -
+  arXiv:2606.19808, https://arxiv.org/abs/2606.19808; Hugging Face paper page,
+  https://huggingface.co/papers/2606.19808. The frozen-model study reports that selective
+  verification can reduce harmful answer flips and post-generation verification tokens, while
+  also showing that a longer initial solve can dominate the tested total-token frontier. Carnot
+  hook: Exp5748 may spend extra exact-verifier calls only when preregistered conflict/uncertainty
+  signals predict recoverable proposal failures, and must compare that policy against both
+  always-verify and matched-budget one-shot proposal baselines. Exact validators remain authority;
+  the learned or heuristic allocation signal cannot admit a candidate by itself.
+
+### Reused recent deltas with unfinished experimental implications
+
+- **Hard Rules, Soft Preferences** - arXiv:2607.15562 remains the basis for a disjoint
+  hard-feasibility/soft-objective benchmark. `.512` proved parse-safe finite-choice receipts but
+  did not measure whether SOTA proposals reduce exact search or improve top-k feasible discovery.
+- **Presentation, Not Mechanism** - arXiv:2607.16019 remains the required render-matched control
+  for the KAN/lifecycle stream. `.512` proved safe zero-gated updates, but its parameter-matched
+  MLP residual was better, so `.513` must test a mechanism-specific residual before scaling KAN.
+- **Do Coding Agents Need Executable World Models, Simplification, and Verification to Solve
+  ARC-AGI-3?** - arXiv:2607.15439 remains the basis for exact replay and deletion attribution.
+  `.512` found seven positive primitive deletions, but its gate artifact conflated rejected leak
+  canaries with admitted leaks and encoded coverage as an object. `.513` first repairs that schema,
+  then runs the already-designed game-blind live A/B only if the corrected gate is clean.
+
+### Citation-trail and secondary-source status
+
+- **EBT / ARM-EBM:** ARM-EBM is at arXiv v4 (2026-05-25) and is listed as an ICML 2026 paper.
+  The accessible Semantic Scholar/search trails did not expose a new open implementation or
+  local-weight method stronger than Carnot's already-indexed energy/lookahead work. No citation
+  count claim is made because the citation endpoint was not consistently available.
+- **OpenReview / Hugging Face Papers:** Opt-Verifier and selective verification were the only new
+  findings promoted to `.513`. LLM-as-a-Verifier, generative self-verifiers, broad RL, and
+  fine-tuned optimization agents remain non-authoritative or outside the local no-weight-update
+  boundary.
+- **GitHub:** trending and EBM/constraint topic searches found no new reproducible repository that
+  supersedes Carnot's exact validators, active-spline sidecar, ARC live path, or Rust sampler.
+- **Extropic:** the public writing index still exposes the October 2025 X0/XTR-0/TSU material and
+  THRML simulation; no authenticated Carnot-local XTR-0/Z1 hardware or new public 2026 execution
+  surface was found. Thermodynamic speed or power claims remain out of scope.
+- **Logical Intelligence:** Kona 1.0 remains a proprietary architecture/benchmark reference. No
+  local weights, executable API receipt, or reproducible comparator was found, so `.513` makes no
+  Kona execution claim.
+
+### V513 planning impact
+
+- Measure decision utility, not just parseability: compare SOTA finite-choice proposals against
+  random, deterministic heuristic, and exact-search controls under matched validator budgets.
+- Admit adaptive verification only after a one-shot utility result is positive, and require it to
+  beat both always-verify and longer/matched-budget proposal baselines.
+- Audit the safe CSL stream for render- and parameter-matched mechanism residual before any larger
+  KAN scale-up; preserve exact retention, rollback, and immutable-GGUF boundaries.
+- Treat the Rust restart mismatch and ARC gate schema as blockers to repair, not reasons to repeat
+  the same benchmark or solve already-complete public games.
+
+<!-- V513-PLANNER-REFRESH-20260720-END -->
