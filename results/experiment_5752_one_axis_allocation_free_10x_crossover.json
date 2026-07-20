@@ -1,0 +1,105 @@
+{
+  "experiment": 5752,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-20",
+  "started_at": "2026-07-20T08:59:56.113904+00:00",
+  "finished_at": "2026-07-20T08:59:56.113904+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5751 parity: run allocation-free Rust/Python 10x-or-retire crossover",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 of 4 gate(s) failed; first failure: exp5751-rust-restart-parity-repair.distributional_parity (actual={'passed': True, 'scope': 'bounded repair replay uses identical samples; large n=96/192 non-enumerable cases report energy histogram TV on repaired replay, no timing promotion', 'cases': [{'size': 48, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 96, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 192, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}]} == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5751-rust-restart-parity-repair",
+      "artifact_field": "restart_parity_ready_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 >= expected=1.0"
+    },
+    {
+      "upstream": "exp5751-rust-restart-parity-repair",
+      "artifact_field": "distributional_parity",
+      "op": "==",
+      "expected": true,
+      "actual": {
+        "passed": true,
+        "scope": "bounded repair replay uses identical samples; large n=96/192 non-enumerable cases report energy histogram TV on repaired replay, no timing promotion",
+        "cases": [
+          {
+            "size": 48,
+            "energy_histogram_tv": 0.0,
+            "mean_energy_delta_abs": 0.0,
+            "best_energy_delta_abs": 0.0
+          },
+          {
+            "size": 96,
+            "energy_histogram_tv": 0.0,
+            "mean_energy_delta_abs": 0.0,
+            "best_energy_delta_abs": 0.0
+          },
+          {
+            "size": 192,
+            "energy_histogram_tv": 0.0,
+            "mean_energy_delta_abs": 0.0,
+            "best_energy_delta_abs": 0.0
+          }
+        ]
+      },
+      "passed": false,
+      "reason": "actual={'passed': True, 'scope': 'bounded repair replay uses identical samples; large n=96/192 non-enumerable cases report energy histogram TV on repaired replay, no timing promotion', 'cases': [{'size': 48, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 96, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}, {'size': 192, 'energy_histogram_tv': 0.0, 'mean_energy_delta_abs': 0.0, 'best_energy_delta_abs': 0.0}]} == expected=True"
+    },
+    {
+      "upstream": "exp5751-rust-restart-parity-repair",
+      "artifact_field": "fallback_equivalence",
+      "op": "==",
+      "expected": true,
+      "actual": {
+        "exact_fallback_equivalence": true,
+        "rust_active_backend": "rust_pyo3",
+        "python_active_backend": "python_exact_fallback",
+        "cases": [
+          {
+            "size": 48,
+            "rust_python_samples_match": true,
+            "rust_active_backend": "rust_pyo3",
+            "python_active_backend": "python_exact_fallback"
+          },
+          {
+            "size": 96,
+            "rust_python_samples_match": true,
+            "rust_active_backend": "rust_pyo3",
+            "python_active_backend": "python_exact_fallback"
+          },
+          {
+            "size": 192,
+            "rust_python_samples_match": true,
+            "rust_active_backend": "rust_pyo3",
+            "python_active_backend": "python_exact_fallback"
+          }
+        ]
+      },
+      "passed": false,
+      "reason": "actual={'exact_fallback_equivalence': True, 'rust_active_backend': 'rust_pyo3', 'python_active_backend': 'python_exact_fallback', 'cases': [{'size': 48, 'rust_python_samples_match': True, 'rust_active_backend': 'rust_pyo3', 'python_active_backend': 'python_exact_fallback'}, {'size': 96, 'rust_python_samples_match': True, 'rust_active_backend': 'rust_pyo3', 'python_active_backend': 'python_exact_fallback'}, {'size': 192, 'rust_python_samples_match': True, 'rust_active_backend': 'rust_pyo3', 'python_active_backend': 'python_exact_fallback'}]} == expected=True"
+    },
+    {
+      "upstream": "exp5751-rust-restart-parity-repair",
+      "artifact_field": "production_backend_reachable",
+      "op": "==",
+      "expected": true,
+      "actual": {
+        "passed": true,
+        "backend_name": "one_axis_rust",
+        "sample_batch_callable": true,
+        "scalar_api_unchanged": true,
+        "second_sampler_api_added": false,
+        "two_axis_exchange_retired": true
+      },
+      "passed": false,
+      "reason": "actual={'passed': True, 'backend_name': 'one_axis_rust', 'sample_batch_callable': True, 'scalar_api_unchanged': True, 'second_sampler_api_added': False, 'two_axis_exchange_retired': True} == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
