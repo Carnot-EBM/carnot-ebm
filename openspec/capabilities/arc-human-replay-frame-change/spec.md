@@ -10200,3 +10200,112 @@ Required field principles:
 #### SCENARIO-ARC-FCP-5740-BLOB-CACHE-PERF-FIX-BEHAVIOR-PRESERVING
 - **WHEN** `ObjectHistorySaliencePrior.score()` is routed through `_cached_blobs_and_counts` instead of calling `connected_color_blobs` raw per candidate
 - **THEN** the fix SHALL be behavior-preserving (identical blobs -> `fixed_scores_identical_to_raw: true`, verified against a pre-fix raw replica on a real frame) and SHALL remove the per-candidate flood-fill cost (raw ~2807us/cand -> fixed ~703us/cand), and the artifact SHALL document that the residual overhead over the blob-only baseline is `object_hash(blob)` (inherent to the mechanism) which does NOT confound the capability metrics because `run_game`'s budget is action-count, not wall-clock, and the no-induction search path has no wall-clock cutoff.
+
+### REQ-ARC-FCP-5756: InertClickSigPruner Properly-Powered 11-Game Live A/B + Cache Hygiene
+
+`InertClickSigPruner` (`arc_inert_click_pruner.py`) is an already-live-wired
+move-pruner (gated OFF by default, `SUBMITTED_INERT_CLICK_PRUNER_ENABLED =
+False`) that drops click candidates whose structural signature `(color, size,
+is_rect, twin_count)` has repeatedly produced zero frame change, gated by
+`HazardMovePruner`'s trust+specificity discipline (`min_observations=4`,
+`min_specificity=0.9`, any ever-leveled signature permanently sacred). It is
+wired into the LIVE `E3AgentPolicy`/`StepwiseExplorer` path as a
+`rank_candidates` drop-filter in `_candidates` + a real `observe()` from
+`_ingest`'s per-transition OBSERVE hook. Its own docstring states flipping it on
+for the SCORED agent "needs its own matched-budget offline A/B first, per the
+`solve_rate_dropped` guardrail." Two prior artifacts touched this mechanism,
+BOTH single-game (`m0r0`) nulls at a low budget (~37 transitions): exp5595 (the
+offline prototype, `0 confidently inert`) and exp5602 (the matched-budget A/B,
+`no_op_offline_and_live_at_this_budget_on_m0r0`, whose OfflineSolver arm's
+pruner `observed=0` -- the directed search never even exercised it -- and whose
+live E3 arm observed 32 clicks but pruned 0). The shared root cause: a single
+game at a low budget never accumulates `min_observations=4` inert observations
+of one signature to fire. This re-test is NOT a doomed rerun (Failed-Experiment
+Rerun Discipline): it changes the roster (1 game -> the full 11-game
+exp5729/exp5732/exp5740 roster), the budget (~37 -> 200), AND uses real
+capability metrics (`levels`/`states_expanded`) on the ACTUAL live-wired E3 path,
+NOT exp5602's OfflineSolver arm where the pruner was never exercised.
+
+A cache-hygiene change is made FIRST (NOT exp5740's per-candidate flood):
+`InertClickSigPruner`'s live path already decomposes ONCE per `rank_candidates`
+call (then loops candidates via the cheap `blob_at_click` lookup) and ONCE per
+`observe()` transition -- NOT once per candidate -- so it does NOT have exp5740's
+severe O(candidates x grid_cells) flood. What it DID do was call
+`connected_color_blobs` RAW, bypassing the shared `_cached_blobs_and_counts`
+per-frame LRU cache (the same key `ColorBlobSaliencePrior.score` uses with
+`min_pixels=1`/`max_component_fraction=1.0`), so repeated same-frame
+decomposition recomputed the flood from scratch. A new `_frame_blobs(grid)`
+helper routes through the cache (int16-normalized to match the shared key),
+behavior-preserving (identical signatures, verified). Because `run_game`'s budget
+is action-count, not wall-clock, this per-frame timing change cannot confound the
+capability read either way -- it is hygiene, not a capability-confound fix.
+
+`python/carnot/experiment_5756_inert_click_pruner_11game_ab.py` SHALL run a
+matched-budget A/B across the full 11-game roster (same roster + `budget=200` +
+`CARNOT_ARC_DISABLE_INDUCTION=1` no-LLM harness as exp5740, single-threaded,
+per-game fixed seed) with THREE arms: (1) `baseline` -- shipped default
+(`inert_click_pruner` OFF); (2) `treatment_default` -- the faithful live flip
+(`inert_click_pruner=True`, shipped params `min_observations=4`,
+`min_specificity=0.9`); (3) `treatment_aggressive` -- `min_observations=2` (Reki's
+original K=2 floor) to test whether the shipped default's higher evidence floor is
+WHY the pruner never fired in exp5595/exp5602. The artifact SHALL report
+`levels_gained_total_by_arm`, `states_expanded_total_by_arm`, per-game breakdown,
+`n_signatures_reaching_evidence_floor_per_game` + `n_candidates_pruned_per_game`
+(the engagement diagnostics distinguishing a never-fired guard from a real null),
+`trajectories_diverge_per_game`, `blob_cache_perf_fix` (before/after timing +
+behavior-preservation), a `safety_regression_check` that includes an EMPIRICAL
+missed-win check (`suppressed_a_winnable_click` = any game where a treatment arm
+banks FEWER levels than baseline), and a `prior_work_extended` block citing
+exp5595 + exp5602 (the m0r0 nulls this extends) and exp5740 (the harness
+precedent). The verdict SHALL distinguish: pruner never fires; fires but banks
+zero prunes; fires + holds levels + REDUCES states (efficiency win); fires + holds
+levels but states did NOT decrease (no efficiency benefit); or suppressed a
+winnable click (safety failure).
+
+**RESOLUTION (2026-07-20).** Ran cleanly on the full 11-game roster,
+budget=200/game, 3 arms, 183.3s, adversarial_verify 0 flags. NEW FINDING (unlike
+exp5595/exp5602's never-fired null): at budget=200 the pruner FIRES. Signatures
+crossed the evidence floor on 8/11 games (`ls20`/`tu93`/`wa30` had 0 click
+transitions), and the pruner actually dropped candidates on ONE game, `sk48`
+(1122 candidates at default `min_observations=4`, 1521 across both treatment arms
+= 2643 total; `treatment_aggressive` at `min_observations=2` crossed the floor on
+83 signatures vs 48 at default). So the larger budget DID cross the evidence floor
+the single-game low-budget priors never reached. Capability: every arm banked
+exactly `1` level (`lp85` L1, a pre-existing registry solve reached in every arm),
+`any_config_beats_baseline_levels: false`, `levels_gained_headroom_present: true`
+(interpretable null). SAFETY: `any_config_suppressed_a_winnable_click: false` --
+NO game lost a level under pruning; the trust+specificity+sacred gate correctly
+avoided suppressing any winnable click (verified empirically via per-game level
+deltas, not assumed). EFFICIENCY (the load-bearing result): pruning did NOT reduce
+search cost -- `states_expanded` INCREASED, baseline 931 -> `treatment_default`
+953 (+22, all from `sk48` 26 -> 48) -> `treatment_aggressive` 960 (+29). On the
+one game where it actually pruned, dropping frame-inert click candidates reshaped
+the search frontier so the search expanded MORE states for the same banked levels
+-- the OPPOSITE of `HazardMovePruner`'s tu93 efficiency win (2947 -> 2859). Below
+the 20% `states_expanded_regression` threshold (+2.4%), so not flagged as a
+material regression, but a real deterministic (per-game fixed seed) increase, not
+noise. The cache-hygiene fix removed a real ~205x per-decomposition cost on
+repeated same-frame calls (raw 3018us/call -> cached 15us/call,
+`fixed_signatures_identical_to_raw: true`). Verdict:
+`complete: inert_click_pruner_fires_at_budget200_prunes_2643_candidates_holds_levels_at_1_no_missed_win_but_states_expanded_did_not_decrease_delta_+22_no_efficiency_benefit`.
+Recommendation (operator-only): do NOT flip `SUBMITTED_INERT_CLICK_PRUNER_ENABLED`
+-- at this budget the inert-click pruner buys no capability AND no efficiency (a
+frame-inert click can still be a necessary traversal step the search re-routes
+around). Per the retire condition, another plain budget/roster A/B is not warranted
+without a NEW mechanism that makes pruning reduce rather than reshape search cost;
+logged as a verifier gap.
+
+Required field principles:
+
+- `n_signatures_reaching_evidence_floor_per_game`: principle "the load-bearing engagement diagnostic -- distinguishes 'inert-click pruning does not help' from 'the evidence floor was never reached' (exp5595/exp5602's ambiguity at budget~37); a null is only interpretable (FALSE_NEGATIVE_RISK) if some signature crossed the floor somewhere."
+- `n_candidates_pruned_per_game`: principle "0 everywhere means treatment is byte-identical to baseline by construction (a never-fired guard); a positive count means the capability/efficiency delta is a REAL pruning effect."
+- `safety_regression_check.suppressed_a_winnable_click`: principle "the pruner-specific safety property -- a treatment arm banking FEWER levels than baseline on any game means the pruner dropped a click that led to progress, the exact failure the trust+specificity+sacred gate exists to prevent; measured empirically via per-game level deltas, not assumed."
+- `blob_cache_perf_fix`: principle "documents the cache-hygiene change and WHY it is NOT exp5740's per-candidate flood (the pruner already decomposes once per frame), plus the behavior-preservation assertion and the action-budget invariance argument."
+
+#### SCENARIO-ARC-FCP-5756-ELEVEN-GAME-CAPABILITY-AB
+- **WHEN** the shipped default has `inert_click_pruner` OFF and the faithful live flip (`inert_click_pruner=True`) is A/B'd against baseline across the full 11-game roster at `budget=200` with real `levels`/`states_expanded` metrics, extending exp5595/exp5602's single-game (`m0r0`) low-budget (~37 transitions) nulls where no signature ever crossed the evidence floor
+- **THEN** the experiment SHALL report per-arm `levels_gained_total_by_arm`, `states_expanded_total_by_arm`, per-game `n_signatures_reaching_evidence_floor_per_game` + `n_candidates_pruned_per_game` (here: the pruner FIRES at budget=200 -- 2643 candidates pruned, all on `sk48` -- unlike the priors' zero), an EMPIRICAL missed-win safety check (here `any_config_suppressed_a_winnable_click: false`, no game lost a level), and a verdict that distinguishes an efficiency win (states reduced) from no efficiency benefit (here states INCREASED 931 -> 953, so `pruner_reduced_states_expanded: false`) -- and the recommendation SHALL be operator-only, never self-authorizing a live-default flip.
+
+#### SCENARIO-ARC-FCP-5756-INERT-CLICK-CACHE-HYGIENE
+- **WHEN** `InertClickSigPruner._signature_for_click` and `.rank_candidates` are routed through `_cached_blobs_and_counts` (via a new `_frame_blobs` helper) instead of calling `connected_color_blobs` raw, sharing the per-frame LRU cache key `ColorBlobSaliencePrior.score` uses
+- **THEN** the change SHALL be behavior-preserving (`fixed_signatures_identical_to_raw: true`, verified against a raw replica on a real frame) and the artifact SHALL document that this is NOT exp5740's per-candidate flood (the pruner already decomposes once per `rank_candidates` call and once per `observe`, not once per candidate) and that the per-frame timing change (raw ~3018us/call -> cached ~15us/call on repeated same-frame decomposition) cannot confound the capability metrics because `run_game`'s budget is action-count, not wall-clock.

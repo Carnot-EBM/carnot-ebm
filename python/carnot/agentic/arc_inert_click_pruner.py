@@ -78,7 +78,11 @@ from typing import Any, Callable, Optional, Sequence
 
 import numpy as np
 
-from carnot.agentic.arc_color_blob_salience import ColorBlob, blob_at_click, connected_color_blobs
+from carnot.agentic.arc_color_blob_salience import (
+    ColorBlob,
+    _cached_blobs_and_counts,
+    blob_at_click,
+)
 
 
 def _default_action_of_label(label: Any) -> Optional[dict]:
@@ -173,10 +177,26 @@ class InertClickSigPruner:
         except (ValueError, TypeError):
             return None
 
+    def _frame_blobs(self, grid: np.ndarray) -> list[ColorBlob]:
+        """Full-frame blob decomposition, routed through the shared per-frame LRU cache
+        (``_cached_blobs_and_counts``, arc_color_blob_salience.py) instead of a raw
+        ``connected_color_blobs`` call. Behavior-preserving: the cache stores exactly
+        ``connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0)``'s output.
+        The int16 normalization matches the cache key ``ColorBlobSaliencePrior.score`` uses
+        (it decomposes with the same ``min_pixels=1``/``max_component_fraction=1.0``), so a
+        co-active blob prior and this pruner share one decomposition per frame rather than
+        each recomputing the O(grid-cells) flood-fill (REQ-ARC-FCP-5699 cache discipline)."""
+
+        g = np.asarray(grid)
+        if g.dtype != np.int16:
+            g = g.astype(np.int16, copy=False)
+        blobs, _counts = _cached_blobs_and_counts(g, min_pixels=1, max_component_fraction=1.0)
+        return blobs
+
     def _signature_for_click(
         self, grid: np.ndarray, x: int, y: int
     ) -> Optional[tuple[int, int, bool, int]]:
-        blobs = connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0)
+        blobs = self._frame_blobs(grid)
         blob = blob_at_click(blobs, x, y)
         if blob is None:
             return None
@@ -236,7 +256,7 @@ class InertClickSigPruner:
         g = self._g2d(frame)
         if g is None:
             return list(rows)
-        blobs = connected_color_blobs(g, min_pixels=1, max_component_fraction=1.0)
+        blobs = self._frame_blobs(g)
         kept: list[dict] = []
         for row in rows:
             if int(row.get("action", -1)) != 6:
