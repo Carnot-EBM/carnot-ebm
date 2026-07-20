@@ -13812,3 +13812,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-20 02:44 UTC | Qualify a finite-choice proposal channel across th | OK | 86 passed, 1 warning in 9.90s |
 | 2026-07-20 03:09 UTC | Gated on Exp5733 readiness: build a sealed exact-a | OK | 85 passed, 1 warning in 10.66s |
 | 2026-07-20 03:32 UTC | Run non-cascading zero-gated KAN continuous self-l | OK | 88 passed, 1 warning in 14.11s |
+| 2026-07-20 03:53 UTC | Gated on Exp5735 safety: exercise typed CSL lifecy | OK | 90 passed, 1 warning in 10.04s |
