@@ -1,0 +1,337 @@
+{
+  "action_id_only_auroc": 0.5491163488496458,
+  "click_head_within_action_discrimination": {
+    "n": 2973,
+    "n_changed": 2553,
+    "n_noop": 420,
+    "robust_learned_signal": false,
+    "trained_over_seeds": {
+      "max": 0.918057,
+      "mean": 0.570108,
+      "min": 0.44399,
+      "n_seeds": 5,
+      "std": 0.175194
+    },
+    "untrained_structural_baseline_over_seeds": {
+      "max": 0.737648,
+      "mean": 0.580173,
+      "min": 0.205869,
+      "n_seeds": 5,
+      "std": 0.192494
+    }
+  },
+  "cnn_held_out_delta_auroc": 0.539259,
+  "cnn_held_out_delta_auroc_over_seeds": {
+    "max": 0.57631,
+    "mean": 0.539259,
+    "min": 0.484802,
+    "n_seeds": 5,
+    "std": 0.032048
+  },
+  "corpus_grew_since_exp4547": {
+    "current_corpus_examples_loaded": 165542,
+    "exp4547_corpus_examples_loaded": 14020,
+    "note": "corpus regenerated ~11.8x larger since exp4547; exp4547's 0.709 is the PRIOR-corpus number, cited not reproduced; CNN AUROC re-measured on current corpus."
+  },
+  "corpus_summary": {
+    "corpus_examples_loaded": 165542,
+    "game_count": 24,
+    "heldout_examples": 31963,
+    "heldout_trainable": 31687,
+    "train_examples": 133579,
+    "train_subset_used": 4096
+  },
+  "directional_head_within_action_discrimination": {
+    "robust_learned_signal": false,
+    "trained_over_seeds": {
+      "max": 0.615984,
+      "mean": 0.498285,
+      "min": 0.402303,
+      "n_seeds": 5,
+      "std": 0.068747
+    },
+    "untrained_structural_baseline_over_seeds": {
+      "max": 0.54709,
+      "mean": 0.499107,
+      "min": 0.440024,
+      "n_seeds": 5,
+      "std": 0.040069
+    },
+    "within_action_floor": 0.55
+  },
+  "duration_s": 403.309,
+  "exp4547_reported_cnn_held_out_delta_auroc": 0.7092359400538687,
+  "experiment": "experiment_5730_cnn_baserate_audit",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "action_id_only_auroc": "the adversarial control (exp5727 methodology) -- per-action-id empirical change rate from TRAIN applied to HELDOUT; the 'free' trivial signal every agent has. CNN-seed-independent.",
+    "click_head_within_action_discrimination": "click_head AUROC with action_id fixed at 6 (base rate constant), ACROSS SEEDS vs an untrained control -- the one signal a per-action-type base rate structurally cannot explain, but only if stable across seeds and beating the untrained structural baseline.",
+    "cnn_held_out_delta_auroc": "the number exp4547 reported vs bare chance, RE-MEASURED (mean over seeds) on the current corpus so the base-rate control is directly comparable; exp4547's value is cited separately.",
+    "directional_head_within_action_discrimination": "per-directional-action-id AUROC with action id held fixed, across seeds vs untrained -- tests per-frame (not base-rate) discrimination for the pooled directional head.",
+    "duration_s": "wall-clock of corpus load + multi-seed CNN train + forward passes; no LLM/GPU, 1s floor.",
+    "false_negative_risk_checked": "a null is valid only with the positive control passed AND the seed-robustness check done (so a real-but-unstable signal is not mistaken for no signal, nor seed luck for signal).",
+    "frame_adds_over_action_id": "THE HEADLINE -- mean cnn_auroc minus the action-id base rate. Near-zero/negative means the CNN AUROC is a per-action-type base rate, NOT frame-content discrimination.",
+    "honest_verdict": "terminal prefix; complete: base-rate mirage (frame adds ~0, no robust within-action signal across seeds) matching exp5727, OR complete: a head carries robust learned signal.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- trains/scores a small CPU CNN against cached replay transitions, no GGUF/LLM load (1s floor).",
+    "positive_control_passed": "the AUROC harness is functional (training reduces loss AND the machinery can produce above-chance AUROCs when structure exists) -- guards against a null from a broken harness.",
+    "preconditions_checked": "records resources verified (torch, corpus cached) before the run.",
+    "random_seed": "primary determinism seed (exp4547's 4547); full seed set in `seeds`.",
+    "recommendation": "is there ANY real, robust, non-base-rate signal worth building on, and WHERE (click_head vs directional_head), or is the scorer a base-rate/seed-luck mirage matching exp5727?",
+    "reproducibility_checksum": "content hash of inputs+metrics; catches silent corpus/model drift.",
+    "seed_robustness": "the load-bearing rigor field -- a within-action AUROC is only a real learned signal if it clears the floor on the WORST seed; a lone-seed high value is seed luck, not signal.",
+    "verifier_is_oracle": "false -- the label is raw pixel-change ground truth, oracle-DISTINCT from the LEARNED CNN scoring the frames; no moat/gate claim is made."
+  },
+  "frame_adds_over_action_id": -0.009857,
+  "frame_adds_over_action_id_over_seeds": {
+    "max": 0.027194,
+    "mean": -0.009857,
+    "min": -0.064314,
+    "n_seeds": 5,
+    "std": 0.032048
+  },
+  "frame_beats_action_base_rate": false,
+  "frame_beats_action_margin_threshold": 0.05,
+  "heldout_summary": {
+    "changed_fraction": 0.9279,
+    "global_train_change_rate": 0.9532,
+    "n_changed": 29401,
+    "n_heldout_trainable": 31687,
+    "n_noop": 2286,
+    "per_action_id_base_rate": {
+      "1": {
+        "heldout_change_rate": 0.9422,
+        "heldout_n": 6561,
+        "train_base_rate": 0.9709,
+        "train_changed": 16866,
+        "train_total": 17371
+      },
+      "2": {
+        "heldout_change_rate": 0.9373,
+        "heldout_n": 6378,
+        "train_base_rate": 0.9734,
+        "train_changed": 14914,
+        "train_total": 15321
+      },
+      "3": {
+        "heldout_change_rate": 0.9411,
+        "heldout_n": 7046,
+        "train_base_rate": 0.9821,
+        "train_changed": 20876,
+        "train_total": 21255
+      },
+      "4": {
+        "heldout_change_rate": 0.9276,
+        "heldout_n": 7601,
+        "train_base_rate": 0.9782,
+        "train_changed": 22624,
+        "train_total": 23128
+      },
+      "5": {
+        "heldout_change_rate": 0.8918,
+        "heldout_n": 1128,
+        "train_base_rate": 0.9716,
+        "train_changed": 3689,
+        "train_total": 3796
+      },
+      "6": {
+        "heldout_change_rate": 0.8587,
+        "heldout_n": 2973,
+        "train_base_rate": 0.9162,
+        "train_changed": 46640,
+        "train_total": 50903
+      }
+    }
+  },
+  "honest_verdict": "complete: cnn_held_out_auroc_is_action_id_base_rate_and_seed_luck_mirage_frame_adds_-0.010_no_robust_within_action_signal_matching_exp5727_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "per_seed_results": [
+    {
+      "click_head_auroc_trained": 0.9180567213175909,
+      "click_head_auroc_untrained": 0.5969485012963274,
+      "cnn_held_out_delta_auroc": 0.5284662397286051,
+      "directional_per_action_trained": {
+        "1": 0.257734174200526,
+        "2": 0.5567263298762127,
+        "3": 0.39496287063500574,
+        "4": 0.37514897951289955,
+        "5": 0.5988739692989603
+      },
+      "directional_weighted_auroc_trained": 0.40230340830330724,
+      "directional_weighted_auroc_untrained": 0.4400243139346694,
+      "final_loss": 0.6470233146101236,
+      "frame_adds_over_action_id": -0.020650109121040705,
+      "seed": 4547
+    },
+    {
+      "click_head_auroc_trained": 0.4884953276257624,
+      "click_head_auroc_untrained": 0.6740119000988566,
+      "cnn_held_out_delta_auroc": 0.5414649539509239,
+      "directional_per_action_trained": {
+        "1": 0.5587451098559184,
+        "2": 0.40076739712278353,
+        "3": 0.5355388073179462,
+        "4": 0.45171413468108973,
+        "5": 0.7863067496659388
+      },
+      "directional_weighted_auroc_trained": 0.4985672742324367,
+      "directional_weighted_auroc_untrained": 0.5470898299408058,
+      "final_loss": 0.6180069982074201,
+      "frame_adds_over_action_id": -0.007651394898721908,
+      "seed": 7
+    },
+    {
+      "click_head_auroc_trained": 0.5,
+      "click_head_auroc_untrained": 0.7376475854736725,
+      "cnn_held_out_delta_auroc": 0.5652512310319225,
+      "directional_per_action_trained": {
+        "1": 0.6618105248960938,
+        "2": 0.5993645449983273,
+        "3": 0.5642155410966745,
+        "4": 0.5993625662381867,
+        "5": 0.8787846690349705
+      },
+      "directional_weighted_auroc_trained": 0.6159842793430965,
+      "directional_weighted_auroc_untrained": 0.4645868276493625,
+      "final_loss": 0.6308073466643691,
+      "frame_adds_over_action_id": 0.016134882182276766,
+      "seed": 99
+    },
+    {
+      "click_head_auroc_trained": 0.44399026355548094,
+      "click_head_auroc_untrained": 0.68638529834182,
+      "cnn_held_out_delta_auroc": 0.4848022976584408,
+      "directional_per_action_trained": {
+        "1": 0.46604470891318656,
+        "2": 0.4315979424556708,
+        "3": 0.527474094841135,
+        "4": 0.47335103982671706,
+        "5": 0.44494508359678
+      },
+      "directional_weighted_auroc_trained": 0.4745724313029312,
+      "directional_weighted_auroc_untrained": 0.5207971983050704,
+      "final_loss": 0.6989137576892972,
+      "frame_adds_over_action_id": -0.06431405119120498,
+      "seed": 123
+    },
+    {
+      "click_head_auroc_trained": 0.5,
+      "click_head_auroc_untrained": 0.20586937869546565,
+      "cnn_held_out_delta_auroc": 0.5763102388212493,
+      "directional_per_action_trained": {
+        "1": 0.5,
+        "2": 0.5,
+        "3": 0.5,
+        "4": 0.5,
+        "5": 0.5
+      },
+      "directional_weighted_auroc_trained": 0.5,
+      "directional_weighted_auroc_untrained": 0.5230346285213551,
+      "final_loss": 0.6245511556044221,
+      "frame_adds_over_action_id": 0.027193889971603546,
+      "seed": 2024
+    }
+  ],
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "corpus_cached": true,
+    "torch_import": true
+  },
+  "prior_work_extended": {
+    "exp4547_frame_change_predictor": {
+      "role": "the original 0.709-vs-CHANCE (0.5 hardcoded) measurement this re-controls; its own final verdict was already an action-reduction null.",
+      "verdict": "complete: frame_change_cnn_no_action_reduction_honest_null"
+    },
+    "exp4568_clickability_action_effect_predictor": {
+      "role": "earlier clickability-predictor null (actions_delta 0.0) -- same no-live-gain pattern.",
+      "verdict": "complete: clickability_predictor_no_efficiency_gain_honest_null_gap_sharpened"
+    },
+    "exp5727_perception_action_effect_adequacy": {
+      "role": "the base-rate control methodology applied here; found frame_adds_over_action_id=-0.039 for the LINEAR classifier on the same action-effect target.",
+      "verdict": "complete: action_effect_above_chance_but_driven_by_action_base_rate_not_frame_representation_honest_null_on_perception"
+    },
+    "exp5728_cnn_weight_sweep": {
+      "role": "why this matters -- weight sweep null localized the gate, not the weight.",
+      "verdict": "complete: cnn_weight_sweep_headroom_present_weight_change_yields_same_levels"
+    },
+    "exp5729_gtv_gate_fix_ab": {
+      "role": "why this matters -- loosening the gate turned the scorer ON (~27k consults on lp85) yet search was byte-identical; localized the blocker to scorer signal quality, which THIS experiment characterizes as a base-rate/seed-luck mirage.",
+      "verdict": "complete: gtv_gate_loosening_turns_scorer_on_3_to_10_of_11_games_validated_but_no_level_gain_scorer_signal_is_the_blocker_not_the_gate"
+    }
+  },
+  "random_seed": 4547,
+  "recommendation": "NO robust, non-base-rate signal anywhere in the CNN. (1) frame_adds_over_action_id is ~0/negative (mean -0.010): the held-out AUROC does not beat the action-id base rate, same finding as exp5727's linear classifier. (2) The click_head's within-action AUROC is seed-UNSTABLE (min 0.44399, max 0.918057 across 5 seeds) and does not reliably beat its own untrained structural baseline (max 0.737648) -- any lone high seed is seed luck, not learned signal. (3) The directional_head is at/below chance. So the CNN is redundant with the memory term (PersistentAEM already encodes per-action-id base rates), which is mechanically why exp5729 saw the CNN never reorder search. Do NOT retrain SmallFrameChangeCNN on the same frame-only representation or tune its blend weight/gate again -- the ceiling is the representation, not the model, the weight, or the gate. The next lever per Missing-Verifier Gap Logging is a richer state-grounded representation (the exp5727 gap), not another pass on this scorer.",
+  "reproducibility_checksum": "sha256:b1ca6de6c1d621d73df93694769aa1f643a1f7cdaa39a4de1a277b3f5e744d1a",
+  "requirements": [
+    "REQ-ARC-FCP-5730"
+  ],
+  "scenarios": [
+    "SCENARIO-ARC-FCP-5730-BASE-RATE-CONTROL",
+    "SCENARIO-ARC-FCP-5730-WITHIN-ACTION-ID-SEED-ROBUST"
+  ],
+  "schema": "carnot.arc_cnn_baserate_audit_5730.v1",
+  "seed_robustness": {
+    "click_head_robust_learned_signal": false,
+    "click_head_trained": {
+      "max": 0.918057,
+      "mean": 0.570108,
+      "min": 0.44399,
+      "n_seeds": 5,
+      "std": 0.175194
+    },
+    "click_head_untrained_structural_baseline": {
+      "max": 0.737648,
+      "mean": 0.580173,
+      "min": 0.205869,
+      "n_seeds": 5,
+      "std": 0.192494
+    },
+    "directional_head_robust_learned_signal": false,
+    "directional_head_trained": {
+      "max": 0.615984,
+      "mean": 0.498285,
+      "min": 0.402303,
+      "n_seeds": 5,
+      "std": 0.068747
+    },
+    "directional_head_untrained_structural_baseline": {
+      "max": 0.54709,
+      "mean": 0.499107,
+      "min": 0.440024,
+      "n_seeds": 5,
+      "std": 0.040069
+    },
+    "note": "A within-action AUROC is a real LEARNED signal only if the WORST seed clears 0.55 AND beats the untrained (random-init) structural baseline. A lone high seed with a low worst-seed is seed luck, not signal.",
+    "seeds": [
+      4547,
+      7,
+      99,
+      123,
+      2024
+    ]
+  },
+  "seeds": [
+    4547,
+    7,
+    99,
+    123,
+    2024
+  ],
+  "surprising_result_acknowledgment": "During scoping, seed 4547 alone gave a click_head within-action AUROC of 0.918, which in isolation would read as a strong positive finding. The multi-seed control shows it is seed luck (0.489/0.500 on other seeds) sitting on an untrained structural baseline of ~0.69 -- not a learned discriminator. Reported here as the reason single-seed CNN AUROCs are not headline-eligible for this scorer (Adversarial Verification cross-check discipline).",
+  "target": "does the CNN held-out change-prediction AUROC beat the action-id base rate (robustly)",
+  "training_summary_primary_seed": {
+    "batch_size": 64,
+    "batches_trained": 64,
+    "epochs": 1,
+    "examples_seen": 4096,
+    "examples_used": 4096,
+    "final_loss": 0.6470233146101236,
+    "frame_size": 64,
+    "hidden_channels": 8,
+    "initial_loss": 0.6906794933602214,
+    "learning_rate": 0.01,
+    "num_colors": 16
+  },
+  "verifier_is_oracle": false,
+  "within_action_floor": 0.55
+}
