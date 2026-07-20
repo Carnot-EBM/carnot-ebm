@@ -2898,3 +2898,104 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5731 | Implemented (`python/carnot/experiment_5731_transition_v512.py`, `results/experiment_5731_transition_v512.json`) | Implemented (`tests/python/test_experiment_5731_transition_v512.py`) |
+
+- REQ-CAPSTONE-5742: The `.512` capstone reconciliation workflow
+  `exp5742-v512-capstone-reconciliation` in
+  `python/carnot/experiment_5742_v512_capstone_reconciliation.py` SHALL read
+  every expected Exp5731 through Exp5741 artifact plus conductor outcomes and
+  write `results/experiment_5742_v512_capstone_reconciliation.json` without
+  modifying `research-roadmap.yaml` or `scripts/research_conductor.py`. It
+  SHALL declare `inference_substrate=artifact_reconciliation_only`. Missing,
+  gate-skipped, blocked, flagged, null, and complete states SHALL remain
+  separate denominator states. The workflow SHALL recompute proposal-channel,
+  SOTA-stream, zero-gate CSL, lifecycle, optional ingress, Rust batch,
+  batched-10x, ARC causal-audit, and ARC live A/B readiness directly from
+  artifact fields and hashes. Continuous self-learning credit SHALL come from
+  Exp5735 and Exp5736 independently of Exp5733, Exp5734, and Exp5737. GGUF
+  weights and production defaults SHALL remain unchanged. ARC registry credit
+  SHALL remain unchanged unless direct `live_agent_self_discovery` evidence
+  beyond the registry precheck is present. Same-verdict retirements SHALL be
+  applied only for matching cited prior scope, while nonmatching techniques and
+  successful upstream capabilities remain preserved and no dependency chain may
+  point at a retired ID.
+- SCENARIO-CAPSTONE-5742: The artifact
+  `results/experiment_5742_v512_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `preconditions_checked`,
+  `task_artifact_hashes`, `task_statuses`, `task_honest_verdicts`,
+  `conductor_outcomes`, `gate_skip_receipts`, `missing_artifacts`,
+  `flagged_artifacts`, `proposal_channel_ready`,
+  `sota_proposal_stream_ready`, `zero_gate_csl_ready`,
+  `csl_lifecycle_ready`, `sota_csl_ingress_ready`, `batch_backend_ready`,
+  `rust_batched_10x_ready`, `arc_causal_primitive_ready`,
+  `arc_generic_primitive_live_ready`, `continuous_self_learning_credited`,
+  `model_weight_mutation`, `production_default_enabled`,
+  `arc_registry_count_before`, `arc_registry_count_after`,
+  `arc_registry_delta`, `arc_solve_credited`, `solve_provenance_summary`,
+  `retirements_required`, `retirements_applied`, `preserved_scopes`,
+  `closed_scopes_reopened`, `timing_claimed`, `software_speedup_claimed`,
+  `hardware_speedup_claimed`, `spec_files_updated`, `ops_files_updated`,
+  `e2e_commands`, `e2e_exit_codes`, `inference_substrate`,
+  `reproducibility_checksum`, and `honest_verdict`. With the current `.512`
+  evidence, the capstone must report proposal-channel, SOTA-stream,
+  zero-gate CSL, lifecycle, optional ingress, and batched backend readiness as
+  true; batched 10x and ARC live A/B readiness as false; ARC causal primitive
+  evidence as development-proxy positive but not live-creditable; continuous
+  self-learning as credited from Exp5735 and Exp5736; model-weight mutation and
+  production-default enablement as false; `arc_registry_delta=0`;
+  `arc_solve_credited=false`; timing claimed only for Exp5739's CPU benchmark;
+  software and hardware speedup claims as false; and the blocked Exp5741 gate
+  receipt preserved separately from the complete Exp5740 causal-audit
+  evidence.
+- SCENARIO-CAPSTONE-5742-MISSING-MALFORMED: If any expected Exp5731 through
+  Exp5741 artifact is missing or malformed, the workflow must still emit a
+  capstone artifact, list the affected path, keep dependent readiness and
+  promotion false, preserve unrelated completed/null evidence, and start
+  `honest_verdict` with `blocked:`. A missing scientific artifact must not be
+  recreated or replaced by zero-valued synthetic evidence.
+- SCENARIO-CAPSTONE-5742-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line reason for every required Exp5742 field.",
+  `preconditions_checked` = "source artifacts, roadmap state, registry state, conductor log, and protected-file checks are recorded before reconciliation.",
+  `task_artifact_hashes` = "each expected task is bound to the exact bytes read, or to a missing/malformed state.",
+  `task_statuses` = "complete, flagged, blocked, gate-skipped, missing, malformed, and unknown statuses remain distinct.",
+  `task_honest_verdicts` = "terminal verdict text is copied from direct artifacts without reinterpretation.",
+  `conductor_outcomes` = "conductor OK, FLAGGED, GATE_BLOCK, and fallback states are retained as operations evidence.",
+  `gate_skip_receipts` = "blocked gate artifacts keep their failed upstream fields instead of disappearing from the denominator.",
+  `missing_artifacts` = "missing expected deliverables stay visible and cannot promote.",
+  `flagged_artifacts` = "flagged artifacts are quarantined from success credit while their existence remains visible.",
+  `proposal_channel_ready` = "true only from Exp5733 ready score, receipt integrity, qualified flagship coverage, and clean status.",
+  `sota_proposal_stream_ready` = "true only from Exp5734 stream ready score, commitments, zero missing rows, and zero validator disagreements.",
+  `zero_gate_csl_ready` = "true only from Exp5735 function-preserving zero-gate readiness and safety fields.",
+  `csl_lifecycle_ready` = "true only from Exp5736 typed lifecycle replay, rollback, and zero unsafe propagation evidence.",
+  `sota_csl_ingress_ready` = "optional Exp5737 ingress readiness is independent of the Exp5735/Exp5736 CSL credit.",
+  `batch_backend_ready` = "true only from Exp5738 batched backend readiness and parity mismatch counts.",
+  `rust_batched_10x_ready` = "true only if Exp5739 proves the strict 10x rule; a timing null remains false.",
+  `arc_causal_primitive_ready` = "records Exp5740 development-proxy causal primitives while denying live or registry credit when leakage gates fail.",
+  `arc_generic_primitive_live_ready` = "true only from Exp5741 live A/B readiness; gate-blocked artifacts remain false.",
+  `continuous_self_learning_credited` = "credits Exp5735 and Exp5736 independently of the SOTA proposal branch.",
+  `model_weight_mutation` = "bare false preserves immutable GGUF and sidecar boundaries.",
+  `production_default_enabled` = "bare false keeps CSL and proposal work out of production defaults.",
+  `arc_registry_count_before` = "registry baseline before any directly creditable Exp5741 live self-discovery update.",
+  `arc_registry_count_after` = "registry count after reconciliation, unchanged without live self-discovery evidence.",
+  `arc_registry_delta` = "solve credit requires a positive reproduced live-agent-self-discovery registry delta.",
+  `arc_solve_credited` = "bare false unless direct live_agent_self_discovery evidence beyond precheck exists.",
+  `solve_provenance_summary` = "development proxies, gate skips, and live self-discovery are separated by task.",
+  `retirements_required` = "same-verdict candidates are named only when current verdict and cited prior scope match.",
+  `retirements_applied` = "mechanical retirements are narrow and never retire successful upstream capabilities.",
+  `preserved_scopes` = "nonmatching techniques and successful branch capabilities remain available.",
+  `closed_scopes_reopened` = "bare false confirms retired IDs were not reopened by dependencies.",
+  `timing_claimed` = "true only for observed CPU timing benchmark evidence, not for readiness-only artifacts.",
+  `software_speedup_claimed` = "bare false unless the Exp5739 strict speedup gate passes.",
+  `hardware_speedup_claimed` = "bare false because no GPU, FPGA, TSU, or board speedup is reconciled.",
+  `spec_files_updated` = "lists only OpenSpec files directly edited for this capstone.",
+  `ops_files_updated` = "records stop-rule delegation instead of silently editing ops ledgers.",
+  `e2e_commands` = "verification commands are replayable and include planning-only or blocked reasons where applicable.",
+  `e2e_exit_codes` = "observed exits are recorded without laundering failures.",
+  `inference_substrate` = "artifact_reconciliation_only because this capstone reads evidence only.",
+  `reproducibility_checksum` = "content-addressed checksum catches silent capstone drift.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5742)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5742 | Planned (`python/carnot/experiment_5742_v512_capstone_reconciliation.py`, `results/experiment_5742_v512_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5742_v512_capstone_reconciliation.py`) |
