@@ -42708,3 +42708,118 @@ entry, every gate field is bare, the checksum is populated and stable, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5757 | Implemented (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Implemented (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
+
+### REQ-REPORT-5758: Rust Restart Parity Scalar Bridge Preserves Exp5751 Evidence
+
+The Exp5758 workflow SHALL read the canonical
+`results/experiment_5751_rust_restart_parity_repair.json` and the prior
+Exp5752 gate-block artifact without modifying either file, without modifying
+sampler code, without rerunning the allocation-free benchmark, without running
+an LLM, and without making a timing or hardware-speedup claim. It SHALL write
+`results/experiment_5758_rust_parity_scalar_bridge.json` as a cached fixture
+replay artifact.
+
+The bridge SHALL hash-verify the Exp5751 artifact, the repair source hashes
+recorded by Exp5751, the reproduced-failure receipt, the first-divergence
+receipt, the interruption manifest, the release-build receipt, and every
+recorded `n=48`, `n=96`, and `n=192` parity row before deriving downstream
+scalars. If a required nested predicate is missing, object-wrapped, ambiguous,
+contradicts its case rows, or depends on a stale source hash, the bridge SHALL
+fail closed with a `blocked:` verdict rather than synthesize readiness.
+
+The workflow SHALL emit only separately named bare numeric gate fields for
+`restart_parity_ready_score`, `distributional_parity_score`,
+`fallback_equivalence_score`, `production_backend_reachable_score`, and
+`rust_benchmark_gate_ready_score`. Structured Exp5751 receipts SHALL be
+preserved by hash or reference in derivation receipts instead of being replaced
+or flattened in place. `rust_benchmark_gate_ready_score` SHALL equal `1.0` only
+when restart readiness is `1.0`, every derived predicate is `1.0`, all
+artifact/source hashes match, no unsafe synthesis occurs, and the planned
+Exp5764 conductor gate replay passes through
+`scripts/conductor_gates.evaluate_gates()`.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `spec_refs`, `upstream_artifact_path`,
+`upstream_artifact_hash`, `repair_source_hashes`,
+`reproduced_failure_receipt_hash`, `first_divergence_receipt_hash`,
+`interruption_manifest_hash`, `parity_case_count`, bare
+`restart_parity_ready_score`, bare `distributional_parity_score`, bare
+`fallback_equivalence_score`, bare `production_backend_reachable_score`,
+`derivation_receipts`, `producer_normalizer_receipts`,
+`gate_replay_receipts`, `unsafe_synthesis_count`, bare
+`rust_benchmark_gate_ready_score`, `upstream_modified`,
+`sampler_code_modified`, `timing_claimed`, `hardware_speedup_claimed`,
+`inference_substrate`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every top-level field SHALL
+have a non-empty `field_principles` entry, `inference_substrate` SHALL equal
+`cached_fixture_replay_no_llm`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `field_principles`: principle "Maps every bridge field to the Exp5751 evidence boundary that justifies it."
+- `status`: principle "Bare terminal state supports machine checks without parsing prose."
+- `preconditions_checked`: principle "Records artifact, source-hash, release-build, failure, divergence, interruption, and prior gate-block checks."
+- `spec_refs`: principle "Binds the bridge to REQ-REPORT-5758 and REQ-SAMPLE-5758."
+- `upstream_artifact_path`: principle "Names the canonical Exp5751 artifact read without mutation."
+- `upstream_artifact_hash`: principle "Binds the upstream Exp5751 artifact to exact bytes."
+- `repair_source_hashes`: principle "Pins the source files Exp5751 said were part of the repair before downstream timing work consumes the bridge."
+- `reproduced_failure_receipt_hash`: principle "Preserves the reproduced Exp5739 restart failure by content hash."
+- `first_divergence_receipt_hash`: principle "Preserves the signed-zero first-divergence diagnosis by content hash."
+- `interruption_manifest_hash`: principle "Preserves the n=48/n=96/n=192 interruption replay manifest by content hash."
+- `parity_case_count`: principle "Records the shared n=48/n=96/n=192 denominator used by every derived predicate."
+- `restart_parity_ready_score`: principle "Copies the upstream restart readiness scalar only after hash and case replay."
+- `distributional_parity_score`: principle "Bare scalar derived from distributional_parity.passed plus zero-tolerance case rows."
+- `fallback_equivalence_score`: principle "Bare scalar derived from exact_fallback_equivalence plus per-case sample matches."
+- `production_backend_reachable_score`: principle "Bare scalar derived from the existing sample_batch callable, scalar API, and no-second-API receipts."
+- `derivation_receipts`: principle "Records source fields and receipt hashes used to derive each bridge scalar."
+- `producer_normalizer_receipts`: principle "Records ExperimentTemplate producer normalization without inventing methodology receipts."
+- `gate_replay_receipts`: principle "Records the exact Exp5764 conductor comparisons on the bridge artifact."
+- `unsafe_synthesis_count`: principle "Must remain zero because the bridge never fabricates missing evidence."
+- `rust_benchmark_gate_ready_score`: principle "Bare gate scalar is true only when Exp5751 evidence and conductor replay both pass."
+- `upstream_modified`: principle "Must remain false because Exp5751 is a read-only input."
+- `sampler_code_modified`: principle "Must remain false because the bridge does not touch sampler implementation."
+- `timing_claimed`: principle "Must remain false because no benchmark is rerun or promoted."
+- `hardware_speedup_claimed`: principle "Must remain false because scalar bridge evidence is not a hardware result."
+- `inference_substrate`: principle "Must be cached_fixture_replay_no_llm because no model, solver generation, or hardware timing is run."
+- `test_commands`: principle "Verification commands are preserved exactly."
+- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
+- `reproducibility_checksum`: principle "Stable content checksum detects bridge artifact drift."
+- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not inflate Rust throughput."
+
+#### SCENARIO-REPORT-5758: Hash-Verified Exp5751 Emits Bare Rust Parity Scalars
+
+**Given** the canonical Exp5751 repair artifact and its recorded repair source
+hashes are readable and hash-consistent
+**And** the reproduced failure, first divergence, release build, interruption
+manifest, and all `n=48`, `n=96`, and `n=192` parity rows are internally
+consistent
+**When** the Exp5758 bridge runs
+**Then** it writes `results/experiment_5758_rust_parity_scalar_bridge.json`,
+keeps `upstream_modified=false`, keeps `sampler_code_modified=false`, keeps
+`timing_claimed=false`, emits the five downstream gate fields as bare numeric
+scalars, sets `rust_benchmark_gate_ready_score=1.0`, and emits a `complete:`
+verdict.
+
+#### SCENARIO-REPORT-5758-GATE-REPLAY: Planned Exp5764 Predicates Pass Or Fail On Bare Fields
+
+**Given** an Exp5758 bridge artifact
+**When** the planned Exp5764 conductor gates are evaluated with
+`evaluate_gates()`
+**Then** the complete bridge passes all gates, while missing fields,
+wrapper-object gate values, absent nested predicates, contradictory case rows,
+source-hash drift, and false readiness controls fail closed.
+
+#### SCENARIO-REPORT-5758-FIELD-PRINCIPLES: Every Bridge Field Is Annotated
+
+**Given** the Exp5758 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, every gate field is bare, the checksum is populated and stable, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5758)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5758 | Planned (`scripts/experiment_5758_rust_parity_scalar_bridge.py`, `results/experiment_5758_rust_parity_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5758_rust_parity_scalar_bridge.py`) |

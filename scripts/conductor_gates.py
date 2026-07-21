@@ -168,14 +168,21 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
             False,
             f"numeric comparison rejected because one side is None (actual={actual!r}, expected={expected!r})",
         )
-    if op == ">":
-        return actual > expected, f"actual={actual} > expected={expected}"
-    if op == ">=":
-        return actual >= expected, f"actual={actual} >= expected={expected}"
-    if op == "<":
-        return actual < expected, f"actual={actual} < expected={expected}"
-    if op == "<=":
-        return actual <= expected, f"actual={actual} <= expected={expected}"
+    if op in (">", ">=", "<", "<="):
+        try:
+            if op == ">":
+                return actual > expected, f"actual={actual} > expected={expected}"
+            if op == ">=":
+                return actual >= expected, f"actual={actual} >= expected={expected}"
+            if op == "<":
+                return actual < expected, f"actual={actual} < expected={expected}"
+            return actual <= expected, f"actual={actual} <= expected={expected}"
+        except TypeError:
+            return (
+                False,
+                "numeric comparison rejected because values are not comparable "
+                f"(actual_type={type(actual).__name__}, expected_type={type(expected).__name__})",
+            )
     if op == "in":
         if not isinstance(expected, (list, tuple, set)):
             return (
