@@ -30573,6 +30573,70 @@ beginning with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5746 | Implemented (`python/carnot/experiment_5746_exact_proposal_utility_benchmark.py`, `results/experiment_5746_exact_proposal_utility_benchmark.json`) | Implemented (`tests/python/test_experiment_5746_exact_proposal_utility_benchmark.py`) |
 
+### REQ-VERIFY-5759: SOTA Proposal Utility With Exact Validator Authority
+
+Carnot SHALL provide Exp5759 to measure whether local SOTA GGUF finite-choice
+proposal orderings reduce exact hard/soft search work on the frozen Exp5746
+science split. The workflow SHALL consume the Exp5757 bridge and Exp5746
+manifest by hash, SHALL NOT regenerate or tune science rows, and SHALL freeze
+prompts, candidate-label bijections, candidate ordering seeds, exact budgets,
+stopping rules, and metric definitions before any model scoring call.
+
+The workflow SHALL define `MODEL_SPECS` with exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; resolve concrete GGUF paths through the
+repository SOTA cache helpers or their all-three equivalent; authenticate local
+weight hashes, embedded tokenizer one-token labels, llama.cpp CUDA build
+support, GPU offload, and resource/checkpoint receipts; and block before
+inference when any mandated model or upstream evidence is unavailable or
+unauthenticated.
+
+The workflow SHALL use only sealed candidate labels as proposal signals.
+Native model logits over the sealed labels MAY order candidates, but exact
+validators SHALL remain the sole authority for hard feasibility, objective
+values, exact optimum discovery, validator disagreement, and gate readiness.
+The artifact SHALL declare `verifier_is_oracle=true`,
+`llm_judge_used=false`, `generated_text_scoring_used=false`,
+`token_scores_are_semantic_authority=false`, and `model_weight_mutation=false`.
+
+The terminal artifact SHALL include field principles for every field and bare
+producer gate scalars `proposal_utility_lcb`,
+`flagship_nonregression_count`, `validator_disagreement_count`,
+`authority_violation_count`, and `proposal_utility_ready_score`. The
+ready-score gate SHALL require a non-negative proposal utility lower bound,
+non-negative per-family utility deltas in both flagship models, zero validator
+disagreements, zero exact-authority violations, and all three mandated models
+contributing authenticated local llama.cpp CUDA GGUF score rows.
+
+### SCENARIO-VERIFY-5759: Exact Validators Decide Proposal Utility
+
+**Given** the Exp5757 bridge, Exp5746 science rows, local GGUF paths, and CUDA
+runtime all authenticate
+**When** Exp5759 ranks sealed candidate labels and evaluates proposal and
+control orderings
+**Then** exact-validator receipts decide every feasible/optimal/gap metric,
+paired bootstrap intervals are reported by row, family, model, and overall,
+forbidden generated-text or judge paths remain false, and the artifact emits a
+terminal `complete:` verdict.
+
+### SCENARIO-VERIFY-5759-BLOCKED: Preconditions Fail Closed Before Scoring
+
+**Given** any upstream hash, bridge scalar, model path/hash, tokenizer label,
+CUDA/offload, resource, or checkpoint precondition fails
+**When** Exp5759 runs
+**Then** no score runner is invoked, `status="blocked"`,
+`proposal_utility_ready_score=0.0`, and the blocked verdict preserves the exact
+mechanical reason.
+
+**Spec traces:** REQ-VERIFY-5759, SCENARIO-VERIFY-5759,
+SCENARIO-VERIFY-5759-BLOCKED
+
+## Implementation Status (REQ-VERIFY-5759)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5759 | Planned (`python/carnot/experiment_5759_sota_exact_proposal_utility_panel.py`, `results/experiment_5759_sota_exact_proposal_utility_panel.json`) | Planned (`tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py`) |
+
 ### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
 
 The repository SHALL provide Exp 5615 at
