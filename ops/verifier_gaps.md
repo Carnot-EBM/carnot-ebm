@@ -3112,3 +3112,54 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   closing it is a world-model/goal-conditioned build, not a cheap salience tweak. Keep
   `CARNOT_ARC_SMALL_OBJECT_FIRST` OFF (operator-only whether to flip); this entry is the falsification
   record, NOT an edit to `ops/exclusion_manifest.yaml`.
+
+## GAP-ARC-INDUCTION-REFINEMENT-NULL: verifier-grounded CEGIS refinement does not lift world-model induction quality, on either a small or a substantially larger frozen local model (2026-07-21)
+
+### GAP-ARC-INDUCTION-REFINEMENT-NULL: CEGIS refinement is not the fix for near-zero induction accuracy
+- status: tested_and_null — the design doc's own HONEST-NEGATIVE branch, but disclosed with real nuance
+  (neither run cleanly satisfies the branch's literal criteria; see below)
+- evidence: `results/experiment_5760_cegis_refinement_induction_ab.json` (REQ-ARC-WMTE-5760,
+  ThinkingCap-Qwen3.6-27B + Qwen3.5-9B-MTP, 78 cells) and `results/experiment_5766_gemma31b_cegis_refinement_ab.json`
+  (REQ-ARC-WMTE-5766, gemma-4-31B-it, 39 cells, run in PARALLEL on a second GPU per operator directive to
+  test whether a substantially more capable model changes the answer). Both ran the SAME 13-game
+  pre-registered roster through the live agent's OWN CEGIS refinement loop
+  (`execute_bounded_llm_reinduction`, `arc_llm_reinduction.py:654`, wired into both live call sites
+  `arc_competition_agent.py:3885,4005`) instead of single-shot induction, measuring the WITHIN-loop delta
+  (round0 vs best-refined round) to isolate the refinement mechanism's own effect. Result on BOTH models,
+  independently re-verified against each artifact's raw fields: `positive_game_frac = 0.0`, `wins = 0` —
+  literally zero games improved on either model. Pooled `delta_heldout`: `-0.0128` (ThinkingCap+Qwen) and
+  `-0.0598` (gemma-4-31B). `degradation_guard` holds on both (no corruption of an already-correct model).
+- failure mode: this closes the design doc's own open architectural question
+  (`docs/research-notes/arc-induction-quality-improvement-design-2026-07-20.md` §2) with a real
+  measurement rather than an assumption. Model CAPACITY genuinely helps single-shot induction quality
+  (REQ-ARC-WMTE-5764: gemma-4-31B pooled single-shot heldout `0.378` vs ThinkingCap-27B's `0.188`, both
+  independently verified) — but applying MORE COMPUTE VIA REFINEMENT to either model's guesses does not.
+  This corroborates arXiv:2606.31511 ("Falsification, Not Exposure") on this exact task: for frozen local
+  models, self-repair feedback content does not improve correctness; only comparison against external
+  executable ground truth would (the falsification/filter role, not the correction role). Two real,
+  disclosed nuances keep this from being a CLEAN HONEST-NEGATIVE: (1) window-memorization rate dropped
+  substantially on ThinkingCap-27B (`0.73 -> 0.32`) and gemma-4-31B (`0.26` absolute drop) even without a
+  matching correctness gain — refinement changes the induced code's SURFACE structure (stops hardcoding
+  literal observed coordinates) without fixing its DYNAMICS understanding; (2) Qwen-9B's refactor-round
+  emission rate (`0.55`) fell just under the `0.6` healthy threshold, partially confounding its own null
+  (ThinkingCap's and gemma's emission rates were both healthy, `>0.98`).
+- missing discriminator: per the design doc's own pre-registered consequence for this outcome — the gap is
+  NOT "the refinement loop needs tuning" (already tested: `min_heldout_accuracy=1.0` forces genuine
+  refactor attempts, not early-accept; emission is healthy on 2 of 3 model arms; the memorization detector
+  confirms refactor DOES act on the code, just not on its correctness). The missing thing is either (a) a
+  genuinely bigger/different-class offline induction model (permitted on the conductor's 3090s for offline
+  work), to test whether the capacity-helps-single-shot trend continues past 31B, or (b) reconsidering
+  whether Carnot should induce an explicit, verifiable world model up front AT ALL versus a Duck-Harness-style
+  reactive loop where the verifier FILTERS a capable model's turn-by-turn choices instead of trying to
+  correct a wrong symbolic model after the fact — the falsification-not-correction distinction the cited
+  literature makes precisely.
+- candidate design: (a) single-shot (NOT CEGIS-refined) induction with a materially larger/different-family
+  model than gemma-4-31B, same 13-game roster, same metric, to extend the REQ-ARC-WMTE-5764 capacity trend
+  and see where (or whether) it plateaus; (b) a reactive-with-verifier-as-filter prototype on 2-3 games,
+  scoped adversarially per the Phase Prototype + Adversarial Check discipline before any broader investment,
+  since this is a real architecture-level bet, not a parameter tweak.
+- priority: high — this is the decisive result of the whole 2026-07-19/20 wiring-layer-exhaustion ->
+  induction-quality-convergence investigation arc (`ops/status.md` session entry). Do NOT re-propose a CEGIS
+  refinement-loop variant on a frozen local model without a NEW mechanism (per `retire_if_same_verdict` in
+  both REQs' `preregistration` blocks) — the next move is model class or architecture, both operator-only
+  decisions given the GPU-day-scale cost of either.
