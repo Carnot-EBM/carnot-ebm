@@ -112,7 +112,10 @@ TEMPERATURE = 0.2  # matches the code-synthesis induce first-try temperature (ge
 # a fraction of the deployed n_ctx; if a grid is so large that even 1 example + query + answer does
 # not fit, that cell is recorded blocked_grid_too_large (disclosed, NOT silently scored 0).
 MAX_ANSWER_TOKENS_CAP = 8192  # hard cap on a single prediction's output budget
-PROMPT_CELL_FRACTION = 0.60  # examples+query may use up to this fraction of n_ctx (leave room for answer)
+# space-separated small ints tokenize at ~1.4-1.7 tokens/cell (the digit(s) + the joining space),
+# NOT 1 token/cell -- undercounting silently truncates the prompt on large grids. Empirically ~1.6.
+TOKENS_PER_CELL = 1.6
+CTX_SAFETY_FRACTION = 0.92  # keep prompt+answer under this fraction of n_ctx (margin for the estimate)
 
 
 def log(m: str) -> None:
@@ -252,21 +255,25 @@ def _select_examples(window: list, query_idx: int, *, k: int) -> list[Any]:
 
 
 def _answer_budget(shape: tuple[int, int]) -> int:
+    """Output-token budget for ONE full-grid prediction: enough to emit the whole HxW grid at
+    ~TOKENS_PER_CELL tokens/cell plus per-row newlines, capped. A grid that needs more than the
+    cap will truncate -> that prediction is recorded as a parse failure (honest), never silently 0."""
     h, w = shape
-    return int(min(MAX_ANSWER_TOKENS_CAP, h * w * 3 + h + 64))
+    return int(min(MAX_ANSWER_TOKENS_CAP, TOKENS_PER_CELL * h * w + h + 64))
 
 
 def _fits_context(shape: tuple[int, int], k: int, n_ctx: int) -> tuple[bool, int]:
-    """Return (fits, k_usable). Approximate token-cell budget: each shown grid ~ h*w cells; k
-    examples show 2 grids each + the query's before grid + the answer. Reduce k until the prompt
-    fits PROMPT_CELL_FRACTION*n_ctx; if even k=1 does not fit, return (False, 0)."""
+    """Return (fits, k_usable). Estimate prompt tokens as TOKENS_PER_CELL * (2k+1) full grids
+    (k examples show before+after each, plus the query's before) + header overhead, and require
+    prompt+answer under CTX_SAFETY_FRACTION*n_ctx. Reduce k until it fits; (False, 0) if even
+    k=1 does not fit (that game is recorded blocked_grid_too_large, disclosed)."""
     h, w = shape
     cells = h * w
     answer = _answer_budget(shape)
-    budget = int(PROMPT_CELL_FRACTION * n_ctx)
+    ceil = int(CTX_SAFETY_FRACTION * n_ctx)
     for kk in range(k, 0, -1):
-        prompt_cells = (2 * kk + 1) * cells + 400  # +overhead for headers/markers
-        if prompt_cells + answer <= n_ctx and prompt_cells <= budget:
+        prompt_tokens = int(TOKENS_PER_CELL * (2 * kk + 1) * cells) + 600  # +header/marker overhead
+        if prompt_tokens + answer <= ceil:
             return True, kk
     return False, 0
 
