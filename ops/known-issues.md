@@ -3414,6 +3414,65 @@ to adopt is value-judgment, not a blocker.
 better figures, or when GitHub Pages launches and needs hero
 graphics, or when a contributor offers to do the integration.
 
+### 2026-07-21 UPDATE: ADOPTED, with a local-only backend (ERNIE-Image, not gpt-image-2/gemini)
+
+**Status change:** the "parked" note above is superseded by an operator
+directive: "using gemini, claude, or codex isn't an option without paid
+API tokens anymore." paperbanana IS now adopted (per REQ-PUBLISH-042,
+`openspec/capabilities/publication/spec.md`), but NOT with the
+closed-weight backends the 2026-05-01 note evaluated (`gpt-image-2`,
+`gemini-3-pro-image-preview`) -- those require exactly the paid tokens
+that are no longer available.
+
+**What shipped (2026-07-21):**
+
+- `external/paperbanana/` -- vendored git clone of `llmsresearch/paperbanana`
+  at latest tag `v0.3.0` (MIT), gitignored per the `external/ARC-GEN`
+  convention. paperbanana's own source is unmodified.
+- `python/carnot/imagegen/ernie_image_server.py` -- a local FastAPI shim
+  implementing just the `POST /v1/images/generations` contract paperbanana's
+  unmodified `openai_imagen` provider expects, backed by
+  `baidu/ERNIE-Image` (Apache-2.0, 8B-param Diffusion Transformer,
+  Diffusers-native, single 24GB-class GPU). paperbanana is pointed at it via
+  `OPENAI_BASE_URL` -- zero patches to the vendored tool.
+- `scripts/generate_diagram.py` -- the "generate a diagram" entrypoint going
+  forward. `CARNOT_IMAGE_BACKEND` (default `ernie-local`) selects the
+  backend; the old `gemini`/`openai` paid paths are kept only for
+  completeness and are not usable without tokens this project doesn't have.
+- `tests/python/test_ernie_image_server.py` -- 11 tests, all mocked (no
+  GPU/network/8B download), verifying the request/response contract, the
+  size-string parsing, and the honest-`RuntimeError`-on-uncached-model path.
+- Optional dependency group `imagegen` in `pyproject.toml`
+  (`diffusers`, `transformers`, `accelerate`, `pillow`, `fastapi`,
+  `uvicorn`) -- installed into `.venv` 2026-07-21.
+
+**NOT done yet -- the model weights themselves.** `baidu/ERNIE-Image` is
+NOT downloaded (an 8B-parameter model is a multi-gigabyte fetch; per
+Pre-Launch Preconditions Discipline this project never auto-downloads a
+compute-bound resource without an explicit trigger). Before the first real
+diagram generation: `huggingface-cli download baidu/ERNIE-Image`. Verified
+2026-07-21 that `scripts/generate_diagram.py --backend ernie-local` fails
+honestly with `blocked_ernie_image_not_cached` (not a fabricated diagram)
+in the current state.
+
+**KNOWN GAP -- the VLM (planner/critic/stylist) role is still paid-API-only.**
+This adoption swaps ONLY paperbanana's image-generation role. The other six
+agents in paperbanana's pipeline (Retriever, Planner, Stylist, Visualizer's
+prompt-refinement, Critic, Context Enricher/Caption Sharpener) run through
+`VLM_PROVIDER`, which still defaults to `gemini` and needs `GOOGLE_API_KEY`
+-- unavailable per the same operator directive that motivated this change.
+`scripts/generate_diagram.py` prints a visible warning rather than silently
+proceeding as if the whole pipeline were local. paperbanana DOES already
+support two fully-local VLM providers (`ollama`, pointed at a local Ollama
+server -- confirmed running on this box but with zero models pulled as of
+2026-07-21; and `openai_local`, pointed at any local OpenAI-compatible LLM
+server, e.g. this project's own llama.cpp servers IF built with vision
+support and paired with a GGUF that ships an mmproj file). Neither was
+wired up here -- that requires its own verification (does the local
+llama.cpp build actually support image input via `--mmproj`? which local
+model to pull into Ollama?) and was out of scope for the explicit ask
+("our image generation model"). Follow-up candidate for a future task.
+
 ## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z, EXTENDED 2026-05-02 18:40Z)
 
 **arXiv submission is ON HOLD until Phase 4 firm pivot answer + figure-integrity audit.**

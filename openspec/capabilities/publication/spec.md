@@ -2392,9 +2392,85 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
 | REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
 | REQ-PUBLISH-3840 | Planned | Exp 3840 v353 publication gate regression confirmation |
+| REQ-PUBLISH-042 | Implemented | Local paperbanana + ERNIE-Image diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`) |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
 
 ### REQ-PUBLISH-027: Position Paper Nexus
 The experiment 1913 architecture paper workflow MUST draft the position paper nexus and update the architecture document. It MUST produce an artifact at `results/experiment_1913_arch_paper.json` with the schema `carnot.arch_paper.v1` and record the status and an honest verdict indicating readiness.
+
+### REQ-PUBLISH-042: Local Diagram-Generation Backend (paperbanana + ERNIE-Image)
+
+**Origin:** 2026-07-21 operator directive. Gemini/Claude/Codex API tokens
+are no longer available for this project's use, so the diagram/figure
+generation path (previously parked 2026-05-01 as "adopt paperbanana",
+see `ops/known-issues.md`) MUST run entirely on local, open-weight compute
+instead of a paid closed-weight image-generation API.
+
+The project MUST vendor `paperbanana` (MIT, `llmsresearch/paperbanana`)
+under `external/paperbanana/` at its latest tagged release, gitignored per
+the existing `external/ARC-GEN`-style convention (no embedded-repo
+gitlinks). paperbanana's own source MUST NOT be patched — its
+`openai_imagen` provider already accepts an arbitrary `OPENAI_BASE_URL`,
+so the local backend integrates purely as a network-boundary adapter, per
+CLAUDE.md's Decentralization-Respecting Design Constraints rule 7 (vendor
+adapters through an abstract protocol boundary, core code never imports
+the vendor SDK directly).
+
+`python/carnot/imagegen/ernie_image_server.py` MUST implement a local HTTP
+server that matches the exact request/response contract paperbanana's
+`OpenAIImageGen` provider issues against `POST {base_url}/images/generations`
+(`{model, prompt, n=1, size, quality?}` -> `{"data": [{"b64_json": ...}]}`),
+backed by `baidu/ERNIE-Image` (Apache-2.0, Diffusers-native, 8B-parameter
+DiT, runs on a single 24GB-class consumer GPU) loaded via
+`diffusers.DiffusionPipeline.from_pretrained`. The pipeline MUST be a lazy,
+process-wide singleton (never loaded at import time or per-request) and
+MUST refuse to load with an honest `RuntimeError` naming the exact
+`huggingface-cli download` command when the model is not yet in the local
+HuggingFace cache -- it MUST NOT trigger a silent multi-gigabyte download
+mid-request (Pre-Launch Preconditions Discipline).
+
+`scripts/generate_diagram.py` MUST be the entrypoint used going forward for
+diagram generation. It MUST read `CARNOT_IMAGE_BACKEND` (env var or
+`--backend` flag) with legal values `{ernie-local, gemini, openai, none}`
+and default to `ernie-local`. For `ernie-local` it MUST: verify the model is
+cached (else exit with `blocked_ernie_image_not_cached`), verify the
+`paperbanana` CLI is installed (else exit with
+`blocked_paperbanana_not_installed`), reuse an already-healthy
+`ernie_image_server` process via its `/healthz` endpoint or launch one
+(pinned to a caller-supplied CUDA device index), and then invoke
+`paperbanana generate` with `IMAGE_PROVIDER=openai_imagen`,
+`OPENAI_BASE_URL` pointed at the local server, and a non-empty placeholder
+`OPENAI_API_KEY` (the local server requires no real credential).
+
+**Known gap, explicitly documented, not silently hidden:** this requirement
+covers ONLY the image-generation role. paperbanana's VLM
+(planner/critic/stylist) role still defaults to a paid provider and is not
+addressed here; `scripts/generate_diagram.py` MUST emit a visible warning
+when `VLM_PROVIDER` resolves to a paid provider with no matching API key
+set, rather than silently proceeding as if the whole pipeline were local.
+
+### SCENARIO-PUBLISH-042: ernie-local Backend Serves paperbanana Without Paid API Keys
+
+**Given** `baidu/ERNIE-Image` is cached locally, `paperbanana` is installed
+from `external/paperbanana`, and no `ernie_image_server` is currently running
+**When** `scripts/generate_diagram.py --backend ernie-local` is invoked
+**Then** it launches `ernie_image_server`, waits for `/healthz`, sets
+`IMAGE_PROVIDER=openai_imagen` / `OPENAI_BASE_URL` / `OPENAI_API_KEY` in the
+subprocess environment, and invokes `paperbanana generate` against the local
+server -- with no `GOOGLE_API_KEY`, `OPENAI_API_KEY` (real), or
+`ANTHROPIC_API_KEY` required for the image-generation step.
+
+**Given** `baidu/ERNIE-Image` is NOT yet in the local HuggingFace cache
+**When** `scripts/generate_diagram.py --backend ernie-local` is invoked
+**Then** it exits non-zero with `blocked_ernie_image_not_cached` and the
+exact `huggingface-cli download baidu/ERNIE-Image` command, without
+attempting to download the model or fabricate a diagram.
+
+**Given** a request to `POST /v1/images/generations` with `size="1024x1536"`
+and `n=1`
+**When** `ernie_image_server` handles it
+**Then** it returns `{"data": [{"b64_json": <base64 PNG>}]}` where the
+decoded image is exactly 1024x1536, and a request with `n=2` is rejected
+with HTTP 400 rather than silently generating only one image.
