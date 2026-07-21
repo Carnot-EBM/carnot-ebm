@@ -42609,6 +42609,15 @@ both receipt failure counts and validator disagreements are zero, the held-out
 partition is disjoint, adversarial controls are clean, every hash reproduces,
 and every gate comparison passes.
 
+The Exp5759 replay SHALL compare exactly these producer-normalized fields:
+`benchmark_bridge_ready_score`, `benchmark_ready_score`,
+`structure_receipt_failure_count`, `solution_receipt_failure_count`,
+`validator_disagreement_count`, `heldout_partition_disjoint_score`, and
+`adversarial_verification_clean_score`. Missing top-level fields,
+`{value, principle}` wrapper objects, ambiguous nested scalar candidates,
+altered upstream or row hashes, and readiness asserted despite failed receipts
+SHALL fail closed before any bridge artifact can be marked complete.
+
 The artifact SHALL include, at minimum, `field_principles`, bare `status`,
 `preconditions_checked`, `spec_refs`, `upstream_artifact_path`,
 `upstream_artifact_hash`, `benchmark_manifest_path`,
@@ -42698,4 +42707,4 @@ entry, every gate field is bare, the checksum is populated and stable, and
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-5757 | Planned (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
+| REQ-REPORT-5757 | Implemented (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Implemented (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
