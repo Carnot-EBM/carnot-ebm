@@ -13865,3 +13865,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-21 15:10 UTC | Gated on Exp5766 held-out delta>0: harden one game | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audi |
 | 2026-07-21 15:12 UTC | Gated on Exp5766 held-out delta>0: harden one game | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audi |
 | 2026-07-21 15:14 UTC | Gated on Exp5766 held-out delta>0: harden one game | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audi |
+| 2026-07-21 15:37 UTC | Reconcile .514 gate, proposal, constraint-learning | OK | 85 passed, 1 warning in 11.13s |
