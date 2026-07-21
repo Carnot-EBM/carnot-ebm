@@ -23423,6 +23423,117 @@ continuous-self-learning credit.
 |---|---|---|
 | REQ-LEARN-5762 | Planned (`python/carnot/experiment_5762_query_driven_constraint_lifecycle.py`, `results/experiment_5762_query_driven_constraint_lifecycle.json`) | Planned (`tests/python/test_experiment_5762_query_driven_constraint_lifecycle.py`) |
 
+## REQ-LEARN-5763: Dependent Chronological Constraint Acquisition
+
+The self-learning tier SHALL provide Exp5763, a deterministic no-LLM
+dependent-task extension of the qualified Exp5762 query-driven lifecycle.
+Before learner access, Exp5763 SHALL verify qualified Exp5762 learner and
+checkpoint hashes, Exp5761 benchmark generator and exact solver receipts, RAM
+and disk floors, fixed seeds, the immutable base-model boundary, and
+reproducible replay of the Exp5762 positive gate. Any missing prerequisite,
+hash mismatch, ambiguous oracle boundary, unfixed seed, mutable model-weight
+path, or principle-wrapped gate scalar SHALL block credit.
+
+Exp5763 SHALL generate at least 60 chronological sessions whose later
+constraints compose with, depend on, supersede, narrow, or conflict with
+earlier constraints. Exact validators SHALL mint every row/query label before
+learner access and SHALL seal the dependency DAG, operation order, protected
+prefixes, supersession and conflict schedules, held-out composition suffix,
+shift points, delayed-counterexample plan, crash points, and corruption
+controls. The learner SHALL see only bounded exact membership-query answers,
+not faithful target AST/text, hidden repair receipts, pseudo-labels, LLM
+outputs, GGUF weight writes, online LoRA, broad RL, or KAN scale-up.
+
+Exp5763 SHALL compare the qualified query-driven lifecycle against
+passive-only induction, random-query induction, frozen model, safe generic
+residual sidecar, and reset-each-session controls under matched chronological
+examples, query/update opportunities, state budgets, and stopping rules. The
+stream SHALL exercise typed add, refine, quarantine, supersede, forget, and
+rollback transitions while injecting stale updates, contradictory updates,
+delayed evidence, process interruption, checkpoint corruption, and
+crash/restart around lifecycle boundaries.
+
+Exp5763 SHALL measure forward transfer, held-out compositional exact accuracy,
+constraint-set recovery, query efficiency, dynamic regret, old-task retention,
+recovery time after drift, unsafe or rejected propagation, state/memory growth,
+update latency, and restart/rollback equivalence with paired confidence
+intervals. Continuous-self-learning credit SHALL require exact non-forgetting
+certificates for every protected prefix and exact state-hash restoration after
+rejected updates, crashes, checkpoint corruption, and rollback.
+
+The terminal artifact MUST be written to
+`results/experiment_5763_dependent_task_constraint_acquisition.json` and include
+the top-level fields `field_principles`, `status`, `preconditions_checked`,
+`spec_refs`, `upstream_artifact_hashes`, `generator_version`,
+`dependency_graph_hash`, `stream_root_hash`, `session_count`,
+`heldout_composition_count`, `shift_manifest`, `conflict_manifest`,
+`supersession_manifest`, `delayed_counterexample_manifest`,
+`crash_injection_manifest`, `control_definitions`, `per_arm_metrics`,
+`forward_transfer`, `compositional_exact_accuracy`,
+`constraint_recovery_rate`, `query_efficiency`, `dynamic_regret`,
+`recovery_time`, `old_task_retention_delta`, `unsafe_update_count`,
+`rejected_update_propagation_count`, `update_latency_distribution`,
+`state_growth`, `peak_memory_growth_mb`, `nonforgetting_certificate`,
+`restart_equivalence`, `rollback_hash_mismatch_count`,
+`dependent_task_ca_ready_score`, `continuous_self_learning_target`,
+`continuous_self_learning_credited`, `model_weight_mutation`,
+`production_default_enabled`, `verifier_is_oracle`, `inference_substrate`,
+`random_seeds`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. The fields `status`,
+`unsafe_update_count`, `rejected_update_propagation_count`,
+`rollback_hash_mismatch_count`, `dependent_task_ca_ready_score`,
+`continuous_self_learning_target`, `continuous_self_learning_credited`,
+`model_weight_mutation`, `production_default_enabled`, `verifier_is_oracle`,
+and `inference_substrate` SHALL remain bare top-level fields whose meanings
+appear only in `field_principles`.
+
+Continuous-self-learning credit SHALL require
+`dependent_task_ca_ready_score == 1.0`, `session_count >= 60`,
+`heldout_composition_count > 0`, `forward_transfer > 0.0`,
+`compositional_exact_accuracy == 1.0`, `constraint_recovery_rate == 1.0`,
+`old_task_retention_delta >= 0.0`, `unsafe_update_count == 0`,
+`rejected_update_propagation_count == 0`,
+`rollback_hash_mismatch_count == 0`, exact restart equivalence,
+`continuous_self_learning_target=true`, `model_weight_mutation=false`,
+`production_default_enabled=false`, `verifier_is_oracle=true`, and
+`inference_substrate=dependent_exact_membership_query_sidecar_no_llm`.
+
+### SCENARIO-LEARN-5763-DEPENDENT-STREAM: Dependent Sessions Preserve Exact Recovery
+
+**Given** a sealed Exp5762 positive gate and a preregistered dependent
+chronological stream with at least 60 sessions
+**When** Exp5763 runs the qualified query-driven lifecycle
+**Then** later dependent, composing, narrowed, superseded, and conflicting
+constraints are recovered exactly, delayed counterexamples repair stale state,
+and the sealed held-out composition suffix reaches exact accuracy without
+forgetting protected prefixes.
+
+### SCENARIO-LEARN-5763-MATCHED-CONTROLS: Dependent Gain Uses Matched Controls
+
+**Given** qualified query-driven, passive-only, random-query, frozen,
+safe-generic residual, and reset-each-session arms with identical examples,
+query/update opportunities, state budgets, and stopping rules
+**When** Exp5763 computes dependent-stream metrics
+**Then** forward transfer, dynamic regret, query efficiency, recovery time,
+state growth, and retention are reported per arm and the query-driven arm has
+positive paired gain over the best non-oracle non-reset baseline.
+
+### SCENARIO-LEARN-5763-RECOVERY-RESTART: Fail-Closed Recovery Restores Hashes
+
+**Given** stale updates, contradictory updates, delayed evidence, process
+interruptions, checkpoint corruption, crashes, rejected updates, and rollbacks
+around each lifecycle boundary
+**When** Exp5763 replays recovery receipts
+**Then** every protected prefix has an exact non-forgetting certificate,
+rejected updates have zero propagation, crash/restart and rollback state hashes
+match exactly, and any mismatch blocks `dependent_task_ca_ready_score`.
+
+## Implementation Status (Exp 5763)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5763 | Planned (`python/carnot/experiment_5763_dependent_task_constraint_acquisition.py`, `results/experiment_5763_dependent_task_constraint_acquisition.json`) | Planned (`tests/python/test_experiment_5763_dependent_task_constraint_acquisition.py`) |
+
 ## REQ-LEARN-5737: SOTA Exact Stream CSL Shadow Ingress
 
 The self-learning tier SHALL provide Exp 5737, a CPU-only shadow ingress that

@@ -204,3 +204,33 @@ Then every lifecycle ledger row hash, membership query hash, promoted
 constraint hash, quarantined candidate hash, supersession hash, rollback hash,
 restart hash, science split hash, and template library hash reproduces exactly
 and rejected updates have zero propagation.
+
+### REQ-STORE-5763 — Dependent task lifecycle receipt store
+
+Carnot SHALL store Exp5763 dependent chronological task evidence as
+content-addressed receipts derived from the qualified Exp5762 result. The
+store-level artifact SHALL preserve upstream artifact hashes, generator
+version, dependency DAG hash, stream root hash, row/query label hashes,
+operation-order hashes, protected-prefix hashes, held-out composition hashes,
+shift, conflict, supersession, delayed-counterexample, crash, corruption,
+non-forgetting, restart, and rollback receipts without exposing faithful target
+model AST/text to the learner path.
+
+Stored dependent-task receipts SHALL distinguish exact membership-query answers
+from observed examples, dependencies from supersessions, conflicts from
+quarantines, delayed counterexamples from initial evidence, and rejected or
+corrupted updates from propagated active constraints. Restart and rollback
+receipts SHALL reproduce exact state hashes, and rejected updates SHALL have
+zero propagation.
+
+### SCENARIO-STORE-5763 — Dependent task receipt hashes replay
+
+Given Exp5763 has consumed the qualified Exp5762 query-driven lifecycle result,
+
+When its dependency graph, stream rows, query/update labels, recovery receipts,
+rollback receipts, restart receipts, held-out composition suffix, and
+non-forgetting certificates are replayed,
+
+Then every recorded hash reproduces exactly, protected prefixes retain exact
+membership labels, crash/corruption recovery restores the committed state hash,
+and rejected updates have zero propagation.
