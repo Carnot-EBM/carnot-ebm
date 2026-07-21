@@ -42823,3 +42823,115 @@ entry, every gate field is bare, the checksum is populated and stable, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5758 | Planned (`scripts/experiment_5758_rust_parity_scalar_bridge.py`, `results/experiment_5758_rust_parity_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5758_rust_parity_scalar_bridge.py`) |
+
+### REQ-REPORT-5768: V514 Capstone Reconciles Gate, Science, And Retirement Evidence
+
+The Exp5768 workflow SHALL read the V514 conductor log, roadmap, OpenSpec
+capabilities, operations context, ARC registry, exclusion manifest, and every
+present canonical artifact from `results/experiment_5755_transition_v514.json`
+through `results/experiment_5767_arc_game_blind_composition_hardening.json`.
+It SHALL write `results/experiment_5768_v514_capstone_reconciliation.json`,
+SHALL NOT modify `scripts/research_conductor.py`, SHALL NOT publish, deploy, or
+push, and SHALL declare
+`inference_substrate="cached_artifact_reconciliation_no_llm"`.
+
+The workflow SHALL distinguish blocked preconditions, conductor gate blocks,
+preemptive skips, missing artifacts, negative results, null results, and
+promoted downstream-ready evidence. It SHALL NOT infer a scientific failure
+from an experiment that did not run. Exp5760 and Exp5767 SHALL remain
+gate-blocked when their blocked artifacts show failed upstream scalar gates.
+Exp5759 SHALL be recorded as an executed proposal-utility measurement whose
+utility gate is not ready when the lower confidence bound is non-positive or
+flagship non-regression fails. Exp5765 SHALL be recorded as the final matched
+Rust/Python 10x benchmark only when it executed; it SHALL retire only the
+allocation-free one-axis PyO3 technique when `rust_10x_claimed=false` and
+`rust_10x_retired=true`. Exp5766 SHALL be recorded as an executed ARC
+leave-one-game-out audit with zero registry credit when the held-out delta and
+causal interaction count do not pass downstream gates.
+
+The workflow SHALL reconcile the scalar bridge contract by treating Exp5757 as
+proposal-bridge ready only when `benchmark_bridge_ready_score`,
+`benchmark_ready_score`, disjointness, adversarial cleanliness, and all receipt
+failure counts pass as bare scalar fields. It SHALL treat Exp5758 as Rust-bridge
+ready only when `rust_benchmark_gate_ready_score`, restart parity,
+distributional parity, fallback equivalence, and production reachability pass as
+bare scalar fields. Repeated prior object-shaped gate failures SHALL be recorded
+as terminal infrastructure failures, not scientific nulls.
+
+The workflow SHALL preserve the FR-11 branch boundary: Exp5761 CA benchmark
+readiness requires exact disjoint, validator-clean solver evidence; Exp5762
+credit requires positive query-driven recovery lower bound, exact prefix
+retention, zero unsafe propagation, and zero rollback mismatch; Exp5763
+dependent-task readiness requires the qualified Exp5762 gate and immutable
+GGUF/model weights. KAN-specific scale-up SHALL remain retired even when the new
+constraint-acquisition branch is credited.
+
+The artifact SHALL include, at minimum, principle-covered top-level fields
+`field_principles`, bare `status`, `preconditions_checked`, `milestone`,
+`task_ids`, `task_outcome_matrix`, `artifact_hashes`, `gate_outcomes`,
+`blocked_task_ids`, `scientific_null_task_ids`, `negative_result_task_ids`,
+`promoted_task_ids`, `proposal_bridge_ready`, `rust_bridge_ready`,
+`proposal_panel_executed`, `proposal_utility_ready`,
+`selective_feedback_executed`, `selective_feedback_ready`,
+`continuous_self_learning_executed`, `continuous_self_learning_credited`,
+`kan_scaleup_retired`, `constraint_acquisition_ready`,
+`dependent_task_ca_executed`, `dependent_task_ca_ready`,
+`rust_hot_path_ready`, `rust_benchmark_executed`, `rust_10x_claimed`,
+`rust_10x_retired`, `arc_loo_audit_executed`,
+`arc_loo_generalization_positive`, `arc_composition_executed`,
+`arc_live_generalization_delta`, `solve_provenance`, `arc_registry_delta`,
+`arc_solve_credited`, `hardware_claims`, `model_weight_mutation`,
+`closed_scopes_reopened`, `specs_reconciled`, `traceability_reconciled`,
+`research_complete_reconciled`, `status_reconciled`,
+`changelog_reconciled`, `references_reconciled`, `public_docs_modified`,
+`publication_performed`, `inference_substrate`, `test_commands`,
+`test_exit_codes`, `e2e_checks`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry. `arc_registry_delta` SHALL equal `0`,
+`arc_solve_credited` SHALL equal `false`, `kan_scaleup_retired` SHALL equal
+`true`, `model_weight_mutation` SHALL equal `false`,
+`closed_scopes_reopened` SHALL equal `false`, `public_docs_modified` SHALL equal
+`false`, `publication_performed` SHALL equal `false`, and `honest_verdict`
+SHALL start with `complete:` or `blocked:`.
+
+#### SCENARIO-REPORT-5768: Complete V514 Artifact Reconciles Executed And Gate-Blocked Branches
+
+**Given** the V514 artifacts are present with Exp5757 and Exp5758 bridge gates
+passing, Exp5759 complete but utility not ready, Exp5760 gate-blocked, Exp5761
+through Exp5763 complete and creditable, Exp5764 hot-path ready, Exp5765
+executed and retired without a 10x claim, Exp5766 complete with zero held-out
+delta and zero causal interactions, and Exp5767 gate-blocked
+**When** the Exp5768 capstone workflow runs
+**Then** it emits a complete artifact that keeps gate-blocked task ids separate
+from scientific null and negative task ids, credits only the constraint
+acquisition branch and downstream-ready bridge/hot-path evidence, records
+`proposal_utility_ready=false`, records `selective_feedback_executed=false`,
+records `rust_10x_retired=true`, records `arc_registry_delta=0`, records
+`arc_solve_credited=false`, and does not modify public or operator-curated
+documentation.
+
+#### SCENARIO-REPORT-5768-MISSING-OR-BLOCKED: Missing Or Blocked Inputs Fail Closed Without Science Inference
+
+**Given** one or more expected V514 artifacts are missing, malformed, blocked at
+precondition, or conductor-gate blocked
+**When** the Exp5768 capstone workflow builds the task outcome matrix
+**Then** the missing or blocked task remains explicitly represented in
+`task_outcome_matrix`, no downstream scientific failure is inferred from that
+task alone, artifact hashes and checksum checks are recorded when bytes exist,
+and the honest verdict remains terminal.
+
+#### SCENARIO-REPORT-5768-FIELD-PRINCIPLES: Every Required Field Is Annotated And Stable
+
+**Given** the Exp5768 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level field has a non-empty `field_principles` entry,
+required bare booleans remain bare booleans, the reproducibility checksum is
+stable, the inference substrate is `cached_artifact_reconciliation_no_llm`, and
+unavailable hardware E2E checks are recorded as not applicable rather than
+passed.
+
+## Implementation Status (REQ-REPORT-5768)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5768 | Planned (`python/carnot/experiment_5768_v514_capstone_reconciliation.py`, `results/experiment_5768_v514_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5768_v514_capstone_reconciliation.py`) |
