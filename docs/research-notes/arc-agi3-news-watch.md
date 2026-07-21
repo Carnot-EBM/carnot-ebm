@@ -44,3 +44,11 @@ DhanaLakshmiMalla scored **1.60**, taking sole third place and pushing the **1.5
 
 CHECK_TIMED_OUT
 
+## 2026-07-21 13:14 UTC -- NEW
+
+- YUTO KOJIMA set a new Kaggle high score of **1.86**. Tecnod8.AI is second at **1.61**, and ippeiogawa entered fourth at **1.58**, moving the **1.56** trio to joint fifth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- ARC Prize reported **GPT-5.6 Sol Max at 7.8% verified ARC-AGI-3 performance**—13.33% Public and 7.78% Semi-Private—and the first model to win a public environment, scoring 87% on ft09. [Official results](https://arcprize.org/results/openai-gpt-5-6)
+
+- Organizers analyzed 500 failed submissions: about one-third lacked a traceable visible error, while almost 20% required a GPU without enabling one. Kaggle additionally clarified its 10 MB log cap, 20 GB `/kaggle/working` quota, and 30 GB CPU-notebook memory limit. [Error analysis](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119), [runtime clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
+

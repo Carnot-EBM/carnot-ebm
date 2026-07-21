@@ -23258,6 +23258,57 @@ production default enablement SHALL block `csl_lifecycle_ready_score`.
 |---|---|---|
 | REQ-LEARN-5736 | Planned (`python/carnot/experiment_5736_csl_lifecycle_conflict_rollback.py`, `results/experiment_5736_csl_lifecycle_conflict_rollback.json`) | Planned (`tests/python/test_experiment_5736_csl_lifecycle_conflict_rollback.py`) |
 
+## REQ-LEARN-5761: Exact Constraint Acquisition Lifecycle Operations
+
+The self-learning tier SHALL treat Exp5761 as a no-LLM, solver-authoritative
+constraint-acquisition benchmark for detecting missing and over-fit rules
+before a safe sidecar lifecycle can promote, quarantine, roll back, or repair
+learned constraints. Exp5761 SHALL derive benchmark rows only from the sealed
+Exp5746 exact finite-domain receipts and SHALL NOT import MPMMine rows,
+MPMMine solver outputs, LLM inferences, LLM judges, or generated prose as
+Carnot evidence. External constraint-acquisition benchmark papers MAY inform
+schema principles only.
+
+For every selected faithful model, Exp5761 SHALL provide faithful,
+incomplete, over-fit, and mixed typed-model variants plus expected lifecycle
+operations: `noop` for faithful variants, `add_missing_constraint` for
+incomplete variants, `remove_spurious_constraint` for over-fit variants, and
+both operations for mixed variants. Each operation SHALL be justified by exact
+positive and negative assignments and by minimal distinguishing membership
+queries whose expected answer differs between the faithful model and the
+variant being repaired.
+
+The lifecycle benchmark SHALL preserve train/dev/science split disjointness,
+hard versus soft roles, immutable domain artifacts, model AST/text hashes,
+assignment hashes, query hashes, and expected-repair receipt hashes before any
+learner consumes the rows. Any exact validator disagreement, semantic no-op
+mutation, missing positive or negative assignment, leakage marker, split
+collision, or undetected adversarial control SHALL block
+`ca_benchmark_ready_score`.
+
+### SCENARIO-LEARN-5761: Missing And Spurious Rules Map To Exact Repairs
+
+**Given** a faithful typed Exp5746 model and its incomplete, over-fit, and
+mixed variants
+**When** Exp5761 emits expected lifecycle operations
+**Then** incomplete variants require at least one `add_missing_constraint`
+operation, over-fit variants require at least one
+`remove_spurious_constraint` operation, mixed variants require both operation
+types, and faithful variants require only `noop`.
+
+### SCENARIO-LEARN-5761-MINIMAL-QUERIES: Queries Are Minimal For Repair Class
+
+**Given** a variant's expected repair operation set
+**When** Exp5761 validates the discriminating membership queries
+**Then** removing any query makes at least one required repair operation
+undistinguished, so the receipt records the query set as minimal.
+
+## Implementation Status (Exp 5761)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5761 | Planned (`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py`, `results/experiment_5761_exact_constraint_acquisition_benchmark.json`) | Planned (`tests/python/test_experiment_5761_exact_constraint_acquisition_benchmark.py`) |
+
 ## REQ-LEARN-5737: SOTA Exact Stream CSL Shadow Ingress
 
 The self-learning tier SHALL provide Exp 5737, a CPU-only shadow ingress that

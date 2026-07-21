@@ -1452,6 +1452,103 @@ SCENARIO-BENCH-5759-BLOCKED-PRECONDITIONS
 |---|---|---|
 | REQ-BENCH-5759 | Planned (`python/carnot/experiment_5759_sota_exact_proposal_utility_panel.py`, `results/experiment_5759_sota_exact_proposal_utility_panel.json`) | Planned (`tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py`) |
 
+### REQ-BENCH-5761: Exact Constraint Acquisition Benchmark
+
+Carnot MUST provide Exp5761 at
+`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py` and
+write
+`results/experiment_5761_exact_constraint_acquisition_benchmark.json` plus a
+sealed JSONL manifest. The benchmark SHALL be derived only from the immutable
+Exp5746 artifact and manifest after replaying the upstream artifact hash,
+manifest hash, every row hash, split hashes, generator version, solver
+versions, family balance, deterministic seeds, free RAM/disk, local
+license/provenance, and independent faithful-model structure reconstruction.
+If faithful model structure cannot be reconstructed from the sealed Exp5746
+receipts, Exp5761 SHALL fail closed with an `honest_verdict` beginning
+`blocked:`.
+
+Exp5761 SHALL select at least 120 disjoint source cases across
+`finite_domain_csp`, `weighted_maxsat`, `hard_soft_packing`, and
+`finite_state_planning`, preserving a family-stratified train/dev/science split
+before any learner-facing benchmark rows are exposed. For every faithful typed
+model, the generator SHALL emit hash-sealed faithful, incomplete, over-fit, and
+mixed variants. Incomplete variants SHALL delete one or more non-implied
+constraints, over-fit variants SHALL add spurious globally or locally
+restrictive constraints, and mixed variants SHALL combine both operations.
+Hard versus soft roles SHALL be preserved, and semantically equivalent no-op
+mutations SHALL be rejected.
+
+For every variant, Exp5761 SHALL generate exact positive and negative
+assignments and minimal distinguishing membership queries. A primary exact
+enumerator and an independent exact validator SHALL check model semantics,
+satisfiability, objective values, query minimality, hard/soft roles, expected
+repair operations, and adversarial controls. Duplicate, contradictory,
+implied-constraint, infeasible-model, vacuous-global, objective-sign, leakage,
+split-collision, and shortcut controls SHALL be present and detected. Domain
+artifacts, model text and AST, assignments, queries, and expected lifecycle
+operations SHALL be sealed by hash.
+
+The terminal artifact MUST include top-level bare gate scalars
+`ca_benchmark_ready_score`, `exact_validator_disagreement_count`, and
+`train_dev_science_disjoint_score`, and it MUST list those names in
+`producer_gate_fields`. The artifact MUST also include `field_principles`,
+bare `status`, `preconditions_checked`, `spec_refs`,
+`upstream_artifact_hashes`, `generator_version`, `generator_source_hash`,
+`solver_versions`, `benchmark_manifest_path`, `benchmark_manifest_hash`,
+`instance_count`, `family_counts`, `variant_counts`,
+`faithful_model_hashes`, `incomplete_model_hashes`,
+`overfit_model_hashes`, `mixed_model_hashes`, `domain_artifact_hashes`,
+`positive_assignment_count`, `negative_assignment_count`,
+`membership_query_count`, `distinguishing_query_receipts`,
+`expected_repair_receipts`, `hard_soft_role_receipts`, `split_manifest`,
+`science_row_hashes`, `adversarial_controls`,
+`structure_receipt_failure_count`, `solution_receipt_failure_count`,
+`llm_inference_used` with value false, `verifier_is_oracle` with value true,
+`inference_substrate` with value
+`deterministic_exact_solver_dataset_generation_no_llm`,
+`random_seeds`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and an `honest_verdict` beginning `complete:` or
+`blocked:`.
+
+`ca_benchmark_ready_score` SHALL equal `1.0` only when upstream replay passes,
+at least 120 selected cases are disjoint and balanced across the four required
+families, train/dev/science split membership is disjoint, all variant mutations
+are semantic changes except faithful no-op baselines, every variant has exact
+positive and negative assignments, every required discriminating query is
+minimal for its expected repair operation, independent validators agree, all
+adversarial controls are detected, all required hashes replay, no LLM
+inference is used, and the exact verifier is declared as the oracle. Otherwise
+the ready score SHALL be `0.0`.
+
+#### SCENARIO-BENCH-5761: Sealed Acquisition Rows Distinguish Missing And Over-Fit Rules
+
+**Given** the Exp5746 exact benchmark artifact and manifest replay by hash
+**When** Exp5761 derives the constraint-acquisition benchmark
+**Then** at least 120 disjoint cases are selected across the four required
+families, faithful/incomplete/over-fit/mixed variants are sealed, train/dev/
+science split hashes remain disjoint, exact positive and negative assignments
+are present for every variant, distinguishing membership queries expose the
+expected add/remove repair operation, and the three producer gate fields are
+top-level bare scalars.
+
+#### SCENARIO-BENCH-5761-CONTROLS: Invalid Acquisition Evidence Fails Closed
+
+**Given** duplicate rows, contradictory constraints, implied or vacuous
+mutations, infeasible variants, objective-sign inversions, leakage markers,
+split collisions, or shortcut acceptances
+**When** Exp5761 validates controls
+**Then** each control is detected and any undetected control blocks
+`ca_benchmark_ready_score`.
+
+**Spec traces:** REQ-BENCH-5761, SCENARIO-BENCH-5761,
+SCENARIO-BENCH-5761-CONTROLS
+
+## Implementation Status (REQ-BENCH-5761)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5761 | Planned (`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py`, `results/experiment_5761_exact_constraint_acquisition_benchmark.json`) | Planned (`tests/python/test_experiment_5761_exact_constraint_acquisition_benchmark.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.

@@ -104,6 +104,21 @@ ARTIFACT = REPO / "results" / "experiment_5768_direct_incontext_prediction_ab.js
 GEMMA_CODE_BASELINE_ARTIFACT = REPO / "results" / "experiment_5764_gemma31b_singleshot_induction_ab.json"
 GEMMA_CODE_BASELINE_POOLED = 0.378487  # from REQ-ARC-WMTE-5764 (fallback if artifact unreadable)
 
+import os  # noqa: E402
+
+# PREDICTION MODE (operator-selected). "delta" (default): the model outputs ONLY the changed cells
+# (row col newvalue), applied mechanically to the before-grid -> predicted after-grid. This removes
+# the 4096-cell full-grid regurgitation burden that made literal full-grid output infeasible on this
+# all-64x64 roster (~24h and mechanically floored) while STILL being no-code direct in-context
+# prediction of the transition's effect, scored by the SAME exact full-grid np.array_equal. "full":
+# the model outputs the entire predicted after-grid (the literal spec; kept for a bounded comparison).
+PREDICTION_MODE = os.environ.get("EXP5768_MODE", "delta").strip().lower()
+# gemma-4-31B-it reasons by DEFAULT via its chat template (<think>...), consuming the answer budget
+# before the grid/delta and adding ~100-280s/prediction with NO answer (smoke-verified). Bypassing
+# the chat template (raw /completion: the prompt ends at the answer marker and the model just
+# CONTINUES the text) yields has_think=False and a direct answer -- so both modes use raw completion.
+USE_RAW_COMPLETION = os.environ.get("EXP5768_RAW", "1") != "0"
+
 K_EXAMPLES = 8  # in-context example cap, matching the code path's induce k (_induce_transitions_k=8)
 TEMPERATURE = 0.2  # matches the code-synthesis induce first-try temperature (generate: 0.2+0.1*att)
 # Adaptive size bounds. A logical grid of H*W cells serialized as space-separated ints costs
@@ -132,6 +147,18 @@ def grid_to_text(g: np.ndarray) -> str:
 
 
 _ROW_RE = re.compile(r"-?\d+")
+_THINK_RE = re.compile(r"^.*?</think>", re.DOTALL)
+
+
+def strip_think(text: str) -> str:
+    """Remove a leading reasoning block up to and including </think> (gemma-4-it / reasoning models
+    emit <think>...</think> via the chat template; the _chat_complete_request folds split-out
+    reasoning back in wrapped in those tags). Parsing must see only the FINAL answer, not integer
+    rows the model restated inside its reasoning. If the think block was never closed (truncated
+    mid-reasoning), nothing is stripped and parsing will find no clean answer grid (honest)."""
+    if "</think>" in text:
+        return _THINK_RE.sub("", text, count=1)
+    return text
 
 
 def parse_grid(text: str, expected_shape: tuple[int, int]) -> Optional[np.ndarray]:
@@ -243,6 +270,90 @@ def build_prediction_prompt(
     )
 
 
+def _changed_cells(before: np.ndarray, after: np.ndarray) -> list[tuple[int, int, int]]:
+    """List of (row, col, new_value) for every cell that differs between before and after."""
+    b, a = np.asarray(before), np.asarray(after)
+    if b.shape != a.shape:
+        return []
+    rs, cs = np.where(b != a)
+    return [(int(r), int(c), int(a[r, c])) for r, c in zip(rs.tolist(), cs.tolist())]
+
+
+def _fmt_changes(cells: list[tuple[int, int, int]]) -> str:
+    return "NONE" if not cells else "\n".join(f"{r} {c} {v}" for r, c, v in cells)
+
+
+_DELTA_LINE_RE = re.compile(r"^\s*(\d+)\s+(\d+)\s+(-?\d+)\s*$")
+
+
+def parse_delta(text: str, shape: tuple[int, int]) -> Optional[list[tuple[int, int, int]]]:
+    """Parse the model's changed-cell list ('row col newvalue' per line, or 'NONE') into a list of
+    in-bounds (row, col, value). Returns [] for an explicit NONE; None if NOTHING parseable was
+    found (distinguishes 'predicted no change' from 'produced no answer'). Out-of-bounds coords are
+    dropped (recorded as a malformed prediction that simply won't reproduce the true grid)."""
+    h, w = shape
+    body = strip_think(text)
+    if re.search(r"\bNONE\b", body) and not _DELTA_LINE_RE.search(body):
+        return []
+    cells: list[tuple[int, int, int]] = []
+    found_any = False
+    for raw in body.splitlines():
+        m = _DELTA_LINE_RE.match(raw.strip().strip("`"))
+        if not m:
+            continue
+        found_any = True
+        r, c, v = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        if 0 <= r < h and 0 <= c < w:
+            cells.append((r, c, v))
+    return cells if found_any else None
+
+
+def apply_delta(before: np.ndarray, cells: list[tuple[int, int, int]]) -> np.ndarray:
+    """Apply a changed-cell list to a copy of the before grid -> predicted after grid."""
+    g = np.asarray(before).copy()
+    h, w = g.shape
+    for r, c, v in cells:
+        if 0 <= r < h and 0 <= c < w:
+            g[r, c] = v
+    return g
+
+
+def build_delta_prompt(
+    examples: list[Any], query: Any, *, game: str, cell: int, colors: list[int], shape: tuple[int, int]
+) -> str:
+    """DELTA variant of the direct-prediction prompt: still NO code. Examples show the BEFORE grid +
+    the CHANGED-cell list (row col newvalue) the action produced; the model must output ONLY the
+    changed-cell list for the QUERY. Applied mechanically to the before grid -> predicted after grid,
+    then scored by the SAME exact full-grid np.array_equal. This removes the 4096-cell regurgitation
+    burden of full-grid output while still directly predicting the transition's effect in-context."""
+    h, w = shape
+    ex_lines = []
+    for i, t in enumerate(examples, 1):
+        ex_lines.append(
+            f"EXAMPLE {i}\n"
+            f"BEFORE:\n{grid_to_text(t.grid)}\n"
+            f"{_serialize_action(t)}\n"
+            f"CHANGED CELLS (row col newvalue):\n{_fmt_changes(_changed_cells(t.grid, t.next_grid))}"
+        )
+    examples_block = "\n\n".join(ex_lines)
+    return (
+        f"You are given observed state transitions of the ARC-AGI-3 game '{game}'. Each state is a "
+        f"{h}x{w} integer grid (colors {colors}), rows/cols 0-indexed. An ACTION transforms BEFORE "
+        f"into AFTER; the change is given as the list of cells that differ, 'row col newvalue'. "
+        f"ACTION 6 is a click at pixel DATA={{'x':px,'y':py}} (one logical cell = {cell} pixels); "
+        f"other actions are directional/keyboard with DATA none. Infer the transition rule from the "
+        f"examples and apply it to the QUERY.\n\n"
+        f"{examples_block}\n\n"
+        f"QUERY\n"
+        f"BEFORE:\n{grid_to_text(query.grid)}\n"
+        f"{_serialize_action(query)}\n\n"
+        f"List ONLY the cells that change from BEFORE to AFTER for the QUERY, one per line as "
+        f"'row col newvalue' (0-indexed integers). If nothing changes, output NONE. No explanation, "
+        f"no code, no other text.\n"
+        f"CHANGED CELLS (row col newvalue):\n"
+    )
+
+
 def _select_examples(window: list, query_idx: int, *, k: int) -> list[Any]:
     """Leave-one-out example selection: up to k transitions from window EXCLUDING query_idx,
     preferring state-CHANGING transitions (the informative ones) then keeping a couple of no-ops,
@@ -262,72 +373,121 @@ def _answer_budget(shape: tuple[int, int]) -> int:
     return int(min(MAX_ANSWER_TOKENS_CAP, TOKENS_PER_CELL * h * w + h + 64))
 
 
-def _fits_context(shape: tuple[int, int], k: int, n_ctx: int) -> tuple[bool, int]:
-    """Return (fits, k_usable). Estimate prompt tokens as TOKENS_PER_CELL * (2k+1) full grids
-    (k examples show before+after each, plus the query's before) + header overhead, and require
-    prompt+answer under CTX_SAFETY_FRACTION*n_ctx. Reduce k until it fits; (False, 0) if even
-    k=1 does not fit (that game is recorded blocked_grid_too_large, disclosed)."""
+def _delta_answer_budget(shape: tuple[int, int]) -> int:
+    """Output-token budget for ONE delta prediction: enough to emit a changed-cell list at ~4 tokens
+    per 'row col newvalue' line, capped. A transition whose true delta exceeds this truncates -> a
+    partial/failed prediction (honest), never silently 0. Far smaller on average than a full grid,
+    since most transitions change few cells."""
     h, w = shape
-    cells = h * w
-    answer = _answer_budget(shape)
+    return int(min(MAX_ANSWER_TOKENS_CAP, 4 * h * w + 128))
+
+
+def _est_tokens(text: str) -> int:
+    """CONSERVATIVE token estimate for digit-dense grid/delta text. Space-separated small ints and
+    'row col newvalue' lines tokenize at ~1.3-1.5 chars/token (e.g. '5 2 3' -> '5',' 2',' 3' = 3
+    tokens over 5 chars). We divide by 1.3 to slightly OVER-estimate: overshooting reduces the
+    example count k (safe -- fewer examples), while UNDER-estimating would let the prompt overflow
+    n_ctx and be silently PROMPT-TRUNCATED (dropping the earliest examples), corrupting the
+    prediction. Combined with CTX_SAFETY_FRACTION this leaves a solid margin."""
+    return int(len(text) / 1.3)
+
+
+def _build_and_fit(
+    mode: str, window: list, query_idx: int, *, game: str, cell: int, colors: list[int],
+    shape: tuple[int, int], n_ctx: int,
+) -> Optional[tuple[str, int, int]]:
+    """Build the mode-appropriate leave-one-out prompt with the largest example count k (<=
+    K_EXAMPLES) whose estimated prompt + answer budget fits CTX_SAFETY_FRACTION*n_ctx. Returns
+    (prompt, k_used, answer_budget) or None if even k=1 overflows (-> blocked_grid_too_large)."""
+    q = window[query_idx]
+    answer = _delta_answer_budget(shape) if mode == "delta" else _answer_budget(shape)
     ceil = int(CTX_SAFETY_FRACTION * n_ctx)
-    for kk in range(k, 0, -1):
-        prompt_tokens = int(TOKENS_PER_CELL * (2 * kk + 1) * cells) + 600  # +header/marker overhead
-        if prompt_tokens + answer <= ceil:
-            return True, kk
-    return False, 0
+    builder = build_delta_prompt if mode == "delta" else build_prediction_prompt
+    for kk in range(K_EXAMPLES, 0, -1):
+        examples = _select_examples(window, query_idx, k=kk)
+        prompt = builder(examples, q, game=game, cell=cell, colors=colors, shape=shape)
+        if _est_tokens(prompt) + answer <= ceil:
+            return prompt, kk, answer
+    return None
 
 
 # ---------------------------------------------------------------------------
 # One (game, trial) cell: leave-one-out predict every window transition
 # ---------------------------------------------------------------------------
 def run_prediction_cell(
-    game: str, prop: Any, *, trial: int, window: list, cell: int, n_ctx: int
+    game: str, prop: Any, *, trial: int, window: list, cell: int, n_ctx: int, mode: str = "delta"
 ) -> dict[str, Any]:
     shape = tuple(int(x) for x in np.asarray(window[0].grid).shape)
     colors = sorted({int(v) for t in window for v in np.asarray(t.grid).flatten().tolist()})
-    fits, k_use = _fits_context(shape, K_EXAMPLES, n_ctx)
-    if not fits:
-        return {
-            "game": game,
-            "trial": trial,
-            "grid_shape": list(shape),
-            "n_transitions": len(window),
-            "blocked": "grid_too_large_for_context",
-            "n_ctx": n_ctx,
-            "heldout_accuracy": None,
-            "parse_success_rate": None,
-        }
-    ans_budget = _answer_budget(shape)
     per_trans: list[dict[str, Any]] = []
+    k_used_any = None
     for i, q in enumerate(window):
-        examples = _select_examples(window, i, k=k_use)
-        prompt = build_prediction_prompt(
-            examples, q, game=game, cell=cell, colors=colors, shape=shape
+        built = _build_and_fit(
+            mode, window, i, game=game, cell=cell, colors=colors, shape=shape, n_ctx=n_ctx
         )
+        next_grid = np.asarray(q.next_grid)
+        before = np.asarray(q.grid)
+        changed = not np.array_equal(before, next_grid)
+        n_true_changes = int((before != next_grid).sum())
+        if built is None:  # cannot fit even k=1 -> blocked for this transition
+            per_trans.append(
+                {
+                    "i": i, "action": int(q.action), "changed": changed,
+                    "n_true_changes": n_true_changes, "blocked": "prompt_too_large_for_context",
+                    "server_ok": False, "parse_ok": False, "shape_ok": False, "exact": False,
+                    "identity_copy": False, "cell_agreement": None, "changed_cell_recall": None,
+                    "wall_s": 0.0, "stop_type": "", "prompt_truncated": False,
+                }
+            )
+            continue
+        prompt, k_use, ans_budget = built
+        k_used_any = k_use
         t0 = time.time()
         try:
             ok, text = prop.complete_text(prompt, max_tokens=ans_budget, temperature=TEMPERATURE)
         except Exception as exc:  # network/server boundary -> a datum, not a crash
             ok, text = False, f"complete_text_error: {type(exc).__name__}: {exc}"
-        pred = parse_grid(text, shape) if ok else None
-        next_grid = np.asarray(q.next_grid)
-        before = np.asarray(q.grid)
-        changed = not np.array_equal(before, next_grid)
+        n_pred_changes = None
+        if not ok:
+            pred = None
+        elif mode == "delta":
+            dcells = parse_delta(text, shape)
+            if dcells is None:
+                pred = None
+            else:
+                n_pred_changes = len(dcells)
+                pred = apply_delta(before, dcells)
+        else:
+            pred = parse_grid(strip_think(text), shape)
         parse_ok = pred is not None
-        exact = bool(parse_ok and pred.shape == next_grid.shape and np.array_equal(pred, next_grid))
-        identity = bool(parse_ok and pred.shape == before.shape and np.array_equal(pred, before))
         shape_ok = bool(parse_ok and pred.shape == next_grid.shape)
+        exact = bool(shape_ok and np.array_equal(pred, next_grid))
+        identity = bool(parse_ok and pred.shape == before.shape and np.array_equal(pred, before))
+        # cell-level agreement -- the load-bearing instrumentation for interpreting a floored
+        # exact-match on large grids: distinguishes "regurgitation wall" (copies most of the 4096
+        # cells right, misses a few -> high agreement, exact=0) from "cannot infer" (low agreement).
+        cell_agreement = float((pred == next_grid).mean()) if shape_ok else (0.0 if parse_ok else None)
+        # changed-cell recall (the diagnosis's cell_recall): of the cells that TRULY changed, the
+        # fraction the prediction got right -- did it capture the transition's real effect at all?
+        changed_cell_recall: Optional[float] = None
+        if shape_ok and changed:
+            m = before != next_grid
+            changed_cell_recall = float((pred[m] == next_grid[m]).mean())
         per_trans.append(
             {
                 "i": i,
                 "action": int(q.action),
                 "changed": changed,
+                "n_true_changes": n_true_changes,
+                "n_pred_changes": n_pred_changes,
+                "k_examples": k_use,
                 "server_ok": bool(ok),
                 "parse_ok": parse_ok,
                 "shape_ok": shape_ok,
                 "exact": exact,
                 "identity_copy": identity,
+                "cell_agreement": cell_agreement,
+                "changed_cell_recall": changed_cell_recall,
                 "wall_s": round(time.time() - t0, 2),
                 "stop_type": getattr(prop, "last_stop_type", ""),
                 "prompt_truncated": bool(getattr(prop, "last_prompt_truncated", False)),
@@ -346,8 +506,34 @@ def run_prediction_cell(
             return None
         return round(float(np.mean([bool(r[pred_key]) for r in rows])), 4)
 
+    def _fmean(key: str) -> Optional[float]:
+        vals = [r[key] for r in per_trans if isinstance(r.get(key), (int, float))]
+        return round(float(np.mean(vals)), 4) if vals else None
+
+    # NEW delta-format failure mode the team lead flagged: a syntactically well-formed but
+    # SEMANTICALLY NULL delta (the model emits NONE / zero changed cells) -- on a state-CHANGING
+    # transition that is necessarily wrong (reconstructs to the before-grid == identity copy). Track
+    # the rate among PARSEABLE delta predictions so it is not conflated with a parse failure.
+    parseable_delta = [
+        r for r in per_trans if r.get("parse_ok") and isinstance(r.get("n_pred_changes"), int)
+    ]
+    null_delta_rate = (
+        round(float(np.mean([r["n_pred_changes"] == 0 for r in parseable_delta])), 4)
+        if (mode == "delta" and parseable_delta)
+        else None
+    )
+    null_delta_on_changing = [
+        r for r in parseable_delta if r["changed"]
+    ]
+    null_delta_rate_changing = (
+        round(float(np.mean([r["n_pred_changes"] == 0 for r in null_delta_on_changing])), 4)
+        if (mode == "delta" and null_delta_on_changing)
+        else None
+    )
+
     n = len(per_trans)
     n_changing = sum(1 for r in per_trans if r["changed"])
+    n_blocked_trans = sum(1 for r in per_trans if r.get("blocked"))
     return {
         "game": game,
         "trial": trial,
@@ -355,8 +541,9 @@ def run_prediction_cell(
         "n_transitions": n,
         "n_changing": n_changing,
         "n_noop": n - n_changing,
-        "k_examples_used": k_use,
-        "answer_budget_tokens": ans_budget,
+        "n_blocked_transitions": n_blocked_trans,
+        "k_examples_used": k_used_any,
+        "prediction_mode": mode,
         "n_ctx": n_ctx,
         # PRIMARY metric -- exact full-grid match over ALL window transitions (leave-one-out), the
         # SAME definition/denominator as WorldModelVerifier.accuracy / heldout_accuracy.
@@ -364,10 +551,18 @@ def run_prediction_cell(
         "heldout_accuracy_changing": _rate("exact", "changing"),
         "heldout_accuracy_noop": _rate("exact", "noop"),
         "heldout_accuracy_parseable_only": _rate("exact", "parseable"),
+        # cell-level agreement: interprets a floored exact-match (regurgitation-wall vs cannot-infer)
+        "mean_cell_agreement": _fmean("cell_agreement"),
+        "mean_changed_cell_recall": _fmean("changed_cell_recall"),
         "parse_success_rate": _rate("parse_ok"),
         "shape_match_rate": _rate("shape_ok"),
         "identity_copy_rate": _rate("identity_copy"),
         "identity_copy_rate_changing": _rate("identity_copy", "changing"),
+        # delta-format failure mode (team-lead-flagged): well-formed but semantically null/no-op delta
+        "null_delta_rate": null_delta_rate,
+        "null_delta_rate_changing": null_delta_rate_changing,
+        "mean_pred_delta_size": _fmean("n_pred_changes"),
+        "mean_true_delta_size": _fmean("n_true_changes"),
         "n_truncated": sum(1 for r in per_trans if r["stop_type"] == "limit"),
         "n_prompt_truncated": sum(1 for r in per_trans if r["prompt_truncated"]),
         "per_transition": per_trans,
@@ -452,19 +647,29 @@ def run_all() -> tuple[list[dict[str, Any]], dict[str, Any]]:
         log("all cells present, skipping inference")
         return list(done.values()), server_meta
 
-    log(f"=== gemma-4-31B-it DIRECT prediction : {len(pending)} cells | CUDA={GEMMA['cuda_visible']} ===")
+    log(
+        f"=== gemma-4-31B-it DIRECT prediction mode={PREDICTION_MODE} raw={USE_RAW_COMPLETION} : "
+        f"{len(pending)} cells | CUDA={GEMMA['cuda_visible']} ==="
+    )
     proc = None
     try:
         proc, n_ctx, v_before, v_after = launch_server_ladder()
         server_meta = {"n_ctx": n_ctx, "vram_before": v_before, "vram_after": v_after}
         log(f"  deployed n_ctx={n_ctx}; gpu0={_gpu_mem_used_mib(0)} gpu1={_gpu_mem_used_mib(1)} MiB")
         prop = make_gemma_proposer(n_ctx)
+        # Raw /completion (no chat template) avoids gemma's default <think> reasoning that otherwise
+        # eats the answer budget with no answer (smoke-verified). The prompt ends at the answer
+        # marker so the model just continues the text.
+        if USE_RAW_COMPLETION:
+            prop.use_chat_template = False
         for game, t in pending:
             window, _full_traj, cell = windows[game]
             log(f"RUN gemma31b-predict {game} trial={t}")
             c0 = time.time()
             try:
-                row = run_prediction_cell(game, prop, trial=t, window=window, cell=cell, n_ctx=n_ctx)
+                row = run_prediction_cell(
+                    game, prop, trial=t, window=window, cell=cell, n_ctx=n_ctx, mode=PREDICTION_MODE
+                )
             except Exception as exc:
                 row = {
                     "game": game,
@@ -535,6 +740,10 @@ def build_artifact(
     heldout_changing_by_game = _by_game("heldout_accuracy_changing")
     parse_by_game = _by_game("parse_success_rate")
     identity_by_game = _by_game("identity_copy_rate")
+    cell_agreement_by_game = _by_game("mean_cell_agreement")
+    changed_recall_by_game = _by_game("mean_changed_cell_recall")
+    null_delta_by_game = _by_game("null_delta_rate")
+    null_delta_changing_by_game = _by_game("null_delta_rate_changing")
 
     pooled_vals = [m for m in heldout_by_game.values() if m is not None]
     pooled_mean = _mean(pooled_vals)
@@ -547,6 +756,14 @@ def build_artifact(
     pooled_parse = _mean(parse_vals)
     identity_vals = [m for m in identity_by_game.values() if m is not None]
     pooled_identity = _mean(identity_vals)
+    cell_agree_vals = [m for m in cell_agreement_by_game.values() if m is not None]
+    pooled_cell_agreement = _mean(cell_agree_vals)
+    changed_recall_vals = [m for m in changed_recall_by_game.values() if m is not None]
+    pooled_changed_recall = _mean(changed_recall_vals)
+    null_delta_vals = [m for m in null_delta_by_game.values() if m is not None]
+    pooled_null_delta = _mean(null_delta_vals)
+    null_delta_changing_vals = [m for m in null_delta_changing_by_game.values() if m is not None]
+    pooled_null_delta_changing = _mean(null_delta_changing_vals)
 
     code_by_game, code_pooled = _code_baseline_by_game()
     code_vals = [v for g, v in code_by_game.items() if g in ROSTER and isinstance(v, (int, float))]
@@ -661,6 +878,23 @@ def build_artifact(
         "honest_verdict": verdict,
         "gate_branch": branch,
         "recommendation": recommendation,
+        "prediction_mode": PREDICTION_MODE,
+        "raw_completion": USE_RAW_COMPLETION,
+        "roster_grid_shape_finding": (
+            "ALL 13 roster games are 64x64 logical grids (4096 cells, cell=1); every window transition "
+            "is state-changing (no no-ops). This drove the mechanism choice: literal FULL-GRID output "
+            "(the model emits all 4096 cells) was measured infeasible -- ~4.7 min/prediction (~24h for "
+            "the run) AND mechanically floored (the model must regurgitate 4096 exact cells token-by-"
+            "token, where the code baseline wins by naturally doing copy-then-edit). "
+            + (
+                "DELTA mode (the run's mode) instead has the model output ONLY the changed cells "
+                "(row col newvalue), applied mechanically to the before-grid -> predicted after-grid, "
+                "scored by the SAME exact full-grid match -- still no-code direct in-context prediction "
+                "of the transition's EFFECT, without the regurgitation confound."
+                if PREDICTION_MODE == "delta"
+                else "FULL mode (the run's mode) emits the entire after-grid (the literal spec)."
+            )
+        ),
         "solve_provenance": "development_proxy",
         "verifier_is_oracle": False,
         "read_game_source": False,
@@ -674,15 +908,16 @@ def build_artifact(
                 "hf_id": GEMMA["hf_id"],
                 "quant": "Q4_K_M",
                 "gguf_path": GEMMA["gguf"],
-                "role": "direct in-context next-grid predictor (NO code generation)",
+                "role": "direct in-context transition predictor (NO code generation), delta output",
                 "kv_quant": GEMMA["kv_quant"],
-                "use_chat_template": True,
+                "use_chat_template": (not USE_RAW_COMPLETION),
                 "n_ctx_deployed": server_meta.get("n_ctx"),
                 "temperature": TEMPERATURE,
                 "k_examples_cap": K_EXAMPLES,
                 "server": (
                     f"CUDA llama-server single-GPU (CUDA_VISIBLE_DEVICES={GEMMA['cuda_visible']}), "
-                    f"-ngl 999, q8_0 KV, port {GEMMA['port']}, /v1/chat/completions"
+                    f"-ngl 999, q8_0 KV, port {GEMMA['port']}, "
+                    + ("/completion (raw, no chat template)" if USE_RAW_COMPLETION else "/v1/chat/completions")
                 ),
                 "vram_gpu_before_after_mib": [
                     server_meta.get("vram_before"),
@@ -691,28 +926,52 @@ def build_artifact(
             }
         ],
         "prompt_format_used": {
-            "paradigm": "direct_incontext_grid_prediction_no_code",
+            "paradigm": f"direct_incontext_{PREDICTION_MODE}_prediction_no_code",
+            "serving": (
+                "RAW /completion (use_chat_template=False): the prompt ends at the answer marker and "
+                "the model CONTINUES the text. This bypasses gemma-4-31B-it's DEFAULT <think> reasoning "
+                "(which via the chat template consumed the entire answer budget with no answer, "
+                "smoke-verified) so the model emits the answer directly."
+                if USE_RAW_COMPLETION
+                else "chat /v1/chat/completions (embedded chat template)."
+            ),
             "grid_serialization": "row-major, one line per row, space-separated integers (LOSSLESS; "
             "handles colors > 9, unlike to_ascii's last-digit form)",
-            "example_selection": "LEAVE-ONE-OUT: up to k=8 in-context (before,action,data)->after "
-            "examples drawn from the window EXCLUDING the query transition (prefer changing, keep <=2 "
-            "no-ops); the query transition is NEVER shown -> zero verbatim-answer leakage.",
-            "query": "BEFORE grid + ACTION int + DATA (click pixel dict or none); the model outputs "
-            "ONLY the predicted AFTER grid as H rows of W space-separated integers.",
+            "example_selection": "LEAVE-ONE-OUT: up to k=8 in-context examples drawn from the window "
+            "EXCLUDING the query transition (prefer changing, keep <=2 no-ops); the query transition is "
+            "NEVER shown -> zero verbatim-answer leakage. k is reduced adaptively if the prompt would "
+            "overflow n_ctx (recorded per game).",
+            "delta_output": (
+                "Each example shows the BEFORE grid + its CHANGED-cell list ('row col newvalue'). The "
+                "model outputs ONLY the changed-cell list for the QUERY (or NONE); it is applied "
+                "mechanically to the query's before-grid to RECONSTRUCT the predicted after-grid, which "
+                "is then scored by the SAME exact full-grid np.array_equal as heldout_accuracy. NO code "
+                "is generated. This removes the 4096-cell full-grid regurgitation burden (measured "
+                "infeasible: ~4.7 min/prediction, ~24h, and mechanically floored) while still directly "
+                "predicting the transition's EFFECT in-context."
+                if PREDICTION_MODE == "delta"
+                else "The model outputs the entire predicted AFTER grid as H rows of W integers."
+            ),
             "action_encoding": "ACTION <int>; ACTION 6 is a click with DATA {'x':px,'y':py} in pixel "
             "coords (one logical cell = <cell> pixels); other actions DATA none.",
             "temperature": TEMPERATURE,
-            "parse": "extract maximal contiguous blocks of equal-width integer rows, choose the block "
-            "best matching the expected shape (exact preferred, else largest, last-wins on ties); "
-            "parse_success = a rectangular int grid was produced (wrong-shape counts as parsed-but-"
-            "wrong, mirroring WorldModelVerifier's pred.shape==next.shape AND np.array_equal).",
+            "parse": (
+                "delta: parse 'row col newvalue' lines (in-bounds) into a changed-cell list, apply to "
+                "the before-grid -> predicted after-grid. parse_success = at least one well-formed "
+                "delta line OR an explicit NONE; a truncated/garbled output that yields no line is a "
+                "parse failure (recorded separately, counts as incorrect)."
+                if PREDICTION_MODE == "delta"
+                else "full: extract maximal contiguous blocks of equal-width integer rows, choose the "
+                "block best matching the expected shape."
+            ),
             "template_example": (
                 "You are given observed state transitions of the ARC-AGI-3 game '<game>'. Each state "
-                "is a HxW integer grid (colors [...]). An ACTION transforms BEFORE into AFTER. ... "
-                "EXAMPLE 1\\nBEFORE:\\n<grid>\\nACTION 6  DATA {'x':.., 'y':..}\\nAFTER:\\n<grid>\\n\\n"
-                "... QUERY\\nBEFORE:\\n<grid>\\nACTION 3  DATA none\\n\\nOutput ONLY the predicted AFTER "
-                "grid as exactly H rows of W space-separated integers. No explanation, no code, no "
-                "other text.\\nAFTER:\\n"
+                "is a HxW integer grid (colors [...]), rows/cols 0-indexed. ... EXAMPLE 1\\nBEFORE:\\n"
+                "<grid>\\nACTION 6  DATA {'x':.., 'y':..}\\nCHANGED CELLS (row col newvalue):\\n"
+                "<r c v lines>\\n\\n... QUERY\\nBEFORE:\\n<grid>\\nACTION 3  DATA none\\n\\nList ONLY the "
+                "cells that change from BEFORE to AFTER for the QUERY, one per line as 'row col "
+                "newvalue' (0-indexed). If nothing changes, output NONE. No explanation, no code, no "
+                "other text.\\nCHANGED CELLS (row col newvalue):\\n"
             ),
         },
         "parse_success_rate": pooled_parse,
@@ -722,12 +981,18 @@ def build_artifact(
         "parse_success_rate_by_game": parse_by_game,
         "comparison_to_gemma31b_code_synthesis_baseline": {
             "note": (
-                "direct in-context prediction (leave-one-out, NO code) vs REQ-ARC-WMTE-5764's "
+                "direct in-context DELTA prediction (leave-one-out, NO code) vs REQ-ARC-WMTE-5764's "
                 "gemma-4-31B CODE-SYNTHESIS single-shot induction, SAME 13-game roster, SAME "
-                "exact-match heldout metric, SAME model. Leave-one-out never shows the model the "
-                "queried transition, so this is a STRICTER test than the code baseline (whose induced "
-                "engine may still memorize its k=8 shown transitions) -- a direct-prediction win is "
-                "therefore conservative."
+                "exact-match heldout metric (np.array_equal on the reconstructed full grid), SAME "
+                "model. Delta-output is the MORE apples-to-apples comparison, not a pragmatic fallback: "
+                "the induced Python engine() ALSO effectively computes a delta (it transforms the "
+                "before-grid by construction, preserving untouched cells), so 'predict the changed "
+                "cells, apply mechanically, exact-match the reconstructed after-grid' is a like-for-like "
+                "test of rule-INFERENCE quality -- neither side is penalized for reproducing the "
+                "unchanged 4096-cell background (which raw full-grid regurgitation would have "
+                "confounded). Leave-one-out never shows the model the queried transition, so this is if "
+                "anything a STRICTER test than the code baseline (whose induced engine may still "
+                "memorize its k<=8 shown transitions) -- a direct-prediction win is conservative."
             ),
             "direct_prediction_pooled_mean_heldout": pooled_mean,
             "direct_prediction_pooled_max_game_heldout": pooled_max,
@@ -745,11 +1010,49 @@ def build_artifact(
                 "input grid rather than predicting real dynamics. identity_copy_rate = fraction of "
                 "predictions equal to the INPUT (before) grid; heldout_accuracy_changing isolates the "
                 "state-CHANGING transitions where identity-copy necessarily FAILS -- that is the honest "
-                "'did it predict real dynamics' number."
+                "'did it predict real dynamics' number. NOTE this roster has ZERO no-op transitions "
+                "(all state-changing), so heldout_accuracy == heldout_accuracy_changing and a high "
+                "heldout cannot be no-op copying by construction."
             ),
             "pooled_identity_copy_rate": pooled_identity,
             "pooled_heldout_changing": pooled_changing,
             "pooled_heldout_all": pooled_mean,
+        },
+        "delta_format_failure_mode": {
+            "note": (
+                "NEW failure mode the delta format introduces (does not exist for full-grid output or "
+                "code synthesis): a syntactically well-formed but SEMANTICALLY NULL delta -- the model "
+                "emits NONE / zero changed cells, which on a state-CHANGING transition reconstructs to "
+                "the before-grid (== identity copy) and is necessarily wrong. null_delta_rate is the "
+                "fraction of PARSEABLE delta predictions with zero predicted changes (kept distinct "
+                "from parse failures). null_delta_rate_changing restricts to state-changing transitions "
+                "(where a null delta is definitely wrong). mean_pred_delta_size vs mean_true_delta_size "
+                "shows whether the model under/over-predicts the number of changed cells."
+            ),
+            "pooled_null_delta_rate": pooled_null_delta,
+            "pooled_null_delta_rate_changing": pooled_null_delta_changing,
+            "null_delta_rate_by_game": null_delta_by_game,
+            "mean_pred_delta_size_by_game": _by_game("mean_pred_delta_size"),
+            "mean_true_delta_size_by_game": _by_game("mean_true_delta_size"),
+        },
+        "cell_level_agreement_analysis": {
+            "note": (
+                "Interprets a FLOORED exact-match on these all-64x64 (4096-cell) grids. Exact full-grid "
+                "match requires the model to emit ALL 4096 cells correctly token-by-token -- a much "
+                "harder bar than the code path, whose engine naturally does copy-then-edit. "
+                "mean_cell_agreement (fraction of all 4096 cells predicted right) distinguishes a "
+                "REGURGITATION WALL (high agreement, exact=0: copies most of the grid, misses a few "
+                "cells) from CANNOT-INFER (low agreement: garbage/wrong grid). mean_changed_cell_recall "
+                "(the diagnosis's cell_recall: fraction of the truly-CHANGED cells got right) is whether "
+                "the model captured the transition's real EFFECT at all, independent of whether it "
+                "reproduced the unchanged background exactly."
+            ),
+            "pooled_mean_cell_agreement": pooled_cell_agreement,
+            "pooled_mean_changed_cell_recall": pooled_changed_recall,
+            "mean_cell_agreement_by_game": cell_agreement_by_game,
+            "mean_changed_cell_recall_by_game": changed_recall_by_game,
+            "grid_shape_note": "all 13 roster games are 64x64 logical grids (cell=1, 4096 cells); every "
+            "window transition is state-changing (no no-ops).",
         },
         "attribution": {
             "n_cells": len(rows),
@@ -792,6 +1095,12 @@ def build_artifact(
             "exact quantity (exact full-grid match) the diagnosis named as the binding wall, per game?",
             "identity_copy_rate": "guards the top adversarial concern -- distinguishes real dynamics "
             "prediction from near-identity-copying the input grid on no-op-heavy windows.",
+            "null_delta_rate": "the NEW failure mode the delta format introduces (team-lead-flagged): a "
+            "well-formed but semantically NULL delta (NONE / zero changed cells) that reconstructs to "
+            "the before-grid; on a changing transition it is necessarily wrong -- tracked so a floor is "
+            "not misread as 'the model can't parse' when it is actually 'the model predicts no change'.",
+            "mean_cell_agreement": "fraction of all cells correct -- interprets a floored exact-match as "
+            "regurgitation-wall (high) vs cannot-infer (low); load-bearing on these 4096-cell grids.",
             "recommendation": "screening call ONLY (does direct prediction show real promise vs code "
             "synthesis?); whether to invest further (live plan_in_model wiring / specialized predictor) "
             "is OPERATOR-ONLY.",
