@@ -147,3 +147,30 @@ And if a soft residual is low for an invalid row or high for a valid row,
 
 Then the final decision remains the deterministic verifier decision and the
 artifact records `soft_logic_overrode_solver=false`.
+
+### REQ-STORE-5761 — Hash-sealed typed acquisition model variants
+
+Carnot SHALL store Exp5761 typed constraint-acquisition benchmark evidence as
+content-addressed model variants derived from sealed Exp5746 receipts. For each
+selected source case, the store-level artifact SHALL preserve domain artifact
+hashes, faithful model hashes, incomplete model hashes, over-fit model hashes,
+mixed model hashes, hard/soft role receipts, positive and negative assignment
+hashes, distinguishing query hashes, and expected repair receipt hashes.
+
+The stored variant records SHALL distinguish model AST from model text and
+SHALL preserve hard constraints, soft preferences, and soft objective roles
+without converting soft preferences into hard rules or treating objectives as
+membership authority. Incomplete, over-fit, and mixed mutations SHALL be
+accepted into the benchmark store only when exact semantic comparison proves
+they are not no-op equivalents of the faithful model.
+
+### SCENARIO-STORE-5761 — Acquisition variant hashes replay
+
+Given Exp5761 has selected a sealed Exp5746 source case,
+
+When the typed acquisition variants are materialized,
+
+Then each faithful, incomplete, over-fit, and mixed variant has a stable model
+hash, domain artifact hash, hard/soft role receipt, assignment receipt, query
+receipt, and expected repair receipt, and replaying those fields reproduces the
+stored hashes exactly.
