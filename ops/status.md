@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image-Turbo diagram-generation backend, prompt enhancer disabled)
+**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image-Turbo diagram-generation backend, weights downloaded and LIVE-VERIFIED — real image generated end to end)
 
 ## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image-Turbo (REQ-PUBLISH-042)
 
@@ -22,6 +22,18 @@ paperbanana's own carefully-engineered prompt with a second, opaque LLM rewrite 
 `ops/known-issues.md` "THIRD SAME-DAY REVISION" for detail. 13 tests now (up from 12), all
 passing; `use_pe=False` independently verified to bind against the real pipeline signature, not
 just the mocked test stub.
+
+**THIRD SAME-DAY UPDATE (weights downloaded, LIVE-VERIFIED):** `hf download baidu/ERNIE-Image-Turbo`
+completed (31.63GB / 24 files, verified via `scan_cache_dir` against the repo's own reported file
+count). A REAL (non-mocked) smoke test exercising the actual production code found a genuine
+`torch.OutOfMemoryError` the mocked tests structurally could not catch: a bare `pipe.to(device)`
+moves the unused 7.66GB `pe` prompt-enhancer submodel to GPU regardless of `use_pe=False`, pushing
+total VRAM demand to ~31GB against a single 24GB RTX 3090. Fixed by dropping `pipe.pe`/
+`pipe.pe_tokenizer` entirely and using `enable_model_cpu_offload` instead of `.to(device)`.
+Re-verified: 14.1s load, 16.67GB peak VRAM, a real 1024x1024 image generated correctly in 56.6s at
+8 steps (visually confirmed on-prompt: legible "A"/"B"/"C" text, correctly connected boxes), clean
+GPU release after. See `ops/known-issues.md` "FOURTH SAME-DAY REVISION" for full detail. This is
+the project's first live-GPU-provenance evidence for REQ-PUBLISH-042.
 
 **What's working:** diagram generation no longer requires a paid API. Operator directive:
 gemini/claude/codex tokens are no longer available for this project. Shipped a fully local
@@ -51,11 +63,10 @@ image-generation path for the vendored `paperbanana` diagram tool:
 
 **What's next / known gap (documented, not silently hidden):**
 
-- The `baidu/ERNIE-Image` weights themselves are NOT downloaded yet (8B params, multi-gigabyte;
-  Pre-Launch Preconditions Discipline never auto-downloads a compute-bound resource without an
-  explicit trigger). Before the first real diagram: `huggingface-cli download baidu/ERNIE-Image`.
-  Verified `scripts/generate_diagram.py --backend ernie-local` correctly exits with
-  `blocked_ernie_image_not_cached` in the current state — no fabricated diagram.
+- ~~The `baidu/ERNIE-Image` weights themselves are NOT downloaded yet~~ **FIXED 2026-07-21**:
+  weights downloaded (31.63GB) and live-verified end to end — see "THIRD SAME-DAY UPDATE" above.
+  Found and fixed a real CUDA OOM along the way (bare `.to(device)` including the unused 7.66GB
+  `pe` submodel); real 1024x1024 image now generates correctly at 16.67GB peak VRAM / 56.6s.
 - paperbanana's VLM role (Retriever/Planner/Stylist/Critic, `VLM_PROVIDER`) still defaults to
   `gemini` and is NOT swapped by this change — only the image-generation role is local. Without a
   local `VLM_PROVIDER`, the full 7-agent pipeline still needs an API key even after this change.

@@ -3552,6 +3552,57 @@ binds cleanly against the REAL `ErnieImagePipeline.__call__` signature
 (`inspect.signature(...).bind_partial(...)`), not just the mocked test
 stub.
 
+#### 2026-07-21 FOURTH SAME-DAY REVISION: weights downloaded, live-verified end to end, real VRAM bug found + fixed
+
+Explicit user instruction: download the weights. Executed and verified,
+not just triggered and assumed successful:
+
+- `hf download baidu/ERNIE-Image-Turbo` (the modern replacement for the
+  deprecated `huggingface-cli download` this project's own docs/messages
+  had been citing — both still work, but `hf` is current). Not gated, not
+  private, no auth needed. 31.65GB per the HF API's own file-size listing;
+  completed download measured at 31.63GB / 24 files via `scan_cache_dir`,
+  matching the API's reported file count exactly — no incomplete/lock
+  markers left behind. `ernie_image_cached()` now returns `True`.
+
+- Ran a REAL (non-mocked) smoke test exercising the actual production code
+  (`ErniePipelineSingleton.get()` + the exact kwargs `ernie_image_server.py`'s
+  route uses) rather than declaring success from file presence alone. This
+  caught a genuine bug the mocked test suite structurally could not catch:
+  a bare `pipe.to(device)` moves ALL pipeline components to GPU
+  simultaneously, including the 7.66GB `pe` (prompt-enhancer) submodel —
+  even though `use_pe=False` (the prior revision) guarantees it is never
+  invoked at generation time. Total VRAM demand hit ~31GB against a single
+  RTX 3090's 24GB, and the load crashed with a real
+  `torch.OutOfMemoryError` ("Tried to allocate 32.00 MiB ... 23.54 GiB
+  memory in use"). The model card's "runs on 24G VRAM" claim does not hold
+  for the naive `.to(device)` pattern this code was using.
+
+- **Fix:** since `pe`/`pe_tokenizer` are declared `Optional[...] = None` in
+  `ErnieImagePipeline`'s own constructor, and `use_pe=False` structurally
+  guarantees they are never called, they are now dropped entirely
+  (`pipe.pe = None`) before placement. The remaining components
+  (text_encoder ~7.7GB, transformer ~16GB, vae ~0.17GB — still close to
+  24GB combined) are placed via `pipe.enable_model_cpu_offload(gpu_id=gpu)`
+  instead of a blanket `.to(device)`, so each component moves to GPU only
+  while its `forward` runs rather than all sitting resident simultaneously
+  — the diffusers-standard pattern for VRAM-constrained inference.
+
+- **Re-verified after the fix, on GPU 1 of the dual-3090 rig:** pipeline
+  load 14.1s, peak VRAM 16.67GB (comfortably under 24GB), a real
+  1024x1024 image generated in 56.6s at 8 inference steps for the test
+  prompt "a minimalist line-art diagram of three connected boxes labeled
+  A, B, C". Visually inspected the output: legible "A"/"B"/"C" text,
+  correctly connected boxes with directional arrows — a genuinely correct,
+  on-prompt result, not a garbled/failed generation that merely didn't
+  crash. GPU released cleanly afterward (0 MiB residual). Full mocked test
+  suite (13/13), ruff, ruff-format, and mypy all re-verified clean after
+  the fix.
+
+- This is the project's first live-GPU-provenance evidence for
+  REQ-PUBLISH-042 (CLAUDE.md "All headline results must have live GPU
+  provenance") — everything before this point was mocked/precondition-only.
+
 ## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z, EXTENDED 2026-05-02 18:40Z)
 
 **arXiv submission is ON HOLD until Phase 4 firm pivot answer + figure-integrity audit.**
