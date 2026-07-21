@@ -1,8 +1,27 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image diagram-generation backend)
+**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image-Turbo diagram-generation backend, prompt enhancer disabled)
 
-## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image (REQ-PUBLISH-042)
+## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image-Turbo (REQ-PUBLISH-042)
+
+**SAME-DAY UPDATE:** the model was switched from the base `baidu/ERNIE-Image` (50 steps,
+guidance_scale=4.0) described in this session's original block below to
+`baidu/ERNIE-Image-Turbo` (8 steps, guidance_scale=1.0) per a follow-up operator directive.
+Everywhere below that says `baidu/ERNIE-Image` now means `baidu/ERNIE-Image-Turbo` in the live
+code — see `ops/known-issues.md` "2026-07-21 SAME-DAY REVISION" for the full rationale
+(guidance_scale=1.0 is load-bearing, not cosmetic: Turbo's distillation target bakes in CFG
+differently, so the base model's 4.0 would likely degrade output). Neither variant's weights had
+been downloaded before this revision, so nothing shipped/proven needed reconciling.
+
+**SECOND SAME-DAY UPDATE:** the pipeline's built-in prompt enhancer (`use_pe`, real installed
+`diffusers==0.39.0` default confirmed `True` via `inspect.signature`) is now explicitly disabled
+(`USE_PROMPT_ENHANCER = False`, passed as `use_pe=False` on every call). Read the pipeline's own
+`_enhance_prompt_with_pe` source to confirm what it does: a separate auxiliary LLM `.generate()`
+call rewrites the prompt before synthesis. Left enabled, it would have silently overridden
+paperbanana's own carefully-engineered prompt with a second, opaque LLM rewrite — see
+`ops/known-issues.md` "THIRD SAME-DAY REVISION" for detail. 13 tests now (up from 12), all
+passing; `use_pe=False` independently verified to bind against the real pipeline signature, not
+just the mocked test stub.
 
 **What's working:** diagram generation no longer requires a paid API. Operator directive:
 gemini/claude/codex tokens are no longer available for this project. Shipped a fully local

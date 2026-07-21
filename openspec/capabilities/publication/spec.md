@@ -2392,7 +2392,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
 | REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
 | REQ-PUBLISH-3840 | Planned | Exp 3840 v353 publication gate regression confirmation |
-| REQ-PUBLISH-042 | Implemented | Local paperbanana + ERNIE-Image diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`) |
+| REQ-PUBLISH-042 | Implemented | Local paperbanana + ERNIE-Image-Turbo diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`); same-day 2026-07-21 revisions: base model -> Turbo variant (8 steps, guidance_scale=1.0), and `use_pe` (pipeline's own prompt-rewriting LLM) explicitly disabled |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
@@ -2400,13 +2400,41 @@ The experiment 1750 huggingface retry runner MUST attempt to upload the smallest
 ### REQ-PUBLISH-027: Position Paper Nexus
 The experiment 1913 architecture paper workflow MUST draft the position paper nexus and update the architecture document. It MUST produce an artifact at `results/experiment_1913_arch_paper.json` with the schema `carnot.arch_paper.v1` and record the status and an honest verdict indicating readiness.
 
-### REQ-PUBLISH-042: Local Diagram-Generation Backend (paperbanana + ERNIE-Image)
+### REQ-PUBLISH-042: Local Diagram-Generation Backend (paperbanana + ERNIE-Image-Turbo)
 
 **Origin:** 2026-07-21 operator directive. Gemini/Claude/Codex API tokens
 are no longer available for this project's use, so the diagram/figure
 generation path (previously parked 2026-05-01 as "adopt paperbanana",
 see `ops/known-issues.md`) MUST run entirely on local, open-weight compute
 instead of a paid closed-weight image-generation API.
+
+**Revision (same day, 2026-07-21):** the model was changed from the base
+`baidu/ERNIE-Image` (50 inference steps, guidance_scale=4.0) to
+`baidu/ERNIE-Image-Turbo` (8 inference steps, guidance_scale=1.0) per a
+follow-up operator directive. This is not a cosmetic rename: Turbo is a
+distilled checkpoint (DMD+RL) whose distillation target bakes in
+classifier-free guidance differently from the base model, so reusing the
+base model's guidance_scale=4.0 on Turbo would likely degrade output
+quality, not just run at the wrong speed. Confirmed via the model's own
+HuggingFace card (`https://huggingface.co/baidu/ERNIE-Image-Turbo`), not
+assumed by extrapolation from the base model. Neither variant's weights
+had been downloaded before this revision, so no prior real generation
+needs reconciling — this is a pre-launch correction of the spec/implementation
+pair, not a divergence between shipped behavior and its spec.
+
+**Second revision (same day, 2026-07-21):** the pipeline's prompt-enhancer
+feature (`use_pe`) MUST be explicitly disabled. `ErnieImagePipeline.__call__`
+defaults `use_pe=True` — confirmed by inspecting the installed
+`diffusers==0.39.0` source directly (`inspect.signature`), not assumed. When
+enabled it runs a SEPARATE auxiliary LLM `.generate()` call (its own
+tokenizer + chat template) to rewrite the caller's prompt before image
+synthesis (`_enhance_prompt_with_pe` in
+`diffusers/pipelines/ernie_image/pipeline_ernie_image.py`). Left at its
+default, this would silently override paperbanana's own carefully-engineered
+prompt (venue-specific styling, structured diagram description produced by
+its Planner/Stylist agents) with an opaque second LLM rewrite, undermining
+the whole point of paperbanana's prompt-engineering pipeline. Per operator
+directive.
 
 The project MUST vendor `paperbanana` (MIT, `llmsresearch/paperbanana`)
 under `external/paperbanana/` at its latest tagged release, gitignored per
@@ -2422,14 +2450,19 @@ the vendor SDK directly).
 server that matches the exact request/response contract paperbanana's
 `OpenAIImageGen` provider issues against `POST {base_url}/images/generations`
 (`{model, prompt, n=1, size, quality?}` -> `{"data": [{"b64_json": ...}]}`),
-backed by `baidu/ERNIE-Image` (Apache-2.0, Diffusers-native, 8B-parameter
-DiT, runs on a single 24GB-class consumer GPU) loaded via
-`diffusers.DiffusionPipeline.from_pretrained`. The pipeline MUST be a lazy,
-process-wide singleton (never loaded at import time or per-request) and
-MUST refuse to load with an honest `RuntimeError` naming the exact
-`huggingface-cli download` command when the model is not yet in the local
-HuggingFace cache -- it MUST NOT trigger a silent multi-gigabyte download
-mid-request (Pre-Launch Preconditions Discipline).
+backed by `baidu/ERNIE-Image-Turbo` (Apache-2.0, Diffusers-native,
+8B-parameter distilled DiT, runs on a single 24GB-class consumer GPU) loaded
+via `diffusers.ErnieImagePipeline.from_pretrained` (the pipeline class
+documented on the model's own HuggingFace card -- not the generic
+`DiffusionPipeline` auto-resolver). Inference MUST use the Turbo-specific
+settings (`num_inference_steps=8`, `guidance_scale=1.0`, `use_pe=False`),
+never the base model's (`50`, `4.0`) or the pipeline's own `use_pe=True`
+default. The pipeline MUST be a lazy, process-wide singleton
+(never loaded at import time or per-request) and MUST refuse to load with an
+honest `RuntimeError` naming the exact `huggingface-cli download` command
+when the model is not yet in the local HuggingFace cache -- it MUST NOT
+trigger a silent multi-gigabyte download mid-request (Pre-Launch
+Preconditions Discipline).
 
 `scripts/generate_diagram.py` MUST be the entrypoint used going forward for
 diagram generation. It MUST read `CARNOT_IMAGE_BACKEND` (env var or
@@ -2453,8 +2486,9 @@ set, rather than silently proceeding as if the whole pipeline were local.
 
 ### SCENARIO-PUBLISH-042: ernie-local Backend Serves paperbanana Without Paid API Keys
 
-**Given** `baidu/ERNIE-Image` is cached locally, `paperbanana` is installed
-from `external/paperbanana`, and no `ernie_image_server` is currently running
+**Given** `baidu/ERNIE-Image-Turbo` is cached locally, `paperbanana` is
+installed from `external/paperbanana`, and no `ernie_image_server` is
+currently running
 **When** `scripts/generate_diagram.py --backend ernie-local` is invoked
 **Then** it launches `ernie_image_server`, waits for `/healthz`, sets
 `IMAGE_PROVIDER=openai_imagen` / `OPENAI_BASE_URL` / `OPENAI_API_KEY` in the
@@ -2462,10 +2496,10 @@ subprocess environment, and invokes `paperbanana generate` against the local
 server -- with no `GOOGLE_API_KEY`, `OPENAI_API_KEY` (real), or
 `ANTHROPIC_API_KEY` required for the image-generation step.
 
-**Given** `baidu/ERNIE-Image` is NOT yet in the local HuggingFace cache
+**Given** `baidu/ERNIE-Image-Turbo` is NOT yet in the local HuggingFace cache
 **When** `scripts/generate_diagram.py --backend ernie-local` is invoked
 **Then** it exits non-zero with `blocked_ernie_image_not_cached` and the
-exact `huggingface-cli download baidu/ERNIE-Image` command, without
+exact `huggingface-cli download baidu/ERNIE-Image-Turbo` command, without
 attempting to download the model or fabricate a diagram.
 
 **Given** a request to `POST /v1/images/generations` with `size="1024x1536"`
@@ -2474,3 +2508,14 @@ and `n=1`
 **Then** it returns `{"data": [{"b64_json": <base64 PNG>}]}` where the
 decoded image is exactly 1024x1536, and a request with `n=2` is rejected
 with HTTP 400 rather than silently generating only one image.
+
+**Given** any well-formed generation request
+**When** `ernie_image_server` calls the Diffusers pipeline
+**Then** it MUST pass `num_inference_steps=8` and `guidance_scale=1.0` (the
+Turbo-specific settings), never the base model's `50` / `4.0`.
+
+**Given** any well-formed generation request
+**When** `ernie_image_server` calls `ErnieImagePipeline.__call__`
+**Then** it MUST pass `use_pe=False` explicitly, never leaving the pipeline
+to its own `use_pe=True` default -- so paperbanana's own engineered prompt
+reaches the diffusion model unmodified, without a second, opaque LLM rewrite.

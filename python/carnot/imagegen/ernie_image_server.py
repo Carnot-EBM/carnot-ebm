@@ -1,14 +1,34 @@
-"""Local OpenAI-Images-API-compatible HTTP shim for baidu/ERNIE-Image.
+"""Local OpenAI-Images-API-compatible HTTP shim for baidu/ERNIE-Image-Turbo.
 
 **Researcher summary:**
     Before 2026-07-21, generating a diagram meant calling a paid API
     (Gemini image-gen, GPT-Image, ...). Those tokens are no longer available.
-    This module serves ``baidu/ERNIE-Image`` (an 8B-parameter Diffusion
-    Transformer text-to-image model, Apache-2.0, runs on a single 24GB
-    consumer GPU) behind the same HTTP contract the OpenAI Python SDK's
+    This module serves ``baidu/ERNIE-Image-Turbo`` (an 8B-parameter Diffusion
+    Transformer text-to-image model distilled via DMD+RL for 8-step
+    inference instead of the base model's 50, Apache-2.0, runs on a single
+    24GB consumer GPU) behind the same HTTP contract the OpenAI Python SDK's
     ``client.images.generate(...)`` call expects, so the vendored
     ``paperbanana`` tool can be pointed at it via ``OPENAI_BASE_URL`` with
     zero changes to paperbanana's own source.
+
+    2026-07-21 update: switched from the base ``baidu/ERNIE-Image`` (50
+    steps, guidance_scale=4.0) to ``baidu/ERNIE-Image-Turbo`` (8 steps,
+    guidance_scale=1.0) per explicit user directive. The guidance_scale
+    change is NOT cosmetic -- distilled/turbo diffusion checkpoints
+    typically bake classifier-free guidance into the distillation target,
+    so reusing the base model's guidance_scale=4.0 on the Turbo checkpoint
+    would very likely oversaturate/degrade output, not just run slower.
+    Confirmed via the model's own HuggingFace card, not assumed.
+
+    2026-07-21 follow-up: the prompt enhancer (``use_pe``) is explicitly
+    disabled (:data:`USE_PROMPT_ENHANCER`). ``ErnieImagePipeline`` defaults
+    ``use_pe=True``, which -- confirmed by reading the installed
+    ``diffusers`` source, not assumed -- runs a SEPARATE auxiliary LLM
+    generation call to rewrite the caller's prompt before image synthesis.
+    Left at its default, that would silently rewrite paperbanana's own
+    carefully-engineered prompt (venue styling, structured diagram
+    description) through an opaque second LLM step. Disabled per explicit
+    user directive.
 
 **Detailed explanation for engineers:**
     paperbanana's ``OpenAIImageGen`` provider
@@ -49,11 +69,26 @@ from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
-HF_REPO_ID = "baidu/ERNIE-Image"
+HF_REPO_ID = "baidu/ERNIE-Image-Turbo"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8990
-DEFAULT_GUIDANCE_SCALE = 4.0
-DEFAULT_INFERENCE_STEPS = 50
+# Turbo-specific settings per https://huggingface.co/baidu/ERNIE-Image-Turbo --
+# NOT the base model's guidance_scale=4.0 / 50 steps (see module docstring).
+DEFAULT_GUIDANCE_SCALE = 1.0
+DEFAULT_INFERENCE_STEPS = 8
+# `ErnieImagePipeline.__call__` defaults `use_pe=True` (confirmed by inspecting
+# the installed diffusers==0.39.0 source directly, not assumed). When True it
+# runs a SEPARATE auxiliary LLM's .generate() call (its own tokenizer + chat
+# template, non-greedy sampling by default) to rewrite the caller's prompt
+# before generation -- see `_enhance_prompt_with_pe` in
+# diffusers/pipelines/ernie_image/pipeline_ernie_image.py. For this project
+# that is actively undesirable: paperbanana's own Visualizer/Stylist agents
+# already carefully engineer the prompt (venue-specific styling, structured
+# diagram description); letting ERNIE silently rewrite it again would
+# undermine that prompt engineering and inject non-deterministic LLM output
+# into what should be a controlled generate step. Explicitly disabled (never
+# left to the pipeline's own default) per 2026-07-21 user directive.
+USE_PROMPT_ENHANCER = False
 NATIVE_SIZE = (1024, 1024)
 
 # paperbanana's OpenAIImageGen only ever requests one of these three
@@ -63,7 +98,7 @@ _KNOWN_SIZES = {"1024x1024", "1536x1024", "1024x1536"}
 
 
 def ernie_image_cached() -> bool:
-    """Precondition check: is ``baidu/ERNIE-Image`` already in the local HF cache?
+    """Precondition check: is ``baidu/ERNIE-Image-Turbo`` already in the local HF cache?
 
     **Why this exists (Pre-Launch Preconditions Discipline):** an 8B-parameter
     diffusion model is a multi-gigabyte download. This project's convention
@@ -98,7 +133,7 @@ def parse_openai_size(size: str) -> tuple[int, int]:
 
 
 class ErniePipelineSingleton:
-    """Lazy, process-wide singleton around the Diffusers ERNIE-Image pipeline.
+    """Lazy, process-wide singleton around the Diffusers ERNIE-Image-Turbo pipeline.
 
     **Detailed explanation for engineers:**
         Loading an 8B-parameter DiT pipeline takes real wall-clock time and
@@ -107,6 +142,13 @@ class ErniePipelineSingleton:
         that single instance. Tests never exercise this class directly —
         they monkeypatch ``get`` on the class object, since instantiating
         the real pipeline requires a cached model and a GPU.
+
+        Uses ``diffusers.ErnieImagePipeline`` explicitly (not the generic
+        ``DiffusionPipeline`` auto-class-resolver) to match the exact usage
+        documented on https://huggingface.co/baidu/ERNIE-Image-Turbo.
+        Requires diffusers>=0.39 (confirmed available at 0.39.0 in this
+        project's `.venv` as of 2026-07-21; older diffusers versions may not
+        ship this pipeline class).
     """
 
     _pipeline: Any = None
@@ -120,10 +162,10 @@ class ErniePipelineSingleton:
                     f"Fetch it first: huggingface-cli download {HF_REPO_ID}"
                 )
             import torch
-            from diffusers import DiffusionPipeline
+            from diffusers import ErnieImagePipeline
 
             device = f"cuda:{gpu}" if gpu is not None else "cuda"
-            pipe = DiffusionPipeline.from_pretrained(HF_REPO_ID, torch_dtype=torch.bfloat16)
+            pipe = ErnieImagePipeline.from_pretrained(HF_REPO_ID, torch_dtype=torch.bfloat16)
             cls._pipeline = pipe.to(device)
         return cls._pipeline
 
@@ -207,6 +249,7 @@ def build_app(gpu: Optional[int] = None) -> Any:
             height=height,
             guidance_scale=DEFAULT_GUIDANCE_SCALE,
             num_inference_steps=DEFAULT_INFERENCE_STEPS,
+            use_pe=USE_PROMPT_ENHANCER,
         )
         image = result.images[0]
         duration_s = time.time() - t0

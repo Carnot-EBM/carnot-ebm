@@ -6,13 +6,15 @@
     Claude, etc.). It contains a local HTTP shim that speaks just enough of
     the OpenAI Images API surface for the vendored ``external/paperbanana``
     tool to treat it as a drop-in image-gen provider, backed by a genuinely
-    local, open-weight diffusion model (``baidu/ERNIE-Image``, Apache-2.0).
+    local, open-weight diffusion model (``baidu/ERNIE-Image-Turbo``,
+    Apache-2.0 -- the 8-step distilled checkpoint, not the 50-step base
+    model, per 2026-07-21 user directive).
 
 **Detailed explanation for engineers:**
     ``paperbanana`` (the diagram-generation tool this project vendors under
     ``external/paperbanana``, see CLAUDE.md "Audit untrusted code") already
     supports pointing its ``openai_imagen`` provider at an arbitrary
-    ``OPENAI_BASE_URL``. ERNIE-Image itself has no such HTTP surface — it is
+    ``OPENAI_BASE_URL``. ERNIE-Image-Turbo itself has no such HTTP surface — it is
     a plain Diffusers pipeline. ``ernie_image_server`` is the missing piece:
     a small FastAPI process that loads the Diffusers pipeline once and
     exposes ``POST /v1/images/generations`` in the exact shape paperbanana's

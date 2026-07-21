@@ -1,4 +1,4 @@
-"""Tests for the local ERNIE-Image OpenAI-Images-API-compatible shim.
+"""Tests for the local ERNIE-Image-Turbo OpenAI-Images-API-compatible shim.
 
 Spec coverage: REQ-PUBLISH-042, SCENARIO-PUBLISH-042
 
@@ -35,7 +35,7 @@ class _StubPipeline:
     def __init__(self) -> None:
         self.calls: list[dict] = []
 
-    def __call__(self, prompt, width, height, guidance_scale, num_inference_steps):
+    def __call__(self, prompt, width, height, guidance_scale, num_inference_steps, use_pe):
         self.calls.append(
             {
                 "prompt": prompt,
@@ -43,6 +43,7 @@ class _StubPipeline:
                 "height": height,
                 "guidance_scale": guidance_scale,
                 "num_inference_steps": num_inference_steps,
+                "use_pe": use_pe,
             }
         )
         return _StubResult(Image.new("RGB", (width, height), color=(10, 20, 30)))
@@ -148,6 +149,38 @@ class TestGenerationsEndpoint:
         assert stub.calls[0]["width"] == 1536
         assert stub.calls[0]["height"] == 1024
 
+    def test_uses_turbo_inference_settings_not_base_model_settings(self, monkeypatch):
+        """REQ-PUBLISH-042 (2026-07-21 Turbo switch): guidance_scale=1.0 / steps=8,
+        NOT the base model's guidance_scale=4.0 / steps=50 -- a distilled/turbo
+        checkpoint reusing the base model's guidance_scale would likely degrade
+        output, not just run slower, so this is asserted explicitly."""
+        stub = _StubPipeline()
+        client = self._client(monkeypatch, stub)
+
+        client.post(
+            "/v1/images/generations",
+            json={"model": "ernie-image", "prompt": "x", "n": 1, "size": "1024x1024"},
+        )
+
+        assert stub.calls[0]["guidance_scale"] == 1.0
+        assert stub.calls[0]["num_inference_steps"] == 8
+
+    def test_prompt_enhancer_is_disabled(self, monkeypatch):
+        """REQ-PUBLISH-042 (2026-07-21 use_pe directive): ErnieImagePipeline defaults
+        use_pe=True, which runs a SEPARATE auxiliary LLM to rewrite the prompt before
+        generation. That would silently override paperbanana's own carefully-engineered
+        prompt, so this asserts use_pe=False is explicitly passed -- not left to the
+        pipeline's own default."""
+        stub = _StubPipeline()
+        client = self._client(monkeypatch, stub)
+
+        client.post(
+            "/v1/images/generations",
+            json={"model": "ernie-image", "prompt": "x", "n": 1, "size": "1024x1024"},
+        )
+
+        assert stub.calls[0]["use_pe"] is False
+
     def test_n_greater_than_one_is_rejected(self, monkeypatch):
         """paperbanana's OpenAIImageGen always sends n=1; a different n means an
         unexpected caller, so refuse rather than silently return only one image."""
@@ -190,7 +223,7 @@ class TestErniePipelineSingletonPrecondition:
             raised = False
         except RuntimeError as exc:
             raised = True
-            assert "baidu/ERNIE-Image" in str(exc)
+            assert "baidu/ERNIE-Image-Turbo" in str(exc)
             assert "huggingface-cli download" in str(exc)
 
         assert raised, "expected RuntimeError when the model is not cached"
