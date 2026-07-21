@@ -1,0 +1,51 @@
+{
+  "experiment": 5767,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-21",
+  "started_at": "2026-07-21T15:10:33.454678+00:00",
+  "finished_at": "2026-07-21T15:10:33.454678+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5766 held-out delta>0: harden one game-blind ARC live-path composition rule",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audit.loo_generalization_delta_lcb (actual=0.0 > expected=0.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5766-arc-loo-component-interaction-audit",
+      "artifact_field": "loo_generalization_delta_lcb",
+      "op": ">",
+      "expected": 0.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 > expected=0.0"
+    },
+    {
+      "upstream": "exp5766-arc-loo-component-interaction-audit",
+      "artifact_field": "causal_interaction_count",
+      "op": ">=",
+      "expected": 1,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 >= expected=1"
+    },
+    {
+      "upstream": "exp5766-arc-loo-component-interaction-audit",
+      "artifact_field": "source_leak_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    },
+    {
+      "upstream": "exp5766-arc-loo-component-interaction-audit",
+      "artifact_field": "game_identity_leak_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
