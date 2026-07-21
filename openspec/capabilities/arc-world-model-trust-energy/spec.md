@@ -8026,6 +8026,155 @@ aggregate deltas and paired confidence intervals, sets
 `per_game_adapter_used=false`, and emits an honest complete, blocked, or retired
 verdict without modifying `scripts/research_conductor.py`.
 
+### REQ-ARC-WMTE-5766: LOO ARC Component Interaction Attribution Audit
+
+Experiment 5766 SHALL attribute marginal and preregistered pairwise interaction
+effects of existing, already-reachable generic ARC live-path components under
+leave-one-game-out folds across all 25 completed public games. The audit SHALL
+consume the checked-in Exp5753 matched live trace artifact, the Exp5727
+live-vs-oracle generalization-gap receipt, and the current saturated ARC solve
+registry before scoring any fold. It SHALL fail closed if registry saturation,
+upstream artifact hashes, trace provenance, live environment reachability,
+component source hashes, identical 400-action budgets/seeds, exact trace replay,
+RAM, or disk checks fail. It SHALL also fail closed if game source, a
+`GameAdapter`, a banked plan, game identity as a runtime feature, outer-loop
+ground truth, offline BFS, or policy-default mutation would be required.
+
+The component inventory SHALL freeze at least five existing generic components
+reachable from `E3AgentPolicy` or `StepwiseExplorer`, such as inert-click
+pruning, object-history salience, relational goal energy, goal-candidate
+guidance, epistemic ledger, action-effect expansion prediction, or the shipped
+generic causal primitive. Experiment 5766 SHALL NOT create a new ARC component
+or enable a selected composition in production defaults. For every held-out
+game, all thresholds, selected components, and causal-interaction calls SHALL
+be chosen only from that fold's 24-game development side and evaluated once on
+the held-out game. Game identity SHALL be allowed in manifests and fold labels,
+but SHALL NOT be a runtime feature in the simulated composition or component
+selection rule.
+
+On agent-owned matched live traces, the audit SHALL score the submitted
+baseline, single-component deletion arms, and preregistered pairwise
+deletion/addition combinations with identical observations, seeds, resets,
+400-action budgets, cache policy, stopping rules, and trace receipts. The audit
+SHALL measure known-level live reproduction only as a development-proxy
+diagnostic and SHALL also report first-action validity, action-effect
+prediction, valid/repeated action rates, unique states, planning reachability,
+budget exhaustion, environment steps, crashes, and wall time. Solve credit and
+registry delta SHALL remain zero regardless of any proxy diagnostic movement.
+
+Marginal and pairwise effects SHALL be reported with paired uncertainty. A
+pairwise effect may be called causal only when exact replay passes, positive
+control is non-degenerate, source and game-identity leak canaries are rejected,
+thresholds are fold-disjoint, and the held-out effect sign is consistent with
+the development-side sign. Bare `loo_generalization_delta` SHALL equal the
+held-out macro delta of the best development-selected, game-blind composition
+over baseline on the preregistered live-path utility. Bare
+`loo_generalization_delta_lcb` SHALL equal that composition's paired 95% lower
+bound. The composition SHALL remain a reported measurement only and SHALL NOT
+be implemented or enabled.
+
+The terminal artifact
+`results/experiment_5766_arc_loo_component_interaction_audit.json` SHALL include
+top-level `field_principles` covering every artifact field, plus bare `status`,
+`preconditions_checked`, `spec_refs`, `upstream_artifact_hashes`,
+`registry_precheck`, `registry_hash`, `public_game_count`,
+`registry_level_count`, `component_inventory`, `component_source_hashes`,
+`live_reachability_receipts`, `loo_fold_manifest`,
+`fold_disjointness_receipts`, `paired_trial_manifest`,
+`exact_replay_receipts`, `positive_control_receipt`,
+`negative_leak_canary_receipts`, `per_game_metrics`, `marginal_effects`,
+`pairwise_interaction_effects`, `confidence_intervals`,
+`development_selected_composition`, `composition_runtime_features`,
+`loo_generalization_delta`, `loo_generalization_delta_lcb`,
+`causal_interaction_count`, `source_leak_count`, `game_identity_leak_count`,
+`producer_gate_fields`, `solve_provenance="development_proxy"`,
+`arc_registry_delta=0`, `arc_solve_credited=false`,
+`outer_loop_re_used=false`, `per_game_adapter_used=false`,
+`source_read_used=false`, `production_default_enabled=false`,
+`inference_substrate="agent_owned_arc_live_trace_replay_development_proxy_no_llm"`,
+`random_seeds`, `duration_s`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and an `honest_verdict` beginning `complete:` or
+`blocked:`.
+
+Required field principles SHALL include:
+
+- `field_principles`: principle "every Exp5766 field carries its audit rationale so the interaction audit is schema-stable."
+- `status`: principle "bare status lets downstream gates distinguish complete from blocked without parsing prose."
+- `preconditions_checked`: principle "structured gates fail closed before attribution on registry, traces, hashes, live reachability, resources, budgets, and provenance."
+- `spec_refs`: principle "REQ/SCENARIO anchors make the LOO attribution traceable to OpenSpec."
+- `upstream_artifact_hashes`: principle "Exp5753, Exp5727, component sources, and registry inputs are content-addressed before use."
+- `registry_precheck`: principle "confirms all public games and known levels are already complete, so no public solve target is admissible."
+- `registry_hash`: principle "ties the audit to the exact saturated registry bytes checked before scoring."
+- `public_game_count`: principle "fixed denominator for the 25 public leave-one-game-out folds."
+- `registry_level_count`: principle "fixed saturated known-level denominator; context only, never credit."
+- `component_inventory`: principle "freezes only existing reachable E3/StepwiseExplorer components before effect selection."
+- `component_source_hashes`: principle "source hashes prevent silent component drift between attribution and reuse."
+- `live_reachability_receipts`: principle "each audited component is tied to an existing live-policy hook rather than an orphan solver."
+- `loo_fold_manifest`: principle "one held-out game per fold with the 24-game development side visible."
+- `fold_disjointness_receipts`: principle "thresholds and selections are learned on development games and evaluated once on held-out games."
+- `paired_trial_manifest`: principle "baseline, deletion, and pairwise arms share observations, seeds, resets, budgets, caches, and stopping rules."
+- `exact_replay_receipts`: principle "trace hashes prove attribution used exact agent-owned live transitions, not source or offline BFS."
+- `positive_control_receipt`: principle "nondegenerate controls prove the harness can detect an effect before causal/null interpretation."
+- `negative_leak_canary_receipts`: principle "source and game-identity canaries are detected and rejected, not admitted as features."
+- `per_game_metrics`: principle "held-out rows expose proxy reproduction, validity, prediction, repeat, coverage, planning, budget, crash, step, and timing diagnostics."
+- `marginal_effects`: principle "single-component deletion/addition deltas are separated from pairwise interactions."
+- `pairwise_interaction_effects`: principle "interaction effect equals paired pair delta minus marginal terms and carries causal-call guards."
+- `confidence_intervals`: principle "paired uncertainty is reported for macro, marginal, and interaction deltas."
+- `development_selected_composition`: principle "the best game-blind composition is selected only on each fold's development side."
+- `composition_runtime_features`: principle "empty or game-blind feature list proves game identity is not a runtime input."
+- `loo_generalization_delta`: principle "held-out macro delta of the development-selected composition on the preregistered live-path utility."
+- `loo_generalization_delta_lcb`: principle "paired 95% lower bound for the held-out LOO generalization delta."
+- `causal_interaction_count`: principle "bare downstream gate scalar counts only interactions passing exact replay, controls, leak, fold, and sign guards."
+- `source_leak_count`: principle "bare downstream gate scalar; admitted source leaks must remain zero."
+- `game_identity_leak_count`: principle "bare downstream gate scalar; admitted game-identity leaks must remain zero."
+- `producer_gate_fields`: principle "lists the bare scalar downstream gates without wrapping their values in objects."
+- `solve_provenance`: principle "development_proxy -- known public live-trace attribution, not hidden-game self-discovery credit."
+- `arc_registry_delta`: principle "zero prevents attribution diagnostics from inflating the public solve registry."
+- `arc_solve_credited`: principle "false keeps known-level reproduction diagnostics out of solve credit."
+- `outer_loop_re_used`: principle "false excludes hand reverse engineering and offline ground-truth search."
+- `per_game_adapter_used`: principle "false excludes hand GameAdapter routes from attribution."
+- `source_read_used`: principle "false excludes game source from the component effect estimate."
+- `production_default_enabled`: principle "false keeps the selected composition out of submitted defaults."
+- `inference_substrate`: principle "agent-owned ARC live-trace replay without LLM, source, adapter, or policy-default mutation."
+- `random_seeds`: principle "matched trace replay and fold selection are deterministic."
+- `duration_s`: principle "wall time of the attribution audit is recorded for reproducibility."
+- `test_commands`: principle "records verification commands used for the artifact."
+- `test_exit_codes`: principle "records command exit codes rather than prose-only verification."
+- `reproducibility_checksum`: principle "content-addressed artifact catches silent metric, fold, or threshold drift."
+- `honest_verdict`: principle "terminal complete:/blocked: verdict reports a valid audit or the exact precondition blocker."
+
+#### SCENARIO-ARC-WMTE-5766-REGISTRY-AND-INVENTORY-PRECHECK
+
+Given Exp5753, Exp5727, the ARC registry, and reachable component source files
+are present
+When Exp5766 evaluates preconditions
+Then it records all upstream hashes, confirms 25 complete public games and 183
+known levels, freezes at least five existing live-path components, records
+source hashes and hook reachability, and blocks before attribution if source,
+adapter, banked-plan, game-identity runtime features, outer-loop truth, budget,
+seed, RAM, disk, or live reachability is missing or required.
+
+#### SCENARIO-ARC-WMTE-5766-LOO-PAIRED-ATTRIBUTION
+
+Given agent-owned matched live trace rows with one baseline row per public game
+When Exp5766 builds leave-one-game-out folds
+Then every held-out game appears exactly once, thresholds and compositions are
+selected only from that fold's development games, paired baseline/deletion/
+pairwise arms share observations, seeds, resets, 400-action budgets, caches,
+and stopping rules, and the artifact reports per-game and macro utility deltas
+without changing policy defaults or registry credit.
+
+#### SCENARIO-ARC-WMTE-5766-CONTROLS-GATES-AND-PRODUCER-FIELDS
+
+Given exact replay receipts, nondegenerate positive controls, and negative leak
+canaries
+When Exp5766 estimates marginal and pairwise effects
+Then interactions are counted causal only when replay, control, leak,
+fold-disjointness, and held-out sign-consistency guards all pass; bare
+`loo_generalization_delta_lcb`, `causal_interaction_count`,
+`source_leak_count`, and `game_identity_leak_count` are listed in
+`producer_gate_fields`, and solve credit fields remain zero/false.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
