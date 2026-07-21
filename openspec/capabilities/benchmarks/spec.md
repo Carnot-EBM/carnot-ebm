@@ -1374,6 +1374,84 @@ SCENARIO-BENCH-5757-NEGATIVE-CONTROLS
 |---|---|---|
 | REQ-BENCH-5757 | Implemented (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Implemented (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
 
+### REQ-BENCH-5759: SOTA Exact Proposal Utility Panel
+
+Carnot MUST provide Exp5759 at
+`python/carnot/experiment_5759_sota_exact_proposal_utility_panel.py` and write
+`results/experiment_5759_sota_exact_proposal_utility_panel.json` by consuming
+only the sealed Exp5757 scalar bridge and the frozen Exp5746 science split.
+The panel MUST define `MODEL_SPECS` containing exactly the three mandated local
+headline GGUF ids: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy tiny models MAY appear only in
+explicit smoke-test receipts and MUST NOT populate headline metrics.
+
+Before model access, the runner MUST verify bridge/upstream hashes, immutable
+science rows, exact solver versions, candidate label bijections, candidate
+ordering seeds, exact budgets, stopping rules, local GGUF paths and hashes,
+llama.cpp CUDA build support, GPU visibility/offload, free VRAM/RAM/disk, and
+checkpoint/resume space. If any model, runtime, or evidence provenance is not
+authenticated, the runner MUST bail before inference and emit a terminal
+blocked artifact rather than substitute stale or unauthenticated evidence.
+
+The runner MUST use only the sealed finite-choice candidate-label interface:
+native logits over one-token sealed labels MAY rank proposals, while generated
+reasoning text, free-form answers, LLM judges, generated-text scoring, PHASE-D
+reopening, grammar-runtime authority, and token scores as semantic authority
+MUST remain absent. Exact deterministic validators are the only authority for
+feasibility and objective values.
+
+For each model, the panel MUST compare the model ordering with paired random
+permutations, the deterministic Carnot energy heuristic, solver-native
+branching, and exact-search-only controls under matched candidate pools,
+validator-call budgets, seeds, and stopping rules. It MUST report top-1
+feasible discovery, top-k exact optimum discovery, nodes/candidates to first
+valid and first optimum, exact-validator calls, hard-violation rate, exact
+objective gap, wall time, model tokens, model-family shortcut residuals, and
+paired bootstrap intervals by row, family, model, and overall.
+
+The artifact MUST preregister bare scalar `proposal_utility_delta_overall` as
+a signed normalized composite where lower nodes/calls/gaps and higher feasible
+or optimal discovery favor the proposal. Bare scalar `proposal_utility_lcb`
+MUST be the paired 95 percent lower bootstrap bound. The downstream gate fields
+`proposal_utility_lcb`, `flagship_nonregression_count`,
+`validator_disagreement_count`, `authority_violation_count`, and
+`proposal_utility_ready_score` MUST be top-level bare scalars and their
+explanations MUST live only in `field_principles`. The ready score MAY equal
+`1.0` only when the lower bound is non-negative, both flagship models have
+non-negative per-family deltas, all three mandated models are authenticated and
+used, and exact-authority violations are zero.
+
+#### SCENARIO-BENCH-5759: Sealed Science Split Produces A Utility Panel
+
+**Given** the Exp5757 bridge is ready, the Exp5746 manifest replays, and all
+three mandated local GGUFs authenticate with llama.cpp CUDA
+**When** Exp5759 scores the frozen science rows through the finite-choice label
+interface
+**Then** the artifact contains all required provenance, metric, bootstrap,
+producer-gate, and no-forbidden-runtime fields, compares against all matched
+controls, and emits a terminal `complete:` verdict without mutating the sealed
+science split.
+
+#### SCENARIO-BENCH-5759-BLOCKED-PRECONDITIONS: Unauthenticated Evidence Blocks Before Inference
+
+**Given** a missing bridge scalar, altered upstream hash, missing GGUF path,
+non-CUDA llama.cpp build, tokenizer label collision, insufficient resources, or
+unreplayable checkpoint space
+**When** Exp5759 preconditions are collected
+**Then** inference is not invoked, the artifact status is `blocked`, the
+producer ready score is `0.0`, and the blocked verdict names the mechanical
+precondition rather than fabricating proposal utility.
+
+**Spec traces:** REQ-BENCH-5759, SCENARIO-BENCH-5759,
+SCENARIO-BENCH-5759-BLOCKED-PRECONDITIONS
+
+## Implementation Status (REQ-BENCH-5759)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5759 | Planned (`python/carnot/experiment_5759_sota_exact_proposal_utility_panel.py`, `results/experiment_5759_sota_exact_proposal_utility_panel.json`) | Planned (`tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.

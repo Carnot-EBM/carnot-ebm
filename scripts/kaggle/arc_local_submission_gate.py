@@ -20,6 +20,7 @@ CLI:  --check (default)            run the gate, print verdict, set exit code
 """
 
 import argparse
+import inspect
 import json
 import re
 import subprocess
@@ -313,6 +314,35 @@ def _normalize_game_row(row: dict) -> dict:
     return out
 
 
+def _call_measure_game(
+    game: str,
+    policy: str,
+    budget: int,
+    cap: int,
+    *,
+    disable_induction: bool,
+) -> dict:
+    try:
+        signature = inspect.signature(_measure_game)
+    except (TypeError, ValueError):
+        accepts_disable_induction = True
+    else:
+        parameters = signature.parameters.values()
+        accepts_disable_induction = any(
+            parameter.name == "disable_induction" or parameter.kind == inspect.Parameter.VAR_KEYWORD
+            for parameter in parameters
+        )
+    if accepts_disable_induction:
+        return _measure_game(
+            game,
+            policy,
+            budget,
+            cap,
+            disable_induction=disable_induction,
+        )
+    return _measure_game(game, policy, budget, cap)
+
+
 def measure(
     policy: str,
     budget: int,
@@ -324,7 +354,7 @@ def measure(
         rows = [
             _normalize_game_row(row)
             for row in ex.map(
-                lambda g: _measure_game(
+                lambda g: _call_measure_game(
                     g,
                     policy,
                     budget,
