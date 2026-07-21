@@ -60,6 +60,23 @@ SERVER_START_TIMEOUT_S = 30.0
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _find_paperbanana() -> "str | None":
+    """Locate the paperbanana CLI, preferring the current interpreter's own venv.
+
+    `shutil.which("paperbanana")` alone only checks $PATH, which is wrong
+    when this script is invoked as `.venv/bin/python scripts/generate_diagram.py`
+    without that venv's bin/ directory being on PATH (e.g. from a plain
+    `python3 scripts/generate_diagram.py` shebang-driven call, or a subagent
+    shell that never `source`d activate) -- paperbanana would then be
+    genuinely installed (editable, into this exact interpreter's site-packages)
+    but reported as "not installed", a misleading blocked_* verdict.
+    """
+    venv_candidate = os.path.join(os.path.dirname(sys.executable), "paperbanana")
+    if os.path.isfile(venv_candidate) and os.access(venv_candidate, os.X_OK):
+        return venv_candidate
+    return shutil.which("paperbanana")
+
+
 def _server_healthy(host: str, port: int, timeout: float = 2.0) -> bool:
     """Return True if an ernie_image_server is already answering /healthz."""
     try:
@@ -126,7 +143,8 @@ def _ensure_ernie_local_backend(host: str, port: int, gpu: "int | None") -> dict
             file=sys.stderr,
         )
         sys.exit(1)
-    if shutil.which("paperbanana") is None:
+    paperbanana_path = _find_paperbanana()
+    if paperbanana_path is None:
         print(
             "blocked_paperbanana_not_installed: run "
             "`uv pip install -e external/paperbanana[openai]` first "
@@ -205,7 +223,7 @@ def main() -> None:
             file=sys.stderr,
         )
 
-    cmd = ["paperbanana", "generate", *passthrough]
+    cmd = [_find_paperbanana() or "paperbanana", "generate", *passthrough]
     result = subprocess.run(cmd, cwd=REPO_ROOT, env=env, check=False)
     sys.exit(result.returncode)
 

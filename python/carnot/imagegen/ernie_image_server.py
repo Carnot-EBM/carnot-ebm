@@ -39,9 +39,11 @@ from __future__ import annotations
 
 import argparse
 import base64
+import functools
 import io
 import logging
 import os
+import threading
 import time
 from typing import Any, Optional
 
@@ -131,41 +133,57 @@ class ErniePipelineSingleton:
         cls._pipeline = None
 
 
-def _build_request_model() -> Any:
-    """Build the OpenAI Images API request schema at module scope.
+_request_model_lock = threading.Lock()
+
+
+@functools.lru_cache(maxsize=1)
+def _request_model() -> Any:
+    """Build the OpenAI Images API request schema, once, as a real module global.
 
     FastAPI resolves a Pydantic model's fields via `get_type_hints`, which
-    needs the class's `__module__` to be resolvable at import time. A model
-    class nested inside `build_app()`'s closure fails that resolution
-    silently: FastAPI falls back to treating the parameter as a query
-    param instead of a request body (a real bug caught by
-    tests/python/test_ernie_image_server.py -- `loc: ['query', 'req']`
-    instead of the request body). Defining it here, once, at module scope
-    avoids the closure entirely.
+    (for a function using `from __future__ import annotations`, as this
+    module does) resolves string annotations against the function's
+    `__globals__` -- for a nested function that is always the *module's*
+    global namespace, never a merely-local variable of an enclosing
+    function. A model class assigned only to a local inside `build_app()`
+    is therefore invisible to `get_type_hints`: FastAPI silently falls back
+    to treating the parameter as a query param instead of a request body
+    (a real bug caught by tests/python/test_ernie_image_server.py --
+    `loc: ['query', 'req']` instead of the request body; `lru_cache` alone,
+    without also writing a real module global, reproduces the exact same
+    bug -- verified by hand while writing this comment). The lock makes the
+    "build once, publish to module globals" step below race-free; the
+    `lru_cache` on top of it means every caller after the first gets the
+    cheap cached return without re-acquiring the lock.
     """
-    from pydantic import BaseModel
+    with _request_model_lock:
+        existing = globals().get("ImageGenerationRequest")
+        if existing is not None:
+            return existing
 
-    class ImageGenerationRequest(BaseModel):
-        model: str = "ernie-image"
-        prompt: str
-        n: int = 1
-        size: str = "1024x1024"
-        quality: Optional[str] = None
-        response_format: Optional[str] = "b64_json"
+        from pydantic import BaseModel
 
-    return ImageGenerationRequest
+        class ImageGenerationRequest(BaseModel):
+            model: str = "ernie-image"
+            prompt: str
+            n: int = 1
+            size: str = "1024x1024"
+            # ERNIE-Image has no OpenAI-style quality tiering; accepted for
+            # request-shape compatibility with paperbanana's OpenAIImageGen
+            # (which always sends it when the caller passed --image-quality),
+            # but silently unused -- see generate() below.
+            quality: Optional[str] = None
+            response_format: Optional[str] = "b64_json"
 
-
-ImageGenerationRequest = None  # populated lazily by build_app() below
+        globals()["ImageGenerationRequest"] = ImageGenerationRequest
+        return ImageGenerationRequest
 
 
 def build_app(gpu: Optional[int] = None) -> Any:
     """Construct the FastAPI app. Imports FastAPI lazily (optional ``imagegen`` extra)."""
-    global ImageGenerationRequest
     from fastapi import FastAPI, HTTPException
 
-    if ImageGenerationRequest is None:
-        ImageGenerationRequest = _build_request_model()
+    _request_model()  # ensures ImageGenerationRequest is a real module global before use
 
     app = FastAPI(title="carnot-ernie-image-shim")
 
