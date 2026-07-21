@@ -13853,3 +13853,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-21 11:50 UTC | Build a lossless bare-scalar bridge for the ready  | OK | 86 passed, 1 warning in 9.20s |
 | 2026-07-21 12:07 UTC | Build a lossless bare-scalar bridge for repaired R | OK | 86 passed, 1 warning in 8.19s |
 | 2026-07-21 12:50 UTC | Gated on Exp5757 scalar readiness: measure SOTA pr | OK | 88 passed, 1 warning in 13.70s |
+| 2026-07-21 12:52 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
