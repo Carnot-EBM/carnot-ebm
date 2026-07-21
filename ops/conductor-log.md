@@ -13856,3 +13856,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-21 12:52 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
 | 2026-07-21 12:54 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
 | 2026-07-21 12:56 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
+| 2026-07-21 13:26 UTC | Build an exact MPMMine-shaped benchmark for typed  | OK | 88 passed, 1 warning in 67.31s (0:01:07) |
