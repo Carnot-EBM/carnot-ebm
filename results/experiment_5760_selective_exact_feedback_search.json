@@ -1,0 +1,51 @@
+{
+  "experiment": 5760,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-21",
+  "started_at": "2026-07-21T12:52:22.098321+00:00",
+  "finished_at": "2026-07-21T12:52:22.098321+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5759 utility>0: allocate exact conflict feedback to recoverable proposal states",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel.proposal_utility_lcb (actual=-0.045291796847 > expected=0.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5759-sota-exact-proposal-utility-panel",
+      "artifact_field": "proposal_utility_lcb",
+      "op": ">",
+      "expected": 0.0,
+      "actual": -0.045291796847,
+      "passed": false,
+      "reason": "actual=-0.045291796847 > expected=0.0"
+    },
+    {
+      "upstream": "exp5759-sota-exact-proposal-utility-panel",
+      "artifact_field": "flagship_nonregression_count",
+      "op": ">=",
+      "expected": 2,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 >= expected=2"
+    },
+    {
+      "upstream": "exp5759-sota-exact-proposal-utility-panel",
+      "artifact_field": "validator_disagreement_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    },
+    {
+      "upstream": "exp5759-sota-exact-proposal-utility-panel",
+      "artifact_field": "authority_violation_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
