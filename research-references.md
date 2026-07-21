@@ -30337,3 +30337,98 @@ those are not relabeled as new findings below.
   re-solving any registered public level.
 
 <!-- V514-PLANNER-REFRESH-20260720-END -->
+
+## V515 Planner Refresh - 20260721
+
+Planning-time sweep for milestone `.515` after the terminal `.514` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint satisfaction, Ising sampling, hallucination detection and mitigation, KANs,
+constrained generation, hardware-accelerated sampling, and continual/online constraint
+learning. It also checked OpenReview, Hugging Face Papers, GitHub discovery, Extropic
+writing, Logical Intelligence's public Kona/Aleph material, and Semantic Scholar search
+routes for EBT (`2507.02092`) and ARM-EBM (`2512.15605`). Existing entries already cover
+DRIFT-Bench, strict-constraint distortion, counterexample-guided reasoning agents,
+HardNet++, Energy-Based Constraint Networks, LLM-as-a-Verifier, selective verification,
+the recent FPGA p-bit schedule, Extropic X0/XTR-0, and Kona 1.0; those are not relabeled
+as new findings below.
+
+### New actionable delta
+
+- **Validate the Dream Before You Trust Its Verdict: Admissibility for World-Model
+  Simulators** - arXiv:2607.07196, https://arxiv.org/abs/2607.07196 (submitted
+  2026-07-08; accepted at the RSS 2026 Workshop on Robot World Models). The paper argues
+  that a learned world model must be accredited before its closed-loop verdict can count
+  as assurance evidence and defines an L0-L4 ladder separating visual fidelity from
+  action-following and unseen-action robustness. Carnot hook: translate the ladder into a
+  game-blind ARC world-model admission contract over agent-owned transitions. A generated
+  executable model may influence E3 planning only after exact syntax/replay checks,
+  held-out action-following, unseen-action robustness, calibration, and leak controls pass
+  on a train/calibration/test split. The real environment remains authority. This motivates
+  the `.515` ARC accreditation and model-family panel; it does not authorize source reads,
+  per-game adapters, offline ground-truth BFS, or solve credit.
+
+### Reused findings with newly unfinished implications
+
+- **Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning** -
+  arXiv:2605.23940, https://arxiv.org/abs/2605.23940; code:
+  https://github.com/kaons-research/drift-bench. DRIFT-Bench is already indexed, but
+  `.514`'s solver-certified constraint acquisition used a synthetic exact lifecycle and
+  did not test the paper's central distinction on a natural multi-turn GGUF stream.
+  `.515` should therefore report contradiction and satisfiable answer drift separately,
+  validate every returned assignment against the maintained ledger, and require old-prefix
+  retention after each accepted update. Solver consistency alone cannot earn FR-11 credit.
+- **Distortion Instead of Hallucination: The Effect of Reasoning Under Strict
+  Constraints** - arXiv:2601.01490, https://arxiv.org/abs/2601.01490. This is already
+  indexed, but its constraint-compliance versus factual-distortion tradeoff becomes a
+  required control when `.515` creates the first prospective SOTA stream for constraint
+  acquisition. The stream must preserve immutable prompt facts separately from mutable
+  constraints, and an update that improves constraint compliance while changing protected
+  facts counts as unsafe propagation rather than learning.
+- **Bridging the Agent-World Gap: Text World Models for LLM-based Agents** -
+  arXiv:2606.09032, https://arxiv.org/abs/2606.09032. The survey's separation of world-model
+  construction, inference-time planning, verification, adaptation, and evaluation supports
+  `.515`'s staged ARC graph: first accredit executable transition models, then compare
+  mandated SOTA inducer families, then allow a held-out live E3 A/B only behind an
+  accreditation gate.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the public API route was not consistently accessible during this
+  sweep. Search-visible EBT and ARM-EBM trails exposed no new open implementation or local
+  method beyond already-indexed fixed-point, lookahead, distributional-energy, workload,
+  and safe-distillation work. No citation-count claim is made.
+- **OpenReview / Hugging Face Papers:** Energy-Based Constraint Networks, V1, Spilled
+  Energy, LLM-as-a-Verifier, strict-constraint distortion, and selective verification
+  reinforce localization, uncertainty, and verifier-allocation controls. Carnot's retired
+  external generated-text/logprob scorer remains closed; exact validators remain release
+  authority.
+- **GitHub:** discovery surfaced the public DRIFT-Bench repository and existing EBT/CEGIS
+  implementations. DRIFT-Bench is a useful reproducible benchmark source, but no repository
+  supersedes Carnot's exact validators, typed constraint lifecycle, or live E3 entrypoint.
+- **Extropic:** the public writing index still ends with the October 2025 X0/XTR-0/TSU
+  launch material, while the hardware page advertises Z1 early access in 2026. Carnot has
+  no authenticated local XTR-0/Z1 route, so `.515` makes no TSU execution, power, or
+  speedup claim.
+- **Logical Intelligence:** the June 2026 formal-verification post describes Kona's learned
+  latent energy as a cheap but imperfect verifier beneath machine-checkable proof, but no
+  local weights, API receipt, or reproducible comparator are public. Kona remains
+  architecture context rather than imported evidence.
+
+### V515 planning impact
+
+- Move FR-11 from a synthetic exact lifecycle to a sealed prospective multi-turn stream
+  produced by all three mandated SOTA GGUF families. Separate contradiction, satisfiable
+  drift, protected-fact distortion, and parser failure, then test solver-certified online
+  acquisition with chronological retention and rollback.
+- Treat `.514`'s positive Gemma 31B single-shot ARC induction evidence and negative CEGIS
+  evidence as a mechanism boundary: accredit multiple independent single-shot world-model
+  hypotheses and select only by agent-owned calibration transitions; do not run another
+  iterative reinduction loop.
+- Require the arXiv:2607.07196 admissibility ladder before any learned world model can
+  influence the live E3 policy, and measure generalization on held-out games/actions rather
+  than re-solving the already-complete public registry.
+- Preserve the terminal retirement of the allocation-free one-axis software 10x path and
+  the negative exact-proposal-ordering branch. Hardware work is continuity/accounting only
+  unless a real attached-board precondition has changed.
+
+<!-- V515-PLANNER-REFRESH-20260721-END -->

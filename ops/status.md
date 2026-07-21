@@ -1,6 +1,54 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-20 (REQ-ARC-FCP-5590/5728/5729/5730/5732/5740/5756/5757/5758, REQ-ARC-WMTE-5726/5760: induction-quality convergence + click-ranking/perception dead-ends)
+**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image diagram-generation backend)
+
+## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image (REQ-PUBLISH-042)
+
+**What's working:** diagram generation no longer requires a paid API. Operator directive:
+gemini/claude/codex tokens are no longer available for this project. Shipped a fully local
+image-generation path for the vendored `paperbanana` diagram tool:
+
+- `external/paperbanana/` — vendored `llmsresearch/paperbanana` (MIT) at latest tag v0.3.0,
+  gitignored per the `external/ARC-GEN` convention. Source unmodified.
+- `python/carnot/imagegen/ernie_image_server.py` — local FastAPI shim implementing exactly the
+  OpenAI Images API request/response contract paperbanana's `OpenAIImageGen` provider issues
+  (`POST /v1/images/generations`), backed by `baidu/ERNIE-Image` (Apache-2.0, Diffusers-native,
+  8B-param DiT, single 24GB-class GPU). paperbanana is pointed at it via `OPENAI_BASE_URL` —
+  zero patches to the vendored tool, matching CLAUDE.md's Decentralization-Respecting Design
+  Constraints rule 7 (vendor adapter through an abstract/network protocol boundary).
+- `scripts/generate_diagram.py` — new entrypoint for diagram generation going forward.
+  `CARNOT_IMAGE_BACKEND` (default `ernie-local`) selects the backend, brings up or reuses the
+  local server, and shells out to `paperbanana generate`.
+- `tests/python/test_ernie_image_server.py` — 11 tests, all mocked (no GPU/network/8B download),
+  all passing. Caught and fixed a real bug along the way: a Pydantic request model nested inside
+  `build_app()`'s closure was silently misread by FastAPI as a query param rather than the
+  request body (module uses `from __future__ import annotations`, so `get_type_hints` needs the
+  class reachable via the module's `__globals__`) — fixed by building it at module scope.
+- `pyproject.toml` `imagegen` optional-dependency group (diffusers, transformers, accelerate,
+  pillow, fastapi, uvicorn) — installed into `.venv`.
+- Spec-anchored: `openspec/capabilities/publication/spec.md` REQ-PUBLISH-042 +
+  SCENARIO-PUBLISH-042, `_bmad/traceability.md` rows, `ops/known-issues.md` 2026-07-21 update to
+  the 2026-05-01 parked entry (nothing deleted, per Documentation Update Rules).
+
+**What's next / known gap (documented, not silently hidden):**
+
+- The `baidu/ERNIE-Image` weights themselves are NOT downloaded yet (8B params, multi-gigabyte;
+  Pre-Launch Preconditions Discipline never auto-downloads a compute-bound resource without an
+  explicit trigger). Before the first real diagram: `huggingface-cli download baidu/ERNIE-Image`.
+  Verified `scripts/generate_diagram.py --backend ernie-local` correctly exits with
+  `blocked_ernie_image_not_cached` in the current state — no fabricated diagram.
+- paperbanana's VLM role (Retriever/Planner/Stylist/Critic, `VLM_PROVIDER`) still defaults to
+  `gemini` and is NOT swapped by this change — only the image-generation role is local. Without a
+  local `VLM_PROVIDER`, the full 7-agent pipeline still needs an API key even after this change.
+  `scripts/generate_diagram.py` prints a visible warning rather than proceeding silently.
+  Candidate follow-up: `VLM_PROVIDER=ollama` (Ollama already running on this box, zero models
+  pulled as of 2026-07-21) or `VLM_PROVIDER=openai_local` pointed at a local vision-capable
+  llama.cpp server (needs verification: does this project's llama.cpp build support `--mmproj`
+  image input, and which local GGUF ships an mmproj file).
+- No end-to-end diagram has actually been generated yet (would require the model download above,
+  and a live GPU that isn't currently occupied by the direct-in-context-prediction experiment on
+  GPU 1). This session verified every component up to that point (server contract, precondition
+  gating, CLI wiring) with real tests and real manual smoke tests, never a live generation.
 
 ## Session 2026-07-19/20 - ARC Wiring-Layer Exhaustion → Induction-Quality Convergence (REQ-ARC-FCP-5590 through 5758, REQ-ARC-WMTE-5720/5724/5725/5726/5760)
 

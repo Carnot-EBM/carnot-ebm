@@ -108,8 +108,22 @@ mcp = [
 rust = [
     "maturin>=1.7,<2.0",
 ]
+# imagegen -- local, open-weight diagram/figure generation (REQ-PUBLISH-042).
+# Backs a local OpenAI-Images-API-compatible shim (python/carnot/imagegen/)
+# that serves baidu/ERNIE-Image (Apache-2.0, Diffusers-native, 24GB-VRAM-class)
+# so the vendored external/paperbanana tool never has to call a paid
+# closed-weight image API (gemini/openai/anthropic) to generate a figure.
+# Per CLAUDE.md Decentralization-Respecting Design Constraints rule 1/7.
+imagegen = [
+    "diffusers>=0.30",
+    "transformers>=4.44",
+    "accelerate>=0.33",
+    "pillow>=10.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.30",
+]
 all = [
-    "carnot[llm,mcp,rust,dwave]",
+    "carnot[llm,mcp,rust,dwave,imagegen]",
 ]
 
 # ----------------------------------------------------------------------
