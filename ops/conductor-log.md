@@ -13862,3 +13862,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-21 14:31 UTC | Gated on Exp5758 scalar parity: profile and optimi | OK | Deliverable already exists in repo |
 | 2026-07-21 14:51 UTC | Gated on Exp5764 parity: run the final matched Rus | OK | 138 passed, 1 warning in 20.82s |
 | 2026-07-21 15:08 UTC | Measure ARC leave-one-game-out generalization and  | OK | 89 passed, 1 warning in 13.90s |
+| 2026-07-21 15:10 UTC | Gated on Exp5766 held-out delta>0: harden one game | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audi |
