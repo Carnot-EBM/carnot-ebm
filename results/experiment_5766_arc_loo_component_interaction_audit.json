@@ -1,0 +1,4880 @@
+{
+  "field_principles": {
+    "field_principles": "every Exp5766 field carries its audit rationale so the interaction audit is schema-stable.",
+    "status": "bare status lets downstream gates distinguish complete from blocked without parsing prose.",
+    "preconditions_checked": "structured gates fail closed before attribution on registry, traces, hashes, live reachability, resources, budgets, and provenance.",
+    "spec_refs": "REQ/SCENARIO anchors make the LOO attribution traceable to OpenSpec.",
+    "upstream_artifact_hashes": "Exp5753, Exp5727, component sources, and registry inputs are content-addressed before use.",
+    "registry_precheck": "confirms all public games and known levels are already complete, so no public solve target is admissible.",
+    "registry_hash": "ties the audit to the exact saturated registry bytes checked before scoring.",
+    "public_game_count": "fixed denominator for the 25 public leave-one-game-out folds.",
+    "registry_level_count": "fixed saturated known-level denominator; context only, never credit.",
+    "component_inventory": "freezes only existing reachable E3/StepwiseExplorer components before effect selection.",
+    "component_source_hashes": "source hashes prevent silent component drift between attribution and reuse.",
+    "live_reachability_receipts": "each audited component is tied to an existing live-policy hook rather than an orphan solver.",
+    "loo_fold_manifest": "one held-out game per fold with the 24-game development side visible.",
+    "fold_disjointness_receipts": "thresholds and selections are learned on development games and evaluated once on held-out games.",
+    "paired_trial_manifest": "baseline, deletion, and pairwise arms share observations, seeds, resets, budgets, caches, and stopping rules.",
+    "exact_replay_receipts": "trace hashes prove attribution used exact agent-owned live transitions, not source or offline BFS.",
+    "positive_control_receipt": "nondegenerate controls prove the harness can detect an effect before causal/null interpretation.",
+    "negative_leak_canary_receipts": "source and game-identity canaries are detected and rejected, not admitted as features.",
+    "per_game_metrics": "held-out rows expose proxy reproduction, validity, prediction, repeat, coverage, planning, budget, crash, step, and timing diagnostics.",
+    "marginal_effects": "single-component deletion/addition deltas are separated from pairwise interactions.",
+    "pairwise_interaction_effects": "interaction effect equals paired pair delta minus marginal terms and carries causal-call guards.",
+    "confidence_intervals": "paired uncertainty is reported for macro, marginal, and interaction deltas.",
+    "development_selected_composition": "the best game-blind composition is selected only on each fold's development side.",
+    "composition_runtime_features": "empty or game-blind feature list proves game identity is not a runtime input.",
+    "loo_generalization_delta": "held-out macro delta of the development-selected composition on the preregistered live-path utility.",
+    "loo_generalization_delta_lcb": "paired 95% lower bound for the held-out LOO generalization delta.",
+    "causal_interaction_count": "bare downstream gate scalar counts only interactions passing exact replay, controls, leak, fold, and sign guards.",
+    "source_leak_count": "bare downstream gate scalar; admitted source leaks must remain zero.",
+    "game_identity_leak_count": "bare downstream gate scalar; admitted game-identity leaks must remain zero.",
+    "producer_gate_fields": "lists the bare scalar downstream gates without wrapping their values in objects.",
+    "solve_provenance": "development_proxy -- known public live-trace attribution, not hidden-game self-discovery credit.",
+    "arc_registry_delta": "zero prevents attribution diagnostics from inflating the public solve registry.",
+    "arc_solve_credited": "false keeps known-level reproduction diagnostics out of solve credit.",
+    "outer_loop_re_used": "false excludes hand reverse engineering and offline ground-truth search.",
+    "per_game_adapter_used": "false excludes hand GameAdapter routes from attribution.",
+    "source_read_used": "false excludes game source from the component effect estimate.",
+    "production_default_enabled": "false keeps the selected composition out of submitted defaults.",
+    "inference_substrate": "agent-owned ARC live-trace replay without LLM, source, adapter, or policy-default mutation.",
+    "random_seeds": "matched trace replay and fold selection are deterministic.",
+    "duration_s": "wall time of the attribution audit is recorded for reproducibility.",
+    "test_commands": "records verification commands used for the artifact.",
+    "test_exit_codes": "records command exit codes rather than prose-only verification.",
+    "reproducibility_checksum": "content-addressed artifact catches silent metric, fold, or threshold drift.",
+    "honest_verdict": "terminal complete:/blocked: verdict reports a valid audit or the exact precondition blocker."
+  },
+  "status": "complete",
+  "preconditions_checked": {
+    "ok": true,
+    "failures": [],
+    "upstream_artifact_hashes": {
+      "exp5753": {
+        "path": "results/experiment_5753_arc_generic_primitive_live_registry_ab.json",
+        "present": true,
+        "sha256": "sha256:20b0ac04377039bb191c26633f10768953d68037883ebca46d727ce2cd83adcf"
+      },
+      "exp5727": {
+        "path": "results/experiment_5727_arc_generalization_live_oracle_gap_v511.json",
+        "present": true,
+        "sha256": "sha256:46347c420f76cba180e8a5f8b07bf7db7a2d9f2861f8e44e82130127e7b1b63b"
+      },
+      "registry": {
+        "path": "ops/arc_solve_registry.yaml",
+        "present": true,
+        "sha256": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+      }
+    },
+    "registry_precheck": {
+      "source": "ops/arc_solve_registry.yaml",
+      "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+      "checked_before_attribution": true,
+      "public_game_count": 25,
+      "registry_level_count": 183,
+      "full_game_clear_count": 25,
+      "all_public_games_complete": true,
+      "no_public_level_can_be_credited_as_new": true,
+      "games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "ok": true
+    },
+    "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+    "exp5753_trace_rows": 25,
+    "exp5753_agent_owned_trace_provenance": true,
+    "exp5753_budgets_and_seeds_match": true,
+    "exp5727_games_measured": 25,
+    "component_source_hash_count": 7,
+    "component_inventory_count": 7,
+    "live_environment_reachable": true,
+    "resource_precheck": {
+      "disk_free_mb": 1202503,
+      "ram_free_mb": 54101,
+      "min_disk_free_mb": 256,
+      "min_ram_free_mb": 256,
+      "ok": true
+    },
+    "forbidden_inputs": {
+      "source_required": false,
+      "game_adapter_required": false,
+      "banked_plan_required": false,
+      "game_identity_runtime_feature_required": false,
+      "outer_loop_ground_truth_required": false
+    },
+    "gates": {
+      "exp5753_present": true,
+      "exp5727_present": true,
+      "registry_precheck_passed": true,
+      "exp5753_has_25_agent_owned_trace_rows": true,
+      "exp5753_agent_owned_trace_provenance": true,
+      "exp5753_no_solve_credit": true,
+      "exp5753_no_adapter_or_outer_loop": true,
+      "exp5727_full_registry_gap_receipt": true,
+      "budgets_and_seeds_match": true,
+      "component_inventory_count": true,
+      "component_sources_hashed": true,
+      "all_components_live_reachable": true,
+      "live_environment_reachable": true,
+      "resources_ok": true,
+      "forbidden_inputs_not_required": true
+    }
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-5766",
+    "SCENARIO-ARC-WMTE-5766-REGISTRY-AND-INVENTORY-PRECHECK",
+    "SCENARIO-ARC-WMTE-5766-LOO-PAIRED-ATTRIBUTION",
+    "SCENARIO-ARC-WMTE-5766-CONTROLS-GATES-AND-PRODUCER-FIELDS"
+  ],
+  "upstream_artifact_hashes": {
+    "exp5753": {
+      "path": "results/experiment_5753_arc_generic_primitive_live_registry_ab.json",
+      "present": true,
+      "sha256": "sha256:20b0ac04377039bb191c26633f10768953d68037883ebca46d727ce2cd83adcf"
+    },
+    "exp5727": {
+      "path": "results/experiment_5727_arc_generalization_live_oracle_gap_v511.json",
+      "present": true,
+      "sha256": "sha256:46347c420f76cba180e8a5f8b07bf7db7a2d9f2861f8e44e82130127e7b1b63b"
+    },
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+    }
+  },
+  "registry_precheck": {
+    "source": "ops/arc_solve_registry.yaml",
+    "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+    "checked_before_attribution": true,
+    "public_game_count": 25,
+    "registry_level_count": 183,
+    "full_game_clear_count": 25,
+    "all_public_games_complete": true,
+    "no_public_level_can_be_credited_as_new": true,
+    "games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "ok": true
+  },
+  "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+  "public_game_count": 25,
+  "registry_level_count": 183,
+  "component_inventory": [
+    {
+      "component_id": "epistemic_ledger",
+      "display_name": "agent-owned epistemic ledger",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": true,
+      "audit_operation": "delete",
+      "source_paths": [
+        "python/carnot/agentic/arc_epistemic_ledger.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "E3AgentPolicy.next_move.observe_state",
+        "E3AgentPolicy.next_move.observe_transition",
+        "StepwiseExplorer._candidates.rank_candidates"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    },
+    {
+      "component_id": "action_effect_prediction",
+      "display_name": "submitted action-effect expansion prior",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": true,
+      "audit_operation": "delete",
+      "source_paths": [
+        "python/carnot/agentic/arc_frame_change_predictor.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "E3AgentPolicy.__init__.frame_change_scorer",
+        "StepwiseExplorer._action_effect_frontier_key"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    },
+    {
+      "component_id": "relational_goal_energy",
+      "display_name": "relational goal energy",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": true,
+      "audit_operation": "delete",
+      "source_paths": [
+        "python/carnot/agentic/arc_goal_energy_live.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "E3AgentPolicy.__init__.goal_bias",
+        "StepwiseExplorer._goal_bias_score"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    },
+    {
+      "component_id": "goal_candidate_guidance",
+      "display_name": "goal-energy candidate guidance",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": true,
+      "audit_operation": "delete",
+      "source_paths": [
+        "python/carnot/agentic/arc_goal_energy_live.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "E3AgentPolicy.__init__.goal_candidate_guidance",
+        "StepwiseExplorer._candidates.goal_candidate_guidance.rank_candidates"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    },
+    {
+      "component_id": "inert_click_pruner",
+      "display_name": "inert click signature pruner",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": false,
+      "audit_operation": "add",
+      "source_paths": [
+        "python/carnot/agentic/arc_inert_click_pruner.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "StepwiseExplorer._candidates.inert_click_pruner.rank_candidates",
+        "StepwiseExplorer._ingest.inert_click_pruner.observe"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    },
+    {
+      "component_id": "object_history_salience",
+      "display_name": "object-history salience prior",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": false,
+      "audit_operation": "add",
+      "source_paths": [
+        "python/carnot/agentic/arc_object_history_salience.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "E3AgentPolicy.__init__.coerce_object_history_salience_prior",
+        "StepwiseExplorer._candidates.action_prior.score",
+        "StepwiseExplorer._ingest.action_prior.observe_transition"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    },
+    {
+      "component_id": "generic_causal_primitive",
+      "display_name": "shipped generic causal primitive",
+      "existing_component": true,
+      "created_by_exp5766": false,
+      "live_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+      "live_path_reachable": true,
+      "default_enabled": false,
+      "audit_operation": "add",
+      "source_paths": [
+        "python/carnot/agentic/arc_generic_causal_primitives.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "hook_paths": [
+        "StepwiseExplorer._candidates.generic_causal_primitive.rank_candidates",
+        "StepwiseExplorer._ingest.generic_causal_primitive.observe_transition"
+      ],
+      "runtime_feature_contract": "game_blind_agent_owned_visible_trace_receipts"
+    }
+  ],
+  "component_source_hashes": {
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "present": true,
+      "sha256": "sha256:c470180a7ecf7c82d08ac3e56e063b54d10e25a729bc86d681285e131f7c7181"
+    },
+    "python/carnot/agentic/arc_epistemic_ledger.py": {
+      "present": true,
+      "sha256": "sha256:dbc856581b49e0661317c56a70320fe0dc3ddbddba975cd5d39c9851cff8b7e8"
+    },
+    "python/carnot/agentic/arc_frame_change_predictor.py": {
+      "present": true,
+      "sha256": "sha256:1638369290346c9b5f0ba67cdbab0e2e54c2b37385e3a96ea5e47e68f2fb598d"
+    },
+    "python/carnot/agentic/arc_generic_causal_primitives.py": {
+      "present": true,
+      "sha256": "sha256:eebba5a27bf756c3348b8593a3c083288ea598e5222e9c6125a53de859520b03"
+    },
+    "python/carnot/agentic/arc_goal_energy_live.py": {
+      "present": true,
+      "sha256": "sha256:89202f4453293a59e901b0142ec73d28823dbd08abff7da37826e3a0d68dcc7d"
+    },
+    "python/carnot/agentic/arc_inert_click_pruner.py": {
+      "present": true,
+      "sha256": "sha256:38a10b625160b31f56b6daa4b350358486ed815a44882dd488ffb13471ffb40b"
+    },
+    "python/carnot/agentic/arc_object_history_salience.py": {
+      "present": true,
+      "sha256": "sha256:e272ad9a477d9cc30f67e3e8ba5a1f962d33b99f338df5c2aaa14aede878f6ce"
+    }
+  },
+  "live_reachability_receipts": {
+    "entrypoint": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+    "component_count": 7,
+    "all_components_reachable": true,
+    "production_default_enabled": false,
+    "components": [
+      {
+        "component_id": "epistemic_ledger",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "E3AgentPolicy.next_move.observe_state",
+          "E3AgentPolicy.next_move.observe_transition",
+          "StepwiseExplorer._candidates.rank_candidates"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      },
+      {
+        "component_id": "action_effect_prediction",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "E3AgentPolicy.__init__.frame_change_scorer",
+          "StepwiseExplorer._action_effect_frontier_key"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      },
+      {
+        "component_id": "relational_goal_energy",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "E3AgentPolicy.__init__.goal_bias",
+          "StepwiseExplorer._goal_bias_score"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      },
+      {
+        "component_id": "goal_candidate_guidance",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "E3AgentPolicy.__init__.goal_candidate_guidance",
+          "StepwiseExplorer._candidates.goal_candidate_guidance.rank_candidates"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      },
+      {
+        "component_id": "inert_click_pruner",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "StepwiseExplorer._candidates.inert_click_pruner.rank_candidates",
+          "StepwiseExplorer._ingest.inert_click_pruner.observe"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      },
+      {
+        "component_id": "object_history_salience",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "E3AgentPolicy.__init__.coerce_object_history_salience_prior",
+          "StepwiseExplorer._candidates.action_prior.score",
+          "StepwiseExplorer._ingest.action_prior.observe_transition"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      },
+      {
+        "component_id": "generic_causal_primitive",
+        "live_policy_path": "carnot.agentic.arc_competition_agent.E3AgentPolicy/StepwiseExplorer",
+        "hook_paths": [
+          "StepwiseExplorer._candidates.generic_causal_primitive.rank_candidates",
+          "StepwiseExplorer._ingest.generic_causal_primitive.observe_transition"
+        ],
+        "live_path_reachable": true,
+        "production_default_enabled": false
+      }
+    ]
+  },
+  "loo_fold_manifest": [
+    {
+      "fold_id": "loo_00_ar25",
+      "heldout_game": "ar25",
+      "development_games": [
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_01_bp35",
+      "heldout_game": "bp35",
+      "development_games": [
+        "ar25",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_02_cd82",
+      "heldout_game": "cd82",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_03_cn04",
+      "heldout_game": "cn04",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_04_dc22",
+      "heldout_game": "dc22",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_05_ft09",
+      "heldout_game": "ft09",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_06_g50t",
+      "heldout_game": "g50t",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_07_ka59",
+      "heldout_game": "ka59",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_08_lf52",
+      "heldout_game": "lf52",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_09_lp85",
+      "heldout_game": "lp85",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_10_ls20",
+      "heldout_game": "ls20",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_11_m0r0",
+      "heldout_game": "m0r0",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_12_r11l",
+      "heldout_game": "r11l",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_13_re86",
+      "heldout_game": "re86",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_14_s5i5",
+      "heldout_game": "s5i5",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_15_sb26",
+      "heldout_game": "sb26",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_16_sc25",
+      "heldout_game": "sc25",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_17_sk48",
+      "heldout_game": "sk48",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_18_sp80",
+      "heldout_game": "sp80",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_19_su15",
+      "heldout_game": "su15",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_20_tn36",
+      "heldout_game": "tn36",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_21_tr87",
+      "heldout_game": "tr87",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_22_tu93",
+      "heldout_game": "tu93",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "vc33",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_23_vc33",
+      "heldout_game": "vc33",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "wa30"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    },
+    {
+      "fold_id": "loo_24_wa30",
+      "heldout_game": "wa30",
+      "development_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33"
+      ],
+      "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+      "runtime_features_used_for_selection": []
+    }
+  ],
+  "fold_disjointness_receipts": {
+    "all_disjoint": true,
+    "thresholds_from_development_only": true,
+    "heldout_evaluated_once": true,
+    "runtime_features_used_for_selection": [],
+    "folds": [
+      {
+        "fold_id": "loo_00_ar25",
+        "heldout_game": "ar25",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_01_bp35",
+        "heldout_game": "bp35",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_02_cd82",
+        "heldout_game": "cd82",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_03_cn04",
+        "heldout_game": "cn04",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_04_dc22",
+        "heldout_game": "dc22",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_05_ft09",
+        "heldout_game": "ft09",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_06_g50t",
+        "heldout_game": "g50t",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_07_ka59",
+        "heldout_game": "ka59",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_08_lf52",
+        "heldout_game": "lf52",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_09_lp85",
+        "heldout_game": "lp85",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_10_ls20",
+        "heldout_game": "ls20",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_11_m0r0",
+        "heldout_game": "m0r0",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_12_r11l",
+        "heldout_game": "r11l",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_13_re86",
+        "heldout_game": "re86",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_14_s5i5",
+        "heldout_game": "s5i5",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_15_sb26",
+        "heldout_game": "sb26",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_16_sc25",
+        "heldout_game": "sc25",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_17_sk48",
+        "heldout_game": "sk48",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_18_sp80",
+        "heldout_game": "sp80",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_19_su15",
+        "heldout_game": "su15",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_20_tn36",
+        "heldout_game": "tn36",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_21_tr87",
+        "heldout_game": "tr87",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_22_tu93",
+        "heldout_game": "tu93",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_23_vc33",
+        "heldout_game": "vc33",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      },
+      {
+        "fold_id": "loo_24_wa30",
+        "heldout_game": "wa30",
+        "development_game_count": 24,
+        "fold_disjoint": true,
+        "threshold_source": "development_only",
+        "selection_threshold": 0.0,
+        "heldout_evaluated_once": true
+      }
+    ]
+  },
+  "paired_trial_manifest": {
+    "arms": [
+      "baseline",
+      "delete:epistemic_ledger",
+      "delete:action_effect_prediction",
+      "delete:relational_goal_energy",
+      "delete:goal_candidate_guidance",
+      "add:inert_click_pruner",
+      "add:object_history_salience",
+      "add:generic_causal_primitive",
+      "pair:epistemic_ledger+action_effect_prediction:delete_delete",
+      "pair:relational_goal_energy+goal_candidate_guidance:delete_delete",
+      "pair:inert_click_pruner+object_history_salience:add_add",
+      "pair:generic_causal_primitive+inert_click_pruner:add_add",
+      "pair:action_effect_prediction+generic_causal_primitive:delete_add"
+    ],
+    "game_count": 25,
+    "games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "random_seeds": [
+      20260721,
+      5766
+    ],
+    "action_budget": 400,
+    "observations_matched": true,
+    "resets_matched": true,
+    "budget_matched": true,
+    "cache_policy_matched": true,
+    "stopping_rules_matched": true,
+    "trace_replay_only": true,
+    "source_read_used": false,
+    "per_game_adapter_used": false,
+    "outer_loop_re_used": false
+  },
+  "exact_replay_receipts": {
+    "game_count": 25,
+    "all_exact_replay_passed": true,
+    "per_game": [
+      {
+        "game": "ar25",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:3d54c17b02ff074d3ad93baeb654183ead21629bb808cde1402892b225bb3333",
+        "primitive_trace_hash": "sha256:3d54c17b02ff074d3ad93baeb654183ead21629bb808cde1402892b225bb3333",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "bp35",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:bdb1e9ad98dd751c776710d0feddd5e40b534e36769949a290b3e7b6b0ab6d26",
+        "primitive_trace_hash": "sha256:bdb1e9ad98dd751c776710d0feddd5e40b534e36769949a290b3e7b6b0ab6d26",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "cd82",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:80bdf905d4cd86f63f330cb24c6834a97783b6d77f1be7655b6a405413489878",
+        "primitive_trace_hash": "sha256:80bdf905d4cd86f63f330cb24c6834a97783b6d77f1be7655b6a405413489878",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "cn04",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:102bd46a1ef190a85f5fc07e2f23269eddde067b09eac9a1b2b3e265853a5c18",
+        "primitive_trace_hash": "sha256:102bd46a1ef190a85f5fc07e2f23269eddde067b09eac9a1b2b3e265853a5c18",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "dc22",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:dc294669407aa52af4f874c735dfa3b4b81580ea5cb0a3d10e6f829d94293369",
+        "primitive_trace_hash": "sha256:dc294669407aa52af4f874c735dfa3b4b81580ea5cb0a3d10e6f829d94293369",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "ft09",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:bd5ee79690805a5e06f4f253c846e97ae8d991ea58f9e43e83a7162936de063c",
+        "primitive_trace_hash": "sha256:bd5ee79690805a5e06f4f253c846e97ae8d991ea58f9e43e83a7162936de063c",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "g50t",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:c05b1d72c94808d17859ed43cb02a5f17948e8cbb6b0cb7147343f6ea4eff5db",
+        "primitive_trace_hash": "sha256:c05b1d72c94808d17859ed43cb02a5f17948e8cbb6b0cb7147343f6ea4eff5db",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "ka59",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:2937432defb791c73c9200d8069a970533131da7344cb48e103631d10db12707",
+        "primitive_trace_hash": "sha256:2937432defb791c73c9200d8069a970533131da7344cb48e103631d10db12707",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "lf52",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:18f8437a0ce168010f6dce0e2be1ce7f2fd68f92a8e0177a329d7708a563ac94",
+        "primitive_trace_hash": "sha256:18f8437a0ce168010f6dce0e2be1ce7f2fd68f92a8e0177a329d7708a563ac94",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "lp85",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:d334ae32c7df8c6df5ece1a20be4030a677f5489532930f37b9469105dbeea93",
+        "primitive_trace_hash": "sha256:d334ae32c7df8c6df5ece1a20be4030a677f5489532930f37b9469105dbeea93",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "ls20",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:9322687ac583b84a2f389b7cab3609667666f592236cc6265f67c4dd29862b9d",
+        "primitive_trace_hash": "sha256:9322687ac583b84a2f389b7cab3609667666f592236cc6265f67c4dd29862b9d",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "m0r0",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:c829bdfdde5550b858448ecc97130100b6c6d78d95a84c7652cf491b4544133a",
+        "primitive_trace_hash": "sha256:c829bdfdde5550b858448ecc97130100b6c6d78d95a84c7652cf491b4544133a",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "r11l",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:9c62d5d687956ec268c831c9e9faa9085dffd03a4c0e18e12950b0d6d64b2f42",
+        "primitive_trace_hash": "sha256:9c62d5d687956ec268c831c9e9faa9085dffd03a4c0e18e12950b0d6d64b2f42",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "re86",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:4d7c5d62d40fe0594ada8e9f0f0b8c567b2fe503277b52607190212cb34dace2",
+        "primitive_trace_hash": "sha256:4d7c5d62d40fe0594ada8e9f0f0b8c567b2fe503277b52607190212cb34dace2",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "s5i5",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:3d27328cfe494e49f95f40abda3b7a10a9fee1d07d93e954554be5c48e76d173",
+        "primitive_trace_hash": "sha256:3d27328cfe494e49f95f40abda3b7a10a9fee1d07d93e954554be5c48e76d173",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "sb26",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:2e70a5d4960e65874d1da33b5e7c7830e0cd55104c2fec1649e3ce2f00c9c4a8",
+        "primitive_trace_hash": "sha256:2e70a5d4960e65874d1da33b5e7c7830e0cd55104c2fec1649e3ce2f00c9c4a8",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "sc25",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:5142192590ba6867a2d87eb7b136ececfc277c87c069ed78033a148bb17c79f3",
+        "primitive_trace_hash": "sha256:5142192590ba6867a2d87eb7b136ececfc277c87c069ed78033a148bb17c79f3",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "sk48",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:9663e9bcf9790767f619b961178786c6b300423ab615fc050417e25ad2c131f2",
+        "primitive_trace_hash": "sha256:9663e9bcf9790767f619b961178786c6b300423ab615fc050417e25ad2c131f2",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "sp80",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:cde00830296c04aa4695b501060b8a522647a11ce681ce7203536584170d8e51",
+        "primitive_trace_hash": "sha256:cde00830296c04aa4695b501060b8a522647a11ce681ce7203536584170d8e51",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "su15",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:557a1128e1fdf32fba06d07b4f0c07a0eff47819f706a3e8f71e9da02f341244",
+        "primitive_trace_hash": "sha256:557a1128e1fdf32fba06d07b4f0c07a0eff47819f706a3e8f71e9da02f341244",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "tn36",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:9721b55cce7b4b2a0d874727df765759351215acb3c65852e9b73c69e38f2d50",
+        "primitive_trace_hash": "sha256:9721b55cce7b4b2a0d874727df765759351215acb3c65852e9b73c69e38f2d50",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "tr87",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:a3d633933852a6d4f5876e77c06e58652ab4a3b7bf8ccf36667329579c9da5b8",
+        "primitive_trace_hash": "sha256:a3d633933852a6d4f5876e77c06e58652ab4a3b7bf8ccf36667329579c9da5b8",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "tu93",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:8d6255a3e2a50ec0bd5182a4ecd2936e3b96d5ce8b30b83673239ab36efddc29",
+        "primitive_trace_hash": "sha256:8d6255a3e2a50ec0bd5182a4ecd2936e3b96d5ce8b30b83673239ab36efddc29",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "vc33",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:5cc15efd9e2a85206aacef8e8fff1b3a6fe95f2ea28543a63e65f55f8a4589cd",
+        "primitive_trace_hash": "sha256:5cc15efd9e2a85206aacef8e8fff1b3a6fe95f2ea28543a63e65f55f8a4589cd",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      },
+      {
+        "game": "wa30",
+        "seed": 20260720,
+        "baseline_trace_hash": "sha256:fddf1c90b9906daf23647588514a276a9cb19a566d9f1074c883e471ddc82936",
+        "primitive_trace_hash": "sha256:fddf1c90b9906daf23647588514a276a9cb19a566d9f1074c883e471ddc82936",
+        "baseline_receipt_count": 400,
+        "primitive_receipt_count": 400,
+        "environment_transition_count": 399,
+        "exact_replay_passed": true,
+        "replay_mode": "stable_hash_exact_agent_owned_receipt_replay"
+      }
+    ]
+  },
+  "positive_control_receipt": {
+    "control_name": "synthetic_trace_utility_shift",
+    "non_degenerate": true,
+    "baseline_utility": 0.5,
+    "positive_control_utility": 0.605,
+    "positive_control_delta": 0.105,
+    "paired_ci95": {
+      "mean": 0.105,
+      "ci95_low": 0.092348,
+      "ci95_high": 0.117652,
+      "n": 4
+    },
+    "not_used_for_component_selection": true
+  },
+  "negative_leak_canary_receipts": {
+    "source": {
+      "canary_keys": [
+        "adapter_label",
+        "game_source",
+        "hand_authored_model",
+        "hidden_state",
+        "outer_loop_bfs",
+        "per_game_adapter",
+        "solution_code",
+        "source_file",
+        "source_rule"
+      ],
+      "detected_canary_count": 1,
+      "admitted_leak_count": 0,
+      "canaries_rejected": true
+    },
+    "game_identity": {
+      "canary_keys": [
+        "game",
+        "game_id",
+        "game_name",
+        "registry_game",
+        "registry_provenance",
+        "source_game"
+      ],
+      "detected_canary_count": 1,
+      "admitted_leak_count": 0,
+      "canaries_rejected": true
+    },
+    "runtime_feature_canary": {
+      "composition_runtime_features": [],
+      "game_identity_runtime_feature_count": 0
+    }
+  },
+  "per_game_metrics": [
+    {
+      "game": "ar25",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.488608,
+        "unique_states": 210,
+        "unique_state_rate": 0.525,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 395,
+        "crashed": false,
+        "wall_time_s": 2.766512,
+        "live_path_utility": 0.477389
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "bp35",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.002545,
+        "unique_states": 383,
+        "unique_state_rate": 0.9575,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 393,
+        "crashed": false,
+        "wall_time_s": 3.325342,
+        "live_path_utility": 0.547621
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "cd82",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.040609,
+        "unique_states": 275,
+        "unique_state_rate": 0.6875,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 394,
+        "crashed": false,
+        "wall_time_s": 2.297971,
+        "live_path_utility": 0.530314
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "cn04",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.251269,
+        "unique_states": 195,
+        "unique_state_rate": 0.4875,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 394,
+        "crashed": false,
+        "wall_time_s": 1.992662,
+        "live_path_utility": 0.499248
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "dc22",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.027848,
+        "unique_states": 215,
+        "unique_state_rate": 0.5375,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 395,
+        "crashed": false,
+        "wall_time_s": 2.316742,
+        "live_path_utility": 0.52409
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "ft09",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.035264,
+        "unique_states": 72,
+        "unique_state_rate": 0.18,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 397,
+        "crashed": false,
+        "wall_time_s": 2.576612,
+        "live_path_utility": 0.505474
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "g50t",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.29798,
+        "unique_states": 314,
+        "unique_state_rate": 0.785,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 396,
+        "crashed": false,
+        "wall_time_s": 2.988947,
+        "live_path_utility": 0.509452
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "ka59",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.121212,
+        "unique_states": 286,
+        "unique_state_rate": 0.715,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 396,
+        "crashed": false,
+        "wall_time_s": 2.522659,
+        "live_path_utility": 0.523629
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "lf52",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.020253,
+        "unique_states": 347,
+        "unique_state_rate": 0.8675,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 395,
+        "crashed": false,
+        "wall_time_s": 2.632264,
+        "live_path_utility": 0.54135
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "lp85",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.744737,
+        "unique_states": 302,
+        "unique_state_rate": 0.755,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 380,
+        "crashed": false,
+        "wall_time_s": 5.011914,
+        "live_path_utility": 0.463276
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "ls20",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.746803,
+        "unique_states": 257,
+        "unique_state_rate": 0.6425,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 391,
+        "crashed": false,
+        "wall_time_s": 3.181736,
+        "live_path_utility": 0.457445
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "m0r0",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.179293,
+        "unique_states": 267,
+        "unique_state_rate": 0.6675,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 396,
+        "crashed": false,
+        "wall_time_s": 2.900493,
+        "live_path_utility": 0.515446
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "r11l",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.941176,
+        "unique_states": 300,
+        "unique_state_rate": 0.75,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 391,
+        "crashed": false,
+        "wall_time_s": 6.763366,
+        "live_path_utility": 0.443382
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "re86",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.863636,
+        "unique_states": 390,
+        "unique_state_rate": 0.975,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 396,
+        "crashed": false,
+        "wall_time_s": 2.200116,
+        "live_path_utility": 0.462386
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "s5i5",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.040816,
+        "unique_states": 352,
+        "unique_state_rate": 0.88,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 392,
+        "crashed": false,
+        "wall_time_s": 2.59256,
+        "live_path_utility": 0.539918
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "sb26",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.233668,
+        "unique_states": 124,
+        "unique_state_rate": 0.31,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 398,
+        "crashed": false,
+        "wall_time_s": 1.95386,
+        "live_path_utility": 0.492133
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "sc25",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.834184,
+        "unique_states": 347,
+        "unique_state_rate": 0.8675,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 392,
+        "crashed": false,
+        "wall_time_s": 4.189326,
+        "live_path_utility": 0.459957
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "sk48",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.100503,
+        "unique_states": 47,
+        "unique_state_rate": 0.1175,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 398,
+        "crashed": false,
+        "wall_time_s": 2.611521,
+        "live_path_utility": 0.495825
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "sp80",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 1,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.198454,
+        "unique_states": 341,
+        "unique_state_rate": 0.8525,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 388,
+        "crashed": false,
+        "wall_time_s": 2.741598,
+        "live_path_utility": 0.82278
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "su15",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.020566,
+        "unique_states": 270,
+        "unique_state_rate": 0.675,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 389,
+        "crashed": false,
+        "wall_time_s": 1.924145,
+        "live_path_utility": 0.531693
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "tn36",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.70844,
+        "unique_states": 242,
+        "unique_state_rate": 0.605,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 391,
+        "crashed": false,
+        "wall_time_s": 7.575867,
+        "live_path_utility": 0.459406
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "tr87",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.742424,
+        "unique_states": 394,
+        "unique_state_rate": 0.985,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 396,
+        "crashed": false,
+        "wall_time_s": 3.30624,
+        "live_path_utility": 0.475008
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "tu93",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.200514,
+        "unique_states": 323,
+        "unique_state_rate": 0.8075,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 389,
+        "crashed": false,
+        "wall_time_s": 2.632052,
+        "live_path_utility": 0.520324
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "vc33",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.096774,
+        "unique_states": 302,
+        "unique_state_rate": 0.755,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 372,
+        "crashed": false,
+        "wall_time_s": 3.196493,
+        "live_path_utility": 0.528073
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    },
+    {
+      "game": "wa30",
+      "seed": 20260720,
+      "action_budget": 400,
+      "baseline": {
+        "known_level_live_reproduction": 0,
+        "first_action_valid": true,
+        "action_effect_prediction_accuracy": 1.0,
+        "valid_action_rate": 1.0,
+        "repeated_action_rate": 0.451697,
+        "unique_states": 326,
+        "unique_state_rate": 0.815,
+        "planning_reachable": false,
+        "budget_exhausted": false,
+        "environment_steps": 383,
+        "crashed": false,
+        "wall_time_s": 2.691919,
+        "live_path_utility": 0.49558
+      },
+      "single_component_arms": {
+        "epistemic_ledger": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "action_effect_prediction": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "relational_goal_energy": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "goal_candidate_guidance": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "inert_click_pruner": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "object_history_salience": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        },
+        "generic_causal_primitive": {
+          "utility_delta": 0.0,
+          "arm_operation": "delete_or_add_existing_component",
+          "observations_matched": true
+        }
+      },
+      "pairwise_arms": {
+        "epistemic_ledger+action_effect_prediction": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "relational_goal_energy+goal_candidate_guidance": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_delete"
+        },
+        "inert_click_pruner+object_history_salience": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "generic_causal_primitive+inert_click_pruner": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "add_add"
+        },
+        "action_effect_prediction+generic_causal_primitive": {
+          "interaction_delta": 0.0,
+          "observations_matched": true,
+          "mode": "delete_add"
+        }
+      },
+      "arc_registry_delta": 0,
+      "arc_solve_credited": false
+    }
+  ],
+  "marginal_effects": [
+    {
+      "component_id": "epistemic_ledger",
+      "operation": "delete",
+      "default_enabled": true,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    },
+    {
+      "component_id": "action_effect_prediction",
+      "operation": "delete",
+      "default_enabled": true,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    },
+    {
+      "component_id": "relational_goal_energy",
+      "operation": "delete",
+      "default_enabled": true,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    },
+    {
+      "component_id": "goal_candidate_guidance",
+      "operation": "delete",
+      "default_enabled": true,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    },
+    {
+      "component_id": "inert_click_pruner",
+      "operation": "add",
+      "default_enabled": false,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    },
+    {
+      "component_id": "object_history_salience",
+      "operation": "add",
+      "default_enabled": false,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    },
+    {
+      "component_id": "generic_causal_primitive",
+      "operation": "add",
+      "default_enabled": false,
+      "per_game_utility_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "effect_basis": "exact_trace_replay_no_counterfactual_environment_delta",
+      "causal_claimed": false
+    }
+  ],
+  "pairwise_interaction_effects": [
+    {
+      "pair_id": "epistemic_ledger+action_effect_prediction",
+      "left_component_id": "epistemic_ledger",
+      "right_component_id": "action_effect_prediction",
+      "mode": "delete_delete",
+      "per_game_interaction_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_interaction_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "marginal_additivity_checked": true,
+      "exact_replay_passed": true,
+      "positive_control_nondegenerate": true,
+      "negative_leak_canaries_clean": true,
+      "fold_disjoint_thresholds": true,
+      "heldout_sign_consistent": false,
+      "causal_called": false
+    },
+    {
+      "pair_id": "relational_goal_energy+goal_candidate_guidance",
+      "left_component_id": "relational_goal_energy",
+      "right_component_id": "goal_candidate_guidance",
+      "mode": "delete_delete",
+      "per_game_interaction_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_interaction_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "marginal_additivity_checked": true,
+      "exact_replay_passed": true,
+      "positive_control_nondegenerate": true,
+      "negative_leak_canaries_clean": true,
+      "fold_disjoint_thresholds": true,
+      "heldout_sign_consistent": false,
+      "causal_called": false
+    },
+    {
+      "pair_id": "inert_click_pruner+object_history_salience",
+      "left_component_id": "inert_click_pruner",
+      "right_component_id": "object_history_salience",
+      "mode": "add_add",
+      "per_game_interaction_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_interaction_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "marginal_additivity_checked": true,
+      "exact_replay_passed": true,
+      "positive_control_nondegenerate": true,
+      "negative_leak_canaries_clean": true,
+      "fold_disjoint_thresholds": true,
+      "heldout_sign_consistent": false,
+      "causal_called": false
+    },
+    {
+      "pair_id": "generic_causal_primitive+inert_click_pruner",
+      "left_component_id": "generic_causal_primitive",
+      "right_component_id": "inert_click_pruner",
+      "mode": "add_add",
+      "per_game_interaction_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_interaction_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "marginal_additivity_checked": true,
+      "exact_replay_passed": true,
+      "positive_control_nondegenerate": true,
+      "negative_leak_canaries_clean": true,
+      "fold_disjoint_thresholds": true,
+      "heldout_sign_consistent": false,
+      "causal_called": false
+    },
+    {
+      "pair_id": "action_effect_prediction+generic_causal_primitive",
+      "left_component_id": "action_effect_prediction",
+      "right_component_id": "generic_causal_primitive",
+      "mode": "delete_add",
+      "per_game_interaction_deltas": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.0,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.0,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.0,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.0,
+        "vc33": 0.0,
+        "wa30": 0.0
+      },
+      "macro_interaction_delta": 0.0,
+      "paired_ci95": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "marginal_additivity_checked": true,
+      "exact_replay_passed": true,
+      "positive_control_nondegenerate": true,
+      "negative_leak_canaries_clean": true,
+      "fold_disjoint_thresholds": true,
+      "heldout_sign_consistent": false,
+      "causal_called": false
+    }
+  ],
+  "confidence_intervals": {
+    "loo_generalization_delta": {
+      "mean": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.0,
+      "n": 25
+    },
+    "marginal_effects": {
+      "epistemic_ledger": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "action_effect_prediction": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "relational_goal_energy": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "goal_candidate_guidance": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "inert_click_pruner": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "object_history_salience": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "generic_causal_primitive": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      }
+    },
+    "pairwise_interactions": {
+      "epistemic_ledger+action_effect_prediction": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "relational_goal_energy+goal_candidate_guidance": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "inert_click_pruner+object_history_salience": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "generic_causal_primitive+inert_click_pruner": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      },
+      "action_effect_prediction+generic_causal_primitive": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 25
+      }
+    }
+  },
+  "development_selected_composition": {
+    "selection_rule": "fold_dev_select_highest_positive_game_blind_utility_else_baseline",
+    "runtime_features_used": [],
+    "folds": [
+      {
+        "fold_id": "loo_00_ar25",
+        "heldout_game": "ar25",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_01_bp35",
+        "heldout_game": "bp35",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_02_cd82",
+        "heldout_game": "cd82",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_03_cn04",
+        "heldout_game": "cn04",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_04_dc22",
+        "heldout_game": "dc22",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_05_ft09",
+        "heldout_game": "ft09",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_06_g50t",
+        "heldout_game": "g50t",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_07_ka59",
+        "heldout_game": "ka59",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_08_lf52",
+        "heldout_game": "lf52",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_09_lp85",
+        "heldout_game": "lp85",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_10_ls20",
+        "heldout_game": "ls20",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_11_m0r0",
+        "heldout_game": "m0r0",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_12_r11l",
+        "heldout_game": "r11l",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_13_re86",
+        "heldout_game": "re86",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_14_s5i5",
+        "heldout_game": "s5i5",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_15_sb26",
+        "heldout_game": "sb26",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_16_sc25",
+        "heldout_game": "sc25",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_17_sk48",
+        "heldout_game": "sk48",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_18_sp80",
+        "heldout_game": "sp80",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_19_su15",
+        "heldout_game": "su15",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_20_tn36",
+        "heldout_game": "tn36",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_21_tr87",
+        "heldout_game": "tr87",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_22_tu93",
+        "heldout_game": "tu93",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_23_vc33",
+        "heldout_game": "vc33",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      },
+      {
+        "fold_id": "loo_24_wa30",
+        "heldout_game": "wa30",
+        "selected_components": [],
+        "development_macro_delta": 0.0,
+        "heldout_delta": 0.0,
+        "runtime_features_used_for_selection": []
+      }
+    ],
+    "not_implemented_or_enabled": true
+  },
+  "composition_runtime_features": [],
+  "loo_generalization_delta": 0.0,
+  "loo_generalization_delta_lcb": 0.0,
+  "causal_interaction_count": 0,
+  "source_leak_count": 0,
+  "game_identity_leak_count": 0,
+  "producer_gate_fields": [
+    "loo_generalization_delta_lcb",
+    "causal_interaction_count",
+    "source_leak_count",
+    "game_identity_leak_count"
+  ],
+  "solve_provenance": "development_proxy",
+  "arc_registry_delta": 0,
+  "arc_solve_credited": false,
+  "outer_loop_re_used": false,
+  "per_game_adapter_used": false,
+  "source_read_used": false,
+  "production_default_enabled": false,
+  "inference_substrate": "agent_owned_arc_live_trace_replay_development_proxy_no_llm",
+  "random_seeds": [
+    20260721,
+    5766
+  ],
+  "duration_s": 3.852487,
+  "test_commands": [],
+  "test_exit_codes": {},
+  "reproducibility_checksum": "sha256:10ff80533d8150a8d4087856260414130132e84439c57b2d49a73b663ed5892b",
+  "honest_verdict": "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+}
