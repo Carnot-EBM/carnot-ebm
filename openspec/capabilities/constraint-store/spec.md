@@ -174,3 +174,33 @@ Then each faithful, incomplete, over-fit, and mixed variant has a stable model
 hash, domain artifact hash, hard/soft role receipt, assignment receipt, query
 receipt, and expected repair receipt, and replaying those fields reproduces the
 stored hashes exactly.
+
+### REQ-STORE-5762 — Query lifecycle receipt store
+
+Carnot SHALL store Exp5762 query-driven lifecycle evidence as content-addressed
+receipts derived from the sealed Exp5761 manifest. The store-level artifact
+SHALL preserve benchmark manifest hashes, science split hashes, template
+library hashes, membership query hashes, lifecycle state hashes, birth,
+refinement, quarantine, supersession, rollback, and restart receipts for every
+episode without storing or exposing a faithful target model AST/text to the
+learner path.
+
+Stored lifecycle receipts SHALL distinguish observed assignments from oracle
+membership answers, candidate constraints from promoted active constraints,
+rejected or quarantined candidates from propagated constraints, and protected
+prefix replay hashes from science recovery metrics. Producer gate fields for
+`constraint_recovery_gain_lcb`, `prefix_retention_pass_score`,
+`unsafe_update_count`, and `rollback_hash_mismatch_count` SHALL remain bare
+top-level scalars in the result artifact, with principles recorded only in
+`field_principles`.
+
+### SCENARIO-STORE-5762 — Lifecycle receipt hashes replay
+
+Given Exp5762 has consumed the sealed Exp5761 acquisition benchmark,
+
+When its query, update, rollback, and restart receipts are replayed,
+
+Then every lifecycle ledger row hash, membership query hash, promoted
+constraint hash, quarantined candidate hash, supersession hash, rollback hash,
+restart hash, science split hash, and template library hash reproduces exactly
+and rejected updates have zero propagation.
