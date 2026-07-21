@@ -1690,6 +1690,69 @@ accepted, or any speed/hardware claim appears
 |---|---|---|
 | REQ-SAMPLE-5751 | Implemented (`python/carnot/samplers/one_axis_rust_backend.py`, `results/experiment_5751_rust_restart_parity_repair.json`) | Implemented (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5751_rust_restart_parity_repair.py`) |
 
+### REQ-SAMPLE-5758: One-Axis Rust Parity Scalar Bridge
+
+Carnot MUST provide Exp5758 at
+`scripts/experiment_5758_rust_parity_scalar_bridge.py` and write
+`results/experiment_5758_rust_parity_scalar_bridge.json` without modifying
+`python/carnot/samplers/one_axis_rust_backend.py`, without modifying
+`scripts/research_conductor.py`, without rerunning Exp5752 timing work, and
+without changing the Exp5751 structured parity receipts.
+
+The bridge SHALL derive `distributional_parity_score=1.0` only when
+Exp5751's `distributional_parity.passed` is explicitly true and every
+distributional case at `n=48`, `n=96`, and `n=192` has zero
+`energy_histogram_tv`, zero `mean_energy_delta_abs`, and zero
+`best_energy_delta_abs`. It SHALL derive `fallback_equivalence_score=1.0`
+only when `fallback_equivalence.exact_fallback_equivalence` is explicitly true
+and every fallback case records `rust_python_samples_match=true`. It SHALL
+derive `production_backend_reachable_score=1.0` only when
+`production_backend_reachable.passed`, `sample_batch_callable`, and
+`scalar_api_unchanged` are explicitly true and
+`second_sampler_api_added=false`.
+
+The bridge SHALL verify that every semantic parity family shares the same
+`n=48`, `n=96`, and `n=192` case denominator, that restart suffix hashes match,
+that interruption manifests match uninterrupted Rust and Python suffixes, that
+checkpoint corruption remains rejected, that the release PyO3 build receipt
+completed with exit code zero, and that all Exp5751 source hashes still match
+local files. If any predicate is missing, object-wrapped, ambiguous,
+contradicts its row evidence, or depends on stale source bytes, every affected
+derived score SHALL be `0.0` and the bridge SHALL block rather than promoting
+`rust_benchmark_gate_ready_score`.
+
+The downstream readiness field `rust_benchmark_gate_ready_score` SHALL equal
+`1.0` only when `restart_parity_ready_score`, `distributional_parity_score`,
+`fallback_equivalence_score`, and `production_backend_reachable_score` are all
+`1.0`, all source and receipt hashes match, unsafe synthesis is zero, and the
+planned Exp5764 conductor gate replay passes through
+`scripts/conductor_gates.evaluate_gates()` against bare numeric fields. No
+timing promotion is in scope: `timing_claimed=false` and
+`hardware_speedup_claimed=false`.
+
+### SCENARIO-SAMPLE-5758: Exp5758 Bridges Repaired One-Axis Rust Parity To Bare Gates
+
+**Given** Exp5751 records repaired restart parity at `n=48`, `n=96`, and
+`n=192`
+**When** Exp5758 reads the artifact and derives scalar bridge predicates
+**Then** it preserves the structured receipts by hash, emits bare numeric
+scores for downstream gates, passes the planned Exp5764 gate replay, leaves the
+sampler implementation untouched, and makes no timing or hardware speedup
+claim.
+
+**If** any distributional, fallback, production-reachability, interruption,
+checkpoint, source-hash, or gate-replay predicate is absent, object-wrapped,
+ambiguous, contradictory, or stale
+**Then** the bridge SHALL emit terminal evidence with
+`rust_benchmark_gate_ready_score=0.0` and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5758)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5758 | Planned (`scripts/experiment_5758_rust_parity_scalar_bridge.py`, `results/experiment_5758_rust_parity_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5758_rust_parity_scalar_bridge.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
