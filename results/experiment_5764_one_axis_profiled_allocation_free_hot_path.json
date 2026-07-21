@@ -1,0 +1,3164 @@
+{
+  "field_principles": {
+    "field_principles": "Explains why every Exp5764 field exists before downstream allocation or timing work can consume the artifact.",
+    "status": "Bare terminal state lets gates distinguish complete from blocked without parsing prose.",
+    "preconditions_checked": "Records provenance, build, host-stability, resource, and Exp5751 replay gates before profiling starts.",
+    "spec_refs": "Binds the artifact to REQ-SAMPLE-5764 and SCENARIO-SAMPLE-5764.",
+    "upstream_artifact_hashes": "Pins Exp5751, Exp5758, and Exp5739 evidence so parity and prior timing context cannot drift.",
+    "source_hashes_before": "Hashes the source bytes that were profiled before the compact hot-path edit.",
+    "source_hashes_after": "Hashes the source bytes after optimization so reviewers can separate measured before/after code.",
+    "rust_toolchain": "Records rustc and cargo versions used for release PyO3 profiling.",
+    "python_version": "Records the CPython runtime used for SamplerBackend execution.",
+    "pyo3_version": "Records the binding dependency version relevant to PyO3 boundary allocation.",
+    "host_receipts": "Authenticates CPU, governor, memory, disk, thread, and competing-process observations.",
+    "release_build_receipt": "Shows the release PyO3 build command and exit code.",
+    "affinity_receipt": "Records fixed CPU placement used for profiling and parity replay.",
+    "phase_definitions": "Defines every measured phase before selecting a dominant phase.",
+    "phase_timing_receipts": "Preserves raw warm and restart-containing phase samples by size.",
+    "phase_share_by_size": "Shows median phase share and confidence interval for each measured size.",
+    "dominant_phase": "Names the preregistered dominant end-to-end phase selected from phase-share evidence.",
+    "dominant_phase_selection_receipt": "Explains why only the selected measured phase was optimized.",
+    "allocation_counts_before": "Reports pre-optimization allocation boundaries rather than inferring them from time.",
+    "allocation_counts_after": "Reports post-optimization allocation boundaries and any unavoidable remaining allocation.",
+    "buffer_reuse_receipts": "Proves the compact path uses contiguous reused work buffers instead of per-sample heap buffers.",
+    "worker_pool_receipts": "Documents fixed worker policy and that no dynamic per-sample worker scheduling is introduced.",
+    "changed_files": "Lists the exact spec, implementation, test, and artifact files changed.",
+    "checkpoint_compatibility": "Proves compact execution preserves the v1 checkpoint schema and restartable state.",
+    "restart_parity_receipts": "Proves optimized checkpoints resume with the same samples and suffix hashes.",
+    "fallback_equivalence_receipts": "Proves exact Python fallback remains equivalent for the profiled cells.",
+    "semantic_parity_score": "Bare scalar equals 1.0 only when semantic, scheduler, RNG, checkpoint, restart, fallback, and sample-count checks pass.",
+    "distributional_parity_score": "Bare scalar equals 1.0 only when matched distribution diagnostics pass across the required seeds and cells.",
+    "production_backend_reachable_score": "Bare scalar equals 1.0 only when the existing explicit one_axis_rust production entrypoint reaches the optimized path.",
+    "producer_gate_fields": "Lists the bare scalar downstream gates without wrapping their values in objects.",
+    "optimized_path_ready_score": "Bare scalar equals 1.0 only when profiling, allocation, buffer reuse, parity, and no-speed gates all pass.",
+    "timing_promotion_claimed": "Bare false prevents profiling from becoming a speed promotion.",
+    "hardware_speedup_claimed": "Bare false prevents local CPU profiling from becoming an accelerator or board claim.",
+    "two_axis_exchange_reopened": "Bare false keeps retired two-axis exchange out of scope.",
+    "inference_substrate": "Declares local Rust/PyO3 CPU release profiling and parity, not LLM inference or accelerator timing.",
+    "random_seeds": "Records replay seeds for profiling, restart, fallback, and distributional diagnostics.",
+    "test_commands": "Lists the commands used to verify the implementation and artifact.",
+    "test_exit_codes": "Records verification command outcomes honestly.",
+    "reproducibility_checksum": "Content-addresses the complete artifact after blanking the self-checksum field.",
+    "honest_verdict": "Starts complete: or blocked: and states whether the profiled allocation-free hot path is ready."
+  },
+  "status": "complete",
+  "preconditions_checked": [
+    {
+      "resource": "upstream_artifact_hashes",
+      "available": true
+    },
+    {
+      "resource": "exp5751_parity_replay",
+      "available": true
+    },
+    {
+      "resource": "release_build_capability",
+      "available": true
+    },
+    {
+      "resource": "free_ram",
+      "available": true
+    },
+    {
+      "resource": "free_disk",
+      "available": true
+    },
+    {
+      "resource": "no_competing_benchmark_process",
+      "available": true
+    },
+    {
+      "resource": "cpu_governor_observed_or_blocked",
+      "available": true
+    }
+  ],
+  "spec_refs": [
+    "REQ-SAMPLE-5764",
+    "SCENARIO-SAMPLE-5764"
+  ],
+  "upstream_artifact_hashes": {
+    "exp5751": {
+      "path": "results/experiment_5751_rust_restart_parity_repair.json",
+      "available": true,
+      "sha256": "d69c72ac75c5ad3f67b0367d5c6643b1f2a1be3e0683db030b46d1c4d8344202",
+      "honest_verdict": "complete: restart parity repaired for the reproduced Exp5739 n=96 failure and interruption-injected n=48/n=96/n=192 production sample_batch cases; no timing or hardware claim",
+      "restart_parity_ready_score": 1.0,
+      "rust_benchmark_gate_ready_score": null,
+      "distributional_parity_score": null,
+      "production_backend_reachable_score": null
+    },
+    "exp5758": {
+      "path": "results/experiment_5758_rust_parity_scalar_bridge.json",
+      "available": true,
+      "sha256": "58905b0f6d91f1e85ade22495690ebb686e5561bea2fc4589705ad712d0a8594",
+      "honest_verdict": "complete: Exp5751 Rust parity receipts bridged to bare scalar gates",
+      "restart_parity_ready_score": 1.0,
+      "rust_benchmark_gate_ready_score": 1.0,
+      "distributional_parity_score": 1.0,
+      "production_backend_reachable_score": 1.0
+    },
+    "exp5739": {
+      "path": "results/experiment_5739_one_axis_batched_10x_crossover.json",
+      "available": true,
+      "sha256": "fd80805dcf9da5a39801c55c8da5d7bd138b9ae22010258eb4be32b372e10352",
+      "honest_verdict": "complete: terminal null; matched batched Rust/Python CPU evidence did not prove the strict consecutive larger-size 10x lower-bound rule",
+      "restart_parity_ready_score": null,
+      "rust_benchmark_gate_ready_score": null,
+      "distributional_parity_score": null,
+      "production_backend_reachable_score": null
+    }
+  },
+  "source_hashes_before": {
+    "source": "exp5758.repair_source_hashes",
+    "hashes": {
+      "crates/carnot-python/src/one_axis_tempering.rs": "dd37f5197845e66ea3e540dce2e66f5eff10868d0b1c01b50f4b0adb001d67d4",
+      "crates/carnot-samplers/src/one_axis_tempering.rs": "95df0b7e873a81fe5d39caeb3fd087e85f7dd8fb82ffd874d7c3bd3fbd42f8b7",
+      "python/carnot/samplers/one_axis_rust_backend.py": "2b953f14aeb57bb6f20af21484d8926f45e02ee30f2ae9af15b458d70645b488"
+    }
+  },
+  "source_hashes_after": {
+    "openspec/capabilities/samplers/spec.md": "3cb72c33feadf4fbdc2e7e41722972d7910f0ce298b9528cc38f35f82cdc9012",
+    "crates/carnot-samplers/src/one_axis_tempering.rs": "78bf3ccf12e9fd5ca51c34f784e2b5a4e9ffb6c70496e949865761f9c8a017cb",
+    "crates/carnot-python/src/one_axis_tempering.rs": "1c8815e377d707b1b0b58ddd193b378060235d2810bb5f04dc8769a7b1282af2",
+    "crates/carnot-samplers/tests/one_axis_tempering.rs": "722888fbbe784b91a63ff455746846864dc6388e340519bb1a4455d2b9499593",
+    "python/carnot/samplers/one_axis_rust_backend.py": "d35e188f1f619dee1fb7f3ff0ae053a2225d22fee1b3d37a59d9460c88c69f95",
+    "python/carnot/experiment_5764_one_axis_profiled_allocation_free_hot_path.py": "8ce4ea0f5ea5791740cdab984bd97bf91f771affffd2e3ae2bcef6d7dc1f101c",
+    "tests/python/samplers/test_one_axis_rust_backend.py": "662b5aaca50b1f8c3f9f9f9a35dcecc6a9ff05f8d7ddad8ea7cf7e456309cd3d",
+    "tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py": "2e679ca3879296b0d1a6d7eef461042909ed559a3b533283e5eb9eef68dedc3c"
+  },
+  "rust_toolchain": {
+    "rustc": {
+      "command": [
+        "rustc",
+        "--version",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "lines": [
+        "rustc 1.97.0 (2d8144b78 2026-07-07) (Arch Linux rust 1:1.97.0-1.1)",
+        "binary: rustc",
+        "commit-hash: 2d8144b7880597b6e6d3dfd63a9a9efae3f533d3",
+        "commit-date: 2026-07-07",
+        "host: x86_64-unknown-linux-gnu",
+        "release: 1.97.0",
+        "LLVM version: 22.1.8"
+      ]
+    },
+    "cargo": {
+      "command": [
+        "cargo",
+        "--version",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "lines": [
+        "cargo 1.97.0 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.0-1.1)",
+        "release: 1.97.0",
+        "commit-hash: c980f4866141969fab6254a680546a277789d6f0",
+        "commit-date: 2026-06-30",
+        "host: x86_64-unknown-linux-gnu",
+        "libgit2: 1.9.4 (sys:0.20.4 system)",
+        "libcurl: 8.21.0 (sys:0.4.88+curl-8.20.0 system ssl:OpenSSL/3.6.3)",
+        "os: CachyOS Linux Rolling Release [64-bit]"
+      ]
+    }
+  },
+  "python_version": {
+    "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+    "implementation": "CPython",
+    "platform": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43"
+  },
+  "pyo3_version": {
+    "Cargo.lock": "0.24.2",
+    "Cargo.toml_requirement": "0.24",
+    "features": [
+      "extension-module"
+    ]
+  },
+  "host_receipts": {
+    "cpu_model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M",
+    "cpu_governor": {
+      "governors": [
+        "powersave"
+      ],
+      "stable_single_governor": true
+    },
+    "thread_counts": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "free_ram": {
+      "observable": true,
+      "mem_total_kib": 131157064,
+      "mem_available_kib": 56529232
+    },
+    "free_disk": {
+      "total_bytes": 3953289023488,
+      "free_bytes": 1260202008576
+    },
+    "competing_benchmark_processes": []
+  },
+  "release_build_receipt": {
+    "command": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python --release",
+    "exit_code": 0,
+    "completed": true,
+    "reused_existing_release_artifact": true
+  },
+  "affinity_receipt": {
+    "observable": true,
+    "freeze_requested": true,
+    "current_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "profile_cpus": [
+      0
+    ],
+    "fixed_worker_policy": "single_worker_no_dynamic_spawn"
+  },
+  "phase_definitions": {
+    "serialization": "Canonical JSON descriptor and checkpoint serialization paid by production receipts.",
+    "python_preparation": "NumPy dtype and contiguity preparation before the backend boundary.",
+    "pyo3_crossing": "Rust config/core construction and PyO3 argument crossing.",
+    "rust_batch_allocation": "One-time Rust compact-run output and workspace allocation.",
+    "worker_scheduling": "Fixed single-worker scheduling receipt; no dynamic per-sample worker spawn.",
+    "within_swap_kernel_work": "Corrected within-replica and adjacent-label swap sweeps.",
+    "validation": "Shape, active-backend, checksum, and receipt validation.",
+    "result_conversion": "Diagnostic result materialization and conversion crossing the PyO3 boundary.",
+    "checkpoint": "Checkpoint construction and checksum validation.",
+    "restart": "One-sweep checkpoint suffix replay."
+  },
+  "phase_timing_receipts": [
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "samples_s": [
+        3.1449017e-05,
+        2.6099035e-05,
+        2.1961983e-05
+      ],
+      "median_s": 2.6099035e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "samples_s": [
+        3.497e-06,
+        1.662993e-06,
+        8.61008e-07
+      ],
+      "median_s": 1.662993e-06,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.001694860985,
+        0.001054529916,
+        0.001000799006
+      ],
+      "median_s": 0.001054529916,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.001160889049,
+        0.001094613923,
+        0.001073505031
+      ],
+      "median_s": 0.001094613923,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        1.963926e-06,
+        1.122011e-06,
+        6.01052e-07
+      ],
+      "median_s": 1.122011e-06,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.001055461005,
+        0.001043899101,
+        0.001051313011
+      ],
+      "median_s": 0.001051313011,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "samples_s": [
+        0.001101186965,
+        0.001088663004,
+        0.001089293975
+      ],
+      "median_s": 0.001089293975,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.002170925029,
+        0.00211165403,
+        0.003539402969
+      ],
+      "median_s": 0.002170925029,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.00136305904,
+        0.001150097931,
+        0.00109942304
+      ],
+      "median_s": 0.001150097931,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "samples_s": [
+        5.81029e-07,
+        4.20958e-07,
+        3.29921e-07
+      ],
+      "median_s": 4.20958e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "samples_s": [
+        2.6189024e-05,
+        2.1449989e-05,
+        2.0368025e-05
+      ],
+      "median_s": 2.1449989e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "samples_s": [
+        2.615037e-06,
+        8.91974e-07,
+        6.50994e-07
+      ],
+      "median_s": 8.91974e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.00091666996,
+        0.000896832906,
+        0.000887164962
+      ],
+      "median_s": 0.000896832906,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.001042025979,
+        0.001039862051,
+        0.001045983052
+      ],
+      "median_s": 0.001042025979,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        1.252047e-06,
+        5.01052e-07,
+        3.50992e-07
+      ],
+      "median_s": 5.01052e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.001042827033,
+        0.001029141946,
+        0.001045010984
+      ],
+      "median_s": 0.001042827033,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "samples_s": [
+        0.001064779004,
+        0.001062674099,
+        0.001070198952
+      ],
+      "median_s": 0.001064779004,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.002079854021,
+        0.002077689976,
+        0.003036028007
+      ],
+      "median_s": 0.002079854021,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.00135250797,
+        0.001144598937,
+        0.001112186932
+      ],
+      "median_s": 0.001144598937,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "samples_s": [
+        0.002648621099,
+        0.002621439984,
+        0.002584961941
+      ],
+      "median_s": 0.002621439984,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "samples_s": [
+        3.9424049e-05,
+        3.2830983e-05,
+        3.1239004e-05
+      ],
+      "median_s": 3.2830983e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "samples_s": [
+        1.834007e-06,
+        6.01052e-07,
+        5.50994e-07
+      ],
+      "median_s": 6.01052e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.002702562022,
+        0.002721808036,
+        0.00278892403
+      ],
+      "median_s": 0.002721808036,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.003462939989,
+        0.003278373042,
+        0.003355658031
+      ],
+      "median_s": 0.003355658031,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        1.493027e-06,
+        4.80912e-07,
+        3.4098e-07
+      ],
+      "median_s": 4.80912e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.003236935008,
+        0.003240501974,
+        0.003221084946
+      ],
+      "median_s": 0.003236935008,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "samples_s": [
+        0.003298030002,
+        0.003273262992,
+        0.003398478962
+      ],
+      "median_s": 0.003298030002,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.004824846052,
+        0.004612155957,
+        0.004627173999
+      ],
+      "median_s": 0.004627173999,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.003233989934,
+        0.003280326957,
+        0.003419768997
+      ],
+      "median_s": 0.003280326957,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "samples_s": [
+        5.81029e-07,
+        2.20956e-07,
+        2.00002e-07
+      ],
+      "median_s": 2.20956e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "samples_s": [
+        3.8080965e-05,
+        3.2481039e-05,
+        3.1759031e-05
+      ],
+      "median_s": 3.2481039e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "samples_s": [
+        2.303976e-06,
+        6.61006e-07,
+        8.52044e-07
+      ],
+      "median_s": 8.52044e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.002642179024,
+        0.002549343975,
+        0.002521382063
+      ],
+      "median_s": 0.002549343975,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.003289654036,
+        0.003155482933,
+        0.003205796937
+      ],
+      "median_s": 0.003205796937,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        1.111999e-06,
+        3.81027e-07,
+        2.79979e-07
+      ],
+      "median_s": 3.81027e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.003592091962,
+        0.003211015952,
+        0.003118221997
+      ],
+      "median_s": 0.003211015952,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "samples_s": [
+        0.003185409005,
+        0.003275837982,
+        0.003206767957
+      ],
+      "median_s": 0.003206767957,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.004991848022,
+        0.005078381975,
+        0.004793926957
+      ],
+      "median_s": 0.004991848022,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.003283914062,
+        0.003198983963,
+        0.003234800999
+      ],
+      "median_s": 0.003234800999,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "samples_s": [
+        0.007690974046,
+        0.007590877009,
+        0.007367247017
+      ],
+      "median_s": 0.007590877009,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "samples_s": [
+        6.1064959e-05,
+        5.4803095e-05,
+        5.2878982e-05
+      ],
+      "median_s": 5.4803095e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "samples_s": [
+        2.054032e-06,
+        5.50994e-07,
+        5.20959e-07
+      ],
+      "median_s": 5.50994e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.009478168911,
+        0.00916143402,
+        0.00906976196
+      ],
+      "median_s": 0.00916143402,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.011501145898,
+        0.011253340053,
+        0.011646328028
+      ],
+      "median_s": 0.011501145898,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        1.322012e-06,
+        5.01052e-07,
+        3.90923e-07
+      ],
+      "median_s": 5.01052e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.011220098939,
+        0.011193807935,
+        0.008566998993
+      ],
+      "median_s": 0.011193807935,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "samples_s": [
+        0.009768655058,
+        0.012136869016,
+        0.011337138014
+      ],
+      "median_s": 0.011337138014,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.013639329001,
+        0.013638037024,
+        0.013676757924
+      ],
+      "median_s": 0.013639329001,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.01139124902,
+        0.011203726986,
+        0.011798413936
+      ],
+      "median_s": 0.01139124902,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "samples_s": [
+        4.61005e-07,
+        4.00003e-07,
+        1.8999e-07
+      ],
+      "median_s": 4.00003e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "samples_s": [
+        5.9793005e-05,
+        5.4352102e-05,
+        5.3249998e-05
+      ],
+      "median_s": 5.4352102e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "samples_s": [
+        2.415036e-06,
+        5.80912e-07,
+        5.21075e-07
+      ],
+      "median_s": 5.80912e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.008903760929,
+        0.009029607056,
+        0.008998098085
+      ],
+      "median_s": 0.008998098085,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.011142071919,
+        0.011331056012,
+        0.011132894084
+      ],
+      "median_s": 0.011142071919,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        1.462991e-06,
+        4.4005e-07,
+        3.10014e-07
+      ],
+      "median_s": 4.4005e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.011776653002,
+        0.011549526942,
+        0.010454080068
+      ],
+      "median_s": 0.011549526942,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "samples_s": [
+        0.011190532008,
+        0.010473266942,
+        0.012152759009
+      ],
+      "median_s": 0.011190532008,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.013367137988,
+        0.013272940996,
+        0.013806762989
+      ],
+      "median_s": 0.013367137988,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.011881930986,
+        0.012455616961,
+        0.011340533965
+      ],
+      "median_s": 0.011881930986,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "samples_s": [
+        0.026587930974,
+        0.029507138999,
+        0.031952017918
+      ],
+      "median_s": 0.029507138999,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "samples_s": [
+        7.8427023e-05,
+        6.9912057e-05,
+        6.8508903e-05
+      ],
+      "median_s": 6.9912057e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "samples_s": [
+        2.023997e-06,
+        5.71017e-07,
+        5.01052e-07
+      ],
+      "median_s": 5.71017e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.016705823946,
+        0.014127895003,
+        0.012378112064
+      ],
+      "median_s": 0.014127895003,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.016715341946,
+        0.020790130016,
+        0.020215380937
+      ],
+      "median_s": 0.020215380937,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        2.405024e-06,
+        5.40982e-07,
+        3.10945e-07
+      ],
+      "median_s": 5.40982e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.020436967025,
+        0.020411628997,
+        0.020533137023
+      ],
+      "median_s": 0.020436967025,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "samples_s": [
+        0.019809489022,
+        0.020098982961,
+        0.020245307009
+      ],
+      "median_s": 0.020098982961,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.022360365954,
+        0.022682170034,
+        0.023472502944
+      ],
+      "median_s": 0.022682170034,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.020676697022,
+        0.019617508049,
+        0.019649898983
+      ],
+      "median_s": 0.019649898983,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "samples_s": [
+        8.30973e-07,
+        2.89991e-07,
+        2.00002e-07
+      ],
+      "median_s": 2.89991e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "samples_s": [
+        7.743598e-05,
+        6.929005e-05,
+        6.7887013e-05
+      ],
+      "median_s": 6.929005e-05,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "samples_s": [
+        3.545894e-06,
+        5.40982e-07,
+        5.00935e-07
+      ],
+      "median_s": 5.40982e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "samples_s": [
+        0.015884642024,
+        0.016592370928,
+        0.015987846069
+      ],
+      "median_s": 0.015987846069,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "samples_s": [
+        0.020683158073,
+        0.020107207936,
+        0.020566250081
+      ],
+      "median_s": 0.020566250081,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "samples_s": [
+        3.776979e-06,
+        4.51109e-07,
+        2.91038e-07
+      ],
+      "median_s": 4.51109e-07,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "samples_s": [
+        0.020681876107,
+        0.0201513801,
+        0.018859165022
+      ],
+      "median_s": 0.0201513801,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "samples_s": [
+        0.020682537928,
+        0.014953644946,
+        0.016957666958
+      ],
+      "median_s": 0.016957666958,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "samples_s": [
+        0.01755543903,
+        0.01570140908,
+        0.01547568501
+      ],
+      "median_s": 0.01570140908,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "samples_s": [
+        0.014748470043,
+        0.021097315941,
+        0.01595511497
+      ],
+      "median_s": 0.01595511497,
+      "included_in_end_to_end": true
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "samples_s": [
+        0.032769522979,
+        0.032738866052,
+        0.042924682028
+      ],
+      "median_s": 0.032769522979,
+      "included_in_end_to_end": true
+    }
+  ],
+  "phase_share_by_size": [
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "median_share": 0.002163343866,
+      "ci95": [
+        0.002054222123,
+        0.002641300395
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "median_share": 8.9960255e-05,
+      "ci95": [
+        6.5656158e-05,
+        0.000263740194
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "median_share": 0.090450301204,
+      "ci95": [
+        0.089475238356,
+        0.092450972117
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.10509378395,
+      "ci95": [
+        0.104875540465,
+        0.105492875512
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "median_share": 5.0533722e-05,
+      "ci95": [
+        3.5399384e-05,
+        0.000126275505
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.105174574446,
+      "ci95": [
+        0.103794361663,
+        0.105394837357
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "median_share": 0.107388545829,
+      "ci95": [
+        0.107176255123,
+        0.107935176005
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "median_share": 0.209764183942,
+      "ci95": [
+        0.209545928656,
+        0.306199344224
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "median_share": 0.115438804616,
+      "ci95": [
+        0.112169883956,
+        0.136407520786
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "median_share": 0.264385968171,
+      "ci95": [
+        0.260706966258,
+        0.267127326145
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "median_share": 0.003416068832,
+      "ci95": [
+        0.002874575463,
+        0.004116321035
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "median_share": 0.000217666996,
+      "ci95": [
+        0.00011269622,
+        0.000457717793
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "median_share": 0.138026052622,
+      "ci95": [
+        0.130993283519,
+        0.221838155517
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.143272596296,
+      "ci95": [
+        0.140509680807,
+        0.151947261556
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "median_share": 0.000146858564,
+      "ci95": [
+        7.8670917e-05,
+        0.000257055726
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.1376049961,
+      "ci95": [
+        0.136634599038,
+        0.138147921653
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "median_share": 0.142576275204,
+      "ci95": [
+        0.142493688228,
+        0.144132933236
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "median_share": 0.284149560619,
+      "ci95": [
+        0.276391656455,
+        0.463267862805
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "median_share": 0.150534826121,
+      "ci95": [
+        0.143902055381,
+        0.178409029395
+      ]
+    },
+    {
+      "size": 48,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "median_share": 5.5098646e-05,
+      "ci95": [
+        4.3182932e-05,
+        7.6050132e-05
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "median_share": 0.001159036819,
+      "ci95": [
+        0.001133273054,
+        0.00135886172
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "median_share": 3.0403903e-05,
+      "ci95": [
+        2.3587001e-05,
+        8.2213904e-05
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "median_share": 0.090969489316,
+      "ci95": [
+        0.089971710719,
+        0.094282167825
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.114394021783,
+      "ci95": [
+        0.112598642543,
+        0.117386335706
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "median_share": 1.3596373e-05,
+      "ci95": [
+        9.990628e-06,
+        3.9680005e-05
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.114580254451,
+      "ci95": [
+        0.111269042319,
+        0.128178376305
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "median_share": 0.114428671165,
+      "ci95": [
+        0.113666509223,
+        0.116893330687
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "median_share": 0.178126557168,
+      "ci95": [
+        0.171064042896,
+        0.181214390583
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "median_share": 0.115428987929,
+      "ci95": [
+        0.114150911096,
+        0.117181513404
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "median_share": 0.270868981094,
+      "ci95": [
+        0.262889082592,
+        0.274440792677
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "median_share": 0.00159729871,
+      "ci95": [
+        0.00151984547,
+        0.001918065706
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "median_share": 2.9242487e-05,
+      "ci95": [
+        2.6807056e-05,
+        8.9228428e-05
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "median_share": 0.132421879178,
+      "ci95": [
+        0.131485518749,
+        0.135687218222
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.163260059662,
+      "ci95": [
+        0.1594999769,
+        0.168479560189
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "median_share": 2.3397414e-05,
+      "ci95": [
+        1.6589418e-05,
+        7.263901e-05
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.157483926444,
+      "ci95": [
+        0.156712786464,
+        0.157657467096
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "median_share": 0.160456330746,
+      "ci95": [
+        0.159251361857,
+        0.165343391063
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "median_share": 0.225122076255,
+      "ci95": [
+        0.224391415857,
+        0.234739251447
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "median_share": 0.159595039114,
+      "ci95": [
+        0.157340642191,
+        0.166379197559
+      ]
+    },
+    {
+      "size": 96,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "median_share": 1.074999e-05,
+      "ci95": [
+        9.730532e-06,
+        2.8268324e-05
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "median_share": 0.000556362934,
+      "ci95": [
+        0.000545081497,
+        0.0006120575
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "median_share": 5.946374e-06,
+      "ci95": [
+        5.333866e-06,
+        2.4720967e-05
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "median_share": 0.092106985077,
+      "ci95": [
+        0.09114132423,
+        0.092429519494
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.114053285736,
+      "ci95": [
+        0.113959338915,
+        0.115987778433
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "median_share": 4.504472e-06,
+      "ci95": [
+        3.173388e-06,
+        1.4975575e-05
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.118224106433,
+      "ci95": [
+        0.107010813588,
+        0.120549030703
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "median_share": 0.114549336419,
+      "ci95": [
+        0.107207215661,
+        0.124398954325
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "median_share": 0.13682966862,
+      "ci95": [
+        0.13586544253,
+        0.141329789982
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "median_share": 0.121626684848,
+      "ci95": [
+        0.116084797344,
+        0.127499090887
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "median_share": 0.302043119088,
+      "ci95": [
+        0.272161309904,
+        0.32706956623
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "median_share": 0.000802618729,
+      "ci95": [
+        0.000774439132,
+        0.000894326859
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "median_share": 8.069583e-06,
+      "ci95": [
+        7.629705e-06,
+        3.0082326e-05
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "median_share": 0.134173782181,
+      "ci95": [
+        0.132831199024,
+        0.138812523035
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.168440032552,
+      "ci95": [
+        0.164810792042,
+        0.170566297441
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "median_share": 7.338157e-06,
+      "ci95": [
+        5.725263e-06,
+        1.9361527e-05
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.163938914407,
+      "ci95": [
+        0.125467983977,
+        0.164323959306
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "median_share": 0.166038055082,
+      "ci95": [
+        0.143066837909,
+        0.177750515493
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "median_share": 0.199754793243,
+      "ci95": [
+        0.199735871594,
+        0.200302958536
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "median_share": 0.166830537822,
+      "ci95": [
+        0.164084183868,
+        0.17279367161
+      ]
+    },
+    {
+      "size": 192,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "median_share": 5.858244e-06,
+      "ci95": [
+        2.782499e-06,
+        6.751649e-06
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "serialization",
+      "median_share": 0.000501522254,
+      "ci95": [
+        0.000491367055,
+        0.000560482598
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "python_preparation",
+      "median_share": 3.915635e-06,
+      "ci95": [
+        3.625774e-06,
+        2.5665225e-05
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "pyo3_crossing",
+      "median_share": 0.115720231077,
+      "ci95": [
+        0.1149732389,
+        0.120095789615
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.148858776941,
+      "ci95": [
+        0.145536224118,
+        0.149704958459
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "worker_scheduling",
+      "median_share": 3.265133e-06,
+      "ci95": [
+        2.106537e-06,
+        2.7337822e-05
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.145855942797,
+      "ci95": [
+        0.136502873798,
+        0.149695679572
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "validation",
+      "median_share": 0.122739806878,
+      "ci95": [
+        0.108234670331,
+        0.149700469841
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "result_conversion",
+      "median_share": 0.113646996545,
+      "ci95": [
+        0.112013202885,
+        0.127066488659
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "checkpoint",
+      "median_share": 0.11548332297,
+      "ci95": [
+        0.106749611801,
+        0.15270263832
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "restart_containing",
+      "phase": "restart",
+      "median_share": 0.237186219772,
+      "ci95": [
+        0.236964324548,
+        0.310689388785
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "serialization",
+      "median_share": 0.000596099094,
+      "ci95": [
+        0.000584135223,
+        0.000668701214
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "python_preparation",
+      "median_share": 4.868727e-06,
+      "ci95": [
+        4.272176e-06,
+        1.7257435e-05
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "pyo3_crossing",
+      "median_share": 0.120460272198,
+      "ci95": [
+        0.105540899632,
+        0.142440759886
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "rust_batch_allocation",
+      "median_share": 0.172364693377,
+      "ci95": [
+        0.142521914288,
+        0.177265241582
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "worker_scheduling",
+      "median_share": 4.612636e-06,
+      "ci95": [
+        2.651246e-06,
+        2.0506229e-05
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "within_swap_kernel_work",
+      "median_share": 0.17425402795,
+      "ci95": [
+        0.174037985451,
+        0.175074013102
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "validation",
+      "median_share": 0.171372236123,
+      "ci95": [
+        0.168903891145,
+        0.172619855436
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "result_conversion",
+      "median_share": 0.193397556802,
+      "ci95": [
+        0.190653722206,
+        0.200136261856
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "checkpoint",
+      "median_share": 0.16754316051,
+      "ci95": [
+        0.167266982018,
+        0.176298064991
+      ]
+    },
+    {
+      "size": 256,
+      "batch_kind": "steady_state",
+      "phase": "restart",
+      "median_share": 2.472583e-06,
+      "ci95": [
+        1.7053e-06,
+        7.085219e-06
+      ]
+    }
+  ],
+  "dominant_phase": {
+    "phase": "result_conversion",
+    "median_phase_share": 0.196576175022,
+    "ci95": [
+      0.113646996545,
+      0.284149560619
+    ],
+    "optimized": true
+  },
+  "dominant_phase_selection_receipt": {
+    "preregistered_statistic": "median_phase_share",
+    "selected_phase": "result_conversion",
+    "optimized_only_selected_phase": true,
+    "confidence_interval_excludes_tie": true,
+    "note": "Only result conversion/boundary allocation was optimized; sampler kernel and target distribution were unchanged."
+  },
+  "allocation_counts_before": {
+    "rust_per_sample_heap_allocations": "diagnostic_decision_log_events",
+    "python_per_sample_heap_allocations": "diagnostic_normalization",
+    "documented_unavoidable_boundaries": [
+      "full_decision_log"
+    ]
+  },
+  "allocation_counts_after": {
+    "rust_per_sample_heap_allocations": 0,
+    "python_per_sample_heap_allocations": 0,
+    "documented_unavoidable_boundaries": [
+      "numpy_samples_array",
+      "checkpoint_dict"
+    ],
+    "observed_case_count": 40
+  },
+  "buffer_reuse_receipts": [
+    {
+      "size": 48,
+      "seed": 5764000,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764001,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764002,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764003,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764004,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764005,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764006,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764007,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764008,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764009,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764000,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764001,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764002,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764003,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764004,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764005,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764006,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764007,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764008,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764009,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764000,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764001,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764002,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764003,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764004,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764005,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764006,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764007,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764008,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764009,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764000,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764001,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764002,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764003,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764004,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764005,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764006,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764007,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764008,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764009,
+      "contiguous_samples": true,
+      "workspace_reused": true,
+      "per_sample_heap_buffers": 0
+    }
+  ],
+  "worker_pool_receipts": [
+    {
+      "size": 48,
+      "seed": 5764000,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764001,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764002,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764003,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764004,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764005,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764006,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764007,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764008,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 48,
+      "seed": 5764009,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764000,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764001,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764002,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764003,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764004,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764005,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764006,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764007,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764008,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 96,
+      "seed": 5764009,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764000,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764001,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764002,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764003,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764004,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764005,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764006,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764007,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764008,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 192,
+      "seed": 5764009,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764000,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764001,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764002,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764003,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764004,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764005,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764006,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764007,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764008,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    },
+    {
+      "size": 256,
+      "seed": 5764009,
+      "fixed_worker_count": 1,
+      "dynamic_per_sample_workers": 0
+    }
+  ],
+  "changed_files": [
+    "openspec/capabilities/samplers/spec.md",
+    "crates/carnot-samplers/src/one_axis_tempering.rs",
+    "crates/carnot-python/src/one_axis_tempering.rs",
+    "crates/carnot-samplers/tests/one_axis_tempering.rs",
+    "python/carnot/samplers/one_axis_rust_backend.py",
+    "python/carnot/experiment_5764_one_axis_profiled_allocation_free_hot_path.py",
+    "tests/python/samplers/test_one_axis_rust_backend.py",
+    "tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py",
+    "results/experiment_5764_one_axis_profiled_allocation_free_hot_path.json"
+  ],
+  "checkpoint_compatibility": {
+    "schema_version_preserved": true,
+    "checkpoint_schema": "carnot.one_axis_samplerbackend.checkpoint.v1",
+    "compact_descriptor_hash_compatible": true
+  },
+  "restart_parity_receipts": [
+    {
+      "size": 48,
+      "seed": 5764000,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764001,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764002,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764003,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764004,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764005,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764006,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764007,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764008,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764009,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764000,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764001,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764002,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764003,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764004,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764005,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764006,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764007,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764008,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764009,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764000,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764001,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764002,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764003,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764004,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764005,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764006,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764007,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764008,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764009,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764000,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764001,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764002,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764003,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764004,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764005,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764006,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764007,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764008,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764009,
+      "restart_match": true,
+      "suffix_hash_match": true,
+      "checkpoint_state_match": true
+    }
+  ],
+  "fallback_equivalence_receipts": [
+    {
+      "size": 48,
+      "seed": 5764000,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764001,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764002,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764003,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764004,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764005,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764006,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764007,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764008,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 48,
+      "seed": 5764009,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764000,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764001,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764002,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764003,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764004,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764005,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764006,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764007,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764008,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 96,
+      "seed": 5764009,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764000,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764001,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764002,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764003,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764004,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764005,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764006,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764007,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764008,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 192,
+      "seed": 5764009,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764000,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764001,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764002,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764003,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764004,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764005,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764006,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764007,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764008,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    },
+    {
+      "size": 256,
+      "seed": 5764009,
+      "fallback_equivalent": true,
+      "rust_python_samples_match": true
+    }
+  ],
+  "semantic_parity_score": 1.0,
+  "distributional_parity_score": 1.0,
+  "production_backend_reachable_score": 1.0,
+  "producer_gate_fields": [
+    "semantic_parity_score",
+    "distributional_parity_score",
+    "production_backend_reachable_score",
+    "optimized_path_ready_score"
+  ],
+  "optimized_path_ready_score": 1.0,
+  "timing_promotion_claimed": false,
+  "hardware_speedup_claimed": false,
+  "two_axis_exchange_reopened": false,
+  "inference_substrate": "local_rust_pyo3_cpu_release_profile_and_parity",
+  "random_seeds": [
+    5764000,
+    5764001,
+    5764002,
+    5764003,
+    5764004,
+    5764005,
+    5764006,
+    5764007,
+    5764008,
+    5764009
+  ],
+  "test_commands": [
+    "cargo test -p carnot-samplers one_axis_tempering",
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python --release",
+    ".venv/bin/pytest tests/python/samplers/test_one_axis_rust_backend.py -q -k '5723 or 5738 or 5751 or 5764' --no-cov -n 0",
+    ".venv/bin/pytest tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5764_one_axis_profiled_allocation_free_hot_path.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    "cargo test -p carnot-samplers one_axis_tempering": null,
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python --release": null,
+    ".venv/bin/pytest tests/python/samplers/test_one_axis_rust_backend.py -q -k '5723 or 5738 or 5751 or 5764' --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py -q --no-cov -n 0": null,
+    ".venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5764_one_axis_profiled_allocation_free_hot_path.py --fail-under=100": null,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/python scripts/check_spec_coverage.py": null,
+    ".venv/bin/python scripts/root_clutter_sweep.py": null
+  },
+  "reproducibility_checksum": "f3ee53a3425e7263bb8a4be60c50b9a4bb26ba848e3a4cc6e640f489a4c6e0a6",
+  "honest_verdict": "complete: profiled result_conversion as the dominant phase and validated the compact allocation-free one-axis Rust/PyO3 hot path; no timing or hardware claim"
+}

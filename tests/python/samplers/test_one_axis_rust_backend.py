@@ -1,7 +1,8 @@
 """Tests for the one-axis Rust SamplerBackend adapter.
 
 Spec coverage: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723, REQ-SAMPLE-5738,
-SCENARIO-SAMPLE-5738, REQ-SAMPLE-5751, SCENARIO-SAMPLE-5751
+SCENARIO-SAMPLE-5738, REQ-SAMPLE-5751, SCENARIO-SAMPLE-5751,
+REQ-SAMPLE-5764, SCENARIO-SAMPLE-5764
 """
 
 from __future__ import annotations
@@ -591,3 +592,78 @@ def test_req_sample_5751_restart_decision_log_canonical_json_has_no_signed_zero(
     assert canonical_json(rust_payload) == canonical_json(python_payload)
     assert _negative_zero_paths(rust_suffix["decision_log"]) == []
     assert sha256_json(rust_payload) == sha256_json(python_payload)
+
+
+def test_req_sample_5764_compact_hot_path_matches_diagnostic_semantics() -> None:
+    """REQ-SAMPLE-5764: compact Rust path preserves samples, checkpoints, and receipts."""
+    biases, couplings = _fixture_inputs()
+    descriptor = _descriptor(seed=5764)
+    compact_descriptor = {**descriptor, "return_decision_log": False}
+
+    diagnostic = OneAxisRustBackend(seed=5764).run_descriptor(
+        biases,
+        couplings,
+        n_samples=3,
+        config=descriptor,
+    )
+    compact = OneAxisRustBackend(seed=5764).run_descriptor(
+        biases,
+        couplings,
+        n_samples=3,
+        config=compact_descriptor,
+    )
+
+    np.testing.assert_array_equal(compact["samples"], diagnostic["samples"])
+    np.testing.assert_array_equal(
+        np.asarray(compact["samples_spin"], dtype=np.int8),
+        np.asarray(diagnostic["samples_spin"], dtype=np.int8),
+    )
+    assert compact["decision_log"] == []
+    assert compact["checkpoint"]["state"] == diagnostic["checkpoint"]["state"]
+    assert compact["checkpoint"]["payload_checksum"] == checkpoint_checksum(compact["checkpoint"])
+    assert compact["receipt"]["optimized_hot_path"]["used"] is True
+    assert compact["receipt"]["optimized_hot_path"]["decision_log_materialized"] is False
+    assert compact["receipt"]["optimized_hot_path"]["spec_refs"] == [
+        "REQ-SAMPLE-5764",
+        "SCENARIO-SAMPLE-5764",
+    ]
+    assert compact["allocation_counters"]["rust_per_sample_heap_allocations"] == 0
+    assert compact["allocation_counters"]["python_per_sample_heap_allocations"] == 0
+    assert compact["buffer_reuse_receipt"]["contiguous_samples"] is True
+    assert compact["worker_pool_receipt"]["fixed_worker_count"] == 1
+
+
+def test_scenario_sample_5764_compact_batch_restart_and_fallback_equivalence() -> None:
+    """SCENARIO-SAMPLE-5764: optimized batch path remains restartable and fallback-equivalent."""
+    item = _batch_workload(6, 5765)
+    item["config"] = {**item["config"], "return_decision_log": False}
+    rust_row = OneAxisRustBackend(seed=5765).sample_batch([item])[0]
+    fallback_row = OneAxisRustBackend(seed=5765, prefer_rust=False).sample_batch([item])[0]
+
+    np.testing.assert_array_equal(rust_row["samples"], fallback_row["samples"])
+    np.testing.assert_array_equal(
+        np.asarray(rust_row["samples_spin"], dtype=np.int8),
+        np.asarray(fallback_row["samples_spin"], dtype=np.int8),
+    )
+    assert rust_row["receipt"]["active_backend"] == "rust_pyo3"
+    assert rust_row["decision_log"] == []
+    assert fallback_row["decision_log"] == []
+    assert rust_row["checkpoint"]["state"] == fallback_row["checkpoint"]["state"]
+
+    restart_config = {**item["config"], "checkpoint": rust_row["checkpoint"], "burn_in_sweeps": 0}
+    rust_suffix = OneAxisRustBackend(seed=5765).run_descriptor(
+        item["biases"],
+        item["couplings"],
+        n_samples=1,
+        config=restart_config,
+    )
+    fallback_suffix = OneAxisRustBackend(seed=5765, prefer_rust=False).run_descriptor(
+        item["biases"],
+        item["couplings"],
+        n_samples=1,
+        config=restart_config,
+    )
+
+    np.testing.assert_array_equal(rust_suffix["samples"], fallback_suffix["samples"])
+    assert rust_suffix["checkpoint"]["state"] == fallback_suffix["checkpoint"]["state"]
+    assert rust_suffix["receipt"]["optimized_hot_path"]["used"] is True
