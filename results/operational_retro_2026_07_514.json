@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.514",
+  "generated_at": "2026-07-21T15:43:01Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 314.1,
+  "experiments_completed": 14,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Transition terminal .513 evidence, preserve blocked-versus-null verdicts, and al",
+      "duration_minutes": 118.15,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Ingest post-V514 source deltas with bounded bibliographic receipts",
+      "duration_minutes": 49.82,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5758 scalar parity: profile and optimize the production one-axis Rus",
+      "duration_minutes": 45.27,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Build an exact MPMMine-shaped benchmark for typed constraint acquisition",
+      "duration_minutes": 30.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5761 exact corpus: learn typed constraints by solver-certified query",
+      "duration_minutes": 22.63,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Work completed 14 experiments in 314.1 minutes, with 4 classified as compute-bound. The bounded slowest list contains only synthesis work, so it cannot rank the compute-bound experiments or explain their runtime; the locked task-conditioned GPU-idle value is false.",
+  "bottlenecks_identified": [
+    "The bounded slowest set is entirely synthesis-only and is led by the transition-evidence task; the supplied data does not isolate the slow phase within that work.",
+    "Disk-mtime reconstruction supplies aggregate durations but not phase-level timing, leaving the compute-bound ranking and causal attribution unavailable.",
+    "The supplied evidence does not correlate model concurrency, runner selection, or GPU telemetry with individual compute-bound tasks."
+  ],
+  "improvements_suggested": [
+    "Add resumable, content-addressed checkpoints to long synthesis workflows so unchanged transition, ingestion, and reconciliation inputs can be reused.",
+    "Emit per-phase start and stop receipts plus task-correlated GPU utilization in each experiment artifact.",
+    "Declare model concurrency in the task manifest and select DualGPURunner only for concurrent multi-model execution.",
+    "Use dependency-aware scheduling to start ready independent tasks without waiting for unrelated synthesis work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make long synthesis workflows incremental and resumable.",
+    "Replace reconstruction-only timing with per-phase, task-correlated timing and GPU receipts.",
+    "Add manifest-driven concurrency and runner selection, with DualGPURunner reserved for concurrent multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The visible long tail belongs to synthesis-only work, while the bounded evidence omits the compute-bound names, durations, and phase causes needed for a hardware diagnosis. Improving synthesis reuse and task-level observability is justified; stronger GPU or runner claims are not."
+}
