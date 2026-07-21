@@ -28,3 +28,9 @@ CHECK_TIMED_OUT
 
 ## 2026-07-20 13:43 UTC -- checked, nothing new
 
+## 2026-07-21 13:35 UTC -- NEW
+
+- **DhanaLakshmiMalla** newly entered the top five at **#3, 1.60**; **ippeiogawa** newly entered at **#4, 1.58**. [Current Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- Neither entrant currently exposes submission-linked code or a technique writeup. DhanaLakshmiMalla has no public notebooks; ippeiogawa’s public notebooks are unrelated to ARC-AGI-3. Therefore, no evidence-based **(a) exploit** or **(b) general-purpose** classification—and no Carnot lever—can yet be assigned. [DhanaLakshmiMalla notebooks](https://www.kaggle.com/dhanalakshmimalla/code), [ippeiogawa notebooks](https://www.kaggle.com/ippeiogawa/code)
+

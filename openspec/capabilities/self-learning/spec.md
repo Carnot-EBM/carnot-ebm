@@ -23309,6 +23309,120 @@ undistinguished, so the receipt records the query set as minimal.
 |---|---|---|
 | REQ-LEARN-5761 | Planned (`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py`, `results/experiment_5761_exact_constraint_acquisition_benchmark.json`) | Planned (`tests/python/test_experiment_5761_exact_constraint_acquisition_benchmark.py`) |
 
+## REQ-LEARN-5762: Query-Driven Constraint Lifecycle Recovery
+
+The self-learning tier SHALL provide Exp5762, a deterministic no-LLM
+query-driven constraint lifecycle that starts each chronological episode from a
+sealed Exp5761 incomplete, over-fit, or mixed typed constraint set and changes
+the active hard-constraint set online only through solver-certified lifecycle
+operations. Before learner access, Exp5762 SHALL verify Exp5761 artifact,
+manifest, row, model, query, solver-version, split, checkpoint, chronological
+seed, RAM, and disk preconditions; any ambiguous science split, hidden oracle
+boundary, stale solver version, or unreplayed hash SHALL block the run.
+
+Exp5762 SHALL freeze, using train/dev evidence only, the train/dev/science
+split, generic template library, candidate birth/refinement/quarantine rules,
+membership-query budget, promotion thresholds, protected prefix, update policy,
+and metric definitions. Candidate birth, refinement, quarantine, and
+supersession operations SHALL be generated only from observed positive/negative
+counterexamples and the frozen generic template library. The learner SHALL NOT
+inspect the faithful target model AST/text, science repair receipt, LLM output,
+pseudo-labels, hidden science outcome, or any exact target label except through
+bounded membership-query calls recorded in `membership_query_receipts`.
+
+For each active episode, Exp5762 SHALL choose bounded discriminating
+assignments that separate competing candidate constraints, ask the exact
+Exp5761 membership oracle only for those assignments, update confidence
+monotonically, and promote a constraint only when it remains exact-consistent
+with all observed rows, adds development-held-out discrimination, keeps the
+current model feasible, and passes protected-prefix replay. Overly broad
+candidates SHALL be refined, contradicted candidates SHALL be quarantined,
+obsolete versions SHALL be superseded, and rollback/restart SHALL restore exact
+state hashes.
+
+Exp5762 SHALL compare the query-driven arm against passive-only constraint
+induction, random queries, frozen model, safe generic residual sidecar, and an
+exact-query-budget oracle upper bound under matched examples, query budget,
+candidate library, update opportunities, and stopping rules. It SHALL report
+behavioral exact accuracy, constraint precision/recall/F1, over-fit removal,
+missing-constraint recovery, held-out error, query efficiency, dynamic regret,
+protected-prefix retention, unsafe/rejected propagation, update latency, state
+growth, rollback/restart equivalence, and paired intervals. The bare
+`constraint_recovery_gain` SHALL be the science behavioral-recovery
+improvement over the best non-oracle matched baseline, and the bare
+`constraint_recovery_gain_lcb` SHALL be its paired 95% lower bound.
+
+The terminal artifact MUST be written to
+`results/experiment_5762_query_driven_constraint_lifecycle.json` and include
+the top-level fields `field_principles`, `status`, `preconditions_checked`,
+`spec_refs`, `upstream_artifact_hashes`, `benchmark_manifest_hash`,
+`science_split_hash`, `template_library_hash`, `query_policy_definition`,
+`query_budget`, `update_policy_definition`, `constraint_lifecycle_ledger`,
+`membership_query_receipts`, `constraint_birth_receipts`,
+`constraint_refinement_receipts`, `constraint_quarantine_receipts`,
+`constraint_supersession_receipts`, `control_definitions`, `per_arm_metrics`,
+`behavioral_exact_accuracy`, `constraint_precision`, `constraint_recall`,
+`constraint_f1`, `overfit_constraint_removal_rate`,
+`missing_constraint_recovery_rate`, `query_efficiency`, `dynamic_regret`,
+`update_latency_distribution`, `state_growth`, `constraint_recovery_gain`,
+`constraint_recovery_gain_lcb`, `prefix_retention_pass_score`,
+`unsafe_update_count`, `rejected_update_propagation_count`,
+`rollback_hash_mismatch_count`, `restart_equivalence`,
+`oracle_boundary_violation_count`, `continuous_self_learning_target`,
+`continuous_self_learning_credited`, `model_weight_mutation`,
+`production_default_enabled`, `verifier_is_oracle`, `inference_substrate`,
+`random_seeds`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, `honest_verdict`, and `producer_gate_fields`.
+Downstream producer gate fields SHALL be exported as bare top-level scalars named
+`constraint_recovery_gain_lcb`, `prefix_retention_pass_score`,
+`unsafe_update_count`, and `rollback_hash_mismatch_count`, and their meanings
+SHALL appear only in `field_principles`.
+
+Continuous-self-learning credit SHALL require
+`constraint_recovery_gain_lcb > 0.0`, `prefix_retention_pass_score == 1.0`,
+`unsafe_update_count == 0`, `rejected_update_propagation_count == 0`,
+`oracle_boundary_violation_count == 0`, `rollback_hash_mismatch_count == 0`,
+exact restart equivalence, `continuous_self_learning_target=true`,
+`model_weight_mutation=false`, `production_default_enabled=false`,
+`verifier_is_oracle=true`, and
+`inference_substrate=online_exact_membership_query_sidecar_no_llm`.
+
+### SCENARIO-LEARN-5762-QUERY-LIFECYCLE: Discriminating Queries Repair Typed Constraints
+
+**Given** sealed Exp5761 incomplete, over-fit, and mixed typed variants in
+chronological order
+**When** Exp5762 runs the query-driven lifecycle
+**Then** missing hard constraints are recovered, spurious over-fit constraints
+are removed or quarantined, mixed variants receive both operation classes, every
+query receipt names the observed assignment and exact oracle answer, and no
+candidate is promoted without consistency, development discrimination,
+feasibility, and protected-prefix replay.
+
+### SCENARIO-LEARN-5762-MATCHED-CONTROLS: Query-Driven Gain Uses Matched Baselines
+
+**Given** query-driven, passive-only, random-query, frozen, safe-generic
+residual, and exact-budget oracle arms with the same examples, budget,
+candidate library, update opportunities, and stopping rules
+**When** Exp5762 computes science recovery
+**Then** `constraint_recovery_gain` equals query-driven behavioral recovery
+minus the best non-oracle matched baseline, and
+`constraint_recovery_gain_lcb` is the paired 95% lower bound used for credit.
+
+### SCENARIO-LEARN-5762-ROLLBACK-RESTART: Rollback And Restart Are Exact
+
+**Given** promoted, refined, quarantined, superseded, and rejected lifecycle
+states
+**When** Exp5762 runs rollback and restart replay
+**Then** restored state hashes match exactly, rejected updates have zero
+propagation, protected-prefix retention remains 1.0, and any mismatch blocks
+continuous-self-learning credit.
+
+## Implementation Status (Exp 5762)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5762 | Planned (`python/carnot/experiment_5762_query_driven_constraint_lifecycle.py`, `results/experiment_5762_query_driven_constraint_lifecycle.json`) | Planned (`tests/python/test_experiment_5762_query_driven_constraint_lifecycle.py`) |
+
 ## REQ-LEARN-5737: SOTA Exact Stream CSL Shadow Ingress
 
 The self-learning tier SHALL provide Exp 5737, a CPU-only shadow ingress that
