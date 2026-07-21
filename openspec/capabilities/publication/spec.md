@@ -2392,7 +2392,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
 | REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
 | REQ-PUBLISH-3840 | Planned | Exp 3840 v353 publication gate regression confirmation |
-| REQ-PUBLISH-042 | Implemented | Local paperbanana + ERNIE-Image-Turbo diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`); same-day 2026-07-21 revisions: base model -> Turbo variant (8 steps, guidance_scale=1.0), and `use_pe` (pipeline's own prompt-rewriting LLM) explicitly disabled |
+| REQ-PUBLISH-042 | Implemented, live-verified | Local paperbanana + ERNIE-Image-Turbo diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`); same-day 2026-07-21 revisions: base model -> Turbo variant (8 steps, guidance_scale=1.0), `use_pe` explicitly disabled, weights downloaded (31.63GB) and live-verified (real OOM found + fixed via dropped `pe` component + `enable_model_cpu_offload`; real 1024x1024 image generated, 16.67GB peak VRAM, 56.6s) |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
@@ -2436,6 +2436,26 @@ its Planner/Stylist agents) with an opaque second LLM rewrite, undermining
 the whole point of paperbanana's prompt-engineering pipeline. Per operator
 directive.
 
+**Third revision (same day, 2026-07-21) — weights downloaded, live-verified,
+VRAM fix required and applied:** `baidu/ERNIE-Image-Turbo` (31.63GB, 24
+files, verified complete via `scan_cache_dir` against the repo's own
+reported file count) was downloaded per operator directive. The FIRST real
+(non-mocked) load attempt hit a real `torch.OutOfMemoryError`: a bare
+`pipe.to(device)` moves ALL pipeline components to GPU simultaneously,
+including the 7.66GB `pe` (prompt-enhancer) submodel -- even though
+`use_pe=False` guarantees it is never invoked -- pushing total VRAM demand
+to ~31GB against a single RTX 3090's 24GB. Fixed by dropping
+`pipe.pe`/`pipe.pe_tokenizer` entirely (both are `Optional[...] = None` in
+the pipeline's own constructor) before placement, and using
+`enable_model_cpu_offload` instead of a blanket `.to(device)` for the
+remaining components. Re-verified end-to-end after the fix: pipeline load
+14.1s, peak VRAM 16.67GB, 1024x1024 generation in 56.6s at 8 steps,
+producing a correct, legible image matching the test prompt ("three
+connected boxes labeled A, B, C") with clean GPU release afterward (0 MiB
+residual). This is the project's live-GPU-provenance evidence for this
+requirement (CLAUDE.md "All headline results must have live GPU
+provenance").
+
 The project MUST vendor `paperbanana` (MIT, `llmsresearch/paperbanana`)
 under `external/paperbanana/` at its latest tagged release, gitignored per
 the existing `external/ARC-GEN`-style convention (no embedded-repo
@@ -2457,7 +2477,13 @@ documented on the model's own HuggingFace card -- not the generic
 `DiffusionPipeline` auto-resolver). Inference MUST use the Turbo-specific
 settings (`num_inference_steps=8`, `guidance_scale=1.0`, `use_pe=False`),
 never the base model's (`50`, `4.0`) or the pipeline's own `use_pe=True`
-default. The pipeline MUST be a lazy, process-wide singleton
+default. Placement onto GPU MUST drop the unused `pe`/`pe_tokenizer`
+components (never invoked when `use_pe=False`) and use
+`enable_model_cpu_offload` rather than a blanket `.to(device)` -- a bare
+`.to(device)` moves the 7.66GB `pe` submodel to GPU regardless of whether
+it will ever run, pushing total VRAM demand to ~31GB against a single
+24GB GPU (a real `torch.OutOfMemoryError`, not a theoretical concern --
+see the third revision note above). The pipeline MUST be a lazy, process-wide singleton
 (never loaded at import time or per-request) and MUST refuse to load with an
 honest `RuntimeError` naming the exact `huggingface-cli download` command
 when the model is not yet in the local HuggingFace cache -- it MUST NOT
@@ -2519,3 +2545,12 @@ Turbo-specific settings), never the base model's `50` / `4.0`.
 **Then** it MUST pass `use_pe=False` explicitly, never leaving the pipeline
 to its own `use_pe=True` default -- so paperbanana's own engineered prompt
 reaches the diffusion model unmodified, without a second, opaque LLM rewrite.
+
+**Given** `baidu/ERNIE-Image-Turbo` is cached locally and a single 24GB-class
+GPU is available
+**When** `ErniePipelineSingleton.get` loads the pipeline
+**Then** peak VRAM usage MUST stay under the GPU's capacity (empirically
+verified 2026-07-21: 16.67GB peak on a 24GB RTX 3090, real 1024x1024
+generation in 56.6s at 8 steps, clean GPU release afterward) -- a bare
+`pipe.to(device)` MUST NOT be used, since it would include the unused
+7.66GB `pe` submodel and exceed available VRAM.

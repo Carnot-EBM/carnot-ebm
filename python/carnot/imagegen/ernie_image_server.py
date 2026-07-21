@@ -149,6 +149,25 @@ class ErniePipelineSingleton:
         Requires diffusers>=0.39 (confirmed available at 0.39.0 in this
         project's `.venv` as of 2026-07-21; older diffusers versions may not
         ship this pipeline class).
+
+        2026-07-21 VRAM fix (found via a real, non-mocked smoke test after
+        the weights were downloaded -- NOT caught by the model card's "runs
+        on 24G VRAM" claim, which does not hold for a naive `.to(device)`):
+        a bare `pipe.to(device)` moves ALL pipeline components to GPU
+        simultaneously, INCLUDING the ``pe`` prompt-enhancer submodel
+        (7.66GB on disk) -- even though ``use_pe=False`` (see
+        :data:`USE_PROMPT_ENHANCER`) guarantees it is never invoked at
+        generation time. That pushed total VRAM demand to ~31GB, well past
+        a single RTX 3090's 24GB, and reproduced a real
+        ``torch.OutOfMemoryError`` mid-load. Since ``pe``/``pe_tokenizer``
+        are declared ``Optional[...] = None`` in the pipeline's own
+        constructor, they are dropped entirely before the remaining
+        components (text_encoder, transformer, vae -- ~24GB combined) are
+        placed via ``enable_model_cpu_offload`` instead of a blanket
+        ``.to(device)``, so components move to GPU only while their
+        ``forward`` runs rather than all sitting resident simultaneously.
+        Re-verified end-to-end after this fix: a real 1024x1024 image
+        generates successfully.
     """
 
     _pipeline: Any = None
@@ -164,9 +183,14 @@ class ErniePipelineSingleton:
             import torch
             from diffusers import ErnieImagePipeline
 
-            device = f"cuda:{gpu}" if gpu is not None else "cuda"
             pipe = ErnieImagePipeline.from_pretrained(HF_REPO_ID, torch_dtype=torch.bfloat16)
-            cls._pipeline = pipe.to(device)
+            # use_pe is always False (USE_PROMPT_ENHANCER) -- never load the
+            # 7.66GB prompt-enhancer submodel onto GPU for a component that
+            # is structurally guaranteed to never be called.
+            pipe.pe = None
+            pipe.pe_tokenizer = None
+            pipe.enable_model_cpu_offload(gpu_id=gpu)
+            cls._pipeline = pipe
         return cls._pipeline
 
     @classmethod
