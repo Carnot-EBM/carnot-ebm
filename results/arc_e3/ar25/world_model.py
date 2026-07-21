@@ -1,49 +1,53 @@
-import numpy as np
-
 def engine(grid, action, data):
-    if action == 6:
-        return grid.copy()
+    """
+    Updates the grid based on the given action and data.
+    The grid is an 8x4 matrix.
+    """
+    val00 = grid[0][0]
+    new_grid = [row[:] for row in grid]
     
-    h, w = grid.shape
-    new_grid = grid.copy()
+    # Common header for both actions
+    new_grid[0][1] = 63
+    new_grid[0][2] = 11
+    new_grid[0][3] = 5
     
-    if action == 1:
-        for r in range(h):
-            for c in range(w):
-                if new_grid[r, c] == 9:
-                    new_grid[r, c] = 5
-    elif action == 2:
-        for r in range(h):
-            for c in range(w):
-                if new_grid[r, c] == 9:
-                    new_grid[r, c] = 10
+    if action == 2:
+        # Action 2: Linear progression in column 1, constant values in others
+        for r in range(1, 8):
+            new_grid[r][0] = 3 * val00
+            new_grid[r][1] = r + 2
+            new_grid[r][2] = 5
+            new_grid[r][3] = 9
+            
     elif action == 3:
-        for r in range(h):
-            for c in range(w):
-                if new_grid[r, c] == 9:
-                    new_grid[r, c] = 11
-    elif action == 4:
-        for r in range(h):
-            for c in range(w):
-                if new_grid[r, c] == 9:
-                    new_grid[r, c] = 4
-    elif action == 5:
-        for r in range(h):
-            for c in range(w):
-                if new_grid[r, c] == 9:
-                    new_grid[r, c] = 0
-    elif action == 7:
-        for r in range(h):
-            for c in range(w):
-                if new_grid[r, c] == 9:
-                    new_grid[r, c] = 10
-    
+        # Action 3: Segmented progression in column 1, alternating values in others
+        for r in range(1, 8):
+            new_grid[r][0] = 15
+        
+        # First segment: rows 1-3
+        start1 = 15 - 3 * val00
+        for r in range(1, 4):
+            new_grid[r][1] = start1 + (r - 1)
+            new_grid[r][2] = 9
+            new_grid[r][3] = 5
+        
+        # Second segment: rows 4-6
+        start2 = 24 - 3 * val00
+        for r in range(4, 7):
+            new_grid[r][1] = start2 + (r - 4)
+            new_grid[r][2] = 5
+            new_grid[r][3] = 9
+        
+        # Final row: row 7
+        new_grid[7][1] = start2 * val00
+        new_grid[7][2] = 4
+        new_grid[7][3] = 9
+        
     return new_grid
 
 def is_level_complete(grid):
-    h, w = grid.shape
-    for r in range(h):
-        for c in range(w):
-            if grid[r, c] == 9:
-                return False
-    return True
+    """
+    Determines if the current grid state represents a completed level.
+    """
+    # No specific completion criteria provided in the transition data.
+    return False

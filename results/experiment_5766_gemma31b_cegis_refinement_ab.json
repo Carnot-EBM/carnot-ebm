@@ -1,0 +1,296 @@
+{
+  "comparison_to_gemma31b_singleshot_baseline": {
+    "cegis_best_achieved_pooled_heldout": 0.059829,
+    "cegis_round0_pooled_heldout": 0.059829,
+    "gemma31b_singleshot_5764_pooled_heldout": 0.378487,
+    "n_games_cegis_beats_singleshot": 2,
+    "n_games_cegis_below_singleshot": 10,
+    "n_games_compared": 13,
+    "note": "The PRIMARY cross-experiment question the operator asked: does CEGIS refinement improve on gemma's OWN 0.378 single-shot baseline (REQ-ARC-WMTE-5764), per game + pooled? 'cegis_best_achieved' = best heldout the loop reached across round0 + every refactor round (what the refinement PIPELINE achieved). Paired by game.",
+    "per_game": {
+      "ar25": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": 0.0,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.0
+      },
+      "cd82": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.466667,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.466667
+      },
+      "ft09": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.833333,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.833333
+      },
+      "g50t": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.083333,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.083333
+      },
+      "lp85": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.333333,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.333333
+      },
+      "r11l": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.444433,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.444433
+      },
+      "re86": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.027767,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.027767
+      },
+      "sb26": {
+        "cegis_best_achieved_heldout_mean": 0.444444,
+        "cegis_best_minus_singleshot": 0.296311,
+        "cegis_round0_heldout_mean": 0.444444,
+        "gemma31b_singleshot_5764_heldout_mean": 0.148133
+      },
+      "sk48": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.3889,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.3889
+      },
+      "sp80": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.75,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.75
+      },
+      "tr87": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -0.2222,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 0.2222
+      },
+      "tu93": {
+        "cegis_best_achieved_heldout_mean": 0.333333,
+        "cegis_best_minus_singleshot": 0.1111,
+        "cegis_round0_heldout_mean": 0.333333,
+        "gemma31b_singleshot_5764_heldout_mean": 0.222233
+      },
+      "vc33": {
+        "cegis_best_achieved_heldout_mean": 0.0,
+        "cegis_best_minus_singleshot": -1.0,
+        "cegis_round0_heldout_mean": 0.0,
+        "gemma31b_singleshot_5764_heldout_mean": 1.0
+      }
+    },
+    "pooled_delta_bootstrap_95ci": {
+      "excludes_0": true,
+      "hi": -0.118793,
+      "lo": -0.519235,
+      "n": 13
+    },
+    "pooled_delta_cegis_best_minus_singleshot": -0.318658
+  },
+  "degradation_guard": {
+    "games": [
+      "sp80",
+      "ft09"
+    ],
+    "holds": true,
+    "violations": []
+  },
+  "delta_heldout_by_game": {
+    "bootstrap_95ci": {
+      "excludes_0": false,
+      "hi": 0.0,
+      "lo": -0.145299,
+      "n": 13
+    },
+    "losses": 2,
+    "n_games": 13,
+    "note": "PRIMARY metric (REQ-ARC-WMTE-5760's exact metric): delta_heldout = heldout(best refined round) - heldout(round 0), per game (mean over trials) + pooled, bootstrap 95% CI over games. This is the WITHIN-loop refinement lift on gemma.",
+    "paired_sign_test_p": 0.5,
+    "per_game_delta": {
+      "ar25": 0.0,
+      "cd82": 0.0,
+      "ft09": 0.0,
+      "g50t": 0.0,
+      "lp85": 0.0,
+      "r11l": 0.0,
+      "re86": 0.0,
+      "sb26": -0.444444,
+      "sk48": 0.0,
+      "sp80": 0.0,
+      "tr87": 0.0,
+      "tu93": -0.333333,
+      "vc33": 0.0
+    },
+    "pooled_mean_delta_heldout": -0.059829,
+    "positive_game_frac": 0.0,
+    "wins": 0
+  },
+  "duration_s": 43984.23,
+  "experiment": "experiment_5766_gemma31b_cegis_refinement_ab",
+  "field_principles": {
+    "comparison_to_gemma31b_singleshot_baseline": "the operator's primary question -- does refinement COMPOUND gemma's 0.378 single-shot edge, per game + pooled?",
+    "delta_heldout_by_game": "PRIMARY -- the within-loop refinement lift on the exact quantity the diagnosis named as the binding wall, per game.",
+    "duration_s": "real wall-clock; a bigger dense model across 3 refinement rounds is slow and disclosed; the 60s floor guards against a fabricated fast run.",
+    "gate_branch": "the pre-registered 5760 branch this run lands in (positive / honest_negative / emission_confound / partial) -- decides the 2x2 interpretation.",
+    "honest_verdict": "terminal-prefixed, numbers-first; a continuous heldout delta with real headroom (gemma's single-shot baseline is a measured 0.378, not a floor) cannot come back 'no headroom'.",
+    "inference_substrate": "live_llm_inference -- real gemma-4-31B-it Q4_K_M GGUF generation across up to 3 CEGIS rounds/cell on a CUDA llama-server; 60s duration floor. Runtime VRAM-jump assertion refuses a silent CPU fallback.",
+    "prior_work_extended": "traces this to REQ-ARC-WMTE-5726/5760/5764 by id+verdict so the 2x2 interaction is auditable (5760 cited as in-progress, no final verdict).",
+    "random_seed": "LLM sampling is server-side stochastic; trials are per-game replicates (same seeded window), paired by GAME, bootstrap over games -- NOT independent samples.",
+    "recommendation": "OPERATOR-ONLY 2x2 interpretation (compound vs ceiling); this experiment NEVER flips the frozen live stack.",
+    "reproducibility_checksum": "content hash over harness + reinduction + world-model code + generator/roster/budget config + rows.",
+    "solve_provenance": "development_proxy -- PUBLIC-game offline measurement of the LIVE refinement mechanism with a bigger offline model swapped in; NOT a hidden-game solve.",
+    "verifier_is_oracle": "False -- heldout_accuracy is exact-match against real recorded transitions the engine was NOT fit to (held-out split); win oracle is the level counter, oracle-distinct."
+  },
+  "gate_branch": "partial_inconclusive",
+  "honest_verdict": "complete_gemma31b_cegis_refinement_partial_pooled_delta_-0.0598_CI_-0.145299_0.0_posfrac_0.0_signp_0.5_memdrop_0.2564_emission_0.9872_vs_singleshot_-0.318658_N13_does_not_cleanly_meet_a_preregistered_branch",
+  "inference_substrate": "live_llm_inference",
+  "methodology_note": "Route induction through execute_bounded_llm_reinduction (min_heldout_accuracy=1.0, candidate_provider = the loaded engine, load_engine + plan_in_model from arc_executable_world_model) via exp5760.run_cegis_cell VERBATIM -- the ONLY scientific variable vs REQ-ARC-WMTE-5760 is the generator (gemma-4-31B-it dense, /v1/chat/completions with its embedded chat template, vs ThinkingCap-27B/Qwen-9B). Per-round heldout from outcome.rounds[*]['heldout_accuracy'] (exact-match on the held-out split; CARNOT_ARC_TRUST_METRIC forced OFF so the metric is exact, not cell_recall). round 0 = induce (the within-run single-shot baseline), rounds 1-2 = refactor. Proposer mirrors tonight's reason-induce (codeonly OFF, /think, tries=1, 16384 budget). gemma pinned to GPU 1 (CUDA_VISIBLE_DEVICES=1), own llama-server on port 8972, PARALLEL to and NON-INTERFERING with the GPU-0 CEGIS job (which stays on GPU 0 via CARNOT_5726_QW_CUDA=0). n_ctx chosen by a launch-time ladder (32768 first for comparability; smaller only on OOM). Disclosed divergences (identical to 5764/5760): (1) the '/think\\n' prefix is a Qwen-ism gemma ignores; (2) round 0 uses the loop's STANDARD induce (the live path), not tonight's _induce_no_fence variant -- but the rigorous quantity is the INTERNAL round-0-vs-refined delta. A DIAGNOSTIC over the EXISTING live refinement mechanism with a bigger offline model, NOT a live-path modification and NOT an orphan solver.",
+  "model_specs": [
+    {
+      "budget": 16384,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "kv_quant": "q8_0",
+      "min_heldout_accuracy": 1.0,
+      "mtp": false,
+      "n_ctx_deployed": 32768,
+      "name": "gemma-4-31B-it",
+      "quant": "Q4_K_M",
+      "role": "different-family DENSE 31B; CEGIS-refinement induction probe on GPU 1 (the missing model x mechanism 2x2 cell: does refinement compound gemma's single-shot edge?)",
+      "server": "CUDA llama-server single-GPU (CUDA_VISIBLE_DEVICES=1), -ngl 999, q8_0 KV, port 8972, /v1/chat/completions",
+      "use_chat_template": true,
+      "vram_gpu1_before_after_mib": [
+        4,
+        21426
+      ]
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "resource": "gguf_cached::gemma-4-31B-it"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "gpu1 used=4 MiB (threshold <1000)",
+      "resource": "gpu1_idle"
+    },
+    {
+      "available": true,
+      "detail": "llama_supports_gpu_offload()",
+      "resource": "llama_cpp_gpu_offload"
+    }
+  ],
+  "preregistration": {
+    "budget": 16384,
+    "gate_emission_confound": "refactor-emission rate<=0.6 (mechanical artifact, not evidence against refinement)",
+    "gate_honest_negative": "delta<=0.05 pooled AND memorization unchanged AND emission healthy (CEILING / architecture wall)",
+    "gate_positive": "pooled mean delta_heldout>0.15 across >=12 games AND bootstrap 95% CI excludes 0 AND positive on >=50% of games AND paired sign-test p<0.05 AND memorization rate drops >=0.2 absolute AND degradation guard holds AND refactor-emission rate>0.6 (REQ-ARC-WMTE-5760's EXACT thresholds)",
+    "min_heldout_accuracy": 1.0,
+    "primary_metric": "delta_heldout = heldout(best refined round) - heldout(round 0), per game + pooled",
+    "retire_if_same_verdict": "on HONEST-NEGATIVE, do NOT re-propose more induction-refinement variants; the 2x2 then reads 'architecture wall independent of model capacity AND refinement depth' -- pivot the architecture (reactive-with-filter / executable-world-model construction).",
+    "roster": [
+      "tu93",
+      "tr87",
+      "sp80",
+      "sb26",
+      "re86",
+      "g50t",
+      "r11l",
+      "cd82",
+      "ar25",
+      "lp85",
+      "sk48",
+      "vc33",
+      "ft09"
+    ],
+    "roster_n": 13,
+    "roster_source": "IMPORTED from REQ-ARC-WMTE-5760 (ROSTER/TRIALS) -- byte-identical to BOTH prior tonight runs (5760 ThinkingCap CEGIS, 5764 gemma single-shot). Not hand-copied.",
+    "secondary_metric": "cegis_best_achieved_heldout - gemma31b_singleshot_5764_heldout, per game + pooled",
+    "trials": [
+      0,
+      1,
+      2
+    ]
+  },
+  "prior_work_extended": [
+    {
+      "relation": "ThinkingCap-27B SINGLE-SHOT induction diagnosis (pooled heldout 0.187604, near-zero floor). The single-shot cell of the OTHER model in the 2x2.",
+      "req": "REQ-ARC-WMTE-5726",
+      "verdict": "complete_thinkingcap_16k_dualgpu_reason_near_zero_heldout_floor"
+    },
+    {
+      "relation": "CONCURRENT (GPU 0, NOT COMPLETE) ThinkingCap-27B CEGIS refinement -- the SAME mechanism this experiment runs, on the OTHER model. Early cells show real code emission but ~flat/negative heldout lift (its pre-registered HONEST-NEGATIVE pattern). This experiment pairs that mechanism with gemma-4-31B to complete the model x mechanism 2x2. No final verdict for 5760 is claimed here.",
+      "req": "REQ-ARC-WMTE-5760",
+      "verdict": "in_progress_do_not_cite_final"
+    },
+    {
+      "relation": "gemma-4-31B SINGLE-SHOT induction -- pooled heldout 0.378487 (12/13 games nonzero), a real POSITIVE showing a bigger different-family model moves single-shot off the floor. This experiment tests whether CEGIS refinement COMPOUNDS that 0.378 baseline (the primary comparison arm).",
+      "req": "REQ-ARC-WMTE-5764",
+      "verdict": "complete_gemma31b_singleshot_induction_pooled_heldout_0.378487_vs_thinkingcap27_baseline_0.187604_delta_0.190883_nonzero_games_12of13_moved_off_floor_N13"
+    }
+  ],
+  "question": "Does the EXISTING verifier-grounded CEGIS refinement loop (execute_bounded_llm_reinduction, min_heldout_accuracy=1.0) COMPOUND gemma-4-31B's already-better single-shot world-model induction (pooled heldout 0.378, REQ-ARC-WMTE-5764), or was gemma's single-shot edge already near a ceiling refinement cannot cross? The missing model x mechanism 2x2 cell distinguishing a model-capacity wall from an induction-architecture wall.",
+  "random_seed": 0,
+  "read_game_source": false,
+  "recommendation": "PARTIAL/INCONCLUSIVE: pooled delta -0.0598 (best-achieved 0.059829 vs single-shot 0.378487, -0.318658) does not cleanly meet a pre-registered branch. Read the per-game trajectory + emission attribution before drawing a 2x2 conclusion. OPERATOR-ONLY on any follow-up.",
+  "refactor_emission_rate": {
+    "healthy_threshold": 0.6,
+    "note": "attribution guard -- a low rate means a flat delta is a budget-overrun mechanical artifact, not evidence against refinement (5760 design sec 5 branch 3).",
+    "refactor_emission_rate_pooled": 0.9872,
+    "refactor_rounds_attempted": 78,
+    "refactor_rounds_emitted": 77
+  },
+  "reproducibility_checksum": "sha256:b52d5972552c9af4b03a4b38189ab85e5dce7c4a4364c162dc64130132ebc99a",
+  "requirements": [
+    "REQ-ARC-WMTE-5766"
+  ],
+  "sample_size": {
+    "games": 13,
+    "note": "SAME 13-game pre-registered roster + 3 trials + 16384 budget as BOTH prior tonight runs (imported from REQ-ARC-WMTE-5760 to guarantee an exact match). Trials add per-game stability, not additional independent degrees of freedom (same seeded window).",
+    "paired_unit": "game (delta_heldout averaged over trials; paired by game vs 5764 single-shot)",
+    "roster": [
+      "tu93",
+      "tr87",
+      "sp80",
+      "sb26",
+      "re86",
+      "g50t",
+      "r11l",
+      "cd82",
+      "ar25",
+      "lp85",
+      "sk48",
+      "vc33",
+      "ft09"
+    ],
+    "roster_n": 13,
+    "trials_per_game": 3
+  },
+  "schema": "carnot.exp5766.gemma31b_cegis_refinement_ab.v1",
+  "solve_provenance": "development_proxy",
+  "submitted_to_leaderboard": false,
+  "trials_per_game": 3,
+  "used_env_source": true,
+  "verifier_is_oracle": false,
+  "window_memorization_rate_before_after": {
+    "definition": "structural AST scan of the induced engine() source; is_memorizing := >=3 int literals (>=10, coordinate range not action/color codes) matching an observed-window changed-cell row/col index. GATED quantity = before/after DELTA (cancels the dense-window chance-match confound symmetrically).",
+    "rate_after_refinement": 0.5385,
+    "rate_before_refinement": 0.7949,
+    "rate_drop": 0.2564
+  }
+}

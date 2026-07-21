@@ -1,34 +1,55 @@
 import numpy as np
 
 def engine(grid, action, data):
+    """
+    Executes an action on the grid based on the provided action ID and data.
+    Refactored to use general rules and avoid NumPy array ambiguity errors.
+    """
+    grid = np.array(grid)
+    rows, cols = grid.shape
+
+    # Movement rules for actions 0-3 (Up, Down, Left, Right)
+    if 0 <= action <= 3:
+        moves = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
+        dr, dc = moves[action]
+        # Find the first non-zero object to move
+        coords = np.argwhere(grid != 0)
+        if coords.size > 0:
+            r, c = coords[0]
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols:
+                grid[nr, nc] = grid[r, c]
+                grid[r, c] = 0
+        return grid.tolist()
+
+    # Color modification rules for actions 4-5
+    if action == 4: # Change object color
+        coords = np.argwhere(grid != 0)
+        if coords.size > 0:
+            grid[coords[0][0], coords[0][1]] = data.get('color', 1)
+        return grid.tolist()
+    
+    if action == 5: # Fill entire grid
+        grid[:] = data.get('color', 1)
+        return grid.tolist()
+
+    # Special rule for action 6 (Fixing the ValueError)
     if action == 6:
-        px, py = data['x'], data['y']
-        new_grid = grid.copy()
-        # Check if the action is valid (within bounds)
-        if 0 <= px < grid.shape[1] and 0 <= py < grid.shape[0]:
-            # Check if the target cell is 4 (the player)
-            if new_grid[py, px] == 4:
-                # Move the player to the clicked position
-                new_grid[py, px] = 4
-                # Check for adjacent cells that are not 4 and change them to 4
-                # This is a simplified rule based on the observed transitions
-                # The player seems to be able to change adjacent cells to 4
-                for dy in [-1, 0, 1]:
-                    for dx in [-1, 0, 1]:
-                        if dy == 0 and dx == 0:
-                            continue
-                        ny, nx = py + dy, px + dx
-                        if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
-                            if new_grid[ny, nx] != 4:
-                                new_grid[ny, nx] = 4
-        return new_grid
-    else:
-        # For other actions, return the grid unchanged
-        return grid
+        # Use np.array_equal to avoid "truth value of an array is ambiguous" error
+        target = np.array(data.get('target', []))
+        if target.size > 0 and np.array_equal(grid, target):
+            grid[:] = 0
+        return grid.tolist()
+
+    return grid.tolist()
 
 def is_level_complete(grid):
-    # Check if the grid is complete based on the observed transitions
-    # The level is complete if there are no more changes possible
-    # This is a simplified rule based on the observed transitions
-    # The level is complete if the grid is full of 4s
-    return np.all(grid == 4)
+    """
+    Determines if the level is complete. 
+    A level is typically complete if the grid is uniform in color.
+    """
+    grid = np.array(grid)
+    if grid.size == 0:
+        return True
+    # Check if all elements are the same as the first element
+    return np.all(grid == grid[0, 0])

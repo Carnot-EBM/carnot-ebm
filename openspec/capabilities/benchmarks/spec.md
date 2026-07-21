@@ -1327,6 +1327,14 @@ and the planned Exp5759 conductor gates pass on the emitted artifact. Missing
 fields, object-wrapped gate values, altered hashes, ambiguous nested values, and
 false readiness MUST fail closed.
 
+The planned Exp5759 conductor gate replay MUST evaluate the emitted bridge
+artifact through `scripts/conductor_gates.evaluate_gates()` against exactly
+these fields: `benchmark_bridge_ready_score`, `benchmark_ready_score`,
+`structure_receipt_failure_count`, `solution_receipt_failure_count`,
+`validator_disagreement_count`, `heldout_partition_disjoint_score`, and
+`adversarial_verification_clean_score`. The bridge MUST preserve all seven as
+top-level bare scalars and MUST keep any explanation in `field_principles`.
+
 Required field principles:
 
 - `benchmark_manifest_path`: principle "sealed manifest is reused by reference"
@@ -1364,7 +1372,7 @@ SCENARIO-BENCH-5757-NEGATIVE-CONTROLS
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-BENCH-5757 | Planned (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`) | Planned (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
+| REQ-BENCH-5757 | Implemented (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Implemented (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
 
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
