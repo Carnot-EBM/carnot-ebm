@@ -3473,6 +3473,85 @@ llama.cpp build actually support image input via `--mmproj`? which local
 model to pull into Ollama?) and was out of scope for the explicit ask
 ("our image generation model"). Follow-up candidate for a future task.
 
+#### 2026-07-21 SAME-DAY REVISION: switched to ERNIE-Image-Turbo (8 steps), not the base model
+
+Follow-up operator directive, same day: use `baidu/ERNIE-Image-Turbo`
+(https://huggingface.co/baidu/ERNIE-Image-Turbo) instead of the base
+`baidu/ERNIE-Image` used in the ADOPTED section above. This is preserved
+as a same-day revision addendum rather than an edit to the ADOPTED section,
+per the Documentation Update Rules (never silently rewrite what was
+recorded) -- but note neither variant's weights had actually been
+downloaded yet at the time of this revision, so nothing shipped/proven
+needs reconciling; this corrects the design before first real use, not
+after.
+
+**What changed:**
+
+- `HF_REPO_ID`: `baidu/ERNIE-Image` -> `baidu/ERNIE-Image-Turbo`.
+- Inference settings: `num_inference_steps` 50 -> 8, `guidance_scale` 4.0
+  -> 1.0. The guidance_scale change is load-bearing, not cosmetic: Turbo is
+  a DMD+RL-distilled checkpoint, and distilled/turbo diffusion checkpoints
+  typically bake classifier-free guidance into the distillation target.
+  Reusing the base model's guidance_scale=4.0 on Turbo would likely
+  oversaturate/degrade output quality, not just run at the wrong speed.
+  Confirmed via the Turbo model's own HuggingFace card (guidance_scale=1.0
+  explicitly recommended there), not assumed by extrapolating from the base
+  model's card.
+- Pipeline class: `diffusers.DiffusionPipeline` (generic auto-resolver) ->
+  `diffusers.ErnieImagePipeline` (the specific class documented in the
+  Turbo model card's own example code). Confirmed `ErnieImagePipeline`
+  exists in this project's installed `diffusers==0.39.0` before switching
+  to it, so this isn't a version bump that also needed doing.
+- Re-verified `external/paperbanana` is still at the latest tag (`v0.3.0`,
+  matches `origin/main` after `git fetch --tags`) -- no update was needed,
+  it was already current from the original adoption.
+
+**Files touched:** `python/carnot/imagegen/ernie_image_server.py`,
+`python/carnot/imagegen/__init__.py`, `scripts/generate_diagram.py`,
+`tests/python/test_ernie_image_server.py` (12 tests now, up from 11 --
+added an explicit assertion that Turbo's settings, not the base model's,
+reach the pipeline call), `openspec/capabilities/publication/spec.md`
+(REQ-PUBLISH-042 revised in place with a rationale note, since nothing had
+shipped yet), `_bmad/traceability.md`.
+
+**Still true, unchanged by this revision:** the model weights are NOT
+downloaded (now `huggingface-cli download baidu/ERNIE-Image-Turbo`); the
+VLM-role gap above is unchanged; `scripts/generate_diagram.py --backend
+ernie-local` still fails honestly with `blocked_ernie_image_not_cached`
+(re-verified against the new repo id).
+
+#### 2026-07-21 THIRD SAME-DAY REVISION: prompt enhancer (`use_pe`) explicitly disabled
+
+Follow-up user instruction: ensure ERNIE-Image-Turbo's built-in prompt
+enhancer is NOT enabled. Investigated rather than assumed:
+`inspect.signature(ErnieImagePipeline.__call__)` against the real installed
+`diffusers==0.39.0` confirms `use_pe` defaults `True`. Reading
+`_enhance_prompt_with_pe` directly in
+`diffusers/pipelines/ernie_image/pipeline_ernie_image.py` shows what it
+actually does when enabled: it runs a SEPARATE auxiliary LLM's
+`.generate()` call (its own tokenizer + chat template, sampled with
+temperature=0.6/top_p=0.95 by default) to rewrite the caller's prompt
+*before* image synthesis.
+
+**Why this matters here specifically:** paperbanana's own Planner/Stylist
+agents already produce a carefully-engineered, venue-styled, structured
+prompt before it ever reaches the image backend. Leaving `use_pe` at its
+default would insert a second, opaque LLM rewrite step on top of that
+engineered prompt, which could silently drift the final image away from
+what paperbanana's pipeline intended, and adds non-determinism + extra
+generation latency neither asked for nor wanted.
+
+**Fix:** `python/carnot/imagegen/ernie_image_server.py` now declares
+`USE_PROMPT_ENHANCER = False` and passes `use_pe=USE_PROMPT_ENHANCER`
+explicitly on every pipeline call — never relying on the pipeline's own
+default (matches this project's general discipline of never trusting an
+implicit default for compute-bound/generation-affecting behavior). Added
+`tests/python/test_ernie_image_server.py::test_prompt_enhancer_is_disabled`
+(13th test) and independently verified the `use_pe=False` keyword argument
+binds cleanly against the REAL `ErnieImagePipeline.__call__` signature
+(`inspect.signature(...).bind_partial(...)`), not just the mocked test
+stub.
+
 ## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z, EXTENDED 2026-05-02 18:40Z)
 
 **arXiv submission is ON HOLD until Phase 4 firm pivot answer + figure-integrity audit.**

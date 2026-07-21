@@ -5,8 +5,9 @@
     This is the entrypoint for "generate a diagram" going forward. As of
     2026-07-21, Gemini/Claude/Codex API tokens are no longer available for
     this project, so the default image-generation backend is a local,
-    open-weight model (``baidu/ERNIE-Image``, Apache-2.0) served from this
-    machine's own GPU instead of a paid closed-weight API.
+    open-weight model (``baidu/ERNIE-Image-Turbo``, Apache-2.0, 8 inference
+    steps) served from this machine's own GPU instead of a paid closed-weight
+    API.
 
 **Detailed explanation for engineers:**
     Wires the vendored ``external/paperbanana`` CLI (see CLAUDE.md "Audit
