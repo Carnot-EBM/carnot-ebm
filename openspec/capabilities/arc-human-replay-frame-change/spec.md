@@ -9866,6 +9866,112 @@ prerequisite before any deployment consideration of the 27B.
 - **WHEN** the artifact reports the completion-rate comparison
 - **THEN** it SHALL disclose that N>=30 UNIQUE games is mathematically unreachable (only 25 public games exist, of which 20 supply a valid seeded window), state the exact N used and whether it was further bounded by conductor downtime (a downtime bound, NOT a fresh statistical ceiling), use the Wilcoxon signed-rank on per-game deltas as the primary paired test (with the sign test + fragility alongside), and disclose that trials-per-game add per-game stability but are NOT independent game-level degrees of freedom.
 
+### REQ-ARC-WMTE-5760: CEGIS Refinement-Loop Induction A/B (ThinkingCap-27B + Qwen3.5-9B)
+
+`docs/research-notes/arc-induction-quality-improvement-design-2026-07-20.md` found the live agent's
+CEGIS-style refinement loop (`execute_bounded_llm_reinduction`, `arc_llm_reinduction.py:654`, wired
+into BOTH live call sites `arc_competition_agent.py:3885,4005`) was never exercised by
+REQ-ARC-WMTE-5726's single-shot diagnosis, which hardcodes `n_refinement_rounds=0`
+(`arc_actions_to_progress.py:764`) -- so the 29/37-near-zero `heldout_accuracy` finding is a
+SINGLE-SHOT number, and whether the live agent's actual repair loop fixes it was unmeasured.
+
+`python/carnot/experiment_5760_cegis_refinement_induction_ab.py` routes induction through
+`execute_bounded_llm_reinduction` (`min_heldout_accuracy=1.0` so refactor rounds actually fire,
+`candidate_provider`/`load_engine`/`plan_in_model` from the live modules) instead of single-shot
+`proposer.induce()`, capturing the FULL per-round `heldout_accuracy` trajectory (round 0 = baseline,
+rounds 1-2 = counterexample-guided refactor) on BOTH ThinkingCap-Qwen3.6-27B and Qwen3.5-9B-MTP, a
+13-game pre-registered roster (12 fastest-to-induce of the 17 REQ-ARC-WMTE-5726 games + `ft09`, fixed
+before the run), 3 trials/game. Primary metric `delta_heldout = heldout(best refined round) -
+heldout(round 0)`, pooled + per-game, bootstrap 95% CI. Also tracks the structural window-memorization
+detector (before/after refinement) and the refactor-round code-emission rate (attribution guard against
+an emission-budget confound). Three pre-registered branches (POSITIVE / HONEST-NEGATIVE /
+EMISSION-CONFOUND) per the design doc's exact thresholds; a `degradation_guard` on the two games already
+at round-0 `heldout=1.0` (`sp80`, `ft09`) requires refinement NOT to corrupt an already-correct model.
+
+**RESOLUTION (2026-07-21).** Ran the full pre-registered roster (78 cells, both models, GPU 0, launched
+fully detached per the established pattern). **Pooled `delta_heldout = -0.0128`** (bootstrap CI
+`[-0.032, 0.0]`, includes 0), `positive_game_frac = 0.0`, `wins = 0` across all 13 games -- ZERO games
+improved on EITHER model. `degradation_guard` HOLDS (no corruption on `sp80`/`ft09`). BUT the result does
+NOT cleanly satisfy the pre-registered HONEST-NEGATIVE branch, for two disclosed, real reasons: (1)
+ThinkingCap-27B's window-memorization rate dropped substantially (`0.7297 -> 0.3243`, a genuine ~40-point
+swing) even though `heldout_accuracy` did not improve -- refinement measurably changes the induced code's
+SURFACE structure (stops hardcoding literal window coordinates) without fixing its DYNAMICS correctness;
+(2) Qwen-9B's refactor-round emission rate (`0.55`) fell just under the `0.6` healthy threshold (vs
+ThinkingCap's clean `0.9863`), so Qwen's own null is partially confounded by budget/emission, while
+ThinkingCap's is cleanly attributable. `gate_branch: partial_inconclusive` -- the artifact reports this
+honestly rather than force-fitting a pre-registered label the data does not cleanly support. Verdict:
+`complete_cegis_refinement_partial_pooled_delta_-0.0128_..._does_not_cleanly_meet_a_preregistered_branch`.
+adversarial_verify: 0 flags. Independently re-verified (bootstrap CI, per-model breakdown, memorization
+detector, emission attribution all cross-checked against the artifact's raw fields).
+
+Required field principles:
+
+- `primary_result`: principle "pooled delta_heldout + per-game + per-model breakdown + bootstrap CI is the load-bearing quantity for whether refinement helps; reporting only a point estimate would hide whether 0 is inside or outside the confidence interval."
+- `memorization_detector`: principle "a before/after DELTA on window-coordinate-literal counts, gated to cancel the dense-window chance-match confound -- distinguishes 'refinement changed surface code structure' from 'refinement fixed dynamics correctness', which the primary delta_heldout metric alone cannot separate."
+- `emission_attribution`: principle "per-model refactor-round code-emission rate lets a reader distinguish a genuine no-improvement null from a budget-overrun mechanical artifact -- without it, a low-emission model's null would be indistinguishable from a real negative result."
+- `degradation_guard`: principle "an already-correct model (round0 heldout=1.0) being CORRUPTED by refinement would be the single worst possible outcome (actively harmful, not merely unhelpful) -- this field makes that check explicit and auditable rather than buried in an aggregate mean."
+
+#### SCENARIO-ARC-WMTE-5760-WITHIN-LOOP-DELTA-IS-THE-FAIR-COMPARISON
+- **WHEN** the artifact reports whether CEGIS refinement improved induction quality
+- **THEN** the PRIMARY metric SHALL be the WITHIN-LOOP delta (round 0 vs best-refined round, same induction call, same model, same game) rather than a cross-experiment comparison against a differently-invoked single-shot baseline, so the result isolates the refinement mechanism's own effect and is not confounded by an unrelated methodology difference in how round 0 itself was invoked.
+
+#### SCENARIO-ARC-WMTE-5760-MEMORIZATION-CHANGE-DOES-NOT-IMPLY-CORRECTNESS-CHANGE
+- **WHEN** the window-memorization detector shows a substantial before/after drop for a model whose `delta_heldout` is flat or negative
+- **THEN** the artifact SHALL report both quantities separately and SHALL NOT infer or claim a correctness improvement from a memorization-rate change alone -- refinement measurably altering the induced code's surface structure (removing hardcoded literals) is a DISTINCT finding from whether the code's DYNAMICS predictions became more accurate, and conflating the two would overstate what refinement achieved.
+
+#### SCENARIO-ARC-WMTE-5760-DEGRADATION-GUARD-BLOCKS-A-FALSE-POSITIVE-RECOMMENDATION
+- **WHEN** a game already at round-0 `heldout_accuracy=1.0` (a genuinely correct induced model) goes through refactor rounds
+- **THEN** the artifact SHALL explicitly check and report whether the refined heldout ever drops below the round-0 value on that game, and a violation SHALL block any POSITIVE gate_branch recommendation regardless of the pooled delta, since a mechanism that improves the average while corrupting an already-working model is not safe to recommend for the live path.
+
+### REQ-ARC-WMTE-5766: CEGIS Refinement-Loop Induction A/B (gemma-4-31B-it, GPU1, parallel to REQ-ARC-WMTE-5760)
+
+REQ-ARC-WMTE-5764 (single-shot induction, same 13-game roster) found gemma-4-31B-it -- a genuinely
+different, dense, more-per-token-compute model family than ThinkingCap-27B or the 35B-A3B MoE --
+substantially outperforms ThinkingCap-27B's single-shot `heldout_accuracy` (pooled `0.378487` vs
+`0.187604`, 12/13 nonzero games vs 6/13; both numbers independently re-verified against the raw
+39-row shard). This REQ completes the missing cell of the model x mechanism 2x2 design (operator
+directive: "swap models and try both again at the same time to see if either result changes"): does
+verifier-grounded CEGIS refinement COMPOUND gemma's already-better single-shot starting point, or was
+that edge already near a ceiling refinement cannot improve on? Ran in PARALLEL with REQ-ARC-WMTE-5760
+on GPU 1 (`CARNOT_5726_QW_CUDA=0` set on REQ-ARC-WMTE-5760's restart specifically to keep both arms of
+that job on GPU 0, permanently eliminating a real, identified GPU-1 contention risk between the two
+concurrent jobs rather than racing a timing estimate).
+
+`python/carnot/experiment_5766_gemma31b_cegis_refinement_ab.py` reuses REQ-ARC-WMTE-5760's exact CEGIS
+mechanism and gate thresholds, substituting gemma-4-31B-it-GGUF as the model, on the IDENTICAL
+13-game/3-trial roster (imported from the sibling module to guarantee an exact match).
+
+**RESOLUTION (2026-07-21).** Ran the full pre-registered roster (39 cells, GPU 1, launched fully
+detached, ran independently of REQ-ARC-WMTE-5760's concurrent GPU-0 job with zero contention).
+**Pooled `delta_heldout = -0.0598`** (bootstrap CI `[-0.145, 0.0]`, includes 0), `positive_game_frac =
+0.0`, `wins = 0` across all 13 games -- ZERO games improved. `degradation_guard` HOLDS. Emission rate
+`0.9872` (healthy). Memorization rate dropped `0.2564` absolute. Same `gate_branch:
+partial_inconclusive` outcome as REQ-ARC-WMTE-5760, for the analogous reason (memorization changed
+substantially without a matching correctness gain). **Cross-experiment comparison caveat, disclosed
+explicitly and NOT to be read at face value:** the CEGIS loop's own round-0 pooled heldout
+(`0.059829`) is far below REQ-ARC-WMTE-5764's standalone single-shot pooled heldout (`0.378487`) on
+the SAME roster -- but this gap is NOT clean evidence that refinement is destructive; the CEGIS loop's
+round-0 call uses the live path's STANDARD `induce()` invocation, a disclosed, real methodological
+divergence from REQ-ARC-WMTE-5764's dedicated `_induce_no_fence` single-shot script
+(`methodology_note`, both artifacts). The FAIR, apples-to-apples quantity is the within-loop `-0.0598`
+delta above (same round-0 invocation method used for both the "before" and "after" comparison), which
+is directly comparable to REQ-ARC-WMTE-5760's `-0.0128` and shows the same qualitative result on a
+substantially more capable model: refinement does not compound a strong single-shot starting point,
+either. adversarial_verify: 0 flags. Independently re-verified.
+
+Required field principles:
+
+- `comparison_to_gemma31b_singleshot_baseline`: principle "reports the cross-experiment gap explicitly WITH its methodology caveat, so a reader cannot mistake a round-0-invocation difference for evidence that refinement is actively harmful relative to not refining at all -- the within-loop delta is the metric that isolates the refinement mechanism's own effect."
+- `delta_heldout_by_game`: principle "identical schema and gate thresholds to REQ-ARC-WMTE-5760's `primary_result`, by design, so the two runs are directly comparable without re-deriving a matched methodology after the fact."
+
+#### SCENARIO-ARC-WMTE-5766-BIGGER-MODEL-DOES-NOT-MAKE-REFINEMENT-WORK
+- **WHEN** gemma-4-31B's own single-shot baseline (REQ-ARC-WMTE-5764) is substantially higher than ThinkingCap-27B's, and the SAME CEGIS mechanism is applied to gemma
+- **THEN** the artifact SHALL report the within-loop `delta_heldout` (not merely the cross-experiment gap to the single-shot baseline) as the primary test of whether refinement compounds the stronger starting point, and a result matching REQ-ARC-WMTE-5760's qualitative outcome (zero games improved) on a model with a 2x higher single-shot baseline SHALL be read as evidence that the refinement mechanism's ineffectiveness is not explained by insufficient model capacity.
+
+#### SCENARIO-ARC-WMTE-5766-PARALLEL-EXECUTION-GPU-ISOLATION
+- **WHEN** REQ-ARC-WMTE-5760 and REQ-ARC-WMTE-5766 run concurrently on separate GPUs
+- **THEN** each job's model-serving process SHALL be pinned to a single, exclusive GPU index for its ENTIRE run (including any later arm/model transition within the same job), verified via an explicit env-var override where the default GPU assignment would otherwise create a future collision, so neither job's GPU memory or compute contends with the other at any point in either run.
+
 ### REQ-ARC-FCP-5728: CNN-Blend-Weight Sweep, Matched-Budget A/B
 
 `arc_frame_change_predictor.LiveActionEffectScorer` combines two signals
