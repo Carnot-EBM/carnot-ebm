@@ -10,6 +10,8 @@ use carnot_samplers::one_axis_tempering::{
     CorrectedStepOutcome, OneAxisTemperingConfig, OneAxisTemperingCore, OneAxisTemperingState,
     SwapOutcome,
 };
+use ndarray::Array2;
+use numpy::PyArray2;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
@@ -332,6 +334,76 @@ impl PyOneAxisTemperingCore {
         d.set_item("samples_spin", samples_spin)?;
         d.set_item("decision_log", decision_log)?;
         d.set_item("final_state", state_to_checkpoint(py, &state)?)?;
+        Ok(d)
+    }
+
+    #[pyo3(signature = (states, labels, rng_state, sweep, burn_in_sweeps, n_samples))]
+    fn run_sweeps_compact<'py>(
+        &self,
+        py: Python<'py>,
+        states: Vec<Vec<i8>>,
+        labels: Vec<usize>,
+        rng_state: u64,
+        sweep: usize,
+        burn_in_sweeps: usize,
+        n_samples: usize,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        if n_samples == 0 {
+            return Err(PyValueError::new_err("n_samples must be positive"));
+        }
+        let n_spins = self.inner.config.n_spins();
+        let state =
+            OneAxisTemperingState::new(states, labels, rng_state, sweep).map_err(value_error)?;
+        let outcome = self
+            .inner
+            .run_compact_sweeps(&state, burn_in_sweeps, n_samples)
+            .map_err(value_error)?;
+        let samples = Array2::from_shape_vec((n_samples, n_spins), outcome.samples_spin)
+            .map_err(|err| PyValueError::new_err(format!("compact sample shape invalid: {err}")))?;
+
+        let counters = PyDict::new(py);
+        counters.set_item(
+            "rust_per_sample_heap_allocations",
+            outcome.counters.rust_per_sample_heap_allocations,
+        )?;
+        counters.set_item(
+            "workspace_allocations",
+            outcome.counters.workspace_allocations,
+        )?;
+        counters.set_item("output_allocations", outcome.counters.output_allocations)?;
+        counters.set_item(
+            "total_corrected_transitions",
+            outcome.counters.total_corrected_transitions,
+        )?;
+        counters.set_item("total_swap_attempts", outcome.counters.total_swap_attempts)?;
+
+        let buffer_reuse = PyDict::new(py);
+        buffer_reuse.set_item(
+            "contiguous_samples",
+            outcome.buffer_reuse.contiguous_samples,
+        )?;
+        buffer_reuse.set_item("workspace_reused", outcome.buffer_reuse.workspace_reused)?;
+        buffer_reuse.set_item(
+            "per_sample_heap_buffers",
+            outcome.buffer_reuse.per_sample_heap_buffers,
+        )?;
+
+        let worker_pool = PyDict::new(py);
+        worker_pool.set_item("fixed_worker_count", outcome.worker_pool.fixed_worker_count)?;
+        worker_pool.set_item(
+            "dynamic_per_sample_workers",
+            outcome.worker_pool.dynamic_per_sample_workers,
+        )?;
+
+        let d = PyDict::new(py);
+        d.set_item("samples_spin", PyArray2::from_owned_array(py, samples))?;
+        d.set_item(
+            "final_state",
+            state_to_checkpoint(py, &outcome.final_state)?,
+        )?;
+        d.set_item("allocation_counters", counters)?;
+        d.set_item("buffer_reuse_receipt", buffer_reuse)?;
+        d.set_item("worker_pool_receipt", worker_pool)?;
         Ok(d)
     }
 

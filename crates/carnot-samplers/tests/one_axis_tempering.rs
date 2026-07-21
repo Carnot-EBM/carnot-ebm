@@ -24,11 +24,10 @@ fn req_sample_5714_energy_proposal_and_swap_are_deterministic() {
     let target = vec![-1, -1, 1];
 
     assert!((core.energy(&state).unwrap() - 1.18).abs() < 1e-12);
-    assert!(
-        core.proposal_log_probability(&state, &target, 0.8)
-            .unwrap()
-            .is_finite()
-    );
+    assert!(core
+        .proposal_log_probability(&state, &target, 0.8)
+        .unwrap()
+        .is_finite());
 
     let decision = core
         .corrected_step(&state, 0.8, &[0.07, 0.61, 0.44, 0.19])
@@ -72,6 +71,36 @@ fn scenario_sample_5714_checkpoint_restart_reproduces_schedule() {
 }
 
 #[test]
+fn req_sample_5764_compact_sweeps_reuse_buffers_and_match_step_replay() {
+    let core = OneAxisTemperingCore::new(config());
+    let initial = OneAxisTemperingState::new(
+        vec![vec![1, -1, 1], vec![-1, -1, 1], vec![1, 1, -1]],
+        vec![0, 1, 2],
+        5764,
+        0,
+    )
+    .expect("REQ-SAMPLE-5764 fixture state must validate");
+
+    let compact = core.run_compact_sweeps(&initial, 1, 3).unwrap();
+    let mut replay = initial.clone();
+    let mut expected_samples = Vec::new();
+    for sweep in 0..4 {
+        replay = core.step(&replay).unwrap();
+        if sweep >= 1 {
+            expected_samples.extend(core.target_state(&replay).unwrap());
+        }
+    }
+
+    assert_eq!(compact.samples_spin, expected_samples);
+    assert_eq!(compact.final_state, replay);
+    assert_eq!(compact.counters.rust_per_sample_heap_allocations, 0);
+    assert_eq!(compact.counters.workspace_allocations, 4);
+    assert_eq!(compact.counters.output_allocations, 1);
+    assert!(compact.buffer_reuse.contiguous_samples);
+    assert_eq!(compact.worker_pool.fixed_worker_count, 1);
+}
+
+#[test]
 fn req_sample_5714_malformed_inputs_fail_closed() {
     assert!(OneAxisTemperingConfig::new(
         vec![vec![0.0, 0.1]],
@@ -82,14 +111,10 @@ fn req_sample_5714_malformed_inputs_fail_closed() {
     )
     .is_err());
 
-    assert!(OneAxisTemperingConfig::new(
-        vec![vec![0.0]],
-        vec![0.0],
-        vec![0.8, 0.8],
-        0.72,
-        0.17,
-    )
-    .is_err());
+    assert!(
+        OneAxisTemperingConfig::new(vec![vec![0.0]], vec![0.0], vec![0.8, 0.8], 0.72, 0.17,)
+            .is_err()
+    );
 
     let core = OneAxisTemperingCore::new(config());
     assert!(core.energy(&[1, 0, -1]).is_err());

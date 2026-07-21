@@ -1753,6 +1753,283 @@ ambiguous, contradictory, or stale
 |---|---|---|
 | REQ-SAMPLE-5758 | Planned (`scripts/experiment_5758_rust_parity_scalar_bridge.py`, `results/experiment_5758_rust_parity_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5758_rust_parity_scalar_bridge.py`) |
 
+### REQ-SAMPLE-5764: One-Axis Profiled Allocation-Free Hot Path
+
+Carnot MUST provide Exp5764 at
+`python/carnot/experiment_5764_one_axis_profiled_allocation_free_hot_path.py`
+and write
+`results/experiment_5764_one_axis_profiled_allocation_free_hot_path.json`
+without modifying `scripts/research_conductor.py`. Exp5764 SHALL profile the
+production-reachable one-axis Rust/PyO3 `SamplerBackend` batch path before any
+speed interpretation and SHALL optimize only the measured dominant
+end-to-end phase.
+
+Before profiling, Exp5764 SHALL verify local Rust, Python, and PyO3 toolchains,
+release-build capability, upstream artifact hashes, source hashes, CPU
+affinity, CPU governor observability or blocker, fixed thread counts, free RAM,
+free disk, absence of competing benchmark processes, and replay of Exp5751
+restart parity. If any provenance or host-stability gate fails, profiling SHALL
+stop and the artifact SHALL report `status="blocked"`.
+
+The profiling ledger SHALL freeze Python/Rust semantics, beta ladder, seeds,
+batch shapes, restart schedule, checkpoint schema, quality metrics, and the
+production `SamplerBackend` entrypoint. It SHALL measure serialization, Python
+preparation, PyO3 crossing, Rust batch allocation, worker scheduling,
+within/swap kernel work, validation, result conversion, checkpoint, and restart
+phases for warm steady-state and restart-containing batches at `n=48`, `n=96`,
+`n=192`, and one larger feasible size. The dominant phase SHALL be selected
+from preregistered median phase share with a confidence interval before
+optimization.
+
+The optimized path SHALL preserve the one-axis target distribution and SHALL
+NOT add a second sampler. When the measured dominant phase is result conversion
+or boundary allocation, the production backend MAY use a backward-compatible
+compact Rust/PyO3 path that reuses contiguous buffers, returns slice/view-based
+sample storage, avoids per-sample Rust heap allocation in the steady-state hot
+path, and records a fixed-worker receipt. Full diagnostic decision logs SHALL
+remain available for semantic, scheduler, RNG, checkpoint, restart, fallback,
+and corrupted-checkpoint tests.
+
+Allocation counters SHALL report before and after counts for Python and Rust
+hot-path allocation boundaries. Any remaining allocation SHALL be explicitly
+documented and SHALL not be hidden from `optimized_path_ready_score`. Exp5764
+SHALL rerun exact semantic, scheduler, RNG, checkpoint, restart, sample-count,
+fallback, production-entrypoint, corrupted-checkpoint, and distributional
+diagnostics across at least ten seeds per measured cell. Exp5764 MAY profile
+local CPU timing but SHALL NOT claim a 10x result:
+`timing_promotion_claimed=false`, `hardware_speedup_claimed=false`, and
+`two_axis_exchange_reopened=false`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `status`, `preconditions_checked`, `spec_refs`,
+`upstream_artifact_hashes`, `source_hashes_before`, `source_hashes_after`,
+`rust_toolchain`, `python_version`, `pyo3_version`, `host_receipts`,
+`release_build_receipt`, `affinity_receipt`, `phase_definitions`,
+`phase_timing_receipts`, `phase_share_by_size`, `dominant_phase`,
+`dominant_phase_selection_receipt`, `allocation_counts_before`,
+`allocation_counts_after`, `buffer_reuse_receipts`, `worker_pool_receipts`,
+`changed_files`, `checkpoint_compatibility`, `restart_parity_receipts`,
+`fallback_equivalence_receipts`, `semantic_parity_score`,
+`distributional_parity_score`, `production_backend_reachable_score`,
+`producer_gate_fields`, `optimized_path_ready_score`, `timing_promotion_claimed`,
+`hardware_speedup_claimed`, `two_axis_exchange_reopened`,
+`inference_substrate`, `random_seeds`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+`semantic_parity_score`, `distributional_parity_score`,
+`production_backend_reachable_score`, and `optimized_path_ready_score` SHALL be
+bare numeric `0.0` or `1.0` fields and SHALL also be listed by
+`producer_gate_fields`. `inference_substrate` SHALL equal
+`local_rust_pyo3_cpu_release_profile_and_parity`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every Exp5764 field exists before downstream allocation or timing work can consume the artifact."
+- `status`: principle "Bare terminal state lets gates distinguish complete from blocked without parsing prose."
+- `preconditions_checked`: principle "Records provenance, build, host-stability, resource, and Exp5751 replay gates before profiling starts."
+- `spec_refs`: principle "Binds the artifact to REQ-SAMPLE-5764 and SCENARIO-SAMPLE-5764."
+- `upstream_artifact_hashes`: principle "Pins Exp5751, Exp5758, and Exp5739 evidence so parity and prior timing context cannot drift."
+- `source_hashes_before`: principle "Hashes the source bytes that were profiled before the compact hot-path edit."
+- `source_hashes_after`: principle "Hashes the source bytes after optimization so reviewers can separate measured before/after code."
+- `rust_toolchain`: principle "Records rustc and cargo versions used for release PyO3 profiling."
+- `python_version`: principle "Records the CPython runtime used for SamplerBackend execution."
+- `pyo3_version`: principle "Records the binding dependency version relevant to PyO3 boundary allocation."
+- `host_receipts`: principle "Authenticates CPU, governor, memory, disk, thread, and competing-process observations."
+- `release_build_receipt`: principle "Shows the release PyO3 build command and exit code."
+- `affinity_receipt`: principle "Records fixed CPU placement used for profiling and parity replay."
+- `phase_definitions`: principle "Defines every measured phase before selecting a dominant phase."
+- `phase_timing_receipts`: principle "Preserves raw warm and restart-containing phase samples by size."
+- `phase_share_by_size`: principle "Shows median phase share and confidence interval for each measured size."
+- `dominant_phase`: principle "Names the preregistered dominant end-to-end phase selected from phase-share evidence."
+- `dominant_phase_selection_receipt`: principle "Explains why only the selected measured phase was optimized."
+- `allocation_counts_before`: principle "Reports pre-optimization allocation boundaries rather than inferring them from time."
+- `allocation_counts_after`: principle "Reports post-optimization allocation boundaries and any unavoidable remaining allocation."
+- `buffer_reuse_receipts`: principle "Proves the compact path uses contiguous reused work buffers instead of per-sample heap buffers."
+- `worker_pool_receipts`: principle "Documents fixed worker policy and that no dynamic per-sample worker scheduling is introduced."
+- `changed_files`: principle "Lists the exact spec, implementation, test, and artifact files changed."
+- `checkpoint_compatibility`: principle "Proves compact execution preserves the v1 checkpoint schema and restartable state."
+- `restart_parity_receipts`: principle "Proves optimized checkpoints resume with the same samples and suffix hashes."
+- `fallback_equivalence_receipts`: principle "Proves exact Python fallback remains equivalent for the profiled cells."
+- `semantic_parity_score`: principle "Bare scalar equals 1.0 only when semantic, scheduler, RNG, checkpoint, restart, fallback, and sample-count checks pass."
+- `distributional_parity_score`: principle "Bare scalar equals 1.0 only when matched distribution diagnostics pass across the required seeds and cells."
+- `production_backend_reachable_score`: principle "Bare scalar equals 1.0 only when the existing explicit one_axis_rust production entrypoint reaches the optimized path."
+- `producer_gate_fields`: principle "Lists the bare scalar downstream gates without wrapping their values in objects."
+- `optimized_path_ready_score`: principle "Bare scalar equals 1.0 only when profiling, allocation, buffer reuse, parity, and no-speed gates all pass."
+- `timing_promotion_claimed`: principle "Bare false prevents profiling from becoming a speed promotion."
+- `hardware_speedup_claimed`: principle "Bare false prevents local CPU profiling from becoming an accelerator or board claim."
+- `two_axis_exchange_reopened`: principle "Bare false keeps retired two-axis exchange out of scope."
+- `inference_substrate`: principle "Declares local Rust/PyO3 CPU release profiling and parity, not LLM inference or accelerator timing."
+- `random_seeds`: principle "Records replay seeds for profiling, restart, fallback, and distributional diagnostics."
+- `test_commands`: principle "Lists the commands used to verify the implementation and artifact."
+- `test_exit_codes`: principle "Records verification command outcomes honestly."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether the profiled allocation-free hot path is ready."
+
+### SCENARIO-SAMPLE-5764: Exp5764 Emits Profiled Allocation-Free Hot-Path Evidence
+
+**Given** Exp5751 restart parity and Exp5758 scalar parity gates are
+hash-pinned
+**When** Exp5764 profiles the production one-axis batch path at `n=48`,
+`n=96`, `n=192`, and one larger feasible size
+**Then** it records a campaign-style phase ledger, selects the dominant phase
+from median phase share with confidence intervals, optimizes only that phase,
+proves compact-path parity and checkpoint compatibility, emits bare producer
+gate scores, and writes
+`results/experiment_5764_one_axis_profiled_allocation_free_hot_path.json`
+with `timing_promotion_claimed=false`,
+`hardware_speedup_claimed=false`, and `two_axis_exchange_reopened=false`.
+
+**If** provenance, release build, host stability, Exp5751 replay, phase
+selection, allocation counts, buffer reuse, fallback equivalence, production
+reachability, checkpoint compatibility, or distributional parity fails
+**Then** the artifact SHALL still emit all required fields with
+`optimized_path_ready_score=0.0` and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5764)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5764 | Implemented (`python/carnot/samplers/one_axis_rust_backend.py`, `crates/carnot-python/src/one_axis_tempering.rs`, `crates/carnot-samplers/src/one_axis_tempering.rs`, `python/carnot/experiment_5764_one_axis_profiled_allocation_free_hot_path.py`, `results/experiment_5764_one_axis_profiled_allocation_free_hot_path.json`) | Implemented (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5764_one_axis_profiled_allocation_free_hot_path.py`, `crates/carnot-samplers/tests/one_axis_tempering.rs`) |
+
+### REQ-SAMPLE-5765: One-Axis Final Matched-Quality 10x Crossover
+
+Carnot MUST provide Exp5765 at
+`python/carnot/experiment_5765_one_axis_final_10x_crossover.py` and write
+`results/experiment_5765_one_axis_final_10x_crossover.json` without modifying
+`scripts/research_conductor.py`. Exp5765 is the final preregistered attempt to
+qualify the PRD NFR-01 10x software claim for the Exp5764 profiled
+allocation-reduced production one-axis Rust/PyO3 technique after the Exp5751
+restart repair. A repeated null SHALL retire this allocation-free one-axis
+PyO3 technique only; it SHALL NOT retire all future Rust work, hardware work,
+or reopen two-axis exchange.
+
+Before timing, Exp5765 SHALL verify optimized source hashes, release binary
+hashes, Rust/Python/PyO3 versions, upstream Exp5751/Exp5739/Exp5764 hashes,
+CPU affinity, governor observability or blocker, fixed thread counts, absence
+of competing benchmark load, minimum free RAM and disk, stable warmup,
+restart/checkpoint fixtures, and baseline manifests. If the host or evidence
+chain is unstable, Exp5765 SHALL bail before timed science rows and emit a
+`status="blocked"` artifact.
+
+The benchmark manifest SHALL be frozen before timed rows are collected. It
+SHALL include `n=48`, `n=96`, `n=192`, and one larger feasible size, one
+production Rust/PyO3 release arm, one exact Python fallback arm, identical
+Hamiltonians, batch counts, seeds, warmup budget, retained-sample budget,
+restart schedule, checkpoint schema, quality tolerances, outlier policy,
+paired bootstrap method, and the final consecutive larger-size 10x rule. Each
+cell SHALL collect at least thirty paired measured batches after warmup,
+interleave arm order, pin or record CPU affinity, and preserve raw per-batch
+end-to-end timing and phase receipts.
+
+For every pair, Exp5765 SHALL require semantic parity, restart/checkpoint
+parity, exact fallback equivalence, matched energy, feasibility, acceptance,
+retained-sample count, effective sample size or bounded proxy,
+autocorrelation or bounded proxy, and distributional diagnostics before the
+pair can enter speed summaries. Exclusions SHALL be allowed only for
+preregistered reasons and every exclusion SHALL be reported. Speedups SHALL be
+paired Python/Rust end-to-end ratios. Exp5765 SHALL compute bootstrap 95%
+confidence intervals by size and for an end-to-end aggregate, without mixing
+setup-only, kernel-only, simulated, debug, or unmatched rows into the NFR-01
+headline.
+
+Bare `rust_10x_claimed` SHALL be true only when all matched-quality and parity
+gates pass and the paired lower confidence bound is at least `10.0` at two
+consecutive larger sizes. Otherwise `rust_10x_claimed=false`,
+`rust_10x_retired=true`, the honest measured speedup SHALL be preserved, and
+`remaining_bottleneck` SHALL name the bottleneck that prevented the 10x claim.
+`hardware_speedup_claimed=false`, `two_axis_exchange_reopened=false`, and
+`inference_substrate` SHALL equal
+`local_rust_pyo3_cpu_release_matched_benchmark`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `status`, `preconditions_checked`, `spec_refs`,
+`upstream_artifact_hashes`, `source_hashes`, `release_binary_hashes`,
+`host_receipts`, `affinity_receipt`, `benchmark_manifest`,
+`benchmark_manifest_hash`, `cell_sizes`, `paired_batches_per_cell`,
+`raw_timing_receipts`, `warmup_receipts`, `quality_metrics_by_cell`,
+`semantic_parity_by_cell`, `restart_parity_by_cell`,
+`distributional_parity_by_cell`, `fallback_equivalence`,
+`production_backend_reachable`, `exclusion_manifest`,
+`speedup_median_by_size`, `speedup_lcb_by_size`, `speedup_ucb_by_size`,
+`consecutive_larger_size_rule_passed`, `matched_quality_gate_passed`,
+`rust_10x_claimed`, `rust_10x_retired`, `remaining_bottleneck`,
+`nfr01_status`, `hardware_speedup_claimed`, `two_axis_exchange_reopened`,
+`inference_substrate`, `random_seeds`, `duration_s`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every Exp5765 field exists before a reviewer trusts the final NFR-01 claim or retirement."
+- `status`: principle "Bare terminal state lets gates distinguish complete from blocked without parsing prose."
+- `preconditions_checked`: principle "Records provenance, release-build, host-stability, warmup, restart, and manifest gates before timing starts."
+- `spec_refs`: principle "Binds the artifact to REQ-SAMPLE-5765 and SCENARIO-SAMPLE-5765."
+- `upstream_artifact_hashes`: principle "Pins Exp5751, Exp5739, and Exp5764 so final timing cannot drift from repaired and optimized provenance."
+- `source_hashes`: principle "Hashes optimized source bytes used by the final release benchmark."
+- `release_binary_hashes`: principle "Hashes the local release extension artifacts used by the Rust/PyO3 path."
+- `host_receipts`: principle "Authenticates CPU, governor, thread, memory, disk, and competing-load observations."
+- `affinity_receipt`: principle "Records fixed CPU placement used for warmup and paired timing."
+- `benchmark_manifest`: principle "Freezes sizes, batches, seeds, budgets, paths, tolerances, outlier policy, bootstrap method, and claim rule before timing."
+- `benchmark_manifest_hash`: principle "Content-addresses the preregistered manifest independently of timing results."
+- `cell_sizes`: principle "Makes the 48/96/192 plus larger feasible final panel explicit."
+- `paired_batches_per_cell`: principle "Proves each qualified size has at least thirty paired measured batches after warmup."
+- `raw_timing_receipts`: principle "Preserves raw interleaved per-batch end-to-end timing and phase receipts before summaries."
+- `warmup_receipts`: principle "Shows warmup stability before science rows enter the benchmark."
+- `quality_metrics_by_cell`: principle "Reports energy, feasibility, acceptance, retained count, ESS, and autocorrelation diagnostics before speed claims."
+- `semantic_parity_by_cell`: principle "Proves exact semantic parity where exactness applies."
+- `restart_parity_by_cell`: principle "Proves checkpoint and restart parity remained repaired during timing."
+- `distributional_parity_by_cell`: principle "Reports distributional diagnostics so speed cannot hide wrong samples."
+- `fallback_equivalence`: principle "Proves the Python exact fallback and Rust production path remain matched."
+- `production_backend_reachable`: principle "Proves the explicit one_axis_rust SamplerBackend reached the optimized release path."
+- `exclusion_manifest`: principle "Reports every excluded pair with a preregistered reason instead of silently filtering timing."
+- `speedup_median_by_size`: principle "Preserves honest measured paired speedup medians by size."
+- `speedup_lcb_by_size`: principle "Applies the paired bootstrap lower bound used by the 10x claim rule."
+- `speedup_ucb_by_size`: principle "Preserves the paired bootstrap upper bound for uncertainty review."
+- `consecutive_larger_size_rule_passed`: principle "Bare gate proves two consecutive larger sizes have lower confidence bound >=10.0."
+- `matched_quality_gate_passed`: principle "Bare gate proves all parity and quality checks passed before any NFR-01 claim."
+- `rust_10x_claimed`: principle "Bare true is allowed only under the final consecutive larger-size confidence rule."
+- `rust_10x_retired`: principle "Bare true retires only this allocation-free one-axis PyO3 technique after a repeated null."
+- `remaining_bottleneck`: principle "Names the measured bottleneck left after allocation reduction when the 10x rule fails."
+- `nfr01_status`: principle "States whether PRD NFR-01 is qualified, retired for this technique, or blocked."
+- `hardware_speedup_claimed`: principle "Bare false prevents local CPU software timing from becoming a hardware claim."
+- `two_axis_exchange_reopened`: principle "Bare false keeps retired two-axis exchange out of scope."
+- `inference_substrate`: principle "Declares local Rust/PyO3 CPU release matched benchmarking, not LLM, GPU, FPGA, or TSU inference."
+- `random_seeds`: principle "Records the paired seed schedule for replay."
+- `duration_s`: principle "Records real wall-clock artifact construction time for fabrication review."
+- `test_commands`: principle "Lists the verification commands run for the final benchmark."
+- `test_exit_codes`: principle "Records command outcomes honestly."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether NFR-01 was claimed, retired for this technique, or blocked."
+
+### SCENARIO-SAMPLE-5765: Exp5765 Emits Final 10x Claim Or Technique Retirement
+
+**Given** Exp5751 restart parity repair, Exp5739 terminal 10x null context, and
+Exp5764 profiled allocation-reduced production path are hash-pinned
+**When** Exp5765 runs the preregistered matched-quality release benchmark at
+`n=48`, `n=96`, `n=192`, and one larger feasible size with at least thirty
+paired batches per cell
+**Then** it records preconditions, raw timing, warmup, quality, semantic,
+restart/checkpoint, fallback, distributional, exclusion, paired speedup, and
+bootstrap confidence evidence and writes
+`results/experiment_5765_one_axis_final_10x_crossover.json`
+**And** `rust_10x_claimed=true` only when the paired lower confidence bound is
+at least `10.0` at two consecutive larger sizes and all quality/parity gates
+pass.
+
+**If** any precondition blocks, fewer than thirty paired measured batches exist
+in a qualified cell, matched-quality gates fail, the consecutive larger-size
+10x confidence rule fails, or any hardware/two-axis acceleration claim appears
+**Then** the artifact SHALL still emit all required fields with
+`rust_10x_claimed=false`, `hardware_speedup_claimed=false`,
+`two_axis_exchange_reopened=false`, and an `honest_verdict` starting with
+`complete:` or `blocked:`; a repeated timing null SHALL set
+`rust_10x_retired=true` only for this allocation-free one-axis PyO3 technique.
+
+## Implementation Status (REQ-SAMPLE-5765)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5765 | Planned (`python/carnot/experiment_5765_one_axis_final_10x_crossover.py`, `results/experiment_5765_one_axis_final_10x_crossover.json`) | Planned (`tests/python/test_experiment_5765_one_axis_final_10x_crossover.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`

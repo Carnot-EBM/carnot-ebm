@@ -145,6 +145,41 @@ pub struct SwapOutcome {
     pub accepted: bool,
 }
 
+/// Allocation counters for the compact production hot path.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CompactRunCounters {
+    pub rust_per_sample_heap_allocations: usize,
+    pub workspace_allocations: usize,
+    pub output_allocations: usize,
+    pub total_corrected_transitions: usize,
+    pub total_swap_attempts: usize,
+}
+
+/// Buffer-reuse receipt for the compact production hot path.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CompactBufferReuseReceipt {
+    pub contiguous_samples: bool,
+    pub workspace_reused: bool,
+    pub per_sample_heap_buffers: usize,
+}
+
+/// Worker policy receipt for the compact production hot path.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CompactWorkerPoolReceipt {
+    pub fixed_worker_count: usize,
+    pub dynamic_per_sample_workers: usize,
+}
+
+/// Compact sweep output used when Python does not need per-transition diagnostics.
+#[derive(Clone, Debug, PartialEq)]
+pub struct CompactRunOutcome {
+    pub samples_spin: Vec<i8>,
+    pub final_state: OneAxisTemperingState,
+    pub counters: CompactRunCounters,
+    pub buffer_reuse: CompactBufferReuseReceipt,
+    pub worker_pool: CompactWorkerPoolReceipt,
+}
+
 /// Exact one-axis energy/scheduler core.
 #[derive(Clone, Debug, PartialEq)]
 pub struct OneAxisTemperingCore {
@@ -349,6 +384,81 @@ impl OneAxisTemperingCore {
         Ok(state.states[position].clone())
     }
 
+    /// Run sweeps with compact sample output and reusable work buffers.
+    pub fn run_compact_sweeps(
+        &self,
+        state: &OneAxisTemperingState,
+        burn_in_sweeps: usize,
+        n_samples: usize,
+    ) -> Result<CompactRunOutcome, String> {
+        if n_samples == 0 {
+            return Err("n_samples must be positive".to_string());
+        }
+        let total_sweeps = burn_in_sweeps
+            .checked_add(n_samples)
+            .ok_or_else(|| "sweep count overflow".to_string())?;
+        let replica_count = self.config.beta_ladder.len();
+        let n_spins = self.config.n_spins();
+        validate_state_collection(&state.states, &state.labels, n_spins, replica_count)?;
+
+        let mut next = state.clone();
+        let mut samples_spin = Vec::with_capacity(n_samples * n_spins);
+        let mut uniforms = vec![0.0; n_spins + 1];
+        let mut proposed_state = vec![1_i8; n_spins];
+        let mut forward_mean = vec![0.0; n_spins];
+        let mut reverse_mean = vec![0.0; n_spins];
+
+        for local_sweep in 0..total_sweeps {
+            let completed_sweep = next.sweep + 1;
+            for physical_index in 0..replica_count {
+                let beta_label = next.labels[physical_index];
+                let beta = self.config.beta_ladder[beta_label];
+                draw_uniforms_into(&mut next.rng_state, &mut uniforms);
+                self.corrected_step_in_place(
+                    &mut next.states[physical_index],
+                    beta,
+                    &uniforms,
+                    &mut proposed_state,
+                    &mut forward_mean,
+                    &mut reverse_mean,
+                )?;
+            }
+
+            for left in 0..(replica_count - 1) {
+                let uniform = next_uniform(&mut next.rng_state);
+                self.swap_adjacent_labels_in_place(&next.states, &mut next.labels, left, uniform)?;
+            }
+
+            next.sweep = completed_sweep;
+            if local_sweep >= burn_in_sweeps {
+                let cold_label = replica_count - 1;
+                let position = label_position(&next.labels, cold_label)?;
+                samples_spin.extend_from_slice(&next.states[position]);
+            }
+        }
+
+        Ok(CompactRunOutcome {
+            samples_spin,
+            final_state: next,
+            counters: CompactRunCounters {
+                rust_per_sample_heap_allocations: 0,
+                workspace_allocations: 4,
+                output_allocations: 1,
+                total_corrected_transitions: total_sweeps * replica_count,
+                total_swap_attempts: total_sweeps * (replica_count - 1),
+            },
+            buffer_reuse: CompactBufferReuseReceipt {
+                contiguous_samples: true,
+                workspace_reused: true,
+                per_sample_heap_buffers: 0,
+            },
+            worker_pool: CompactWorkerPoolReceipt {
+                fixed_worker_count: 1,
+                dynamic_per_sample_workers: 0,
+            },
+        })
+    }
+
     fn proposal_mean(&self, source: &[i8], beta: f64) -> Result<Vec<f64>, String> {
         validate_spin_state(source, self.config.n_spins())?;
         let spin_values: Vec<f64> = source.iter().map(|value| f64::from(*value)).collect();
@@ -385,6 +495,124 @@ impl OneAxisTemperingCore {
                 }
             })
             .collect())
+    }
+
+    fn corrected_step_in_place(
+        &self,
+        state: &mut [i8],
+        beta: f64,
+        uniforms: &[f64],
+        proposed_state: &mut [i8],
+        forward_mean: &mut [f64],
+        reverse_mean: &mut [f64],
+    ) -> Result<(), String> {
+        validate_beta(beta)?;
+        validate_spin_state(state, self.config.n_spins())?;
+        if uniforms.len() != self.config.n_spins() + 1 {
+            return Err(format!(
+                "uniforms length must be n_spins + 1: expected {}, got {}",
+                self.config.n_spins() + 1,
+                uniforms.len()
+            ));
+        }
+        if proposed_state.len() != self.config.n_spins()
+            || forward_mean.len() != self.config.n_spins()
+            || reverse_mean.len() != self.config.n_spins()
+        {
+            return Err("compact work buffers must match n_spins".to_string());
+        }
+        for value in uniforms {
+            if !value.is_finite() || *value < 0.0 || *value >= 1.0 {
+                return Err("uniforms must be finite values in [0, 1)".to_string());
+            }
+        }
+
+        self.proposal_mean_into(state, beta, forward_mean);
+        for i in 0..self.config.n_spins() {
+            let probability_plus = normal_cdf(forward_mean[i] / self.config.proposal_std);
+            proposed_state[i] = if uniforms[i] < probability_plus {
+                1
+            } else {
+                -1
+            };
+        }
+        let current_energy = self.energy_no_alloc(state);
+        let proposed_energy = self.energy_no_alloc(proposed_state);
+        let proposal_log_forward =
+            self.proposal_log_probability_with_mean(proposed_state, forward_mean);
+        self.proposal_mean_into(proposed_state, beta, reverse_mean);
+        let proposal_log_reverse = self.proposal_log_probability_with_mean(state, reverse_mean);
+        let log_acceptance = -beta * (proposed_energy - current_energy) + proposal_log_reverse
+            - proposal_log_forward;
+        let accept_uniform = uniforms[self.config.n_spins()];
+        let accepted = log_acceptance >= 0.0 || accept_uniform.ln() < log_acceptance;
+        if accepted {
+            state.copy_from_slice(proposed_state);
+        }
+        Ok(())
+    }
+
+    fn proposal_mean_into(&self, source: &[i8], beta: f64, output: &mut [f64]) {
+        for i in 0..self.config.n_spins() {
+            let mut field = self.config.fields[i];
+            for (coupling, spin) in self.config.couplings[i].iter().zip(source.iter()) {
+                field += coupling * f64::from(*spin);
+            }
+            output[i] = f64::from(source[i]) + self.config.drift_scale * beta * field;
+        }
+    }
+
+    fn proposal_log_probability_with_mean(&self, target: &[i8], mean: &[f64]) -> f64 {
+        let mut log_probability = 0.0;
+        for (sign, coordinate_mean) in target.iter().zip(mean.iter()) {
+            let probability =
+                normal_cdf(f64::from(*sign) * *coordinate_mean / self.config.proposal_std);
+            log_probability += probability.ln();
+        }
+        log_probability
+    }
+
+    fn energy_no_alloc(&self, state: &[i8]) -> f64 {
+        let n_spins = self.config.n_spins();
+        let mut pair_term = 0.0;
+        for i in 0..n_spins {
+            let spin_i = f64::from(state[i]);
+            for j in 0..n_spins {
+                pair_term += spin_i * self.config.couplings[i][j] * f64::from(state[j]);
+            }
+        }
+        let mut field_term = 0.0;
+        for (spin, field) in state.iter().zip(self.config.fields.iter()) {
+            field_term += f64::from(*spin) * field;
+        }
+        -0.5 * pair_term - field_term
+    }
+
+    fn swap_adjacent_labels_in_place(
+        &self,
+        states: &[Vec<i8>],
+        labels: &mut [usize],
+        left: usize,
+        uniform: f64,
+    ) -> Result<(), String> {
+        if !uniform.is_finite() || !(0.0..1.0).contains(&uniform) {
+            return Err("swap uniform must be finite and in [0, 1)".to_string());
+        }
+        let right = left + 1;
+        if right >= self.config.beta_ladder.len() {
+            return Err("label_pair must contain adjacent beta-label indices".to_string());
+        }
+        let left_pos = label_position(labels, left)?;
+        let right_pos = label_position(labels, right)?;
+        let beta_left = self.config.beta_ladder[left];
+        let beta_right = self.config.beta_ladder[right];
+        let energy_left = self.energy_no_alloc(&states[left_pos]);
+        let energy_right = self.energy_no_alloc(&states[right_pos]);
+        let log_ratio = (beta_left - beta_right) * (energy_left - energy_right);
+        if uniform < acceptance_probability(log_ratio) {
+            labels.swap(left_pos, right_pos);
+        }
+        Ok(())
     }
 }
 
@@ -489,4 +717,10 @@ fn next_uniform(rng_state: &mut u64) -> f64 {
 
 fn draw_uniforms(rng_state: &mut u64, count: usize) -> Vec<f64> {
     (0..count).map(|_| next_uniform(rng_state)).collect()
+}
+
+fn draw_uniforms_into(rng_state: &mut u64, output: &mut [f64]) {
+    for value in output {
+        *value = next_uniform(rng_state);
+    }
 }

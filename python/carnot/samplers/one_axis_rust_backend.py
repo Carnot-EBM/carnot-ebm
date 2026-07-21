@@ -14,7 +14,7 @@
     stop at the boundary instead of changing algorithms silently.
 
 Spec: REQ-SAMPLE-5723, SCENARIO-SAMPLE-5723, REQ-SAMPLE-5738,
-SCENARIO-SAMPLE-5738
+SCENARIO-SAMPLE-5738, REQ-SAMPLE-5764, SCENARIO-SAMPLE-5764
 """
 
 from __future__ import annotations
@@ -44,6 +44,7 @@ ACTIVE_PYTHON_FALLBACK = "python_exact_fallback"
 DEFAULT_ONE_AXIS_BACKEND_SEED = 5723
 ONE_AXIS_BACKEND_SPEC_REFS = ["REQ-SAMPLE-5723", "SCENARIO-SAMPLE-5723"]
 BATCH_BACKEND_SPEC_REFS = ["REQ-SAMPLE-5738", "SCENARIO-SAMPLE-5738"]
+OPTIMIZED_BACKEND_SPEC_REFS = ["REQ-SAMPLE-5764", "SCENARIO-SAMPLE-5764"]
 
 
 def canonical_json(value: Any) -> str:
@@ -112,6 +113,7 @@ class _NormalizedDescriptor:
     initial_state: exp5714.OneAxisState
     force_python_fallback: bool
     checkpoint: Mapping[str, Any] | None
+    return_decision_log: bool = True
 
     @property
     def descriptor_hash(self) -> str:
@@ -229,6 +231,11 @@ class OneAxisRustBackend:
             "ordered_workload_ids": ordered_ids,
             "active_backends": active_backends,
             "result_order_deterministic": True,
+            "optimized_path_item_count": sum(
+                1
+                for row in results
+                if row["receipt"].get("optimized_hot_path", {}).get("used") is True
+            ),
             "empty_batch": len(workloads) == 0,
             "spec_refs": list(BATCH_BACKEND_SPEC_REFS),
         }
@@ -290,12 +297,23 @@ class OneAxisRustBackend:
             start_sweep=initial.sweep,
             final_state=run["final_state"],
         )
+        receipt["optimized_hot_path"] = run.get(
+            "optimized_hot_path",
+            {
+                "used": False,
+                "decision_log_materialized": True,
+                "spec_refs": list(OPTIMIZED_BACKEND_SPEC_REFS),
+            },
+        )
         result = {
             "samples": np.asarray(run["samples_bool"], dtype=np.bool_),
             "samples_spin": run["samples_spin"],
             "decision_log": run["decision_log"],
             "receipt": receipt,
             "checkpoint": checkpoint,
+            "allocation_counters": run.get("allocation_counters", {}),
+            "buffer_reuse_receipt": run.get("buffer_reuse_receipt", {}),
+            "worker_pool_receipt": run.get("worker_pool_receipt", {}),
         }
         self.last_receipt = receipt
         self.last_checkpoint = checkpoint
@@ -476,6 +494,14 @@ class OneAxisRustBackend:
         descriptor: _NormalizedDescriptor,
     ) -> JsonDict:
         bulk_runner = getattr(core, "run_sweeps", None)
+        compact_runner = getattr(core, "run_sweeps_compact", None)
+        if not descriptor.return_decision_log and callable(compact_runner):
+            return self._advance_rust_compact(
+                compact_runner=compact_runner,
+                state=state,
+                n_samples=n_samples,
+                descriptor=descriptor,
+            )
         if callable(bulk_runner):
             return self._advance_rust_bulk(
                 bulk_runner=bulk_runner,
@@ -523,25 +549,26 @@ class OneAxisRustBackend:
                 outcome = dict(core.corrected_step(before, beta, uniforms))
                 after = [int(value) for value in outcome["state"]]
                 states[physical_index] = np.array(after, dtype=np.int8)
-                sweep_events.append(
-                    {
-                        "kind": "within",
-                        "sweep": completed_sweep,
-                        "physical_index": physical_index,
-                        "beta_label": beta_label,
-                        "beta": _stable_float(beta),
-                        "uniforms": [_stable_float(value) for value in uniforms],
-                        "state_before": before,
-                        "state_after": after,
-                        "proposed_state": [int(value) for value in outcome["proposed_state"]],
-                        "current_energy": _stable_float(outcome["current_energy"]),
-                        "proposed_energy": _stable_float(outcome["proposed_energy"]),
-                        "proposal_log_forward": _stable_float(outcome["proposal_log_forward"]),
-                        "proposal_log_reverse": _stable_float(outcome["proposal_log_reverse"]),
-                        "log_acceptance": _stable_float(outcome["log_acceptance"]),
-                        "accepted": bool(outcome["accepted"]),
-                    }
-                )
+                if descriptor.return_decision_log:
+                    sweep_events.append(
+                        {
+                            "kind": "within",
+                            "sweep": completed_sweep,
+                            "physical_index": physical_index,
+                            "beta_label": beta_label,
+                            "beta": _stable_float(beta),
+                            "uniforms": [_stable_float(value) for value in uniforms],
+                            "state_before": before,
+                            "state_after": after,
+                            "proposed_state": [int(value) for value in outcome["proposed_state"]],
+                            "current_energy": _stable_float(outcome["current_energy"]),
+                            "proposed_energy": _stable_float(outcome["proposed_energy"]),
+                            "proposal_log_forward": _stable_float(outcome["proposal_log_forward"]),
+                            "proposal_log_reverse": _stable_float(outcome["proposal_log_reverse"]),
+                            "log_acceptance": _stable_float(outcome["log_acceptance"]),
+                            "accepted": bool(outcome["accepted"]),
+                        }
+                    )
             for left in range(len(descriptor.beta_ladder) - 1):
                 before_labels = list(labels)
                 rng_state, uniform = exp5714._next_uniform(rng_state)  # noqa: SLF001
@@ -554,22 +581,26 @@ class OneAxisRustBackend:
                     )
                 )
                 labels = [int(label) for label in outcome["labels"]]
-                sweep_events.append(
-                    {
-                        "kind": "swap",
-                        "sweep": completed_sweep,
-                        "label_pair": [left, left + 1],
-                        "uniform": _stable_float(uniform),
-                        "labels_before": before_labels,
-                        "labels_after": list(labels),
-                        "proposed_labels": [int(label) for label in outcome["proposed_labels"]],
-                        "log_ratio": _stable_float(outcome["log_ratio"]),
-                        "acceptance_probability": _stable_float(outcome["acceptance_probability"]),
-                        "accepted": bool(outcome["accepted"]),
-                    }
-                )
+                if descriptor.return_decision_log:
+                    sweep_events.append(
+                        {
+                            "kind": "swap",
+                            "sweep": completed_sweep,
+                            "label_pair": [left, left + 1],
+                            "uniform": _stable_float(uniform),
+                            "labels_before": before_labels,
+                            "labels_after": list(labels),
+                            "proposed_labels": [int(label) for label in outcome["proposed_labels"]],
+                            "log_ratio": _stable_float(outcome["log_ratio"]),
+                            "acceptance_probability": _stable_float(
+                                outcome["acceptance_probability"]
+                            ),
+                            "accepted": bool(outcome["accepted"]),
+                        }
+                    )
             sweep = completed_sweep
-            decision_log.extend(sweep_events)
+            if descriptor.return_decision_log:
+                decision_log.extend(sweep_events)
             if local_sweep >= descriptor.burn_in_sweeps:
                 cold_position = labels.index(exp5714.COLD_LABEL)
                 sample = states[cold_position].astype(int).tolist()
@@ -587,6 +618,27 @@ class OneAxisRustBackend:
             "samples_bool": samples_bool,
             "decision_log": decision_log,
             "final_state": final_state,
+            "allocation_counters": {
+                "rust_per_sample_heap_allocations": None,
+                "python_per_sample_heap_allocations": 0
+                if not descriptor.return_decision_log
+                else "diagnostic_event_dicts_materialized",
+                "documented_unavoidable_boundaries": ["python_reference_lists"],
+            },
+            "buffer_reuse_receipt": {
+                "contiguous_samples": False,
+                "workspace_reused": False,
+                "per_sample_heap_buffers": "python_reference_path",
+            },
+            "worker_pool_receipt": {
+                "fixed_worker_count": 1,
+                "dynamic_per_sample_workers": 0,
+            },
+            "optimized_hot_path": {
+                "used": False,
+                "decision_log_materialized": descriptor.return_decision_log,
+                "spec_refs": list(OPTIMIZED_BACKEND_SPEC_REFS),
+            },
         }
 
     def _advance_rust_bulk(
@@ -620,6 +672,76 @@ class OneAxisRustBackend:
             "samples_bool": [[value == 1 for value in sample] for sample in samples_spin],
             "decision_log": decision_log,
             "final_state": final_state,
+            "allocation_counters": {
+                "rust_per_sample_heap_allocations": "diagnostic_event_dicts_materialized",
+                "python_per_sample_heap_allocations": "diagnostic_normalization",
+                "documented_unavoidable_boundaries": ["full_decision_log"],
+            },
+            "buffer_reuse_receipt": {
+                "contiguous_samples": False,
+                "workspace_reused": False,
+                "per_sample_heap_buffers": "diagnostic_mode",
+            },
+            "worker_pool_receipt": {
+                "fixed_worker_count": 1,
+                "dynamic_per_sample_workers": 0,
+            },
+            "optimized_hot_path": {
+                "used": False,
+                "decision_log_materialized": True,
+                "spec_refs": list(OPTIMIZED_BACKEND_SPEC_REFS),
+            },
+        }
+
+    def _advance_rust_compact(
+        self,
+        *,
+        compact_runner: Callable[..., Mapping[str, Any]],
+        state: exp5714.OneAxisState,
+        n_samples: int,
+        descriptor: _NormalizedDescriptor,
+    ) -> JsonDict:
+        if n_samples <= 0:
+            raise ValueError("n_samples must be positive")
+        try:
+            raw = compact_runner(
+                state.states.astype(int).tolist(),
+                list(state.labels),
+                int(state.rng_state),
+                int(state.sweep),
+                int(descriptor.burn_in_sweeps),
+                int(n_samples),
+            )
+        except ValueError:
+            raise
+        except Exception as exc:  # noqa: BLE001 - fail closed at the compact boundary.
+            raise ValueError(
+                f"compact rust one-axis run failed: {type(exc).__name__}:{exc}"
+            ) from exc
+        samples_spin = np.asarray(raw["samples_spin"], dtype=np.int8)
+        final_state = exp5714.OneAxisState.from_checkpoint(raw["final_state"])
+        allocation_counters = {
+            **dict(raw.get("allocation_counters", {})),
+            "python_per_sample_heap_allocations": 0,
+            "documented_unavoidable_boundaries": [
+                "numpy_samples_array",
+                "checkpoint_dict",
+            ],
+        }
+        return {
+            "samples_spin": samples_spin,
+            "samples_bool": samples_spin == 1,
+            "decision_log": [],
+            "final_state": final_state,
+            "allocation_counters": allocation_counters,
+            "buffer_reuse_receipt": dict(raw.get("buffer_reuse_receipt", {})),
+            "worker_pool_receipt": dict(raw.get("worker_pool_receipt", {})),
+            "optimized_hot_path": {
+                "used": True,
+                "decision_log_materialized": False,
+                "rust_compact_symbol": "run_sweeps_compact",
+                "spec_refs": list(OPTIMIZED_BACKEND_SPEC_REFS),
+            },
         }
 
     def _make_checkpoint(
@@ -753,6 +875,7 @@ class OneAxisRustBackend:
             initial_state=initial_state,
             force_python_fallback=bool(descriptor.get("force_python_fallback", False)),
             checkpoint=checkpoint if isinstance(checkpoint, Mapping) else None,
+            return_decision_log=bool(descriptor.get("return_decision_log", True)),
         )
 
     @staticmethod

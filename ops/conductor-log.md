@@ -13859,3 +13859,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-21 13:26 UTC | Build an exact MPMMine-shaped benchmark for typed  | OK | 88 passed, 1 warning in 67.31s (0:01:07) |
 | 2026-07-21 13:49 UTC | Gated on Exp5761 exact corpus: learn typed constra | OK | 89 passed, 1 warning in 13.51s |
 | 2026-07-21 14:06 UTC | Gated on Exp5762 recovery>0: scale constraint acqu | OK | 89 passed, 1 warning in 12.44s |
+| 2026-07-21 14:31 UTC | Gated on Exp5758 scalar parity: profile and optimi | OK | Deliverable already exists in repo |
