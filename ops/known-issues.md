@@ -4,6 +4,45 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 2): offline/live ACTION6 bounds gap closed in `arc_solver_kit.reproduce()`
+
+**What was found:** the OFFLINE arcade (`arc_agi`'s `LocalEnvironmentWrapper.step()`) never
+validates ACTION6 click coordinates, even though the installed `arcengine` dependency already
+declares the live API's own `[0,63]x[0,63]` bound (`ComplexAction.x`/`.y`:
+`Field(ge=0, le=63)`) — that validation is wired only into the live HTTP handler
+(`RestAPI.cmd()`), never into the local/offline replay path. This is the exact root cause behind
+lf52's original L9 route reproducing cleanly offline while 400-ing live at action 849 (22
+out-of-bounds clicks, x up to 132) — found only at live-submission time and fixed reactively on
+2026-07-17 (an alternate in-bounds route, commit `5ca2a999b`), but the underlying gap in
+`arc_solver_kit.reproduce()` — THE canonical offline reproduction gate every future solve is
+supposed to pass through — was never closed. Nothing prevented a future solve for any of the
+other 24 games from silently banking another OOB-click-dependent "win."
+
+**Fix shipped (reusable-primitive hardening, not a per-game patch):**
+`python/carnot/agentic/arc_solver_kit.py`'s `reproduce()` now additionally flags any ACTION6
+click a solve route depends on that the live API would reject, reusing
+`arcengine.enums.GameAction.ACTION6.validate_data()` (the exact same validation the live server
+runs) rather than hardcoding the bound a second time. Additive only —
+`reproduced`/`reached_level` semantics are unchanged; new fields `checked_action6_clicks`,
+`oob_action6_clicks`, `any_oob_action6_clicks`. Verified via a synthetic regression check (a
+deliberately out-of-bounds click IS detected) before trusting anything downstream.
+
+**Real corpus audit, not an assumption:** `scripts/arc_action6_bounds_audit.py` real-replayed all
+25 currently-banked live-submission trajectories
+(`results/arc3_live_banked_trajectories/<game>.json`) through the hardened `reproduce()`. Found
+along the way that several games' own `GameAdapter.apply()` implementations parse their own
+internal search-label dialect rather than the standard JSON encoding this script produces
+(raised real `int()`/`KeyError` errors for ar25/ka59/cd82/lp85 on the first run) — fixed by
+using a uniform generic raw-replay `apply` for all 25 games instead of each game's adapter.
+Result: **all 25 games replay cleanly, 2468 total ACTION6 clicks checked, 0 out-of-bounds
+found.** Artifact: `results/outer_loop_action6_bounds_audit_20260722.json`. 10 new unit tests
+(`tests/python/test_arc_solver_kit_reproduce_action6_bounds.py`, real non-mocked coverage
+against the actual lf52 offline env, all passing).
+
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5820.
+**Registry:** `ops/arc_solve_registry.yaml` `general_gotchas` entry
+`offline_arcade_permits_out_of_bounds_action6_clicks`.
+
 ### 2026-07-19 (outer-loop, INFORMATIONAL — conductor stale-import gotcha: a fixed lint doesn't take effect until process restart)
 
 **Symptom:** the conductor was stuck refusing to activate milestone 2026.07.511 for ~90 hours
