@@ -1,0 +1,53 @@
+{
+  "comparison_to_registry_hand_derived_depth": {
+    "holdout_run_levels_gained": 0,
+    "holdout_run_reached_level": 0,
+    "registry_levels_reproduced": 6
+  },
+  "duration_note": "Includes GGUF server load + the bounded live e3 run itself (138.36s for run_bounded_progress alone).",
+  "duration_s": 138.773,
+  "experiment": "outer_loop_holdout_generalization_probe_sc25_20260722",
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "The live agent's own runtime attempt IS the deliverable per CLAUDE.md's ARC Live-Path Reachability Discipline self-solve provenance contract -- this run used zero outer-loop RE, zero source-reading, zero per-game adapter."
+    }
+  },
+  "honest_verdict": "complete_holdout_induced_and_planned_but_did_not_reach_a_levelup_within_budget",
+  "inference_substrate": "live_llm_inference",
+  "narrative": "Held-out live-path measurement (ARC-AGI-3 Generalization-Testing Floor task class 1): sc25 has NO registered GameAdapter -- its registry solve was banked via a different one-off mechanism, not arc_game_adapters.py's reusable scaffolding. This run drives the REAL scored E3AgentPolicy cascade (the same mechanism the Kaggle submission uses) against sc25 cold, with zero per-game hand-tuning, to measure how far the generic reusable mechanism gets on its own. The registry's hand-derived depth for sc25 is levels_reproduced=6 (read AFTER this run, for comparison only -- this run had no access to the registry entry, solver module, or any per-game gotcha).",
+  "preconditions_checked": {
+    "cuda_gpu1_pinned": true,
+    "game_has_no_registered_adapter": true
+  },
+  "random_seed": 20260722,
+  "reproducibility_checksum": "e9d74245aa674d76515cc46ea75003bc38d8a3cbdd58a8957e0e50a3142d63c7",
+  "result": {
+    "actions_to_first_solve": null,
+    "arm": "frozen",
+    "best_hv": null,
+    "error": null,
+    "game": "sc25",
+    "hit_induction_cap": false,
+    "hv_progress": null,
+    "levels_gained": 0,
+    "mean_heldout_accuracy": 0.0,
+    "mean_prefix_accuracy": 0.1765,
+    "n_inductions": 1,
+    "n_plans_found": 0,
+    "noop_frac": 0.094,
+    "plan_found_rate": 0.0,
+    "reached_level": 0,
+    "revisit_frac": 0.0855,
+    "seed": 20260722,
+    "solved": false,
+    "start_hv": null,
+    "start_level": 0,
+    "timed_out": false,
+    "total_actions": 117,
+    "wall_s": 136.5
+  },
+  "run_date": "2026-07-22",
+  "schema": "carnot.arc_holdout_generalization_probe.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "target_model": "unsloth/Qwen3.5-9B-MTP-GGUF"
+}

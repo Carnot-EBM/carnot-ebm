@@ -4,6 +4,32 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
+
+**What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered
+`GameAdapter` (`ops/arc_solve_registry.yaml` `levels_reproduced=6`, banked via a different
+one-off mechanism). Ran the REAL scored `E3AgentPolicy` cascade
+(`arc_actions_to_progress.run_bounded_progress`) against it cold — zero per-game hand-tuning,
+zero source-reading, a fresh `offline_arcade()` reset, on GPU 1 (the outer loop's dedicated
+card, per the `CARNOT_ARC_GENERATOR_CUDA_GPU` convention) — to see how far the generic reusable
+mechanism gets on its own, compared against the hand-derived depth.
+
+**Result (honest negative, real run, 138.8s total including GGUF load):** the generic mechanism
+DID stall and attempt induction once (`n_inductions=1`, `total_actions=117` of a 120-action
+budget), but the induced dynamics model could not support a usable plan
+(`plan_found_rate=0.0`, `mean_heldout_accuracy=0.0`) — so `reached_level=0`,
+`levels_gained=0`, versus the registry's hand-derived `levels_reproduced=6`. This is NOT a
+harness failure or an untested claim (the mechanism was genuinely exercised, not just never
+reaching the stall/induce phase) — it independently corroborates, on a game outside the prior
+6-game roster, the standing finding in `project_arc_actions_to_progress_metric` (memory):
+**the frozen generator's dynamics-induction quality is the binding constraint**, not per-game
+adapter absence. An adapter for sc25 alone would not have unblocked this game; the induced
+dynamics model itself is too weak.
+
+**Artifact:** `results/outer_loop_holdout_generalization_probe_sc25_20260722.json`.
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5821.
+**Registry:** `ops/arc_solve_registry.yaml` sc25 entry, `latest_outer_loop_holdout_generalization_probe`.
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 2): offline/live ACTION6 bounds gap closed in `arc_solver_kit.reproduce()`
 
 **What was found:** the OFFLINE arcade (`arc_agi`'s `LocalEnvironmentWrapper.step()`) never

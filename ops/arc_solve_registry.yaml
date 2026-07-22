@@ -2190,6 +2190,22 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: fresh_deepest_sc25_l6_before_lp85_cn04_peer_targets_avoided
     reproducibility_checksum: 17fd7df2396eda695bb2b749e9303c6dc4d08fc8f72c26714a2f8565c67d84c7
+  latest_outer_loop_holdout_generalization_probe:
+    artifact: results/outer_loop_holdout_generalization_probe_sc25_20260722.json
+    purpose: ARC-AGI-3 Generalization-Testing Floor task class 1 -- held-out live-path
+      measurement (sc25 has no registered GameAdapter, so this ran the real scored
+      E3AgentPolicy cascade cold, with zero per-game hand-tuning, and compared it to
+      this entry's own levels_reproduced=6).
+    result: 'reached_level=0, n_inductions=1, mean_heldout_accuracy=0.0,
+      plan_found_rate=0.0 -- the generic mechanism stalled and induced once but the
+      induced dynamics model was not accurate enough to produce a usable plan within
+      budget (120 actions / 600s / 3 induction cycles). Corroborates (independently,
+      on a game outside the prior 6-game roster) the standing finding in
+      project_arc_actions_to_progress_metric: dynamics-induction quality is the
+      binding constraint on this generator, not per-game adapter absence -- an
+      adapter alone would not have unblocked this game.'
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: e9d74245aa674d76515cc46ea75003bc38d8a3cbdd58a8957e0e50a3142d63c7
 - game: cd82
   reproducibility: reproduced
   levels_reproduced: 6
