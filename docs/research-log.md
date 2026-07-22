@@ -5979,3 +5979,9 @@ The critical path for milestone .250:
 - theme: finite-choice channel work led compute runtime under coarse timing reconstruction
 - key result: bounded operational finding -- finite-choice qualification at 33.6 minutes outran the 22.58-minute Qwen diagnosis; the locked GPU classification is non-idle for compute, and nothing supplied shows that multiple models were loaded concurrently
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.518
+- exp_range: exp5799-exp5812 (only IDs present in the authoritative timing data; the complete milestone range is not available)
+- theme: a gated changed-mechanism canary concentrated an otherwise short operational closeout
+- key result: operational limitation -- the 12-minute compute-bound canary dominated 13 minutes of wall time, but phase-level causes and task-time GPU efficiency remain unmeasured, and no concurrent multi-model runner miss is evidenced
+- acceptance: no data available this milestone
