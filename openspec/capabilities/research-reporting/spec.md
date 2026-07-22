@@ -43170,3 +43170,109 @@ entry, `search_started_at < search_finished_at`,
 receipt family is present, every classified finding has URL/date/search
 timestamp/reason provenance, `closed_scopes_reopened=false`,
 `hardware_claim_changed=false`, and the checksum is stable.
+
+## Implementation Status (REQ-REPORT-5770)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5770 | Implemented (`results/experiment_5770_v515_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5770_v515_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5771: Read-Only Exact-Deliverable Evidence Index And Collision Preflight
+
+The Exp5771 workflow SHALL write
+`results/experiment_5771_evidence_index_collision_preflight.json` and SHALL
+leave `research-complete.yaml`, `research-roadmap.yaml`, and
+`scripts/research_conductor.py` unchanged. It SHALL define canonical evidence
+identity as the tuple `(milestone, task_id, declared_deliverable)`. The exact
+`declared_deliverable` path from roadmap or completion-history metadata SHALL
+be the only canonical artifact path. Files that share a numeric experiment
+prefix but do not equal the declared deliverable SHALL be disclosed as aliases,
+not canonical evidence.
+
+The workflow SHALL read roadmap YAML and conductor evidence and SHALL emit a
+read-only canonical task projection. It SHALL detect and report same-number
+alias files, duplicate task ids, duplicate milestone history blocks, missing
+declared deliverables, conflicting hashes for the same canonical identity, and
+ambiguous gate artifacts. It SHALL NOT delete, deduplicate, reorder, sort, or
+rewrite historical completion ledger blocks. Repeated historical blocks SHALL
+remain preserved and be reported as history diagnostics only.
+
+The workflow SHALL refuse latest-mtime or broad-glob canonicalization. Its
+machine-readable `canonical_lookup()` equivalent SHALL either return the exact
+declared path for the requested `(milestone, task_id, declared_deliverable)` or
+fail closed with all same-number candidates listed. Numeric-prefix candidates
+MAY be used only to populate alias diagnostics and ambiguity receipts.
+
+The workflow SHALL include real receipts proving that the V514 conductor
+artifacts for Exp5760, Exp5764, and Exp5766 remain canonical while
+`results/experiment_5760_cegis_refinement_induction_ab.json`,
+`results/experiment_5764_gemma31b_singleshot_induction_ab.json`, and
+`results/experiment_5766_gemma31b_cegis_refinement_ab.json` remain discoverable
+aliases. It SHALL include negative controls for missing deliverables, duplicate
+task ids, hash conflicts, principle-wrapper field values, and mtime inversion.
+
+The artifact SHALL set `evidence_index_ready_score=1.0` only when all Exp5771
+tests pass, Exp5769-Exp5781 are collision-free, and every V514 task is either
+exactly resolved or explicitly mapped to a recorded non-artifact conductor
+outcome. It SHALL emit `producer_gate_fields` as bare scalars for
+`evidence_index_ready_score`, `next_range_collision_count`,
+`unresolved_canonical_count`, and `history_mutation_count`.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `spec_refs`, `roadmap_hashes`,
+`research_complete_hash_before`, `research_complete_hash_after`,
+`canonical_identity_contract`, `canonical_task_index`,
+`same_number_alias_groups`, `duplicate_history_blocks`,
+`missing_declared_deliverables`, `conflicting_hashes`,
+`gate_artifact_ambiguities`, `canonical_lookup_receipts`,
+`mtime_inversion_control`, `real_collision_fixture_receipts`,
+`negative_control_receipts`, bare `evidence_index_ready_score`, bare
+`next_range_collision_count`, bare `unresolved_canonical_count`, bare
+`history_mutation_count`, `producer_gate_fields`,
+`research_complete_modified`, `conductor_unchanged`, `inference_substrate`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry. `research_complete_modified` SHALL be `false`,
+`conductor_unchanged` SHALL be `true`, `inference_substrate` SHALL equal
+`local_filesystem_metadata_and_hashes_no_llm`, and `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+#### SCENARIO-REPORT-5771-EXACT-LOOKUP: Declared Deliverables Win Over Same-Number Aliases
+
+**Given** a roadmap or history block declares an exact deliverable for a task
+**And** other files share the task's numeric experiment prefix
+**When** `canonical_lookup()` is called with the canonical identity tuple
+**Then** it returns only the declared deliverable path, reports same-number
+files as aliases, and does not choose by glob order, lexical order, or mtime.
+
+#### SCENARIO-REPORT-5771-FAIL-CLOSED: Missing Or Conflicting Canonical Evidence Does Not Guess
+
+**Given** a declared deliverable is missing, a task id is duplicated with a
+different deliverable, or two records claim conflicting hashes for the same
+canonical identity
+**When** the evidence index is built
+**Then** the unresolved or conflicting identity is reported, the lookup receipt
+lists every numeric-prefix candidate, and downstream readiness cannot become
+`1.0`.
+
+#### SCENARIO-REPORT-5771-HISTORY-READONLY: Duplicate History Blocks Are Diagnostics Only
+
+**Given** `research-complete.yaml` contains duplicate milestone blocks
+**When** the Exp5771 workflow scans completion history
+**Then** it records `duplicate_history_blocks`, leaves the file byte-for-byte
+unchanged, sets `history_mutation_count=0`, and does not collapse or rewrite the
+blocks.
+
+#### SCENARIO-REPORT-5771-FIELD-PRINCIPLES: Every Evidence-Index Field Is Annotated
+
+**Given** the Exp5771 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, the producer gate fields are bare scalars, `research_complete_modified`
+is false, `conductor_unchanged` is true, and the checksum is stable.
+
+## Implementation Status (REQ-REPORT-5771)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5771 | Implemented (`scripts/evidence_index_collision_preflight.py`, `results/experiment_5771_evidence_index_collision_preflight.json`) | Implemented (`tests/python/test_evidence_index_collision_preflight.py`) |
