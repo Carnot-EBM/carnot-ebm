@@ -14062,3 +14062,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 00:07 UTC | Milestone 2026.07.515 activated | OK | 7 tasks queued |
 | 2026-07-22 00:55 UTC | Archive terminal .514 evidence with collision-disc | OK | 89 passed, 1 warning in 13.21s |
 | 2026-07-22 01:33 UTC | Ingest post-V515 source deltas with bounded biblio | OK | 87 passed, 2 warnings in 12.99s |
+| 2026-07-22 02:14 UTC | Build an exact-deliverable evidence index and fail | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5771_evidenc |
