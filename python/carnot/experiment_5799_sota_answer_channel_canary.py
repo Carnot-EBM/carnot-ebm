@@ -1270,19 +1270,51 @@ def _resume_runtime_receipt(
         "model_hf_id": str(model_spec["hf_id"]),
         "model_family": str(model_spec["family"]),
         "mode_id": str(mode["mode_id"]),
+        "resume_from_checkpoint": True,
         "llama_cpp_version": "resume_from_checkpoint",
         "llama_cpp_build_info": {"resume_from_checkpoint": True},
         "chat_template": {"used": True, "resume_from_checkpoint": True},
         "cuda_device_receipt": {"resume_from_checkpoint": True},
         "n_gpu_layers_requested": N_GPU_LAYERS_REQUESTED,
-        "n_gpu_layers_offloaded": 1,
+        "n_gpu_layers_offloaded": 0,
         "gpu_memory_before_mb": 0,
-        "gpu_memory_peak_mb": 1,
+        "gpu_memory_peak_mb": 0,
         "gpu_memory_after_mb": 0,
-        "cuda_offload_authenticated": True,
+        "cuda_offload_authenticated": False,
         "rows_attempted": len(existing_rows),
-        "offload_log_excerpt": "resume_from_existing_authenticated_rows",
+        "offload_log_excerpt": "resume_only_no_runtime_receipt",
     }
+
+
+def _runtime_receipt_is_resume_only(runtime_receipt: Mapping[str, Any]) -> bool:
+    return bool(
+        runtime_receipt.get("resume_from_checkpoint") is True
+        or runtime_receipt.get("llama_cpp_version") == "resume_from_checkpoint"
+        or dict(runtime_receipt.get("cuda_device_receipt") or {}).get("resume_from_checkpoint")
+        is True
+        or "resume_from" in str(runtime_receipt.get("offload_log_excerpt") or "")
+    )
+
+
+def _prior_runtime_receipt(
+    result_path: str | Path, model_spec: Mapping[str, Any], mode: Mapping[str, Any]
+) -> JsonDict:
+    prior_path = Path(result_path)
+    if not prior_path.is_file():
+        return {}
+    try:
+        prior = json.loads(prior_path.read_text(encoding="utf-8"))
+    except Exception:  # pragma: no cover - defensive corrupt-prior fallback.
+        return {}
+    model_receipts = dict(prior.get("model_runtime_receipts") or {})
+    model = dict(model_receipts.get(str(model_spec["hf_id"])) or {})
+    receipt = dict(dict(model.get("mode_runtime_receipts") or {}).get(str(mode["mode_id"])) or {})
+    if not receipt or _runtime_receipt_is_resume_only(receipt):
+        return {}
+    if receipt.get("model_hf_id") != model_spec["hf_id"] or receipt.get("mode_id") != mode["mode_id"]:
+        return {}  # pragma: no cover - defensive stale-prior fallback.
+    receipt["replayed_from_prior_artifact"] = True
+    return receipt
 
 
 def run(
@@ -1371,11 +1403,11 @@ def run(
                     )
                 else:
                     mode_rows = _rows_for_mode(all_rows, str(model_spec["hf_id"]), str(mode["mode_id"]))
-                    runtime_receipts[receipt_key] = _resume_runtime_receipt(
+                    runtime_receipts[receipt_key] = _prior_runtime_receipt(
+                        result_path,
                         model_spec,
                         mode,
-                        mode_rows,
-                    )
+                    ) or _resume_runtime_receipt(model_spec, mode, mode_rows)
                 current_rows = _rows_for_mode(
                     all_rows,
                     str(model_spec["hf_id"]),

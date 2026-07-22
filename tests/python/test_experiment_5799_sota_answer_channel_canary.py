@@ -355,6 +355,36 @@ def test_scenario_verify_5799_complete_canary_rows_selection_and_resume(tmp_path
     assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8")) == resumed
 
 
+def test_scenario_report_5811_resume_without_prior_receipt_is_not_authenticated(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-5811-PRODUCER-REPAIR: resume-only receipts do not authenticate GPU."""
+
+    first = _run_canary(tmp_path)
+    result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
+    result_path.unlink()
+
+    resumed = _run_canary(tmp_path)
+    qwen_mode = "qwen3-6-35b-a3b:reasoning_disabled_final_sentinel_128"
+    qwen_receipt = resumed["model_runtime_receipts"][mod.QWEN_ID]["mode_runtime_receipts"][
+        qwen_mode
+    ]
+
+    assert first["answer_channel_ready_score"] == 1.0
+    assert resumed["answer_channel_ready_score"] == 0.0
+    assert resumed["qualified_real_sota_model_count"] == 0
+    assert qwen_receipt["resume_from_checkpoint"] is True
+    assert qwen_receipt["cuda_offload_authenticated"] is False
+    assert qwen_receipt["n_gpu_layers_offloaded"] == 0
+    assert qwen_receipt["offload_log_excerpt"] == "resume_only_no_runtime_receipt"
+    qwen_mode = next(
+        mode
+        for mode in _diagnostic_artifact()["candidate_mode_matrix"]
+        if mode["mode_id"] == qwen_mode
+    )
+    assert mod._prior_runtime_receipt(result_path, first["MODEL_SPECS"][0], qwen_mode) == {}
+
+
 def test_scenario_verify_5799_balanced_fixture_and_adversarial_controls(tmp_path: Path) -> None:
     """SCENARIO-VERIFY-5799-CONTROLS: fixture and controls reject syntax-only success."""
 

@@ -44214,3 +44214,120 @@ are present, and the checksum is stable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5810 | Implemented (`python/carnot/experiment_5810_v518_source_delta_ingestion.py`, `results/experiment_5810_v518_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5810_v518_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5811: Exp5799 Event And Provenance Audit Preserves Quarantined Evidence
+
+The Exp5811 workflow SHALL read the historical Exp5799 artifact and row JSONL,
+the Exp5798 diagnostic artifact, the Exp5799 producer and tests, the
+artifact-verification scripts, relevant OpenSpec files, available runtime logs,
+and local disk/RAM receipts before writing
+`results/experiment_5811_exp5799_event_provenance_audit.json`. It SHALL hash
+all immutable inputs before and after the audit and SHALL NOT rewrite,
+sanitize, or rerun `results/experiment_5799_sota_answer_channel_canary.json` or
+`results/experiment_5799_sota_answer_channel_canary.rows.jsonl`. If row hashes,
+raw-response hashes, row-file hashes, unique model/mode/fixture cells,
+declared row counts, mode denominators, or artifact-level counts cannot be
+reconciled, the workflow SHALL fail closed with a terminal `blocked:` verdict.
+
+The workflow SHALL recompute parser failure, truncation, empty final content,
+exact wrong answer, invalid candidate, timeout, and stop collision from
+independent raw row predicates. It SHALL produce an overlapping event matrix
+that permits legitimate co-occurrence, and a mutually exclusive primary-failure
+taxonomy whose totals close exactly over every replayed row. It SHALL never use
+the Exp5799 top-level flagged aggregate as ground truth for reconstructed
+metrics, and it SHALL explicitly explain equal rates when overlap makes equality
+legitimate rather than forcing distinct metrics to differ.
+
+The workflow SHALL recompute per-model and per-mode rows, denominators, rates,
+exact-label coverage, independent-unit counts, seed, duration, row hashes, and
+sample-size receipts. It SHALL explicitly mark absent methodology fields,
+including missing runtime logs, missing per-row load evidence, absent external
+test receipts, or missing duration/seed evidence rather than backfilling them.
+GPU provenance reconciliation SHALL classify row, mode, model, and top-level
+receipts as `authenticated`, `resume_only`, `inconsistent`, or `missing` by
+checking actual offload layers, requested layers, VRAM samples, load logs,
+runtime hashes, checkpoint origin, and resume-row provenance. Resume-only or
+inconsistent receipts SHALL NOT qualify a model as real-GPU evidence.
+
+If the Exp5799 producer conflates independent event definitions or fabricates
+authenticated-looking resume receipts, the workflow SHALL repair only producer
+definitions/tests and SHALL NOT mutate historical result files. The companion
+artifact SHALL record those repairs as superseding definitions. The audit SHALL
+emit `canary_evidence_ready_score=1.0` only when every row is replayed,
+definitions are independent, denominators and hashes close, methodology gaps are
+explicit, and no unauthenticated receipt is used to qualify a model. It SHALL
+declare `inference_substrate="aggregation_from_upstream_artifacts"` and
+`verifier_is_oracle=true`, because exact parser/fixture correctness is circular
+authority and the artifact makes no verifier-moat claim.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`immutable_input_hashes`, `independent_event_definitions`,
+`overlapping_event_matrix`, `exclusive_primary_failure_taxonomy`,
+`per_model_mode_reconstruction`, `methodology_gap_matrix`,
+`gpu_provenance_reconciliation`, `producer_repairs_and_tests`,
+`canary_evidence_ready_score`, `original_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every required top-level field SHALL have a non-empty
+field-provenance principle. The `honest_verdict` SHALL begin with `complete:`
+or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "A terminal audit state distinguishes a clean reconstruction from unresolved evidence."
+- `preconditions_checked`: principle "Hash and row checks prevent auditing a different artifact than the quarantined input."
+- `immutable_input_hashes`: principle "Historical evidence must remain byte-identical while a companion audit is produced."
+- `independent_event_definitions`: principle "Each metric needs a raw predicate so accidental tautologies are detectable."
+- `overlapping_event_matrix`: principle "Failures can co-occur; explicit overlap prevents double counting from masquerading as independent evidence."
+- `exclusive_primary_failure_taxonomy`: principle "One primary cause per row makes totals and denominators close exactly."
+- `per_model_mode_reconstruction`: principle "Family and transport effects must not disappear into one aggregate."
+- `methodology_gap_matrix`: principle "Missing seed, duration, or test receipts remain visible rather than backfilled."
+- `gpu_provenance_reconciliation`: principle "Only actual load/offload evidence may support a real-GPU qualification."
+- `producer_repairs_and_tests`: principle "Any code correction is explicit and does not mutate historical result files."
+- `canary_evidence_ready_score`: principle "A bare scalar gates new protocol work only after the quarantined evidence is independently reconstructable."
+- `original_files_unchanged`: principle "A true receipt prevents silent sanitization of flagged evidence."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only audit artifacts."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` declares that no LLM is loaded or invoked."
+- `verifier_is_oracle`: principle "The exact parser/fixture defines correctness and is circular authority, so no verifier-moat claim is allowed."
+- `field_provenance`: principle "Every reconstructed field identifies the row predicate or runtime receipt that satisfies it."
+- `test_commands`: principle "Commands document row replay, code repair, and immutability validation."
+- `test_exit_codes`: principle "Exit codes prevent failed audit checks from being narrated as passing."
+- `reproducibility_checksum`: principle "A checksum detects drift in inputs, definitions, or reconstructed outputs."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix provides a terminal audit outcome."
+
+#### SCENARIO-REPORT-5811-ROW-REPLAY: Reconstructed Events Close Over Rows
+
+**Given** the quarantined Exp5799 artifact and row JSONL are readable
+**When** Exp5811 replays the rows from raw predicates
+**Then** row hashes, raw-response hashes, unique cells, declared row counts,
+artifact counts, per-mode denominators, exact-label coverage, independent-unit
+counts, and row-file hash all reconcile, overlapping events explain co-occurring
+parser/truncation/empty-final failures, and the exclusive primary taxonomy
+totals exactly match the row denominator.
+
+#### SCENARIO-REPORT-5811-GPU-RECEIPTS: Resume Receipts Do Not Qualify Models
+
+**Given** Exp5799 contains top-level GPU summaries, per-mode runtime receipts,
+checkpoint-resume metadata, and possible absent runtime logs
+**When** Exp5811 reconciles provenance
+**Then** every receipt is classified as `authenticated`, `resume_only`,
+`inconsistent`, or `missing`; resume-only or inconsistent receipts do not
+qualify a model as real-GPU evidence; absent methodology fields are explicit;
+and `canary_evidence_ready_score` is never raised by unauthenticated GPU
+summaries.
+
+#### SCENARIO-REPORT-5811-PRODUCER-REPAIR: Superseding Definitions Do Not Rewrite History
+
+**Given** the Exp5799 producer has a resume path or metric definition that can
+conflate independent evidence
+**When** the producer is repaired
+**Then** tests reference REQ-REPORT-5811 or SCENARIO-REPORT-5811, resume-only
+receipts no longer authenticate fresh GPU offload, historical Exp5799 artifact
+and row files remain byte-identical, and the Exp5811 artifact records the
+superseding definitions and test commands.
+
+## Implementation Status (REQ-REPORT-5811)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5811 | Implemented (`python/carnot/experiment_5811_exp5799_event_provenance_audit.py`, `results/experiment_5811_exp5799_event_provenance_audit.json`) | Implemented (`tests/python/test_experiment_5811_exp5799_event_provenance_audit.py`) |
