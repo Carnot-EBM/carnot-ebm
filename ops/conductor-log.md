@@ -14088,3 +14088,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 10:15 UTC | Gated on Exp5784 readiness: build a sealed hardnes | OK | 87 passed, 1 warning in 20.73s |
 | 2026-07-22 11:06 UTC | Gated on Exp5785 fixture readiness: run the three- | OK | 85 passed, 1 warning in 18.78s |
 | 2026-07-22 11:08 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
+| 2026-07-22 11:10 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
