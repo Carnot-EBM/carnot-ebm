@@ -30735,3 +30735,110 @@ materially change how the CRITICAL-flagged Exp5799 evidence must be repaired.
   only resource/ABI mappings and explicit blocked receipts.
 
 <!-- V518-PLANNER-REFRESH-20260722-END -->
+
+## V519 Planner Refresh - 20260722
+
+Planning-time sweep for the milestone after terminal `.518`. The search covered
+2025-2026 arXiv work on energy-based verification and reasoning, neural constraint
+satisfaction, Ising/CSP methods, hallucination controls, KANs, energy-guided decoding,
+hardware acceleration, and continual/online learning. It also rechecked OpenReview,
+Hugging Face Papers, Semantic Scholar citation routes for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), GitHub repositories, Extropic writing, and Logical Intelligence's public
+Kona material. The findings below are new relative to the V518 block and actionable under
+Carnot's immutable-GGUF, exact-validator, and live-ARC boundaries.
+
+### New actionable deltas
+
+- **Learning from World Feedback: Why Model Uncertainty Fails as a Risk Signal in
+  Model-Based RL** - arXiv:2607.16591, https://arxiv.org/abs/2607.16591; submitted
+  2026-07-18 and accepted at the ICML 2026 RLxF workshop. Across four world models, the
+  paper reports statistically equivalent MPC behavior despite a 2x prediction-MSE range,
+  an increase in collisions from 26% to 34% under dynamics-uncertainty penalties, and
+  reduction to 1-14% with direct or outcome-supervised world-feedback signals. It locates
+  the mismatch in support: prediction uncertainty lives in state space, whereas task risk
+  lives on constraint boundaries (`r < 0.15`). Carnot hook: admit constraint skills and
+  ARC world facts with exact boundary/outcome evidence, never with a model's confidence in
+  its own hypothesis.
+- **Planning with Transformers: Chain of Computation and Structured Context Windows** -
+  arXiv:2607.17710, https://arxiv.org/abs/2607.17710; submitted 2026-07-20. The Chain of
+  Computation architecture uses a constant-sized structured context window inside an
+  iterative loop and reports greater than 99.89% success on BlocksWorld and Pancake, with
+  symbolic arithmetic or a deterministic pushdown automaton extending Tower of Hanoi to
+  20 disks. Carnot hook: test an append-only, bounded, typed world-fact tape on the live E3
+  path. Deterministic state updates and exact observations own the tape; free-form
+  reflection and iterative CEGIS do not.
+- **Ask the World Before Acting: Environment Probing for Calibrated Agent World Models** -
+  arXiv:2606.31422, https://arxiv.org/abs/2606.31422; revised 2026-07-05. The paper treats
+  environment evidence acquisition as a budgeted action over typed belief fields and
+  reports that task criticality, staleness, and dependency role outperform periodic
+  probing, while self-reported uncertainty is unreliable under confidently wrong beliefs.
+  Carnot hook: evaluate a game-blind world-feedback probe scheduler as an induction-data
+  collection policy, with identical legal-action budgets and exact action outcomes. This
+  does not reopen the retired first-contact novelty-signal or public-game re-solve lanes.
+- **Write-Protected Discrete Bottlenecks for Language-Grounded World Models: A Structural
+  Limitation and Sufficient Fix** - arXiv:2607.08312,
+  https://arxiv.org/abs/2607.08312; submitted 2026-07-09. The paper finds symbol collapse
+  when language gradients enter a Gumbel-softmax bottleneck and combines detached symbols,
+  a non-parametric symbol-to-label memory table, and collision splitting. Carnot hook:
+  keep GGUF parameters immutable and make accepted constraint skills and ARC world facts
+  write-protected, versioned records whose bindings come only from exact co-occurrence or
+  transition evidence. Collision splitting, quarantine, and rollback must be explicit.
+- **Rethinking Transfer in Continual Learning: A Replay-Based Realisation** -
+  arXiv:2607.15587, https://arxiv.org/abs/2607.15587; submitted 2026-07-17. The paper
+  defines when prior experience should transfer and introduces Transfer-Selective Replay
+  using task signatures to select compatible examples. Carnot hook: compare compatible
+  replay against all-replay and no-replay controls on a chronological constraint stream,
+  preregister family headroom, and report forward transfer separately from retention and
+  recurrence recovery.
+- **A Blueprint for Equilibrium-Based Differentiable Continuous-Variable Thermodynamic
+  Computing** - arXiv:2607.16183, https://arxiv.org/abs/2607.16183; submitted 2026-07-17.
+  The Extropic-authored paper gives a continuous-variable Langevin blueprint and a
+  superconducting-circuit mapping. Carnot hook: extend the backend-neutral capability ABI
+  with bounded state, precision, stochastic-update, and observability requirements. It is
+  architecture context only: Carnot has no authenticated Extropic execution path, so no
+  TSU speed, power, energy, or convergence claim is permitted.
+
+### Guarded, deduplicated, and secondary-source status
+
+- **Parallel-tempering SNN CSP solver:** arXiv:2607.08897,
+  https://arxiv.org/abs/2607.08897, reports improvements on 332 of 1000 tested CSP
+  instances and regressions on 5. Carnot does not promote it into `.519`: parallel and
+  two-axis tempering are already a retired method family locally, and a new paper alone
+  does not invalidate the measured negative evidence.
+- **Semantic Scholar:** the direct API exposed 29 citations in EBT metadata on 2026-07-22
+  and eight ARM-EBM citing records. The ARM trail consists of already indexed families
+  including Path-Measure Dynamics, Distributional EBMs, LoopUS, ontology-constrained
+  reasoning, graph-energy matching, safe distillation, and false-first-step planning. The
+  EBT citation-list request then rate-limited (`HTTP 429`), so no new stable forward-citation
+  claim is made.
+- **OpenReview / Hugging Face Papers:** searches surfaced recent spectral-attention,
+  SAT-verification, selective-verification, and self-evolving-agent work, but no locally
+  available dependency that supersedes exact validators or the mandated GGUF path.
+  Methods requiring proprietary attention internals are not promoted; llama.cpp's
+  reproducible embedding interface remains the only permitted local hidden-state surface.
+- **GitHub:** repository and trending/topic checks found no maintained EBM, KAN, CSP, or
+  constrained-generation package that replaces Carnot's current exact solvers, KAN
+  modules, validators, or live E3 entrypoint. `.519` therefore adds no unverified external
+  runtime dependency.
+- **Extropic / Logical Intelligence:** Extropic's public writing index still has no local
+  XTR-0/Z1 execution route. Logical Intelligence's May-June 2026 Aleph formal-verification
+  posts add product context but no public Kona weights, authenticated API receipt, or
+  reproducible comparator. Both remain watch items rather than experiment backends.
+
+### V519 planning impact
+
+- End the finite-ID GGUF answer-transport lane after `.518`'s same-verdict split-budget
+  result. Continuous self-learning must consume the already-certified exact constraint
+  stream, learn constraint structure rather than parameter weights, validate on sealed
+  future batches, and promote or roll back versioned memory while GGUF weights stay frozen.
+- Build ARC induction around a bounded write-protected fact tape and exact world feedback.
+  Compare budget-matched probe policies on held-out live actions with adapters, source
+  inspection, offline BFS, public solve credit, and iterative CEGIS disabled.
+- Use internal embeddings only for an oracle-distinct paired-candidate verifier and keep
+  exact solvers as labels/release authority. A held-model-family-out test must separate
+  representation transfer from model-identity shortcuts.
+- Map only validated adaptive-memory operations into a bounded backend-neutral microkernel.
+  Attached-board commands remain conditional on changed authenticated preconditions; the
+  thermodynamic blueprint supplies ABI fields, not hardware evidence.
+
+<!-- V519-PLANNER-REFRESH-20260722-END -->
