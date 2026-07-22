@@ -43040,3 +43040,133 @@ machine-readable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5769 | Implemented (`python/carnot/experiment_5769_transition_v515.py`, `results/experiment_5769_transition_v515.json`) | Implemented (`tests/python/test_experiment_5769_transition_v515.py`) |
+
+### REQ-REPORT-5770: V515 Source Delta Ingestion With Family Receipts
+
+The Exp5770 workflow SHALL search only after the
+`V515-PLANNER-REFRESH-20260721-END` marker and SHALL write
+`results/experiment_5770_v515_source_delta_ingestion.json`. It SHALL first
+verify the V515 planner marker and marker hash, current UTC timestamp,
+network/source reachability, `ops/exclusion_manifest.yaml` hash, and active
+`research-roadmap.yaml` hash. If that provenance cannot be established, the
+workflow SHALL emit a terminal `blocked:` artifact and SHALL leave
+`research-references.md`, `research-roadmap.yaml`, and
+`scripts/research_conductor.py` unchanged.
+
+The workflow SHALL search arXiv first for 2025-2026 EBM reasoning and
+verification, constraint acquisition and satisfaction, Ising/sampling,
+hallucination mitigation, KAN, constrained generation, probabilistic hardware,
+online learning, and adaptive world models. It SHALL then check OpenReview,
+Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`, Hugging Face Papers, GitHub discovery, Extropic writing, and
+Logical Intelligence public material. Every surfaced candidate SHALL be
+classified as `accepted`, `duplicate`, `watch_only`, `excluded`, or
+`inaccessible` with source URL, publication date when available, search
+timestamp, search receipt id, and an honest reason.
+
+The workflow MAY complete with zero accepted findings. An accepted finding
+SHALL be post-V515-marker or newly actionable after the V515 marker,
+non-duplicate, and SHALL sharpen only an existing Exp5772-Exp5779 control or
+validation boundary. It SHALL NOT reopen retired proposal scoring, KAN
+scale-up, CEGIS, PHASE-D text scoring, Rust 10x, public ARC solving, or
+unsupported hardware claims. Any dependency, gate, model, id, hardware, or
+headline-claim change request SHALL set `operator_review_required=true` and
+SHALL NOT be applied in this workflow. The artifact SHALL set
+`closed_scopes_reopened=false`, `hardware_claim_changed=false`, and
+`inference_substrate=web_bibliographic_research_no_local_model_inference`.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `planner_marker`, `planner_marker_hash`,
+`search_started_at`, `search_finished_at`, `actual_search_wall_time_s`,
+`source_queries`, `source_receipts`, `arxiv_receipts`, `openreview_receipts`,
+`semantic_scholar_receipts`, `huggingface_receipts`, `github_receipts`,
+`extropic_receipts`, `logical_intelligence_receipts`, `accepted_findings`,
+`duplicate_findings`, `watch_only_findings`, `excluded_findings`,
+`inaccessible_findings`, `references_changed`, `references_diff_hash`,
+`roadmap_scope_change_requested`, `operator_review_required`,
+`closed_scopes_reopened`, `hardware_claim_changed`, `inference_substrate`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry, and `honest_verdict` SHALL start with `complete:` or
+`blocked:`.
+
+Required field principles:
+
+- `field_principles`: principle "Maps every artifact field to the evidence boundary that justifies it."
+- `status`: principle "Bare terminal state supports machine gating without parsing prose."
+- `preconditions_checked`: principle "Records marker, source reachability, timestamp, ledger hash, exclusion hash, and roadmap hash before findings are trusted."
+- `planner_marker`: principle "Binds the execution search window to the V515 planner boundary."
+- `planner_marker_hash`: principle "Content-addressed marker context detects silent planner-block drift."
+- `search_started_at`: principle "Records the real UTC instant before external querying starts."
+- `search_finished_at`: principle "Records the real UTC instant after final source disposition."
+- `actual_search_wall_time_s`: principle "Wall time is bibliographic search time only, not model, solver, benchmark, or hardware compute."
+- `source_queries`: principle "Search intent is reconstructable without trusting memory or mutable indexes."
+- `source_receipts`: principle "Network and local source receipts show which routes were reachable and how candidates surfaced."
+- `arxiv_receipts`: principle "Primary arXiv receipts preserve date-window and topic-search provenance."
+- `openreview_receipts`: principle "OpenReview access limits are separated from accepted findings."
+- `semantic_scholar_receipts`: principle "Citation-route receipts are separated from general source search and do not become stable citation-count claims."
+- `huggingface_receipts`: principle "Hugging Face paper-feed receipts are secondary discovery evidence, not source authority."
+- `github_receipts`: principle "Repository discovery receipts distinguish executable code availability from roadmap dependencies."
+- `extropic_receipts`: principle "Probabilistic-hardware context cannot become a hardware claim without local authenticated execution."
+- `logical_intelligence_receipts`: principle "Logical Intelligence public material remains context unless local weights, APIs, or reproducible comparators exist."
+- `accepted_findings`: principle "Accepted findings must be post-marker or newly actionable, non-duplicate, and bounded to existing V515 controls or validation boundaries."
+- `duplicate_findings`: principle "Already-ledgered work stays visible but cannot create duplicate roadmap work."
+- `watch_only_findings`: principle "Relevant but non-executable or non-local material cannot support Carnot claims."
+- `excluded_findings`: principle "Closed scopes remain closed by explicit disposition."
+- `inaccessible_findings`: principle "Access failures are separated from scientific exclusions and never promoted."
+- `references_changed`: principle "The reference ledger mutation state is declared."
+- `references_diff_hash`: principle "Reference-file before/after content is hash-bound even when unchanged."
+- `roadmap_scope_change_requested`: principle "Scope changes block for operator review rather than silently mutating the roadmap."
+- `operator_review_required`: principle "Graph, id, gate, model, hardware, or headline changes require explicit operator review."
+- `closed_scopes_reopened`: principle "Retired scopes must stay closed unless the operator explicitly reopens them."
+- `hardware_claim_changed`: principle "Bibliographic research cannot change FPGA, TSU, Kona, or other hardware claims."
+- `inference_substrate`: principle "The run used web bibliographic research and no local model inference."
+- `test_commands`: principle "Verification commands are preserved exactly."
+- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
+- `reproducibility_checksum`: principle "Stable content checksum detects artifact drift."
+- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not inflate novelty."
+
+#### SCENARIO-REPORT-5770-ZERO-FINDING: Post-V515 Search May Complete Without Accepted Deltas
+
+**Given** the V515 planner marker is present and source reachability is
+established
+**And** every surfaced item is duplicate, watch-only, excluded, or inaccessible
+**When** the Exp5770 workflow runs
+**Then** it writes `results/experiment_5770_v515_source_delta_ingestion.json`,
+sets `status=complete`, keeps `accepted_findings=[]`,
+`references_changed=false`, `roadmap_scope_change_requested=false`,
+`operator_review_required=false`, `closed_scopes_reopened=false`,
+`hardware_claim_changed=false`, and emits a `complete:` verdict.
+
+#### SCENARIO-REPORT-5770-ACCEPT-BOUNDED-DELTA: Accepted Findings Stay Inside V515 Controls
+
+**Given** a source is post-marker or newly actionable after the marker,
+non-duplicate, and only sharpens an already allocated Exp5772-Exp5779 control or
+validation boundary
+**When** the source is accepted
+**Then** the artifact and optional reference append record the source id, title,
+URL, publication date, search timestamp, source receipt, existing target
+experiment, authority boundary, Carnot hook, and falsifiable metric while
+keeping roadmap ids, gates, dependencies, models, hardware claims, headline
+claims, and retired scopes unchanged.
+
+#### SCENARIO-REPORT-5770-BLOCKED-PROVENANCE: Missing Marker Or Source Reachability Blocks
+
+**Given** the V515 marker is absent or no source-route reachability can be
+established
+**When** the Exp5770 workflow runs
+**Then** it emits a blocked artifact, leaves references unchanged, keeps
+`accepted_findings=[]`, records the failed precondition, keeps
+`operator_review_required=false`, and starts `honest_verdict` with
+`blocked:`.
+
+#### SCENARIO-REPORT-5770-FIELD-PRINCIPLES: Every Source-Delta Field Is Annotated
+
+**Given** the Exp5770 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, `search_started_at < search_finished_at`,
+`actual_search_wall_time_s` matches the timestamp delta within rounding, each
+receipt family is present, every classified finding has URL/date/search
+timestamp/reason provenance, `closed_scopes_reopened=false`,
+`hardware_claim_changed=false`, and the checksum is stable.
