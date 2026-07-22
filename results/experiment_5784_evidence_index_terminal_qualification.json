@@ -1,0 +1,580 @@
+{
+  "bootstrap_skeleton_absent": true,
+  "canonical_identity_contract": {
+    "canonical_path_rule": "exact declared_deliverable only",
+    "identity_tuple": [
+      "milestone",
+      "task_id",
+      "declared_deliverable"
+    ],
+    "numeric_prefix_matches": "aliases_only",
+    "selection_policy": "exact_declared_deliverable"
+  },
+  "conductor_unchanged": true,
+  "evidence_index_ready_score": 1.0,
+  "experiment": 5784,
+  "experiment_id": "exp5784-evidence-index-terminal-qualification",
+  "field_principles": {
+    "bootstrap_skeleton_absent": "Bare boolean proving the emitted artifact contains the terminal schema, not a bootstrap stub.",
+    "canonical_identity_contract": "Carries the reused exact-deliverable identity tuple and alias policy.",
+    "conductor_unchanged": "True when scripts/research_conductor.py stayed byte-identical.",
+    "evidence_index_ready_score": "Bare scalar readiness from task-owned receipts plus the reused exact index.",
+    "experiment": "Numeric experiment id for the corrigendum artifact.",
+    "experiment_id": "Task id that owns the terminal qualification deliverable.",
+    "field_principles": "Maps every top-level qualification field to its evidence boundary.",
+    "focused_test_receipts": "Task-owned focused unit and coverage receipt rows.",
+    "gate_replay_receipts": "Structured Exp5785 gate replay rows read back from the finalized artifact.",
+    "global_baseline_receipts": "Non-authoritative global pytest health receipts disclosed separately.",
+    "history_mutation_count": "Bare count proving research-complete.yaml was not mutated.",
+    "honest_verdict": "Terminal summary beginning complete: or blocked:.",
+    "implementation_hashes_after": "Hashes implementation/spec/test inputs used by the finalizer.",
+    "implementation_hashes_before": "Hashes implementation/spec/test inputs captured before this correction edited them.",
+    "inference_substrate": "Declares local metadata, hashes, and explicit test receipts only; no LLM inference.",
+    "integration_test_receipts": "Task-owned integration, gate replay, lint, and hygiene receipt rows.",
+    "next_range_collision_count": "Bare Exp5771 index collision count after owned-history deliverables are allowed.",
+    "pre_existing_global_failures": "Global or spec coverage failures disclosed without relabeling them task-owned.",
+    "preconditions_checked": "Records input hashes, resource receipts, namespace scan, and failed checks.",
+    "prior_artifact_hash": "Hashes the Exp5771 artifact that had the correct index but no passing receipt authority.",
+    "producer_gate_fields": "Bare scalar fields copied for downstream conductor gates.",
+    "reproducibility_checksum": "Stable checksum over the qualification artifact excluding this checksum field.",
+    "research_complete_modified": "False when research-complete.yaml stayed byte-identical.",
+    "research_roadmap_unchanged": "True when the active roadmap hash stayed byte-identical.",
+    "run_date": "Operator-specified date for the Exp5784 qualification.",
+    "schema": "Versioned schema for the Exp5784 terminal qualification receipt.",
+    "spec_coverage_receipts": "Non-authoritative spec coverage health receipts disclosed separately.",
+    "spec_refs": "Anchors the corrigendum to REQ-REPORT-5784 and scenarios.",
+    "status": "Bare terminal state derived from task-owned receipts and exact-index gates.",
+    "task_owned_failures": "Any focused or integration receipt with nonzero exit code; these block readiness.",
+    "terminal_finalizer_receipt": "Records atomic replace, reopen, checksum, mtime, and terminal-status verification.",
+    "test_commands": "All verification commands recorded exactly in receipt order.",
+    "test_exit_codes": "Observed exit codes by command without relabeling failures.",
+    "test_ownership_policy": "States which receipt classes authorize readiness and which are disclosure-only.",
+    "unresolved_canonical_count": "Bare count of unresolved exact canonical identities."
+  },
+  "focused_test_receipts": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+      "exit_code": 0,
+      "failure_signature": "100% coverage on scripts/evidence_index_collision_preflight.py",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+      "exit_code": 0,
+      "failure_signature": "100% coverage on scripts/evidence_index_collision_preflight.py",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "failure_signature": "12 passed after run-id finalizer patch",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "current_code",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "failure_signature": "12 passed after run-id finalizer patch",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "current_code",
+      "suite_kind": "focused"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+      "exit_code": 0,
+      "failure_signature": "100% coverage on scripts/evidence_index_collision_preflight.py after run-id finalizer patch",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "current_code",
+      "suite_kind": "focused"
+    }
+  ],
+  "gate_replay_receipts": [
+    {
+      "actual": 1.0,
+      "artifact_field": "evidence_index_ready_score",
+      "artifact_status": "complete",
+      "bootstrap_skeleton_absent": true,
+      "expected": 1.0,
+      "gate_index": 0,
+      "mtime_ns": 1784678400000000000,
+      "op": "==",
+      "passed": true,
+      "reason": "actual=1.0 == expected=1.0",
+      "reloaded_checksum_match": true,
+      "reopened_from_disk": true,
+      "source": "results/experiment_5784_evidence_index_terminal_qualification.json",
+      "upstream": "exp5784-evidence-index-terminal-qualification"
+    },
+    {
+      "actual": 0,
+      "artifact_field": "next_range_collision_count",
+      "artifact_status": "complete",
+      "bootstrap_skeleton_absent": true,
+      "expected": 0,
+      "gate_index": 1,
+      "mtime_ns": 1784678400000000000,
+      "op": "==",
+      "passed": true,
+      "reason": "actual=0 == expected=0",
+      "reloaded_checksum_match": true,
+      "reopened_from_disk": true,
+      "source": "results/experiment_5784_evidence_index_terminal_qualification.json",
+      "upstream": "exp5784-evidence-index-terminal-qualification"
+    },
+    {
+      "actual": 0,
+      "artifact_field": "unresolved_canonical_count",
+      "artifact_status": "complete",
+      "bootstrap_skeleton_absent": true,
+      "expected": 0,
+      "gate_index": 2,
+      "mtime_ns": 1784678400000000000,
+      "op": "==",
+      "passed": true,
+      "reason": "actual=0 == expected=0",
+      "reloaded_checksum_match": true,
+      "reopened_from_disk": true,
+      "source": "results/experiment_5784_evidence_index_terminal_qualification.json",
+      "upstream": "exp5784-evidence-index-terminal-qualification"
+    },
+    {
+      "actual": 0,
+      "artifact_field": "history_mutation_count",
+      "artifact_status": "complete",
+      "bootstrap_skeleton_absent": true,
+      "expected": 0,
+      "gate_index": 3,
+      "mtime_ns": 1784678400000000000,
+      "op": "==",
+      "passed": true,
+      "reason": "actual=0 == expected=0",
+      "reloaded_checksum_match": true,
+      "reopened_from_disk": true,
+      "source": "results/experiment_5784_evidence_index_terminal_qualification.json",
+      "upstream": "exp5784-evidence-index-terminal-qualification"
+    }
+  ],
+  "global_baseline_receipts": [
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "failure_signature": "pre-existing unrelated baseline: 5 failed, 9071 passed, 8 skipped; failures in experiment_2117_neuroring, abstention_http_rest_3810 timeouts, experiment_1504_thrml parity blocked, test_adaptive worker crash; visible Z3 segfault in z3_math_verifier; interrupted after hang at 16:00",
+      "ownership_class": "global_baseline",
+      "pre_existing": true,
+      "run_id": "run1",
+      "suite_kind": "global_baseline"
+    }
+  ],
+  "history_mutation_count": 0,
+  "honest_verdict": "complete: exact-deliverable index qualified by task-owned receipts; global baseline health disclosed separately",
+  "implementation_hashes_after": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:e56abbfdcbfc124ce458be0cb69ac57ee5c6dec24118db3f02fa5440c94030ea",
+    "ops/conductor-log.md": "sha256:b5d9af0cc94bf48a4cb36b2eeb81ba9bb104946ffc1772c371cf3e91db5c8939",
+    "research-complete.yaml": "sha256:e63ee46c27d688ab99e56991fdde860dd6fd14806a4e680db2b51d9cd3cd0b88",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "sha256:e8a0ebc8ba164b593ed1349af9dc957364b2fe9ad68098f1959b9dabf5b39200",
+    "results/experiment_5771_evidence_index_collision_preflight.json": "sha256:32fe7d967e1711ba2aceebcae4b51552a5a3d61dd3871df90e8c4e78dbcf06d0",
+    "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+    "scripts/evidence_index_collision_preflight.py": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "tests/python/test_evidence_index_collision_preflight.py": "sha256:d6752517f313a9eb05f72a6a625ca908f836e7a7fd471c54454742111327bc30"
+  },
+  "implementation_hashes_before": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:8c66f50edbd5643533df1f05db7bb7e23a03f264981935a9bd3f767ba8fef791",
+    "ops/conductor-log.md": "sha256:b5d9af0cc94bf48a4cb36b2eeb81ba9bb104946ffc1772c371cf3e91db5c8939",
+    "research-complete.yaml": "sha256:e63ee46c27d688ab99e56991fdde860dd6fd14806a4e680db2b51d9cd3cd0b88",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "sha256:e8a0ebc8ba164b593ed1349af9dc957364b2fe9ad68098f1959b9dabf5b39200",
+    "results/experiment_5771_evidence_index_collision_preflight.json": "sha256:32fe7d967e1711ba2aceebcae4b51552a5a3d61dd3871df90e8c4e78dbcf06d0",
+    "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+    "scripts/evidence_index_collision_preflight.py": "sha256:2dd832c0974bad3f4759f29182494f79b34764a4c9c7fed1c3d471048d625347",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "tests/python/test_evidence_index_collision_preflight.py": "sha256:a731a52238a67285808341d63283f10f4cac88477519d991500bde58815c6294"
+  },
+  "inference_substrate": "local_filesystem_metadata_hashes_and_explicit_test_receipts_no_llm",
+  "integration_test_receipts": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run1",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+      "exit_code": 0,
+      "failure_signature": "",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "run2",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'",
+      "exit_code": 0,
+      "failure_signature": "4 passed after run-id finalizer patch",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "current_code",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+      "exit_code": 0,
+      "failure_signature": "current code ruff check passed after run-id finalizer patch",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "current_code",
+      "suite_kind": "integration"
+    },
+    {
+      "command": ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+      "exit_code": 0,
+      "failure_signature": "current code ruff format check passed after run-id finalizer patch",
+      "ownership_class": "task_owned",
+      "pre_existing": false,
+      "run_id": "current_code",
+      "suite_kind": "integration"
+    }
+  ],
+  "next_range_collision_count": 0,
+  "pre_existing_global_failures": [
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "failure_signature": "pre-existing unrelated baseline: 5 failed, 9071 passed, 8 skipped; failures in experiment_2117_neuroring, abstention_http_rest_3810 timeouts, experiment_1504_thrml parity blocked, test_adaptive worker crash; visible Z3 segfault in z3_math_verifier; interrupted after hang at 16:00",
+      "ownership_class": "global_baseline",
+      "pre_existing": true,
+      "run_id": "run1",
+      "suite_kind": "global_baseline"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "failure_signature": "pre-existing unrelated baseline: 1261 tests missing spec traceability; Exp5784 tests include REQ/SCENARIO references",
+      "ownership_class": "spec_coverage",
+      "pre_existing": true,
+      "run_id": "run1",
+      "suite_kind": "spec_coverage"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "failure_signature": "pre-existing unrelated baseline repeated: 1261 tests missing spec traceability; Exp5784 tests include REQ/SCENARIO references",
+      "ownership_class": "spec_coverage",
+      "pre_existing": true,
+      "run_id": "run2",
+      "suite_kind": "spec_coverage"
+    }
+  ],
+  "preconditions_checked": {
+    "conductor_hash_after": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "conductor_hash_before": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "exp5782_exp5795_collision_scan": {
+      "collision_count": 0,
+      "collision_free": true,
+      "owned_paths": [
+        {
+          "ownership": "owned_implementation_or_test_path",
+          "path": "python/carnot/experiment_5782_transition_v516.py"
+        },
+        {
+          "ownership": "owned_implementation_or_test_path",
+          "path": "python/carnot/experiment_5783_v516_source_delta_ingestion.py"
+        },
+        {
+          "ownership": "active_roadmap_declared_deliverable",
+          "path": "results/experiment_5782_transition_v516.json"
+        },
+        {
+          "ownership": "active_roadmap_declared_deliverable",
+          "path": "results/experiment_5783_v516_source_delta_ingestion.json"
+        },
+        {
+          "ownership": "current_task_deliverable",
+          "path": "results/experiment_5784_evidence_index_terminal_qualification.json"
+        },
+        {
+          "ownership": "owned_implementation_or_test_path",
+          "path": "tests/python/test_experiment_5782_transition_v516.py"
+        },
+        {
+          "ownership": "owned_implementation_or_test_path",
+          "path": "tests/python/test_experiment_5783_v516_source_delta_ingestion.py"
+        }
+      ],
+      "range": "exp5782-exp5795",
+      "unowned_path_collisions": []
+    },
+    "failed_preconditions": [],
+    "implementation_hashes_after": {
+      "openspec/capabilities/research-reporting/spec.md": "sha256:e56abbfdcbfc124ce458be0cb69ac57ee5c6dec24118db3f02fa5440c94030ea",
+      "ops/conductor-log.md": "sha256:b5d9af0cc94bf48a4cb36b2eeb81ba9bb104946ffc1772c371cf3e91db5c8939",
+      "research-complete.yaml": "sha256:e63ee46c27d688ab99e56991fdde860dd6fd14806a4e680db2b51d9cd3cd0b88",
+      "research-roadmap-next.yaml": null,
+      "research-roadmap.yaml": "sha256:e8a0ebc8ba164b593ed1349af9dc957364b2fe9ad68098f1959b9dabf5b39200",
+      "results/experiment_5771_evidence_index_collision_preflight.json": "sha256:32fe7d967e1711ba2aceebcae4b51552a5a3d61dd3871df90e8c4e78dbcf06d0",
+      "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "scripts/evidence_index_collision_preflight.py": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b",
+      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "tests/python/test_evidence_index_collision_preflight.py": "sha256:d6752517f313a9eb05f72a6a625ca908f836e7a7fd471c54454742111327bc30"
+    },
+    "prior_artifact": {
+      "honest_verdict": "blocked: evidence index preflight failed closed: tests_not_recorded_passing",
+      "path": "results/experiment_5771_evidence_index_collision_preflight.json",
+      "sha256": "sha256:32fe7d967e1711ba2aceebcae4b51552a5a3d61dd3871df90e8c4e78dbcf06d0",
+      "status": "blocked"
+    },
+    "research_roadmap_hash_after": "sha256:e8a0ebc8ba164b593ed1349af9dc957364b2fe9ad68098f1959b9dabf5b39200",
+    "research_roadmap_hash_before": "sha256:e8a0ebc8ba164b593ed1349af9dc957364b2fe9ad68098f1959b9dabf5b39200",
+    "resource_receipts": {
+      "disk_free_bytes": 1229026779136,
+      "disk_total_bytes": 3953289023488,
+      "mem_available_kib": 88665364
+    },
+    "reused_index_failed_preconditions": []
+  },
+  "prior_artifact_hash": "sha256:32fe7d967e1711ba2aceebcae4b51552a5a3d61dd3871df90e8c4e78dbcf06d0",
+  "producer_gate_fields": {
+    "evidence_index_ready_score": 1.0,
+    "history_mutation_count": 0,
+    "next_range_collision_count": 0,
+    "unresolved_canonical_count": 0
+  },
+  "reproducibility_checksum": "sha256:03cb16561509fc8884dd615c878954084cbc8c16fdafe7e7bddde1255000a769",
+  "research_complete_modified": false,
+  "research_roadmap_unchanged": true,
+  "run_date": "2026-07-22",
+  "schema": "carnot.exp5784.evidence_index_terminal_qualification.v1",
+  "spec_coverage_receipts": [
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "failure_signature": "pre-existing unrelated baseline: 1261 tests missing spec traceability; Exp5784 tests include REQ/SCENARIO references",
+      "ownership_class": "spec_coverage",
+      "pre_existing": true,
+      "run_id": "run1",
+      "suite_kind": "spec_coverage"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "failure_signature": "pre-existing unrelated baseline repeated: 1261 tests missing spec traceability; Exp5784 tests include REQ/SCENARIO references",
+      "ownership_class": "spec_coverage",
+      "pre_existing": true,
+      "run_id": "run2",
+      "suite_kind": "spec_coverage"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5784",
+    "SCENARIO-REPORT-5784-TASK-OWNED-READINESS",
+    "SCENARIO-REPORT-5784-TASK-OWNED-BLOCK",
+    "SCENARIO-REPORT-5784-GATE-REPLAY"
+  ],
+  "status": "complete",
+  "task_owned_failures": [],
+  "terminal_finalizer_receipt": {
+    "atomic_replace": true,
+    "bootstrap_skeleton_absent_verified": true,
+    "final_status_verified": true,
+    "gate_replay_rechecked": true,
+    "mtime_ns_after": 1784678400000000000,
+    "output_path": "results/experiment_5784_evidence_index_terminal_qualification.json",
+    "previous_artifact_present": true,
+    "reloaded_checksum_match": true,
+    "reopened_from_disk": true,
+    "temporary_path": "results/experiment_5784_evidence_index_terminal_qualification.json.tmp"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+    ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+    ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+    ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py"
+  ],
+  "test_exit_codes": {
+    "current_code::.venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100": 0,
+    "current_code::.venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
+    "current_code::.venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
+    "current_code::.venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'": 0,
+    "current_code::.venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    "current_code::.venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    "run1::.venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100": 0,
+    "run1::.venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
+    "run1::.venv/bin/pytest tests/python -q": 2,
+    "run1::.venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
+    "run1::.venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'": 0,
+    "run1::.venv/bin/python scripts/check_spec_coverage.py": 1,
+    "run1::.venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    "run1::.venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "run1::.venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    "run1::.venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    "run2::.venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100": 0,
+    "run2::.venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
+    "run2::.venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
+    "run2::.venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 -k 'real_v514_alias_groups or mtime_inversion_control or missing_duplicate_hash_conflict or terminal_qualification_gate_replay'": 0,
+    "run2::.venv/bin/python scripts/check_spec_coverage.py": 1,
+    "run2::.venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    "run2::.venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "run2::.venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    "run2::.venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0
+  },
+  "test_ownership_policy": {
+    "blocking_rule": "any nonzero task_owned focused/integration exit code blocks readiness",
+    "disclosure_only_suite_kinds": [
+      "global_baseline",
+      "spec_coverage"
+    ],
+    "global_health_rule": "global pytest and spec coverage failures are disclosed as health receipts and pre_existing_global_failures when marked pre_existing; they are not reclassified as task-owned evidence-index failures",
+    "readiness_authority": "task_owned focused and integration receipts only",
+    "task_owned_suite_kinds": [
+      "focused",
+      "integration"
+    ]
+  },
+  "unresolved_canonical_count": 0
+}

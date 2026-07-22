@@ -89,6 +89,104 @@ def _minimal_root(root: Path, tasks: list[JsonDict], *, copies: int = 1) -> None
             )
 
 
+def _qualification_root(root: Path) -> None:
+    _minimal_root(root, [_task("exp5760-qualification", "results/experiment_5760_q.json")])
+    _write_text(
+        root,
+        "openspec/capabilities/research-reporting/spec.md",
+        "### REQ-REPORT-5784\n",
+    )
+    _write_text(root, "tests/python/test_evidence_index_collision_preflight.py", "# tests\n")
+    _write_text(root, "scripts/evidence_index_collision_preflight.py", "# script\n")
+    _write_text(root, "scripts/conductor_gates.py", "# gate script\n")
+    _write_text(root, "scripts/exclusion_manifest_lint.py", "# lint script\n")
+    _write_text(
+        root,
+        "research-roadmap.yaml",
+        yaml.safe_dump(
+            {
+                "milestone": "2026.07.516",
+                "tasks": [
+                    {
+                        "id": "exp5785-hardness-surface-prospective-fixture",
+                        "deliverable": "results/experiment_5785_hardness_surface_fixture.json",
+                        "gated_on": [
+                            {
+                                "upstream": mod.QUALIFICATION_EXPERIMENT_ID,
+                                "artifact_field": "evidence_index_ready_score",
+                                "op": "==",
+                                "value": 1.0,
+                            },
+                            {
+                                "upstream": mod.QUALIFICATION_EXPERIMENT_ID,
+                                "artifact_field": "next_range_collision_count",
+                                "op": "==",
+                                "value": 0,
+                            },
+                            {
+                                "upstream": mod.QUALIFICATION_EXPERIMENT_ID,
+                                "artifact_field": "unresolved_canonical_count",
+                                "op": "==",
+                                "value": 0,
+                            },
+                            {
+                                "upstream": mod.QUALIFICATION_EXPERIMENT_ID,
+                                "artifact_field": "history_mutation_count",
+                                "op": "==",
+                                "value": 0,
+                            },
+                        ],
+                    }
+                ],
+            }
+        ),
+    )
+    mod.emit_report(
+        root,
+        output_path=root / mod.RESULT_RELATIVE_PATH,
+        tests_run=[{"command": "prior-focused", "exit_code": 0}],
+    )
+
+
+def _passing_qualification_receipts() -> list[JsonDict]:
+    return [
+        {
+            "run_id": "fixture",
+            "command": "focused unit and coverage",
+            "exit_code": 0,
+            "ownership_class": "task_owned",
+            "suite_kind": "focused",
+            "failure_signature": "",
+        },
+        {
+            "run_id": "fixture",
+            "command": "integration gate replay and hygiene",
+            "exit_code": 0,
+            "ownership_class": "task_owned",
+            "suite_kind": "integration",
+            "failure_signature": "",
+        },
+        {
+            "run_id": "fixture",
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 2,
+            "ownership_class": "global_baseline",
+            "suite_kind": "global_baseline",
+            "failure_signature": "pre-existing unrelated global baseline failure",
+            "pre_existing": True,
+        },
+        {
+            "run_id": "fixture",
+            "command": ".venv/bin/python scripts/check_spec_coverage.py",
+            "exit_code": 1,
+            "ownership_class": "spec_coverage",
+            "suite_kind": "spec_coverage",
+            "failure_signature": "pre-existing unrelated spec coverage baseline",
+            "pre_existing": True,
+        },
+    ]
+
+
 def test_req_report_5771_spec_declares_exact_deliverable_contract() -> None:
     """REQ-REPORT-5771: the OpenSpec names identity, aliases, and fields."""
 
@@ -493,3 +591,308 @@ def test_defensive_branches_and_cli_controls(
     bad_tests_json = _write_json(cli_root, "bad-tests.json", {"command": "unit"})
     with pytest.raises(ValueError, match="tests-run JSON must be a list"):
         mod._load_tests_run(bad_tests_json)
+
+
+def test_req_report_5784_spec_declares_terminal_qualification_contract() -> None:
+    """REQ-REPORT-5784: OpenSpec separates task-owned readiness from global health."""
+
+    text = SPEC_PATH.read_text(encoding="utf-8")
+    section = text[text.index("### REQ-REPORT-5784") :]
+
+    assert "SCENARIO-REPORT-5784-TASK-OWNED-READINESS" in section
+    assert "SCENARIO-REPORT-5784-TASK-OWNED-BLOCK" in section
+    assert "SCENARIO-REPORT-5784-GATE-REPLAY" in section
+    assert mod.QUALIFICATION_INFERENCE_SUBSTRATE in section
+    for field in mod.QUALIFICATION_REQUIRED_ARTIFACT_FIELDS:
+        assert f"`{field}`" in section
+
+
+def test_terminal_qualification_discloses_global_failures_without_blocking(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-5784-TASK-OWNED-READINESS: task-owned checks authorize readiness."""
+
+    _qualification_root(tmp_path)
+    output = tmp_path / mod.QUALIFICATION_RESULT_RELATIVE_PATH
+
+    report = mod.emit_terminal_qualification(
+        tmp_path,
+        output_path=output,
+        test_receipts=_passing_qualification_receipts(),
+        implementation_hashes_before={"scripts/evidence_index_collision_preflight.py": "before"},
+    )
+    written = json.loads(output.read_text(encoding="utf-8"))
+
+    assert written == report
+    assert report["status"] == "complete"
+    assert report["evidence_index_ready_score"] == 1.0
+    assert report["next_range_collision_count"] == 0
+    assert report["unresolved_canonical_count"] == 0
+    assert report["history_mutation_count"] == 0
+    assert report["producer_gate_fields"] == {
+        "evidence_index_ready_score": 1.0,
+        "next_range_collision_count": 0,
+        "unresolved_canonical_count": 0,
+        "history_mutation_count": 0,
+    }
+    assert report["task_owned_failures"] == []
+    assert {row["ownership_class"] for row in report["focused_test_receipts"]} == {"task_owned"}
+    assert {row["ownership_class"] for row in report["integration_test_receipts"]} == {"task_owned"}
+    assert report["global_baseline_receipts"][0]["exit_code"] == 2
+    assert report["spec_coverage_receipts"][0]["exit_code"] == 1
+    assert len(report["pre_existing_global_failures"]) == 2
+    assert report["research_complete_modified"] is False
+    assert report["research_roadmap_unchanged"] is True
+    assert report["conductor_unchanged"] is True
+    assert report["bootstrap_skeleton_absent"] is True
+    assert report["terminal_finalizer_receipt"]["atomic_replace"] is True
+    assert report["terminal_finalizer_receipt"]["reloaded_checksum_match"] is True
+    assert all(row["passed"] is True for row in report["gate_replay_receipts"])
+    assert mod.payload_checksum(report) == report["reproducibility_checksum"]
+
+
+def test_terminal_qualification_blocks_task_owned_failures(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-5784-TASK-OWNED-BLOCK: task-owned failures block readiness."""
+
+    _qualification_root(tmp_path)
+    receipts = _passing_qualification_receipts()
+    receipts[1] = receipts[1] | {
+        "exit_code": 1,
+        "failure_signature": "new integration gate replay failure",
+    }
+
+    report = mod.emit_terminal_qualification(
+        tmp_path,
+        output_path=tmp_path / mod.QUALIFICATION_RESULT_RELATIVE_PATH,
+        test_receipts=receipts,
+        implementation_hashes_before={},
+    )
+
+    assert report["status"] == "blocked"
+    assert report["evidence_index_ready_score"] == 0.0
+    assert report["task_owned_failures"] == [report["integration_test_receipts"][0]]
+    assert report["pre_existing_global_failures"]
+    assert report["honest_verdict"].startswith("blocked:")
+
+
+def test_terminal_qualification_gate_replay_uses_reopened_artifact(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-5784-GATE-REPLAY: the on-disk artifact is gate authority."""
+
+    _qualification_root(tmp_path)
+    output = tmp_path / mod.QUALIFICATION_RESULT_RELATIVE_PATH
+    report = mod.emit_terminal_qualification(
+        tmp_path,
+        output_path=output,
+        test_receipts=_passing_qualification_receipts(),
+        implementation_hashes_before={},
+    )
+    replay = mod.replay_qualification_gates(tmp_path, output)
+
+    assert replay == report["gate_replay_receipts"]
+    assert all(row["source"] == output.relative_to(tmp_path).as_posix() for row in replay)
+    assert all(row["reopened_from_disk"] is True for row in replay)
+    assert all(row["bootstrap_skeleton_absent"] is True for row in replay)
+
+
+def test_terminal_qualification_defensive_controls(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-REPORT-5784: malformed receipts, collisions, and mutation checks fail closed."""
+
+    assert mod.normalize_qualification_receipts([{"command": "bool", "exit_code": True}]) == [
+        {
+            "command": "bool",
+            "exit_code": 1,
+            "ownership_class": "global_baseline",
+            "suite_kind": "",
+            "failure_signature": "",
+            "pre_existing": False,
+        }
+    ]
+    assert mod.bootstrap_skeleton_absent({"status": "complete"}) is False
+
+    history_root = tmp_path / "history-owned"
+    _write_text(
+        history_root,
+        "research-complete.yaml",
+        yaml.safe_dump(
+            {
+                "milestones": [
+                    "bad",
+                    {"tasks": "bad"},
+                    {"tasks": ["bad", {"deliverable": "results/experiment_5773_owned.json"}]},
+                ]
+            }
+        ),
+    )
+    _write_text(history_root, "research-roadmap.yaml", yaml.safe_dump({"tasks": []}))
+    _write_json(history_root, "results/experiment_5773_owned.json", {"status": "blocked"})
+    assert (
+        mod.next_range_collision_scan(
+            history_root,
+            history_root / mod.RESULT_RELATIVE_PATH,
+        )["collision_count"]
+        == 0
+    )
+
+    scan_root = tmp_path / "range-scan"
+    _write_text(
+        scan_root,
+        "research-roadmap.yaml",
+        yaml.safe_dump(
+            {
+                "tasks": [
+                    "bad",
+                    {
+                        "id": "exp5785-hardness-surface-prospective-fixture",
+                        "deliverable": "results/experiment_5785_hardness_surface_fixture.json",
+                    },
+                ]
+            }
+        ),
+    )
+    _write_json(scan_root, "results/experiment_5785_hardness_surface_fixture.json", {})
+    _write_text(scan_root, "python/carnot/experiment_5782_existing.py", "# owned\n")
+    _write_json(scan_root, "results/experiment_5794_unowned.json", {})
+    range_scan = mod.exp5782_5795_collision_scan(
+        scan_root,
+        mod.QUALIFICATION_RESULT_RELATIVE_PATH,
+    )
+    assert range_scan["collision_count"] == 1
+    assert range_scan["owned_paths"] == [
+        {
+            "path": "python/carnot/experiment_5782_existing.py",
+            "ownership": "owned_implementation_or_test_path",
+        },
+        {
+            "path": "results/experiment_5785_hardness_surface_fixture.json",
+            "ownership": "active_roadmap_declared_deliverable",
+        },
+    ]
+
+    bad_gate_root = tmp_path / "bad-gates"
+    _write_text(bad_gate_root, "research-roadmap.yaml", yaml.safe_dump({"tasks": "bad"}))
+    assert mod._qualification_gate_task(bad_gate_root) is None
+    no_match_root = tmp_path / "no-match-gates"
+    _write_text(
+        no_match_root,
+        "research-roadmap.yaml",
+        yaml.safe_dump({"tasks": ["bad", {"id": "exp0000-other"}]}),
+    )
+    assert mod._qualification_gate_task(no_match_root) is None
+    missing_replay = mod.replay_qualification_gates(
+        no_match_root,
+        no_match_root / mod.QUALIFICATION_RESULT_RELATIVE_PATH,
+    )
+    assert missing_replay[0]["passed"] is False
+    assert missing_replay[0]["reason"] == "missing"
+
+    _qualification_root(no_match_root)
+    emitted = mod.emit_terminal_qualification(
+        no_match_root,
+        output_path=no_match_root / mod.QUALIFICATION_RESULT_RELATIVE_PATH,
+        test_receipts=_passing_qualification_receipts(),
+        implementation_hashes_before={},
+    )
+    _write_text(no_match_root, "research-roadmap.yaml", yaml.safe_dump({"tasks": []}))
+    no_task_replay = mod.replay_qualification_gates(
+        no_match_root,
+        no_match_root / mod.QUALIFICATION_RESULT_RELATIVE_PATH,
+    )
+    assert emitted["status"] == "complete"
+    assert no_task_replay[0]["reason"] == "exp5785 gate task not found in active roadmap"
+
+    old = mod.QUALIFICATION_FIELD_PRINCIPLES.pop("status")
+    try:
+        with pytest.raises(KeyError, match="missing qualification field principles"):
+            mod.build_terminal_qualification_report(
+                no_match_root,
+                test_receipts=_passing_qualification_receipts(),
+            )
+    finally:
+        mod.QUALIFICATION_FIELD_PRINCIPLES["status"] = old
+
+    collision_root = tmp_path / "qualification-collision"
+    _qualification_root(collision_root)
+    _write_json(collision_root, "results/experiment_5794_unowned.json", {})
+    collision_report = mod.build_terminal_qualification_report(
+        collision_root,
+        test_receipts=_passing_qualification_receipts(),
+    )
+    assert (
+        "exp5782_exp5795_unowned_collisions"
+        in collision_report["preconditions_checked"]["failed_preconditions"]
+    )
+
+    duplicate_root = tmp_path / "qualification-duplicate"
+    _qualification_root(duplicate_root)
+    _minimal_root(
+        duplicate_root,
+        [
+            _task("exp5760-dup", "results/experiment_5760_a.json"),
+            _task("exp5760-dup", "results/experiment_5760_b.json"),
+        ],
+    )
+    mod.emit_report(
+        duplicate_root,
+        output_path=duplicate_root / mod.RESULT_RELATIVE_PATH,
+        tests_run=[{"command": "prior-focused", "exit_code": 0}],
+    )
+    duplicate_report = mod.build_terminal_qualification_report(
+        duplicate_root,
+        test_receipts=_passing_qualification_receipts(),
+    )
+    assert (
+        "ambiguous_exact_identities"
+        in duplicate_report["preconditions_checked"]["failed_preconditions"]
+    )
+
+    protected_root = tmp_path / "protected-mutation"
+    _qualification_root(protected_root)
+    original_sha = mod.sha256_file
+    calls = {"roadmap": 0, "conductor": 0}
+
+    def fake_sha(path: Path) -> str | None:
+        if path.name == "research-roadmap.yaml":
+            calls["roadmap"] += 1
+            return f"sha256:roadmap-{calls['roadmap']}"
+        if path.name == "research_conductor.py":
+            calls["conductor"] += 1
+            return f"sha256:conductor-{calls['conductor']}"
+        return original_sha(path)
+
+    monkeypatch.setattr(mod, "sha256_file", fake_sha)
+    protected_report = mod.build_terminal_qualification_report(
+        protected_root,
+        test_receipts=_passing_qualification_receipts(),
+    )
+    protected_failed = protected_report["preconditions_checked"]["failed_preconditions"]
+    assert "research_roadmap_modified" in protected_failed
+    assert "research_conductor_modified" in protected_failed
+    monkeypatch.setattr(mod, "sha256_file", original_sha)
+
+    cli_root = tmp_path / "qualification-cli"
+    _qualification_root(cli_root)
+    receipts_json = _write_json(cli_root, "receipts.json", _passing_qualification_receipts())
+    before_json = _write_json(cli_root, "before.json", {"script": "before"})
+    assert (
+        mod.main(
+            [
+                "--root",
+                str(cli_root),
+                "--output",
+                str(cli_root / mod.QUALIFICATION_RESULT_RELATIVE_PATH),
+                "--qualify-terminal",
+                "--qualification-tests-run-json",
+                str(receipts_json),
+                "--implementation-hashes-before-json",
+                str(before_json),
+            ]
+        )
+        == 0
+    )
+    assert mod._load_json_mapping_file(None) == {}
+    bad_map_json = _write_json(cli_root, "bad-map.json", [])
+    with pytest.raises(ValueError, match="JSON file must be a mapping"):
+        mod._load_json_mapping_file(bad_map_json)

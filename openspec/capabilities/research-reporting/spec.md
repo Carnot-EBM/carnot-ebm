@@ -43526,3 +43526,93 @@ is false, `conductor_unchanged` is true, and the checksum is stable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5771 | Implemented (`scripts/evidence_index_collision_preflight.py`, `results/experiment_5771_evidence_index_collision_preflight.json`) | Implemented (`tests/python/test_evidence_index_collision_preflight.py`) |
+
+### REQ-REPORT-5784: Evidence-Index Terminal Qualification Separates Task-Owned Receipts From Global Health
+
+The Exp5784 corrigendum workflow SHALL reuse
+`scripts/evidence_index_collision_preflight.py` as the only evidence-index
+implementation and SHALL write
+`results/experiment_5784_evidence_index_terminal_qualification.json` through an
+atomic terminal finalizer. It SHALL NOT modify `research-complete.yaml`,
+`research-roadmap.yaml`, historical result artifacts, or
+`scripts/research_conductor.py`. It SHALL declare
+`inference_substrate="local_filesystem_metadata_hashes_and_explicit_test_receipts_no_llm"`.
+
+The workflow SHALL ingest explicit verification receipt rows containing command,
+exit code, ownership class, suite kind, and failure signature. Focused
+evidence-index unit and coverage checks and integration checks, including real
+alias fixtures, exact lookup, missing/conflict/mtime negative controls, gate
+replay, exclusion lint, and root-clutter checks, SHALL be task-owned readiness
+authority. Any newly introduced task-owned failure SHALL block
+`evidence_index_ready_score=1.0`. Global baseline pytest failures and spec
+coverage failures SHALL be disclosed as health receipts and pre-existing global
+failures, but SHALL NOT by themselves authorize or block the exact-deliverable
+index when the task-owned checks pass.
+
+The workflow SHALL hash the Exp5771 script, spec, tests, prior artifact, active
+and next roadmaps when present, `research-complete.yaml`, conductor gate code,
+exclusion lint code, conductor log, and `scripts/research_conductor.py` before
+finalization, record disk/RAM resources, and fail closed on ambiguous exact
+canonical identities. Exp5782-Exp5795 namespace findings SHALL be recorded
+before finalization; already allocated owned deliverables are not same-number
+collisions for Exp5784.
+
+The finalizer SHALL derive the bare producer gate fields from a reopened
+on-disk terminal artifact, verify checksum and mtime after atomic replace,
+prove no bootstrap skeleton remains, and replay the structured Exp5785 gates
+against the finalized artifact. The artifact SHALL set bare
+`evidence_index_ready_score=1.0`, `next_range_collision_count=0`,
+`unresolved_canonical_count=0`, and `history_mutation_count=0` only when all
+task-owned readiness checks pass and the reused exact-deliverable index reports
+zero next-range collisions, zero unresolved canonical identities, and zero
+history mutations.
+
+The artifact SHALL include, at minimum, bare `status`,
+`preconditions_checked`, `prior_artifact_hash`,
+`implementation_hashes_before`, `implementation_hashes_after`,
+`canonical_identity_contract`, `focused_test_receipts`,
+`integration_test_receipts`, `global_baseline_receipts`,
+`spec_coverage_receipts`, `test_ownership_policy`, `task_owned_failures`,
+`pre_existing_global_failures`, `terminal_finalizer_receipt`,
+`bootstrap_skeleton_absent`, `gate_replay_receipts`, bare
+`evidence_index_ready_score`, bare `next_range_collision_count`, bare
+`unresolved_canonical_count`, bare `history_mutation_count`,
+`producer_gate_fields`, `research_complete_modified`,
+`research_roadmap_unchanged`, `conductor_unchanged`, `inference_substrate`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. `research_complete_modified` SHALL be `false`,
+`research_roadmap_unchanged` SHALL be `true`, `conductor_unchanged` SHALL be
+`true`, and `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+#### SCENARIO-REPORT-5784-TASK-OWNED-READINESS: Focused And Integration Receipts Authorize Readiness
+
+**Given** the reused Exp5771 index reports zero next-range collisions, zero
+unresolved canonical identities, and zero history mutations
+**And** focused and integration receipt rows all have exit code zero
+**When** Exp5784 finalizes its terminal artifact
+**Then** it sets `evidence_index_ready_score=1.0`, preserves the three zero
+producer fields as bare scalars, and discloses nonzero global baseline or spec
+coverage receipts outside `task_owned_failures`.
+
+#### SCENARIO-REPORT-5784-TASK-OWNED-BLOCK: New Task-Owned Failure Blocks Readiness
+
+**Given** a focused or integration receipt row has a nonzero exit code
+**When** Exp5784 finalizes its terminal artifact
+**Then** it records the row in `task_owned_failures`, sets
+`evidence_index_ready_score=0.0`, and emits a blocked terminal verdict without
+erasing unrelated global health receipts.
+
+#### SCENARIO-REPORT-5784-GATE-REPLAY: Final On-Disk Artifact Is The Gate Authority
+
+**Given** the terminal artifact has been atomically written
+**When** the Exp5785 structured gate predicates are replayed using
+`scripts/conductor_gates.py`
+**Then** every replay receipt reads from the reopened on-disk artifact, verifies
+checksum, mtime, terminal status, and absence of bootstrap skeleton fields, and
+passes only when the bare producer gate fields satisfy the declared predicates.
+
+## Implementation Status (REQ-REPORT-5784)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5784 | Implemented (`scripts/evidence_index_collision_preflight.py`, `results/experiment_5784_evidence_index_terminal_qualification.json`) | Implemented (`tests/python/test_evidence_index_collision_preflight.py`) |

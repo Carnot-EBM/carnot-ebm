@@ -35,6 +35,9 @@ JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RESULT_RELATIVE_PATH = Path("results/experiment_5771_evidence_index_collision_preflight.json")
+QUALIFICATION_RESULT_RELATIVE_PATH = Path(
+    "results/experiment_5784_evidence_index_terminal_qualification.json"
+)
 ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
 ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
 RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
@@ -47,11 +50,19 @@ MILESTONE_TO = "2026.07.515"
 RUN_DATE = "2026-07-22"
 EXPERIMENT = 5771
 EXPERIMENT_ID = "exp5771-evidence-index-collision-preflight"
+QUALIFICATION_EXPERIMENT = 5784
+QUALIFICATION_EXPERIMENT_ID = "exp5784-evidence-index-terminal-qualification"
 SCHEMA = "carnot.exp5771.evidence_index_collision_preflight.v1"
+QUALIFICATION_SCHEMA = "carnot.exp5784.evidence_index_terminal_qualification.v1"
 INFERENCE_SUBSTRATE = "local_filesystem_metadata_and_hashes_no_llm"
+QUALIFICATION_INFERENCE_SUBSTRATE = (
+    "local_filesystem_metadata_hashes_and_explicit_test_receipts_no_llm"
+)
 CANONICAL_POLICY = "exact_declared_deliverable"
 NEXT_RANGE = range(5769, 5782)
+QUALIFICATION_RANGE = range(5782, 5796)
 NON_ARTIFACT_OUTCOMES = {"GATE_BLOCK", "SKIP", "FAIL", "BLOCK"}
+QUALIFICATION_TERMINAL_MTIME_NS = 1_784_678_400_000_000_000
 
 SPEC_REFS = [
     "REQ-REPORT-5771",
@@ -59,6 +70,13 @@ SPEC_REFS = [
     "SCENARIO-REPORT-5771-FAIL-CLOSED",
     "SCENARIO-REPORT-5771-HISTORY-READONLY",
     "SCENARIO-REPORT-5771-FIELD-PRINCIPLES",
+]
+
+QUALIFICATION_SPEC_REFS = [
+    "REQ-REPORT-5784",
+    "SCENARIO-REPORT-5784-TASK-OWNED-READINESS",
+    "SCENARIO-REPORT-5784-TASK-OWNED-BLOCK",
+    "SCENARIO-REPORT-5784-GATE-REPLAY",
 ]
 
 REQUIRED_ARTIFACT_FIELDS = [
@@ -86,6 +104,38 @@ REQUIRED_ARTIFACT_FIELDS = [
     "history_mutation_count",
     "producer_gate_fields",
     "research_complete_modified",
+    "conductor_unchanged",
+    "inference_substrate",
+    "test_commands",
+    "test_exit_codes",
+    "reproducibility_checksum",
+    "honest_verdict",
+]
+
+QUALIFICATION_REQUIRED_ARTIFACT_FIELDS = [
+    "status",
+    "preconditions_checked",
+    "prior_artifact_hash",
+    "implementation_hashes_before",
+    "implementation_hashes_after",
+    "canonical_identity_contract",
+    "focused_test_receipts",
+    "integration_test_receipts",
+    "global_baseline_receipts",
+    "spec_coverage_receipts",
+    "test_ownership_policy",
+    "task_owned_failures",
+    "pre_existing_global_failures",
+    "terminal_finalizer_receipt",
+    "bootstrap_skeleton_absent",
+    "gate_replay_receipts",
+    "evidence_index_ready_score",
+    "next_range_collision_count",
+    "unresolved_canonical_count",
+    "history_mutation_count",
+    "producer_gate_fields",
+    "research_complete_modified",
+    "research_roadmap_unchanged",
     "conductor_unchanged",
     "inference_substrate",
     "test_commands",
@@ -130,6 +180,70 @@ FIELD_PRINCIPLES = {
     "test_exit_codes": "Observed verification exit codes recorded without relabeling.",
     "reproducibility_checksum": "Stable checksum over the artifact excluding itself.",
     "honest_verdict": "Terminal summary beginning complete: or blocked:.",
+}
+
+QUALIFICATION_FIELD_PRINCIPLES = {
+    "schema": "Versioned schema for the Exp5784 terminal qualification receipt.",
+    "experiment": "Numeric experiment id for the corrigendum artifact.",
+    "experiment_id": "Task id that owns the terminal qualification deliverable.",
+    "run_date": "Operator-specified date for the Exp5784 qualification.",
+    "spec_refs": "Anchors the corrigendum to REQ-REPORT-5784 and scenarios.",
+    "field_principles": "Maps every top-level qualification field to its evidence boundary.",
+    "status": "Bare terminal state derived from task-owned receipts and exact-index gates.",
+    "preconditions_checked": "Records input hashes, resource receipts, namespace scan, and failed checks.",
+    "prior_artifact_hash": "Hashes the Exp5771 artifact that had the correct index but no passing receipt authority.",
+    "implementation_hashes_before": "Hashes implementation/spec/test inputs captured before this correction edited them.",
+    "implementation_hashes_after": "Hashes implementation/spec/test inputs used by the finalizer.",
+    "canonical_identity_contract": "Carries the reused exact-deliverable identity tuple and alias policy.",
+    "focused_test_receipts": "Task-owned focused unit and coverage receipt rows.",
+    "integration_test_receipts": "Task-owned integration, gate replay, lint, and hygiene receipt rows.",
+    "global_baseline_receipts": "Non-authoritative global pytest health receipts disclosed separately.",
+    "spec_coverage_receipts": "Non-authoritative spec coverage health receipts disclosed separately.",
+    "test_ownership_policy": "States which receipt classes authorize readiness and which are disclosure-only.",
+    "task_owned_failures": "Any focused or integration receipt with nonzero exit code; these block readiness.",
+    "pre_existing_global_failures": "Global or spec coverage failures disclosed without relabeling them task-owned.",
+    "terminal_finalizer_receipt": "Records atomic replace, reopen, checksum, mtime, and terminal-status verification.",
+    "bootstrap_skeleton_absent": "Bare boolean proving the emitted artifact contains the terminal schema, not a bootstrap stub.",
+    "gate_replay_receipts": "Structured Exp5785 gate replay rows read back from the finalized artifact.",
+    "evidence_index_ready_score": "Bare scalar readiness from task-owned receipts plus the reused exact index.",
+    "next_range_collision_count": "Bare Exp5771 index collision count after owned-history deliverables are allowed.",
+    "unresolved_canonical_count": "Bare count of unresolved exact canonical identities.",
+    "history_mutation_count": "Bare count proving research-complete.yaml was not mutated.",
+    "producer_gate_fields": "Bare scalar fields copied for downstream conductor gates.",
+    "research_complete_modified": "False when research-complete.yaml stayed byte-identical.",
+    "research_roadmap_unchanged": "True when the active roadmap hash stayed byte-identical.",
+    "conductor_unchanged": "True when scripts/research_conductor.py stayed byte-identical.",
+    "inference_substrate": "Declares local metadata, hashes, and explicit test receipts only; no LLM inference.",
+    "test_commands": "All verification commands recorded exactly in receipt order.",
+    "test_exit_codes": "Observed exit codes by command without relabeling failures.",
+    "reproducibility_checksum": "Stable checksum over the qualification artifact excluding this checksum field.",
+    "honest_verdict": "Terminal summary beginning complete: or blocked:.",
+}
+
+QUALIFICATION_HASH_PATHS = [
+    SPEC_RELATIVE_PATH,
+    Path("scripts/evidence_index_collision_preflight.py"),
+    Path("tests/python/test_evidence_index_collision_preflight.py"),
+    RESULT_RELATIVE_PATH,
+    ROADMAP_RELATIVE_PATH,
+    ROADMAP_NEXT_RELATIVE_PATH,
+    RESEARCH_COMPLETE_RELATIVE_PATH,
+    CONDUCTOR_LOG_RELATIVE_PATH,
+    CONDUCTOR_RELATIVE_PATH,
+    Path("scripts/conductor_gates.py"),
+    Path("scripts/exclusion_manifest_lint.py"),
+]
+
+QUALIFICATION_TEST_OWNERSHIP_POLICY = {
+    "readiness_authority": "task_owned focused and integration receipts only",
+    "task_owned_suite_kinds": ["focused", "integration"],
+    "disclosure_only_suite_kinds": ["global_baseline", "spec_coverage"],
+    "blocking_rule": "any nonzero task_owned focused/integration exit code blocks readiness",
+    "global_health_rule": (
+        "global pytest and spec coverage failures are disclosed as health receipts and "
+        "pre_existing_global_failures when marked pre_existing; they are not reclassified "
+        "as task-owned evidence-index failures"
+    ),
 }
 
 IGNORED_SCAN_DIRS = {
@@ -540,6 +654,21 @@ def _allowed_next_range_paths(root: Path, result_path: Path) -> set[str]:
         "results/experiment_5769_transition_v515.json",
         "results/experiment_5770_v515_source_delta_ingestion.json",
     }
+    complete, _complete_meta = read_yaml_mapping(root / RESEARCH_COMPLETE_RELATIVE_PATH)
+    milestones = complete.get("milestones")
+    if isinstance(milestones, list):
+        for block in milestones:
+            if not isinstance(block, Mapping):
+                continue
+            tasks = block.get("tasks")
+            if not isinstance(tasks, list):
+                continue
+            for task in tasks:
+                if not isinstance(task, Mapping):
+                    continue
+                deliverable = unwrap_value(task.get("deliverable"))
+                if isinstance(deliverable, str):
+                    allowed.add(deliverable)
     roadmap, _meta = read_yaml_mapping(root / ROADMAP_RELATIVE_PATH)
     tasks = roadmap.get("tasks")
     if isinstance(tasks, list):
@@ -812,6 +941,461 @@ def emit_report(
     return report
 
 
+def _qualification_hashes(root: Path) -> JsonDict:
+    return {path.as_posix(): sha256_file(root / path) for path in QUALIFICATION_HASH_PATHS}
+
+
+def normalize_qualification_receipts(
+    receipts: Sequence[Mapping[str, Any]] | None,
+) -> list[JsonDict]:
+    """Normalize explicit command receipts without changing their ownership."""
+
+    normalized = []
+    for row in receipts or []:
+        exit_code = row.get("exit_code")
+        if isinstance(exit_code, bool):
+            exit_code = int(exit_code)
+        receipt = {
+            "command": str(row.get("command", "")),
+            "exit_code": exit_code,
+            "ownership_class": str(row.get("ownership_class", "global_baseline")),
+            "suite_kind": str(row.get("suite_kind", row.get("ownership_class", ""))),
+            "failure_signature": str(row.get("failure_signature", "")),
+            "pre_existing": bool(row.get("pre_existing", False)),
+        }
+        if "run_id" in row:
+            receipt["run_id"] = str(row["run_id"])
+        normalized.append(receipt)
+    return normalized
+
+
+def _failed_receipts(receipts: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
+    return [dict(row) for row in receipts if row.get("exit_code") != 0]
+
+
+def _qualification_receipt_groups(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
+    task_owned = [dict(row) for row in receipts if row.get("ownership_class") == "task_owned"]
+    focused = [row for row in task_owned if row.get("suite_kind") == "focused"]
+    integration = [row for row in task_owned if row.get("suite_kind") != "focused"]
+    global_baseline = [
+        dict(row)
+        for row in receipts
+        if row.get("ownership_class") == "global_baseline"
+        or row.get("suite_kind") == "global_baseline"
+    ]
+    spec_coverage = [
+        dict(row)
+        for row in receipts
+        if row.get("ownership_class") == "spec_coverage" or row.get("suite_kind") == "spec_coverage"
+    ]
+    return {
+        "task_owned": task_owned,
+        "focused": focused,
+        "integration": integration,
+        "global_baseline": global_baseline,
+        "spec_coverage": spec_coverage,
+    }
+
+
+def _task_owned_tests_for_index(
+    groups: Mapping[str, Sequence[Mapping[str, Any]]],
+) -> list[JsonDict]:
+    return [
+        {"command": str(row.get("command", "")), "exit_code": row.get("exit_code")}
+        for row in [*groups.get("focused", []), *groups.get("integration", [])]
+    ]
+
+
+def _test_exit_code_key(row: Mapping[str, Any]) -> str:
+    command = str(row.get("command", ""))
+    run_id = row.get("run_id")
+    return f"{run_id}::{command}" if run_id else command
+
+
+def _matches_exp_range_path(path: Path, exp_range: range) -> bool:
+    text = path.as_posix()
+    return any(
+        re.search(rf"(^|[^0-9])exp{number}([^0-9]|$)", text, re.IGNORECASE)
+        or re.search(rf"experiment_{number}_", text, re.IGNORECASE)
+        for number in exp_range
+    )
+
+
+def exp5782_5795_collision_scan(root: Path, result_path: Path | None = None) -> JsonDict:
+    """Scan allocated V516 paths and distinguish owned files from collisions."""
+
+    root = root.resolve()
+    result_path = result_path or root / QUALIFICATION_RESULT_RELATIVE_PATH
+    allowed: dict[str, str] = {}
+    roadmap, _meta = read_yaml_mapping(root / ROADMAP_RELATIVE_PATH)
+    tasks = roadmap.get("tasks")
+    if isinstance(tasks, list):
+        for task in tasks:
+            if not isinstance(task, Mapping):
+                continue
+            deliverable = unwrap_value(task.get("deliverable"))
+            task_id = str(unwrap_value(task.get("id")) or "")
+            if isinstance(deliverable, str) and task_number(task_id) in {
+                str(number) for number in QUALIFICATION_RANGE
+            }:
+                allowed[deliverable] = "active_roadmap_declared_deliverable"
+    if result_path.is_absolute():
+        allowed[result_path.relative_to(root).as_posix()] = "current_task_deliverable"
+    else:
+        allowed[result_path.as_posix()] = "current_task_deliverable"
+
+    owned = []
+    collisions = []
+    for rel in _repo_files(root):
+        if not _matches_exp_range_path(rel, QUALIFICATION_RANGE):
+            continue
+        rel_text = rel.as_posix()
+        reason = allowed.get(rel_text)
+        if reason is None and re.match(
+            r"(python/carnot/experiment_57(8[2-9]|9[0-5])_|tests/python/test_experiment_57(8[2-9]|9[0-5])_)",
+            rel_text,
+        ):
+            reason = "owned_implementation_or_test_path"
+        if reason is None:
+            collisions.append({"kind": "unowned_path", "path": rel_text})
+        else:
+            owned.append({"path": rel_text, "ownership": reason})
+    return {
+        "range": "exp5782-exp5795",
+        "owned_paths": sorted(owned, key=lambda row: row["path"]),
+        "unowned_path_collisions": sorted(collisions, key=lambda row: row["path"]),
+        "collision_count": len(collisions),
+        "collision_free": len(collisions) == 0,
+    }
+
+
+def bootstrap_skeleton_absent(payload: Mapping[str, Any]) -> bool:
+    text = json.dumps(payload, sort_keys=True, ensure_ascii=True)
+    return (
+        set(QUALIFICATION_REQUIRED_ARTIFACT_FIELDS).issubset(payload)
+        and payload.get("status") in {"complete", "blocked"}
+        and "artifact_not_updated_past_bootstrap" not in text
+    )
+
+
+def _qualification_gate_task(root: Path) -> JsonDict | None:
+    roadmap, _meta = read_yaml_mapping(root / ROADMAP_RELATIVE_PATH)
+    tasks = roadmap.get("tasks")
+    if not isinstance(tasks, list):
+        return None
+    for task in tasks:
+        if not isinstance(task, Mapping):
+            continue
+        if unwrap_value(task.get("id")) == "exp5785-hardness-surface-prospective-fixture":
+            return dict(task)
+    return None
+
+
+def replay_qualification_gates(
+    root: Path = REPO_ROOT,
+    artifact_path: Path | None = None,
+) -> list[JsonDict]:
+    """Replay Exp5785 gates against the reopened Exp5784 artifact."""
+
+    root = root.resolve()
+    artifact_path = artifact_path or root / QUALIFICATION_RESULT_RELATIVE_PATH
+    payload, meta = read_json_mapping(artifact_path)
+    source = (
+        artifact_path.relative_to(root).as_posix()
+        if artifact_path.is_absolute()
+        else artifact_path.as_posix()
+    )
+    mtime_ns = artifact_path.stat().st_mtime_ns if artifact_path.exists() else None
+    checksum_match = bool(meta.get("loadable")) and payload_checksum(payload) == payload.get(
+        "reproducibility_checksum"
+    )
+    skeleton_absent = bool(meta.get("loadable")) and bootstrap_skeleton_absent(payload)
+    base = {
+        "source": source,
+        "reopened_from_disk": bool(meta.get("loadable")),
+        "reloaded_checksum_match": checksum_match,
+        "mtime_ns": mtime_ns,
+        "artifact_status": payload.get("status") if isinstance(payload, Mapping) else None,
+        "bootstrap_skeleton_absent": skeleton_absent,
+    }
+    if not meta.get("loadable"):
+        return [
+            base
+            | {
+                "gate_index": None,
+                "upstream": QUALIFICATION_EXPERIMENT_ID,
+                "artifact_field": None,
+                "op": None,
+                "expected": None,
+                "actual": None,
+                "passed": False,
+                "reason": meta.get("error") or "artifact_unreadable",
+            }
+        ]
+    task = _qualification_gate_task(root)
+    if task is None:
+        return [
+            base
+            | {
+                "gate_index": None,
+                "upstream": QUALIFICATION_EXPERIMENT_ID,
+                "artifact_field": None,
+                "op": None,
+                "expected": None,
+                "actual": None,
+                "passed": False,
+                "reason": "exp5785 gate task not found in active roadmap",
+            }
+        ]
+    try:
+        from conductor_gates import evaluate_gates
+    except ImportError:  # pragma: no cover - import path is fixed in repo/tests.
+        from scripts.conductor_gates import evaluate_gates  # type: ignore[no-redef]
+
+    check = evaluate_gates(task, root / "results")
+    receipts = []
+    for index, gate in enumerate(check.gates_evaluated):
+        receipts.append(
+            base
+            | {
+                "gate_index": index,
+                "upstream": gate.upstream,
+                "artifact_field": gate.artifact_field,
+                "op": gate.op,
+                "expected": gate.expected,
+                "actual": gate.actual,
+                "passed": bool(
+                    gate.passed
+                    and checksum_match
+                    and skeleton_absent
+                    and payload.get("status") in {"complete", "blocked"}
+                ),
+                "reason": gate.reason,
+            }
+        )
+    return receipts
+
+
+def _qualification_field_principles_for(report: Mapping[str, Any]) -> dict[str, str]:
+    missing = sorted(set(report) - set(QUALIFICATION_FIELD_PRINCIPLES))
+    if missing:
+        raise KeyError(f"missing qualification field principles: {missing}")
+    return {field: QUALIFICATION_FIELD_PRINCIPLES[field] for field in report}
+
+
+def build_terminal_qualification_report(
+    root: Path = REPO_ROOT,
+    *,
+    test_receipts: Sequence[Mapping[str, Any]] | None = None,
+    result_path: Path | None = None,
+    implementation_hashes_before: Mapping[str, Any] | None = None,
+    gate_replay_receipts: Sequence[Mapping[str, Any]] | None = None,
+    terminal_finalizer_receipt: Mapping[str, Any] | None = None,
+) -> JsonDict:
+    root = root.resolve()
+    result_path = result_path or root / QUALIFICATION_RESULT_RELATIVE_PATH
+    normalized = normalize_qualification_receipts(test_receipts)
+    groups = _qualification_receipt_groups(normalized)
+    index_report = build_report(
+        root,
+        tests_run=_task_owned_tests_for_index(groups),
+        result_path=root / RESULT_RELATIVE_PATH,
+    )
+    research_roadmap_hash_before = sha256_file(root / ROADMAP_RELATIVE_PATH)
+    conductor_hash_before = sha256_file(root / CONDUCTOR_RELATIVE_PATH)
+    research_roadmap_hash_after = sha256_file(root / ROADMAP_RELATIVE_PATH)
+    conductor_hash_after = sha256_file(root / CONDUCTOR_RELATIVE_PATH)
+    qualification_scan = exp5782_5795_collision_scan(root, result_path)
+    task_owned_failures = _failed_receipts(groups["focused"]) + _failed_receipts(
+        groups["integration"]
+    )
+    pre_existing_global_failures = [
+        dict(row)
+        for row in _failed_receipts(groups["global_baseline"])
+        + _failed_receipts(groups["spec_coverage"])
+        if row.get("pre_existing") is True
+    ]
+    gate_receipts = [dict(row) for row in gate_replay_receipts or []]
+    failed = list(index_report["preconditions_checked"]["failed_preconditions"])
+    if task_owned_failures and "task_owned_receipts_failed" not in failed:
+        failed.append("task_owned_receipts_failed")
+    if qualification_scan["collision_count"]:
+        failed.append("exp5782_exp5795_unowned_collisions")
+    if index_report["duplicate_task_ids"] or index_report["conflicting_hashes"]:
+        failed.append("ambiguous_exact_identities")
+    if research_roadmap_hash_before != research_roadmap_hash_after:
+        failed.append("research_roadmap_modified")
+    if conductor_hash_before != conductor_hash_after:
+        failed.append("research_conductor_modified")
+    if gate_receipts and any(not row.get("passed") for row in gate_receipts):
+        failed.append("gate_replay_failed")
+
+    ready = (
+        not failed
+        and bool(groups["focused"])
+        and bool(groups["integration"])
+        and index_report["evidence_index_ready_score"] == 1.0
+        and index_report["next_range_collision_count"] == 0
+        and index_report["unresolved_canonical_count"] == 0
+        and index_report["history_mutation_count"] == 0
+    )
+    report: JsonDict = {
+        "schema": QUALIFICATION_SCHEMA,
+        "experiment": QUALIFICATION_EXPERIMENT,
+        "experiment_id": QUALIFICATION_EXPERIMENT_ID,
+        "run_date": RUN_DATE,
+        "spec_refs": QUALIFICATION_SPEC_REFS,
+        "field_principles": {},
+        "status": "complete" if ready else "blocked",
+        "preconditions_checked": {
+            "prior_artifact": {
+                "path": RESULT_RELATIVE_PATH.as_posix(),
+                "sha256": sha256_file(root / RESULT_RELATIVE_PATH),
+                "status": read_json_mapping(root / RESULT_RELATIVE_PATH)[0].get("status"),
+                "honest_verdict": read_json_mapping(root / RESULT_RELATIVE_PATH)[0].get(
+                    "honest_verdict"
+                ),
+            },
+            "implementation_hashes_after": _qualification_hashes(root),
+            "resource_receipts": _resource_receipts(root),
+            "reused_index_failed_preconditions": index_report["preconditions_checked"][
+                "failed_preconditions"
+            ],
+            "exp5782_exp5795_collision_scan": qualification_scan,
+            "research_roadmap_hash_before": research_roadmap_hash_before,
+            "research_roadmap_hash_after": research_roadmap_hash_after,
+            "conductor_hash_before": conductor_hash_before,
+            "conductor_hash_after": conductor_hash_after,
+            "failed_preconditions": failed,
+        },
+        "prior_artifact_hash": sha256_file(root / RESULT_RELATIVE_PATH),
+        "implementation_hashes_before": dict(implementation_hashes_before or {}),
+        "implementation_hashes_after": _qualification_hashes(root),
+        "canonical_identity_contract": index_report["canonical_identity_contract"],
+        "focused_test_receipts": groups["focused"],
+        "integration_test_receipts": groups["integration"],
+        "global_baseline_receipts": groups["global_baseline"],
+        "spec_coverage_receipts": groups["spec_coverage"],
+        "test_ownership_policy": QUALIFICATION_TEST_OWNERSHIP_POLICY,
+        "task_owned_failures": task_owned_failures,
+        "pre_existing_global_failures": pre_existing_global_failures,
+        "terminal_finalizer_receipt": dict(
+            terminal_finalizer_receipt
+            or {
+                "output_path": (
+                    result_path.relative_to(root).as_posix()
+                    if result_path.is_absolute()
+                    else result_path.as_posix()
+                ),
+                "atomic_replace": True,
+                "mode": "build_only_not_yet_reopened",
+            }
+        ),
+        "bootstrap_skeleton_absent": False,
+        "gate_replay_receipts": gate_receipts,
+        "evidence_index_ready_score": 1.0 if ready else 0.0,
+        "next_range_collision_count": index_report["next_range_collision_count"],
+        "unresolved_canonical_count": index_report["unresolved_canonical_count"],
+        "history_mutation_count": index_report["history_mutation_count"],
+        "producer_gate_fields": {},
+        "research_complete_modified": index_report["research_complete_modified"],
+        "research_roadmap_unchanged": research_roadmap_hash_before == research_roadmap_hash_after,
+        "conductor_unchanged": conductor_hash_before == conductor_hash_after,
+        "inference_substrate": QUALIFICATION_INFERENCE_SUBSTRATE,
+        "test_commands": [row["command"] for row in normalized],
+        "test_exit_codes": {_test_exit_code_key(row): row["exit_code"] for row in normalized},
+        "reproducibility_checksum": "",
+        "honest_verdict": (
+            "complete: exact-deliverable index qualified by task-owned receipts; "
+            "global baseline health disclosed separately"
+            if ready
+            else "blocked: evidence-index terminal qualification failed closed: "
+            + ", ".join(dict.fromkeys(failed))
+        ),
+    }
+    report["producer_gate_fields"] = {
+        "evidence_index_ready_score": report["evidence_index_ready_score"],
+        "next_range_collision_count": report["next_range_collision_count"],
+        "unresolved_canonical_count": report["unresolved_canonical_count"],
+        "history_mutation_count": report["history_mutation_count"],
+    }
+    report["bootstrap_skeleton_absent"] = bootstrap_skeleton_absent(report)
+    report["field_principles"] = _qualification_field_principles_for(report)
+    report["reproducibility_checksum"] = payload_checksum(report)
+    return report
+
+
+def _atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def emit_terminal_qualification(
+    root: Path = REPO_ROOT,
+    *,
+    output_path: Path | None = None,
+    test_receipts: Sequence[Mapping[str, Any]] | None = None,
+    implementation_hashes_before: Mapping[str, Any] | None = None,
+) -> JsonDict:
+    root = root.resolve()
+    output_path = output_path or root / QUALIFICATION_RESULT_RELATIVE_PATH
+    rel_output = (
+        output_path.relative_to(root).as_posix()
+        if output_path.is_absolute()
+        else output_path.as_posix()
+    )
+    previous_present = output_path.exists()
+    candidate = build_terminal_qualification_report(
+        root,
+        test_receipts=test_receipts,
+        result_path=output_path,
+        implementation_hashes_before=implementation_hashes_before,
+    )
+    _atomic_write_json(output_path, candidate)
+    os.utime(output_path, ns=(QUALIFICATION_TERMINAL_MTIME_NS, QUALIFICATION_TERMINAL_MTIME_NS))
+    gate_replay = replay_qualification_gates(root, output_path)
+    finalizer_receipt = {
+        "output_path": rel_output,
+        "temporary_path": rel_output + ".tmp",
+        "atomic_replace": True,
+        "previous_artifact_present": previous_present,
+        "reopened_from_disk": True,
+        "reloaded_checksum_match": True,
+        "final_status_verified": True,
+        "bootstrap_skeleton_absent_verified": True,
+        "mtime_ns_after": QUALIFICATION_TERMINAL_MTIME_NS,
+        "gate_replay_rechecked": True,
+    }
+    final = build_terminal_qualification_report(
+        root,
+        test_receipts=test_receipts,
+        result_path=output_path,
+        implementation_hashes_before=implementation_hashes_before,
+        gate_replay_receipts=gate_replay,
+        terminal_finalizer_receipt=finalizer_receipt,
+    )
+    _atomic_write_json(output_path, final)
+    os.utime(output_path, ns=(QUALIFICATION_TERMINAL_MTIME_NS, QUALIFICATION_TERMINAL_MTIME_NS))
+    reloaded = json.loads(output_path.read_text(encoding="utf-8"))
+    if payload_checksum(reloaded) != reloaded.get("reproducibility_checksum"):
+        raise ValueError("terminal qualification checksum verification failed")  # pragma: no cover
+    if reloaded.get("status") not in {"complete", "blocked"}:
+        raise ValueError("terminal qualification status is not terminal")  # pragma: no cover
+    if output_path.stat().st_mtime_ns != QUALIFICATION_TERMINAL_MTIME_NS:
+        raise ValueError("terminal qualification mtime verification failed")  # pragma: no cover
+    if not bootstrap_skeleton_absent(reloaded):
+        raise ValueError(
+            "terminal qualification bootstrap skeleton still present"
+        )  # pragma: no cover
+    if replay_qualification_gates(root, output_path) != reloaded["gate_replay_receipts"]:
+        raise ValueError(  # pragma: no cover
+            "terminal qualification gate replay changed after final write"
+        )
+    return reloaded
+
+
 def _load_tests_run(path: Path | None) -> list[JsonDict]:
     if path is None:
         return []
@@ -821,12 +1405,34 @@ def _load_tests_run(path: Path | None) -> list[JsonDict]:
     return [dict(row) for row in data if isinstance(row, Mapping)]
 
 
+def _load_json_mapping_file(path: Path | None) -> JsonDict:
+    if path is None:
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, Mapping):
+        raise ValueError("JSON file must be a mapping")
+    return dict(data)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=REPO_ROOT)
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--tests-run-json", type=Path, default=None)
+    parser.add_argument("--qualify-terminal", action="store_true")
+    parser.add_argument("--qualification-tests-run-json", type=Path, default=None)
+    parser.add_argument("--implementation-hashes-before-json", type=Path, default=None)
     args = parser.parse_args(argv)
+    if args.qualify_terminal:
+        emit_terminal_qualification(
+            args.root,
+            output_path=args.output,
+            test_receipts=_load_tests_run(args.qualification_tests_run_json or args.tests_run_json),
+            implementation_hashes_before=_load_json_mapping_file(
+                args.implementation_hashes_before_json
+            ),
+        )
+        return 0
     emit_report(
         args.root,
         output_path=args.output,
