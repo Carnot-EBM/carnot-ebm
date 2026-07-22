@@ -1,0 +1,662 @@
+milestone: "2026.07.518"
+milestone_title: "Audited SOTA Transport, Durable Constraint Memory, and Live ARC Selection"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp5809-transition-v518
+    milestone: "2026.07.518"
+    title: "Transition four activated .517 tasks, quarantine flagged evidence, and allocate .518"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5809_transition_v518.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 60
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5755-transition-v514
+        verdict: "blocked: exp5755 transition preconditions failed: next_range_collision_count=3"
+        addressed_by: "This transition resolves only the four activated .517 identities by declared deliverable plus conductor outcome, tombstones the previously reserved but unactivated Exp5800-Exp5808 range, and allocates the independently scanned Exp5809-Exp5822 interval."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.07.517 is terminal with four activated tasks: Exp5796 transition complete, Exp5797 zero-delta source refresh complete, Exp5798 offline diagnosis complete, and Exp5799 completed-but-quarantined with `flagged_adversarial=true` after a CRITICAL TAUTOLOGY finding. The prior transition reserved Exp5800-Exp5808 even though those tasks were never activated; do not reuse them. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5796_transition_v517.json
+      - {project_root}/results/experiment_5797_v517_source_delta_ingestion.json
+      - {project_root}/results/experiment_5798_sota_answer_channel_diagnostic.json
+      - {project_root}/results/experiment_5799_sota_answer_channel_canary.json
+      - {project_root}/results/experiment_5799_sota_answer_channel_canary.rows.jsonl
+      - {project_root}/scripts/evidence_index_collision_preflight.py
+      - {project_root}/scripts/in_process_doc_reconcile.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Archive terminal `.517` evidence by exact task identity, preserve Exp5799 as flagged/quarantined, tombstone the reserved unactivated identities, allocate Exp5809-Exp5822, and write results/experiment_5809_transition_v518.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: parse both roadmaps; hash completion history, conductor log, exclusion manifest, all four declared `.517` deliverables, and the Exp5799 row file; record disk/RAM. Fail closed on ambiguous identity or a real Exp5809-Exp5822 collision.
+      1. Add or extend REQ-* requirements and tests before implementation. Canonical identity is `(milestone, task_id, declared_deliverable)`; numeric prefixes and proposal-only tasks are not execution evidence.
+      2. Resolve Exp5796-Exp5799 from exact paths plus conductor outcomes. Preserve complete-positive, complete-null, complete-negative, flagged-quarantined, blocked, missing, and no-solve as disjoint classes. Exp5799 is never clean success.
+      3. Append `.517` completion exactly once only if the exact milestone block is absent. Never deduplicate, reorder, or rewrite historical blocks; report existing corruption or duplicates diagnostically.
+      4. Record Exp5800-Exp5808 as `reserved_unactivated_task_ids`, not completed or reusable. Scan Exp5809-Exp5822 across roadmaps, completion history, proposals, exclusion manifest, results, and transition allocations; require `next_range_collision_count=0`.
+      5. Reconcile only transition-owned specs, traceability, and ops docs. Leave research-roadmap.yaml and scripts/research_conductor.py byte-for-byte unchanged.
+      6. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A normalized state lets the conductor distinguish a completed transition from a bootstrap stub."
+         preconditions_checked:
+           principle: "Exact resource and input checks prevent fabricated archival when the ledger or artifacts are unavailable."
+         milestone_transition:
+           principle: "Explicit source and destination milestones prevent numeric-prefix aliasing."
+         declared_deliverable_matrix:
+           principle: "Declared paths, hashes, and conductor outcomes are the authority for task identity."
+         outcome_classification:
+           principle: "Separate positive, null, negative, flagged, blocked, missing, and no-solve classes preserve epistemic honesty."
+         flagged_quarantined_task_ids:
+           principle: "Flagged artifacts must never enter headline or clean-success aggregation."
+         reserved_unactivated_task_ids:
+           principle: "Previously allocated but unrun identities remain tombstoned and cannot silently collide."
+         research_complete_append_count:
+           principle: "An exact append count prevents duplicate milestone history."
+         next_task_range:
+           principle: "A declared interval makes downstream identity allocation auditable."
+         next_range_collision_count:
+           principle: "Only zero collisions authorize the next milestone range."
+         docs_reconciled:
+           principle: "Specs, traceability, and ops summaries must match the archived evidence classes."
+         duration_s:
+           principle: "Measured wall time exposes implausible or bootstrap-only execution."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` prevents archival work from masquerading as model inference."
+         field_provenance:
+           principle: "Per-field sources make the transition independently auditable."
+         test_commands:
+           principle: "Recorded commands show which identity and history checks actually ran."
+         test_exit_codes:
+           principle: "Exit codes prevent failed checks from being narrated as passing."
+         reproducibility_checksum:
+           principle: "A content hash detects later ledger or allocation drift."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
+      7. Run YAML parse, exact-path/hash, duplicate-history, alias, flagged-quarantine, collision, reserved-range, terminal-verdict, reconciliation, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5810-v518-source-delta-ingestion
+    milestone: "2026.07.518"
+    title: "Time-windowed post-V518 literature and implementation freshness receipt"
+    priority: high
+    track: research
+    deliverable: results/experiment_5810_v518_source_delta_ingestion.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 45
+    requires_gpu: false
+    prompt: |
+      CONTEXT:
+      The planning sweep is recorded at `V518-PLANNER-REFRESH-20260722-END` in research-references.md. This execution refresh may ingest only newer evidence and add bounded controls inside Exp5811-Exp5821. It may not rewrite IDs, structured gates, required models, retired scopes, or hardware/headline claims. Zero accepted findings is complete. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_5797_v517_source_delta_ingestion.json
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Run a bounded post-marker primary/secondary source refresh, append only non-duplicate actionable deltas to research-references.md, and write results/experiment_5810_v518_source_delta_ingestion.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the V518 marker, next-roadmap IDs/gates, references, exclusion manifest, and active roadmap; record source/network availability. Report unavailable routes instead of inventing results.
+      1. Add or extend reporting REQ-* and tests for the time window, provenance, duplicate suppression, closed-scope protection, and roadmap immutability.
+      2. Search arXiv first for post-marker EBM reasoning/verification, neural CSPs, Ising/sampling, hallucination verification, KANs, constrained decoding, probabilistic hardware, continual learning, and live ARC/world-model accreditation.
+      3. Check OpenReview, Hugging Face Papers, direct Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery/issues, Extropic writing/hardware, and Logical Intelligence public pages. Preserve URLs, dates, queries, and access outcomes.
+      4. Classify every item as accepted, duplicate, watch-only, inaccessible, or excluded. Accepted items must map to an allocated task without reopening PHASE D, grammar-as-semantic-authority, shadow integration, ARC CEGIS/public solves, unchanged board probes, TSU execution, or Kona execution.
+      5. Append a dated execution-refresh block only for accepted non-duplicates; otherwise leave references unchanged.
+      6. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A terminal source-refresh state distinguishes a complete zero delta from a failed search."
+         preconditions_checked:
+           principle: "Marker and network checks prevent stale-window or fabricated-source claims."
+         planner_marker_and_search_window:
+           principle: "A sealed time boundary makes novelty claims falsifiable."
+         source_receipts:
+           principle: "Queries, URLs, dates, and access outcomes distinguish primary evidence from secondary discovery."
+         citation_trail_receipts:
+           principle: "Direct EBT and ARM-EBM checks prevent unsupported citation-count or novelty claims."
+         finding_classification:
+           principle: "Accepted, duplicate, watch-only, inaccessible, and excluded classes stop literature laundering."
+         accepted_finding_count:
+           principle: "A scalar zero is a valid complete result and prevents forced novelty."
+         references_modified:
+           principle: "The artifact must disclose whether the shared ledger changed."
+         roadmap_immutability_receipts:
+           principle: "Source ingestion may sharpen controls but cannot silently redesign identities or gates."
+         duration_s:
+           principle: "Measured time exposes a bootstrap-only search receipt."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` identifies metadata synthesis rather than experiment-model inference."
+         field_provenance:
+           principle: "Every accepted finding must point to its source and experiment hook."
+         test_commands:
+           principle: "Commands document the date, duplicate, and immutability checks."
+         test_exit_codes:
+           principle: "Exit codes prevent failed provenance checks from being narrated as successful."
+         reproducibility_checksum:
+           principle: "A checksum detects later marker, reference, or classification drift."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix makes the source-refresh outcome terminal."
+      7. Run URL/provenance, date-window, duplicate, Semantic Scholar receipt, exclusion-manifest, roadmap-immutability, schema, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5811-exp5799-event-provenance-audit
+    milestone: "2026.07.518"
+    title: "Companion audit for Exp5799 event definitions, row replay, and CUDA provenance"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5811_exp5799_event_provenance_audit.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 90
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5799-sota-answer-channel-canary
+        verdict: "complete: answer_channel_canary_complete_not_ready:qualified_models=1"
+        addressed_by: "This is a no-inference companion audit that preserves Exp5799 unchanged, reconstructs overlapping events and an exclusive primary-cause taxonomy independently from raw rows, and reconciles row-level CUDA receipts against the disputed top-level resume summaries before any new canary is allowed."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5799 is completed-but-quarantined. `adversarial_verify.py` emitted CRITICAL TAUTOLOGY because `parser_failure_rate` and `truncation_rate` were both 0.775, and the artifact carries `flagged_adversarial=true`. Its top-level GPU receipts also show unauthenticated Qwen/Gemma-26B summaries and a one-layer/1 MB Gemma-31B resume summary, while per-mode rows contain a richer execution story. The original artifact and rows are historical evidence and must not be edited or sanitized. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_5799_sota_answer_channel_canary.json
+      - {project_root}/results/experiment_5799_sota_answer_channel_canary.rows.jsonl
+      - {project_root}/results/experiment_5798_sota_answer_channel_diagnostic.json
+      - {project_root}/python/carnot/experiment_5799_sota_answer_channel_canary.py
+      - {project_root}/tests/python/test_experiment_5799_sota_answer_channel_canary.py
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/scripts/summarize_artifact.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Reconstruct Exp5799's events and provenance independently, preserve the original files, repair producer definitions/tests only if warranted, and write results/experiment_5811_exp5799_event_provenance_audit.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash and make read-only comparisons for the original artifact, rows, producer, tests, fixture, model metadata, and available runtime logs; record disk/RAM. Fail closed if row hashes or declared counts cannot be reconciled.
+      1. Add or extend verification/reporting REQ-* and tests before implementation. Define parser failure, truncation, empty final, exact wrong answer, invalid candidate, timeout, and stop collision from independent raw predicates.
+      2. Recompute an overlapping event matrix and a mutually exclusive primary-failure taxonomy from each raw row. Explain legitimate overlap; never force distinct rates to differ, and never reuse the flagged aggregate as ground truth.
+      3. Recompute per-model/per-mode counts, denominators, exact-label coverage, independent-unit counts, duration, seed, and row hashes. Mark absent methodology fields explicitly.
+      4. Reconcile requested/actual offload layers, VRAM samples, load logs, runtime hashes, checkpoint origin, and resumed-row provenance at row, mode, model, and top levels. Classify each receipt `authenticated`, `resume_only`, `inconsistent`, or `missing`.
+      5. If the producer conflates event definitions or resume receipts, repair that implementation and its tests without rerunning or rewriting Exp5799. The companion artifact records superseding definitions, not altered historical numbers.
+      6. Emit `canary_evidence_ready_score=1.0` only if every row is replayed, definitions are independent, denominators and hashes close, methodology gaps are explicit, and no unauthenticated receipt is used to qualify a model.
+      7. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A terminal audit state distinguishes a clean reconstruction from unresolved evidence."
+         preconditions_checked:
+           principle: "Hash and row checks prevent auditing a different artifact than the quarantined input."
+         immutable_input_hashes:
+           principle: "Historical evidence must remain byte-identical while a companion audit is produced."
+         independent_event_definitions:
+           principle: "Each metric needs a raw predicate so accidental tautologies are detectable."
+         overlapping_event_matrix:
+           principle: "Failures can co-occur; explicit overlap prevents double counting from masquerading as independent evidence."
+         exclusive_primary_failure_taxonomy:
+           principle: "One primary cause per row makes totals and denominators close exactly."
+         per_model_mode_reconstruction:
+           principle: "Family and transport effects must not disappear into one aggregate."
+         methodology_gap_matrix:
+           principle: "Missing seed, duration, or test receipts remain visible rather than backfilled."
+         gpu_provenance_reconciliation:
+           principle: "Only actual load/offload evidence may support a real-GPU qualification."
+         producer_repairs_and_tests:
+           principle: "Any code correction is explicit and does not mutate historical result files."
+         canary_evidence_ready_score:
+           principle: "A bare scalar gates new protocol work only after the quarantined evidence is independently reconstructable."
+         original_files_unchanged:
+           principle: "A true receipt prevents silent sanitization of flagged evidence."
+         duration_s:
+           principle: "Measured wall time exposes bootstrap-only audit artifacts."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` declares that no LLM is loaded or invoked."
+         verifier_is_oracle:
+           principle: "The exact parser/fixture defines correctness and is circular authority, so no verifier-moat claim is allowed."
+         field_provenance:
+           principle: "Every reconstructed field identifies the row predicate or runtime receipt that satisfies it."
+         test_commands:
+           principle: "Commands document row replay, code repair, and immutability validation."
+         test_exit_codes:
+           principle: "Exit codes prevent failed audit checks from being narrated as passing."
+         reproducibility_checksum:
+           principle: "A checksum detects drift in inputs, definitions, or reconstructed outputs."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix provides a terminal audit outcome."
+      8. Run original-file immutability, row/hash, event-independence, overlap/exclusive-total, denominator, GPU-provenance, methodology-gap, adversarial-verify, focused coverage, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5812-split-budget-channel-contract
+    milestone: "2026.07.518"
+    title: "Gated on Exp5811 clean evidence: implement split-budget finite-choice transport"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5812_split_budget_channel_contract.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 120
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5799-sota-answer-channel-canary
+        verdict: "complete: answer_channel_canary_complete_not_ready:qualified_models=1"
+        addressed_by: "The prior canary shared one output budget between visible reasoning and the final label. This task implements a two-call contract with independent preregistered reasoning/finalization budgets, a frozen transcript, sealed candidate environment, and independently tested event predicates before any SOTA inference."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5811-exp5799-event-provenance-audit
+        artifact_field: canary_evidence_ready_score
+        op: "=="
+        value: 1.0
+        principle: "A changed transport must start from independently reconstructable failure evidence, not a quarantined aggregate."
+      - upstream: exp5811-exp5799-event-provenance-audit
+        artifact_field: original_files_unchanged
+        op: "=="
+        value: true
+        principle: "Historical flagged evidence must remain preserved before a successor mechanism is built."
+    prompt: |
+      CONTEXT:
+      Exp5811 supplies independent event definitions and provenance. arXiv:2605.07686 identifies the coupling tax when reasoning and final answers share an output cap. arXiv:2607.18357 shows that environment-indexed grammars can guarantee reference support but not arbitrary semantic truth. This task changes the mechanism before another expensive canary and performs no headline SOTA inference. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5811_exp5799_event_provenance_audit.json
+      - {project_root}/results/experiment_5798_sota_answer_channel_diagnostic.json
+      - {project_root}/python/carnot/experiment_5799_sota_answer_channel_canary.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Implement, specify, and adversarially test a reusable split-budget reasoning/finalization channel, then write results/experiment_5812_split_budget_channel_contract.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay structured gates; hash Exp5811, the sealed fixture/parser, current channel producer, embedded-template metadata fixtures, and test dependencies; record disk/RAM. Do not load a headline model.
+      1. Add REQ-* requirements and tests before implementation for two independent calls, transcript freezing, budget accounting, exact candidate identity, replay, and fail-closed parsing.
+      2. Implement a bounded reasoning stage whose output is content-hashed and immutable, followed by a separate finalization stage with its own maximum tokens, timeout, stops, and raw receipt. The finalizer sees the problem, frozen reasoning, and sealed candidate IDs, not hidden labels.
+      3. Preserve a shared-budget control and preregister at least two split-budget configurations. Do not silently edit GGUF templates or use Hugging Face AutoTokenizer on GGUF repos.
+      4. Implement an environment-indexed finite-ID support constraint only where the runtime supports it. Claim only candidate-membership/syntax safety; exact parser/solver validation establishes semantic correctness.
+      5. Test empty reasoning, empty final, overlong reasoning, stop collision, unclosed thinking, duplicate/invalid/ghost ID, schema/control-plane injection, candidate-label leakage, timeout, replay mismatch, and exact wrong answer.
+      6. Emit `split_budget_contract_ready_score=1.0` only if all adversarial controls fail closed, budgets are separately measured, the frozen transcript replays, and the canary mode/retirement rules are fully preregistered.
+      7. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A terminal contract state distinguishes an executable transport from design prose."
+         preconditions_checked:
+           principle: "Gate and dependency checks prevent building against quarantined or missing evidence."
+         contract_version_and_code_hashes:
+           principle: "Versioned implementation identity prevents silent transport drift."
+         reasoning_stage_contract:
+           principle: "An independent cap, stop policy, timeout, and transcript hash remove the shared-budget ambiguity."
+         finalization_stage_contract:
+           principle: "A separate cap and parser boundary guarantee room for a final answer without claiming truth."
+         sealed_candidate_environment:
+           principle: "Only fixture-declared IDs may be referenced; hidden labels never enter prompts."
+         grammar_claim_boundary:
+           principle: "Grammar may establish membership and syntax only; exact validation remains semantic authority."
+         preregistered_mode_matrix:
+           principle: "Fixed modes prevent post-hoc tuning on canary outcomes."
+         adversarial_control_results:
+           principle: "Negative controls prove empty, injected, ghost, truncated, and wrong outputs fail closed."
+         replay_receipts:
+           principle: "Frozen transcript and deterministic parser replay make the two-stage boundary auditable."
+         split_budget_contract_ready_score:
+           principle: "A bare scalar gates expensive inference only when the contract and attacks pass."
+         llm_calls_made:
+           principle: "Zero headline calls keeps protocol implementation separate from capability evidence."
+         duration_s:
+           principle: "Measured implementation/test time exposes a bootstrap-only artifact."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` declares offline implementation and tests with no headline model load."
+         verifier_is_oracle:
+           principle: "The fixture parser/solver defines correctness, so channel success is execution-grounded rather than a verifier moat."
+         field_provenance:
+           principle: "Every contract field points to code, test, or sealed fixture evidence."
+         test_commands:
+           principle: "Commands document focused, adversarial, replay, and coverage execution."
+         test_exit_codes:
+           principle: "Exit codes prevent failed controls from being narrated as passing."
+         reproducibility_checksum:
+           principle: "A checksum detects later contract, fixture, or test drift."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix makes protocol readiness terminal."
+      8. Run unit/coverage, independent-budget, transcript-freeze, candidate-environment, grammar-boundary, injection/ghost/empty/truncation, exact-wrong-answer, replay, schema, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5813-split-budget-sota-canary
+    milestone: "2026.07.518"
+    title: "Gated on Exp5812 contract: changed-mechanism canary on all three mandated SOTA GGUFs"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5813_split_budget_sota_canary.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "This canary uses exact finite candidate IDs, embedded templates, independently budgeted reasoning/final calls, raw split receipts, and fresh authenticated CUDA loads instead of the retired free-form single-channel parser."
+        retire_if_same_verdict: true
+      - experiment_id: exp5786-sota-hardness-controlled-constraint-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "This is a twelve-unit changed-mechanism canary, not another scaled stream: it qualifies transport before scale and separates parser, truncation, empty-final, exact-error, and receipt failures."
+        retire_if_same_verdict: true
+      - experiment_id: exp5799-sota-answer-channel-canary
+        verdict: "complete: answer_channel_canary_complete_not_ready:qualified_models=1"
+        addressed_by: "Exp5799 shared one token budget and produced a quarantined aggregate. This attempt freezes a first-call reasoning transcript, grants an independent second-call finalization budget, uses Exp5811's independent metrics, and refuses resume-only GPU provenance."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5811-exp5799-event-provenance-audit
+        artifact_field: canary_evidence_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Fresh inference may proceed only after the predecessor evidence is independently reconstructable."
+      - upstream: exp5812-split-budget-channel-contract
+        artifact_field: split_budget_contract_ready_score
+        op: "=="
+        value: 1.0
+        principle: "The materially changed transport and its adversarial controls must be executable before GPU spend."
+    prompt: |
+      CONTEXT:
+      Exp5812 provides a two-call transport with separately bounded reasoning and finalization. This task is the single allowed changed-mechanism retry after Exp5799. It must run the three mandated local GGUF families, use fresh model-load receipts, and permanently retire the lane if the honest outcome repeats the one-qualified-family/not-ready verdict. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_5811_exp5799_event_provenance_audit.json
+      - {project_root}/results/experiment_5812_split_budget_channel_contract.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.rows.jsonl
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Run the preregistered split-budget canary on all three mandated real SOTA GGUFs and write the main artifact plus results/experiment_5813_split_budget_sota_canary.rows.jsonl.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay both gates; call `cached_sota_pair()` and explicitly resolve the third mandated model; verify cached paths/hashes, embedded templates, CUDA-enabled llama.cpp, two RTX 3090s, fixture subset/hash, writable outputs/checkpoints, disk/RAM, and fixed seeds. Do not require load receipts or rows before execution.
+      1. Add verification REQ-* and tests before implementation. `MODEL_SPECS` and artifact `model_specs` must include `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` with resolved path/hash, quantization, template/runtime hashes, budgets, sampling, stops, GPU, and seed.
+      2. Seal at least twelve independent balanced fixture units spanning all constraint families, SAT status, solver bins, and surface pairs. Repeated modes, calls, or surfaces do not increase N.
+      3. Run only preregistered modes. For each call record actual load/offload layers, VRAM, runtime logs, raw reasoning, frozen transcript hash, raw final, token counts, finish/stop reason, timeout, parser result, validator result, and checkpoint. Fresh load evidence is required; resume-only summaries cannot qualify a model.
+      4. Compare the shared-budget control with split-budget modes without post-hoc edits. A mode qualifies only with raw coverage and exact-label coverage 1.0 and zero parser failure, truncation, empty final, invalid/ghost ID, stop collision, timeout, schema injection acceptance, or protected-fact distortion. Exact wrong answers remain a separate non-transport metric.
+      5. Select at most one bounded transport per model. Different mechanics may emit only the identical semantic candidate-ID contract. Re-run deterministic row/hash replay and adversarial verification before computing readiness.
+      6. Emit `answer_channel_ready_score=1.0` only when `qualified_real_sota_model_count=3`, all provenance/acceptance gates pass, and on-disk rows/checkpoints replay. A complete non-ready result triggers the prior-failure retirement mechanic; do not propose another retry.
+      7. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A terminal state distinguishes a completed non-ready canary from an operational block."
+         preconditions_checked:
+           principle: "Cache, CUDA, fixture, seed, and output checks prevent fabricated live-inference evidence."
+         model_specs:
+           principle: "Resolved identities for all three mandated models prevent legacy smoke models from becoming headline evidence."
+         random_seed:
+           principle: "Fixed seeds make canary sampling and replay reproducible."
+         model_runtime_and_gpu_receipts:
+           principle: "Fresh actual CUDA load/offload evidence is required for every qualified family."
+         sample_size_and_justification:
+           principle: "At least twelve independent balanced units support a transport canary without counting repeated modes as samples."
+         preregistered_mode_results:
+           principle: "Fixed shared/split arms prevent post-hoc transport selection."
+         independent_failure_metrics:
+           principle: "Parser, truncation, empty-final, ghost-ID, timeout, stop, and exact-error events remain separately reconstructable."
+         transcript_and_checkpoint_receipts:
+           principle: "Raw calls, frozen transcript hashes, and per-row checkpoints make two-stage execution replayable."
+         selected_transport_by_model:
+           principle: "At most one disclosed bounded transport per family prevents hidden fallback mixtures."
+         qualified_real_sota_model_count:
+           principle: "All three required families must qualify before downstream stream generation."
+         answer_channel_ready_score:
+           principle: "A bare scalar activates scale only when every family and provenance gate passes."
+         adversarial_control_results:
+           principle: "Injected, ghost, empty, truncated, and wrong outputs must fail closed."
+         row_file_and_sha256:
+           principle: "Content-addressed raw rows prevent summary-only claims."
+         duration_s:
+           principle: "Real three-family inference must have plausible measured wall time."
+         inference_substrate:
+           principle: "`live_llm_inference` declares actual local autoregressive GGUF execution."
+         verifier_is_oracle:
+           principle: "Exact fixture validation defines correctness, so verified yield is execution-grounded and not a moat claim."
+         field_provenance:
+           principle: "Each metric identifies its row predicate, runtime log, or exact validator source."
+         test_commands:
+           principle: "Commands document live load, focused tests, row replay, and adversarial verification."
+         test_exit_codes:
+           principle: "Exit codes prevent failed live or validation checks from being narrated as passing."
+         reproducibility_checksum:
+           principle: "A checksum detects model, fixture, mode, seed, or row drift."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix provides the retirement mechanic with a terminal verdict."
+      8. Run unit/coverage, real-GGUF load, all-three-model, embedded-template, split-budget, parser/validator, empty/truncation/ghost/stop/injection, CUDA-authenticity, checkpoint/resume, row/hash, gate-replay, adversarial-verify, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5814-channel-qualified-constraint-stream
+    milestone: "2026.07.518"
+    title: "Gated on Exp5813 all-family qualification: prospective chronological SOTA stream"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5814_channel_qualified_constraint_stream.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 540
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "The stream is emitted only after Exp5813 proves exact finite-ID parsing on all three families with a changed split-budget channel and independently replayed event definitions."
+        retire_if_same_verdict: true
+      - experiment_id: exp5786-sota-hardness-controlled-constraint-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "The prior stream used one 48-token answer path and failed for Qwen. This run consumes only per-model transports already qualified by Exp5813, preserves two-call receipts, and checkpoints chronological rows before any learning."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5813-split-budget-sota-canary
+        artifact_field: answer_channel_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Scaled GPU generation is forbidden unless the changed canary is clean across every required family."
+      - upstream: exp5813-split-budget-sota-canary
+        artifact_field: qualified_real_sota_model_count
+        op: "=="
+        value: 3
+        principle: "A Gemma-only or two-family stream cannot support the mandated SOTA self-learning claim."
+    prompt: |
+      CONTEXT:
+      Exp5813 supplies exactly one qualified transport for each mandated SOTA family. This task emits a sealed chronological response stream and performs no learning. Solver hardness and proof-preserving surface remain crossed axes because solver-hard is not model-hard. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_5813_split_budget_sota_canary.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.rows.jsonl
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
+
+      TASK:
+      Generate a clean prospective chronological stream from all three qualified transports and write the main artifact plus results/experiment_5814_channel_qualified_constraint_stream.rows.jsonl.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay Exp5813 gates; verify selected-transport hashes, fixture hashes, all cached GGUFs, CUDA runtime, two GPUs, fixed chronology/seeds, checkpoints, writable outputs, disk/RAM. Inputs may gate; rows and load receipts are outputs.
+      1. Add self-learning/verification REQ-* and tests before implementation. `MODEL_SPECS` and artifact `model_specs` include all three mandated IDs with exact Exp5813 transport versions.
+      2. Freeze a chronological schedule with N>=30 independent units per model x constraint-family primary cell, balanced across SAT status, solver bins, and proof-preserving surface pairs. Repeated calls and surfaces are not independent units.
+      3. Generate with fresh actual CUDA receipts and checkpoint after every two-call response. Preserve raw problem, candidate environment, reasoning/final transcripts, budgets, stops, row seed, parser/validator outcome, hardness, surface, protected facts, timestamps, and hashes.
+      4. Report parser failure, truncation, empty final, invalid/ghost ID, exact error, contradiction, satisfiable drift, protected-fact distortion, verified accepted yield, wasted tokens, and wall time independently per model/family/surface.
+      5. Freeze the row order and a prefix/future partition before any learner sees data. No skill update, prompt adaptation, answer repair, or row deletion occurs in this task.
+      6. Emit `stream_ready_score=1.0` only with three authenticated model families, complete chronology/label coverage, zero parser/truncation/empty/invalid/ghost failures, zero protected-fact distortion, replayable rows, and enough satisfiable-drift examples for paired learning cells.
+      7. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A terminal stream state distinguishes clean collection from blocked or non-ready evidence."
+         preconditions_checked:
+           principle: "Transport, fixture, cache, CUDA, chronology, and output checks prevent fabricated scale results."
+         model_specs:
+           principle: "All three mandated current models and their qualified transports define headline scope."
+         random_seed:
+           principle: "Fixed row and schedule seeds make the chronological stream reproducible."
+         chronology_and_partition_manifest:
+           principle: "A sealed order and future split prevent learner-induced leakage."
+         sample_size_and_justification:
+           principle: "N>=30 independent units per model/family cell supports paired downstream estimates without pseudoreplication."
+         model_runtime_and_gpu_receipts:
+           principle: "Actual CUDA execution must support every model-family row."
+         crossed_axis_metrics:
+           principle: "Hardness, surface, SAT status, and model family remain separate causal axes."
+         independent_failure_and_exact_metrics:
+           principle: "Transport failures, semantic errors, drift, and protected-fact harm cannot be conflated."
+         checkpoint_resume_receipts:
+           principle: "Per-row content hashes make a long run resumable without duplicate or synthetic rows."
+         learning_actions_taken:
+           principle: "The value must be zero so collection and adaptation remain causally separated."
+         stream_ready_score:
+           principle: "A bare scalar gates self-learning only after complete, safe, replayable all-family evidence."
+         row_file_and_sha256:
+           principle: "Raw content-addressed rows are the authority behind summary metrics."
+         duration_s:
+           principle: "Real scaled three-family inference must have plausible measured wall time."
+         inference_substrate:
+           principle: "`live_llm_inference` declares real local two-stage GGUF generation."
+         verifier_is_oracle:
+           principle: "The exact solver defines labels, so stream verification is circular authority and not a moat claim."
+         field_provenance:
+           principle: "Each metric points to raw rows, runtime receipts, or exact solver outputs."
+         test_commands:
+           principle: "Commands document live loads, chronology, labels, row replay, and gate computation."
+         test_exit_codes:
+           principle: "Exit codes prevent failed collection checks from being narrated as passing."
+         reproducibility_checksum:
+           principle: "A checksum detects model, transport, fixture, chronology, seed, or row drift."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix provides a terminal collection outcome."
+      8. Run unit/coverage, all-three-model CUDA, transport-hash, chronology/leakage, sample-independence, parser/solver, hardness/surface, protected-fact, checkpoint/resume, row/hash, adversarial-verify, gate-replay, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5815-future-validated-constraint-skill-ab
+    milestone: "2026.07.518"
+    title: "Gated on Exp5814 clean stream: future-validated typed-skill continuous-learning A/B"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5815_future_validated_constraint_skill_ab.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5773-prospective-constraint-acquisition-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5815 depends on a newly qualified all-family split-budget stream, uses immutable chronological future batches, and tests versioned typed skills with exact commit/rollback rather than the retired unready acquisition stream."
+        retire_if_same_verdict: true
+      - experiment_id: exp5787-validation-gated-constraint-skill-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prior task never reached learning because Exp5786 was parser-incomplete. This task can run only after Exp5814 supplies three-family parser-complete rows and adds separate acquisition, temporal update, composition, relevance, and boundary-awareness outcomes."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5814-channel-qualified-constraint-stream
+        artifact_field: stream_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Learning may start only from a sealed, exact-label, parser-complete chronological stream."
+    prompt: |
+      CONTEXT:
+      Exp5814 provides a frozen chronological stream from all three mandated families. The base GGUFs are not invoked or updated here. Following future-feedback skill validation and ImprintBench's decomposition, this task tests acquisition, temporal replacement, composition, implicit relevance, and justified abstention as separate outcomes under exact solver authority. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5814_channel_qualified_constraint_stream.json
+      - {project_root}/results/experiment_5814_channel_qualified_constraint_stream.rows.jsonl
+      - {project_root}/results/experiment_5787_validation_gated_constraint_skill_ab.json
+      - {project_root}/python/carnot/learning/constraint_skill_learner.py
+      - {project_root}/python/carnot/verification/constraint_store.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/openspec/capabilities/constraint-store/spec.md
+
+      TASK:
+      Run a solver-authoritative future-validated typed-skill A/B over the sealed stream and write results/experiment_5815_future_validated_constraint_skill_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay the stream gate; hash rows, chronology/partition, exact validators, skill learner/store, immutable protected facts, and fixed seeds; record disk/RAM. Fail closed on leakage, changed row order, or missing rollback baseline.
+      1. Add self-learning/constraint-store REQ-* and tests before implementation. Freeze three matched arms: no update, contradiction-only feedback, and query-driven typed skills.
+      2. Use only chronological prefix evidence to propose typed, scoped, versioned skill edits. Keep every proposal quarantined with provenance, support/conflict counts, affected predicates, and a reversible pre-state hash.
+      3. Commit only when an immutable future validation batch yields paired `delta_ci_low>0`, zero unsafe propagation/protected-fact distortion, zero old-prefix regression, and exact rollback replay. Reject, quarantine, or abstain otherwise.
+      4. Score at least thirty independent chronological episodes per arm and separately report acquisition, temporal stale-skill replacement, referential composition, implicit relevance, boundary-awareness/abstention, retention, and false propagation.
+      5. Keep GGUF weights, prompts, exact validators, row labels, and future split immutable. Do not create a shadow adapter or wire learned state into production inference.
+      6. Emit `self_learning_ready_score=1.0` only if the query-driven arm has a positive paired lower bound over both baselines and all safety, retention, memory, and rollback gates pass.
+      7. REQUIRED ARTIFACT FIELDS:
+         status:
+           principle: "A terminal A/B state distinguishes a valid null from an operational block."
+         preconditions_checked:
+           principle: "Stream, chronology, validator, protected-fact, and rollback checks prevent leaked or fabricated learning."
+         immutable_input_hashes:
+           principle: "Frozen rows, partitions, validators, and GGUF identities define the causal experiment."
+         random_seed:
+           principle: "Fixed episode and bootstrap seeds make paired estimates reproducible."
+         arm_contracts:
+           principle: "No-update, contradiction-only, and typed-skill arms isolate the source of benefit."
+         sample_size_and_justification:
+           principle: "At least thirty independent episodes per arm support paired lower-bound gates without counting repeated queries."
+         skill_proposal_and_quarantine_ledger:
+           principle: "No proposed rule influences outcomes before exact future validation."
+         future_validation_and_commit_receipts:
+           principle: "Immutable future evidence, not training-prefix fit, authorizes a skill commit."
+         capability_axis_metrics:
+           principle: "Acquisition, update, composition, relevance, and abstention must not collapse into direct recall."
+         paired_effect_intervals:
+           principle: "A positive lower bound prevents promotion by noisy point estimate."
+         safety_retention_and_rollback_receipts:
+           principle: "Zero unsafe propagation, old-prefix regression, and hash mismatch are load-bearing invariants."
+         weights_and_validators_unchanged:
+           principle: "Frozen GGUFs and exact authority keep this a sidecar-memory experiment."
+         self_learning_ready_score:
+           principle: "A bare scalar gates durability work only after benefit and every safety invariant pass."
+         duration_s:
+           principle: "Measured compute time exposes bootstrap-only lifecycle artifacts."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` declares offline learning over cached rows with no LLM load."
+         verifier_is_oracle:
+           principle: "Exact solvers define labels and safety, so the result is execution-grounded rather than a verifier moat."
+         field_provenance:
+           principle: "Each metric and commit points to episodes, solver receipts, and state hashes."
+         test_commands:
+           principle: "Commands document chronology, leakage, A/B, safety, rollback, and coverage tests."
+         test_exit_codes:
+           principle: "Exit codes prevent failed lifecycle invariants from being narrated as passing."
+         reproducibility_checksum:
+           principle: "A checksum detects stream, split, arm, seed, or state-transition drift."
+         honest_verdict:
+           principle: "A `complete:` or `blocked:` prefix gives the self-learning result a terminal status."
+      8. Run unit/coverage, chronology/leakage, arm isolation, exact future validation, acquisition/update/composition/relevance/abstention, paired CI, protected-fact, retention, memory, rollback, restart-baseline, adversarial-verify, gate-replay, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

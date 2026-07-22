@@ -2162,5 +2162,14 @@
   "truncation_rate": 0.775,
   "verified_outputs_per_second": 0.139563,
   "verified_outputs_per_token": 0.001337,
-  "wasted_token_count": 14986
+  "wasted_token_count": 14986,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "parser_failure_rate=0.775 and truncation_rate=0.775 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

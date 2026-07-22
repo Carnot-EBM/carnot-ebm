@@ -30642,3 +30642,96 @@ artifacts.
   claims remain blocked unless a real execution precondition changed.
 
 <!-- V517-PLANNER-REFRESH-20260722-END -->
+
+## V518 Planner Refresh - 20260722
+
+Planning-time sweep for milestone `.518` after the terminal `.517` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint satisfaction, Ising and thermodynamic sampling, hallucination controls, KANs,
+energy-guided and constrained generation, hardware acceleration, and continual/online
+learning. It also rechecked OpenReview, Hugging Face Papers, direct Semantic Scholar
+citation routes for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub
+trending/topics and llama.cpp issues, Extropic writing/hardware, and Logical
+Intelligence's public Kona material. Findings below are new relative to the V517 block or
+materially change how the CRITICAL-flagged Exp5799 evidence must be repaired.
+
+### New actionable deltas
+
+- **The Coupling Tax: How Shared Token Budgets Undermine Visible Chain-of-Thought Under
+  Fixed Output Limits** - arXiv:2605.07686,
+  https://arxiv.org/abs/2605.07686; submitted 2026-05-08. The paper identifies a
+  truncation-waste mechanism in which reasoning and the final answer compete for one
+  output-token budget, and reports split-budget generation as a mitigation. Carnot hook:
+  Exp5799's empty-final/truncation-heavy Qwen3.6 and Gemma 26B rows require a materially
+  different answer-channel attempt that gives reasoning and finalization independent,
+  preregistered budgets. The new canary must compare against a shared-budget control,
+  preserve both transcripts and stop reasons, and reject any answer that is absent,
+  truncated, or not exact-validator parseable. This is an output-transport hypothesis,
+  not evidence of constraint competence and not permission to use an external
+  generated-text/logprob scorer.
+- **Decode-Time Grammars: Constrained LLM Generation over a Refinement Order of Grammar
+  Fragments** - arXiv:2607.18357, https://arxiv.org/abs/2607.18357; submitted
+  2026-07-20. The paper formalizes environment-indexed grammar fragments and a
+  No-Ghost support guarantee while explicitly locating the boundary of properties that
+  token masking can enforce. Carnot hook: any grammar arm in the repaired channel may
+  restrict references only to a sealed candidate environment and may claim syntax or
+  support-set safety only. Grammar membership is never semantic correctness; exact
+  parsers, solvers, and validators remain release authority. This supplies an adversarial
+  control for the split-budget canary rather than reopening the retired grammar-only or
+  external-scorer lanes.
+- **Measuring the Limits of Continual Learning for LLMs / ImprintBench** - OpenReview
+  CompLearn 2026, https://openreview.net/forum?id=QIJgTW3Qd2; published 2026-05-27,
+  revised 2026-06-19. The refreshable benchmark separates acquisition, temporal update,
+  referential resolution, composition, implicit relevance, and boundary awareness, and
+  reports shortcomings across retrieval- and training-based update methods. Carnot hook:
+  the FR-11 typed-skill lifecycle must measure acquisition and stale-skill replacement
+  separately from composition and justified abstention. Each accepted skill remains a
+  versioned, rollback-capable memory edit with immutable GGUF weights and exact
+  future-batch validation; direct recall alone is not a successful self-learning result.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct public citation-API queries on 2026-07-22 returned the
+  already-indexed EBT trail through arXiv:2607.17047 and the already-indexed ARM-EBM
+  trail through Path-Measure Dynamics, Distributional EBMs, LoopUS, safe distillation,
+  ontology, graph-energy, and false-first-step planning. No newer reproducible Carnot-local
+  dependency or stable citation-count claim was found.
+- **OpenReview / Hugging Face Papers:** ImprintBench is promoted above. Other surfaced
+  work on LLM-as-a-Verifier, selective verification, CEM, DCCD, CRANE, and pairwise
+  self-verification repeats already-indexed method families. Learned judges and scoring
+  token logits do not supersede exact validators or reopen PHASE D.
+- **GitHub:** trending/topic checks exposed maintained KAN/EBM lists and structured-output
+  libraries but no repository that supersedes Carnot's exact validators, typed lifecycle,
+  mandated local GGUF path, or live E3 entrypoint. No public implementation for
+  arXiv:2607.18357 was search-visible, so `.518` imports only its testable support-set
+  boundary, not an unavailable dependency.
+- **Extropic:** the public writing index still ends with the October 2025 X0/XTR-0/TSU
+  material; the hardware page still advertises Z1 early access in 2026. Carnot has no
+  authenticated local XTR-0/Z1 route, so `.518` makes no TSU execution, energy, power,
+  or speedup claim.
+- **Logical Intelligence:** the public Kona 1.0 page still describes a constraint-enforcing
+  EBM layer but exposes no local weights, authenticated API receipt, or reproducible
+  comparator. Kona remains architecture context rather than imported experiment evidence.
+
+### V518 planning impact
+
+- Quarantine Exp5799 as evidence until a companion audit separates parser failure from
+  truncation, reconciles per-row and top-level GPU receipts, and restores seed, duration,
+  test-exit, and replay provenance. Do not derive a headline family verdict from the
+  CRITICAL-flagged aggregate.
+- Replace the shared-budget retry with preregistered split-budget reasoning/finalization,
+  a sealed candidate environment, and exact-validator authority. Require all three
+  mandated SOTA families to qualify before emitting the expensive prospective stream;
+  retire the lane if the materially changed canary reaches the same not-ready verdict.
+- Evaluate continuous self-learning as a chronological typed-memory lifecycle spanning
+  acquisition, update, composition, boundary awareness, retention, quarantine, and
+  rollback. Frozen GGUF parameters and exact solvers remain immutable boundaries.
+- Preserve ARC generalization as an immutable single-shot hypothesis-panel and
+  calibration-selector question. Improve the live agent path on held-out actions/games;
+  do not claim public-game solves, offline BFS, source inspection, per-game adapters, or
+  iterative counterexample reinduction.
+- Keep attached-board work backend-neutral and precondition-aware. Board commands and
+  speedup claims require a changed authenticated execution precondition; otherwise emit
+  only resource/ABI mappings and explicit blocked receipts.
+
+<!-- V518-PLANNER-REFRESH-20260722-END -->
