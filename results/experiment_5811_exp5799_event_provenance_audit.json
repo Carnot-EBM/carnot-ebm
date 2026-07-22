@@ -1,0 +1,1286 @@
+{
+  "canary_evidence_ready_score": 1.0,
+  "duration_s": 0.025625,
+  "exclusive_primary_failure_taxonomy": {
+    "denominator": 120,
+    "primary_counts": {
+      "empty_final_content": 91,
+      "exact_wrong_answer": 6,
+      "truncation": 2,
+      "valid_exact_output": 21
+    },
+    "primary_order": [
+      "timeout",
+      "empty_final_content",
+      "truncation",
+      "stop_collision",
+      "invalid_candidate",
+      "parser_failure",
+      "exact_wrong_answer",
+      "valid_exact_output"
+    ],
+    "total": 120,
+    "total_matches_denominator": true
+  },
+  "experiment": "experiment_5811_exp5799_event_provenance_audit",
+  "experiment_id": "exp5811-exp5799-event-provenance-audit",
+  "field_provenance": {
+    "canary_evidence_ready_score": {
+      "principle": "A bare scalar gates new protocol work only after the quarantined evidence is independently reconstructable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes bootstrap-only audit artifacts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "exclusive_primary_failure_taxonomy": {
+      "principle": "One primary cause per row makes totals and denominators close exactly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "experiment": {
+      "principle": "Stable local slug ties the artifact to this implementation.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "experiment_id": {
+      "principle": "Conductor task identity prevents numeric-prefix aliasing.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every reconstructed field identifies the row predicate or runtime receipt that satisfies it.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "gpu_provenance_reconciliation": {
+      "principle": "Only actual load/offload evidence may support a real-GPU qualification.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A `complete:` or `blocked:` prefix provides a terminal audit outcome.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "immutable_input_hashes": {
+      "principle": "Historical evidence must remain byte-identical while a companion audit is produced.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "independent_event_definitions": {
+      "principle": "Each metric needs a raw predicate so accidental tautologies are detectable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`aggregation_from_upstream_artifacts` declares that no LLM is loaded or invoked.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "methodology_gap_matrix": {
+      "principle": "Missing seed, duration, or test receipts remain visible rather than backfilled.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "milestone": {
+      "principle": "Binds the audit to V518.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "original_files_unchanged": {
+      "principle": "A true receipt prevents silent sanitization of flagged evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "overlapping_event_matrix": {
+      "principle": "Failures can co-occur; explicit overlap prevents double counting from masquerading as independent evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "per_model_mode_reconstruction": {
+      "principle": "Family and transport effects must not disappear into one aggregate.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hash and row checks prevent auditing a different artifact than the quarantined input.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "producer_repairs_and_tests": {
+      "principle": "Any code correction is explicit and does not mutate historical result files.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "random_seed": {
+      "principle": "Deterministic metadata for an aggregation-only audit.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects drift in inputs, definitions, or reconstructed outputs.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "result_path": {
+      "principle": "Declares the intended companion JSON path.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "row_predicates": {
+      "empty_final_content": "row.raw_final_content == ''",
+      "exact_wrong_answer": "parser parse_ok is true AND selected_label != exact_label",
+      "invalid_candidate": "parser_failure_reason in {'invalid_id','invalid_candidate'}",
+      "parser_failure": "row.parser_receipt.parse_ok is not true",
+      "stop_collision": "row.stop_collision is true OR parser_failure_reason == 'stop_token' OR stop string appears in raw_response_text",
+      "timeout": "row.timeout is true",
+      "truncation": "finish_reason == 'length' OR parser_failure_reason == 'truncation' OR output_tokens >= diagnostic_mode.max_tokens"
+    },
+    "run_date": {
+      "principle": "Operator-requested audit date.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "runtime_receipts": {
+      "allowed_classes": [
+        "authenticated",
+        "resume_only",
+        "inconsistent",
+        "missing"
+      ],
+      "source": "Exp5799 model_runtime_receipts and gpu_offload_receipts"
+    },
+    "schema": {
+      "principle": "Versioned schema id for the companion Exp5799 audit.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors for the audit and producer repair.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "status": {
+      "principle": "A terminal audit state distinguishes a clean reconstruction from unresolved evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document row replay, code repair, and immutability validation.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed audit checks from being narrated as passing.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The exact parser/fixture defines correctness and is circular authority, so no verifier-moat claim is allowed.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    }
+  },
+  "gpu_provenance_reconciliation": {
+    "audit_answer_channel_qualified_models": [],
+    "authenticated_mode_count": 2,
+    "mode_receipts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF::qwen3-6-35b-a3b:embedded_template_final_sentinel_192": {
+        "classification": "authenticated",
+        "cuda_offload_authenticated_declared": true,
+        "gpu_memory_after_mb": 532,
+        "gpu_memory_before_mb": 532,
+        "gpu_memory_peak_mb": 21799,
+        "n_gpu_layers_offloaded": 41,
+        "n_gpu_layers_requested": -1,
+        "offload_log_excerpt_present": true,
+        "resume_from_checkpoint": false,
+        "rows_attempted": 24,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": true
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF::qwen3-6-35b-a3b:reasoning_disabled_final_sentinel_128": {
+        "classification": "resume_only",
+        "cuda_offload_authenticated_declared": true,
+        "gpu_memory_after_mb": 0,
+        "gpu_memory_before_mb": 0,
+        "gpu_memory_peak_mb": 1,
+        "n_gpu_layers_offloaded": 1,
+        "n_gpu_layers_requested": -1,
+        "offload_log_excerpt_present": true,
+        "resume_from_checkpoint": true,
+        "rows_attempted": 24,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF::gemma-4-26b-a4b-it:embedded_template_final_sentinel_192": {
+        "classification": "authenticated",
+        "cuda_offload_authenticated_declared": true,
+        "gpu_memory_after_mb": 532,
+        "gpu_memory_before_mb": 532,
+        "gpu_memory_peak_mb": 17731,
+        "n_gpu_layers_offloaded": 31,
+        "n_gpu_layers_requested": -1,
+        "offload_log_excerpt_present": true,
+        "resume_from_checkpoint": false,
+        "rows_attempted": 24,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF::gemma-4-26b-a4b-it:reasoning_disabled_final_sentinel_128": {
+        "classification": "resume_only",
+        "cuda_offload_authenticated_declared": true,
+        "gpu_memory_after_mb": 0,
+        "gpu_memory_before_mb": 0,
+        "gpu_memory_peak_mb": 1,
+        "n_gpu_layers_offloaded": 1,
+        "n_gpu_layers_requested": -1,
+        "offload_log_excerpt_present": true,
+        "resume_from_checkpoint": true,
+        "rows_attempted": 24,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF::gemma-4-31b-it:reasoning_disabled_final_sentinel_128": {
+        "classification": "resume_only",
+        "cuda_offload_authenticated_declared": true,
+        "gpu_memory_after_mb": 0,
+        "gpu_memory_before_mb": 0,
+        "gpu_memory_peak_mb": 1,
+        "n_gpu_layers_offloaded": 1,
+        "n_gpu_layers_requested": -1,
+        "offload_log_excerpt_present": true,
+        "resume_from_checkpoint": true,
+        "rows_attempted": 24,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": true
+      }
+    },
+    "model_receipts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "classification": "authenticated",
+        "mode_classifications": [
+          "authenticated",
+          "resume_only"
+        ],
+        "top_level_classification": "missing"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "classification": "authenticated",
+        "mode_classifications": [
+          "authenticated",
+          "resume_only"
+        ],
+        "top_level_classification": "missing"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "classification": "resume_only",
+        "mode_classifications": [
+          "resume_only"
+        ],
+        "top_level_classification": "resume_only"
+      }
+    },
+    "original_answer_channel_qualification_uses_resume_only": true,
+    "original_answer_channel_qualified_models": [
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "resume_only_mode_count": 3,
+    "top_level_receipts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "classification": "missing",
+        "cuda_offload_authenticated_declared": false,
+        "gpu_memory_after_mb": 0,
+        "gpu_memory_before_mb": 0,
+        "gpu_memory_peak_mb": 0,
+        "n_gpu_layers_offloaded": 0,
+        "n_gpu_layers_requested": 0,
+        "offload_log_excerpt_present": false,
+        "resume_from_checkpoint": false,
+        "rows_attempted": 0,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "classification": "missing",
+        "cuda_offload_authenticated_declared": false,
+        "gpu_memory_after_mb": 0,
+        "gpu_memory_before_mb": 0,
+        "gpu_memory_peak_mb": 0,
+        "n_gpu_layers_offloaded": 0,
+        "n_gpu_layers_requested": 0,
+        "offload_log_excerpt_present": false,
+        "resume_from_checkpoint": false,
+        "rows_attempted": 0,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "classification": "resume_only",
+        "cuda_offload_authenticated_declared": true,
+        "gpu_memory_after_mb": 0,
+        "gpu_memory_before_mb": 0,
+        "gpu_memory_peak_mb": 1,
+        "n_gpu_layers_offloaded": 1,
+        "n_gpu_layers_requested": -1,
+        "offload_log_excerpt_present": true,
+        "resume_from_checkpoint": true,
+        "rows_attempted": 0,
+        "runtime_hash_present_in_receipt": false,
+        "vram_growth_observed": true
+      }
+    },
+    "unauthenticated_receipt_used_to_qualify_model": false
+  },
+  "honest_verdict": "complete: exp5799_events_and_provenance_reconstructed_with_resume_receipts_unqualified",
+  "immutable_input_hashes": {
+    "after": {
+      "adversarial_verify": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784553348246799609,
+        "path": "scripts/adversarial_verify.py",
+        "readable": true,
+        "sha256": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+        "size_bytes": 233359
+      },
+      "claude_instructions": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784329344029250447,
+        "path": "CLAUDE.md",
+        "readable": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+        "size_bytes": 248157
+      },
+      "codex_instructions": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1776353464570016430,
+        "path": "CODEX.md",
+        "readable": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      "exp5785_fixture_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784715226672386330,
+        "path": "results/experiment_5785_hardness_surface_fixture.json",
+        "readable": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a",
+        "size_bytes": 588163
+      },
+      "exp5785_fixture_rows": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784715226587779321,
+        "path": "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "readable": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af",
+        "size_bytes": 1207825
+      },
+      "exp5798_diagnostic_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784741814899133551,
+        "path": "results/experiment_5798_sota_answer_channel_diagnostic.json",
+        "readable": true,
+        "sha256": "sha256:994acb96f8404602a23c09731ec848b30f9fec28def51fcef12994adca0f186c",
+        "size_bytes": 31476
+      },
+      "exp5799_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784745672107238604,
+        "path": "results/experiment_5799_sota_answer_channel_canary.json",
+        "readable": true,
+        "sha256": "sha256:2d09302991ea80737cf7a8d971e0a180ee4d6f363cfcc465125b307fe3258a4e",
+        "size_bytes": 127632
+      },
+      "exp5799_producer": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784752093359374322,
+        "path": "python/carnot/experiment_5799_sota_answer_channel_canary.py",
+        "readable": true,
+        "sha256": "sha256:9003ee34b7abfb9c3844c6b21ca1b3033fff95772c5f3b734092159a005541f8",
+        "size_bytes": 77673
+      },
+      "exp5799_rows": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784743812827518599,
+        "path": "results/experiment_5799_sota_answer_channel_canary.rows.jsonl",
+        "readable": true,
+        "sha256": "sha256:29a8565d832a79bb180f8a072f8b68dbd7c3f4833fc65ded324473cf8cd6dbef",
+        "size_bytes": 505124
+      },
+      "exp5799_tests": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784752260142426192,
+        "path": "tests/python/test_experiment_5799_sota_answer_channel_canary.py",
+        "readable": true,
+        "sha256": "sha256:a7e76b6f0ddb387498abc651c71dc8b0b7597ab4678e56903a2be7b988e8cf98",
+        "size_bytes": 25539
+      },
+      "model_metadata": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1780089710014132585,
+        "path": "python/carnot/inference/sota_models.py",
+        "readable": true,
+        "sha256": "sha256:db9b6d3f56d4fb137117230575c3559dadeec97e2d02d37358895225e33dcd1d",
+        "size_bytes": 14140
+      },
+      "research_reporting_spec": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784752313098767095,
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "readable": true,
+        "sha256": "sha256:aab5f362115d3edcc80f07900a3688612c040be255a4fef5d82a0b7e179c29d3",
+        "size_bytes": 2637387
+      },
+      "summarize_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1782125012267405031,
+        "path": "scripts/summarize_artifact.py",
+        "readable": true,
+        "sha256": "sha256:68a39a39cd23f66e97408df5fbe8d087fb21ba1fc9d2a0513192235fc387775e",
+        "size_bytes": 12687
+      },
+      "verification_spec": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784743101503384502,
+        "path": "openspec/capabilities/verification/spec.md",
+        "readable": true,
+        "sha256": "sha256:4801e254606f3b15d88f51aeb6d39187b347faa4905a657667184db2eab01e48",
+        "size_bytes": 2177303
+      }
+    },
+    "before": {
+      "adversarial_verify": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784553348246799609,
+        "path": "scripts/adversarial_verify.py",
+        "readable": true,
+        "sha256": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+        "size_bytes": 233359
+      },
+      "claude_instructions": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784329344029250447,
+        "path": "CLAUDE.md",
+        "readable": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+        "size_bytes": 248157
+      },
+      "codex_instructions": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1776353464570016430,
+        "path": "CODEX.md",
+        "readable": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      "exp5785_fixture_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784715226672386330,
+        "path": "results/experiment_5785_hardness_surface_fixture.json",
+        "readable": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a",
+        "size_bytes": 588163
+      },
+      "exp5785_fixture_rows": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784715226587779321,
+        "path": "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "readable": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af",
+        "size_bytes": 1207825
+      },
+      "exp5798_diagnostic_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784741814899133551,
+        "path": "results/experiment_5798_sota_answer_channel_diagnostic.json",
+        "readable": true,
+        "sha256": "sha256:994acb96f8404602a23c09731ec848b30f9fec28def51fcef12994adca0f186c",
+        "size_bytes": 31476
+      },
+      "exp5799_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784745672107238604,
+        "path": "results/experiment_5799_sota_answer_channel_canary.json",
+        "readable": true,
+        "sha256": "sha256:2d09302991ea80737cf7a8d971e0a180ee4d6f363cfcc465125b307fe3258a4e",
+        "size_bytes": 127632
+      },
+      "exp5799_producer": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784752093359374322,
+        "path": "python/carnot/experiment_5799_sota_answer_channel_canary.py",
+        "readable": true,
+        "sha256": "sha256:9003ee34b7abfb9c3844c6b21ca1b3033fff95772c5f3b734092159a005541f8",
+        "size_bytes": 77673
+      },
+      "exp5799_rows": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784743812827518599,
+        "path": "results/experiment_5799_sota_answer_channel_canary.rows.jsonl",
+        "readable": true,
+        "sha256": "sha256:29a8565d832a79bb180f8a072f8b68dbd7c3f4833fc65ded324473cf8cd6dbef",
+        "size_bytes": 505124
+      },
+      "exp5799_tests": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784752260142426192,
+        "path": "tests/python/test_experiment_5799_sota_answer_channel_canary.py",
+        "readable": true,
+        "sha256": "sha256:a7e76b6f0ddb387498abc651c71dc8b0b7597ab4678e56903a2be7b988e8cf98",
+        "size_bytes": 25539
+      },
+      "model_metadata": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1780089710014132585,
+        "path": "python/carnot/inference/sota_models.py",
+        "readable": true,
+        "sha256": "sha256:db9b6d3f56d4fb137117230575c3559dadeec97e2d02d37358895225e33dcd1d",
+        "size_bytes": 14140
+      },
+      "research_reporting_spec": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784752313098767095,
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "readable": true,
+        "sha256": "sha256:aab5f362115d3edcc80f07900a3688612c040be255a4fef5d82a0b7e179c29d3",
+        "size_bytes": 2637387
+      },
+      "summarize_artifact": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1782125012267405031,
+        "path": "scripts/summarize_artifact.py",
+        "readable": true,
+        "sha256": "sha256:68a39a39cd23f66e97408df5fbe8d087fb21ba1fc9d2a0513192235fc387775e",
+        "size_bytes": 12687
+      },
+      "verification_spec": {
+        "mode_octal": "0o644",
+        "mtime_ns": 1784743101503384502,
+        "path": "openspec/capabilities/verification/spec.md",
+        "readable": true,
+        "sha256": "sha256:4801e254606f3b15d88f51aeb6d39187b347faa4905a657667184db2eab01e48",
+        "size_bytes": 2177303
+      }
+    }
+  },
+  "independent_event_definitions": {
+    "definition_independence_receipt": {
+      "aggregate_reused_as_ground_truth": false,
+      "distinct_raw_predicates": true,
+      "primary_failure_order": [
+        "timeout",
+        "empty_final_content",
+        "truncation",
+        "stop_collision",
+        "invalid_candidate",
+        "parser_failure",
+        "exact_wrong_answer",
+        "valid_exact_output"
+      ]
+    },
+    "empty_final_content": {
+      "predicate": "row.raw_final_content == ''",
+      "source": "row.raw_final_content"
+    },
+    "exact_wrong_answer": {
+      "predicate": "parser parse_ok is true AND selected_label != exact_label",
+      "source": "row.parser_receipt,row.selected_label,row.exact_label"
+    },
+    "invalid_candidate": {
+      "predicate": "parser_failure_reason in {'invalid_id','invalid_candidate'}",
+      "source": "row.parser_receipt.parser_failure_reason"
+    },
+    "parser_failure": {
+      "predicate": "row.parser_receipt.parse_ok is not true",
+      "source": "row.parser_receipt"
+    },
+    "stop_collision": {
+      "predicate": "row.stop_collision is true OR parser_failure_reason == 'stop_token' OR stop string appears in raw_response_text",
+      "source": "row.stop_collision,row.raw_response_text,Exp5798 mode.stops"
+    },
+    "timeout": {
+      "predicate": "row.timeout is true",
+      "source": "row.timeout"
+    },
+    "truncation": {
+      "predicate": "finish_reason == 'length' OR parser_failure_reason == 'truncation' OR output_tokens >= diagnostic_mode.max_tokens",
+      "source": "row.finish_reason,row.output_tokens,Exp5798 mode.max_tokens"
+    }
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methodology_gap_matrix": {
+    "checkpoint_origin": {
+      "status": "mixed_resume_and_new_rows",
+      "value": {
+        "checkpoint_after_every_response": true,
+        "duplicate_cells_present": false,
+        "duplicate_cells_skipped": 72,
+        "existing_rows_loaded": 72,
+        "replayed_row_hashes_match": true,
+        "resume_supported": true,
+        "row_file": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5799_sota_answer_channel_canary.rows.jsonl",
+        "rows_written": 48,
+        "schema": "carnot.experiment_5799.sota_answer_channel_canary.v1.checkpoint_resume"
+      }
+    },
+    "original_duration_s": {
+      "note": "Exp5799 has row timing but no top-level wall-clock duration.",
+      "status": "absent",
+      "value": null
+    },
+    "original_test_exit_codes": {
+      "status": "absent",
+      "value": {}
+    },
+    "per_row_load_receipts": {
+      "note": "Rows carry response/timing hashes, while load/offload evidence is mode-level.",
+      "status": "absent"
+    },
+    "runtime_hashes": {
+      "model_runtime_hashes": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:7008576b37b1ccbf6dcb6195782ebdcdb7126d6c901657a111e666f01e3d7f7f",
+        "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:7008576b37b1ccbf6dcb6195782ebdcdb7126d6c901657a111e666f01e3d7f7f",
+        "unsloth/gemma-4-31B-it-GGUF": "sha256:7008576b37b1ccbf6dcb6195782ebdcdb7126d6c901657a111e666f01e3d7f7f"
+      },
+      "note": "Per-mode runtime receipts omit a runtime hash field.",
+      "status": "precondition_only"
+    },
+    "runtime_logs": {
+      "paths": [],
+      "searched_globs": [
+        "logs/*5799*.log",
+        "results/*5799*.log",
+        "results/raw/*5799*/*.log"
+      ],
+      "status": "missing"
+    },
+    "seed": {
+      "status": "present",
+      "value": {
+        "base_seed": 5799,
+        "fixture_seed": 5799002,
+        "runner_seed": 5799001
+      }
+    }
+  },
+  "milestone": "2026.07.518",
+  "original_files_unchanged": true,
+  "overlapping_event_matrix": {
+    "denominator": 120,
+    "event_counts": {
+      "empty_final_content": 91,
+      "exact_wrong_answer": 6,
+      "invalid_candidate": 2,
+      "parser_failure": 93,
+      "stop_collision": 0,
+      "timeout": 0,
+      "truncation": 93
+    },
+    "event_rates": {
+      "empty_final_content": 0.758333,
+      "exact_wrong_answer": 0.05,
+      "invalid_candidate": 0.016667,
+      "parser_failure": 0.775,
+      "stop_collision": 0.0,
+      "timeout": 0.0,
+      "truncation": 0.775
+    },
+    "legitimate_overlap_explanation": "A truncated response can also have no final line and therefore fail parsing; overlap is expected and is not evidence that definitions share a predicate.",
+    "original_corrigendum_pending": [
+      {
+        "detail": "parser_failure_rate=0.775 and truncation_rate=0.775 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "original_flagged_adversarial": true,
+    "pairwise_overlap_counts": {
+      "exact_wrong_answer&parser_failure": 0,
+      "invalid_candidate&parser_failure": 2,
+      "invalid_candidate&truncation": 2,
+      "parser_failure&empty_final_content": 91,
+      "parser_failure&truncation": 93,
+      "stop_collision&parser_failure": 0,
+      "timeout&truncation": 0,
+      "truncation&empty_final_content": 91
+    },
+    "rows_with_multiple_events": 93,
+    "tautology_flag_resolution": "parser_failure_rate and truncation_rate both equal 93/120 through legitimate co-occurrence; the audit keeps independent raw predicates and does not force distinct rates to differ."
+  },
+  "per_model_mode_reconstruction": {
+    "models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "event_counts": {
+          "empty_final_content": 46,
+          "exact_wrong_answer": 0,
+          "invalid_candidate": 2,
+          "parser_failure": 48,
+          "stop_collision": 0,
+          "timeout": 0,
+          "truncation": 48
+        },
+        "mode_count": 2,
+        "model_family": "qwen3-6-35b-a3b",
+        "modes": {
+          "qwen3-6-35b-a3b:embedded_template_final_sentinel_192": {
+            "event_counts": {
+              "empty_final_content": 22,
+              "exact_wrong_answer": 0,
+              "invalid_candidate": 2,
+              "parser_failure": 24,
+              "stop_collision": 0,
+              "timeout": 0,
+              "truncation": 24
+            },
+            "mode_type": "embedded_template_final_sentinel",
+            "primary_failure_counts": {
+              "empty_final_content": 22,
+              "truncation": 2
+            },
+            "row_count": 24,
+            "row_hash_manifest_sha256": "sha256:c716ea9c0e68b9781da8690509057cb41170efa251a531592b3996b0b552c1f9",
+            "row_hashes": [
+              "sha256:1ff99d480d2270aa12465197cd82f78bec6380e6899ce41b77638d878e14feb0",
+              "sha256:d6cbfee694dab999b6370e31bed8cb211c0d2b7034ade82166a1eea8d2451a6c",
+              "sha256:e10abc47e44a3acc519de7f846308d26672e5dc2b19b76604791e999a6629f9f",
+              "sha256:0ecd81a1c57b02e69a4c13dded96d240f84948e512f416240d07aff214f3323c",
+              "sha256:ccb6c57ff1f675673f75c55fa255b7568ed8b0e4282dfcf40c8e3ad24a9e790c",
+              "sha256:6a594681005787aa335f7f864af5b8e8f73340836c866bb8e4f6f85b7058936c",
+              "sha256:1172c80427e77222ca14d5c292e4461a2a4db2d18369852e44dbd9c7ea0285c8",
+              "sha256:0a5f75e36cd401baea38474d38687a64673edd2376d2737286266b87b65029e0",
+              "sha256:94b8c210739fb89b3c1b801ca29d5ffcde0b665727b5ebcc3395cd7ad7caf404",
+              "sha256:44f3588a1466a4a4fb695655f5dea847b3011e9fdf2b249cd9a003e47a7bd3a4",
+              "sha256:a637a28c69db0697ec7a1e1ce2f2b889943e15d2a9769cd5f3185abcb7b0a629",
+              "sha256:90fed9c03a43affdee04253ca17a97e32bfa92845babdcf2feb8e6f14fe7d6b0",
+              "sha256:570989f621f7bd9621d36c65427465571efb5d7a645c5629875441a569561af9",
+              "sha256:15981b60a4a1c064d40d32f1ea0cf4d2289a0ab256a70e1a6360a0e96a2505a3",
+              "sha256:21f582340c596cbd7322bd20defd97525bd9e76f1ae6a8f378df8a16cb0562a7",
+              "sha256:fff9bd3bf7ea09860fb3e6a9f26d49f50135f916f48d9a5fb404525f424c057c",
+              "sha256:01857deabf3b19ddf9c6a4a1058387977b36605491fde5431fe583b12f57b292",
+              "sha256:8739f0327a716018527de2946f4fad765128af16120e90e4095230dd60b5d47e",
+              "sha256:d956b3804feafc3274134f7efb25c24ad258ab81d6cca3ed12c8fe8ef99ad987",
+              "sha256:3de056b1a6e3c4ea7521d22970da96f384b99b0118bc263db55f50ac2d8bff8d",
+              "sha256:947de131bf06e6b55187a40e0cee5cd8cdbe3a57c70a53207cb851d8b29cc5ae",
+              "sha256:3068e62cda671ab8519263d2e9ce2e471dfb837c3171d0b103e51f39e804b797",
+              "sha256:0a816bc8a8d2814d44a7420524fafeae25fc8486bb3e7d4b48e7ef15394e09de",
+              "sha256:c53483d763308afa6d61c0f0b805d27365121404d17a456f09bed0a9602bf795"
+            ]
+          },
+          "qwen3-6-35b-a3b:reasoning_disabled_final_sentinel_128": {
+            "event_counts": {
+              "empty_final_content": 24,
+              "exact_wrong_answer": 0,
+              "invalid_candidate": 0,
+              "parser_failure": 24,
+              "stop_collision": 0,
+              "timeout": 0,
+              "truncation": 24
+            },
+            "mode_type": "reasoning_disabled_final_sentinel",
+            "primary_failure_counts": {
+              "empty_final_content": 24
+            },
+            "row_count": 24,
+            "row_hash_manifest_sha256": "sha256:bc4afe5f5b1ac6f0a62b5d9d705155257aafeabcf76621318ad293378b9b7a43",
+            "row_hashes": [
+              "sha256:ea23441ba7532bc7ab50fb47d9157513d50eedbd0ff80757fddb7235809c7161",
+              "sha256:b51f3b6d869a9689916c698d359ab6ccb5ca98cbe97c4df2382362a245e7f9fd",
+              "sha256:89deeca7f882e4449c659544c3bacb2da7429b378d9b681226a2537d3961ca2d",
+              "sha256:4fc1964f98b46c6d036291a52988895b5d426a99491f18af90426349864aa178",
+              "sha256:2fee7d3180037acabd382ec30a33bfdcf0d06adf1df03240ac8dc2c71a126055",
+              "sha256:508eb199269718252e7765b1d50af7d2ad9b9eebe98004ab7db1e7041b816916",
+              "sha256:92cd6531083f9b6222ee0a4d7b213290e238d50bf402af827b1da5d2d80f6270",
+              "sha256:f337805a64833cc919fb84195adb068c13e356b9977d2bb979a48f9ce887fddb",
+              "sha256:69c7b79a1ad0ee07269ab06413e5e14fab2ac1c114b72d5c763dbc0167725c2a",
+              "sha256:868ede18a999cd93878f899d712263280b517c0830a9bc47d37b13e4f379c764",
+              "sha256:e7a5e2a48a2662229f09f0e06ed6f921eaf769ae31869411beaa9a9828436149",
+              "sha256:39bcc549a7a08aa355f259f8842a0bc9b102c3a06b8e60254b7271f02e4c125d",
+              "sha256:6714d9e2d2cbc0a553eef168f0049d4be9bd4a6be9742d75714594a43e4912b5",
+              "sha256:6e206b6d2142f7340a6f9c425695f7db1feb2b06030dfa9fcfc4d8245ad945a5",
+              "sha256:8f4ff45d6ed0ccf5421581ddb3f8ae315805f06ecfbde85eba4890effd2edd80",
+              "sha256:576abaa97e4229c71edf3a8964defc8bc3a99f53d75aad496a0447bd4a08867b",
+              "sha256:973ae5458adc69a187cbf07b00d204a73969549eec2ffdf8eed66427a4ca8963",
+              "sha256:18ceea4a76e612727a25757b0f6be0426831f6ae61f943ee2f5f35138c07baf9",
+              "sha256:a2399248af62b06c5346afdea4e283df62e6e66539ebd70ae2537abc0e8a1877",
+              "sha256:8c7641540273c4885bef385b5323c141b8b250f70542c39f0e67d8635d13b79a",
+              "sha256:4dfed8cfccea71de113759401307ea02cb589278ab3bde2846b3f5863a5c11e3",
+              "sha256:a992500c027a5e43e6f439f4e28b19e35d7bc11c840740170a2b9ed4906dcb14",
+              "sha256:909005361b7a34d210767c5341a8f12f0e8b1d95da3e3920ff83146733e5602a",
+              "sha256:870b7c480c8001069c52b8663c3a296e87481b3a84717c54c31e608378f66315"
+            ]
+          }
+        },
+        "primary_failure_counts": {
+          "empty_final_content": 46,
+          "truncation": 2
+        },
+        "row_count": 48
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "event_counts": {
+          "empty_final_content": 45,
+          "exact_wrong_answer": 0,
+          "invalid_candidate": 0,
+          "parser_failure": 45,
+          "stop_collision": 0,
+          "timeout": 0,
+          "truncation": 45
+        },
+        "mode_count": 2,
+        "model_family": "gemma-4-26b-a4b-it",
+        "modes": {
+          "gemma-4-26b-a4b-it:embedded_template_final_sentinel_192": {
+            "event_counts": {
+              "empty_final_content": 22,
+              "exact_wrong_answer": 0,
+              "invalid_candidate": 0,
+              "parser_failure": 22,
+              "stop_collision": 0,
+              "timeout": 0,
+              "truncation": 22
+            },
+            "mode_type": "embedded_template_final_sentinel",
+            "primary_failure_counts": {
+              "empty_final_content": 22,
+              "valid_exact_output": 2
+            },
+            "row_count": 24,
+            "row_hash_manifest_sha256": "sha256:a52a37aec042f3d8e6cf29c8180a78fccca9b061a6e7f525af350af31485780d",
+            "row_hashes": [
+              "sha256:0532738aa5c78268346e4652cb93e0c7f8d87d1e6225f7b057c1675a8f2e483c",
+              "sha256:981ca8e9cf925858389ef0832cb84da10acddfccc1256e28236e5404eba7d2ce",
+              "sha256:92f7271833b0b88fd51e46dc29111003a67f0856abe1c29468bd5c6a36b9b4bb",
+              "sha256:3aa2cb0e707b4707fdc43e352eb73f5f726e624b56e1d2b4b5435eb8b7d1d1f0",
+              "sha256:a3f36d30f47459af90d3a9ab408f0a1777b5e7a864976c029efa556e13b130fe",
+              "sha256:f8c7c0f364593ad1ea54f5628efe8e8b414875afb2171b4ec46e67c6e433a05f",
+              "sha256:93996b00c855ae40e6da6108901ea96209a2a27587aa43533a91a87b2326febb",
+              "sha256:8bbac6d18cd1d31187dbc556704aa6b7e175fe93e4f902fb9ace1ec351d82069",
+              "sha256:4ffb958c3dce8dcfdff72ff059243450bef8a501de6ec49ea0570ffc9fbe7b80",
+              "sha256:f85c694525ccdd3fe555e08d6d80600778595f67d89812cfde03c3a257012b95",
+              "sha256:2619f14ab55b0a87b2777f37b141ccb2ba82a0bc8fb8b6dc250681357f849ee8",
+              "sha256:0d8957c40f538dc8cd39f57be04586e4e9dc7b0fb4ecead935bd2aefc856ad15",
+              "sha256:698c695035991cc7d95000ccc91068ac41203f5ed76e091cc612bf0ddcf041a6",
+              "sha256:e1cf4e76a328473632ceee505f9ed2ba740c3cfc7fa9769172663cac6b027a84",
+              "sha256:e1e3215f1c769aa558255afbd27fc0b0cf18f7e6c88ea084bdd51f4d140f1e26",
+              "sha256:c3c5a194385138b5ed56883284dd3befce59ba1639c51e62b42c61c35a8a6f87",
+              "sha256:19fc3171c3354808b970c00fa5399116f0a6a3d01f67f461d6d9bfa00f36ad49",
+              "sha256:94fb5f7119d8af1feb4f7bc5df35a0147d9fd52db4085d7af8b987df31e7486b",
+              "sha256:1e0b1be45efe790141ee4f9217957be5cb5d7ef9c4923487e44fbb0536ab57c1",
+              "sha256:51b3a68bce7ae60830195a32c1ab48460ecfee606a6a97b90c52fd56ebf2e793",
+              "sha256:98bfbe573b00c3cc8bbd08200231b5de6df1fdf7e57e5e515dddec8b22ea1b21",
+              "sha256:0a5b6a18962219b5bbef186cc32d6b277ddaee5ac5a30983cb16fb39610d182b",
+              "sha256:9d2bac003373bd4042e1a06ea662014b5f3d5755378cbc8abf3763a4cbc04a39",
+              "sha256:51b017d05972249658cb8b921cefa6bd8766bf8ddcf37381e9b26f84441129c1"
+            ]
+          },
+          "gemma-4-26b-a4b-it:reasoning_disabled_final_sentinel_128": {
+            "event_counts": {
+              "empty_final_content": 23,
+              "exact_wrong_answer": 0,
+              "invalid_candidate": 0,
+              "parser_failure": 23,
+              "stop_collision": 0,
+              "timeout": 0,
+              "truncation": 23
+            },
+            "mode_type": "reasoning_disabled_final_sentinel",
+            "primary_failure_counts": {
+              "empty_final_content": 23,
+              "valid_exact_output": 1
+            },
+            "row_count": 24,
+            "row_hash_manifest_sha256": "sha256:41afe02ebe138138386cad02ed6bfcacd88d8957c366d222246c6abe45294f7f",
+            "row_hashes": [
+              "sha256:b29b9c1e5c31cd228f5f7eb96b8548f7d3f8db9919363c1498ad44b27b005526",
+              "sha256:d5f0561395e6b44469671c99ebba8592ae98cb95fb2968010d7d2bdf193fcaf6",
+              "sha256:526e5c1e7d9d35a55dc003a89588e6113c58a86fd5fad849f2c61651e57d80c2",
+              "sha256:c16aa87c9fa4753f504539afcec85b00ea27beaa7b7f464bf6fb4dc047179189",
+              "sha256:c11e66c0f13437ec990478cf067a833b0d5dac3e553cf8ac1f3fce2b41192396",
+              "sha256:e7c539a1930df6833837f26396d1401dcc2e6e708e691a39aebd48276537f913",
+              "sha256:0fa05ce10141b47e7aa6fc3df9934d3836c355f46150021abc9918afe12a9fb5",
+              "sha256:9a164a643e0714d418fabf5eac16ddd8ba65ff09e7e1cea4960b89f98487faa3",
+              "sha256:f98739045e8b0643a889021dc6f88f61741557381829f920fcfd70fdbd378538",
+              "sha256:48301b601e5721294960a243dbb5892ec0dc028de0c19bf7a36538c6dbbc0233",
+              "sha256:779647d1586a427cafcccef4e543de55139f69a63a1eac696e7306f328c08eee",
+              "sha256:efe8104fdb9a9f3a01b0e18142c4897fc4fb5bd60246e5f2b6db2933530d23ff",
+              "sha256:ac0ab8fe0afe9571731f8415cffaa02e3c92771988fc09448c0ecf9f3cc91bd2",
+              "sha256:f119b30fbeaec7719fc95c5623a4a1fd5927b68aa98f404635190a6de6086b03",
+              "sha256:8e0bd542e64ccbaf9f4552170d824c2aecb717a7e4b7998fff23c3e20e047b0a",
+              "sha256:0ef92add08d5bf8941510ded31fa8e620ad59a1ea21c06e38095e98ca5628c15",
+              "sha256:7a2903259770f2d25ceadcc324104d3fe4ac18d40b6e172c62c5f7cc3a28de4d",
+              "sha256:c369f358d554f27e53c8df74b2a89efdfe4af3493c3c38f331f960583063616c",
+              "sha256:7c094461b942c329ba05c3976eef0bf639dfab545aebd75693d3a36af9c20fbe",
+              "sha256:03c7738df5791999c69d5781b3b9255a7b91fa9727d9339c2d6b0f870c6408d9",
+              "sha256:ea91d6a885363f54a696c07b79bbe7bec0a57fdaac29e848d8bfeee4dffbb3cc",
+              "sha256:2a6b79808ecb187d0574a6ce8cc18a88bb504e6eeaf686de6546463161704ee3",
+              "sha256:2f3a424f20b03ff4d3028a5c968f50b4fb96696aff945ac09a1e18a4f4a779d1",
+              "sha256:8db15f7e5a55aae218340efc26da177c5b2aff2626c5f2a856fcd5323490ab41"
+            ]
+          }
+        },
+        "primary_failure_counts": {
+          "empty_final_content": 45,
+          "valid_exact_output": 3
+        },
+        "row_count": 48
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "event_counts": {
+          "empty_final_content": 0,
+          "exact_wrong_answer": 6,
+          "invalid_candidate": 0,
+          "parser_failure": 0,
+          "stop_collision": 0,
+          "timeout": 0,
+          "truncation": 0
+        },
+        "mode_count": 1,
+        "model_family": "gemma-4-31b-it",
+        "modes": {
+          "gemma-4-31b-it:reasoning_disabled_final_sentinel_128": {
+            "event_counts": {
+              "empty_final_content": 0,
+              "exact_wrong_answer": 6,
+              "invalid_candidate": 0,
+              "parser_failure": 0,
+              "stop_collision": 0,
+              "timeout": 0,
+              "truncation": 0
+            },
+            "mode_type": "reasoning_disabled_final_sentinel",
+            "primary_failure_counts": {
+              "exact_wrong_answer": 6,
+              "valid_exact_output": 18
+            },
+            "row_count": 24,
+            "row_hash_manifest_sha256": "sha256:5453ed4e82d0728baaa900eafd04198f599de6e591d19f4574a7cb1137c531c6",
+            "row_hashes": [
+              "sha256:d2c5a20ac63bbe6f0b5fb05a9dc3ac3595941b1d73148ebdba4d8f6ba62b7cf1",
+              "sha256:387badaa410bc440671f8823be3096f32b0fdf05865301efc59d7185bfbd28a7",
+              "sha256:753e086af975d04823f84d8d5f7eb3c095d2ad5784dc3efa574e29089d376218",
+              "sha256:2b40e4b0fb1fac49febfedd7c3d747bdf229901c049672a8019417c417832753",
+              "sha256:5e007b510764c122323b7be36053e3584fef9ea0afce0e6619a34964a9ab3811",
+              "sha256:af66c7cc92027dfaae597dc77df5a47d6836879f237463d68924fe216d8e29db",
+              "sha256:c19b38480a1a04a4219eee74556eace30ef0bfe380e1e107ce70aa937e00699b",
+              "sha256:5937f6dbfa87a0fc27128b9de4cb04b750f466a23b9d64b6e5b14ae24743c616",
+              "sha256:9841bbacebc120aea7584372290a585b407e3ea33f562b46b69178f9b99d6c5a",
+              "sha256:cc0c5f9b796081bf0a58bf7949ae23ce8be871c62e6de33f286a6816de45e4b3",
+              "sha256:738c140fe1ed606adafcce4e3220810e64a017dd5a1e0f7135750d1c3b7ea156",
+              "sha256:c3c7672235cb7ef15618d7ec3ef2472a1bf883094910b60a50482e124c17cf41",
+              "sha256:2b8cb781a1c1228e85809de221ae50de95c82281645f3e959e9640f485bf4120",
+              "sha256:42e715b8c24dcbe80783454287b99b6b91f3341d8d67de4534043930b80009cd",
+              "sha256:4f0d69819c8019333312503bb7ac19f57a3be126138bd8c10e9b2b2c2efa5d4a",
+              "sha256:14d8d1c5e4fca8ce07148f857f666cc62ff7b8db6473188861c87d1384a778fa",
+              "sha256:50caaf42cfe6519d34a712ba9e04615776819e0a3c3b7964d8baa5c3b0a1eecd",
+              "sha256:4db3a4bc4a06c674be66b7ccb51888bc7c66e9019dd5c02eefc93ac3850f8757",
+              "sha256:09d87d7a14f3ab0c38c77759af664b530a6b18485ec5dbac4d22b025a9887ed5",
+              "sha256:9964f70aa19be5105f8979988e8ecb3719a8b219ff1bda881c98250f1659ff3d",
+              "sha256:2d1b02806788d2e95b0f9ef6142ed2bee552adb19b2ea0ed74626f301d286cb7",
+              "sha256:5c3d9c051015d2a08cbdd4ceafbf89aa92a152e4db4b3093ed6f6336040870ab",
+              "sha256:e25fcc4d64bdbf9c880600e62457a2e6ac281fbdfe40ff13713e005ba20e4644",
+              "sha256:8de3701fd22ca08a5583b6b1d18810719898a388b696e7bfb92ba1dce97f2762"
+            ]
+          }
+        },
+        "primary_failure_counts": {
+          "exact_wrong_answer": 6,
+          "valid_exact_output": 18
+        },
+        "row_count": 24
+      }
+    },
+    "overall": {
+      "artifact_independent_unit_count": 12,
+      "duration_from_rows_s": 150.469241,
+      "exact_label_count": 120,
+      "exact_label_coverage": 1.0,
+      "fixture_row_count": 24,
+      "independent_unit_count": 12,
+      "independent_unit_count_matches_artifact": true,
+      "mode_count": 5,
+      "model_count": 3,
+      "row_count": 120,
+      "row_file_sha256_matches_declared": true,
+      "row_hash_manifest_sha256": "sha256:a6808016fc1efc81e17e64784887be0c87b13c01c338a2fc7a014142dc18459f",
+      "seed": {
+        "base_seed": 5799,
+        "fixture_seed": 5799002,
+        "runner_seed": 5799001
+      }
+    },
+    "row_hashes_by_sequence": [
+      "sha256:ea23441ba7532bc7ab50fb47d9157513d50eedbd0ff80757fddb7235809c7161",
+      "sha256:b51f3b6d869a9689916c698d359ab6ccb5ca98cbe97c4df2382362a245e7f9fd",
+      "sha256:89deeca7f882e4449c659544c3bacb2da7429b378d9b681226a2537d3961ca2d",
+      "sha256:4fc1964f98b46c6d036291a52988895b5d426a99491f18af90426349864aa178",
+      "sha256:2fee7d3180037acabd382ec30a33bfdcf0d06adf1df03240ac8dc2c71a126055",
+      "sha256:508eb199269718252e7765b1d50af7d2ad9b9eebe98004ab7db1e7041b816916",
+      "sha256:92cd6531083f9b6222ee0a4d7b213290e238d50bf402af827b1da5d2d80f6270",
+      "sha256:f337805a64833cc919fb84195adb068c13e356b9977d2bb979a48f9ce887fddb",
+      "sha256:69c7b79a1ad0ee07269ab06413e5e14fab2ac1c114b72d5c763dbc0167725c2a",
+      "sha256:868ede18a999cd93878f899d712263280b517c0830a9bc47d37b13e4f379c764",
+      "sha256:e7a5e2a48a2662229f09f0e06ed6f921eaf769ae31869411beaa9a9828436149",
+      "sha256:39bcc549a7a08aa355f259f8842a0bc9b102c3a06b8e60254b7271f02e4c125d",
+      "sha256:6714d9e2d2cbc0a553eef168f0049d4be9bd4a6be9742d75714594a43e4912b5",
+      "sha256:6e206b6d2142f7340a6f9c425695f7db1feb2b06030dfa9fcfc4d8245ad945a5",
+      "sha256:8f4ff45d6ed0ccf5421581ddb3f8ae315805f06ecfbde85eba4890effd2edd80",
+      "sha256:576abaa97e4229c71edf3a8964defc8bc3a99f53d75aad496a0447bd4a08867b",
+      "sha256:973ae5458adc69a187cbf07b00d204a73969549eec2ffdf8eed66427a4ca8963",
+      "sha256:18ceea4a76e612727a25757b0f6be0426831f6ae61f943ee2f5f35138c07baf9",
+      "sha256:a2399248af62b06c5346afdea4e283df62e6e66539ebd70ae2537abc0e8a1877",
+      "sha256:8c7641540273c4885bef385b5323c141b8b250f70542c39f0e67d8635d13b79a",
+      "sha256:4dfed8cfccea71de113759401307ea02cb589278ab3bde2846b3f5863a5c11e3",
+      "sha256:a992500c027a5e43e6f439f4e28b19e35d7bc11c840740170a2b9ed4906dcb14",
+      "sha256:909005361b7a34d210767c5341a8f12f0e8b1d95da3e3920ff83146733e5602a",
+      "sha256:870b7c480c8001069c52b8663c3a296e87481b3a84717c54c31e608378f66315",
+      "sha256:d2c5a20ac63bbe6f0b5fb05a9dc3ac3595941b1d73148ebdba4d8f6ba62b7cf1",
+      "sha256:387badaa410bc440671f8823be3096f32b0fdf05865301efc59d7185bfbd28a7",
+      "sha256:753e086af975d04823f84d8d5f7eb3c095d2ad5784dc3efa574e29089d376218",
+      "sha256:2b40e4b0fb1fac49febfedd7c3d747bdf229901c049672a8019417c417832753",
+      "sha256:5e007b510764c122323b7be36053e3584fef9ea0afce0e6619a34964a9ab3811",
+      "sha256:af66c7cc92027dfaae597dc77df5a47d6836879f237463d68924fe216d8e29db",
+      "sha256:c19b38480a1a04a4219eee74556eace30ef0bfe380e1e107ce70aa937e00699b",
+      "sha256:5937f6dbfa87a0fc27128b9de4cb04b750f466a23b9d64b6e5b14ae24743c616",
+      "sha256:9841bbacebc120aea7584372290a585b407e3ea33f562b46b69178f9b99d6c5a",
+      "sha256:cc0c5f9b796081bf0a58bf7949ae23ce8be871c62e6de33f286a6816de45e4b3",
+      "sha256:738c140fe1ed606adafcce4e3220810e64a017dd5a1e0f7135750d1c3b7ea156",
+      "sha256:c3c7672235cb7ef15618d7ec3ef2472a1bf883094910b60a50482e124c17cf41",
+      "sha256:2b8cb781a1c1228e85809de221ae50de95c82281645f3e959e9640f485bf4120",
+      "sha256:42e715b8c24dcbe80783454287b99b6b91f3341d8d67de4534043930b80009cd",
+      "sha256:4f0d69819c8019333312503bb7ac19f57a3be126138bd8c10e9b2b2c2efa5d4a",
+      "sha256:14d8d1c5e4fca8ce07148f857f666cc62ff7b8db6473188861c87d1384a778fa",
+      "sha256:50caaf42cfe6519d34a712ba9e04615776819e0a3c3b7964d8baa5c3b0a1eecd",
+      "sha256:4db3a4bc4a06c674be66b7ccb51888bc7c66e9019dd5c02eefc93ac3850f8757",
+      "sha256:09d87d7a14f3ab0c38c77759af664b530a6b18485ec5dbac4d22b025a9887ed5",
+      "sha256:9964f70aa19be5105f8979988e8ecb3719a8b219ff1bda881c98250f1659ff3d",
+      "sha256:2d1b02806788d2e95b0f9ef6142ed2bee552adb19b2ea0ed74626f301d286cb7",
+      "sha256:5c3d9c051015d2a08cbdd4ceafbf89aa92a152e4db4b3093ed6f6336040870ab",
+      "sha256:e25fcc4d64bdbf9c880600e62457a2e6ac281fbdfe40ff13713e005ba20e4644",
+      "sha256:8de3701fd22ca08a5583b6b1d18810719898a388b696e7bfb92ba1dce97f2762",
+      "sha256:b29b9c1e5c31cd228f5f7eb96b8548f7d3f8db9919363c1498ad44b27b005526",
+      "sha256:d5f0561395e6b44469671c99ebba8592ae98cb95fb2968010d7d2bdf193fcaf6",
+      "sha256:526e5c1e7d9d35a55dc003a89588e6113c58a86fd5fad849f2c61651e57d80c2",
+      "sha256:c16aa87c9fa4753f504539afcec85b00ea27beaa7b7f464bf6fb4dc047179189",
+      "sha256:c11e66c0f13437ec990478cf067a833b0d5dac3e553cf8ac1f3fce2b41192396",
+      "sha256:e7c539a1930df6833837f26396d1401dcc2e6e708e691a39aebd48276537f913",
+      "sha256:0fa05ce10141b47e7aa6fc3df9934d3836c355f46150021abc9918afe12a9fb5",
+      "sha256:9a164a643e0714d418fabf5eac16ddd8ba65ff09e7e1cea4960b89f98487faa3",
+      "sha256:f98739045e8b0643a889021dc6f88f61741557381829f920fcfd70fdbd378538",
+      "sha256:48301b601e5721294960a243dbb5892ec0dc028de0c19bf7a36538c6dbbc0233",
+      "sha256:779647d1586a427cafcccef4e543de55139f69a63a1eac696e7306f328c08eee",
+      "sha256:efe8104fdb9a9f3a01b0e18142c4897fc4fb5bd60246e5f2b6db2933530d23ff",
+      "sha256:ac0ab8fe0afe9571731f8415cffaa02e3c92771988fc09448c0ecf9f3cc91bd2",
+      "sha256:f119b30fbeaec7719fc95c5623a4a1fd5927b68aa98f404635190a6de6086b03",
+      "sha256:8e0bd542e64ccbaf9f4552170d824c2aecb717a7e4b7998fff23c3e20e047b0a",
+      "sha256:0ef92add08d5bf8941510ded31fa8e620ad59a1ea21c06e38095e98ca5628c15",
+      "sha256:7a2903259770f2d25ceadcc324104d3fe4ac18d40b6e172c62c5f7cc3a28de4d",
+      "sha256:c369f358d554f27e53c8df74b2a89efdfe4af3493c3c38f331f960583063616c",
+      "sha256:7c094461b942c329ba05c3976eef0bf639dfab545aebd75693d3a36af9c20fbe",
+      "sha256:03c7738df5791999c69d5781b3b9255a7b91fa9727d9339c2d6b0f870c6408d9",
+      "sha256:ea91d6a885363f54a696c07b79bbe7bec0a57fdaac29e848d8bfeee4dffbb3cc",
+      "sha256:2a6b79808ecb187d0574a6ce8cc18a88bb504e6eeaf686de6546463161704ee3",
+      "sha256:2f3a424f20b03ff4d3028a5c968f50b4fb96696aff945ac09a1e18a4f4a779d1",
+      "sha256:8db15f7e5a55aae218340efc26da177c5b2aff2626c5f2a856fcd5323490ab41",
+      "sha256:1ff99d480d2270aa12465197cd82f78bec6380e6899ce41b77638d878e14feb0",
+      "sha256:d6cbfee694dab999b6370e31bed8cb211c0d2b7034ade82166a1eea8d2451a6c",
+      "sha256:e10abc47e44a3acc519de7f846308d26672e5dc2b19b76604791e999a6629f9f",
+      "sha256:0ecd81a1c57b02e69a4c13dded96d240f84948e512f416240d07aff214f3323c",
+      "sha256:ccb6c57ff1f675673f75c55fa255b7568ed8b0e4282dfcf40c8e3ad24a9e790c",
+      "sha256:6a594681005787aa335f7f864af5b8e8f73340836c866bb8e4f6f85b7058936c",
+      "sha256:1172c80427e77222ca14d5c292e4461a2a4db2d18369852e44dbd9c7ea0285c8",
+      "sha256:0a5f75e36cd401baea38474d38687a64673edd2376d2737286266b87b65029e0",
+      "sha256:94b8c210739fb89b3c1b801ca29d5ffcde0b665727b5ebcc3395cd7ad7caf404",
+      "sha256:44f3588a1466a4a4fb695655f5dea847b3011e9fdf2b249cd9a003e47a7bd3a4",
+      "sha256:a637a28c69db0697ec7a1e1ce2f2b889943e15d2a9769cd5f3185abcb7b0a629",
+      "sha256:90fed9c03a43affdee04253ca17a97e32bfa92845babdcf2feb8e6f14fe7d6b0",
+      "sha256:570989f621f7bd9621d36c65427465571efb5d7a645c5629875441a569561af9",
+      "sha256:15981b60a4a1c064d40d32f1ea0cf4d2289a0ab256a70e1a6360a0e96a2505a3",
+      "sha256:21f582340c596cbd7322bd20defd97525bd9e76f1ae6a8f378df8a16cb0562a7",
+      "sha256:fff9bd3bf7ea09860fb3e6a9f26d49f50135f916f48d9a5fb404525f424c057c",
+      "sha256:01857deabf3b19ddf9c6a4a1058387977b36605491fde5431fe583b12f57b292",
+      "sha256:8739f0327a716018527de2946f4fad765128af16120e90e4095230dd60b5d47e",
+      "sha256:d956b3804feafc3274134f7efb25c24ad258ab81d6cca3ed12c8fe8ef99ad987",
+      "sha256:3de056b1a6e3c4ea7521d22970da96f384b99b0118bc263db55f50ac2d8bff8d",
+      "sha256:947de131bf06e6b55187a40e0cee5cd8cdbe3a57c70a53207cb851d8b29cc5ae",
+      "sha256:3068e62cda671ab8519263d2e9ce2e471dfb837c3171d0b103e51f39e804b797",
+      "sha256:0a816bc8a8d2814d44a7420524fafeae25fc8486bb3e7d4b48e7ef15394e09de",
+      "sha256:c53483d763308afa6d61c0f0b805d27365121404d17a456f09bed0a9602bf795",
+      "sha256:0532738aa5c78268346e4652cb93e0c7f8d87d1e6225f7b057c1675a8f2e483c",
+      "sha256:981ca8e9cf925858389ef0832cb84da10acddfccc1256e28236e5404eba7d2ce",
+      "sha256:92f7271833b0b88fd51e46dc29111003a67f0856abe1c29468bd5c6a36b9b4bb",
+      "sha256:3aa2cb0e707b4707fdc43e352eb73f5f726e624b56e1d2b4b5435eb8b7d1d1f0",
+      "sha256:a3f36d30f47459af90d3a9ab408f0a1777b5e7a864976c029efa556e13b130fe",
+      "sha256:f8c7c0f364593ad1ea54f5628efe8e8b414875afb2171b4ec46e67c6e433a05f",
+      "sha256:93996b00c855ae40e6da6108901ea96209a2a27587aa43533a91a87b2326febb",
+      "sha256:8bbac6d18cd1d31187dbc556704aa6b7e175fe93e4f902fb9ace1ec351d82069",
+      "sha256:4ffb958c3dce8dcfdff72ff059243450bef8a501de6ec49ea0570ffc9fbe7b80",
+      "sha256:f85c694525ccdd3fe555e08d6d80600778595f67d89812cfde03c3a257012b95",
+      "sha256:2619f14ab55b0a87b2777f37b141ccb2ba82a0bc8fb8b6dc250681357f849ee8",
+      "sha256:0d8957c40f538dc8cd39f57be04586e4e9dc7b0fb4ecead935bd2aefc856ad15",
+      "sha256:698c695035991cc7d95000ccc91068ac41203f5ed76e091cc612bf0ddcf041a6",
+      "sha256:e1cf4e76a328473632ceee505f9ed2ba740c3cfc7fa9769172663cac6b027a84",
+      "sha256:e1e3215f1c769aa558255afbd27fc0b0cf18f7e6c88ea084bdd51f4d140f1e26",
+      "sha256:c3c5a194385138b5ed56883284dd3befce59ba1639c51e62b42c61c35a8a6f87",
+      "sha256:19fc3171c3354808b970c00fa5399116f0a6a3d01f67f461d6d9bfa00f36ad49",
+      "sha256:94fb5f7119d8af1feb4f7bc5df35a0147d9fd52db4085d7af8b987df31e7486b",
+      "sha256:1e0b1be45efe790141ee4f9217957be5cb5d7ef9c4923487e44fbb0536ab57c1",
+      "sha256:51b3a68bce7ae60830195a32c1ab48460ecfee606a6a97b90c52fd56ebf2e793",
+      "sha256:98bfbe573b00c3cc8bbd08200231b5de6df1fdf7e57e5e515dddec8b22ea1b21",
+      "sha256:0a5b6a18962219b5bbef186cc32d6b277ddaee5ac5a30983cb16fb39610d182b",
+      "sha256:9d2bac003373bd4042e1a06ea662014b5f3d5755378cbc8abf3763a4cbc04a39",
+      "sha256:51b017d05972249658cb8b921cefa6bd8766bf8ddcf37381e9b26f84441129c1"
+    ]
+  },
+  "preconditions_checked": {
+    "adversarial_quarantine": {
+      "corrigendum_pending": [
+        {
+          "detail": "parser_failure_rate=0.775 and truncation_rate=0.775 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "flagged_adversarial": true
+    },
+    "available_runtime_logs": {
+      "paths": [],
+      "searched_globs": [
+        "logs/*5799*.log",
+        "results/*5799*.log",
+        "results/raw/*5799*/*.log"
+      ],
+      "status": "missing"
+    },
+    "blocked_reasons": [],
+    "declared_counts": {
+      "artifact_empty_final_count": 91,
+      "artifact_parser_failure_count": 93,
+      "artifact_truncation_count": 93,
+      "ok": true
+    },
+    "host_capacity": {
+      "disk": {
+        "available_mb": 1171715,
+        "total_mb": 3770150
+      },
+      "memory": {
+        "available_mb": 61071
+      }
+    },
+    "immutable_input_count": 14,
+    "input_hashes_captured_after": true,
+    "input_hashes_captured_before": true,
+    "row_replay": {
+      "declared_mode_row_count": 120,
+      "ok": true,
+      "raw_response_receipts_match": true,
+      "row_count": 120,
+      "row_file_sha256_matches_declared": true,
+      "unique_cell_count": 120
+    }
+  },
+  "producer_repairs_and_tests": {
+    "historical_files_mutated": false,
+    "repair_required": true,
+    "repairs": [
+      {
+        "change": "Resume-only rows no longer synthesize cuda_offload_authenticated=true; prior runtime receipts must be replayed from an existing artifact.",
+        "file": "python/carnot/experiment_5799_sota_answer_channel_canary.py",
+        "historical_result_files_rewritten": false
+      }
+    ],
+    "superseding_definitions": [
+      "Exp5811 parser/truncation/empty-final/invalid/timeout/stop/exact-wrong metrics use independent raw predicates.",
+      "Resume-only GPU receipts classify as resume_only and cannot qualify answer-channel models."
+    ],
+    "tests_reference": [
+      "SCENARIO-REPORT-5811-PRODUCER-REPAIR",
+      "tests/python/test_experiment_5799_sota_answer_channel_canary.py",
+      "tests/python/test_experiment_5811_exp5799_event_provenance_audit.py"
+    ]
+  },
+  "random_seed": 5811,
+  "reproducibility_checksum": "sha256:c68d789c9240a2b22483a09befe64f1dd7c5444a078372f28a3ce6a92acc51dc",
+  "result_path": "results/experiment_5811_exp5799_event_provenance_audit.json",
+  "run_date": "20260722",
+  "schema": "carnot.experiment_5811.exp5799_event_provenance_audit.v1",
+  "spec_refs": [
+    "REQ-REPORT-5811",
+    "SCENARIO-REPORT-5811-ROW-REPLAY",
+    "SCENARIO-REPORT-5811-GPU-RECEIPTS",
+    "SCENARIO-REPORT-5811-PRODUCER-REPAIR"
+  ],
+  "status": "complete",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5811_exp5799_event_provenance_audit.py tests/python/test_experiment_5799_sota_answer_channel_canary.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5811_exp5799_event_provenance_audit.py -m pytest tests/python/test_experiment_5811_exp5799_event_provenance_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5811_exp5799_event_provenance_audit.py --fail-under=100",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5799_sota_answer_channel_canary.py -m pytest tests/python/test_experiment_5799_sota_answer_channel_canary.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5799_sota_answer_channel_canary.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5811_exp5799_event_provenance_audit.json",
+    ".venv/bin/ruff check python/carnot/experiment_5811_exp5799_event_provenance_audit.py python/carnot/experiment_5799_sota_answer_channel_canary.py tests/python/test_experiment_5811_exp5799_event_provenance_audit.py tests/python/test_experiment_5799_sota_answer_channel_canary.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5799_sota_answer_channel_canary.py -m pytest tests/python/test_experiment_5799_sota_answer_channel_canary.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5799_sota_answer_channel_canary.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5811_exp5799_event_provenance_audit.py -m pytest tests/python/test_experiment_5811_exp5799_event_provenance_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5811_exp5799_event_provenance_audit.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5811_exp5799_event_provenance_audit.py tests/python/test_experiment_5799_sota_answer_channel_canary.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5811_exp5799_event_provenance_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5811_exp5799_event_provenance_audit.py python/carnot/experiment_5799_sota_answer_channel_canary.py tests/python/test_experiment_5811_exp5799_event_provenance_audit.py tests/python/test_experiment_5799_sota_answer_channel_canary.py": 0
+  },
+  "verifier_is_oracle": true
+}
