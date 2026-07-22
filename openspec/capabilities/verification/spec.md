@@ -30532,6 +30532,137 @@ SCENARIO-VERIFY-5799-CONTROLS
 |---|---|---|
 | REQ-VERIFY-5799 | Planned (`python/carnot/experiment_5799_sota_answer_channel_canary.py`, `results/experiment_5799_sota_answer_channel_canary.json`) | Planned (`tests/python/test_experiment_5799_sota_answer_channel_canary.py`) |
 
+### REQ-VERIFY-5812: Split-Budget Reasoning/Finalization Channel Contract
+
+The repository SHALL provide Exp5812 at
+`python/carnot/experiment_5812_split_budget_channel_contract.py` and write
+`results/experiment_5812_split_budget_channel_contract.json` without loading a
+headline model, without modifying GGUF chat templates, without calling Hugging Face `AutoTokenizer`
+on a GGUF repository, without mutating
+`scripts/research_conductor.py`, and without making a SOTA or capability
+headline claim. The experiment substrate SHALL be
+`aggregation_from_upstream_artifacts`.
+
+Exp5812 SHALL replay structured gates before contract construction by hashing
+Exp5811, Exp5798, the sealed Exp5785 fixture artifact/row file/parser module,
+the current Exp5799 channel producer, the Exp5799 producer tests, the SOTA GGUF
+metadata registry, this OpenSpec file, and the split-budget test dependency. It
+SHALL also record current disk and RAM receipts. These preconditions SHALL be
+contract gates only and SHALL NOT require or perform a headline local-GGUF load.
+
+The split-budget channel SHALL have two independent transport calls. The
+reasoning stage SHALL have its own maximum tokens, timeout, stop strings, raw
+receipt, token count, finish reason, and transcript hash. Once captured, the
+reasoning transcript SHALL be frozen as immutable content; replay with any
+different reasoning bytes, hash, prompt hash, or candidate-environment hash
+SHALL fail closed. The finalization stage SHALL have a separate maximum tokens,
+timeout, stop strings, raw receipt, token count, finish reason, parser receipt,
+and raw receipt hash. The finalizer prompt SHALL see the problem surface, the
+frozen reasoning transcript/hash, and sealed fixture-declared candidate IDs
+only; hidden exact labels and exact answers SHALL NOT enter prompts.
+
+Exp5812 SHALL preserve a shared-budget control and preregister at least two
+split-budget configurations. Mode records SHALL include canary mode, finalizer,
+retirement rules, maximum tokens, timeouts, stop policies, parser boundaries,
+budget accounting fields, and fail-closed conditions before any future canary
+generation. `split_budget_contract_ready_score=1.0` SHALL be emitted only when
+all adversarial controls fail closed, budgets are separately measured, the
+frozen transcript replays exactly, hidden labels are absent from prompts, the
+shared-budget control remains registered, at least two split-budget modes are
+registered, and canary mode/retirement rules are fully preregistered.
+
+Where the runtime declares environment-indexed finite-ID grammar support, the
+contract SHALL constrain the finalizer only to fixture-declared candidate IDs
+for the active row. Where the runtime does not support that path, the grammar
+receipt SHALL record unsupported status and rely on the same fail-closed parser
+boundary. Grammar receipts MAY claim only candidate-membership and syntax
+safety; semantic correctness SHALL remain established exclusively by the sealed
+fixture parser, exact candidate identity mapping, and exact validators.
+
+The required terminal artifact SHALL include these fields and principles:
+`status` principle "A terminal contract state distinguishes an executable
+transport from design prose."; `preconditions_checked` principle "Gate and
+dependency checks prevent building against quarantined or missing evidence.";
+`contract_version_and_code_hashes` principle "Versioned implementation identity
+prevents silent transport drift."; `reasoning_stage_contract` principle "An
+independent cap, stop policy, timeout, and transcript hash remove the
+shared-budget ambiguity."; `finalization_stage_contract` principle "A separate
+cap and parser boundary guarantee room for a final answer without claiming
+truth."; `sealed_candidate_environment` principle "Only fixture-declared IDs may
+be referenced; hidden labels never enter prompts."; `grammar_claim_boundary`
+principle "Grammar may establish membership and syntax only; exact validation
+remains semantic authority."; `preregistered_mode_matrix` principle "Fixed modes
+prevent post-hoc tuning on canary outcomes."; `adversarial_control_results`
+principle "Negative controls prove empty, injected, ghost, truncated, and wrong
+outputs fail closed."; `replay_receipts` principle "Frozen transcript and
+deterministic parser replay make the two-stage boundary auditable.";
+`split_budget_contract_ready_score` principle "A bare scalar gates expensive
+inference only when the contract and attacks pass."; `llm_calls_made` principle
+"Zero headline calls keeps protocol implementation separate from capability
+evidence."; `duration_s` principle "Measured implementation/test time exposes a
+bootstrap-only artifact."; `inference_substrate` principle
+"`aggregation_from_upstream_artifacts` declares offline implementation and tests
+with no headline model load."; `verifier_is_oracle` principle "The fixture
+parser/solver defines correctness, so channel success is execution-grounded
+rather than a verifier moat."; `field_provenance` principle "Every contract
+field points to code, test, or sealed fixture evidence."; `test_commands`
+principle "Commands document focused, adversarial, replay, and coverage
+execution."; `test_exit_codes` principle "Exit codes prevent failed controls
+from being narrated as passing."; `reproducibility_checksum` principle "A
+checksum detects later contract, fixture, or test drift."; and `honest_verdict`
+principle "A `complete:` or `blocked:` prefix makes protocol readiness
+terminal."
+
+#### SCENARIO-VERIFY-5812-CONTRACT: Split Budgets Freeze Reasoning Before Finalization
+
+**Given** the Exp5811 audit, Exp5798 diagnostic, and sealed Exp5785 fixture
+replay cleanly
+**When** Exp5812 runs its offline split-budget contract checks
+**Then** the reasoning and finalization stages are recorded as two independent
+calls with separate token caps, timeouts, stops, raw receipts, and hashes; the
+frozen reasoning transcript is immutable; the finalizer prompt contains no
+hidden label or exact-answer leakage; and the result artifact sets
+`llm_calls_made=0` and `inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-VERIFY-5812-CONTROLS: Adversarial Outputs Fail Closed
+
+**Given** empty reasoning, empty final, overlong reasoning, stop collision,
+unclosed thinking, duplicate candidate ID, invalid candidate ID, ghost candidate
+ID, schema/control-plane injection, candidate-label leakage, timeout, replay
+mismatch, and exact-wrong-answer controls
+**When** the split-budget parser, candidate environment, and exact validator
+receipts are replayed
+**Then** every malformed, injected, leaked, ghost, truncated, timed-out, or
+replayed-with-drift output fails closed, while a grammar-valid wrong candidate
+parses but remains an exact-validator failure rather than a semantic success.
+
+#### SCENARIO-VERIFY-5812-GRAMMAR-BOUNDARY: Finite-ID Support Is Syntax Only
+
+**Given** a runtime with environment-indexed finite-ID grammar support and a
+runtime without that support
+**When** Exp5812 builds the grammar boundary receipts
+**Then** the supported path constrains references to fixture-declared candidate
+IDs, the unsupported path declares no grammar enforcement, and both paths state
+that grammar membership is not semantic correctness.
+
+#### SCENARIO-VERIFY-5812-REPLAY: Frozen Transcript And Artifact Checksums Detect Drift
+
+**Given** a completed split-budget contract artifact and replay receipts
+**When** reasoning text, final text, candidate IDs, prompt hashes, parser
+receipts, field provenance, or the artifact checksum are tampered with
+**Then** validation raises a terminal mismatch instead of recomputing readiness
+over altered evidence.
+
+**Spec traces:** REQ-VERIFY-5812, SCENARIO-VERIFY-5812-CONTRACT,
+SCENARIO-VERIFY-5812-CONTROLS, SCENARIO-VERIFY-5812-GRAMMAR-BOUNDARY,
+SCENARIO-VERIFY-5812-REPLAY
+
+## Implementation Status (REQ-VERIFY-5812)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5812 | Planned (`python/carnot/experiment_5812_split_budget_channel_contract.py`, `results/experiment_5812_split_budget_channel_contract.json`) | Planned (`tests/python/test_experiment_5812_split_budget_channel_contract.py`) |
+
 ### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
 
 The repository SHALL provide Exp 5734 at
