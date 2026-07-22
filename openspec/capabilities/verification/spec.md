@@ -30272,6 +30272,52 @@ precise blockers, and an `honest_verdict` starting with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5733 | Planned (`python/carnot/experiment_5733_sota_finite_choice_proposal_channel.py`, `results/experiment_5733_sota_finite_choice_proposal_channel.json`) | Planned (`tests/python/test_experiment_5733_sota_finite_choice_proposal_channel.py`) |
 
+### REQ-VERIFY-5785: Deterministic Finite-Choice Parser Contract For Exact Fixture Rows
+
+The repository SHALL provide the Exp5785 parser contract inside
+`python/carnot/experiment_5785_hardness_surface_fixture.py` and record it in
+`results/experiment_5785_hardness_surface_fixture.json`. The contract SHALL
+reuse the Exp5733 finite-choice boundary shape for downstream inference rows:
+each fixture row has one row id, a complete bounded candidate domain, one
+unique label per candidate, exactly one selected label in valid parser output,
+and exact validators as the only semantic authority. The parser SHALL accept
+whitespace and ordering differences that preserve the same row-id-to-label
+mapping, and SHALL treat parser failure separately from exact wrongness.
+
+The parser negative-control suite SHALL include truncation, missing answer,
+duplicate ID, invalid candidate, whitespace/order, stop-token, and adversarial
+payload controls. Truncation, missing answer, duplicate ID, invalid candidate,
+stop-token contamination, and adversarial payloads SHALL produce parser-failure
+receipts. Whitespace and ordering variants SHALL parse successfully when the
+same row IDs and labels are present. A parsed but wrong valid label SHALL be
+reported as exact wrongness, not parser failure.
+
+The Exp5785 artifact SHALL include `parser_contract` and
+`parser_negative_controls`, and bare `parser_control_pass_rate` SHALL equal
+`1.0` only when every required parser negative control returns its expected
+parser-vs-exact classification. Any missing control, parser/exact conflation,
+candidate-domain omission, or adversarial payload acceptance SHALL block
+`fixture_ready_score`.
+
+#### SCENARIO-VERIFY-5785: Parser Controls Separate Format Failure From Exact Wrongness
+
+**Given** sealed finite-choice fixture rows with complete candidate domains
+**When** parser controls replay truncation, missing answer, duplicate ID,
+invalid candidate, whitespace/order, stop-token, adversarial payload, and
+valid-wrong-label cases
+**Then** parser failures are counted only for malformed or unsafe outputs,
+whitespace/order variants still parse, valid wrong labels are exact wrongness,
+and `parser_control_pass_rate=1.0` only when all expected classifications
+match.
+
+**Spec traces:** REQ-VERIFY-5785, SCENARIO-VERIFY-5785
+
+## Implementation Status (REQ-VERIFY-5785)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5785 | Planned (`python/carnot/experiment_5785_hardness_surface_fixture.py`, `results/experiment_5785_hardness_surface_fixture.json`) | Planned (`tests/python/test_experiment_5785_hardness_surface_fixture.py`) |
+
 ### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
 
 The repository SHALL provide Exp 5734 at
