@@ -1,0 +1,60 @@
+{
+  "experiment": 5773,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-22",
+  "started_at": "2026-07-22T03:03:37.648610+00:00",
+  "finished_at": "2026-07-22T03:03:37.648610+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5772 clean drift headroom: run prospective solver-certified constraint acquisition A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "5 of 5 gate(s) failed; first failure: exp5772-sota-constraint-drift-stream.stream_ready_score (upstream artifact not found for task id 'exp5772-sota-constraint-drift-stream')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5772-sota-constraint-drift-stream",
+      "artifact_field": "stream_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5772-sota-constraint-drift-stream'"
+    },
+    {
+      "upstream": "exp5772-sota-constraint-drift-stream",
+      "artifact_field": "parser_failure_count",
+      "op": "==",
+      "expected": 0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5772-sota-constraint-drift-stream'"
+    },
+    {
+      "upstream": "exp5772-sota-constraint-drift-stream",
+      "artifact_field": "validator_disagreement_count",
+      "op": "==",
+      "expected": 0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5772-sota-constraint-drift-stream'"
+    },
+    {
+      "upstream": "exp5772-sota-constraint-drift-stream",
+      "artifact_field": "satisfiable_drift_count",
+      "op": ">",
+      "expected": 0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5772-sota-constraint-drift-stream'"
+    },
+    {
+      "upstream": "exp5772-sota-constraint-drift-stream",
+      "artifact_field": "evaluable_science_row_count",
+      "op": ">=",
+      "expected": 180,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5772-sota-constraint-drift-stream'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
