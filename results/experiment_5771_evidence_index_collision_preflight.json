@@ -720,7 +720,7 @@
   },
   "next_range_collision_count": 0,
   "preconditions_checked": {
-    "conductor_log_sha256": "sha256:37a48b1bc0fc5072829d22349e91a45c19ad99e2010f85b98f890098d1ede48c",
+    "conductor_log_sha256": "sha256:e16761a2b300a0e270449570794bc751bc20a0adf316f40a377617bc0da061fc",
     "conductor_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
     "declared_deliverable_count": 14,
     "failed_preconditions": [
@@ -729,9 +729,9 @@
     "research_complete_blocks_for_milestone": 192,
     "research_complete_sha256": "sha256:01a32cd3e7fcf2db805d8ca0917bff39a3059307dd64e1ef75d2020d243cb3f1",
     "resource_receipts": {
-      "disk_free_bytes": 1228050210816,
+      "disk_free_bytes": 1228044111872,
       "disk_total_bytes": 3953289023488,
-      "mem_available_kib": 88512620
+      "mem_available_kib": 88352152
     },
     "roadmaps": {
       "active": {
@@ -780,7 +780,7 @@
       "present": true
     }
   },
-  "reproducibility_checksum": "sha256:99dcf496c38b50ebe26561b286ebc6b9f54a1951448161ba30059ebc67a5b26a",
+  "reproducibility_checksum": "sha256:556f7e4384a5ad310c80bbe5209962dbef72fd2ec13627ff65e49af2d8462d2e",
   "research_complete_hash_after": "sha256:01a32cd3e7fcf2db805d8ca0917bff39a3059307dd64e1ef75d2020d243cb3f1",
   "research_complete_hash_before": "sha256:01a32cd3e7fcf2db805d8ca0917bff39a3059307dd64e1ef75d2020d243cb3f1",
   "research_complete_modified": false,
@@ -1011,22 +1011,26 @@
   "status": "blocked",
   "test_commands": [
     ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
-    ".venv/bin/coverage erase && .venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
+    ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
     ".venv/bin/pytest tests/python -q",
     ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/python scripts/root_clutter_sweep.py",
-    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py && .venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
     "roadmap/history schema validation, gate audit, exact-deliverable lookup, real collision fixtures"
   ],
   "test_exit_codes": {
-    ".venv/bin/coverage erase && .venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
     ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
     ".venv/bin/python scripts/check_spec_coverage.py": 1,
     ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
-    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py && .venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
     "roadmap/history schema validation, gate audit, exact-deliverable lookup, real collision fixtures": 0
   },
   "unresolved_canonical_count": 0
