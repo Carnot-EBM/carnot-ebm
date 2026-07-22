@@ -14079,3 +14079,6 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 03:13 UTC | Gated on Exp5774 cross-family transfer: wire a dis | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5774-constraint-transfer-forgetting-aud |
 | 2026-07-22 04:16 UTC | Plan milestone 2026.07.516 | OK | 14 tasks proposed |
 | 2026-07-22 04:19 UTC | Milestone 2026.07.516 activated | OK | 14 tasks queued |
+| 2026-07-22 05:42 UTC | Transition terminal .515 evidence and allocate col | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: t_root,
++      |
+| 2026-07-22 07:06 UTC | Transition terminal .515 evidence and allocate col | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: n -u -c import |
