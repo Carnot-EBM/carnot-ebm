@@ -42935,3 +42935,108 @@ passed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5768 | Planned (`python/carnot/experiment_5768_v514_capstone_reconciliation.py`, `results/experiment_5768_v514_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5768_v514_capstone_reconciliation.py`) |
+
+### REQ-REPORT-5769: V515 Transition Archives V514 With Exact Deliverables And Alias Disclosure
+
+The Exp5769 workflow SHALL read the V514 completion ledger, V514 capstone
+artifact, conductor log, active roadmap, vNEXT roadmap document, and every V514
+task's exact declared deliverable from Exp5755 through Exp5768. It SHALL write
+`results/experiment_5769_transition_v515.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT choose canonical evidence by `experiment_<number>_*.json` glob order
+or mtime, and SHALL declare
+`inference_substrate="cached_artifact_reconciliation_no_llm"`.
+
+The workflow SHALL build an explicit task-to-declared-deliverable matrix for
+Exp5755-Exp5768 from the declared ledger paths and SHALL hash the exact
+canonical artifact for each task. Same-number outer-loop artifacts for 5760,
+5764, and 5766 SHALL be disclosed as aliases only: the conductor-declared
+artifacts SHALL remain canonical V514 task evidence, while
+`results/experiment_5760_cegis_refinement_induction_ab.json`,
+`results/experiment_5764_gemma31b_singleshot_induction_ab.json`, and
+`results/experiment_5766_gemma31b_cegis_refinement_ab.json` SHALL be hashed as
+outer-loop development-proxy evidence without overwriting or conflating either
+role.
+
+The workflow SHALL collision-check Exp5769-Exp5781 across repository paths and
+content, while allowing only the active roadmap, the vNEXT document, the
+REQ-REPORT-5769 spec section, and Exp5769's own module, test, and result files
+to mention the new range. If any unowned new-range collision is found, if any
+V514 declared deliverable is missing or malformed, or if duplicated V514
+completion blocks disagree on task id or declared deliverable, the workflow
+SHALL write a terminal `blocked:` artifact instead of selecting by numeric
+prefix. Repeated identical completion blocks MAY be preserved as historical
+duplication and recorded without rewriting `research-complete.yaml`.
+
+The artifact SHALL classify Exp5759 as measured-negative/not promoted, Exp5760
+and Exp5767 as gate-skipped, Exp5762 and Exp5763 as positive constraint
+acquisition evidence, Exp5765 as a technique-specific one-axis PyO3 10x
+retirement, and Exp5766 as a scientific zero. It SHALL preserve conductor
+outcomes from the V514 capstone/conductor record and SHALL NOT infer a
+scientific failure from a task that only gate-blocked.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `milestone_from`, `milestone_to`,
+`declared_deliverable_matrix`, `canonical_artifact_hashes`,
+`same_number_alias_groups`, `outer_loop_evidence_hashes`,
+`artifact_selection_policy`, `conductor_outcomes`, `blocked_task_ids`,
+`gate_skipped_task_ids`, `scientific_null_task_ids`,
+`negative_result_task_ids`, `positive_result_task_ids`,
+`retired_technique_ids`, `archived_task_ids`,
+`research_complete_append_count`, `collision_scan`, `next_task_range`,
+`next_range_collision_count`, `docs_reconciled`,
+`research_roadmap_unchanged`, `conductor_unchanged`, `inference_substrate`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry. `artifact_selection_policy` SHALL equal
+`exact_declared_deliverable`, `next_task_range` SHALL equal
+`exp5769-exp5781`, `research_roadmap_unchanged` SHALL be `true`,
+`conductor_unchanged` SHALL be `true`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+#### SCENARIO-REPORT-5769: Exact V514 Deliverables Archive Into V515 Without Alias Conflation
+
+**Given** V514's declared deliverable matrix is unambiguous
+**And** all exact declared deliverables from Exp5755 through Exp5768 are readable
+**And** the V514 capstone/conductor record preserves terminal outcomes
+**And** Exp5769-Exp5781 have no unowned path or content collisions
+**When** the Exp5769 workflow runs
+**Then** it emits a complete transition artifact using
+`artifact_selection_policy="exact_declared_deliverable"`, archives all
+fourteen V514 task ids, records canonical hashes for the declared deliverables,
+records same-number outer-loop artifacts only in alias fields, keeps
+Exp5759 negative, Exp5760/Exp5767 gate-skipped, Exp5765 retired, Exp5766 null,
+and leaves roadmap and conductor files unchanged.
+
+#### SCENARIO-REPORT-5769-COLLISION-BLOCK: Occupied Next-Range Ids Fail Closed
+
+**Given** any unowned repository path or content already occupies an
+Exp5769-Exp5781 id
+**When** the Exp5769 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+completion history to hide the collision.
+
+#### SCENARIO-REPORT-5769-DECLARED-DELIVERABLE-BLOCK: Missing Or Ambiguous V514 Mapping Fails Closed
+
+**Given** a V514 completion block is absent, disagrees with another V514 block,
+declares a different deliverable for an expected task, or points at a missing
+or malformed exact deliverable
+**When** the Exp5769 workflow builds the declared deliverable matrix
+**Then** it emits a terminal `blocked:` artifact and records the mapping failure
+without falling back to numeric-prefix glob selection.
+
+#### SCENARIO-REPORT-5769-FIELD-PRINCIPLES: Every Required Field Is Annotated And Stable
+
+**Given** the Exp5769 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level field has a non-empty `field_principles` entry, the
+checksum is stable, `inference_substrate` is
+`cached_artifact_reconciliation_no_llm`, and the terminal verdict prefix is
+machine-readable.
+
+## Implementation Status (REQ-REPORT-5769)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5769 | Implemented (`python/carnot/experiment_5769_transition_v515.py`, `results/experiment_5769_transition_v515.json`) | Implemented (`tests/python/test_experiment_5769_transition_v515.py`) |
