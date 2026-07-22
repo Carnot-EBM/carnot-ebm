@@ -30663,6 +30663,126 @@ SCENARIO-VERIFY-5812-REPLAY
 |---|---|---|
 | REQ-VERIFY-5812 | Planned (`python/carnot/experiment_5812_split_budget_channel_contract.py`, `results/experiment_5812_split_budget_channel_contract.json`) | Planned (`tests/python/test_experiment_5812_split_budget_channel_contract.py`) |
 
+### REQ-VERIFY-5813: Three-Family Split-Budget SOTA Canary
+
+The repository shall provide an Exp 5813 local GGUF canary that runs the
+preregistered Exp 5812 split-budget reasoning/finalization transport plus its
+shared-budget control on all three mandated real SOTA GGUF families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The canary MUST call `cached_sota_pair()`
+before selecting models, explicitly resolve the third mandated model, and
+verify cached paths, GGUF hashes, embedded templates, CUDA-enabled llama.cpp,
+two RTX 3090 devices, the sealed Exp 5785 fixture subset/hash, writable
+outputs/checkpoints, free disk/RAM, and fixed seeds before any model
+generation. Missing preconditions SHALL produce a terminal blocked artifact
+without requiring rows or fresh load receipts.
+
+The canary SHALL seal at least twelve independent balanced fixture units from
+Exp 5785, spanning every required constraint family, both satisfiable and
+unsatisfiable cases, low/medium/high solver bins, and both canonical/symbol and
+canonical/order surface pairs. Repeated modes, calls, and surfaces SHALL NOT
+increase the independent-unit count.
+
+For each attempted model/mode/fixture cell, the canary SHALL record the actual
+model-load and CUDA offload evidence, VRAM observations, runtime logs, raw
+reasoning, frozen reasoning transcript hash, raw final text, token counts,
+finish/stop reason, timeout status, parser result, exact-validator result, and
+per-row checkpoint evidence. Resume-only rows MAY be replayed for continuity
+but SHALL NOT qualify a model unless a fresh non-resume runtime receipt for the
+same model and selected mode is present.
+
+The canary SHALL compare the shared-budget control with only preregistered
+split-budget modes and SHALL select at most one bounded transport per mandated
+model. A selected mode qualifies only when raw final coverage and exact-label
+coverage are 1.0 and parser failures, truncations, empty finals, invalid or
+ghost candidate IDs, stop collisions, timeouts, schema-injection accepts, and
+protected-fact distortions are all zero. Exact wrong answers SHALL remain a
+separate non-transport metric and SHALL NOT by themselves retire a transport
+mode.
+
+The terminal artifact MUST be
+`results/experiment_5813_split_budget_sota_canary.json`, with raw rows in
+`results/experiment_5813_split_budget_sota_canary.rows.jsonl`. It MUST include
+the following principle-annotated fields: `status`,
+`preconditions_checked`, `model_specs`, `random_seed`,
+`model_runtime_and_gpu_receipts`, `sample_size_and_justification`,
+`preregistered_mode_results`, `independent_failure_metrics`,
+`transcript_and_checkpoint_receipts`, `selected_transport_by_model`,
+`qualified_real_sota_model_count`, `answer_channel_ready_score`,
+`adversarial_control_results`, `row_file_and_sha256`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`answer_channel_ready_score` SHALL be 1.0 only when
+`qualified_real_sota_model_count=3`, all provenance and acceptance gates pass,
+and the on-disk rows/checkpoints replay by content hash. Otherwise it SHALL be
+0.0. If the complete non-ready outcome repeats Exp 5799's
+one-qualified-family/not-ready verdict, the artifact SHALL set the retirement
+mechanic and the `honest_verdict` SHALL begin with `complete:` while stating
+that the lane is retired rather than proposing another retry.
+
+Field principles:
+
+- `status`: A terminal state distinguishes a completed non-ready canary from an operational block.
+- `preconditions_checked`: Cache, CUDA, fixture, seed, and output checks prevent fabricated live-inference evidence.
+- `model_specs`: Resolved identities for all three mandated models prevent legacy smoke models from becoming headline evidence.
+- `random_seed`: Fixed seeds make canary sampling and replay reproducible.
+- `model_runtime_and_gpu_receipts`: Fresh actual CUDA load/offload evidence is required for every qualified family.
+- `sample_size_and_justification`: At least twelve independent balanced units support a transport canary without counting repeated modes as samples.
+- `preregistered_mode_results`: Fixed shared/split arms prevent post-hoc transport selection.
+- `independent_failure_metrics`: Parser, truncation, empty-final, ghost-ID, timeout, stop, and exact-error events remain separately reconstructable.
+- `transcript_and_checkpoint_receipts`: Raw calls, frozen transcript hashes, and per-row checkpoints make two-stage execution replayable.
+- `selected_transport_by_model`: At most one disclosed bounded transport per family prevents hidden fallback mixtures.
+- `qualified_real_sota_model_count`: All three required families must qualify before downstream stream generation.
+- `answer_channel_ready_score`: A bare scalar activates scale only when every family and provenance gate passes.
+- `adversarial_control_results`: Injected, ghost, empty, truncated, and wrong outputs must fail closed.
+- `row_file_and_sha256`: Content-addressed raw rows prevent summary-only claims.
+- `duration_s`: Real three-family inference must have plausible measured wall time.
+- `inference_substrate`: `live_llm_inference` declares actual local autoregressive GGUF execution.
+- `verifier_is_oracle`: Exact fixture validation defines correctness, so verified yield is execution-grounded and not a moat claim.
+- `field_provenance`: Each metric identifies its row predicate, runtime log, or exact validator source.
+- `test_commands`: Commands document live load, focused tests, row replay, and adversarial verification.
+- `test_exit_codes`: Exit codes prevent failed live or validation checks from being narrated as passing.
+- `reproducibility_checksum`: A checksum detects model, fixture, mode, seed, or row drift.
+- `honest_verdict`: A `complete:` or `blocked:` prefix provides the retirement mechanic with a terminal verdict.
+
+### SCENARIO-VERIFY-5813: Three Mandated Families Gate Answer-Channel Readiness
+
+Given Exp 5811 and Exp 5812 gates pass, the sealed Exp 5785 fixture is
+balanced, CUDA-enabled llama.cpp is available on two RTX 3090 devices, and all
+three mandated GGUFs are cached with embedded templates,
+When Exp 5813 runs the preregistered shared and split-budget modes over the
+sealed balanced fixture,
+Then it writes the terminal artifact and row JSONL, records fresh load/offload
+and transcript receipts for every attempted cell, selects no more than one
+bounded transport per model, computes failure metrics directly from rows, and
+sets `answer_channel_ready_score=1.0` only when all three mandated families
+qualify and row/checkpoint replay succeeds.
+
+If preconditions fail, then Exp 5813 writes a blocked artifact with
+`answer_channel_ready_score=0.0`, no required row/load-receipt precondition,
+and an `honest_verdict` beginning with `blocked:`. If the run completes but
+only one family qualifies, then the verdict begins with `complete:`, the ready
+score remains 0.0, and the prior-failure retirement mechanic records that the
+changed transport lane is retired.
+
+### SCENARIO-VERIFY-5813-CONTROLS: Split-Budget Rows Fail Closed Under Attacks
+
+Given a sealed Exp 5785 fixture row and the Exp 5812 candidate-ID contract,
+When Exp 5813 verifies empty reasoning, empty finalization, truncation, ghost
+candidate IDs, invalid IDs, stop collisions, timeout, schema injection,
+protected-fact distortion, and exact-wrong-output controls,
+Then every malformed or adversarial row fails closed, exact wrong answers are
+classified separately from transport failures, replay/hash drift raises a
+manifest error, and no mode can qualify from parser or summary-only evidence.
+
+## Implementation Status (REQ-VERIFY-5813)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5813 | Planned (`python/carnot/experiment_5813_split_budget_sota_canary.py`, `results/experiment_5813_split_budget_sota_canary.json`) | Planned (`tests/python/test_experiment_5813_split_budget_sota_canary.py`) |
+
 ### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
 
 The repository SHALL provide Exp 5734 at

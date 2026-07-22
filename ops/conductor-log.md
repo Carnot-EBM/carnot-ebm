@@ -14133,3 +14133,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 20:14 UTC | Time-windowed post-V518 literature and implementat | OK | 88 passed, 2 warnings in 11.46s |
 | 2026-07-22 20:35 UTC | Companion audit for Exp5799 event definitions, row | OK | 97 passed, 1 warning in 27.87s |
 | 2026-07-22 21:11 UTC | Gated on Exp5811 clean evidence: implement split-b | OK | 87 passed, 1 warning in 26.78s |
+| 2026-07-22 21:35 UTC | Gated on Exp5812 contract: changed-mechanism canar | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (665s silence). Last out |
