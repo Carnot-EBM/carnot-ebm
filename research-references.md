@@ -30432,3 +30432,18 @@ as new findings below.
   unless a real attached-board precondition has changed.
 
 <!-- V515-PLANNER-REFRESH-20260721-END -->
+
+## V515 Execution Refresh - 20260722
+
+Execution-time sweep on 2026-07-22 after the V515 planner marker. Only non-duplicate sources that sharpen existing Exp5772-Exp5779 controls or validation boundaries are listed here.
+
+### New actionable deltas
+
+- **When a Verified World Model Still Loses: Play-Adequacy vs Prediction-Accuracy in LLM-Synthesized Code World Models** - https://arxiv.org/abs/2607.14169 (submitted 2026-07-15; current version 2026-07-19). Carnot hook: Add a play-adequacy control that rejects high transition accuracy when pivotal dynamics are missed. Target: exp5776-arc-world-model-admission-contract. Authority boundary: agent-owned play adequacy and pivotal-transition coverage remain required before simulated rollouts can influence E3. Falsifiable metric: heldout_pivotal_transition_miss_rate is zero before any world-model policy influence. Search receipt: arxiv_abs_2607_14169.
+
+### V515 execution impact
+
+- Preserve roadmap ids, gates, dependencies, model choices, hardware claims, headline claims, and retired scopes. Accepted deltas may only add bounded controls or validation receipts inside already allocated Exp5772-Exp5779 work.
+
+<!-- V515-EXECUTION-REFRESH-20260722-END -->
+

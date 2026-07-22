@@ -1,0 +1,845 @@
+{
+  "accepted_findings": [
+    {
+      "authority_boundary": "agent-owned play adequacy and pivotal-transition coverage remain required before simulated rollouts can influence E3",
+      "carnot_hook": "Add a play-adequacy control that rejects high transition accuracy when pivotal dynamics are missed.",
+      "classification": "accepted",
+      "falsifiable_metric": "heldout_pivotal_transition_miss_rate is zero before any world-model policy influence",
+      "newly_actionable_after_marker": true,
+      "post_marker_or_newly_actionable": true,
+      "publication_date": "2026-07-15",
+      "reason": "The source was not present in the local ledger or V515 planner block; its post-marker arXiv replacement listing plus linked reproduction repository sharpen the existing ARC world-model validation boundary without changing task IDs, gates, dependencies, models, hardware claims, or headline claims.",
+      "search_receipt": "arxiv_abs_2607_14169",
+      "search_timestamp": "2026-07-22T01:02:00Z",
+      "source_id": "verified_world_model_play_adequacy_2607_14169",
+      "target_experiment": "exp5776-arc-world-model-admission-contract",
+      "title": "When a Verified World Model Still Loses: Play-Adequacy vs Prediction-Accuracy in LLM-Synthesized Code World Models",
+      "url": "https://arxiv.org/abs/2607.14169",
+      "version_date": "2026-07-19"
+    }
+  ],
+  "actual_search_wall_time_s": 340.0,
+  "arxiv_receipts": [
+    {
+      "candidate_ids": [],
+      "queried_at": "2026-07-22T00:59:39Z",
+      "receipt_id": "arxiv_home_reachability",
+      "receipt_summary": "HEAD request reached arXiv before source classification.",
+      "status": "http_200",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/"
+    },
+    {
+      "candidate_ids": [
+        "2607.16199",
+        "2607.16200",
+        "2607.16266",
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "arxiv_cs_ai_new_20260721",
+      "receipt_summary": "cs.AI new listings were reachable; relevant items were dispositioned.",
+      "status": "http_200_showing_new_listings_2026_07_21",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/list/cs.AI/new"
+    },
+    {
+      "candidate_ids": [
+        "2607.16591",
+        "2607.17047",
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "arxiv_cs_lg_new_20260721",
+      "receipt_summary": "cs.LG new listings were reachable; world-model and constraint candidates were dispositioned.",
+      "status": "http_200_showing_new_listings_2026_07_21",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/list/cs.LG/new"
+    },
+    {
+      "candidate_ids": [
+        "2607.16808",
+        "halo_hallucination_oversight"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "arxiv_cs_cl_new_20260721",
+      "receipt_summary": "cs.CL new listings were reachable; constrained extraction and hallucination items were dispositioned.",
+      "status": "http_200_showing_new_listings_2026_07_21",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/list/cs.CL/new"
+    },
+    {
+      "candidate_ids": [
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:02:00Z",
+      "receipt_id": "arxiv_abs_2607_14169",
+      "receipt_summary": "The paper and linked code/reproduction log sharpen V515 ARC world-model admission without changing roadmap ids or gates.",
+      "status": "http_200_newly_actionable_v515_boundary",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/abs/2607.14169"
+    }
+  ],
+  "closed_scope_review": {
+    "cegis_reopened": false,
+    "kan_scaleup_reopened": false,
+    "operator_authorized_reopen": null,
+    "phase_d_text_scoring_reopened": false,
+    "public_arc_solving_reopened": false,
+    "retired_proposal_scoring_reopened": false,
+    "rust_10x_reopened": false,
+    "unsupported_hardware_claims_reopened": false
+  },
+  "closed_scopes_reopened": false,
+  "date_window_checks": {
+    "accepted_all_post_marker_or_newly_actionable": true,
+    "accepted_newly_actionable_count": 1,
+    "source_window": "strictly_after_V515_or_newly_actionable_after_marker"
+  },
+  "dedupe_corpus_checked": [
+    {
+      "exists": true,
+      "path": "research-references.md",
+      "sha256": "sha256:3bffb9e651cac1decd1f96e7082d7887b51731b4948e5af1d89a343b1afb1015"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:23dc656ff9f5626287a97154abc8cfc3b74884390ed8b12f8734eee3bc5cfa0b"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:094577049089f725a62d4b48fa253a96ee7313f63b3c56754b4bc0601054519f"
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:3b6462304ac7fea45d171926e9581830bbd77646e3fd5d64a4509cf5366f799d"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2"
+    },
+    {
+      "exists": true,
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:7b83d0c435d1371a3172b89244fd7e91fff40e050e4ea5b902cd90b48d0d81a9"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5756_v514_source_delta_ingestion.json",
+      "sha256": "sha256:1d59d61eb078af14de9dbe099c77f4dba7d375d8b8df609197a29504b1f4f771"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    }
+  ],
+  "duplicate_checks": {
+    "closed_scopes_checked": true,
+    "exclusion_manifest_checked": true,
+    "source_ids_unique": true,
+    "titles_checked_against_research_references": true,
+    "urls_checked": [
+      "https://arxiv.org/abs/2607.14169",
+      "https://arxiv.org/abs/2607.07196",
+      "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation",
+      "https://arxiv.org/abs/2607.16591",
+      "https://arxiv.org/abs/2607.17047",
+      "https://arxiv.org/abs/2607.16266",
+      "https://extropic.ai/hardware",
+      "https://arxiv.org/abs/2607.16808",
+      "https://huggingface.co/papers/2607.07820",
+      "https://arxiv.org/abs/2607.16204",
+      "https://openreview.net/",
+      "https://huggingface.co/api/daily_papers?date=2026-07-22"
+    ],
+    "urls_unique_or_intentionally_reused": true,
+    "v515_planner_block_checked": true
+  },
+  "duplicate_findings": [
+    {
+      "classification": "duplicate",
+      "publication_date": "2026-07-08",
+      "reason": "Already accepted in the V515 planner block as the ARC world-model admissibility ladder.",
+      "search_receipt": "local_research_references_v515_ledger",
+      "search_timestamp": "2026-07-22T01:05:40Z",
+      "source_id": "world_model_admissibility_2607_07196",
+      "title": "Validate the Dream Before You Trust Its Verdict: Admissibility for World-Model Simulators",
+      "url": "https://arxiv.org/abs/2607.07196"
+    },
+    {
+      "classification": "duplicate",
+      "publication_date": "2026-06-01",
+      "reason": "The V515 planner already classified Logical Intelligence's public formal verification material as context without local weights or API receipts.",
+      "search_receipt": "logical_intelligence_public_formal_verification",
+      "search_timestamp": "2026-07-22T01:01:41Z",
+      "source_id": "logical_intelligence_formal_verification_public_post",
+      "title": "Automatic Formal Verification for Code Generation",
+      "url": "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation"
+    }
+  ],
+  "excluded_findings": [
+    {
+      "classification": "excluded",
+      "publication_date": "2026-07-18",
+      "reason": "The result depends on LoRA fine-tuning and document-event extraction, which would reopen model-weight training rather than sharpening V515's sealed exact-validation boundary.",
+      "search_receipt": "arxiv_cs_cl_new_20260721",
+      "search_timestamp": "2026-07-22T01:05:30Z",
+      "source_id": "schema_constrained_eae_2607_16808",
+      "title": "Schema-Constrained Document-Level Event Argument Extraction with Lightweight LLM Fine-Tuning",
+      "url": "https://arxiv.org/abs/2607.16808"
+    },
+    {
+      "classification": "excluded",
+      "publication_date": "2026-07-08",
+      "reason": "Web-agent self-distillation and released model training reopen model-write and broad agent-training scope outside Exp5772-Exp5779.",
+      "search_receipt": "huggingface_daily_2026_07_21",
+      "search_timestamp": "2026-07-22T01:01:40Z",
+      "source_id": "deepsearch_world_self_distillation_2607_07820",
+      "title": "DeepSearch-World: Self-Distillation for Deep Search Agents in a Verifiable Environment",
+      "url": "https://huggingface.co/papers/2607.07820"
+    },
+    {
+      "classification": "excluded",
+      "publication_date": "2026-05-07",
+      "reason": "Agentic RL world-model training is outside the V515 ARC admission contract and would reopen broad RL and model-weight scope.",
+      "search_receipt": "huggingface_daily_2026_07_21",
+      "search_timestamp": "2026-07-22T01:01:40Z",
+      "source_id": "masked_diffusion_world_models_rl_2607_16204",
+      "title": "Masked Diffusion Language Models are Strong and Steerable Text-Based World Models for Agentic RL",
+      "url": "https://arxiv.org/abs/2607.16204"
+    }
+  ],
+  "experiment": "experiment_5770_v515_source_delta_ingestion",
+  "experiment_id": "exp5770-v515-source-delta-ingestion",
+  "extropic_receipts": [
+    {
+      "candidate_ids": [
+        "z1_hardware_page",
+        "thrml_software_page"
+      ],
+      "queried_at": "2026-07-22T01:01:41Z",
+      "receipt_id": "extropic_hardware_and_software_pages",
+      "receipt_summary": "Public Z1/XTR-0/THRML material remained context only; no Carnot-local authenticated hardware execution route was found.",
+      "status": "http_200_public_z1_xtr0_thrml_material",
+      "surface": "Extropic writing",
+      "url": "https://extropic.ai/hardware"
+    }
+  ],
+  "field_principles": {
+    "accepted_findings": "Accepted findings must be post-marker or newly actionable, non-duplicate, and bounded to existing V515 controls or validation boundaries.",
+    "actual_search_wall_time_s": "Wall time is bibliographic search time only, not model, solver, benchmark, or hardware compute.",
+    "arxiv_receipts": "Primary arXiv receipts preserve date-window and topic-search provenance.",
+    "closed_scope_review": "Documents that banned research scopes remain closed.",
+    "closed_scopes_reopened": "Retired scopes must stay closed unless the operator explicitly reopens them.",
+    "date_window_checks": "Records whether accepted findings are post-marker or newly actionable.",
+    "dedupe_corpus_checked": "Lists local ledgers hashed for duplicate and scope review.",
+    "duplicate_checks": "Summarizes id, URL, title, and classification uniqueness checks.",
+    "duplicate_findings": "Already-ledgered work stays visible but cannot create duplicate roadmap work.",
+    "excluded_findings": "Closed scopes remain closed by explicit disposition.",
+    "experiment": "Stable local experiment slug for result indexing.",
+    "experiment_id": "Binds this receipt to the conductor task id.",
+    "extropic_receipts": "Probabilistic-hardware context cannot become a hardware claim without local authenticated execution.",
+    "field_principles": "Maps every artifact field to the evidence boundary that justifies it.",
+    "github_receipts": "Repository discovery receipts distinguish executable code availability from roadmap dependencies.",
+    "hardware_claim_changed": "Bibliographic research cannot change FPGA, TSU, Kona, or other hardware claims.",
+    "honest_verdict": "Terminal summary starts with complete: or blocked: and does not inflate novelty.",
+    "huggingface_receipts": "Hugging Face paper-feed receipts are secondary discovery evidence, not source authority.",
+    "inaccessible_findings": "Access failures are separated from scientific exclusions and never promoted.",
+    "inference_substrate": "The run used web bibliographic research and no local model inference.",
+    "logical_intelligence_receipts": "Logical Intelligence public material remains context unless local weights, APIs, or reproducible comparators exist.",
+    "marker_checks": "Records planner-heading, marker-line, and marker-hash details.",
+    "milestone": "Prevents V515 source receipts from being reused for another milestone.",
+    "openreview_receipts": "OpenReview access limits are separated from accepted findings.",
+    "operator_review_required": "Graph, id, gate, model, hardware, or headline changes require explicit operator review.",
+    "planner_marker": "Binds the execution search window to the V515 planner boundary.",
+    "planner_marker_found": "Shows whether the source window was anchored before mutation.",
+    "planner_marker_hash": "Content-addressed marker context detects silent planner-block drift.",
+    "preconditions_checked": "Records marker, source reachability, timestamp, ledger hash, exclusion hash, and roadmap hash before findings are trusted.",
+    "random_seed": "Deterministic metadata even though the run performs no stochastic science.",
+    "references_after_hash": "Hash of research-references.md after any optional append.",
+    "references_before_hash": "Hash of research-references.md before any optional append.",
+    "references_changed": "The reference ledger mutation state is declared.",
+    "references_diff_hash": "Reference-file before/after content is hash-bound even when unchanged.",
+    "reproducibility_checksum": "Stable content checksum detects artifact drift.",
+    "result_path": "Records where the JSON receipt is written.",
+    "roadmap_scope_change_requested": "Scope changes block for operator review rather than silently mutating the roadmap.",
+    "run_date": "Records the operator-requested execution date in compact form.",
+    "schema": "Identifies the versioned Exp5770 artifact schema.",
+    "search_finished_at": "Records the real UTC instant after final source disposition.",
+    "search_started_at": "Records the real UTC instant before external querying starts.",
+    "semantic_scholar_receipts": "Citation-route receipts are separated from general source search and do not become stable citation-count claims.",
+    "source_queries": "Search intent is reconstructable without trusting memory or mutable indexes.",
+    "source_receipts": "Network and local source receipts show which routes were reachable and how candidates surfaced.",
+    "source_window": "States the post-marker inclusion boundary in plain machine-readable text.",
+    "spec_refs": "OpenSpec anchors for this artifact's behavior.",
+    "status": "Bare terminal state supports machine gating without parsing prose.",
+    "target_experiment_map": "Maps accepted findings to existing Exp5772-Exp5779 controls.",
+    "test_commands": "Verification commands are preserved exactly.",
+    "test_exit_codes": "Observed exit codes are recorded without relabeling failures.",
+    "watch_only_findings": "Relevant but non-executable or non-local material cannot support Carnot claims."
+  },
+  "github_receipts": [
+    {
+      "candidate_ids": [
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:02:34Z",
+      "receipt_id": "github_repo_code_world_models",
+      "receipt_summary": "The linked repository is public and includes docs/EXPERIMENTS.md; it is evidence for reproducibility context, not a new dependency.",
+      "status": "http_200_repo_found_pushed_2026_07_21T21_33_42Z",
+      "surface": "GitHub discovery",
+      "url": "https://github.com/JaviMaligno/code-world-models"
+    },
+    {
+      "candidate_ids": [],
+      "queried_at": "2026-07-22T01:02:34Z",
+      "receipt_id": "github_recent_required_queries",
+      "receipt_summary": "Recent repository searches for constraint acquisition, energy reasoning, and world-model verification returned zero new executable dependencies.",
+      "status": "http_200_total_count_0_for_required_recent_queries",
+      "surface": "GitHub discovery",
+      "url": "https://api.github.com/search/repositories"
+    }
+  ],
+  "hardware_claim_changed": false,
+  "honest_verdict": "complete: accepted 1 post-V515 bounded source delta(s); no roadmap id, gate, dependency graph, model, hardware claim, or headline claim changed",
+  "huggingface_receipts": [
+    {
+      "candidate_ids": [
+        "2607.17250",
+        "2607.07820",
+        "2607.18144",
+        "2607.18110",
+        "2607.16204"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "huggingface_daily_2026_07_21",
+      "receipt_summary": "Daily-feed hits were mostly earlier July papers submitted to HF on 2026-07-21; none superseded the accepted arXiv/source-code receipt.",
+      "status": "http_200_daily_feed",
+      "surface": "Hugging Face Papers",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-07-21"
+    },
+    {
+      "candidate_ids": [],
+      "queried_at": "2026-07-22T01:01:55Z",
+      "receipt_id": "huggingface_daily_2026_07_22",
+      "receipt_summary": "The next daily-feed route did not return the expected list shape and was not used for accepted findings.",
+      "status": "inaccessible_unexpected_schema_string",
+      "surface": "Hugging Face Papers",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-07-22"
+    }
+  ],
+  "inaccessible_findings": [
+    {
+      "classification": "inaccessible",
+      "publication_date": null,
+      "reason": "Search snippets and forum IDs were visible, but primary forum pages presented browser verification.",
+      "search_receipt": "openreview_search_snippets_v515",
+      "search_timestamp": "2026-07-22T01:01:20Z",
+      "source_id": "openreview_primary_forum_pages_v515",
+      "title": "OpenReview primary forum pages for EBT, Spilled Energy, Flow Expander, and CRANE",
+      "url": "https://openreview.net/"
+    },
+    {
+      "classification": "inaccessible",
+      "publication_date": null,
+      "reason": "The route returned an unexpected non-list shape during narrowing and was not used for accepted findings.",
+      "search_receipt": "huggingface_daily_2026_07_22",
+      "search_timestamp": "2026-07-22T01:01:55Z",
+      "source_id": "huggingface_daily_2026_07_22_unexpected_schema",
+      "title": "Hugging Face Papers daily feed for 2026-07-22",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-07-22"
+    }
+  ],
+  "inference_substrate": "web_bibliographic_research_no_local_model_inference",
+  "logical_intelligence_receipts": [
+    {
+      "candidate_ids": [
+        "kona_formal_verification_public_post"
+      ],
+      "queried_at": "2026-07-22T01:01:41Z",
+      "receipt_id": "logical_intelligence_public_formal_verification",
+      "receipt_summary": "Public Kona/Aleph material discusses EBRMs as imperfect verifiers, but no local weights, API receipt, or reproducible comparator was available.",
+      "status": "http_200_public_ebrms_for_fv_context",
+      "surface": "Logical Intelligence",
+      "url": "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation"
+    }
+  ],
+  "marker_checks": {
+    "planner_end_marker": "<!-- V515-PLANNER-REFRESH-20260721-END -->",
+    "planner_heading": "## V515 Planner Refresh - 20260721",
+    "planner_marker": "V515-PLANNER-REFRESH-20260721-END",
+    "planner_marker_found": true,
+    "planner_marker_hash": "sha256:35db3f67703e14ab61960f8554e781ab6c66caaa80ffedc6de81686daf3559c3",
+    "planner_marker_line": 30434
+  },
+  "milestone": "2026.07.515",
+  "openreview_receipts": [
+    {
+      "candidate_ids": [
+        "ZBj3Qp1bYg",
+        "EXFKk4Y3yc",
+        "IfDYQbsWf4",
+        "wKs9fHYxCV"
+      ],
+      "queried_at": "2026-07-22T01:01:20Z",
+      "receipt_id": "openreview_search_snippets_v515",
+      "receipt_summary": "Search snippets were visible, but primary forum pages required browser verification and were not promoted.",
+      "status": "inaccessible_browser_verification_primary_forums",
+      "surface": "OpenReview",
+      "url": "https://openreview.net/"
+    }
+  ],
+  "operator_review_required": false,
+  "planner_marker": "V515-PLANNER-REFRESH-20260721-END",
+  "planner_marker_found": true,
+  "planner_marker_hash": "sha256:35db3f67703e14ab61960f8554e781ab6c66caaa80ffedc6de81686daf3559c3",
+  "preconditions_checked": {
+    "active_roadmap_hash": "sha256:23dc656ff9f5626287a97154abc8cfc3b74884390ed8b12f8734eee3bc5cfa0b",
+    "active_roadmap_milestone": "2026.07.515",
+    "agents_md_read": true,
+    "claude_md_read": true,
+    "codex_md_read": true,
+    "current_utc_timestamp_checked": true,
+    "exclusion_manifest_hash": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2",
+    "exclusion_manifest_read": true,
+    "failed_preconditions": [],
+    "known_issues_read": true,
+    "network_source_reachability_established": true,
+    "ops_changelog_modified": false,
+    "ops_status_modified": false,
+    "planner_marker_found": true,
+    "planner_marker_hash": "sha256:35db3f67703e14ab61960f8554e781ab6c66caaa80ffedc6de81686daf3559c3",
+    "prior_v514_source_delta_read": true,
+    "research_program_read": true,
+    "research_references_read": true,
+    "research_roadmap_next_read": false,
+    "research_roadmap_read": true,
+    "research_roadmap_yaml_modified": false,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_report_5770": true,
+    "traceability_modified": false,
+    "v515_planner_marker_verified": true
+  },
+  "random_seed": 5770,
+  "references_after_hash": "sha256:3bffb9e651cac1decd1f96e7082d7887b51731b4948e5af1d89a343b1afb1015",
+  "references_before_hash": "sha256:a5acf44f81762780c1417e6ed3cff08fe4383339e153eb020f88d89e5171e7ae",
+  "references_changed": true,
+  "references_diff_hash": "sha256:4b0a8a62dab19de951b869667306eb1c6602e1648594e84bc8da7ec3a7df1a02",
+  "reproducibility_checksum": "sha256:8b78af6797c5c17e8f2fe159ba6464fc10cf6f1588fb0a46f285ef8f441d230b",
+  "result_path": "results/experiment_5770_v515_source_delta_ingestion.json",
+  "roadmap_scope_change_requested": false,
+  "run_date": "20260722",
+  "schema": "carnot.experiment_5770.v515_source_delta_ingestion.v1",
+  "search_finished_at": "2026-07-22T01:05:40Z",
+  "search_started_at": "2026-07-22T01:00:00Z",
+  "semantic_scholar_receipts": [
+    {
+      "candidate_ids": [
+        "2607.17047",
+        "2607.11555",
+        "2606.22726"
+      ],
+      "http_status": 200,
+      "latest_publication_date": "2026-07-19",
+      "paper": "arXiv:2507.02092",
+      "post_marker_publication_count": 0,
+      "queried_at": "2026-07-22T01:00:37Z",
+      "receipt_id": "semantic_scholar_ebt_citations_v515",
+      "receipt_summary": "The visible EBT citation sample was reachable; the newest sample predates the V515 marker.",
+      "sample_returned_count": 5,
+      "sample_titles": [
+        "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+        "Advancing Optimal Subset Oracle via Learning Relaxation of Neural Set Functions",
+        "Text Dictates, Music Decorates: Energy-based Attention for Editable Dance Motion Generation"
+      ],
+      "status": "http_200",
+      "surface": "Semantic Scholar",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations"
+    },
+    {
+      "candidate_ids": [
+        "2607.02154",
+        "2606.03089",
+        "2605.18871"
+      ],
+      "http_status": 200,
+      "latest_publication_date": "2026-07-02",
+      "paper": "arXiv:2512.15605",
+      "post_marker_publication_count": 0,
+      "queried_at": "2026-07-22T01:00:37Z",
+      "receipt_id": "semantic_scholar_arm_ebm_citations_v515",
+      "receipt_summary": "The visible ARM-EBM citation sample was reachable and contained no post-V515 publication.",
+      "sample_returned_count": 5,
+      "sample_titles": [
+        "Path-Measure Dynamics of Attention-Driven World Models",
+        "Constitutional On-Policy Safe Distillation",
+        "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning"
+      ],
+      "status": "http_200",
+      "surface": "Semantic Scholar",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations"
+    }
+  ],
+  "source_queries": [
+    {
+      "order": 1,
+      "queries": [
+        "2025-2026 EBM reasoning verification",
+        "constraint acquisition satisfaction 2026",
+        "Ising sampling probabilistic hardware",
+        "hallucination mitigation verification reasoning",
+        "KAN constrained generation online learning",
+        "adaptive world models agent planning",
+        "cs.AI new 2026-07-21",
+        "cs.LG new 2026-07-21",
+        "cs.CL new 2026-07-21"
+      ],
+      "surface": "arXiv"
+    },
+    {
+      "order": 2,
+      "queries": [
+        "energy-based reasoning verification constraints 2026",
+        "constrained generation verifier 2026"
+      ],
+      "surface": "OpenReview"
+    },
+    {
+      "order": 3,
+      "queries": [
+        "arXiv:2507.02092 citations",
+        "arXiv:2512.15605 citations"
+      ],
+      "surface": "Semantic Scholar"
+    },
+    {
+      "order": 4,
+      "queries": [
+        "daily_papers 2026-07-21",
+        "daily_papers 2026-07-22"
+      ],
+      "surface": "Hugging Face Papers"
+    },
+    {
+      "order": 5,
+      "queries": [
+        "\"2607.14169\" OR \"World Model Still Loses\"",
+        "\"energy-based\" reasoning constraint created:>2026-07-21",
+        "\"constrained generation\" verifier created:>2026-07-21",
+        "world model verification created:>2026-07-21"
+      ],
+      "surface": "GitHub discovery"
+    },
+    {
+      "order": 6,
+      "queries": [
+        "Z1 XTR-0 TSU THRML"
+      ],
+      "surface": "Extropic writing"
+    },
+    {
+      "order": 7,
+      "queries": [
+        "Kona Aleph energy based reasoning formal verification"
+      ],
+      "surface": "Logical Intelligence"
+    },
+    {
+      "order": 8,
+      "queries": [
+        "research-references.md complete ledger",
+        "V515 planner block",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "results/experiment_5756_v514_source_delta_ingestion.json"
+      ],
+      "surface": "local Carnot ledgers"
+    }
+  ],
+  "source_receipts": [
+    {
+      "candidate_ids": [],
+      "queried_at": "2026-07-22T00:59:39Z",
+      "receipt_id": "arxiv_home_reachability",
+      "receipt_summary": "HEAD request reached arXiv before source classification.",
+      "status": "http_200",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/"
+    },
+    {
+      "candidate_ids": [
+        "2607.16199",
+        "2607.16200",
+        "2607.16266",
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "arxiv_cs_ai_new_20260721",
+      "receipt_summary": "cs.AI new listings were reachable; relevant items were dispositioned.",
+      "status": "http_200_showing_new_listings_2026_07_21",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/list/cs.AI/new"
+    },
+    {
+      "candidate_ids": [
+        "2607.16591",
+        "2607.17047",
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "arxiv_cs_lg_new_20260721",
+      "receipt_summary": "cs.LG new listings were reachable; world-model and constraint candidates were dispositioned.",
+      "status": "http_200_showing_new_listings_2026_07_21",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/list/cs.LG/new"
+    },
+    {
+      "candidate_ids": [
+        "2607.16808",
+        "halo_hallucination_oversight"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "arxiv_cs_cl_new_20260721",
+      "receipt_summary": "cs.CL new listings were reachable; constrained extraction and hallucination items were dispositioned.",
+      "status": "http_200_showing_new_listings_2026_07_21",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/list/cs.CL/new"
+    },
+    {
+      "candidate_ids": [
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:02:00Z",
+      "receipt_id": "arxiv_abs_2607_14169",
+      "receipt_summary": "The paper and linked code/reproduction log sharpen V515 ARC world-model admission without changing roadmap ids or gates.",
+      "status": "http_200_newly_actionable_v515_boundary",
+      "surface": "arXiv",
+      "url": "https://arxiv.org/abs/2607.14169"
+    },
+    {
+      "candidate_ids": [
+        "ZBj3Qp1bYg",
+        "EXFKk4Y3yc",
+        "IfDYQbsWf4",
+        "wKs9fHYxCV"
+      ],
+      "queried_at": "2026-07-22T01:01:20Z",
+      "receipt_id": "openreview_search_snippets_v515",
+      "receipt_summary": "Search snippets were visible, but primary forum pages required browser verification and were not promoted.",
+      "status": "inaccessible_browser_verification_primary_forums",
+      "surface": "OpenReview",
+      "url": "https://openreview.net/"
+    },
+    {
+      "candidate_ids": [
+        "2607.17047",
+        "2607.11555",
+        "2606.22726"
+      ],
+      "http_status": 200,
+      "latest_publication_date": "2026-07-19",
+      "paper": "arXiv:2507.02092",
+      "post_marker_publication_count": 0,
+      "queried_at": "2026-07-22T01:00:37Z",
+      "receipt_id": "semantic_scholar_ebt_citations_v515",
+      "receipt_summary": "The visible EBT citation sample was reachable; the newest sample predates the V515 marker.",
+      "sample_returned_count": 5,
+      "sample_titles": [
+        "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+        "Advancing Optimal Subset Oracle via Learning Relaxation of Neural Set Functions",
+        "Text Dictates, Music Decorates: Energy-based Attention for Editable Dance Motion Generation"
+      ],
+      "status": "http_200",
+      "surface": "Semantic Scholar",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations"
+    },
+    {
+      "candidate_ids": [
+        "2607.02154",
+        "2606.03089",
+        "2605.18871"
+      ],
+      "http_status": 200,
+      "latest_publication_date": "2026-07-02",
+      "paper": "arXiv:2512.15605",
+      "post_marker_publication_count": 0,
+      "queried_at": "2026-07-22T01:00:37Z",
+      "receipt_id": "semantic_scholar_arm_ebm_citations_v515",
+      "receipt_summary": "The visible ARM-EBM citation sample was reachable and contained no post-V515 publication.",
+      "sample_returned_count": 5,
+      "sample_titles": [
+        "Path-Measure Dynamics of Attention-Driven World Models",
+        "Constitutional On-Policy Safe Distillation",
+        "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning"
+      ],
+      "status": "http_200",
+      "surface": "Semantic Scholar",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations"
+    },
+    {
+      "candidate_ids": [
+        "2607.17250",
+        "2607.07820",
+        "2607.18144",
+        "2607.18110",
+        "2607.16204"
+      ],
+      "queried_at": "2026-07-22T01:05:30Z",
+      "receipt_id": "huggingface_daily_2026_07_21",
+      "receipt_summary": "Daily-feed hits were mostly earlier July papers submitted to HF on 2026-07-21; none superseded the accepted arXiv/source-code receipt.",
+      "status": "http_200_daily_feed",
+      "surface": "Hugging Face Papers",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-07-21"
+    },
+    {
+      "candidate_ids": [],
+      "queried_at": "2026-07-22T01:01:55Z",
+      "receipt_id": "huggingface_daily_2026_07_22",
+      "receipt_summary": "The next daily-feed route did not return the expected list shape and was not used for accepted findings.",
+      "status": "inaccessible_unexpected_schema_string",
+      "surface": "Hugging Face Papers",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-07-22"
+    },
+    {
+      "candidate_ids": [
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:02:34Z",
+      "receipt_id": "github_repo_code_world_models",
+      "receipt_summary": "The linked repository is public and includes docs/EXPERIMENTS.md; it is evidence for reproducibility context, not a new dependency.",
+      "status": "http_200_repo_found_pushed_2026_07_21T21_33_42Z",
+      "surface": "GitHub discovery",
+      "url": "https://github.com/JaviMaligno/code-world-models"
+    },
+    {
+      "candidate_ids": [],
+      "queried_at": "2026-07-22T01:02:34Z",
+      "receipt_id": "github_recent_required_queries",
+      "receipt_summary": "Recent repository searches for constraint acquisition, energy reasoning, and world-model verification returned zero new executable dependencies.",
+      "status": "http_200_total_count_0_for_required_recent_queries",
+      "surface": "GitHub discovery",
+      "url": "https://api.github.com/search/repositories"
+    },
+    {
+      "candidate_ids": [
+        "z1_hardware_page",
+        "thrml_software_page"
+      ],
+      "queried_at": "2026-07-22T01:01:41Z",
+      "receipt_id": "extropic_hardware_and_software_pages",
+      "receipt_summary": "Public Z1/XTR-0/THRML material remained context only; no Carnot-local authenticated hardware execution route was found.",
+      "status": "http_200_public_z1_xtr0_thrml_material",
+      "surface": "Extropic writing",
+      "url": "https://extropic.ai/hardware"
+    },
+    {
+      "candidate_ids": [
+        "kona_formal_verification_public_post"
+      ],
+      "queried_at": "2026-07-22T01:01:41Z",
+      "receipt_id": "logical_intelligence_public_formal_verification",
+      "receipt_summary": "Public Kona/Aleph material discusses EBRMs as imperfect verifiers, but no local weights, API receipt, or reproducible comparator was available.",
+      "status": "http_200_public_ebrms_for_fv_context",
+      "surface": "Logical Intelligence",
+      "url": "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation"
+    },
+    {
+      "candidate_ids": [
+        "2607.07196",
+        "2605.23940",
+        "2607.14169"
+      ],
+      "queried_at": "2026-07-22T01:05:40Z",
+      "receipt_id": "local_research_references_v515_ledger",
+      "receipt_summary": "The complete ledger and V515 planner block were checked for duplicates and boundary dispositions.",
+      "status": "local_ledger_checked_marker_line_30434",
+      "surface": "local Carnot ledgers",
+      "url": "research-references.md"
+    }
+  ],
+  "source_window": "strictly_after_V515_or_newly_actionable_after_marker",
+  "spec_refs": [
+    "REQ-REPORT-5770",
+    "SCENARIO-REPORT-5770-ZERO-FINDING",
+    "SCENARIO-REPORT-5770-ACCEPT-BOUNDED-DELTA",
+    "SCENARIO-REPORT-5770-BLOCKED-PROVENANCE",
+    "SCENARIO-REPORT-5770-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "target_experiment_map": [
+    {
+      "authority_boundary": "agent-owned play adequacy and pivotal-transition coverage remain required before simulated rollouts can influence E3",
+      "carnot_hook": "Add a play-adequacy control that rejects high transition accuracy when pivotal dynamics are missed.",
+      "falsifiable_metric": "heldout_pivotal_transition_miss_rate is zero before any world-model policy influence",
+      "search_receipt": "arxiv_abs_2607_14169",
+      "source_id": "verified_world_model_play_adequacy_2607_14169",
+      "target_experiment": "exp5776-arc-world-model-admission-contract"
+    }
+  ],
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5770_v515_source_delta_ingestion.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5770_v515_source_delta_ingestion.py -m pytest tests/python/test_experiment_5770_v515_source_delta_ingestion.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5770_v515_source_delta_ingestion.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --include=python/carnot/experiment_5770_v515_source_delta_ingestion.py -m pytest tests/python/test_experiment_5770_v515_source_delta_ingestion.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5770_v515_source_delta_ingestion.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5770_v515_source_delta_ingestion.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "watch_only_findings": [
+    {
+      "classification": "watch_only",
+      "publication_date": "2026-07-18",
+      "reason": "Relevant world-model risk context, but the robotics MBRL setting does not add a Carnot-local Exp5772-Exp5779 control beyond the existing V515 admissibility ladder.",
+      "search_receipt": "arxiv_cs_lg_new_20260721",
+      "search_timestamp": "2026-07-22T01:05:30Z",
+      "source_id": "world_feedback_mbrl_2607_16591",
+      "title": "Learning from World Feedback: Why Model Uncertainty Fails as a Risk Signal in Model-Based RL",
+      "url": "https://arxiv.org/abs/2607.16591"
+    },
+    {
+      "classification": "watch_only",
+      "publication_date": "2026-07-19",
+      "reason": "Useful caution for future constraint-reasoning benchmark design, but it predates the V515 marker and would broaden Exp5772's sealed task families.",
+      "search_receipt": "semantic_scholar_ebt_citations_v515",
+      "search_timestamp": "2026-07-22T01:00:37Z",
+      "source_id": "solver_hard_not_model_hard_2607_17047",
+      "title": "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+      "url": "https://arxiv.org/abs/2607.17047"
+    },
+    {
+      "classification": "watch_only",
+      "publication_date": "2026-07-03",
+      "reason": "Relevant transition-verification context, but importing Soda or a new verification dependency would require operator review and is not needed for the existing exact-validator boundary.",
+      "search_receipt": "arxiv_cs_ai_new_20260721",
+      "search_timestamp": "2026-07-22T01:05:30Z",
+      "source_id": "composable_verification_pipelines_2607_16266",
+      "title": "Composable Verification Pipelines for Multi-Agent Systems",
+      "url": "https://arxiv.org/abs/2607.16266"
+    },
+    {
+      "classification": "watch_only",
+      "publication_date": "2026-07-21",
+      "reason": "Public probabilistic-hardware context only; no authenticated Carnot-local Z1/XTR-0/TSU execution, timing, SDK, or correctness receipt was found.",
+      "search_receipt": "extropic_hardware_and_software_pages",
+      "search_timestamp": "2026-07-22T01:01:41Z",
+      "source_id": "extropic_z1_thrml_public_material",
+      "title": "Extropic Z1, XTR-0, and THRML public material",
+      "url": "https://extropic.ai/hardware"
+    }
+  ]
+}
