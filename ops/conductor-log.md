@@ -14096,3 +14096,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 11:16 UTC | Gated on Exp5788 transfer: wire a disabled typed-c | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5788-constraint-skill-transfer-audit.tr |
 | 2026-07-22 11:18 UTC | Causal future-family holdout of versioned rule sta | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5787-validation-gated-constraint-skill-ab |
 | 2026-07-22 11:18 UTC | Gated on Exp5788 transfer: wire a disabled typed-c | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5788-constraint-skill-transfer-audit.tr |
+| 2026-07-22 11:36 UTC | Pivotal-dynamics accreditation contract for immuta | OK | 87 passed, 1 warning in 11.18s |
