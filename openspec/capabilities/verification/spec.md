@@ -30318,6 +30318,59 @@ match.
 |---|---|---|
 | REQ-VERIFY-5785 | Planned (`python/carnot/experiment_5785_hardness_surface_fixture.py`, `results/experiment_5785_hardness_surface_fixture.json`) | Planned (`tests/python/test_experiment_5785_hardness_surface_fixture.py`) |
 
+### REQ-VERIFY-5786: Raw Response Replay And Exact Failure Taxonomy
+
+The repository SHALL provide Exp5786 raw-response replay and taxonomy helpers
+inside `python/carnot/experiment_5786_sota_constraint_stream.py`. The helpers
+SHALL parse model output only at the qualified Exp5785 finite-choice
+row-id-to-label boundary and SHALL treat all natural-language reasoning text as
+raw evidence, not as semantic authority.
+
+Every stream row SHALL preserve lossless raw response text and a raw-response
+SHA-256 hash before parsing. The row parser SHALL accept exactly one known
+fixture row id and one known candidate label for that row. It SHALL record
+parser failure independently from exact wrongness and SHALL never infer a
+candidate from free-form prose, score margins, model confidence, or a learned
+constraint.
+
+The taxonomy SHALL independently label parser failure, contradiction,
+satisfiable drift, protected-fact distortion, exact answer error, abstention,
+truncation, and valid/correct response. The taxonomy phrase "parser failure, contradiction, satisfiable drift, protected-fact distortion" names the first four independent failure labels. Exact validators from Exp5785 SHALL be the only correctness authority. Contradictions, satisfiable drift, abstentions,
+and protected-fact distortions MAY co-occur with exact answer error; the
+artifact SHALL report both row-level boolean labels and aggregate counts.
+
+Raw replay SHALL verify row hashes, raw-response hashes, prompt hashes, model
+identity, fixture row hashes, and checkpoint uniqueness. Duplicate checkpoint cells, mismatched raw hashes, missing raw responses, invalid fixture hashes, or taxonomy rows without exact labels SHALL fail closed and block readiness. The
+paired statistics SHALL cluster by canonical fixture unit, not by repeated
+surface rows, model rows, or turns.
+
+#### SCENARIO-VERIFY-5786: Taxonomy Separates Parser Failure From Exact Wrongness
+
+**Given** sealed Exp5785 rows and raw model responses
+**When** Exp5786 parses a valid correct label, a valid wrong label, malformed
+text, truncation, abstention text, a contradiction candidate, satisfiable drift,
+and protected-fact distortion
+**Then** only valid labels reach exact correctness scoring, parser failures are
+not credited as exact errors, and the taxonomy booleans and aggregate counts
+match the exact validator boundary.
+
+#### SCENARIO-VERIFY-5786-REPLAY: Checkpoints Resume Without Duplicate Rows
+
+**Given** a partially written Exp5786 JSONL response manifest
+**When** the runner resumes the same model/fixture-row stream
+**Then** already completed cells are reused exactly, new cells append once,
+raw hashes and row hashes replay, duplicate cells fail closed, and coverage is
+computed against the preregistered model-by-fixture-cell denominator.
+
+**Spec traces:** REQ-VERIFY-5786, SCENARIO-VERIFY-5786,
+SCENARIO-VERIFY-5786-REPLAY
+
+## Implementation Status (REQ-VERIFY-5786)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5786 | Planned (`python/carnot/experiment_5786_sota_constraint_stream.py`, `results/experiment_5786_sota_constraint_stream.json`) | Planned (`tests/python/test_experiment_5786_sota_constraint_stream.py`) |
+
 ### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
 
 The repository SHALL provide Exp 5734 at

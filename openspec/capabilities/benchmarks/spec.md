@@ -1637,6 +1637,95 @@ SCENARIO-BENCH-5785-CONTROLS
 |---|---|---|
 | REQ-BENCH-5785 | Planned (`python/carnot/experiment_5785_hardness_surface_fixture.py`, `results/experiment_5785_hardness_surface_fixture.json`) | Planned (`tests/python/test_experiment_5785_hardness_surface_fixture.py`) |
 
+### REQ-BENCH-5786: Prospective Local-SOTA Constraint Response Stream
+
+Carnot MUST provide Exp5786 at
+`python/carnot/experiment_5786_sota_constraint_stream.py` and write
+`results/experiment_5786_sota_constraint_stream.json` plus
+`results/experiment_5786_sota_constraint_stream.rows.jsonl`. The experiment
+MUST consume the sealed Exp5785 fixture chronologically and MUST NOT implement
+constraint learning, update model weights, or use legacy tiny models for
+headline cells.
+
+Step 0 MUST replay the Exp5785 producer gates and row-file hash, call
+`cached_sota_pair()`, verify both RTX 3090 devices, verify readable local GGUF
+paths and SHA-256 hashes for exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, verify llama.cpp CUDA build support, verify
+embedded GGUF chat-template availability, verify RAM/VRAM/disk budgets, and
+verify output paths. If any mandated model cannot authenticate positive
+llama.cpp CUDA offload, the terminal artifact MUST be `blocked:` and MUST NOT
+substitute a smoke model into headline rows.
+
+The stream MUST use matched prompt, sampling, stop, max-token, seed, and row
+budgets for every mandated model. It MUST preserve canonical, symbol-relabel,
+order-paraphrase, and meaning-change-canary rows, keep chronological order,
+checkpoint after every model/row cell, and resume exactly without duplicate
+rows. Each JSONL stream row MUST preserve lossless raw response text, a raw
+response SHA-256 hash, prompt hash, fixture row hash, model identity, runtime
+receipt, parser receipt, exact-validator label receipt, taxonomy labels, and a
+row hash.
+
+The artifact MUST report behavior by formal constraint family, solver-hardness
+bin, surface rendering, satisfiability, and model family. It MUST include
+proof-preserving paired deltas and model-identity interactions computed with
+canonical fixture units as the independent cluster. At least 30 independent
+canonical items per primary paired cell MUST be present or the artifact MUST
+document a power calculation; repeated turns, model repeats, and surface
+variants MUST NOT be counted as additional independent items.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`MODEL_SPECS`, `models_used`, `model_runtime_receipts`,
+`gpu_offload_receipts`, `fixture_hash`, `row_file`, `row_file_sha256`,
+`raw_response_receipts`, `checkpoint_resume_receipts`,
+`sample_size_justification`, `independent_unit_count`,
+`failure_taxonomy_counts`, `family_metrics`, `solver_hardness_metrics`,
+`surface_sensitivity_metrics`, `proof_preserving_paired_deltas`,
+`model_identity_interactions`, `parser_failure_rate`,
+`protected_fact_distortion_count`, `satisfiable_drift_count`,
+`exact_label_coverage`, `raw_response_coverage`, `leakage_checks`, bare
+`real_sota_model_count`, bare `stream_ready_score`, `producer_gate_fields`,
+`inference_substrate` with value
+`real_local_llama_cpp_cuda_gguf_generation_plus_exact_z3_validation`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and an
+`honest_verdict` beginning `complete:` or `blocked:`.
+
+`stream_ready_score` SHALL equal `1.0` only when all three mandated local SOTA
+families produce authenticated CUDA GGUF generation rows, raw-response coverage
+and exact-label coverage are both `1.0`, parser failure remains below the
+preregistered threshold, split/hash leakage checks pass, and the stream contains
+enough satisfiable drift to test downstream learning. A complete stream without
+that headroom MUST remain `complete:` but set `stream_ready_score=0.0`.
+
+#### SCENARIO-BENCH-5786: Matched Chronological Stream Preserves Raw Responses
+
+**Given** Exp5785 is ready, all three mandated local GGUFs are readable, and
+llama.cpp authenticates CUDA offload on the dual RTX 3090 host
+**When** Exp5786 runs the matched prospective stream
+**Then** every model/fixture-row cell is checkpointed once, raw response text
+and hashes are preserved, exact labels are assigned only by the fixture
+validator boundary, and the artifact reports family, solver-bin, surface,
+satisfiability, paired-delta, and model-interaction metrics.
+
+#### SCENARIO-BENCH-5786-BLOCKERS: Missing SOTA Offload Blocks Headline Rows
+
+**Given** a missing mandated GGUF, unreadable hash, missing chat template,
+unauthenticated CUDA offload, split/hash leak, duplicate checkpoint row, parser
+failure above threshold, or no satisfiable drift
+**When** Exp5786 validates the stream
+**Then** it writes a terminal artifact with a `blocked:` or complete-but-not-
+ready verdict naming the mechanical fault, excludes tiny smoke models from
+headline rows, and keeps raw responses immutable.
+
+**Spec traces:** REQ-BENCH-5786, SCENARIO-BENCH-5786,
+SCENARIO-BENCH-5786-BLOCKERS
+
+## Implementation Status (REQ-BENCH-5786)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5786 | Planned (`python/carnot/experiment_5786_sota_constraint_stream.py`, `results/experiment_5786_sota_constraint_stream.json`) | Planned (`tests/python/test_experiment_5786_sota_constraint_stream.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
