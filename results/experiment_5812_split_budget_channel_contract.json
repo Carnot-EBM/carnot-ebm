@@ -1,0 +1,960 @@
+{
+  "adversarial_control_results": {
+    "candidate_label_leakage": {
+      "hidden_label_leakage_detected": true,
+      "leakage_markers": [
+        "candidate_label:A",
+        "exact_metadata_key"
+      ],
+      "passed": true
+    },
+    "duplicate_candidate_id": {
+      "parser_failure_reason": "duplicate_id",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "empty_final": {
+      "failure_mode": "empty_final",
+      "parser_failure_reason": "missing_answer",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "empty_reasoning": {
+      "failure_mode": "empty_reasoning",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "exact_wrong_answer": {
+      "exact_answer_error": true,
+      "parse_ok": true,
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "ghost_candidate_id": {
+      "parser_failure_reason": "ghost_candidate_id",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "invalid_candidate_id": {
+      "parser_failure_reason": "invalid_candidate_id",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "overlong_reasoning": {
+      "failure_mode": "reasoning_truncation",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "replay_mismatch": {
+      "failure_mode": "replay_mismatch",
+      "passed": true,
+      "replay_ok": false
+    },
+    "schema_control_plane_injection": {
+      "parser_failure_reason": "adversarial_payload",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "stop_collision": {
+      "failure_mode": "stop_collision",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "timeout": {
+      "failure_mode": "timeout",
+      "passed": true,
+      "valid_exact_output": false
+    },
+    "unclosed_thinking": {
+      "failure_mode": "unclosed_thinking",
+      "passed": true,
+      "valid_exact_output": false
+    }
+  },
+  "contract_version_and_code_hashes": {
+    "code_hash": "sha256:065fb454d9c89a8830174b6705854b78443d9ffd7eda5f6e92c0b496bd41533b",
+    "contract_version": "split_budget_reasoning_finalization_contract_v1",
+    "hashed_inputs": {
+      "claude_instructions": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "codex_instructions": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "current_channel_producer": "sha256:9003ee34b7abfb9c3844c6b21ca1b3033fff95772c5f3b734092159a005541f8",
+      "current_channel_producer_tests": "sha256:a7e76b6f0ddb387498abc651c71dc8b0b7597ab4678e56903a2be7b988e8cf98",
+      "embedded_template_metadata_fixture": "sha256:bd995c2f92fc84efa14879c7d4755204729ec9368c8b173ce50b1eebd27ecd4f",
+      "exp5798_diagnostic": "sha256:994acb96f8404602a23c09731ec848b30f9fec28def51fcef12994adca0f186c",
+      "exp5811_audit": "sha256:fd41798401bed03d566668681eb20ec739c7207a4173a2b239053d83a91f99ac",
+      "experiment_template": "sha256:97407d7ee103898654e31ff45ecc2ad8d5233ff068d448f2a0ef90798fcf9ef3",
+      "research_references": "sha256:a7937190431761aba21481ef116a45e79dd45ac09ea950b8afdbc8be86b487e6",
+      "sealed_fixture_artifact": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a",
+      "sealed_fixture_parser": "sha256:f1c19e9684570d8d33f2f562f880392c8fa8a0ffce147f73548229c7468a1463",
+      "sealed_fixture_rows": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af",
+      "sota_model_metadata_registry": "sha256:db9b6d3f56d4fb137117230575c3559dadeec97e2d02d37358895225e33dcd1d",
+      "split_budget_module": "sha256:065fb454d9c89a8830174b6705854b78443d9ffd7eda5f6e92c0b496bd41533b",
+      "split_budget_tests": "sha256:ddfadd526f47678ff905817e719c8daac9d4d5b25661e2e4c56ffceffd955b6d",
+      "verification_spec": "sha256:7d708c819ba4b6de051ca832881f6160035de3961b054b6507b739350d5c673c"
+    },
+    "schema": "carnot.experiment_5812.split_budget_channel_contract.v1",
+    "test_hash": "sha256:ddfadd526f47678ff905817e719c8daac9d4d5b25661e2e4c56ffceffd955b6d",
+    "transport_drift_allowed": false
+  },
+  "duration_s": 1.967731,
+  "experiment": 5812,
+  "experiment_id": "experiment_5812_split_budget_channel_contract",
+  "field_provenance": {
+    "adversarial_control_results": {
+      "principle": "Negative controls prove empty, injected, ghost, truncated, and wrong outputs fail closed.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "contract_version_and_code_hashes": {
+      "principle": "Versioned implementation identity prevents silent transport drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured implementation/test time exposes a bootstrap-only artifact.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "experiment": {
+      "principle": "Numeric experiment id binds the artifact to Exp5812.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "experiment_id": {
+      "principle": "Stable local slug ties the artifact to the implementation.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every contract field points to code, test, or sealed fixture evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "finalization_stage_contract": {
+      "principle": "A separate cap and parser boundary guarantee room for a final answer without claiming truth.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "grammar_claim_boundary": {
+      "principle": "Grammar may establish membership and syntax only; exact validation remains semantic authority.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A `complete:` or `blocked:` prefix makes protocol readiness terminal.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`aggregation_from_upstream_artifacts` declares offline implementation and tests with no headline model load.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "llm_calls_made": {
+      "principle": "Zero headline calls keeps protocol implementation separate from capability evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "milestone": {
+      "principle": "Binds the contract to V518.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Gate and dependency checks prevent building against quarantined or missing evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "preregistered_mode_matrix": {
+      "principle": "Fixed modes prevent post-hoc tuning on canary outcomes.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "random_seed": {
+      "principle": "Deterministic metadata for an offline contract artifact.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "reasoning_stage_contract": {
+      "principle": "An independent cap, stop policy, timeout, and transcript hash remove the shared-budget ambiguity.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "replay_receipts": {
+      "principle": "Frozen transcript and deterministic parser replay make the two-stage boundary auditable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects later contract, fixture, or test drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "result_path": {
+      "principle": "Declares the intended terminal JSON path.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "run_date": {
+      "principle": "Operator-requested contract date.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "schema": {
+      "principle": "Versioned schema id for the split-budget contract.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "sealed_candidate_environment": {
+      "principle": "Only fixture-declared IDs may be referenced; hidden labels never enter prompts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "sealed_fixture_sources": {
+      "fixture_artifact": "results/experiment_5785_hardness_surface_fixture.json",
+      "fixture_rows": "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+      "parser_module": "python/carnot/experiment_5785_hardness_surface_fixture.py"
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors for the split-budget contract and controls.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "split_budget_contract_ready_score": {
+      "principle": "A bare scalar gates expensive inference only when the contract and attacks pass.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "status": {
+      "principle": "A terminal contract state distinguishes an executable transport from design prose.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused, adversarial, replay, and coverage execution.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed controls from being narrated as passing.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The fixture parser/solver defines correctness, so channel success is execution-grounded rather than a verifier moat.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "tests/python/test_experiment_5812_split_budget_channel_contract.py",
+        "python/carnot/experiment_5812_split_budget_channel_contract.py"
+      ]
+    }
+  },
+  "finalization_stage_contract": {
+    "budget_accounting": {
+      "max_tokens": 32,
+      "measured_separately": true,
+      "output_tokens": 2
+    },
+    "call_ordinal": 2,
+    "candidate_environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+    "finish_reason": "stop",
+    "hidden_label_leakage_detected": false,
+    "max_tokens": 32,
+    "output_tokens": 2,
+    "parser": "exp5785_candidate_id_to_row_id_label_exact_parser",
+    "raw_receipt_hash": "sha256:5674e41fc7888af42a099af07ed182ff4df56804bbcd37c528e91002b646edf3",
+    "reasoning_transcript_hash": "sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064",
+    "stage_id": "bounded_finalization_stage_v1",
+    "stops": [
+      "<|eot_id|>",
+      "<stop>"
+    ],
+    "timeout_s": 180
+  },
+  "grammar_claim_boundary": {
+    "claim_boundary": "candidate_membership_and_syntax_only_exact_parser_solver_remain_semantic_authority",
+    "exact_validation_required": true,
+    "semantic_correctness_claimed": false,
+    "supported_runtime_receipt": {
+      "candidate_membership_claimed": true,
+      "claim_boundary": "candidate_membership_and_syntax_only_exact_parser_solver_remain_semantic_authority",
+      "enforced_candidate_ids": [
+        "CID_A2B1DB2D40_00",
+        "CID_A2B1DB2D40_01",
+        "CID_A2B1DB2D40_02",
+        "CID_A2B1DB2D40_03"
+      ],
+      "environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+      "exact_validation_required": true,
+      "grammar_runtime": "finite_id_environment_mask",
+      "parser_remains_fail_closed": true,
+      "runtime_supports_environment_indexed_grammar": true,
+      "semantic_correctness_claimed": false,
+      "syntax_safety_claimed": true
+    },
+    "unsupported_runtime_receipt": {
+      "candidate_membership_claimed": false,
+      "claim_boundary": "candidate_membership_and_syntax_only_exact_parser_solver_remain_semantic_authority",
+      "enforced_candidate_ids": [],
+      "environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+      "exact_validation_required": true,
+      "grammar_runtime": "unsupported",
+      "parser_remains_fail_closed": true,
+      "runtime_supports_environment_indexed_grammar": false,
+      "semantic_correctness_claimed": false,
+      "syntax_safety_claimed": false
+    }
+  },
+  "honest_verdict": "complete: split_budget_channel_contract_ready_no_headline_model_calls",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "llm_calls_made": 0,
+  "milestone": "2026.07.518",
+  "preconditions_checked": {
+    "autotokenizer_used_on_gguf": false,
+    "blocked_reasons": [],
+    "disk": {
+      "available_mb": 1171714,
+      "ok": true,
+      "required_mb": 512
+    },
+    "gguf_templates_modified": false,
+    "headline_model_loaded": false,
+    "input_hashes": {
+      "claude_instructions": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "codex_instructions": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "current_channel_producer": "sha256:9003ee34b7abfb9c3844c6b21ca1b3033fff95772c5f3b734092159a005541f8",
+      "current_channel_producer_tests": "sha256:a7e76b6f0ddb387498abc651c71dc8b0b7597ab4678e56903a2be7b988e8cf98",
+      "embedded_template_metadata_fixture": "sha256:bd995c2f92fc84efa14879c7d4755204729ec9368c8b173ce50b1eebd27ecd4f",
+      "exp5798_diagnostic": "sha256:994acb96f8404602a23c09731ec848b30f9fec28def51fcef12994adca0f186c",
+      "exp5811_audit": "sha256:fd41798401bed03d566668681eb20ec739c7207a4173a2b239053d83a91f99ac",
+      "experiment_template": "sha256:97407d7ee103898654e31ff45ecc2ad8d5233ff068d448f2a0ef90798fcf9ef3",
+      "research_references": "sha256:a7937190431761aba21481ef116a45e79dd45ac09ea950b8afdbc8be86b487e6",
+      "sealed_fixture_artifact": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a",
+      "sealed_fixture_parser": "sha256:f1c19e9684570d8d33f2f562f880392c8fa8a0ffce147f73548229c7468a1463",
+      "sealed_fixture_rows": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af",
+      "sota_model_metadata_registry": "sha256:db9b6d3f56d4fb137117230575c3559dadeec97e2d02d37358895225e33dcd1d",
+      "split_budget_module": "sha256:065fb454d9c89a8830174b6705854b78443d9ffd7eda5f6e92c0b496bd41533b",
+      "split_budget_tests": "sha256:ddfadd526f47678ff905817e719c8daac9d4d5b25661e2e4c56ffceffd955b6d",
+      "verification_spec": "sha256:7d708c819ba4b6de051ca832881f6160035de3961b054b6507b739350d5c673c"
+    },
+    "llm_calls_made": 0,
+    "memory": {
+      "available_mb": 61724,
+      "ok": true,
+      "required_mb": 512
+    },
+    "preconditions_ready": true,
+    "research_conductor_modified": false,
+    "run_date": "20260722",
+    "schema": "carnot.experiment_5812.split_budget_channel_contract.v1.preconditions",
+    "structured_gate_replay": {
+      "all_passed": true,
+      "exp5785_fixture": {
+        "parser_control_pass_rate": 1.0,
+        "passed": true,
+        "ready_score": 1.0,
+        "status": "complete"
+      },
+      "exp5798": {
+        "passed": true,
+        "ready_score": 1.0,
+        "status": "complete"
+      },
+      "exp5811": {
+        "passed": true,
+        "ready_score": 1.0,
+        "status": "complete"
+      }
+    }
+  },
+  "preregistered_mode_matrix": [
+    {
+      "bounded": true,
+      "executable": false,
+      "fail_closed_conditions": [
+        "empty_final",
+        "truncation",
+        "invalid_or_ghost_candidate_id",
+        "exact_validator_mismatch"
+      ],
+      "finalizer": "legacy single-call reasoning and final line share one output cap",
+      "max_tokens": 128,
+      "mode_id": "shared_budget_control_128",
+      "mode_type": "shared_budget_control",
+      "parser": "exp5785_candidate_id_to_row_id_label_exact_parser",
+      "preserved_as_control": true,
+      "retirement_rules_preregistered": true,
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    },
+    {
+      "bounded": true,
+      "canary_mode_preregistered": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "empty_reasoning",
+        "empty_final",
+        "reasoning_truncation",
+        "final_truncation",
+        "stop_collision",
+        "unclosed_thinking",
+        "timeout",
+        "invalid_or_ghost_candidate_id",
+        "hidden_label_leakage",
+        "replay_mismatch",
+        "exact_validator_mismatch"
+      ],
+      "finalization": {
+        "max_tokens": 32,
+        "stops": [
+          "<|eot_id|>",
+          "<stop>"
+        ],
+        "timeout_s": 180
+      },
+      "finalizer": "candidate-id-only finalizer over frozen reasoning transcript",
+      "mode_id": "split_reasoning_96_final_32_candidate_id",
+      "mode_retirement_rules": {
+        "retire_on_empty_final": true,
+        "retire_on_empty_reasoning": true,
+        "retire_on_exact_answer_mismatch_control": true,
+        "retire_on_hidden_label_leakage": true,
+        "retire_on_replay_mismatch": true,
+        "retire_on_stop_collision": true,
+        "retire_on_timeout": true,
+        "retire_on_truncation": true,
+        "retire_on_unclosed_thinking": true
+      },
+      "mode_type": "split_budget",
+      "parser": "exp5785_candidate_id_to_row_id_label_exact_parser",
+      "reasoning": {
+        "max_tokens": 96,
+        "stops": [
+          "<|eot_id|>",
+          "<stop>"
+        ],
+        "timeout_s": 900
+      },
+      "retirement_rules_preregistered": true,
+      "runtime_supports_environment_indexed_grammar": false
+    },
+    {
+      "bounded": true,
+      "canary_mode_preregistered": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "empty_reasoning",
+        "empty_final",
+        "reasoning_truncation",
+        "final_truncation",
+        "stop_collision",
+        "unclosed_thinking",
+        "timeout",
+        "invalid_or_ghost_candidate_id",
+        "hidden_label_leakage",
+        "replay_mismatch",
+        "exact_validator_mismatch"
+      ],
+      "finalization": {
+        "max_tokens": 48,
+        "stops": [
+          "<|eot_id|>",
+          "<stop>"
+        ],
+        "timeout_s": 180
+      },
+      "finalizer": "candidate-id-only finalizer with optional finite-ID grammar support",
+      "mode_id": "split_reasoning_192_final_48_env_indexed_ids",
+      "mode_retirement_rules": {
+        "retire_on_empty_final": true,
+        "retire_on_empty_reasoning": true,
+        "retire_on_exact_answer_mismatch_control": true,
+        "retire_on_hidden_label_leakage": true,
+        "retire_on_replay_mismatch": true,
+        "retire_on_stop_collision": true,
+        "retire_on_timeout": true,
+        "retire_on_truncation": true,
+        "retire_on_unclosed_thinking": true
+      },
+      "mode_type": "split_budget",
+      "parser": "exp5785_candidate_id_to_row_id_label_exact_parser",
+      "reasoning": {
+        "max_tokens": 192,
+        "stops": [
+          "<|eot_id|>",
+          "<stop>"
+        ],
+        "timeout_s": 900
+      },
+      "retirement_rules_preregistered": true,
+      "runtime_supports_environment_indexed_grammar": true
+    }
+  ],
+  "random_seed": 5812,
+  "reasoning_stage_contract": {
+    "budget_accounting": {
+      "max_tokens": 96,
+      "measured_separately": true,
+      "output_tokens": 7
+    },
+    "call_ordinal": 1,
+    "finish_reason": "stop",
+    "immutable_after_capture": true,
+    "max_tokens": 96,
+    "output_tokens": 7,
+    "raw_receipt_hash": "sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064",
+    "stage_id": "bounded_reasoning_stage_v1",
+    "stops": [
+      "<|eot_id|>",
+      "<stop>"
+    ],
+    "timeout_s": 900,
+    "transcript_hash": "sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064"
+  },
+  "replay_receipts": {
+    "deterministic_parser_replay": true,
+    "frozen_transcript_replays": true,
+    "positive_control": {
+      "budget_accounting": {
+        "finalization_max_tokens": 32,
+        "finalization_output_tokens": 2,
+        "measured_separately": true,
+        "reasoning_max_tokens": 96,
+        "reasoning_output_tokens": 7,
+        "shared_budget_used": false
+      },
+      "call_count": 2,
+      "candidate_environment": {
+        "candidate_by_id": {
+          "CID_A2B1DB2D40_00": {
+            "candidate": "FEASIBLE",
+            "candidate_hash": "sha256:75988fad385844345439b9e4356f31c89942dbf671e2fce17f863769cd23e3cf",
+            "candidate_id": "CID_A2B1DB2D40_00",
+            "label": "A",
+            "source_label_mapping_hash": "sha256:2d74113d5c39aeb65aef1ed32421c1504bea4d7718147cabbd57fc2decae5fb9",
+            "source_row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b"
+          },
+          "CID_A2B1DB2D40_01": {
+            "candidate": "BOTH",
+            "candidate_hash": "sha256:8c458494c5d04df54c112ea5142a090edd9784bc432ad1a43c16cf4bd7b3ac9e",
+            "candidate_id": "CID_A2B1DB2D40_01",
+            "label": "B",
+            "source_label_mapping_hash": "sha256:2d74113d5c39aeb65aef1ed32421c1504bea4d7718147cabbd57fc2decae5fb9",
+            "source_row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b"
+          },
+          "CID_A2B1DB2D40_02": {
+            "candidate": "INFEASIBLE",
+            "candidate_hash": "sha256:fd0f23bdc98d2dd1d007c271b9063dbd9022b74bc4648a33a7b8a693ffbacecf",
+            "candidate_id": "CID_A2B1DB2D40_02",
+            "label": "C",
+            "source_label_mapping_hash": "sha256:2d74113d5c39aeb65aef1ed32421c1504bea4d7718147cabbd57fc2decae5fb9",
+            "source_row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b"
+          },
+          "CID_A2B1DB2D40_03": {
+            "candidate": "UNKNOWN",
+            "candidate_hash": "sha256:23759997b3c59884dc4c0ff5320d6301b0e7f63bf0f6483a7b54d7d43bc5ccd1",
+            "candidate_id": "CID_A2B1DB2D40_03",
+            "label": "D",
+            "source_label_mapping_hash": "sha256:2d74113d5c39aeb65aef1ed32421c1504bea4d7718147cabbd57fc2decae5fb9",
+            "source_row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b"
+          }
+        },
+        "candidate_ids": [
+          "CID_A2B1DB2D40_00",
+          "CID_A2B1DB2D40_01",
+          "CID_A2B1DB2D40_02",
+          "CID_A2B1DB2D40_03"
+        ],
+        "environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+        "environment_id": "env::exp5785-train-finite-domain-scheduling-000-canonical::463427bca87800ba",
+        "exact_answer_exposed_to_prompt": false,
+        "exact_label_exposed_to_prompt": false,
+        "fixture_row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b",
+        "hidden_labels_exposed_to_prompt": false,
+        "label_to_candidate_id": {
+          "A": "CID_A2B1DB2D40_00",
+          "B": "CID_A2B1DB2D40_01",
+          "C": "CID_A2B1DB2D40_02",
+          "D": "CID_A2B1DB2D40_03"
+        },
+        "row_id": "exp5785-train-finite-domain-scheduling-000-canonical"
+      },
+      "exact_parser_id": "exp5785_candidate_id_to_row_id_label_exact_parser",
+      "failure_mode": "valid_exact_output",
+      "finalization": {
+        "call_ordinal": 2,
+        "candidate_environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+        "empty_final": false,
+        "exact_answer_error": false,
+        "failure_mode": "valid_exact_output",
+        "finish_reason": "stop",
+        "fixture_parser_receipt": {
+          "exact_wrong_count": 0,
+          "parse_ok": true,
+          "parsed_labels": {
+            "exp5785-train-finite-domain-scheduling-000-canonical": "A"
+          },
+          "parser_failure_reason": "",
+          "valid_wrong_labels": []
+        },
+        "grammar_membership_ok": true,
+        "max_tokens": 32,
+        "output_tokens": 2,
+        "parse_ok": true,
+        "parsed_candidate_ids": {
+          "exp5785-train-finite-domain-scheduling-000-canonical": "CID_A2B1DB2D40_00"
+        },
+        "parser_failure": false,
+        "parser_failure_reason": "",
+        "parser_receipt_hash": "sha256:434ecb8499a5c761fa4391f9947c6282be0949c0efacd4be66b40d50d18cea7e",
+        "prompt_hash": "sha256:681e099d58a84bb6b31ae3103052cb0c44403ab0bf654cf0cac2deaa88a39d9b",
+        "raw_sha256": "sha256:5674e41fc7888af42a099af07ed182ff4df56804bbcd37c528e91002b646edf3",
+        "raw_text": "exp5785-train-finite-domain-scheduling-000-canonical: CID_A2B1DB2D40_00",
+        "reasoning_transcript_hash": "sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064",
+        "selected_candidate": "FEASIBLE",
+        "selected_candidate_hash": "sha256:75988fad385844345439b9e4356f31c89942dbf671e2fce17f863769cd23e3cf",
+        "selected_candidate_id": "CID_A2B1DB2D40_00",
+        "selected_hidden_label": "A",
+        "stage": "finalization",
+        "stop_collision": false,
+        "stops": [
+          "<|eot_id|>",
+          "<stop>"
+        ],
+        "timeout": false,
+        "timeout_s": 180,
+        "truncation": false,
+        "valid_exact_output": true
+      },
+      "finalizer_prompt": {
+        "leakage": {
+          "hidden_label_leakage_detected": false,
+          "leakage_markers": [],
+          "prompt_sha256": "sha256:681e099d58a84bb6b31ae3103052cb0c44403ab0bf654cf0cac2deaa88a39d9b"
+        },
+        "prompt_sha256": "sha256:681e099d58a84bb6b31ae3103052cb0c44403ab0bf654cf0cac2deaa88a39d9b",
+        "prompt_text": "Today is 20260722.\nFinalize the sealed finite-choice fixture using candidate IDs only.\nFixture surface: Solve the exact fixture. unit=exp5785-train-finite-domain-scheduling-000; family=finite_domain_scheduling; facts={\"slots\":[0,1,2],\"tasks\":[\"compile\",\"test\",\"ship\"]}; constraints=['compile', 'test', 'ship'] are all distinct | compile before test | ship equals 2\nFrozen reasoning hash: sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064\nFrozen reasoning transcript:\nbounded reasoning transcript over sealed fixture facts\nAllowed candidate IDs for exp5785-train-finite-domain-scheduling-000-canonical: CID_A2B1DB2D40_00 CID_A2B1DB2D40_01 CID_A2B1DB2D40_02 CID_A2B1DB2D40_03\nReturn exactly: exp5785-train-finite-domain-scheduling-000-canonical: <candidate_id>"
+      },
+      "fixture_row": {
+        "candidate_completeness_receipt": {
+          "candidate_count": 4,
+          "complete": true,
+          "domain_hash": "sha256:3a971b2c4b14d18d59807f1ac767b6f632f6e9c639d6da9fc9fa119f3a72df98",
+          "domain_size": 4,
+          "exact_candidate_present": true,
+          "label_count": 4,
+          "label_mapping_hash": "sha256:2d74113d5c39aeb65aef1ed32421c1504bea4d7718147cabbd57fc2decae5fb9",
+          "labels_unique": true,
+          "row_id": "exp5785-train-finite-domain-scheduling-000-canonical"
+        },
+        "candidate_domain": [
+          "FEASIBLE",
+          "INFEASIBLE",
+          "UNKNOWN",
+          "BOTH"
+        ],
+        "candidate_labels": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "chronology_index": 0,
+        "exact_answer": "FEASIBLE",
+        "exact_certificate_hash": "sha256:b12f00d1419f70c37c69b8ff0c3e7273889cab638ba86714b4f2aaf82502de94",
+        "exact_label": "A",
+        "exact_status": "sat",
+        "exact_validator_receipt": {
+          "certificate_hash": "sha256:b12f00d1419f70c37c69b8ff0c3e7273889cab638ba86714b4f2aaf82502de94",
+          "independent": {
+            "certificate": {
+              "assignment": {
+                "compile": 0,
+                "ship": 2,
+                "test": 1
+              }
+            },
+            "exact_answer": "FEASIBLE",
+            "status": "sat",
+            "validator_version": "exp5785_enumeration_independent_validator_v1"
+          },
+          "primary": {
+            "certificate": {
+              "assignment": {
+                "compile": 0,
+                "ship": 2,
+                "test": 1
+              }
+            },
+            "exact_answer": "FEASIBLE",
+            "status": "sat",
+            "time_ms": 0.03,
+            "validator_version": "exp5785_z3_primary_exact_validator_v1"
+          },
+          "solver_effort_bin": "low",
+          "validators_agree": true
+        },
+        "family": "finite_domain_scheduling",
+        "label_mapping": [
+          {
+            "candidate": "FEASIBLE",
+            "candidate_hash": "sha256:75988fad385844345439b9e4356f31c89942dbf671e2fce17f863769cd23e3cf",
+            "is_exact": true,
+            "label": "A"
+          },
+          {
+            "candidate": "BOTH",
+            "candidate_hash": "sha256:8c458494c5d04df54c112ea5142a090edd9784bc432ad1a43c16cf4bd7b3ac9e",
+            "is_exact": false,
+            "label": "B"
+          },
+          {
+            "candidate": "INFEASIBLE",
+            "candidate_hash": "sha256:fd0f23bdc98d2dd1d007c271b9063dbd9022b74bc4648a33a7b8a693ffbacecf",
+            "is_exact": false,
+            "label": "C"
+          },
+          {
+            "candidate": "UNKNOWN",
+            "candidate_hash": "sha256:23759997b3c59884dc4c0ff5320d6301b0e7f63bf0f6483a7b54d7d43bc5ccd1",
+            "is_exact": false,
+            "label": "D"
+          }
+        ],
+        "mutable_constraint_hash": "sha256:06da678c44b94be6caf9c4f718b436396985e3a60974f6b5ded6aba15d22f0d3",
+        "mutable_constraints": [
+          {
+            "id": "all_tasks_distinct",
+            "type": "all_distinct",
+            "vars": [
+              "compile",
+              "test",
+              "ship"
+            ]
+          },
+          {
+            "id": "compile_before_test",
+            "left": "compile",
+            "right": "test",
+            "type": "before"
+          },
+          {
+            "id": "ship_fixed",
+            "type": "equals",
+            "value": 2,
+            "var": "ship"
+          }
+        ],
+        "preregistered_conflict_bin": "low",
+        "preregistered_time_bin": "low",
+        "proof_preserving": true,
+        "protected_fact_hash": "sha256:d263f17c1f3982561f4233202d4bd6b603035d572b87d233183391ae4f34af4d",
+        "protected_facts": {
+          "slots": [
+            0,
+            1,
+            2
+          ],
+          "tasks": [
+            "compile",
+            "test",
+            "ship"
+          ]
+        },
+        "row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b",
+        "row_id": "exp5785-train-finite-domain-scheduling-000-canonical",
+        "schema": "carnot.experiment_5785.hardness_surface_fixture.v1.row",
+        "solver_effort_bin": "low",
+        "split": "train",
+        "surface_kind": "canonical",
+        "surface_text": "Solve the exact fixture. unit=exp5785-train-finite-domain-scheduling-000; family=finite_domain_scheduling; facts={\"slots\":[0,1,2],\"tasks\":[\"compile\",\"test\",\"ship\"]}; constraints=['compile', 'test', 'ship'] are all distinct | compile before test | ship equals 2",
+        "unit_id": "exp5785-train-finite-domain-scheduling-000"
+      },
+      "grammar_receipt": {
+        "candidate_membership_claimed": true,
+        "claim_boundary": "candidate_membership_and_syntax_only_exact_parser_solver_remain_semantic_authority",
+        "enforced_candidate_ids": [
+          "CID_A2B1DB2D40_00",
+          "CID_A2B1DB2D40_01",
+          "CID_A2B1DB2D40_02",
+          "CID_A2B1DB2D40_03"
+        ],
+        "environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+        "exact_validation_required": true,
+        "grammar_runtime": "finite_id_environment_mask",
+        "parser_remains_fail_closed": true,
+        "runtime_supports_environment_indexed_grammar": true,
+        "semantic_correctness_claimed": false,
+        "syntax_safety_claimed": true
+      },
+      "mode_id": "split_reasoning_96_final_32_candidate_id",
+      "prompt_leakage": {
+        "hidden_label_leakage_detected": false,
+        "leakage_markers": [],
+        "prompt_sha256": "sha256:681e099d58a84bb6b31ae3103052cb0c44403ab0bf654cf0cac2deaa88a39d9b"
+      },
+      "reasoning": {
+        "call_ordinal": 1,
+        "empty_reasoning": false,
+        "failure_mode": "valid_reasoning",
+        "finish_reason": "stop",
+        "immutable": true,
+        "max_tokens": 96,
+        "output_tokens": 7,
+        "raw_sha256": "sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064",
+        "raw_text": "bounded reasoning transcript over sealed fixture facts",
+        "stage": "reasoning",
+        "stop_collision": false,
+        "stops": [
+          "<|eot_id|>",
+          "<stop>"
+        ],
+        "timeout": false,
+        "timeout_s": 900,
+        "transcript_hash": "sha256:bcff6155a300311b0d637b97d90ac4686af47c3c4f5960bc61f20ee8e5329064",
+        "truncation": false,
+        "unclosed_thinking": false,
+        "valid_reasoning": true
+      },
+      "receipt_hash": "sha256:568346e66147c227fd983bde09da66b0c06faa997df0da21b181aa22f07e3d6a",
+      "replay_ok": true,
+      "schema": "carnot.experiment_5812.split_budget_channel_contract.v1.split_receipt",
+      "semantic_contract_id": "exp5812_frozen_reasoning_then_candidate_id_final_v1",
+      "valid_exact_output": true
+    },
+    "replay_mismatch_control_passed": true
+  },
+  "reproducibility_checksum": "sha256:c5f5abcee72319e8717a1c0791732752be87bf0f6916b4e958cc131341ccfef1",
+  "result_path": "results/experiment_5812_split_budget_channel_contract.json",
+  "run_date": "20260722",
+  "schema": "carnot.experiment_5812.split_budget_channel_contract.v1",
+  "sealed_candidate_environment": {
+    "candidate_count": 4,
+    "candidate_ids": [
+      "CID_A2B1DB2D40_00",
+      "CID_A2B1DB2D40_01",
+      "CID_A2B1DB2D40_02",
+      "CID_A2B1DB2D40_03"
+    ],
+    "environment_hash": "sha256:ae5f513868b91c084fa3ab72cb08df0920268058a4fca2aa38b4841e807c5e35",
+    "exact_answer_exposed_to_prompt": false,
+    "exact_label_exposed_to_prompt": false,
+    "fixture_row_hash": "sha256:26d679aef2cd4b8f970c70372eab794b68b71ca607c46c9a90a53af1243f997b",
+    "hidden_labels_exposed_to_prompt": false,
+    "row_id": "exp5785-train-finite-domain-scheduling-000-canonical"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5812",
+    "SCENARIO-VERIFY-5812-CONTRACT",
+    "SCENARIO-VERIFY-5812-CONTROLS",
+    "SCENARIO-VERIFY-5812-GRAMMAR-BOUNDARY",
+    "SCENARIO-VERIFY-5812-REPLAY"
+  ],
+  "split_budget_contract_ready_score": 1.0,
+  "status": "complete",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5812_split_budget_channel_contract.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5812_split_budget_channel_contract.py -m pytest tests/python/test_experiment_5812_split_budget_channel_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5812_split_budget_channel_contract.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5812_split_budget_channel_contract.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5812_split_budget_channel_contract.py -m pytest tests/python/test_experiment_5812_split_budget_channel_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5812_split_budget_channel_contract.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5812_split_budget_channel_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5812_split_budget_channel_contract.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "verifier_is_oracle": true
+}
