@@ -1,0 +1,33 @@
+{
+  "experiment": 5814,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-22",
+  "started_at": "2026-07-22T22:12:32.816763+00:00",
+  "finished_at": "2026-07-22T22:12:32.816763+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5813 all-family qualification: prospective chronological SOTA stream",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_channel_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5813-split-budget-sota-canary",
+      "artifact_field": "answer_channel_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp5813-split-budget-sota-canary",
+      "artifact_field": "qualified_real_sota_model_count",
+      "op": "==",
+      "expected": 3,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 == expected=3"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

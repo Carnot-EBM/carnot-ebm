@@ -14135,3 +14135,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 21:11 UTC | Gated on Exp5811 clean evidence: implement split-b | OK | 87 passed, 1 warning in 26.78s |
 | 2026-07-22 21:35 UTC | Gated on Exp5812 contract: changed-mechanism canar | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (665s silence). Last out |
 | 2026-07-22 21:37 UTC | Gated on Exp5812 contract: changed-mechanism canar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-07-22 22:10 UTC | Gated on Exp5812 contract: changed-mechanism canar | OK | 81 passed, 1 warning in 8.73s |
