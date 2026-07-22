@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.518",
+  "generated_at": "2026-07-22T22:22:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 13.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp5812 contract: changed-mechanism canary on all three mandated SOTA G",
+      "duration_minutes": 12.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Time-windowed post-V518 literature and implementation freshness receipt",
+      "duration_minutes": 0.73,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Transition four activated .517 tasks, quarantine flagged evidence, and allocate ",
+      "duration_minutes": 0.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5811 clean evidence: implement split-budget finite-choice transport",
+      "duration_minutes": 0.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Companion audit for Exp5799 event definitions, row replay, and CUDA provenance",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Six experiments completed within 13.0 minutes, including three compute-bound tasks. The 12.05-minute changed-mechanism canary dominated the recorded wall time, while the locked task-level classification does not identify GPU idleness during compute-bound execution.",
+  "bottlenecks_identified": [
+    "Within the bounded slowest list, the 12.05-minute changed-mechanism canary gated on Exp5812 was the longest compute-bound path; the 0.03-minute transport gated on Exp5811 was the other visible compute-bound entry. The data does not decompose the canary's gate, setup, model execution, or validation time, so its causal slow phase is unknown.",
+    "Task-level observability is incomplete: the point-in-time GPU snapshot cannot establish utilization during compute-bound execution or distinguish single-model from concurrent multi-model work."
+  ],
+  "improvements_suggested": [
+    "Emit phase-level timing receipts for each compute-bound task so gate, setup, model execution, and validation costs can be separated.",
+    "Capture task-scoped GPU utilization and process ownership from launch through completion instead of relying on a post-run snapshot.",
+    "Declare model concurrency in the task manifest and route only confirmed concurrent multi-model work through DualGPURunner; retain one-GPU routing for single-model tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-correlated GPU telemetry to the compute harness.",
+    "Add phase timers to gated canary execution.",
+    "Add model-count-aware runner selection with DualGPURunner reserved for concurrent multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports a runtime-concentration finding, not a causal diagnosis: the longest entry is clear, but its slow phase is not. The idle monitor snapshot should not be retroactively assigned to compute work without task-correlated samples. No supplied task record establishes concurrent model loading, so a missed DualGPURunner engagement cannot be claimed."
+}
