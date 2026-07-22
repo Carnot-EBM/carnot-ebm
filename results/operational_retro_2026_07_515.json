@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.515",
+  "generated_at": "2026-07-22T03:18:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 174.4,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Build an exact-deliverable evidence index and fail-closed collision preflight",
+      "duration_minutes": 87.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Archive terminal .514 evidence with collision-disclosed canonical deliverables a",
+      "duration_minutes": 48.65,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Ingest post-V515 source deltas with bounded bibliographic receipts",
+      "duration_minutes": 37.75,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5772 clean drift headroom: run prospective solver-certified constrai",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5774 cross-family transfer: wire a disabled online constraint-sideca",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Five experiments consumed 174.4 minutes; the three nonzero synthesis-only entries account for all recorded duration. The only compute-bound entry, 'Gated on Exp5772 clean drift headroom: run prospective solver-certified constrai', is consequently the longest compute-bound experiment at 0.0 minutes, with the supplied title establishing only that it was gated. Compute-task GPU idle was not observed, and the data provides no evidence of a concurrent multi-model run or missed DualGPURunner engagement.",
+  "bottlenecks_identified": [
+    "The exact-deliverable evidence index and fail-closed collision preflight was the dominant recorded delay at 87.97 minutes; it was synthesis-only, so GPU inactivity is expected.",
+    "Archival and source-delta ingestion added 48.65 and 37.75 minutes of synthesis-only work, concentrating the milestone's elapsed time in evidence handling.",
+    "Phase timing and model-count telemetry are absent, preventing causal diagnosis of the gated compute path and direct evaluation of parallel-runner selection."
+  ],
+  "improvements_suggested": [
+    "Maintain an incremental, content-addressed exact-deliverable evidence index and run collision checks against only changed deliverables.",
+    "Cache validated archival manifests and bibliographic receipts so synthesis closeout can reuse unchanged evidence.",
+    "Record per-phase timestamps and task-correlated GPU telemetry with model-count metadata so future retrospectives can separate gate, synthesis, and inference time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make evidence indexing and collision preflight incremental.",
+    "Reuse validated archival manifests and bibliographic receipts across milestones.",
+    "Add phase-level timing plus task-correlated GPU and model-count telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "The operational leverage is in evidence synthesis, not GPU policy: the three nonzero synthesis entries account for the recorded wall time, while the gated compute entry contributes none. The savings estimate is a bounded planning target equal to halving the 87.97-minute leader, about 25% of 174.4 minutes, rather than a measured result."
+}

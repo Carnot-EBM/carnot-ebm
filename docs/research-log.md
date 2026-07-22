@@ -5961,3 +5961,9 @@ The critical path for milestone .250:
 - theme: synthesis-heavy execution with missing compute-phase attribution
 - key result: bounded operational negative -- the visible runtime leader is the 118.15-minute synthesis-only transition task; because no compute-tagged job appears in the slowest list, compute ordering and causal timing are unavailable, the task-conditioned idle value remains false, and runner selection cannot be evaluated without concurrent-model evidence
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.515
+- exp_range: no data available this milestone
+- theme: evidence-handling latency dominated a synthesis-heavy operational closeout
+- key result: honest operational result -- the lone compute-bound entry was gated at 0.0 minutes, task-conditioned GPU idle was false, and no concurrent multi-model runner miss was evidenced; the runtime opportunity is incremental evidence indexing and receipt reuse
+- acceptance: 4/4 operational questions answered
