@@ -16618,3 +16618,61 @@ degeneracy, and leak metrics are reported over fresh matched cells only; the imp
 excluded from family inference; `panel_ready_score=1.0` only if all three real SOTA families,
 complete hashes, zero leaks, sufficient sample size, and at least two admissible independent
 hypotheses pass; and no field supports solve or registry credit.
+
+### REQ-ARC-WMTE-5820: Offline Reproduction Gate Flags Live-Unsubmittable ACTION6 Clicks
+
+**Origin:** 2026-07-22, outer-loop work under CLAUDE.md's "ARC-AGI-3 Generalization-Testing
+Floor" (task class 2: reusable-primitive hardening based on a genuine gap surfaced by a real
+measurement). The 2026-07-17 live re-validation (`results/outer_loop_live_revalidation_20260717.json`,
+`project_arc_final_sprint_state` memory) found that lf52's original L9 route reproduced cleanly
+OFFLINE (`arc_solver_kit.reproduce()` reported `reproduced: true`) while being un-submittable
+LIVE (HTTP 400 at action 849, 22 ACTION6 clicks with x up to 132, valid range 0-63). Root cause:
+the OFFLINE arcade (`arc_agi`'s `LocalEnvironmentWrapper.step()`) never validates ACTION6
+coordinates, even though the installed `arcengine` dependency already declares the live API's
+own bound (`ComplexAction.x`/`.y`: `Field(ge=0, le=63)`) -- that validation is wired only into
+the live HTTP handler (`RestAPI.cmd()` -> `action.validate_data()`), never into the local/offline
+path. lf52's specific route was fixed reactively (an alternate in-bounds action sequence, commit
+`5ca2a999b`), but the underlying gap in `reproduce()` -- THE canonical offline reproduction gate
+every future solve is supposed to pass through per "ARC Solve Reproducibility Discipline" -- was
+never closed, leaving any future solve for any game free to silently bank another
+OOB-click-dependent "win" undetected until live-submission time.
+
+`arc_solver_kit.reproduce()` SHALL additionally track, for every label in `solution` that
+decodes (via the standard `_json_action_label` JSON-string encoding) to an ACTION6 click, whether
+that click's `(x, y)` would be rejected by the live API's own declared bound. It SHALL reuse
+`arcengine.enums.GameAction.ACTION6.validate_data()` (the exact validation the live server runs)
+rather than hardcoding the `[0,63]` bound a second time, so the check stays in sync automatically
+if the live API's bound ever changes. The check SHALL be additive: it SHALL NOT change
+`reproduced`/`reached_level` semantics (offline reproduction and live-submittability are distinct
+claims -- a route can satisfy one and not the other, as lf52's original route did). Labels this
+cannot parse (an adapter-specific dialect other than the standard JSON encoding) SHALL be silently
+skipped, not silently assumed clean -- coverage SHALL be reported via `checked_action6_clicks`
+rather than claimed complete.
+
+`reproduce()`'s return dict SHALL gain three fields: `checked_action6_clicks` (int, how many
+labels were successfully parsed as an ACTION6 click and checked), `oob_action6_clicks` (list of
+`{index, x, y}` for every checked click that fails the live bound), and
+`any_oob_action6_clicks` (bool, `len(oob_action6_clicks) > 0`).
+
+### SCENARIO-ARC-WMTE-5820-REPRODUCE-FLAGS-OOB-ACTION6-CLICK
+
+**Given** a `solution` containing one ACTION6 label with `x` or `y` outside `[0, 63]`
+**When** `arc_solver_kit.reproduce()` replays it against the offline arcade
+**Then** the returned dict has `any_oob_action6_clicks=True`, `oob_action6_clicks` naming the
+exact index/x/y of the offending click, and `reproduced`/`reached_level` computed exactly as
+before this requirement (the OOB flag does not gate or alter offline-reproduction semantics).
+
+### SCENARIO-ARC-WMTE-5820-CORPUS-AUDIT-ALL-25-CLEAN
+
+**Given** all 25 currently-banked live-submission trajectories
+(`results/arc3_live_banked_trajectories/<game>.json`)
+**When** each is replayed through the hardened `reproduce()` (verified 2026-07-22 via
+`scripts/arc_action6_bounds_audit.py`, real non-mocked replay, no adapter-specific label
+dialects -- a generic raw-action apply used uniformly across all 25 games after per-adapter
+`apply()` methods were found to expect their own internal search-label dialect rather than the
+standard JSON encoding)
+**Then** all 25 games replay with zero errors, 2468 total ACTION6 clicks checked, and zero
+out-of-bounds clicks found (`results/outer_loop_action6_bounds_audit_20260722.json`) -- a real
+measurement, not an assumption, and a synthetic deliberately-out-of-bounds regression check
+(`synthetic_regression_check.synthetic_oob_detected=true`) confirms the detector itself is
+working before this "all clean" result is trusted.

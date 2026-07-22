@@ -715,6 +715,27 @@ general_gotchas:
   - sc25
   note: Exp 4438 records consolidated generic primitive active_data_collection from
     Exp 4436.
+- id: offline_arcade_permits_out_of_bounds_action6_clicks
+  derived_from_games:
+  - lf52
+  note: 'The OFFLINE arcade (arc_agi LocalEnvironmentWrapper.step()) never validates
+    ACTION6 (x,y) against the live API''s own [0,63]x[0,63] bound (arcengine''s
+    ComplexAction already declares Field(ge=0,le=63) -- that check is wired only
+    into the live HTTP handler, never the local path). A route can therefore
+    reproduce cleanly offline while 400-ing live -- exactly what happened to lf52''s
+    original L9 route (22 OOB clicks, x up to 132), found only at live-submission
+    time and fixed reactively 2026-07-17 (commit 5ca2a999b). 2026-07-22 fix:
+    arc_solver_kit.reproduce() (the canonical offline reproduction gate) now
+    reuses arcengine''s own bound to flag any ACTION6 click a solve route
+    depends on that would be rejected live (oob_action6_clicks /
+    any_oob_action6_clicks / checked_action6_clicks fields), additively --
+    reproduced/reached_level semantics are unchanged. All 25 currently-banked
+    trajectories re-audited clean (0/2468 clicks OOB) via
+    scripts/arc_action6_bounds_audit.py -- see
+    results/outer_loop_action6_bounds_audit_20260722.json and
+    openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-5820.
+    Future solves for ANY game are now caught by this check before being
+    promoted into a submission package, not just discovered live.'
 games:
 - game: r11l
   reproducibility: reproduced

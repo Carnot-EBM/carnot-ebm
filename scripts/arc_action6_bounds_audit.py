@@ -39,7 +39,9 @@ import os
 import sys
 import time
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "python"))
+sys.path.insert(
+    0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "python")
+)
 
 from carnot.agentic import arc_solver_kit as kit  # noqa: E402
 from carnot.agentic.arc_agi3_live_adapter import _game_action  # noqa: E402
@@ -51,7 +53,8 @@ OUTPUT_PATH = os.path.join(REPO_ROOT, "results", "outer_loop_action6_bounds_audi
 
 
 def _generic_apply(env, label, frame):
-    """Raw-replay apply for games with no registered GameAdapter (sc25, tn36, wa30).
+    """Raw-replay apply used for ALL 25 games (see `_apply_for`'s docstring for why per-game
+    GameAdapter.apply is deliberately NOT used here).
 
     Mirrors the pattern every real adapter's own `apply` already uses internally (e.g.
     arc_game_adapters.py's `_lf52`/`_re86`): decode the JSON label, dispatch the action id +
@@ -65,8 +68,43 @@ def _generic_apply(env, label, frame):
 
 
 def _apply_for(game: str):
-    adapter = get_adapter(game)
-    return adapter.apply if adapter is not None else _generic_apply
+    """Always use the generic raw-replay apply, never a game's own GameAdapter.apply.
+
+    Discovered by running this audit for real (not assumed up front): several adapters'
+    apply() implementations parse their OWN internal search-label dialect (e.g. a bare
+    action-id string, or a differently-templated click label) rather than the standard
+    `_json_action_label` JSON-string format this script constructs from the raw banked
+    `{"action":int,"data":{"x":..,"y":..}}` entries -- using get_adapter(game).apply here
+    raised real errors for ar25/ka59 (int() on a raw JSON string) and cd82/lp85 (KeyError
+    'x', a different label shape). _generic_apply directly interprets exactly the format
+    this script produces, uniformly, for every game -- it doesn't need any per-game
+    adapter's own idiosyncratic label parsing, which exists to interpret THAT adapter's own
+    internally-generated search labels, not externally-supplied raw action replay.
+    """
+    del game
+    return _generic_apply
+
+
+def _labels_from_bank(raw_solution: list[dict]) -> tuple[list[str], bool]:
+    """Convert a banked trajectory's structured entries into _json_action_label strings.
+
+    Most games' banks are {"action": int, "data": {"x":.., "y":..}}. lp85's bank is
+    ACTION6-only and omits the "action" key entirely (every entry is bare {"x":.., "y":..}) --
+    confirmed by direct inspection, not assumed; handled explicitly here rather than papering
+    over a KeyError, and the fallback is reported back via the returned bool so it shows up in
+    the artifact rather than being silently applied.
+    """
+    used_implicit_action6_fallback = False
+    labels = []
+    for entry in raw_solution:
+        if "action" in entry:
+            labels.append(_json_action_label(entry["action"], entry.get("data")))
+        elif {"x", "y"} <= entry.keys():
+            used_implicit_action6_fallback = True
+            labels.append(_json_action_label(6, {"x": entry["x"], "y": entry["y"]}))
+        else:
+            raise ValueError(f"unrecognized banked trajectory entry shape: {entry!r}")
+    return labels, used_implicit_action6_fallback
 
 
 def _run_synthetic_regression_check() -> dict:
@@ -114,7 +152,7 @@ def main() -> None:
         with open(os.path.join(BANKED_DIR, game + ".json")) as f:
             bank = json.load(f)
         raw_solution = bank["solution"]
-        labels = [_json_action_label(a["action"], a.get("data")) for a in raw_solution]
+        labels, used_implicit_action6_fallback = _labels_from_bank(raw_solution)
 
         adapter = get_adapter(game)
         if adapter is None:
@@ -126,6 +164,7 @@ def main() -> None:
             entry = {
                 "game": game,
                 "banked_action_count": bank.get("action_count", len(raw_solution)),
+                "used_implicit_action6_fallback": used_implicit_action6_fallback,
                 "checked_action6_clicks": result["checked_action6_clicks"],
                 "any_oob_action6_clicks": result["any_oob_action6_clicks"],
                 "oob_action6_clicks": result["oob_action6_clicks"],
@@ -137,6 +176,7 @@ def main() -> None:
             entry = {
                 "game": game,
                 "banked_action_count": bank.get("action_count", len(raw_solution)),
+                "used_implicit_action6_fallback": used_implicit_action6_fallback,
                 "checked_action6_clicks": None,
                 "any_oob_action6_clicks": None,
                 "oob_action6_clicks": None,
@@ -146,7 +186,9 @@ def main() -> None:
 
     duration_s = round(time.monotonic() - t0, 3)
     replay_errors = [e for e in per_game if e["replay_error"] is not None]
-    any_corpus_oob = any(e["any_oob_action6_clicks"] for e in per_game if e["any_oob_action6_clicks"] is not None)
+    any_corpus_oob = any(
+        e["any_oob_action6_clicks"] for e in per_game if e["any_oob_action6_clicks"] is not None
+    )
 
     checksum_input = json.dumps(
         [{"game": e["game"], "oob": e["oob_action6_clicks"]} for e in per_game], sort_keys=True
@@ -242,8 +284,10 @@ def main() -> None:
 
     print(f"Wrote {OUTPUT_PATH}")
     print(f"verdict: {verdict}")
-    print(f"games_audited={len(banked_games)} total_action6_clicks_checked={total_checked_clicks} "
-          f"total_oob_action6_clicks_found={total_oob_clicks} replay_errors={len(replay_errors)}")
+    print(
+        f"games_audited={len(banked_games)} total_action6_clicks_checked={total_checked_clicks} "
+        f"total_oob_action6_clicks_found={total_oob_clicks} replay_errors={len(replay_errors)}"
+    )
 
 
 if __name__ == "__main__":

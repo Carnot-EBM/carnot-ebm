@@ -11,9 +11,11 @@ suite covers the reusable-primitive hardening added to reproduce() so any FUTURE
 solve is flagged for this gap immediately, rather than only being discovered at
 live-submission time.
 
-Spec: CLAUDE.md "ARC-AGI-3 Generalization-Testing Floor" (task class 2: reusable-primitive
-hardening based on a genuine gap surfaced by a real measurement -- the 2026-07-17 live
-re-validation that surfaced lf52's original OOB route).
+Spec: REQ-ARC-WMTE-5820, SCENARIO-ARC-WMTE-5820-REPRODUCE-FLAGS-OOB-ACTION6-CLICK,
+SCENARIO-ARC-WMTE-5820-CORPUS-AUDIT-ALL-25-CLEAN (openspec/capabilities/
+arc-world-model-trust-energy/spec.md). Also CLAUDE.md "ARC-AGI-3 Generalization-Testing
+Floor" (task class 2: reusable-primitive hardening based on a genuine gap surfaced by a real
+measurement -- the 2026-07-17 live re-validation that surfaced lf52's original OOB route).
 """
 
 from __future__ import annotations
