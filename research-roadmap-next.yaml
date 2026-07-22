@@ -1,0 +1,208 @@
+milestone: "2026.07.517"
+milestone_title: "Channel-Qualified Continuous Self-Learning and Reachable ARC World Models"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp5796-transition-v517
+    milestone: "2026.07.517"
+    title: "Transition terminal .516 evidence and allocate collision-free .517 identities"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5796_transition_v517.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 60
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5755-transition-v514
+        verdict: "blocked: exp5755 transition preconditions failed: next_range_collision_count=3"
+        addressed_by: "The .517 transition consumes the qualified exact-deliverable index, resolves every .516 outcome by declared path plus conductor evidence, and preallocates the collision-free Exp5796-Exp5808 range rather than trusting numeric-prefix aliases."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.07.516 is terminal. Exp5782, Exp5784, Exp5785, Exp5790, and Exp5794 completed positively; Exp5783 completed with no accepted source delta; Exp5786 completed as a negative stream-readiness result after 360/360 Qwen truncations; Exp5791 blocked on bootstrap-ordered output checks; Exp5787, Exp5789, and Exp5793 gate-blocked; Exp5788 and Exp5792 have no exact deliverable; Exp5795 reconciled the milestone. This transition must archive those classes without turning operational blocks or missing artifacts into scientific nulls. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5782_transition_v516.json
+      - {project_root}/results/experiment_5784_evidence_index_terminal_qualification.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_5787_validation_gated_constraint_skill_ab.json
+      - {project_root}/results/experiment_5790_arc_world_model_admission_contract.json
+      - {project_root}/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+      - {project_root}/results/experiment_5793_arc_live_world_model_ab.json
+      - {project_root}/results/experiment_5794_hardware_terminal_action_receipt.json
+      - {project_root}/results/experiment_5795_v516_capstone_reconciliation.json
+      - {project_root}/scripts/evidence_index_collision_preflight.py
+      - {project_root}/scripts/in_process_doc_reconcile.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Archive terminal `.516` evidence by exact task/deliverable identity, append it to research-complete.yaml exactly once if absent, allocate Exp5796-Exp5808, and write results/experiment_5796_transition_v517.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: parse both roadmap YAML files; hash research-complete.yaml, conductor log, exclusion manifest, active roadmap, and every declared `.516` deliverable that exists; record free disk/RAM. Fail closed on ambiguous identity or a real Exp5796-Exp5808 collision.
+      1. Add/extend the transition REQ-* and tests before implementation. Canonical identity is `(milestone, task_id, declared_deliverable)`; same-number files are aliases only.
+      2. Resolve Exp5782-Exp5795 using exact declared paths plus conductor outcomes. Preserve complete-positive, complete-null, complete-negative, blocked-precondition, blocked-gate, failed-delivery, missing, retired, and no-solve classes as disjoint.
+      3. Append `.516` completion exactly once only if absent. Do not deduplicate, reorder, or rewrite historical milestone blocks. Record duplicate history as diagnostics.
+      4. Scan Exp5796-Exp5808 against both roadmaps, completion history, proposals, exclusion manifest, and results. Require bare `next_range_collision_count=0` before allocation.
+      5. Reconcile only transition-owned specs/docs/traceability. Leave research-roadmap.yaml and scripts/research_conductor.py byte-for-byte unchanged.
+      6. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `milestone_from`; `milestone_to`; `declared_deliverable_matrix`; `canonical_artifact_hashes`; `same_number_alias_groups`; `conductor_outcomes`; `positive_result_task_ids`; `scientific_null_task_ids`; `negative_result_task_ids`; `blocked_precondition_task_ids`; `blocked_gate_task_ids`; `failed_delivery_task_ids`; `missing_task_ids`; `retired_task_ids`; `no_solve_task_ids`; `archived_task_ids`; `research_complete_append_count`; `duplicate_history_diagnostics`; `next_task_range`; bare `next_range_collision_count`; `docs_reconciled`; `research_roadmap_unchanged=true`; `conductor_unchanged=true`; `inference_substrate=local_exact_artifact_and_conductor_reconciliation_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: exact identities support archival, outcome classes preserve epistemic honesty, and collision-free scalar receipts authorize allocation.
+      7. Run YAML parse, exact-path/hash, duplicate-task, collision, alias, terminal-verdict, history-readonly, reconciliation, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5797-v517-source-delta-ingestion
+    milestone: "2026.07.517"
+    title: "Time-windowed post-V517 literature freshness receipt"
+    priority: high
+    track: research
+    deliverable: results/experiment_5797_v517_source_delta_ingestion.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 45
+    requires_gpu: false
+    prompt: |
+      CONTEXT:
+      The V517 planning search is recorded in research-references.md at `V517-PLANNER-REFRESH-20260722-END`. This bounded execution refresh may ingest only sources newer than that marker and may add controls inside Exp5798-Exp5807. It may not rewrite IDs, gates, model requirements, retired scopes, or hardware/headline claims. Zero accepted findings is complete. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_5783_v516_source_delta_ingestion.json
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Run a bounded post-marker primary/secondary source refresh, append only non-duplicate actionable findings to research-references.md, and write results/experiment_5797_v517_source_delta_ingestion.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the V517 planner marker, next-roadmap IDs/gates, references, exclusion manifest, and active roadmap; record network/source availability. Report unavailable routes instead of fabricating results.
+      1. Add/extend research-reporting REQ-* and tests for the time window, source provenance, duplicate suppression, closed-scope protection, and roadmap immutability.
+      2. Search arXiv first for post-marker EBM verification/reasoning, neural CSPs, Ising/sampling, hallucination verification, KANs, constrained decoding, probabilistic hardware, continual learning, and ARC/world-model accreditation.
+      3. Check OpenReview, Hugging Face Papers, direct Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery/issues, Extropic writing/hardware, and Logical Intelligence public pages. Preserve URLs, dates, queries, and access outcomes.
+      4. Classify every item as accepted control, duplicate, watch-only, inaccessible, or excluded. Any accepted finding must map to Exp5798-Exp5807 without reopening grammar-as-authority, PHASE-D scoring, shadow integration, CEGIS, public ARC solves, unchanged board probes, TSU execution, or Kona execution.
+      5. Append a dated execution-refresh block only for accepted non-duplicate deltas; otherwise leave references unchanged and report `accepted_finding_count=0`.
+      6. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `planner_marker`; `search_window`; `primary_source_receipts`; `secondary_source_receipts`; `semantic_scholar_citation_receipts`; `candidate_findings`; `accepted_findings`; `duplicate_findings`; `watch_only_findings`; `inaccessible_findings`; `excluded_findings`; `accepted_finding_count`; `references_modified`; `roadmap_ids_unchanged=true`; `gates_unchanged=true`; `closed_scopes_reopened=false`; `hardware_claim_changed=false`; `inference_substrate=primary_source_metadata_and_local_ledger_synthesis_no_experiment_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: papers support hypotheses, exact local artifacts support Carnot claims, and proprietary pages are not execution evidence.
+      7. Run URL/provenance, date-window, duplicate, exclusion-manifest, roadmap-immutability, source-family, schema, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5798-sota-answer-channel-diagnostic
+    milestone: "2026.07.517"
+    title: "Forensic diagnosis of Qwen reasoning truncation and finite-choice answer channels"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5798_sota_answer_channel_diagnostic.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 90
+    requires_gpu: false
+    prompt: |
+      CONTEXT:
+      Exp5786 authenticated all three mandated SOTA GGUFs and emitted 1,080 raw rows. Both Gemma families had zero parser failures; Qwen3.6-35B-A3B truncated on all 360 rows at `max_tokens=48`. Upstream llama.cpp issue #20345 documents that grammar can constrain Qwen reasoning content, leave final content empty, or loop, while #22792 says the embedded GGUF template is the default authority and #20196 makes reasoning-disable support template/model dependent. This task diagnoses existing evidence and calls no LLM. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.rows.jsonl
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Attribute Exp5786 channel failures from existing raw receipts, preregister a bounded per-model mode matrix for real-GGUF canaries, and write results/experiment_5798_sota_answer_channel_diagnostic.json without running model inference.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the Exp5785 fixture, Exp5786 artifact/rows, relevant parser/runtime code, llama.cpp binary if present, and cached GGUF metadata; record disk/RAM. Require raw response coverage before diagnosis and fail closed on row/hash mismatch.
+      1. Add verification/reporting REQ-* and tests before implementation. Separate reasoning content, final content, parser boundary, stop reason, token exhaustion, template metadata, and exact wrongness.
+      2. Parse all existing rows and build per-model/per-stop/per-length distributions. For Qwen, determine whether the answer sentinel ever appears, whether final content is empty, whether all rows consume the exact token cap, and whether the parser would succeed with a larger bounded budget. Use Gemma as matched controls.
+      3. Inspect embedded GGUF chat-template metadata and pinned llama.cpp version/hash locally. Do not download a tokenizer and do not replace the embedded template silently. Map upstream claims to local observations without treating issue prose as a local receipt.
+      4. Preregister at least two bounded candidate modes per required family: embedded-template final-sentinel with a larger capped budget; explicit reasoning-budget/no-thinking only where metadata/runtime supports it; and a grammar/JSON arm only where reasoning/final separation is demonstrated. Each mode includes max tokens, stops, finalizer, parser, timeout, and fail-closed conditions.
+      5. Add adversarial controls for empty final content, reasoning-only output, invalid/duplicate candidate ID, schema/control-plane injection, stop collision, unclosed thinking, max-token exhaustion, and exact-answer mismatch. Grammar cannot establish semantic correctness.
+      6. Emit `channel_diagnostic_ready_score=1.0` only when every Exp5786 row is classified, local/upstream evidence is distinguished, candidate modes are executable and bounded, and the canary acceptance/retirement rules are preregistered.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `input_artifact_hashes`; `row_count`; `raw_response_coverage`; `per_model_failure_attribution`; `reasoning_content_receipts`; `final_content_receipts`; `stop_reason_counts`; `token_length_distributions`; `qwen_answer_sentinel_count`; `qwen_empty_final_count`; `qwen_exact_cap_count`; `embedded_template_metadata`; `llama_cpp_runtime_receipts`; `upstream_issue_receipts`; `local_upstream_distinction`; `candidate_mode_matrix`; bare `candidate_mode_count`; `mode_acceptance_rules`; `mode_retirement_rules`; `adversarial_control_matrix`; `llm_calls_made=0`; bare `channel_diagnostic_ready_score`; `producer_gate_fields`; `inference_substrate=offline_exact_forensics_over_existing_real_gguf_rows_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: raw local rows establish symptoms, runtime/template metadata establish transport context, upstream issues motivate controls, and exact validators establish answer truth.
+      8. Run row/hash, full-coverage, reasoning/final split, token/stop, parser negative-control, candidate-mode schema, upstream/local provenance, deterministic replay, focused coverage, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5799-sota-answer-channel-canary
+    milestone: "2026.07.517"
+    title: "Gated on Exp5798 diagnosis: qualify finite-choice channels on all three real SOTA GGUFs"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5799_sota_answer_channel_canary.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 240
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "This attempt uses a separately completed forensic mode matrix, embedded GGUF templates, raw reasoning/final separation, bounded per-model transport candidates, exact candidate IDs, and authenticated CUDA rather than the retired free-form parse channel."
+        retire_if_same_verdict: true
+      - experiment_id: exp5786-sota-hardness-controlled-constraint-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "This is a small channel canary, not a scaled stream rerun: it changes the Qwen token/reasoning/finalization transport, tests grammar only as a guarded arm, and must prove zero parser/truncation/empty-content failures before any scale task."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5798-sota-answer-channel-diagnostic
+        artifact_field: channel_diagnostic_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Real-GGUF inference starts only after existing failures and bounded candidate modes are fully classified."
+      - upstream: exp5798-sota-answer-channel-diagnostic
+        artifact_field: candidate_mode_count
+        op: ">="
+        value: 2
+        principle: "A single presumed fix cannot qualify the transport channel."
+    prompt: |
+      CONTEXT:
+      Exp5798 supplies a preregistered mode matrix for the Exp5786 Qwen truncation. This task spends only canary-scale GPU time and selects a per-model transport, not a different semantic task. Grammar is a guarded candidate because upstream Qwen thinking/grammar interactions can loop or empty final content. Every headline response comes from a real cached mandated GGUF with actual CUDA offload. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.rows.jsonl
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_5798_sota_answer_channel_diagnostic.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Execute a bounded matched channel canary on all three mandated real SOTA GGUFs, select only transport modes that preserve the finite-choice contract, and write the main artifact plus results/experiment_5799_sota_answer_channel_canary.rows.jsonl.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay Exp5798 gates; call `cached_sota_pair()` and explicitly add the third mandated model; verify cached `.gguf` paths/hashes, embedded template metadata, CUDA-enabled llama.cpp, two RTX 3090s, exact fixture subset/hash, writable output/checkpoint paths, disk/RAM, and deterministic seeds. These are input checks; do not demand load receipts or rows before execution.
+      1. Add verification REQ-* and tests before implementation. MODEL_SPECS must include `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`, with resolved path/hash, quantization, embedded template hash, runtime hash, sampling, stop, token/reasoning budget, GPU, and seed.
+      2. Select a sealed balanced canary of at least 12 independent Exp5785 units spanning all three constraint families, SAT status, solver bins, and surface pairs. Do not count repeated modes or surfaces as independent units.
+      3. For each model, run only preregistered Exp5798 modes. Capture actual offload layers/VRAM, raw reasoning and final content separately, token counts, finish reason, timeout, stop collision, and exact parser/validator result. Checkpoint after every response and prove resume equivalence.
+      4. A mode is acceptable only with raw coverage `1.0`, exact-label coverage `1.0`, and zero parser failure, truncation, empty final content, invalid ID, stop collision, timeout, schema injection acceptance, or protected-fact mutation. Exact answer errors remain reported and cannot be relabeled as parser failures.
+      5. Select at most one bounded transport per model. Different transport mechanics are allowed only when the emitted semantic contract and exact parser are identical. Retire a mode that repeats its preregistered failure. Never silently edit GGUF templates or use Hugging Face AutoTokenizer.
+      6. Compute verified accepted outputs per wall-second/token and wasted reasoning/truncated token work. Throughput without an exact accepted output is non-credit.
+      7. Emit `answer_channel_ready_score=1.0` only when `qualified_real_sota_model_count=3`, all acceptance rules pass, and on-disk rows/checkpoints/hash receipts replay. A clean Gemma-only result is complete but not ready for Exp5800.
+      8. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `MODEL_SPECS`; `models_used`; `model_runtime_receipts`; `gpu_offload_receipts`; `embedded_template_receipts`; `canary_fixture_hash`; `independent_unit_count`; `sample_size_justification`; `mode_execution_matrix`; `selected_transport_by_model`; `raw_reasoning_coverage`; `raw_final_content_coverage`; `exact_label_coverage`; `parser_failure_rate`; `truncation_rate`; `empty_final_content_rate`; `invalid_candidate_rate`; `exact_answer_error_rate`; `protected_fact_distortion_count`; `adversarial_control_results`; `verified_outputs_per_second`; `verified_outputs_per_token`; `wasted_token_count`; `checkpoint_resume_receipts`; bare `qualified_real_sota_model_count`; bare `answer_channel_ready_score`; `producer_gate_fields`; `row_file`; `row_file_sha256`; `inference_substrate=real_local_llama_cpp_cuda_gguf_generation_plus_exact_validation`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: authenticated offload establishes real inference, raw split receipts establish transport behavior, and exact validators establish answer correctness.
+      9. Run focused unit/coverage, real-GGUF load, embedded-template, reasoning/final split, parser/validator, truncation/empty/stop, adversarial schema, checkpoint/resume, row/hash, gate-replay, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

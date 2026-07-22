@@ -1,393 +1,385 @@
-# Research Roadmap vNEXT — Milestone 2026.07.516
+# Research Roadmap vNEXT — Milestone 2026.07.517
 
-**Milestone:** 2026.07.516
-**Title:** Evidence-Ready Prospective Self-Learning and Play-Adequate ARC World Models
-**Status:** Proposed
-**Task range:** Exp5782-Exp5795 (14 experiments)
-**Execution file:** `research-roadmap-next.yaml`
+**Milestone:** 2026.07.517  
+**Title:** Channel-Qualified Continuous Self-Learning and Reachable ARC World Models  
+**Status:** Proposed  
+**Task range:** Exp5796-Exp5808 (13 experiments)  
+**Execution file:** `research-roadmap-next.yaml`  
 **Date planned:** 2026-07-22
 
 ## Thesis
 
-Milestone `.515` reached a terminal conductor state without reaching its science. The transition
-and source refresh completed, and the exact-deliverable evidence index was implemented with focused
-tests, zero detected next-range collisions, zero unresolved canonical identities, and zero history
-mutations. Its terminal artifact nevertheless stayed blocked because passing tests were not recorded
-into the producer receipt; three retries then retired the prerequisite and pre-emptively gate-blocked
-the prospective constraint stream. The downstream constraint-acquisition, transfer, and shadow tasks
-therefore generated no scientific evidence.
+Milestone `.516` reached the real SOTA models and produced useful negative evidence. The exact
+evidence index and sealed constraint fixture are ready, and all three mandated GGUFs ran with
+authenticated CUDA offload. The stream was not promotable because Qwen3.6 used all 48 output tokens
+without reaching the finite-choice answer on every one of its 360 rows. The two Gemma families were
+fully parseable, but the combined parser-failure rate was `0.333333`; only 25 satisfiable-drift rows
+were available, below the learning gate. The continuous-self-learning chain therefore did not test
+learning.
 
-Milestone `.516` first repairs that producer-to-gate boundary and independently validates the sealed
-fixture before spending GPU time. It then executes the previously blocked continuous-self-learning
-question with stronger controls from new literature: exact solver hardness is crossed with
-proof-preserving surface relabelings, all SOTA runtime details are preserved, and typed constraints
-are treated as validation-gated, versioned skills evaluated on immutable future batches.
+The ARC admission contract also shipped, but the three-family single-shot panel blocked before
+generation. Its preflight demanded GPU-load receipts, fresh hypotheses, and a resume checkpoint
+before the code path that creates those artifacts. That is a bootstrap-ordering defect, not evidence
+against single-shot world-model induction. Downstream calibration and live E3 influence were not
+tested.
 
-The ARC branch remains independent. It turns the positive Gemma 4 31B single-shot induction result
-and the negative CEGIS results into an accreditation-and-selection program. Average transition
-accuracy cannot admit a model: unseen-action fidelity, calibration, pivotal-dynamics coverage, and
-closed-loop play adequacy must clear before an induced model may influence the live E3 policy.
+Milestone `.517` repairs these two evidence boundaries without relaxing them. It first diagnoses and
+qualifies per-model answer channels on small real-GGUF canaries. The Qwen arm explicitly tests the
+upstream reasoning/grammar interaction rather than assuming grammar is safe or sufficient. Only a
+three-family, parser-complete, exact-label-complete canary may trigger a scaled chronological stream.
+That stream then supports validation-gated, versioned constraint skills with future-batch admission,
+rollback, endurance, and out-of-distribution audits while every GGUF weight remains immutable.
 
-The milestone makes two claims falsifiable:
+In parallel, `.517` moves ARC load receipts, checkpoint creation, and hypothesis existence to their
+correct place in execution. It runs independent single-shot hypotheses from the three mandated SOTA
+families through the already-qualified admission contract, selects only among immutable admissible
+hypotheses using agent-owned calibration transitions, and permits one held-out live E3 A/B only if
+the selector has a positive lower bound. This is live-path generalization, not a public-game solve.
 
-1. A frozen-GGUF, solver-authoritative sidecar can add and retire typed constraint skills online,
-   reduce satisfiable drift on a prospective chronological stream, preserve facts and old-prefix
-   behavior, and transfer across generator families with exact rollback.
-2. Independent single-shot ARC world-model hypotheses can be accredited and selected solely from
-   agent-owned observations, and the selected model can improve held-out live E3 utility without
-   source, game identity, adapters, banked plans, or public-level solve credit.
+The milestone makes two falsifiable claims:
 
-## What milestone 2026.07.515 proved
+1. A bounded, model-specific transport layer can recover exact finite-choice responses from all
+   three mandated local SOTA GGUFs without hiding reasoning truncation, empty content, unsafe schema
+   control, or exact-answer errors.
+2. Frozen-model sidecar learning and immutable ARC world-model selection can improve sealed future
+   behavior under exact/live authority, with rollback and abstention when evidence is insufficient.
 
-| Branch | Terminal evidence | Consequence for `.516` |
+## What milestone 2026.07.516 proved
+
+| Branch | Terminal evidence | Consequence for `.517` |
 |---|---|---|
-| Transition and archival | Exp5769 archived `.514` by exact declared deliverable, disclosed same-number aliases, found `next_range_collision_count=0`, and preserved history. | Reuse exact identities and hashes; do not repair history by deletion or broad glob selection. |
-| Source currency | Exp5770 completed the bounded execution-time source refresh. | Preserve accepted controls, especially pivotal ARC dynamics; ingest only newer deltas at execution time. |
-| Evidence index | Exp5771 shipped `scripts/evidence_index_collision_preflight.py`, tests, and OpenSpec coverage. Its final artifact reported zero collisions, unresolved identities, and history mutations, but `evidence_index_ready_score=0.0` because passing tests were not recorded. Three runs ended `artifact_not_updated_past_bootstrap`. | This is an artifact-finalization/readiness-contract failure, not a canonical-index scientific failure. Qualify the existing implementation with explicit focused and global test receipts and a terminal finalizer. |
-| Prospective stream | Exp5772 never ran; the conductor pre-emptively skipped it after Exp5771 retired. | No null or negative scientific claim exists. Rebuild as exact fixture then SOTA generation so cheap controls fail before GPU work. |
-| Constraint learning | Exp5773/5774/5775 were gate-blocked; only generated gate receipts exist. | Execute the positive `.514` CA mechanism on new prospective evidence; include prior-failure discipline for repeated deliverable shapes. |
-| ARC | The `.515` ARC tasks were documented but not queued. The latest evidence remains Gemma 4 31B single-shot `+0.190883` pooled held-out accuracy versus the anchor, while ThinkingCap and Gemma CEGIS refinements were negative. | Compare independent single-shot families; do not retry iterative CEGIS or component composition. |
-| Hardware | No attached-board precondition changed during `.515`. | Emit one cached terminal/action receipt; do not repeat unchanged probes or claim acceleration. |
-
-The `.514` results still establish the scientific starting point: Exp5762 credited query-driven typed
-constraint acquisition with exact lifecycle receipts; Exp5763 reported positive dependent-task
-transfer and `old_task_retention_delta=+0.12`; Exp5759 did not establish useful SOTA proposal
-ordering; Exp5765 retired the allocation-free one-axis 10x PyO3 route; and Exp5766 found no
-held-out benefit from generic ARC component composition.
+| Transition and reporting | Exp5782 archived `.515` by exact declared identity. Exp5784 qualified the exact-deliverable index and Exp5795 reconciled all `.516` outcomes. | Reuse the qualified identity path. Do not reopen evidence-index repair or infer task state from numeric-prefix aliases. |
+| Source currency | Exp5783 completed with no accepted post-marker delta. | Execute one bounded V517 refresh; zero accepted findings remains a complete result. |
+| Exact constraint fixture | Exp5785 shipped the sealed hardness/surface fixture with exact labels and parser controls ready. | Reuse it byte-for-byte. No new benchmark generation is needed before channel qualification. |
+| Real SOTA stream | Exp5786 produced 1,080 rows with authenticated CUDA offload for Qwen3.6-35B-A3B, Gemma4-31B, and Gemma4-26B-A4B. Gemma4-26B scored `0.927778`, Gemma4-31B scored `0.75`, and both had zero parser failures. Qwen had 360/360 truncations at `max_tokens=48`, so `parser_failure_rate=0.333333` and `stream_ready_score=0`. | Preserve the Gemma evidence, diagnose Qwen reasoning/final-content behavior, and qualify a bounded channel before another scaled run. Do not call the Qwen result a competence failure. |
+| Continuous self-learning | Exp5787 was gate-blocked, Exp5788 had no exact deliverable, and Exp5789 repeated its gate-blocked verdict. No learning A/B, transfer, or integration evidence exists. | A future clean stream may reopen exact skill learning, but the retired shadow-integration shape remains closed. Test lifecycle durability and OOD safety without production wiring. |
+| ARC admission | Exp5790 shipped `admission_contract_ready_score=1.0`, with pivotal-dynamics and no-source-leak controls. It claimed no solve. | Reuse the immutable admission contract; do not rebuild or weaken it. |
+| ARC hypothesis panel | Exp5791 verified all three GGUFs were cached and two RTX 3090s were visible, then blocked on `headline_gpu_offload_receipts_present`, `fresh_matched_hypotheses_present`, and `resume_checkpoint_file_present` before loading or generating. | Repair execution ordering. Preconditions may check inputs and capacity; load receipts, checkpoints, and hypotheses are outputs. |
+| ARC selector/live A/B | Exp5792 produced no artifact and Exp5793 was gate-blocked. | Run them only behind new panel/admission evidence. No public solve, source, offline BFS, GameAdapter, CEGIS, or registry credit. |
+| Hardware | Exp5794 reconciled cached KV260, PolarFire, and GateMate state and made no speed/energy claim. No physical precondition changed. | Do not repeat probes. Produce a bounded self-learning microkernel/ABI handoff that can later be mapped to attached boards. |
 
 ## The three biggest gaps to the PRD vision
 
-### Gap 1 — Exact evidence exists, but the execution boundary is not reliable
+### Gap 1 — Real local models run, but a verified answer channel is not portable across families
 
-FR-12 requires verifiable reasoning, yet a semantically clean evidence index could not produce the
-bare readiness receipt that its own downstream gates consume. The experiment graph cannot be
-trusted while passing focused tests, unrelated global baseline failures, bootstrap artifacts, and
-terminal producer state are conflated. `.516` must prove exact lookup, independent receipt capture,
-atomic terminal finalization, gate replay, and collision-free allocation before expensive tasks run.
+FR-12 requires exact verification, yet exact validators cannot act on a response that never reaches
+its answer boundary. `.516` demonstrated that a common `max_tokens=48` transport is invalid for the
+Qwen3.6 reasoning model even though the same fixture and parser work for Gemma. Recent llama.cpp
+receipts also show that grammar constraints can leak into Qwen reasoning content, produce empty
+final content, or loop to the token limit. Carnot needs a model-aware but semantically identical
+transport contract with raw reasoning/final-content/stop/token receipts and fail-closed parsing.
 
-### Gap 2 — Continuous self-learning is synthetic, not prospective or durable
+### Gap 2 — FR-11 self-learning has a positive synthetic mechanism but no prospective durability
 
-FR-11 requires autonomous improvement while retaining prior knowledge. Carnot has a positive exact
-constraint lifecycle, but not on real outputs from the three mandated SOTA families, not against
-proof-preserving surface changes, and not on a sealed future suffix. It also lacks leave-one-family-
-out evidence, delayed retention, restart equivalence, and a default-off runtime adapter. Continuous
-self-learning must mean versioned sidecar state changes accepted by exact future-batch evidence;
-GGUF parameter changes, LLM judges, and protected-fact edits remain prohibited.
+The PRD calls for autonomous propose-measure-update loops that retain prior knowledge. Carnot has
+solver-authoritative typed constraint acquisition and positive dependent-task transfer from `.514`,
+but no clean prospective stream, fixed future-batch admission, multi-change endurance, memory cap,
+restart equivalence, or OOD audit. `.517` must show that versioned sidecar skills improve a sealed
+future suffix without changing protected facts, GGUF weights, exact validators, or old-prefix
+behavior. A null is acceptable; unsafe propagation is terminal.
 
-### Gap 3 — ARC world models are neither accredited nor live-path useful
+### Gap 3 — ARC world-model selection is specified but not reachable by the live agent
 
-The live agent's dominant bottleneck is upstream of search: 29 of 37 induced world models had zero
-held-out accuracy, and component/search interventions have repeatedly failed to help. A larger dense
-model improved independent single-shot induction, but high average prediction accuracy can still
-miss rare pivotal rules and lose at play. Carnot needs a game-blind admission contract, a matched
-three-family panel, calibration-only selection among immutable hypotheses, and one held-out live E3
-A/B. None of these measurements is a public-game solve.
+The admission contract is ready, while the producer blocked on outputs mislabeled as preconditions.
+The live path therefore has no matched three-family panel, no calibration-only selector, and no
+held-out E3 evidence. `.517` must create immutable hypotheses from the agent's own transitions,
+admit and select them without test leakage, and measure policy influence at the scored
+`E3AgentPolicy` entrypoint. The target is held-out action/game generalization, not another solve of
+the complete 25-game public registry.
 
-NFR-01's production 10x target remains open, but the last software technique is terminally retired.
-Hardware work in this milestone is evidence continuity only; a future speed claim requires a changed
-ABI/workload or authenticated accelerator precondition.
+NFR-01's production 10x goal remains open. The allocation-free software route is retired, and no
+attached-board state changed. This milestone narrows the hardware gap by defining and benchmarking
+a portable bounded update/lookup microkernel for accepted self-learning state; it makes no FPGA,
+thermodynamic, energy, or 10x claim.
 
 ## 2025-2026 research update and experiment hooks
 
-The complete dated search ledger is in `research-references.md` under
-`V516-PLANNER-REFRESH-20260722-END`.
+The dated search ledger is in `research-references.md` under
+`V517-PLANNER-REFRESH-20260722-END`.
 
 | Finding | Carnot implication | Experiment hook |
 |---|---|---|
-| [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047) | Solver conflict counts do not label LLM difficulty, and proof-preserving relabeling can dominate accuracy. | Exp5785 crosses solver hardness and surface rendering; Exp5786 reports both axes and identity residuals. |
-| [Verifiable Self-Evolution via Future-Feedback Prediction](https://arxiv.org/abs/2607.18973) | A frozen model can improve through validation-gated textual skills when the target is fixed before edits. | Exp5787 versions typed constraints as skills and admits them only against immutable future batches; exact solvers remain authority. |
-| [HindsightBench](https://arxiv.org/abs/2607.18867) | Model generation, quantization, and serving mode can alter measured behavior. | Exp5786 hashes model paths, quantization, llama.cpp runtime, sampling policy, prompt date, and parser version. |
-| [Validate the Dream Before You Trust Its Verdict](https://arxiv.org/abs/2607.07196) | A world model must pass an action- and embodiment-specific ladder before policy influence. | Exp5790 defines the admission contract; all later ARC tasks consume it. |
-| [When a Verified World Model Still Loses](https://arxiv.org/abs/2607.14169) | Sampled transition accuracy can be perfect while omitted pivotal dynamics cause systematic play loss. | Exp5790/5791 require pivotal-transition coverage and play-cost weighting; Exp5793 gates policy influence on them. |
-| [A2RBench](https://arxiv.org/abs/2605.17278) and [S3](https://arxiv.org/abs/2607.19232) | Cycle consistency is a malformed-model control, not accreditation; horizon-matched uncertainty is a selector diagnostic. | Exp5790 keeps cycle consistency as a negative control; Exp5792 reports hypothesis disagreement without reopening RL or transition-cycle proxies. |
-| Extropic and Logical Intelligence public updates | TSU and Kona remain relevant architecture context without an authenticated local execution surface. | No proprietary execution, speed, power, or comparator claim. |
+| [Self-Evolving World Models for LLM Agent Planning](https://arxiv.org/abs/2606.30639) | Frozen parameters can support deployment-time learning through episodic memory, persistent rules derived from mismatch, and selective use of uncertain foresight. | Exp5801-Exp5803 use exact outcomes as observations, version typed skills, future-gate edits, cap memory, and abstain/rollback under uncertainty. This does not reopen ARC CEGIS. |
+| [Reasoning-Aware SLOs](https://openreview.net/forum?id=eEZ7uze9kf) | First-token latency is not useful when reasoning branches truncate or fail verification. | Exp5799/Exp5800 report verified accepted outputs per wall-second/token and wasted/truncated token work; Exp5807 benchmarks verified useful update/lookup operations. |
+| [llama.cpp Qwen grammar/thinking issue #20345](https://github.com/ggml-org/llama.cpp/issues/20345) | Grammar may constrain reasoning content, leave final content empty, or loop; reasoning-disable support is model/template dependent. | Exp5798 builds the forensic mode matrix; Exp5799 treats grammar as one guarded candidate, uses embedded GGUF templates, and requires raw reasoning/final-content receipts. |
+| [Verifiable Self-Evolution via Future-Feedback Prediction](https://arxiv.org/abs/2607.18973) | Textual skills can be validation-gated against fixed downstream feedback while the base model stays frozen. | Exp5801 admits typed skill edits only on an immutable future batch with exact solver authority and rollback. |
+| [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047) | Solver conflicts and proof-preserving surfaces are separate causal axes. | Exp5800 preserves the `.516` fixture's crossed reporting; Exp5803 audits surface and family transfer rather than averaging them away. |
+| [When a Verified World Model Still Loses](https://arxiv.org/abs/2607.14169) | Transition accuracy alone misses pivotal dynamics needed for play. | Exp5804 reuses Exp5790's pivotal admission; Exp5805 cannot select a high-average model that fails play-cost coverage. |
+| Extropic TSU and Logical Intelligence Kona public pages | Both remain architecture-relevant but unavailable as authenticated local execution surfaces. | No proprietary execution or performance claim; the microkernel handoff stays open, local, and backend neutral. |
 
 ## Target architecture
 
 ```text
- exact-deliverable identity + terminal receipt finalizer
-                         |
-                         v
- hardness-controlled sealed fixture
- solver difficulty x proof-preserving surface relabeling
-                         |
-                         v
-  Qwen3.6-35B-A3B / Gemma4-31B / Gemma4-26B-A4B
-        immutable local GGUF prospective responses
-                         |
-              exact failure taxonomy
-       parse / contradiction / satisfiable drift /
-       protected-fact distortion / exact answer error
-                         |
-                         v
-   versioned typed-constraint skill sidecar (FR-11)
- propose -> exact query -> quarantine -> future-batch validate
-              -> commit / rollback / retire
-                         |
-            leave-one-family-out audit
-                         |
-              disabled shadow adapter
+                 exact sealed constraint fixture (Exp5785)
+                                |
+                                v
+          offline failure forensics on Exp5786 raw responses
+          reasoning | final content | stop | token exhaustion
+                                |
+                                v
+ Qwen3.6-35B-A3B ---- answer-channel canary ---- Gemma4-31B
+               \            |                 /
+                \---- Gemma4-26B-A4B --------/
+             embedded templates; guarded grammar/no-think arms
+                                |
+                    three-family clean-channel gate
+                                |
+                                v
+        sealed chronological exact response stream (no learning)
+                                |
+             solver-certified typed constraint proposals
+                                |
+                                v
+ versioned sidecar: quarantine -> fixed future validate -> commit/rollback
+                                |
+              endurance + OOD family/surface safety audits
+                                |
+           packed bounded update/lookup microkernel handoff
 
- agent-owned ARC observations/actions
-                         |
-        independent single-shot executable hypotheses
-                         |
-                         v
- syntax -> seen action -> unseen action -> calibration
-       -> pivotal dynamics -> closed-loop play adequacy
-                         |
-          immutable calibration-only selector
-                         |
-                         v
-     shared live E3AgentPolicy held-out A/B
-     (game blind; real environment is authority)
+
+ agent-owned ARC transitions -> immutable admission contract (Exp5790)
+                                |
+                                v
+       3 SOTA families x independent single-shot hypotheses
+       checkpoint/create -> load receipt -> generate -> freeze -> score
+                                |
+                                v
+        calibration-only selector over admissible hypotheses
+                                |
+                    positive lower-bound gate
+                                |
+                                v
+       held-out scored E3AgentPolicy A/B on live observations
+       no source / BFS / adapter / iterative patch / solve credit
 ```
 
-The constraint and ARC science branches share evidence discipline but no scientific gate. A null
-constraint result cannot suppress the ARC floor, and a failed ARC model cannot suppress FR-11.
+The constraint and ARC branches share exact evidence, local execution, and fail-closed gate
+principles but have no scientific dependency. Phase 3 consumes accepted constraint state only for
+the microkernel; the capstone always runs.
 
-## Phase 0 — Evidence integrity and sealed controls (Exp5782-Exp5785)
+## Phase 0 — Transition and answer-channel qualification (Exp5796-Exp5799)
 
-### Exp5782 — Transition terminal `.515` evidence and allocate `.516`
+### Exp5796 — Transition terminal `.516` evidence and allocate `.517`
 
-Archive all seven queued `.515` tasks by exact declared deliverables and conductor outcomes. Preserve
-Exp5771's three identical delivery failures and distinguish the gate-blocked tasks from scientific
-nulls. Allocate the collision-free Exp5782-Exp5795 range without changing the active roadmap.
+Archive every `.516` task by exact declared path and conductor outcome. Preserve positive,
+scientific-null, negative, blocked-precondition, blocked-gate, missing, and no-solve classes as
+distinct. Append `.516` completion exactly once and allocate Exp5796-Exp5808 collision-free.
 
-**Deliverable:** `results/experiment_5782_transition_v516.json`
+**Deliverable:** `results/experiment_5796_transition_v517.json`
 
-### Exp5783 — Post-V516 execution source-delta ingestion
+### Exp5797 — Post-V517 time-windowed source refresh
 
-Search only work newer than the V516 planner marker across the required primary and secondary
-sources. New findings may add controls or validation receipts to allocated tasks but may not rewrite
-IDs, gates, headline claims, or retired scopes. Zero accepted findings is a complete outcome.
+Search only work newer than the V517 planner marker. Findings may add bounded controls inside the
+allocated tasks, but may not rewrite IDs, gates, retired scopes, model requirements, or hardware
+claims. Zero accepted findings is complete.
 
-**Deliverable:** `results/experiment_5783_v516_source_delta_ingestion.json`
+**Deliverable:** `results/experiment_5797_v517_source_delta_ingestion.json`
 
-### Exp5784 — Evidence-index terminal qualification corrigendum
+### Exp5798 — Forensic answer-channel diagnosis
 
-Reuse the implemented Exp5771 index rather than rebuilding it. Capture the focused contract suite,
-relevant integration suite, global baseline, spec coverage, and root-clutter results as distinct
-receipts; only task-owned focused/integration failures block index readiness. Prove terminal artifact
-finalization, bare producer fields, and gate replay after the final write.
+Analyze Exp5786's complete raw rows without calling an LLM. Attribute each Qwen truncation to
+reasoning/final-content/token/stop/template behavior, compare Gemma controls, inspect embedded GGUF
+template metadata and pinned runtime receipts, and preregister a bounded candidate-mode matrix.
+Grammar is a guarded arm, not the presumed repair.
 
-**Deliverable:** `results/experiment_5784_evidence_index_terminal_qualification.json`
+**Deliverable:** `results/experiment_5798_sota_answer_channel_diagnostic.json`
 
-### Exp5785 — Hardness- and surface-controlled prospective fixture
+### Exp5799 — Three-family real-GGUF channel canary
 
-Before LLM inference, build a sealed exact fixture crossing constraint family, satisfiability,
-solver conflict bins, proof-preserving symbol/order relabeling, and protected facts. Qualify the
-finite-choice parser and exact validators with positive, negative, leakage, and metamorphic controls.
-
-**Deliverables:**
-
-- `results/experiment_5785_hardness_surface_fixture.json`
-- `results/experiment_5785_hardness_surface_fixture.rows.jsonl`
-
-## Phase 1 — Prospective continuous self-learning (Exp5786-Exp5789)
-
-### Exp5786 — Three-family prospective constraint stream
-
-Run all three mandated SOTA GGUF families over the sealed fixture under matched budgets. Preserve raw
-responses and full model/runtime receipts, checkpoint every turn, and label parser failure,
-contradiction, satisfiable drift, protected-fact distortion, exact correctness, solver hardness, and
-surface sensitivity independently. This task creates evidence and does not learn.
+Run a small matched canary on all three mandated models. Test only the preregistered modes, preserve
+raw reasoning and final content separately, and include empty-content, token-exhaustion, invalid-ID,
+schema-injection, stop, and exact-answer controls. Select a per-model transport only when it produces
+the same finite-choice semantic contract with zero parser failures and authenticated CUDA offload.
 
 **Deliverables:**
 
-- `results/experiment_5786_sota_constraint_stream.json`
-- `results/experiment_5786_sota_constraint_stream.rows.jsonl`
+- `results/experiment_5799_sota_answer_channel_canary.json`
+- `results/experiment_5799_sota_answer_channel_canary.rows.jsonl`
 
-### Exp5787 — Validation-gated typed-constraint skill A/B
+## Phase 1 — Prospective continuous self-learning (Exp5800-Exp5803)
 
-Compare frozen ledger, contradiction-only feedback, and query-driven typed-constraint skills on the
-chronological stream. Proposed edits are quarantined, evaluated on a fixed future batch, and either
-committed, refined, retired, or rolled back. Credit self-learning only with a positive paired lower
-bound on satisfiable-drift reduction, zero fact distortion/unsafe propagation, exact old-prefix
-retention, state-hash rollback, and immutable GGUF hashes.
+### Exp5800 — Channel-qualified three-family prospective stream
 
-**Deliverable:** `results/experiment_5787_validation_gated_constraint_skill_ab.json`
+Reuse the sealed Exp5785 fixture and selected Exp5799 transport for each model. Run all three
+mandated SOTA families at N>=30 independent units per primary cell, preserve checkpoint/resume and
+raw response receipts, and report solver hardness, surface sensitivity, parser failure, truncation,
+exact error, satisfiable drift, and protected-fact distortion separately. This task learns nothing.
 
-### Exp5788 — Future-batch leave-one-family-out transfer and forgetting audit
+**Deliverables:**
 
-Rotate each generator family as a held-out future stream. Separate constraint-template transfer from
-model-identity and surface-rendering shortcuts, measure delayed retention and dynamic regret, and
-include reset/retire controls for rules that become liabilities under drift.
+- `results/experiment_5800_channel_qualified_constraint_stream.json`
+- `results/experiment_5800_channel_qualified_constraint_stream.rows.jsonl`
 
-**Deliverable:** `results/experiment_5788_constraint_skill_transfer_audit.json`
+### Exp5801 — Future-validated typed-skill learning A/B
 
-### Exp5789 — Disabled shadow adapter with restart and rollback
+Compare frozen state, contradiction-only feedback, and query-driven typed skills. Proposed updates
+come only from chronological prefix evidence, remain quarantined, and are committed only if an
+immutable future batch yields a positive paired lower bound with zero unsafe propagation, exact
+old-prefix retention, and state-hash rollback. Model weights and exact validators remain immutable.
 
-Wire the credited sidecar behind a disabled-by-default verification shadow adapter. Replay a fresh
-sealed suffix through interruption/resume, size caps, quarantine, corruption recovery, retirement,
-and rollback. Default-off outputs must be byte-identical and no production answer may change.
+**Deliverable:** `results/experiment_5801_future_validated_constraint_skill_ab.json`
 
-**Deliverable:** `results/experiment_5789_constraint_skill_shadow_adapter.json`
+### Exp5802 — Multi-change endurance, retirement, and restart
 
-## Phase 2 — Play-adequate ARC world-model generalization (Exp5790-Exp5793)
+Replay at least two preregistered distribution changes through the credited lifecycle. Measure
+dynamic regret, delayed retention, rule interference, memory growth, selective abstention,
+quarantine, retirement, rollback, and interruption/resume equivalence under a fixed sidecar memory
+cap. This is the required continuous-self-learning durability experiment.
 
-### Exp5790 — ARC world-model admission and pivotal-dynamics contract
+**Deliverable:** `results/experiment_5802_constraint_skill_endurance.json`
 
-Implement a game-blind contract over agent-owned transitions: syntax/compile, exact seen-action
-replay, held-out and unseen-action fidelity, rollout calibration, cycle-consistency negative control,
-pivotal-transition coverage/play cost, and closed-loop utility. This task validates immutable models;
-it does not induce, patch, deploy, or solve with one.
+### Exp5803 — Leave-one-family/surface OOD audit
 
-**Deliverable:** `results/experiment_5790_arc_world_model_admission_contract.json`
+Hold out generator family, constraint family, and proof-preserving surface axes. Compare reset,
+frozen, transferred, and retired-rule states; separate useful transfer from model-identity shortcuts
+and safety from benefit. No shadow adapter or production answer path is introduced.
 
-### Exp5791 — Matched mandated-SOTA independent single-shot panel
+**Deliverable:** `results/experiment_5803_constraint_skill_ood_audit.json`
 
-Hash-import the existing Gemma 4 31B single-shot rows as a disclosed development anchor and run the
-missing Qwen3.6-35B-A3B and Gemma4-26B-A4B cells under the identical agent-owned split. Generate
-multiple independent single-shot hypotheses per cell, never iteratively edit them, and score every
-hypothesis through Exp5790.
+## Phase 2 — Reachable ARC world-model generalization (Exp5804-Exp5806)
 
-**Deliverable:** `results/experiment_5791_arc_sota_independent_hypothesis_panel.json`
+### Exp5804 — Bootstrap-safe matched single-shot ARC panel
 
-### Exp5792 — Calibration-only world-model hypothesis selector
+Reuse Exp5790's admission contract. Create the checkpoint/seed manifest, load each real model and
+capture offload, then generate and freeze independent single-shot hypotheses before scoring. Run
+Qwen3.6-35B-A3B, Gemma4-31B, and Gemma4-26B-A4B under matched agent-owned splits and budgets. No
+hypothesis may be iteratively patched or see source, a GameAdapter, offline BFS, or test transitions.
 
-Select among immutable independent hypotheses using only calibration transitions, complexity,
-stability, horizon-matched disagreement, and pivotal coverage. Compare first sample, random, and a
-non-deployable test oracle upper bound; evaluate once on sealed future transitions. Selection is not
-CEGIS and cannot patch a rejected model.
+**Deliverables:**
 
-**Deliverable:** `results/experiment_5792_arc_calibration_only_selector.json`
+- `results/experiment_5804_arc_bootstrap_safe_sota_panel.json`
+- `results/experiment_5804_arc_bootstrap_safe_sota_panel.hypotheses.jsonl`
 
-### Exp5793 — Held-out live E3 world-model A/B
+### Exp5805 — Calibration-only immutable-hypothesis selector
 
-If the selector and admission gates pass, compare baseline E3 against selected-world-model E3 through
-the shared live entrypoint on held-out games/actions with identical seeds and budgets. Measure live
-generalization utility and validity, not public levels. No source, GameAdapter, offline BFS, registry
-recipe, or banked plan is allowed; any incidental progress is registry-neutral and agent-owned.
+Choose only among admissible frozen hypotheses using calibration transitions, complexity, stability,
+horizon-matched disagreement, and pivotal coverage. Compare first, random, and a disclosed
+non-deployable held-out oracle upper bound. Evaluate once on the sealed test split; never patch a
+rejected hypothesis.
 
-**Deliverable:** `results/experiment_5793_arc_live_world_model_ab.json`
+**Deliverable:** `results/experiment_5805_arc_immutable_selector.json`
 
-## Phase 3 — Hardware boundary and capstone (Exp5794-Exp5795)
+### Exp5806 — Held-out live E3 generalization A/B
 
-### Exp5794 — Attached-board terminal/action and changed-precondition receipt
+If the selector has a positive paired lower bound and zero leakage, compare baseline E3 with
+selected-world-model E3 at the scored `E3AgentPolicy` entrypoint using identical held-out
+games/actions, seeds, and budgets. Report policy utility, validity, abstention, and pivotal outcomes.
+No public-game level is targeted; any incidental live success remains
+`live_agent_self_discovery` provenance and does not update the solve registry in this task.
 
-Reconcile KV260, PolarFire, and GateMate from cached exact artifacts. Run no board command unless the
-device/reachability/precondition hash changed. If unchanged, emit the precise operator action needed;
-if changed, use only the bounded non-destructive check authorized by the hardware wishlist. No
-speedup, energy, or production-readiness claim is possible.
+**Deliverable:** `results/experiment_5806_arc_live_heldout_world_model_ab.json`
 
-**Deliverable:** `results/experiment_5794_hardware_terminal_action_receipt.json`
+## Phase 3 — Hardware path and reconciliation (Exp5807-Exp5808)
 
-### Exp5795 — `.516` capstone reconciliation and phase telemetry
+### Exp5807 — Bounded self-learning update/lookup microkernel handoff
 
-Always run. Reconcile exact artifacts, gate blocks, scientific nulls, negative results, retirements,
-specs, traceability, status, changelog, completed research, and per-phase time/retry telemetry. Keep
-blocked work distinct from tested nulls, leave defaults off unless all promotion gates pass, and do
-not publish or push.
+If Exp5801 credits self-learning, translate only its accepted versioned-rule operations into a
+backend-neutral packed ABI: lookup, quarantine insert, validate/commit, retire, rollback, and state
+hash. Prove Python/Rust exact parity, benchmark verified useful operations under a preregistered
+memory cap, and map resource envelopes to cached KV260/PolarFire/GateMate constraints. Run no board
+command unless a precondition hash changed; claim no 10x, board, speed, power, or energy result.
 
-**Deliverable:** `results/experiment_5795_v516_capstone_reconciliation.json`
+**Deliverable:** `results/experiment_5807_self_learning_microkernel_handoff.json`
+
+### Exp5808 — `.517` capstone reconciliation
+
+Resolve all tasks by exact declared identity and conductor outcome, replay gates, apply repeated-
+failure retirement, compute phase telemetry, and reconcile OpenSpec, traceability, research history,
+status, changelog, known issues, and architecture only where evidence warrants it. Keep public claims,
+production sidecar influence, ARC registry credit, and hardware claims closed unless their exact
+promotion gates pass.
+
+**Deliverable:** `results/experiment_5808_v517_capstone_reconciliation.json`
 
 ## Dependency graph
 
 ```text
-Exp5782 transition
-  +--> Exp5783 source ingestion ----------------------------------+
-  +--> Exp5784 evidence qualification                             |
-  |      +--> Exp5785 exact fixture                               |
-  |              +--> Exp5786 SOTA stream                         |
-  |                      +--> Exp5787 skill A/B                    |
-  |                              +--> Exp5788 transfer audit       |
-  |                                      +--> Exp5789 shadow       |
-  |                                                                 +--> Exp5795 capstone
-  +--> Exp5790 ARC admission contract                             |
-  |      +--> Exp5791 independent hypothesis panel                |
-  |              +--> Exp5792 calibration selector               |
-  |                      +--> Exp5793 live E3 A/B                  |
-  +--> Exp5794 hardware/action receipt ---------------------------+
+Exp5796 transition ----> Exp5797 source refresh
+
+Exp5786 rows ----------> Exp5798 diagnosis
+                              |
+                              v
+                         Exp5799 canary
+                              |
+                              v
+                         Exp5800 stream
+                              |
+                              v
+                         Exp5801 skill A/B
+                              |
+                              v
+                         Exp5802 endurance
+                              |
+                              v
+                         Exp5803 OOD audit
+                              |
+                accepted skill state only
+                              v
+                         Exp5807 microkernel
+
+Exp5790 admission -----> Exp5804 SOTA panel
+                              |
+                              v
+                         Exp5805 selector
+                              |
+                              v
+                         Exp5806 live E3 A/B
+
+Exp5796-Exp5807 -------> Exp5808 capstone (always runs)
 ```
 
-All conditional dependencies are encoded as structured `gated_on` entries in
-`research-roadmap-next.yaml`. Exp5795 has no scientific gate and reconciles every skip.
+The conductor executes in numeric order. Structured `gated_on` fields skip expensive downstream
+agent calls when producer scalars fail. Exp5808 has no scientific gate.
 
-## Model requirements
+## Hardware and execution requirements
 
-Every task that performs local LLM inference must declare `MODEL_SPECS`, resolve paths through
-`cached_sota_pair()`, preserve exact hub IDs/model hashes/quantization/runtime/chat template/sampling
-receipts, and include at least one mandated model:
-
-- `unsloth/Qwen3.6-35B-A3B-GGUF` — flagship MoE
-- `unsloth/gemma-4-31B-it-GGUF` — flagship dense
-- `unsloth/gemma-4-26B-A4B-it-GGUF` — middle MoE
-
-Exp5786 and Exp5791 use all three. Exp5792/5793 declare all three eligible specifications and consume
-only the best admissible family selected upstream. Qwen3.5-0.8B and Gemma4-E4B may run CPU smoke
-tests only; they cannot populate headline metrics or satisfy a promotion gate. Missing real SOTA
-CUDA/offload evidence yields a terminal blocked artifact, never a silent tiny-model substitution.
-
-## Hardware requirements and boundaries
-
-| Resource | Tasks | Requirement / boundary |
+| Resource | Use | Requirements and boundaries |
 |---|---|---|
-| 2x RTX 3090 24 GB | Exp5786, Exp5791, Exp5792, Exp5793 | Real llama.cpp CUDA offload, VRAM before/after receipts, one large GGUF per card or sequential cells. CPU headline fallback is prohibited. |
-| CPU/RAM/disk | All; especially Exp5784-Exp5790 | Z3/exact validators available, at least 64 GB free RAM preferred and 100 GB free disk for raw responses/checkpoints. Every compute task records step-0 preconditions. |
-| ARC local environment | Exp5790-Exp5793 | Agent-owned observations/actions only. No source, GameAdapter, exhaustive offline ground-truth BFS, public-registry recipe, or banked action plan. |
-| KV260 | Exp5794 only | Cached receipt unless reachability hash changed; SSH-only bounded check; never access host storage or block devices; no speed claim. |
-| PolarFire SoC | Exp5794 only | Cached receipt unless authenticated workload state changed; disclose passive cooling and any bounded duration/temperature. |
-| GateMate A1 | Exp5794 only | No repeated detect/flash under unchanged DirtyJTAG state; emit operator cable/JTAG action. |
-| Extropic TSU / Kona | None | No authenticated local execution surface. Architecture context only. |
+| Dual NVIDIA RTX 3090, 24 GB each | Exp5799, Exp5800, Exp5804 | Real local GGUF inference through CUDA-enabled llama.cpp. Each headline row records model path/hash, quantization, embedded template hash, runtime/binary hash, requested and actual offload layers, VRAM delta/peak, token counts, stop reason, seed, and checkpoint. CPU-only smoke evidence is non-headline. |
+| Mandated GGUF cache | Exp5799, Exp5800, Exp5804 | `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Use cached `.gguf` files and embedded tokenizer/templates; never call `AutoTokenizer` on a GGUF repository. |
+| CPU/RAM/disk | All tasks | At least 64 GB host RAM recommended, enough free disk for raw rows/checkpoints, deterministic local exact validators, and atomic artifacts. Every task records precondition capacity and hashes. |
+| Z3/exact validators | Exp5798-Exp5803 | Exact labels and protected-fact authority. LLM or learned scores never replace them. |
+| KV260 | Exp5807 mapping only | Existing SSH/bitstream receipts are cached. No `/dev/mmcblk*` access, flashing, or storage writes. A bounded non-destructive check is allowed only if the canonical precondition hash changed. |
+| PolarFire SoC Icicle | Exp5807 mapping only | Existing SSH/hash smoke is cached; terminal workload validation remains absent. No performance claim without authenticated workload execution. |
+| GateMate | Exp5807 mapping only | Toolchain exists, while physical DirtyJTAG/cable state remains blocked. No repeated probe or board claim without changed physical preconditions. |
+| Extropic XTR-0/Z1 and Kona | Context only | No authenticated local route or open reproducible comparator. No execution, power, energy, certainty, or speedup claim. |
+| Network | Exp5797 only | Primary arXiv/OpenReview/official-project metadata and named secondary checks. Unavailable routes are reported, not guessed. Science inference remains local/offline. |
 
-## Promotion and retirement rules
+## Promotion criteria
 
-### Evidence branch
+| Branch | Promotion gate |
+|---|---|
+| Answer channel | All three mandated SOTA families have authenticated real-GGUF CUDA receipts, raw reasoning and final-content coverage `1.0`, exact-label coverage `1.0`, parser/truncation/empty-content rate `0.0`, and adversarial channel controls passing. |
+| Prospective stream | Channel gate passes at preregistered sample size; chronology and row hashes are sealed; exact taxonomy is complete; at least 30 independent solver-certified learnable errors exist for the learning A/B. |
+| Continuous self-learning | Paired satisfiable-drift reduction lower bound `>0`, unsafe propagation `=0`, protected-fact distortion delta `<=0`, old-prefix retention `=1.0`, rollback/restart equivalence `=1.0`, immutable GGUF hashes, and bounded state growth. |
+| OOD learning safety | Every leave-one-family/surface cell has zero unsafe propagation and exact rollback; transfer benefit is reported honestly and may be null. No shadow adapter promotion occurs in `.517`. |
+| ARC panel | All three real SOTA families actually load and generate independent immutable hypotheses; admission scores are complete; source/offline/test leakage counts are zero. Panel completion does not require an admissible model. |
+| ARC selector | At least one admissible hypothesis, selector-vs-random paired lower bound `>0`, zero test leakage, and selected hypothesis passes pivotal/play-adequacy requirements. |
+| Live ARC influence | Scored `E3AgentPolicy` utility paired lower bound `>0`, validity non-inferiority, zero source/BFS/adapter leakage, and agent-owned live provenance. No public solve or registry claim. |
+| Hardware path | Exact Python/Rust operation parity, bounded memory/state, deterministic rollback hash, and truthful verified-useful-op telemetry. No 10x or board claim. |
 
-- Exp5784 promotes only with focused and integration tests passing, exact gate replay passing,
-  collisions/unresolved/history mutations all zero, and a non-bootstrap terminal artifact.
-- Unrelated pre-existing global-suite failures are disclosed but cannot be silently relabeled as
-  task-owned failures. Any new task-owned failure blocks readiness.
-- A repeated Exp5771 verdict retires this qualification shape under `prior_failures` discipline.
+## Retired-scope and safety boundaries
 
-### Constraint branch
+- Do not rerun PHASE-D generated-text/logprob external scoring, LNN within-chain adaptation,
+  allocation-free one-axis 10x scaling, two-axis tempering, ARC transition-cycle accreditation,
+  counterexample-patched/CEGIS world models, generic component composition, cross-game value
+  transfer, or public-game solve tasks.
+- Do not recreate the retired constraint shadow-integration task. `.517` ends at endurance, OOD
+  audit, and a backend-neutral microkernel handoff.
+- Grammar-constrained decoding is not exact semantic authority and may be a safety/control-plane
+  hazard. Raw outputs, exact candidate membership, protected facts, and independent validators remain
+  authoritative.
+- A gate skip, missing artifact, bootstrap block, cached hardware receipt, development proxy, or
+  non-deployable oracle is not a scientific null or promoted result.
+- No task may modify `research-roadmap.yaml` or `scripts/research_conductor.py`, push, publish, flash
+  hardware, write board storage, or update the ARC solve registry.
 
-- Exp5786 must use real mandated SOTA inference and report solver-hardness and surface-sensitivity
-  axes separately; no single aggregate can hide parser/fact failures.
-- Exp5787 promotes only if `drift_reduction_lcb > 0`, unsafe propagation and protected-fact
-  distortion are zero, old-prefix retention is within margin, rollback hashes match, and GGUF hashes
-  are unchanged.
-- Exp5788 promotes only with a positive leave-one-family-out macro lower bound and no family-specific
-  retention failure. Exp5789 stays disabled unless both upstream science gates pass.
-- Repetition of the Exp5708 parse-failure or Exp5709/Exp5775 gate-block shape retires the new
-  prospective/shadow attempt as declared in YAML.
+## Decentralization and local-first implications
 
-### ARC branch
+The milestone uses open local GGUFs, exact local validators, content-addressed rows, versioned sidecar
+state, and a backend-neutral microkernel contract. A result can be reproduced without a proprietary
+inference or verifier service, and the accepted learning state can move with its hashes, rollback
+log, and exact authority. Extropic and Kona remain optional future substrates, not dependencies.
+This keeps Carnot's verification and learning control plane inspectable, self-hostable, and portable
+across CPU, GPU, Rust, and eventual attached hardware.
 
-- A hypothesis may enter selection only with zero source/game-identity leaks, positive held-out and
-  unseen-action evidence, calibrated rollouts, and complete preregistered pivotal-dynamics coverage.
-- Exp5792 promotes only if its test lower bound is positive versus first-sample selection and no
-  admission rung regresses.
-- Exp5793 promotes live influence only if paired live utility has a positive lower bound, validity
-  does not regress, all evaluated hypotheses remain immutable, and the live path is reachable.
-- No task claims a game level solve. Iterative CEGIS, counterexample patching, transition-cycle
-  accreditation, generic component composition, and cross-game learned value transfer remain closed.
-
-### Closed branches
-
-- Do not reopen PHASE-D generated-text/logprob scoring or LLM-as-judge authority.
-- Do not retry SOTA proposal ordering, selective proposal feedback, negative KAN scaling, or the
-  allocation-free one-axis PyO3 10x technique.
-- Do not re-solve any of the 25 complete public ARC games or claim registry credit.
-- Do not infer FPGA/TSU/Kona acceleration from cached continuity receipts.
-
-## Required milestone outputs
-
-By capstone, `.516` must leave:
-
-1. a terminally qualified exact-deliverable index and collision-free `.516` namespace;
-2. a sealed hardness/surface-controlled fixture and real three-family prospective stream;
-3. an honest continuous-self-learning verdict with future-batch, retention, rollback, safety, and
-   immutable-weight receipts;
-4. a transfer verdict and default-off shadow-adapter receipt, or explicit structured gate blocks;
-5. an ARC admission contract with pivotal-dynamics controls, matched independent-hypothesis panel,
-   and calibration-only selector verdict;
-6. one held-out live-path ARC generalization measurement or a structured selector/admission gate
-   block—never a duplicate public solve;
-7. a no-speedup attached-board terminal/operator-action receipt; and
-8. reconciled specs, traceability, research completion, operations docs, references, and phase
-   telemetry.
-
-No task may push, publish, submit, deploy, modify `scripts/research_conductor.py`, or mutate
-`research-roadmap.yaml`.

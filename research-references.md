@@ -30557,3 +30557,88 @@ they are not relabeled as new findings below.
   research experiment.
 
 <!-- V516-PLANNER-REFRESH-20260722-END -->
+
+## V517 Planner Refresh - 20260722
+
+Planning-time sweep for milestone `.517` after the terminal `.516` conductor run. The
+search rechecked 2025-2026 arXiv work on energy-based verification/reasoning, neural
+constraint satisfaction, Ising and thermodynamic sampling, hallucination controls, KANs,
+constrained generation, hardware acceleration, and continual/online learning. It also
+checked OpenReview, Hugging Face Papers, Semantic Scholar citation routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), GitHub repositories/issues, Extropic writing,
+and Logical Intelligence's public Kona pages. The findings below are either absent from
+the V516 block or materially sharpen the interpretation of the completed `.516`
+artifacts.
+
+### New actionable deltas
+
+- **Self-Evolving World Models for LLM Agent Planning** - arXiv:2606.30639,
+  https://arxiv.org/abs/2606.30639; submitted 2026-06-29. WorldEvolver keeps model
+  parameters frozen while revising deployment-time episodic memory, deriving persistent
+  semantic rules from prediction-observation mismatches, and filtering low-confidence
+  foresight before it reaches the downstream agent. Carnot hook: `.517` may treat exact
+  solver outcomes as immutable observations and versioned typed constraints as semantic
+  memory, but each edit must pass a sealed future-batch gate, retain rollback provenance,
+  and abstain when evidence is insufficient. This supports the continuous-self-learning
+  lane; it does not reopen retired ARC CEGIS/counterexample-patching or authorize GGUF
+  weight changes.
+- **Reasoning-Aware SLOs: Why TTFT and TBT Are the Wrong Metrics for o1/R1-Class
+  Models** - OpenReview MLArchSys 2026 Oral,
+  https://openreview.net/forum?id=eEZ7uze9kf; published 2026-06-26. The paper argues for
+  verified-answer yield, useful-token accounting, and abandoned-branch energy rather than
+  first-token latency alone. Carnot hook: the repaired constraint channel and ARC panel
+  should report verified accepted outputs per wall-second/token and wasted/truncated token
+  work. Latency or throughput without an exact accepted deliverable is not a speedup.
+- **llama.cpp grammar/thinking interaction on Qwen 3.x** - upstream issue #20345,
+  https://github.com/ggml-org/llama.cpp/issues/20345; reported 2026-03-10 with a Qwen3.6
+  35B A3B reproduction added 2026-04-30. The issue records grammar constraints leaking
+  into reasoning content, empty final content, loops, and token-limit exhaustion for
+  Qwen3.x thinking models. Related upstream guidance says to use the chat template embedded
+  in GGUF metadata (issue #22792,
+  https://github.com/ggml-org/llama.cpp/issues/22792) and documents that reasoning-disable
+  behavior is template/model dependent (issue #20196,
+  https://github.com/ggml-org/llama.cpp/issues/20196). Carnot hook: `.516`'s 360/360 Qwen
+  truncations at `max_tokens=48` are not evidence that Qwen lacks constraint competence.
+  `.517` must first compare bounded answer-channel modes using the embedded template,
+  explicit reasoning/token receipts, and fail-closed parsing. A grammar-only rerun is not
+  justified; grammar is a candidate arm with adversarial safety and empty-content controls.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** public EBT and ARM-EBM routes exposed no newer reproducible local
+  dependency beyond the solver-hardness, fixed-point, distributional-energy, ontology,
+  graph-energy, and safe-distillation work already indexed through V516. No citation-count
+  delta is claimed.
+- **OpenReview / Hugging Face Papers:** selective verification, V1, Energy-Based Constraint
+  Networks, and grammar-constrained-decoding safety work repeat already-indexed method
+  families. They support compute-allocation and safety controls but do not supersede exact
+  validators or reopen the retired external generated-text/logprob scorer.
+- **GitHub:** llama.cpp's Qwen reasoning/grammar receipts above are promoted because they
+  directly explain a completed local failure mode. General EBM/KAN/constrained-decoding
+  trending pages exposed no repository that supersedes Carnot's exact validators, local
+  GGUF path, typed constraint lifecycle, or live E3 policy.
+- **Extropic:** the public writing index still ends with the October 2025 X0/XTR-0/TSU
+  material. There is no authenticated Carnot-local XTR-0/Z1 route, so `.517` makes no TSU
+  execution, power, energy, or speedup claim.
+- **Logical Intelligence:** Kona 1.0's public pages continue to describe an EBM constraint
+  layer, but expose no local weights, authenticated API receipt, or reproducible comparator.
+  Kona remains architecture context rather than experiment evidence.
+
+### V517 planning impact
+
+- Separate channel diagnosis from the expensive prospective stream. Qualify Qwen and Gemma
+  answer-channel modes on a small real-GGUF canary before any N>=30-per-family run; preserve
+  raw reasoning/final-content/token/stop receipts and reject truncation or empty content.
+- Run continuous self-learning only if the repaired all-family stream is exact-label and
+  parser complete. Keep GGUF parameters frozen; commit versioned constraint skills only
+  after exact future-batch validation, then measure chronological retention, rollback, and
+  out-of-distribution transfer.
+- Repair the `.516` ARC panel's bootstrap ordering: model-load receipts, matched hypotheses,
+  and checkpoint files are execution outputs, not preconditions. Preserve immutable
+  single-shot hypotheses and forbid source inspection, offline BFS, per-game adapters,
+  iterative reinduction, or public solve credit.
+- Translate accepted self-learning state into a backend-neutral bounded update/lookup
+  microkernel and measure verified useful work. Attached-board or proprietary hardware
+  claims remain blocked unless a real execution precondition changed.
+
+<!-- V517-PLANNER-REFRESH-20260722-END -->
