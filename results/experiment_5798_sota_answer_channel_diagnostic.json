@@ -1,0 +1,771 @@
+{
+  "adversarial_control_matrix": [
+    {
+      "control_id": "empty_final_content",
+      "description": "Parser must reject present reasoning with no final label.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "reasoning_only_output",
+      "description": "Reasoning text alone cannot be credited as a candidate.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "invalid_candidate_id",
+      "description": "Unknown fixture row ids fail before exact scoring.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "duplicate_candidate_id",
+      "description": "Repeated final labels for one row fail closed.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "schema_control_plane_injection",
+      "description": "JSON or instruction injection cannot override parser boundaries.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "stop_collision",
+      "description": "A stop string inside reasoning must not create a false final.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "unclosed_thinking",
+      "description": "Open thinking tags or channels retire the mode.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "max_token_exhaustion",
+      "description": "Length termination blocks mode acceptance even if syntax is partial.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "reject"
+    },
+    {
+      "control_id": "exact_answer_mismatch",
+      "description": "Grammar-valid wrong labels remain exact validator failures.",
+      "exact_validator_required": true,
+      "fail_closed": true,
+      "grammar_can_establish_semantic_correctness": false,
+      "parser_expected": "parse_then_fail_exact"
+    }
+  ],
+  "candidate_mode_count": 6,
+  "candidate_mode_matrix": [
+    {
+      "bounded": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "missing_raw_reasoning_or_final_receipt",
+        "empty_final_content",
+        "invalid_or_duplicate_candidate_id",
+        "max_token_exhaustion",
+        "exact_validator_mismatch",
+        "cuda_offload_not_authenticated"
+      ],
+      "finalizer": "strict line '<fixture_row_id>: <candidate_label>' after optional reasoning",
+      "grammar_json": false,
+      "max_tokens": 192,
+      "mode_id": "qwen3-6-35b-a3b:embedded_template_final_sentinel_192",
+      "mode_type": "embedded_template_final_sentinel",
+      "model_family": "qwen3-6-35b-a3b",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parser": "exp5785_row_id_to_candidate_label_exact_parser",
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    },
+    {
+      "bounded": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "missing_raw_reasoning_or_final_receipt",
+        "empty_final_content",
+        "invalid_or_duplicate_candidate_id",
+        "max_token_exhaustion",
+        "exact_validator_mismatch",
+        "cuda_offload_not_authenticated",
+        "reasoning_disable_unsupported_by_metadata"
+      ],
+      "finalizer": "single strict final row-id label line",
+      "grammar_json": false,
+      "max_tokens": 128,
+      "metadata_supports_reasoning_disable": true,
+      "mode_id": "qwen3-6-35b-a3b:reasoning_disabled_final_sentinel_128",
+      "mode_type": "reasoning_disabled_final_sentinel",
+      "model_family": "qwen3-6-35b-a3b",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parser": "exp5785_row_id_to_candidate_label_exact_parser",
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    },
+    {
+      "bounded": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "missing_raw_reasoning_or_final_receipt",
+        "empty_final_content",
+        "invalid_or_duplicate_candidate_id",
+        "max_token_exhaustion",
+        "exact_validator_mismatch",
+        "cuda_offload_not_authenticated"
+      ],
+      "finalizer": "strict line '<fixture_row_id>: <candidate_label>' after optional reasoning",
+      "grammar_json": false,
+      "max_tokens": 192,
+      "mode_id": "gemma-4-31b-it:embedded_template_final_sentinel_192",
+      "mode_type": "embedded_template_final_sentinel",
+      "model_family": "gemma-4-31b-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parser": "exp5785_row_id_to_candidate_label_exact_parser",
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    },
+    {
+      "bounded": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "missing_raw_reasoning_or_final_receipt",
+        "empty_final_content",
+        "invalid_or_duplicate_candidate_id",
+        "max_token_exhaustion",
+        "exact_validator_mismatch",
+        "cuda_offload_not_authenticated",
+        "reasoning_disable_unsupported_by_metadata"
+      ],
+      "finalizer": "single strict final row-id label line",
+      "grammar_json": false,
+      "max_tokens": 128,
+      "metadata_supports_reasoning_disable": true,
+      "mode_id": "gemma-4-31b-it:reasoning_disabled_final_sentinel_128",
+      "mode_type": "reasoning_disabled_final_sentinel",
+      "model_family": "gemma-4-31b-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parser": "exp5785_row_id_to_candidate_label_exact_parser",
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    },
+    {
+      "bounded": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "missing_raw_reasoning_or_final_receipt",
+        "empty_final_content",
+        "invalid_or_duplicate_candidate_id",
+        "max_token_exhaustion",
+        "exact_validator_mismatch",
+        "cuda_offload_not_authenticated"
+      ],
+      "finalizer": "strict line '<fixture_row_id>: <candidate_label>' after optional reasoning",
+      "grammar_json": false,
+      "max_tokens": 192,
+      "mode_id": "gemma-4-26b-a4b-it:embedded_template_final_sentinel_192",
+      "mode_type": "embedded_template_final_sentinel",
+      "model_family": "gemma-4-26b-a4b-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parser": "exp5785_row_id_to_candidate_label_exact_parser",
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    },
+    {
+      "bounded": true,
+      "executable": true,
+      "fail_closed_conditions": [
+        "missing_raw_reasoning_or_final_receipt",
+        "empty_final_content",
+        "invalid_or_duplicate_candidate_id",
+        "max_token_exhaustion",
+        "exact_validator_mismatch",
+        "cuda_offload_not_authenticated",
+        "reasoning_disable_unsupported_by_metadata"
+      ],
+      "finalizer": "single strict final row-id label line",
+      "grammar_json": false,
+      "max_tokens": 128,
+      "metadata_supports_reasoning_disable": true,
+      "mode_id": "gemma-4-26b-a4b-it:reasoning_disabled_final_sentinel_128",
+      "mode_type": "reasoning_disabled_final_sentinel",
+      "model_family": "gemma-4-26b-a4b-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parser": "exp5785_row_id_to_candidate_label_exact_parser",
+      "stops": [
+        "<|eot_id|>",
+        "<stop>"
+      ],
+      "timeout_s": 900
+    }
+  ],
+  "channel_diagnostic_ready_score": 1.0,
+  "embedded_template_metadata": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "chat_template_checked_in_exp5786": true,
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "contains_enable_thinking": true,
+      "contains_reasoning_content_key": true,
+      "contains_think_tags": true,
+      "embedded_template_is_default_authority": true,
+      "gguf_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_family": "qwen3-6-35b-a3b",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "supports_reasoning_disable": true,
+      "template_length": 8057,
+      "template_metadata_source": "local_llama_cpp_vocab_only_no_generation",
+      "template_replaced": false,
+      "tokenizer_downloaded": false
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "chat_template_checked_in_exp5786": true,
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "contains_enable_thinking": true,
+      "contains_reasoning_content_key": true,
+      "contains_think_tags": false,
+      "embedded_template_is_default_authority": true,
+      "gguf_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_family": "gemma-4-26b-a4b-it",
+      "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "supports_reasoning_disable": true,
+      "template_length": 16934,
+      "template_metadata_source": "local_llama_cpp_vocab_only_no_generation",
+      "template_replaced": false,
+      "tokenizer_downloaded": false
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "chat_template_checked_in_exp5786": true,
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "contains_enable_thinking": true,
+      "contains_reasoning_content_key": true,
+      "contains_think_tags": false,
+      "embedded_template_is_default_authority": true,
+      "gguf_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_family": "gemma-4-31b-it",
+      "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "supports_reasoning_disable": true,
+      "template_length": 16934,
+      "template_metadata_source": "local_llama_cpp_vocab_only_no_generation",
+      "template_replaced": false,
+      "tokenizer_downloaded": false
+    }
+  },
+  "experiment": 5798,
+  "experiment_id": "experiment_5798_sota_answer_channel_diagnostic",
+  "field_principles": {
+    "adversarial_control_matrix": "Negative controls show why syntax constraints cannot prove semantic correctness.",
+    "candidate_mode_count": "Bare scalar prevents prose from inflating mode coverage.",
+    "candidate_mode_matrix": "Downstream canary modes are preregistered, executable, and bounded before generation.",
+    "channel_diagnostic_ready_score": "Strict gate for complete classification, provenance separation, bounded modes, and preregistered rules.",
+    "embedded_template_metadata": "GGUF template metadata supplies transport context without replacing the embedded template.",
+    "final_content_receipts": "Strict final row-id label lines are counted separately from reasoning text.",
+    "honest_verdict": "Terminal summary starts with complete: or blocked: and does not call Qwen truncation a competence failure.",
+    "inference_substrate": "Declares offline exact forensics over existing real-GGUF rows with no LLM calls.",
+    "input_artifact_hashes": "Binds Exp5785, Exp5786, row, parser/runtime, llama.cpp, and GGUF metadata evidence.",
+    "llama_cpp_runtime_receipts": "Pinned runtime/package/library receipts distinguish runtime context from model behavior.",
+    "llm_calls_made": "Bare scalar must remain zero for this offline forensics task.",
+    "local_upstream_distinction": "Local row symptoms, runtime metadata, upstream claims, and exact truth are separate.",
+    "mode_acceptance_rules": "Acceptance rules are frozen before the canary run.",
+    "mode_retirement_rules": "Retirement rules prevent looping, empty final, and grammar-only success from being promoted.",
+    "per_model_failure_attribution": "Separates parser, final-content, stop, token, template, and exact-answer evidence per model.",
+    "preconditions_checked": "Records file hashes, row coverage, disk/RAM, runtime, and template checks before attribution.",
+    "producer_gate_fields": "Names the bare fields downstream producers must inspect.",
+    "qwen_answer_sentinel_count": "Bare Qwen strict-boundary count prevents prose from hiding absent final answers.",
+    "qwen_empty_final_count": "Bare Qwen empty-final count records channel failure directly.",
+    "qwen_exact_cap_count": "Bare Qwen exact-cap count distinguishes length exits from stop-before-boundary rows.",
+    "raw_response_coverage": "Every raw row must carry response text and hash evidence before diagnosis.",
+    "reasoning_content_receipts": "Reasoning-like text is preserved as channel evidence, not semantic authority.",
+    "reproducibility_checksum": "Stable content checksum detects artifact drift.",
+    "row_count": "Bare row denominator prevents silent row loss.",
+    "status": "Terminal diagnostic state from local row/hash and schema gates.",
+    "stop_reason_counts": "Termination behavior is direct local receipt evidence.",
+    "test_commands": "Verification commands are preserved exactly.",
+    "test_exit_codes": "Observed exit codes are recorded without relabeling failures.",
+    "token_length_distributions": "Token exhaustion is measured independently from parser failure.",
+    "upstream_issue_receipts": "Issue references motivate controls but do not count as local evidence."
+  },
+  "final_content_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "answer_sentinel_count": 0,
+      "exact_match_count": 0,
+      "exact_mismatch_count": 0,
+      "final_empty_count": 360,
+      "final_nonempty_count": 0,
+      "final_sha256_samples": [],
+      "model_family": "qwen3-6-35b-a3b",
+      "not_scored_count": 360,
+      "parsed_label_counts": {
+        "": 360
+      },
+      "parser_ok_count": 0,
+      "row_count": 360
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "answer_sentinel_count": 360,
+      "exact_match_count": 334,
+      "exact_mismatch_count": 26,
+      "final_empty_count": 0,
+      "final_nonempty_count": 360,
+      "final_sha256_samples": [
+        "sha256:b4089291e1bca9b0a31b5534c987ae5817a29cf8a71105db65153d407b1f58c5",
+        "sha256:750257048116f3154552884cb5d6b30cf85d164cb67c22759babf1ab0f39e224",
+        "sha256:513e6a19299307486ba04893546425ece8279b20883a5609de0f0a1a4a5281dd"
+      ],
+      "model_family": "gemma-4-26b-a4b-it",
+      "not_scored_count": 0,
+      "parsed_label_counts": {
+        "A": 93,
+        "B": 95,
+        "C": 87,
+        "D": 85
+      },
+      "parser_ok_count": 360,
+      "row_count": 360
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "answer_sentinel_count": 360,
+      "exact_match_count": 270,
+      "exact_mismatch_count": 90,
+      "final_empty_count": 0,
+      "final_nonempty_count": 360,
+      "final_sha256_samples": [
+        "sha256:b4089291e1bca9b0a31b5534c987ae5817a29cf8a71105db65153d407b1f58c5",
+        "sha256:750257048116f3154552884cb5d6b30cf85d164cb67c22759babf1ab0f39e224",
+        "sha256:513e6a19299307486ba04893546425ece8279b20883a5609de0f0a1a4a5281dd"
+      ],
+      "model_family": "gemma-4-31b-it",
+      "not_scored_count": 0,
+      "parsed_label_counts": {
+        "A": 110,
+        "B": 76,
+        "C": 105,
+        "D": 69
+      },
+      "parser_ok_count": 360,
+      "row_count": 360
+    }
+  },
+  "honest_verdict": "complete: answer_channel_diagnostic_ready_qwen_channel_failure_not_competence_failure",
+  "inference_substrate": "offline_exact_forensics_over_existing_real_gguf_rows_no_llm",
+  "input_artifact_hashes": {
+    "cached_gguf_metadata": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+        "metadata_receipt_hash": "sha256:a834d7d89ac5002549cd1e217ca528a950a2abfffca2236ab6c70fb129ee3c9e",
+        "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "metadata_receipt_hash": "sha256:cfc6799f5b1c9b8171c6c5b52b676585bab8edc8db4c8513080936ba5ae93861",
+        "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "metadata_receipt_hash": "sha256:af7969be2568b4e138b499a3686497a444f2a710773051a2c91833c0c85af6ba",
+        "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      }
+    },
+    "exp5785_fixture_artifact": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a",
+    "exp5785_fixture_artifact_json": "sha256:23971c932cd65601aa0df6809556ca040bf8683358e14ecd9dddb2935f83cd55",
+    "exp5785_parser_code": "sha256:f1c19e9684570d8d33f2f562f880392c8fa8a0ffce147f73548229c7468a1463",
+    "exp5786_artifact": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562",
+    "exp5786_artifact_json": "sha256:c8a089a343af707bd1154a245cec7379d2f96dcf52817f977c2cc180a4bd3bc5",
+    "exp5786_parser_runtime_code": "sha256:081cfe672ad2b5e3a57bd7c0505232603e6a27a8b768b0588a5c829bfbff7def",
+    "exp5786_rows": "sha256:23005f32f36f5af7e7235d43bf4d8d5525ccefe6932e376cf5c36eb8ecab0876",
+    "exp5798_diagnostic_code": "sha256:02e03b91d9517dbf53f3609c4d4215e7ca4c6ecac0a53884aa15b1bbf58506c2",
+    "experiment_template_code": "sha256:97407d7ee103898654e31ff45ecc2ad8d5233ff068d448f2a0ef90798fcf9ef3",
+    "llama_cpp_runtime_package": "sha256:7d56ea827547bc9f31701889ec41e4dc28f3820adee9c792f5cedb3a4d33e414"
+  },
+  "llama_cpp_runtime_receipts": {
+    "package": {
+      "cuda_backend": true,
+      "libllama_hash": "sha256:314a6ea6a8349938b2d3272f03278660bcbd61bc5082705d03b8720ba7278da3",
+      "libllama_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/lib/libllama.so",
+      "python_module_hash": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+      "python_module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "standalone_binary_hash": "",
+      "standalone_binary_path": "",
+      "standalone_binary_present": false,
+      "supports_gpu_offload": true,
+      "system_info_hash": "sha256:959e16c2eadaf9b8856c780a0fa8d811ad90ce2b48559d357857efbe8049b261",
+      "version": "0.3.33"
+    },
+    "per_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+        "cuda_offload_authenticated": true,
+        "llama_cpp_version": "0.3.33",
+        "n_gpu_layers_offloaded": 41,
+        "n_gpu_layers_requested": -1,
+        "rows_attempted": 360
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "cuda_offload_authenticated": true,
+        "llama_cpp_version": "0.3.33",
+        "n_gpu_layers_offloaded": 31,
+        "n_gpu_layers_requested": -1,
+        "rows_attempted": 360
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "cuda_offload_authenticated": true,
+        "llama_cpp_version": "0.3.33",
+        "n_gpu_layers_offloaded": 61,
+        "n_gpu_layers_requested": -1,
+        "rows_attempted": 360
+      }
+    }
+  },
+  "llm_calls_made": 0,
+  "local_upstream_distinction": {
+    "grammar_can_establish_semantic_correctness": false,
+    "larger_budget_success_is_local_receipt": false,
+    "local_rows_establish": [
+      "raw text bytes",
+      "strict final-boundary presence or absence",
+      "finish reasons",
+      "completion token counts",
+      "parser and exact-validator outcomes"
+    ],
+    "qwen_competence_failure_claim_supported": false,
+    "runtime_template_metadata_establishes": [
+      "llama.cpp package/runtime context",
+      "embedded template hashes",
+      "whether metadata exposes thinking controls"
+    ],
+    "upstream_issue_prose_is_local_receipt": false,
+    "upstream_issues_motivate": [
+      "reasoning-disable canary arms",
+      "grammar guarded negative controls",
+      "embedded-template authority checks"
+    ]
+  },
+  "milestone": "2026.07.517",
+  "mode_acceptance_rules": {
+    "authenticated_cuda_offload_required": true,
+    "empty_final_allowed": false,
+    "exact_validator_authority": "Exp5785 exact labels only",
+    "grammar_success_counts_as_semantic_correctness": false,
+    "invalid_or_duplicate_candidate_allowed": false,
+    "matched_all_three_families_required": true,
+    "max_token_exhaustion_allowed": false,
+    "raw_reasoning_final_split_required": true,
+    "zero_parser_failures_required": true
+  },
+  "mode_retirement_rules": {
+    "retire_on_any_unbounded_generation": true,
+    "retire_on_empty_final_content": true,
+    "retire_on_exact_answer_mismatch_in_adversarial_control": true,
+    "retire_on_grammar_loop_or_syntax_only_success": true,
+    "retire_on_max_token_exhaustion": true,
+    "retire_on_reasoning_only_output": true,
+    "retire_on_stop_collision": true,
+    "retire_on_unclosed_thinking": true
+  },
+  "per_model_failure_attribution": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "all_rows_exact_cap": false,
+      "answer_sentinel_count": 0,
+      "attribution": "local rows show an answer-channel failure before the strict row-id label boundary; sentinel_count=0, parser_failures=360, exact_cap_rows=358/360. This is not a competence verdict.",
+      "empty_final_count": 360,
+      "exact_cap_count": 358,
+      "exact_mismatch_count": 0,
+      "failure_class_counts": {
+        "exact_token_cap": 358,
+        "final_content_empty": 360,
+        "finish_reason_length": 358,
+        "parser_boundary_missing": 360,
+        "parser_reported_truncation": 360,
+        "stop_before_boundary": 2
+      },
+      "finish_reason_length_count": 358,
+      "larger_bounded_budget_parse_status": "not_established_from_existing_rows",
+      "model_family": "qwen3-6-35b-a3b",
+      "parser_failure_count": 360,
+      "row_count": 360,
+      "stop_before_boundary_count": 2
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "all_rows_exact_cap": false,
+      "answer_sentinel_count": 360,
+      "attribution": "matched Gemma control rows reached the strict row-id label boundary; exact mismatches, if any, are scored only after deterministic parsing.",
+      "empty_final_count": 0,
+      "exact_cap_count": 0,
+      "exact_mismatch_count": 26,
+      "failure_class_counts": {
+        "exact_answer_mismatch": 26,
+        "valid_exact_match": 334
+      },
+      "finish_reason_length_count": 0,
+      "larger_bounded_budget_parse_status": "not_needed_current_rows_parse",
+      "model_family": "gemma-4-26b-a4b-it",
+      "parser_failure_count": 0,
+      "row_count": 360,
+      "stop_before_boundary_count": 0
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "all_rows_exact_cap": false,
+      "answer_sentinel_count": 360,
+      "attribution": "matched Gemma control rows reached the strict row-id label boundary; exact mismatches, if any, are scored only after deterministic parsing.",
+      "empty_final_count": 0,
+      "exact_cap_count": 0,
+      "exact_mismatch_count": 90,
+      "failure_class_counts": {
+        "exact_answer_mismatch": 90,
+        "valid_exact_match": 270
+      },
+      "finish_reason_length_count": 0,
+      "larger_bounded_budget_parse_status": "not_needed_current_rows_parse",
+      "model_family": "gemma-4-31b-it",
+      "parser_failure_count": 0,
+      "row_count": 360,
+      "stop_before_boundary_count": 0
+    }
+  },
+  "preconditions_checked": {
+    "disk": {
+      "available_mb": 1172151,
+      "ok": true,
+      "required_mb": 4096
+    },
+    "exp5785_fixture_ready_score": 1.0,
+    "exp5786_raw_response_coverage": 1.0,
+    "expected_row_count": 1080,
+    "fail_closed_on_row_or_hash_mismatch": true,
+    "llama_cpp": {
+      "cuda_backend": true,
+      "ok": true,
+      "supports_gpu_offload": true,
+      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+      "version": "0.3.33"
+    },
+    "llm_calls_made": 0,
+    "memory": {
+      "available_mb": 75328,
+      "ok": true,
+      "required_mb": 32768
+    },
+    "observed_row_count": 1080,
+    "raw_response_coverage_required": true,
+    "row_hash_replay_ok": true,
+    "run_date": "20260722"
+  },
+  "producer_gate_fields": [
+    "row_count",
+    "raw_response_coverage",
+    "per_model_failure_attribution",
+    "candidate_mode_count",
+    "llm_calls_made",
+    "channel_diagnostic_ready_score"
+  ],
+  "qwen_answer_sentinel_count": 0,
+  "qwen_empty_final_count": 360,
+  "qwen_exact_cap_count": 358,
+  "raw_response_coverage": 1.0,
+  "reasoning_content_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "model_family": "qwen3-6-35b-a3b",
+      "reasoning_empty_count": 0,
+      "reasoning_nonempty_count": 360,
+      "reasoning_sha256_samples": [
+        "sha256:9c35b9a87d0560d04c1eaac6b9c09ddc51b5034365f75d1f700fd41253a6609e",
+        "sha256:55b548b1186e887f3ff25fa3ea59686372b33c203c4b39375afb50cbe9a15c79",
+        "sha256:0a3b8c5cd208a115c740010234c5e8893950472eeab6e6651de14edb44dca503"
+      ],
+      "row_count": 360,
+      "unclosed_thinking_count": 0
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "model_family": "gemma-4-26b-a4b-it",
+      "reasoning_empty_count": 360,
+      "reasoning_nonempty_count": 0,
+      "reasoning_sha256_samples": [],
+      "row_count": 360,
+      "unclosed_thinking_count": 0
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "model_family": "gemma-4-31b-it",
+      "reasoning_empty_count": 360,
+      "reasoning_nonempty_count": 0,
+      "reasoning_sha256_samples": [],
+      "row_count": 360,
+      "unclosed_thinking_count": 0
+    }
+  },
+  "reproducibility_checksum": "sha256:1d1768e338836a190d44c2dedeb58707b6f7bb10c563edae1d9c00b38cbd8065",
+  "row_count": 1080,
+  "run_date": "20260722",
+  "schema": "carnot.experiment_5798.sota_answer_channel_diagnostic.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5798",
+    "SCENARIO-VERIFY-5798",
+    "SCENARIO-VERIFY-5798-CONTROLS",
+    "REQ-REPORT-5798",
+    "SCENARIO-REPORT-5798",
+    "SCENARIO-REPORT-5798-BLOCKED"
+  ],
+  "status": "complete",
+  "stop_reason_counts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "length": 358,
+      "stop": 2
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "stop": 360
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "stop": 360
+    }
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5798_sota_answer_channel_diagnostic.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5798_sota_answer_channel_diagnostic.py -m pytest tests/python/test_experiment_5798_sota_answer_channel_diagnostic.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5798_sota_answer_channel_diagnostic.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {},
+  "token_length_distributions": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "exact_cap_count": 358,
+      "exact_cap_fraction": 0.994444,
+      "histogram": {
+        "41": 1,
+        "45": 1,
+        "48": 358
+      },
+      "max": 48,
+      "max_tokens_configured": 48,
+      "mean": 47.972222,
+      "min": 41,
+      "n_rows": 360,
+      "per_stop_length_counts": {
+        "length:48": 358,
+        "stop:41": 1,
+        "stop:45": 1
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "exact_cap_count": 0,
+      "exact_cap_fraction": 0.0,
+      "histogram": {
+        "19": 20,
+        "21": 50,
+        "22": 20,
+        "23": 40,
+        "24": 70,
+        "25": 50,
+        "26": 70,
+        "27": 20,
+        "28": 20
+      },
+      "max": 28,
+      "max_tokens_configured": 48,
+      "mean": 24.0,
+      "min": 19,
+      "n_rows": 360,
+      "per_stop_length_counts": {
+        "stop:19": 20,
+        "stop:21": 50,
+        "stop:22": 20,
+        "stop:23": 40,
+        "stop:24": 70,
+        "stop:25": 50,
+        "stop:26": 70,
+        "stop:27": 20,
+        "stop:28": 20
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "exact_cap_count": 0,
+      "exact_cap_fraction": 0.0,
+      "histogram": {
+        "19": 20,
+        "21": 50,
+        "22": 20,
+        "23": 40,
+        "24": 70,
+        "25": 50,
+        "26": 70,
+        "27": 20,
+        "28": 20
+      },
+      "max": 28,
+      "max_tokens_configured": 48,
+      "mean": 24.0,
+      "min": 19,
+      "n_rows": 360,
+      "per_stop_length_counts": {
+        "stop:19": 20,
+        "stop:21": 50,
+        "stop:22": 20,
+        "stop:23": 40,
+        "stop:24": 70,
+        "stop:25": 50,
+        "stop:26": 70,
+        "stop:27": 20,
+        "stop:28": 20
+      }
+    }
+  },
+  "upstream_issue_receipts": {
+    "20196": {
+      "claim_summary": "Reasoning-disable behavior is template/model dependent.",
+      "evidence_role": "control_motivation",
+      "local_receipt": false,
+      "local_reference": "research-references.md:30599",
+      "url": "https://github.com/ggml-org/llama.cpp/issues/20196"
+    },
+    "20345": {
+      "claim_summary": "Qwen reasoning plus grammar can constrain thinking, leave final content empty, or loop.",
+      "evidence_role": "motivation_only",
+      "local_receipt": false,
+      "local_reference": "research-references.md:30592 and openspec/change-proposals/research-roadmap-vNEXT.md:104",
+      "url": "https://github.com/ggml-org/llama.cpp/issues/20345"
+    },
+    "22792": {
+      "claim_summary": "The embedded GGUF chat template is the default authority.",
+      "evidence_role": "transport_context_motivation",
+      "local_receipt": false,
+      "local_reference": "research-references.md:30597",
+      "url": "https://github.com/ggml-org/llama.cpp/issues/22792"
+    }
+  }
+}
