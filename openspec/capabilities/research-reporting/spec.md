@@ -43738,3 +43738,144 @@ verdict prefix is machine-readable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5796 | Implemented (`python/carnot/experiment_5796_transition_v517.py`, `results/experiment_5796_transition_v517.json`) | Implemented (`tests/python/test_experiment_5796_transition_v517.py`) |
+
+### REQ-REPORT-5797: V517 Post-Marker Source Delta Ingestion Preserves Roadmap Boundaries
+
+The Exp5797 workflow SHALL run a bounded execution refresh after the
+`V517-PLANNER-REFRESH-20260722-END` marker and SHALL write
+`results/experiment_5797_v517_source_delta_ingestion.json`. It SHALL first
+verify the planner marker, marker hash, active roadmap task IDs and gate
+content hash, `ops/exclusion_manifest.yaml` hash, `research-references.md`
+hash, active `research-roadmap.yaml` hash, optional
+`research-roadmap-next.yaml` availability, and network/source reachability. If
+the planner marker is absent, no primary or secondary source family is
+reachable, or roadmap immutability cannot be checked, the workflow SHALL emit a
+terminal `blocked:` artifact and SHALL leave `research-references.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present, and
+`scripts/research_conductor.py` unchanged.
+
+The workflow SHALL search arXiv first for post-marker work in EBM
+verification/reasoning, neural CSPs, Ising/sampling, hallucination
+verification, KANs, constrained decoding, probabilistic hardware, continual
+learning, and ARC/world-model accreditation. It SHALL then check OpenReview,
+Hugging Face Papers, direct Semantic Scholar citation APIs for EBT
+`2507.02092` and ARM-EBM `2512.15605`, GitHub discovery/issues, Extropic
+writing/hardware pages, and Logical Intelligence public pages. Every surfaced
+candidate SHALL be classified as `accepted`, `duplicate`, `watch_only`,
+`excluded`, or `inaccessible` with URL, publication or source date when
+available, search timestamp, search receipt id, access outcome, and an honest
+reason.
+
+The workflow MAY complete with zero accepted findings. An accepted finding
+SHALL be post-marker or newly actionable after the V517 marker,
+non-duplicate, and SHALL map only to allocated Exp5798-Exp5807 controls or
+validation receipts without changing task identity, IDs, gates, model
+requirements, hardware requirements, headline claims, or retired scopes. It
+SHALL NOT reopen grammar-as-authority, PHASE-D generated-text scoring,
+constraint shadow integration, CEGIS, public ARC solves, unchanged board
+probes, TSU execution, or Kona execution. If no accepted non-duplicate finding
+exists, the workflow SHALL leave `research-references.md` unchanged and set
+`accepted_finding_count=0` and `references_modified=false`. If an accepted
+non-duplicate finding exists, it MAY append one dated execution refresh block
+to `research-references.md` without rewriting the planner block.
+
+The artifact SHALL include, at minimum, bare `status`, `preconditions_checked`,
+`planner_marker`, `search_window`, `primary_source_receipts`,
+`secondary_source_receipts`, `semantic_scholar_citation_receipts`,
+`candidate_findings`, `accepted_findings`, `duplicate_findings`,
+`watch_only_findings`, `inaccessible_findings`, `excluded_findings`,
+`accepted_finding_count`, `references_modified`, `roadmap_ids_unchanged`,
+`gates_unchanged`, `closed_scopes_reopened`, `hardware_claim_changed`,
+`inference_substrate`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. It SHALL set
+`roadmap_ids_unchanged=true`, `gates_unchanged=true`,
+`closed_scopes_reopened=false`, `hardware_claim_changed=false`, and
+`inference_substrate=primary_source_metadata_and_local_ledger_synthesis_no_experiment_llm`.
+Every top-level field SHALL have a non-empty `field_principles` entry, and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal state is derived from source reachability, marker anchoring, and protected-boundary checks."
+- `preconditions_checked`: principle "Records marker, roadmap-id/gate, exclusion, reference, active-roadmap, optional-next-roadmap, conductor, and network availability checks before findings are trusted."
+- `planner_marker`: principle "Binds the search window to the V517 planner ledger boundary."
+- `search_window`: principle "States the post-marker inclusion rule and execution timestamp range without relying on mutable search indexes."
+- `primary_source_receipts`: principle "Primary metadata receipts show arXiv and directly named source availability before any hypothesis is promoted."
+- `secondary_source_receipts`: principle "Secondary feeds and discovery routes are context only unless backed by primary source metadata or local receipts."
+- `semantic_scholar_citation_receipts`: principle "Citation-route receipts are direct API evidence and do not become stable citation-count claims."
+- `candidate_findings`: principle "Every surfaced candidate is dispositioned before it can influence a Carnot task."
+- `accepted_findings`: principle "Accepted deltas must be post-marker or newly actionable, non-duplicate, and bounded to allocated Exp5798-Exp5807 controls."
+- `duplicate_findings`: principle "Planner-covered or already-ledgered sources remain visible but cannot create duplicate roadmap work."
+- `watch_only_findings`: principle "Relevant but non-executable or non-local material is monitored without supporting Carnot execution claims."
+- `inaccessible_findings`: principle "Access failures are recorded separately and never promoted."
+- `excluded_findings`: principle "Closed scopes and unsupported mechanisms remain closed by explicit disposition."
+- `accepted_finding_count`: principle "Bare scalar prevents prose from inflating zero accepted deltas."
+- `references_modified`: principle "The reference-ledger mutation state is declared and must be false when no accepted non-duplicate delta exists."
+- `roadmap_ids_unchanged`: principle "Bibliographic refresh cannot rewrite allocated task identity."
+- `gates_unchanged`: principle "Bibliographic refresh cannot rewrite conductor gate requirements."
+- `closed_scopes_reopened`: principle "Retired scopes require explicit operator authorization outside this workflow."
+- `hardware_claim_changed`: principle "Public source metadata cannot change FPGA, TSU, Kona, speed, energy, or execution claims."
+- `inference_substrate`: principle "The run synthesizes primary source metadata and local ledger evidence without experiment LLM inference."
+- `test_commands`: principle "Verification commands are preserved exactly."
+- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
+- `reproducibility_checksum`: principle "Stable content checksum detects artifact drift."
+- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not inflate novelty."
+
+#### SCENARIO-REPORT-5797-ZERO-FINDING: No Accepted Post-Marker Delta Leaves References Unchanged
+
+**Given** the V517 planner marker is present, arXiv and at least one secondary
+source family are reachable, and every surfaced item is duplicate,
+watch-only, excluded, or inaccessible
+**When** the Exp5797 workflow runs
+**Then** it writes `results/experiment_5797_v517_source_delta_ingestion.json`,
+sets `status=complete`, keeps `accepted_findings=[]`, sets
+`accepted_finding_count=0`, sets `references_modified=false`, keeps
+`roadmap_ids_unchanged=true`, `gates_unchanged=true`,
+`closed_scopes_reopened=false`, `hardware_claim_changed=false`, and emits a
+`complete:` verdict.
+
+#### SCENARIO-REPORT-5797-ACCEPT-BOUNDED-DELTA: Accepted Findings Map Only To Allocated Tasks
+
+**Given** a source is post-marker or newly actionable after the V517 marker,
+non-duplicate, and only adds a bounded control or validation receipt to
+Exp5798-Exp5807
+**When** the source is accepted
+**Then** the artifact and optional reference append record the source id, title,
+URL, date, search timestamp, source receipt, target experiment,
+authority-boundary reason, Carnot hook, and falsifiable metric while preserving
+roadmap IDs, gates, model requirements, hardware requirements, headline
+claims, and retired scopes.
+
+#### SCENARIO-REPORT-5797-BLOCKED-PROVENANCE: Missing Marker Or Source Reachability Blocks
+
+**Given** the V517 marker is absent or no primary or secondary source-route
+reachability can be established
+**When** the Exp5797 workflow runs
+**Then** it emits a blocked artifact, leaves references unchanged, keeps
+`accepted_findings=[]`, records the failed precondition, keeps
+`references_modified=false`, and starts `honest_verdict` with `blocked:`.
+
+#### SCENARIO-REPORT-5797-CLOSED-SCOPE-IMMUTABILITY: Closed Scopes And Roadmap Boundaries Are Protected
+
+**Given** a candidate would reopen grammar-as-authority, PHASE-D
+generated-text scoring, constraint shadow integration, CEGIS, public ARC
+solves, unchanged board probes, TSU execution, or Kona execution
+**When** the candidate is classified
+**Then** it is excluded or watch-only, `closed_scopes_reopened=false`,
+`hardware_claim_changed=false`, `roadmap_ids_unchanged=true`, and
+`gates_unchanged=true`.
+
+#### SCENARIO-REPORT-5797-FIELD-PRINCIPLES: Every Required Field Is Annotated
+
+**Given** the Exp5797 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level artifact field has a non-empty `field_principles`
+entry, each classified finding has URL/date/search-timestamp/reason
+provenance, each required source family has a receipt, every candidate
+classification is one of the allowed values, and the checksum is stable.
+
+## Implementation Status (REQ-REPORT-5797)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5797 | Implemented (`python/carnot/experiment_5797_v517_source_delta_ingestion.py`, `results/experiment_5797_v517_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5797_v517_source_delta_ingestion.py`) |
