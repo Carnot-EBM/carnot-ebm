@@ -30447,3 +30447,113 @@ Execution-time sweep on 2026-07-22 after the V515 planner marker. Only non-dupli
 
 <!-- V515-EXECUTION-REFRESH-20260722-END -->
 
+## V516 Planner Refresh - 20260722
+
+Planning-time sweep for milestone `.516` after the terminal `.515` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint satisfaction, Ising/sampling, hallucination detection and mitigation, KANs,
+energy-guided and constrained generation, hardware-accelerated probabilistic computing,
+and continual/online learning. It also checked OpenReview, Hugging Face Papers, GitHub
+trending/topics, Extropic writing and hardware pages, Logical Intelligence's public Kona
+and Aleph material, and direct Semantic Scholar citation-API routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`). Existing entries already cover the dominant
+fixed-point, distributional-energy, verifier, KAN, p-bit, cDLS, Extropic, and Kona lines;
+they are not relabeled as new findings below.
+
+### New actionable deltas
+
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint
+  Reasoning** - arXiv:2607.17047, https://arxiv.org/abs/2607.17047; submitted
+  2026-07-19; code and aggregate reproduction data are linked from the arXiv record.
+  Near-matched clause density and width produced a pooled model-accuracy gap consistent
+  with zero despite solver-conflict differences up to 51x, while proof-preserving
+  relabeling caused a 93-point mean loss for one model. Carnot hook: the prospective
+  mandated-SOTA constraint stream must cross exact solver hardness with proof-preserving
+  surface relabelings and report both axes independently. Solver effort is not an LLM
+  difficulty label, and model success under one rendering is not transferable evidence.
+- **Verifiable Self-Evolution for Open-Ended Dialogue Skills via Future-Feedback
+  Prediction** - arXiv:2607.18973, https://arxiv.org/abs/2607.18973; submitted
+  2026-07-21. The paper turns a moving downstream feedback target into a fixed logged
+  prediction task, then validation-gates edits to textual skills while keeping the base
+  language model frozen. Carnot hook: treat solver-certified typed constraints as
+  versioned textual skills and evaluate proposed edits against immutable chronological
+  future batches before commit. The accepted pattern is fixed-target validation plus
+  rollback, not the proprietary dialogue result; exact solvers remain authority and no
+  GGUF weights may change.
+- **HindsightBench: A Black-Box Behavioral Audit Protocol for Parametric Hindsight in
+  Time-Indexed LLM Decision Tasks** - arXiv:2607.18867,
+  https://arxiv.org/abs/2607.18867; submitted 2026-07-21. The paper reports that
+  time-indexed behavior can depend on model generation, quantization, and serving regime,
+  including a Qwen3-to-Qwen3.6 discontinuity. Carnot hook: every prospective SOTA stream
+  must preserve model path/hash, quantization, runtime, sampling policy, prompt date, and
+  parser receipts, and must keep chronology sealed. This is an operational confounder
+  control, not permission to infer training cutoffs or model internals from behavior.
+
+### Corroborating ARC controls
+
+- **When a Verified World Model Still Loses: Play-Adequacy vs Prediction-Accuracy in
+  LLM-Synthesized Code World Models** - arXiv:2607.14169,
+  https://arxiv.org/abs/2607.14169. The `.515` execution refresh already indexed this
+  paper. `.516` promotes its pivotal-dynamics result into the ARC admission contract:
+  average transition accuracy, including 100% on a sample gate, cannot authorize policy
+  influence when rare high-play-cost transitions remain uncovered.
+- **A2RBench: An Automatic Paradigm for Formally Verifiable Abstract Reasoning Benchmark
+  Generation** - arXiv:2605.17278, https://arxiv.org/abs/2605.17278. Its formal
+  forward/inverse cycle-consistency criterion is useful as a negative control for generated
+  abstract tasks. Carnot disposition: watch/control only. `.507` already retired the ARC
+  transition-cycle proxy as insufficient, so cycle consistency may detect a malformed
+  hypothesis but cannot accredit play adequacy or reopen that mechanism.
+- **S3: Stable Subgoal Selection by Constraining Uncertainty of Coarse Dynamics in
+  Hierarchical Reinforcement Learning** - arXiv:2607.19232,
+  https://arxiv.org/abs/2607.19232; ALA/AAMAS 2026 workshop. Its risk-averse use of
+  coarse-dynamics uncertainty supports reporting hypothesis disagreement at the same
+  horizon where E3 consumes a world model. Carnot disposition: bounded selector control
+  only; the MDN/HRL result is not imported evidence and does not justify RL training or a
+  new exploration-signal lane.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct citation-API queries returned a new EBT-citing item,
+  arXiv:2607.17047, which is promoted above. The remaining visible EBT trail repeated
+  Fixed-Point Reasoners, LoopUS, causal-energy parameterization, EBM workload studies,
+  temporal-difference representations, and energy-based physical reasoning. The visible
+  ARM-EBM trail repeated Distributional EBMs, Path-Measure Dynamics, safe distillation,
+  ontology and graph-energy work, and false-first-step planning. No stable citation-count
+  claim is made.
+- **OpenReview / Hugging Face Papers:** recent pages repeated CEM, EBRM, V1, CRANE,
+  compute-optimal solve/verify allocation, and Draft-and-Audit. Their learned scorers or
+  weight-update regimes do not supersede Carnot's exact validators or reopen the retired
+  PHASE-D generated-text scorer.
+- **GitHub:** trending and EBM/KAN/constraint topic checks found no reproducible repository
+  that supersedes Carnot's exact validators, typed constraint lifecycle, local GGUF path,
+  or live E3 policy. The arXiv:2607.17047 code is useful as a fixture-design reference,
+  subject to local re-generation and row hashing.
+- **Extropic:** the writing index still ends with the October 2025 X0/XTR-0/TSU material;
+  the hardware page still advertises Z1 early access in 2026 but exposes no authenticated
+  Carnot-local route. No `.516` task may claim TSU execution, energy, power, or speedup.
+- **Logical Intelligence:** public Kona/Aleph pages continue to describe an EBM constraint
+  layer and machine-checkable formal-verification orchestration, but publish no local
+  weights, authenticated API receipt, or reproducible comparator. Kona remains
+  architecture context only.
+
+### V516 planning impact
+
+- Repair and independently qualify the already-implemented exact-deliverable evidence
+  index before dispatching any expensive science. A final artifact must distinguish
+  focused contract tests from unrelated global-suite failures and must never remain a
+  bootstrap stub.
+- Rebuild the blocked prospective stream as two cheap stages: a sealed,
+  hardness-controlled/relabeling-controlled exact fixture first, then all three mandated
+  local SOTA GGUF families with complete runtime and chronology receipts.
+- Advance FR-11 through validation-gated, versioned typed-constraint skills with exact
+  chronological retention, delayed future-batch validation, quarantine, and rollback.
+  Immutable GGUF weights, exact solver authority, and protected facts remain unchanged.
+- Accredit independent single-shot ARC world-model hypotheses by action-following,
+  unseen-action robustness, calibration, leak controls, and pivotal play adequacy before
+  any held-out live E3 A/B. Do not retry CEGIS, transition-cycle accreditation, component
+  composition, cross-game value transfer, or public-game level solves.
+- Keep hardware work to changed-precondition accounting. Attached-board or proprietary
+  speedup claims require a new authenticated execution path; unchanged probes are not a
+  research experiment.
+
+<!-- V516-PLANNER-REFRESH-20260722-END -->

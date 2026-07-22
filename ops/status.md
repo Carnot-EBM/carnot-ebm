@@ -1,6 +1,28 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image-Turbo diagram-generation backend, weights downloaded and LIVE-VERIFIED — real image generated end to end)
+**Last Updated:** 2026-07-22 (milestone 2026.07.516 research plan staged; active `.515` roadmap and conductor unchanged)
+
+## Session 2026-07-22 - Milestone 2026.07.516 Research Planning
+
+**What's working:** the next milestone is staged in `research-roadmap-next.yaml` with 14
+collision-free tasks, Exp5782-Exp5795, across evidence integrity, prospective continuous
+self-learning, play-adequate ARC world models, and hardware/capstone reconciliation. The plan
+preserves all three mandated SOTA GGUF families for headline inference, keeps GGUF weights
+immutable, includes a validation-gated typed-constraint skill experiment for FR-11, and measures
+ARC generalization without claiming a public-game solve. YAML/schema validation, all 35 gate-field
+cross-references, prior-failure validation, roadmap gate audit, and exclusion-manifest lint pass.
+
+**What `.515` actually established:** Exp5769/5770 completed. Exp5771 implemented the exact-
+deliverable index with zero collisions, unresolved identities, or history mutations, but its
+producer artifact remained blocked because passing tests were not recorded and the conductor saw
+three `artifact_not_updated_past_bootstrap` failures. Exp5772-Exp5775 were gate-blocked, so `.515`
+did not test the prospective SOTA/constraint-learning science.
+
+**What's next:** activate `.516` only after operator review. Exp5784 first qualifies the existing
+index with explicit task-owned/global test receipts and terminal gate replay; Exp5785 then seals
+hardness/surface controls before Exp5786 spends GPU time. The independent ARC branch accredits
+pivotal dynamics before any selected model can influence live E3. `research-roadmap.yaml` and
+`scripts/research_conductor.py` remain unchanged.
 
 ## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image-Turbo (REQ-PUBLISH-042)
 
