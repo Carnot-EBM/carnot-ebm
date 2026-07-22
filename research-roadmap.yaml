@@ -1,203 +1,263 @@
-milestone: "2026.07.515"
-milestone_title: "Prospective Constraint Drift, Accredited World Models, and Verified Online Adaptation"
+milestone: "2026.07.516"
+milestone_title: "Evidence-Ready Prospective Self-Learning and Play-Adequate ARC World Models"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp5769-transition-v515
-    milestone: "2026.07.515"
-    title: "Archive terminal .514 evidence with collision-disclosed canonical deliverables and allocate .515"
+  - id: exp5782-transition-v516
+    milestone: "2026.07.516"
+    title: "Transition terminal .515 evidence and allocate collision-free .516 identities"
     priority: critical
-    track: transition
-    deliverable: results/experiment_5769_transition_v515.json
+    track: infrastructure
+    deliverable: results/experiment_5782_transition_v516.json
     agent_type: codex
-    model: "gpt-5.5"
+    model: gpt-5.5
     max_turns: 30
-    estimated_wall_time_min: 60
-    operator_override: "2026-05-29 standing operator directive: routine milestone-transition continuation is authorized and must preserve rather than rerun prior science."
+    estimated_wall_time_min: 45
+    requires_gpu: false
     prior_failures:
       - experiment_id: exp5755-transition-v514
         verdict: "blocked: exp5755 transition preconditions failed: next_range_collision_count=3"
-        addressed_by: "This transition uses the newly collision-scanned Exp5769-Exp5781 range and maps .514 tasks by their exact declared deliverables, while recording same-number outer-loop artifacts as aliases instead of treating glob/mtime selection as canonical."
+        addressed_by: "The .516 transition uses the shipped exact-deliverable index, a preallocated collision-free Exp5782-Exp5795 scan, alias disclosure, and conductor outcome mapping rather than the collision-ambiguous transition path that blocked Exp5755."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Milestone 2026.07.514 is terminal. Its capstone credited query-driven constraint acquisition, rejected exact SOTA proposal utility, retired the allocation-free one-axis software 10x technique, and recorded a null ARC component-interaction audit. Exp5755 itself blocked because three .514 experiment numbers collided with separately produced outer-loop ARC induction artifacts. Today is {date}.
+      Milestone 2026.07.515 is terminal. Exp5769 and Exp5770 completed; Exp5771 failed delivery three times with artifact_not_updated_past_bootstrap while its final artifact honestly reported `blocked: evidence index preflight failed closed: tests_not_recorded_passing`; Exp5772-Exp5775 were gate-blocked and generated no scientific result. This transition must preserve exact declared-deliverable identity, distinguish operational blocks from scientific nulls, and allocate Exp5782-Exp5795 without modifying the active roadmap. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/research-program.md
       - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
       - {project_root}/research-complete.yaml
       - {project_root}/ops/conductor-log.md
-      - {project_root}/ops/status.md
-      - {project_root}/ops/changelog.md
       - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/results/experiment_5755_transition_v514.json
-      - {project_root}/results/experiment_5759_sota_exact_proposal_utility_panel.json
-      - {project_root}/results/experiment_5760_selective_exact_feedback_search.json
-      - {project_root}/results/experiment_5762_query_driven_constraint_lifecycle.json
-      - {project_root}/results/experiment_5763_dependent_task_constraint_acquisition.json
-      - {project_root}/results/experiment_5765_one_axis_final_10x_crossover.json
-      - {project_root}/results/experiment_5766_arc_loo_component_interaction_audit.json
-      - {project_root}/results/experiment_5768_v514_capstone_reconciliation.json
-      - {project_root}/results/experiment_5760_cegis_refinement_induction_ab.json
-      - {project_root}/results/experiment_5764_gemma31b_singleshot_induction_ab.json
-      - {project_root}/results/experiment_5766_gemma31b_cegis_refinement_ab.json
-      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5769_transition_v515.json
+      - {project_root}/results/experiment_5770_v515_source_delta_ingestion.json
+      - {project_root}/results/experiment_5771_evidence_index_collision_preflight.json
+      - {project_root}/results/experiment_5773_prospective_constraint_acquisition_ab.json
+      - {project_root}/results/experiment_5775_constraint_sidecar_shadow_integration.json
+      - {project_root}/scripts/in_process_doc_reconcile.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Archive terminal .514 exactly once using declared deliverable paths and conductor outcomes, disclose same-number outer-loop evidence without conflation, collision-check Exp5769-Exp5781, and emit results/experiment_5769_transition_v515.json.
+      Archive the terminal `.515` conductor evidence by exact identity, allocate `.516`, and write results/experiment_5782_transition_v516.json without deleting duplicate history or treating gate blocks as tested nulls.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: verify research-roadmap.yaml still names .514, the vNEXT document names .515, every .514 task's exact declared deliverable and conductor outcome, canonical hashes, and a repository-wide collision scan for Exp5769-Exp5781. Bail with a terminal blocked artifact if any new ID is occupied or a .514 task cannot be mapped unambiguously.
-      1. Build an explicit task-to-declared-deliverable matrix for Exp5755-Exp5768. Never choose canonical evidence by `experiment_<number>_*.json` glob order or mtime.
-      2. Record the three disclosed same-number alias groups for 5760, 5764, and 5766. Preserve the conductor artifacts as .514 task evidence and the separate CEGIS/single-shot artifacts as outer-loop development-proxy evidence. Hash both; overwrite neither.
-      3. Reconcile .514 once into research-complete.yaml without deleting, deduplicating, sorting, or rewriting unrelated historical blocks. Preserve blocked, gate-skipped, negative, null, retired, and positive outcomes verbatim.
-      4. Record Exp5759 as measured-negative/not promoted, Exp5762/5763 as positive CA evidence, Exp5765 as a technique-specific 10x retirement, Exp5766 as a scientific zero, and Exp5767 as gate-blocked rather than a scientific failure.
-      5. Update only transition-owned internal traceability/status/changelog surfaces required by repository policy. Do not modify research-roadmap.yaml, scripts/research_conductor.py, public docs, or operator-curated records.
-      6. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field to its evidence boundary; bare `status`; `preconditions_checked`; `milestone_from`; `milestone_to`; `declared_deliverable_matrix`; `canonical_artifact_hashes`; `same_number_alias_groups`; `outer_loop_evidence_hashes`; `artifact_selection_policy=exact_declared_deliverable`; `conductor_outcomes`; `blocked_task_ids`; `gate_skipped_task_ids`; `scientific_null_task_ids`; `negative_result_task_ids`; `positive_result_task_ids`; `retired_technique_ids`; `archived_task_ids`; `research_complete_append_count`; `collision_scan`; `next_task_range=exp5769-exp5781`; `next_range_collision_count`; `docs_reconciled`; `research_roadmap_unchanged=true`; `conductor_unchanged=true`; `inference_substrate=cached_artifact_reconciliation_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      7. Run YAML parse, exact-deliverable hash, duplicate-task, collision, alias-disclosure, archival consistency, terminal-verdict, spec-coverage, reconciliation, and root-clutter checks.
+      0. PRECONDITIONS: parse both roadmap YAML files; hash research-complete.yaml, conductor log, exclusion manifest, active roadmap, and every declared `.515` deliverable; record free disk/RAM. Fail closed if identity resolution is ambiguous.
+      1. Add the relevant REQ-* transition requirement and tests before implementation. Define canonical identity as `(milestone, task_id, declared_deliverable)` and numeric-prefix files as aliases only.
+      2. Reconcile all seven active `.515` tasks from conductor outcomes plus exact deliverables. Preserve Exp5771's three delivery failures, the terminal blocked artifact, and all downstream GATE_BLOCK rows without manufacturing missing artifacts.
+      3. Append `.515` completion evidence exactly once only if absent. Do not deduplicate, sort, or rewrite historical milestone blocks. Report duplicate history as diagnostics.
+      4. Scan Exp5782-Exp5795 against active/next roadmaps, completion history, exclusion manifest, proposal docs, and results. `next_range_collision_count` must be a bare scalar; collisions block allocation.
+      5. Reconcile only transition-owned docs and traceability. Leave research-roadmap.yaml and scripts/research_conductor.py byte-for-byte unchanged. Do not publish.
+      6. REQUIRED ARTIFACT FIELDS: `status` (principle: terminal transition state); `preconditions_checked` (principle: exact inputs/resources checked before mutation); `milestone_from` and `milestone_to` (principle: archival boundary); `declared_deliverable_matrix` (principle: canonical evidence paths); `canonical_artifact_hashes` (principle: immutable evidence identity); `same_number_alias_groups` (principle: aliases never become canonical); `conductor_outcomes` (principle: execution authority); `blocked_task_ids`, `gate_skipped_task_ids`, `scientific_null_task_ids`, and `positive_result_task_ids` (principle: outcome classes stay disjoint); `archived_task_ids` and `research_complete_append_count` (principle: exactly-once archive receipt); `duplicate_history_diagnostics` (principle: history is read-only); `next_task_range`; bare `next_range_collision_count` (principle: namespace safety gate); `docs_reconciled`; `research_roadmap_unchanged=true`; `conductor_unchanged=true`; `inference_substrate=local_exact_artifact_and_conductor_reconciliation_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
+      7. Run YAML parse, exact-path lookup, hash, duplicate-task, collision, alias, terminal-verdict, history-readonly, reconciliation, spec-coverage, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5770-v515-source-delta-ingestion
-    milestone: "2026.07.515"
-    title: "Ingest post-V515 source deltas with bounded bibliographic receipts"
+  - id: exp5783-v516-source-delta-ingestion
+    milestone: "2026.07.516"
+    title: "Time-windowed literature freshness receipt"
     priority: high
     track: research
-    deliverable: results/experiment_5770_v515_source_delta_ingestion.json
-    model: sonnet
+    deliverable: results/experiment_5783_v516_source_delta_ingestion.json
+    agent_type: codex
+    model: gpt-5.5
     max_turns: 30
-    estimated_wall_time_min: 90
-    prior_failures:
-      - experiment_id: exp5756-v514-source-delta-ingestion
-        verdict: "complete: no new non-duplicate actionable V514 source deltas; references left unchanged"
-        addressed_by: "This searches only work newer than the V515 planner marker and treats zero accepted deltas as a successful bounded refresh rather than manufacturing novelty."
-        retire_if_same_verdict: true
+    estimated_wall_time_min: 45
+    requires_gpu: false
     prompt: |
       CONTEXT:
-      The V515 planner searched the required 2025-2026 sources and added arXiv:2607.07196 as the new ARC world-model accreditation control. Execution-time ingestion may accept only genuinely newer or newly actionable findings and cannot silently alter task IDs, gates, dependencies, or headline claims. Today is {date}.
+      The V516 planning search is recorded in research-references.md at `V516-PLANNER-REFRESH-20260722-END`. This bounded execution refresh may discover work newer than that marker, but it may only add controls or receipts within allocated tasks. It may not rewrite IDs, gates, model requirements, headline claims, or retired scopes. Zero accepted deltas is a complete result. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
       - {project_root}/research-program.md
       - {project_root}/research-references.md
-      - {project_root}/research-roadmap.yaml
-      - {project_root}/research-roadmap-next.yaml
       - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_5756_v514_source_delta_ingestion.json
+      - {project_root}/results/experiment_5770_v515_source_delta_ingestion.json
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Search for post-V515 non-duplicate research deltas, append only actionable findings to research-references.md, classify all surfaced items honestly, and emit results/experiment_5770_v515_source_delta_ingestion.json.
+      Run a bounded post-marker source refresh, append only non-duplicate actionable findings to research-references.md, and write results/experiment_5783_v516_source_delta_ingestion.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: verify the `V515-PLANNER-REFRESH-20260721-END` marker and hash, network/source reachability, current UTC timestamp, exclusion-manifest hash, and active-roadmap hash. Bail cleanly when provenance cannot be established.
-      1. Search arXiv first for 2025-2026 EBM reasoning/verification, constraint acquisition/satisfaction, Ising/sampling, hallucination mitigation, KAN, constrained generation, probabilistic hardware, online learning, and adaptive world models. Then check OpenReview, Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers, GitHub discovery, Extropic writing, and Logical Intelligence.
-      2. Deduplicate against the full references ledger and V515 block. Classify each candidate as `accepted`, `duplicate`, `watch_only`, `excluded`, or `inaccessible`, with URL, publication date, search timestamp, and reason.
-      3. Accept a finding only if it sharpens an existing Exp5772-Exp5779 control or validation boundary without reopening retired proposal scoring, KAN scale-up, CEGIS, PHASE-D text scoring, Rust 10x, public ARC solving, or unsupported hardware claims.
-      4. Any requested dependency, gate, model, ID, hardware, or claim change must be recorded as `operator_review_required=true`; do not change the roadmap here. Zero accepted findings is a terminal `complete:` outcome.
-      5. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field; bare `status`; `preconditions_checked`; `planner_marker`; `planner_marker_hash`; `search_started_at`; `search_finished_at`; `actual_search_wall_time_s`; `source_queries`; `source_receipts`; `arxiv_receipts`; `openreview_receipts`; `semantic_scholar_receipts`; `huggingface_receipts`; `github_receipts`; `extropic_receipts`; `logical_intelligence_receipts`; `accepted_findings`; `duplicate_findings`; `watch_only_findings`; `excluded_findings`; `inaccessible_findings`; `references_changed`; `references_diff_hash`; `roadmap_scope_change_requested`; `operator_review_required`; `closed_scopes_reopened=false`; `hardware_claim_changed=false`; `inference_substrate=web_bibliographic_research_no_local_model_inference`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      6. Run URL/provenance, date-window, duplicate, exclusion-manifest, roadmap-immutability, closed-scope, schema, spec-coverage, and root-clutter checks.
+      0. PRECONDITIONS: hash the planner marker, roadmap IDs/gates, exclusion manifest, references, and active roadmap; record network/search availability. If a source is unavailable, record it rather than fabricating a result.
+      1. Add/extend the research-reporting REQ-* and tests for the post-marker search window, provenance, duplicate suppression, closed-scope protection, and roadmap immutability.
+      2. Search arXiv first for post-marker work in EBM verification/reasoning, neural CSPs, Ising/sampling, hallucination verification, KANs, constrained decoding, accelerated probabilistic hardware, online learning, and ARC/world-model accreditation.
+      3. Check OpenReview, Hugging Face Papers, direct Semantic Scholar citation APIs for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery, Extropic writing/hardware, and Logical Intelligence public pages. Preserve URLs, dates, queries, and access outcomes.
+      4. Classify every candidate as accepted control, duplicate, watch-only, inaccessible, or excluded. Any accepted finding must map to Exp5784-Exp5794 without changing task identity or reopening CEGIS, generated-text scoring, KAN scaling, allocation-free 10x, public ARC solves, TSU, or Kona execution.
+      5. Append a dated execution-refresh block only if there is an accepted non-duplicate delta; otherwise leave references unchanged and report `accepted_finding_count=0`.
+      6. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `planner_marker`; `search_window`; `primary_source_receipts`; `secondary_source_receipts`; `semantic_scholar_citation_receipts`; `candidate_findings`; `accepted_findings`; `duplicate_findings`; `watch_only_findings`; `excluded_findings`; `accepted_finding_count`; `references_modified`; `roadmap_ids_unchanged=true`; `gates_unchanged=true`; `closed_scopes_reopened=false`; `hardware_claim_changed=false`; `inference_substrate=primary_source_metadata_and_local_ledger_synthesis_no_experiment_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: sources support hypotheses, exact local artifacts support Carnot claims, and inaccessible proprietary systems provide no execution evidence.
+      7. Run URL/provenance, date-window, duplicate, exclusion-manifest, roadmap-immutability, source-family, schema, spec-coverage, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5771-evidence-index-collision-preflight
-    milestone: "2026.07.515"
-    title: "Build an exact-deliverable evidence index and fail-closed collision preflight"
+  - id: exp5784-evidence-index-terminal-qualification
+    milestone: "2026.07.516"
+    title: "Qualify the existing exact-deliverable index with terminal test receipts and gate replay"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_5771_evidence_index_collision_preflight.json
-    agent_type: claude
-    model: opus
+    deliverable: results/experiment_5784_evidence_index_terminal_qualification.json
+    agent_type: codex
+    model: gpt-5.5
     max_turns: 100
-    estimated_wall_time_min: 180
+    estimated_wall_time_min: 120
+    requires_gpu: false
     prior_failures:
-      - experiment_id: exp5755-transition-v514
-        verdict: "blocked: exp5755 transition preconditions failed: next_range_collision_count=3"
-        addressed_by: "This creates a tested read-only index keyed by roadmap task ID plus exact declared deliverable and explicitly models alias artifacts, so future evidence lookup cannot silently choose a same-number outer-loop file."
+      - experiment_id: exp5771-evidence-index-collision-preflight
+        verdict: "blocked: evidence index preflight failed closed: tests_not_recorded_passing"
+        addressed_by: "This reuses the implemented index, records focused/integration/global/spec checks as separate explicit receipts, writes a distinct qualification artifact through an atomic terminal finalizer, and replays the bare gate fields after finalization instead of rebuilding the same bootstrap-prone task."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5755 exposed a recurring evidence-integrity flaw: numeric experiment prefixes are not unique across conductor and outer-loop work, while several helpers use broad globs and latest-mtime selection. The historical research-complete ledger also contains duplicate milestone blocks. This task adds a read-only canonical projection and preflight without rewriting history or modifying the conductor. Today is {date}.
+      Exp5771 implemented the exact-deliverable index, tests, and spec. Its artifact found zero next-range collisions, zero unresolved canonical identities, and zero history mutations, but readiness stayed 0 because passing tests were not supplied to the producer. The conductor then saw three artifact_not_updated_past_bootstrap failures. This corrigendum qualifies the existing implementation and must distinguish task-owned checks from unrelated global baseline failures. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
+      - {project_root}/results/experiment_5771_evidence_index_collision_preflight.json
+      - {project_root}/scripts/evidence_index_collision_preflight.py
+      - {project_root}/tests/python/test_evidence_index_collision_preflight.py
+      - {project_root}/scripts/conductor_gates.py
+      - {project_root}/scripts/exclusion_manifest_lint.py
       - {project_root}/research-roadmap.yaml
       - {project_root}/research-roadmap-next.yaml
       - {project_root}/research-complete.yaml
-      - {project_root}/results/experiment_5755_transition_v514.json
-      - {project_root}/scripts/in_process_doc_reconcile.py
-      - {project_root}/scripts/conductor_gates.py
-      - {project_root}/scripts/exclusion_manifest_lint.py
+      - {project_root}/ops/conductor-log.md
       - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Repair only the evidence-index test-receipt/finalization boundary, independently replay its downstream gate, and write results/experiment_5784_evidence_index_terminal_qualification.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the Exp5771 script/spec/tests/artifact, active and next roadmaps, research-complete.yaml, and conductor; verify Exp5782-Exp5795 collisions before editing. Record RAM/disk. Bail on ambiguous exact identities.
+      1. Extend REQ-REPORT-5771 or add a corrigendum REQ-* before code. Specify focused/integration checks as task-owned readiness authority, global suite/spec coverage as separately disclosed health receipts, and any newly introduced task-owned failure as blocking.
+      2. Reuse `scripts/evidence_index_collision_preflight.py`; do not rebuild the index under another implementation. Add the smallest receipt/finalizer interface needed to ingest explicit command/exit-code/ownership rows and atomically emit a non-bootstrap terminal artifact.
+      3. Run the focused unit suite with coverage, real alias fixtures, exact lookup, missing/conflict/mtime negative controls, integration gate replay, relevant global suite, spec coverage, exclusion lint, and root-clutter sweep. Preserve every command, exit code, ownership class, and failure signature.
+      4. Require bare `evidence_index_ready_score=1.0`, `next_range_collision_count=0`, `unresolved_canonical_count=0`, and `history_mutation_count=0` only when all task-owned checks pass. A pre-existing unrelated global failure must be disclosed, never erased or silently treated as task-owned.
+      5. Replay the structured gates Exp5785 will consume against the finalized artifact. Re-open the artifact from disk, verify checksum/mtime/final status, and prove no bootstrap skeleton remains.
+      6. Do not modify research-complete.yaml, research-roadmap.yaml, historical results, or scripts/research_conductor.py.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `prior_artifact_hash`; `implementation_hashes_before`; `implementation_hashes_after`; `canonical_identity_contract`; `focused_test_receipts`; `integration_test_receipts`; `global_baseline_receipts`; `spec_coverage_receipts`; `test_ownership_policy`; `task_owned_failures`; `pre_existing_global_failures`; `terminal_finalizer_receipt`; `bootstrap_skeleton_absent`; `gate_replay_receipts`; bare `evidence_index_ready_score`; bare `next_range_collision_count`; bare `unresolved_canonical_count`; bare `history_mutation_count`; `producer_gate_fields`; `research_complete_modified=false`; `research_roadmap_unchanged=true`; `conductor_unchanged=true`; `inference_substrate=local_filesystem_metadata_hashes_and_explicit_test_receipts_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: exact identities and task-owned tests authorize readiness; global health is disclosed separately; the on-disk terminal artifact is the gate authority.
+      8. Run the complete test matrix above twice for deterministic checksum/gate replay, then run spec coverage and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5785-hardness-surface-prospective-fixture
+    milestone: "2026.07.516"
+    title: "Gated on Exp5784 readiness: build a sealed hardness- and surface-controlled exact fixture"
+    priority: critical
+    track: benchmarks
+    deliverable: results/experiment_5785_hardness_surface_fixture.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 120
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "This task performs no LLM inference: it separates exact fixture, finite-choice parser, proof-preserving surface, and leakage qualification before the later SOTA stream, instead of repeating Exp5708's free-form generation-and-parse shape."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5784-evidence-index-terminal-qualification
+        artifact_field: evidence_index_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Fixture evidence may be emitted only through a qualified exact-deliverable index."
+      - upstream: exp5784-evidence-index-terminal-qualification
+        artifact_field: next_range_collision_count
+        op: "=="
+        value: 0
+        principle: "The destination namespace must be collision-free before dataset artifacts are created."
+      - upstream: exp5784-evidence-index-terminal-qualification
+        artifact_field: unresolved_canonical_count
+        op: "=="
+        value: 0
+        principle: "No ambiguous upstream identity may enter a sealed benchmark lineage."
+      - upstream: exp5784-evidence-index-terminal-qualification
+        artifact_field: history_mutation_count
+        op: "=="
+        value: 0
+        principle: "Readiness cannot depend on rewriting historical evidence."
+    prompt: |
+      CONTEXT:
+      Exp5761 built an exact synthetic CA benchmark, while Exp5708 showed that free-form SOTA output can collapse at parsing before any learning question is answered. arXiv:2607.17047 shows solver hardness and model difficulty dissociate and that proof-preserving relabeling can dominate accuracy. This task builds the exact, cheap, no-LLM fixture and parser contract before flagship inference. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5784_evidence_index_terminal_qualification.json
+      - {project_root}/results/experiment_5708_sota_exact_constraint_canary.json
+      - {project_root}/results/experiment_5733_sota_finite_choice_proposal_channel.json
+      - {project_root}/results/experiment_5761_exact_constraint_acquisition_benchmark.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/openspec/capabilities/benchmarks/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
       - {project_root}/tests/python
 
       TASK:
-      Implement and validate a read-only exact-deliverable evidence index with alias/collision diagnostics, emit results/experiment_5771_evidence_index_collision_preflight.json, and leave historical ledgers and the conductor unchanged.
+      Build and qualify a sealed chronological exact fixture crossing solver hardness and proof-preserving surface variants, writing the main artifact and results/experiment_5785_hardness_surface_fixture.rows.jsonl without calling an LLM.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash active/next roadmaps, research-complete.yaml, conductor log, and all Exp5755-Exp5768 declared deliverables; verify free RAM/disk and that Exp5769-Exp5781 remain collision-free. Bail if the roadmaps cannot be parsed or exact deliverables are missing without a recorded conductor outcome.
-      1. Add/extend REQ-* in the research-reporting capability before implementation. Define canonical identity as `(milestone, task_id, declared_deliverable)` and treat numeric-prefix matches as aliases only.
-      2. Add a narrowly scoped script/module under scripts/ that reads roadmap YAML and conductor evidence, emits a canonical projection, detects same-number alias files, duplicate task IDs, duplicate milestone history blocks, missing declared deliverables, conflicting hashes, and ambiguous gate artifacts. Do not delete, deduplicate, reorder, or rewrite research-complete.yaml.
-      3. Refuse latest-mtime or broad-glob canonicalization. Include a machine-readable `canonical_lookup()` or equivalent that either returns the exact declared path or fails closed with all candidates listed.
-      4. Add tests for the real 5760/5764/5766 alias groups plus synthetic missing, duplicate, hash-conflict, wrapper-field, and mtime-inversion controls. Prove the active .514 conductor artifacts remain canonical for .514 tasks while the outer-loop files remain discoverable aliases.
-      5. Do not modify scripts/research_conductor.py. Do not retroactively rewrite existing artifacts or history. `evidence_index_ready_score=1.0` only if all tests pass, the .515 range is collision-free, and every .514 task is either exactly resolved or explicitly mapped to a recorded non-artifact conductor outcome.
-      6. Emit downstream gate fields through `producer_gate_fields` as bare scalars: `evidence_index_ready_score`, `next_range_collision_count`, `unresolved_canonical_count`, and `history_mutation_count`.
-      7. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field; bare `status`; `preconditions_checked`; `spec_refs`; `roadmap_hashes`; `research_complete_hash_before`; `research_complete_hash_after`; `canonical_identity_contract`; `canonical_task_index`; `same_number_alias_groups`; `duplicate_history_blocks`; `missing_declared_deliverables`; `conflicting_hashes`; `gate_artifact_ambiguities`; `canonical_lookup_receipts`; `mtime_inversion_control`; `real_collision_fixture_receipts`; `negative_control_receipts`; bare `evidence_index_ready_score`; bare `next_range_collision_count`; bare `unresolved_canonical_count`; bare `history_mutation_count`; `producer_gate_fields`; `research_complete_modified=false`; `conductor_unchanged=true`; `inference_substrate=local_filesystem_metadata_and_hashes_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      8. Run focused unit/coverage tests, real collision fixtures, roadmap/history schema validation, exact-deliverable lookup, hash-conflict controls, exclusion lint, gate audit, full relevant suite, spec coverage, and root-clutter sweep.
+      0. PRECONDITIONS: replay Exp5784 gates; verify Z3/exact-validator availability, disk/RAM, deterministic seeds, and that both deliverable paths are unoccupied. Record versions and bail with a terminal artifact if an exact authority is missing.
+      1. Add benchmark/verification REQ-* before implementation. Specify train/calibration/future-test chronology, immutable protected facts, mutable constraints, exact candidate completeness, and disjoint row hashes.
+      2. Generate at least three exact constraint families (finite-domain scheduling, logic grid, and typed finite choice) crossed with SAT/UNSAT or feasible/infeasible status, preregistered solver conflict/time bins, and proof-preserving symbol/order/paraphrase variants. Do not call solver effort "model hardness."
+      3. Pair every canonical item with at least two proof-preserving surface variants and one meaning-changing canary. Exact assignments/certificates and protected-fact hashes are authority; natural-language equivalence alone is not.
+      4. Reuse the qualified finite-choice boundary. Test truncation, missing answer, duplicate ID, invalid candidate, whitespace/order, stop-token, and adversarial payload controls. Parser failure must remain separate from exact wrongness.
+      5. Seal chronology and all row hashes before downstream inference. Include sample-size justification with at least 30 independent units per primary paired comparison or an explicit power rationale; do not use repeated turns as independent samples.
+      6. Emit `fixture_ready_score=1.0` only if row hashes, exact labels, candidate completeness, split isolation, surface equivalence, meaning-change canaries, parser controls, and protected-fact separation all pass.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `spec_refs`; `fixture_schema`; `row_file`; `row_file_sha256`; `family_counts`; `independent_unit_count`; `sample_size_justification`; `chronological_split_receipts`; `solver_hardness_bins`; `surface_variant_matrix`; `proof_preserving_receipts`; `meaning_change_canary_receipts`; `protected_fact_manifest`; `mutable_constraint_manifest`; `candidate_completeness_receipts`; `parser_contract`; `parser_negative_controls`; `exact_validator_receipts`; `leakage_checks`; bare `fixture_ready_score`; bare `exact_label_coverage`; bare `parser_control_pass_rate`; `producer_gate_fields`; `inference_substrate=deterministic_local_fixture_generation_z3_and_exact_validators_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: solvers label formal status, transforms establish controlled surfaces, and sealed hashes establish chronology.
+      8. Run focused unit/coverage, determinism, exact-label, solver-bin, metamorphic-equivalence, meaning-change, parser, candidate-completeness, chronology/leakage, schema/adversarial, gate-replay, spec-coverage, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5772-sota-constraint-drift-stream
-    milestone: "2026.07.515"
-    title: "Gated on Exp5771 evidence readiness: build a prospective three-family exact constraint-drift stream"
+  - id: exp5786-sota-hardness-controlled-constraint-stream
+    milestone: "2026.07.516"
+    title: "Gated on Exp5785 fixture readiness: run the three-family prospective exact constraint stream"
     priority: critical
     track: verification
-    deliverable: results/experiment_5772_sota_constraint_drift_stream.json
-    model: sonnet
+    deliverable: results/experiment_5786_sota_constraint_stream.json
+    agent_type: codex
+    model: gpt-5.5
     max_turns: 50
-    estimated_wall_time_min: 900
+    estimated_wall_time_min: 720
     requires_gpu: true
     prior_failures:
       - experiment_id: exp5708-sota-exact-constraint-canary
         verdict: "blocked: parse_failures"
-        addressed_by: "This uses the already-qualified sealed finite-choice answer boundary, preregistered candidate IDs, explicit stop rules, per-turn checkpointing, and all three current mandated SOTA GGUF families instead of the retired free-form parse channel."
-        retire_if_same_verdict: true
-      - experiment_id: exp5709-fr11-prospective-shadow-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "This creates a new parse-safe prospective stream with bare readiness scalars and exact gate replay before any downstream FR-11 task, rather than reusing the parse-failed Exp5708 stream."
+        addressed_by: "This attempt uses a separately qualified finite-choice parser, sealed candidate IDs, per-turn checkpoints, explicit stop controls, a hardness/surface-controlled fixture, and all three current mandated CUDA-backed SOTA GGUF families instead of the retired free-form parse channel."
         retire_if_same_verdict: true
     gated_on:
-      - upstream: exp5771-evidence-index-collision-preflight
-        artifact_field: evidence_index_ready_score
+      - upstream: exp5785-hardness-surface-prospective-fixture
+        artifact_field: fixture_ready_score
         op: "=="
         value: 1.0
-        principle: "Expensive SOTA generation may start only after exact declared-deliverable lookup is unambiguous."
-      - upstream: exp5771-evidence-index-collision-preflight
-        artifact_field: next_range_collision_count
+        principle: "GPU inference starts only after the exact fixture, parser, and leakage controls pass."
+      - upstream: exp5785-hardness-surface-prospective-fixture
+        artifact_field: exact_label_coverage
         op: "=="
-        value: 0
-        principle: "The .515 evidence namespace must be collision-free before emitting a large stream."
-      - upstream: exp5771-evidence-index-collision-preflight
-        artifact_field: history_mutation_count
+        value: 1.0
+        principle: "Every generated response needs an independent exact target."
+      - upstream: exp5785-hardness-surface-prospective-fixture
+        artifact_field: parser_control_pass_rate
         op: "=="
-        value: 0
-        principle: "Evidence repair must not depend on silently rewriting historical records."
+        value: 1.0
+        principle: "The previous parse-failure mechanism must be closed before spending flagship compute."
     prompt: |
       CONTEXT:
-      Exp5762/5763 credited solver-certified constraint acquisition on a synthetic exact benchmark, but Exp5708's earlier prospective SOTA stream parse-failed and Exp5709 gate-blocked. DRIFT-Bench shows that satisfiable answer drift can dominate contradiction, while arXiv:2601.01490 warns that apparent constraint compliance can hide protected-fact distortion. This task builds the missing parse-safe prospective stream and does not learn constraints. Today is {date}.
+      Exp5762/5763 credited exact constraint acquisition on synthetic evidence, but the prior prospective task never ran after Exp5771 retired. Exp5708's earlier free-form stream parse-failed. Exp5785 now provides a sealed finite-choice fixture that separates solver difficulty from proof-preserving surface sensitivity. This task creates a real chronological response stream and does not learn constraints. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
       - {project_root}/research-program.md
       - {project_root}/research-references.md
-      - {project_root}/results/experiment_5771_evidence_index_collision_preflight.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.rows.jsonl
       - {project_root}/results/experiment_5708_sota_exact_constraint_canary.json
-      - {project_root}/results/experiment_5709_fr11_prospective_shadow_stream.json
       - {project_root}/results/experiment_5733_sota_finite_choice_proposal_channel.json
-      - {project_root}/results/experiment_5761_exact_constraint_acquisition_benchmark.json
       - {project_root}/scripts/experiment_template.py
       - {project_root}/python/carnot/inference/sota_models.py
       - {project_root}/openspec/capabilities/benchmarks/spec.md
@@ -205,242 +265,624 @@ tasks:
       - {project_root}/tests/python
 
       TASK:
-      Build a sealed chronological multi-turn constraint stream from all three mandated SOTA GGUF families, classify exact failure modes independently, write the main artifact plus results/experiment_5772_sota_constraint_drift_stream.rows.jsonl, and do not implement learning.
+      Run a matched prospective response stream from all three mandated local SOTA GGUF families, write the main artifact plus results/experiment_5786_sota_constraint_stream.rows.jsonl, and classify exact failure modes without implementing learning.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: enforce all Exp5771 gates; verify the three mandated GGUF files, llama-server/CUDA support, real GPU offload via VRAM before/after, model chat templates, exact Z3/finite-domain validators, seeds, free VRAM/RAM/disk, and checkpoint/resume paths. Emit a terminal blocked artifact if real offload or any flagship model is unavailable; tiny legacy models may run smoke tests only and cannot populate headline rows.
-      1. Add/extend benchmark/verification REQ-* before implementation. Freeze at least three domains (scheduling, finite-domain CSP, and logic-grid), a chronological multi-turn session protocol, development/science split, candidate sets, protected immutable facts, mutable constraint additions/retractions, and row hashes before generation.
-      2. Define `MODEL_SPECS` from `cached_sota_pair()` and require these exact headline hub IDs: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Record exact GGUF paths, quantization, GPU, context, chat template, tokens, latency, and `models_used`.
-      3. Reuse the sealed finite-choice channel: each turn exposes a preregistered set of full candidate assignments and the model returns one candidate ID. Preserve raw text, parsed ID, token counts, finish reason, and retries. Do not let model prose define a constraint or ground truth.
-      4. For every turn, independently label parser failure, maintained-ledger contradiction, satisfiable answer drift, protected-fact distortion, exact answer validity, candidate-domain completeness, and validator disagreement. A satisfiable ledger with an answer that violates it is drift, not contradiction.
-      5. Keep exact ground truth and science labels hidden from generation. Build non-degenerate positive/negative controls, permutation controls, model-identity canaries, truncation/echo/repetition controls, and at least 60 evaluable science turns per model family unless the preregistered power calculation justifies more.
-      6. `stream_ready_score=1.0` only when every expected headline cell ran with real SOTA offload, parser failures and validator disagreements are zero, candidate domains are complete, splits are disjoint, protected facts are separately hashed, and at least one exact-error/drift event provides nonzero learning headroom. Otherwise block downstream learning honestly.
-      7. Emit downstream gate fields through `producer_gate_fields` as bare scalars: `stream_ready_score`, `parser_failure_count`, `validator_disagreement_count`, `satisfiable_drift_count`, `protected_fact_distortion_count`, and `evaluable_science_row_count`.
-      8. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field; bare `status`; `preconditions_checked`; `spec_refs`; `upstream_artifact_hash`; `MODEL_SPECS`; `models_used`; `model_file_hashes`; `gpu_offload_receipts`; `runtime_receipts`; `domain_manifest`; `session_manifest`; `candidate_manifest`; `protected_fact_manifest`; `mutable_constraint_manifest`; `development_split_hash`; `science_split_hash`; `row_manifest_hash`; `raw_response_hashes`; `failure_taxonomy`; `per_family_metrics`; `per_domain_metrics`; `parser_failure_rows`; `contradiction_rows`; `satisfiable_drift_rows`; `protected_fact_distortion_rows`; `exact_error_rows`; `positive_control_receipts`; `negative_control_receipts`; `model_identity_canary_receipts`; bare `stream_ready_score`; bare `parser_failure_count`; bare `validator_disagreement_count`; bare `satisfiable_drift_count`; bare `protected_fact_distortion_count`; bare `evaluable_science_row_count`; `llm_as_judge_used=false`; `model_weight_mutation=false`; `verifier_is_oracle=true`; `production_default_enabled=false`; `inference_substrate=live_local_sota_gguf_cuda_inference_with_exact_z3_validation`; `random_seeds`; `duration_s`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      9. Run focused unit/coverage, cached_sota_pair, GPU-offload, chat-template, sealed-answer, parser, exact-validator, failure-taxonomy, split-leakage, candidate-completeness, checkpoint/resume, positive/negative control, schema/adversarial, gate-replay, spec-coverage, and root-clutter tests.
+      0. PRECONDITIONS: replay Exp5785 gates; call `cached_sota_pair()`; verify both RTX 3090s, real llama.cpp CUDA offload, model file/hash readability, VRAM/RAM/disk, chat templates, and output paths. Write a terminal blocked artifact if any headline model lacks authenticated GPU offload; do not substitute a tiny model into headline cells.
+      1. Add/extend verification and benchmark REQ-* before implementation. Define matched budgets, chronology, row-level raw-response preservation, checkpoints, exact failure taxonomy, and model/runtime receipts.
+      2. Declare MODEL_SPECS containing all three: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Record exact local paths, file hashes, quantization, llama.cpp commit/build, GPU layers, chat template, prompt date, sampling parameters, stop policy, and seeds. Legacy Qwen3.5-0.8B/Gemma4-E4B may run smoke only and must be excluded from primary rows.
+      3. Run every mandated family over matched sealed rows and budgets, preserving canonical/surface pairs. Checkpoint after every turn/cell and support exact resume without duplicate rows.
+      4. Preserve raw bytes or lossless text plus hashes. Parse only through the qualified candidate-ID boundary. Independently label parser failure, contradiction, satisfiable drift, protected-fact distortion, exact answer error, abstention, truncation, and valid/correct response.
+      5. Report response behavior by formal constraint family, solver hardness bin, canonical/surface rendering, satisfiability, and model family. Include proof-preserving paired deltas and model-identity interactions; do not call solver conflicts model reasoning effort.
+      6. Use at least 30 independent items per primary paired cell or document a power calculation. Use paired bootstrap intervals clustered by canonical item; repeated samples/turns are not independent units.
+      7. Set `stream_ready_score=1.0` only if all three real SOTA families ran, raw-response coverage and exact-label coverage are 1.0, parser failure stays below the preregistered threshold, no split/hash leak exists, and the stream contains enough satisfiable drift to test learning. A valid no-headroom outcome is complete but not ready.
+      8. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `MODEL_SPECS`; `models_used`; `model_runtime_receipts`; `gpu_offload_receipts`; `fixture_hash`; `row_file`; `row_file_sha256`; `raw_response_receipts`; `checkpoint_resume_receipts`; `sample_size_justification`; `independent_unit_count`; `failure_taxonomy_counts`; `family_metrics`; `solver_hardness_metrics`; `surface_sensitivity_metrics`; `proof_preserving_paired_deltas`; `model_identity_interactions`; `parser_failure_rate`; `protected_fact_distortion_count`; `satisfiable_drift_count`; `exact_label_coverage`; `raw_response_coverage`; `leakage_checks`; bare `real_sota_model_count`; bare `stream_ready_score`; `producer_gate_fields`; `inference_substrate=real_local_llama_cpp_cuda_gguf_generation_plus_exact_z3_validation`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: immutable raw responses establish model behavior, exact validators establish correctness, and model/runtime receipts delimit generalization.
+      9. Run focused unit/coverage, cached_sota_pair, GPU-offload, chat-template, parser, raw-replay, exact-validator, taxonomy, surface/metamorphic, solver-bin, model-receipt, split/leakage, checkpoint/resume, sample-size/statistics, schema/adversarial, gate-replay, spec-coverage, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5773-prospective-constraint-acquisition-ab
-    milestone: "2026.07.515"
-    title: "Gated on Exp5772 clean drift headroom: run prospective solver-certified constraint acquisition A/B"
+  - id: exp5787-validation-gated-constraint-skill-ab
+    milestone: "2026.07.516"
+    title: "Gated on Exp5786 clean drift headroom: run continuous typed-constraint skill learning A/B"
     priority: critical
-    track: continuous-self-learning
-    deliverable: results/experiment_5773_prospective_constraint_acquisition_ab.json
-    model: sonnet
+    track: continual-learning
+    deliverable: results/experiment_5787_validation_gated_constraint_skill_ab.json
+    agent_type: codex
+    model: gpt-5.5
     max_turns: 50
-    estimated_wall_time_min: 300
-    continuous_self_learning_task: true
+    estimated_wall_time_min: 240
+    requires_gpu: false
     prior_failures:
-      - experiment_id: exp5709-fr11-prospective-shadow-stream
+      - experiment_id: exp5773-prospective-constraint-acquisition-ab
         verdict: "blocked_gate_check_failed"
-        addressed_by: "This is gated on a new all-SOTA finite-choice stream with zero parse failures and explicit satisfiable-drift headroom, and it compares a typed query-driven lifecycle against frozen and MUS-only controls instead of consuming Exp5708's invalid stream."
+        addressed_by: "The prerequisite is now a separately qualified three-model stream with clean parser/headroom scalars, and proposed typed skills are evaluated on immutable future batches before commit rather than dispatching against a missing gate artifact."
         retire_if_same_verdict: true
     gated_on:
-      - upstream: exp5772-sota-constraint-drift-stream
+      - upstream: exp5786-sota-hardness-controlled-constraint-stream
         artifact_field: stream_ready_score
         op: "=="
         value: 1.0
-        principle: "Continuous-learning science requires a sealed, complete, real-SOTA stream."
-      - upstream: exp5772-sota-constraint-drift-stream
-        artifact_field: parser_failure_count
-        op: "=="
-        value: 0
-        principle: "A parser failure cannot be relabeled as a learning failure."
-      - upstream: exp5772-sota-constraint-drift-stream
-        artifact_field: validator_disagreement_count
-        op: "=="
-        value: 0
-        principle: "Exact labels must be unambiguous before they drive updates."
-      - upstream: exp5772-sota-constraint-drift-stream
-        artifact_field: satisfiable_drift_count
-        op: ">"
-        value: 0
-        principle: "The primary intervention needs observed satisfiable-drift headroom."
-      - upstream: exp5772-sota-constraint-drift-stream
-        artifact_field: evaluable_science_row_count
+        principle: "Self-learning credit requires a clean, sealed, exactly labeled prospective stream."
+      - upstream: exp5786-sota-hardness-controlled-constraint-stream
+        artifact_field: real_sota_model_count
         op: ">="
-        value: 180
-        principle: "At least 60 evaluable science turns per mandated family are required."
+        value: 3
+        principle: "The experiment must cover all mandated headline generator families."
+      - upstream: exp5786-sota-hardness-controlled-constraint-stream
+        artifact_field: exact_label_coverage
+        op: "=="
+        value: 1.0
+        principle: "Every accepted or rejected skill edit needs solver-authoritative evidence."
+      - upstream: exp5786-sota-hardness-controlled-constraint-stream
+        artifact_field: satisfiable_drift_count
+        op: ">="
+        value: 30
+        principle: "A primary paired lower bound needs enough independent correctable drift events."
+      - upstream: exp5786-sota-hardness-controlled-constraint-stream
+        artifact_field: protected_fact_distortion_count
+        op: ">="
+        value: 0
+        principle: "Fact distortion is measured as a safety outcome, not used to suppress the experiment."
     prompt: |
       CONTEXT:
-      Exp5762 credited a query-driven typed constraint lifecycle and Exp5763 credited dependent-task retention, but both used a synthetic exact benchmark. Exp5772 supplies the first sealed chronological all-SOTA stream with contradiction, satisfiable drift, and protected-fact distortion labeled separately. This task is the milestone's mandatory continuous self-learning experiment. GGUF weights remain immutable. Today is {date}.
+      Exp5762 credited query-driven typed constraint acquisition and Exp5763 found positive dependent-task transfer on a synthetic benchmark. The new prospective stream supplies real SOTA drift, exact labels, surface controls, and chronology. arXiv:2607.18973 motivates validation-gated evolution of textual skills against a fixed future target while the base model remains frozen. Carnot adapts only that pattern: exact solvers, not dialogue feedback or an LLM judge, authorize typed constraint changes. This is the milestone's continuous self-learning experiment. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5761_exact_constraint_acquisition_benchmark.json
+      - {project_root}/results/experiment_5762_query_driven_constraint_acquisition.json
+      - {project_root}/results/experiment_5763_constraint_acquisition_transfer.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.rows.jsonl
+      - {project_root}/openspec/capabilities/continual-learning/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Compare frozen, contradiction-only, and validation-gated query-driven typed-constraint skill arms on the chronological prospective stream and write results/experiment_5787_validation_gated_constraint_skill_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay all Exp5786 gates; verify exact stream/hash, Z3, lifecycle implementation, checkpoint directory, disk/RAM, and immutable GGUF hashes. Record and bail terminally if the chronological future split cannot be reconstructed exactly.
+      1. Add/extend continual-learning REQ-* before implementation. Define skill identity/version/hash, propose/query/quarantine/future-validate/commit/refine/retire/rollback transitions, protected facts, prefix retention, and frozen-model invariants.
+      2. Freeze arm assignments, budgets, candidate-query counts, chronological prefixes, calibration batches, future-validation batches, and final test suffix before reading outcomes. Compare: A frozen ledger; B contradiction/MUS-only feedback; C query-driven typed skills with future-batch validation.
+      3. Permit changes only in the typed sidecar. Hash all three GGUFs before/after and prove no model parameter/cache write. Exact membership queries and validators are feedback and release authority.
+      4. For every proposed skill preserve supporting failures, discriminating queries, exact labels, confidence/provenance, version ancestry, quarantine result, future-batch utility, and terminal lifecycle state. An edit that changes a protected fact is unsafe and rolls back immediately.
+      5. Measure satisfiable-drift reduction, exact answer accuracy, contradiction, parser failure, unsafe propagation, protected-fact distortion, query cost, state growth, old-prefix retention, delayed future-batch retention, and rollback hash equivalence.
+      6. Use paired bootstrap intervals clustered by independent canonical item and report per-model/per-surface strata. Credit FR-11 only if arm C has `drift_reduction_lcb>0`, zero unsafe/fact violations, retention within margin, and exact rollback. Arm C must also beat arm B under matched query/validator budget.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `stream_hash`; `arm_contracts`; `chronological_split_receipts`; `budget_parity_receipts`; `skill_lifecycle_schema`; `skill_version_receipts`; `exact_query_receipts`; `quarantine_receipts`; `future_batch_validation_receipts`; `commit_refine_retire_rollback_counts`; `paired_metrics`; `model_family_metrics`; `surface_variant_metrics`; `drift_reduction_delta`; bare `drift_reduction_lcb`; `exact_accuracy_delta`; `contradiction_delta`; `unsafe_propagation_count`; `protected_fact_distortion_count`; `old_prefix_retention_delta`; `old_prefix_retention_lcb`; `delayed_retention_delta`; `rollback_hash_match`; `sidecar_state_growth`; `gguf_hashes_before`; `gguf_hashes_after`; `gguf_weights_immutable`; bare `self_learning_ready_score`; `producer_gate_fields`; `inference_substrate=offline_exact_solver_certified_typed_sidecar_learning_over_frozen_sota_response_stream`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: future exact evidence authorizes skill state changes, chronological retention supports learning credit, and unchanged GGUF hashes prove sidecar-only adaptation.
+      8. Run lifecycle-transition, chronological-leakage, exact-query, protected-fact, over-fit/conflict, future-batch, retention, rollback/restart, immutable-GGUF, matched-budget, paired-statistics, producer-gate, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5788-constraint-skill-transfer-audit
+    milestone: "2026.07.516"
+    title: "Causal future-family holdout of versioned rule state"
+    priority: high
+    track: continual-learning
+    deliverable: results/experiment_5788_constraint_skill_transfer_audit.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5787-validation-gated-constraint-skill-ab
+        artifact_field: self_learning_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Transfer is meaningful only after the core prospective learner earns exact safety credit."
+      - upstream: exp5787-validation-gated-constraint-skill-ab
+        artifact_field: drift_reduction_lcb
+        op: ">"
+        value: 0.0
+        principle: "A positive paired lower bound is required before testing generalization."
+      - upstream: exp5787-validation-gated-constraint-skill-ab
+        artifact_field: unsafe_propagation_count
+        op: "=="
+        value: 0
+        principle: "Unsafe learned state cannot be transferred."
+      - upstream: exp5787-validation-gated-constraint-skill-ab
+        artifact_field: protected_fact_distortion_count
+        op: "=="
+        value: 0
+        principle: "A sidecar that changes immutable facts is not eligible for transfer."
+      - upstream: exp5787-validation-gated-constraint-skill-ab
+        artifact_field: gguf_weights_immutable
+        op: "=="
+        value: true
+        principle: "The tested mechanism must remain sidecar learning, not model fine-tuning."
+    prompt: |
+      CONTEXT:
+      Exp5763 found positive dependent-task transfer in a controlled benchmark. This task asks whether the credited prospective sidecar transfers to future sessions from a held-out mandated generator family while retaining prior exact behavior. It must separate formal constraint-template transfer from model-identity and proof-preserving surface shortcuts, and it must allow a learned rule to be retired when drift makes retention harmful. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5763_constraint_acquisition_transfer.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_5787_validation_gated_constraint_skill_ab.json
+      - {project_root}/openspec/capabilities/continual-learning/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Rotate each mandated generator family as a held-out chronological future stream, measure transfer/forgetting/retirement under exact authority, and write results/experiment_5788_constraint_skill_transfer_audit.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay Exp5787 gates; verify frozen fold assignments, row hashes, sidecar checkpoint hashes, exact validators, disk/RAM, and that no held-out response influenced training/quarantine decisions.
+      1. Extend continual-learning REQ-* before implementation for leave-one-family-out folds, future-only evaluation, identity/surface canaries, delayed retention, dynamic regret, reset/retire controls, and exact restart equivalence.
+      2. Run three folds: learn on two model families and evaluate once on a disjoint future suffix from the third. Match query, validator, state-size, and chronological budgets. Never tune on held-out outcomes.
+      3. Cross formal constraint templates with canonical/surface variants so template transfer, rendering sensitivity, and model-identity residual are separately identifiable. Include permuted identity labels as a negative control.
+      4. Compare retain, exact-triggered retire/reset, and frozen-ledger controls when predicates conflict or drift. The exact validator decides whether a retained skill helps or becomes a liability.
+      5. Report new-suffix utility, negative transfer, old-prefix and delayed retention, dynamic regret, skill survival/retirement, rollback/restart hashes, state growth, and per-family intervals. Use independent sessions/items for clustered intervals.
+      6. Set `transfer_ready_score=1.0` only if the macro leave-one-family lower bound is positive, every family stays within the retention margin, unsafe propagation/fact distortion remain zero, and restart hashes match.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `upstream_state_hash`; `fold_manifest`; `heldout_row_hashes`; `chronology_receipts`; `budget_parity_receipts`; `template_surface_identity_matrix`; `identity_canary_receipts`; `fold_metrics`; `macro_transfer_delta`; bare `macro_transfer_lcb`; `negative_transfer_counts`; `old_prefix_retention_by_fold`; `delayed_retention_by_fold`; `dynamic_regret_by_fold`; `retain_retire_reset_comparison`; `skill_survival_receipts`; `unsafe_propagation_count`; `protected_fact_distortion_count`; `rollback_restart_hash_match`; `state_growth`; bare `transfer_ready_score`; `producer_gate_fields`; `inference_substrate=offline_exact_leave_one_model_family_out_sidecar_evaluation_over_frozen_responses`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: held-out chronology supports transfer, exact retention supports safety, and identity/surface controls bound shortcut explanations.
+      8. Run fold-leakage, chronology, identity-canary, proof-preserving surface, matched-budget, exact-validation, transfer/negative-transfer, retention, retire/reset, rollback/restart, paired-statistics, producer-gate, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5789-constraint-skill-shadow-adapter
+    milestone: "2026.07.516"
+    title: "Gated on Exp5788 transfer: wire a disabled typed-constraint shadow adapter with exact restart and rollback"
+    priority: high
+    track: integration
+    deliverable: results/experiment_5789_constraint_skill_shadow_adapter.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5709-fr11-prospective-shadow-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This consumes a new parse-qualified three-family stream and a credited future-batch learner, replays explicit bare gates, and tests a default-off adapter rather than reusing the parse-failed Exp5708 stream."
+        retire_if_same_verdict: true
+      - experiment_id: exp5775-constraint-sidecar-shadow-integration
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The upstream stream, learning, and transfer artifacts now have separately qualified producer gates and this task adds exact interruption/restart, retirement, and corruption rollback receipts before any adapter promotion."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5788-constraint-skill-transfer-audit
+        artifact_field: transfer_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Runtime shadow wiring is attempted only for a transfer-qualified sidecar."
+      - upstream: exp5788-constraint-skill-transfer-audit
+        artifact_field: macro_transfer_lcb
+        op: ">"
+        value: 0.0
+        principle: "A positive held-out macro lower bound is required before integration work."
+      - upstream: exp5788-constraint-skill-transfer-audit
+        artifact_field: unsafe_propagation_count
+        op: "=="
+        value: 0
+        principle: "Unsafe state must never reach a runtime adapter."
+      - upstream: exp5788-constraint-skill-transfer-audit
+        artifact_field: protected_fact_distortion_count
+        op: "=="
+        value: 0
+        principle: "Protected facts remain immutable at the integration boundary."
+      - upstream: exp5788-constraint-skill-transfer-audit
+        artifact_field: rollback_restart_hash_match
+        op: "=="
+        value: true
+        principle: "Only restart-stable sidecar state is eligible for shadow replay."
+    prompt: |
+      CONTEXT:
+      The prior Exp5709 and Exp5775 shadow shapes gate-blocked before meaningful execution. This attempt is materially different only if Exp5786-Exp5788 produce a parse-clean, credited, transfer-safe sidecar. The adapter remains disabled by default and may not change production answers. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_5709_fr11_prospective_shadow_stream.json
+      - {project_root}/results/experiment_5775_constraint_sidecar_shadow_integration.json
+      - {project_root}/results/experiment_5787_validation_gated_constraint_skill_ab.json
+      - {project_root}/results/experiment_5788_constraint_skill_transfer_audit.json
+      - {project_root}/python/carnot
+      - {project_root}/openspec/capabilities/continual-learning/spec.md
+      - {project_root}/openspec/capabilities/integration/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Wire and test a disabled-by-default typed-constraint shadow adapter over a fresh sealed suffix, proving byte-identical default-off behavior, restart, retirement, corruption rollback, and exact validation in results/experiment_5789_constraint_skill_shadow_adapter.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay every Exp5788 gate; verify sidecar/checkpoint hashes, fresh suffix disjointness, exact validators, disk/RAM, output path, and baseline byte hashes. Bail terminally if the fresh suffix overlaps training/calibration rows.
+      1. Add/extend integration and continual-learning REQ-* before implementation. Define default-off configuration, read-only shadow observations, state caps, checkpoint atomicity, rollback, retirement, corruption recovery, and no-answer-mutation invariants.
+      2. Add the smallest generic adapter behind an explicit default-false flag. With the flag off, prove byte-for-byte output and state equivalence to baseline. With shadow on, log recommendations and exact outcomes but never alter the returned answer.
+      3. Replay a sealed future suffix with interruptions before/after propose, quarantine, commit, retire, and rollback transitions. Resume from checkpoints without duplicate state changes or row processing.
+      4. Enforce state-size/query/time caps and safe fallback. Inject truncated/corrupt checkpoints, stale versions, conflicting skills, and protected-fact edits; require quarantine or exact rollback to the last valid hash.
+      5. Report shadow-only utility, exact agreement, unsafe recommendations, lifecycle counts, cap hits, interruption equivalence, corruption recovery, and family-blind behavior. Do not deploy or enable the adapter.
+      6. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `adapter_contract`; `default_enabled=false`; `fresh_suffix_hashes`; `baseline_output_hash`; `default_off_output_hash`; `default_off_byte_identical`; `shadow_state_hashes`; `shadow_recommendation_metrics`; `exact_validation_receipts`; `lifecycle_receipts`; `cap_receipts`; `interruption_resume_matrix`; `restart_hash_match`; `rollback_hash_match`; `corruption_injection_receipts`; `protected_fact_receipts`; `unsafe_recommendation_count`; `production_answer_mutation_count`; `family_identity_blind_receipts`; bare `shadow_adapter_ready_score`; `producer_gate_fields`; `inference_substrate=default_off_local_shadow_replay_over_frozen_responses_and_exact_validators`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: baseline hashes prove no production change, exact validators judge recommendations, and restart/rollback hashes bound durable state risk.
+      7. Run adapter-contract, default-off byte-equivalence, suffix-disjointness, exact-validator, lifecycle, caps/fallback, interruption/restart, rollback/corruption, protected-fact, family-blind, no-answer-mutation, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5790-arc-world-model-admission-contract
+    milestone: "2026.07.516"
+    title: "Pivotal-dynamics accreditation contract for immutable simulators"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5790_arc_world_model_admission_contract.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 240
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp4327-e3-executable-world-model-ar25
+        verdict: "complete_e3_ar25_partial_model_0.89"
+        addressed_by: "This task does not propose or deploy an AR25 model; it builds a generic immutable admission contract with held-out unseen-action, leakage, pivotal-dynamics, and play-adequacy controls that the earlier partial model lacked."
+        retire_if_same_verdict: true
+      - experiment_id: exp4328-e3-executable-world-model-ka59
+        verdict: "complete_e3_ka59_partial_model_0.56"
+        addressed_by: "This replaces a per-instance partial-model attempt with validation-only accreditation across agent-owned traces and adversarial identity/action-ignore canaries; it cannot patch or solve with KA59."
+        retire_if_same_verdict: true
+      - experiment_id: exp4329-e3-executable-world-model-tr87-ft09
+        verdict: "complete_e3_tr87_ft09_partial"
+        addressed_by: "This validates immutable hypotheses under a game-blind cross-trace contract and pivotal coverage rather than extending the TR87/FT09 partial executable-model technique."
+        retire_if_same_verdict: true
+      - experiment_id: exp4557-executable-world-model-proposer
+        verdict: "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined"
+        addressed_by: "This is an admission/negative-control task over retained hypotheses, not a proposer; it requires positive and adversarial controls to pass before any later generation panel is allowed."
+        retire_if_same_verdict: true
+      - experiment_id: exp4872-cegis-world-model-refinement
+        verdict: "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed"
+        addressed_by: "This prohibits CEGIS and any counterexample patching, keeps hypotheses immutable, and measures accreditation only; later selection may choose among independent single shots but never refine them."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5782-transition-v516
+        artifact_field: next_range_collision_count
+        op: "=="
+        value: 0
+        principle: "ARC evidence requires an unambiguous .516 experiment namespace."
+    prompt: |
+      CONTEXT:
+      Carnot's public ARC registry is complete and no task may re-solve a registered level. Generic component composition was null, while independent Gemma 4 31B single-shot executable-model induction improved held-out transition accuracy and iterative CEGIS worsened it. arXiv:2607.07196 requires world-model accreditation; arXiv:2607.14169 shows average or sampled-perfect prediction can miss rare pivotal dynamics and lose at play. This task validates immutable hypotheses only and cannot induce, patch, deploy, or solve with one. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5760_cegis_refinement_induction_ab.json
+      - {project_root}/results/experiment_5764_gemma31b_singleshot_induction_ab.json
+      - {project_root}/results/experiment_5766_gemma31b_cegis_refinement_ab.json
+      - {project_root}/results/experiment_5766_arc_loo_component_attribution.json
+      - {project_root}/python/carnot/arc
+      - {project_root}/openspec/capabilities/arc/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Implement and test a game-blind admission contract over agent-owned ARC transition evidence, re-score retained immutable single-shot hypotheses, and write results/experiment_5790_arc_world_model_admission_contract.json without claiming a level solve.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: registry-precheck all public games/levels; hash the live E3 entrypoint, retained development-proxy rows/models, agent-owned trace manifests, and source-denylist; verify disk/RAM and exact replay environment. Bail if a trace cannot prove agent-owned provenance.
+      1. Add ARC REQ-* before implementation. Define rungs: L0 syntax/compile and sandbox; L1 exact seen-action replay; L2 held-out and unseen-action fidelity; L3 multi-step calibration/stability; L4 pivotal-dynamics coverage, play-cost-weighted adequacy, and closed-loop utility. The real environment remains authority.
+      2. Build a generic immutable validator over agent-owned `(observation, action, successor)` rows. Reject any hypothesis or trace with source, game-identity feature, per-game adapter, offline ground-truth BFS, banked plan, or public registry recipe leakage.
+      3. Define pivotal transitions without source or oracle BFS: preregister agent-owned outcome-sensitive strata using observed action reversals, terminal/goal-state changes, rare object effects, policy disagreement, and counterfactual replay among already observed successors. Preserve definition and hashes before scoring test rows.
+      4. Measure ordinary and pivotal transition accuracy, unseen-action fidelity, multi-step calibration/error growth, stability across seeds, action validity, and play-cost-weighted miss risk. Average accuracy cannot compensate for a pivotal-coverage failure.
+      5. Include A2RBench-style cycle consistency only as a malformed-model negative control; it cannot satisfy admission. Include deliberately identity, action-ignoring, memorizing, rare-rule-omitting, and source-leak canaries.
+      6. Re-score retained single-shot hypotheses as disclosed development proxies. Do not execute them through live E3 and do not edit rejected hypotheses. `admission_contract_ready_score=1.0` requires all positive/negative controls, split/leakage checks, pivotal definition freeze, and deterministic replay to pass.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`; `registry_credit=false`; `spec_refs`; `admission_rung_contract`; `agent_owned_trace_manifest`; `trace_provenance_receipts`; `source_game_identity_denylist`; `leakage_checks`; `pivotal_definition`; `pivotal_definition_freeze_hash`; `ordinary_transition_metrics`; `unseen_action_metrics`; `rollout_calibration_metrics`; `pivotal_transition_metrics`; `play_cost_weighted_risk`; `closed_loop_proxy_metrics`; `cycle_consistency_negative_control`; `adversarial_canary_receipts`; `retained_model_rescore`; `admission_decisions`; bare `pivotal_fixture_coverage_score`; bare `source_leak_count`; bare `admission_contract_ready_score`; `producer_gate_fields`; `inference_substrate=immutable_executable_world_model_replay_over_agent_owned_arc_transitions_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: agent-owned transitions establish admissible evidence, the real environment defines outcomes, pivotal coverage bounds play risk, and no field grants solve credit.
+      8. Run registry-duplicate, live-path-provenance, source/identity leak, sandbox, exact replay, seen/unseen split, pivotal-freeze, play-cost, calibration, cycle-insufficiency, action-ignore/memorization/rare-rule canary, deterministic checksum, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5791-arc-sota-independent-hypothesis-panel
+    milestone: "2026.07.516"
+    title: "Gated on Exp5790 admission readiness: run a matched three-family independent single-shot ARC hypothesis panel"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 720
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5760-cegis-refinement-induction-ab
+        verdict: "complete_cegis_refinement_partial_pooled_delta_-0.0128_CI_-0.032051_0.0_posfrac_0.0_signp_0.5_memdrop_0.3061_emission_0.8925_N13_does_not_cleanly_meet_a_preregistered_branch"
+        addressed_by: "This panel generates independent single-shot hypotheses once, never feeds failures back, and compares all three mandated SOTA families under pivotal accreditation instead of refining ThinkingCap hypotheses with CEGIS."
+        retire_if_same_verdict: true
+      - experiment_id: exp5766-gemma31b-cegis-refinement-ab
+        verdict: "complete_gemma31b_cegis_refinement_partial_pooled_delta_-0.0598_CI_-0.145299_0.0_posfrac_0.0_signp_0.5_memdrop_0.2564_emission_0.9872_vs_singleshot_-0.318658_N13_does_not_cleanly_meet_a_preregistered_branch"
+        addressed_by: "This preserves Gemma hypotheses as immutable independent samples and uses calibration-only downstream selection, replacing the harmful iterative Gemma CEGIS mechanism."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5790-arc-world-model-admission-contract
+        artifact_field: admission_contract_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Hypotheses may be generated only after an adversarially qualified admission contract exists."
+      - upstream: exp5790-arc-world-model-admission-contract
+        artifact_field: pivotal_fixture_coverage_score
+        op: "=="
+        value: 1.0
+        principle: "The evaluation must cover preregistered pivotal dynamics before comparing model families."
+      - upstream: exp5790-arc-world-model-admission-contract
+        artifact_field: source_leak_count
+        op: "=="
+        value: 0
+        principle: "No contaminated development evidence may enter the family panel."
+    prompt: |
+      CONTEXT:
+      The fixed development anchor `experiment_5764_gemma31b_singleshot_induction_ab.json` found a +0.190883 pooled held-out accuracy delta for Gemma 4 31B, while both ThinkingCap and Gemma iterative CEGIS refinements were negative. The next question is whether capacity/family and independent hypothesis diversity survive the stricter action/pivotal admission contract. This task uses independent single-shot hypotheses only; no rejected hypothesis may be repaired. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5790_arc_world_model_admission_contract.json
+      - {project_root}/results/experiment_5764_gemma31b_singleshot_induction_ab.json
+      - {project_root}/results/experiment_5760_cegis_refinement_induction_ab.json
+      - {project_root}/results/experiment_5766_gemma31b_cegis_refinement_ab.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/python/carnot/arc
+      - {project_root}/openspec/capabilities/arc/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Run a matched independent single-shot executable-world-model panel across all three mandated SOTA GGUF families, score every immutable hypothesis through Exp5790, and write results/experiment_5791_arc_sota_independent_hypothesis_panel.json without solve credit.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay Exp5790 gates; registry-precheck; call `cached_sota_pair()`; verify both RTX 3090s, real CUDA offload, GGUF file hashes, llama.cpp runtime, RAM/disk, agent-owned trace hashes, and output/checkpoint paths. Missing headline offload yields a terminal blocked artifact, not tiny-model evidence.
+      1. Add/extend ARC REQ-* before implementation for matched family cells, independent single-shot samples, immutable hypothesis hashes, development-anchor import, admission scoring, sample size, and no-refinement/no-solve boundaries.
+      2. Declare MODEL_SPECS for `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Record exact paths/hashes, quantization, chat templates, CUDA layers, runtime build, prompts, sampling, stop policy, and seeds.
+      3. Hash-import the existing Gemma 4 31B rows as a development-proxy anchor and disclose any protocol mismatch. Run new matched cells for all three families on a fresh agent-owned split; the fresh Gemma cell, not the imported anchor, supports the matched comparison.
+      4. Generate at least three independent single-shot hypotheses per independent induction unit/family or document a power rationale. Each sample sees the same allowed train evidence once. Never feed compiler, replay, admission, calibration, or test failures back into generation.
+      5. Sandbox/compile and score every immutable hypothesis through all Exp5790 rungs. Report family, capacity, ordinary/pivotal accuracy, unseen actions, calibration, stability, admissibility, source leaks, degeneracy types, and hypothesis diversity.
+      6. Use clustered intervals by held-out game/induction unit. Preserve missing/compile-failed hypotheses in denominators. `panel_ready_score=1.0` requires all three real SOTA families, complete hypothesis hashes, zero source/game-ID leaks, and at least two admissible independent hypotheses for downstream selection.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`; `registry_credit=false`; `MODEL_SPECS`; `models_used`; `model_runtime_receipts`; `gpu_offload_receipts`; `agent_owned_split_manifest`; `development_anchor_import_receipt`; `fresh_matched_cells`; `prompt_and_sampling_receipts`; `hypothesis_hashes`; `independence_receipts`; `no_refinement_receipts`; `compile_sandbox_receipts`; `admission_rung_scores`; `ordinary_transition_metrics`; `unseen_action_metrics`; `pivotal_transition_metrics`; `rollout_calibration_metrics`; `family_comparison`; `hypothesis_diversity_metrics`; `degeneracy_taxonomy`; `sample_size_justification`; `source_game_identity_leaks`; bare `admissible_hypothesis_count`; bare `real_sota_model_count`; bare `panel_ready_score`; `producer_gate_fields`; `inference_substrate=real_local_llama_cpp_cuda_single_shot_model_synthesis_plus_immutable_agent_owned_arc_replay`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: fresh matched cells support family inference, immutable hashes prove independence, agent-owned replay supports accreditation, and no field supports level credit.
+      8. Run cached_sota_pair, GPU-offload, runtime/hash, registry, source/identity leak, split isolation, independence/no-feedback, compile/sandbox, admission-rung, pivotal, calibration, degeneracy, sample-size/statistics, checkpoint/resume, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5792-arc-calibration-only-selector
+    milestone: "2026.07.516"
+    title: "Frozen calibration chooser over immutable simulator candidates"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5792_arc_calibration_only_selector.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 240
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5791-arc-sota-independent-hypothesis-panel
+        artifact_field: panel_ready_score
+        op: "=="
+        value: 1.0
+        principle: "Selector evaluation requires a complete matched panel with immutable evidence."
+      - upstream: exp5791-arc-sota-independent-hypothesis-panel
+        artifact_field: admissible_hypothesis_count
+        op: ">="
+        value: 2
+        principle: "Selection is undefined without at least two independently admissible alternatives."
+      - upstream: exp5791-arc-sota-independent-hypothesis-panel
+        artifact_field: real_sota_model_count
+        op: ">="
+        value: 3
+        principle: "Family conclusions require all three mandated headline models."
+    prompt: |
+      CONTEXT:
+      The panel produces immutable independent single-shot world-model hypotheses. Iterative CEGIS is retired because it worsened both ThinkingCap and Gemma evidence. This task may choose among fixed hypotheses using calibration transitions, complexity, stability, horizon-matched disagreement, and pivotal coverage; it may not patch, regenerate, or test-tune a hypothesis. S3 is a bounded uncertainty-control inspiration only, not imported HRL evidence. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5790_arc_world_model_admission_contract.json
+      - {project_root}/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+      - {project_root}/results/experiment_5766_gemma31b_cegis_refinement_ab.json
+      - {project_root}/python/carnot/arc
+      - {project_root}/openspec/capabilities/arc/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Freeze a calibration-only selector over immutable admissible hypotheses, evaluate once on sealed future transitions, and write results/experiment_5792_arc_calibration_only_selector.json without LLM inference or solve claims.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay panel gates; registry-precheck; verify hypothesis hashes, train/calibration/test split hashes, no-refinement receipts, exact replay environment, and disk/RAM. Bail if any test row or test metric entered hypothesis generation or selector design.
+      1. Add/extend ARC REQ-* before implementation for selector inputs, frozen weights/rules, calibration-only fitting, horizon-matched disagreement, pivotal coverage, test-once evaluation, baselines, and non-deployable oracle separation.
+      2. Preregister selector features and tie-breaking before reading test outcomes: calibration ordinary/pivotal accuracy, unseen-action fidelity, expected calibration error, multi-step error growth, code complexity, seed stability, and hypothesis disagreement at E3's consumption horizon.
+      3. Compare first admissible sample, random admissible sample, best calibration score, ablated selectors, and a clearly labeled non-deployable test oracle upper bound. The oracle cannot populate promotion gates.
+      4. Freeze selector rules/hash, select once per independent unit, and evaluate on sealed future transitions. Do not compile new code, regenerate, edit, or feed test errors back.
+      5. Report paired test utility, ordinary and pivotal fidelity, calibration, stability, selection regret to the oracle, family concentration, and shortcut canaries. Cluster intervals by held-out game/induction unit.
+      6. Set `selector_ready_score=1.0` only if `selector_delta_lcb>0` versus first sample, selected hypotheses retain full admission, pivotal coverage is complete, source leaks are zero, and test-once/no-refinement receipts pass.
+      7. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`; `registry_credit=false`; `eligible_MODEL_SPECS`; `panel_hash`; `hypothesis_hashes`; `split_hashes`; `selector_feature_contract`; `selector_freeze_hash`; `calibration_receipts`; `horizon_matched_disagreement`; `baseline_results`; `ablation_results`; `oracle_upper_bound_non_deployable`; `selected_hypothesis_ids`; `selected_model_hf_ids`; `test_once_receipt`; `no_refinement_receipt`; `paired_test_metrics`; `selection_regret`; `family_concentration`; bare `selector_delta_lcb`; bare `selected_model_admissible_score`; bare `selected_pivotal_coverage_score`; bare `source_leak_count`; bare `selector_ready_score`; `producer_gate_fields`; `inference_substrate=calibration_only_selection_over_immutable_precomputed_arc_hypotheses_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: calibration evidence chooses hypotheses, sealed test evidence estimates generalization, and oracle evidence is diagnostic only.
+      8. Run split/leakage, selector-freeze, no-test-tuning, no-refinement, baseline/randomization, horizon-disagreement, pivotal, calibration, oracle-isolation, paired-statistics, registry, producer-gate, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5793-arc-live-world-model-ab
+    milestone: "2026.07.516"
+    title: "Gated on Exp5792 selector benefit: measure selected-world-model influence on held-out live E3"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5793_arc_live_world_model_ab.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 480
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5767-arc-game-blind-composition-hardening
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This replaces null/gate-blocked generic component composition with an independently induced, pivotal-accredited, calibration-selected world model and measures only its reachable live E3 influence on held-out actions."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5792-arc-calibration-only-selector
+        artifact_field: selector_ready_score
+        op: "=="
+        value: 1.0
+        principle: "The live policy may see a world model only after test-positive calibration-only selection."
+      - upstream: exp5792-arc-calibration-only-selector
+        artifact_field: selector_delta_lcb
+        op: ">"
+        value: 0.0
+        principle: "A positive held-out selector lower bound is required before live influence."
+      - upstream: exp5792-arc-calibration-only-selector
+        artifact_field: selected_model_admissible_score
+        op: "=="
+        value: 1.0
+        principle: "The selected immutable hypothesis must retain every admission rung."
+      - upstream: exp5792-arc-calibration-only-selector
+        artifact_field: selected_pivotal_coverage_score
+        op: "=="
+        value: 1.0
+        principle: "No selected model with missing pivotal dynamics may influence E3."
+      - upstream: exp5792-arc-calibration-only-selector
+        artifact_field: source_leak_count
+        op: "=="
+        value: 0
+        principle: "Live evidence must remain source-, adapter-, and identity-clean."
+    prompt: |
+      CONTEXT:
+      This is the mandatory `.516` ARC generalization-floor measurement. It does not target or claim a game level solve. It tests whether a pivotal-accredited, calibration-selected immutable world model is reachable by and useful to the shared live E3AgentPolicy on held-out games/actions. The comparison must use the same live entrypoint, observations, budgets, seeds, and action-validity authority. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5767_arc_game_blind_composition_hardening.json
+      - {project_root}/results/experiment_5790_arc_world_model_admission_contract.json
+      - {project_root}/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+      - {project_root}/results/experiment_5792_arc_calibration_only_selector.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/python/carnot/arc
+      - {project_root}/openspec/capabilities/arc/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Run a game-blind held-out baseline-versus-selected-world-model A/B through the reachable live E3 entrypoint and write results/experiment_5793_arc_live_world_model_ab.json with no solve or registry claim.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay all Exp5792 gates; registry-precheck; hash the exact shared live E3 entrypoint and selected immutable hypothesis; verify agent-owned held-out split, real ARC environment, both RTX 3090s, cached mandated GGUF path for any live proposer call, CUDA offload, RAM/disk, action budget, and no external training process conflict. Bail terminally if the world-model branch is not reachable from E3.
+      1. Add/extend ARC REQ-* before implementation for live reachability, matched A/B budgets, agent-owned self-discovery, selected-model immutability, no solve claim, action validity, safety stops, and registry neutrality.
+      2. Declare eligible MODEL_SPECS for all three mandated GGUFs and load only the upstream-selected mandated family if E3 requires an LLM call. Record exact path/hash/runtime/offload. Qwen3.5-0.8B and Gemma4-E4B are smoke-only and cannot populate primary rows.
+      3. Freeze held-out games/actions after registry precheck. Exclude any game/level used for selector tuning or already registered as a target solve. Do not read game source, use GameAdapter, exhaustive offline ground-truth BFS, banked action plans, or registry recipes.
+      4. Run baseline E3 and selected-world-model E3 with identical observations, seeds, per-episode action/tool/token/time budgets, safety stops, and real-environment action validity. The selected model may propose simulated consequences only through the generic reachable branch; the environment decides outcomes.
+      5. Preserve every live observation/action/successor, model-use decision, selected rollout, disagreement, fallback, invalid action, and environment outcome. Prove the hypothesis hash never changes and no calibration/test feedback triggers reinduction.
+      6. Measure paired live utility, valid-action rate, progress/goal-predicate change without solve credit, wasted actions, model-use calibration, pivotal-event outcomes, latency, and fallbacks. Use held-out game/episode clusters for intervals.
+      7. Set `live_world_model_ready_score=1.0` only if paired live utility lower bound is positive, validity does not regress, E3 reachability is proven, the model remains immutable, and all evidence is agent-owned. Regardless of metric, `solve_claimed=false` and `registry_credit=false` in this experiment.
+      8. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`; `registry_credit=false`; `MODEL_SPECS`; `models_used`; `model_runtime_receipts`; `gpu_offload_receipts`; `live_entrypoint_hash`; `arc_live_path_reachable`; `selected_hypothesis_id`; `selected_hypothesis_hash_before`; `selected_hypothesis_hash_after`; `hypothesis_immutable`; `heldout_manifest`; `agent_owned_trace_receipts`; `matched_budget_receipts`; `arm_rows`; `paired_live_metrics`; `live_utility_delta`; bare `live_utility_lcb`; `valid_action_delta`; `progress_metrics_without_solve_credit`; `pivotal_event_metrics`; `world_model_use_calibration`; `fallback_counts`; `latency_metrics`; `source_adapter_bfs_bank_leak_checks`; bare `live_world_model_ready_score`; `producer_gate_fields`; `inference_substrate=live_e3_agent_owned_arc_interaction_with_selected_immutable_world_model_and_real_environment_authority`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: live agent attempts establish generalization evidence, the real environment establishes outcomes, immutable hashes exclude CEGIS, and no field supports a level solve claim.
+      9. Run registry-duplicate, live-reachability, source/adapter/BFS/bank leak, model-hash immutability, matched-budget, action-validity, safety-stop, trace-provenance, pivotal-event, paired-statistics, GPU-offload, checkpoint/resume, producer-gate, focused coverage, relevant suite, spec-coverage, schema/adversarial, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5794-hardware-terminal-action-receipt
+    milestone: "2026.07.516"
+    title: "Board-state hash ledger and operator handoff packet"
+    priority: medium
+    track: hardware
+    deliverable: results/experiment_5794_hardware_terminal_action_receipt.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 60
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5782-transition-v516
+        artifact_field: next_range_collision_count
+        op: "=="
+        value: 0
+        principle: "Hardware receipts need an unambiguous evidence identity even when no probe runs."
+    prompt: |
+      CONTEXT:
+      Hardware continuity is evidence accounting in `.516`, not a speedup lane. Current evidence says KV260 has an SSH/bitstream proof of concept, PolarFire is reachable but lacks a terminal Carnot workload and has passive-cooling limits, and GateMate remains physically blocked by DirtyJTAG/cable state. Extropic TSU/Z1 and Kona have no authenticated Carnot-local route. Repeating an unchanged detect/flash/SSH probe is prohibited. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/results
+      - {project_root}/openspec/capabilities/hardware/spec.md
+      - {project_root}/tests/python
+
+      TASK:
+      Reconcile exact cached terminal/precondition evidence for KV260, PolarFire, and GateMate, run a bounded non-destructive check only if a precondition hash changed, and write results/experiment_5794_hardware_terminal_action_receipt.json with no performance claim.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the hardware wishlist, newest exact declared board artifacts, device/reachability evidence, known issues, exclusion manifest, and any operator message. Record host/device safety boundaries before any command. If there is no changed precondition, skip all hardware commands and proceed with cached reconciliation.
+      1. Add/extend hardware-reporting REQ-* before implementation for exact cached provenance, per-board state machines, changed-precondition detection, no-repeat behavior, bounded authorized checks, operator-action packets, and no-speedup claims.
+      2. Resolve each board's newest canonical artifact by declared path/hash, never broad numeric glob or mtime. For KV260 record SSH/bitstream/workload state and prohibit every host-side storage or block-device access. For PolarFire record authentication/workload state plus passive-cooling duration/temperature limits. For GateMate record DirtyJTAG/device/cable/flash state.
+      3. Compute a per-board precondition hash from device identity, connectivity, toolchain, bitstream/workload, cooling, and operator authorization. Compare with the last canonical receipt.
+      4. If unchanged, issue no board command and emit a precise operator-action packet. If changed, run only the smallest non-destructive check explicitly authorized by the wishlist/known issue; record command, target, timeout, stdout/stderr hashes, temperatures where applicable, and stop state. Never flash or write storage unless explicitly authorized by an existing operator directive.
+      5. Report Extropic and Kona as `no_authenticated_local_execution_surface`; do not probe public services or infer performance from marketing pages.
+      6. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `canonical_hardware_artifacts`; `hardware_artifact_hashes`; `board_state_machine`; `kv260_state`; `polarfire_state`; `gatemate_state`; `precondition_hashes_previous`; `precondition_hashes_current`; `changed_preconditions`; `probe_decisions`; `commands_run`; `commands_skipped`; `safety_boundaries`; `storage_write_count`; `flash_write_count`; `temperature_duration_receipts`; `operator_action_packets`; `extropic_access_state`; `kona_access_state`; `speedup_claimed=false`; `energy_claimed=false`; `production_ready_claimed=false`; `inference_substrate=exact_cached_hardware_artifact_reconciliation_with_changed_precondition_only_bounded_checks_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: authenticated physical receipts establish board state, changed hashes authorize bounded rechecks, and cached continuity cannot support speed/energy claims.
+      7. Run exact-path, hash, per-board-state, changed-precondition, no-repeat, no-storage-write, no-flash-without-authorization, thermal-disclosure, operator-packet, proprietary-access, schema/adversarial, focused coverage, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5795-v516-capstone-reconciliation
+    milestone: "2026.07.516"
+    title: "Reconcile .516 evidence, phase telemetry, specs, operations docs, and honest promotion decisions"
+    priority: critical
+    track: synthesis
+    deliverable: results/experiment_5795_v516_capstone_reconciliation.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 120
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5716-v510-capstone-reconciliation
+        verdict: "blocked: v510 reconciled; exp5708_stream_promoted=False; exp5709_promoted=False; exp5710_promoted=False; arc_registry_delta=0; arc_solve_credited=False; one_axis_rust_parity=True; one_axis_quality_restart=True; timing_claimed=false; hardware_speedup_claimed=false"
+        addressed_by: "The .516 capstone is unconditionally queued, resolves every task by exact declared path plus conductor outcome, replays bare gates, and records phase telemetry even when science branches are blocked."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This capstone always runs after the `.516` queue and must reconcile exact declared deliverables plus conductor outcomes. Missing, gate-blocked, operationally blocked, scientific-null, negative, positive, and retired outcomes are distinct. No branch may be promoted from a bootstrap, gate, cached hardware, development-proxy, tiny-model, or non-deployable oracle result. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
       - {project_root}/research-program.md
       - {project_root}/_bmad/prd.md
-      - {project_root}/results/experiment_5772_sota_constraint_drift_stream.json
-      - {project_root}/results/experiment_5772_sota_constraint_drift_stream.rows.jsonl
-      - {project_root}/results/experiment_5761_exact_constraint_acquisition_benchmark.json
-      - {project_root}/results/experiment_5762_query_driven_constraint_lifecycle.json
-      - {project_root}/results/experiment_5763_dependent_task_constraint_acquisition.json
-      - {project_root}/scripts/experiment_5762_query_driven_constraint_lifecycle.py
-      - {project_root}/openspec/capabilities/continuous-learning/spec.md
-      - {project_root}/openspec/capabilities/verification/spec.md
-      - {project_root}/tests/python
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/_bmad/traceability.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/research-references.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5782_transition_v516.json
+      - {project_root}/results/experiment_5783_v516_source_delta_ingestion.json
+      - {project_root}/results/experiment_5784_evidence_index_terminal_qualification.json
+      - {project_root}/results/experiment_5785_hardness_surface_fixture.json
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_5787_validation_gated_constraint_skill_ab.json
+      - {project_root}/results/experiment_5788_constraint_skill_transfer_audit.json
+      - {project_root}/results/experiment_5789_constraint_skill_shadow_adapter.json
+      - {project_root}/results/experiment_5790_arc_world_model_admission_contract.json
+      - {project_root}/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+      - {project_root}/results/experiment_5792_arc_calibration_only_selector.json
+      - {project_root}/results/experiment_5793_arc_live_world_model_ab.json
+      - {project_root}/results/experiment_5794_hardware_terminal_action_receipt.json
+      - {project_root}/scripts/in_process_doc_reconcile.py
+      - {project_root}/openspec/capabilities
 
       TASK:
-      Compare frozen-ledger, MUS/contradiction-only, and query-driven constraint-acquisition arms on the sealed prospective stream, enforce retention and rollback, and emit results/experiment_5773_prospective_constraint_acquisition_ab.json.
+      Reconcile milestone `.516` by exact artifact/conductor identity, compute phase telemetry and promotion/retirement decisions, update required internal specs/docs/history, and write results/experiment_5795_v516_capstone_reconciliation.json without publishing or pushing.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: enforce all Exp5772 gates; verify upstream artifact/row hashes, exact validators, chronological ordering, disjoint development/science sessions, typed template-library hash, random seeds, and free RAM/disk. Bail if any raw row, protected fact, candidate set, label, or split differs from Exp5772.
-      1. Add/extend continuous-learning and verification REQ-* before implementation. Freeze three arms: (a) immutable/frozen ledger, (b) MUS/contradiction-only feedback, and (c) Exp5762-style query-driven acquire/refine/quarantine/supersede/rollback. Match candidate, validator, and membership-query budgets.
-      2. Process science sessions strictly chronologically. The learner may observe only the current/past candidate, exact accept/reject label, localized counterexample, and bounded membership-query answers. It cannot access future rows, hidden target constraints, model identity, exact solution text, or science aggregate metrics.
-      3. Validate every returned assignment against both the current maintained ledger and the independent exact task validator. Keep contradiction, satisfiable drift, exact error, and protected-fact distortion separate. Solver satisfiability of the ledger alone is not a correct answer.
-      4. Every proposed update must have typed origin, pre/post state hashes, development-only discrimination, protected-prefix replay, current-model feasibility, confidence, and accept/quarantine/reject receipt. Rejected updates may not propagate. Supersession must preserve an audit chain.
-      5. Inject conflict, over-fit, stale-constraint, protected-fact, interruption, restart, and rollback canaries. Exact rollback must restore the prior sidecar state and identical future decisions. Do not modify model weights, prompts, raw rows, validators, or production defaults.
-      6. Measure per-family/domain exact accuracy, satisfiable-drift rate, contradiction rate, constraint precision/recall/F1, query efficiency, dynamic regret, update latency, state growth, new-suffix utility, old-prefix retention, protected-fact distortion, unsafe propagation, and rollback mismatches with paired session-level uncertainty.
-      7. Set bare `continuous_self_learning_credited_score=1.0` only if the query-driven arm has `drift_reduction_lcb>0` versus both controls, `old_prefix_retention_delta_lcb>=0`, no exact-accuracy regression, zero protected-fact distortion introduced, zero unsafe propagation, exact rollback, and at least two domains plus two model families show non-negative effects. Otherwise it is a scientific null/negative, not an infrastructure success.
-      8. Emit downstream gate fields through `producer_gate_fields` as bare scalars: `continuous_self_learning_credited_score`, `drift_reduction_lcb`, `old_prefix_retention_delta_lcb`, `unsafe_propagation_count`, `rollback_hash_mismatch_count`, and `protected_fact_distortion_introduced_count`.
-      9. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field; bare `status`; `preconditions_checked`; `spec_refs`; `upstream_artifact_hashes`; `science_stream_hash`; `template_library_hash`; `arm_definitions`; `matched_budget_receipts`; `chronological_session_manifest`; `information_boundary_receipts`; `constraint_lifecycle_ledger`; `constraint_birth_receipts`; `constraint_refinement_receipts`; `constraint_quarantine_receipts`; `constraint_supersession_receipts`; `membership_query_receipts`; `rollback_receipts`; `restart_equivalence`; `per_arm_metrics`; `per_family_metrics`; `per_domain_metrics`; `failure_mode_deltas`; `constraint_precision`; `constraint_recall`; `constraint_f1`; `query_efficiency`; `dynamic_regret`; `new_suffix_utility_delta`; bare `drift_reduction_lcb`; bare `old_prefix_retention_delta_lcb`; bare `unsafe_propagation_count`; bare `rollback_hash_mismatch_count`; bare `protected_fact_distortion_introduced_count`; bare `continuous_self_learning_credited_score`; `continuous_self_learning_target=prospective_typed_constraint_sidecar`; `model_weight_mutation=false`; `raw_stream_modified=false`; `verifier_is_oracle=true`; `production_default_enabled=false`; `inference_substrate=cached_sota_stream_online_exact_constraint_sidecar_cpu_z3`; `random_seeds`; `duration_s`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      10. Run chronological-leakage, exact answer-ledger validation, all-arm budget parity, lifecycle transition, retention, protected-fact, conflict/over-fit, restart/rollback, unsafe-propagation, paired-statistics, producer-gate, schema/adversarial, focused coverage, relevant full-suite, spec-coverage, and root-clutter tests.
+      0. PRECONDITIONS: parse active/next roadmaps; hash every declared deliverable, conductor log, research-complete.yaml, exclusion manifest, ARC registry, specs, and operations docs; record free disk/RAM. Map missing artifacts to conductor outcomes and never guess by numeric prefix or mtime.
+      1. Add/extend the capstone reporting REQ-* and tests before implementation. Define outcome taxonomy, gate replay, exact promotion rules, retirement updates, phase telemetry, history append, and doc reconciliation.
+      2. Build the canonical task matrix for Exp5782-Exp5794 with exact path/hash, conductor status, artifact status, inference substrate, primary metrics, gate inputs/outputs, prior-failure retirement result, and task-owned/global test state.
+      3. Classify each task as complete-positive, complete-null, complete-negative, blocked-precondition, blocked-gate, failed-delivery, missing, or retired. A gate block is not a scientific null; a development proxy is not live evidence; a no-solve ARC task cannot update the solve registry.
+      4. Replay every structured gate from producer bare scalars and compare with conductor decisions. Report stale/wrapper/type/alias discrepancies without modifying scripts/research_conductor.py.
+      5. Apply roadmap promotion/retirement rules exactly. If a `prior_failures` task repeats the same verdict, update ops/exclusion_manifest.yaml with the mechanical retirement. Keep the constraint adapter default-off unless all science/integration gates pass. Keep ARC model influence default-off unless the live lower bound and validity gates pass.
+      6. Compute per-phase/task wall time, retries, gate-skipped agent calls, GPU/CPU utilization receipts when available, slowest tasks, avoidable orchestration time, and budget adherence from conductor logs and artifacts. Preserve evidence/index repair as infrastructure rather than scientific progress.
+      7. Reconcile OpenSpec implementation status, `_bmad/traceability.md`, architecture only if the runtime architecture materially changed, research-complete.yaml exactly once, research-references.md, ops/status.md, ops/changelog.md, and known issues. Do not update public README/paper claims without promotion-grade evidence.
+      8. REQUIRED ARTIFACT FIELDS: `status`; `preconditions_checked`; `milestone`; `canonical_task_matrix`; `canonical_artifact_hashes`; `conductor_outcomes`; `outcome_taxonomy`; `positive_task_ids`; `scientific_null_task_ids`; `negative_task_ids`; `blocked_precondition_task_ids`; `blocked_gate_task_ids`; `failed_delivery_task_ids`; `missing_task_ids`; `retired_task_ids`; `gate_replay_receipts`; `prior_failure_retirement_receipts`; `constraint_branch_decision`; `arc_branch_decision`; `hardware_branch_decision`; `arc_registry_unchanged`; `solve_claim_count`; `phase_telemetry`; `task_wall_times`; `retry_counts`; `gate_skipped_agent_calls`; `slowest_tasks`; `avoidable_orchestration_time_min`; `gpu_cpu_receipts`; `criteria_matrix`; `docs_reconciled`; `specs_reconciled`; `traceability_reconciled`; `research_complete_append_count`; `public_claims_changed=false`; `research_roadmap_unchanged=true`; `conductor_unchanged=true`; `inference_substrate=exact_local_artifact_conductor_gate_and_document_reconciliation_no_llm`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`. Principles: exact task identities support reconciliation, producer scalars support gates, live/exact evidence supports promotion, and telemetry supports the next plan rather than scientific claims.
+      9. Run YAML/history schema, exact-identity/hash, outcome-taxonomy, gate replay, prior-failure retirement, ARC registry/no-solve, promotion, doc/spec/traceability consistency, relevant unit/lint/spec-coverage, applicable ops/e2e-test-plan checks, and root-clutter sweep.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5774-constraint-transfer-forgetting-audit
-    milestone: "2026.07.515"
-    title: "Gated on Exp5773 credited learning: test leave-one-family-out constraint transfer and forgetting"
-    priority: high
-    track: continuous-self-learning
-    deliverable: results/experiment_5774_constraint_transfer_forgetting_audit.json
-    model: sonnet
-    max_turns: 50
-    estimated_wall_time_min: 240
-    continuous_self_learning_task: true
-    prior_failures:
-      - experiment_id: exp918-lagrange-forgetting-multi-constraint
-        verdict: "marginal_improvement (signed_entropy_improvement=0.018, forgetting_lambda=0.051)"
-        addressed_by: "Exp918 tests WITHIN-STREAM forgetting on a single model's synthetic constraint-type corpus (8 constraint types e.g. arithmetic_carry/sign_check, Lagrange-multiplier entropy-decay weighting, one generator throughout) -- a different mechanism (Lagrange-multiplier weighting vs this task's typed exact sidecar), a different corpus (synthetic constraint types vs cached real-generator rows from Exp5772), and a different research question (does an entropy-decay schedule slow in-stream forgetting, vs does a constraint learned from one model FAMILY transfer or get forgotten when the acquisition source rotates to a DIFFERENT family). The only overlap is the word 'forgetting' plus the general constraint-learning domain; Exp918's own prior_failure field shows it already differs from an even earlier attempt (exp909) on the same within-stream axis -- this task is a third, cross-family axis, not a rerun of either."
-        retire_if_same_verdict: false
-    gated_on:
-      - upstream: exp5773-prospective-constraint-acquisition-ab
-        artifact_field: continuous_self_learning_credited_score
-        op: "=="
-        value: 1.0
-        principle: "Transfer is meaningful only after prospective within-stream learning is credited."
-      - upstream: exp5773-prospective-constraint-acquisition-ab
-        artifact_field: drift_reduction_lcb
-        op: ">"
-        value: 0.0
-        principle: "The source learner must reduce satisfiable drift with a positive lower bound."
-      - upstream: exp5773-prospective-constraint-acquisition-ab
-        artifact_field: old_prefix_retention_delta_lcb
-        op: ">="
-        value: 0.0
-        principle: "Transfer cannot build on a learner that forgets its protected prefix."
-      - upstream: exp5773-prospective-constraint-acquisition-ab
-        artifact_field: unsafe_propagation_count
-        op: "=="
-        value: 0
-        principle: "Only safely admitted source constraints may enter a family-transfer audit."
-      - upstream: exp5773-prospective-constraint-acquisition-ab
-        artifact_field: rollback_hash_mismatch_count
-        op: "=="
-        value: 0
-        principle: "The source lifecycle must be exactly reversible."
-    prompt: |
-      CONTEXT:
-      Exp5773 may show that a typed exact sidecar improves a chronological stream within the pooled model set. FR-11 requires reusable learning rather than memorizing one generator's characteristic mistakes. This task rotates Qwen3.6-35B-A3B, Gemma4-31B, and Gemma4-26B-A4B as held-out families and tests task-level transfer, negative transfer, and forgetting using cached Exp5772 rows only. Today is {date}.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/results/experiment_5772_sota_constraint_drift_stream.json
-      - {project_root}/results/experiment_5772_sota_constraint_drift_stream.rows.jsonl
-      - {project_root}/results/experiment_5773_prospective_constraint_acquisition_ab.json
-      - {project_root}/scripts/experiment_5762_query_driven_constraint_lifecycle.py
-      - {project_root}/openspec/capabilities/continuous-learning/spec.md
-      - {project_root}/tests/python
-
-      TASK:
-      Run a leave-one-model-family-out transfer and forgetting audit for the credited typed constraint sidecar and emit results/experiment_5774_constraint_transfer_forgetting_audit.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: enforce every Exp5773 gate; verify upstream hashes, exact validators, family labels, session and task-template splits, sidecar initial state, random seeds, and free RAM/disk. Bail if a held-out family or template appears in training through row identity, prompt hash, or cached state.
-      1. Add/extend continuous-learning REQ-* before implementation. Freeze three folds, each learning chronologically from two model families and evaluating once on disjoint sessions from the third. Within each fold, keep task-template-disjoint and task-template-matched strata separate.
-      2. Remove model identity, hub ID, prompt-template family marker, and response-style features from runtime inputs. Add shuffled-family and family-label leakage canaries. The sidecar may route only from typed constraints, exact counterexamples, and lifecycle state.
-      3. Compare transferred sidecar, fresh-empty sidecar, pooled-oracle-development upper bound, and frozen-ledger controls under matched query/validator budgets. The oracle development arm is diagnostic and cannot be promoted.
-      4. Measure held-out-family exact accuracy, satisfiable-drift reduction, contradiction, protected-fact distortion, query efficiency, task-template transfer, old-prefix retention, state growth, update churn, dynamic regret, and negative-transfer cells with paired fold uncertainty.
-      5. Replay every source-family protected prefix after held-out-family evaluation and after any admitted held-out update. Quarantine or rollback any update that harms a source prefix. Reproduce all state hashes after interruption/resume.
-      6. Set `cross_family_transfer_ready_score=1.0` only if the leave-one-family-out macro `transfer_delta_lcb>0`, every family has a non-negative point estimate, old-prefix retention lower bound is non-negative, negative-transfer count is zero after quarantine, and no leak or unsafe propagation occurs.
-      7. Emit downstream gate fields through `producer_gate_fields` as bare scalars: `cross_family_transfer_ready_score`, `transfer_delta_lcb`, `old_prefix_retention_delta_lcb`, `negative_transfer_count`, `unsafe_propagation_count`, and `family_identity_leak_count`.
-      8. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field; bare `status`; `preconditions_checked`; `spec_refs`; `upstream_artifact_hashes`; `family_fold_manifest`; `task_template_strata`; `fold_disjointness_receipts`; `runtime_feature_manifest`; `family_identity_canary_receipts`; `arm_definitions`; `matched_budget_receipts`; `per_fold_metrics`; `per_family_metrics`; `per_domain_metrics`; `task_template_transfer_metrics`; `negative_transfer_cells`; `retention_replay_receipts`; `quarantine_receipts`; `rollback_receipts`; `restart_equivalence`; bare `transfer_delta`; bare `transfer_delta_lcb`; bare `old_prefix_retention_delta_lcb`; bare `negative_transfer_count`; bare `unsafe_propagation_count`; bare `family_identity_leak_count`; bare `cross_family_transfer_ready_score`; `model_weight_mutation=false`; `production_default_enabled=false`; `inference_substrate=cached_sota_stream_leave_one_family_out_exact_sidecar`; `random_seeds`; `duration_s`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      9. Run fold/task-template leakage, model-identity canary, matched-budget, exact-validation, transfer/negative-transfer, retention, quarantine/rollback, restart, paired-statistics, producer-gate, schema/adversarial, focused coverage, relevant full-suite, spec-coverage, and root-clutter tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5775-constraint-sidecar-shadow-integration
-    milestone: "2026.07.515"
-    title: "Gated on Exp5774 cross-family transfer: wire a disabled online constraint-sidecar shadow path"
-    priority: high
-    track: continuous-self-learning
-    deliverable: results/experiment_5775_constraint_sidecar_shadow_integration.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 50
-    estimated_wall_time_min: 300
-    continuous_self_learning_task: true
-    prior_failures:
-      - experiment_id: exp5709-fr11-prospective-shadow-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "This integration is gated on a clean parse-safe stream plus positive prospective and leave-one-family-out evidence, and it writes only a disabled typed sidecar shadow adapter with exact restart/rollback tests."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp5774-constraint-transfer-forgetting-audit
-        artifact_field: cross_family_transfer_ready_score
-        op: "=="
-        value: 1.0
-        principle: "A runtime shadow path requires family-transfer evidence, not only pooled fixture success."
-      - upstream: exp5774-constraint-transfer-forgetting-audit
-        artifact_field: transfer_delta_lcb
-        op: ">"
-        value: 0.0
-        principle: "Held-out-family transfer must have a positive lower bound."
-      - upstream: exp5774-constraint-transfer-forgetting-audit
-        artifact_field: old_prefix_retention_delta_lcb
-        op: ">="
-        value: 0.0
-        principle: "The sidecar cannot enter integration after forgetting protected prefixes."
-      - upstream: exp5774-constraint-transfer-forgetting-audit
-        artifact_field: unsafe_propagation_count
-        op: "=="
-        value: 0
-        principle: "No unsafe update may reach the integration task."
-      - upstream: exp5774-constraint-transfer-forgetting-audit
-        artifact_field: family_identity_leak_count
-        op: "=="
-        value: 0
-        principle: "The shared runtime path must be model-family blind."
-    prompt: |
-      CONTEXT:
-      Exp5773/5774 may establish prospective, transferable constraint learning. This task turns that evidence into a bounded disabled shadow adapter in the existing verification pipeline. It must prove lifecycle persistence and observation without changing any production answer, model weight, or default. Today is {date}.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/results/experiment_5773_prospective_constraint_acquisition_ab.json
-      - {project_root}/results/experiment_5774_constraint_transfer_forgetting_audit.json
-      - {project_root}/python/carnot/verification
-      - {project_root}/python/carnot/pipeline
-      - {project_root}/scripts/experiment_template.py
-      - {project_root}/openspec/capabilities/continuous-learning/spec.md
-      - {project_root}/openspec/capabilities/verification/spec.md
-      - {project_root}/tests/python
-
-      TASK:
-      Implement a disabled-by-default model-family-blind constraint-sidecar shadow adapter, replay a fresh sealed suffix with interruption and rollback, and emit results/experiment_5775_constraint_sidecar_shadow_integration.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: enforce every Exp5774 gate; verify upstream artifact/state hashes, target verification entrypoint, no production process is active on the test fixture, fresh sealed suffix availability, exact validators, state directory isolation, and free RAM/disk. Bail if integration would require mutating a production default or model weight.
-      1. Add/extend continuous-learning/verification REQ-* before implementation. Define a narrow adapter contract for observing exact feedback, proposing typed updates, shadow-scoring future candidates, exporting/importing state, quarantining, and rollback.
-      2. Wire the adapter behind an explicit default-off flag. With the flag off, prove byte-identical decisions, logs, and outputs against baseline. With shadow on, record recommendations and lifecycle receipts but never replace or suppress the production answer.
-      3. Replay a fresh chronological suffix not used for Exp5773/5774 selection. Inject process interruption at multiple update boundaries, resume from the last committed state, and prove decisions/state hashes match an uninterrupted run.
-      4. Enforce state-size, update-count, query, latency, and memory caps. On cap/conflict/validator disagreement, quarantine or roll back and continue baseline behavior. Add corrupt-state, partial-write, stale-version, family-ID, and protected-fact negative controls.
-      5. Measure shadow exact utility, satisfiable-drift recommendations, false intervention rate, harmful recommendation count, retained-prefix replay, latency/memory overhead, state growth, restart equivalence, rollback integrity, and unsafe propagation.
-      6. `shadow_integration_ready_score=1.0` only if default-off equivalence is exact, the fresh suffix retains positive shadow utility without harmful recommendations, every cap/failure falls back safely, interruption/resume is exact, and production defaults remain off. This is shadow readiness, not deployment authorization.
-      7. REQUIRED ARTIFACT FIELDS: `field_principles` mapping every artifact field; bare `status`; `preconditions_checked`; `spec_refs`; `upstream_artifact_hashes`; `upstream_state_hash`; `adapter_contract`; `changed_files`; `integration_entrypoint`; `default_off_receipts`; `byte_equivalence_receipts`; `fresh_suffix_manifest`; `fresh_suffix_hash`; `shadow_recommendation_ledger`; `lifecycle_receipts`; `cap_definitions`; `cap_trigger_receipts`; `fallback_receipts`; `interruption_manifest`; `restart_equivalence`; `rollback_receipts`; `corrupt_state_control`; `partial_write_control`; `family_identity_control`; `protected_fact_control`; `shadow_exact_utility_delta`; `satisfiable_drift_recommendation_delta`; `false_intervention_rate`; `harmful_recommendation_count`; `retention_delta`; `latency_overhead`; `memory_overhead`; `state_growth`; `unsafe_propagation_count`; `production_answers_changed_count=0`; bare `shadow_integration_ready_score`; `model_weight_mutation=false`; `production_default_enabled=false`; `deployment_authorized=false`; `inference_substrate=cached_sota_suffix_disabled_exact_constraint_shadow_adapter`; `random_seeds`; `duration_s`; `test_commands`; `test_exit_codes`; `reproducibility_checksum`; `honest_verdict` beginning `complete:` or `blocked:`.
-      8. Run adapter-contract, default-off byte equivalence, fresh-suffix disjointness, exact-validator, lifecycle, caps/fallback, interruption/restart, rollback/corruption, protected-fact, family-blind, no-answer-mutation, focused coverage, relevant full-suite, spec-coverage, schema/adversarial, and root-clutter tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-# PHASE_3_TASKS
