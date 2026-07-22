@@ -1,0 +1,546 @@
+{
+  "status": "complete",
+  "preconditions_checked": {
+    "ok": true,
+    "failures": [],
+    "registry_precheck": {
+      "source": "ops/arc_solve_registry.yaml",
+      "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+      "checked_before_scoring": true,
+      "public_game_count": 25,
+      "registry_level_count": 183,
+      "full_game_clear_count": 25,
+      "all_public_games_complete": true,
+      "no_public_level_can_be_credited_as_new": true,
+      "ok": true
+    },
+    "live_e3_entrypoint_hash": {
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "present": true,
+      "sha256": "sha256:c470180a7ecf7c82d08ac3e56e063b54d10e25a729bc86d681285e131f7c7181"
+    },
+    "retained_development_proxy_hashes": {
+      "exp5764": {
+        "path": "results/experiment_5764_gemma31b_singleshot_induction_ab.json",
+        "present": true,
+        "sha256": "sha256:ed7f0d14f3991d17c81e9bf6b2773c3848b9b59d76267efa29a3cdf063abaf04"
+      },
+      "exp5764_shard": {
+        "path": "results/exp5764_gemma31b_singleshot_shard.jsonl",
+        "present": true,
+        "sha256": "sha256:36f1ac2c2b562e16bd64a1bf0094a6066a83f41189ba1d1acc1f029c0bc7df33"
+      },
+      "exp5760": {
+        "path": "results/experiment_5760_cegis_refinement_induction_ab.json",
+        "present": true,
+        "sha256": "sha256:c2466efd34b61150c0f5b46237d16723497a45674f9afbb1ca95201d6b10debb"
+      },
+      "exp5766_gemma_cegis": {
+        "path": "results/experiment_5766_gemma31b_cegis_refinement_ab.json",
+        "present": true,
+        "sha256": "sha256:6f62d58ff0e832c9ab932beb0a3b50b913725375156977edc6361addbaf059a4"
+      }
+    },
+    "agent_owned_trace_manifest_hashes": {
+      "exp5766_interaction_audit": {
+        "path": "results/experiment_5766_arc_loo_component_interaction_audit.json",
+        "present": true,
+        "sha256": "sha256:95c7c7d02f2057c463430d2a1ef382721b9359e19f581b59a3d61abceda4ea5f"
+      }
+    },
+    "source_denylist_hash": "sha256:a71912c548c6e5844d81329d6bf8da3a9e1ef4c6a038864fc1d14ff32335ec3f",
+    "disk_ram": {
+      "ok": true,
+      "disk_free_mb": 1172140,
+      "ram_free_mb": 79050,
+      "min_disk_free_mb": 256,
+      "min_ram_free_mb": 256
+    },
+    "replay_environment": {
+      "ok": true,
+      "python": "3.12.13",
+      "platform": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43",
+      "deterministic_replay": true,
+      "no_live_e3_execution": true
+    },
+    "trace_provenance_ok": true,
+    "trace_gates": {
+      "trace_audit_present": true,
+      "trace_status_complete": true,
+      "trace_rows_25": true,
+      "trace_exact_replay": true,
+      "trace_no_source": true,
+      "trace_no_adapter": true,
+      "trace_no_outer_loop_re": true,
+      "trace_no_leaks": true,
+      "trace_no_solve_credit": true
+    }
+  },
+  "registry_precheck": {
+    "source": "ops/arc_solve_registry.yaml",
+    "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+    "checked_before_scoring": true,
+    "public_game_count": 25,
+    "registry_level_count": 183,
+    "full_game_clear_count": 25,
+    "all_public_games_complete": true,
+    "no_public_level_can_be_credited_as_new": true,
+    "ok": true
+  },
+  "solve_claimed": false,
+  "registry_credit": false,
+  "spec_refs": [
+    "REQ-ARC-WMTE-5790",
+    "SCENARIO-ARC-WMTE-5790-LEAKAGE-AND-PROVENANCE-REJECTION",
+    "SCENARIO-ARC-WMTE-5790-PIVOTAL-FREEZE-AND-METRICS",
+    "SCENARIO-ARC-WMTE-5790-ADMISSION-DECISIONS-NO-CREDIT"
+  ],
+  "admission_rung_contract": {
+    "L0": {
+      "name": "syntax_compile_and_sandbox",
+      "passes_when": "immutable hypothesis compiles, runs in sandbox, and has no forbidden input leak"
+    },
+    "L1": {
+      "name": "exact_seen_action_replay",
+      "passes_when": "exact replay accuracy on seen-action rows is 1.0"
+    },
+    "L2": {
+      "name": "heldout_and_unseen_action_fidelity",
+      "passes_when": "heldout accuracy >= 0.65 and unseen-action accuracy >= 0.7"
+    },
+    "L3": {
+      "name": "multi_step_calibration_and_stability",
+      "passes_when": "seed stability >= 0.7 and error growth <= 0.4"
+    },
+    "L4": {
+      "name": "pivotal_coverage_play_cost_and_closed_loop_utility",
+      "passes_when": "pivotal accuracy >= 0.8, every pivotal stratum is covered, and play-cost miss risk <= 0.2"
+    }
+  },
+  "agent_owned_trace_manifest": {
+    "row_count": 100,
+    "row_hashes": [
+      "sha256:18e246171ed7b1a14ca89d7c87be031a373fa75791a3a3cc5934e112704988f3",
+      "sha256:49a6b0baaccefd3a9f2f87073362ae9fe4ea26e2ed7f73ec5dc73f2d88dfa0b7",
+      "sha256:ec2a3a1c6a35f94d1b83256dfad63fe17f62f9a9633deb44a0b7ad28fe0ab476",
+      "sha256:682a3c7e4ac413289cec0d9645b290c6e5f898d02f1bd53cd1c3f9c318365e19",
+      "sha256:3360b9195c54181d053665c1dd33028215a32087aa59c826394758dabbcca34a",
+      "sha256:6ea8d672032f8634a916f32c46cc9c0ac6e1247eca0a7b6f24e0db2247852924",
+      "sha256:ec8b88a7d9990293f0c54b2c24885ba48d0cdc3ac1bcd23731e922af31fc001a",
+      "sha256:99a883ffe42007127cda8c8592e763bfd9fc9ebab41fcf31b87be526a988e141",
+      "sha256:367ff336136aa4879bda63a26d28a625d1ca11151a6f89d8d87367118b7fe3f1",
+      "sha256:9367d66352a9e809d5894b85f7b4a23d63d3b635fc36f4aacc3ad430ab51d625",
+      "sha256:f17a8550b2f9090e8cebbc7097ce2371b5fbf372e62e58583aaa2ff0a787b79d",
+      "sha256:aa06481786acc8abee4ffaba00433e69691fe53e19f7ed59c96ab375f949ea83",
+      "sha256:c812cd0438a5f4cbab497c2d0ff51495bee68cc592dd5f8fba0d3ef9ebd9c292",
+      "sha256:0953776f26d892f0ad8164df8f343900f9b15dfc571f2d7bc16d228d4706d26f",
+      "sha256:79174a22d400b8703452369de1bc9ab76c1762ee319e72d2d2f89ef45affbbcc",
+      "sha256:f7f7aed290ed997a92d3c2f5229a5dbd63aae7115ccb89aa97bfd8cb0b0c477b",
+      "sha256:265b343f09f887fc661b88c4789f16774b0f879098930761f71d110daa5272d5",
+      "sha256:8b23fa9f0237a37e15992d181bed3cc3130292f4ac1de5a18153b3c9bb14704e",
+      "sha256:466e20c52ea68f8c472f7b6f91256f407de579a104972f6179aecef2f8c44f25",
+      "sha256:f2d9253ddd217c3cbc2d34d2e0d24c2734e464a4ef2ac0bf284fe7cdc9829198",
+      "sha256:4696af8d9d67f4b0d8b7045b4e7a2ee132122ea05ca55b53a8096690ab26a9db",
+      "sha256:5f90639395e114ed4fcb8bf334f9ba0678663a52ed08eabcc1f4865b92c56c0e",
+      "sha256:375c4dd68dce173959e40844845944d106404ccf7936fdb467a6dfe6b4efa939",
+      "sha256:0d315101151a70a5f536bd51263a6d67aaecd2119ad67e13de933fa0786d7126",
+      "sha256:125e4f2136d40695c053aae44c3d564ae3032a75bb8bdf6b106879fea3ac921e",
+      "sha256:ff75da0389a935ed12299e5c06d5df6a392e8e92fa01093a2daed735b4ea6bc4",
+      "sha256:48692a623101392b2c4b9f93c4e8f032dd1e1998a4c60f39152ac06dbb0e785a",
+      "sha256:f69904d4bb0d9b5df9169cafbb33c927a57044a67a36afbc81d54c9cd8aa3db0",
+      "sha256:ff2e9143da6fe1aa5e0dda5bf7c3288799626233126a629b56ab4889a7212ca9",
+      "sha256:4d49e4406881c75bac7243a0f613d5f34ff2fa40f3834cdb1e6a38adb8f66782",
+      "sha256:27cbd3e1d94b426e5dde3b8cc1bc0b932bf569d6a8a19893ae4da6efe4fc1dc6",
+      "sha256:a02d78c4db7b6bab8f822feb41f9010c6d3de96edbe50569e63775bf81113770",
+      "sha256:103eb2fd372afc7a59a0605045483ab46c3d1e3154e66784bbc4031fa139555f",
+      "sha256:d58c96881a9338ffd699367e3a893015030b308d3b8df517664a0fe82340f7ee",
+      "sha256:79dd4ff27370414670d8ed932d0197c1f326053cbaebb2952084693fb0ef504a",
+      "sha256:c5cdaa02e749413cdb06dbea73cbc3098e4a21774effa33ea38dbb28be584707",
+      "sha256:8d43f7c5f45bcb098d0e607aba0b3002ed075d1c082f083742f2f65e9e19b61b",
+      "sha256:e457ba0629d83f5e4ae53fbc5e8828c7440bfa4dfe4dd9c333e048ec9336043d",
+      "sha256:b288032cdf71fb1ac6154b3560e3917d43a865c9eef1151a818ee5384e274a5c",
+      "sha256:1bc52f5428259c07dd37de7842feecd69c40079cede1e7bc272948e584cf8c4c",
+      "sha256:fdbb54afd533ea03b612c656c478898ee4575afa0fb79553e1df538e69e284b1",
+      "sha256:12a189b0e6fb242b7cad42d3fbee9cb1a8460b8da12681394d5f27abb9a6757a",
+      "sha256:2d70990999649a554ec8700e4008edf3e42b5579c66f10e599f3b94e29baa41f",
+      "sha256:2335f7933341236da32e10ecc9dfdb38694c9228bc8bd4676fd396936a06b2b4",
+      "sha256:7e0d1dd47f25b495392d35e6ed04df921970477f425334428825fb8ada54f0b4",
+      "sha256:2ec04048f66564b68d560e6d7295f3928d1a9b3eccaaddb6a77e869ac21fa5ff",
+      "sha256:de6995060219ee5b813c05af8335327587edf02136995f6986ca902a5af3edc8",
+      "sha256:cfccebf9a0f37e6ec291b2b6a025f065041a9f7e6edf13aea2f468a975debf9e",
+      "sha256:04b39fec574c8a66584175c0085fcf11ac0e95b15552839e331a90681a925b51",
+      "sha256:ecc7ca8a207e351f0d23da2e862cda81b45f3c66202e4e30d48c27e0adad0b98",
+      "sha256:b35551dac79da16d0fcc7442559d61b450e1a14cf9115e19449137f10b4e50fb",
+      "sha256:77a22583cfe1f4ae173c9b7638f78fa4156eedf5f4c800bb1cfbe5d24da8fdfa",
+      "sha256:8bcaf37ab88d9467ff21056aa8fa27b7416aac25985dfc7598db84025722e0ab",
+      "sha256:a703e43756f89b95c26b338133625f1d9be14fc63a0ad58e1ab0198a6725676a",
+      "sha256:fb5cd61b0e5fae2ac05ee71441602e2f6310523aaa02a1b63a24678d487f8f43",
+      "sha256:c6a3bc5bb909fcf9f9228ca746157af7da2ad731f0eae512f9813f68d2692e8f",
+      "sha256:3454cefd7a801267c4b5d83393ee1e7dd44df880a43e29c5a740cc1d82d93cab",
+      "sha256:3d7484e9565118987cd04bca2ab1bddd9110a4ae33c13067f691f19c33019be4",
+      "sha256:e29988e67d7fea1bbe5c26a0479e1eb79792fa834801e73ea480cd5f33256430",
+      "sha256:66eb0ebcfe98ebaca1a7073e30c9b21b30d2d1af3bfd267285b7ee321fddbce0",
+      "sha256:84b3f27209e62691bf26d19f262c6b15858c61a7112fca596078b9efd0acdd74",
+      "sha256:776dc7b7b0b1e8dd29441ff8f5be0590e18d438a5b2b4575715abf762911504d",
+      "sha256:25086af94d2e3d420f4b8edf07af5b57ca4b66da0d5b21fa7f2844607bdf9963",
+      "sha256:b56a95a0dd4511f12c5662e910b0684fddb1389dd5a553ab5c8267ecce3e5af3",
+      "sha256:5bb99b376b062915e259225b76294584a0cb5bd176bce4f1d221908e4e88a820",
+      "sha256:91e7e6762865540272af3b47072d339fa9ab4b0fed3eb4d6e2bc184343591d7c",
+      "sha256:7711fff534b4b5a6c7565589e02b5c064a4560786d89618ae77bbb22b0233944",
+      "sha256:042f5c5ac2bc09fa7b76ef805522eedb8bfd194d59c06508106b9c99744e3577",
+      "sha256:70aaaa0fcf9fcfb1f00e65bf891984948b56e12f6dc5cc6c2d147c107095cce5",
+      "sha256:aeee45cb0932ec54a7a49c524913c23a3d9a66b4e52ef2006d2bb72fff2f88c6",
+      "sha256:fa5994b4bee054838cf6dc6b2ec818d894d2d68fd22738c6fb791e4c273e62a0",
+      "sha256:91ab256c081a6a0cbbf340300468779142a9f0fccdc6fde1c97072027ce4fd81",
+      "sha256:b32856d37564f690a5f96006a0a4fd0c09c5975bcb8a2450ca6491cd6a4f7a4c",
+      "sha256:b21118a409f938e48d23ffcd32c17f47006e298f44b23fd33740bc30c8e398fd",
+      "sha256:2e1eab684274bc9b86c8834d2b584d9ae8cb29e3cada46bb97ca00fefa28b2bb",
+      "sha256:a16bb5cd7e21912c3829496b3c686f3e5552a93d794d5098a856145994d47fff",
+      "sha256:ea5030e74ad11b6e58f919ac740e0bab60e64963aa1b5b24cb75b8ae8cdfbd04",
+      "sha256:159349d2f0332b96cbdc68443664f2df964287280b2a1a50a4125161cdc8aec1",
+      "sha256:7def99941bb8cc872f232fe8c6cbee50e65c197b3477d98f761256451228df7a",
+      "sha256:af9a3255bccb1577e64e67ce97afabbd1739eeacf2a9805c6065986c6e0c4900",
+      "sha256:493317ce71328dcb6011750605766663dfd71fd6dfc38f6694c2c3212a01fa9a",
+      "sha256:d0a96938ba8e6c7790fa1b6f6f1eaf17707560a125a08e134218e026f533d354",
+      "sha256:c41ffc4ff8664936b707091ccba2c23f7521cad7c88d7c4f4fd5270455779583",
+      "sha256:d04b3c904f6d7bcafe511b798c47ac55f7ee1bd48628b329fa5a1eb69894be80",
+      "sha256:547a50283ebf35d56590b7647d5c1c12cad70aa8cb9bd8956f0950029fdd420b",
+      "sha256:6459a0c2f16bd288e78dd3c2efec76d8b713b22696d7467b754ef43c49223d7e",
+      "sha256:f3b5d6f712720ad3722e077081782abddb5358766fb0a895d60baf9e86948dd4",
+      "sha256:3e13140d25fd69525d3f89b76455ddcda53871ee90a86521d809bff54c0bd358",
+      "sha256:7dba122d94aad7f24fe16e6c868524ec6fca4ac6f8325d431a68d4c05ee8729c",
+      "sha256:8a1db116b02e65577a4d8353d28440e9eecd69c879b5728b32556acf71568681",
+      "sha256:e5d4450d797f191ab38c41e5ea7ffc66f9f60c6e40ff2e5e08b35247d5902201",
+      "sha256:d30c1d745ffccd27cb34e1884f869d1597e2011f9986a6f1862f5a971dc1a606",
+      "sha256:2e565e996e2a54bfa4f5a18d274b8d616457641e8383ad33c80ea4fe1d58bd86",
+      "sha256:81d8b363b45a39824da52dfde2fdecae9da2818521aa58fcc2c3a293bf7fa350",
+      "sha256:57acc2ea3c590454a0976cb29cc1fd0caff7bf70f5a45560707d597518631780",
+      "sha256:c6731f30c97b1ce3530dadb8b077f36aac4e6236cee10d60821c70c58af1c6a9",
+      "sha256:0abf617d4d2db215a27256b77d92839eb5a78fde50e4aa06959c7c77b5910ecd",
+      "sha256:4402c21d4f0f7cf042cef49644b8f1b96b68ae812ebc625b55264b2a9ae1b497",
+      "sha256:2ebe4fa75372d75f5691088142ee312b880eb76128df36629a556137eeb93b5c",
+      "sha256:a2b18aaf68e4205e408b90f4f29db8217eae21aca5dfc8f773ae4a21d3009e52"
+    ],
+    "receipt_schema": [
+      "observation_hash",
+      "action",
+      "successor_hash"
+    ],
+    "provenance": "agent_owned_observation_action_successor_receipts",
+    "source_or_adapter_used": false
+  },
+  "trace_provenance_receipts": {
+    "accepted_count": 100,
+    "rejected_count": 0,
+    "rejections": [],
+    "all_agent_owned_provenance": true,
+    "admitted_source_leak_count": 0,
+    "admitted_game_identity_leak_count": 0
+  },
+  "source_game_identity_denylist": {
+    "classes": {
+      "source": [
+        "source_file",
+        "source_rule",
+        "game_source",
+        "solution_code",
+        "hidden_state",
+        "read_game_source",
+        "used_env_source"
+      ],
+      "game_identity": [
+        "game",
+        "game_id",
+        "game_name",
+        "source_game",
+        "registry_game",
+        "registry_provenance"
+      ],
+      "per_game_adapter": [
+        "per_game_adapter",
+        "adapter_label",
+        "game_adapter",
+        "hand_registered_adapter"
+      ],
+      "offline_ground_truth": [
+        "outer_loop_bfs",
+        "offline_ground_truth_bfs",
+        "exhaustive_bfs_calibration",
+        "ground_truth_win_flag"
+      ],
+      "banked_plan": [
+        "banked_plan",
+        "solve_trace",
+        "registered_solution_actions",
+        "public_registry_recipe"
+      ]
+    },
+    "sha256": "sha256:a71912c548c6e5844d81329d6bf8da3a9e1ef4c6a038864fc1d14ff32335ec3f"
+  },
+  "leakage_checks": {
+    "transition_rows_checked": 100,
+    "accepted_rows": 100,
+    "rejected_rows": 0,
+    "hypothesis_canaries_checked": [
+      "identity",
+      "action_ignoring",
+      "memorizing",
+      "rare_rule_omitting",
+      "source_leak"
+    ],
+    "admitted_source_leak_count": 0,
+    "admitted_game_identity_leak_count": 0,
+    "passed": true
+  },
+  "pivotal_definition": {
+    "version": 1,
+    "frozen_before_scoring": true,
+    "authority": "real_environment_outcomes_agent_owned_observation_receipts",
+    "source_or_oracle_bfs_used": false,
+    "strata": {
+      "observed_action_reversal": {
+        "rule": "same-agent observations show an action undoing a prior effect",
+        "row_count": 5
+      },
+      "terminal_or_goal_state_change": {
+        "rule": "observed successor toggles terminal, goal, or level state",
+        "row_count": 4
+      },
+      "rare_object_effect": {
+        "rule": "observed visible object effect is rare within agent-owned receipts",
+        "row_count": 5
+      },
+      "policy_disagreement": {
+        "rule": "recorded policies disagree on the next action for the state",
+        "row_count": 7
+      },
+      "counterfactual_successor_sensitivity": {
+        "rule": "already observed alternative successors change the local outcome",
+        "row_count": 9
+      }
+    },
+    "pivotal_row_ids": [
+      "trace_00_0",
+      "trace_00_1",
+      "trace_00_2",
+      "trace_00_3",
+      "trace_03_3",
+      "trace_04_3",
+      "trace_05_0",
+      "trace_06_2",
+      "trace_06_3",
+      "trace_07_1",
+      "trace_08_3",
+      "trace_09_3",
+      "trace_10_0",
+      "trace_12_2",
+      "trace_12_3",
+      "trace_14_1",
+      "trace_15_0",
+      "trace_15_3",
+      "trace_16_3",
+      "trace_18_2",
+      "trace_18_3",
+      "trace_20_0",
+      "trace_20_3",
+      "trace_21_1",
+      "trace_21_3",
+      "trace_24_2",
+      "trace_24_3"
+    ]
+  },
+  "pivotal_definition_freeze_hash": "sha256:ca9a835eaa1264616d50f71418d44550ed890a7968a0ea0145ed72db8af8281a",
+  "ordinary_transition_metrics": {
+    "positive_control_exact_accuracy": 1.0,
+    "rare_rule_omitter_exact_accuracy": 0.78,
+    "retained_gemma31b_mean_heldout_accuracy": 0.362132,
+    "average_accuracy_not_sufficient": true
+  },
+  "unseen_action_metrics": {
+    "positive_control_unseen_action_accuracy": 1.0,
+    "rare_rule_omitter_unseen_action_accuracy": 0.8,
+    "retained_gemma31b_unseen_action_fidelity_proxy": 0.575676,
+    "unseen_action_row_count": 25
+  },
+  "rollout_calibration_metrics": {
+    "positive_control_seed_stability": 1.0,
+    "positive_control_error_growth": 0.0,
+    "rare_rule_omitter_seed_stability": 1.0,
+    "rare_rule_omitter_error_growth": 0.04,
+    "retained_gemma31b_seed_stability_proxy": 0.696085
+  },
+  "pivotal_transition_metrics": {
+    "positive_control_pivotal_accuracy": 1.0,
+    "rare_rule_omitter_pivotal_accuracy": 0.185185,
+    "stratum_counts": {
+      "observed_action_reversal": 5,
+      "terminal_or_goal_state_change": 4,
+      "rare_object_effect": 5,
+      "policy_disagreement": 7,
+      "counterfactual_successor_sensitivity": 9
+    },
+    "all_strata_present": true,
+    "retained_gemma31b_pivotal_proxy_accuracy": 0.179487
+  },
+  "play_cost_weighted_risk": {
+    "positive_control": {
+      "weighted_miss_risk": 0.0,
+      "miss_cost": 0,
+      "total_pivotal_play_cost": 55.0,
+      "average_accuracy_cannot_compensate": true
+    },
+    "rare_rule_omitter": {
+      "weighted_miss_risk": 0.8,
+      "miss_cost": 44.0,
+      "total_pivotal_play_cost": 55.0,
+      "average_accuracy_cannot_compensate": true
+    },
+    "retained_gemma31b_proxy": 0.820513
+  },
+  "closed_loop_proxy_metrics": {
+    "positive_control": {
+      "closed_loop_proxy_utility": 0.5,
+      "development_proxy_only": true
+    },
+    "rare_rule_omitter": {
+      "closed_loop_proxy_utility": 0.6,
+      "development_proxy_only": true
+    },
+    "retained_gemma31b_plan_found_rate": 0.2564102564102564,
+    "retained_gemma31b_reached_levelup_count": 1,
+    "development_proxy_only": true,
+    "artifact_wall_time_s": 0.490953
+  },
+  "cycle_consistency_negative_control": {
+    "control": "a2rbench_style_cycle_consistency_only",
+    "cycle_consistency_score": 1.0,
+    "pivotal_accuracy": 0.185185,
+    "admitted": false,
+    "insufficient_for_admission": true,
+    "reason": "cycle_consistency_insufficient_without_pivotal_coverage"
+  },
+  "adversarial_canary_receipts": [
+    {
+      "canary": "identity",
+      "detected": true,
+      "rejected": true,
+      "failed_rung": "L0",
+      "leak_classes": [
+        "game_identity"
+      ],
+      "admitted": false
+    },
+    {
+      "canary": "action_ignoring",
+      "detected": true,
+      "rejected": true,
+      "failed_rung": "L1",
+      "leak_classes": [],
+      "admitted": false
+    },
+    {
+      "canary": "memorizing",
+      "detected": true,
+      "rejected": true,
+      "failed_rung": "L2",
+      "leak_classes": [],
+      "admitted": false
+    },
+    {
+      "canary": "rare_rule_omitting",
+      "detected": true,
+      "rejected": true,
+      "failed_rung": "L4",
+      "leak_classes": [],
+      "admitted": false
+    },
+    {
+      "canary": "source_leak",
+      "detected": true,
+      "rejected": true,
+      "failed_rung": "L0",
+      "leak_classes": [
+        "source"
+      ],
+      "admitted": false
+    }
+  ],
+  "retained_model_rescore": {
+    "model_id": "gemma31b_singleshot_5764_retained",
+    "immutable": true,
+    "source": "results/exp5764_gemma31b_singleshot_shard.jsonl",
+    "row_count": 39,
+    "game_count": 13,
+    "ordinary_transition_accuracy": 0.362132,
+    "unseen_action_fidelity_proxy": 0.575676,
+    "goal_predicate_accuracy": 0.935239,
+    "pivotal_proxy_accuracy": 0.179487,
+    "memorization_rate": 0.820513,
+    "seed_stability_proxy": 0.696085,
+    "play_cost_weighted_miss_risk_proxy": 0.820513,
+    "heldout_accuracy_by_game": {
+      "ar25": 0.0,
+      "cd82": 0.466667,
+      "ft09": 0.833333,
+      "g50t": 0.083333,
+      "lp85": 0.333333,
+      "r11l": 0.444433,
+      "re86": 0.027767,
+      "sb26": 0.148133,
+      "sk48": 0.3889,
+      "sp80": 0.75,
+      "tr87": 0.2222,
+      "tu93": 0.222233,
+      "vc33": 1.0
+    },
+    "upstream_used_env_source_disclosed": true,
+    "upstream_read_game_source_disclosed": false,
+    "executed_through_live_e3": false,
+    "edited_rejected_hypotheses": false,
+    "solve_claimed": false,
+    "registry_credit": false,
+    "admission_decision": {
+      "admitted": false,
+      "failed_rung": "L2",
+      "reason": "retained_proxy_heldout_or_unseen_fidelity_failed",
+      "solve_claimed": false,
+      "registry_credit": false
+    }
+  },
+  "admission_decisions": {
+    "perfect_fixture": {
+      "admitted": true,
+      "failed_rung": null,
+      "reason": "admitted_through_L4_without_solve_credit",
+      "solve_claimed": false,
+      "registry_credit": false
+    },
+    "rare_rule_omitter": {
+      "admitted": false,
+      "failed_rung": "L4",
+      "reason": "pivotal_or_play_cost_adequacy_failed",
+      "solve_claimed": false,
+      "registry_credit": false
+    },
+    "gemma31b_singleshot_5764_retained": {
+      "admitted": false,
+      "failed_rung": "L2",
+      "reason": "retained_proxy_heldout_or_unseen_fidelity_failed",
+      "solve_claimed": false,
+      "registry_credit": false
+    }
+  },
+  "pivotal_fixture_coverage_score": 1.0,
+  "source_leak_count": 0,
+  "admission_contract_ready_score": 1.0,
+  "producer_gate_fields": [
+    "pivotal_fixture_coverage_score",
+    "source_leak_count",
+    "admission_contract_ready_score"
+  ],
+  "inference_substrate": "immutable_executable_world_model_replay_over_agent_owned_arc_transitions_no_llm",
+  "test_commands": [],
+  "test_exit_codes": {},
+  "reproducibility_checksum": "sha256:38725ab5e5ce955e644c0f0c05ff3670cd73b1c7fff92315e76e0ed397a6c5ca",
+  "honest_verdict": "complete: immutable_world_model_admission_contract_ready_no_solve_credit"
+}
