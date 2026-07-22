@@ -1,0 +1,479 @@
+{
+  "board_state_machine": {
+    "gatemate": {
+      "current": "cached_dirtyjtag_cable_or_port_block_no_flash",
+      "evidence": [
+        "cached_visible_no_gm1ax_idcode",
+        "cached_cable_or_port_physical_block",
+        "not_authorized_not_run"
+      ],
+      "next_allowed_transition": "operator_reports_physical_setup_changed",
+      "terminal_state_reached": false
+    },
+    "kv260": {
+      "current": "cached_ssh_bitstream_poc_no_performance_claim",
+      "evidence": [
+        "cached_reachable",
+        "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+        "cached_hash_smoke_proof_of_concept_not_terminal_benchmark"
+      ],
+      "next_allowed_transition": "new_operator_bitstream_or_workload_directive",
+      "terminal_state_reached": false
+    },
+    "polarfire": {
+      "current": "cached_ssh_reachable_terminal_workload_missing_passive_cooling_limited",
+      "evidence": [
+        "cached_ssh_reachable",
+        "missing_terminal_hash_verified_dispatch",
+        "passive_cooling_limit_recorded"
+      ],
+      "next_allowed_transition": "operator_authorized_terminal_workload_with_cooling",
+      "terminal_state_reached": false
+    }
+  },
+  "canonical_hardware_artifacts": {
+    "gatemate": {
+      "board": "gatemate",
+      "path": "results/experiment_5217_hardware_continuity_v477.json",
+      "present": true,
+      "purpose": "newest declared cached GateMate DirtyJTAG raw-IDCODE cable-or-port block",
+      "selection_method": "declared_exact_path_no_glob_no_mtime",
+      "sha256": "a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9"
+    },
+    "kv260": {
+      "board": "kv260",
+      "path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+      "present": true,
+      "purpose": "newest declared cached KV260 SSH plus board-local hash-smoke proof of concept",
+      "selection_method": "declared_exact_path_no_glob_no_mtime",
+      "sha256": "ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7"
+    },
+    "polarfire": {
+      "board": "polarfire",
+      "path": "results/experiment_5573_matched_sampler_hardware_continuity.json",
+      "present": true,
+      "purpose": "newest declared cached PolarFire SSH/workload reachability receipt",
+      "selection_method": "declared_exact_path_no_glob_no_mtime",
+      "sha256": "e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e"
+    }
+  },
+  "changed_preconditions": {
+    "gatemate": false,
+    "kv260": false,
+    "polarfire": false
+  },
+  "commands_run": [],
+  "commands_skipped": [
+    {
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "reason": "unchanged_precondition_hash",
+      "target": "ssh_reachability"
+    },
+    {
+      "board": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "reason": "unchanged_precondition_hash",
+      "target": "ssh_reachability_passive_cooling_bounded"
+    },
+    {
+      "board": "gatemate",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "reason": "unchanged_precondition_hash",
+      "target": "dirtyjtag_idcode"
+    }
+  ],
+  "energy_claimed": false,
+  "experiment": 5794,
+  "experiment_id": "exp5794-hardware-terminal-action-receipt",
+  "extropic_access_state": {
+    "commands_run": [],
+    "performance_inferred_from_marketing": false,
+    "public_services_probed": false,
+    "state": "no_authenticated_local_execution_surface"
+  },
+  "field_principles": {
+    "board_state_machine": "per-board terminal states prevent cross-board inference",
+    "canonical_hardware_artifacts": "exact paths prevent mtime drift",
+    "changed_preconditions": "only changed facts permit a board command",
+    "commands_run": "command receipts exist only for changed authorized checks",
+    "commands_skipped": "unchanged checks must not be repeated",
+    "energy_claimed": "cached continuity cannot prove energy improvement",
+    "extropic_access_state": "proprietary substrates require authenticated local route",
+    "flash_write_count": "flash writes are prohibited without authorization",
+    "gatemate_state": "DirtyJTAG and cable state are physical blockers",
+    "hardware_artifact_hashes": "byte hashes pin cached evidence",
+    "honest_verdict": "terminal status starts with complete: or blocked:",
+    "inference_substrate": "no LLM or hardware benchmark was invoked",
+    "kona_access_state": "Kona execution requires authenticated local route",
+    "kv260_state": "SSH and bitstream evidence only; no host block devices",
+    "operator_action_packets": "blocked continuity becomes precise operator action",
+    "polarfire_state": "reachable is not terminal workload completion",
+    "precondition_hashes_current": "current declared facts define check authorization",
+    "precondition_hashes_previous": "last receipt defines no-repeat baseline",
+    "preconditions_checked": "changed hashes authorize bounded checks",
+    "probe_decisions": "skip/run choice must be auditable",
+    "production_ready_claimed": "POC continuity is not production readiness",
+    "reproducibility_checksum": "artifact content is self-checking",
+    "safety_boundaries": "host/device write boundaries are explicit before commands",
+    "speedup_claimed": "cached continuity cannot prove speedup",
+    "storage_write_count": "storage writes are prohibited without authorization",
+    "temperature_duration_receipts": "passive cooling limits bound PolarFire use",
+    "test_commands": "verification commands are recorded",
+    "test_exit_codes": "verification outcomes are recorded"
+  },
+  "flash_write_count": 0,
+  "gatemate_state": {
+    "board": "gatemate",
+    "cable_state": "cached_cable_or_port_physical_block",
+    "canonical_artifact_path": "results/experiment_5217_hardware_continuity_v477.json",
+    "device_state": "blocked_dirtyjtag_idcode",
+    "dirtyjtag_state": "cached_visible_no_gm1ax_idcode",
+    "expected_idcode": "0x20000001",
+    "flash_state": "not_authorized_not_run",
+    "flash_write_authorized": false,
+    "performance_claim_supported": false,
+    "raw_idcode": "0xffffffff",
+    "storage_write_authorized": false
+  },
+  "hardware_artifact_hashes": {
+    "results/experiment_5217_hardware_continuity_v477.json": "a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9",
+    "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json": "ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7",
+    "results/experiment_5573_matched_sampler_hardware_continuity.json": "e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e"
+  },
+  "honest_verdict": "complete: cached hardware reconciliation; kv260=ssh_bitstream_poc polarfire=reachable_no_terminal_workload gatemate=blocked_dirtyjtag_cable extropic=no_authenticated_local_execution_surface kona=no_authenticated_local_execution_surface no_speedup_claim no_energy_claim no_production_ready_claim",
+  "inference_substrate": "exact_cached_hardware_artifact_reconciliation_with_changed_precondition_only_bounded_checks_no_llm",
+  "kona_access_state": {
+    "commands_run": [],
+    "performance_inferred_from_marketing": false,
+    "public_services_probed": false,
+    "state": "no_authenticated_local_execution_surface"
+  },
+  "kv260_state": {
+    "bitstream_state": "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+    "board": "kv260",
+    "cached_status_text": "reachable",
+    "canonical_artifact_path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+    "flash_write_authorized": false,
+    "host_storage_access_prohibited": true,
+    "host_storage_or_block_device_accessed": false,
+    "performance_claim_supported": false,
+    "ssh_state": "cached_reachable",
+    "storage_write_authorized": false,
+    "workload_state": "cached_hash_smoke_proof_of_concept_not_terminal_benchmark"
+  },
+  "milestone": "2026.07.516",
+  "operator_action_packets": {
+    "extropic": {
+      "do_not_do": "do not probe public services or use marketing claims",
+      "next_action": "provide authenticated local Extropic TSU/Z1 execution credentials or hardware",
+      "state": "no_authenticated_local_execution_surface"
+    },
+    "gatemate": {
+      "do_not_do": "do not repeat DirtyJTAG detect or flash until physical setup changes",
+      "next_action": "change or reseat cable/port/power path and provide a new physical-setup message",
+      "state": "blocked_dirtyjtag_cable_or_port"
+    },
+    "kona": {
+      "do_not_do": "do not infer Kona execution from papers or public pages",
+      "next_action": "provide an authenticated local Kona execution route",
+      "state": "no_authenticated_local_execution_surface"
+    },
+    "kv260": {
+      "do_not_do": "do not use host storage, host SD-card, flash, or block-device probes",
+      "next_action": "provide a new explicit bitstream/workload directive before any SSH recheck",
+      "state": "cached_ssh_bitstream_poc"
+    },
+    "polarfire": {
+      "do_not_do": "do not infer terminal workload or speedup from SSH reachability",
+      "next_action": "add active cooling or authorize a bounded terminal Carnot workload with temperature monitoring",
+      "state": "reachable_no_terminal_carnot_workload_passive_cooling_limited"
+    }
+  },
+  "polarfire_state": {
+    "authentication_state": "cached_ssh_reachable",
+    "board": "polarfire",
+    "cached_status_text": "reached",
+    "canonical_artifact_path": "results/experiment_5573_matched_sampler_hardware_continuity.json",
+    "flash_write_authorized": false,
+    "latest_cached_workload_marker": "f1924a326f815722f2c2fbab139c3c1d707bf365f34a956e9b7397fe22524494",
+    "passive_cooling": {
+      "active_cooling_required_for_long_benchmarks": true,
+      "cooling_mode": "passive",
+      "max_unaided_duration_s": 300,
+      "source": "ops/operator-followup.md PolarFire sustained-load thermal monitoring",
+      "temperature_limit_c": 70.0
+    },
+    "performance_claim_supported": false,
+    "storage_write_authorized": false,
+    "terminal_carnot_workload_state": "missing_terminal_hash_verified_dispatch"
+  },
+  "precondition_hash_inputs": {
+    "gatemate": {
+      "bitstream_or_workload": "not_authorized_not_run",
+      "connectivity": "cached_visible_no_gm1ax_idcode",
+      "cooling": "not_applicable_to_blocked_idcode_receipt",
+      "device_identity": "Cologne Chip GateMate A1-EVB-2M via DirtyJTAG",
+      "operator_authorization": {
+        "bounded_non_destructive_check_authorized": false,
+        "flash_write_authorized": false,
+        "physical_setup_changed": false,
+        "storage_write_authorized": false
+      },
+      "source_hashes": {
+        "artifact": "a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9",
+        "exclusion_manifest": "ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2",
+        "hardware_wishlist": "dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+        "known_issues": "d495e893f6f7e361f4c829175bc0646664c12552636b03617c66d813d0d75cb0",
+        "operator_followup": "52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+        "roadmap_exp5794_operator_message": "0a583961b96f43fee8ebc4a6923cadf5fbe974e4a28c357e099ec83cbc3f1931"
+      },
+      "toolchain": "openFPGALoader dirtyJtag detect only unless physical state changes"
+    },
+    "kv260": {
+      "bitstream_or_workload": [
+        "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+        "cached_hash_smoke_proof_of_concept_not_terminal_benchmark"
+      ],
+      "connectivity": "cached_reachable",
+      "cooling": "not_declared_for_cached_poc",
+      "device_identity": "AMD/Xilinx KV260 via ssh alias kria",
+      "operator_authorization": {
+        "bitstream_or_workload_changed": false,
+        "bounded_non_destructive_check_authorized": false,
+        "flash_write_authorized": false,
+        "storage_write_authorized": false
+      },
+      "source_hashes": {
+        "artifact": "ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7",
+        "exclusion_manifest": "ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2",
+        "hardware_wishlist": "dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+        "known_issues": "d495e893f6f7e361f4c829175bc0646664c12552636b03617c66d813d0d75cb0",
+        "operator_followup": "52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+        "roadmap_exp5794_operator_message": "0a583961b96f43fee8ebc4a6923cadf5fbe974e4a28c357e099ec83cbc3f1931"
+      },
+      "toolchain": "board-local xmutil and remote UIO only"
+    },
+    "polarfire": {
+      "bitstream_or_workload": "missing_terminal_hash_verified_dispatch",
+      "connectivity": "cached_ssh_reachable",
+      "cooling": {
+        "active_cooling_required_for_long_benchmarks": true,
+        "cooling_mode": "passive",
+        "max_unaided_duration_s": 300,
+        "source": "ops/operator-followup.md PolarFire sustained-load thermal monitoring",
+        "temperature_limit_c": 70.0
+      },
+      "device_identity": "Microchip PolarFire SoC Discovery Kit via ssh alias polarfire",
+      "operator_authorization": {
+        "bounded_non_destructive_check_authorized": false,
+        "cooling_changed": false,
+        "flash_write_authorized": false,
+        "storage_write_authorized": false,
+        "terminal_workload_authorized": false
+      },
+      "source_hashes": {
+        "artifact": "e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e",
+        "exclusion_manifest": "ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2",
+        "hardware_wishlist": "dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+        "known_issues": "d495e893f6f7e361f4c829175bc0646664c12552636b03617c66d813d0d75cb0",
+        "operator_followup": "52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+        "roadmap_exp5794_operator_message": "0a583961b96f43fee8ebc4a6923cadf5fbe974e4a28c357e099ec83cbc3f1931"
+      },
+      "toolchain": "board-local Linux ssh and Python only"
+    }
+  },
+  "precondition_hashes_current": {
+    "gatemate": "897f5d360ecd79307903563fe82845f2509e33df5153cd9f8c95501420ddadfb",
+    "kv260": "36518e5c758954c7994731080cf0522529310e2a9a10954d5a1c77e9e17b039d",
+    "polarfire": "0cd2ed53bcf32faf8db1fe3b5f5213d2ab4378ca6cf7241c3df208208d17ecde"
+  },
+  "precondition_hashes_previous": {
+    "gatemate": "897f5d360ecd79307903563fe82845f2509e33df5153cd9f8c95501420ddadfb",
+    "kv260": "36518e5c758954c7994731080cf0522529310e2a9a10954d5a1c77e9e17b039d",
+    "polarfire": "0cd2ed53bcf32faf8db1fe3b5f5213d2ab4378ca6cf7241c3df208208d17ecde"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "hash": null,
+      "path": null,
+      "principle": "host/device write boundaries are explicit before commands",
+      "resource": "safety_boundaries_recorded"
+    },
+    {
+      "available": true,
+      "hash": "dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-hardware-wishlist.md",
+      "principle": "declared precondition source hash",
+      "resource": "hardware_wishlist"
+    },
+    {
+      "available": true,
+      "hash": "d495e893f6f7e361f4c829175bc0646664c12552636b03617c66d813d0d75cb0",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/known-issues.md",
+      "principle": "declared precondition source hash",
+      "resource": "known_issues"
+    },
+    {
+      "available": true,
+      "hash": "658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/status.md",
+      "principle": "declared precondition source hash",
+      "resource": "operational_status"
+    },
+    {
+      "available": true,
+      "hash": "ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "principle": "declared precondition source hash",
+      "resource": "exclusion_manifest"
+    },
+    {
+      "available": true,
+      "hash": "e63ee46c27d688ab99e56991fdde860dd6fd14806a4e680db2b51d9cd3cd0b88",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "principle": "declared precondition source hash",
+      "resource": "research_complete"
+    },
+    {
+      "available": true,
+      "hash": "52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/operator-followup.md",
+      "principle": "declared precondition source hash",
+      "resource": "operator_followup"
+    },
+    {
+      "available": true,
+      "hash": "e8a0ebc8ba164b593ed1349af9dc957364b2fe9ad68098f1959b9dabf5b39200",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "principle": "declared precondition source hash",
+      "resource": "roadmap"
+    },
+    {
+      "available": true,
+      "hash": "0a583961b96f43fee8ebc4a6923cadf5fbe974e4a28c357e099ec83cbc3f1931",
+      "path": "research-roadmap.yaml",
+      "principle": "declared precondition source hash",
+      "resource": "roadmap_exp5794_operator_message"
+    },
+    {
+      "available": true,
+      "board": "kv260",
+      "hash": "ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7",
+      "path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+      "principle": "exact paths prevent mtime drift",
+      "resource": "kv260_canonical_artifact",
+      "selection_method": "declared_exact_path_no_glob_no_mtime"
+    },
+    {
+      "available": true,
+      "board": "polarfire",
+      "hash": "e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e",
+      "path": "results/experiment_5573_matched_sampler_hardware_continuity.json",
+      "principle": "exact paths prevent mtime drift",
+      "resource": "polarfire_canonical_artifact",
+      "selection_method": "declared_exact_path_no_glob_no_mtime"
+    },
+    {
+      "available": true,
+      "board": "gatemate",
+      "hash": "a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9",
+      "path": "results/experiment_5217_hardware_continuity_v477.json",
+      "principle": "exact paths prevent mtime drift",
+      "resource": "gatemate_canonical_artifact",
+      "selection_method": "declared_exact_path_no_glob_no_mtime"
+    }
+  ],
+  "probe_decisions": {
+    "gatemate": {
+      "candidate_command": "openFPGALoader -c dirtyJtag --detect",
+      "changed": false,
+      "decision": "skip_unchanged_precondition_hash",
+      "reason": "unchanged_precondition_hash"
+    },
+    "kv260": {
+      "candidate_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "changed": false,
+      "decision": "skip_unchanged_precondition_hash",
+      "reason": "unchanged_precondition_hash"
+    },
+    "polarfire": {
+      "candidate_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "changed": false,
+      "decision": "skip_unchanged_precondition_hash",
+      "reason": "unchanged_precondition_hash"
+    }
+  },
+  "production_ready_claimed": false,
+  "random_seed": 5794,
+  "reproducibility_checksum": "c7f1def7eb5b342f9d745f0af31c84fff12f89c07a29c0010198e2fd4b849a61",
+  "run_date": "20260722",
+  "safety_boundaries": {
+    "gatemate": {
+      "allowed": [
+        "openFPGALoader dirtyJtag detect"
+      ],
+      "flash_write_allowed_without_operator_directive": false,
+      "physical_setup_change_required_before_repeat_detect": true
+    },
+    "kv260": {
+      "allowed": [
+        "ssh kria",
+        "board-local xmutil",
+        "remote board-local uio reads"
+      ],
+      "host_storage_or_block_device_access_prohibited": true,
+      "prohibited": [
+        "host removable-storage probes",
+        "host block-device probes",
+        "host-side board storage writes"
+      ]
+    },
+    "polarfire": {
+      "active_cooling_required_for_long_benchmarks": true,
+      "allowed": [
+        "ssh polarfire",
+        "bounded board-local read-only identity or workload check"
+      ],
+      "passive_cooling_max_unaided_duration_s": 300,
+      "passive_cooling_temperature_limit_c": 70.0
+    },
+    "recorded_before_any_board_command": true,
+    "writes": {
+      "flash_write_authorized": false,
+      "storage_write_authorized": false
+    }
+  },
+  "schema": "carnot.experiment_5794.hardware_terminal_action_receipt.v1",
+  "spec_refs": [
+    "REQ-HW-5794",
+    "SCENARIO-HW-5794"
+  ],
+  "speedup_claimed": false,
+  "status": "complete_cached_hardware_reconciliation_no_board_commands",
+  "storage_write_count": 0,
+  "temperature_duration_receipts": {
+    "polarfire": {
+      "active_cooling_required_for_terminal_workload": true,
+      "command_run": false,
+      "cooling_mode": "passive",
+      "current_temperature_c": null,
+      "max_unaided_duration_s": 300,
+      "reason": "unchanged precondition hash; passive-cooling limit disclosed from cached operator note",
+      "temperature_limit_c": 70.0
+    }
+  },
+  "test_commands": [
+    "tests/python/test_experiment_5794_hardware_terminal_action_receipt.py",
+    ".venv/bin/pytest tests/python -q",
+    "python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py --check"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py --check": 0,
+    "python scripts/check_spec_coverage.py": 0,
+    "tests/python/test_experiment_5794_hardware_terminal_action_receipt.py": 0
+  }
+}

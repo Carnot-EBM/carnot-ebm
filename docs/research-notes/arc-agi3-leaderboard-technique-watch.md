@@ -34,3 +34,9 @@ CHECK_TIMED_OUT
 
 - Neither entrant currently exposes submission-linked code or a technique writeup. DhanaLakshmiMalla has no public notebooks; ippeiogawa’s public notebooks are unrelated to ARC-AGI-3. Therefore, no evidence-based **(a) exploit** or **(b) general-purpose** classification—and no Carnot lever—can yet be assigned. [DhanaLakshmiMalla notebooks](https://www.kaggle.com/dhanalakshmimalla/code), [ippeiogawa notebooks](https://www.kaggle.com/ippeiogawa/code)
 
+## 2026-07-22 13:40 UTC -- NEW
+
+- **ippeiogawa — newly discovered ARC-3 model artifact:** A July 17 Kaggle dataset is explicitly labeled an “arc3 teacher-probe artifact” containing `Qwen3.5-122B-A10B-NVFP4`: a multimodal MoE with 122B total/10B active parameters, NVFP4 quantization, and vLLM deployment support. No public harness links it to the leaderboard submission, so it establishes an ARC-3 experimentation direction—not the score’s mechanism. [Kaggle artifact](https://www.kaggle.com/datasets/ippeiogawa/qwen35-122b-a10b-nvfp4), [model architecture](https://huggingface.co/nvidia/Qwen3.5-122B-A10B-NVFP4)
+
+  **Classification: (b) GENERAL-PURPOSE artifact.** The published checkpoint contains no game-source reading or per-game hardcoding and is plausibly applicable to unseen games; the surrounding teacher-probe procedure remains undisclosed.
+

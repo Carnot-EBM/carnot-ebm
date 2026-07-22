@@ -1,0 +1,397 @@
+{
+  "attribution": {
+    "blocked_games": [],
+    "n_blocked_grid_too_large": 0,
+    "n_cells": 37,
+    "note": "parse_success_rate is a NEW failure mode code-synthesis lacked: free-text grid output can be malformed/truncated/wrong-shape. A parse failure counts as an incorrect prediction but is reported separately; heldout_accuracy_parseable_only (per-cell) is the conditional accuracy over parseable predictions. Grids too large to fit in-context (n_ctx) are recorded blocked, NOT silently scored 0.",
+    "pooled_parse_success_rate": 0.879276
+  },
+  "cell_level_agreement_analysis": {
+    "grid_shape_note": "all 13 roster games are 64x64 logical grids (cell=1, 4096 cells); every window transition is state-changing (no no-ops).",
+    "mean_cell_agreement_by_game": {
+      "ar25": 0.9553,
+      "cd82": 0.926,
+      "ft09": 0.7096,
+      "g50t": 0.952267,
+      "lp85": 0.878767,
+      "r11l": 0.8659,
+      "re86": 0.976933,
+      "sb26": 0.970667,
+      "sk48": 0.946767,
+      "sp80": 0.9193,
+      "tr87": 0.962133,
+      "tu93": 0.9783,
+      "vc33": 0.85375
+    },
+    "mean_changed_cell_recall_by_game": {
+      "ar25": 0.061367,
+      "cd82": 0.014233,
+      "ft09": 0.6316,
+      "g50t": 0.045167,
+      "lp85": 0.210933,
+      "r11l": 0.003833,
+      "re86": 0.008,
+      "sb26": 0.275833,
+      "sk48": 0.037233,
+      "sp80": 0.5875,
+      "tr87": 0.154033,
+      "tu93": 0.0729,
+      "vc33": 0.3409
+    },
+    "note": "Interprets a FLOORED exact-match on these all-64x64 (4096-cell) grids. Exact full-grid match requires the model to emit ALL 4096 cells correctly token-by-token -- a much harder bar than the code path, whose engine naturally does copy-then-edit. mean_cell_agreement (fraction of all 4096 cells predicted right) distinguishes a REGURGITATION WALL (high agreement, exact=0: copies most of the grid, misses a few cells) from CANNOT-INFER (low agreement: garbage/wrong grid). mean_changed_cell_recall (the diagnosis's cell_recall: fraction of the truly-CHANGED cells got right) is whether the model captured the transition's real EFFECT at all, independent of whether it reproduced the unchanged background exactly.",
+    "pooled_mean_cell_agreement": 0.915053,
+    "pooled_mean_changed_cell_recall": 0.187964
+  },
+  "comparison_to_gemma31b_code_synthesis_baseline": {
+    "code_synthesis_pooled_mean_heldout": 0.378487,
+    "code_synthesis_pooled_mean_heldout_on_roster": 0.378487,
+    "direct_prediction_nonzero_games": 1,
+    "direct_prediction_pooled_max_game_heldout": 0.1111,
+    "direct_prediction_pooled_mean_heldout": 0.008546,
+    "direct_prediction_pooled_mean_heldout_changing": 0.008546,
+    "n_games_compared": 13,
+    "note": "direct in-context DELTA prediction (leave-one-out, NO code) vs REQ-ARC-WMTE-5764's gemma-4-31B CODE-SYNTHESIS single-shot induction, SAME 13-game roster, SAME exact-match heldout metric (np.array_equal on the reconstructed full grid), SAME model. Delta-output is the MORE apples-to-apples comparison, not a pragmatic fallback: the induced Python engine() ALSO effectively computes a delta (it transforms the before-grid by construction, preserving untouched cells), so 'predict the changed cells, apply mechanically, exact-match the reconstructed after-grid' is a like-for-like test of rule-INFERENCE quality -- neither side is penalized for reproducing the unchanged 4096-cell background (which raw full-grid regurgitation would have confounded). Leave-one-out never shows the model the queried transition, so this is if anything a STRICTER test than the code baseline (whose induced engine may still memorize its k<=8 shown transitions) -- a direct-prediction win is conservative.",
+    "per_game": {
+      "ar25": {
+        "code_synthesis_heldout": 0.0,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.444433,
+        "parse_success_rate": 0.805567
+      },
+      "cd82": {
+        "code_synthesis_heldout": 0.466667,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.133333,
+        "parse_success_rate": 0.666667
+      },
+      "ft09": {
+        "code_synthesis_heldout": 0.833333,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0,
+        "parse_success_rate": 0.375
+      },
+      "g50t": {
+        "code_synthesis_heldout": 0.083333,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0,
+        "parse_success_rate": 1.0
+      },
+      "lp85": {
+        "code_synthesis_heldout": 0.333333,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0,
+        "parse_success_rate": 1.0
+      },
+      "r11l": {
+        "code_synthesis_heldout": 0.444433,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0,
+        "parse_success_rate": 1.0
+      },
+      "re86": {
+        "code_synthesis_heldout": 0.027767,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.1667,
+        "parse_success_rate": 1.0
+      },
+      "sb26": {
+        "code_synthesis_heldout": 0.148133,
+        "direct_prediction_heldout": 0.1111,
+        "direct_prediction_heldout_changing": 0.1111,
+        "identity_copy_rate": 0.1111,
+        "parse_success_rate": 1.0
+      },
+      "sk48": {
+        "code_synthesis_heldout": 0.3889,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.083333,
+        "parse_success_rate": 0.944467
+      },
+      "sp80": {
+        "code_synthesis_heldout": 0.75,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0,
+        "parse_success_rate": 1.0
+      },
+      "tr87": {
+        "code_synthesis_heldout": 0.2222,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0833,
+        "parse_success_rate": 1.0
+      },
+      "tu93": {
+        "code_synthesis_heldout": 0.222233,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0833,
+        "parse_success_rate": 0.972233
+      },
+      "vc33": {
+        "code_synthesis_heldout": 1.0,
+        "direct_prediction_heldout": 0.0,
+        "direct_prediction_heldout_changing": 0.0,
+        "identity_copy_rate": 0.0,
+        "parse_success_rate": 0.66665
+      }
+    },
+    "pooled_mean_delta_direct_minus_code": -0.369941
+  },
+  "delta_format_failure_mode": {
+    "mean_pred_delta_size_by_game": {
+      "ar25": 55.444467,
+      "cd82": 244.694433,
+      "ft09": 39.3333,
+      "g50t": 72.027767,
+      "lp85": 293.266667,
+      "r11l": 90.8889,
+      "re86": 49.8889,
+      "sb26": 40.296267,
+      "sk48": 96.5783,
+      "sp80": 72.5,
+      "tr87": 25.305567,
+      "tu93": 19.0,
+      "vc33": 264.5
+    },
+    "mean_true_delta_size_by_game": {
+      "ar25": 157.25,
+      "cd82": 241.8,
+      "ft09": 918.0,
+      "g50t": 160.5,
+      "lp85": 535.4,
+      "r11l": 517.6667,
+      "re86": 75.4167,
+      "sb26": 116.0,
+      "sk48": 164.6667,
+      "sp80": 317.5,
+      "tr87": 147.4167,
+      "tu93": 78.75,
+      "vc33": 1091.3333
+    },
+    "note": "NEW failure mode the delta format introduces (does not exist for full-grid output or code synthesis): a syntactically well-formed but SEMANTICALLY NULL delta -- the model emits NONE / zero changed cells, which on a state-CHANGING transition reconstructs to the before-grid (== identity copy) and is necessarily wrong. null_delta_rate is the fraction of PARSEABLE delta predictions with zero predicted changes (kept distinct from parse failures). null_delta_rate_changing restricts to state-changing transitions (where a null delta is definitely wrong). mean_pred_delta_size vs mean_true_delta_size shows whether the model under/over-predicts the number of changed cells.",
+    "null_delta_rate_by_game": {
+      "ar25": 0.6,
+      "cd82": 0.2222,
+      "ft09": 0.0,
+      "g50t": 0.0,
+      "lp85": 0.0,
+      "r11l": 0.0,
+      "re86": 0.0833,
+      "sb26": 0.1111,
+      "sk48": 0.0,
+      "sp80": 0.0,
+      "tr87": 0.0,
+      "tu93": 0.0,
+      "vc33": 0.0
+    },
+    "pooled_null_delta_rate": 0.0782,
+    "pooled_null_delta_rate_changing": 0.0782
+  },
+  "duration_s": 16639.67,
+  "experiment": "experiment_5768_direct_incontext_prediction_ab",
+  "field_principles": {
+    "duration_s": "real wall-clock; the 60s floor guards against a fabricated fast run.",
+    "heldout_accuracy_by_game": "the PRIMARY signal -- does no-code direct prediction move the exact quantity (exact full-grid match) the diagnosis named as the binding wall, per game?",
+    "honest_verdict": "terminal-prefixed, numbers-first; a continuous leave-one-out heldout mean with real headroom (baseline pooled 0.378487) cannot come back 'no headroom'.",
+    "identity_copy_rate": "guards the top adversarial concern -- distinguishes real dynamics prediction from near-identity-copying the input grid on no-op-heavy windows.",
+    "inference_substrate": "live_llm_inference -- real gemma-4-31B-it Q4_K_M GGUF generation on a CUDA llama-server; 60s duration floor. Runtime VRAM-jump assertion refuses CPU fallback.",
+    "mean_cell_agreement": "fraction of all cells correct -- interprets a floored exact-match as regurgitation-wall (high) vs cannot-infer (low); load-bearing on these 4096-cell grids.",
+    "null_delta_rate": "the NEW failure mode the delta format introduces (team-lead-flagged): a well-formed but semantically NULL delta (NONE / zero changed cells) that reconstructs to the before-grid; on a changing transition it is necessarily wrong -- tracked so a floor is not misread as 'the model can't parse' when it is actually 'the model predicts no change'.",
+    "parse_success_rate": "a NEW failure mode code-synthesis lacked; reported separately so a parse failure is never silently conflated with a genuine wrong-dynamics prediction.",
+    "prior_work_extended": "traces this to REQ-ARC-WMTE-5764 (code-synthesis baseline) + 5760/5766 (CEGIS), stating precisely what is mechanistically different (no code generated).",
+    "prompt_format_used": "the exact in-context prediction template + grid serialization, so the paradigm is reproducible and auditable (a NEW-mechanism claim needs its mechanism written down).",
+    "random_seed": "LLM sampling is server-side stochastic (temperature 0.2); trials are per-game replicates (same window), NOT independent game-level samples -- reported per game + pooled.",
+    "recommendation": "screening call ONLY (does direct prediction show real promise vs code synthesis?); whether to invest further (live plan_in_model wiring / specialized predictor) is OPERATOR-ONLY.",
+    "reproducibility_checksum": "content hash over harness + induce/e3 code + generator/roster config + rows.",
+    "solve_provenance": "development_proxy -- PUBLIC-game offline measurement of the induction INPUT the live mechanism uses, with the METHOD swapped to direct prediction; NOT a hidden-game self-discovery solve and NOT a live-path modification (nothing writes world_model.py or plans/executes).",
+    "verifier_is_oracle": "False -- heldout_accuracy is exact-match against real recorded transitions; oracle-distinct from any win oracle."
+  },
+  "gate_branch": "direct_prediction_does_not_beat_code_synthesis",
+  "heldout_accuracy_by_game": {
+    "ar25": 0.0,
+    "cd82": 0.0,
+    "ft09": 0.0,
+    "g50t": 0.0,
+    "lp85": 0.0,
+    "r11l": 0.0,
+    "re86": 0.0,
+    "sb26": 0.1111,
+    "sk48": 0.0,
+    "sp80": 0.0,
+    "tr87": 0.0,
+    "tu93": 0.0,
+    "vc33": 0.0
+  },
+  "heldout_accuracy_changing_by_game": {
+    "ar25": 0.0,
+    "cd82": 0.0,
+    "ft09": 0.0,
+    "g50t": 0.0,
+    "lp85": 0.0,
+    "r11l": 0.0,
+    "re86": 0.0,
+    "sb26": 0.1111,
+    "sk48": 0.0,
+    "sp80": 0.0,
+    "tr87": 0.0,
+    "tu93": 0.0,
+    "vc33": 0.0
+  },
+  "honest_verdict": "complete_direct_incontext_prediction_pooled_heldout_0.008546_vs_code_synthesis_0.378487_delta_-0.369941_changing_0.008546_parse_0.879276_no_win_N13",
+  "identity_copy_analysis": {
+    "note": "The top adversarial concern: a high parse+heldout could be near-identity-copying the input grid rather than predicting real dynamics. identity_copy_rate = fraction of predictions equal to the INPUT (before) grid; heldout_accuracy_changing isolates the state-CHANGING transitions where identity-copy necessarily FAILS -- that is the honest 'did it predict real dynamics' number. NOTE this roster has ZERO no-op transitions (all state-changing), so heldout_accuracy == heldout_accuracy_changing and a high heldout cannot be no-op copying by construction.",
+    "pooled_heldout_all": 0.008546,
+    "pooled_heldout_changing": 0.008546,
+    "pooled_identity_copy_rate": 0.085038
+  },
+  "identity_copy_rate_by_game": {
+    "ar25": 0.444433,
+    "cd82": 0.133333,
+    "ft09": 0.0,
+    "g50t": 0.0,
+    "lp85": 0.0,
+    "r11l": 0.0,
+    "re86": 0.1667,
+    "sb26": 0.1111,
+    "sk48": 0.083333,
+    "sp80": 0.0,
+    "tr87": 0.0833,
+    "tu93": 0.0833,
+    "vc33": 0.0
+  },
+  "inference_substrate": "live_llm_inference",
+  "methodology_note": "DIRECT in-context grid prediction: no code generated at any point. Per (game, trial) the SAME build_progress_window window (from exp5717.build_window, imported via arc_actions_to_progress) is used. For EACH window transition (leave-one-out), up to k=8 OTHER transitions are serialized as (before-grid, action, data)->after-grid in-context examples (query never shown -> zero answer leakage), the model is asked to output ONLY the predicted after-grid as rows of space-separated integers, the output is parsed back into a grid, and scored by exact full-grid np.array_equal against the true next_grid -- the SAME metric definition WorldModelVerifier.accuracy / heldout_accuracy uses. gemma-4-31B-it served via /v1/chat/completions (its embedded chat template) on GPU 1 (CUDA_VISIBLE_DEVICES=1), temperature 0.2 (matching the code-synthesis induce first-try temperature), n_ctx by the exp5764 launch ladder. Grids too large to fit in-context are recorded blocked (disclosed). This is a DIAGNOSTIC over the same induction input the live mechanism uses with the induction METHOD swapped -- NOT a live-path modification (no world_model.py written, no plan/execute) and NOT an orphan solver.",
+  "model_specs": [
+    {
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "k_examples_cap": 8,
+      "kv_quant": "q8_0",
+      "n_ctx_deployed": 32768,
+      "name": "gemma-4-31B-it",
+      "quant": "Q4_K_M",
+      "role": "direct in-context transition predictor (NO code generation), delta output",
+      "server": "CUDA llama-server single-GPU (CUDA_VISIBLE_DEVICES=1), -ngl 999, q8_0 KV, port 8971, /completion (raw, no chat template)",
+      "temperature": 0.2,
+      "use_chat_template": false,
+      "vram_gpu_before_after_mib": [
+        4,
+        21426
+      ]
+    }
+  ],
+  "parse_success_rate": 0.879276,
+  "parse_success_rate_by_game": {
+    "ar25": 0.805567,
+    "cd82": 0.666667,
+    "ft09": 0.375,
+    "g50t": 1.0,
+    "lp85": 1.0,
+    "r11l": 1.0,
+    "re86": 1.0,
+    "sb26": 1.0,
+    "sk48": 0.944467,
+    "sp80": 1.0,
+    "tr87": 1.0,
+    "tu93": 0.972233,
+    "vc33": 0.66665
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "resource": "gguf_cached::gemma-4-31B-it"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "gpu1 used=4 MiB (threshold <1000)",
+      "resource": "gpu1_idle"
+    },
+    {
+      "available": true,
+      "detail": "llama_supports_gpu_offload()",
+      "resource": "llama_cpp_gpu_offload"
+    }
+  ],
+  "prediction_mode": "delta",
+  "prior_work_extended": [
+    {
+      "relation": "gemma-4-31B-it CODE-SYNTHESIS single-shot induction baseline (LLM writes engine(grid,action,data) Python), pooled heldout 0.378487 on this exact 13-game roster -- the DIRECT comparison arm. What is mechanistically DIFFERENT here: NO code is generated at any point; the model's raw text output IS the predicted grid, parsed and exact-matched against the true next_grid. This tests whether the code-EXTERNALIZATION step (not the pattern inference) is the binding wall.",
+      "req": "REQ-ARC-WMTE-5764",
+      "verdict": "complete_gemma31b_singleshot_induction_pooled_heldout_0.378487"
+    },
+    {
+      "relation": "CEGIS refinement of the induced engine() CODE (iterative counterexample-guided repair) -- pooled delta_heldout -0.0128, zero games improved. DIFFERENT here: no code to refine; a single direct-prediction pass per held-out transition.",
+      "req": "REQ-ARC-WMTE-5760",
+      "verdict": "complete_cegis_refinement_partial_pooled_delta_-0.0128_does_not_cleanly_meet_a_preregistered_branch"
+    },
+    {
+      "relation": "CEGIS refinement on gemma-4-31B specifically -- pooled delta_heldout -0.0598, zero games improved. Same DIFFERENCE: this experiment removes code generation entirely rather than refining it.",
+      "req": "REQ-ARC-WMTE-5766",
+      "verdict": "complete_cegis_refinement_partial_pooled_delta_-0.0598_does_not_cleanly_meet_a_preregistered_branch"
+    }
+  ],
+  "prompt_format_used": {
+    "action_encoding": "ACTION <int>; ACTION 6 is a click with DATA {'x':px,'y':py} in pixel coords (one logical cell = <cell> pixels); other actions DATA none.",
+    "delta_output": "Each example shows the BEFORE grid + its CHANGED-cell list ('row col newvalue'). The model outputs ONLY the changed-cell list for the QUERY (or NONE); it is applied mechanically to the query's before-grid to RECONSTRUCT the predicted after-grid, which is then scored by the SAME exact full-grid np.array_equal as heldout_accuracy. NO code is generated. This removes the 4096-cell full-grid regurgitation burden (measured infeasible: ~4.7 min/prediction, ~24h, and mechanically floored) while still directly predicting the transition's EFFECT in-context.",
+    "example_selection": "LEAVE-ONE-OUT: up to k=8 in-context examples drawn from the window EXCLUDING the query transition (prefer changing, keep <=2 no-ops); the query transition is NEVER shown -> zero verbatim-answer leakage. k is reduced adaptively if the prompt would overflow n_ctx (recorded per game).",
+    "grid_serialization": "row-major, one line per row, space-separated integers (LOSSLESS; handles colors > 9, unlike to_ascii's last-digit form)",
+    "paradigm": "direct_incontext_delta_prediction_no_code",
+    "parse": "delta: parse 'row col newvalue' lines (in-bounds) into a changed-cell list, apply to the before-grid -> predicted after-grid. parse_success = at least one well-formed delta line OR an explicit NONE; a truncated/garbled output that yields no line is a parse failure (recorded separately, counts as incorrect).",
+    "serving": "RAW /completion (use_chat_template=False): the prompt ends at the answer marker and the model CONTINUES the text. This bypasses gemma-4-31B-it's DEFAULT <think> reasoning (which via the chat template consumed the entire answer budget with no answer, smoke-verified) so the model emits the answer directly.",
+    "temperature": 0.2,
+    "template_example": "You are given observed state transitions of the ARC-AGI-3 game '<game>'. Each state is a HxW integer grid (colors [...]), rows/cols 0-indexed. ... EXAMPLE 1\\nBEFORE:\\n<grid>\\nACTION 6  DATA {'x':.., 'y':..}\\nCHANGED CELLS (row col newvalue):\\n<r c v lines>\\n\\n... QUERY\\nBEFORE:\\n<grid>\\nACTION 3  DATA none\\n\\nList ONLY the cells that change from BEFORE to AFTER for the QUERY, one per line as 'row col newvalue' (0-indexed). If nothing changes, output NONE. No explanation, no code, no other text.\\nCHANGED CELLS (row col newvalue):\\n"
+  },
+  "question": "Does asking the SAME local model (gemma-4-31B-it) to DIRECTLY predict the next grid in-context (no code, no function) outperform asking it to write general Python code implementing the transition rule, on the SAME 13 games / 3 trials / same window / same exact-match metric? A win would show the code-EXTERNALIZATION step, not pattern inference, is the binding wall the induction-quality diagnosis found.",
+  "random_seed": 0,
+  "raw_completion": true,
+  "read_game_source": false,
+  "recommendation": "NOT A WIN: direct in-context prediction pooled leave-one-out heldout 0.008546 (changing-only 0.008546, parse-success 0.879276, identity-copy 0.085038) does not clear the gemma-4-31B code-synthesis baseline 0.378487 by a meaningful margin (delta -0.369941). Extends GAP-ARC-INDUCTION-REFINEMENT-NULL with a fourth negative: neither a bigger model, CEGIS refinement, nor a no-code direct-prediction paradigm moves single-shot induction quality off its floor on these near-optimal-baseline corpora. Do NOT re-propose direct-prediction variants without a different corpus/mechanic-class prior. OPERATOR-ONLY regardless.",
+  "reproducibility_checksum": "sha256:9f65c3a57d79d26a7789af8fa94b676ba2eb122053357c7ac660f4dd7a3b3661",
+  "requirements": [
+    "REQ-ARC-WMTE-5768"
+  ],
+  "roster_grid_shape_finding": "ALL 13 roster games are 64x64 logical grids (4096 cells, cell=1); every window transition is state-changing (no no-ops). This drove the mechanism choice: literal FULL-GRID output (the model emits all 4096 cells) was measured infeasible -- ~4.7 min/prediction (~24h for the run) AND mechanically floored (the model must regurgitate 4096 exact cells token-by-token, where the code baseline wins by naturally doing copy-then-edit). DELTA mode (the run's mode) instead has the model output ONLY the changed cells (row col newvalue), applied mechanically to the before-grid -> predicted after-grid, scored by the SAME exact full-grid match -- still no-code direct in-context prediction of the transition's EFFECT, without the regurgitation confound.",
+  "sample_size": {
+    "games": 13,
+    "note": "SAME 13-game pre-registered roster + 3-trial count as REQ-ARC-WMTE-5760/5764/5766 (ROSTER/TRIALS imported from exp5760 to guarantee an exact match). Each cell leave-one-out predicts EVERY window transition, so the per-cell heldout aggregates over all ~N window transitions, not a single grid.",
+    "paired_unit": "game (heldout averaged over trials, compared by game vs the code baseline)",
+    "roster": [
+      "tu93",
+      "tr87",
+      "sp80",
+      "sb26",
+      "re86",
+      "g50t",
+      "r11l",
+      "cd82",
+      "ar25",
+      "lp85",
+      "sk48",
+      "vc33",
+      "ft09"
+    ],
+    "roster_n": 13,
+    "trials_per_game": 3
+  },
+  "schema": "carnot.exp5768.direct_incontext_prediction_ab.v1",
+  "solve_provenance": "development_proxy",
+  "submitted_to_leaderboard": false,
+  "trials_per_game": 3,
+  "used_env_source": true,
+  "verifier_is_oracle": false
+}
