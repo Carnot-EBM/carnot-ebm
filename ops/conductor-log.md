@@ -14137,3 +14137,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 21:37 UTC | Gated on Exp5812 contract: changed-mechanism canar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-07-22 22:10 UTC | Gated on Exp5812 contract: changed-mechanism canar | OK | 81 passed, 1 warning in 8.73s |
 | 2026-07-22 22:12 UTC | Gated on Exp5813 all-family qualification: prospec | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_ch |
+| 2026-07-22 22:14 UTC | Gated on Exp5813 all-family qualification: prospec | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_ch |
