@@ -2392,7 +2392,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
 | REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
 | REQ-PUBLISH-3840 | Planned | Exp 3840 v353 publication gate regression confirmation |
-| REQ-PUBLISH-042 | Implemented, live-verified | Local paperbanana + ERNIE-Image-Turbo diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`); same-day 2026-07-21 revisions: base model -> Turbo variant (8 steps, guidance_scale=1.0), `use_pe` explicitly disabled, weights downloaded (31.63GB) and live-verified (real OOM found + fixed via dropped `pe` component + `enable_model_cpu_offload`; real 1024x1024 image generated, 16.67GB peak VRAM, 56.6s) |
+| REQ-PUBLISH-042 | Implemented, live-verified, full-pipeline (no paid API) | Local paperbanana + ERNIE-Image-Turbo diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`); 2026-07-21 revisions: base model -> Turbo variant (8 steps, guidance_scale=1.0), `use_pe` explicitly disabled, weights downloaded (31.63GB) and live-verified (real OOM found + fixed via dropped `pe` component + `enable_model_cpu_offload`; real 1024x1024 image generated, 16.67GB peak VRAM, 56.6s); 2026-07-22: VLM role (planner/stylist/critic) also defaulted to no-paid-API `claude_code` provider, full 7-agent pipeline live-verified end-to-end (258.5s, real 1536x1024 PNG, Critic caught genuine diagram defects) with zero paid API keys required anywhere in the pipeline |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
@@ -2503,12 +2503,37 @@ cached (else exit with `blocked_ernie_image_not_cached`), verify the
 `OPENAI_BASE_URL` pointed at the local server, and a non-empty placeholder
 `OPENAI_API_KEY` (the local server requires no real credential).
 
-**Known gap, explicitly documented, not silently hidden:** this requirement
-covers ONLY the image-generation role. paperbanana's VLM
-(planner/critic/stylist) role still defaults to a paid provider and is not
-addressed here; `scripts/generate_diagram.py` MUST emit a visible warning
-when `VLM_PROVIDER` resolves to a paid provider with no matching API key
-set, rather than silently proceeding as if the whole pipeline were local.
+**Fourth revision (2026-07-22) — VLM-role gap closed:** the "known gap"
+this requirement originally left open (below, preserved for history) is now
+CLOSED. `scripts/generate_diagram.py` MUST also default `VLM_PROVIDER=
+claude_code` + `VLM_MODEL=sonnet` for the `ernie-local` backend (only when
+the caller has not already set `VLM_PROVIDER` via env or a `--vlm-provider`
+passthrough flag), and MUST verify the `claude` CLI is on PATH (else exit
+with `blocked_claude_cli_not_found` per Pre-Launch Preconditions
+Discipline) before invoking `paperbanana generate`. The paid-API warning
+(below) MUST NOT fire for `claude_code` -- it needs the CLI (uses the
+existing Claude Code subscription), not an `ANTHROPIC_API_KEY`. Verified
+directly, not assumed: headless `claude -p --output-format json --model
+sonnet` calls succeed with no API key set; a real end-to-end
+`scripts/generate_diagram.py` run (VLM=`claude_code`/`sonnet`,
+Image=`openai_imagen`/ERNIE-Image-Turbo, `--iterations 1`) completed in
+258.5s producing a real 1536x1024 PNG, with the Critic agent (running on
+`claude_code`) correctly identifying real, specific defects in the
+generated diagram (garbled labels, a duplicated row, winning-arrow routed
+to the wrong energy value) -- genuine visual+logical reasoning, not a
+rubber-stamp. The full 7-agent pipeline now runs with zero paid API keys.
+See `ops/known-issues.md` "2026-07-22 FIFTH REVISION" for full detail.
+
+**Known gap (HISTORICAL — closed by the fourth revision above, preserved
+per Documentation Update Rules):** this requirement originally covered ONLY
+the image-generation role. paperbanana's VLM (planner/critic/stylist) role
+defaulted to a paid provider and was not addressed; `scripts/
+generate_diagram.py` emitted a visible warning when `VLM_PROVIDER` resolved
+to a paid provider with no matching API key set, rather than silently
+proceeding as if the whole pipeline were local. That warning logic is
+retained for the case where a caller explicitly overrides to a genuinely
+paid provider (`gemini`/`openai`/`anthropic`/`atlas`/`bedrock`) without a
+key.
 
 ### SCENARIO-PUBLISH-042: ernie-local Backend Serves paperbanana Without Paid API Keys
 
@@ -2554,3 +2579,29 @@ verified 2026-07-21: 16.67GB peak on a 24GB RTX 3090, real 1024x1024
 generation in 56.6s at 8 steps, clean GPU release afterward) -- a bare
 `pipe.to(device)` MUST NOT be used, since it would include the unused
 7.66GB `pe` submodel and exceed available VRAM.
+
+**Given** the `claude` CLI is on PATH, `VLM_PROVIDER` is not already set by
+the caller, and `scripts/generate_diagram.py --backend ernie-local` is
+invoked
+**When** the subprocess environment for `paperbanana generate` is built
+**Then** it MUST set `VLM_PROVIDER=claude_code` and `VLM_MODEL=sonnet`
+together (never `VLM_PROVIDER` alone -- paperbanana's `Settings.vlm_model`
+default of `gemini-2.5-flash` is not a valid model name for the `claude`
+CLI), and MUST NOT emit the paid-API warning for this provider.
+
+**Given** the `claude` CLI is NOT on PATH
+**When** `scripts/generate_diagram.py --backend ernie-local` is invoked
+with no `--vlm-provider` override
+**Then** it exits non-zero with `blocked_claude_cli_not_found`, without
+attempting to invoke paperbanana or fabricate a diagram.
+
+**Given** a real methodology description and `--iterations 1`
+**When** `scripts/generate_diagram.py` runs the full pipeline with
+`VLM_PROVIDER=claude_code` and the `ernie-local` image backend
+**Then** it MUST complete end-to-end (Retrieval, Planning, Styling,
+Visualizer, Critic) with no `GOOGLE_API_KEY` / real `OPENAI_API_KEY` /
+`ANTHROPIC_API_KEY` set, and produce a real output PNG at
+`final_output.png` (empirically verified 2026-07-22: 258.5s total, real
+1536x1024 PNG, Critic correctly flagged genuine defects in the generated
+image with `needs_revision=True` -- substantive reasoning, not a
+rubber-stamp).

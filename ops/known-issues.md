@@ -3603,6 +3603,60 @@ not just triggered and assumed successful:
   REQ-PUBLISH-042 (CLAUDE.md "All headline results must have live GPU
   provenance") — everything before this point was mocked/precondition-only.
 
+#### 2026-07-22 FIFTH REVISION: VLM-role gap closed — `VLM_PROVIDER=claude_code` is now the default
+
+Explicit user instruction: "let's use claude as our VLM_PROVIDER." This closes the
+**KNOWN GAP** documented in the original 2026-07-21 ADOPTED section above (the
+Retriever/Planner/Stylist/Critic agents still defaulting to paid `gemini`). Investigated
+rather than assumed:
+
+- Read `external/paperbanana/paperbanana/providers/vlm/claude_code.py` in full and
+  `providers/registry.py`'s `claude_code` branch: the provider shells out to the `claude`
+  CLI (`claude -p --output-format json --model <model> [--resume <session_id>]`),
+  constructed as `ClaudeCodeVLM(model=settings.vlm_model)` — i.e. paperbanana's
+  `VLM_MODEL` env var (default `gemini-2.5-flash`, a bogus value for this provider) is
+  passed straight through with no override, so `VLM_PROVIDER` and `VLM_MODEL` must be
+  set together or the CLI call fails on an unrecognized model name.
+- Verified directly (not assumed) that headless `claude` CLI calls work in this
+  environment with no `ANTHROPIC_API_KEY`: a cold `claude -p --output-format json
+  --model sonnet "Reply with exactly: OK"` succeeded (real cost $0.72, dominated by
+  first-call cache-creation of this project's full context); a `--resume <session_id>`
+  follow-up call in the same session dropped to $0.043 via cache reuse. Then ran the
+  EXACT image-file-reference pattern `ClaudeCodeVLM._generate()` uses against a real
+  generated PNG from the 2026-07-21 smoke test — Claude correctly and accurately
+  described the image contents (matching the real image), `permission_denials: []`,
+  confirming headless image-reading works without interactive approval.
+- **Fix:** `scripts/generate_diagram.py` now defaults `VLM_PROVIDER=claude_code` +
+  `VLM_MODEL=sonnet` (only when the caller hasn't already set `VLM_PROVIDER` via env or
+  passed `--vlm-provider` through), adds a real PRECONDITIONS check
+  (`shutil.which("claude")`, honest `blocked_claude_cli_not_found` on failure — Pre-Launch
+  Preconditions Discipline), and narrows the paid-API warning to only fire when the
+  caller explicitly picks a genuinely-paid provider (`gemini`/`openai`/`anthropic`/
+  `atlas`/`bedrock`) without a matching key. `claude_code` is deliberately excluded from
+  that warning set — it needs the CLI, not an API key.
+- **Real end-to-end verification, not just a component test:** ran
+  `scripts/generate_diagram.py` with a real methodology description through the full
+  unmodified paperbanana pipeline — VLM=`claude_code`/`sonnet`, Image=`openai_imagen`
+  pointed at the local ERNIE-Image-Turbo shim, `--iterations 1`. Completed in 258.5s:
+  Planner (37.2s, $0.78 cold-start), Stylist (47.0s, $0.15), Visualizer/ERNIE-Image-Turbo
+  generation (61.2s, real 1536x1024 PNG), Critic (112.9s, $1.06). The Critic — running on
+  `claude_code` — correctly identified real, specific defects in the generated diagram
+  (garbled candidate labels, a duplicated row, and the winning-arrow routed to the wrong
+  (highest, not lowest) energy value) with `needs_revision=True`, demonstrating genuine
+  visual+logical reasoning rather than a rubber-stamp. This is real, substantive VLM
+  behavior, not a mocked or trivial pass. (`--iterations 1` with no `--auto` intentionally
+  stops after the Critic's first pass rather than looping to address the feedback — this
+  was a pipeline-wiring verification, not a diagram-quality run.)
+- **Net effect:** the full 7-agent paperbanana pipeline (image generation AND the
+  VLM-driven Retriever/Planner/Stylist/Critic roles) now runs end-to-end with zero paid
+  API keys — closing the KNOWN GAP from the original 2026-07-21 adoption. Real dollar
+  cost remains (Claude Code subscription usage, ~$2/run at these iteration counts — not
+  free, but not a per-call API-token purchase either), and should be weighed if run at
+  volume (e.g. `--auto` mode looping many iterations, or `batch`/`sweep`/`orchestrate`
+  across many figures).
+
+**Files touched:** `scripts/generate_diagram.py`.
+
 ## 2026-07-22: REQ-ARC-WMTE-5769 data-loss incident (fix lost before commit, re-applied)
 
 While supervising `experiment_5768_direct_incontext_prediction_ab.py` via a `/loop
