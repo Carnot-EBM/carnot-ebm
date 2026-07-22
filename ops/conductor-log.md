@@ -14089,3 +14089,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 11:06 UTC | Gated on Exp5785 fixture readiness: run the three- | OK | 85 passed, 1 warning in 18.78s |
 | 2026-07-22 11:08 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
 | 2026-07-22 11:10 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
+| 2026-07-22 11:12 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
+| 2026-07-22 11:14 UTC | Causal future-family holdout of versioned rule sta | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5787-validation-gated-constraint-skill-ab |
