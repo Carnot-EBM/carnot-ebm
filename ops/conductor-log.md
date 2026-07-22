@@ -14101,3 +14101,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 12:48 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
 | 2026-07-22 13:19 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
 | 2026-07-22 13:21 UTC | Frozen calibration chooser over immutable simulato | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5791-arc-sota-independent-hypothesis-pane |
+| 2026-07-22 13:21 UTC | Gated on Exp5792 selector benefit: measure selecte | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.sele |
+| 2026-07-22 13:23 UTC | Frozen calibration chooser over immutable simulato | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5791-arc-sota-independent-hypothesis-pane |
