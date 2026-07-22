@@ -14098,3 +14098,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 11:18 UTC | Gated on Exp5788 transfer: wire a disabled typed-c | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5788-constraint-skill-transfer-audit.tr |
 | 2026-07-22 11:36 UTC | Pivotal-dynamics accreditation contract for immuta | OK | 87 passed, 1 warning in 11.18s |
 | 2026-07-22 12:22 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
+| 2026-07-22 12:48 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
