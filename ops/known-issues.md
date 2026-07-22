@@ -13107,3 +13107,13 @@ machinery has a chance to protect it regardless of the still-unknown mechanism. 
 if the pattern recurs with enough detail to actually pin down a cause.
 
 
+
+- [MANUAL QUARANTINE 2026-07-22T21:43:03Z] tests/python/test_experiment_5813_split_budget_sota_canary.py moved to
+  tests/python/quarantine/ (outer-loop, pre-empting the conductor's own 3-strikes auto-quarantine —
+  poison-test cascade guard). Root cause: exp5813's codex agent hit a wall-clock+idle timeout
+  (1204s / 665s silence, conductor-log 21:35 UTC) after writing this 552-line test but before
+  writing the `python/carnot/experiment_5813_split_budget_sota_canary.py` module it imports,
+  poisoning pytest collection (ImportError) for the whole pretest gate. The experiment script is
+  unaffected (it never existed); the TEST setup is broken. exp5813 itself is untouched and will be
+  retried/re-planned by the conductor in a future milestone. Un-quarantine once a real
+  implementation + test pair lands for exp5813.

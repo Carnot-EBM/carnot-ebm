@@ -317,7 +317,10 @@ def test_scenario_verify_5813_complete_canary_rows_and_replay(tmp_path: Path) ->
     assert mod.validate_artifact(artifact) is True
     assert mod.verify_canary_rows(rows, artifact, rows_path=rows_path) is True
     assert artifact["status"] == "complete"
-    assert artifact["honest_verdict"] == "complete: answer_channel_ready_all_three_split_budget_sota_models"
+    assert (
+        artifact["honest_verdict"]
+        == "complete: answer_channel_ready_all_three_split_budget_sota_models"
+    )
     assert artifact["qualified_real_sota_model_count"] == 3
     assert artifact["answer_channel_ready_score"] == 1.0
     assert artifact["row_file_and_sha256"]["sha256"] == mod.sha256_file(rows_path)
@@ -342,14 +345,19 @@ def test_scenario_verify_5813_complete_canary_rows_and_replay(tmp_path: Path) ->
     assert artifact["transcript_and_checkpoint_receipts"]["checkpoint_count"] == len(rows)
     assert artifact["transcript_and_checkpoint_receipts"]["row_hash_replay_ok"] is True
     assert all(row["checkpoint_after_response"] is True for row in rows)
-    assert all(row["frozen_transcript_hash"] == row["reasoning_call"]["transcript_hash"] for row in rows)
+    assert all(
+        row["frozen_transcript_hash"] == row["reasoning_call"]["transcript_hash"] for row in rows
+    )
     assert all(
         row["candidate_environment_hash"] == row["finalization_call"]["candidate_environment_hash"]
         for row in rows
     )
     assert resumed["row_file_and_sha256"]["sha256"] == artifact["row_file_and_sha256"]["sha256"]
     assert resumed["transcript_and_checkpoint_receipts"]["duplicate_cells_skipped"] == len(rows)
-    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8")) == resumed
+    assert (
+        json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8"))
+        == resumed
+    )
 
 
 def test_scenario_verify_5813_balanced_fixture_and_controls(tmp_path: Path) -> None:
@@ -445,7 +453,10 @@ def test_req_verify_5813_row_hash_and_artifact_gates_fail_closed(tmp_path: Path)
     for mutate, match in (
         (lambda item: item.pop("status"), "missing required artifact fields"),
         (lambda item: item.update({"inference_substrate": "wrong"}), "inference_substrate"),
-        (lambda item: item.update({"answer_channel_ready_score": 0.0}), "answer_channel_ready_score"),
+        (
+            lambda item: item.update({"answer_channel_ready_score": 0.0}),
+            "answer_channel_ready_score",
+        ),
         (lambda item: item["model_specs"][0].update({"hf_id": "wrong"}), "model_specs"),
         (lambda item: item["field_provenance"].pop("status"), "field_provenance"),
         (lambda item: item.update({"honest_verdict": "ready"}), "honest_verdict"),
@@ -509,8 +520,16 @@ def test_req_verify_5813_defensive_receipts_and_resume_only_runtime(tmp_path: Pa
     assert "fresh_load_receipt_missing" in resume_summary["retirement_reasons"]
 
     extra_receipt = deepcopy(artifact)
-    extra_receipt["transcript_and_checkpoint_receipts"]["raw_call_receipts"]["extra::cell"] = deepcopy(
-        next(iter(extra_receipt["transcript_and_checkpoint_receipts"]["raw_call_receipts"].values()))
+    extra_receipt["transcript_and_checkpoint_receipts"]["raw_call_receipts"]["extra::cell"] = (
+        deepcopy(
+            next(
+                iter(
+                    extra_receipt["transcript_and_checkpoint_receipts"][
+                        "raw_call_receipts"
+                    ].values()
+                )
+            )
+        )
     )
     with pytest.raises(mod.ManifestReplayError, match="row receipt set"):
         mod.verify_canary_rows(rows, extra_receipt)
