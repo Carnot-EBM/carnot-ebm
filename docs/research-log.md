@@ -5973,3 +5973,9 @@ The critical path for milestone .250:
 - theme: transition processing led a synthesis-heavy runtime tail while gated compute work remained coarsely timed
 - key result: honest operational result -- compute-task GPU idle was not indicated, but phase timing and model-concurrency evidence are insufficient to explain the longest compute durations or establish a missed DualGPURunner engagement
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.517
+- exp_range: exp5798-exp5798 (only experiment ID present in the authoritative timing data; the complete milestone range is not available)
+- theme: finite-choice channel work led compute runtime under coarse timing reconstruction
+- key result: bounded operational finding -- finite-choice qualification at 33.6 minutes outran the 22.58-minute Qwen diagnosis; the locked GPU classification is non-idle for compute, and nothing supplied shows that multiple models were loaded concurrently
+- acceptance: 4/4 operational questions answered
