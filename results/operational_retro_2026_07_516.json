@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.516",
+  "generated_at": "2026-07-22T14:39:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 597.5,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Transition terminal .515 evidence and allocate collision-free .516 identities",
+      "duration_minutes": 196.27,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5790 admission readiness: run a matched three-family independent sin",
+      "duration_minutes": 102.48,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Time-windowed literature freshness receipt",
+      "duration_minutes": 58.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify the existing exact-deliverable index with terminal test receipts and gat",
+      "duration_minutes": 56.83,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5785 fixture readiness: run the three-family prospective exact const",
+      "duration_minutes": 50.93,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Across 597.5 minutes, 12 experiments completed, including 4 compute-bound experiments. The listed tail peaks at 196.27 minutes for synthesis work and at 102.48 minutes for compute work; the locked task-level field reports no compute-bound GPU-idle condition.",
+  "bottlenecks_identified": [
+    "Runtime concentration in the 196.27-minute synthesis-only transition and collision-free identity allocation entry.",
+    "The compute tail includes 102.48-minute admission-gated and 50.93-minute fixture-gated entries; the data supplies no phase breakdown, so their durations cannot be causally assigned to gate waiting, setup, or model execution.",
+    "The absence of per-task time-series GPU and model-concurrency evidence prevents utilization measurement and runner-selection attribution."
+  ],
+  "improvements_suggested": [
+    "Add gate-aware phase timing to every experiment receipt, separating readiness wait, environment or model setup, execution, verification, and artifact persistence.",
+    "Record task-correlated GPU utilization, active model count, and runner identity throughout compute-bound experiments.",
+    "Make transition evidence and collision-free identity allocation incremental and resumable, then compare the next measured duration with the 196.27-minute entry.",
+    "Dispatch through DualGPURunner only when a task declares at least 2 models intended to run in parallel; retain single-GPU execution for single-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Build an incremental, resumable transition and identity-allocation path for the longest listed task.",
+    "Emit phase-level gate, setup, execution, verification, and artifact-write timers in experiment receipts.",
+    "Attach continuous GPU samples, active-model count, and runner identity to compute-bound receipts, with conditional DualGPURunner dispatch for parallel-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded evidence ranks the visible runtime tail and rules out a task-level GPU-idle flag, but it does not reveal why the compute entries ran long or whether parallel-model execution occurred. A nonzero savings estimate would be unsupported until phase and concurrency telemetry is recorded."
+}
