@@ -1400,6 +1400,34 @@ def _cuda_gpu_free_mb(idx: int) -> int:
         return -1
 
 
+# How many times _generator_server_and_env retries the free-VRAM check before conceding to the
+# iGPU fallback, and how long it waits between retries. A just-crashed CUDA process does not
+# release its VRAM allocation to the driver instantaneously; LocalGGUFProposer's self-heal path
+# (_ensure_server) calls _generator_server_and_env() immediately after detecting an unhealthy
+# server, so a single free-memory snapshot can catch the dying process's VRAM still "in use" and
+# wrongly fall back to the iGPU for that server's entire subsequent lifetime. Found 2026-07-21
+# (exp5768): three consecutive self-heals after a CUDA server crash all silently landed on the HIP
+# build with near-zero VRAM, running a 31B model on CPU for hours before being noticed. An initial
+# fix used 4 attempts / 1.5s apart (~6s total) -- confirmed insufficient 2026-07-22 when the exact
+# same failure recurred (a longer reclaim window than 6s in that instance). Widened to 10 attempts
+# / 2s apart (~20s total) after that. Still bounded small enough that a genuinely busy card (a real
+# conductor job actually holding the VRAM) yields to the iGPU within seconds, not a long stall.
+_GENERATOR_CUDA_FREE_RETRY_ATTEMPTS = 10
+_GENERATOR_CUDA_FREE_RETRY_DELAY_S = 2.0
+
+
+def _cuda_gpu_has_headroom(idx: int, min_free_mb: int) -> bool:
+    """True if GPU `idx` has >= `min_free_mb` free, retrying briefly across
+    _GENERATOR_CUDA_FREE_RETRY_ATTEMPTS attempts to survive a just-crashed process's VRAM not yet
+    being reclaimed by the driver (see the constants' docstring above)."""
+    for attempt in range(_GENERATOR_CUDA_FREE_RETRY_ATTEMPTS):
+        if _cuda_gpu_free_mb(idx) >= min_free_mb:
+            return True
+        if attempt < _GENERATOR_CUDA_FREE_RETRY_ATTEMPTS - 1:
+            time.sleep(_GENERATOR_CUDA_FREE_RETRY_DELAY_S)
+    return False
+
+
 def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
     """Resolve the llama-server binary + launch env for the generator, evaluated at LAUNCH time so the
     3090 guard sees current GPU state.
@@ -1407,9 +1435,11 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
     Priority:
       1. CARNOT_LLAMA_SERVER (Kaggle/live bundled CUDA binary) -- unchanged; inherits ambient env.
       2. OPT-IN CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> the local CUDA build pinned to that 3090 via
-         CUDA_VISIBLE_DEVICES, but ONLY if the card has >=_GENERATOR_CUDA_MIN_FREE_MB free. This is the
-         operator-approved (2026-06-19) use of one idle 3090 for generator throughput now that the TRM
-         run is retired; the free-memory guard yields to any conductor job already on the card.
+         CUDA_VISIBLE_DEVICES, but ONLY if the card has >=_GENERATOR_CUDA_MIN_FREE_MB free (checked
+         via _cuda_gpu_has_headroom, which retries briefly to survive a just-crashed process's VRAM
+         not yet being reclaimed -- see that function's docstring). This is the operator-approved
+         (2026-06-19) use of one idle 3090 for generator throughput now that the TRM run is retired;
+         the free-memory guard yields to any conductor job already on the card.
       3. Default: the iGPU HIP build (no conductor contention), else the CUDA build.
     Returns (server_path, env_or_None); env=None means inherit the ambient environment (legacy behavior).
     """
@@ -1427,7 +1457,7 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
             idx = int(gpu)
         except ValueError:
             idx = -1
-        if idx >= 0 and _cuda_gpu_free_mb(idx) >= _GENERATOR_CUDA_MIN_FREE_MB:
+        if idx >= 0 and _cuda_gpu_has_headroom(idx, _GENERATOR_CUDA_MIN_FREE_MB):
             return cuda, dict(os.environ, CUDA_VISIBLE_DEVICES=str(idx))
         # guard tripped (card busy / unavailable / bad idx) -> fall through to the iGPU path,
         # never fight the conductor for the 3090.
