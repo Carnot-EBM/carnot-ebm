@@ -43041,6 +43041,118 @@ machine-readable.
 |---|---|---|
 | REQ-REPORT-5769 | Implemented (`python/carnot/experiment_5769_transition_v515.py`, `results/experiment_5769_transition_v515.json`) | Implemented (`tests/python/test_experiment_5769_transition_v515.py`) |
 
+### REQ-REPORT-5782: V516 Transition Archives Terminal V515 By Exact Identity
+
+The Exp5782 workflow SHALL read the V515 completion ledger, conductor log,
+active roadmap, optional `research-roadmap-next.yaml`, exclusion manifest,
+vNEXT proposal document, and every V515 task's exact declared deliverable from
+Exp5769 through Exp5775. It SHALL write
+`results/experiment_5782_transition_v516.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT choose canonical evidence by `experiment_<number>_*.json` glob order
+or mtime, and SHALL declare
+`inference_substrate="local_exact_artifact_and_conductor_reconciliation_no_llm"`.
+
+The workflow SHALL define canonical identity as the tuple `(milestone, task_id,
+declared_deliverable)`. It SHALL build an explicit V515
+task-to-declared-deliverable matrix from the completion ledger, hash each exact
+declared artifact when it exists, and treat numeric-prefix matches as aliases
+only. Missing declared artifacts SHALL NOT be manufactured: Exp5772 and Exp5774
+may remain missing declared paths only when conductor evidence records
+`GATE_BLOCK` non-artifact outcomes for those task ids.
+
+The workflow SHALL preserve the V515 conductor outcome taxonomy. Exp5769 and
+Exp5770 SHALL be recorded as completed operational tasks. Exp5771 SHALL be
+recorded as an operational block with three
+`artifact_not_updated_past_bootstrap` delivery failures and its terminal
+blocked artifact verdict
+`blocked: evidence index preflight failed closed: tests_not_recorded_passing`.
+Exp5772, Exp5773, Exp5774, and Exp5775 SHALL be recorded as gate-skipped tasks
+that generated no scientific result. A gate block SHALL NOT be classified as a
+scientific null, tested negative, or positive result.
+
+The workflow SHALL collision-check Exp5782-Exp5795 across the active roadmap,
+optional next roadmap, completion history, exclusion manifest, vNEXT proposal
+document, and results directory. Planned references in the active roadmap and
+vNEXT proposal MAY be recorded as allowed allocation references. Any unowned
+completion-history, exclusion-manifest, or result collision SHALL make the
+artifact terminal `blocked:` with bare scalar
+`next_range_collision_count > 0`.
+
+The workflow SHALL append V515 completion evidence exactly once only if absent.
+When the completion ledger already contains an identical V515 milestone block,
+it SHALL set `research_complete_append_count=0`, SHALL preserve duplicate
+history blocks without deleting, sorting, deduplicating, or rewriting them, and
+SHALL report duplicate history as diagnostics.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `milestone_from`, `milestone_to`,
+`declared_deliverable_matrix`, `canonical_artifact_hashes`,
+`same_number_alias_groups`, `conductor_outcomes`, `blocked_task_ids`,
+`gate_skipped_task_ids`, `scientific_null_task_ids`,
+`positive_result_task_ids`, `archived_task_ids`,
+`research_complete_append_count`, `duplicate_history_diagnostics`,
+`next_task_range`, bare `next_range_collision_count`, `docs_reconciled`,
+`research_roadmap_unchanged`, `conductor_unchanged`, `inference_substrate`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry. `next_task_range` SHALL equal `exp5782-exp5795`,
+`next_range_collision_count` SHALL be a bare integer,
+`research_roadmap_unchanged` SHALL be `true`, `conductor_unchanged` SHALL be
+`true`, and `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+#### SCENARIO-REPORT-5782: Exact V515 Deliverables Archive Into V516
+
+**Given** V515's declared deliverable matrix is unambiguous
+**And** exact declared artifacts exist for Exp5769, Exp5770, Exp5771, Exp5773,
+and Exp5775
+**And** conductor evidence records Exp5772 and Exp5774 as non-artifact
+`GATE_BLOCK` outcomes
+**And** Exp5782-Exp5795 have no unowned result, completion-history, or
+exclusion-manifest collisions
+**When** the Exp5782 workflow runs
+**Then** it emits a complete transition artifact using
+`artifact_selection_policy="exact_declared_deliverable"`, archives all seven
+V515 task ids, records canonical hashes for existing declared deliverables,
+preserves missing gate-blocked paths without fabricating artifacts, records
+Exp5771's three delivery failures and terminal blocked artifact, keeps
+scientific null and positive result sets empty, and leaves roadmap and
+conductor files unchanged.
+
+#### SCENARIO-REPORT-5782-COLLISION-BLOCK: Occupied V516 Ids Fail Closed
+
+**Given** any unowned result path, completion-history entry, or
+exclusion-manifest entry already occupies an Exp5782-Exp5795 id
+**When** the Exp5782 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records a bare integer
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+completion history to hide the collision.
+
+#### SCENARIO-REPORT-5782-IDENTITY-BLOCK: Ambiguous V515 Mapping Fails Closed
+
+**Given** a V515 completion block is absent, disagrees with another V515 block,
+declares a different deliverable for an expected task, or repeats a task id
+with incompatible deliverables
+**When** the Exp5782 workflow builds canonical identities
+**Then** it emits a terminal `blocked:` artifact and records the mapping
+failure without falling back to numeric-prefix glob selection.
+
+#### SCENARIO-REPORT-5782-FIELD-PRINCIPLES: Every Required Field Is Annotated And Stable
+
+**Given** the Exp5782 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level field has a non-empty `field_principles` entry, the
+checksum is stable, `next_range_collision_count` remains a bare integer,
+`inference_substrate` is
+`local_exact_artifact_and_conductor_reconciliation_no_llm`, and the terminal
+verdict prefix is machine-readable.
+
+## Implementation Status (REQ-REPORT-5782)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5782 | Implemented (`python/carnot/experiment_5782_transition_v516.py`, `results/experiment_5782_transition_v516.json`) | Implemented (`tests/python/test_experiment_5782_transition_v516.py`) |
+
 ### REQ-REPORT-5770: V515 Source Delta Ingestion With Family Receipts
 
 The Exp5770 workflow SHALL search only after the
