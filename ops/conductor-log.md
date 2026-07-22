@@ -14124,3 +14124,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 16:17 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-22 16:19 UTC | Milestone 2026.07.517 activated | OK | 4 tasks queued |
 | 2026-07-22 16:52 UTC | Transition terminal .516 evidence and allocate col | OK | 88 passed, 1 warning in 11.27s |
+| 2026-07-22 17:17 UTC | Time-windowed post-V517 literature freshness recei | OK | 88 passed, 2 warnings in 11.10s |
