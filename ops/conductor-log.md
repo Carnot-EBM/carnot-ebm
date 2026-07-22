@@ -14066,3 +14066,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 02:32 UTC | Build an exact-deliverable evidence index and fail | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5771_evidenc |
 | 2026-07-22 03:01 UTC | Build an exact-deliverable evidence index and fail | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5771_evidenc |
 | 2026-07-22 03:03 UTC | Gated on Exp5771 evidence readiness: build a prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5771-evidence-index-collision-preflight,  |
+| 2026-07-22 03:03 UTC | Gated on Exp5772 clean drift headroom: run prospec | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5772-sota-constraint-drift-stream.strea |
+| 2026-07-22 03:05 UTC | Gated on Exp5771 evidence readiness: build a prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5771-evidence-index-collision-preflight,  |
