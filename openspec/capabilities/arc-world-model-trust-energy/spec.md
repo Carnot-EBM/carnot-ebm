@@ -16272,3 +16272,111 @@ at or above it on a later call within the retry budget
 **Then** it falls back to the iGPU HIP build (or the CUDA build if the HIP build is absent), exactly
 as before this fix -- the retry only survives a *transient* low reading, it does not change the
 outcome for a card that is actually busy for the whole retry window.
+
+### REQ-ARC-WMTE-5790: Game-Blind Immutable World-Model Admission Contract
+
+Experiment 5790 SHALL implement a game-blind admission validator over immutable executable ARC
+world-model hypotheses and agent-owned `(observation, action, successor)` transition evidence. The
+validator SHALL consume only agent-owned trace rows and retained development-proxy hypothesis
+metrics; it SHALL NOT induce, patch, edit, deploy, execute through live E3, or claim a public level
+solve. The real ARC environment remains the authority for outcomes, while this contract measures
+whether an immutable hypothesis is accredited enough to be admitted as world-model evidence.
+
+The admission ladder SHALL define rungs L0 through L4:
+
+- L0 syntax/compile and sandbox;
+- L1 exact seen-action replay;
+- L2 held-out and unseen-action fidelity;
+- L3 multi-step calibration, error growth, and stability across seeds;
+- L4 pivotal-dynamics coverage, play-cost-weighted adequacy, and closed-loop utility.
+
+Average transition accuracy SHALL NOT compensate for a failed pivotal-coverage gate. The pivotal
+definition SHALL be preregistered from agent-owned observations only, using observed action
+reversals, terminal or goal-state changes, rare object effects, policy disagreement, and
+counterfactual replay among already observed successors. The pivotal definition and its hash SHALL be
+frozen before scoring test rows. A2RBench-style cycle consistency SHALL appear only as a
+malformed-model negative control and SHALL NOT satisfy admission by itself.
+
+The validator SHALL reject any hypothesis or trace with game-identity runtime features, source code
+features, per-game adapter features, offline ground-truth BFS, banked plans, public registry recipes,
+or source-leak canaries. It SHALL include identity, action-ignoring, memorizing, rare-rule-omitting,
+and source-leak canaries. `admission_contract_ready_score` SHALL be `1.0` only when positive and
+negative controls, split/leakage checks, pivotal definition freeze, deterministic replay, and
+schema validation all pass; otherwise the artifact SHALL emit a terminal `blocked:` or `complete:`
+verdict without solve credit.
+
+Experiment 5790 SHALL write
+`results/experiment_5790_arc_world_model_admission_contract.json` with these bare top-level fields:
+`status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`;
+`registry_credit=false`; `spec_refs`; `admission_rung_contract`; `agent_owned_trace_manifest`;
+`trace_provenance_receipts`; `source_game_identity_denylist`; `leakage_checks`;
+`pivotal_definition`; `pivotal_definition_freeze_hash`; `ordinary_transition_metrics`;
+`unseen_action_metrics`; `rollout_calibration_metrics`; `pivotal_transition_metrics`;
+`play_cost_weighted_risk`; `closed_loop_proxy_metrics`;
+`cycle_consistency_negative_control`; `adversarial_canary_receipts`; `retained_model_rescore`;
+`admission_decisions`; bare `pivotal_fixture_coverage_score`; bare `source_leak_count`; bare
+`admission_contract_ready_score`; `producer_gate_fields`;
+`inference_substrate=immutable_executable_world_model_replay_over_agent_owned_arc_transitions_no_llm`;
+`test_commands`; `test_exit_codes`; `reproducibility_checksum`; and `honest_verdict` beginning
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "bare completion state for downstream gates."
+- `preconditions_checked`: principle "registry, live entrypoint hash, retained proxy rows/models, trace manifests, denylist, disk/RAM, and deterministic replay environment are checked before scoring."
+- `registry_precheck`: principle "all public games and levels are already complete, so no retained row can claim solve credit."
+- `solve_claimed`: principle "false because admission evaluates immutable hypotheses only."
+- `registry_credit`: principle "false because no public registered level is solved or re-solved for credit."
+- `spec_refs`: principle "REQ/SCENARIO anchors keep the admission contract traceable."
+- `admission_rung_contract`: principle "L0-L4 accreditation ladder is explicit before model scoring."
+- `agent_owned_trace_manifest`: principle "evidence rows are traceable to agent-owned observation/action/successor receipts."
+- `trace_provenance_receipts`: principle "rows without agent-owned provenance fail closed."
+- `source_game_identity_denylist`: principle "source, game identity, per-game adapters, BFS, banked plans, and registry recipes are forbidden inputs."
+- `leakage_checks`: principle "source and identity leak checks run before transition metrics are trusted."
+- `pivotal_definition`: principle "pivotal strata are preregistered from agent-owned outcome-sensitive observations only."
+- `pivotal_definition_freeze_hash`: principle "pivotal scoring uses a frozen definition hash."
+- `ordinary_transition_metrics`: principle "average exact transition fidelity remains visible but is not sufficient for admission."
+- `unseen_action_metrics`: principle "unseen-action fidelity is measured separately from seen replay."
+- `rollout_calibration_metrics`: principle "multi-step error growth and seed stability bound simulator drift."
+- `pivotal_transition_metrics`: principle "rare pivotal misses gate admission independently of average accuracy."
+- `play_cost_weighted_risk`: principle "miss risk is weighted by observed play cost, not smoothed away."
+- `closed_loop_proxy_metrics`: principle "closed-loop utility remains a development proxy and grants no solve credit."
+- `cycle_consistency_negative_control`: principle "A2RBench-style cycle consistency is a malformed-model control only."
+- `adversarial_canary_receipts`: principle "identity, action-ignore, memorization, rare-rule omission, and source-leak canaries are detected and rejected."
+- `retained_model_rescore`: principle "retained immutable single-shot hypotheses are re-scored as disclosed development proxies."
+- `admission_decisions`: principle "per-model decisions expose the lowest failed rung and no admitted leak."
+- `pivotal_fixture_coverage_score`: principle "bare downstream gate scalar for pivotal coverage."
+- `source_leak_count`: principle "bare downstream gate scalar; admitted source leaks must remain zero."
+- `admission_contract_ready_score`: principle "bare downstream gate scalar; 1.0 requires controls, splits, freeze, deterministic replay, and schema validation."
+- `producer_gate_fields`: principle "lists the bare scalar downstream gates without wrapping them in objects."
+- `inference_substrate`: principle "immutable executable world-model replay over agent-owned ARC transitions with no LLM."
+- `test_commands`: principle "records verification commands used for the artifact."
+- `test_exit_codes`: principle "records command exit codes rather than prose-only verification."
+- `reproducibility_checksum`: principle "content-addressed artifact catches silent metric, threshold, or provenance drift."
+- `honest_verdict`: principle "terminal complete:/blocked: verdict reports the admission result without solve credit."
+
+#### SCENARIO-ARC-WMTE-5790-LEAKAGE-AND-PROVENANCE-REJECTION
+
+Given immutable hypothesis metadata and transition rows that may include source, game identity,
+per-game adapter, offline BFS, banked-plan, registry-recipe, or missing-provenance signals
+When the admission validator checks the evidence
+Then clean agent-owned rows are retained, all forbidden rows or hypotheses are rejected, canary
+receipts are recorded, and admitted source leak count remains zero.
+
+#### SCENARIO-ARC-WMTE-5790-PIVOTAL-FREEZE-AND-METRICS
+
+Given agent-owned transition rows with observed reversals, terminal changes, rare object effects,
+policy disagreement, and counterfactual successor sensitivity
+When the pivotal definition is frozen before scoring
+Then the artifact records the freeze hash, ordinary and unseen-action metrics, rollout calibration,
+pivotal metrics, play-cost-weighted risk, and closed-loop proxy metrics while keeping the real
+environment authoritative.
+
+#### SCENARIO-ARC-WMTE-5790-ADMISSION-DECISIONS-NO-CREDIT
+
+Given retained immutable single-shot development-proxy hypotheses and malformed canaries
+When Exp5790 re-scores them without live E3 execution or editing rejected hypotheses
+Then average accuracy cannot override pivotal-coverage failure, cycle consistency remains
+insufficient, `solve_claimed=false`, `registry_credit=false`, and
+`admission_contract_ready_score` is `1.0` only when every control and deterministic replay gate
+passes.
