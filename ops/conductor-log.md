@@ -14085,3 +14085,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 07:35 UTC | Transition terminal .515 evidence and allocate col | OK | 89 passed, 1 warning in 10.89s |
 | 2026-07-22 08:33 UTC | Time-windowed literature freshness receipt | OK | 88 passed, 2 warnings in 11.17s |
 | 2026-07-22 09:30 UTC | Qualify the existing exact-deliverable index with  | OK | 93 passed, 1 warning in 35.64s |
+| 2026-07-22 10:15 UTC | Gated on Exp5784 readiness: build a sealed hardnes | OK | 87 passed, 1 warning in 20.73s |
