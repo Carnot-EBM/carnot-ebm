@@ -43879,3 +43879,80 @@ classification is one of the allowed values, and the checksum is stable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5797 | Implemented (`python/carnot/experiment_5797_v517_source_delta_ingestion.py`, `results/experiment_5797_v517_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5797_v517_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5798: SOTA Answer-Channel Diagnostic Artifact Schema
+
+The Exp5798 workflow SHALL write
+`results/experiment_5798_sota_answer_channel_diagnostic.json` as an offline
+forensic report over existing Exp5786 real-GGUF rows and SHALL declare
+`inference_substrate=offline_exact_forensics_over_existing_real_gguf_rows_no_llm`.
+It SHALL NOT run model inference, download a tokenizer, replace embedded GGUF
+templates, modify `scripts/research_conductor.py`, push, or treat upstream
+issue prose as a local receipt.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`input_artifact_hashes`, `row_count`, `raw_response_coverage`,
+`per_model_failure_attribution`, `reasoning_content_receipts`,
+`final_content_receipts`, `stop_reason_counts`, `token_length_distributions`,
+`qwen_answer_sentinel_count`, `qwen_empty_final_count`,
+`qwen_exact_cap_count`, `embedded_template_metadata`,
+`llama_cpp_runtime_receipts`, `upstream_issue_receipts`,
+`local_upstream_distinction`, `candidate_mode_matrix`, bare
+`candidate_mode_count`, `mode_acceptance_rules`, `mode_retirement_rules`,
+`adversarial_control_matrix`, bare `llm_calls_made=0`, bare
+`channel_diagnostic_ready_score`, `producer_gate_fields`,
+`inference_substrate`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. `honest_verdict` SHALL start
+with `complete:` when the report is ready or `blocked:` when any precondition
+fails.
+
+`channel_diagnostic_ready_score` SHALL equal `1.0` only when every Exp5786 row
+is classified, local receipts and upstream issue receipts are distinguished,
+candidate modes are executable and bounded, and canary acceptance and
+retirement rules are preregistered. Any missing row, hash mismatch, incomplete
+raw-response coverage, unbounded candidate mode, missing adversarial control,
+LLM call, or grammar-as-semantics claim SHALL force
+`channel_diagnostic_ready_score=0.0`.
+
+Required field principles:
+
+- `status`: principle "Terminal diagnostic state from local row/hash and schema gates."
+- `preconditions_checked`: principle "Records file hashes, row coverage, disk/RAM, runtime, and template checks before attribution."
+- `input_artifact_hashes`: principle "Binds Exp5785, Exp5786, row, parser/runtime, llama.cpp, and GGUF metadata evidence."
+- `row_count`: principle "Bare row denominator prevents silent row loss."
+- `raw_response_coverage`: principle "Every raw row must carry response text and hash evidence before diagnosis."
+- `per_model_failure_attribution`: principle "Separates parser, final-content, stop, token, template, and exact-answer evidence per model."
+- `candidate_mode_matrix`: principle "Downstream canary modes are preregistered, executable, and bounded before generation."
+- `candidate_mode_count`: principle "Bare scalar prevents prose from inflating mode coverage."
+- `adversarial_control_matrix`: principle "Negative controls show why syntax constraints cannot prove semantic correctness."
+- `llm_calls_made`: principle "Bare scalar must remain zero for this offline forensics task."
+- `channel_diagnostic_ready_score`: principle "Strict gate for complete classification, provenance separation, bounded modes, and preregistered rules."
+- `inference_substrate`: principle "Declares offline exact forensics over existing real-GGUF rows with no LLM calls."
+- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not call Qwen truncation a competence failure."
+
+#### SCENARIO-REPORT-5798: Complete Diagnostic Emits Ready Artifact
+
+**Given** Exp5785, Exp5786, and all Exp5786 JSONL rows are hash-consistent
+**And** local GGUF/runtime/template receipts are available from cached metadata
+or prior local runtime receipts
+**When** Exp5798 builds the diagnostic
+**Then** it writes the required artifact fields, reports `row_count=1080`,
+sets `llm_calls_made=0`, distinguishes local and upstream evidence, registers
+bounded per-family candidate modes and adversarial controls, and sets
+`channel_diagnostic_ready_score=1.0`.
+
+#### SCENARIO-REPORT-5798-BLOCKED: Incomplete Evidence Fails Closed
+
+**Given** any Exp5786 row hash, raw-response hash, row count, receipt coverage,
+or candidate-mode bound is invalid
+**When** Exp5798 validates the report
+**Then** it writes or rejects a blocked artifact with
+`channel_diagnostic_ready_score=0.0`, preserves `llm_calls_made=0`, and does
+not present upstream issue prose, grammar validity, or inferred larger-budget
+success as local proof.
+
+## Implementation Status (REQ-REPORT-5798)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5798 | Planned (`python/carnot/experiment_5798_sota_answer_channel_diagnostic.py`, `results/experiment_5798_sota_answer_channel_diagnostic.json`) | Planned (`tests/python/test_experiment_5798_sota_answer_channel_diagnostic.py`) |

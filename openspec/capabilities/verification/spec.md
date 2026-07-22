@@ -30371,6 +30371,65 @@ SCENARIO-VERIFY-5786-REPLAY
 |---|---|---|
 | REQ-VERIFY-5786 | Planned (`python/carnot/experiment_5786_sota_constraint_stream.py`, `results/experiment_5786_sota_constraint_stream.json`) | Planned (`tests/python/test_experiment_5786_sota_constraint_stream.py`) |
 
+### REQ-VERIFY-5798: Offline SOTA Answer-Channel Failure Attribution
+
+The repository SHALL provide Exp5798 offline forensic helpers inside
+`python/carnot/experiment_5798_sota_answer_channel_diagnostic.py` and write
+`results/experiment_5798_sota_answer_channel_diagnostic.json` without running
+model inference. The helpers SHALL consume the sealed Exp5785 fixture artifact,
+the Exp5786 artifact, and every Exp5786 JSONL raw row, then fail closed when
+row counts, row hashes, raw-response hashes, or artifact row receipts disagree.
+
+The diagnostic SHALL separate reasoning content receipts, final-content
+receipts, parser-boundary receipts, stop reasons, token exhaustion, embedded
+template metadata, and exact wrongness. Local rows SHALL establish symptoms;
+GGUF/runtime metadata SHALL establish transport context; upstream issue prose
+SHALL motivate canary controls only; and Exp5785 exact validators SHALL remain
+the sole semantic correctness authority. Grammar or JSON validity SHALL NOT be
+credited as semantic correctness.
+
+For Qwen3.6-35B-A3B, Exp5798 SHALL determine from existing rows whether the
+Exp5786 strict answer sentinel appears, whether final content is empty, whether
+rows consume the configured token cap, and whether a larger bounded budget is
+locally established or remains unproven without a canary. Gemma4-31B and
+Gemma4-26B-A4B rows SHALL be reported as matched controls over the same row
+surface. Candidate canary modes SHALL be bounded per mandated model family and
+SHALL include max tokens, stops, finalizer, parser, timeout, and fail-closed
+conditions before any downstream Exp5799 generation is allowed.
+
+#### SCENARIO-VERIFY-5798: Rows Are Classified Without Inference
+
+**Given** the Exp5785 fixture artifact and Exp5786 artifact/rows are readable
+and hash-consistent
+**When** Exp5798 runs
+**Then** it classifies every Exp5786 row by reasoning/final/parser/stop/token
+state, distinguishes local receipts from upstream issue claims, reports Qwen
+sentinel/final-content/token-cap counts, keeps Gemma controls separate, and
+sets `llm_calls_made=0`.
+
+If any row is missing, duplicated, hash-mismatched, or lacks raw response
+coverage, then the same workflow SHALL emit a terminal blocked artifact and
+SHALL NOT set `channel_diagnostic_ready_score=1.0`.
+
+#### SCENARIO-VERIFY-5798-CONTROLS: Negative Controls Protect The Canary Matrix
+
+**Given** Exp5798 preregisters candidate modes for Exp5799
+**When** the mode and adversarial-control matrices are validated
+**Then** every mandated family has bounded candidate modes, grammar/JSON arms
+are present only as guarded syntax arms, and adversarial controls cover empty
+final content, reasoning-only output, invalid or duplicate candidate ID,
+schema/control-plane injection, stop collision, unclosed thinking, max-token
+exhaustion, and exact-answer mismatch.
+
+**Spec traces:** REQ-VERIFY-5798, SCENARIO-VERIFY-5798,
+SCENARIO-VERIFY-5798-CONTROLS
+
+## Implementation Status (REQ-VERIFY-5798)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5798 | Planned (`python/carnot/experiment_5798_sota_answer_channel_diagnostic.py`, `results/experiment_5798_sota_answer_channel_diagnostic.json`) | Planned (`tests/python/test_experiment_5798_sota_answer_channel_diagnostic.py`) |
+
 ### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
 
 The repository SHALL provide Exp 5734 at
