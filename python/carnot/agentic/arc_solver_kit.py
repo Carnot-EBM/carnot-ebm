@@ -5429,6 +5429,54 @@ class OfflineSolver:
         return full, cur
 
 
+def _action6_click_from_label(label: str) -> Optional[tuple[int, int]]:
+    """Best-effort extraction of an ACTION6 (x, y) click from a solve-label string.
+
+    Covers the dominant label encoding (`_json_action_label` in arc_game_adapters.py:
+    a JSON string `{"action": 6, "data": {"x": .., "y": ..}}`). Returns None (never
+    raises) on any other encoding or a non-ACTION6 label -- this is a best-effort
+    early-warning check, not a complete parser for every adapter's label dialect
+    (some games use templated strings like "click:{x},{y}" via
+    `_click_label_for_grid`, which are not covered here). Coverage is reported
+    honestly by the caller (`checked_action6_clicks` vs `solution` length) rather
+    than silently assumed complete.
+    """
+    try:
+        parsed = json.loads(label)
+    except (TypeError, ValueError):
+        return None
+    if not isinstance(parsed, Mapping):
+        return None
+    if _action_id_from(parsed) != 6:
+        return None
+    return _click_xy_from(parsed)
+
+
+def _action6_out_of_live_bounds(x: int, y: int) -> bool:
+    """True if (x, y) would be REJECTED by the live arcprize.org API for ACTION6.
+
+    Reuses the bound already declared by the installed `arcengine` dependency
+    (`ComplexAction`'s `x`/`y` fields, `Field(ge=0, le=63)`) -- the exact same
+    pydantic validation the live server runs in `RestAPI.cmd()` before dispatching
+    an action. The OFFLINE arcade (`LocalEnvironmentWrapper.step()`) never calls
+    this validation -- it silently accepts and routes any coordinate straight into
+    the per-game simulator's hit-test, which itself does no bounds check either.
+    That asymmetry is what let lf52's original L9 route (22 clicks with x up to 132)
+    reproduce cleanly offline while 400-ing live at submission time (see
+    ops/known-issues.md 2026-07-17, commit 5ca2a999b). Reusing arcengine's own
+    declared bound (rather than hardcoding 0/63 a second time) keeps this check in
+    sync automatically if the live API's bound ever changes.
+    """
+    from arcengine.enums import GameAction
+    from pydantic import ValidationError
+
+    try:
+        GameAction.ACTION6.validate_data({"x": int(x), "y": int(y)})
+    except ValidationError:
+        return True
+    return False
+
+
 def reproduce(
     game_id: str,
     solution: Sequence[str],
@@ -5441,14 +5489,34 @@ def reproduce(
     report the level it actually reaches. A solve is only real if this reproduces
     the claimed level offline — never trust a live-recorded trajectory alone.
 
-    Returns {reached_level, claimed_level, reproduced: bool}. Zero quota.
+    Also flags any ACTION6 click that the OFFLINE arcade would silently accept but
+    the LIVE API would reject (out of the [0,63]x[0,63] bound) -- offline
+    reproduction is necessary but NOT sufficient for live-submittability; a route
+    can pass this gate's `reproduced: True` while still being un-submittable, which
+    is exactly what happened to lf52's original L9 route before its 2026-07-17 fix.
+    `oob_action6_clicks`/`any_oob_action6_clicks` surface that gap explicitly rather
+    than leaving it to be discovered only at live-submission time. Best-effort:
+    `checked_action6_clicks` reports how many labels this could actually parse and
+    check (see `_action6_click_from_label`'s coverage caveat) -- a label dialect this
+    can't parse is silently skipped, not silently assumed clean.
+
+    Returns {reached_level, claimed_level, reproduced: bool, oob_action6_clicks,
+    any_oob_action6_clicks, checked_action6_clicks}. Zero quota.
     """
     arc = offline_arcade()
     env = arc.make(game_id, scorecard_id=arc.open_scorecard())
     f = env.reset()
     if warmup_label is not None:
         f = apply(env, warmup_label, f)
-    for label in solution:
+    oob_action6_clicks: list[dict[str, int]] = []
+    checked_action6_clicks = 0
+    for index, label in enumerate(solution):
+        click = _action6_click_from_label(label)
+        if click is not None:
+            checked_action6_clicks += 1
+            x, y = click
+            if _action6_out_of_live_bounds(x, y):
+                oob_action6_clicks.append({"index": index, "x": x, "y": y})
         f = apply(env, label, f)
     reached = frame_level(f)
     return {
@@ -5457,6 +5525,9 @@ def reproduce(
         "claimed_level": claimed_level,
         "reproduced": (claimed_level is None) or (reached >= int(claimed_level)),
         "mode": "offline_reproduction_gate_no_quota",
+        "checked_action6_clicks": checked_action6_clicks,
+        "oob_action6_clicks": oob_action6_clicks,
+        "any_oob_action6_clicks": bool(oob_action6_clicks),
     }
 
 

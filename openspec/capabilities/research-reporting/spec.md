@@ -43956,3 +43956,134 @@ success as local proof.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5798 | Planned (`python/carnot/experiment_5798_sota_answer_channel_diagnostic.py`, `results/experiment_5798_sota_answer_channel_diagnostic.json`) | Planned (`tests/python/test_experiment_5798_sota_answer_channel_diagnostic.py`) |
+
+### REQ-REPORT-5809: V518 Transition Archives Terminal V517 And Tombstones Reserved Identities
+
+The Exp5809 workflow SHALL read the terminal V517 completion ledger, active
+roadmap, optional `research-roadmap-next.yaml`, vNEXT proposal document,
+conductor log, exclusion manifest, Exp5796 transition artifact, Exp5797 source
+refresh artifact, Exp5798 diagnostic artifact, Exp5799 canary artifact, and
+Exp5799 row file. It SHALL write
+`results/experiment_5809_transition_v518.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL preserve Exp5799 as flagged/quarantined, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL define canonical identity as the tuple
+`(milestone, task_id, declared_deliverable)`. It SHALL resolve only the four
+activated V517 task ids Exp5796 through Exp5799 from exact declared paths plus
+conductor outcomes. Numeric prefixes and proposal-only tasks SHALL be recorded
+only as diagnostic references or allocation context, not as execution evidence.
+Exp5799 SHALL NOT be recorded as clean success even when its artifact status is
+`complete`; when `flagged_adversarial=true` or a conductor `FLAGGED` outcome is
+present, it SHALL be placed in `flagged_quarantined_task_ids`.
+
+The workflow SHALL preserve outcome classes as disjoint task-id lists:
+complete-positive, complete-null, complete-negative, flagged-quarantined,
+blocked, missing, and no-solve. Exp5796 and Exp5798 SHALL be
+complete-positive when their exact artifacts are terminal complete. Exp5797
+SHALL be complete-null when `accepted_finding_count=0`. Exp5799 SHALL be a
+flagged-quarantined not-ready outcome when the adversarial flag or conductor
+flag is present; it SHALL NOT be duplicated into clean success or
+complete-negative aggregation.
+
+The workflow SHALL append V517 completion evidence exactly once only if no
+exact V517 completion block is present. When completion history already
+contains the exact V517 block, it SHALL set `research_complete_append_count=0`,
+leave `research-complete.yaml` byte-for-byte unchanged, and report duplicate or
+corrupt history only as diagnostics. Exp5800 through Exp5808 SHALL be recorded
+in `reserved_unactivated_task_ids` as tombstoned identities derived from the
+prior Exp5796 transition allocation, not as completed or reusable work.
+
+The workflow SHALL scan Exp5809 through Exp5822 across active and optional next
+roadmaps, the vNEXT proposal document, completion history, exclusion manifest,
+results, and prior transition allocations. Active-roadmap and vNEXT proposal
+mentions MAY be recorded as allowed allocation references, but any unowned
+result file, completion-history entry, exclusion-manifest entry, next-roadmap
+entry, or prior-transition allocation that occupies Exp5809-Exp5822 SHALL make
+the artifact terminal `blocked:` with bare integer
+`next_range_collision_count > 0`. A complete allocation SHALL require
+`next_range_collision_count=0`.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `declared_deliverable_matrix`,
+`outcome_classification`, `flagged_quarantined_task_ids`,
+`reserved_unactivated_task_ids`, `research_complete_append_count`,
+`next_task_range`, bare `next_range_collision_count`, `docs_reconciled`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty principle entry. The
+transition-owned reconciliation for this task SHALL be limited to spec, test,
+implementation, and result artifacts; operator-owned status, changelog, and
+traceability reconciliation may be explicitly deferred to the conductor
+reconciler when the task prompt forbids touching those files.
+
+Required field principles:
+
+- `status`: principle "A normalized state lets the conductor distinguish a completed transition from a bootstrap stub."
+- `preconditions_checked`: principle "Exact resource and input checks prevent fabricated archival when the ledger or artifacts are unavailable."
+- `milestone_transition`: principle "Explicit source and destination milestones prevent numeric-prefix aliasing."
+- `declared_deliverable_matrix`: principle "Declared paths, hashes, and conductor outcomes are the authority for task identity."
+- `outcome_classification`: principle "Separate positive, null, negative, flagged, blocked, missing, and no-solve classes preserve epistemic honesty."
+- `flagged_quarantined_task_ids`: principle "Flagged artifacts must never enter headline or clean-success aggregation."
+- `reserved_unactivated_task_ids`: principle "Previously allocated but unrun identities remain tombstoned and cannot silently collide."
+- `research_complete_append_count`: principle "An exact append count prevents duplicate milestone history."
+- `next_task_range`: principle "A declared interval makes downstream identity allocation auditable."
+- `next_range_collision_count`: principle "Only zero collisions authorize the next milestone range."
+- `docs_reconciled`: principle "Specs, traceability, and ops summaries must match the archived evidence classes."
+- `duration_s`: principle "Measured wall time exposes implausible or bootstrap-only execution."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` prevents archival work from masquerading as model inference."
+- `field_provenance`: principle "Per-field sources make the transition independently auditable."
+- `test_commands`: principle "Recorded commands show which identity and history checks actually ran."
+- `test_exit_codes`: principle "Exit codes prevent failed checks from being narrated as passing."
+- `reproducibility_checksum`: principle "A content hash detects later ledger or allocation drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
+
+#### SCENARIO-REPORT-5809: Exact V517 Evidence Archives Into V518
+
+**Given** the exact V517 completion block declares Exp5796 through Exp5799
+**And** all four declared artifacts and the Exp5799 row file are readable and
+hashable
+**And** conductor evidence records Exp5799 as flagged
+**And** Exp5809-Exp5822 have no unowned collisions
+**When** the Exp5809 workflow runs
+**Then** it writes a complete transition artifact, classifies Exp5796 and
+Exp5798 as complete-positive, Exp5797 as complete-null, Exp5799 as
+flagged-quarantined not-ready evidence, records Exp5800-Exp5808 as reserved
+unactivated ids, sets `research_complete_append_count=0` when V517 history is
+already present, and leaves the active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5809-QUARANTINE: Exp5799 Cannot Become Clean Success
+
+**Given** Exp5799 has `status=complete`
+**And** either its artifact has `flagged_adversarial=true` or the conductor log
+records a `FLAGGED` outcome
+**When** the Exp5809 workflow classifies outcomes
+**Then** Exp5799 appears in `flagged_quarantined_task_ids`, does not appear in
+clean success lists, and the field provenance records both artifact and
+conductor evidence.
+
+#### SCENARIO-REPORT-5809-COLLISION-BLOCK: Occupied V518 Ids Fail Closed
+
+**Given** any unowned result, completion-history, exclusion-manifest,
+next-roadmap, or prior-transition allocation occupies Exp5809-Exp5822
+**When** the Exp5809 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records a bare integer
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+completion history to hide the collision.
+
+#### SCENARIO-REPORT-5809-FIELD-PROVENANCE: Required Fields Are Auditable
+
+**Given** the Exp5809 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required field has a matching principle and field-provenance
+entry, the checksum is stable, `inference_substrate` equals
+`aggregation_from_upstream_artifacts`, `next_task_range` equals
+`exp5809-exp5822`, and the terminal verdict starts with `complete:` or
+`blocked:`.
+
+## Implementation Status (REQ-REPORT-5809)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5809 | Implemented (`python/carnot/experiment_5809_transition_v518.py`, `results/experiment_5809_transition_v518.json`) | Implemented (`tests/python/test_experiment_5809_transition_v518.py`) |
