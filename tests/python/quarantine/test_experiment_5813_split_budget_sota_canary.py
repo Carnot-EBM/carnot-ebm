@@ -18,7 +18,7 @@ from carnot import experiment_5812_split_budget_channel_contract as contract
 from carnot import experiment_5813_split_budget_sota_canary as mod
 
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = next(parent for parent in Path(__file__).resolve().parents if (parent / "AGENTS.md").is_file())
 VERIFY_SPEC = REPO / "openspec/capabilities/verification/spec.md"
 TEST_COMMAND = (
     ".venv/bin/pytest tests/python/test_experiment_5813_split_budget_sota_canary.py "
@@ -569,3 +569,115 @@ def test_req_verify_5813_defensive_receipts_and_resume_only_runtime(tmp_path: Pa
 
     with pytest.raises(mod.ManifestReplayError, match="duplicate canary cell"):
         _run_canary(tmp_path / "dup", duplicate_runner)
+
+
+def test_req_verify_5813_defensive_branch_coverage(tmp_path: Path) -> None:
+    """REQ-VERIFY-5813: defensive gates cover drift, bad summaries, and live-runner absence."""
+
+    specs = _fake_model_specs(tmp_path / "models")
+    preconditions = _preconditions(tmp_path, specs)
+    artifact = _run_canary(tmp_path)
+    rows_path = tmp_path / mod.ROW_FILE_RELATIVE_PATH.name
+    rows = mod.read_canary_rows(rows_path)
+
+    pathless = mod.normalize_model_specs([{"hf_id": mod.QWEN_ID, "family": "qwen"}])[0]
+    assert pathless["model_hash"] == mod.sha256_text("")
+    with pytest.raises(ValueError, match="balanced fixture"):
+        mod.select_canary_fixture(fixture.generate_fixture_rows(), min_units=13)
+    assert (
+        mod._row_failure_mode(
+            {"valid_reasoning": False, "failure_mode": "empty_reasoning"},
+            {"failure_mode": "valid_exact_output"},
+            False,
+        )
+        == "empty_reasoning"
+    )
+    assert (
+        mod._row_failure_mode(
+            {"valid_reasoning": True, "failure_mode": "valid_reasoning"},
+            {"failure_mode": "valid_exact_output"},
+            True,
+        )
+        == "protected_fact_distortion"
+    )
+    assert mod._mode_runtime_receipt([], {"fallback": True}) == {"fallback": True}
+    assert mod._honest_verdict(0, False) == "complete: answer_channel_not_ready_split_budget_sota_canary"
+
+    bad_summary_rows = deepcopy(rows[:2])
+    bad_summary_rows[0]["reasoning_call"]["stop_collision"] = True
+    bad_summary_rows[0]["timeouts"]["reasoning"] = True
+    bad_summary_rows[0]["parser_result"]["schema_injection_accepted"] = True
+    bad_summary_rows[0]["protected_fact_distortion"] = True
+    summary = mod.mode_summary(
+        model_hf_id=mod.QWEN_ID,
+        mode=mod.preregistered_modes()[1],
+        rows=bad_summary_rows,
+        runtime_receipt=_runtime_receipt(specs[0], [], mod.preregistered_modes()[1]),
+        expected_rows=3,
+    )
+    assert set(summary["retirement_reasons"]) >= {
+        "row_count_mismatch",
+        "stop_collision",
+        "timeout",
+        "schema_injection_acceptance",
+        "protected_fact_distortion",
+    }
+
+    for mutate, match in (
+        (
+            lambda item: item[0]["reasoning_call"].update({"raw_text": "tampered"}),
+            "frozen_transcript_hash",
+        ),
+        (
+            lambda item: item[0]["reasoning_call"].update({"transcript_hash": "sha256:bad"}),
+            "reasoning transcript mismatch",
+        ),
+        (
+            lambda item: item[0].update({"candidate_environment_hash": "sha256:bad"}),
+            "candidate_environment_hash",
+        ),
+        (
+            lambda item: Path(item[0]["checkpoint_path"]).unlink(),
+            "checkpoint_missing",
+        ),
+        (
+            lambda item: Path(item[0]["checkpoint_path"]).write_text(
+                json.dumps({"row_hash": "sha256:bad"}) + "\n",
+                encoding="utf-8",
+            ),
+            "checkpoint_row_hash",
+        ),
+    ):
+        for row in rows:
+            Path(row["checkpoint_path"]).write_text(
+                mod.canonical_json(row) + "\n",
+                encoding="utf-8",
+            )
+        tampered = deepcopy(rows)
+        mutate(tampered)
+        with pytest.raises(mod.ManifestReplayError, match=match):
+            mod.verify_canary_rows(tampered, artifact)
+
+    receipt_row_mismatch = deepcopy(artifact)
+    first_key = mod.canary_cell_key(rows[0])
+    receipt_row_mismatch["transcript_and_checkpoint_receipts"]["raw_call_receipts"][first_key][
+        "row_hash"
+    ] = mod.sha256_text("bad-row")
+    with pytest.raises(mod.ManifestReplayError, match="row_hash"):
+        mod.verify_canary_rows(rows, receipt_row_mismatch)
+
+    with pytest.raises(RuntimeError, match="live canary_runner required"):
+        mod.run(
+            result_path=tmp_path / "no_runner.json",
+            row_file_path=tmp_path / "no_runner.rows.jsonl",
+            checkpoint_dir=tmp_path / "no_runner_checkpoints",
+            fixture_rows=fixture.generate_fixture_rows(),
+            model_specs=specs,
+            preconditions_checked=preconditions,
+            canary_runner=None,
+            max_modes_per_model=1,
+            duration_s=125.0,
+            test_commands=TEST_COMMANDS,
+            test_exit_codes=TEST_EXIT_CODES,
+            write=False,
+        )
