@@ -3603,6 +3603,54 @@ not just triggered and assumed successful:
   REQ-PUBLISH-042 (CLAUDE.md "All headline results must have live GPU
   provenance") — everything before this point was mocked/precondition-only.
 
+## 2026-07-22: REQ-ARC-WMTE-5769 data-loss incident (fix lost before commit, re-applied)
+
+While supervising `experiment_5768_direct_incontext_prediction_ab.py` via a `/loop
+status 1h` monitoring loop, found and fixed a real race condition in shared ARC
+generator tooling: `LocalGGUFProposer._ensure_server()`'s self-heal path checks free
+VRAM via a single `nvidia-smi` snapshot immediately after detecting its server died,
+but a just-crashed CUDA process doesn't release VRAM to the driver instantaneously —
+so the snapshot can catch stale "still in use" memory and silently fall back to the
+AMD iGPU HIP build, running a 31B model on CPU for hours undetected. Full detail in
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5769.
+
+**The incident:** the first fix (4 retry attempts / 1.5s apart) was written, tested
+(5 passing tests), and verified working via a real relaunch — but NOT committed
+immediately (kept monitoring/relaunching exp5768 for ~3 hours afterward instead).
+Sometime in that window, the entire fix vanished from the working tree: the untracked
+test file was deleted from disk, the source edit and spec entry were reverted, with
+zero trace in `git log` or `git reflog`. This is real data loss, not a false alarm.
+
+**Investigated, not fully resolved:** `scripts/research_conductor.py` has three
+already-known `git clean -fd` / `git checkout .` call sites, all already fixed
+(replaced with commit-and-preserve) for a documented 2026-07-19/20 incident with the
+EXACT same signature (an outer-loop agent's untracked file destroyed by a concurrent
+git operation in this shared working tree — see the comments at those three call
+sites). None of the three matched this recurrence; no other conductor-adjacent script
+has the destructive pattern either. Most likely explanation: a codex-driven task
+subprocess ran its own destructive git command autonomously while executing an
+unrelated assigned task, without knowledge of this project's specific
+never-destroy-uncommitted-work discipline. Could not confirm without codex subprocess
+transcripts not available after the fact.
+
+**Response:** re-applied the fix immediately and committed it within the same tool
+call sequence (commit `097f5026f`), then pushed to both remotes (`git push origin
+main`) before doing anything else — not just a local commit, given the demonstrated
+volatility of this shared working tree. Also widened the retry budget from 4
+attempts/1.5s (~6s total) to 10 attempts/2s (~20s total): the narrower window was
+independently confirmed insufficient when the exact same wrong-binary failure
+recurred in a fresh occurrence after the first fix was lost, meaning ~6s wasn't
+reliably wide enough even before the loss.
+
+**Open follow-up, not yet actioned:** this incident is evidence the 2026-07-19/20 fix
+was incomplete — there is at least one more destructive-git code path (most likely in
+codex subprocess behavior, not conductor Python code) that can still destroy
+outer-loop uncommitted/untracked work in this shared tree. The CLAUDE.md
+Never-Stash-Commit-First discipline's mitigation (commit immediately, don't leave
+work uncommitted) is a real, working defense against this class of failure but
+doesn't fix the root cause. A genuine fix would require either finding the actual
+codex-side mechanism, or sandboxing codex subprocesses' git access more tightly.
+
 ## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z, EXTENDED 2026-05-02 18:40Z)
 
 **arXiv submission is ON HOLD until Phase 4 firm pivot answer + figure-integrity audit.**
