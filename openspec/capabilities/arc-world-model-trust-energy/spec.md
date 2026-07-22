@@ -16676,3 +16676,52 @@ out-of-bounds clicks found (`results/outer_loop_action6_bounds_audit_20260722.js
 measurement, not an assumption, and a synthetic deliberately-out-of-bounds regression check
 (`synthetic_regression_check.synthetic_oob_detected=true`) confirms the detector itself is
 working before this "all clean" result is trusted.
+
+### REQ-ARC-WMTE-5821: Held-Out Live-Path Generalization Probe on a Never-Adaptered Game
+
+**Origin:** 2026-07-22, outer-loop work under CLAUDE.md's "ARC-AGI-3 Generalization-Testing
+Floor" task class 1: held-out/leave-one-game-out live-path measurement. Only 3 of the 25
+fully-solved public games (`sc25`, `tn36`, `wa30`) have NO registered `GameAdapter` in
+`python/carnot/agentic/arc_game_adapters.py` -- their registry solves were banked via a
+different one-off mechanism, not the reusable `GameAdapter` scaffolding. This makes them a
+ready-made held-out test: running the REAL scored live-path mechanism
+(`E3AgentPolicy` via `arc_actions_to_progress.run_bounded_progress`) against one of them, cold,
+measures how far the generic reusable mechanism gets on its own, with zero per-game hand-tuning,
+compared against the depth the per-game hand-derived solve reached.
+
+An experiment satisfying this requirement SHALL select a game from
+`{game : get_adapter(game) is None}` (confirmed via direct inspection, not assumed), run
+`arc_actions_to_progress.run_bounded_progress(game, "frozen", proposer=<LocalGGUFProposer
+pinned to the outer loop's dedicated GPU>, seed=<int>, budget=..., max_inductions=...,
+wall_s=...)` against a fresh `offline_arcade()` reset (no seeded window, no per-game adapter, no
+source-reading), and report the result alongside the game's registry `levels_reproduced` value
+(read AFTER the run completes, for comparison only -- the held-out run itself SHALL have no
+access to the registry entry, solver module, or any per-game gotcha, so the comparison does not
+contaminate the measurement). The artifact SHALL declare `solve_provenance:
+live_agent_self_discovery` (the run is the live agent's own attempt, not outer-loop RE) and
+SHALL NOT claim a new banked level regardless of outcome -- this is a measurement of the generic
+mechanism's reach, not a solve attempt gated by the reproduction gate.
+
+### SCENARIO-ARC-WMTE-5821-HOLDOUT-PROBE-REPORTS-HONEST-RESULT-REGARDLESS-OF-OUTCOME
+
+**Given** a game with no registered `GameAdapter` and a real `LocalGGUFProposer`
+**When** `run_bounded_progress` is run against it cold, bounded by budget/wall-clock/induction
+caps
+**Then** the artifact reports `n_inductions`, `plan_found_rate`, `mean_heldout_accuracy`,
+`reached_level`, and `levels_gained` exactly as measured -- a null result (the generic mechanism
+never reaches a level-up) is reported as honestly as a positive one, with a terminal-prefixed
+`honest_verdict` distinguishing "never stalled into induction within budget" (the generic
+mechanism was untested by this run) from "induced and planned but did not reach a level-up"
+(the mechanism WAS exercised and its induction/planning was the limiting factor) from an actual
+level-up (`solved: true`).
+
+**Given** `sc25` (registry `levels_reproduced=6`, no registered `GameAdapter`)
+**When** the held-out probe runs (verified 2026-07-22,
+`results/outer_loop_holdout_generalization_probe_sc25_20260722.json`)
+**Then** the generic mechanism stalls into induction once
+(`n_inductions=1`) within its 120-action/600s budget, but the induced dynamics model does not
+support a usable plan (`plan_found_rate=0.0`, `mean_heldout_accuracy=0.0`), so
+`reached_level=0` and `levels_gained=0` against the registry's hand-derived depth of 6 --
+corroborating, independently and on a game outside the prior 6-game roster
+(`project_arc_actions_to_progress_metric` memory), that dynamics-induction quality is the
+binding constraint on the frozen generator, not per-game adapter absence.
