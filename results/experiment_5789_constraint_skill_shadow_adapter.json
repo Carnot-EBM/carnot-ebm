@@ -1,0 +1,60 @@
+{
+  "experiment": 5789,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-22",
+  "started_at": "2026-07-22T11:14:29.774081+00:00",
+  "finished_at": "2026-07-22T11:14:29.774081+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5788 transfer: wire a disabled typed-constraint shadow adapter with exact restart and rollback",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "5 of 5 gate(s) failed; first failure: exp5788-constraint-skill-transfer-audit.transfer_ready_score (upstream artifact not found for task id 'exp5788-constraint-skill-transfer-audit')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5788-constraint-skill-transfer-audit",
+      "artifact_field": "transfer_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5788-constraint-skill-transfer-audit'"
+    },
+    {
+      "upstream": "exp5788-constraint-skill-transfer-audit",
+      "artifact_field": "macro_transfer_lcb",
+      "op": ">",
+      "expected": 0.0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5788-constraint-skill-transfer-audit'"
+    },
+    {
+      "upstream": "exp5788-constraint-skill-transfer-audit",
+      "artifact_field": "unsafe_propagation_count",
+      "op": "==",
+      "expected": 0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5788-constraint-skill-transfer-audit'"
+    },
+    {
+      "upstream": "exp5788-constraint-skill-transfer-audit",
+      "artifact_field": "protected_fact_distortion_count",
+      "op": "==",
+      "expected": 0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5788-constraint-skill-transfer-audit'"
+    },
+    {
+      "upstream": "exp5788-constraint-skill-transfer-audit",
+      "artifact_field": "rollback_restart_hash_match",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp5788-constraint-skill-transfer-audit'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
