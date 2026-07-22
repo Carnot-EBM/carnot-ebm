@@ -335,6 +335,7 @@ def test_scenario_arc_wmte_5791_independent_hashes_and_admission_panel(
     assert saved["prompt_and_sampling_receipts"]["feedback_used_for_generation"] is False
     assert saved["independence_receipts"]["all_samples_independent_single_shot"] is True
     assert saved["no_refinement_receipts"]["repaired_rejected_hypothesis_count"] == 0
+    assert saved["no_refinement_receipts"]["edited_after_freeze_count"] == 0
     assert len(saved["hypothesis_hashes"]) == 9
     assert all(row["source_sha256"] for row in saved["hypothesis_hashes"])
     assert all(row["freeze_stage"] == "pre_compile" for row in saved["hypothesis_hashes"])
@@ -347,12 +348,78 @@ def test_scenario_arc_wmte_5791_independent_hashes_and_admission_panel(
     assert saved["source_game_identity_leaks"] == []
     assert saved["admissible_hypothesis_count"] >= 2
     assert saved["real_sota_model_count"] == 3
+    assert saved["hypothesis_diversity_metrics"]["diversity_passed"] is True
+    assert saved["sample_size_justification"]["sample_size_gate_passed"] is True
+    for family, summary in saved["family_comparison"]["families"].items():
+        assert summary["capacity"]
+        assert summary["family"] == family
     assert saved["panel_ready_score"] == pytest.approx(1.0)
     assert saved["producer_gate_fields"] == list(mod.PRODUCER_GATE_FIELDS)
     assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
     assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
     assert saved["honest_verdict"].startswith("complete:")
     mod.validate_artifact(saved)
+
+
+def test_req_arc_wmte_5791_model_specs_and_unique_real_family_gate() -> None:
+    """REQ-ARC-WMTE-5791: MODEL_SPECS are exact and real-family counting is unique."""
+
+    assert [spec["hf_id"] for spec in mod.MODEL_SPECS] == list(mod.MANDATED_HF_IDS)
+    assert [spec["family"] for spec in mod.MODEL_SPECS] == ["qwen35b", "gemma31b", "gemma26b"]
+    for spec in mod.MODEL_SPECS:
+        assert spec["quantization"] == "Q4_K_M"
+        assert spec["chat_template"] == "embedded"
+        assert spec["cuda_layers"] == 999
+        assert spec["runtime"] == "llama.cpp CUDA"
+        assert spec["prompt_id"] == "arc_world_model_single_shot_v1"
+        assert spec["sampling"]["temperature"] == pytest.approx(0.7)
+        assert spec["sampling"]["top_p"] == pytest.approx(0.95)
+        assert spec["sampling"]["max_tokens"] == 16384
+        assert spec["stop_policy"]
+        assert len(spec["seeds"]) == 3
+        assert not str(spec["hf_id"]).startswith(("mock/", "test/"))
+
+    duplicate_qwen = [
+        {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "family": "qwen35b", "real_sota": True},
+        {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "family": "qwen35b", "real_sota": True},
+        {"hf_id": "unsloth/gemma-4-31B-it-GGUF", "family": "gemma31b", "real_sota": True},
+    ]
+    assert mod._real_sota_count(duplicate_qwen) == 2
+
+
+def test_scenario_arc_wmte_5791_panel_readiness_requires_diversity_and_no_refinement(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-5791-INDEPENDENT-IMMUTABLE-HASHES-NO-FEEDBACK."""
+
+    rows = _rows()
+    monkeypatch.setattr(mod, "structured_preconditions", lambda **_kw: _preconditions_fixture())
+    monkeypatch.setattr(mod, "load_agent_owned_transition_rows", lambda *_args, **_kw: rows)
+
+    duplicate_source = _fresh_hypotheses(rows)
+    duplicate_source[1]["source"] = duplicate_source[0]["source"]
+    monkeypatch.setattr(mod, "load_fresh_matched_hypotheses", lambda *_args, **_kw: duplicate_source)
+    duplicate_artifact = mod.build_artifact(root=tmp_path)
+
+    assert duplicate_artifact["hypothesis_diversity_metrics"]["diversity_passed"] is False
+    assert duplicate_artifact["panel_ready_score"] == pytest.approx(0.0)
+    assert duplicate_artifact["status"] == "blocked"
+    mod.validate_artifact(duplicate_artifact)
+
+    edited_after_freeze = _fresh_hypotheses(rows)
+    edited_after_freeze[0]["edited_after_freeze"] = True
+    monkeypatch.setattr(
+        mod,
+        "load_fresh_matched_hypotheses",
+        lambda *_args, **_kw: edited_after_freeze,
+    )
+    edited_artifact = mod.build_artifact(root=tmp_path)
+
+    assert edited_artifact["no_refinement_receipts"]["edited_after_freeze_count"] == 1
+    assert edited_artifact["panel_ready_score"] == pytest.approx(0.0)
+    assert edited_artifact["status"] == "blocked"
+    mod.validate_artifact(edited_artifact)
 
 
 def test_scenario_arc_wmte_5791_compile_sandbox_is_source_derived() -> None:
@@ -431,6 +498,22 @@ def test_req_arc_wmte_5791_validation_rejects_manual_overclaims(
         ("admissible_hypothesis_count", lambda data: data.__setitem__("admissible_hypothesis_count", 1)),
         ("panel_ready_score", lambda data: data.__setitem__("panel_ready_score", 0.5)),
         ("family_comparison", lambda data: data["family_comparison"].__setitem__("fresh_only", False)),
+        (
+            "family_comparison",
+            lambda data: data["family_comparison"]["families"]["qwen35b"].__setitem__("capacity", ""),
+        ),
+        (
+            "hypothesis_diversity_metrics",
+            lambda data: data["hypothesis_diversity_metrics"].__setitem__("diversity_passed", False),
+        ),
+        (
+            "sample_size_justification",
+            lambda data: data["sample_size_justification"].__setitem__("sample_size_gate_passed", False),
+        ),
+        (
+            "no_refinement_receipts",
+            lambda data: data["no_refinement_receipts"].__setitem__("edited_after_freeze_count", 1),
+        ),
         ("hypothesis_hashes", lambda data: data["hypothesis_hashes"][0].__setitem__("source_sha256", "")),
         (
             "compile_sandbox_receipts",
@@ -460,6 +543,9 @@ def test_req_arc_wmte_5791_validation_rejects_manual_overclaims(
     blocked = deepcopy(artifact)
     blocked["status"] = "blocked"
     blocked["models_used"] = []
+    blocked["model_runtime_receipts"]["matched_inference_executed"] = False
+    blocked["model_runtime_receipts"]["generation_blocked_before_prompting"] = True
+    blocked["honest_verdict"] = "blocked: manual_pre_prompt_block"
     blocked["panel_ready_score"] = 1.0
     blocked["reproducibility_checksum"] = mod.payload_checksum(blocked)
     with pytest.raises(ValueError, match="panel_ready_score"):
@@ -468,9 +554,33 @@ def test_req_arc_wmte_5791_validation_rejects_manual_overclaims(
     blocked_models = deepcopy(artifact)
     blocked_models["status"] = "blocked"
     blocked_models["panel_ready_score"] = 0.0
+    blocked_models["model_runtime_receipts"]["matched_inference_executed"] = False
+    blocked_models["model_runtime_receipts"]["generation_blocked_before_prompting"] = True
+    blocked_models["honest_verdict"] = "blocked: manual_pre_prompt_block"
     blocked_models["reproducibility_checksum"] = mod.payload_checksum(blocked_models)
     with pytest.raises(ValueError, match="models_used"):
         mod.validate_artifact(blocked_models)
+
+    invalid_status = deepcopy(artifact)
+    invalid_status["status"] = "partial"
+    with pytest.raises(ValueError, match="status"):
+        mod.validate_artifact(invalid_status)
+
+    blocked_bad_verdict = deepcopy(artifact)
+    blocked_bad_verdict["status"] = "blocked"
+    blocked_bad_verdict["panel_ready_score"] = 0.0
+    with pytest.raises(ValueError, match="honest_verdict"):
+        mod.validate_artifact(blocked_bad_verdict)
+
+    post_scoring_block_missing_models = deepcopy(artifact)
+    post_scoring_block_missing_models["status"] = "blocked"
+    post_scoring_block_missing_models["models_used"] = []
+    post_scoring_block_missing_models["panel_ready_score"] = 0.0
+    post_scoring_block_missing_models["honest_verdict"] = "blocked: post_scoring_gate_failed"
+    post_scoring_block_missing_models["model_runtime_receipts"]["matched_inference_executed"] = True
+    post_scoring_block_missing_models["model_runtime_receipts"]["generation_blocked_before_prompting"] = False
+    with pytest.raises(ValueError, match="models_used"):
+        mod.validate_artifact(post_scoring_block_missing_models)
 
 
 def test_req_arc_wmte_5791_degeneracy_and_leak_taxonomy_edges() -> None:

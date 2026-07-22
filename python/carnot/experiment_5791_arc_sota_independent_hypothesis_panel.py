@@ -626,7 +626,13 @@ def _family_summary(scored: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         pivotal = [float(row["score"]["pivotal"]["pivotal_accuracy"]) for row in rows]
         unseen = [float(row["score"]["unseen_action"]["unseen_action_accuracy"]) for row in rows]
         admitted = sum(1 for row in rows if row["score"]["decision"]["admitted"] is True)
+        capacity = next(
+            (str(row["hypothesis"].get("capacity")) for row in rows if row["hypothesis"].get("capacity")),
+            "unknown",
+        )
         summary[family] = {
+            "family": family,
+            "capacity": capacity,
             "hypothesis_count": len(rows),
             "admissible_count": admitted,
             "mean_ordinary_accuracy": _mean(ordinary),
@@ -743,11 +749,17 @@ def _sample_size_justification(scored: Sequence[Mapping[str, Any]]) -> dict[str,
 
 
 def _real_sota_count(model_specs: Sequence[Mapping[str, Any]]) -> int:
-    return sum(
-        1
-        for spec in model_specs
-        if spec.get("hf_id") in MANDATED_HF_IDS and spec.get("real_sota") is True
-    )
+    seen: set[str] = set()
+    for spec in model_specs:
+        hf_id = str(spec.get("hf_id") or "")
+        family = str(spec.get("family") or "")
+        if (
+            hf_id in MANDATED_HF_IDS
+            and FAMILY_BY_HF_ID.get(hf_id) == family
+            and spec.get("real_sota") is True
+        ):
+            seen.add(hf_id)
+    return len(seen)
 
 
 def _agent_owned_split_manifest(rows: Sequence[Mapping[str, Any]], provenance: Mapping[str, Any]) -> dict[str, Any]:
@@ -863,6 +875,10 @@ def build_artifact(
     diversity = _diversity_metrics(scored)
     sample_size = _sample_size_justification(scored)
     compile_receipts = _compile_receipts(hypotheses)
+    repaired_rejected_count = sum(
+        1 for row in hypotheses if row.get("repaired_rejected_hypothesis") is True
+    )
+    edited_after_freeze_count = sum(1 for row in hypotheses if row.get("edited_after_freeze") is True)
     admissible_count = sum(1 for row in scored if row["score"]["decision"]["admitted"] is True)
     model_specs = list(preconditions["MODEL_SPECS"])
     real_count = _real_sota_count(model_specs)
@@ -882,6 +898,9 @@ def build_artifact(
             and admissible_count >= 2
             and families_complete
             and sample_size["sample_size_gate_passed"] is True
+            and diversity["diversity_passed"] is True
+            and repaired_rejected_count == 0
+            and edited_after_freeze_count == 0
         )
         else 0.0
     )
@@ -935,8 +954,8 @@ def build_artifact(
             "same_allowed_train_evidence_once": True,
         },
         "no_refinement_receipts": {
-            "repaired_rejected_hypothesis_count": 0,
-            "edited_after_freeze_count": sum(1 for row in hypotheses if row.get("edited_after_freeze") is True),
+            "repaired_rejected_hypothesis_count": repaired_rejected_count,
+            "edited_after_freeze_count": edited_after_freeze_count,
             "feedback_used_for_generation": False,
         },
         "compile_sandbox_receipts": compile_receipts,
@@ -1015,7 +1034,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         raise ValueError("producer_gate_fields")
     if artifact.get("source_game_identity_leaks") != []:
         raise ValueError("source_game_identity_leaks")
-    if artifact.get("status") == "complete":
+    status = str(artifact.get("status") or "")
+    honest_verdict = str(artifact.get("honest_verdict", ""))
+    if status == "complete":
+        if not honest_verdict.startswith("complete:"):
+            raise ValueError("honest_verdict")
         if models_used != list(MANDATED_HF_IDS):
             raise ValueError("models_used")
         if artifact.get("real_sota_model_count") != 3:
@@ -1026,6 +1049,25 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
             raise ValueError("panel_ready_score")
         if artifact.get("family_comparison", {}).get("fresh_only") is not True:
             raise ValueError("family_comparison")
+        family_rows = artifact.get("family_comparison", {}).get("families", {})
+        if not all(
+            isinstance(summary, Mapping)
+            and summary.get("family") == family
+            and bool(summary.get("capacity"))
+            for family, summary in dict(family_rows).items()
+        ):
+            raise ValueError("family_comparison")
+        if artifact.get("hypothesis_diversity_metrics", {}).get("diversity_passed") is not True:
+            raise ValueError("hypothesis_diversity_metrics")
+        if artifact.get("sample_size_justification", {}).get("sample_size_gate_passed") is not True:
+            raise ValueError("sample_size_justification")
+        no_refinement = artifact.get("no_refinement_receipts", {})
+        if (
+            no_refinement.get("repaired_rejected_hypothesis_count") != 0
+            or no_refinement.get("edited_after_freeze_count") != 0
+            or no_refinement.get("feedback_used_for_generation") is not False
+        ):
+            raise ValueError("no_refinement_receipts")
         if not all(
             row.get("source_sha256")
             and row.get("metadata_sha256")
@@ -1049,14 +1091,21 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         ):
             raise ValueError("compile_sandbox_receipts")
     else:
-        if models_used:
+        if status != "blocked":
+            raise ValueError("status")
+        if not honest_verdict.startswith("blocked:"):
+            raise ValueError("honest_verdict")
+        runtime_receipts = artifact.get("model_runtime_receipts", {})
+        matched_inference = runtime_receipts.get("matched_inference_executed") is True
+        blocked_before_prompt = runtime_receipts.get("generation_blocked_before_prompting") is True
+        if matched_inference and models_used != list(MANDATED_HF_IDS):
+            raise ValueError("models_used")
+        if blocked_before_prompt and models_used:
             raise ValueError("models_used")
         if artifact.get("panel_ready_score") != 0.0:
             raise ValueError("panel_ready_score")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         raise ValueError("inference_substrate")
-    if not str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:")):
-        raise ValueError("honest_verdict")
     if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
         raise ValueError("reproducibility_checksum")
     return True
