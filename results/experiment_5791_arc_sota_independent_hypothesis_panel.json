@@ -1,0 +1,521 @@
+{
+  "status": "blocked",
+  "preconditions_checked": {
+    "ok": false,
+    "failures": [
+      "headline_gpu_offload_receipts_present",
+      "fresh_matched_hypotheses_present",
+      "resume_checkpoint_file_present"
+    ],
+    "cached_sota_pair_called": true,
+    "cached_sota_pair_result": [
+      {
+        "name": "Qwen3.6-35B-A3B",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "gpu": 0,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+      },
+      {
+        "name": "Gemma4-26B-A4B-it",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "gpu": 1,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      }
+    ],
+    "registry_precheck": {
+      "source": "ops/arc_solve_registry.yaml",
+      "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+      "checked_before_scoring": true,
+      "public_game_count": 25,
+      "registry_level_count": 183,
+      "full_game_clear_count": 25,
+      "all_public_games_complete": true,
+      "no_public_level_can_be_credited_as_new": true,
+      "ok": true
+    },
+    "MODEL_SPECS": [
+      {
+        "name": "Qwen3.6-35B-A3B",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "family": "qwen35b",
+        "role": "flagship_moe",
+        "quantization": "Q4_K_M",
+        "chat_template": "embedded",
+        "cuda_layers": 999,
+        "runtime": "llama.cpp CUDA",
+        "prompt_id": "arc_world_model_single_shot_v1",
+        "sampling": {
+          "temperature": 0.7,
+          "top_p": 0.95,
+          "max_tokens": 16384
+        },
+        "stop_policy": [
+          "fenced_code_block_end",
+          "model_eot",
+          "max_tokens"
+        ],
+        "seeds": [
+          20260722,
+          20260723,
+          20260724
+        ],
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "total_params_b": 35.0,
+        "active_params_b": 3.0,
+        "gpu": 0,
+        "real_sota": true
+      },
+      {
+        "name": "Gemma4-31B-it",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "family": "gemma31b",
+        "role": "flagship_dense",
+        "quantization": "Q4_K_M",
+        "chat_template": "embedded",
+        "cuda_layers": 999,
+        "runtime": "llama.cpp CUDA",
+        "prompt_id": "arc_world_model_single_shot_v1",
+        "sampling": {
+          "temperature": 0.7,
+          "top_p": 0.95,
+          "max_tokens": 16384
+        },
+        "stop_policy": [
+          "fenced_code_block_end",
+          "model_eot",
+          "max_tokens"
+        ],
+        "seeds": [
+          20260722,
+          20260723,
+          20260724
+        ],
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "total_params_b": 31.0,
+        "active_params_b": 31.0,
+        "gpu": 1,
+        "real_sota": true
+      },
+      {
+        "name": "Gemma4-26B-A4B-it",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "family": "gemma26b",
+        "role": "middle_moe",
+        "quantization": "Q4_K_M",
+        "chat_template": "embedded",
+        "cuda_layers": 999,
+        "runtime": "llama.cpp CUDA",
+        "prompt_id": "arc_world_model_single_shot_v1",
+        "sampling": {
+          "temperature": 0.7,
+          "top_p": 0.95,
+          "max_tokens": 16384
+        },
+        "stop_policy": [
+          "fenced_code_block_end",
+          "model_eot",
+          "max_tokens"
+        ],
+        "seeds": [
+          20260722,
+          20260723,
+          20260724
+        ],
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "total_params_b": 26.0,
+        "active_params_b": 4.0,
+        "gpu": 0,
+        "real_sota": true
+      }
+    ],
+    "intended_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "models_used": [],
+    "model_runtime_receipts": {
+      "python": "3.12.13",
+      "platform": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43",
+      "llama_cpp_python_cuda": true,
+      "llama_cpp_detail": "llama_supports_gpu_offload=true",
+      "llama_server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "llama_server_present": true,
+      "llama_server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "repo_root": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    "gpu_offload_receipts": [
+      {
+        "gpu": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mib": 24576,
+        "memory_used_mib": 5,
+        "offload_ok": true,
+        "headline_load_verified": false,
+        "vram_delta_mib": 0
+      },
+      {
+        "gpu": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mib": 24576,
+        "memory_used_mib": 4,
+        "offload_ok": true,
+        "headline_load_verified": false,
+        "vram_delta_mib": 0
+      }
+    ],
+    "agent_owned_trace_hashes": {
+      "exp5766_interaction_audit": {
+        "path": "results/experiment_5766_arc_loo_component_interaction_audit.json",
+        "present": true,
+        "sha256": "sha256:95c7c7d02f2057c463430d2a1ef382721b9359e19f581b59a3d61abceda4ea5f"
+      }
+    },
+    "checkpoint_paths": {
+      "output": "results/experiment_5791_arc_sota_independent_hypothesis_panel.json",
+      "fresh_hypotheses": "results/experiment_5791_arc_sota_independent_hypothesis_panel.fresh_hypotheses.jsonl",
+      "checkpoint": "results/checkpoints/experiment_5791/checkpoint.json",
+      "fresh_cells_present": false,
+      "resume_checkpoint_file_present": false,
+      "output_parent_present": true
+    },
+    "disk_ram": {
+      "ok": true,
+      "disk_free_mb": 1171259,
+      "ram_free_mb": 86556,
+      "min_disk_free_mb": 4096,
+      "min_ram_free_mb": 4096
+    },
+    "gates": {
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_available": true,
+      "all_three_ggufs_cached_and_hashed": true,
+      "registry_precheck_passed": true,
+      "llama_cpp_cuda_runtime": true,
+      "llama_server_binary_present": true,
+      "both_rtx3090s_visible": true,
+      "headline_gpu_offload_receipts_present": false,
+      "disk_ram_ok": true,
+      "fresh_matched_hypotheses_present": false,
+      "resume_checkpoint_file_present": false,
+      "output_parent_available": true
+    }
+  },
+  "registry_precheck": {
+    "source": "ops/arc_solve_registry.yaml",
+    "registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+    "checked_before_scoring": true,
+    "public_game_count": 25,
+    "registry_level_count": 183,
+    "full_game_clear_count": 25,
+    "all_public_games_complete": true,
+    "no_public_level_can_be_credited_as_new": true,
+    "ok": true
+  },
+  "solve_claimed": false,
+  "registry_credit": false,
+  "MODEL_SPECS": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "family": "qwen35b",
+      "role": "flagship_moe",
+      "quantization": "Q4_K_M",
+      "chat_template": "embedded",
+      "cuda_layers": 999,
+      "runtime": "llama.cpp CUDA",
+      "prompt_id": "arc_world_model_single_shot_v1",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 16384
+      },
+      "stop_policy": [
+        "fenced_code_block_end",
+        "model_eot",
+        "max_tokens"
+      ],
+      "seeds": [
+        20260722,
+        20260723,
+        20260724
+      ],
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "total_params_b": 35.0,
+      "active_params_b": 3.0,
+      "gpu": 0,
+      "real_sota": true
+    },
+    {
+      "name": "Gemma4-31B-it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "family": "gemma31b",
+      "role": "flagship_dense",
+      "quantization": "Q4_K_M",
+      "chat_template": "embedded",
+      "cuda_layers": 999,
+      "runtime": "llama.cpp CUDA",
+      "prompt_id": "arc_world_model_single_shot_v1",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 16384
+      },
+      "stop_policy": [
+        "fenced_code_block_end",
+        "model_eot",
+        "max_tokens"
+      ],
+      "seeds": [
+        20260722,
+        20260723,
+        20260724
+      ],
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "total_params_b": 31.0,
+      "active_params_b": 31.0,
+      "gpu": 1,
+      "real_sota": true
+    },
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "family": "gemma26b",
+      "role": "middle_moe",
+      "quantization": "Q4_K_M",
+      "chat_template": "embedded",
+      "cuda_layers": 999,
+      "runtime": "llama.cpp CUDA",
+      "prompt_id": "arc_world_model_single_shot_v1",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 16384
+      },
+      "stop_policy": [
+        "fenced_code_block_end",
+        "model_eot",
+        "max_tokens"
+      ],
+      "seeds": [
+        20260722,
+        20260723,
+        20260724
+      ],
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "total_params_b": 26.0,
+      "active_params_b": 4.0,
+      "gpu": 0,
+      "real_sota": true
+    }
+  ],
+  "models_used": [],
+  "model_runtime_receipts": {
+    "python": "3.12.13",
+    "platform": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43",
+    "llama_cpp_python_cuda": true,
+    "llama_cpp_detail": "llama_supports_gpu_offload=true",
+    "llama_server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "llama_server_present": true,
+    "llama_server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "matched_inference_executed": false,
+    "generation_blocked_before_prompting": true
+  },
+  "gpu_offload_receipts": [
+    {
+      "gpu": 0,
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mib": 24576,
+      "memory_used_mib": 5,
+      "offload_ok": true,
+      "headline_load_verified": false,
+      "vram_delta_mib": 0
+    },
+    {
+      "gpu": 1,
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mib": 24576,
+      "memory_used_mib": 4,
+      "offload_ok": true,
+      "headline_load_verified": false,
+      "vram_delta_mib": 0
+    }
+  ],
+  "agent_owned_split_manifest": {},
+  "development_anchor_import_receipt": {
+    "source": "results/experiment_5764_gemma31b_singleshot_induction_ab.json",
+    "artifact_present": true,
+    "artifact_sha256": "sha256:ed7f0d14f3991d17c81e9bf6b2773c3848b9b59d76267efa29a3cdf063abaf04",
+    "imported_as_development_proxy_only": true,
+    "excluded_from_matched_comparison": true,
+    "protocol_mismatch": [
+      "Exp5764 used an older development split",
+      "Exp5764 contains only Gemma 4 31B, not a three-family matched panel"
+    ],
+    "pooled_heldout_accuracy_delta": 0.190883,
+    "honest_verdict": "complete_gemma31b_singleshot_induction_pooled_heldout_0.378487_vs_thinkingcap27_baseline_0.187604_delta_0.190883_nonzero_games_12of13_moved_off_floor_N13"
+  },
+  "fresh_matched_cells": {
+    "families_complete": false,
+    "reason": "headline_gpu_offload_receipts_present",
+    "fresh_cells_loaded": 0
+  },
+  "prompt_and_sampling_receipts": {
+    "feedback_used_for_generation": false,
+    "generation_blocked_before_prompting": true
+  },
+  "hypothesis_hashes": [],
+  "independence_receipts": {
+    "all_samples_independent_single_shot": false,
+    "reason": "headline_gpu_offload_receipts_present"
+  },
+  "no_refinement_receipts": {
+    "repaired_rejected_hypothesis_count": 0,
+    "feedback_used_for_generation": false
+  },
+  "compile_sandbox_receipts": {
+    "hypothesis_count": 0,
+    "compile_pass_count": 0,
+    "code_object_compile_pass_count": 0,
+    "sandbox_pass_count": 0,
+    "payload_compile_flags_trusted": false,
+    "failed_hypotheses_preserved_in_denominator": true,
+    "per_hypothesis": []
+  },
+  "admission_rung_scores": {
+    "contract": {
+      "L0": {
+        "name": "syntax_compile_and_sandbox",
+        "passes_when": "immutable hypothesis compiles, runs in sandbox, and has no forbidden input leak"
+      },
+      "L1": {
+        "name": "exact_seen_action_replay",
+        "passes_when": "exact replay accuracy on seen-action rows is 1.0"
+      },
+      "L2": {
+        "name": "heldout_and_unseen_action_fidelity",
+        "passes_when": "heldout accuracy >= 0.65 and unseen-action accuracy >= 0.7"
+      },
+      "L3": {
+        "name": "multi_step_calibration_and_stability",
+        "passes_when": "seed stability >= 0.7 and error growth <= 0.4"
+      },
+      "L4": {
+        "name": "pivotal_coverage_play_cost_and_closed_loop_utility",
+        "passes_when": "pivotal accuracy >= 0.8, every pivotal stratum is covered, and play-cost miss risk <= 0.2"
+      }
+    },
+    "hypothesis_count": 0,
+    "per_hypothesis": []
+  },
+  "ordinary_transition_metrics": {
+    "hypothesis_count": 0,
+    "denominator_includes_compile_failures": true,
+    "clustered_interval": {
+      "n_clusters": 0,
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0
+    }
+  },
+  "unseen_action_metrics": {
+    "hypothesis_count": 0,
+    "denominator_includes_compile_failures": true,
+    "clustered_interval": {
+      "n_clusters": 0,
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0
+    }
+  },
+  "pivotal_transition_metrics": {
+    "hypothesis_count": 0,
+    "denominator_includes_compile_failures": true,
+    "clustered_interval": {
+      "n_clusters": 0,
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0
+    }
+  },
+  "rollout_calibration_metrics": {
+    "hypothesis_count": 0,
+    "denominator_includes_compile_failures": true,
+    "clustered_interval": {
+      "n_clusters": 0,
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0
+    }
+  },
+  "family_comparison": {
+    "fresh_only": true,
+    "blocked_before_scoring": true,
+    "families": {}
+  },
+  "hypothesis_diversity_metrics": {
+    "source_hash_unique_count": 0,
+    "prediction_hash_unique_count": 0,
+    "duplicate_source_hash_count": 0,
+    "unique_source_hashes_by_family": {},
+    "diversity_passed": false
+  },
+  "degeneracy_taxonomy": {
+    "counts": {
+      "admissible": 0,
+      "compile_failed": 0,
+      "ordinary_or_unseen_action_failed": 0,
+      "pivotal_coverage_failed": 0,
+      "rollout_calibration_failed": 0,
+      "sandbox_failed": 0,
+      "seen_replay_failed": 0,
+      "source_or_identity_leak": 0
+    },
+    "compile_failed_hypotheses_preserved": true,
+    "admissible_not_degenerate_count": 0
+  },
+  "sample_size_justification": {
+    "minimum_hypotheses_per_family_unit": 3,
+    "observed_counts": [],
+    "power_rationale": "Three independent single-shot hypotheses per family/unit is the minimum diversity panel; failures remain in denominators.",
+    "shortfalls": [],
+    "sample_size_gate_passed": false
+  },
+  "source_game_identity_leaks": [],
+  "admissible_hypothesis_count": 0,
+  "real_sota_model_count": 3,
+  "panel_ready_score": 0.0,
+  "producer_gate_fields": [
+    "admissible_hypothesis_count",
+    "real_sota_model_count",
+    "panel_ready_score"
+  ],
+  "inference_substrate": "real_local_llama_cpp_cuda_single_shot_model_synthesis_plus_immutable_agent_owned_arc_replay",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py -m pytest tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5791_arc_sota_independent_hypothesis_panel.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/ruff check python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py scripts/experiments/experiment_5791_arc_sota_independent_hypothesis_panel.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py -m pytest tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5791_arc_sota_independent_hypothesis_panel.json": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py scripts/experiments/experiment_5791_arc_sota_independent_hypothesis_panel.py": 0
+  },
+  "reproducibility_checksum": "sha256:26cf7b53888c2c7310ed75ae49303e7ae869b7805d93e9d043656005007a8f5d",
+  "honest_verdict": "blocked: headline_gpu_offload_receipts_present"
+}

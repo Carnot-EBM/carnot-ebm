@@ -12557,6 +12557,123 @@ missing, the workflow SHALL write
 false gates, append the audit report, and stop without fabricating A1/A1b
 passes.
 
+### REQ-ARC-WMTE-5791: Matched SOTA Independent Hypothesis Panel
+
+Experiment 5791 SHALL run or honestly block a matched independent single-shot executable
+world-model hypothesis panel across exactly the three mandated SOTA GGUF families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The producer SHALL call `cached_sota_pair()` during
+precondition evaluation, resolve and hash every declared GGUF file path, record the llama.cpp CUDA
+runtime and GPU offload receipts, verify both RTX 3090s, and fail closed with a terminal
+`blocked:` artifact rather than presenting tiny-model or CPU-fallback evidence when headline
+offload, cache, runtime, RAM/disk, registry, split, or checkpoint-file preconditions are missing.
+The `models_used` field SHALL mean matched inference that actually ran; pre-prompt blocked
+artifacts SHALL keep it empty and rely on `MODEL_SPECS` plus precondition receipts for intended
+family cells.
+
+The experiment SHALL import the existing Gemma 4 31B single-shot rows from
+`results/experiment_5764_gemma31b_singleshot_induction_ab.json` as a development-proxy anchor by
+content hash only, disclose any protocol mismatch, and keep that imported anchor out of the matched
+family comparison. Matched inference SHALL be supported only by fresh agent-owned split cells for
+all three families. Each family cell SHALL produce at least three independent single-shot immutable
+hypotheses per induction unit, or else the artifact SHALL document the power rationale and keep
+compile-failed or missing hypotheses in all denominators. No rejected, compiled, replayed,
+admitted, calibrated, or test-failed hypothesis MAY be repaired, regenerated from feedback, or fed
+back into the model generator.
+
+Every immutable hypothesis SHALL have a stable source hash and metadata hash before sandboxing,
+compile, or admission scoring. Compile and sandbox receipts SHALL be computed from the frozen
+source by the producer and SHALL NOT trust hypothesis-payload booleans. The panel SHALL score each
+immutable hypothesis through the Exp5790
+admission rungs and SHALL report family, capacity, ordinary accuracy, unseen-action accuracy,
+pivotal accuracy, rollout calibration, stability, admissibility, source/game-identity leaks,
+degeneracy type, and hypothesis diversity. Intervals SHALL be clustered by held-out game or
+induction unit. The artifact SHALL set `solve_claimed=false` and `registry_credit=false`; no field
+SHALL support ARC level credit, live hidden-game solve credit, registry credit, or downstream
+submission credit.
+
+Experiment 5791 SHALL write
+`results/experiment_5791_arc_sota_independent_hypothesis_panel.json` with these bare top-level
+fields: `status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`;
+`registry_credit=false`; `MODEL_SPECS`; `models_used`; `model_runtime_receipts`;
+`gpu_offload_receipts`; `agent_owned_split_manifest`; `development_anchor_import_receipt`;
+`fresh_matched_cells`; `prompt_and_sampling_receipts`; `hypothesis_hashes`;
+`independence_receipts`; `no_refinement_receipts`; `compile_sandbox_receipts`;
+`admission_rung_scores`; `ordinary_transition_metrics`; `unseen_action_metrics`;
+`pivotal_transition_metrics`; `rollout_calibration_metrics`; `family_comparison`;
+`hypothesis_diversity_metrics`; `degeneracy_taxonomy`; `sample_size_justification`;
+`source_game_identity_leaks`; bare `admissible_hypothesis_count`; bare
+`real_sota_model_count`; bare `panel_ready_score`; `producer_gate_fields`;
+`inference_substrate=real_local_llama_cpp_cuda_single_shot_model_synthesis_plus_immutable_agent_owned_arc_replay`;
+`test_commands`; `test_exit_codes`; `reproducibility_checksum`; and `honest_verdict` beginning
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "terminal panel state for downstream gates."
+- `preconditions_checked`: principle "records cached_sota_pair, registry, CUDA offload, GGUF hashes, runtime, RAM/disk, split, trace, and checkpoint gates before scoring."
+- `registry_precheck`: principle "public registry state is checked so the panel cannot mint solve credit."
+- `solve_claimed`: principle "false because independent hypotheses are scored only, never submitted or executed for level credit."
+- `registry_credit`: principle "false because no new public-game registry level is banked."
+- `MODEL_SPECS`: principle "declares the three mandated SOTA family cells with exact paths, hashes, quantization, templates, CUDA layers, runtime, prompts, sampling, stop policy, and seeds."
+- `models_used`: principle "records exact SOTA GGUF IDs actually used for matched inference; blocked pre-prompt artifacts record an empty list."
+- `model_runtime_receipts`: principle "llama.cpp CUDA runtime, cache, and command receipts make live local inference auditable."
+- `gpu_offload_receipts`: principle "RTX 3090 offload receipts prevent silent CPU or tiny-model evidence."
+- `agent_owned_split_manifest`: principle "fresh matched cells use agent-owned split rows rather than source or registry identity."
+- `development_anchor_import_receipt`: principle "Exp5764 Gemma 31B rows are hash-imported as development proxy only and excluded from matched comparisons."
+- `fresh_matched_cells`: principle "fresh all-family single-shot cells carry the matched comparison."
+- `prompt_and_sampling_receipts`: principle "prompts, sampling, stop policy, seeds, and one-pass evidence are recorded for independence."
+- `hypothesis_hashes`: principle "immutable source and metadata hashes prove hypotheses were frozen before compile and scoring."
+- `independence_receipts`: principle "each sample sees allowed train evidence once and receives no compiler, replay, admission, calibration, or test feedback."
+- `no_refinement_receipts`: principle "rejected or failed hypotheses are never repaired."
+- `compile_sandbox_receipts`: principle "compile failures are computed from frozen source, stay in denominators, and are recorded before admission scoring."
+- `admission_rung_scores`: principle "every immutable hypothesis is scored through Exp5790 L0-L4."
+- `ordinary_transition_metrics`: principle "ordinary exact accuracy is visible but insufficient for panel readiness."
+- `unseen_action_metrics`: principle "unseen-action fidelity is measured separately from ordinary replay."
+- `pivotal_transition_metrics`: principle "pivotal accuracy gates readiness independently of average accuracy."
+- `rollout_calibration_metrics`: principle "seed stability and error growth bound simulator drift."
+- `family_comparison`: principle "fresh matched cells, not the imported anchor, support capacity/family inference."
+- `hypothesis_diversity_metrics`: principle "independent hypotheses must show source and prediction diversity, not duplicate samples."
+- `degeneracy_taxonomy`: principle "compile failures, leaks, action-ignore, memorization, pivotal omission, and duplicates are classified."
+- `sample_size_justification`: principle "at least three hypotheses per induction unit/family or a documented power rationale."
+- `source_game_identity_leaks`: principle "zero source or game-ID leaks are required for readiness."
+- `admissible_hypothesis_count`: principle "bare downstream scalar for admitted independent hypotheses."
+- `real_sota_model_count`: principle "bare downstream scalar; panel readiness requires all three real SOTA families."
+- `panel_ready_score`: principle "bare downstream scalar; 1.0 requires all three real SOTA families, complete hashes, zero leaks, and at least two admissible independent hypotheses."
+- `producer_gate_fields`: principle "lists bare downstream gates without wrapping them in objects."
+- `inference_substrate`: principle "declares the required real local llama.cpp CUDA single-shot synthesis plus immutable agent-owned ARC replay substrate."
+- `test_commands`: principle "records verification commands used for the artifact."
+- `test_exit_codes`: principle "records command exit codes rather than prose-only verification."
+- `reproducibility_checksum`: principle "content-addressed artifact catches silent protocol, metric, or precondition drift."
+- `honest_verdict`: principle "terminal complete:/blocked: verdict reports the matched panel without solve credit."
+
+#### SCENARIO-ARC-WMTE-5791-PRECONDITION-BLOCKS-TINY-OR-CPU-EVIDENCE
+
+Given the three mandated SOTA GGUF families, local runtime resources, and registry gates
+When Exp5791 checks preconditions
+Then it calls `cached_sota_pair()`, records resolved paths and hashes, verifies both RTX 3090s and
+CUDA offload, and emits a terminal `blocked:` artifact with `models_used=[]` and
+`panel_ready_score=0.0` if any headline SOTA/offload/runtime/cache/split/checkpoint-file gate is
+missing.
+
+#### SCENARIO-ARC-WMTE-5791-INDEPENDENT-IMMUTABLE-HASHES-NO-FEEDBACK
+
+Given a fresh agent-owned split and at least three samples per family and induction unit
+When single-shot hypotheses are generated
+Then each hypothesis records frozen source and metadata hashes before compile/scoring, the producer
+computes compile and sandbox receipts from frozen source without trusting payload booleans, each
+sample sees the same allowed train evidence once, failed hypotheses remain in denominators, and no
+compile, replay, admission, calibration, or test result is fed back into any generation.
+
+#### SCENARIO-ARC-WMTE-5791-ADMISSION-PANEL-NO-SOLVE-CREDIT
+
+Given immutable fresh matched hypotheses plus the hash-imported Exp5764 development anchor
+When Exp5791 scores the panel through Exp5790 admission rungs
+Then family comparison uses only fresh matched cells, reports ordinary, unseen-action, pivotal,
+calibration, diversity, degeneracy, and clustered interval metrics, and sets `solve_claimed=false`,
+`registry_credit=false`, `source_game_identity_leaks=[]`, and `panel_ready_score=1.0` only when all
+readiness gates pass.
+
 The A1 audit SHALL run `scripts/summarize_artifact.py` and
 `scripts/adversarial_verify.py` on the A1 artifact, inspect the source
 induce-plan path, and run `scripts/arc_orphan_solver_lint.py`. The falsifiable
