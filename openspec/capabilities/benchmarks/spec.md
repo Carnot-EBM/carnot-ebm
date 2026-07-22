@@ -1549,6 +1549,94 @@ SCENARIO-BENCH-5761-CONTROLS
 |---|---|---|
 | REQ-BENCH-5761 | Planned (`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py`, `results/experiment_5761_exact_constraint_acquisition_benchmark.json`) | Planned (`tests/python/test_experiment_5761_exact_constraint_acquisition_benchmark.py`) |
 
+### REQ-BENCH-5785: Sealed Hardness/Surface Exact Fixture
+
+Carnot MUST provide Exp5785 at
+`python/carnot/experiment_5785_hardness_surface_fixture.py` and write
+`results/experiment_5785_hardness_surface_fixture.json` plus
+`results/experiment_5785_hardness_surface_fixture.rows.jsonl` without calling
+an LLM. The fixture MUST replay the Exp5784 readiness gates before generation,
+verify Z3 and deterministic exact-validator availability, verify free RAM/disk,
+record deterministic seeds and versions, and fail closed with a terminal
+`blocked:` artifact if either exact authority is unavailable.
+
+The fixture MUST generate a chronological train/calibration/future-test panel
+covering at least the three constraint families `finite_domain_scheduling`,
+`logic_grid`, and `typed_finite_choice`. Within each family, canonical
+independent units MUST cross exact SAT/UNSAT or feasible/infeasible labels,
+preregistered solver conflict/time bins, two or more proof-preserving
+symbol/order/paraphrase surface variants, and one meaning-changing canary.
+Solver effort fields MUST be named as solver-hardness bins and MUST NOT be
+called model hardness. The fixture MUST include a sample-size justification
+with at least 30 independent canonical units per primary paired comparison, or
+else an explicit power rationale; repeated turns or surface variants MUST NOT
+be counted as independent units.
+
+Immutable protected facts, mutable constraints, exact assignments or
+certificates, protected-fact hashes, candidate domains, finite-choice labels,
+surface-transform receipts, meaning-change canaries, chronological split
+receipts, and every row hash MUST be sealed before downstream inference.
+Protected-fact hashes are the authority for proof-preserving surface variants;
+natural-language equivalence alone is insufficient. Candidate completeness
+receipts MUST prove that the exact answer/certificate is present and that all
+candidate labels are unique and bounded. Split isolation and disjoint row hashes
+MUST prove that train, calibration, and future-test rows do not overlap.
+
+The terminal artifact MUST include bare `fixture_ready_score`,
+`exact_label_coverage`, and `parser_control_pass_rate`, and MUST list those
+names in `producer_gate_fields`. It MUST also include `status`,
+`preconditions_checked`, `spec_refs`, `fixture_schema`, `row_file`,
+`row_file_sha256`, `family_counts`, `independent_unit_count`,
+`sample_size_justification`, `chronological_split_receipts`,
+`solver_hardness_bins`, `surface_variant_matrix`,
+`proof_preserving_receipts`, `meaning_change_canary_receipts`,
+`protected_fact_manifest`, `mutable_constraint_manifest`,
+`candidate_completeness_receipts`, `parser_contract`,
+`parser_negative_controls`, `exact_validator_receipts`, `leakage_checks`,
+`inference_substrate` with value
+`deterministic_local_fixture_generation_z3_and_exact_validators_no_llm`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and an
+`honest_verdict` beginning `complete:` or `blocked:`.
+
+`fixture_ready_score` SHALL equal `1.0` only when row hashes replay, exact
+labels cover every fixture row, candidate completeness passes, chronological
+split isolation passes, proof-preserving variants retain exact labels and
+protected-fact hashes, meaning-changing canaries change exact labels or
+certificates, parser controls pass, protected facts remain separate from
+mutable constraints, and all exact validators agree. Otherwise the score SHALL
+be `0.0`.
+
+#### SCENARIO-BENCH-5785: Chronological Exact Fixture Seals Hardness And Surface Rows
+
+**Given** Exp5784 has `evidence_index_ready_score=1.0`,
+`next_range_collision_count=0`, `unresolved_canonical_count=0`, and
+`history_mutation_count=0`
+**When** Exp5785 generates the deterministic fixture
+**Then** it writes the JSON artifact and JSONL rows, includes at least 30
+independent canonical units, preserves train/calibration/future-test chronology,
+seals disjoint row hashes, records solver-hardness bins separately from model
+difficulty, and emits the three producer gate fields as top-level bare scalars.
+
+#### SCENARIO-BENCH-5785-CONTROLS: Surface, Canary, Candidate, And Leakage Faults Block Readiness
+
+**Given** a row-hash mutation, exact-label mismatch, incomplete candidate
+domain, split collision, proof-preserving surface drift, missing
+meaning-changing canary, parser-control failure, protected-fact leakage, or
+exact-validator disagreement
+**When** Exp5785 validates the fixture
+**Then** the artifact remains terminal but `fixture_ready_score=0.0` and the
+blocked verdict names the mechanical fault instead of treating parser failure as
+exact wrongness.
+
+**Spec traces:** REQ-BENCH-5785, SCENARIO-BENCH-5785,
+SCENARIO-BENCH-5785-CONTROLS
+
+## Implementation Status (REQ-BENCH-5785)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5785 | Planned (`python/carnot/experiment_5785_hardness_surface_fixture.py`, `results/experiment_5785_hardness_surface_fixture.json`) | Planned (`tests/python/test_experiment_5785_hardness_surface_fixture.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
