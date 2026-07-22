@@ -14091,3 +14091,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 11:10 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
 | 2026-07-22 11:12 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
 | 2026-07-22 11:14 UTC | Causal future-family holdout of versioned rule sta | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5787-validation-gated-constraint-skill-ab |
+| 2026-07-22 11:14 UTC | Gated on Exp5788 transfer: wire a disabled typed-c | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5788-constraint-skill-transfer-audit.tr |
+| 2026-07-22 11:16 UTC | Causal future-family holdout of versioned rule sta | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5787-validation-gated-constraint-skill-ab |
