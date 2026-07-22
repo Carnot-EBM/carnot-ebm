@@ -2999,3 +2999,85 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5742 | Planned (`python/carnot/experiment_5742_v512_capstone_reconciliation.py`, `results/experiment_5742_v512_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5742_v512_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5795: The `.516` capstone reconciliation workflow
+  `exp5795-v516-capstone-reconciliation` in
+  `python/carnot/experiment_5795_v516_capstone_reconciliation.py` SHALL read
+  the active roadmap task declarations for Exp5782 through Exp5794, bind every
+  task to its exact declared deliverable path, hash present artifacts and
+  required ledgers, map missing artifacts only through conductor outcomes, and
+  write `results/experiment_5795_v516_capstone_reconciliation.json` without
+  modifying `scripts/research_conductor.py`, `research-roadmap.yaml`, public
+  README or paper claims, `ops/status.md`, `ops/changelog.md`, or
+  `_bmad/traceability.md`. It SHALL classify outcomes into
+  complete-positive, complete-null, complete-negative, blocked-precondition,
+  blocked-gate, failed-delivery, missing, and retired without merging gate
+  blocks into scientific nulls. It SHALL replay structured roadmap gates from
+  bare producer scalars or gate-check artifacts, record discrepancies, compute
+  branch promotion/default-off decisions, preserve ARC registry neutrality when
+  `solve_claimed` and `registry_credit` are false, record same-verdict
+  retirement receipts, and compute phase telemetry from conductor log rows and
+  artifact receipts. No constraint adapter or ARC influence branch may promote
+  from a bootstrap, gate, cached hardware, development-proxy, tiny-model, or
+  non-deployable oracle result.
+- SCENARIO-CAPSTONE-5795: The artifact
+  `results/experiment_5795_v516_capstone_reconciliation.json` must emit
+  top-level fields `status`, `preconditions_checked`, `milestone`,
+  `canonical_task_matrix`, `canonical_artifact_hashes`,
+  `conductor_outcomes`, `outcome_taxonomy`, `positive_task_ids`,
+  `scientific_null_task_ids`, `negative_task_ids`,
+  `blocked_precondition_task_ids`, `blocked_gate_task_ids`,
+  `failed_delivery_task_ids`, `missing_task_ids`, `retired_task_ids`,
+  `gate_replay_receipts`, `prior_failure_retirement_receipts`,
+  `constraint_branch_decision`, `arc_branch_decision`,
+  `hardware_branch_decision`, `arc_registry_unchanged`,
+  `solve_claim_count`, `phase_telemetry`, `task_wall_times`,
+  `retry_counts`, `gate_skipped_agent_calls`, `slowest_tasks`,
+  `avoidable_orchestration_time_min`, `gpu_cpu_receipts`,
+  `criteria_matrix`, `docs_reconciled`, `specs_reconciled`,
+  `traceability_reconciled`, `research_complete_append_count`,
+  `public_claims_changed=false`, `research_roadmap_unchanged=true`,
+  `conductor_unchanged=true`,
+  `inference_substrate=exact_local_artifact_conductor_gate_and_document_reconciliation_no_llm`,
+  `test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+  `honest_verdict`. With the current `.516` evidence, Exp5782 through Exp5785,
+  Exp5790, and Exp5794 are complete-positive infrastructure/control/hardware
+  receipts; Exp5783 is complete-null source freshness; Exp5786 is
+  complete-negative stream science because parser and protected-fact defects
+  block readiness after real SOTA response collection; Exp5787, Exp5789, and
+  Exp5793 are blocked-gate; Exp5788 and Exp5792 are missing declared
+  gate-blocked deliverables; Exp5791 is failed-delivery and
+  blocked-precondition with `panel_ready_score=0`; no branch promotes the
+  constraint adapter or ARC live influence; and the ARC registry solve count
+  remains unchanged.
+- SCENARIO-CAPSTONE-5795-GATE-REPLAY: Gate replay must use the active
+  roadmap's `gated_on` rows and compare each expected scalar to the canonical
+  upstream artifact value, the upstream missing state, and any existing
+  `blocked_gate_check_v1.gates_evaluated` row. Wrapper, stale, alias, missing,
+  and type discrepancies must be reported without editing
+  `scripts/research_conductor.py`.
+- SCENARIO-CAPSTONE-5795-FIELD-PRINCIPLES: The required field principles are:
+  `canonical_task_matrix` = "the fixed Exp5782-Exp5794 denominator with exact
+  declared paths, conductor rows, artifact states, substrate, metrics, gates,
+  retirement, and tests"; `outcome_taxonomy` = "complete-positive,
+  complete-null, complete-negative, blocked-precondition, blocked-gate,
+  failed-delivery, missing, and retired stay disjoint"; `gate_replay_receipts`
+  = "bare producer scalars and gate-check artifacts are replayed exactly";
+  `constraint_branch_decision` = "default-off unless stream, learning,
+  transfer, and shadow integration gates all pass"; `arc_branch_decision` =
+  "default-off unless admission, panel, selector, and live A/B gates pass with
+  solve-neutral provenance"; `hardware_branch_decision` = "cached hardware
+  continuity cannot become speedup, energy, or production readiness";
+  `phase_telemetry` = "timings and retries support planning only, not
+  scientific claims"; `docs_reconciled` = "the operator stop rule delegates
+  ops/status, ops/changelog, and traceability edits"; `public_claims_changed`
+  = "bare false without promotion-grade evidence"; `research_roadmap_unchanged`
+  = "active roadmap mutation is forbidden"; `conductor_unchanged` = "the
+  conductor is read-only"; and `honest_verdict` = "terminal summary starting
+  with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5795)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5795 | Planned (`python/carnot/experiment_5795_v516_capstone_reconciliation.py`, `results/experiment_5795_v516_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5795_v516_capstone_reconciliation.py`) |

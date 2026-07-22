@@ -794,3 +794,64 @@ retired_extras:
   - repeat Exp5709 prospective shadow stream on the parse-failed Exp5708 stream
   - blocked_gate_check_failed after exp5708 parse_failures without a new clean
     stream
+- id: exp5773_prospective_constraint_acquisition_ab_retired_v516
+  scope_key: prospective_constraint_acquisition_exp5773_same_verdict
+  experiment_scope: Exp5773 prospective constraint acquisition A/B rerun on an
+    unready or parse-failed constraint stream only
+  reason: >-
+    Exp5787 repeated the same blocked_gate_check_failed verdict after Exp5786
+    produced authenticated real SOTA responses but kept stream_ready_score at
+    0.0 and satisfiable_drift_count below the learning gate. Preserve future
+    clean parse-qualified streams and exact prospective skill learning.
+  experiment_ids:
+  - exp5773
+  retired_milestone: 2026.07.516
+  retired_by_artifact: results/experiment_5787_validation_gated_constraint_skill_ab.json
+  recorded_by_artifact: results/experiment_5795_v516_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - prospective_constraint_acquisition_exp5773_same_verdict
+  - repeat Exp5773 prospective constraint acquisition on an unready stream
+  - blocked_gate_check_failed after exp5786 stream_ready_score 0.0 without a new
+    clean stream
+- id: exp5775_constraint_sidecar_shadow_integration_retired_v516
+  scope_key: constraint_sidecar_shadow_integration_exp5775_same_verdict
+  experiment_scope: Exp5775 constraint sidecar shadow integration rerun with a
+    missing or transfer-unqualified sidecar only
+  reason: >-
+    Exp5789 repeated the same blocked_gate_check_failed verdict because the
+    exact Exp5788 transfer-audit deliverable was absent and the shadow adapter
+    remained gate-blocked. Keep the adapter default-off until a transfer-ready
+    upstream artifact exists and all integration gates replay cleanly.
+  experiment_ids:
+  - exp5775
+  retired_milestone: 2026.07.516
+  retired_by_artifact: results/experiment_5789_constraint_skill_shadow_adapter.json
+  recorded_by_artifact: results/experiment_5795_v516_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - constraint_sidecar_shadow_integration_exp5775_same_verdict
+  - repeat Exp5775 sidecar shadow integration with missing Exp5788 transfer audit
+  - blocked_gate_check_failed after exp5788 exact deliverable missing
+- id: exp5767_arc_game_blind_composition_hardening_retired_v516
+  scope_key: arc_game_blind_composition_exp5767_same_verdict
+  experiment_scope: Exp5767 ARC game-blind composition hardening rerun with a
+    missing or selector-unqualified world-model selector only
+  reason: >-
+    Exp5793 repeated the same blocked_gate_check_failed verdict because the
+    exact Exp5792 calibration-only selector deliverable was absent and live ARC
+    influence stayed gate-blocked. Do not update ARC solve credit or live model
+    influence from missing selector evidence.
+  experiment_ids:
+  - exp5767
+  retired_milestone: 2026.07.516
+  retired_by_artifact: results/experiment_5793_arc_live_world_model_ab.json
+  recorded_by_artifact: results/experiment_5795_v516_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - arc_game_blind_composition_exp5767_same_verdict
+  - repeat Exp5767 ARC composition hardening with missing Exp5792 selector
+  - blocked_gate_check_failed after exp5792 exact deliverable missing
