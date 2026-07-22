@@ -5967,3 +5967,9 @@ The critical path for milestone .250:
 - theme: evidence-handling latency dominated a synthesis-heavy operational closeout
 - key result: honest operational result -- the lone compute-bound entry was gated at 0.0 minutes, task-conditioned GPU idle was false, and no concurrent multi-model runner miss was evidenced; the runtime opportunity is incremental evidence indexing and receipt reuse
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.516
+- exp_range: no data available this milestone
+- theme: transition processing led a synthesis-heavy runtime tail while gated compute work remained coarsely timed
+- key result: honest operational result -- compute-task GPU idle was not indicated, but phase timing and model-concurrency evidence are insufficient to explain the longest compute durations or establish a missed DualGPURunner engagement
+- acceptance: 4/4 operational questions answered
