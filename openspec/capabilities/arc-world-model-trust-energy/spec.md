@@ -16229,3 +16229,46 @@ When Exp5641 evaluates the patched executable model
 Then patched next-effect error and abstention calibration are reported against last-transition,
 frequency-table, unpatched, and oracle-free controls, unsupported cases abstain, informative
 questions score above irrelevant controls, and unsafe patch accept count remains zero.
+
+### REQ-ARC-WMTE-5769: CARNOT_ARC_GENERATOR_CUDA_GPU Free-VRAM Check Survives a Just-Crashed Server
+
+**Origin:** 2026-07-21/22, found while running `experiment_5768_direct_incontext_prediction_ab.py`
+(an outer-loop script, not a conductor experiment, but a genuine consumer of the shared
+`LocalGGUFProposer` generator machinery). `_generator_server_and_env()`'s opt-in
+`CARNOT_ARC_GENERATOR_CUDA_GPU=<idx>` path is gated on a single `_cuda_gpu_free_mb(idx) >=
+_GENERATOR_CUDA_MIN_FREE_MB` snapshot, evaluated inside `LocalGGUFProposer._ensure_server()`
+immediately after the proposer detects its current server is unhealthy (e.g. crashed). A
+just-crashed CUDA process does not release its VRAM allocation to the driver instantaneously; a
+snapshot taken in that narrow window sees the dying process's memory as still "in use," the guard
+correctly-per-its-own-logic yields, and `_generator_server_and_env()` falls back to the iGPU
+(`build-hip/bin/llama-server`) HIP build for that server's entire subsequent lifetime -- silently
+running the generator model on CPU. Reproduced multiple times across this session, including a
+recurrence AFTER an initial fix (4 retry attempts / 1.5s apart, ~6s total) was applied and
+verified, but then lost entirely from the working tree before being committed (a real data-loss
+incident, not a false alarm -- see `ops/known-issues.md` for detail) and re-applied with a wider
+retry budget.
+
+`_generator_server_and_env()` SHALL check free VRAM via a bounded retry
+(`_cuda_gpu_has_headroom`, `_GENERATOR_CUDA_FREE_RETRY_ATTEMPTS=10` attempts,
+`_GENERATOR_CUDA_FREE_RETRY_DELAY_S=2.0` between attempts, ~20s total) rather than a single
+snapshot, before conceding the opt-in CUDA path and falling back to the iGPU build. The retry
+SHALL be bounded small enough that a genuinely busy card (a real conductor job actually holding
+the VRAM) still yields to the iGPU within seconds, not a long stall -- this is a race-condition fix
+for a transient reclaim window, not a relaxation of the "never fight the conductor for the 3090"
+guard.
+
+### SCENARIO-ARC-WMTE-5769-TRANSIENT-LOW-VRAM-SURVIVES-RETRY
+
+**Given** `CARNOT_ARC_GENERATOR_CUDA_GPU=<idx>` is set, the CUDA build exists, and
+`_cuda_gpu_free_mb(idx)` returns a value below `_GENERATOR_CUDA_MIN_FREE_MB` on its first call but
+at or above it on a later call within the retry budget
+**When** `_generator_server_and_env()` resolves the launch binary
+**Then** it returns the CUDA build pinned to `idx` (not the iGPU HIP build), because
+`_cuda_gpu_has_headroom` retried past the transient low reading.
+
+**Given** `CARNOT_ARC_GENERATOR_CUDA_GPU=<idx>` is set but `_cuda_gpu_free_mb(idx)` stays below
+`_GENERATOR_CUDA_MIN_FREE_MB` across every attempt in the retry budget (a genuinely busy card)
+**When** `_generator_server_and_env()` resolves the launch binary
+**Then** it falls back to the iGPU HIP build (or the CUDA build if the HIP build is absent), exactly
+as before this fix -- the retry only survives a *transient* low reading, it does not change the
+outcome for a card that is actually busy for the whole retry window.
