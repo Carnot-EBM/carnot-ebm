@@ -16,37 +16,37 @@ OK: all solver-like ARC modules are reachable from the live agent path (56 modul
 
 ## Hostile LLM review
 
-TL;DR: **FAIL — 0/6 establish a new hidden-game capability of the live entrypoints: 3 duplicates, 2 outer-loop RE solves, 1 off-path solve.**
+TL;DR: **FAIL — 0/6 demonstrate a new hidden-game capability of the live entrypoints: 3 duplicates, 2 outer-loop RE solves, 1 off-path solve.**
 
 - `results/arc_loop_solve_sk48.json`
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches L2 via `development_proxy`; registry already records `sk48` through L8/full clear. Its hand-registered `GameAdapter` path is not evidence of hidden-game self-discovery.
-  - **Recommended action:** Exclude from recent advances. Retain only as a replay regression fixture.
+  - **Evidence:** Reaches L2 as `development_proxy`; registry already records `sk48` through L8/full clear. Adapter-backed replay is not hidden-game self-discovery.
+  - **Recommended action:** Exclude from advance counts; retain only as a replay regression fixture.
 
 - `results/arc_loop_solve_ar25.json`
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches L3 via `development_proxy`; registry already records `ar25` through L8/full clear. No new live capability is demonstrated.
-  - **Recommended action:** Exclude from advance counts; label explicitly as adapter-backed replay verification.
+  - **Evidence:** Reaches L3 as `development_proxy`; registry already records `ar25` through L8/full clear.
+  - **Recommended action:** Exclude from advances and label explicitly as adapter-backed replay verification.
 
 - `results/outer_loop_lf52_l8plus_probe_20260717.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly read `lf52.py`, used a per-game source planner/engine translator, symbolic search, and searches up to hundreds of thousands of states. `development_proxy` is accurate; this is exactly the forbidden source-assisted outer loop.
-  - **Recommended action:** Remove L8–L10 from live-self-discovery credit. Keep as dev-only analysis, never as hidden-game capability evidence.
+  - **Evidence:** Explicitly read `lf52.py`, used per-game source planner/translator scripts, and ran large deterministic searches. Replaying the resulting plan through `env.step` does not convert source-derived solving into self-discovery.
+  - **Recommended action:** Remove L8–L10 from live-self-discovery credit; retain as dev-only analysis.
 
 - `results/outer_loop_round26_bp35_probe_l9_20260717.json`
   - **Verdict:** `OFF_PATH`
-  - **Evidence:** Strong runtime-only evidence—public frames/actions, failed hypotheses, no source/private state—but the artifact was produced by an `outer_loop` GPT probe and does not show either live entrypoint performing the discovery. A provenance string cannot establish reachability.
-  - **Recommended action:** Reproduce the discovery—not merely replay the 410-action sequence—through a live entrypoint from fresh state before granting `SELF_DISCOVERY_ADVANCE`.
+  - **Evidence:** Good runtime-only evidence—public frames/actions, failed hypotheses, no source/private state—but it is an `arc_outer_loop_probe` produced by an outer-loop GPT session. Nothing authenticates discovery through either live entrypoint. The provenance string alone proves nothing.
+  - **Recommended action:** Demonstrate fresh discovery—not mere replay of the 410-action sequence—through a live entrypoint before granting credit.
 
 - `results/outer_loop_round14_lf52_probe_20260716.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Admits re-reading public game source, auditing a hand-built simulator/search, constructing the missing relay externally, then translating it into engine actions.
+  - **Evidence:** Admits rereading game source, auditing a hand-built simulator/search, externally constructing the relay, then translating it into actions.
   - **Recommended action:** Strip L7 of live-agent credit; retain only as development-proxy diagnostics.
 
 - `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Explicitly says `new_levels_banked: 0` and that `lf52` was already 10/10. It also read source and used a faithful per-game Python model, so even the route repair is outer-loop work.
-  - **Recommended action:** Count only as live replay/parity validation, never as a solve advance.
+  - **Evidence:** Declares `new_levels_banked: 0`; `lf52` was already 10/10. It also used a faithful per-game Python model, so this is outer-loop route repair plus replay validation—not discovery.
+  - **Recommended action:** Count only as live-parity validation, never as a solve advance.
 
-**Pattern watch:** The project is laundering outer-loop knowledge into the live path through banked sequences, source-derived models, and hand-built adapters. Reachability lint proves code can be called; it does not prove the live agent discovered anything. Require an entrypoint-authenticated discovery trace showing fresh runtime observations, hypotheses, agent-selected probes, revisions, and the winning action—without source access, per-game modeling, or injected solved sequences.
+**Pattern watch:** The project is laundering outer-loop knowledge into the live path through banked trajectories, source-derived models, and hand-built adapters. Reachability lint proves code can be called; it does not prove the live agent discovered the solution. Require entrypoint-authenticated traces showing fresh observations, agent-selected probes, hypothesis revision, and the winning action without source access, injected solutions, or per-game models.
 

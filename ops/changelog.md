@@ -1,5 +1,29 @@
 # Carnot — Changelog
 
+## 2026-07-22 (Milestone 2026.07.516 research planning staged -- codex)
+
+- User instruction: plan the next research milestone after terminal `.515`, refresh 2025-2026
+  literature, use the three mandated local SOTA GGUF families, include continuous self-learning,
+  and stage a full design document plus conductor-order YAML without changing the active roadmap,
+  conductor, or pushing.
+- Added `V516-PLANNER-REFRESH-20260722-END` to `research-references.md`. New actionable controls:
+  arXiv:2607.17047 for solver-hardness versus proof-preserving surface sensitivity,
+  arXiv:2607.18973 for validation-gated frozen-model skill evolution, and arXiv:2607.18867 for
+  model/quantization/runtime chronology receipts. Promoted arXiv:2607.14169 pivotal play adequacy
+  into the ARC admission boundary; kept A2RBench/S3 bounded and TSU/Kona non-executable.
+- Replaced `openspec/change-proposals/research-roadmap-vNEXT.md` with milestone `2026.07.516` and
+  created `research-roadmap-next.yaml` with 14 tasks Exp5782-Exp5795 across four phases: terminal
+  evidence qualification and exact fixture controls; three-family prospective typed-constraint
+  self-learning/transfer/shadow; immutable single-shot ARC hypothesis accreditation/selection/live
+  E3 A/B; and no-speedup hardware/capstone reconciliation.
+- The plan records `.515` honestly: Exp5771's index implementation exists, but readiness/finalization
+  failed and Exp5772-Exp5775 were gate-blocked, so no downstream result is labeled a scientific null.
+- Validation passed: YAML/task/prompt contract; Pydantic roadmap schema; all 35 structured gate
+  cross-references; prior-failure four-field discipline; roadmap gate audit; exclusion-manifest
+  pre-emit lint. No solve task is proposed, all LLM tasks declare mandated GGUFs, and all prompts
+  end with the required no-push/no-conductor-modification command.
+- Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
+
 ## 2026-07-15 (Exp5714 one-axis parity repair -- codex)
 
 - Fixed the failing Exp5714 Rust/Python one-axis parity tests without modifying
