@@ -24,13 +24,21 @@
     others are kept only for completeness and require API keys this project
     no longer has.
 
-    KNOWN GAP (documented, not silently hidden): this script only swaps the
-    *image-generation* role. paperbanana's Retriever/Planner/Stylist/Critic
-    agents ("VLM_PROVIDER") still default to Gemini and are NOT addressed
-    here — see ops/known-issues.md 2026-07-21 entry for the local-VLM
-    follow-up. Without a local VLM_PROVIDER, the full 7-agent pipeline still
-    needs GOOGLE_API_KEY (or another VLM provider's key) even after this
-    change; only the raster image-gen step becomes truly local.
+    As of 2026-07-22, the VLM role (Retriever/Planner/Stylist/Critic —
+    paperbanana's ``VLM_PROVIDER``) also defaults to a no-paid-API option:
+    paperbanana's own ``claude_code`` provider, which shells out to the
+    ``claude`` CLI already installed on this machine (uses the existing
+    Claude Code subscription, no ``ANTHROPIC_API_KEY`` needed). Verified
+    directly 2026-07-22: headless ``claude -p --output-format json --model
+    sonnet`` calls succeed with no API key set, correctly read and describe
+    a real generated image (the exact reference-image prompt pattern
+    ``ClaudeCodeVLM._generate`` uses), and are cheap after the first call in
+    a run (~$0.72 cold-start cache-creation cost for the first call in a
+    fresh session; ~$0.04-$0.10 per subsequent resumed call in the same
+    session). This closes the paid-API gap for the full 7-agent pipeline,
+    not just the raster image-gen step. Override via ``--vlm-provider`` /
+    ``--vlm-model`` passthrough flags, or the ``VLM_PROVIDER`` / ``VLM_MODEL``
+    env vars, if a different provider is ever preferred.
 
 Spec: REQ-PUBLISH-042, SCENARIO-PUBLISH-042
 
@@ -57,6 +65,18 @@ DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8990
 PLACEHOLDER_API_KEY = "local-not-a-real-key"
 SERVER_START_TIMEOUT_S = 30.0
+
+# paperbanana's Settings.vlm_model defaults to "gemini-2.5-flash" -- if we
+# only set VLM_PROVIDER=claude_code and leave VLM_MODEL unset, that bogus
+# model name gets passed straight to `claude -p --model gemini-2.5-flash`
+# (ClaudeCodeVLM(model=settings.vlm_model) in providers/registry.py) and the
+# CLI call fails. Both must be set together.
+DEFAULT_VLM_PROVIDER = "claude_code"
+DEFAULT_VLM_MODEL = "sonnet"
+# Providers that need a paid API key paperbanana does not have a local
+# fallback for. claude_code is deliberately absent: it needs the `claude`
+# CLI (checked separately below), not an API key.
+_PAID_VLM_PROVIDERS = {"gemini", "openai", "anthropic", "atlas", "bedrock"}
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -204,17 +224,30 @@ def main() -> None:
     env = dict(os.environ)
     if args.backend == "ernie-local":
         env.update(_ensure_ernie_local_backend(args.host, args.port, args.gpu))
+        # Default the VLM role to the local, no-paid-API claude_code provider
+        # too -- only if the caller hasn't already picked something else via
+        # env or a --vlm-provider passthrough flag.
+        if "VLM_PROVIDER" not in env and "--vlm-provider" not in passthrough:
+            env["VLM_PROVIDER"] = DEFAULT_VLM_PROVIDER
+            env.setdefault("VLM_MODEL", DEFAULT_VLM_MODEL)
         vlm_provider = env.get("VLM_PROVIDER", "gemini")
-        if vlm_provider in {"gemini", "openai", "anthropic", "atlas", "bedrock"} and not (
+        if vlm_provider == "claude_code" and shutil.which("claude") is None:
+            print(
+                "blocked_claude_cli_not_found: VLM_PROVIDER=claude_code needs the "
+                "`claude` CLI on PATH (Pre-Launch Preconditions Discipline). Install "
+                "Claude Code and sign in, or pass --vlm-provider/--vlm-model to pick "
+                "a different provider.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        if vlm_provider in _PAID_VLM_PROVIDERS and not (
             env.get("GOOGLE_API_KEY") or env.get(f"{vlm_provider.upper()}_API_KEY")
         ):
             print(
                 "WARNING: VLM_PROVIDER (paperbanana's planner/critic/stylist role) "
-                f"still defaults to '{vlm_provider}' and no matching API key is set. "
-                "Only the image-generation step is local right now -- see "
-                "ops/known-issues.md 2026-07-21 entry for the local-VLM follow-up. "
-                "Pass --vlm-provider ollama or --vlm-provider openai_local through "
-                "to paperbanana if you have a local VLM server running.",
+                f"is set to '{vlm_provider}' and no matching API key is set. "
+                "Pass --vlm-provider claude_code (default), ollama, or openai_local "
+                "for a no-paid-API option.",
                 file=sys.stderr,
             )
     else:
