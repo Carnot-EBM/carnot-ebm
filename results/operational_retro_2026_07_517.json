@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.517",
+  "generated_at": "2026-07-22T18:13:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 113.7,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp5798 diagnosis: qualify finite-choice channels on all three real SOT",
+      "duration_minutes": 33.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Transition terminal .516 evidence and allocate collision-free .517 identities",
+      "duration_minutes": 33.03,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Time-windowed post-V517 literature freshness receipt",
+      "duration_minutes": 24.47,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Forensic diagnosis of Qwen reasoning truncation and finite-choice answer channel",
+      "duration_minutes": 22.58,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 experiments in 113.7 minutes, including 2 compute-bound experiments. The compute-bound paths took 33.6 and 22.58 minutes, but the supplied evidence does not divide those totals into queueing, model loading, inference, or artifact-writing phases. The locked task-level indicator reports no GPU idle on compute-bound work; the standalone idle snapshot does not establish utilization while those tasks were running.",
+  "bottlenecks_identified": [
+    "The finite-choice channel qualification was the longest compute-bound path at 33.6 minutes; its title indicates broader qualification scope, but the data does not identify which execution phase caused the duration.",
+    "The forensic Qwen diagnosis was the other compute-bound path at 22.58 minutes, with no phase-level timing to distinguish model setup, inference, diagnosis, and result serialization.",
+    "Disk-mtime reconstruction provides end-to-end ordering but no task-correlated GPU, concurrency, or runner trace, so GPU efficiency and runner selection cannot be causally evaluated from the idle snapshot alone."
+  ],
+  "improvements_suggested": [
+    "Emit per-experiment phase timings for queueing, model load, warm-up, inference, evaluation, and artifact writing so the next retrospective can target measured slow phases.",
+    "Add a task-correlated GPU engagement probe for compute-bound launches that records device assignment and utilization during the task, while leaving synthesis-only tasks exempt.",
+    "Record model count, concurrent-model intent, and selected runner; route through DualGPURunner only when at least 2 models are actually loaded in parallel.",
+    "Persist per-model finite-choice qualification receipts so later gated qualification can reuse completed checks when inputs and model hashes are unchanged."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument phase-level timings on every compute-bound experiment.",
+    "Correlate GPU utilization samples with experiment start and stop boundaries.",
+    "Capture concurrency intent and conditionally select DualGPURunner for confirmed multi-model parallel tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded evidence ranks the compute-bound work but does not support a causal explanation for its runtime. Because it contains neither a timed counterfactual nor phase-specific loss, the defensible savings estimate is 0."
+}
