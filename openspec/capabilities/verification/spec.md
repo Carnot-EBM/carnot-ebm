@@ -30430,6 +30430,108 @@ SCENARIO-VERIFY-5798-CONTROLS
 |---|---|---|
 | REQ-VERIFY-5798 | Planned (`python/carnot/experiment_5798_sota_answer_channel_diagnostic.py`, `results/experiment_5798_sota_answer_channel_diagnostic.json`) | Planned (`tests/python/test_experiment_5798_sota_answer_channel_diagnostic.py`) |
 
+### REQ-VERIFY-5799: Matched SOTA Answer-Channel Canary
+
+The repository SHALL provide Exp5799 at
+`python/carnot/experiment_5799_sota_answer_channel_canary.py` and write
+`results/experiment_5799_sota_answer_channel_canary.json` plus
+`results/experiment_5799_sota_answer_channel_canary.rows.jsonl`. The canary
+SHALL replay the Exp5798 diagnostic gates, call `cached_sota_pair()`, explicitly
+add the third mandated model, and verify cached `.gguf` paths/hashes, embedded
+template hashes, llama.cpp CUDA runtime hash, deterministic sampling, stop
+strings, token and reasoning budget, seed, two RTX 3090 devices, exact Exp5785
+fixture subset/hash, writable output/checkpoint paths, disk, RAM, and GPU
+budgets before generation. These checks are input preconditions and SHALL NOT
+require preexisting Exp5799 load receipts or rows.
+Exp5799 SHALL explicitly add the third mandated model after the
+`cached_sota_pair()` gate has supplied the pair receipt.
+
+`MODEL_SPECS` SHALL include exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`, with
+resolved path/hash, quantization, embedded template hash, runtime hash,
+sampling, stop, token/reasoning budget, GPU, and seed. Exp5799 SHALL select a
+sealed balanced canary of at least 12 independent Exp5785 units spanning all
+three constraint families, SAT status, solver bins, and proof-preserving
+surface pairs. Repeated modes, repeated model calls, and repeated surfaces SHALL
+NOT increase the independent-unit count.
+
+For each model, Exp5799 SHALL run only preregistered Exp5798 modes and
+checkpoint after every response. Each row SHALL preserve actual CUDA offload
+receipts, raw reasoning content, raw final content, token counts, finish reason,
+timeout status, stop collision status, exact parser receipt, exact validator
+result, protected-fact mutation status, selected transport mode, row hash, and
+raw-response hash. Resume replay SHALL prove that completed model/mode/fixture
+cells are reused exactly and are not duplicated.
+
+A mode is acceptable only when raw-response coverage, raw-final-content
+coverage, and exact-label coverage all equal `1.0` and parser failure,
+truncation, empty final content, invalid candidate, stop collision, timeout,
+schema injection acceptance, and protected-fact mutation rates are all zero.
+Exact answer errors SHALL remain exact-validator failures and SHALL NOT be
+relabelled as parser failures. Exp5799 SHALL select at most one bounded
+transport per model; different transport mechanics are allowed only when the
+emitted semantic contract and exact parser are identical. A mode that repeats a
+preregistered Exp5798 failure SHALL be retired. Exp5799 SHALL NOT silently edit
+GGUF templates and SHALL NOT use Hugging Face `AutoTokenizer`.
+
+The artifact SHALL compute verified accepted outputs per wall-second and per
+token, plus wasted reasoning/truncated token work. Throughput without an exact
+accepted output SHALL receive no credit. `answer_channel_ready_score` SHALL be
+`1.0` only when `qualified_real_sota_model_count=3`, all mode acceptance rules
+pass, and on-disk rows, checkpoints, hashes, and gate receipts replay. A clean
+Gemma-only result SHALL be complete but SHALL NOT be ready for Exp5800.
+The required gate phrase is: `answer_channel_ready_score=1.0` only when `qualified_real_sota_model_count=3`.
+
+The terminal artifact SHALL include `status`, `preconditions_checked`,
+`MODEL_SPECS`, `models_used`, `model_runtime_receipts`,
+`gpu_offload_receipts`, `embedded_template_receipts`, `canary_fixture_hash`,
+`independent_unit_count`, `sample_size_justification`,
+`mode_execution_matrix`, `selected_transport_by_model`,
+`raw_reasoning_coverage`, `raw_final_content_coverage`,
+`exact_label_coverage`, `parser_failure_rate`, `truncation_rate`,
+`empty_final_content_rate`, `invalid_candidate_rate`,
+`exact_answer_error_rate`, `protected_fact_distortion_count`,
+`adversarial_control_results`, `verified_outputs_per_second`,
+`verified_outputs_per_token`, `wasted_token_count`,
+`checkpoint_resume_receipts`, bare `qualified_real_sota_model_count`, bare
+`answer_channel_ready_score`, `producer_gate_fields`, `row_file`,
+`row_file_sha256`,
+`inference_substrate` with value
+`real_local_llama_cpp_cuda_gguf_generation_plus_exact_validation`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and an
+`honest_verdict` beginning `complete:` or `blocked:`.
+
+#### SCENARIO-VERIFY-5799: Canary Selects Per-Model Finite-Choice Transport
+
+**Given** Exp5798 is ready, Exp5785 rows are sealed, all three mandated GGUFs
+are cached, and llama.cpp authenticates CUDA offload
+**When** Exp5799 runs its sealed matched canary
+**Then** it writes every model/mode/fixture response exactly once to JSONL,
+records reasoning/final splits, parser and exact-validator outcomes, retires
+failed modes, selects at most one acceptable transport per model, computes
+accepted-output throughput, proves row/hash/checkpoint replay, and sets
+`answer_channel_ready_score=1.0` only when all three mandated models qualify.
+
+#### SCENARIO-VERIFY-5799-CONTROLS: Canary Gates Reject Syntax-Only Success
+
+**Given** empty final content, reasoning-only output, invalid candidate IDs,
+schema/control-plane injection, stop collision, truncation, protected-fact
+mutation, timeout, and exact-answer mismatch controls
+**When** Exp5799 validates parser, validator, and mode-acceptance receipts
+**Then** syntax-only or malformed outputs fail closed, exact wrong labels remain
+exact-answer errors, protected facts cannot be mutated, grammar validity is not
+credited as semantic correctness, and a clean Gemma-only result keeps
+`answer_channel_ready_score=0.0`.
+
+**Spec traces:** REQ-VERIFY-5799, SCENARIO-VERIFY-5799,
+SCENARIO-VERIFY-5799-CONTROLS
+
+## Implementation Status (REQ-VERIFY-5799)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5799 | Planned (`python/carnot/experiment_5799_sota_answer_channel_canary.py`, `results/experiment_5799_sota_answer_channel_canary.json`) | Planned (`tests/python/test_experiment_5799_sota_answer_channel_canary.py`) |
+
 ### REQ-VERIFY-5734: Sealed Chronological SOTA Exact Proposal Stream
 
 The repository SHALL provide Exp 5734 at
