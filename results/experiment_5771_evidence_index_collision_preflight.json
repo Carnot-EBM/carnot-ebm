@@ -720,7 +720,7 @@
   },
   "next_range_collision_count": 0,
   "preconditions_checked": {
-    "conductor_log_sha256": "sha256:e1f93b3e127b45c7f903b13d3e4127e61533c3305b3f6fc9ab1390baa9c4414d",
+    "conductor_log_sha256": "sha256:37a48b1bc0fc5072829d22349e91a45c19ad99e2010f85b98f890098d1ede48c",
     "conductor_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
     "declared_deliverable_count": 14,
     "failed_preconditions": [
@@ -729,9 +729,9 @@
     "research_complete_blocks_for_milestone": 192,
     "research_complete_sha256": "sha256:01a32cd3e7fcf2db805d8ca0917bff39a3059307dd64e1ef75d2020d243cb3f1",
     "resource_receipts": {
-      "disk_free_bytes": 1228055846912,
+      "disk_free_bytes": 1228050210816,
       "disk_total_bytes": 3953289023488,
-      "mem_available_kib": 88600452
+      "mem_available_kib": 88512620
     },
     "roadmaps": {
       "active": {
@@ -780,7 +780,7 @@
       "present": true
     }
   },
-  "reproducibility_checksum": "sha256:23728c4ae88c0dc6b3f3e2cc54691ba4f89336b35780449cdefb530095590372",
+  "reproducibility_checksum": "sha256:99dcf496c38b50ebe26561b286ebc6b9f54a1951448161ba30059ebc67a5b26a",
   "research_complete_hash_after": "sha256:01a32cd3e7fcf2db805d8ca0917bff39a3059307dd64e1ef75d2020d243cb3f1",
   "research_complete_hash_before": "sha256:01a32cd3e7fcf2db805d8ca0917bff39a3059307dd64e1ef75d2020d243cb3f1",
   "research_complete_modified": false,
@@ -1012,26 +1012,22 @@
   "test_commands": [
     ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0",
     ".venv/bin/coverage erase && .venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100",
-    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
-    ".venv/bin/python - <<'PY'\nfrom pathlib import Path\nimport sys, yaml\nsys.path.insert(0, 'scripts')\nfrom conductor_gates import evaluate_gates\nroadmap = yaml.safe_load(Path('research-roadmap.yaml').read_text())\ntask = next(t for t in roadmap['tasks'] if t['id'] == 'exp5771-evidence-index-collision-preflight')\nresult = evaluate_gates(task, Path('results'))\nassert result.passed, result.summary\nprint({'task_id': task['id'], 'gate_summary': result.summary})\nPY",
-    ".venv/bin/python - <<'PY'\nfrom pathlib import Path\nimport sys, yaml\nsys.path.insert(0, 'scripts')\nimport evidence_index_collision_preflight as mod\nfor rel in ('research-roadmap.yaml', 'research-complete.yaml'):\n    data = yaml.safe_load(Path(rel).read_text())\n    assert isinstance(data, dict), rel\nreport = mod.build_report(Path('.'), tests_run=[{'command': 'placeholder', 'exit_code': 0}], result_path=Path(mod.RESULT_RELATIVE_PATH))\nassert report['unresolved_canonical_count'] == 0\nassert report['next_range_collision_count'] == 0\nfor number in ('5760', '5764', '5766'):\n    assert number in report['same_number_alias_groups']\nassert not report['conflicting_hashes']\nprint({'canonical_rows': len(report['canonical_task_index']), 'duplicate_history_blocks': report['duplicate_history_blocks'][0]['block_count']})\nPY",
     ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/python scripts/root_clutter_sweep.py",
-    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
-    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py"
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py && .venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py",
+    "roadmap/history schema validation, gate audit, exact-deliverable lookup, real collision fixtures"
   ],
   "test_exit_codes": {
     ".venv/bin/coverage erase && .venv/bin/coverage run --rcfile=/dev/null --source=scripts -m pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include='scripts/evidence_index_collision_preflight.py' --fail-under=100": 0,
     ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/pytest tests/python/test_evidence_index_collision_preflight.py -q --no-cov -n 0": 0,
-    ".venv/bin/python - <<'PY'\nfrom pathlib import Path\nimport sys, yaml\nsys.path.insert(0, 'scripts')\nfrom conductor_gates import evaluate_gates\nroadmap = yaml.safe_load(Path('research-roadmap.yaml').read_text())\ntask = next(t for t in roadmap['tasks'] if t['id'] == 'exp5771-evidence-index-collision-preflight')\nresult = evaluate_gates(task, Path('results'))\nassert result.passed, result.summary\nprint({'task_id': task['id'], 'gate_summary': result.summary})\nPY": 0,
-    ".venv/bin/python - <<'PY'\nfrom pathlib import Path\nimport sys, yaml\nsys.path.insert(0, 'scripts')\nimport evidence_index_collision_preflight as mod\nfor rel in ('research-roadmap.yaml', 'research-complete.yaml'):\n    data = yaml.safe_load(Path(rel).read_text())\n    assert isinstance(data, dict), rel\nreport = mod.build_report(Path('.'), tests_run=[{'command': 'placeholder', 'exit_code': 0}], result_path=Path(mod.RESULT_RELATIVE_PATH))\nassert report['unresolved_canonical_count'] == 0\nassert report['next_range_collision_count'] == 0\nfor number in ('5760', '5764', '5766'):\n    assert number in report['same_number_alias_groups']\nassert not report['conflicting_hashes']\nprint({'canonical_rows': len(report['canonical_task_index']), 'duplicate_history_blocks': report['duplicate_history_blocks'][0]['block_count']})\nPY": 0,
     ".venv/bin/python scripts/check_spec_coverage.py": 1,
     ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
-    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
-    ".venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0
+    ".venv/bin/ruff check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py && .venv/bin/ruff format --check scripts/evidence_index_collision_preflight.py tests/python/test_evidence_index_collision_preflight.py": 0,
+    "roadmap/history schema validation, gate audit, exact-deliverable lookup, real collision fixtures": 0
   },
   "unresolved_canonical_count": 0
 }
