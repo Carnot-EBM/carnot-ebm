@@ -14140,3 +14140,15 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 22:14 UTC | Gated on Exp5813 all-family qualification: prospec | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_ch |
 | 2026-07-22 22:16 UTC | Gated on Exp5813 all-family qualification: prospec | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_ch |
 | 2026-07-22 22:18 UTC | Gated on Exp5814 clean stream: future-validated ty | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5814-channel-qualified-constraint-stream) |
+| 2026-07-22 23:18 UTC | Plan milestone 2026.07.519 | OK | 7 tasks proposed |
+| 2026-07-22 23:20 UTC | Gated on Exp5814 clean stream: future-validated ty | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5814-channel-qualified-constraint-stream) |
+| 2026-07-22 23:20 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:22 UTC | Gated on Exp5814 clean stream: future-validated ty | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5814-channel-qualified-constraint-stream) |
+| 2026-07-22 23:23 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:25 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:27 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:29 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:31 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:34 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:36 UTC | Activation REFUSED: milestone 2026.07.519 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 23:38 UTC | Milestone 2026.07.519 activated | OK | 7 tasks queued |
