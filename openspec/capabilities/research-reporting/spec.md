@@ -43616,3 +43616,125 @@ passes only when the bare producer gate fields satisfy the declared predicates.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5784 | Implemented (`scripts/evidence_index_collision_preflight.py`, `results/experiment_5784_evidence_index_terminal_qualification.json`) | Implemented (`tests/python/test_evidence_index_collision_preflight.py`) |
+
+### REQ-REPORT-5796: V517 Transition Archives Terminal V516 By Exact Identity
+
+The Exp5796 workflow SHALL read the V516 completion ledger, conductor log,
+active roadmap, optional `research-roadmap-next.yaml`, vNEXT proposal document,
+exclusion manifest, and every V516 task's exact declared deliverable from
+Exp5782 through Exp5795. It SHALL write
+`results/experiment_5796_transition_v517.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT select canonical evidence by numeric-prefix glob order or mtime, and
+SHALL declare
+`inference_substrate="local_exact_artifact_and_conductor_reconciliation_no_llm"`.
+
+The workflow SHALL define canonical identity as the tuple `(milestone, task_id, declared_deliverable)`.
+It SHALL build an explicit V516
+task-to-declared-deliverable matrix from the completion ledger, hash each exact
+declared artifact when it exists, and report same-number result files only as
+aliases. Missing declared deliverables for Exp5788 and Exp5792 SHALL remain
+missing when the completion ledger and conductor evidence identify those
+tasks; they SHALL NOT be replaced by same-number aliases or classified as
+scientific nulls.
+
+The workflow SHALL preserve the V516 outcome taxonomy as disjoint classes.
+Exp5782, Exp5784, Exp5785, Exp5790, and Exp5794 SHALL be recorded as
+complete-positive task ids. Exp5783 SHALL be recorded as a complete-null task
+id because it accepted no source delta. Exp5786 SHALL be recorded as a
+complete-negative task id because the stream completed but was not ready after
+360/360 Qwen truncations. Exp5791 SHALL be recorded as a primary
+failed-delivery task id because the conductor recorded three bootstrap-ordered
+output delivery failures; its exact artifact status SHALL still disclose the
+blocked-precondition verdict. Exp5787, Exp5789, and Exp5793 SHALL be recorded as blocked-gate task ids.
+Exp5788 and Exp5792 SHALL be recorded as missing task ids. Exp5790 SHALL also
+be recorded as no-solve because its admission contract carries no ARC solve
+credit. Retired prior scopes disclosed by Exp5795 SHALL be recorded only in
+`retired_task_ids`.
+
+The workflow SHALL append V516 completion evidence exactly once only if no V516
+completion block is present. When completion history already contains one or
+more V516 blocks, it SHALL set `research_complete_append_count=0`, leave
+`research-complete.yaml` byte-for-byte unchanged, preserve duplicate history
+without deleting, sorting, deduplicating, or rewriting it, and record duplicate
+history diagnostics.
+
+The workflow SHALL collision-check Exp5796-Exp5808 across the active roadmap,
+optional next roadmap, completion history, vNEXT proposal document, exclusion
+manifest, and results directory. Planned references in the active roadmap and
+vNEXT proposal MAY be recorded as allowed allocation references. Any unowned
+completion-history, exclusion-manifest, next-roadmap, or result collision SHALL
+make the artifact terminal `blocked:` with bare scalar
+`next_range_collision_count > 0`. A collision-free allocation SHALL require
+bare integer `next_range_collision_count=0` even when
+`research-roadmap-next.yaml` is absent because the active roadmap has already
+been activated.
+
+The artifact SHALL include, at minimum, `field_principles`, bare `status`,
+`preconditions_checked`, `milestone_from`, `milestone_to`,
+`declared_deliverable_matrix`, `canonical_artifact_hashes`,
+`same_number_alias_groups`, `conductor_outcomes`,
+`positive_result_task_ids`, `scientific_null_task_ids`,
+`negative_result_task_ids`, `blocked_precondition_task_ids`,
+`blocked_gate_task_ids`, `failed_delivery_task_ids`, `missing_task_ids`,
+`retired_task_ids`, `no_solve_task_ids`, `archived_task_ids`,
+`research_complete_append_count`, `duplicate_history_diagnostics`,
+`next_task_range`, bare `next_range_collision_count`, `docs_reconciled`,
+`research_roadmap_unchanged`, `conductor_unchanged`, `inference_substrate`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every top-level field SHALL have a non-empty
+`field_principles` entry. `next_task_range` SHALL equal `exp5796-exp5808`,
+`next_range_collision_count` SHALL be a bare integer,
+`research_roadmap_unchanged` SHALL be `true`, `conductor_unchanged` SHALL be
+`true`, and `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+#### SCENARIO-REPORT-5796: Exact V516 Deliverables Archive Into V517
+
+**Given** V516's declared deliverable matrix is unambiguous
+**And** exact declared artifacts exist for every V516 task except Exp5788 and
+Exp5792
+**And** conductor evidence records the completed, negative, failed-delivery,
+blocked-gate, and missing classes described by REQ-REPORT-5796
+**And** Exp5796-Exp5808 have no unowned result, completion-history,
+next-roadmap, or exclusion-manifest collisions
+**When** the Exp5796 workflow runs
+**Then** it emits a complete transition artifact using exact declared
+deliverables as canonical evidence, archives all fourteen V516 task ids,
+records canonical hashes for existing declared deliverables, keeps Exp5788 and
+Exp5792 missing, preserves every outcome class as disjoint, records
+`research_complete_append_count=0` when V516 is already present, and leaves the
+active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5796-COLLISION-BLOCK: Occupied V517 Ids Fail Closed
+
+**Given** any unowned result path, completion-history entry, next-roadmap
+entry, or exclusion-manifest entry already occupies an Exp5796-Exp5808 id
+**When** the Exp5796 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records a bare integer
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+completion history to hide the collision.
+
+#### SCENARIO-REPORT-5796-IDENTITY-BLOCK: Ambiguous V516 Mapping Fails Closed
+
+**Given** a V516 completion block is absent, disagrees with another V516 block,
+declares a different deliverable for an expected task, or repeats a task id
+with incompatible deliverables
+**When** the Exp5796 workflow builds canonical identities
+**Then** it emits a terminal `blocked:` artifact and records the mapping
+failure without falling back to numeric-prefix glob selection.
+
+#### SCENARIO-REPORT-5796-FIELD-PRINCIPLES: Every Required Field Is Annotated And Stable
+
+**Given** the Exp5796 artifact is emitted
+**When** the artifact schema is validated
+**Then** every top-level field has a non-empty `field_principles` entry, the
+checksum is stable, `next_range_collision_count` remains a bare integer,
+`inference_substrate` is
+`local_exact_artifact_and_conductor_reconciliation_no_llm`, and the terminal
+verdict prefix is machine-readable.
+
+## Implementation Status (REQ-REPORT-5796)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5796 | Implemented (`python/carnot/experiment_5796_transition_v517.py`, `results/experiment_5796_transition_v517.json`) | Implemented (`tests/python/test_experiment_5796_transition_v517.py`) |
