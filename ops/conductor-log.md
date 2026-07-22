@@ -14108,3 +14108,18 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 13:25 UTC | Gated on Exp5792 selector benefit: measure selecte | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.sele |
 | 2026-07-22 13:51 UTC | Board-state hash ledger and operator handoff packe | OK | 91 passed, 1 warning in 10.48s |
 | 2026-07-22 14:35 UTC | Reconcile .516 evidence, phase telemetry, specs, o | OK | 86 passed, 1 warning in 11.48s |
+| 2026-07-22 15:49 UTC | Plan milestone 2026.07.517 | OK | 4 tasks proposed |
+| 2026-07-22 15:51 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 15:53 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 15:55 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 15:58 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:00 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:02 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:04 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:06 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:08 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:11 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:13 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:15 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:17 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-22 16:19 UTC | Milestone 2026.07.517 activated | OK | 4 tasks queued |
