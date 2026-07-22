@@ -1,0 +1,60 @@
+{
+  "experiment": 5787,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-22",
+  "started_at": "2026-07-22T11:08:22.261782+00:00",
+  "finished_at": "2026-07-22T11:08:22.261782+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5786 clean drift headroom: run continuous typed-constraint skill learning A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constraint-stream.stream_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5786-sota-hardness-controlled-constraint-stream",
+      "artifact_field": "stream_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp5786-sota-hardness-controlled-constraint-stream",
+      "artifact_field": "real_sota_model_count",
+      "op": ">=",
+      "expected": 3,
+      "actual": 3,
+      "passed": true,
+      "reason": "actual=3 >= expected=3"
+    },
+    {
+      "upstream": "exp5786-sota-hardness-controlled-constraint-stream",
+      "artifact_field": "exact_label_coverage",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp5786-sota-hardness-controlled-constraint-stream",
+      "artifact_field": "satisfiable_drift_count",
+      "op": ">=",
+      "expected": 30,
+      "actual": 25,
+      "passed": false,
+      "reason": "actual=25 >= expected=30"
+    },
+    {
+      "upstream": "exp5786-sota-hardness-controlled-constraint-stream",
+      "artifact_field": "protected_fact_distortion_count",
+      "op": ">=",
+      "expected": 0,
+      "actual": 10,
+      "passed": true,
+      "reason": "actual=10 >= expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

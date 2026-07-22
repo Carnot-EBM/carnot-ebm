@@ -14086,3 +14086,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-22 08:33 UTC | Time-windowed literature freshness receipt | OK | 88 passed, 2 warnings in 11.17s |
 | 2026-07-22 09:30 UTC | Qualify the existing exact-deliverable index with  | OK | 93 passed, 1 warning in 35.64s |
 | 2026-07-22 10:15 UTC | Gated on Exp5784 readiness: build a sealed hardnes | OK | 87 passed, 1 warning in 20.73s |
+| 2026-07-22 11:06 UTC | Gated on Exp5785 fixture readiness: run the three- | OK | 85 passed, 1 warning in 18.78s |
