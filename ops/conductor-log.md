@@ -14169,3 +14169,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 07:59 UTC | Archive terminal .519 evidence and allocate .520 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5837_transit |
 | 2026-07-23 08:26 UTC | Dated primary-source and implementation receipt fo | OK | 88 passed, 2 warnings in 7.84s |
 | 2026-07-23 08:54 UTC | Independent .519 row-level evidence and lifecycle  | OK | 88 passed, 1 warning in 83.09s (0:01:23) |
+| 2026-07-23 09:14 UTC | Gated on Exp5839 stream qualification: exact causa | OK | 86 passed, 1 warning in 9.62s |
