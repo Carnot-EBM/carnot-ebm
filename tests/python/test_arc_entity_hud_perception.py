@@ -123,3 +123,57 @@ class TestComposePerception:
         res = perceive_entities(_scene((8, 8), 0), [])
         assert res.mover is None and res.hud_bands == []
         assert isinstance(res.text, str) and res.text
+
+
+class TestReauthorFraming:
+    """The REQ-ARC-WMTE-5834 re-authoring fix: retract HUD-band rules + name player/target + override the
+    counter-fixation framing (the end-to-end gate showed adding perception ALONGSIDE the wrong rules fails).
+    Spec: REQ-ARC-WMTE-5834."""
+
+    def _percept(self):
+        from carnot.agentic.arc_entity_hud_perception import HudBand, Mover, PerceptionResult
+
+        return PerceptionResult(
+            text="...",
+            objects=[
+                {"id": 0, "color": 9, "row": 8, "col": 8, "size": 4, "role": "player"},
+                {"id": 1, "color": 14, "row": 2, "col": 30, "size": 6, "role": "object"},
+                {"id": 2, "color": 2, "row": 50, "col": 5, "size": 3, "role": "object"},
+            ],
+            hud_bands=[HudBand(axis="row", index=63, direction="fill", changed_fraction=1.0, monotone_ratio=1.0)],
+            mover=Mover(color=9, alignment=1.0, evidence=10),
+        )
+
+    def test_retracts_hud_coordinate_rule(self):
+        from carnot.agentic.arc_entity_hud_perception import reauthor_framing
+
+        rules = "Action 6 at (x, y) changes (63, x) to 15.\nActions 1 and 3 move the token."
+        cr, block = reauthor_framing(rules, self._percept())
+        assert "63" not in cr  # the HUD-coordinate rule removed
+        assert "move the token" in cr  # a genuine rule kept
+        assert "DISREGARD" in block and "(63, x)" in block
+
+    def test_retracts_row_keyword_rule(self):
+        from carnot.agentic.arc_entity_hud_perception import reauthor_framing
+
+        cr, _ = reauthor_framing("Actions 1 and 6 change cells in row 63 from 0 to 1.", self._percept())
+        assert cr == "(no reliable rules yet)"
+
+    def test_keeps_noncoordinate_rule(self):
+        from carnot.agentic.arc_entity_hud_perception import reauthor_framing
+
+        cr, _ = reauthor_framing("Actions 1 and 3 clear cells with value 6.", self._percept())
+        assert "value 6" in cr  # HUD band is row 63, rule references no coord 63 -> kept
+
+    def test_names_player_and_nearest_target(self):
+        from carnot.agentic.arc_entity_hud_perception import reauthor_framing
+
+        _, block = reauthor_framing("some rule about the board", self._percept())
+        assert "PLAYER: color 9" in block
+        assert "candidate TARGET" in block and "color 14" in block  # color 14 is nearest to the player
+
+    def test_override_language_present(self):
+        from carnot.agentic.arc_entity_hud_perception import reauthor_framing
+
+        _, block = reauthor_framing("r", self._percept())
+        assert "OVERRIDES" in block and "IGNORE these STATUS COUNTERS" in block

@@ -5997,3 +5997,9 @@ The critical path for milestone .250:
 - theme: synthesis-heavy closeout led by the dated evidence receipt under coarse timing reconstruction
 - key result: honest operational result -- the only compute-bound entry recorded 0.01 minutes and was not classified as GPU-idle; no concurrent multi-model task is supplied, so no missed DualGPURunner engagement is established
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.521
+- exp_range: no data available this milestone
+- theme: long synthesis conformance and multi-family extraction exposed missing phase telemetry
+- key result: honest operational negative -- runtime ordering is clear, but the bounded data cannot causally explain the 20.4-minute compute path, grade GPU efficiency over task lifetimes, or evaluate runner selection for concurrent model loads
+- acceptance: no data available this milestone

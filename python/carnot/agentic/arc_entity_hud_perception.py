@@ -34,6 +34,7 @@ frame) transitions; nothing here reads game source or a win predicate.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -337,3 +338,97 @@ def perceive_entities(
     return PerceptionResult(
         text="\n".join(lines), objects=objects, hud_bands=hud_bands, mover=mover
     )
+
+
+# --- Re-authoring (REQ-ARC-WMTE-5834 fix) ---------------------------------------------------------------
+# The end-to-end gate (REQ-ARC-WMTE-5834) found that emitting detector perception ALONGSIDE the model's own
+# WRONG learned rules does NOT flip goal induction (0 correct, 2 partial vs the oracle's 7/8): the model
+# follows a rule it already believes ("action 6 changes (63,x) to 15") even when the detector correctly flags
+# that band as a counter to ignore. The oracle got 7/8 because it REPLACED the framing. So re-authoring must
+# (a) RETRACT any learned rule that references a detected HUD band, (b) NAME the mover's nearest object as the
+# candidate target, and (c) state that the goal involves the player + a target, NOT the counter.
+
+_CHANGE_WORDS = ("change", "set", "fill", "toggle", "clear", "recolor", "turn", "->", "consume", "deplete")
+
+
+def _line_references_hud(line: str, bands: list[HudBand]) -> bool:
+    """True if a rule LINE is about a detected HUD band: it describes a cell change AND references the band's
+    index as a coordinate (a `(R, ...)`/`(..., R)` tuple) or via a `row R`/`col R` keyword. This is what
+    lets us retract exactly the HUD-fixation rules (bp35 'changes (63,x) to 15', lf52 'change cells in row 0')
+    without touching genuine game rules."""
+    low = line.lower()
+    if not any(w in low for w in _CHANGE_WORDS):
+        return False
+    nums = {int(n) for n in re.findall(r"\d+", line)}
+    for b in bands:
+        if re.search(rf"\b(?:row|column|col)\s*{b.index}\b", low):
+            return True
+        if b.index in nums and re.search(
+            rf"\(\s*{b.index}\s*,|,\s*{b.index}\s*\)", line
+        ):
+            return True
+    return False
+
+
+def _candidate_targets(percept: PerceptionResult, *, k: int = 2) -> tuple[list[dict], Optional[dict]]:
+    """The player object (if any) and the k non-HUD objects nearest to it (or the k largest if no player) --
+    the detector's best guess at what the player should be routed toward."""
+    player = next((o for o in percept.objects if o.get("role") == "player"), None)
+    objs = [o for o in percept.objects if o.get("role") == "object"]
+    if player is not None and objs:
+        px, py = player["col"], player["row"]
+        objs = sorted(objs, key=lambda o: (o["col"] - px) ** 2 + (o["row"] - py) ** 2)
+    else:
+        objs = sorted(objs, key=lambda o: -int(o.get("size", 0)))
+    return objs[:k], player
+
+
+def reauthor_framing(rules_text: str, percept: PerceptionResult) -> tuple[str, str]:
+    """Re-author the model's framing from the detector output (REQ-ARC-WMTE-5834 fix). Returns
+    (corrected_rules, perception_block): the rules with HUD-band-referencing lines REMOVED, and a strong
+    perception block that OVERRIDES the counter-fixation -- naming the player, its candidate target(s), the
+    counters to ignore, and the retracted rules. Feed corrected_rules as the goal prompt's RULES and
+    perception_block as its PERCEPTION so the correction replaces, not augments, the wrong framing."""
+    bands = percept.hud_bands
+    kept: list[str] = []
+    retracted: list[str] = []
+    for line in rules_text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if bands and _line_references_hud(stripped, bands):
+            retracted.append(stripped)
+        else:
+            kept.append(stripped)
+    corrected_rules = "\n".join(kept) if kept else "(no reliable rules yet)"
+
+    targets, player = _candidate_targets(percept)
+    lines = ["PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):"]
+    if player is not None:
+        lines.append(
+            f"- PLAYER: color {player['color']} at row {player['row']} col {player['col']}; "
+            f"it MOVES with actions 1/2/3/4."
+        )
+    elif percept.mover is not None:
+        lines.append(f"- A PLAYER entity (color {percept.mover.color}) moves with actions 1/2/3/4.")
+    for o in targets:
+        lines.append(
+            f"- candidate TARGET: object color {o['color']} at row {o['row']} col {o['col']} "
+            f"(the goal likely requires the player to reach/act on it)."
+        )
+    if bands:
+        desc = ", ".join(f"{b.axis} {b.index}" for b in bands)
+        lines.append(
+            f"- IGNORE these STATUS COUNTERS ({desc}): they advance on EVERY action and are a score/"
+            f"budget readout, NOT the game board. Filling or changing them is NOT the objective."
+        )
+    if retracted:
+        lines.append(
+            "- DISREGARD these earlier notes -- they describe a counter advancing as a side-effect, not the "
+            "objective: " + " | ".join(retracted)
+        )
+    lines.append(
+        "- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), "
+        "NOT filling/changing a counter band."
+    )
+    return corrected_rules, "\n".join(lines)
