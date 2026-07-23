@@ -23872,3 +23872,116 @@ immutability gates all pass.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5640 | Planned (`python/carnot/pipeline/fr11_shadow_adapter.py`, `python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py`, `results/experiment_5640_fr11_shadow_pipeline_integration.json`) | Planned (`tests/python/test_fr11_shadow_adapter.py`, `tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py`) |
+
+## REQ-LEARN-5825: Certified Adaptive Memory Event/State Contract
+
+The self-learning tier SHALL provide Exp5825, a deterministic no-LLM certified
+adaptive-memory contract builder at
+`python/carnot/experiment_5825_certified_adaptive_memory_contract.py` that
+writes `results/experiment_5825_certified_adaptive_memory_contract.json` by
+adapting, not regenerating, the sealed Exp5761 exact acquisition benchmark,
+Exp5762 query-driven lifecycle, Exp5763 dependent-task acquisition stream, and
+Exp5785 hardness/surface fixture. The experiment substrate SHALL be
+`aggregation_from_upstream_artifacts`.
+
+Before constructing the canonical contract, Exp5825 SHALL hash every upstream
+JSON and JSONL artifact, verify complete or blocked terminal verdict prefixes,
+exact-validator or solver-version receipts, row counts, train/dev/science or
+future split hashes, disk and RAM probes, and writable output paths. A missing,
+unreadable, malformed, stale, or corrupt upstream SHALL write the same result
+path as a terminal blocked artifact with readiness `0.0` and explicit schema
+errors rather than narrating partial readiness.
+
+The contract SHALL define one typed canonical event vocabulary covering
+`observation`, `exact_membership_outcome`, `minimal_core_evidence`,
+`constraint_birth`, `quarantine`, `promotion`, `supersession`, `recurrence`,
+`collision_split`, `rollback`, `protected_prefix_replay`, and
+`sealed_future_evaluation`. Every canonical event
+SHALL include a stable event id, event type, causal sequence index, parent state
+id, resulting state id, family/hardness/surface/change axes, immutable payload
+hash, source artifact hash, source row or receipt hash, oracle provenance, and
+explicit train/dev/science/future visibility. Every canonical state SHALL
+include a versioned immutable state id, state hash, parent state hash, mutation
+receipt hash, lifecycle operation, source artifact, source row or receipt hash,
+visibility, and axes.
+
+Adapters for Exp5761, Exp5762, Exp5763, and Exp5785 SHALL round-trip every
+available sealed row or lifecycle receipt through the canonical event/state
+hash rules. Contract validation SHALL reject non-monotone chronology, hidden
+science or future exact-label access, missing hashes, duplicate identities,
+state mutation without a receipt, forged oracle labels, collision without a
+split receipt, stale supersession, rollback mismatch, and missing
+protected-prefix evidence. `adaptive_memory_contract_ready_score` SHALL be a
+bare top-level scalar equal to `1.0` only when all upstream adapters close,
+round-trip hashes match, leakage and adversarial tests pass, and
+`schema_errors` is empty; otherwise it SHALL be `0.0` with a terminal
+`blocked:` honest verdict.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `canonical_event_schema`,
+`canonical_state_schema`, `adapter_round_trip_receipts`,
+`chronology_and_visibility_checks`, `adversarial_contract_results`,
+`adaptive_memory_contract_ready_score`, `schema_errors`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Field provenance SHALL record the principle for every
+required field and SHALL distinguish upstream-artifact, schema-rule, and
+adversarial-test sources.
+
+Required field principles:
+
+- `status`: A terminal contract state distinguishes reusable infrastructure from an incomplete schema.
+- `preconditions_checked`: Upstream hashes, verdicts, validators, resources, and writable paths prevent fabricated readiness.
+- `upstream_artifact_hashes`: Exact hashes bind the contract to the credited acquisition evidence.
+- `canonical_event_schema`: One typed event vocabulary prevents each experiment from redefining learning history.
+- `canonical_state_schema`: Versioned immutable state identities make promotion, supersession, and rollback auditable.
+- `adapter_round_trip_receipts`: Round-trip hashes prove existing evidence was adapted rather than regenerated.
+- `chronology_and_visibility_checks`: Monotone sequence and split visibility prevent future-label leakage.
+- `adversarial_contract_results`: Forged, colliding, stale, and rollback-mismatched events must fail closed.
+- `adaptive_memory_contract_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5826 to build on this boundary.
+- `schema_errors`: Explicit errors prevent a partial contract from being narrated as ready.
+- `duration_s`: Measured wall time exposes bootstrap-only execution.
+- `inference_substrate`: `aggregation_from_upstream_artifacts` declares no LLM or new scientific inference.
+- `verifier_is_oracle`: True records that exact solvers and validators remain circular correctness authority.
+- `field_provenance`: Every field maps to an upstream artifact, schema rule, or adversarial test.
+- `test_commands`: Commands document round-trip, leakage, schema, and failure-closed tests.
+- `test_exit_codes`: Exit codes prevent failed contract checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects later adapter, schema, or upstream drift.
+- `honest_verdict`: A `complete:` or `blocked:` prefix provides a terminal infrastructure outcome.
+
+### SCENARIO-LEARN-5825-ADAPTERS: Upstream Evidence Round-Trips Through One Vocabulary
+
+**Given** sealed Exp5761, Exp5762, Exp5763, and Exp5785 artifacts and row files
+with complete terminal verdicts
+**When** Exp5825 adapts their rows and lifecycle receipts
+**Then** every source row or receipt has one canonical event id, payload hash,
+source artifact hash, source row or receipt hash, visibility marker, and
+round-trip receipt
+**And** the adapter hashes match the canonical event/state replay hashes without
+benchmark regeneration or learner access.
+
+### SCENARIO-LEARN-5825-FAIL-CLOSED: Contract Rejects Leakage, Forgery, And Bad State Edges
+
+**Given** adversarial canonical events with hidden science-label access, forged
+oracle labels, collision without split, stale supersession, rollback mismatch,
+and missing protected-prefix evidence
+**When** Exp5825 validates the contract
+**Then** every adversarial case fails closed with a typed schema error
+**And** no failed adversarial receipt can leave
+`adaptive_memory_contract_ready_score` at `1.0`.
+
+### SCENARIO-LEARN-5825-ARTIFACT: Readiness Is A Bare Scalar Over Clean Receipts
+
+**Given** all upstream preconditions, adapter round-trip receipts, chronology
+checks, visibility checks, schema checks, and adversarial controls pass
+**When** Exp5825 writes its terminal artifact
+**Then** `adaptive_memory_contract_ready_score` is the bare scalar `1.0`,
+`inference_substrate` equals `aggregation_from_upstream_artifacts`,
+`verifier_is_oracle=true`, `schema_errors=[]`, and `honest_verdict` starts with
+`complete:`.
+
+## Implementation Status (Exp 5825)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5825 | Planned (`python/carnot/experiment_5825_certified_adaptive_memory_contract.py`, `results/experiment_5825_certified_adaptive_memory_contract.json`) | Planned (`tests/python/test_experiment_5825_certified_adaptive_memory_contract.py`) |
