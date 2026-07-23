@@ -14180,3 +14180,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 14:40 UTC | Exact replay substrate contract and false-compute- | OK | cache hit: 81 passed, 1 warning in 12.47s |
 | 2026-07-23 15:31 UTC | Current-SOTA causal-pair embedding extraction acro | OK | 87 passed, 1 warning in 15.09s |
 | 2026-07-23 16:02 UTC | Claim-flip, evaluator-swap, and identity-shortcut  | OK | 87 passed, 1 warning in 11.98s |
+| 2026-07-23 16:04 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
