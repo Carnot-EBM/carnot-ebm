@@ -44873,3 +44873,150 @@ are present, and the checksum is stable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5838 | Implemented (`python/carnot/experiment_5838_v520_source_delta_ingestion.py`, `results/experiment_5838_v520_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5838_v520_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5849: V521 Transition Archives Terminal V520 Without Evidence Laundering
+
+The Exp5849 workflow SHALL read the terminal `.520` completion ledger, active
+roadmap, optional `research-roadmap-next.yaml`, vNEXT proposal document,
+conductor log, exclusion manifest, Exp5837 through Exp5840 declared
+deliverables, `scripts/evidence_index_collision_preflight.py`,
+`scripts/in_process_doc_reconcile.py`, and this spec. It SHALL write
+`results/experiment_5849_transition_v521.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL resolve activated evidence only by the exact tuple
+`(milestone, task_id, declared_deliverable)`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL parse both roadmap inputs when present; hash completion
+history, conductor log, exclusion manifest, helper scripts, spec, and all four
+declared `.520` deliverables; record disk, RAM, and writable atomic-output
+receipts; and fail closed when the exact `.520` activated identity set is
+ambiguous, a declared deliverable is missing or malformed, or a protected file
+changes. It SHALL append `.520` to `research-complete.yaml` exactly once only
+when the exact `.520` milestone block is absent, and otherwise SHALL leave
+historical completion blocks byte-for-byte unchanged without deduplicating,
+normalizing, reordering, or rewriting history.
+
+The workflow SHALL classify exactly Exp5837 through Exp5840 into disjoint
+classes: blocked, clean zero-delta, mixed-qualified, clean-ready, missing, and
+proposal-only. Exp5837 SHALL remain blocked when its artifact status or
+honest-verdict records blocked transition preconditions, including
+repository-wide test or spec failures. Exp5838 SHALL be clean zero-delta only
+when it completes with `accepted_finding_count=0` and
+`references_modified=false`. Exp5839 SHALL be mixed-qualified when exact stream
+and structural-acquisition scores are 1.0 while lifecycle and replay scores are
+0.0 or promotion classes preserve disqualification/provisional status. Exp5840
+SHALL be clean-ready only when its exact counterfactual fixture is complete and
+`counterfactual_fixture_ready_score=1.0`. Blocked or disqualified evidence SHALL
+NOT appear in clean-ready or headline-eligible lists.
+
+The workflow SHALL independently run the live adversarial verifier on Exp5837
+through Exp5840 and record, per artifact, the command, exit code, receipt hash,
+CRITICAL findings, WARN findings, and headline eligibility. Fresh verifier
+receipts SHALL preserve existing blocked, mixed, disqualified, or clean-ready
+reasons without rewriting historical artifacts or treating an upstream block as
+a clean success. Repository-wide test and spec failures MAY be recorded as
+pre-existing debt; the transition SHALL fail only for ambiguity, missing owned
+evidence, append failure, collision, protected-file mutation, verifier receipt
+failure, or focused transition-test failure.
+
+The workflow SHALL record Exp5841 through Exp5848 as
+`reserved_unactivated_task_ids`. It SHALL scan active and optional next
+roadmaps, completion history, vNEXT proposals, exclusion manifest, results, and
+prior transition allocation artifacts for Exp5849 through Exp5862.
+Active-roadmap and vNEXT proposal mentions MAY be recorded as allowed
+allocation references, and the Exp5849 result path MAY be owned by this
+workflow. Any unowned result file, completion-history entry,
+exclusion-manifest entry, optional next-roadmap entry, or prior-transition
+allocation that occupies Exp5849 through Exp5862 SHALL make the artifact
+terminal `blocked:` with bare integer `next_range_collision_count > 0`. A
+complete allocation SHALL require bare `next_range_collision_count=0`.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_identity_matrix`,
+`adversarial_verifier_receipts`, `outcome_classification`,
+`blocked_and_disqualified_evidence_preserved`,
+`reserved_unactivated_task_ids`, `pre_existing_repository_debt`,
+`research_complete_append_count`, `next_task_range`, bare
+`next_range_collision_count`, `docs_reconciled`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty principle entry. The
+transition-owned reconciliation for this task SHALL be limited to spec, test,
+implementation, and result artifacts; operator-owned status, changelog, and
+traceability reconciliation may be explicitly deferred when the task prompt
+forbids touching those files.
+
+Required field principles:
+
+- `status`: principle "A normalized terminal state distinguishes a completed handoff from a bootstrap artifact."
+- `preconditions_checked`: principle "Exact hashes, identity checks, resources, and focused-test availability prevent ambiguous archival."
+- `milestone_transition`: principle "Explicit source and destination milestones prevent prefix aliasing."
+- `activated_identity_matrix`: principle "Declared paths plus conductor outcomes define the four activated `.520` identities."
+- `adversarial_verifier_receipts`: principle "Fresh verifier commands preserve the live artifact-quality authority."
+- `outcome_classification`: principle "Disjoint evidence classes stop blocked or disqualified work becoming success."
+- `blocked_and_disqualified_evidence_preserved`: principle "True proves the handoff did not launder Exp5837 or Exp5839 branch decisions."
+- `reserved_unactivated_task_ids`: principle "Proposal-only Exp5841-Exp5848 remain tombstoned."
+- `pre_existing_repository_debt`: principle "Unrelated global failures are recorded without being mistaken for task-owned failure."
+- `research_complete_append_count`: principle "An exact count prevents missing or duplicate history."
+- `next_task_range`: principle "A declared finite interval makes allocation auditable."
+- `next_range_collision_count`: principle "Only a bare zero authorizes Exp5849-Exp5862."
+- `docs_reconciled`: principle "Internal specs and ops summaries must match exact archived evidence."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only execution."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` identifies archival, not model inference."
+- `field_provenance`: principle "Every field traces to paths, hashes, commands, or exact roadmap records."
+- `test_commands`: principle "Recorded commands document identity, verifier, append, and collision checks."
+- `test_exit_codes`: principle "Exit codes prevent failed owned checks being narrated as passing."
+- `reproducibility_checksum`: principle "A checksum detects later ledger or allocation drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix makes the handoff terminal."
+
+#### SCENARIO-REPORT-5849: Exact V520 Evidence Archives Into V521
+
+**Given** exact `.520` completion history declares Exp5837 through Exp5840
+**And** their exact declared artifacts are readable and hashable
+**And** fresh adversarial verifier receipts are recorded for Exp5837 through
+Exp5840
+**And** Exp5849 through Exp5862 have no unowned collisions
+**When** the Exp5849 workflow runs
+**Then** it writes a complete transition artifact, classifies Exp5837 as
+blocked, Exp5838 as clean zero-delta, Exp5839 as mixed-qualified, Exp5840 as
+clean-ready, records Exp5841 through Exp5848 as reserved proposal-only ids, sets
+`research_complete_append_count=0` when `.520` history is already present, and
+leaves the active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5849-PRESERVE-BLOCKED-MIXED: Blocked And Mixed Evidence Cannot Become Clean
+
+**Given** Exp5837 records a terminal blocked transition
+**And** Exp5839 records qualified stream and structure but disqualified
+lifecycle and replay branches
+**When** the Exp5849 workflow classifies outcomes
+**Then** Exp5837 remains blocked, Exp5839 remains mixed-qualified, neither task
+appears in clean-ready or headline-eligible lists, and
+`blocked_and_disqualified_evidence_preserved=true`.
+
+#### SCENARIO-REPORT-5849-COLLISION-BLOCK: Occupied V521 Ids Fail Closed
+
+**Given** any unowned result, completion-history entry, exclusion-manifest
+entry, optional next-roadmap entry, or prior-transition allocation occupies
+Exp5849 through Exp5862
+**When** the Exp5849 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records a bare integer
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+historical evidence to hide the collision.
+
+#### SCENARIO-REPORT-5849-FIELD-PROVENANCE: Required Fields Are Auditable
+
+**Given** the Exp5849 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required field has a matching principle and field-provenance
+entry with source paths and hashes, the checksum is stable,
+`inference_substrate` equals `aggregation_from_upstream_artifacts`,
+`next_task_range` equals `exp5849-exp5862`, `next_range_collision_count` is a
+bare integer zero for the complete path, and the terminal verdict starts with
+`complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5849)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5849 | Implemented (`python/carnot/experiment_5849_transition_v521.py`, `results/experiment_5849_transition_v521.json`) | Implemented (`tests/python/test_experiment_5849_transition_v521.py`) |
