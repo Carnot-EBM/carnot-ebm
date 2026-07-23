@@ -2528,6 +2528,25 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   first-class refactor signal separate from dynamics.
 - candidate design: wire exp4020's goal-induction-and-verification into the E3 path.
 - priority: high
+- **STRONG NEW EVIDENCE 2026-07-23 (the leaderboard-winner-recipe reproduction,
+  `docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md`):** operator directed matching the
+  27-31B leaderboard leaders. We built the winners' FULL visible recipe faithfully with gemma-4-31B
+  (REQ-ARC-WMTE-5829): greedy-direct architecture (LLM picks each action, no search, no induced model) +
+  object-segmentation perception (the audit's #1 steal) + Reki/forge persistent reflection memory. On
+  bp35/lf52/sc25 (adapter-free, budget 120) it discovers 0 levels — BUT the reflection memory demonstrably
+  WORKED: the 31B genuinely reverse-engineers real dynamics and forms+pursues systematic goal hypotheses
+  (e.g. bp35 final notes: "RULES: Action 6 sets cell to 15. GOAL: Fill column 63 with 15s. PROGRESS:
+  column 63 filled"; lf52: "GOAL: Set all cells to state 1"). **It nulls ONLY because the induced GOAL is
+  WRONG** — it completes a plausible-but-incorrect win condition. This is the strongest evidence yet for
+  this gap: the winner recipe supplies a fluent goal-HYPOTHESIZER (reflection memory) but has NO goal-
+  VERIFIER; a 31B in the winners' own architecture hits precisely this wall. It also confirms
+  `experiment_5722` (31B-as-inducer null) and the 2026-07-23 triangulation (binding constraint = goal/
+  world-model induction) from a completely independent architecture. **The lever this gap names — a goal
+  verifier that checks a hypothesized goal against observed level-up transitions and REJECTS a wrong one
+  (discard "fill column 63" when it does not correlate with a level-up) — is exactly what the winner
+  recipe lacks and what Carnot's verification-first thesis is built to add.** Oracle-distinct,
+  sovereignty-safe, on Carnot's core value proposition. This is the evidence-backed highest-value ARC
+  build lever as of 2026-07-23.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
