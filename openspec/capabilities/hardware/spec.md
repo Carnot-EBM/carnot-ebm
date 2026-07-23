@@ -263,7 +263,7 @@ Required field principles:
 - `honest_verdict` begins with `parity:`, `no-change:`, or `blocked:` and
   contains no prohibited claim.
 
-**Implementation status:** Planned (Exp 5861)
+**Implementation status:** Implemented (Exp 5861)
 
 ---
 
@@ -282,7 +282,7 @@ execution receipts, CPU reference receipts disclosed as software fallback only,
 `authenticated_state_operation_parity_score=0.0`, the exact missing external
 actions for each board, and an `honest_verdict` beginning with `no-change:`.
 
-**Implementation status:** Planned (Exp 5861)
+**Implementation status:** Implemented (Exp 5861)
 
 ---
 
