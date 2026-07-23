@@ -221,13 +221,19 @@ ultimate null outcome. **Corrected picture: sc25 AND lf52 are now both clean, un
 (more search budget would not have helped either); bp35 remains the one open, genuinely budget-bound
 case.**
 
-**Broader-impact caveat, honestly disclosed and NOT verified in this pass:** this bug lives in shared
-`arc_solver_kit.py` infrastructure used by ANY `OfflineSolver` search with a `move_pruner` and >1
-candidate per node — e.g. `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited
-in CLAUDE.md's ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859"). That specific
-historical measurement was NOT re-verified as part of this fix (out of scope for this session); any
-`move_pruner`-based numbers from before 2026-07-23 should be read with this caveat rather than assumed
-unaffected.
+**Broader-impact caveat — VERIFIED CLEAN the same day (follow-up: "what next" → operator "yes" to
+checking tu93/HazardMovePruner).** This bug lives in shared `arc_solver_kit.py` infrastructure used by
+ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — the obvious other consumer
+to check was `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in CLAUDE.md's
+ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859"). Re-ran both arms post-fix via
+`scripts/arc_loop_solve.py --game tu93 --target-level 3` (hazard-prune ON, the default) and
+`--no-hazard-prune` (OFF): **ON = `states_expanded=2859`
+(`hazard_pruner_stats: {observed: 2859, pruned: 88, n_deaths: 6, lethal_mode: omni, trust: 1.0,
+specificity: 1.0}`), OFF = `states_expanded=2947`, delta = −88 — an EXACT match to the historical
+numbers in every digit.** tu93's specific measurement was never affected by the aliasing bug (its
+search apparently never hit the failure mode that corrupted lf52's). The shared, tracked per-game
+output file (`results/arc_loop_solve_tu93.json`) was restored to its pre-verification content via
+`git checkout --` afterward — these were verification runs, not a new canonical measurement.
 
 **The live-path question, answered with existing data rather than a new build.** Investigating how to
 "wire into live" led to `scripts/arc_leaderboard_eval.py` — the project's STANDING measurement engine
