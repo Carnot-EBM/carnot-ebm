@@ -23984,4 +23984,4 @@ checks, visibility checks, schema checks, and adversarial controls pass
 
 | Requirement | Python | Tests |
 |---|---|---|
-| REQ-LEARN-5825 | Planned (`python/carnot/experiment_5825_certified_adaptive_memory_contract.py`, `results/experiment_5825_certified_adaptive_memory_contract.json`) | Planned (`tests/python/test_experiment_5825_certified_adaptive_memory_contract.py`) |
+| REQ-LEARN-5825 | Implemented (`python/carnot/experiment_5825_certified_adaptive_memory_contract.py`, `results/experiment_5825_certified_adaptive_memory_contract.json`) | Implemented (`tests/python/test_experiment_5825_certified_adaptive_memory_contract.py`) |

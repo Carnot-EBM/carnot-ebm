@@ -36,6 +36,10 @@ MAX_TURNS_PER_DECISION = 12  # per operator directive, verbatim
 MAX_SEARCH_NODES = 15  # bounded lookahead search per game (cost: up to 12 LLM turns/node)
 DEPTH_CAP = 15
 CUDA_PORT = 8947
+RANDOM_SEED = 5828  # the REQ id -- llama.cpp's /completion "seed" field, threaded through
+# ToolLoopLookaheadSession -> run_tool_loop -> _completion (offset per node/turn so a
+# multi-turn decision doesn't sample identically every turn; see arc_tool_loop_lookahead
+# docstrings for the exact offset scheme).
 
 PRIOR_BASELINES = {
     "sc25": {
@@ -94,7 +98,9 @@ def main() -> None:
     for game in GAMES:
         print(f"\n=== {game} ===")
         t_game0 = time.monotonic()
-        session = ToolLoopLookaheadSession(prop, max_turns=MAX_TURNS_PER_DECISION)
+        session = ToolLoopLookaheadSession(
+            prop, max_turns=MAX_TURNS_PER_DECISION, seed=RANDOM_SEED
+        )
         solver = OfflineSolver(
             game,
             action_labels=session.action_labels,
@@ -161,10 +167,15 @@ def main() -> None:
         "inference_substrate": "live_llm_inference",
         "solve_provenance": "live_agent_self_discovery",
         "target_model": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "random_seed": None,
+        "random_seed": RANDOM_SEED,
         "random_seed_note": "OfflineSolver's best-first search is deterministic given the LLM's "
-        "responses; the LLM itself is sampled at temperature=0.2 (arc_tool_loop_lookahead._completion) "
-        "-- no separate seed control exists in this harness.",
+        "responses; the LLM itself is sampled at temperature=0.2 with this seed passed to "
+        "llama.cpp's /completion endpoint (arc_tool_loop_lookahead._completion), offset per "
+        "search-node decision and per tool-loop turn so a multi-turn decision doesn't sample "
+        "identically every turn while the whole run stays reproducible given the same seed. "
+        "temperature=0.2 (not 0.0) means seeding narrows variance rather than eliminating it "
+        "entirely -- llama.cpp's seeded sampling is deterministic per (seed, prompt) pair, but "
+        "the prompt itself changes turn-to-turn as the transcript grows.",
         "reproducibility_checksum": reproducibility_checksum,
         "duration_s": duration_s,
         "duration_note": f"Real, non-mocked run across {len(GAMES)} games, max_nodes={MAX_SEARCH_NODES}, "

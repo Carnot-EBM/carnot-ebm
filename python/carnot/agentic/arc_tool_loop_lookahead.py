@@ -190,25 +190,32 @@ def _candidates_from_payload(payload: list) -> list[Candidate]:
     return out
 
 
-def _completion(proposer: Any, prompt: str, *, max_tokens: int) -> tuple[bool, str]:
+def _completion(
+    proposer: Any, prompt: str, *, max_tokens: int, seed: Optional[int] = None
+) -> tuple[bool, str]:
     """Minimal free-text completion, same rationale as arc_reactive_verifier_filter._raw_llm_completion
-    (proposer.generate() is hardcoded for Python code synthesis, unusable for a free-text task)."""
+    (proposer.generate() is hardcoded for Python code synthesis, unusable for a free-text task).
+
+    `seed` (llama.cpp's own `/completion` "seed" field) makes the sampling reproducible given
+    the same prompt/temperature -- omitted (server default, non-reproducible) unless a caller
+    supplies one."""
     if not proposer._ensure_server():
         return False, "gpu llama-server failed to start"
     import urllib.request
 
+    payload = {
+        "prompt": prompt,
+        "n_predict": int(max_tokens),
+        "temperature": 0.2,
+        "cache_prompt": True,
+        "stop": ["\n"],
+    }
+    if seed is not None:
+        payload["seed"] = int(seed)
     try:
         req = urllib.request.Request(
             proposer._url() + "/completion",
-            data=json.dumps(
-                {
-                    "prompt": prompt,
-                    "n_predict": int(max_tokens),
-                    "temperature": 0.2,
-                    "cache_prompt": True,
-                    "stop": ["\n"],
-                }
-            ).encode(),
+            data=json.dumps(payload).encode(),
             headers={"Content-Type": "application/json"},
         )
         with urllib.request.urlopen(req, timeout=proposer.timeout) as r:
@@ -225,11 +232,16 @@ def run_tool_loop(
     proposer: Any,
     *,
     max_turns: int = MAX_TOOL_TURNS,
+    seed: Optional[int] = None,
 ) -> ToolLoopOutcome:
     """Give the model up to `max_turns` rounds to inspect the puzzle (via the safe tool
     dispatch) before it must commit to one action + a self-assessed confidence. An unparseable
     or tool-calling turn consumes budget but does not end the loop; running out of turns without
-    a committed action returns ok=False (the caller decides the fallback)."""
+    a committed action returns ok=False (the caller decides the fallback).
+
+    `seed`, when given, is passed to every completion this call makes -- offset by the turn
+    index so repeated turns within one decision don't all sample identically, while the whole
+    decision stays reproducible given the same (grid, recent, avail, seed)."""
     dispatch = _ToolDispatch(grid, recent, avail)
     transcript_lines: list[str] = []
     seen_tool_calls: set[tuple[str, str]] = set()
@@ -241,7 +253,8 @@ def run_tool_loop(
             urgency=_URGENCY_NOTE if remaining <= _URGENCY_THRESHOLD else "",
             transcript="\n".join(transcript_lines) or "(nothing yet)",
         )
-        ok, text = _completion(proposer, prompt, max_tokens=_TOOL_TOKENS)
+        turn_seed = None if seed is None else int(seed) + turn
+        ok, text = _completion(proposer, prompt, max_tokens=_TOOL_TOKENS, seed=turn_seed)
         if not ok:
             transcript_lines.append(f"[turn {turn}] completion failed: {text}")
             continue
@@ -363,9 +376,12 @@ class ToolLoopLookaheadSession:
     WARMUP_LABEL = "__TOOL_LOOP_WARMUP_SENTINEL__"
     _WARMUP_ACTION_ID = 1
 
-    def __init__(self, proposer: Any, *, max_turns: int = MAX_TOOL_TURNS) -> None:
+    def __init__(
+        self, proposer: Any, *, max_turns: int = MAX_TOOL_TURNS, seed: Optional[int] = None
+    ) -> None:
         self.proposer = proposer
         self.max_turns = max_turns
+        self.seed = seed
         self.recent: list[str] = []
         self.pruner = _DeadEndPruner()
         self._pending_confidence: dict[str, float] = {}
@@ -389,7 +405,13 @@ class ToolLoopLookaheadSession:
         except Exception:
             return []
         avail = list(getattr(frame, "available_actions", []) or range(1, 7))
-        outcome = run_tool_loop(grid, self.recent, avail, self.proposer, max_turns=self.max_turns)
+        # Offset by call count (not multiplied by max_turns) so each search-node decision gets a
+        # distinct seed while staying reproducible run-to-run given the same session seed --
+        # run_tool_loop() itself offsets further per-turn (see its docstring).
+        node_seed = None if self.seed is None else int(self.seed) + self._tool_loop_calls * 1000
+        outcome = run_tool_loop(
+            grid, self.recent, avail, self.proposer, max_turns=self.max_turns, seed=node_seed
+        )
         self._tool_loop_calls += 1
         self._transcripts.append(outcome.transcript)
         labels: list[str] = []
