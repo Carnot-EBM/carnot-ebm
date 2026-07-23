@@ -1,0 +1,1518 @@
+{
+  "arm_definitions_and_replay_parity": {
+    "arms": [
+      "reset_no_replay",
+      "all_replay",
+      "random_matched_count_replay",
+      "signature_compatible_replay"
+    ],
+    "definitions": {
+      "all_replay": {
+        "current_task_evidence": "identical_exact_prefix_and_current_task_membership_receipts",
+        "future_suffix_scorer": "identical_exact_solver_oracle",
+        "learner": "exp5827_active_discriminating_query_minimal_core_synthesis_v1",
+        "memory_cap": 64,
+        "query_budget": 6,
+        "replay_event_cap": 8,
+        "selection_rule": "all-source prior rows truncated to matched compatible count",
+        "stopping_rule": "quarantine_future_validate_promote_or_rollback_v1"
+      },
+      "random_matched_count_replay": {
+        "current_task_evidence": "identical_exact_prefix_and_current_task_membership_receipts",
+        "future_suffix_scorer": "identical_exact_solver_oracle",
+        "learner": "exp5827_active_discriminating_query_minimal_core_synthesis_v1",
+        "memory_cap": 64,
+        "query_budget": 6,
+        "replay_event_cap": 8,
+        "selection_rule": "deterministic prior-row shuffle with compatible count",
+        "stopping_rule": "quarantine_future_validate_promote_or_rollback_v1"
+      },
+      "reset_no_replay": {
+        "current_task_evidence": "identical_exact_prefix_and_current_task_membership_receipts",
+        "future_suffix_scorer": "identical_exact_solver_oracle",
+        "learner": "exp5827_active_discriminating_query_minimal_core_synthesis_v1",
+        "memory_cap": 64,
+        "query_budget": 6,
+        "replay_event_cap": 8,
+        "selection_rule": "no prior rows selected",
+        "stopping_rule": "quarantine_future_validate_promote_or_rollback_v1"
+      },
+      "signature_compatible_replay": {
+        "current_task_evidence": "identical_exact_prefix_and_current_task_membership_receipts",
+        "future_suffix_scorer": "identical_exact_solver_oracle",
+        "learner": "exp5827_active_discriminating_query_minimal_core_synthesis_v1",
+        "memory_cap": 64,
+        "query_budget": 6,
+        "replay_event_cap": 8,
+        "selection_rule": "label-blind signature-compatible prior rows",
+        "stopping_rule": "quarantine_future_validate_promote_or_rollback_v1"
+      }
+    },
+    "matched_count_parity_passed": true,
+    "parity_passed": true,
+    "sample_replay_parity_receipts": [
+      {
+        "all_count": 0,
+        "all_selected_rows_prior": true,
+        "chronology_index": 0,
+        "compatible_count": 0,
+        "future_suffix_rows_selected": 0,
+        "random_count": 0,
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-000-addition"
+      },
+      {
+        "all_count": 1,
+        "all_selected_rows_prior": true,
+        "chronology_index": 1,
+        "compatible_count": 1,
+        "future_suffix_rows_selected": 0,
+        "random_count": 1,
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-000-supersession"
+      },
+      {
+        "all_count": 2,
+        "all_selected_rows_prior": true,
+        "chronology_index": 2,
+        "compatible_count": 2,
+        "future_suffix_rows_selected": 0,
+        "random_count": 2,
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-000-recurrence"
+      },
+      {
+        "all_count": 0,
+        "all_selected_rows_prior": true,
+        "chronology_index": 3,
+        "compatible_count": 0,
+        "future_suffix_rows_selected": 0,
+        "random_count": 0,
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-001-addition"
+      },
+      {
+        "all_count": 1,
+        "all_selected_rows_prior": true,
+        "chronology_index": 4,
+        "compatible_count": 1,
+        "future_suffix_rows_selected": 0,
+        "random_count": 1,
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-001-supersession"
+      },
+      {
+        "all_count": 2,
+        "all_selected_rows_prior": true,
+        "chronology_index": 5,
+        "compatible_count": 2,
+        "future_suffix_rows_selected": 0,
+        "random_count": 2,
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-001-recurrence"
+      },
+      {
+        "all_count": 3,
+        "all_selected_rows_prior": true,
+        "chronology_index": 6,
+        "compatible_count": 3,
+        "future_suffix_rows_selected": 0,
+        "random_count": 3,
+        "replay_count": 3,
+        "row_id": "exp5826-science-finite-domain-csp-002-addition"
+      },
+      {
+        "all_count": 4,
+        "all_selected_rows_prior": true,
+        "chronology_index": 7,
+        "compatible_count": 4,
+        "future_suffix_rows_selected": 0,
+        "random_count": 4,
+        "replay_count": 4,
+        "row_id": "exp5826-science-finite-domain-csp-002-supersession"
+      },
+      {
+        "all_count": 5,
+        "all_selected_rows_prior": true,
+        "chronology_index": 8,
+        "compatible_count": 5,
+        "future_suffix_rows_selected": 0,
+        "random_count": 5,
+        "replay_count": 5,
+        "row_id": "exp5826-science-finite-domain-csp-002-recurrence"
+      },
+      {
+        "all_count": 3,
+        "all_selected_rows_prior": true,
+        "chronology_index": 9,
+        "compatible_count": 3,
+        "future_suffix_rows_selected": 0,
+        "random_count": 3,
+        "replay_count": 3,
+        "row_id": "exp5826-science-finite-domain-csp-003-addition"
+      },
+      {
+        "all_count": 4,
+        "all_selected_rows_prior": true,
+        "chronology_index": 10,
+        "compatible_count": 4,
+        "future_suffix_rows_selected": 0,
+        "random_count": 4,
+        "replay_count": 4,
+        "row_id": "exp5826-science-finite-domain-csp-003-supersession"
+      },
+      {
+        "all_count": 5,
+        "all_selected_rows_prior": true,
+        "chronology_index": 11,
+        "compatible_count": 5,
+        "future_suffix_rows_selected": 0,
+        "random_count": 5,
+        "replay_count": 5,
+        "row_id": "exp5826-science-finite-domain-csp-003-recurrence"
+      },
+      {
+        "all_count": 6,
+        "all_selected_rows_prior": true,
+        "chronology_index": 12,
+        "compatible_count": 6,
+        "future_suffix_rows_selected": 0,
+        "random_count": 6,
+        "replay_count": 6,
+        "row_id": "exp5826-science-finite-domain-csp-004-addition"
+      },
+      {
+        "all_count": 7,
+        "all_selected_rows_prior": true,
+        "chronology_index": 13,
+        "compatible_count": 7,
+        "future_suffix_rows_selected": 0,
+        "random_count": 7,
+        "replay_count": 7,
+        "row_id": "exp5826-science-finite-domain-csp-004-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 14,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-004-recurrence"
+      },
+      {
+        "all_count": 6,
+        "all_selected_rows_prior": true,
+        "chronology_index": 15,
+        "compatible_count": 6,
+        "future_suffix_rows_selected": 0,
+        "random_count": 6,
+        "replay_count": 6,
+        "row_id": "exp5826-science-finite-domain-csp-005-addition"
+      },
+      {
+        "all_count": 7,
+        "all_selected_rows_prior": true,
+        "chronology_index": 16,
+        "compatible_count": 7,
+        "future_suffix_rows_selected": 0,
+        "random_count": 7,
+        "replay_count": 7,
+        "row_id": "exp5826-science-finite-domain-csp-005-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 17,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-005-recurrence"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 18,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-006-addition"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 19,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-006-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 20,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-006-recurrence"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 21,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-007-addition"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 22,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-007-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 23,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-007-recurrence"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 24,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-008-addition"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 25,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-008-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 26,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-008-recurrence"
+      },
+      {
+        "all_count": 0,
+        "all_selected_rows_prior": true,
+        "chronology_index": 27,
+        "compatible_count": 0,
+        "future_suffix_rows_selected": 0,
+        "random_count": 0,
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-009-addition"
+      },
+      {
+        "all_count": 1,
+        "all_selected_rows_prior": true,
+        "chronology_index": 28,
+        "compatible_count": 1,
+        "future_suffix_rows_selected": 0,
+        "random_count": 1,
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-009-supersession"
+      },
+      {
+        "all_count": 2,
+        "all_selected_rows_prior": true,
+        "chronology_index": 29,
+        "compatible_count": 2,
+        "future_suffix_rows_selected": 0,
+        "random_count": 2,
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-009-recurrence"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 30,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-010-addition"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 31,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-010-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 32,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-010-recurrence"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 33,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-011-addition"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 34,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-011-supersession"
+      },
+      {
+        "all_count": 8,
+        "all_selected_rows_prior": true,
+        "chronology_index": 35,
+        "compatible_count": 8,
+        "future_suffix_rows_selected": 0,
+        "random_count": 8,
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-011-recurrence"
+      }
+    ],
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.arm_definitions"
+  },
+  "compatible_replay_credited": true,
+  "credit_gates": {
+    "all_passed": true,
+    "forward_lcb_positive": true,
+    "recurrence_improves": true,
+    "resource_within_cap": true,
+    "retention_noninferior_to_all_replay": true,
+    "unsafe_transfer_zero": true
+  },
+  "duration_s": 3.615075,
+  "experiment": 5829,
+  "experiment_id": "experiment_5829_transfer_selective_replay_audit",
+  "field_provenance": {
+    "arm_definitions_and_replay_parity": {
+      "principle": "Matched counts, budgets, learner, and cap isolate selection quality.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes bootstrap-only audits.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every aggregate traces to held-out episodes and replay receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "forward_transfer_metrics": {
+      "principle": "First-exposure performance measures useful reuse rather than retention.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "heldout_split_and_leakage_receipts": {
+      "principle": "Family/surface isolation is required for a transfer claim.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix states positive, null, negative, or blocked outcome honestly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`aggregation_from_upstream_artifacts` plus exact replay declares no LLM inference.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "paired_deltas_and_ci95": {
+      "principle": "Paired intervals quantify replay effects without point-estimate promotion.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Gate, split, headroom, resource, and checkpoint checks prevent fabricated transfer.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "recurrence_recovery_metrics": {
+      "principle": "Reappearing regimes test durable rather than one-pass memory.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "replay_resource_accounting": {
+      "principle": "Events, bytes, latency, and cap pressure make transfer cost explicit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects split, signature, replay, or metric drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "retention_and_forgetting_metrics": {
+      "principle": "Old-regime performance measures stability separately from transfer.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "status": {
+      "principle": "A terminal audit state distinguishes complete null evidence from an incomplete replay.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "task_signature_and_compatibility_rule": {
+      "principle": "A frozen label-blind rule prevents science-label selection.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document parity, leakage, transfer, retention, recurrence, and resource checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed transfer checks from becoming credit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "unsafe_transfer_count": {
+      "principle": "A bare zero is required before compatible replay is credited.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "upstream_artifact_hashes": {
+      "principle": "Hashes bind replay to the accepted lifecycle and sealed stream.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True records that exact solvers score the lifecycle and prevent a moat claim.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5829_transfer_selective_replay_audit.py",
+        "tests/python/test_experiment_5829_transfer_selective_replay_audit.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+        "results/experiment_5763_dependent_task_constraint_acquisition.json"
+      ]
+    }
+  },
+  "forward_transfer_metrics": {
+    "abstention_rate": {
+      "all_replay": 0.1,
+      "random_matched_count_replay": 0.455556,
+      "reset_no_replay": 1.0,
+      "signature_compatible_replay": 0.033333
+    },
+    "arm_metrics": {
+      "all_replay": {
+        "abstention_count": 36,
+        "forward_transfer_accuracy": 0.903244,
+        "unsafe_transfer_count": 24
+      },
+      "random_matched_count_replay": {
+        "abstention_count": 164,
+        "forward_transfer_accuracy": 0.506991,
+        "unsafe_transfer_count": 152
+      },
+      "reset_no_replay": {
+        "abstention_count": 360,
+        "forward_transfer_accuracy": 0.213889,
+        "unsafe_transfer_count": 0
+      },
+      "signature_compatible_replay": {
+        "abstention_count": 12,
+        "forward_transfer_accuracy": 0.972222,
+        "unsafe_transfer_count": 0
+      }
+    },
+    "compatible_minus_no_replay": {
+      "ci95": [
+        0.725926,
+        0.786111
+      ],
+      "mean_delta": 0.758333,
+      "n": 360
+    },
+    "dynamic_regret": {
+      "all_replay": 0.096756,
+      "random_matched_count_replay": 0.493009,
+      "reset_no_replay": 0.786111,
+      "signature_compatible_replay": 0.027778
+    },
+    "episode_count": 360,
+    "first_exposure_definition": "row_first_seen_before_its_future_suffix_opens",
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.forward_transfer"
+  },
+  "heldout_split_and_leakage_receipts": {
+    "calibration_split": "train_dev_only",
+    "family_surface_isolation_hash": "sha256:649060cb4c19a274f983ccbb6d2527a7b8fcab11b2aab8765286d3697daf2c27",
+    "first_exposure_rows": 360,
+    "future_label_leakage_count": 0,
+    "heldout_family_surface_cell_count": 8,
+    "heldout_family_surface_cells": [
+      "finite_domain_csp|order_paraphrase",
+      "finite_domain_csp|symbol_relabel",
+      "finite_state_planning|order_paraphrase",
+      "finite_state_planning|symbol_relabel",
+      "hard_soft_packing|order_paraphrase",
+      "hard_soft_packing|symbol_relabel",
+      "weighted_maxsat|order_paraphrase",
+      "weighted_maxsat|symbol_relabel"
+    ],
+    "leakage_audit_hash": "sha256:7eca13bdb665d5a785cebc614f9bdd6be0e13a5de358ab77b8a040a34d33d34e",
+    "minimum_rows_per_family_surface_cell": 45,
+    "n_ge_30_per_primary_cell": true,
+    "ok": true,
+    "recurrence_rows": 120,
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.heldout_leakage",
+    "science_label_leakage_count": 0,
+    "science_row_count": 360,
+    "state_or_replay_boundary_crossing_count": 0
+  },
+  "honest_verdict": "positive: signature_compatible_replay_credited",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.520",
+  "paired_deltas_and_ci95": {
+    "compatible_minus_all_replay_retention": {
+      "ci95": [
+        0.02,
+        0.02
+      ],
+      "mean_delta": 0.02,
+      "n": 120
+    },
+    "compatible_minus_no_replay_forward": {
+      "ci95": [
+        0.725926,
+        0.786111
+      ],
+      "mean_delta": 0.758333,
+      "n": 360
+    },
+    "compatible_minus_no_replay_recurrence": {
+      "ci95": [
+        0.755555,
+        0.858333
+      ],
+      "mean_delta": 0.808333,
+      "n": 120
+    },
+    "compatible_minus_random_replay_retention": {
+      "ci95": [
+        0.395694,
+        0.45375
+      ],
+      "mean_delta": 0.42625,
+      "n": 120
+    },
+    "family": {
+      "finite_domain_csp": {
+        "compatible_minus_no_replay_forward": {
+          "ci95": [
+            0.922222,
+            1.0
+          ],
+          "mean_delta": 0.966667,
+          "n": 90
+        }
+      },
+      "finite_state_planning": {
+        "compatible_minus_no_replay_forward": {
+          "ci95": [
+            0.429629,
+            0.52963
+          ],
+          "mean_delta": 0.481481,
+          "n": 90
+        }
+      },
+      "hard_soft_packing": {
+        "compatible_minus_no_replay_forward": {
+          "ci95": [
+            0.766667,
+            0.859259
+          ],
+          "mean_delta": 0.818519,
+          "n": 90
+        }
+      },
+      "weighted_maxsat": {
+        "compatible_minus_no_replay_forward": {
+          "ci95": [
+            0.688889,
+            0.837037
+          ],
+          "mean_delta": 0.766667,
+          "n": 90
+        }
+      }
+    },
+    "family_heterogeneity": {
+      "all_family_lcbs_positive": true,
+      "family_count": 4,
+      "family_lcb95": {
+        "finite_domain_csp": 0.922222,
+        "finite_state_planning": 0.429629,
+        "hard_soft_packing": 0.766667,
+        "weighted_maxsat": 0.688889
+      },
+      "max_forward_lcb95": 0.922222,
+      "min_forward_lcb95": 0.429629
+    },
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.paired_deltas"
+  },
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "checkpoint_paths": {
+      "checkpoint_atomic_suffix": ".tmp",
+      "checkpoint_dir": "results/checkpoints/experiment_5829_transfer_selective_replay_audit",
+      "checkpoint_writable": true,
+      "ok": true,
+      "result_path": "results/experiment_5829_transfer_selective_replay_audit.json",
+      "result_writable": true
+    },
+    "corrupt_upstream_errors": [],
+    "deterministic_seeds": {
+      "base_seed_ok": true,
+      "exp5826_seed_ok": true,
+      "exp5828_seed_ok": true,
+      "ok": true,
+      "random_seeds": {
+        "base_seed": 5829,
+        "bootstrap_seed": 5829001,
+        "checkpoint_seed": 5829003,
+        "random_replay_seed": 5829002
+      }
+    },
+    "headroom_check": {
+      "mean_headroom": 1.0,
+      "ok": true,
+      "positive_headroom_rows": 72,
+      "preregistered_minimum_positive_rows": 30,
+      "sampled_rows": 72
+    },
+    "heldout_split_check": {
+      "first_exposure_rows": 360,
+      "heldout_family_surface_cell_count": 8,
+      "heldout_family_surface_cells": [
+        "finite_domain_csp|order_paraphrase",
+        "finite_domain_csp|symbol_relabel",
+        "finite_state_planning|order_paraphrase",
+        "finite_state_planning|symbol_relabel",
+        "hard_soft_packing|order_paraphrase",
+        "hard_soft_packing|symbol_relabel",
+        "weighted_maxsat|order_paraphrase",
+        "weighted_maxsat|symbol_relabel"
+      ],
+      "minimum_rows_per_family_surface_cell": 45,
+      "n_ge_30_per_primary_cell": true,
+      "ok": true,
+      "recurrence_rows": 120
+    },
+    "llm_calls_made": 0,
+    "preconditions_ready": true,
+    "python": {
+      "available": true,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1171698,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 78733,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "run_date": "20260723",
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.preconditions",
+    "structured_gate_replay": {
+      "constraint_event_stream_ready_score": 1.0,
+      "current_validator_errors_recorded": {
+        "exp5828": "reproducibility_checksum"
+      },
+      "event_schema_hash": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+      "exp5763_status": "complete",
+      "exp5826_status": "complete",
+      "exp5828_honest_verdict": "complete: future_validated_structural_memory_lifecycle_credited",
+      "exp5828_status": "complete",
+      "future_validated_lifecycle_ready_score": 1.0,
+      "lifecycle_hash": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+      "memory_cap": 64,
+      "memory_cap_from_exp5828": 64,
+      "ok": true,
+      "row_count": 360,
+      "row_replay_ok": true,
+      "stream_hash": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+      "unsafe_update_count": 0
+    },
+    "upstream_artifact_hashes": {
+      "constraint_memory_module": "sha256:55cb5a838040633e68161c7c19a92143e92b02e0a86a74f896d8817399878ebd",
+      "exp5762_lifecycle_module": "sha256:aad66f02264953ba20fd354d0b7d8db210c308f14d8dd5178292cd8ed193ab26",
+      "exp5763_dependent_task_artifact": "sha256:e747aefc959a1eb4dca78e7402c1fbd9cac86d5cc9ecb81225f37a05c8a92a48",
+      "exp5825_event_schema_contract": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+      "exp5826_stream_artifact": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+      "exp5826_stream_rows": "sha256:d0d513b081478be94a9de3df08b33e20a93865a08175bdb4fd3707aed0cc121d",
+      "exp5828_lifecycle_artifact": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+      "module": "sha256:0dc0046da80458294ff6fc43de4c5eecd09979e36c8eeb295ba62c5354e66d90",
+      "research_references": "sha256:73aecc29945f0622ba33cc8819cef4ebc73d2ef07b49fbf0681f0ab6973f4c84",
+      "self_learning_spec": "sha256:cfd1ea77debc74c9366075b34f1bd293dc5d3b022182b2abfab98e65832eb3cb",
+      "tests": "sha256:9e0592d26477a0f65aab76f71460efd5d8713fcca56f45defe052644c5140658"
+    }
+  },
+  "random_seed": 5829,
+  "random_seeds": {
+    "base_seed": 5829,
+    "bootstrap_seed": 5829001,
+    "checkpoint_seed": 5829003,
+    "random_replay_seed": 5829002
+  },
+  "recurrence_recovery_metrics": {
+    "arm_metrics": {
+      "all_replay": {
+        "dynamic_regret": 0.012,
+        "recurrence_recovery": 0.988
+      },
+      "random_matched_count_replay": {
+        "dynamic_regret": 0.483333,
+        "recurrence_recovery": 0.516667
+      },
+      "reset_no_replay": {
+        "dynamic_regret": 0.808333,
+        "recurrence_recovery": 0.191667
+      },
+      "signature_compatible_replay": {
+        "dynamic_regret": 0.0,
+        "recurrence_recovery": 1.0
+      }
+    },
+    "compatible_minus_no_replay": {
+      "ci95": [
+        0.755555,
+        0.858333
+      ],
+      "mean_delta": 0.808333,
+      "n": 120
+    },
+    "compatible_recurrence_improves_over_no_replay": true,
+    "recurrence_row_count": 120,
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.recurrence_recovery"
+  },
+  "replay_resource_accounting": {
+    "by_arm": {
+      "all_replay": {
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.027035,
+          "mean_ms": 0.024454,
+          "p95_ms": 0.027035
+        },
+        "max_replay_events": 8,
+        "memory_cap_pressure": 0.125,
+        "total_replay_bytes": 307524,
+        "total_replay_events": 2448
+      },
+      "random_matched_count_replay": {
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.027017,
+          "mean_ms": 0.024448,
+          "p95_ms": 0.027007
+        },
+        "max_replay_events": 8,
+        "memory_cap_pressure": 0.125,
+        "total_replay_bytes": 305398,
+        "total_replay_events": 2448
+      },
+      "reset_no_replay": {
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.010002,
+          "mean_ms": 0.010002,
+          "p95_ms": 0.010002
+        },
+        "max_replay_events": 8,
+        "memory_cap_pressure": 0.125,
+        "total_replay_bytes": 720,
+        "total_replay_events": 2448
+      },
+      "signature_compatible_replay": {
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.027035,
+          "mean_ms": 0.024454,
+          "p95_ms": 0.027035
+        },
+        "max_replay_events": 8,
+        "memory_cap_pressure": 0.125,
+        "total_replay_bytes": 307524,
+        "total_replay_events": 2448
+      }
+    },
+    "cap_compliance": true,
+    "checkpoint_resume_receipt": {
+      "checkpoint_boundaries": [
+        0,
+        90,
+        180,
+        270,
+        360
+      ],
+      "full_replay_hash": "sha256:ce5cb5c3497cfe00cb1b49206c0b5314fb48dad852e396edda7efbf184bafe1a",
+      "parity_sample_hash": "sha256:bca571e1f8231dfd47e8c53d2a214d4b21260672f1a57cb30290dde7f829ec68",
+      "restart_equivalence": 1.0,
+      "resumed_replay_hash": "sha256:ce5cb5c3497cfe00cb1b49206c0b5314fb48dad852e396edda7efbf184bafe1a"
+    },
+    "max_memory_cap_pressure": 0.125,
+    "max_replay_events_per_task": 8,
+    "memory_cap": 64,
+    "replay_event_cap": 8,
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.resource_accounting"
+  },
+  "reproducibility_checksum": "sha256:eff715418bc2eedbbb4bf9bd8f73e910e224e6be50d6954bdfa23c6ffdbd5b23",
+  "result_path": "results/experiment_5829_transfer_selective_replay_audit.json",
+  "retention_and_forgetting_metrics": {
+    "arm_metrics": {
+      "all_replay": {
+        "old_regime_retention": 0.98,
+        "protected_prefix_retention": 1.0
+      },
+      "random_matched_count_replay": {
+        "old_regime_retention": 0.57375,
+        "protected_prefix_retention": 1.0
+      },
+      "reset_no_replay": {
+        "old_regime_retention": 0.225,
+        "protected_prefix_retention": 1.0
+      },
+      "signature_compatible_replay": {
+        "old_regime_retention": 1.0,
+        "protected_prefix_retention": 1.0
+      }
+    },
+    "compatible_minus_all_replay": {
+      "ci95": [
+        0.02,
+        0.02
+      ],
+      "mean_delta": 0.02,
+      "n": 120
+    },
+    "compatible_minus_random_matched_count": {
+      "ci95": [
+        0.395694,
+        0.45375
+      ],
+      "mean_delta": 0.42625,
+      "n": 120
+    },
+    "compatible_retention_noninferior_to_all_replay": true,
+    "forgetting": {
+      "all_replay": 0.02,
+      "random_matched_count_replay": 0.42625,
+      "reset_no_replay": 0.775,
+      "signature_compatible_replay": 0.0
+    },
+    "old_regime_definition": "addition_rows_replayed_after_later_regimes",
+    "old_regime_row_count": 120,
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.retention_forgetting"
+  },
+  "run_date": "20260723",
+  "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1",
+  "spec_refs": [
+    "REQ-LEARN-5829",
+    "SCENARIO-LEARN-5829-SIGNATURE-FREEZE",
+    "SCENARIO-LEARN-5829-REPLAY-PARITY",
+    "SCENARIO-LEARN-5829-TRANSFER-RETENTION-RECURRENCE",
+    "SCENARIO-LEARN-5829-FAIL-CLOSED"
+  ],
+  "status": "complete",
+  "task_signature_and_compatibility_rule": {
+    "compatibility_rule": {
+      "calibration_sources": [
+        "Exp5762 frozen train/dev template signatures",
+        "Exp5826 public schema constants"
+      ],
+      "calibration_split": "train_dev_only",
+      "compatible_when": [
+        "constraint_arity",
+        "constraint_type",
+        "constraint_composition",
+        "variable_domain_shape",
+        "hard_soft_role",
+        "proof_preserving_surface",
+        "exact_prefix_behavior"
+      ],
+      "forbidden_selector_fields": [
+        "family",
+        "row_id",
+        "chronology_index",
+        "future_suffix_label",
+        "future_batch_id",
+        "oracle_accuracy",
+        "metric_delta"
+      ],
+      "rule_hash": "sha256:a8ff8da0c989f4e0f533e85e516b605c83c117c1f66b7571b4ece2c6ab234090",
+      "uses_future_suffix_labels": false,
+      "uses_posthoc_metric_selection": false,
+      "uses_science_family_label": false,
+      "version": "exp5829_label_blind_signature_compatibility_v1"
+    },
+    "compatibility_rule_frozen": true,
+    "label_blind_to_science_outcomes": true,
+    "sample_signature_receipts": [
+      {
+        "row_id": "exp5826-science-finite-domain-csp-000-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-000-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-000-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-001-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-001-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-001-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-002-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-002-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-002-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-003-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-003-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-003-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-004-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-004-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-004-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-005-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-005-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-005-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-006-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-006-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-006-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "symbol_relabel",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:ea4acbad5903bf62f45a957189bf277155fd2b5dc7d0a3ffb4f64e0404434f5b"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-007-addition",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-007-supersession",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      },
+      {
+        "row_id": "exp5826-science-finite-domain-csp-007-recurrence",
+        "signature": {
+          "constraint_arity": 3,
+          "constraint_composition": "ternary_ordered_tuple",
+          "constraint_type": "cyclic_order",
+          "exact_prefix_behavior": "{\"polarity_pattern\":[\"accept\",\"reject\"],\"query_count\":2,\"status\":\"sat\"}",
+          "hard_soft_role": "hard_constraint",
+          "proof_preserving_surface": "order_paraphrase",
+          "variable_domain_shape": "{\"candidate_count\":27,\"query_count\":2,\"query_prefixes\":[\"finite_domain_csp\"]}"
+        },
+        "signature_hash": "sha256:e38eb167fa731ae76aab853778de602b3f8743a9860638fd56dfb51ad9e0e15f"
+      }
+    ],
+    "schema": "carnot.experiment_5829.transfer_selective_replay_audit.v1.signature_rule",
+    "signature_components": [
+      "constraint_arity",
+      "constraint_type",
+      "constraint_composition",
+      "variable_domain_shape",
+      "hard_soft_role",
+      "proof_preserving_surface",
+      "exact_prefix_behavior"
+    ],
+    "signature_count": 360,
+    "signature_root_hash": "sha256:945c6f5c549898c5342f5441041797e9a0b8c1f3796848a81a67d5a29bba4bfa"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5829_transfer_selective_replay_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5829_transfer_selective_replay_audit.py -m pytest tests/python/test_experiment_5829_transfer_selective_replay_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5829_transfer_selective_replay_audit.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5829_transfer_selective_replay_audit.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5829_transfer_selective_replay_audit.py -m pytest tests/python/test_experiment_5829_transfer_selective_replay_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5829_transfer_selective_replay_audit.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5829_transfer_selective_replay_audit.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5829_transfer_selective_replay_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "unsafe_transfer_count": 0,
+  "upstream_artifact_hashes": {
+    "constraint_memory_module": "sha256:55cb5a838040633e68161c7c19a92143e92b02e0a86a74f896d8817399878ebd",
+    "exp5762_lifecycle_module": "sha256:aad66f02264953ba20fd354d0b7d8db210c308f14d8dd5178292cd8ed193ab26",
+    "exp5763_dependent_task_artifact": "sha256:e747aefc959a1eb4dca78e7402c1fbd9cac86d5cc9ecb81225f37a05c8a92a48",
+    "exp5825_event_schema_contract": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+    "exp5826_stream_artifact": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+    "exp5826_stream_rows": "sha256:d0d513b081478be94a9de3df08b33e20a93865a08175bdb4fd3707aed0cc121d",
+    "exp5828_lifecycle_artifact": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+    "module": "sha256:0dc0046da80458294ff6fc43de4c5eecd09979e36c8eeb295ba62c5354e66d90",
+    "research_references": "sha256:73aecc29945f0622ba33cc8819cef4ebc73d2ef07b49fbf0681f0ab6973f4c84",
+    "self_learning_spec": "sha256:cfd1ea77debc74c9366075b34f1bd293dc5d3b022182b2abfab98e65832eb3cb",
+    "tests": "sha256:9e0592d26477a0f65aab76f71460efd5d8713fcca56f45defe052644c5140658"
+  },
+  "verifier_is_oracle": true
+}
