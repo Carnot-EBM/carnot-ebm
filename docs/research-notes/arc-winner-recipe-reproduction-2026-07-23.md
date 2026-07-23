@@ -183,3 +183,35 @@ which is the build this ablation justifies.
 **Next build (evidence-backed):** the mover/entity detector + HUD-register detector on the live E3 path,
 gated by re-running this goal-hypothesis measurement under *detector-produced* perception (not hand-authored)
 to confirm it recovers the ~7/8 goal-correctness.
+
+## Detectors built (5833) and the end-to-end gate (5834): an honest negative that sharpens the fix
+
+**Detectors (REQ-ARC-WMTE-5833).** Built two detectors that run off the agent's own transitions: a
+HUD-register detector (edge band changing on near-every action + position-independent = a counter) and a
+mover detector (the color whose centroid translates with directional actions = the player). Real-frame gate
+(offline arcade, no LLM): HUD recovered on 3/3 confuser games (bp35 row63, lf52 row0, tu93 row63 -- the exact
+bars the model mistook for the goal), mover recovered on the navigate avatars (sc25/ls20 color-9). A key fix
+surfaced only by real frames: the first HUD statistic (monotone background-count) missed every real counter
+because ARC counters change cell VALUES, not fg/bg count -- replaced with change-fraction +
+position-independence.
+
+**End-to-end gate (REQ-ARC-WMTE-5834) -- honest NEGATIVE.** Fed the DETECTOR-produced perception to gemma's
+goal prompt (same rules as the 5832 oracle ablation; only the perception source changed). It did NOT recover
+the oracle's 7/8: **0 correct, 2 partial, 6 wrong.** The two partials (ls20, cn04) are the games where a
+mover was detected, and both produced the right SHAPE -- "move the player to a target" -- which is the
+encouraging signal. But the six wrong show why detector perception alone is insufficient:
+
+1. **The model's own WRONG learned rules dominate.** bp35's rule "action 6 changes (63,x) to 15" and lf52's
+   "actions change row 0" are exactly the HUD-fixation, and gemma follows the rule even when the detector
+   correctly flags that band as a counter to ignore. An "ignore this band" note is weaker than a rule the
+   model already believes.
+2. **The detector names the player but not the target.** It lists candidate objects; it cannot say which is
+   the exit. So even mover-games stay vague.
+3. **Mover recall gap** -- missed on 4/8 (tu93/bp35/lf52/r11l), leaving no player concept.
+
+**The lesson.** The oracle got 7/8 because it REPLACED the framing ("the bar is a lose-timer, NOT the
+objective" + named the exit). The detector ADDS entities alongside the wrong rules instead of correcting
+them. So the perception fix must RE-AUTHOR, not augment: (a) retract any learned rule that references a
+detected HUD band; (b) propose the mover's nearest distinct object as the candidate target; (c) improve mover
+recall. That is the concrete next iteration -- and it is a sharper, better-grounded target than "add a
+perception detector," which this negative result earned.
