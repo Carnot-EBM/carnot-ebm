@@ -104,19 +104,28 @@ def detect_hud_registers(
     transitions: list[Transition],
     *,
     edge_margin: int = 2,
-    changed_fraction_min: float = 0.5,
-    monotone_ratio_min: float = 0.8,
+    changed_fraction_min: float = 0.85,
+    pos_independent_min: float = 0.7,
+    mixed_changed_min: float = 0.5,
     min_frame_changes: int = 3,
 ) -> list[HudBand]:
-    """Find edge rows/cols that behave like a status counter: their non-background cell count moves
-    MONOTONICALLY (fill or deplete) and changes on MOST frame-changing actions, regardless of where/what
-    you acted. That is the signature of a move counter / mana meter / lose-timer bar -- the thing the
-    winner recipe mistook for the game board on 5/8 games.
+    """Find edge rows/cols that behave like a status counter: they change on NEARLY EVERY action, and the
+    change is DECOUPLED from where/what you acted. That is the signature of a move counter / mana meter /
+    lose-timer bar -- the thing the winner recipe mistook for the game board on 5/8 games.
 
-    Discriminator detail: `monotone_ratio = |net count change| / sum(|per-step count change|)`. A pure
-    counter accumulates in one direction -> ratio ~1.0. A busy but non-monotone board region oscillates
-    -> ratio ~0. `changed_fraction` = share of frame-changing transitions in which the band changed at
-    all -> a HUD advances on nearly every action; a board region only changes when you act on it.
+    The discriminating statistic is NOT the non-background cell COUNT: real ARC HUD counters change cell
+    VALUES (a value-6 step-bar depletes, cells recolor to 15) while the non-background count stays flat, so
+    a count-monotonicity test misses them entirely (measured on tu93/bp35: row63 changed on 100% of actions
+    yet net count change was 0). Instead:
+      - `changed_fraction` = share of frame-changing transitions in which the band's VALUES changed at all.
+        A counter advances on nearly every action; a board region only changes when you act on/near it.
+      - `pos_independent` = among CLICK actions whose click cell is OUTSIDE the band, the fraction where the
+        band changed anyway. A counter changes no matter where you click (position-independent); a board
+        region changes only where clicked. This rescues a counter that only advances on ~half the actions
+        (e.g. a meter that ticks on moves but not clicks) from being confused with a busy board column.
+    A band is flagged if it changes on nearly every action, OR it changes on at least half the actions AND
+    is strongly position-independent. `monotone_ratio` (on non-bg count) is still reported best-effort to
+    label fill vs deplete when the count does move.
     """
     changing = [t for t in transitions if _frame_changed(_as_grid(t.before), _as_grid(t.after))]
     if len(changing) < int(min_frame_changes):
@@ -137,6 +146,8 @@ def detect_hud_registers(
     for axis, index in candidates:
         deltas: list[int] = []
         n_changed = 0
+        click_outside = 0
+        click_outside_changed = 0
         for t in changing:
             before = _as_grid(t.before)
             after = _as_grid(t.after)
@@ -144,26 +155,43 @@ def detect_hud_registers(
                 continue
             b = _band_cells(before, axis, index)
             a = _band_cells(after, axis, index)
-            if np.array_equal(b, a):
-                continue
-            n_changed += 1
-            deltas.append(int((a != bg).sum()) - int((b != bg).sum()))
+            band_changed = not np.array_equal(b, a)
+            if band_changed:
+                n_changed += 1
+                deltas.append(int((a != bg).sum()) - int((b != bg).sum()))
+            # position-independence probe: a click whose target is NOT in this band
+            if int(t.action) == 6 and t.x is not None and t.y is not None:
+                click_in_band = (axis == "row" and int(t.y) == index) or (
+                    axis == "col" and int(t.x) == index
+                )
+                if not click_in_band:
+                    click_outside += 1
+                    if band_changed:
+                        click_outside_changed += 1
         if n_changed < int(min_frame_changes):
             continue
         changed_fraction = n_changed / len(changing)
+        pos_independent = (click_outside_changed / click_outside) if click_outside > 0 else None
+        is_hud = changed_fraction >= changed_fraction_min or (
+            pos_independent is not None
+            and pos_independent >= pos_independent_min
+            and changed_fraction >= mixed_changed_min
+        )
+        if not is_hud:
+            continue
         abs_sum = sum(abs(d) for d in deltas)
         net = sum(deltas)
         monotone_ratio = (abs(net) / abs_sum) if abs_sum > 0 else 0.0
-        if changed_fraction >= changed_fraction_min and monotone_ratio >= monotone_ratio_min:
-            bands.append(
-                HudBand(
-                    axis=axis,
-                    index=index,
-                    direction="fill" if net >= 0 else "deplete",
-                    changed_fraction=round(changed_fraction, 3),
-                    monotone_ratio=round(monotone_ratio, 3),
-                )
+        direction = "fill" if net > 0 else ("deplete" if net < 0 else "counter")
+        bands.append(
+            HudBand(
+                axis=axis,
+                index=index,
+                direction=direction,
+                changed_fraction=round(changed_fraction, 3),
+                monotone_ratio=round(monotone_ratio, 3),
             )
+        )
     return bands
 
 
@@ -180,13 +208,20 @@ def detect_mover(
     min_evidence: int = 2,
     align_min: float = 0.5,
     max_shift: float = 4.0,
+    max_area_fraction: float = 0.15,
 ) -> Optional[Mover]:
     """Find the PLAYER: the color whose centroid consistently translates in the direction of the
     directional action (1-4) used. For each directional transition and each non-background color present
     in both frames, we score how well the color's centroid shift aligns with the action's unit vector
     (dot product of the unit shift with the unit direction), requiring a small, real shift (a rigid
     slide of ~1 cell, not a whole-board recolor). The color with the strongest, best-supported alignment
-    is the player."""
+    is the player.
+
+    A player is a SMALL, COMPACT entity, so a color occupying more than `max_area_fraction` of the grid is
+    excluded -- this is what stops a large VOID/background region (not the modal color, so not caught by the
+    background exclusion) from being mistaken for the player. Measured need: cn04's color-0 void was
+    selected as the mover with alignment 1.0 before this guard, because its centroid drifts as the board
+    changes even though it is not an entity."""
     scores: dict[int, list[float]] = {}
     for t in transitions:
         d = _DIR.get(int(t.action))
@@ -197,12 +232,15 @@ def detect_mover(
         if before.shape != after.shape or not _frame_changed(before, after):
             continue
         bg = _background_color(before)
+        area = before.size
         dir_vec = np.asarray(d, dtype=float)
         dir_unit = dir_vec / np.linalg.norm(dir_vec)
         for color in np.unique(before):
             color = int(color)
             if color == bg:
                 continue
+            if int((before == color).sum()) > max_area_fraction * area:
+                continue  # too large to be a compact player entity (a void/background-like region)
             cb = _color_centroid(before, color)
             ca = _color_centroid(after, color)
             if cb is None or ca is None:
