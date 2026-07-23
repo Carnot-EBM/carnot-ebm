@@ -253,6 +253,54 @@ or offline — not a gap specific to the tool-loop-lookahead mechanism or to it 
 addendum).
 **Tests:** `tests/python/test_arc_solver_kit_node_frame_snapshot.py` (1 test, the regression guard).
 
+### 2026-07-23 (outer-loop, operator directive: "how do we reproduce the successful techniques used by the top leaderboard projects?" → "yes" to running the candidate-coverage attribution experiment): independent replication confirms zero lookahead-gap evidence; new concrete finding — bp35's winning clicks are never proposed by the candidate generator
+
+**Context.** Answered the operator's question by pointing to existing research: a 2026-07-20 source-level
+audit of all three Milestone-1 winners (`docs/research-notes/arc-top-project-search-architecture-audit-
+2026-07-20.md`) found Carnot already has MORE search machinery than any winner; their real edge is a bigger
+generator, orientation-time inspection compute (already partially reproduced this session as
+REQ-ARC-WMTE-5828's tool-loop-lookahead), and object-centric perception (already built,
+REQ-ARC-FCP-5591). The note's proposed next step — a pre-registered "candidate-coverage attribution"
+experiment partitioning the score gap into GENERATION vs SELECTION vs PLANNING — had not been run when
+this session started.
+
+**Process note (disclosed honestly, not hidden): this exact experiment had ALREADY been run**
+(`REQ-ARC-FCP-5757`, `python/carnot/experiment_5757_candidate_coverage_attribution.py`, 2026-07-20) — built
+independently before checking `ops/verifier_gaps.md` for it first, an honest process miss. By chance the
+game selection (lf52, bp35, re86 — this session's own worst live/oracle-gap games) is FULLY DISJOINT from
+5757's 9 games (cd82/cn04/ls20/m0r0/r11l/sk48/sp80/su15/tu93), so the result is a genuine independent
+out-of-sample replication, not a wasted duplicate.
+
+**Result** (`results/outer_loop_arc_candidate_coverage_attribution_20260723.json`,
+`scripts/arc_candidate_coverage_attribution.py`, pre-registered games/tolerance/threshold stated in the
+script docstring, `adversarial_verify.py` 0-flagged): N=155 progress actions (L1+L2 winning-path actions
+from existing reproduction-gated banked trajectories). Pooled: **a(generation)=13.55%, b(lookahead)=0.00%,
+c(selection)=23.23%, clean=63.23%.** Bucket b=0 EXACTLY matches 5757's finding on a disjoint game set —
+real, independent corroboration that the lookahead/multi-step hypothesis has zero support (0/247 progress
+actions across two independent runs, 12 games total, are an in-set no-op that only pays off downstream).
+This directly explains why this session's entire tool-loop-lookahead investment (REQ-ARC-WMTE-5828, two
+budgets, a real infra bug found and fixed along the way) kept nulling regardless of search depth — it was
+betting on a lever (multi-step lookahead) that this attribution now shows had no headroom to find, at
+least on the actions sampled.
+
+**New, concrete finding not visible in 5757's 9-game sample: bp35 has a real, characterizable generation
+gap.** bp35 alone accounts for ALL 21 of this run's 25 bucket-a misses (a=36.8% for bp35 specifically,
+0% for lf52 and re86). Every miss is an action-6 click at a specific recurring grid coordinate that
+`rich_action_candidates(frame)` never proposes, despite returning 50+ candidates at every one of those
+states — not a sparse-candidate problem, a genuine blind spot for this specific class of click target
+(matches bp35's registry mechanic: same-row "blocker" tiles that apparently don't survive segmentation as
+independently-clickable objects). This is a direct instance of the search-architecture audit's own
+branch-(a) prescription ("segmentation fidelity + click-point generation beyond object centroids") and
+directly explains bp35's persistent null across every mechanism this session tested (induce-then-plan,
+reactive-filter, tool-loop-lookahead at two budgets, the real E3AgentPolicy cascade): if the candidate
+generator never proposes the needed click, no amount of search or LLM judgment built on top of that
+candidate set could ever have found it. Logged as `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` in
+`ops/verifier_gaps.md`, priority high.
+
+**Spec:** `docs/research-notes/arc-top-project-search-architecture-audit-2026-07-20.md` section 4 (the
+design); `REQ-ARC-FCP-5757` (the original run); `ops/verifier_gaps.md` `GAP-ARCH-NO-HIERARCHICAL-SEARCH`
+(independent-replication addendum) and the new `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` entry.
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
 
 **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered

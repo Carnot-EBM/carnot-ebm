@@ -2573,6 +2573,66 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: LOW (was medium) -- re-ordered below induction/perception per REQ-ARC-FCP-5757. Re-opens ONLY if a
   future well-powered measurement finds bucket b > 0.3 (5757's b branch can fire once on evidence).
 
+**INDEPENDENT REPLICATION 2026-07-23** (`results/outer_loop_arc_candidate_coverage_attribution_20260723.json`,
+`scripts/arc_candidate_coverage_attribution.py`) — built without first checking for REQ-ARC-FCP-5757 (an
+honest process miss, corrected here rather than hidden); by chance the game selection (lf52, bp35, re86 — the
+worst live/oracle-gap games this session's whole prior ARC investigation focused on) is FULLY DISJOINT from
+5757's 9 games (cd82/cn04/ls20/m0r0/r11l/sk48/sp80/su15/tu93), so this ended up a genuine independent
+out-of-sample replication rather than a duplicate. N=155 progress actions (L1+L2 winning-path actions, vs
+5757's L1-only scope — a real, disclosed methodology difference), tolerance 2px (matches 5757's Chebyshev-2),
+rank-low threshold top-3 (STRICTER than 5757's top-12 — this alone explains most of the pooled `c` fraction
+being higher here, 23.2% vs 5757's 5.4%: many actions ranked 4-11 count as a selection-miss under this
+threshold but as "handled" under 5757's). **Pooled: a=13.55%, b=0.00%, c=23.23%, clean=63.23%.** Bucket b=0
+EXACTLY MATCHES 5757's finding on a disjoint game set — this is real, independent corroboration that the
+lookahead/multi-step hypothesis has zero support (not one progress action across 247 total measured actions,
+9+3=12 games, two independent runs, is an in-set no-op-in-isolation that only pays off downstream). Further
+strengthens the down-weighting above; does not change the priority (still LOW).
+
+**NEW finding not visible in 5757's sample: bp35 has a real, concrete, characterizable generation gap.**
+bp35 alone accounts for ALL 21 of this run's 25 bucket-a misses (a=21/57=36.8% for bp35 specifically, vs 0%
+for both lf52 and re86 in this run). Every single miss is an action-6 CLICK at a specific grid-aligned
+coordinate (18/24/30/36/42 × 30/36 — matching bp35's registry `mechanic_class:
+goal_directed_navigation_local_obstacle_clear`, "clicks camera-relative blockers") that `rich_action_
+candidates(frame)` never proposes, DESPITE returning 50-51 candidates at every one of those states (not a
+sparse-candidate problem — the segmentation IS finding plenty of objects, just never these specific ones).
+This is a direct, concrete instance of the original design note's branch-(a) prescription: "the next build
+targets segmentation fidelity + click-point generation beyond object centroids." Logged as a new, separate
+gap below (`GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS`) since it is specific, actionable, and directly
+explains why THIS SESSION's five independent mechanisms (induce-then-plan, reactive-filter, tool-loop-
+lookahead at two budgets, and the real E3AgentPolicy scored cascade) all nulled on bp35 regardless of search
+budget or LLM judgment quality: if the candidate generator itself never proposes the needed click, no amount
+of search or reasoning built ON TOP of that candidate set could ever have found it.
+
+### GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS: bp35's winning clicks are never proposed by rich_action_candidates
+- status: characterized, not yet fixed — a concrete, reproducible finding from the 2026-07-23 candidate-
+  coverage attribution replication above.
+- evidence: `results/outer_loop_arc_candidate_coverage_attribution_20260723_per_action.json` (bp35 rows,
+  bucket `a_generation_miss`) — 21/57 progress actions on bp35's reproduction-gated L1+L2 winning path, ALL
+  action-6 clicks, at coordinates (42,30)/(24,36)/(18,36)/(18,30)/(30,30)/(36,30)/(30,36) recurring across the
+  trajectory, none matched (even within a 2px tolerance) by any candidate in `rich_action_candidates(frame)`
+  at the corresponding replayed state, despite 50-51 candidates being returned each time.
+- failure mode: bp35's win condition requires clicking specific same-row "blocker" tiles per the registry's
+  own win_condition text ("clears same-row blockers before lateral moves... clears the blocker at grid
+  (5,9)"). These blocker cells apparently do not survive Carnot's blob/connected-component segmentation as
+  independently-clickable objects — likely merged into a larger background/wall region whose salience-ranked
+  centroid lands elsewhere, or filtered as non-salient given their small size/common color. The candidate
+  generator's coverage gap is specific to THIS class of small, grid-cell-precise, non-standalone-object click
+  target — not a generic "too few candidates" problem (50+ candidates were already being generated).
+- missing discriminator: a click-point generation mode that proposes grid-cell-precise candidates (not just
+  connected-component centroids) for games with a `goal_directed_navigation_local_obstacle_clear`-class
+  mechanic, OR a finer-grained segmentation that keeps individually-clickable same-row blocker cells distinct
+  from their containing region instead of merging them.
+- candidate design: exactly the original search-architecture audit's branch-(a) prescription — extend
+  `rich_action_candidates`/`arc_color_blob_salience.py`'s segmentation with grid-cell-level click candidates
+  (not just object centroids) for games whose mechanic class involves fine local obstacle-clearing, reusing
+  Duck Harness's translation-invariant object-hash + containment/adjacency structure (already ported,
+  REQ-ARC-FCP-5591) as the substrate to detect when a "blob" actually contains multiple independently
+  meaningful sub-cells.
+- priority: high — this is a concrete, characterized instance of the exact gap class
+  (generation/perception) the top-project search-architecture audit predicted would matter most, on a game
+  this session's entire prior investigation (5 independent mechanisms) could not crack for any other
+  diagnosed reason. Fixing this is the most direct, evidence-backed next lever for bp35 specifically.
+
 ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
 - status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
 - evidence: Original 2026-06-19 evidence, now stale in part: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer`
