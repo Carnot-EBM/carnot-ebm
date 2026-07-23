@@ -40,3 +40,9 @@ CHECK_TIMED_OUT
 
   **Classification: (b) GENERAL-PURPOSE artifact.** The published checkpoint contains no game-source reading or per-game hardcoding and is plausibly applicable to unseen games; the surrounding teacher-probe procedure remains undisclosed.
 
+## 2026-07-23 13:40 UTC -- NEW
+
+- **Dinesh Kumar Thiyagarajan — newly located public-game exploit artifacts.** His Kaggle dataset contains exact action arrays keyed to 14 named public games—97 levels and 1,844 actions. A separate notebook dynamically imports each game’s `.py`, searches an unscored local instance through direct `perform_action` calls, then replays the solution. No evidence links these artifacts to his current leaderboard submission, so this is not score attribution. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [hardcoded solutions](https://www.kaggle.com/datasets/dineshkumar0705/arc-solutions), [source-reading solver](https://www.kaggle.com/datasets/dineshkumar0705/brain-v2)
+
+  **Classification: (a) EXPLOIT/HARDCODED.** It depends on known game IDs, stored trajectories, or inspectable game source and would not transfer to a genuinely hidden game.
+
