@@ -99,10 +99,13 @@ _ORIENT_FRAME = (
     "indices into THIS grid:\n{grid}\n"
     "Available actions this frame: {avail}\n"
     "Recent (your last moves -> observed effect):\n{recent}\n"
+    "EXPLORE to find what the game responds to: if an action in your history shows 'no change', do "
+    "NOT repeat it -- try a DIFFERENT action id or a DIFFERENT location. Vary moves vs clicks.\n"
     "{urgency}Turns left: {remaining}. Notes so far:\n{transcript}\n\n"
     "Respond with EXACTLY ONE LINE: either a NEW tool call, OR commit a SHORT SEQUENCE of 1-{max_seq} "
-    "actions to run in order (then you re-inspect):\n"
-    '  ACTION: [{{"a":<id>,"x":<col>,"y":<row>}}, ...]   ("x","y" only for action 6)\n'
+    "actions to run in order (then you re-inspect). Use STRICT JSON exactly like this:\n"
+    '  ACTION: [{{"a":6,"x":<col>,"y":<row>}}]   or   ACTION: [{{"a":4}},{{"a":4}}]   '
+    '("x","y" only for action 6)\n'
     "Your line:\n"
 )
 _URGENCY = "URGENT: few turns left -- commit an ACTION now, do not inspect.\n"
@@ -120,6 +123,18 @@ def _parse_sequence(primed_text: str, *, max_seq: int, avail: list[int]) -> list
         return []
     if not isinstance(items, list):
         return []
+    # Loose-format recovery: the model sometimes emits a FLAT number list after the prime, e.g.
+    # "6, 18, 41]" -> [6,18,41] (a=6,x=18,y=41) or "4]" -> [4] (a=4). Coerce a purely-numeric top
+    # level into a single action dict so a valid-but-unbracketed intent is not wasted as a retry
+    # (observed with gemma-4-31B on the first smoke, 2026-07-23).
+    if items and all(isinstance(i, (int, float)) and not isinstance(i, bool) for i in items):
+        nums = [int(i) for i in items]
+        if len(nums) == 1:
+            items = [{"a": nums[0]}]
+        elif len(nums) >= 3:
+            items = [{"a": nums[0], "x": nums[1], "y": nums[2]}]
+        else:
+            return []
     out: list[dict] = []
     for item in items[:max_seq]:
         if not isinstance(item, dict) or item.get("a") is None:

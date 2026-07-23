@@ -50,6 +50,20 @@ class TestParseSequence:
     def test_garbage_returns_empty(self):
         assert _parse_sequence("<think> reasoning leaked", max_seq=5, avail=[1]) == []
 
+    def test_loose_flat_click_recovered(self):
+        # gemma-4-31B emitted a bare "6, 18, 41" after the prime (first smoke, 2026-07-23);
+        # coerce a flat 3-number list into a=6,x=18,y=41 rather than wasting a retry.
+        seq = _parse_sequence("6, 18, 41]", max_seq=5, avail=[1, 6])
+        assert seq == [{"a": 6, "x": 18, "y": 41}]
+
+    def test_loose_flat_single_move_recovered(self):
+        seq = _parse_sequence("4]", max_seq=5, avail=[4])
+        assert seq == [{"a": 4}]
+
+    def test_loose_two_numbers_is_ambiguous_dropped(self):
+        # 2 numbers can't be [a] or [a,x,y] -- do not guess.
+        assert _parse_sequence("6, 18]", max_seq=5, avail=[6]) == []
+
 
 class _FakeProposer:
     def __init__(self, responses):
