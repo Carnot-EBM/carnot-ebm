@@ -24713,3 +24713,143 @@ historically flagged rather than unstamping it.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5851 | Planned (`python/carnot/experiment_5851_deterministic_replay_provenance_contract.py`, `results/experiment_5851_deterministic_replay_provenance_contract.json`) | Planned (`tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py`) |
+
+## REQ-LEARN-5856: Provenance-Correct Future-Validated Memory Lifecycle
+
+The self-learning tier SHALL provide Exp5856, a deterministic exact-replay
+rerun of the future-validated adaptive-memory lifecycle at
+`python/carnot/experiment_5856_provenance_correct_lifecycle.py` that writes
+`results/experiment_5856_provenance_correct_lifecycle.json` and
+`results/experiment_5856_provenance_correct_lifecycle.rows.jsonl`. Exp5856
+SHALL consume immutable Exp5826 JSONL rows, Exp5827 structural source evidence,
+Exp5828 only as a historical comparison artifact, Exp5839 qualification
+evidence, and the Exp5851 deterministic replay contract. It SHALL not unflag,
+rewrite, or import the aggregate promotion decision from Exp5828.
+
+Exp5856 SHALL use only the substrate
+`deterministic_exact_verifier_and_replay_no_llm`. It SHALL NOT load an LLM,
+tokenizer, CUDA runtime, GGUF file, embedding model, generation backend, or
+model specification. Model weights SHALL remain immutable; all adaptive behavior
+SHALL be represented as versioned external state, with
+`no_model_weight_mutation` exactly `true` and `verifier_is_oracle` exactly
+`true`.
+
+Before replay, Exp5856 SHALL replay preconditions by hashing Exp5826 rows,
+Exp5826 artifact, Exp5827 artifact and source module, Exp5828 artifact for
+comparison only, Exp5839 qualification, Exp5851 contract, validators, split
+definitions, seed manifests, this module, this test, OpenSpec text, and the live
+adversarial verifier. It SHALL verify RAM, disk, monotonic timer, writable
+atomic result path, writable atomic row path, deterministic seeds, validator
+versions, and balanced chronological splits. If any precondition fails, the
+artifact SHALL be terminal blocked with
+`adaptive_memory_lifecycle_ready_score=0.0`.
+
+Exp5856 SHALL reconstruct chronological per-family events and sealed future
+batches from immutable Exp5826 rows. Every row receipt SHALL prove that future
+labels and cleartext target structure are unavailable before prediction,
+quarantine, validation, and promotion. Membership-query labels used to propose
+minimal cores SHALL be disjoint from sealed future validation labels.
+
+Exp5856 SHALL run a frozen external-state arm and an adaptive external-state arm
+over identical chronological events. The adaptive arm MAY acquire exact minimal
+cores, quarantine proposals, validate on the next sealed batch, promote safe
+rules, reject unsafe or control updates, roll back, restart, serialize, and
+evict bounded receipts. The frozen arm SHALL receive the same events but no
+adaptive memory. All row-level lift, family lower bounds, protected-prefix
+retention, unsafe accepts, state size, cap pressure, rollback hashes, restart
+equivalence, serialization hashes, and seed/group-bootstrap CI95 intervals SHALL
+be recomputed from the new Exp5856 row receipts.
+
+Exp5856 SHALL apply the Exp5851 deterministic replay contract to a fresh
+exact-replay receipt for the rerun and SHALL preserve the live
+`scripts/adversarial_verify.py --json` receipt for the Exp5856 artifact. It
+SHALL compare row-derived scientific metrics with Exp5828 only after confirming
+Exp5828 remained byte-for-byte unchanged and historically flagged. Positive
+Exp5828 aggregates SHALL NOT authorize Exp5856 promotion.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_hashes`, `deterministic_replay_contract_receipt`,
+`chronology_and_visibility_receipts`, `frozen_and_adaptive_arm_definitions`,
+`prospective_row_metrics`, `family_lower_bounds_and_group_bootstraps`,
+`promotion_quarantine_and_rejection_receipts`, `protected_prefix_retention`,
+`rollback_restart_and_serialization_receipts`, `memory_cap_accounting`,
+`no_model_weight_mutation`, `historical_artifacts_mutated`,
+`adversarial_verifier_receipt`, `adaptive_memory_lifecycle_ready_score`,
+`row_file_receipt`, `duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal lifecycle state separates a clean rerun from partial replay.
+- `preconditions_checked`: Gate, hashes, validators, splits, seeds, timers, resources, and outputs prevent fabricated lifecycle evidence.
+- `upstream_hashes`: The rerun is bound to immutable clean stream and structural evidence.
+- `deterministic_replay_contract_receipt`: Substrate honesty is a promotion prerequisite, not metadata decoration.
+- `chronology_and_visibility_receipts`: Future labels must remain sealed until their prospective evaluation point.
+- `frozen_and_adaptive_arm_definitions`: Matched arms isolate external-state learning.
+- `prospective_row_metrics`: Every credited delta is derived from new chronological rows.
+- `family_lower_bounds_and_group_bootstraps`: No pooled family or duplicated surface can carry the claim.
+- `promotion_quarantine_and_rejection_receipts`: Only future-validated safe updates enter reusable memory.
+- `protected_prefix_retention`: Learning new constraints cannot erase certified old behavior.
+- `rollback_restart_and_serialization_receipts`: Exact hashes prove durable versioned state.
+- `memory_cap_accounting`: External memory remains bounded.
+- `no_model_weight_mutation`: Must be true; self-learning is versioned external state only.
+- `historical_artifacts_mutated`: Must be false; Exp5828 remains immutable and flagged.
+- `adversarial_verifier_receipt`: The fresh live verifier owns promotion eligibility.
+- `adaptive_memory_lifecycle_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5857 and Exp5858.
+- `row_file_receipt`: Path, count, and hash make lifecycle evidence auditable.
+- `duration_s`: Measured exact-replay time must match the declared substrate.
+- `inference_substrate`: `deterministic_exact_verifier_and_replay_no_llm` is mandatory.
+- `verifier_is_oracle`: True records exact validators as promotion authority.
+- `field_provenance`: Every metric traces to rows, state hashes, validators, and timers.
+- `test_commands`: Commands document chronology, metrics, state, contract, and live verifier.
+- `test_exit_codes`: Exit codes prevent failed lifecycle checks becoming readiness.
+- `reproducibility_checksum`: A checksum detects row, split, seed, state, or contract drift.
+- `honest_verdict`: A terminal prefix states credited, null, retired, or blocked outcome.
+
+`adaptive_memory_lifecycle_ready_score` SHALL be the bare scalar `1.0` only
+when every family lower bound is positive, protected-prefix retention is exactly
+`1.0`, unsafe accepts are zero, rollback/restart/serialization hashes match,
+state remains under cap, future-label leakage is zero, Exp5851 accepts the
+fresh deterministic replay receipt, no forbidden compute substrate is claimed,
+historical artifacts remain immutable, all tests pass, and the live adversarial
+verifier is clean. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5856-CHRONOLOGY: Rows Stay Sealed Until Prospective Validation
+
+**Given** immutable Exp5826 JSONL rows and Exp5827 source evidence
+**When** Exp5856 reconstructs row events and future batches
+**Then** each row receipt records monotone chronology, sealed future suffix
+hashes, no cleartext target exposure, and zero membership-label reuse for
+future validation.
+
+### SCENARIO-LEARN-5856-MATCHED-ARMS: External-State Learning Is Isolated
+
+**Given** frozen and adaptive external-state arms
+**When** Exp5856 replays chronological events
+**Then** both arms receive identical events, validators, query budgets, and
+seeds, while only the adaptive arm changes versioned external memory.
+
+### SCENARIO-LEARN-5856-READY-GATE: Contract-Clean Positive Lifecycle Is Credited
+
+**Given** row-derived prospective metrics, family lower bounds,
+protected-prefix receipts, rollback/restart receipts, memory-cap receipts, and
+the Exp5851 deterministic replay contract
+**When** all safety, state, contract, immutability, and live-verifier gates pass
+**Then** `adaptive_memory_lifecycle_ready_score` SHALL be the bare scalar `1.0`
+and `honest_verdict` SHALL start with `complete:`.
+
+### SCENARIO-LEARN-5856-FAIL-CLOSED: Bad Substrate Or Safety Cannot Look Ready
+
+**Given** failed tests, missing rows, exposed future labels, reused validation
+labels, unsafe accepts, rollback mismatch, memory-cap overflow, historical
+mutation, failed contract validation, or a flagged live verifier receipt
+**When** Exp5856 validates the artifact
+**Then** `adaptive_memory_lifecycle_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:` or `failed:`.
+
+## Implementation Status (Exp 5856)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5856 | Implemented (`python/carnot/experiment_5856_provenance_correct_lifecycle.py`, `results/experiment_5856_provenance_correct_lifecycle.json`, `results/experiment_5856_provenance_correct_lifecycle.rows.jsonl`) | Implemented (`tests/python/test_experiment_5856_provenance_correct_lifecycle.py`) |
