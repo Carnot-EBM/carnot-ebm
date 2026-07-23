@@ -855,3 +855,41 @@ retired_extras:
   - arc_game_blind_composition_exp5767_same_verdict
   - repeat Exp5767 ARC composition hardening with missing Exp5792 selector
   - blocked_gate_check_failed after exp5792 exact deliverable missing
+- id: finite_id_gguf_generated_answer_transport_same_mechanism_v519
+  scope_key: finite_id_gguf_generated_answer_transport_same_mechanism_v519
+  experiment_scope: Current GGUF generated-answer transport lane using finite
+    IDs, shared or split budgets, grammar constraints, stop tuning, or parser
+    retries.
+  reason: >-
+    retire_if_same_verdict: Exp5813 ran the changed split-budget canary on the
+    three mandated SOTA GGUF families and still produced
+    answer_channel_ready_score=0.0, zero qualified SOTA families, 2/144 exact
+    labels, 138 parser failures, and 134 truncations. Future work must use a
+    materially different non-generation surface.
+  experiment_ids:
+  - exp5799
+  - exp5812
+  - exp5813
+  retired_milestone: 2026.07.518
+  retired_by_artifact: results/experiment_5813_split_budget_sota_canary.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_same_mechanism_retries:
+  - finite-id generated-answer retry
+  - shared-budget generated-answer retry
+  - split-budget generated-answer retry
+  - grammar generated-answer retry
+  - stop/parser generated-answer retry
+  blocked_patterns:
+  - finite-ID GGUF generated-answer retry
+  - shared-budget finite-choice generated-answer retry
+  - split-budget generated-answer retry
+  - grammar constrained generated-answer retry
+  - stop-token generated-answer retry
+  - parser-only generated-answer retry
+  - same-mechanism MMLU-Pro GGUF answer transport retry
+  preserved_open_surfaces:
+  - sota paired embeddings
+  - final-token/final-layer embedding verifier
+  - exact constraint acquisition
+  - non-generation ARC world-feedback surfaces
