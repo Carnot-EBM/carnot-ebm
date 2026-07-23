@@ -145,6 +145,147 @@ Required field principles:
 
 ---
 
+### REQ-HW-5861
+
+**Title:** Exp5861 attached-board state receipts MUST distinguish no-change, blocked, and authenticated state-operation execution
+
+**Description:**
+Experiment 5861 SHALL produce
+`results/experiment_5861_attached_board_state_receipts.json` for KV260,
+PolarFire, and GateMate on 20260723. The artifact is a current capability
+receipt and optional bounded parity receipt only. It MUST NOT redesign FPGA
+logic, flash or program a board, use the retired KV260 host `/dev/mmcblk*`
+precondition, or claim speedup, power, energy, thermalization, convergence,
+TSU/Kona execution, or sovereignty beyond the known KV260 proof of concept.
+
+Before any board command is allowed, the receipt SHALL hash hardware specs,
+prior terminal receipts, tool versions, bitstream/program images, board
+identities, and Exp5859 when present. It SHALL record reachability,
+permissions, cable/JTAG/SSH state, disk/RAM resources, and atomic output
+readiness. The per-board capability matrix SHALL separately label each board as
+one of: unreachable, toolchain-only, software fallback, programmed image,
+authenticated physical execution, or measured state-update dynamics. Requested
+topology and compile success SHALL NOT count as physical execution.
+
+If `results/experiment_5859_adaptive_state_microkernel_parity.json` reports
+`adaptive_state_microkernel_ready_score == 1.0` and a board has a changed,
+authenticated route for state-operation execution, Exp5861 MAY map only bounded
+supported operations and run identical fixtures on the CPU reference and that
+board. The receipt SHALL record inputs, outputs, state hashes, timing source,
+board identity, raw logs, exact accepted tolerance, and parity. If Exp5859 is
+not ready, or if every board's authenticated route/precondition is unchanged or
+unavailable, the experiment MUST run no board commands, avoid repeated
+high-cost probes, and emit a
+terminal blocked/no-change receipt with the exact missing external action.
+
+Required artifact fields:
+
+- `status`
+- `preconditions_checked`
+- `prior_receipt_hashes`
+- `board_capability_matrix`
+- `per_board_access_and_toolchain_receipts`
+- `requested_vs_programmed_vs_observed_dynamics`
+- `exp5859_input_receipt`
+- `bounded_operation_mapping`
+- `cpu_reference_receipts`
+- `authenticated_physical_execution_receipts`
+- `same_input_state_and_hash_parity`
+- `capacity_precision_stochasticity_and_observability`
+- `timing_source_and_raw_logs`
+- `software_fallback_disclosed`
+- `unchanged_precondition_actions_avoided`
+- `prohibited_claims_absent`
+- `authenticated_state_operation_parity_score`
+- `duration_s`
+- `inference_substrate`
+- `field_provenance`
+- `test_commands`
+- `test_exit_codes`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+Required field principles:
+
+- `status`: principle "A terminal per-board capability state distinguishes execution, no-change, and block."
+- `preconditions_checked`: principle "Identity, access, tools, images, permissions, resources, and outputs precede board commands."
+- `prior_receipt_hashes`: principle "Existing terminal evidence prevents redundant probes."
+- `board_capability_matrix`: principle "Each board owns a separate authenticated state."
+- `per_board_access_and_toolchain_receipts`: principle "Host tools and physical reachability are distinct."
+- `requested_vs_programmed_vs_observed_dynamics`: principle "An intended energy/state topology does not prove realized updates."
+- `exp5859_input_receipt`: principle "Only a qualified bounded kernel may be mapped."
+- `bounded_operation_mapping`: principle "Unsupported operations and capacities remain explicit."
+- `cpu_reference_receipts`: principle "Same-input software authority anchors parity."
+- `authenticated_physical_execution_receipts`: principle "Board identity and raw logs are required for a hardware claim."
+- `same_input_state_and_hash_parity`: principle "Physical and reference outputs must match within declared exact tolerance."
+- `capacity_precision_stochasticity_and_observability`: principle "Backend semantics matter more than requested topology."
+- `timing_source_and_raw_logs`: principle "Timing is auditable and cannot become a speedup claim."
+- `software_fallback_disclosed`: principle "Fallback can never masquerade as board execution."
+- `unchanged_precondition_actions_avoided`: principle "Repeated blocked probes are not scientific progress."
+- `prohibited_claims_absent`: principle "No speed, power, energy, convergence, TSU, Kona, or unsupported sovereignty claim."
+- `authenticated_state_operation_parity_score`: principle "EMIT BARE scalar; zero is honest when hardware execution did not occur."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only hardware receipts."
+- `inference_substrate`: principle "`authenticated_hardware_state_execution_or_capability_receipt_no_llm` states the observed path."
+- `field_provenance`: principle "Every field traces to board identity, command, log, image, reference, or prior receipt."
+- `test_commands`: principle "Commands document preconditions, capabilities, parity, claims, and E2E checks."
+- `test_exit_codes`: principle "Exit codes prevent failed or fallback paths becoming hardware success."
+- `reproducibility_checksum`: principle "A checksum detects board, image, tool, fixture, or log drift."
+- `honest_verdict`: principle "A terminal prefix states physical parity, no-change, or blocked outcome."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5861_attached_board_state_receipts --date 20260723`
+  writes `results/experiment_5861_attached_board_state_receipts.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5861` and
+  `SCENARIO-HW-5861`, `random_seed=5861`, and a stable
+  `reproducibility_checksum`.
+- Preconditions hash hardware specs, prior terminal receipts, tool versions,
+  bitstream/program images, board identities, Exp5859, reachability,
+  permissions, cable/JTAG/SSH state, disk/RAM resources, and atomic output
+  readiness before any optional board command.
+- The per-board capability matrix separately reports KV260, PolarFire, and
+  GateMate without inferring one board's state from another.
+- KV260 checks are SSH/board-route based and contain no host `/dev/mmcblk*`,
+  `/dev/disk`, storage-write, or block-device precondition.
+- If Exp5859 is not ready or no board has a changed authenticated state-operation
+  route, `authenticated_physical_execution_receipts=[]`,
+  `same_input_state_and_hash_parity.physical_execution_observed=false`,
+  `authenticated_state_operation_parity_score=0.0`, and repeated board probes
+  are listed under `unchanged_precondition_actions_avoided`.
+- If a board does execute same-input state operations physically, the score may
+  be `1.0` only when CPU and board outputs/state hashes match within the exact
+  declared tolerance and raw logs include board identity.
+- `software_fallback_disclosed` must state that CPU reference receipts are not
+  board execution.
+- `prohibited_claims_absent` must be true for speedup, power, energy,
+  thermalization, convergence, TSU, Kona, and unsupported sovereignty claims.
+- `inference_substrate` equals
+  `authenticated_hardware_state_execution_or_capability_receipt_no_llm`.
+- `honest_verdict` begins with `parity:`, `no-change:`, or `blocked:` and
+  contains no prohibited claim.
+
+**Implementation status:** Planned (Exp 5861)
+
+---
+
+### SCENARIO-HW-5861
+
+**Scenario:** Exp5861 writes a no-change attached-board state receipt without repeated board probes.
+
+**Given:** Exp5859 is present but not ready, and the current KV260, PolarFire,
+and GateMate route hashes match cached terminal receipt evidence with no new
+operator-authenticated route change,
+**When:** Experiment 5861 computes preconditions and capability states,
+**Then:** It writes `results/experiment_5861_attached_board_state_receipts.json`
+with no board commands, per-board access/toolchain receipts, explicit
+requested-vs-programmed-vs-observed dynamics, empty authenticated physical
+execution receipts, CPU reference receipts disclosed as software fallback only,
+`authenticated_state_operation_parity_score=0.0`, the exact missing external
+actions for each board, and an `honest_verdict` beginning with `no-change:`.
+
+**Implementation status:** Planned (Exp 5861)
+
+---
+
 ### SCENARIO-HW-5794
 
 **Scenario:** Exp5794 writes a terminal action receipt from unchanged cached evidence without repeating board probes.
