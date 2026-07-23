@@ -35470,3 +35470,126 @@ bare scalar `0.0`, `status` SHALL be `blocked` or `partial`, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5852 | Planned (`python/carnot/experiment_5852_three_family_paired_embeddings.py`, `results/experiment_5852_three_family_paired_embeddings.json`) | Planned (`tests/python/test_experiment_5852_three_family_paired_embeddings.py`) |
+
+### REQ-VERIFY-5853: Paired Embedding Integrity Audit
+
+The repository SHALL provide Exp5853 at
+`python/carnot/experiment_5853_paired_embedding_integrity_audit.py` that
+consumes `results/experiment_5852_three_family_paired_embeddings.json`,
+`results/experiment_5852_three_family_paired_embeddings.rows.jsonl`, and
+`results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl`,
+then writes
+`results/experiment_5853_paired_embedding_integrity_audit.json`. Exp5853 SHALL
+be an aggregation-only audit with no new model inference and SHALL set
+`inference_substrate` to `aggregation_from_upstream_artifacts`.
+
+Before any control metric is accepted, Exp5853 SHALL replay the Exp5852
+readiness gate, hash the Exp5852 aggregate, Exp5852 rows, Exp5840 rows,
+verification spec, Exp5840 and Exp5852 modules/tests, validator directory,
+split receipts, and Exp5853 audit code, verify disk/RAM and atomic output
+writability, and reconstruct every join from immutable Exp5840 row IDs and
+Exp5852 embedding cell IDs. Aggregate row counts SHALL NOT be sufficient for
+readiness.
+
+Exp5853 SHALL audit claim-flip sensitivity on the candidate-correctness axis
+and constraint-ablation sensitivity on the constraint-ablation axis. Direction
+signs SHALL be fixed before science scoring by a deterministic, label-blind
+train-split anchor keyed by model, causal axis, and constraint family; Exp5853
+SHALL NOT choose or flip a favorable sign after inspecting science outcomes.
+
+Exp5853 SHALL run independent evaluator swaps using the primary exact validator
+receipts versus the independent validator receipts, grounded-versus-true
+crosses that distinguish grounding/candidate invariants from exact truth, and
+feature-consumer reinitialization that proves learner-visible features remain
+label/model/validator masked. It SHALL record disagreement and any evidence of
+co-adapted private codes.
+
+Exp5853 SHALL run label permutation, pair-member swaps, model/family identity
+prediction, identity masking, token-count and norm-only baselines,
+target-preserving perturbations, duplicate-group reweighting, and
+no-information controls. Controls SHALL be evaluated within every model,
+causal axis, constraint family, hardness cell, and proof-preserving surface;
+pooled success SHALL NOT hide a failed cell.
+
+The bare `paired_embedding_integrity_ready_score` SHALL be `1.0` only if every
+required cell is complete, no forbidden shortcut survives, claim flips are
+detectable beyond preregistered null bounds, constraint ablations are
+detectable beyond preregistered null bounds, and evaluator swaps preserve the
+exact target without private-code behavior. Otherwise the score SHALL be `0.0`
+with a blocked or disqualified honest terminal verdict.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_hashes_and_row_reconstruction`, `claim_flip_sensitivity`,
+`constraint_ablation_sensitivity`, `evaluator_swap_receipts`,
+`grounded_vs_true_cross`, `label_and_pair_permutation_controls`,
+`identity_masking_and_prediction_controls`,
+`length_norm_and_truncation_controls`,
+`perturbation_duplicate_and_no_information_controls`,
+`disaggregated_cell_decisions`, `surviving_shortcuts`,
+`paired_embedding_integrity_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal audit state separates clean causal data from unusable embeddings.
+- `preconditions_checked`: Gate, hashes, validators, splits, resources, and outputs prevent fabricated auditing.
+- `upstream_hashes_and_row_reconstruction`: Fresh row joins prevent aggregate self-validation.
+- `claim_flip_sensitivity`: A representation energy must react to the specific violated claim, not only gist.
+- `constraint_ablation_sensitivity`: Removing the owning constraint must change only the intended causal comparison.
+- `evaluator_swap_receipts`: Independent evaluators expose co-adapted target codes.
+- `grounded_vs_true_cross`: Grounding agreement and exact truth must remain distinguishable and jointly checked.
+- `label_and_pair_permutation_controls`: Shuffled or reversed targets must collapse predictability.
+- `identity_masking_and_prediction_controls`: Model or constraint identity cannot substitute for correctness.
+- `length_norm_and_truncation_controls`: Token envelope and vector scale cannot carry the label.
+- `perturbation_duplicate_and_no_information_controls`: Robustness and null tests expose target leakage or duplicate inflation.
+- `disaggregated_cell_decisions`: Every model, axis, family, and hardness cell owns its decision.
+- `surviving_shortcuts`: Any non-empty forbidden shortcut list blocks promotion.
+- `paired_embedding_integrity_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5854.
+- `duration_s`: Measured audit time exposes bootstrap-only execution.
+- `inference_substrate`: `aggregation_from_upstream_artifacts` declares a no-new-inference audit.
+- `verifier_is_oracle`: True records exact validators as target authority.
+- `field_provenance`: Every decision traces to rows, controls, validators, and code.
+- `test_commands`: Commands document every causal and shortcut control.
+- `test_exit_codes`: Exit codes prevent failed controls becoming readiness.
+- `reproducibility_checksum`: A checksum detects row, control, or evaluator drift.
+- `honest_verdict`: A terminal prefix states ready, disqualified, or blocked outcome.
+
+### SCENARIO-VERIFY-5853-PRECONDITIONS: Immutable Rows Gate The Audit
+
+Given Exp5852 reports `paired_embedding_corpus_ready_score == 1.0`, when
+Exp5853 starts, then it SHALL hash required upstream artifacts, validator code,
+split receipts, and its own audit code, replay row-file hashes, verify atomic
+output writability and resources, reconstruct every Exp5852 model-row cell from
+Exp5840 row IDs, and reject missing, duplicate, stale, or aggregate-only joins.
+
+### SCENARIO-VERIFY-5853-CAUSAL: Claim And Ablation Sensitivity Are Disaggregated
+
+Given reconstructed paired embedding rows, when Exp5853 scores
+candidate-correctness claim flips and constraint-ablation pairs, then each
+model/axis/family/hardness/surface cell SHALL report row count, mean paired
+difference norm, train-anchor direction agreement, null bound, and pass/fail
+decision without using science labels to choose a favorable sign.
+
+### SCENARIO-VERIFY-5853-SWAPS: Evaluator Swaps Preserve Exact Targets
+
+Given Exp5840 exact receipts include primary and independent validator versions,
+when Exp5853 runs evaluator swaps and grounded-versus-true crosses, then it
+SHALL report validator disagreement, exact-label replay disagreement,
+grounding/true cross disagreements, feature-consumer reinitialization hashes,
+and any co-adaptation marker before readiness is allowed.
+
+### SCENARIO-VERIFY-5853-CONTROLS: Shortcut Controls Fail Closed Per Cell
+
+Given the paired embedding corpus, when Exp5853 runs permutation, pair-swap,
+identity, token-count, norm-only, perturbation, duplicate-reweighting, and
+no-information controls, then every control SHALL be checked inside each
+model/axis/family/hardness/surface cell, any failed cell or surviving shortcut
+SHALL set `paired_embedding_integrity_ready_score` to `0.0`, and the honest
+verdict SHALL begin with `disqualified:` or `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5853)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5853 | Planned (`python/carnot/experiment_5853_paired_embedding_integrity_audit.py`, `results/experiment_5853_paired_embedding_integrity_audit.json`) | Planned (`tests/python/test_experiment_5853_paired_embedding_integrity_audit.py`) |
