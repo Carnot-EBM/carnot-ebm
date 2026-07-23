@@ -16923,3 +16923,40 @@ Diagnosed and logged as `ops/verifier_gaps.md` `GAP-ARC-TOOL-LOOP-LOOKAHEAD-BUDG
 Scaling the node budget to plausibly reach the relevant depth (likely low hundreds of nodes, each
 costing up to 12 real LLM completions) is a real, disclosed wall-clock/LLM-call cost -- a follow-up
 decision for the operator to weigh, not further architecture work.
+
+**RESULT (large-budget follow-up, verified 2026-07-23; operator directive: "run that larger budget
+test"):** `scripts/arc_tool_loop_lookahead_ab_largebudget.py`,
+`results/outer_loop_tool_loop_lookahead_ab_largebudget_20260723.json` -- `max_nodes=300` (20x),
+`depth_cap=40` (up from 15), a genuinely different seed (58280, not an extension of the first run's
+trajectory). `error: null` on all three, `adversarial_verify.py` 0-flagged, `levels_gained=0` on all
+three -- still an honest negative, but the per-game picture is now differentiated rather than uniformly
+shallow: **sc25 (`states_expanded=95` of 300) CONVERGED -- exhausted its own reachable search frontier
+under the dead-end pruner rather than being budget-capped**, a materially stronger negative than
+budget-inconclusive for this specific game (more budget alone would not have helped; the missing
+goal-progress discriminator is the binding constraint). **bp35 (`states_expanded=302`) used the FULL
+budget without converging** -- still genuinely budget-bound. **lf52 (`states_expanded=3`,
+`tool_loop_calls=2`) was anomalously SHALLOWER than the first run's 16** -- reported honestly as
+observed and flagged as an unresolved anomaly (not the earlier no-op-starves-search bug recurring; the
+fallback-padding fix still fires here), not yet diagnosed.
+
+A recalibration found while preparing this run also matters for reading the result: `ops/arc_solve_
+registry.yaml` shows all three games are `full_game_clear: true`, but ONLY via hand-crafted, per-game
+`GameAdapter`s built across many outer-loop sessions of deliberate reverse-engineering (`development_
+proxy` provenance) -- e.g. lf52's registry entry cites a 146-action L3 sequence and a 927-action L8+
+probe. Even a 20x-larger domain-agnostic budget is not provably sufficient for these specific games'
+actual difficulty; sc25's frontier-exhaustion is the one clean negative here, bp35 and lf52 remain open.
+
+**Live-path wiring gap found and fixed (operator question: "why did we only wire that into offline and
+not live agent?"):** neither this module nor REQ-ARC-WMTE-5827's sibling was reachable from either
+canonical live entrypoint (`scripts/arc_orphan_solver_lint.py`'s own closure check confirmed it) -- not
+even the offline dev-twin (`scripts/arc_loop_solve.py`), only from a standalone A/B script. No
+principled reason; simply never plumbed through. Fixed: `carnot.agentic.arc_tool_loop_lookahead`
+SHALL be, and now is, reachable from `scripts/arc_loop_solve.py` via a new `solve_via_tool_loop_
+lookahead()` function dispatched by `--mechanism tool_loop_lookahead` (alternative to the existing
+`solve_via_explore` graph_explore default), real end-to-end smoke-tested. `arc_orphan_solver_lint.py`
+passes clean post-fix. Wiring into the SCORED `E3AgentPolicy` cascade itself was deliberately deferred:
+the mechanism remains unproven (every measurement to date is null) and costs up to 12 real LLM calls
+per decision -- adding an unproven, expensive mechanism to the actual scored path risks hurting the
+live agent's efficiency metric for no demonstrated correctness benefit. Offline dev-twin wiring now,
+scored-path wiring only once a result here actually proves out, per the Phase-Prototype-and-Validation
+discipline's sequencing.

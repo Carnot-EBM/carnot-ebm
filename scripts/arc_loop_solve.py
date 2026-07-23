@@ -322,6 +322,84 @@ def solve_via_explore(
     }
 
 
+def solve_via_tool_loop_lookahead(
+    game: str,
+    max_nodes: int = 60,
+    depth_cap: int = 25,
+    max_turns: int = 12,
+    seed: int | None = None,
+) -> Optional[dict]:
+    """ADAPTER-FREE first contact, ALTERNATIVE strategy to `solve_via_explore`'s blind
+    graph-explore: an LLM-judged tool-calling orientation loop (REQ-ARC-WMTE-5828,
+    `carnot.agentic.arc_tool_loop_lookahead`) supplies OfflineSolver's search with a
+    goal-directed confidence signal instead of pure BFS. Wired in here 2026-07-23 after the
+    operator asked why this mechanism was only reachable via a standalone A/B script -- there
+    was no principled reason, it was simply never plumbed through the standing entrypoint.
+    Reachable from BOTH standing entrypoints now that this is here (this script directly, and
+    the conductor's north-star task which calls this script).
+
+    Substantially more expensive per node than graph_explore (up to `max_turns` real LLM
+    completions per node vs. a cheap symbolic BFS step) -- NOT a drop-in replacement for
+    `solve_via_explore`'s default role, an explicit alternative selectable via `--mechanism
+    tool_loop_lookahead`. Returns None if no advance (caller falls back to the routing
+    recommendation for per-game RE, same contract as `solve_via_explore`)."""
+    from arcengine import GameAction
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+    from carnot.agentic.arc_tool_loop_lookahead import ToolLoopLookaheadSession
+
+    prop = LocalGGUFProposer(
+        repo_substr="Qwen3.5-9B-MTP", mtp=True, kv_quant="q8_0", no_think_prefix="", max_tokens=512
+    )
+    session = ToolLoopLookaheadSession(prop, max_turns=max_turns, seed=seed)
+    solver = kit.OfflineSolver(
+        game,
+        action_labels=session.action_labels,
+        apply=session.apply,
+        state_key=session.state_key,
+        verifier=session.verifier,
+        warmup_label=session.WARMUP_LABEL,
+        max_nodes=max_nodes,
+        branch_mode="replay",
+        move_pruner=session.pruner,
+    )
+    arc = kit.offline_arcade()
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    path, states_expanded = solver.solve_level(env, start_level=0, prefix=[], depth_cap=depth_cap)
+    if path is None:
+        return None
+    lvl = kit.frame_level(solver.last_frame) if solver.last_frame is not None else 0
+
+    def apply(env, label, frame):
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, step["action"]), data=step.get("data"))
+
+    gate = kit.reproduce(game, path, apply, claimed_level=lvl)
+    seed_path = RESULTS / f"arc_tool_loop_lookahead_trajectory_{game}.json"
+    seed_path.write_text(
+        json.dumps({"game": game, "reached_level": lvl, "solution_labels": path}, indent=2)
+    )
+    return {
+        "game": game,
+        "method": "tool_loop_lookahead_adapter_free",
+        "reached_level": lvl,
+        "moves": len(path),
+        "states_expanded": states_expanded,
+        "tool_loop_calls": session._tool_loop_calls,
+        "offline_reproduced": bool(gate["reproduced"]),
+        "reproduced_levels": lvl if gate["reproduced"] else 0,
+        "trajectory_seed": str(seed_path.relative_to(REPO)),
+        "next": "register a GameAdapter from the seed for verifier-routed re-solving",
+        # PROVENANCE (ARC live-agent self-solve discipline): adapter-free -- no per-game hand
+        # authored win condition or hardcoded action sequence, only the LLM's own tool-inspection
+        # + confidence judgment routing OfflineSolver's generic search. See the function docstring
+        # for the honest caveat: this run executes via the offline dev-twin entrypoint, not (yet)
+        # the scored E3AgentPolicy cascade.
+        "solve_provenance": "live_agent_self_discovery",
+        "mode": "standing_arc_loop_tool_loop_lookahead_no_quota",
+    }
+
+
 def needs_re(game: str) -> dict:
     rec = learning.recommend_approach(game)
     return {
@@ -358,16 +436,44 @@ def main(argv) -> int:
         help="disable the online hazard move-pruner (for A/B states-expanded measurement)",
     )
     ap.set_defaults(hazard_prune=True)
+    ap.add_argument(
+        "--mechanism",
+        choices=["graph_explore", "tool_loop_lookahead"],
+        default="graph_explore",
+        help="adapter-free first-contact strategy (only used when --game has no registered "
+        "adapter, or with --ignore-adapter). graph_explore is the cheap default (blind BFS, "
+        "max_expansions=6000). tool_loop_lookahead (REQ-ARC-WMTE-5828) is substantially more "
+        "expensive per node (up to 12 real LLM completions each) but goal-directed via the "
+        "LLM's own confidence judgment instead of blind search.",
+    )
+    ap.add_argument(
+        "--ignore-adapter",
+        action="store_true",
+        help="force the adapter-free path even for an already-adaptered game (for A/B "
+        "comparison of a domain-agnostic mechanism against the hand-authored adapter -- the "
+        "same purpose --no-hazard-prune serves for the hazard pruner).",
+    )
+    ap.add_argument(
+        "--max-nodes", type=int, default=60, help="tool_loop_lookahead: search node budget"
+    )
+    ap.add_argument(
+        "--depth-cap", type=int, default=25, help="tool_loop_lookahead: max search-path depth"
+    )
+    ap.add_argument("--seed", type=int, default=None, help="tool_loop_lookahead: LLM sampling seed")
     args = ap.parse_args(argv)
     game = args.game or (pick_target() if args.auto else None)
     if not game:
         ap.error("specify --game X or --auto")
 
-    print(f"== standing ARC loop: game={game} ==")
-    if adapters.get_adapter(game):
+    print(f"== standing ARC loop: game={game} mechanism={args.mechanism} ==")
+    if adapters.get_adapter(game) and not args.ignore_adapter:
         out = solve_adaptered(
             game, args.target_level, hazard_prune=args.hazard_prune
         )  # verifier-routed
+    elif args.mechanism == "tool_loop_lookahead":
+        out = solve_via_tool_loop_lookahead(
+            game, max_nodes=args.max_nodes, depth_cap=args.depth_cap, seed=args.seed
+        ) or needs_re(game)
     else:
         out = solve_via_explore(game) or needs_re(
             game
@@ -380,6 +486,7 @@ def main(argv) -> int:
         "offline_reproduced",
         "reproduced_levels",
         "states_expanded",
+        "tool_loop_calls",
         "hazard_prune",
         "hazard_pruner_stats",
         "verifier_src",

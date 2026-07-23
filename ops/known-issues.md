@@ -130,6 +130,58 @@ does not need more fixes before that test.
 **Tests:** `tests/python/test_arc_tool_loop_lookahead.py` (28 tests, pure control-flow + payload
 logic, no GPU required).
 
+### 2026-07-23 (outer-loop, operator-directed follow-up): larger-budget re-run — sc25 converges to a real negative, bp35 still budget-bound, lf52 anomalous; live-path wiring gap found and fixed
+
+**Operator directive:** "run that larger budget test. also, why did we only wire that into offline
+and not live agent?" — two direct follow-ups to the budget-inconclusive result above.
+
+**Larger-budget result (`results/outer_loop_tool_loop_lookahead_ab_largebudget_20260723.json`,
+`scripts/arc_tool_loop_lookahead_ab_largebudget.py`, `max_nodes=300` — 20x, `depth_cap=40` — up
+from 15, a genuinely different seed 58280):** `error: null` on all three, `adversarial_verify.py`
+0-flagged, `levels_gained=0` on all three — still an honest negative, but no longer uniformly
+shallow. **sc25 (`states_expanded=95` of 300) CONVERGED — exhausted its own reachable search
+frontier under the dead-end pruner rather than being budget-capped.** This is a materially
+stronger negative than "budget-inconclusive" for sc25 specifically: more search budget would not
+have helped, the missing goal-progress discriminator is the binding constraint. **bp35
+(`states_expanded=302`) used the FULL budget without converging** — still genuinely budget-bound,
+a live untested lever. **lf52 (`states_expanded=3`, `tool_loop_calls=2`) was anomalously
+SHALLOWER than the first (15-node) run's 16** — reported honestly as observed, NOT the earlier
+no-op-starves-search bug recurring (the fallback-padding fix still fires), but not yet diagnosed
+either. Flagged for a follow-up look, not resolved.
+
+**A recalibration found while preparing this run matters for reading it:** `ops/arc_solve_
+registry.yaml` shows all three games are `full_game_clear: true`, but ONLY via hand-crafted,
+per-game `GameAdapter`s built across many outer-loop sessions of deliberate reverse-engineering
+(`development_proxy` provenance) — e.g. lf52's registry entry cites a 146-action L3 sequence and a
+927-action L8+ probe. Even a 20x-larger domain-agnostic budget is not provably sufficient for these
+specific games' actual difficulty; sc25's frontier-exhaustion is the one clean negative here.
+
+**Live-path wiring gap found and fixed:** `arc_tool_loop_lookahead.py` (and its REQ-ARC-WMTE-5827
+sibling `arc_reactive_verifier_filter.py`) was reachable from NEITHER canonical live entrypoint —
+not even the offline dev-twin (`scripts/arc_loop_solve.py`), only from its own standalone A/B
+script. `scripts/arc_orphan_solver_lint.py`'s closure check confirmed this and didn't catch it
+because its solver-like heuristic (name matches `*world_model*`, or defines `escalating_deepen`/
+`plan_in_model`, or a class with `.engine`+`.is_lethal`) doesn't match this module's shape — a real,
+disclosed gap in the mechanical lint's detection coverage, not a violation it was silently allowing.
+No principled reason for the orphan status itself; simply never plumbed through. **Fixed:** added
+`solve_via_tool_loop_lookahead()` to `scripts/arc_loop_solve.py`, dispatched via a new `--mechanism
+tool_loop_lookahead` flag (alternative to the existing `solve_via_explore` graph_explore default)
+plus `--ignore-adapter` (forces the adapter-free path even on an already-adaptered game, for the
+same A/B-comparison purpose `--no-hazard-prune` serves for the hazard pruner). Real end-to-end
+smoke-tested (`--game sc25 --mechanism tool_loop_lookahead --ignore-adapter`, clean run, correctly
+fell through to `needs_re()` on no advance). `arc_orphan_solver_lint.py` now passes clean.
+
+**Wiring into the SCORED `E3AgentPolicy` cascade was deliberately NOT done in this pass.** The
+mechanism remains unproven — every measurement to date (small-budget AND large-budget) is null —
+and costs up to 12 real LLM completions per decision. Adding an unproven, expensive mechanism to
+the actual scored path risks hurting the live agent's efficiency metric (RHAE) for no demonstrated
+correctness benefit yet. Offline dev-twin wiring now (this fix), scored-path wiring only once a
+result here actually proves out — the correct sequencing per the Phase-Prototype-and-Validation
+discipline, not an oversight being left in place.
+
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5828 (RESULT
+addendum).
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
 
 **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered
