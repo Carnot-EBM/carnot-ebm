@@ -14165,3 +14165,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 05:24 UTC | Plan milestone 2026.07.520 | OK | 4 tasks proposed |
 | 2026-07-23 05:26 UTC | Milestone 2026.07.520 activated | OK | 4 tasks queued |
 | 2026-07-23 06:13 UTC | Archive terminal .519 evidence and allocate .520 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5837_transit |
+| 2026-07-23 07:36 UTC | Archive terminal .519 evidence and allocate .520 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: y and will not |

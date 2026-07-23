@@ -396,7 +396,7 @@
     "milestone_from_block_count": 1,
     "milestone_from_unique_signature_count": 1
   },
-  "duration_s": 18.274926,
+  "duration_s": 19.273544,
   "experiment": "experiment_5837_transition_v520",
   "experiment_id": "exp5837-transition-v520",
   "field_principles": {
@@ -490,7 +490,7 @@
       "derivation": "direct_read_or_deterministic_reconciliation",
       "principle": "Declared paths plus conductor outcomes are the authority for activated task identity.",
       "sha256_by_source": {
-        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
+        "ops/conductor-log.md": "sha256:6a8b915322deadf4642f62011fa9bb1197c3a5a01a82aaf184807df9fd210184",
         "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
         "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
         "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
@@ -670,7 +670,7 @@
       "derivation": "direct_read_or_deterministic_reconciliation",
       "principle": "Disjoint classes prevent flagged or provisional evidence from becoming a clean success.",
       "sha256_by_source": {
-        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
+        "ops/conductor-log.md": "sha256:6a8b915322deadf4642f62011fa9bb1197c3a5a01a82aaf184807df9fd210184",
         "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
         "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
         "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
@@ -696,7 +696,7 @@
       "sha256_by_source": {
         "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
         "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
-        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
+        "ops/conductor-log.md": "sha256:6a8b915322deadf4642f62011fa9bb1197c3a5a01a82aaf184807df9fd210184",
         "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
         "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
         "research-roadmap-next.yaml": null,
@@ -1002,7 +1002,7 @@
         },
         "ops/conductor-log.md": {
           "present": true,
-          "sha256": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2"
+          "sha256": "sha256:6a8b915322deadf4642f62011fa9bb1197c3a5a01a82aaf184807df9fd210184"
         },
         "ops/exclusion_manifest.yaml": {
           "present": true,
@@ -1042,9 +1042,9 @@
     "research_complete_milestone_from_block_count": 1,
     "research_roadmap_unchanged": true,
     "resource_receipts": {
-      "disk_free_bytes": 1228600385536,
+      "disk_free_bytes": 1229740519424,
       "disk_total_bytes": 3953289023488,
-      "mem_available_kib": 76062408,
+      "mem_available_kib": 80129332,
       "writable_paths": {
         "/home/ianblenke/github.com/ianblenke/carnot": {
           "present": true,
@@ -1096,7 +1096,7 @@
     "unique_declared_deliverable_block_count": 1
   },
   "random_seed": 5837,
-  "reproducibility_checksum": "sha256:dcdacd075babb8dbb76f123b137ed8c22ec313070560db56cd9318b1c89012d5",
+  "reproducibility_checksum": "sha256:971a758d305a6f8c9058a19ea5e8f6414f44de0c500a7b6667bd70099cc8ffbe",
   "research_complete_append_count": 0,
   "research_roadmap_unchanged": true,
   "reserved_unactivated_range": "exp5830-exp5836",
@@ -1229,7 +1229,8 @@
     ".venv/bin/python scripts/root_clutter_sweep.py",
     "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py",
     ".venv/bin/ruff check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py",
-    ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py"
+    ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py",
+    "printf '%s\\n' 'Do NOT push. Do NOT modify scripts/research_conductor.py.'"
   ],
   "test_exit_codes": {
     ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py --fail-under=100": 0,
@@ -1247,6 +1248,7 @@
     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
     ".venv/bin/ruff check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py": 0,
     ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py": 0,
-    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py": 0
+    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py": 0,
+    "printf '%s\\n' 'Do NOT push. Do NOT modify scripts/research_conductor.py.'": 0
   }
 }
