@@ -5,7 +5,7 @@
     "principle": "Both prior mechanisms scored 0 new levels across every measurement on these exact games -- ANY real levelup here is decisive, unambiguous evidence the added lookahead+orientation closes a real gap, not a noisy delta."
   },
   "duration_note": "Real, non-mocked run across 3 games, max_nodes=15, up to 12 tool-calling turns per search-node decision.",
-  "duration_s": 68.346,
+  "duration_s": 25.778,
   "experiment": "outer_loop_tool_loop_lookahead_ab_20260723",
   "field_provenance": {
     "acceptance_gate": {
@@ -20,7 +20,7 @@
       "error": null,
       "final_reached_level": 0,
       "game": "sc25",
-      "game_wall_s": 35.379,
+      "game_wall_s": 21.443,
       "levels_gained": 0,
       "path_length": 0,
       "prior_baselines": {
@@ -35,14 +35,14 @@
         }
       },
       "solved": false,
-      "states_expanded": 15,
+      "states_expanded": 16,
       "tool_loop_calls": 4
     },
     {
       "error": null,
       "final_reached_level": 0,
       "game": "lf52",
-      "game_wall_s": 15.592,
+      "game_wall_s": 1.931,
       "levels_gained": 0,
       "path_length": 0,
       "prior_baselines": {
@@ -64,7 +64,7 @@
       "error": null,
       "final_reached_level": 0,
       "game": "bp35",
-      "game_wall_s": 17.374,
+      "game_wall_s": 2.403,
       "levels_gained": 0,
       "path_length": 0,
       "prior_baselines": {
@@ -79,8 +79,8 @@
         }
       },
       "solved": false,
-      "states_expanded": 16,
-      "tool_loop_calls": 4
+      "states_expanded": 18,
+      "tool_loop_calls": 5
     }
   ],
   "preconditions_checked": [
@@ -93,8 +93,8 @@
       "resource": "cuda_gpu1_pinned"
     }
   ],
-  "random_seed": null,
-  "random_seed_note": "OfflineSolver's best-first search is deterministic given the LLM's responses; the LLM itself is sampled at temperature=0.2 (arc_tool_loop_lookahead._completion) -- no separate seed control exists in this harness.",
+  "random_seed": 5828,
+  "random_seed_note": "OfflineSolver's best-first search is deterministic given the LLM's responses; the LLM itself is sampled at temperature=0.2 with this seed passed to llama.cpp's /completion endpoint (arc_tool_loop_lookahead._completion), offset per search-node decision and per tool-loop turn so a multi-turn decision doesn't sample identically every turn while the whole run stays reproducible given the same seed. temperature=0.2 (not 0.0) means seeding narrows variance rather than eliminating it entirely -- llama.cpp's seeded sampling is deterministic per (seed, prompt) pair, but the prompt itself changes turn-to-turn as the transcript grows.",
   "reproducibility_checksum": "a02c9e8272ec4dcb6ae95dbe8a3b137ca5333f7def47509b51bba07a8da94f68",
   "run_date": "2026-07-23",
   "schema": "carnot.arc_tool_loop_lookahead_ab.v1",

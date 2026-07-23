@@ -3212,3 +3212,68 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   naive reactive-filter approaches have now been empirically closed as standalone fixes. `retire_if_same_
   verdict: true` for a bare reactive-filter variant with no lookahead addition — the next attempt in this
   family must add multi-step search/lookahead or a goal-progress signal, not just retune the local filter.
+
+### GAP-ARC-TOOL-LOOP-LOOKAHEAD-BUDGET-INCONCLUSIVE: candidate design (a) built and tested — null, but the
+### test almost certainly never reached the depths where the fix would show up
+- status: budget_inconclusive — NOT a clean architectural refutation of candidate design (a) from
+  `GAP-ARC-REACTIVE-FILTER-MYOPIC` above. The mechanism itself was built correctly (verified via direct
+  tracing, not assumed) and genuinely exercises real multi-step search with backtracking, but the tested
+  search budget was almost certainly too shallow to reach these games' known winning-sequence depths.
+- evidence: `results/outer_loop_tool_loop_lookahead_ab_20260723.json`
+  (`carnot.agentic.arc_tool_loop_lookahead.ToolLoopLookaheadSession`, REQ-ARC-WMTE-5828, operator-directed
+  2026-07-23: "add real multi-step lookahead, and allow up to 12 tool-calling/REPL turns per decision,
+  inspect history, reason, then commit one action"). Real, non-mocked run on the SAME 3 worst live/
+  oracle-gap games as REQ-ARC-WMTE-5827 (sc25 oracle=6, lf52 oracle=10, bp35 oracle=9), `error: null` on
+  all three, `adversarial_verify.py` 0-flagged (including `random_seed=5828`, a real llama.cpp `/completion`
+  seed threaded through per search-node decision and per tool-loop turn — added after the first run of
+  this experiment correctly drew a `METHODOLOGY_MISSING` WARN for lacking one). `levels_gained=0` on all
+  three, matching BOTH the induce-then-plan baseline AND REQ-ARC-WMTE-5827's bare reactive-filter baseline
+  exactly.
+- what actually got built and verified working (not assumed): `ToolLoopLookaheadSession` wires the
+  tool-calling orientation loop into `arc_solver_kit.OfflineSolver`'s existing best-first search with
+  real branching/backtracking — reusing the project's already-tested-across-25-games engine, not a new
+  algorithm. THREE distinct, non-obvious integration bugs were found and fixed via direct empirical
+  tracing during construction: (1) `OfflineSolver` calls `apply()` with `frame=None` during search
+  expansion (`arc_solver_kit.py:5275,5329` — only `_replay()`'s own top-level call passes the real frame),
+  requiring the pre-expansion frame to be captured in `action_labels()` instead; (2) `_replay()` re-applies
+  `warmup_label` on every node visit and every sibling-restoration replay, and a naive fix comparing
+  applied-action VALUES against the warmup action silently swallowed genuine model choices that happened
+  to pick the same action id as the warmup step (found directly: an early attempt's `recent` history came
+  back completely empty) — fixed with a non-JSON sentinel string (`WARMUP_LABEL`) that can never collide
+  with a genuine `_json_action_label()`-encoded candidate; (3) THE search-starving bug: when the tool
+  loop's only proposed candidate was a genuine no-op (observed directly: a click on an empty background
+  cell), its resulting state hashed IDENTICAL to the parent and correctly never reached the search
+  frontier — with no alternative offered, the search died after exactly one node regardless of the
+  12-turn/15-node budgets. Fixed by always padding a thin (<2) candidate set with `rich_action_candidates()`
+  structured fallbacks at low confidence. Verified via three successive diagnostic trace runs, the last
+  showing the search genuinely using its full node budget with distinct state hashes reached at multiple
+  depths.
+- **why this is budget-inconclusive, not a clean negative (the important caveat):** `states_expanded` came
+  back 16/16/18 and `tool_loop_calls` 4/4/5 across the three games — i.e. the ENTIRE search tree, across
+  all branches, visited on the order of 16-18 nodes total. Per the project's own hard-tail
+  characterization (`docs/research-notes/arc-improve-bridge-result-2026-06-23.md`), winning sequences on
+  these exact games are deep (13-33+ actions) and narrow. A search that only ever expands ~16-18 nodes
+  total, most of them near the root, has essentially no chance of reaching a node 13+ actions deep even
+  with correct branching and a genuinely helpful confidence signal — the tree is far too shallow for the
+  claimed mechanism to plausibly show its effect at this budget. This is a materially different, more
+  honest conclusion than "tool-calling + lookahead also doesn't help": the correct statement is "this
+  specific budget was too small to test the hypothesis," not "the hypothesis was tested and failed." Each
+  search-node decision costs up to 12 real LLM completions, so scaling the node budget by even 5-10x
+  (bringing total nodes into the hundreds, closer to plausibly reaching depth 13+) costs a proportional
+  5-10x more wall-clock/LLM calls per game — a real, disclosed cost, not free to just "turn up."
+- missing discriminator: unchanged from `GAP-ARC-REACTIVE-FILTER-MYOPIC` above — a genuine, cross-game
+  goal-progress signal not authored per-game. This experiment supplied the LLM's own self-reported
+  confidence as a stand-in, which IS a real (if noisy) per-node signal, but the shallow-budget result here
+  cannot yet say whether that signal is good enough to guide a properly-scaled search, because the search
+  never ran deep enough to find out.
+- candidate design: run the SAME mechanism with a substantially larger node budget (target: enough nodes
+  to plausibly reach 13+ action depth given the observed branching factor — likely low hundreds of nodes,
+  not 15) on at least one of these three games, so the honest answer becomes "tested at a depth where the
+  hypothesis could show up" one way or the other. This is a budget/cost question for the operator to weigh
+  (up to 12 LLM calls per node), not a further architecture change — the mechanism itself does not need
+  more work before that test, per the three bugs above already being fixed and verified.
+- priority: high — this is the direct, cheap-to-run follow-up to `GAP-ARC-REACTIVE-FILTER-MYOPIC`'s
+  candidate design (a), and the current result neither confirms nor refutes it. `retire_if_same_verdict`
+  does NOT apply here in the usual sense (this was not a doomed-rerun scenario) — a larger-budget rerun of
+  the SAME mechanism is the correct next step, not a rejected repeat, because the small-budget run was
+  never a fair test of the hypothesis in the first place.

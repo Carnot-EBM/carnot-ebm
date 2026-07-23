@@ -16893,3 +16893,33 @@ candidate, for any action id
 **Then** they are never equal -- the sentinel is deliberately not valid JSON, so `apply()`'s
 warmup-skip check can never misclassify a real model choice as internal search bookkeeping (the
 exact class of bug a value-based comparison, e.g. "is this action 1", would reintroduce).
+
+**RESULT (verified 2026-07-23):** budget-inconclusive, NOT a clean negative. Real, non-mocked run
+(`scripts/arc_tool_loop_lookahead_ab.py`,
+`results/outer_loop_tool_loop_lookahead_ab_20260723.json`) on the SAME three worst live/oracle-gap
+games as REQ-ARC-WMTE-5827 (sc25/lf52/bp35). `error: null` on all three, `adversarial_verify.py`
+0-flagged, `random_seed=5828` (a real llama.cpp `/completion` seed, offset per search-node decision
+and per tool-loop turn -- added after the first run of this experiment correctly drew a
+`METHODOLOGY_MISSING` WARN for lacking one). `levels_gained=0` on all three
+(`honest_verdict: complete_tool_loop_lookahead_honest_negative_no_levelup_matches_both_prior_baselines`),
+matching both the induce-then-plan and the bare reactive-filter baselines exactly.
+
+The mechanism itself was built and verified working via direct tracing, not assumed: three
+non-obvious integration bugs were found and fixed during construction (OfflineSolver calling
+`apply()` with `frame=None` during search expansion; `_replay()`'s warmup-label reissue corrupting
+recorded history via a naive value-comparison fix; a single no-op candidate starving the entire
+search of any node to expand). After the third fix, three successive diagnostic traces confirmed
+the search genuinely uses its full node budget with real branching and distinct states reached at
+multiple depths.
+
+**Why this is budget-inconclusive rather than a clean negative:** `states_expanded` came back
+16/16/18 and `tool_loop_calls` 4/4/5 across the three games -- the entire search tree, across all
+branches, visited on the order of 16-18 nodes total. These games require deep (13-33+ action)
+narrow winning sequences (`docs/research-notes/arc-improve-bridge-result-2026-06-23.md`). A tree
+this shallow has essentially no chance of reaching a node 13+ actions deep regardless of whether
+the added lookahead+orientation mechanism is architecturally sound. The correct statement is "this
+specific budget was too small to test the hypothesis," not "the hypothesis was tested and failed."
+Diagnosed and logged as `ops/verifier_gaps.md` `GAP-ARC-TOOL-LOOP-LOOKAHEAD-BUDGET-INCONCLUSIVE`.
+Scaling the node budget to plausibly reach the relevant depth (likely low hundreds of nodes, each
+costing up to 12 real LLM completions) is a real, disclosed wall-clock/LLM-call cost -- a follow-up
+decision for the operator to weigh, not further architecture work.
