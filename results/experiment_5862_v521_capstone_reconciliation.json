@@ -413,7 +413,7 @@
     "ops_status_md": "deferred_by_operator_stop_rule",
     "traceability_md": "deferred_by_operator_stop_rule"
   },
-  "duration_s": 2.624995,
+  "duration_s": 2.852889,
   "exact_task_and_deliverable_matrix": {
     "exp5849-transition-v521": {
       "conductor": {
@@ -1344,7 +1344,6 @@
       }
     },
     "failed_required_test_commands": [
-      ".venv/bin/python scripts/adversarial_verify.py --milestone-range 5849 5861 --json",
       ".venv/bin/pytest tests/python -q"
     ],
     "live_verifier": {
@@ -1358,12 +1357,12 @@
     },
     "resources": {
       "disk": {
-        "available_mb": 1169171,
+        "available_mb": 1169161,
         "ok": true,
         "required_mb": 512
       },
       "memory": {
-        "available_mb": 74701,
+        "available_mb": 74600,
         "ok": true,
         "required_mb": 512
       }
@@ -1395,7 +1394,7 @@
       },
       "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
         "present": true,
-        "sha256": "sha256:84293805680d47e421c9eacf78e603c6569a8c3b7f4855da398cd46ccfe8ab09"
+        "sha256": "sha256:03a0c52a4782974d68e0c574c145842ae19d812db76d5298713f7f736098ae0b"
       },
       "openspec/capabilities/hardware/spec.md": {
         "present": true,
@@ -1403,7 +1402,7 @@
       },
       "openspec/capabilities/research-reporting/spec.md": {
         "present": true,
-        "sha256": "sha256:8aab26bedd429ea13a9c6a36e9202c766a6af211812fcd07a56b580ffdc4ae8d"
+        "sha256": "sha256:53c9e1062c47af72c2718f959d1cbc28b04040c647dee174203d3bf91928c7f9"
       },
       "openspec/capabilities/self-learning/spec.md": {
         "present": true,
@@ -1419,11 +1418,11 @@
       },
       "ops/changelog.md": {
         "present": true,
-        "sha256": "sha256:a8a1579d73c8d316379cb83c0f9336a310423426103a2e673e0f02873f5680ec"
+        "sha256": "sha256:c03258eb8c3797790fd087d75b69c57ec45a1d3ca846199b914908803ed3b110"
       },
       "ops/conductor-log.md": {
         "present": true,
-        "sha256": "sha256:1d5fe5f53db29ca5329dc2c0378f3c66162c95e36feb1874eedfa8c7504dd4ff"
+        "sha256": "sha256:b4ee243e47970e964c7417b36322ab84a9ec7a31f7cb3c0580566be0432472d0"
       },
       "ops/exclusion_manifest.yaml": {
         "present": true,
@@ -1510,7 +1509,7 @@
     "ops/changelog.md": {
       "check_source": "git_status",
       "present": true,
-      "sha256": "sha256:a8a1579d73c8d316379cb83c0f9336a310423426103a2e673e0f02873f5680ec",
+      "sha256": "sha256:c03258eb8c3797790fd087d75b69c57ec45a1d3ca846199b914908803ed3b110",
       "unchanged": true
     },
     "ops/north-star.md": {
@@ -1568,7 +1567,7 @@
     "unmet_gates": []
   },
   "random_seed": 5862,
-  "reproducibility_checksum": "sha256:72cc3b8a800bcdccb44614a594eef72d26f76185fa5c9de7e21b3efc17a0ca78",
+  "reproducibility_checksum": "sha256:d17bf48885a5d63632509a495f7d1f04503313731237538251545713e77426a2",
   "result_path": "results/experiment_5862_v521_capstone_reconciliation.json",
   "run_date": "20260723",
   "schema": "carnot.experiment_5862.v521_capstone_reconciliation.v1",
@@ -1736,10 +1735,12 @@
     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5862_v521_capstone_reconciliation.py -m pytest tests/python/test_experiment_5862_v521_capstone_reconciliation.py -q --no-cov -n 0",
     ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5862_v521_capstone_reconciliation.py --fail-under=100",
     ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None\"",
-    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py",
     ".venv/bin/python scripts/publication_gate.py --json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py",
     ".venv/bin/python scripts/root_clutter_sweep.py",
-    ".venv/bin/python scripts/adversarial_verify.py --milestone-range 5849 5861 --json",
+    ".venv/bin/ruff check python/carnot/experiment_5862_v521_capstone_reconciliation.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5862_v521_capstone_reconciliation.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py",
+    ".venv/bin/python -m py_compile python/carnot/experiment_5862_v521_capstone_reconciliation.py",
     ".venv/bin/pytest tests/python -q"
   ],
   "test_exit_codes": {
@@ -1748,10 +1749,12 @@
     ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/pytest tests/python/test_experiment_5862_v521_capstone_reconciliation.py -q --no-cov -n 0": 0,
     ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None\"": 0,
-    ".venv/bin/python scripts/adversarial_verify.py --milestone-range 5849 5861 --json": 1,
+    ".venv/bin/python -m py_compile python/carnot/experiment_5862_v521_capstone_reconciliation.py": 0,
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py": 0,
     ".venv/bin/python scripts/publication_gate.py --json": 0,
-    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5862_v521_capstone_reconciliation.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_5862_v521_capstone_reconciliation.py tests/python/test_experiment_5862_v521_capstone_reconciliation.py": 0
   },
   "transition_and_source_decision": {
     "decision": "boundary_and_source_current_no_science_promotion",

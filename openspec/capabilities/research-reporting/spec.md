@@ -45287,10 +45287,16 @@ promoted by the capstone.
 The workflow SHALL run or preserve fresh live adversarial-verifier receipts for
 every present declared deliverable. The receipt for each present artifact SHALL
 record command, exit code, parsed JSON report, flag count, maximum severity, and
-receipt hash. A deliverable with CRITICAL or WARN verifier findings, an artifact
+receipt hash. Each receipt command SHALL target the exact declared deliverable
+path directly and SHALL NOT use a milestone-range sweep, glob, or numeric-prefix
+surrogate as the artifact identity. A deliverable with CRITICAL or WARN verifier findings, an artifact
 field such as `flagged_adversarial=true`, a missing declared path, a blocked gate
 receipt, unsafe accepts, off-path provenance, or a software/hardware fallback
 SHALL NOT become a clean positive outcome.
+An adversarial-verifier command that exits `1` because it found flags SHALL be
+recorded as evidence and classification input, not as a capstone test failure;
+unit, coverage, schema, spec-coverage, root-clutter, malformed-verifier, or
+missing-verifier failures remain blocking.
 
 The workflow SHALL produce independent ledgers for transition/source,
 representation energy, lifecycle/replay, continuous self-learning, microkernel,

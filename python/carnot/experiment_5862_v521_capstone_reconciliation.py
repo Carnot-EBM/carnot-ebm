@@ -157,12 +157,8 @@ TASK_TITLES: dict[str, str] = {
     "exp5858-reduced-oracle-continuous-self-learning": (
         "Reduced-oracle versioned constraint memory on sealed future batches"
     ),
-    "exp5859-adaptive-state-microkernel-parity": (
-        "Accepted adaptive operations ABI conformance"
-    ),
-    "exp5860-live-active-observation-ab": (
-        "Closed-loop visual probing under equal action budgets"
-    ),
+    "exp5859-adaptive-state-microkernel-parity": ("Accepted adaptive operations ABI conformance"),
+    "exp5860-live-active-observation-ab": ("Closed-loop visual probing under equal action budgets"),
     "exp5861-attached-board-state-receipts": (
         "KV260 PolarFire GateMate physical capability ledger"
     ),
@@ -184,27 +180,17 @@ CONDUCTOR_TITLE_PATTERNS: dict[str, str] = {
     "exp5854-portable-comparative-energy-controls": (
         "Held-model and held-constraint comparative energy"
     ),
-    "exp5855-exact-release-shadow-routing": (
-        "Exact-authority shadow routing after a portable en"
-    ),
-    "exp5856-provenance-correct-lifecycle": (
-        "Prospective adaptive-memory lifecycle on an honest"
-    ),
+    "exp5855-exact-release-shadow-routing": ("Exact-authority shadow routing after a portable en"),
+    "exp5856-provenance-correct-lifecycle": ("Prospective adaptive-memory lifecycle on an honest"),
     "exp5857-clean-transfer-selective-replay": (
         "Clean-upstream selective replay with hard-case neg"
     ),
     "exp5858-reduced-oracle-continuous-self-learning": (
         "Reduced-oracle versioned constraint memory on seal"
     ),
-    "exp5859-adaptive-state-microkernel-parity": (
-        "Accepted adaptive operations ABI conformance"
-    ),
-    "exp5860-live-active-observation-ab": (
-        "Closed-loop visual probing under equal action budg"
-    ),
-    "exp5861-attached-board-state-receipts": (
-        "KV260 PolarFire GateMate physical capability ledge"
-    ),
+    "exp5859-adaptive-state-microkernel-parity": ("Accepted adaptive operations ABI conformance"),
+    "exp5860-live-active-observation-ab": ("Closed-loop visual probing under equal action budg"),
+    "exp5861-attached-board-state-receipts": ("KV260 PolarFire GateMate physical capability ledge"),
     "exp5862-v521-capstone-reconciliation": "Milestone .521 capstone",
 }
 
@@ -630,7 +616,9 @@ def _roadmap_gates(roadmap: JsonMap) -> dict[str, list[JsonDict]]:
     return {**GATE_DEFINITIONS, **gates}
 
 
-def _structured_gate_replay(payloads: Mapping[str, JsonMap], roadmap: JsonMap) -> dict[str, JsonDict]:
+def _structured_gate_replay(
+    payloads: Mapping[str, JsonMap], roadmap: JsonMap
+) -> dict[str, JsonDict]:
     gates = _roadmap_gates(roadmap)
     replay: dict[str, JsonDict] = {}
     for task_id in EXPECTED_TASK_IDS:
@@ -690,7 +678,9 @@ def _complete_receipt(receipt: JsonMap) -> JsonDict:
     return row
 
 
-def run_live_adversarial_receipts(root: Path = REPO_ROOT) -> dict[str, JsonDict]:  # pragma: no cover
+def run_live_adversarial_receipts(
+    root: Path = REPO_ROOT,
+) -> dict[str, JsonDict]:  # pragma: no cover
     """Run the live artifact verifier for every present upstream deliverable."""
 
     python = root / ".venv/bin/python"
@@ -699,7 +689,12 @@ def run_live_adversarial_receipts(root: Path = REPO_ROOT) -> dict[str, JsonDict]
     for task_id, rel_path in TASK_ARTIFACT_PATHS.items():
         if task_id == EXPERIMENT_ID or not (root / rel_path).exists():
             continue
-        command = [executable, ADVERSARIAL_VERIFY_RELATIVE_PATH.as_posix(), "--json", rel_path.as_posix()]
+        command = [
+            executable,
+            ADVERSARIAL_VERIFY_RELATIVE_PATH.as_posix(),
+            "--json",
+            rel_path.as_posix(),
+        ]
         result = subprocess.run(command, cwd=root, text=True, capture_output=True, check=False)
         try:
             stdout_json: Any = json.loads(result.stdout)
@@ -888,11 +883,15 @@ def _classify_outcomes(
             classes["gated_skip"].append(task_id)
         elif status == "disqualified" or payload.get("surviving_shortcuts"):
             classes["disqualified"].append(task_id)
-        elif status == "blocked" or verdict.startswith("blocked:") or verdict.startswith("blocked_"):
+        elif (
+            status == "blocked" or verdict.startswith("blocked:") or verdict.startswith("blocked_")
+        ):
             classes["blocked"].append(task_id)
         elif status in {"complete_null", "no_change_no_authenticated_state_operation_execution"}:
             classes["clean_null_negative"].append(task_id)
-        elif status in {"complete", "ready", "qualified"} or verdict.startswith(("complete:", "ready:", "qualified:")):
+        elif status in {"complete", "ready", "qualified"} or verdict.startswith(
+            ("complete:", "ready:", "qualified:")
+        ):
             classes["clean_positive"].append(task_id)
         else:
             classes["off_path"].append(task_id)
@@ -922,9 +921,12 @@ def _comparative_energy(payloads: Mapping[str, JsonMap], gates: Mapping[str, Jso
     exp5854_gate = gates["exp5854-portable-comparative-energy-controls"]
     exp5855_gate = gates["exp5855-exact-release-shadow-routing"]
     integrity_ready = exp5853.get("paired_embedding_integrity_ready_score") == 1.0
-    portable_ready = payloads["exp5854-portable-comparative-energy-controls"].get(
-        "portable_comparative_energy_ready_score"
-    ) == 1.0
+    portable_ready = (
+        payloads["exp5854-portable-comparative-energy-controls"].get(
+            "portable_comparative_energy_ready_score"
+        )
+        == 1.0
+    )
     return {
         "paired_embedding_corpus_ready": exp5852.get("paired_embedding_corpus_ready_score") == 1.0,
         "integrity_ready": integrity_ready,
@@ -964,7 +966,9 @@ def _lifecycle_replay(payloads: Mapping[str, JsonMap], receipts: Mapping[str, Js
         "lifecycle_score": lifecycle.get("adaptive_memory_lifecycle_ready_score"),
         "replay_score": replay.get("selective_replay_qualified_score"),
         "exact_replay_substrate": lifecycle.get("inference_substrate"),
-        "decision": "promote_lifecycle_and_replay" if lifecycle_ok and replay_ok else "not_promotable",
+        "decision": "promote_lifecycle_and_replay"
+        if lifecycle_ok and replay_ok
+        else "not_promotable",
     }
 
 
@@ -999,23 +1003,30 @@ def _continuous_self_learning(payloads: Mapping[str, JsonMap]) -> JsonDict:
 
 def _microkernel(payloads: Mapping[str, JsonMap], gates: Mapping[str, JsonMap]) -> JsonDict:
     kernel = payloads["exp5859-adaptive-state-microkernel-parity"]
-    ready = kernel.get("adaptive_state_microkernel_ready_score") == 1.0 and kernel.get("status") != "blocked"
+    ready = (
+        kernel.get("adaptive_state_microkernel_ready_score") == 1.0
+        and kernel.get("status") != "blocked"
+    )
     return {
         "upstream_gate_all_passed": gates["exp5859-adaptive-state-microkernel-parity"].get(
             "all_gates_passed"
         ),
-        "adaptive_state_microkernel_ready_score": kernel.get("adaptive_state_microkernel_ready_score"),
+        "adaptive_state_microkernel_ready_score": kernel.get(
+            "adaptive_state_microkernel_ready_score"
+        ),
         "microkernel_promotable": ready,
         "status": kernel.get("status"),
         "decision": "blocked_artifact_not_promotable" if not ready else "promote_microkernel",
     }
 
 
-def _arc_active_observation(payloads: Mapping[str, JsonMap], receipts: Mapping[str, JsonMap]) -> JsonDict:
+def _arc_active_observation(
+    payloads: Mapping[str, JsonMap], receipts: Mapping[str, JsonMap]
+) -> JsonDict:
     arc = payloads["exp5860-live-active-observation-ab"]
-    verifier_clean = _verifier_clean("exp5860-live-active-observation-ab", receipts) and not arc.get(
-        "flagged_adversarial"
-    )
+    verifier_clean = _verifier_clean(
+        "exp5860-live-active-observation-ab", receipts
+    ) and not arc.get("flagged_adversarial")
     registry_modified = bool(arc.get("registry_modified"))
     solve_credit = registry_modified or arc.get("solve_provenance") != "live_agent_self_discovery"
     ready = arc.get("active_observation_ready_score") == 1.0 and verifier_clean and not solve_credit
@@ -1028,7 +1039,9 @@ def _arc_active_observation(payloads: Mapping[str, JsonMap], receipts: Mapping[s
         "registry_credit": registry_modified,
         "solve_credit": bool(solve_credit),
         "solve_provenance": arc.get("solve_provenance"),
-        "decision": "flagged_null_not_promotable" if not verifier_clean else "clean_null_no_solve_credit",
+        "decision": "flagged_null_not_promotable"
+        if not verifier_clean
+        else "clean_null_no_solve_credit",
     }
 
 
@@ -1038,11 +1051,16 @@ def _hardware(payloads: Mapping[str, JsonMap]) -> JsonDict:
     prohibited = hw.get("prohibited_claims_absent", {})
     execution_receipts = hw.get("authenticated_physical_execution_receipts")
     execution_count = len(execution_receipts) if isinstance(execution_receipts, list) else 0
-    speedup_claimed = isinstance(prohibited, Mapping) and prohibited.get("speedup_claim_absent") is False
+    speedup_claimed = (
+        isinstance(prohibited, Mapping) and prohibited.get("speedup_claim_absent") is False
+    )
     return {
-        "board_claim_promotable": execution_count > 0 and hw.get("authenticated_state_operation_parity_score") == 1.0,
+        "board_claim_promotable": execution_count > 0
+        and hw.get("authenticated_state_operation_parity_score") == 1.0,
         "authenticated_physical_execution_count": execution_count,
-        "authenticated_state_operation_parity_score": hw.get("authenticated_state_operation_parity_score"),
+        "authenticated_state_operation_parity_score": hw.get(
+            "authenticated_state_operation_parity_score"
+        ),
         "software_fallback_promoted": isinstance(fallback, Mapping)
         and fallback.get("software_fallback_used_for_hardware_claim") is True,
         "speedup_claimed": bool(speedup_claimed),
@@ -1066,7 +1084,10 @@ def _model_compliance(payloads: Mapping[str, JsonMap]) -> JsonDict:
         }
     )
     legacy = exp5852.get("legacy_tiny_models")
-    tiny_promoted = any(marker.lower() in " ".join(models_5852 + models_5860).lower() for marker in TINY_MODEL_MARKERS)
+    tiny_promoted = any(
+        marker.lower() in " ".join(models_5852 + models_5860).lower()
+        for marker in TINY_MODEL_MARKERS
+    )
     if isinstance(legacy, list):
         tiny_promoted = tiny_promoted or any(
             isinstance(row, Mapping) and row.get("readiness_eligible") is True for row in legacy
@@ -1075,12 +1096,16 @@ def _model_compliance(payloads: Mapping[str, JsonMap]) -> JsonDict:
         "exp5852": {
             "models_used": models_5852,
             "required_models": list(MANDATED_EMBEDDING_MODEL_IDS),
-            "all_mandated_embedding_models_used": set(MANDATED_EMBEDDING_MODEL_IDS).issubset(models_5852),
+            "all_mandated_embedding_models_used": set(MANDATED_EMBEDDING_MODEL_IDS).issubset(
+                models_5852
+            ),
         },
         "exp5860": {
             "models_used": models_5860,
             "required_models": list(MANDATED_ARC_MODEL_IDS),
-            "mandated_arc_model_used": any(model_id in models_5860 for model_id in MANDATED_ARC_MODEL_IDS),
+            "mandated_arc_model_used": any(
+                model_id in models_5860 for model_id in MANDATED_ARC_MODEL_IDS
+            ),
         },
         "tiny_model_promoted": bool(tiny_promoted),
         "auto_tokenizer_promoted": "AutoTokenizer" in model_blob,
@@ -1117,17 +1142,31 @@ def _authority_receipts(payloads: Mapping[str, JsonMap]) -> JsonDict:
     }
 
 
-def _retirements(payloads: Mapping[str, JsonMap], arc_decision: JsonMap, comparative: JsonMap) -> JsonDict:
-    lifecycle_repeated_flag = payloads["exp5856-provenance-correct-lifecycle"].get(
-        "adaptive_memory_lifecycle_ready_score"
-    ) != 1.0
-    final_embedding_null = comparative.get("portable_comparative_energy_ready") is False and payloads[
-        "exp5854-portable-comparative-energy-controls"
-    ].get("portable_comparative_energy_ready_score") == 0.0
-    reduced_oracle_blocked = payloads[
-        "exp5858-reduced-oracle-continuous-self-learning"
-    ].get("continuous_self_learning_ready_score") != 1.0
-    active_clean_null = arc_decision.get("null_recorded") is True and arc_decision.get("verifier_clean") is True
+def _retirements(
+    payloads: Mapping[str, JsonMap], arc_decision: JsonMap, comparative: JsonMap
+) -> JsonDict:
+    lifecycle_repeated_flag = (
+        payloads["exp5856-provenance-correct-lifecycle"].get(
+            "adaptive_memory_lifecycle_ready_score"
+        )
+        != 1.0
+    )
+    final_embedding_null = (
+        comparative.get("portable_comparative_energy_ready") is False
+        and payloads["exp5854-portable-comparative-energy-controls"].get(
+            "portable_comparative_energy_ready_score"
+        )
+        == 0.0
+    )
+    reduced_oracle_blocked = (
+        payloads["exp5858-reduced-oracle-continuous-self-learning"].get(
+            "continuous_self_learning_ready_score"
+        )
+        != 1.0
+    )
+    active_clean_null = (
+        arc_decision.get("null_recorded") is True and arc_decision.get("verifier_clean") is True
+    )
     rows = {
         "lifecycle_replay": {
             "predicate": "same_flagged_lifecycle_or_replay_verdict",
@@ -1153,7 +1192,9 @@ def _retirements(payloads: Mapping[str, JsonMap], arc_decision: JsonMap, compara
         },
     }
     rows["bounded_retirement_recommendations"] = [
-        key for key, row in rows.items() if isinstance(row, Mapping) and row.get("recommend_retirement")
+        key
+        for key, row in rows.items()
+        if isinstance(row, Mapping) and row.get("recommend_retirement")
     ]
     return rows
 
@@ -1169,7 +1210,9 @@ def _missing_or_flagged(
         "gated_skip_task_ids": list(classes.get("gated_skip", [])),
         "blocked_task_ids": list(classes.get("blocked", [])),
         "disqualified_task_ids": list(classes.get("disqualified", [])),
-        "verifier_flags": {task_id: _receipt_flags(receipts.get(task_id, {})) for task_id in flagged},
+        "verifier_flags": {
+            task_id: _receipt_flags(receipts.get(task_id, {})) for task_id in flagged
+        },
     }
 
 
@@ -1238,7 +1281,10 @@ def _load_publication_gate(root: Path) -> JsonDict:  # pragma: no cover
 
 def _tests_run_rows(tests_run: Sequence[JsonMap] | None) -> list[JsonDict]:
     if tests_run is None:
-        return [{"command": command, "exit_code": None, "status": "not_recorded"} for command in DEFAULT_TEST_COMMANDS]
+        return [
+            {"command": command, "exit_code": None, "status": "not_recorded"}
+            for command in DEFAULT_TEST_COMMANDS
+        ]
     return [dict(row) for row in tests_run]
 
 
@@ -1250,7 +1296,12 @@ def _failed_required_test_commands(test_rows: Sequence[JsonMap]) -> list[str]:
     return [
         str(row.get("command"))
         for row in test_rows
-        if row.get("exit_code") is not None and row.get("exit_code") != 0
+        if row.get("exit_code") is not None
+        and row.get("exit_code") != 0
+        and not (
+            row.get("exit_code") == 1
+            and "scripts/adversarial_verify.py" in str(row.get("command") or "")
+        )
     ]
 
 
@@ -1335,7 +1386,9 @@ def build_report(
     authority = _authority_receipts(payloads)
     retirements = _retirements(payloads, arc, comparative)
     protected = _protected_files(root, modification_overrides)
-    publication = dict(publication_gate) if publication_gate is not None else _load_publication_gate(root)  # pragma: no cover
+    publication = (
+        dict(publication_gate) if publication_gate is not None else _load_publication_gate(root)
+    )  # pragma: no cover
     test_rows = _tests_run_rows(tests_run)
     failed_test_commands = _failed_required_test_commands(test_rows)
 
@@ -1354,17 +1407,32 @@ def build_report(
     }
     preconditions["conductor_outcomes"] = conductor
 
-    if not all(row.get("unchanged") for row in protected.values()):
-        status = "blocked"
-    elif failed_test_commands:
+    if not all(row.get("unchanged") for row in protected.values()) or failed_test_commands:
         status = "blocked"
     else:
-        status = "mixed" if any(classes[key] for key in ("flagged", "gated_skip", "blocked", "disqualified", "missing", "unsafe", "off_path")) else "complete"
+        status = (
+            "mixed"
+            if any(
+                classes[key]
+                for key in (
+                    "flagged",
+                    "gated_skip",
+                    "blocked",
+                    "disqualified",
+                    "missing",
+                    "unsafe",
+                    "off_path",
+                )
+            )
+            else "complete"
+        )
 
     if failed_test_commands:
         honest = "blocked: required capstone checks failed during V521 reconciliation"
     elif status == "blocked":
-        honest = "blocked: protected files or preconditions failed during V521 capstone reconciliation"
+        honest = (
+            "blocked: protected files or preconditions failed during V521 capstone reconciliation"
+        )
     elif status == "mixed":
         honest = (
             "mixed: v521 reconciled with clean lifecycle/replay and reduced-oracle CSL, "
@@ -1406,7 +1474,9 @@ def build_report(
         "paper_ready": bool(publication.get("paper_ready")),
         "publication_gate_receipt": publication,
         "publication_action_taken": False,
-        "duration_s": round(float(duration_s if duration_s is not None else time.perf_counter() - start), 6),
+        "duration_s": round(
+            float(duration_s if duration_s is not None else time.perf_counter() - start), 6
+        ),
         "inference_substrate": INFERENCE_SUBSTRATE,
         "field_provenance": {
             field: {
@@ -1463,6 +1533,41 @@ def validate_artifact(payload: JsonMap) -> bool:
     promoted = set(classes.get("clean_positive", []))
     if flagged & promoted:
         raise ValueError("flagged task promoted as clean positive")
+    matrix = payload.get("exact_task_and_deliverable_matrix")
+    receipts = payload.get("adversarial_verifier_receipts")
+    if not isinstance(matrix, Mapping) or not isinstance(receipts, Mapping):
+        raise ValueError("adversarial verifier receipt matrix missing")
+    required_receipt_keys = {
+        "command",
+        "exit_code",
+        "stdout_json",
+        "flag_count",
+        "max_severity",
+        "receipt_hash",
+    }
+    for task_id, row in matrix.items():
+        if task_id == EXPERIMENT_ID:
+            continue
+        if not isinstance(row, Mapping) or row.get("present") is not True:
+            continue
+        receipt = receipts.get(task_id)
+        if not isinstance(receipt, Mapping):
+            raise ValueError(f"missing adversarial verifier receipt for {task_id}")
+        missing_receipt_fields = sorted(required_receipt_keys - set(receipt))
+        if missing_receipt_fields:
+            raise ValueError(
+                f"missing adversarial verifier receipt fields for {task_id}: {missing_receipt_fields}"
+            )
+        command = str(receipt.get("command") or "")
+        declared_deliverable = str(row.get("declared_deliverable") or "")
+        artifact_path = str(receipt.get("artifact_path") or "")
+        if (
+            "--milestone-range" in command
+            or "*" in command
+            or (declared_deliverable and declared_deliverable not in command)
+            or (artifact_path and artifact_path != declared_deliverable)
+        ):
+            raise ValueError(f"adversarial verifier receipt command is not exact for {task_id}")
     models = payload.get("model_compliance_receipts")
     if isinstance(models, Mapping):
         if models.get("tiny_model_promoted") is True:

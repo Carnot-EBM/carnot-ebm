@@ -70,9 +70,7 @@ def _artifact(task_id: str) -> JsonDict:
                 {"hf_id": model_id, "headline_eligible": True, "quantization": "Q4_K_M"}
                 for model_id in mod.MANDATED_EMBEDDING_MODEL_IDS
             ],
-            "legacy_tiny_models": [
-                {"hf_id": "Qwen/Qwen3.5-0.8B", "readiness_eligible": False}
-            ],
+            "legacy_tiny_models": [{"hf_id": "Qwen/Qwen3.5-0.8B", "readiness_eligible": False}],
             "model_file_and_tokenizer_receipts": {
                 "all_embedded_tokenizers_loadable": True,
                 "all_mandated_files_present": True,
@@ -84,9 +82,7 @@ def _artifact(task_id: str) -> JsonDict:
                 },
             },
             "row_file_receipt": {
-                "path": mod.ROW_ARTIFACT_PATHS[
-                    "exp5852-three-family-paired-embeddings"
-                ].as_posix(),
+                "path": mod.ROW_ARTIFACT_PATHS["exp5852-three-family-paired-embeddings"].as_posix(),
                 "row_count": 12,
             },
             "test_exit_codes": {"focused": 0},
@@ -127,9 +123,7 @@ def _artifact(task_id: str) -> JsonDict:
             "no_model_weight_mutation": True,
             "verifier_is_oracle": True,
             "row_file_receipt": {
-                "path": mod.ROW_ARTIFACT_PATHS[
-                    "exp5856-provenance-correct-lifecycle"
-                ].as_posix(),
+                "path": mod.ROW_ARTIFACT_PATHS["exp5856-provenance-correct-lifecycle"].as_posix(),
                 "row_count": 4,
             },
             "prospective_row_metrics": {
@@ -200,7 +194,10 @@ def _artifact(task_id: str) -> JsonDict:
                 {"kind": "DURATION_TOO_SHORT", "severity": "critical", "detail": "fixture"}
             ],
             "models_used": [mod.MANDATED_ARC_MODEL_IDS[0]],
-            "model_specs": [{"hf_id": model_id, "quantization": "Q4_K_M"} for model_id in mod.MANDATED_ARC_MODEL_IDS],
+            "model_specs": [
+                {"hf_id": model_id, "quantization": "Q4_K_M"}
+                for model_id in mod.MANDATED_ARC_MODEL_IDS
+            ],
             "adapter_source_bfs_and_registry_exclusion_receipts": {
                 "game_adapters_enabled": False,
                 "public_source_read_enabled": False,
@@ -262,7 +259,10 @@ def _roadmap_payload() -> JsonDict:
 
 def _make_root(root: Path) -> None:
     for task_id, rel_path in mod.TASK_ARTIFACT_PATHS.items():
-        if task_id in {"exp5855-exact-release-shadow-routing", "exp5862-v521-capstone-reconciliation"}:
+        if task_id in {
+            "exp5855-exact-release-shadow-routing",
+            "exp5862-v521-capstone-reconciliation",
+        }:
             continue
         _write_json(root, rel_path, _artifact(task_id))
     _write_text(root, mod.ROW_ARTIFACT_PATHS["exp5852-three-family-paired-embeddings"], "{}\n" * 12)
@@ -363,7 +363,7 @@ def _build(root: Path) -> JsonDict:
                 ),
                 "exit_code": 0,
             },
-            { "command": ".venv/bin/pytest tests/python -q", "exit_code": 0 },
+            {"command": ".venv/bin/pytest tests/python -q", "exit_code": 0},
         ],
         modification_overrides={rel_path: False for rel_path in mod.PROTECTED_FILE_PATHS},
         duration_s=1.5,
@@ -395,16 +395,24 @@ def test_scenario_report_5862_gate_replay_and_exact_denominator(tmp_path: Path) 
     assert report["status"] == "mixed"
     assert report["honest_verdict"].startswith("mixed:")
     assert len(report["exact_task_and_deliverable_matrix"]) == 14
-    assert report["exact_task_and_deliverable_matrix"]["exp5855-exact-release-shadow-routing"][
-        "present"
-    ] is False
-    assert report["exact_task_and_deliverable_matrix"]["exp5855-exact-release-shadow-routing"][
-        "selection_policy"
-    ] == "exact_declared_deliverable"
+    assert (
+        report["exact_task_and_deliverable_matrix"]["exp5855-exact-release-shadow-routing"][
+            "present"
+        ]
+        is False
+    )
+    assert (
+        report["exact_task_and_deliverable_matrix"]["exp5855-exact-release-shadow-routing"][
+            "selection_policy"
+        ]
+        == "exact_declared_deliverable"
+    )
 
     gates = report["structured_gate_replay"]
     assert gates["exp5854-portable-comparative-energy-controls"]["all_gates_passed"] is False
-    assert gates["exp5854-portable-comparative-energy-controls"]["science_execution_allowed"] is False
+    assert (
+        gates["exp5854-portable-comparative-energy-controls"]["science_execution_allowed"] is False
+    )
     assert gates["exp5855-exact-release-shadow-routing"]["science_execution_allowed"] is False
     assert gates["exp5858-reduced-oracle-continuous-self-learning"]["all_gates_passed"] is True
     assert gates["exp5859-adaptive-state-microkernel-parity"]["all_gates_passed"] is True
@@ -432,7 +440,9 @@ def test_scenario_report_5862_decisions_and_retirement_predicates(tmp_path: Path
     )
     assert report["lifecycle_and_replay_decision"]["adaptive_memory_lifecycle_promotable"] is True
     assert report["lifecycle_and_replay_decision"]["selective_replay_promotable"] is True
-    assert report["continuous_self_learning_decision"]["continuous_self_learning_promotable"] is True
+    assert (
+        report["continuous_self_learning_decision"]["continuous_self_learning_promotable"] is True
+    )
     assert report["microkernel_decision"]["microkernel_promotable"] is False
     assert report["arc_active_observation_decision"]["active_observation_promotable"] is False
     assert report["arc_active_observation_decision"]["verifier_clean"] is False
@@ -485,9 +495,14 @@ def test_scenario_report_5862_schema_checksum_and_protection(tmp_path: Path) -> 
     assert report["paper_ready"] is True
     assert report["publication_action_taken"] is False
     for receipt in report["adversarial_verifier_receipts"].values():
-        assert {"command", "exit_code", "stdout_json", "flag_count", "max_severity", "receipt_hash"} <= set(
-            receipt
-        )
+        assert {
+            "command",
+            "exit_code",
+            "stdout_json",
+            "flag_count",
+            "max_severity",
+            "receipt_hash",
+        } <= set(receipt)
     assert report["docs_reconciled"]["ops_status_md"] == "deferred_by_operator_stop_rule"
     assert report["docs_reconciled"]["ops_changelog_md"] == "deferred_by_operator_stop_rule"
     assert report["docs_reconciled"]["traceability_md"] == "deferred_by_operator_stop_rule"
@@ -505,9 +520,9 @@ def test_scenario_report_5862_schema_checksum_and_protection(tmp_path: Path) -> 
         (lambda a: a.update(inference_substrate="live_llm_inference"), "inference_substrate"),
         (lambda a: a.update(honest_verdict="ambiguous"), "honest_verdict"),
         (
-            lambda a: a["protected_files_unchanged"][mod.NORTH_STAR_RELATIVE_PATH.as_posix()].update(
-                unchanged=False
-            ),
+            lambda a: a["protected_files_unchanged"][
+                mod.NORTH_STAR_RELATIVE_PATH.as_posix()
+            ].update(unchanged=False),
             "protected file",
         ),
         (lambda a: a.update(field_provenance=[]), "field provenance"),
@@ -538,6 +553,29 @@ def test_scenario_report_5862_schema_checksum_and_protection(tmp_path: Path) -> 
                 publication_action_taken=True
             ),
             "publication_action_taken authority",
+        ),
+        (
+            lambda a: a.update(adversarial_verifier_receipts=[]),
+            "adversarial verifier receipt matrix",
+        ),
+        (
+            lambda a: a["adversarial_verifier_receipts"].pop("exp5849-transition-v521"),
+            "missing adversarial verifier receipt",
+        ),
+        (
+            lambda a: a["adversarial_verifier_receipts"]["exp5849-transition-v521"].pop(
+                "receipt_hash"
+            ),
+            "missing adversarial verifier receipt fields",
+        ),
+        (
+            lambda a: a["adversarial_verifier_receipts"]["exp5849-transition-v521"].update(
+                command=(
+                    ".venv/bin/python scripts/adversarial_verify.py "
+                    "--milestone-range 5849 5861 --json"
+                )
+            ),
+            "adversarial verifier receipt command",
         ),
     ]
     for mutate, needle in mutations:
@@ -605,6 +643,45 @@ def test_scenario_report_5862_failed_required_checks_block_closure(tmp_path: Pat
     mod.validate_artifact(report)
 
 
+def test_scenario_report_5862_verifier_flag_exit_is_evidence_not_bootstrap_failure(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-5862-FLAGS-AND-RETIREMENTS: verifier flags do not block aggregation."""
+
+    _make_root(tmp_path)
+    report = mod.build_report(
+        tmp_path,
+        adversarial_receipts=_receipts(),
+        publication_gate=_publication_gate(),
+        tests_run=[
+            {"command": ".venv/bin/pytest tests/python -q", "exit_code": 0},
+            {
+                "command": (
+                    ".venv/bin/python scripts/adversarial_verify.py --json "
+                    "results/experiment_5860_live_active_observation_ab.json"
+                ),
+                "exit_code": 1,
+            },
+        ],
+        modification_overrides={rel_path: False for rel_path in mod.PROTECTED_FILE_PATHS},
+        duration_s=1.0,
+    )
+
+    assert report["status"] == "mixed"
+    assert report["preconditions_checked"]["failed_required_test_commands"] == []
+    assert (
+        report["test_exit_codes"][
+            ".venv/bin/python scripts/adversarial_verify.py --json "
+            "results/experiment_5860_live_active_observation_ab.json"
+        ]
+        == 1
+    )
+    assert report["missing_or_flagged_evidence"]["flagged_task_ids"] == [
+        "exp5860-live-active-observation-ab"
+    ]
+    mod.validate_artifact(report)
+
+
 def test_req_report_5862_helpers_cover_defensive_and_complete_paths(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -627,7 +704,9 @@ def test_req_report_5862_helpers_cover_defensive_and_complete_paths(
 
     with monkeypatch.context() as patch:
         patch.setattr(Path, "write_text", broken_probe_write)
-        assert mod._atomic_output_receipt(tmp_path / "artifact.json")["error"].startswith("OSError:")
+        assert mod._atomic_output_receipt(tmp_path / "artifact.json")["error"].startswith(
+            "OSError:"
+        )
 
     bad_json = tmp_path / "bad.json"
     bad_json.write_text("{", encoding="utf-8")
@@ -699,10 +778,7 @@ def test_req_report_5862_helpers_cover_defensive_and_complete_paths(
 
     payloads = {task_id: {"status": "complete"} for task_id in mod.EXPECTED_TASK_IDS}
     metadata = {task_id: {"present": True} for task_id in mod.EXPECTED_TASK_IDS}
-    gates = {
-        task_id: {"gates": [], "all_gates_passed": True}
-        for task_id in mod.EXPECTED_TASK_IDS
-    }
+    gates = {task_id: {"gates": [], "all_gates_passed": True} for task_id in mod.EXPECTED_TASK_IDS}
     receipts: dict[str, JsonDict] = {}
     payloads["exp5856-provenance-correct-lifecycle"]["unsafe_accept_count"] = 1
     metadata["exp5849-transition-v521"]["present"] = False
@@ -771,7 +847,10 @@ def test_req_report_5862_helpers_cover_defensive_and_complete_paths(
         tmp_path,
         adversarial_receipts=clean_receipts,
         publication_gate=_publication_gate(),
-        modification_overrides={**{rel_path: False for rel_path in mod.PROTECTED_FILE_PATHS}, mod.NORTH_STAR_RELATIVE_PATH: True},
+        modification_overrides={
+            **{rel_path: False for rel_path in mod.PROTECTED_FILE_PATHS},
+            mod.NORTH_STAR_RELATIVE_PATH: True,
+        },
         duration_s=1.0,
     )
     assert blocked["status"] == "blocked"

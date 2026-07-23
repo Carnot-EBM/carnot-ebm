@@ -195,11 +195,16 @@ def detect_hud_registers(
     return bands
 
 
-def _color_centroid(grid: np.ndarray, color: int) -> Optional[tuple[float, float]]:
-    ys, xs = np.nonzero(grid == color)
-    if ys.size == 0:
-        return None
-    return (float(ys.mean()), float(xs.mean()))
+def _largest_blob_per_color(grid: np.ndarray) -> dict[int, ColorBlob]:
+    """The biggest connected component of each color (connected_color_blobs already suppresses huge
+    background fills). Using the LARGEST connected blob -- not the color's global centroid -- is what makes
+    mover detection robust to a scattered non-entity color whose global centroid drifts as cells flicker."""
+    out: dict[int, ColorBlob] = {}
+    for b in connected_color_blobs(grid):
+        cur = out.get(int(b.color))
+        if cur is None or b.pixel_count > cur.pixel_count:
+            out[int(b.color)] = b
+    return out
 
 
 def detect_mover(
@@ -209,19 +214,21 @@ def detect_mover(
     align_min: float = 0.5,
     max_shift: float = 4.0,
     max_area_fraction: float = 0.15,
+    min_density: float = 0.35,
+    size_tol: float = 0.5,
 ) -> Optional[Mover]:
-    """Find the PLAYER: the color whose centroid consistently translates in the direction of the
-    directional action (1-4) used. For each directional transition and each non-background color present
-    in both frames, we score how well the color's centroid shift aligns with the action's unit vector
-    (dot product of the unit shift with the unit direction), requiring a small, real shift (a rigid
-    slide of ~1 cell, not a whole-board recolor). The color with the strongest, best-supported alignment
-    is the player.
+    """Find the PLAYER: the color whose COMPACT connected blob translates RIGIDLY in the direction of the
+    directional action (1-4) used. For each directional transition we match each non-background color's
+    largest blob before -> after and score how well its centroid shift aligns with the action's unit vector,
+    requiring a small real shift (~1 cell) and a size-preserving match (a rigid slide, not a recolor).
 
-    A player is a SMALL, COMPACT entity, so a color occupying more than `max_area_fraction` of the grid is
-    excluded -- this is what stops a large VOID/background region (not the modal color, so not caught by the
-    background exclusion) from being mistaken for the player. Measured need: cn04's color-0 void was
-    selected as the mover with alignment 1.0 before this guard, because its centroid drifts as the board
-    changes even though it is not an entity."""
+    Two guards keep a non-entity color from masquerading as the player: (a) `max_area_fraction` excludes a
+    color occupying too much of the grid (a void/background-like region), and (b) `min_density`
+    (pixel_count / bbox_area) requires the blob to be COMPACT -- a real sprite fills its bounding box; a
+    scattered set of flickering cells does not. Measured need: cn04's color-0 void was selected as the mover
+    with alignment 1.0 under a global-centroid rule (its centroid drifts as the board changes); requiring a
+    compact, rigidly-translating connected blob removes it while keeping the sc25/ls20 avatar (a dense
+    sprite)."""
     scores: dict[int, list[float]] = {}
     for t in transitions:
         d = _DIR.get(int(t.action))
@@ -235,22 +242,22 @@ def detect_mover(
         area = before.size
         dir_vec = np.asarray(d, dtype=float)
         dir_unit = dir_vec / np.linalg.norm(dir_vec)
-        for color in np.unique(before):
-            color = int(color)
-            if color == bg:
+        lb = _largest_blob_per_color(before)
+        la = _largest_blob_per_color(after)
+        for color, bb in lb.items():
+            if color == bg or bb.pixel_count > max_area_fraction * area:
                 continue
-            if int((before == color).sum()) > max_area_fraction * area:
-                continue  # too large to be a compact player entity (a void/background-like region)
-            cb = _color_centroid(before, color)
-            ca = _color_centroid(after, color)
-            if cb is None or ca is None:
-                continue
-            shift = np.asarray(ca) - np.asarray(cb)
+            bbox_area = bb.height * bb.width
+            if bbox_area <= 0 or (bb.pixel_count / bbox_area) < min_density:
+                continue  # scattered -> not a compact entity (kills the cn04 void FP)
+            ab = la.get(color)
+            if ab is None or abs(ab.pixel_count - bb.pixel_count) > size_tol * bb.pixel_count:
+                continue  # no size-preserving match -> not a rigid slide
+            shift = np.asarray(ab.centroid) - np.asarray(bb.centroid)
             mag = float(np.linalg.norm(shift))
             if mag < 0.3 or mag > max_shift:
                 continue
-            align = float(np.dot(shift / mag, dir_unit))
-            scores.setdefault(color, []).append(align)
+            scores.setdefault(color, []).append(float(np.dot(shift / mag, dir_unit)))
     best: Optional[Mover] = None
     for color, aligns in scores.items():
         positive = [a for a in aligns if a > 0]

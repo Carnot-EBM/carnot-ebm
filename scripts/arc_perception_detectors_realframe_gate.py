@@ -42,19 +42,12 @@ GROUND_TRUTH = {
 }
 
 
-def _explore_plan(h: int, w: int) -> list[tuple[int, int | None, int | None]]:
-    """A fixed exploration: repeated directional cycles (to give the mover directional evidence) interleaved
-    with clicks across a spread of logical cells (to exercise any counter and unstick the agent)."""
-    plan: list[tuple[int, int | None, int | None]] = []
-    for _ in range(6):
-        for a in (1, 2, 3, 4):
-            plan.append((a, None, None))
-    for (cx, cy) in [(1, 1), (w // 3, h // 3), (w // 2, h // 2), (2 * w // 3, 2 * h // 3), (w - 2, h - 2), (0, h - 1), (w - 1, 0), (5, 5)]:
-        plan.append((6, cx, cy))
-    for _ in range(5):
-        for a in (1, 2, 3, 4):
-            plan.append((a, None, None))
-    return plan
+def _click_cells(h: int, w: int) -> list[tuple[int, int]]:
+    """A spread of logical (col, row) click targets to exercise any counter + unstick the agent."""
+    return [
+        (1, 1), (w // 3, h // 3), (w // 2, h // 2), (2 * w // 3, 2 * h // 3),
+        (w - 2, h - 2), (0, h - 1), (w - 1, 0), (5, 5), (w // 4, 3 * h // 4), (3 * w // 4, h // 4),
+    ]
 
 
 def _gather(game: str):
@@ -77,19 +70,41 @@ def _gather(game: str):
     cell = detect_cell(raw)
     logical = to_logical(raw, cell)
     h, w = logical.shape
-    avail = set(_available_action_ids(frame) or [1, 2, 3, 4, 6])
+    clicks = _click_cells(h, w)
+    # ADAPTIVE plan: a repeating action pattern, but at each step we take the next PATTERN action that is
+    # actually AVAILABLE this frame (per-game action sets differ -- a fixed plan under-explored r11l/ft09 to
+    # 8 steps because most planned actions were unavailable). Guarantees directional coverage + periodic
+    # clicks within whatever vocabulary the game exposes.
+    pattern = [1, 2, 3, 4, 1, 2, 3, 4, 6, 6]
+    max_steps = 60
     transitions: list[Transition] = []
-    for aid, cx, cy in _explore_plan(h, w):
-        if _game_over(frame) or aid not in avail:
-            continue
+    click_i = 0
+    pat_i = 0
+    steps = 0
+    while steps < max_steps and not _game_over(frame):
+        avail = set(_available_action_ids(frame) or [1, 2, 3, 4, 6])
+        aid = None
+        for _ in range(len(pattern)):
+            cand = pattern[pat_i % len(pattern)]
+            pat_i += 1
+            if cand in avail:
+                aid = cand
+                break
+        if aid is None:
+            aid = next(iter(avail), None)
+        if aid is None:
+            break
+        cx = cy = None
         data = None
-        if aid == 6 and cx is not None and cy is not None:
+        if aid == 6:
+            cx, cy = clicks[click_i % len(clicks)]
+            click_i += 1
             data = {"x": min(63, max(0, cx * cell + cell // 2)), "y": min(63, max(0, cy * cell + cell // 2))}
         before = to_logical(grid_of(frame), cell)
         frame = env.step(_game_action(GameAction, aid), data=data)
         after = to_logical(grid_of(frame), cell)
         transitions.append(Transition(before=before, action=aid, after=after, x=cx, y=cy))
-        avail = set(_available_action_ids(frame) or list(avail))
+        steps += 1
     return transitions, (h, w), int(frame_level(frame))
 
 
