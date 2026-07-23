@@ -177,3 +177,21 @@ class TestReauthorFraming:
 
         _, block = reauthor_framing("r", self._percept())
         assert "OVERRIDES" in block and "IGNORE these STATUS COUNTERS" in block
+
+    def test_no_mover_uses_neutral_frame_not_forced_navigation(self):
+        # REQ-ARC-WMTE-5834 overcorrection fix: with no player/mover, do NOT force a navigate frame (which
+        # mis-framed the lf52 merge / ft09 CSP games); offer the arrange/match/pattern options instead.
+        from carnot.agentic.arc_entity_hud_perception import HudBand, PerceptionResult, reauthor_framing
+
+        percept = PerceptionResult(
+            text="...",
+            objects=[
+                {"id": 0, "color": 14, "row": 2, "col": 30, "size": 6, "role": "object"},
+                {"id": 1, "color": 2, "row": 50, "col": 5, "size": 3, "role": "object"},
+            ],
+            hud_bands=[HudBand(axis="row", index=0, direction="fill", changed_fraction=1.0, monotone_ratio=1.0)],
+            mover=None,
+        )
+        _, block = reauthor_framing("Actions change cells in row 0 to 1.", percept)
+        assert "PLAYER: color" not in block  # no player asserted
+        assert "arrange/match/merge" in block  # neutral options, not forced navigation

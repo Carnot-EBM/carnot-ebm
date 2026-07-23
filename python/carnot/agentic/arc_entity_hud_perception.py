@@ -427,8 +427,21 @@ def reauthor_framing(rules_text: str, percept: PerceptionResult) -> tuple[str, s
             "- DISREGARD these earlier notes -- they describe a counter advancing as a side-effect, not the "
             "objective: " + " | ".join(retracted)
         )
-    lines.append(
-        "- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), "
-        "NOT filling/changing a counter band."
-    )
+    # Closing directive. When a player/mover WAS detected, push the navigate frame (it is almost certainly a
+    # move-the-player game). When NONE was detected, do NOT force navigation -- that OVERCORRECTED the
+    # non-navigate games (lf52 block-merge, ft09 hidden-CSP) into a wrong navigate frame. Instead offer the
+    # options so the model infers from the objects: move-to-target, arrange/match/merge, or satisfy a pattern.
+    if player is not None or percept.mover is not None:
+        lines.append(
+            "- The GOAL almost certainly involves moving the PLAYER onto one of the TARGET objects above, "
+            "NOT filling/changing a counter band. (If the objects clearly need arranging/matching instead, "
+            "say that.)"
+        )
+    else:
+        lines.append(
+            "- The GOAL involves the GAME OBJECTS above, NOT the counter band. Infer which fits the objects "
+            "and rules: (a) move an object onto a matching target, (b) arrange/match/merge similar objects "
+            "until a target configuration is reached, or (c) satisfy a pattern/constraint over the cells. "
+            "State the single most likely goal."
+        )
     return corrected_rules, "\n".join(lines)
