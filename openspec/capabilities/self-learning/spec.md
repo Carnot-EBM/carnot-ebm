@@ -24377,4 +24377,4 @@ restart mismatch, mutable model weights, or cap overflow
 
 | Requirement | Python | Tests |
 |---|---|---|
-| REQ-LEARN-5828 | Planned (`python/carnot/experiment_5828_future_validated_structural_memory.py`, `results/experiment_5828_future_validated_structural_memory.json`) | Planned (`tests/python/test_experiment_5828_future_validated_structural_memory.py`) |
+| REQ-LEARN-5828 | Implemented (`python/carnot/experiment_5828_future_validated_structural_memory.py`, `results/experiment_5828_future_validated_structural_memory.json`) | Implemented (`tests/python/test_experiment_5828_future_validated_structural_memory.py`) |
