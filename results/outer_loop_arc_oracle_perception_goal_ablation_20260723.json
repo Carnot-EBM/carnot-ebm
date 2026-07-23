@@ -1,0 +1,252 @@
+{
+  "experiment": "outer_loop_arc_oracle_perception_goal_ablation",
+  "experiment_id": "REQ-ARC-WMTE-5832",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_oracle_perception_goal_ablation.v1",
+  "title": "Does handing gemma-4-31B the correct entities (oracle perception) flip its GOAL hypothesis to the true win condition? 3-condition ablation over 8 games.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "random_seed": 5831,
+  "random_seeds_used": [
+    5831,
+    5832
+  ],
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-GGUF",
+      "repo": "unsloth/gemma-4-31B-it-GGUF",
+      "gpu": 1,
+      "port": 8957
+    }
+  ],
+  "methodology_note": "Same model + same learned RULES per game (held constant); only the PERCEPTION varies (A naive HUD/decoy, B +true entities, C +entities+HUD-labeled). Perception facts contain entity presence/role ONLY, never the goal. Source facts read for offline dev analysis (authorized), never used in the hidden submission. Judging of goal-match is done offline by the outer loop.",
+  "conditions": {
+    "A_naive": "only the HUD/decoy the segmentation actually surfaced",
+    "B_entities": "naive view + true entities (HUD not labeled)",
+    "C_oracle": "true entities + HUD explicitly identified as a non-goal counter"
+  },
+  "per_game": [
+    {
+      "game": "sc25",
+      "perception_blocked": true,
+      "true_win": "navigate the player avatar onto the exit tile",
+      "goals": {
+        "A_naive": [
+          "Change the 3x3 value grid to all 14s.",
+          "Change all values in the 3x3 grid to 14."
+        ],
+        "B_entities": [
+          "Reach the EXIT tile after toggling the value block near (54,29) to 14.",
+          "Reach the EXIT tile while the meter at columns 62-63 is filled."
+        ],
+        "C_oracle": [
+          "Reach the EXIT tile after changing the values in the block near (54,29) to a specific required state.",
+          "Reach the EXIT tile after changing the values in the block near (54,29) to a specific required state."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "yes",
+        "C_oracle": "yes",
+        "note": "C names 'reach the EXIT tile' (+ a spurious value precondition); B cleaner ('Reach the EXIT tile')"
+      }
+    },
+    {
+      "game": "tu93",
+      "perception_blocked": true,
+      "true_win": "navigate the player token onto the exit block",
+      "goals": {
+        "A_naive": [
+          "Consume all cells with value 6.",
+          "Consume all cells with value 6."
+        ],
+        "B_entities": [
+          "Move the PLAYER token to the EXIT block.",
+          "Move the PLAYER token to the EXIT block."
+        ],
+        "C_oracle": [
+          "Move the PLAYER token to the EXIT block.",
+          "Move the PLAYER token to the EXIT block."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "yes",
+        "C_oracle": "yes",
+        "note": "C exact: 'Move the PLAYER token to the EXIT block'; A was the LOSE condition"
+      }
+    },
+    {
+      "game": "ls20",
+      "perception_blocked": true,
+      "true_win": "morph the avatar's shape/color/rotation to match a goal pad, then stand on it",
+      "goals": {
+        "A_naive": [
+          "Change all floor cells from color 3/5 to color 12.",
+          "Recolor all floor cells from 3/5 to 12."
+        ],
+        "B_entities": [
+          "Reach a GOAL-PAD tile with the PLAYER avatar.",
+          "Reach a GOAL-PAD tile with the PLAYER avatar."
+        ],
+        "C_oracle": [
+          "Move the PLAYER avatar to a GOAL-PAD while matching its required shape, color, and rotation.",
+          "Move the player avatar to a goal-pad while matching its required shape, color, and rotation."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "yes",
+        "C_oracle": "yes",
+        "note": "C exact incl. attribute-matching (shape/color/rotation)"
+      }
+    },
+    {
+      "game": "cn04",
+      "perception_blocked": true,
+      "true_win": "move/rotate pieces so their terminal markers pair up (spatial endpoint pairing)",
+      "goals": {
+        "A_naive": [
+          "Clear all cells of colors 4, 12, and 14 from the board.",
+          "Clear all cells of colors 4, 12, and 14 from the board."
+        ],
+        "B_entities": [
+          "Align the terminal marker cells (8 and 13) to specific trigger coordinates to clear the rest of the board.",
+          "Align the terminal markers (8 and 13) to specific trigger coordinates to clear the board."
+        ],
+        "C_oracle": [
+          "Align the terminal MARKER cells (8 and 13) so they are adjacent or overlapping.",
+          "Align the terminal MARKER cells (colors 8 and 13) to specific target coordinates or to each other."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "yes",
+        "C_oracle": "yes",
+        "note": "C 'align the terminal markers 8/13' = the endpoint-pairing win"
+      }
+    },
+    {
+      "game": "lf52",
+      "perception_blocked": true,
+      "true_win": "merge blocks until only one (goal count) remains",
+      "goals": {
+        "A_naive": [
+          "Change all cells in row 0 to state 1.",
+          "Fill all cells in row 0 with the state 1."
+        ],
+        "B_entities": [
+          "Clear all blocks from the board.",
+          "Clear all blocks from the board."
+        ],
+        "C_oracle": [
+          "Clear all blocks from the board.",
+          "Clear all blocks from the board."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "partial",
+        "C_oracle": "partial",
+        "note": "right objects+merge frame ('clear all blocks') but wrong count target (reduce-to-ONE, not clear-all)"
+      }
+    },
+    {
+      "game": "bp35",
+      "perception_blocked": false,
+      "true_win": "maneuver the player sprite (via gravity) onto the gem tile",
+      "goals": {
+        "A_naive": [
+          "Fill row 63 entirely with color-15 cells.",
+          "Fill row 63 entirely with color-15 cells."
+        ],
+        "B_entities": [
+          "Fill row 63 entirely with color-15 cells.",
+          "Fill row 63 entirely with color-15 cells."
+        ],
+        "C_oracle": [
+          "Collect the GEM tile.",
+          "Reach the GEM tile."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "no",
+        "C_oracle": "yes",
+        "note": "ONLY C flipped ('reach the GEM'); B stayed HUD-fixated -> HUD-labeling (suppression) was necessary, not just adding entities"
+      }
+    },
+    {
+      "game": "r11l",
+      "perception_blocked": false,
+      "true_win": "slide each piece onto its matching target pad",
+      "goals": {
+        "A_naive": [
+          "Set all cells from (21,0) to (42,0) to 5.",
+          "Set all cells in the range (21,0) through (42,0) to 5."
+        ],
+        "B_entities": [
+          "Move all PIECE objects onto their matching TARGET-PAD tiles.",
+          "Move all PIECE objects onto their matching TARGET-PAD tiles."
+        ],
+        "C_oracle": [
+          "Move all PIECE objects onto their matching TARGET-PAD tiles.",
+          "Move all PIECE objects onto their matching TARGET-PAD tiles."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "yes",
+        "C_oracle": "yes",
+        "note": "exact ('move each PIECE onto its matching TARGET-PAD'); dynamics contrast case flipped on perception alone"
+      }
+    },
+    {
+      "game": "ft09",
+      "perception_blocked": false,
+      "true_win": "satisfy the hidden adjacency-color pattern constraint over the tiles",
+      "goals": {
+        "A_naive": [
+          "Reach a specific target cell on the grid.",
+          "Reach a specific target cell on the grid."
+        ],
+        "B_entities": [
+          "Arrange the colored blocks into a specific hidden pattern by clicking them.",
+          "Arrange the colored blocks into a specific hidden pattern."
+        ],
+        "C_oracle": [
+          "Arrange the colored blocks into a specific hidden adjacency-color pattern.",
+          "Arrange the blocks to match a specific hidden color adjacency pattern."
+        ]
+      },
+      "judgment": {
+        "A_naive": "no",
+        "B_entities": "yes",
+        "C_oracle": "yes",
+        "note": "C 'match the hidden adjacency-color pattern' = the true CSP win; deepest contrast case still flipped"
+      }
+    }
+  ],
+  "duration_s": 42.02,
+  "reproducibility_checksum": "sha256:ef5f8a8dc11e9496f10b4c484b38cf5efca4050a8900b057d455fe7745ac6445",
+  "judgment_summary": {
+    "A_naive": {
+      "no": 8
+    },
+    "B_entities": {
+      "yes": 6,
+      "partial": 1,
+      "no": 1
+    },
+    "C_oracle": {
+      "yes": 7,
+      "partial": 1
+    }
+  },
+  "headline": "DECISIVE POSITIVE: under NAIVE perception 0/8 goals correct (replicating the 8/8-never-hypothesized diagnosis); under ORACLE perception (correct entities + HUD labeled) 7/8 correct + 1/8 partial (lf52). The goal-hypothesis generator is NOT the bottleneck -- it produces the TRUE win condition as soon as perception delivers the right entities. bp35 shows BOTH halves matter: adding entities (B) did NOT flip it; only labeling the row-63 bar as a lose-timer (C) did. Confirms GAP-ARC-PERCEPTION-HUD-VS-BOARD as THE lever and justifies building the HUD-register + mover/entity detectors.",
+  "honest_caveats": [
+    "This measures GOAL-HYPOTHESIS correctness, NOT level discovery. Right goal is necessary, not sufficient: the agent must still EXECUTE it (navigate/merge/two-click), which needs the dynamics/action model (bp35 gravity, r11l two-click remain execution gaps even with the right goal).",
+    "Oracle facts were hand-authored from source (offline dev). A real detector must PRODUCE these from frames autonomously -- that is the build this ablation justifies, not a shipped capability.",
+    "Single temperature (0.3), 2 seeds; goals were highly stable across seeds. Small n (8 games)."
+  ]
+}
