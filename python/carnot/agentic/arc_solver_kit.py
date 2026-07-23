@@ -5016,8 +5016,32 @@ def cast_grid_phase_fsm_world_model(
     }
 
 
-def object_centric_digest(grid: Any) -> dict[str, Any]:
-    """Connected-component digest for ARC frames or grids."""
+def object_centric_digest(
+    grid: Any,
+    *,
+    emit_grid_fallback_for_background: bool = False,
+    grid_fallback_tile_px: int = 8,
+    grid_fallback_max_tiles: int = 64,
+) -> dict[str, Any]:
+    """Connected-component digest for ARC frames or grids.
+
+    ``emit_grid_fallback_for_background`` (REQ-ARC-FCP-5757 follow-up,
+    ``GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS``, 2026-07-23; OFF by default -- a purely
+    additive opt-in, zero behavior change for any existing caller). The single most-common color
+    is always excluded wholesale as "background" here, unconditionally -- but the most-common
+    color is not necessarily true background: bp35's win condition requires clicking individual
+    same-row "blocker" cells that all happen to share the single most-common color (measured
+    directly: color 5, 2109/4096 px on a real stalled state), so those cells NEVER become click
+    candidates regardless of search depth or LLM judgment -- a generation/perception gap no
+    downstream selection or planning improvement can fix (confirmed via the 2026-07-23 candidate-
+    coverage attribution: bp35 alone accounts for all 21/25 of that run's generation misses, every
+    one an action-6 click never proposed despite 50+ other candidates existing). When enabled, the
+    excluded background mask is tiled on an absolute ``grid_fallback_tile_px``-pixel pitch
+    (grid-aligned across the whole frame) into small ``is_grid_fallback: True`` components -- one
+    per occupied tile, not one per pixel, so this does not regress into per-pixel-noise explosion.
+    Fails CLOSED: if tiling the background mask would exceed ``grid_fallback_max_tiles``, no
+    fallback components are emitted (an arbitrary subset would bias toward whichever tiles happen
+    to iterate first, worse than omitting)."""
 
     import numpy as np
 
@@ -5066,6 +5090,28 @@ def object_centric_digest(grid: Any) -> dict[str, Any]:
                     "signature": signature,
                 }
             )
+    if emit_grid_fallback_for_background:
+        bg_ys, bg_xs = np.nonzero(~mask)
+        tile_px = max(1, int(grid_fallback_tile_px))
+        tile_of: dict[tuple[int, int], list[tuple[int, int]]] = {}
+        for y, x in zip(bg_ys.tolist(), bg_xs.tolist()):
+            tile_of.setdefault((y // tile_px, x // tile_px), []).append((y, x))
+        if len(tile_of) <= int(grid_fallback_max_tiles):
+            for cells in tile_of.values():
+                tys = [c[0] for c in cells]
+                txs = [c[1] for c in cells]
+                area = len(cells)
+                bbox = [min(tys), min(txs), max(tys), max(txs)]
+                components.append(
+                    {
+                        "color": background,
+                        "area": area,
+                        "bbox": bbox,
+                        "centroid": [sum(txs) / area, sum(tys) / area],
+                        "signature": f"c{background}:a{area}:bbox{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}:gridfallback",
+                        "is_grid_fallback": True,
+                    }
+                )
     components.sort(key=lambda row: (-int(row["area"]), int(row["color"]), row["bbox"]))
     return {
         "operator": "object_centric_digest",

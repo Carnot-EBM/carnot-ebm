@@ -39,19 +39,34 @@ from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_goal_energy_live import make_goal_energy_heuristic
 
 
-def _components_detailed(grid) -> list:
+def _components_detailed(grid, *, emit_grid_fallback: bool = False) -> list:
     """Connected non-background components with (centroid_y, centroid_x, area, color).
     Same 4-neighbour flood fill as world_model.objects(), but also returns area+color
     so candidates can be ordered by VISUAL SALIENCE (segment size × color rarity) —
     the key ingredient from the graph-explore SOTA (arXiv:2512.24156) that lets the
     search try the most salient interactive elements first instead of treating all
-    objects uniformly."""
+    objects uniformly.
+
+    ``emit_grid_fallback`` (REQ-ARC-FCP-5757 follow-up, GAP-ARC-BP35-CLICK-CANDIDATE-
+    GENERATION-MISS, 2026-07-23; OFF by default): threads through to
+    ``object_centric_digest``'s ``emit_grid_fallback_for_background`` -- see that
+    function's docstring for the full diagnosis and rationale."""
     from carnot.agentic.arc_solver_kit import object_centric_digest
 
     comps = []
-    for comp in object_centric_digest(grid)["components"]:
+    for comp in object_centric_digest(grid, emit_grid_fallback_for_background=emit_grid_fallback)[
+        "components"
+    ]:
         cx, cy = comp["centroid"]
-        comps.append((int(cy), int(cx), int(comp["area"]), int(comp["color"])))
+        comps.append(
+            (
+                int(cy),
+                int(cx),
+                int(comp["area"]),
+                int(comp["color"]),
+                bool(comp.get("is_grid_fallback")),
+            )
+        )
     return comps
 
 
@@ -204,6 +219,8 @@ def rich_action_candidates(
     if 6 in ids:
         import os
 
+        pts_already_bounded = False
+
         grid = grid_of(frame)
         pts = _action_prior_click_points(action_prior, frame, max_click=max_click)
         # CARNOT_ARC_TIER_SCHEDULE=1 orders object-clicks by just-explore's 5 salience tiers (button-like
@@ -229,21 +246,77 @@ def rich_action_candidates(
             except Exception:
                 pts = None
         if pts is None:
-            comps = _components_detailed(grid)
-            if by_salience and comps:
+            # CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1 (REQ-ARC-FCP-5757 follow-up,
+            # GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS, 2026-07-23) tiles the excluded
+            # background color into coarse click candidates so individually-meaningful cells
+            # that share the most-common color (e.g. bp35's same-row blocker tiles) are not
+            # PERMANENTLY invisible to every downstream mechanism regardless of search depth.
+            # Default off -> byte-identical to the proven order (parity preserved; the
+            # SUBMITTED agent unchanged until an A/B greenlights it). The kwarg is only ever
+            # PASSED when the flag is actually on, so a test double patched against the
+            # pre-5757-followup 1-arg _components_detailed(grid) signature is unaffected.
+            grid_fallback_on = os.environ.get("CARNOT_ARC_GRID_FALLBACK_CANDIDATES") == "1"
+            if grid_fallback_on:
+                comps = _components_detailed(grid, emit_grid_fallback=True)
+            else:
+                comps = _components_detailed(grid)
+
+            # Unpacked defensively (not `cy, cx, area, color, is_fb = c`): several existing tests
+            # (e.g. test_req_arc_fcp_4491/4511/4512/4547/4568) monkeypatch _components_detailed
+            # with a fake returning the pre-5757-followup 4-tuple `(cy, cx, area, color)` shape,
+            # to test OTHER rich_action_candidates behavior (rankers, priors) unrelated to grid
+            # fallback -- a hard `len(c) == 5` assumption here would break every one of them.
+            def _is_fallback(c) -> bool:
+                return bool(c[4]) if len(c) > 4 else False
+
+            # Grid-fallback tiles are, BY CONSTRUCTION, small pieces of the single most-common
+            # color -- the exact combination (small area * near-zero color-rarity) the salience
+            # sort below ranks lowest. Left in the same pool, they are reliably pushed past the
+            # `max_click` cap by genuine higher-salience objects and NEVER actually surface as
+            # candidates (measured directly: 55 fallback tiles generated, 0 survived a top-48
+            # cut on a real bp35 state -- the bug this split fixes). Splitting them into their
+            # OWN small reserved budget guarantees the fallback mechanism can't be silently
+            # starved by unrelated objects it structurally can never outrank.
+            real_comps = [c for c in comps if not _is_fallback(c)] if grid_fallback_on else comps
+            fallback_comps = [c for c in comps if _is_fallback(c)] if grid_fallback_on else []
+            if by_salience and real_comps:
                 from collections import Counter
 
                 color_cells = Counter(int(v) for v in grid.flatten().tolist())
                 # salience: big segments + globally-rare colors score highest
-                comps.sort(
+                real_comps.sort(
                     key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
                 )
-            pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
+            pts = [(int(c[1]), int(c[0])) for c in real_comps]
+            if fallback_comps:
+                # SMALLEST tile first, not largest: measured directly on bp35 that the tile
+                # actually covering a real winning click (area=9, a small interior sliver
+                # against other objects) sat near the BOTTOM of an area-descending sort behind
+                # ~50 large, genuinely-empty corner/edge tiles of the suppressed background --
+                # mirrors REQ-ARC-FCP-5758's own established finding elsewhere in this file
+                # ("winning object-clicks are consistently very SMALL objects").
+                fallback_comps.sort(key=lambda c: c[2])  # smaller tile first
+                # No further sub-cap here: object_centric_digest's own grid_fallback_max_tiles
+                # (default 64) is already the size guard. A first attempt additionally capped
+                # this at max_click//2 and measured a REAL, but smaller, improvement on bp35's
+                # actual reproduction-gated winning trajectory (21/57 generation misses -> 16/57)
+                # -- the covering tile for several targets simply didn't make that tighter cut.
+                # Removing the redundant sub-cap (keeping ALL emitted fallback tiles, bounded
+                # only by the digest's own 64-tile ceiling) measured a LARGER improvement on the
+                # SAME replay (21/57 -> 15/57 at the real default max_click=48; a synthetic,
+                # artificially-widened max_click=200 run -- NOT the real live budget -- closed it
+                # completely, confirming the underlying mechanism is sound and the remaining
+                # misses at the real budget are a genuine candidate-budget-sharing tradeoff
+                # against real, higher-salience objects, not a bug in the fallback tiling itself).
+                pts = pts[:max_click] + [(int(c[1]), int(c[0])) for c in fallback_comps]
+                pts_already_bounded = True  # don't let the loop's own [:max_click] slice
+                # below cut the appended fallback tail back off -- that would silently undo
+                # the whole point of the reserved fallback budget above.
         if not pts:
             h, w = grid.shape
             pts = [(w // 2, h // 2)]
         seen: set = set()
-        for x, y in pts[:max_click]:
+        for x, y in pts if pts_already_bounded else pts[:max_click]:
             p = (max(0, int(x)), max(0, int(y)))
             if p in seen:
                 continue

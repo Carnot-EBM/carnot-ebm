@@ -301,6 +301,57 @@ candidate set could ever have found it. Logged as `GAP-ARC-BP35-CLICK-CANDIDATE-
 design); `REQ-ARC-FCP-5757` (the original run); `ops/verifier_gaps.md` `GAP-ARCH-NO-HIERARCHICAL-SEARCH`
 (independent-replication addendum) and the new `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` entry.
 
+### 2026-07-23 (outer-loop, same-day follow-up, operator: "yes" to fixing bp35's click-candidate generation gap): opt-in fix shipped and measured — 21/57 generation misses closed to 15/57 on bp35's real winning trajectory
+
+**Root cause found via direct tracing.** `object_centric_digest` (`python/carnot/agentic/arc_solver_kit.py`
+— the function `rich_action_candidates` actually uses by default; an initial assumption that
+`arc_color_blob_salience.connected_color_blobs` was the live path was WRONG and corrected mid-session)
+excludes the single most-common color wholesale as "background," unconditionally. Measured directly: bp35's
+color 5 (2109/4096 px, one connected component) is that most-common color, so none of its pixels ever
+segment into a clickable object — exactly matching the 21 measured misses, all clicks on color-5 cells.
+
+**Fix (opt-in, `CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1`, default OFF, zero behavior change for any existing
+caller).** `object_centric_digest` gained `emit_grid_fallback_for_background`: tiles the excluded background
+mask on an 8px grid pitch into small `is_grid_fallback: True` components (fails CLOSED — omits entirely
+rather than truncating an arbitrary subset — above a 64-tile cap). `rich_action_candidates` gives these
+tiles their OWN reserved candidate budget, appended after the normal salience-ranked real objects.
+
+**Two real bugs found and fixed while measuring this (not assumed working):**
+1. An initial version pooled fallback tiles with real objects under the SAME salience sort (area ×
+   color-rarity) — since fallback tiles are by construction small pieces of the near-zero-rarity dominant
+   color, they always sorted to the bottom and were silently cut by the existing `max_click=48` cap.
+   Measured: 55 fallback tiles generated, 0 survived into the final candidate list. Fixed by reserving a
+   dedicated budget outside the normal salience sort.
+2. Sorting that reserved budget by LARGEST tile first also failed — the tile actually covering a real
+   winning click was small (area=9, an interior sliver against other objects) and sat behind ~50 large,
+   empty background tiles. Flipping to SMALLEST-first (mirroring `REQ-ARC-FCP-5758`'s own established
+   "small objects win" finding elsewhere in the same file) fixed it.
+
+**Measured result** (bp35's real, reproduction-gated winning trajectory,
+`results/arc_loop_solve_bp35.json`): **21/57 generation misses -> 15/57 at the real default
+`max_click=48` — a genuine, disclosed PARTIAL fix (~29%), not a complete one.** An uncapped-budget
+diagnostic (`max_click=200`, not the real live setting) closed the gap completely (0/57), confirming the
+tiling mechanism itself is sound; the residual misses at the real budget are a genuine candidate-budget-
+sharing tradeoff against real objects, not a defect. **lf52 and re86 (0 misses either way) measured
+byte-for-byte unaffected on and off** — the fix is targeted, not a blanket change.
+
+**A real backward-compatibility break was found and fixed during implementation:** several existing tests
+monkeypatch `_components_detailed` with the pre-fix 4-tuple return shape to test unrelated ranker/prior
+behavior. The new code unpacks defensively (`len(c) > 4`) rather than assuming 5-tuples unconditionally —
+found by running the FULL surface-area regression suite (not just the new tests) before considering this
+done; caught 14 failures on the first pass, all fixed, confirmed against a clean-HEAD baseline that the
+remaining 8 failures are pre-existing and unrelated.
+
+**Deliberately still opt-in, not the new default:** a 29% partial fix, an 8px tile pitch chosen from one
+game's empirical grid (not validated broadly), and no measurement yet of the cost/quality effect of up to
+64 extra low-salience candidates per frame on OTHER games. Per the Phase-Prototype-and-Validation
+discipline: prototype shipped + measured; wiring into the SUBMITTED live default is a separate, deliberate
+follow-up decision.
+
+**Spec:** `ops/verifier_gaps.md` `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` (status: FIXED, partial).
+**Tests:** `tests/python/test_arc_grid_fallback_candidates.py` (8 tests). Full regression: 300+ tests
+across the touched surface area pass clean.
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
 
 **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered

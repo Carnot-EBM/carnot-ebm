@@ -2604,8 +2604,7 @@ budget or LLM judgment quality: if the candidate generator itself never proposes
 of search or reasoning built ON TOP of that candidate set could ever have found it.
 
 ### GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS: bp35's winning clicks are never proposed by rich_action_candidates
-- status: characterized, not yet fixed — a concrete, reproducible finding from the 2026-07-23 candidate-
-  coverage attribution replication above.
+- status: FIXED (partial, disclosed) 2026-07-23, same day — root-caused, an opt-in fix shipped and measured.
 - evidence: `results/outer_loop_arc_candidate_coverage_attribution_20260723_per_action.json` (bp35 rows,
   bucket `a_generation_miss`) — 21/57 progress actions on bp35's reproduction-gated L1+L2 winning path, ALL
   action-6 clicks, at coordinates (42,30)/(24,36)/(18,36)/(18,30)/(30,30)/(36,30)/(30,36) recurring across the
@@ -2632,6 +2631,54 @@ of search or reasoning built ON TOP of that candidate set could ever have found 
   (generation/perception) the top-project search-architecture audit predicted would matter most, on a game
   this session's entire prior investigation (5 independent mechanisms) could not crack for any other
   diagnosed reason. Fixing this is the most direct, evidence-backed next lever for bp35 specifically.
+
+**ROOT CAUSE (found via direct tracing, not assumed):** `object_centric_digest`
+(`python/carnot/agentic/arc_solver_kit.py`, the function `rich_action_candidates`'s DEFAULT path actually
+uses — NOT `arc_color_blob_salience.connected_color_blobs`, an initial, incorrect assumption corrected
+mid-session) picks the SINGLE MOST-COMMON color in the frame and excludes it wholesale as "background"
+(`mask = arr != background`), unconditionally, regardless of whether it forms one blob or many. Measured
+directly on a real bp35 state: color 5 (2109/4096 px, one connected component) IS the most-common color, so
+none of its pixels ever become a segmented "object" and therefore never generate a click candidate — matching
+EXACTLY the 21 measured misses, all clicks on color-5 cells.
+- **Fix (opt-in, `CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1`, default OFF):** `object_centric_digest` gained
+  `emit_grid_fallback_for_background` — when set, the excluded background mask is tiled on an absolute
+  8px-pitch grid into small `is_grid_fallback: True` components (one per occupied tile, not one per pixel;
+  fails CLOSED — omits entirely rather than truncating an arbitrary subset — if tiling would exceed 64
+  tiles). `_components_detailed`/`rich_action_candidates` (`arc_graph_explore.py`) thread the flag through
+  and give fallback tiles their OWN reserved candidate budget, appended after the normal salience-ranked real
+  objects — **not** folded into the same salience sort. Real bug found and fixed mid-implementation: an
+  initial version put fallback tiles in the SAME pool as real objects, ranked by the SAME salience formula
+  (area × color-rarity) — since fallback tiles are BY CONSTRUCTION small pieces of the most-common (i.e.
+  near-zero-rarity) color, they always sorted to the bottom and were silently cut by the existing
+  `max_click=48` cap, measured to add ZERO working candidates despite 55 being generated. A SECOND bug found
+  the same way: sorting the reserved fallback bucket by LARGEST tile first also failed, because the tile
+  that actually covers a real winning click was small (area=9, an interior sliver against other objects)
+  and sat behind ~50 large, genuinely-empty background tiles; flipping to SMALLEST-first (mirroring
+  `REQ-ARC-FCP-5758`'s own established "small objects win" finding elsewhere in this file) fixed it.
+- **Measured result** (real bp35 replay, `results/arc_loop_solve_bp35.json`'s reproduction-gated winning
+  trajectory, both arms measured with and without the flag): **21/57 generation misses -> 15/57 at the real
+  default `max_click=48` budget — a genuine, disclosed PARTIAL fix (~29% reduction), not a complete one.**
+  An uncapped-budget diagnostic run (`max_click=200`, not the real live setting) closed the gap completely
+  (0/57 misses), confirming the underlying tiling mechanism is fully sound; the residual misses at the real
+  budget are a genuine candidate-budget-SHARING tradeoff against real, higher-salience objects, not a defect
+  in the fix itself. **lf52 and re86 (0 generation misses either way) are measured byte-for-byte unaffected
+  on and off** — the fix is targeted, not a blanket behavior change.
+- **Why still opt-in, not the new default:** a 29% partial fix, an 8px tile pitch chosen from one game's
+  empirical grid (not validated as a general default across other suppressed-background games), and no
+  measurement yet of whether adding up to 64 extra low-salience candidates per frame affects OTHER games'
+  candidate-generation cost/quality. Per the Phase-Prototype-and-Validation discipline: prototype shipped +
+  measured, wiring into the SUBMITTED live default is a separate, deliberate follow-up decision, not bundled
+  into this fix.
+- **Tests:** `tests/python/test_arc_grid_fallback_candidates.py` (8 tests: default-off parity, fallback-tile
+  coverage of a synthetic target cell, fail-closed on tile-count overflow, real-components-unaffected,
+  flag-off/flag-on live-agent-path invariants). Full existing surface-area regression suite (300+ tests
+  across `arc_color_blob_salience`/`arc_graph_explore`/`arc_solver_kit`/candidate-ranker consumers) passes
+  clean; a real backward-compatibility break was found and fixed during implementation (several existing
+  tests monkeypatch `_components_detailed` with the pre-fix 4-tuple return shape to test unrelated ranker
+  behavior — the new code unpacks defensively, `len(c) > 4`, rather than assuming 5-tuples unconditionally).
+- **Candidate next step (not done in this pass):** validate the 8px tile pitch / fallback-budget interaction
+  on a broader set of games before considering the flag for the live default; consider whether a smaller
+  tile pitch or a different fallback-ranking heuristic closes more of the residual 15/57 at the real budget.
 
 ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
 - status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
