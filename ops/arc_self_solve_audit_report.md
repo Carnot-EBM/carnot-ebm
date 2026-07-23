@@ -16,42 +16,42 @@ OK: all solver-like ARC modules are reachable from the live agent path (59 modul
 
 ## Hostile LLM review
 
-**TL;DR: 1 credible self-discovery advance; 2 outer-loop results; 1 duplicate outer-loop validation; 3 unproven development proxies. No OFF_PATH finding, but only `bp35` deserves provisional live-capability credit.**
+TL;DR: **0 SELF_DISCOVERY_ADVANCE; 4 OUTER_LOOP_RE; 3 DUPLICATE.** Module reachability does not prove the live agent performed the discovery.
 
 - `results/arc_loop_solve_sk48.json`
-  - **Verdict:** `UNCLEAR`
-  - **Evidence:** Reachable entrypoint, but provenance is `development_proxy`; offline mode and no attempt/runtime-RE trace or honest verdict.
-  - **Recommended action:** Do not count. Attach the live trajectory showing discovery from observations and actions.
+  - **Verdict:** DUPLICATE
+  - **Evidence:** Offline `development_proxy` reaches L2; registry already records sk48 L8/full clear. Uses a registered per-game `GameAdapter`.
+  - **Action:** Keep only as regression evidence; grant no capability credit.
 
 - `results/arc_loop_solve_ar25.json`
-  - **Verdict:** `UNCLEAR`
-  - **Evidence:** Same defect: reachable mechanism, but only a development proxy claim with no discovery trace.
-  - **Recommended action:** Reproduce through the live agent and preserve its attempt history and learned hypothesis.
+  - **Verdict:** DUPLICATE
+  - **Evidence:** Offline `development_proxy` reaches L3; registry already records ar25 L8/full clear. No runtime self-discovery receipt.
+  - **Action:** Remove from recent-solve accounting.
 
 - `results/outer_loop_lf52_l8plus_probe_20260717.json`
-  - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly an `outer_loop` probe with `development_proxy` provenance. “Reproduced” proves execution, not autonomous discovery. Empty declared inputs are not evidence.
-  - **Recommended action:** Quarantine from capability claims. Require the live agent to rediscover levels 8–10 unaided.
+  - **Verdict:** OUTER_LOOP_RE
+  - **Evidence:** Explicitly read `lf52.py`, built source-faithful per-game planners, and ran searches up to 668,532 states plus a 372,127-state BFS. Executing the resulting route through `env.step` does not convert it into agent discovery.
+  - **Action:** Quarantine L8–L10 as development-proxy knowledge; require a clean live-entrypoint rediscovery without source/model/route injection.
 
 - `results/outer_loop_round26_bp35_probe_l9_20260717.json`
-  - **Verdict:** `SELF_DISCOVERY_ADVANCE` — provisional
-  - **Evidence:** Explicit `live_agent_self_discovery` provenance, official reproduction, and five fresh replays. This is the sole artifact claiming the required discovery path.
-  - **Recommended action:** Count only if the underlying live attempt/runtime-RE trace exists; link it directly to the artifact.
+  - **Verdict:** OUTER_LOOP_RE
+  - **Evidence:** Self-label is contradicted by `arc_outer_loop_probe.v1`, external `gpt-5.6-sol-max-effort` orchestration, 26 rounds of targeted probing, 174,508 offline steps, exhaustive subsets, and no live-entrypoint command/policy receipt. Ops itself marks it `[outer-loop]`.
+  - **Action:** Revoke `live_agent_self_discovery`; retain as outer-loop research only. Re-run with a frozen live agent on the actual entrypoint.
 
 - `results/outer_loop_round14_lf52_probe_20260716.json`
-  - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Outer-loop probe, development-proxy provenance, and repeated reproduction of a named hand-understood strategy (“red peg leapfrog bridge”).
-  - **Recommended action:** Exclude from live-agent progress; use only as a test fixture after autonomous rediscovery.
+  - **Verdict:** OUTER_LOOP_RE
+  - **Evidence:** Explicit public-source reread, source audit, hand-maintained simulator, and manually constructed leapfrog route. `development_proxy` is accurate.
+  - **Action:** Do not credit L7 as autonomous capability.
 
 - `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Confirms parity/reproduction through level 10 after another artifact already reports the level-10/full-game clear. It adds no new live capability and is also development-proxy evidence.
-  - **Recommended action:** Classify as regression validation, not a solve advance.
+  - **Verdict:** OUTER_LOOP_RE
+  - **Evidence:** Read source, ported a faithful pure-Python L9 model, and used constrained best-first search. It also admits `new_levels_banked=0` and that lf52 was already 10/10.
+  - **Action:** Classify as duplicate parity validation, not a solve; prevent the derived route/model from entering live-agent capability claims.
 
 - `results/arc_loop_solve_tu93.json`
-  - **Verdict:** `UNCLEAR`
-  - **Evidence:** Reachable standing-loop mode, but development-proxy provenance and no evidence that the agent discovered the solution from its own attempts.
-  - **Recommended action:** Withhold credit pending a live discovery trajectory.
+  - **Verdict:** DUPLICATE
+  - **Evidence:** Offline `development_proxy` reaches L4 using a per-game adapter and `hand_verifier`; registry already records tu93 L9/full clear.
+  - **Action:** Regression-only; no solve credit.
 
-**Pattern watch:** `lf52` shows strong drift toward outer-loop solution engineering followed by reproduction/parity runs presented as progress. Reachability is necessary but does not launder human-derived strategies into self-discovery. Empty `outer_loop_inputs_declared` fields are assertions, not audit evidence.
+**Pattern watch:** Severe outer-loop drift. Source access, per-game simulators, massive offline searches, long human/model probe campaigns, and replay gates are being mistaken for agent capability. Reproduction proves a route works; it does **not** prove the live agent discovered it.
 

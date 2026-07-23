@@ -30965,3 +30965,117 @@ Intelligence's public Kona material. These findings are new relative to the V519
   claims; requested topology alone never proves realized energy dynamics.
 
 <!-- V520-PLANNER-REFRESH-20260723-END -->
+
+## V521 Planner Refresh - 20260723
+
+Planning-time sweep for the milestone after terminal `.520`. The search covered
+2025-2026 arXiv work on energy-based verification and reasoning, neural constraint
+satisfaction, Ising/CSP methods, hallucination detection, KANs, constrained generation,
+probabilistic hardware, continual learning, and live-agent evidence acquisition. It also
+rechecked OpenReview, Hugging Face Papers, direct Semantic Scholar citation routes for
+EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub discovery, Extropic's writing
+index, and Logical Intelligence's public Kona/Aleph material. The items below are new
+relative to the V520 block or materially sharpen its experiment controls.
+
+### New actionable deltas
+
+- **Train the Model, Not the Reader: Decodability Supervision for Verifiable
+  Activation Explanations** - arXiv:2607.20379,
+  https://arxiv.org/abs/2607.20379; surfaced through Hugging Face Papers on
+  2026-07-23. The paper shows that reconstruction can preserve gist while remaining
+  insensitive to individual false claims, and proposes grounded-versus-true crosses
+  plus evaluator swaps to expose co-adapted private codes. Carnot hook: the paired-GGUF
+  corpus must pass claim-flip sensitivity, evaluator-swap, label permutation,
+  model-identity masking, and no-information controls before any learned energy is
+  promoted. Carnot will not train RECAP into the immutable GGUFs; it imports the audit
+  logic only.
+- **An Exam for Active Observers** - arXiv:2607.16165,
+  https://arxiv.org/abs/2607.16165; highlighted by Hugging Face Papers on 2026-07-23
+  with code and data at https://github.com/saccharomycetes/ActiveVision. The benchmark
+  makes repeated evidence acquisition, hypothesis-directed observation, and
+  closed-loop visual reasoning explicit rather than treating perception as a single
+  snapshot. Carnot hook: test a bounded, game-blind active-observation controller on
+  the real adapter-disabled E3 path, scoring newly resolved transition ambiguity and
+  legal-action efficiency under identical budgets. This is not a public-game solve
+  task and does not authorize source inspection, offline BFS, or per-game adapters.
+- **SAGE: Subgoal-Conditioned Action Generation for Latent World Model Planning** -
+  arXiv:2607.17973, https://arxiv.org/abs/2607.17973; submitted 2026-07-20. SAGE
+  separates proposal quality from frozen-world-model evaluation and uses multiple
+  temporal horizons to expose useful candidate futures under a fixed budget. Carnot
+  hook: the live ARC diagnostic should measure short-, medium-, and long-horizon
+  proposal support separately and compare active observation with budget-matched
+  current-policy, periodic, and random controls. It does not reopen the retired
+  CoEx-style landmark/subgoal solver, cross-game value-transfer encoder, or
+  generated-answer CEGIS lane.
+- **WorldScape Policy 2.0: Empowering Steerable World Action Modeling with
+  Reasoning-Augmented Memory** - arXiv:2607.18840,
+  https://arxiv.org/abs/2607.18840; submitted 2026-07-21. The method organizes history
+  into global, local-active, and event-boundary views for progress-aware retrieval.
+  Carnot hook: partition the live agent's own immutable action/observation tape by
+  transition and event boundaries, then audit whether each view changes ambiguity
+  resolution or proposal coverage. Do not import its robotics-scale trained model or
+  treat event captions as hidden-game ground truth.
+
+### Guarded findings and negative controls
+
+- **Hallucination Is Linearly Decodable from Mid-Layer Hidden States in Quantized
+  LLMs** - arXiv:2606.02628, https://arxiv.org/abs/2606.02628, reports strong
+  mid-layer linear-probe results on quantized 7B-8B models. It is a useful warning that
+  the best signal may not live at the final embedding. Carnot does not promote it into
+  `.521`: the permitted reproducible local surface is llama.cpp embedding extraction,
+  and no untracked activation hook, transformer-native loader, or AutoTokenizer path
+  is allowed. A final-layer null must be reported as a bounded surface null, not a
+  claim about every hidden layer.
+- The new activation-explanation paper trains model-side decodability supervision,
+  which conflicts with the frozen-GGUF boundary. Only its independent audit crosses
+  are imported.
+- SAGE and WorldScape rely on trained task-progress supervision and known goal
+  structure. Carnot may borrow their horizon and memory-view ablations, but hidden-game
+  labels must come only from the live agent's own runtime actions and exact
+  observations.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct API queries on 2026-07-23 still returned 29 EBT citing
+  records and eight ARM-EBM citing records. The newest indexed EBT item remained
+  arXiv:2607.17047; the ARM-EBM trail remained the already indexed Path-Measure
+  Dynamics, Distributional EBM, LoopUS, safe-distillation, ontology, graph-energy,
+  and false-first-step families. No new reproducible dependency or stable citation
+  claim was accepted.
+- **OpenReview:** searches repeated Energy-Based Constraint Networks, Spilled Energy,
+  Approximately Aligned Decoding, the frozen-LLM energy world model, and V1 pairwise
+  verification. All are already indexed locally or overlap retired output-logit,
+  generated-text, and self-verification families. No new OpenReview runtime dependency
+  is added.
+- **Hugging Face Papers:** the current feed supplied the Active Observers and activation
+  decodability items above. Other verification results were unrelated or duplicated
+  previously indexed methods.
+- **GitHub:** discovery rechecked the official ARC-AGI-3 agents/toolkit, ActiveVision,
+  recent EBM/KAN/CSP repositories, and Ising hardware projects. ActiveVision is a
+  methodological reference only; no repository supersedes Carnot's live E3 entrypoint,
+  exact validators, KAN controls, or attached-board backends.
+- **Extropic / Logical Intelligence:** Extropic's public writing index exposed no newer
+  authenticated local XTR-0/Z1 route. Logical Intelligence continues to describe Kona
+  and Aleph publicly but exposes no public Kona weights or reproducible local
+  comparator. Neither source authorizes execution, speed, power, or comparative
+  performance claims.
+
+### V521 planning impact
+
+- Execute the already-prepared exact comparative fixture on all three mandated current
+  GGUF families, then require claim-flip sensitivity, evaluator swaps, identity masking,
+  and held-model/held-constraint lower bounds before calling the scalar a portable
+  energy.
+- Repair the adaptive-memory evidence at its actual root cause: rerun the deterministic
+  lifecycle with honest substrate metadata and no fake live-model/CUDA markers, then
+  qualify selective replay and reduced-oracle learning only through structured gates.
+- Keep model weights frozen. Continuous self-learning means versioned structural memory,
+  prospective exact validation, bounded replay, rollback, and explicit hard-case
+  negative-transfer accounting.
+- Give the live E3 path one bounded active-observation experiment. Use only agent-owned
+  actions and observations, separate temporal horizons and memory views, and claim no
+  level solve.
+- Treat hardware as deterministic state-operation portability and authenticated
+  capability evidence. No unchanged board probe or speedup claim is warranted.
+
+<!-- V521-PLANNER-REFRESH-20260723-END -->
