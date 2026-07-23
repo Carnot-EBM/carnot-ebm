@@ -16960,3 +16960,34 @@ per decision -- adding an unproven, expensive mechanism to the actual scored pat
 live agent's efficiency metric for no demonstrated correctness benefit. Offline dev-twin wiring now,
 scored-path wiring only once a result here actually proves out, per the Phase-Prototype-and-Validation
 discipline's sequencing.
+
+**CORRIGENDUM (2026-07-23, same day, operator-directed: "run that larger budget test... investigate lf52
+first"): a REAL BUG, not a benign quirk, explained lf52's anomalous shallowness.** Direct diagnostic
+trace found `arc_solver_kit.py`'s `solve_level()` (and its `_solve_level_deepcopy`/`_solve_level_fresh`
+siblings) captured `node_frame = self.last_frame` ONCE before iterating a node's sibling candidates, then
+passed that SAME reference to `move_pruner.observe()` for every sibling. `env.step()`'s returned frame
+objects are distinct Python objects but their underlying grid data is a shared, mutated-in-place buffer,
+so `node_frame` silently reflected the CURRENT env state at `observe()`-call time rather than the true
+pre-action state -- making every genuinely state-changing action look like a no-op, corrupting the
+dead-end pruner with false dead-ends. Fixed: `copy.deepcopy(self.last_frame)` at each of the three
+capture sites; verified via a regression test that fails pre-fix, passes post-fix
+(`tests/python/test_arc_solver_kit_node_frame_snapshot.py`). Corrected re-run
+(`results/outer_loop_tool_loop_lookahead_ab_largebudget_corrected_20260723.json`, the buggy artifact
+preserved unedited as `corrigendum_of`): lf52's `states_expanded` went from the buggy run's 3 to a
+corrected 140 (< 300 budget -- CONVERGED, same clean-negative shape as sc25). sc25 was unchanged at 95
+(never actually triggered the false-dead-end path). bp35 stayed budget-bound (300/300). `levels_gained=0`
+on all three in the corrected run too -- the bug affected exploration depth, not the ultimate null
+outcome. **Corrected picture: sc25 AND lf52 are now both clean, unambiguous negatives; bp35 remains the
+one open, genuinely budget-bound case.** Broader-impact caveat (honest, unverified): this shared-
+infrastructure bug could affect any prior `move_pruner`-based measurement with >1 candidate per node
+(e.g. `arc_hazard_pruner.HazardMovePruner`'s tu93 numbers) -- not re-verified in this pass, flagged for
+awareness rather than assumed clean.
+
+**Independent cross-check via the ACTUAL scored live path (pre-existing data, not re-run):**
+`results/arc_live_oracle_gap.json` (2026-07-19, the real `E3AgentPolicy` cascade, `--policy e3 --games
+oracle`, frame-only/no-adapter -- the exact live-agent self-discovery configuration) shows the SAME null
+on these SAME three games (sc25 `levels=0, actions=392`; lf52 `levels=0, actions=395`; bp35 `levels=0,
+actions=393`, all routed to a `program_editor` strategy that also never converged). This is a FIFTH
+independent mechanism confirming the null on these exact 3 games -- they are simply hard, deep-mechanic
+games for every adapter-free approach tried so far, live or offline, not a gap specific to any one
+mechanism.

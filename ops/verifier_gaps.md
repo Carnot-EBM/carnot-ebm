@@ -3294,23 +3294,62 @@ result, and each tells a different story:
   budget-bound, not frontier-exhausted. Scaling the budget further remains a live, untested lever for this
   specific game.
 - **lf52: `states_expanded=3`, `tool_loop_calls=2` — anomalously SHALLOWER than the first (15-node-budget)
-  run's 16.** Reported honestly as observed, not explained away: this is surprising and NOT yet diagnosed
-  (candidate causes not yet distinguished: the dead-end pruner firing unusually aggressively near lf52's
-  start state, a genuinely very constrained local neighborhood before any productive action becomes
-  available, or something lf52-specific interacting with the tool loop's own convergence — `tool_loop_calls
-  =2` means the model committed almost immediately both times, so this is NOT the earlier no-op-starves-
-  search bug recurring, since the fallback-padding fix demonstrably still fires here). Flagged for a
-  follow-up look, not resolved.
+  run's 16.** Flagged as unresolved at the time this update was written; RESOLVED below (2026-07-23, same
+  day) — a real bug, not a benign quirk.
 
-**Recalibration that changes how "conclusive" should be read here (found while preparing this run, not
-known when the first budget was picked):** `ops/arc_solve_registry.yaml` shows all three games are
-`full_game_clear: true` — but ONLY via hand-crafted, per-game `GameAdapter`s built across many outer-loop
-sessions of deliberate reverse-engineering (`development_proxy` provenance), e.g. lf52's registry entry
-cites a 146-action L3 sequence and a 927-action L8+ probe. A domain-agnostic mechanism attempting level 1
-from raw pixels alone, with zero game-specific hints, is not attempting a small problem — even a
-20x-larger budget is not provably sufficient for these SPECIFIC games' actual difficulty. sc25's
-frontier-exhaustion result is the one clean, unambiguous negative in this update; bp35 and lf52 remain
-open in different ways (bp35 genuinely budget-bound, lf52 anomalously unexplored).
+**RESOLVED 2026-07-23 (same day, operator-directed follow-up: "run that larger budget test. also, why
+did we only wire that into offline and not live agent?" → investigate lf52 first): the lf52 anomaly was a
+REAL BUG in `arc_solver_kit.py`, not a benign search quirk.** Direct diagnostic trace (not assumed) found
+`solve_level()` captured `node_frame = self.last_frame` ONCE before iterating a node's sibling
+candidates, then passed that SAME reference to `move_pruner.observe()` for every sibling. Confirmed via a
+live trace against the real lf52 offline env: `env.step()` returns a DISTINCT Python object each call
+(`f1 is f0` is `False`) but the underlying grid data is a SHARED, mutated-in-place buffer — so
+`node_frame`, read at `observe()`-call time (after later `apply()`/`env.step()` calls in the same sibling
+loop), silently reflected the CURRENT env state rather than the true pre-action state. This made every
+genuinely state-changing action look like a no-op to the dead-end pruner (`before_key == after_key`
+always, for every candidate), which then correctly-per-its-own-logic pruned those SAME actions as known
+dead-ends the next time they were tried from an equivalent state — closing off lf52's frontier almost
+immediately. **Fix:** `copy.deepcopy(self.last_frame)` at the `node_frame` capture site in all three
+`solve_level` variants (`replay`, `_solve_level_deepcopy`, `_solve_level_fresh` — all three shared the
+identical pattern). **Verified via a regression test** that fails pre-fix and passes post-fix
+(`tests/python/test_arc_solver_kit_node_frame_snapshot.py`, a minimal toy env reproducing the exact
+aliasing shape). **Corrected re-run**
+(`results/outer_loop_tool_loop_lookahead_ab_largebudget_corrected_20260723.json`,
+`corrigendum_of: outer_loop_tool_loop_lookahead_ab_largebudget_20260723.json` — the buggy artifact is
+preserved unedited, never deleted): lf52's `states_expanded` went from the buggy run's 3 to a corrected
+**140** (< the 300 budget — CONVERGED, frontier genuinely exhausted, same clean-negative shape as sc25).
+sc25 was UNCHANGED at 95 (it never actually triggered the false-dead-end path, so the bug didn't affect
+its number). bp35 stayed budget-bound (300/300, up marginally from the buggy run's 302 which had exceeded
+`max_nodes` by a rounding artifact of the bug — now exactly at budget). `levels_gained=0` on all three in
+the corrected run too — the bug affected exploration DEPTH, not the ultimate null outcome.
+
+**Broader impact caveat (honest, not yet verified):** this bug lives in shared `arc_solver_kit.py`
+infrastructure used by ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — e.g.
+`arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in CLAUDE.md's ARC Live-Path
+Reachability Discipline, "states_expanded 2947 → 2859"). That specific historical measurement was NOT
+re-verified as part of this fix (out of scope for this session); the fix is forward-looking, and any
+`move_pruner`-based numbers from BEFORE 2026-07-23 should be read with this caveat rather than assumed
+unaffected.
+
+**Recalibration that changes how "conclusive" should be read here (found while preparing the large-budget
+run, not known when the first budget was picked):** `ops/arc_solve_registry.yaml` shows all three games
+are `full_game_clear: true` — but ONLY via hand-crafted, per-game `GameAdapter`s built across many
+outer-loop sessions of deliberate reverse-engineering (`development_proxy` provenance), e.g. lf52's
+registry entry cites a 146-action L3 sequence and a 927-action L8+ probe. A domain-agnostic mechanism
+attempting level 1 from raw pixels alone, with zero game-specific hints, is not attempting a small problem
+— even a 20x-larger, now-correctly-measured budget is not provably sufficient for these SPECIFIC games'
+actual difficulty. **Corrected picture: sc25 AND lf52 are now both clean, unambiguous negatives (frontier
+genuinely exhausted, more budget would not help); bp35 remains the one open, genuinely budget-bound case.**
+
+**Independent cross-check via the ACTUAL scored live path (found while scoping the live-wiring question,
+not re-run — already-existing data): `results/arc_live_oracle_gap.json` (run 2026-07-19, the real
+`E3AgentPolicy` cascade, `--policy e3 --games oracle`, frame-only/no-adapter, the exact live-agent
+self-discovery configuration) shows the SAME null on these SAME three games** — sc25 `levels=0,
+actions=392`; lf52 `levels=0, actions=395`; bp35 `levels=0, actions=393` — all routed to a
+`program_editor` strategy that also never converged. This is now a FIFTH independent mechanism (induce-
+then-plan, bare reactive-filter, tool-loop-lookahead small/large budget, and the actual production scored
+cascade) confirming the same null on these exact 3 games. These are simply hard, deep-mechanic games for
+every adapter-free approach tried so far — not a gap specific to any one mechanism.
 
 **Live-path wiring gap found and fixed the same session (operator question: "why did we only wire that
 into offline and not live agent?"):** `arc_tool_loop_lookahead.py` was reachable from NEITHER canonical

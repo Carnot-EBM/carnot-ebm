@@ -44,10 +44,19 @@ sys.path.insert(
 os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# CORRECTED re-run (2026-07-23, same day): the original largebudget_20260723.json run used a
+# solve_level() with a real node_frame-aliasing bug in its move_pruner.observe() wiring (found via
+# the lf52 diagnostic investigation -- see arc_solver_kit.py's node_frame comments and
+# tests/python/test_arc_solver_kit_node_frame_snapshot.py). That artifact is preserved unedited
+# (never rewrite historical results); this corrected run writes to a DISTINCT path so both are
+# auditable side by side.
 OUTPUT_PATH = os.path.join(
-    REPO_ROOT, "results", "outer_loop_tool_loop_lookahead_ab_largebudget_20260723.json"
+    REPO_ROOT, "results", "outer_loop_tool_loop_lookahead_ab_largebudget_corrected_20260723.json"
 )
 PRIOR_SMALL_BUDGET_ARTIFACT = "outer_loop_tool_loop_lookahead_ab_20260723.json"
+PRIOR_LARGEBUDGET_PREFIX_BUG_ARTIFACT = (
+    "outer_loop_tool_loop_lookahead_ab_largebudget_20260723.json"
+)
 
 GAMES = ["sc25", "lf52", "bp35"]
 MAX_TURNS_PER_DECISION = 12  # unchanged -- per operator directive, verbatim
@@ -181,9 +190,21 @@ def main() -> None:
     reproducibility_checksum = hashlib.sha256(checksum_input).hexdigest()
 
     artifact = {
-        "experiment": "outer_loop_tool_loop_lookahead_ab_largebudget_20260723",
+        "experiment": "outer_loop_tool_loop_lookahead_ab_largebudget_corrected_20260723",
         "schema": "carnot.arc_tool_loop_lookahead_ab.v1",
         "run_date": "2026-07-23",
+        "corrigendum_of": PRIOR_LARGEBUDGET_PREFIX_BUG_ARTIFACT,
+        "corrigendum_reason": "The prior largebudget run used a solve_level() with a real "
+        "node_frame-aliasing bug in move_pruner.observe() (env.step()'s returned frame objects are "
+        "distinct Python objects but their underlying grid data is a shared, mutated-in-place "
+        "buffer -- a bare `node_frame = self.last_frame` reference silently reflected the CURRENT "
+        "env state at observe()-call time, not the true pre-action state, corrupting the dead-end "
+        "pruner with false dead-ends for genuinely state-changing actions). Found via a direct "
+        "diagnostic trace investigating lf52's anomalously shallow states_expanded=3. Fixed in "
+        "arc_solver_kit.py (copy.deepcopy(self.last_frame) at each capture site) and covered by a "
+        "regression test (tests/python/test_arc_solver_kit_node_frame_snapshot.py, verified to "
+        "fail pre-fix and pass post-fix). This artifact re-runs the SAME large-budget A/B with the "
+        "fix in place. The prior artifact is preserved unedited for audit, not deleted.",
         "inference_substrate": "live_llm_inference",
         "solve_provenance": "live_agent_self_discovery",
         "solve_provenance_note": "Adapter-free (no per-game hand-authored win condition, no "
