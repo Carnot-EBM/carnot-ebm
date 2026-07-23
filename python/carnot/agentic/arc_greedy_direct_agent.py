@@ -110,8 +110,61 @@ _ORIENT_FRAME = (
 )
 _URGENCY = "URGENT: few turns left -- commit an ACTION now, do not inspect.\n"
 
+# v2 perception (2026-07-23): the winner audit's #1 "highest-value steal" -- all three Milestone-1
+# winners feed OBJECT SEGMENTATION as the primary view (Duck: "segmentation is the primary view; the
+# raw grid is not available"). v1 showed the model the raw hex grid and it fixated on clicking a
+# coordinate cluster, discovering nothing. This mode segments the frame into discrete objects (reusing
+# arc_color_blob_salience) so the model reasons over OBJECTS (click object #N), not raw cells.
+_ORIENT_FRAME_OBJ = (
+    "You are an agent DISCOVERING how to win an unknown grid game by acting on it. Actions: "
+    "1=up 2=down 3=left 4=right 6=click. You act DIRECTLY on the real game (there is NO undo).\n"
+    "The frame is a {h}x{w} grid. Its DISCRETE OBJECTS (connected same-color regions; the large "
+    "uniform background is omitted) are:\n{objects}\n"
+    "Available actions this frame: {avail}\n"
+    "Recent (your last moves -> observed effect):\n{recent}\n"
+    "EXPLORE to find what the game responds to: if an action in your history shows 'no change', do NOT "
+    "repeat it -- try a DIFFERENT object or a move. Vary moves (1-4) vs clicks (6).\n"
+    "{urgency}Turns left: {remaining}. Notes so far:\n{transcript}\n\n"
+    "Respond with EXACTLY ONE LINE: a NEW tool call, OR commit a SHORT SEQUENCE of 1-{max_seq} actions. "
+    "To click an OBJECT, use its id. STRICT JSON:\n"
+    '  ACTION: [{{"a":6,"obj":<id>}}]   or   ACTION: [{{"a":4}},{{"a":4}}]   or a raw cell '
+    '{{"a":6,"x":<col>,"y":<row>}}\n'
+    "Your line:\n"
+)
 
-def _parse_sequence(primed_text: str, *, max_seq: int, avail: list[int]) -> list[dict]:
+
+def _render_objects(logical: np.ndarray) -> tuple[str, list[dict]]:
+    """Segment the (logical) frame into discrete objects for the winner-style object view. Returns
+    (rendered_text, objects) where each object carries its LOGICAL centroid (row, col)."""
+    try:
+        from carnot.agentic.arc_color_blob_salience import connected_color_blobs
+
+        blobs = connected_color_blobs(logical)  # excludes the dominant background wholesale
+    except Exception:
+        return "(segmentation unavailable)", []
+    objects: list[dict] = []
+    for i, b in enumerate(blobs):
+        objects.append(
+            {
+                "id": i,
+                "color": int(b.color),
+                "row": int(round(b.centroid[0])),
+                "col": int(round(b.centroid[1])),
+                "size": int(b.pixel_count),
+            }
+        )
+    if not objects:
+        return "(no discrete objects segmented -- try moves or a raw-cell click)", objects
+    text = "\n".join(
+        f"#{o['id']} color={o['color']} at row={o['row']} col={o['col']} size={o['size']}"
+        for o in objects
+    )
+    return text, objects
+
+
+def _parse_sequence(
+    primed_text: str, *, max_seq: int, avail: list[int], objects: Optional[list[dict]] = None
+) -> list[dict]:
     """Parse the model's completion AFTER the 'ACTION: [' prime into a validated action sequence.
     Wraps with the leading '[' the prime supplied; salvages a missing trailing ']'."""
     raw = "[" + primed_text.strip()
@@ -147,11 +200,23 @@ def _parse_sequence(primed_text: str, *, max_seq: int, avail: list[int]) -> list
             continue
         step = {"a": aid}
         if aid == 6:
-            try:
-                step["x"] = int(item["x"])
-                step["y"] = int(item["y"])
-            except Exception:
-                continue  # a click with no valid coords is unusable
+            if "obj" in item and objects is not None:
+                # winner-style object reference -> resolve to that object's LOGICAL centroid
+                try:
+                    oid = int(item["obj"])
+                except Exception:
+                    continue
+                obj = next((o for o in objects if o["id"] == oid), None)
+                if obj is None:
+                    continue
+                step["x"] = int(obj["col"])
+                step["y"] = int(obj["row"])
+            else:
+                try:
+                    step["x"] = int(item["x"])
+                    step["y"] = int(item["y"])
+                except Exception:
+                    continue  # a click with no valid coords/obj is unusable
         out.append(step)
     return out
 
@@ -165,27 +230,32 @@ def decide_sequence(
     max_turns: int = MAX_ORIENT_TURNS,
     max_seq: int = MAX_SEQ,
     seed: Optional[int] = None,
+    perception: str = "grid",
 ) -> tuple[list[dict], list[str]]:
     """One decision: up to `max_turns` tool-inspection turns, then a committed action sequence (in
-    LOGICAL grid coords for clicks). Returns (sequence, transcript)."""
+    LOGICAL grid coords for clicks). Returns (sequence, transcript). `perception`: "grid" (raw hex,
+    v1) or "objects" (winner-style segmentation view, v2)."""
     h, w = logical.shape if logical.ndim == 2 else (0, 0)
     dispatch = _ToolDispatch(logical, recent, avail)
     transcript: list[str] = []
     seen_tools: set[tuple[str, str]] = set()
+    obj_text, objects = _render_objects(logical) if perception == "objects" else ("", None)
 
     def _prompt(remaining: int) -> str:
-        return _ORIENT_FRAME.format(
+        common = dict(
             max_turns=max_turns,
             max_seq=max_seq,
             h=h,
             w=w,
-            grid=_ascii_grid(logical),
             avail=avail,
             recent="\n".join(recent[-6:]) or "(none yet)",
             urgency=_URGENCY if remaining <= _URGENCY_TURNS else "",
             remaining=remaining,
             transcript="\n".join(transcript) or "(nothing yet)",
         )
+        if perception == "objects":
+            return _ORIENT_FRAME_OBJ.format(objects=obj_text, **common)
+        return _ORIENT_FRAME.format(grid=_ascii_grid(logical), **common)
 
     for turn in range(max_turns):
         remaining = max_turns - turn
@@ -216,7 +286,7 @@ def decide_sequence(
             stop=["]"],
             seed=(seed + 500 + turn if seed else None),
         )
-        seq = _parse_sequence(primed, max_seq=max_seq, avail=avail) if ok2 else []
+        seq = _parse_sequence(primed, max_seq=max_seq, avail=avail, objects=objects) if ok2 else []
         if seq:
             transcript.append(f"[t{turn}] COMMIT {seq}")
             return seq, transcript
@@ -233,8 +303,10 @@ def run_greedy_direct(
     max_seq: int = MAX_SEQ,
     seed: Optional[int] = None,
     arcade: Any = None,
+    perception: str = "grid",
 ) -> GreedyDirectResult:
-    """The Duck-Harness-style greedy-direct loop against the offline arcade (adapter-free, no search)."""
+    """The Duck-Harness-style greedy-direct loop against the offline arcade (adapter-free, no search).
+    `perception`: "grid" (raw hex, v1) or "objects" (winner-style segmentation view, v2)."""
     from arcengine import GameAction
     from carnot.agentic.arc_agi3_live_adapter import (
         _game_action,
@@ -263,7 +335,14 @@ def run_greedy_direct(
         logical = to_logical(raw, cell)
         avail = _available_action_ids(frame) or [1, 2, 3, 4, 6]
         seq, transcript = decide_sequence(
-            logical, recent, avail, proposer, max_turns=max_turns, max_seq=max_seq, seed=seed
+            logical,
+            recent,
+            avail,
+            proposer,
+            max_turns=max_turns,
+            max_seq=max_seq,
+            seed=seed,
+            perception=perception,
         )
         orientations += 1
         if orientations <= 3:
