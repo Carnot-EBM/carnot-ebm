@@ -214,3 +214,59 @@ class TestWarmupSentinel:
         for action_id in range(8):
             assert _json_action_label(action_id) != ToolLoopLookaheadSession.WARMUP_LABEL
         assert _json_action_label(1, {"x": 1, "y": 1}) != ToolLoopLookaheadSession.WARMUP_LABEL
+
+
+class _Frame:
+    def __init__(self, frame: np.ndarray) -> None:
+        self.frame = frame
+
+
+class TestActionLabelsFallbackPadding:
+    """Regression coverage for a real bug found via a direct trace (not assumed): when the tool
+    loop's only proposed candidate turns out to be a no-op, its resulting state hashes IDENTICAL
+    to the parent and is correctly never pushed to the search frontier -- but with no OTHER
+    candidate offered, the search then has nothing left to explore and dies after one node,
+    regardless of the turn/node budgets. action_labels() must always pad a thin candidate set
+    with real structured fallback alternatives so a single bad guess can't starve the search."""
+
+    def test_pads_a_single_tool_loop_candidate_with_fallbacks(self, monkeypatch):
+        # rich_action_candidates is imported inside action_labels() via a LOCAL import, so it
+        # must be patched at its source module -- patching it on arc_tool_loop_lookahead itself
+        # would have no effect (the local import re-reads the source module at call time).
+        import carnot.agentic.arc_graph_explore as graph_explore_mod
+
+        proposer = _FakeProposer(['ACTION: [{"a":6,"x":0,"y":0,"confidence":0.9}]'])
+        _patch_completion(monkeypatch, proposer)
+
+        fake_fallback = type("FakeCand", (), {"action_id": 1, "data": None})()
+        monkeypatch.setattr(
+            graph_explore_mod, "rich_action_candidates", lambda frame: [fake_fallback]
+        )
+
+        session = ToolLoopLookaheadSession(proposer, max_turns=12)
+        labels = session.action_labels(None, _Frame(np.zeros((8, 8), dtype=int)), ())
+
+        assert len(labels) >= 2  # the tool-loop candidate PLUS at least one fallback
+        assert '{"action":6,"data":{"x":0,"y":0}}' in labels
+        assert '{"action":1}' in labels
+
+    def test_does_not_pad_when_tool_loop_already_offers_multiple_candidates(self, monkeypatch):
+        import carnot.agentic.arc_graph_explore as graph_explore_mod
+
+        proposer = _FakeProposer(
+            ['ACTION: [{"a":6,"x":0,"y":0,"confidence":0.9},{"a":1,"confidence":0.4}]']
+        )
+        _patch_completion(monkeypatch, proposer)
+
+        calls = []
+        monkeypatch.setattr(
+            graph_explore_mod,
+            "rich_action_candidates",
+            lambda frame: calls.append(1) or [],
+        )
+
+        session = ToolLoopLookaheadSession(proposer, max_turns=12)
+        labels = session.action_labels(None, _Frame(np.zeros((8, 8), dtype=int)), ())
+
+        assert len(labels) == 2
+        assert not calls  # the fallback path is only consulted when < 2 genuine candidates exist
