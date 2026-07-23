@@ -182,6 +182,71 @@ discipline, not an oversight being left in place.
 **Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5828 (RESULT
 addendum).
 
+### 2026-07-23 (outer-loop, operator-directed follow-up: "1 then 2" — lf52 investigation then live-path answer): real node_frame-aliasing bug found and fixed in arc_solver_kit.py; live scored cascade cross-checked, same null confirmed
+
+**Operator directive:** "1 then 2" — investigate lf52's anomaly first, then complete the live-path
+question.
+
+**The lf52 anomaly was a real bug, not a benign quirk.** Direct diagnostic trace (instrumenting
+`action_labels`, `apply`, `should_prune`, `observe` and reading actual state-key values, not just
+booleans) found `arc_solver_kit.py`'s `solve_level()` captured `node_frame = self.last_frame` ONCE
+before iterating a node's sibling candidates, then passed that SAME reference to
+`move_pruner.observe()` for every sibling. Confirmed by direct object-identity test against the real
+lf52 offline env: `env.step()` returns a DISTINCT Python object each call, but the underlying grid
+data is a SHARED, mutated-in-place buffer — so `node_frame`, read at `observe()`-call time (after
+later `apply()`/`env.step()` calls in the same sibling loop), silently reflected the CURRENT env
+state, not the true pre-action state. Every genuinely state-changing action therefore looked like a
+no-op to the dead-end pruner, which then correctly-per-its-own-broken-input pruned those SAME actions
+as known dead-ends the next time they were tried — closing off lf52's frontier almost immediately
+(`states_expanded=3`, down from the small-budget run's 16, despite a 20x larger node budget).
+
+**Fix:** `copy.deepcopy(self.last_frame)` at the `node_frame` capture site in all THREE `solve_level`
+variants (`replay` — the default and only one actually exercised by this project's ARC work,
+`_solve_level_deepcopy`, `_solve_level_fresh` — all three shared the identical vulnerable pattern).
+**Verified via a regression test that fails pre-fix and passes post-fix**
+(`tests/python/test_arc_solver_kit_node_frame_snapshot.py` — a minimal toy env reproducing the exact
+real-world aliasing shape, independent of the `arcengine` dependency; confirmed by temporarily
+reverting the fix and watching the test fail with the exact corrupted value, then restoring it). Full
+relevant test suite (84 tests across `arc_solver_kit`, `arc_hazard_pruner`,
+`arc_reactive_verifier_filter`, `arc_tool_loop_lookahead`) passes clean post-fix.
+
+**Corrected re-run** (`results/outer_loop_tool_loop_lookahead_ab_largebudget_corrected_20260723.json`,
+`corrigendum_of: outer_loop_tool_loop_lookahead_ab_largebudget_20260723.json` — the buggy artifact is
+preserved unedited, never deleted, per never-prune): lf52's `states_expanded` went from the buggy
+run's 3 to a corrected **140** (< the 300 budget — CONVERGED, frontier genuinely exhausted, the same
+clean-negative shape as sc25). sc25 was UNCHANGED at 95 (it never actually triggered the false-dead-
+end path, so the bug happened not to affect its number). bp35 stayed budget-bound (300/300).
+`levels_gained=0` on all three in the corrected run too — the bug affected exploration DEPTH, not the
+ultimate null outcome. **Corrected picture: sc25 AND lf52 are now both clean, unambiguous negatives
+(more search budget would not have helped either); bp35 remains the one open, genuinely budget-bound
+case.**
+
+**Broader-impact caveat, honestly disclosed and NOT verified in this pass:** this bug lives in shared
+`arc_solver_kit.py` infrastructure used by ANY `OfflineSolver` search with a `move_pruner` and >1
+candidate per node — e.g. `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited
+in CLAUDE.md's ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859"). That specific
+historical measurement was NOT re-verified as part of this fix (out of scope for this session); any
+`move_pruner`-based numbers from before 2026-07-23 should be read with this caveat rather than assumed
+unaffected.
+
+**The live-path question, answered with existing data rather than a new build.** Investigating how to
+"wire into live" led to `scripts/arc_leaderboard_eval.py` — the project's STANDING measurement engine
+that already runs the REAL scored `E3AgentPolicy` cascade (frame-only, no banked plan, no
+GameAdapter — the exact live-agent self-discovery configuration) against the full game corpus,
+comparing to the offline-oracle ceiling. Its most recent run
+(`results/arc_live_oracle_gap.json`, 2026-07-19, `--policy e3 --games oracle`, 25 games) already
+covers sc25/lf52/bp35. Reading those rows directly (no re-run needed — Failed-Experiment Rerun
+Discipline): **sc25 `levels=0, actions=392`; lf52 `levels=0, actions=395`; bp35 `levels=0,
+actions=393`** — all three routed to a `program_editor` strategy that also never converged. This is a
+FIFTH independent mechanism (induce-then-plan, bare reactive-filter, tool-loop-lookahead small/large
+budget, and now the actual production scored cascade) confirming the same null on these exact 3
+games. **These are simply hard, deep-mechanic games for every adapter-free approach tried so far, live
+or offline — not a gap specific to the tool-loop-lookahead mechanism or to it being offline-only.**
+
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5828 (CORRIGENDUM
+addendum).
+**Tests:** `tests/python/test_arc_solver_kit_node_frame_snapshot.py` (1 test, the regression guard).
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
 
 **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered

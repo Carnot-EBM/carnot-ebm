@@ -5266,7 +5266,17 @@ class OfflineSolver:
             if len(path) >= depth_cap:
                 continue
             self._replay(env, list(prefix) + path)
-            node_frame = self.last_frame
+            # FROZEN SNAPSHOT, not a live reference: found via a real diagnostic trace (not assumed)
+            # investigating an anomalously shallow lf52 search -- env.step()'s returned frame objects
+            # are distinct Python objects (`f1 is f0` is False) but their underlying grid data is a
+            # SHARED, mutated-in-place buffer, so a bare `node_frame = self.last_frame` reference
+            # silently reflects whatever the CURRENT env state is at read-time, not the state at
+            # capture-time. Since move_pruner.observe() is called for EVERY sibling candidate in this
+            # loop, each with its own apply()/env.step() in between, an un-copied node_frame ends up
+            # showing before_key == after_key (looks like "no change") for EVERY candidate regardless
+            # of whether the game actually changed -- corrupting the dead-end pruner with false
+            # dead-ends for genuinely state-changing actions. copy.deepcopy() breaks the aliasing.
+            node_frame = copy.deepcopy(self.last_frame)
             for label in self._call_action_labels(env, path):
                 if self.move_pruner is not None and self.move_pruner.should_prune(
                     node_frame, label
@@ -5318,7 +5328,9 @@ class OfflineSolver:
                 continue
             env._game = copy.deepcopy(snap)  # restore this node's exact state
             self.last_frame = frame
-            node_frame = frame
+            # FROZEN SNAPSHOT, not a live reference -- see solve_level()'s node_frame comment for the
+            # full diagnosis (frame objects alias a shared, mutated-in-place grid buffer).
+            node_frame = copy.deepcopy(frame)
             for label in self._call_action_labels(env, path):
                 if self.move_pruner is not None and self.move_pruner.should_prune(
                     node_frame, label
@@ -5387,7 +5399,9 @@ class OfflineSolver:
             if len(path) >= depth_cap:
                 continue
             e_node = at(path)  # fresh env at the node (for action_labels)
-            node_frame = self.last_frame
+            # FROZEN SNAPSHOT, not a live reference -- see solve_level()'s node_frame comment for the
+            # full diagnosis (frame objects alias a shared, mutated-in-place grid buffer).
+            node_frame = copy.deepcopy(self.last_frame)
             for label in self._call_action_labels(e_node, path):
                 if self.move_pruner is not None and self.move_pruner.should_prune(
                     node_frame, label
