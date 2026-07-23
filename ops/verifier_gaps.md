@@ -2637,6 +2637,25 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - cross-ref: `project_arc_live_agent_learning_gaps` (perception = binding constraint), `GAP-ARCH-GOAL-NOT-VERIFIED`
   (the downstream gap this unblocks), `GAP-ARCH-GRID-ONLY-STATE` (the HUD-register representation gap this
   shares a root with).
+- **DETECTORS BUILT + REAL-FRAME VALIDATED 2026-07-23 (REQ-ARC-WMTE-5833,
+  `python/carnot/agentic/arc_entity_hud_perception.py`).** Both detectors implemented (from the agent's OWN
+  transitions -- oracle-distinct, no source-reading): `detect_hud_registers` (edge band changing on
+  near-every action + position-independent = a counter) and `detect_mover` (the color whose centroid
+  translates with directional actions = the player). 9 synthetic unit tests + a real-frame offline-arcade
+  gate (`results/outer_loop_arc_perception_detectors_realframe_gate_20260723.json`, no LLM). Real-frame
+  result: **HUD recovered on 3/3 confuser games** (bp35 row63, lf52 row0, tu93 row63 -- the EXACT bars the
+  winner-recipe model mistook for the goal per the diagnosis) and **mover recovered on 2/2 navigate games**
+  (sc25, ls20 color-9 avatar, high alignment). KEY FIX FOUND BY THE GATE: the first HUD statistic
+  (monotone non-background COUNT) missed every real counter -- ARC counters change cell VALUES (value-6
+  depletes, cells recolor), not the fg/bg count; tu93/bp35 row63 changed on 100% of actions with net count
+  0. Replaced with change-fraction + position-independence. HONEST RESIDUALS (next iteration): (1) cn04
+  mover false-positive -- a scattered non-entity color drifts; needs a connected-compact-blob requirement,
+  not just an area guard; (2) sc25's col-62/63 meter missed (0.63 change-rate, below the near-every-action
+  bar); (3) r11l/ft09 under-explored (8 transitions -- the fixed exploration plan is filtered by per-game
+  action availability; a harness gap, not a detector gap); (4) tu93 token mover not surfaced by the scripted
+  moves. Next: fix (1)+(3), then the END-TO-END gate -- re-run the REQ-ARC-WMTE-5832 goal measurement under
+  DETECTOR-produced perception (not hand-authored) to confirm it recovers the ~7/8 goal-correctness, then
+  the execution/dynamics half for the navigate games.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open

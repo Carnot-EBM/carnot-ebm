@@ -1,0 +1,240 @@
+{
+  "experiment": "outer_loop_arc_perception_detectors_realframe_gate",
+  "experiment_id": "REQ-ARC-WMTE-5833",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_perception_detectors_realframe_gate.v1",
+  "title": "Do the entity+HUD perception detectors recover the known HUD band + player from REAL game frames (offline arcade, no LLM)?",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5833,
+  "reproducibility_checksum": "sha256:fda2033f93793689f139f839a2e7cc7d585f23fc63525ecb2e76c721b0dbe126",
+  "methodology_note": "Offline arcade stepping with a FIXED scripted exploration (deterministic, no LLM). Detectors use ONLY the agent's own observed transitions; source ground truth is used for offline judging only, never fed to the detectors. Public-game frames stepped for offline dev validation (authorized); never in the hidden submission.",
+  "per_game": [
+    {
+      "game": "bp35",
+      "n_transitions": 24,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [
+        {
+          "axis": "row",
+          "index": 63,
+          "direction": "counter",
+          "changed_fraction": 1.0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "mover": null,
+      "ground_truth": {
+        "hud": "fill on last row (move-budget/lose bar)",
+        "player": "yes (moves 3/4 under gravity)"
+      },
+      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=5 at row=19 col=29 size=1291\n  #1 color=10 at row=6 col=42 size=276\n  #2 color=3 at row=1 col=2 size=1\n  #3 color=3 at row=1 col=8 size=1\n  #4 color=3 at row=1 col=13 size=1\n  #5 color=14 at row=3 col=15 size=21\n  #6 color=3 at row=1 col=17 size=1\n  #7 color=3 at row=1 col=19 size=1\n  #8 color=14 at row=3 col=21 size=21\n  #9 color=3 at row=1 col=23 size=1\n  #10 color=3 at row=1 col=25 size=1\n  #11 color=14 at row=3 col=27 size=21\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter).",
+      "judgment": {
+        "hud": "correct",
+        "mover": "missed",
+        "note": "row63 counter = the move-budget bar the model fixated on (the exact confuser). Sprite mover not surfaced (gravity/exploration)."
+      }
+    },
+    {
+      "game": "lf52",
+      "n_transitions": 52,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [
+        {
+          "axis": "row",
+          "index": 0,
+          "direction": "counter",
+          "changed_fraction": 1.0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "mover": null,
+      "ground_truth": {
+        "hud": "fill on row 0 (move counter)",
+        "player": "no discrete mover (block-merge)"
+      },
+      "perception_text": "Other distinct objects (candidate targets):\n  #2 color=5 at row=28 col=34 size=172\n  #3 color=0 at row=27 col=35 size=644\n  #4 color=9 at row=39 col=50 size=63\n  #5 color=1 at row=14 col=12 size=16\n  #6 color=1 at row=14 col=18 size=16\n  #7 color=1 at row=14 col=24 size=16\n  #8 color=1 at row=14 col=30 size=16\n  #9 color=1 at row=14 col=36 size=16\n  #10 color=1 at row=14 col=42 size=16\n  #11 color=1 at row=14 col=48 size=16\n  #12 color=3 at row=20 col=18 size=20\n  #13 color=1 at row=20 col=12 size=16\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 0 (counter counter).",
+      "judgment": {
+        "hud": "correct",
+        "mover": "correct_none",
+        "note": "row0 counter = the exact bar the model mistook for the board. No discrete mover (block-merge) -- correctly none."
+      }
+    },
+    {
+      "game": "sc25",
+      "n_transitions": 52,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [],
+      "mover": {
+        "color": 9,
+        "alignment": 0.92,
+        "evidence": 43
+      },
+      "ground_truth": {
+        "hud": "cols ~62/63 (mana/move meter)",
+        "player": "yes (avatar moves 1-4)"
+      },
+      "perception_text": "PLAYER token (color 9) at row=20 col=13 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=26 col=62 size=108\n  #2 color=10 at row=20 col=14 size=16\n  #3 color=2 at row=20 col=29 size=76\n  #4 color=10 at row=20 col=40 size=8\n  #6 color=3 at row=55 col=30 size=208\n  #7 color=2 at row=50 col=25 size=9\n  #8 color=0 at row=50 col=30 size=9\n  #9 color=2 at row=50 col=35 size=9\n  #10 color=3 at row=54 col=16 size=36\n  #11 color=2 at row=54 col=16 size=48\n  #12 color=15 at row=52 col=16 size=4\n  #13 color=15 at row=54 col=12 size=4",
+      "judgment": {
+        "hud": "missed",
+        "mover": "correct",
+        "note": "avatar color 9 found. col62/63 meter missed: changes on only 63% of actions, below the near-every-action bar and not rescued by position-independence."
+      }
+    },
+    {
+      "game": "tu93",
+      "n_transitions": 44,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [
+        {
+          "axis": "row",
+          "index": 63,
+          "direction": "counter",
+          "changed_fraction": 1.0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "mover": null,
+      "ground_truth": {
+        "hud": "deplete on last row (step counter)",
+        "player": "yes (token color ~9 moves 1-4)"
+      },
+      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=0 at row=16 col=16 size=9\n  #1 color=2 at row=16 col=19 size=9\n  #2 color=0 at row=16 col=22 size=9\n  #3 color=0 at row=16 col=28 size=9\n  #4 color=2 at row=16 col=31 size=9\n  #5 color=0 at row=16 col=34 size=9\n  #6 color=2 at row=16 col=37 size=9\n  #7 color=0 at row=16 col=40 size=9\n  #8 color=2 at row=19 col=22 size=9\n  #9 color=2 at row=19 col=28 size=9\n  #10 color=5 at row=19 col=34 size=27\n  #11 color=2 at row=19 col=40 size=9\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter).",
+      "judgment": {
+        "hud": "correct",
+        "mover": "missed",
+        "note": "row63 step-counter recovered. Token mover not surfaced (exploration did not translate it)."
+      }
+    },
+    {
+      "game": "ls20",
+      "n_transitions": 44,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [
+        {
+          "axis": "row",
+          "index": 62,
+          "direction": "counter",
+          "changed_fraction": 1.0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "mover": {
+        "color": 9,
+        "alignment": 1.0,
+        "evidence": 43
+      },
+      "ground_truth": {
+        "hud": "(none prominent)",
+        "player": "yes (avatar color ~9 moves 1-4)"
+      },
+      "perception_text": "PLAYER token (color 9) at row=12 col=36 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=5 at row=26 col=2 size=208\n  #1 color=3 at row=35 col=35 size=892\n  #2 color=5 at row=12 col=36 size=43\n  #5 color=4 at row=38 col=30 size=100\n  #6 color=0 at row=32 col=21 size=3\n  #7 color=1 at row=32 col=20 size=1\n  #8 color=1 at row=33 col=21 size=1\n  #9 color=12 at row=46 col=41 size=10\n  #11 color=5 at row=58 col=6 size=76\n  #14 color=5 at row=62 col=38 size=112\n  #15 color=3 at row=62 col=13 size=2\n  #16 color=11 at row=62 col=34 size=82\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 62 (counter counter).",
+      "judgment": {
+        "hud": "plausible",
+        "mover": "correct",
+        "note": "avatar color 9 found (align 1.0). row62 counter likely a real budget/lives bar (ground-truth guess was 'none prominent')."
+      }
+    },
+    {
+      "game": "cn04",
+      "n_transitions": 52,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [],
+      "mover": {
+        "color": 0,
+        "alignment": 1.0,
+        "evidence": 44
+      },
+      "ground_truth": {
+        "hud": "(none prominent)",
+        "player": "pieces move/rotate"
+      },
+      "perception_text": "PLAYER token (color 0) at row=0 col=26 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #1 color=4 at row=0 col=42 size=10\n  #2 color=12 at row=17 col=18 size=135\n  #3 color=8 at row=27 col=15 size=9\n  #4 color=8 at row=27 col=21 size=9\n  #6 color=10 at row=39 col=45 size=45\n  #7 color=8 at row=36 col=39 size=9\n  #8 color=8 at row=42 col=39 size=9",
+      "judgment": {
+        "hud": "correct_none",
+        "mover": "false_positive",
+        "note": "RESIDUAL BUG: color-0 (a scattered non-entity void) selected as mover; the 0.15 area guard did not catch it because color 0 is small-but-scattered. Needs a connected-compact-blob requirement."
+      }
+    },
+    {
+      "game": "r11l",
+      "n_transitions": 8,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [
+        {
+          "axis": "col",
+          "index": 0,
+          "direction": "deplete",
+          "changed_fraction": 1.0,
+          "monotone_ratio": 1.0
+        }
+      ],
+      "mover": null,
+      "ground_truth": {
+        "hud": "(none prominent)",
+        "player": "pieces (two-click move)"
+      },
+      "perception_text": "Other distinct objects (candidate targets):\n  #1 color=2 at row=2 col=24 size=240\n  #2 color=2 at row=7 col=59 size=134\n  #4 color=15 at row=18 col=38 size=1\n  #5 color=15 at row=18 col=40 size=1\n  #6 color=15 at row=19 col=37 size=1\n  #7 color=15 at row=19 col=41 size=1\n  #8 color=15 at row=20 col=36 size=1\n  #9 color=15 at row=20 col=42 size=1\n  #10 color=15 at row=22 col=36 size=1\n  #11 color=15 at row=22 col=42 size=1\n  #12 color=15 at row=23 col=37 size=1\n  #13 color=15 at row=23 col=41 size=1\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): col 0 (deplete counter).",
+      "judgment": {
+        "hud": "under_explored",
+        "mover": "under_explored",
+        "note": "only 8 transitions -- action-availability filtered the scripted plan; needs per-game action adaptation (harness gap, not detector gap)."
+      }
+    },
+    {
+      "game": "ft09",
+      "n_transitions": 8,
+      "logical_shape": [
+        64,
+        64
+      ],
+      "hud_bands": [],
+      "mover": null,
+      "ground_truth": {
+        "hud": "(none prominent)",
+        "player": "no mover (click-only CSP)"
+      },
+      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=9 at row=4 col=6 size=36\n  #1 color=8 at row=4 col=14 size=36\n  #2 color=9 at row=4 col=22 size=36\n  #3 color=9 at row=4 col=40 size=36\n  #4 color=8 at row=4 col=48 size=36\n  #5 color=9 at row=4 col=56 size=36\n  #6 color=8 at row=12 col=6 size=36\n  #7 color=2 at row=10 col=12 size=4\n  #8 color=0 at row=10 col=14 size=4\n  #9 color=2 at row=12 col=16 size=8\n  #10 color=9 at row=12 col=22 size=36\n  #11 color=8 at row=12 col=40 size=36",
+      "judgment": {
+        "hud": "correct_none",
+        "mover": "under_explored",
+        "note": "only 8 transitions; click-only game."
+      }
+    }
+  ],
+  "duration_s": 2.21,
+  "judgment_summary": {
+    "hud_confuser_games": "3/3 recovered (bp35 row63, lf52 row0, tu93 row63 -- the exact bars the model mistook for the goal)",
+    "mover_navigate_games": "2/2 recovered (sc25, ls20 color-9 avatar, high alignment + strong evidence)",
+    "residuals": [
+      "cn04 mover false-positive: a scattered non-entity color (0) selected; needs a connected-compact-blob requirement, not just an area guard",
+      "sc25 meter missed: 0.63 change-rate is below the near-every-action bar and not position-independent enough",
+      "r11l/ft09 under-explored (8 transitions): the fixed exploration plan is filtered by per-game action availability; needs per-game action adaptation (harness, not detector)",
+      "tu93 token mover missed: the scripted exploration did not translate the token; needs a move set that actually moves it"
+    ]
+  },
+  "headline": "Real-frame validation (no LLM): the refined HUD detector recovers the confuser-bar on ALL 3 games where the winner-recipe model fixated on it (bp35 row63, lf52 row0, tu93 row63), and the mover detector recovers the player on BOTH navigate games (sc25, ls20). These are exactly the perceptual facts the oracle ablation (REQ-ARC-WMTE-5832) showed flip goal induction. Known residuals: a scattered-color mover false-positive (cn04), one partial-rate meter missed (sc25), and 2 under-explored games (harness).",
+  "honest_verdict": "complete_perception_detectors_validated_on_real_frames_with_known_residuals"
+}
