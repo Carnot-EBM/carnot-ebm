@@ -14179,3 +14179,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 14:32 UTC | Exact replay substrate contract and false-compute- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5851_determi |
 | 2026-07-23 14:40 UTC | Exact replay substrate contract and false-compute- | OK | cache hit: 81 passed, 1 warning in 12.47s |
 | 2026-07-23 15:31 UTC | Current-SOTA causal-pair embedding extraction acro | OK | 87 passed, 1 warning in 15.09s |
+| 2026-07-23 16:02 UTC | Claim-flip, evaluator-swap, and identity-shortcut  | OK | 87 passed, 1 warning in 11.98s |
