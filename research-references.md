@@ -30842,3 +30842,126 @@ Carnot's immutable-GGUF, exact-validator, and live-ARC boundaries.
   thermodynamic blueprint supplies ABI fields, not hardware evidence.
 
 <!-- V519-PLANNER-REFRESH-20260722-END -->
+
+## V520 Planner Refresh - 20260723
+
+Planning-time sweep for the milestone after terminal `.519`. The search covered
+2025-2026 arXiv work on energy-based verification and reasoning, neural constraint
+satisfaction, Ising/CSP hardware, hallucination detection, KANs, energy-guided
+generation, and continual/online learning. It also rechecked OpenReview, Hugging Face
+Papers, Semantic Scholar citation routes for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), GitHub repositories, Extropic's writing index, and Logical
+Intelligence's public Kona material. These findings are new relative to the V519 block.
+
+### New actionable deltas
+
+- **CrossHallu: Do Hallucination Signals Generalize Across Languages and Domains in
+  Large Language Model's Internals?** - arXiv:2607.04029,
+  https://arxiv.org/abs/2607.04029; submitted 2026-07-04. Across six LLMs and
+  Arabic/English question answering, the paper reports that internal-state
+  hallucination signals can transfer across language and domain, but that cross-lingual
+  performance depends on class separability and feature-space language alignment.
+  Carnot hook: a current-GGUF internal-energy experiment must hold out both model family
+  and constraint family, mask model identity, quantify representation alignment, and
+  report within-family versus cross-family degradation. An in-family result alone is not
+  a portable verifier.
+- **CORTEX: Token-Level Hallucination Detection in RAG via Comparative Internal
+  Representations** - arXiv:2606.31033, https://arxiv.org/abs/2606.31033; submitted
+  2026-06-30. CORTEX compares an LLM's internal representations with and without
+  retrieved evidence instead of classifying one absolute state, then models propagation
+  and span persistence. Carnot hook: materially change the negative Exp5200 absolute
+  final-layer probe into an output-free, paired counterfactual test. For the reproducible
+  `llama_cpp` surface, compare exact correct/incorrect candidates and
+  constraint-present/constraint-ablated contexts, freeze label-blind difference features,
+  and keep exact solvers as labels and release authority.
+- **SkillOpt: Executive Strategy for Self-Evolving Agent Skills** -
+  arXiv:2605.23904, https://arxiv.org/abs/2605.23904; public implementation and project
+  page at https://microsoft.github.io/SkillOpt/. The method treats a compact external
+  skill document as trainable state for a frozen agent, limits edits to bounded
+  add/delete/replace operations, buffers rejected edits, and accepts changes only through
+  held-out validation. Carnot hook: extend `.519`'s frozen-weight adaptive memory with a
+  sparse exact-oracle budget, a rejected-update buffer, a slow/meta consolidation step,
+  and a prospective multi-objective promotion gate. Self-learning credit still requires
+  sealed future lift, exact retention, zero unsafe accepts, rollback, and bounded state.
+- **Kolmogorov--Arnold Networks for Small Language Models** - arXiv:2607.15525,
+  https://arxiv.org/abs/2607.15525; submitted 2026-07-17. The ten-seed study finds that
+  KAN-family feed-forward replacements do not deliver a consistent benchmark, quality,
+  or latency advantage over strong MLP/SwiGLU controls, although small-basis KANs can be
+  useful for auditing scalar transformations. Carnot hook: retain a compact KAN only as
+  an interpretable control in the paired-embedding energy experiment. Do not privilege
+  it over logistic/MLP baselines, and make a clean all-control null a retirement result.
+- **Delayed Coupling Restores Ising Phase Dynamics in Physical Oscillator Networks** -
+  arXiv:2607.16634, https://arxiv.org/abs/2607.16634; submitted 2026-07-18. The paper
+  shows that a correct coupling topology does not by itself establish realized Ising
+  dynamics: harmonic phase mismatch can introduce even coupling components, while
+  delayed coupling can compensate them. Carnot hook: add a backend-authenticity field to
+  hardware capability receipts that distinguishes requested energy topology from measured
+  update dynamics. Carnot has no oscillator backend, so this is an ABI and evidence rule,
+  not an execution or speed claim.
+
+### Guarded findings and negative controls
+
+- **Structured Output Collapses Answer Diversity Across 44 Language Models** -
+  arXiv:2607.18476, https://arxiv.org/abs/2607.18476; submitted 2026-07-20. A JSON-only
+  request increased modal answer concentration even without decoder enforcement, while
+  enforcement added little further compression. This strengthens the decision to keep
+  the finite-ID/structured generated-answer lane retired: format compliance is not a
+  neutral semantic channel and must not be used to infer constraint knowledge.
+- **HalluTruthQA** - arXiv:2607.20219, surfaced 2026-07-23, adds 2,400 expert-curated
+  Arabic examples with detection, localization, explanation, and correction targets
+  across four domains. It is a useful future cross-language stress set for CrossHallu-like
+  work, but it is not promoted into `.520`: its factual labels do not replace Carnot's
+  exact constraint validators, and current local GGUF embedding feasibility must be
+  established first.
+- **Energy-Based World Models for Controllable Text Generation with Frozen LLMs** -
+  OpenReview/TMLR forum `pOIFHY4dOJ`, posted 2026-06-12. Its frozen-LLM, coupling-aware
+  energy framing is relevant architecture context, but its generated-text clamping and
+  two-axis intervention surface overlaps locally retired families. It does not reopen
+  generation, two-axis clamping, or tempering experiments.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct citation-list queries on 2026-07-23 exposed no newer
+  reproducible EBT item after arXiv:2607.17047 and no newer ARM-EBM item after the
+  already-indexed Path-Measure Dynamics, Distributional EBM, LoopUS, safe-distillation,
+  ontology, graph-energy, and false-first-step families. The API intermittently returned
+  `HTTP 429`; citation counts are therefore not promoted as stable evidence.
+- **OpenReview / Hugging Face Papers:** the searches surfaced the OpenReview world-model
+  item above and Hugging Face's SkillOpt listing. Other energy/verifier results were
+  duplicates of already-indexed Distributional EBM, selective-verification, and
+  energy-guided generation families. None supersedes exact validators or authorizes a
+  generated-answer rerun.
+- **GitHub:** the CrossHallu repository is public at
+  https://github.com/aishaalansari57/CrossHal, SkillOpt is public through the Microsoft
+  project page, and the structured-output study publishes code/data under
+  https://github.com/tap2k/modelun/tree/main/studies/structured. These are method and
+  control references; `.520` should not add them as runtime dependencies when the same
+  paired tests can be implemented against Carnot's cached GGUF and exact-event contracts.
+- **Extropic:** official public writing still centers on the October 2025 X0/XTR-0,
+  TSU, Denoising Thermodynamic Model, and future Z1 material. THRML remains the public
+  simulation route. Carnot still has no authenticated XTR-0/Z1 path, so no TSU execution,
+  power, energy, convergence, or speedup claim is available.
+- **Logical Intelligence:** the June 2026 formal-verification post explicitly frames a
+  learned EBRM energy as a cheap, imperfect verifier surrogate beneath exact formal
+  checking. Kona 1.0 remains proprietary, with no public weights, authenticated local
+  endpoint, or reproducible comparator. Carnot should mirror the authority split
+  (learned routing/surrogate versus exact release) without claiming Kona execution.
+
+### V520 planning impact
+
+- First qualify `.519` independently: replay row-level metrics, test target/feature
+  leakage and shortcut constructions, and preserve exact-oracle provenance before using
+  the near-perfect synthetic results as gates.
+- Test current-GGUF representations through comparative, causal pairs rather than another
+  absolute embedding probe. Use all three mandated SOTA families, hold out model and
+  constraint families, compare logistic/MLP/KAN controls, and retire the bounded route if
+  it does not beat preregistered controls with positive lower bounds.
+- Continue continuous self-learning with frozen weights under a reduced exact-oracle
+  budget. Use versioned external state, rejected-update buffering, prospective
+  multi-objective promotion, exact rollback, and separate forward-transfer, retention,
+  safety, and resource accounting.
+- Preserve the live ARC world-feedback branch and attached-board continuity as independent
+  paths. Runtime observations own ARC facts; authenticated execution receipts own hardware
+  claims; requested topology alone never proves realized energy dynamics.
+
+<!-- V520-PLANNER-REFRESH-20260723-END -->
