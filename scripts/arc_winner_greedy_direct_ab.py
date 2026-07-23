@@ -47,7 +47,7 @@ def _oracle_levels() -> dict:
 
 
 def _run_arm(
-    label: str, proposer, games, *, budget, max_turns, max_seq, perception, reflect_iv
+    label: str, proposer, games, *, budget, max_turns, max_seq, perception, reflect_iv, goal_verify
 ) -> list[dict]:
     from carnot.agentic.arc_greedy_direct_agent import run_greedy_direct
 
