@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.521",
+  "generated_at": "2026-07-23T23:41:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 96.6,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Accepted adaptive operations ABI conformance",
+      "duration_minutes": 71.83,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Current-SOTA causal-pair embedding extraction across three model families",
+      "duration_minutes": 20.4,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Dated web evidence sweep after the V521 marker",
+      "duration_minutes": 1.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Claim-flip, evaluator-swap, and identity-shortcut audit for paired representatio",
+      "duration_minutes": 1.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Closed-loop visual probing under equal action budgets",
+      "duration_minutes": 0.9,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Thirteen experiments consumed 96.6 minutes, including 7 compute-bound experiments. The 71.83-minute synthesis-only conformance task dominated elapsed time; the longest listed compute-bound task took 20.4 minutes, and the locked task-conditioned GPU-idle indicator is false.",
+  "bottlenecks_identified": [
+    "The 71.83-minute synthesis-only adaptive operations ABI conformance path dominated the 96.6-minute milestone.",
+    "Among the listed compute-bound paths, the 20.4-minute causal-pair embedding extraction across three model families exceeded the 0.9-minute closed-loop visual probing task; the timing data does not explain either duration because no phase breakdown is supplied.",
+    "Disk-mtime reconstruction provides task-level durations but no task-correlated phase, GPU, loaded-model-count, or runner trace, limiting causal efficiency analysis."
+  ],
+  "improvements_suggested": [
+    "Add resumable checkpoints and content-addressed reuse to the long synthesis-only ABI conformance path.",
+    "Persist phase timings and sampled GPU utilization under the same task identifier for every compute-bound run.",
+    "Record simultaneous loaded-model count and selected runner; dispatch DualGPURunner only for genuine concurrent multi-model work.",
+    "Persist conductor event timings independently of git commits so milestone accounting does not depend on disk-mtime reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make ABI conformance synthesis resumable and cache unchanged inputs.",
+    "Add task-correlated phase and GPU telemetry to compute-bound execution.",
+    "Capture model concurrency and runner selection, with dual-GPU dispatch limited to genuine parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence ranks task-level elapsed time but does not expose phases or tie the GPU snapshot to task intervals. It therefore supports identifying the long paths, but not claiming causal GPU inefficiency or a missed parallel runner."
+}
