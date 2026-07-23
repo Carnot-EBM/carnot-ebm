@@ -35220,3 +35220,120 @@ reasoning verification, text-quality scoring, or scorer training.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5354 | Planned (`python/carnot/experiment_5354_arithmetic_carry_token_energy_v488.py`, `results/experiment_5354_arithmetic_carry_token_energy_v488.json`) | Planned (`tests/python/test_experiment_5354_arithmetic_carry_token_energy_v488.py`) |
+
+### REQ-VERIFY-5840: Exact Counterfactual Embedding Fixture
+
+The repository SHALL provide Exp5840 at
+`python/carnot/experiment_5840_exact_counterfactual_embedding_fixture.py`
+that consumes the qualified Exp5839 constraint-stream gate and the exact
+Exp5826 chronological row stream, then writes
+`results/experiment_5840_exact_counterfactual_embedding_fixture.json` and
+`results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl`.
+The experiment SHALL perform deterministic exact counterfactual fixture
+generation only, SHALL NOT invoke an LLM, SHALL NOT extract embeddings, and
+SHALL declare
+`inference_substrate=deterministic_exact_counterfactual_generation_no_llm`.
+
+Before constructing fixture rows, Exp5840 SHALL replay the structured gate by
+hashing Exp5839, the Exp5826 stream artifact and exact row bytes, the Exp5826
+validator module and validator version constants, the verification spec, the
+new module and tests when present, and a canonical family registry. It SHALL
+verify Exp5839 `constraint_stream_qualified_score == 1.0`, Exp5826 row-file
+integrity, at least 30 eligible exact rows per constraint family for both
+counterfactual axes, label-blind split headroom, RAM, disk, and writable atomic
+JSON/JSONL output paths. Any failed gate SHALL write a terminal blocked
+artifact with `counterfactual_fixture_ready_score=0.0` and explicit reasons.
+
+Exp5840 SHALL construct two causal axes for every primary Exp5826 family:
+`candidate_correctness`, which holds the context fixed while contrasting an
+exact-correct candidate with a one-minimal-violation candidate, and
+`constraint_ablation`, which holds the candidate fixed while contrasting the
+target-constraint-present context with a context where only that target
+constraint is ablated. Every family/axis cell SHALL contain at least 30
+counterfactual pairs. Rows SHALL include change cells, hardness cells,
+proof-preserving surfaces, pair and group bootstrap units, and provenance
+receipts that trace labels to exact validators.
+
+Exp5840 SHALL preregister label-blind train/dev/science row splits plus family
+and surface partition receipts before future embedding work. Learner-visible
+model inputs SHALL mask explicit family, model, label, oracle, source-row, and
+target-answer identity while retaining provenance outside model inputs. The
+paired condition texts SHALL use fixed token-budget envelopes, with no
+answer-bearing padding and no truncation shortcut.
+
+Exp5840 SHALL run exact label checks, one-minimal-violation proof checks,
+ablation-causality checks, target-leakage scans, duplicate and near-duplicate
+scans, split-overlap tests, proof-preserving surface checks, token-budget
+parity checks, schema checks, row-file integrity checks, root-clutter checks,
+and protected-file immutability checks. The bare
+`counterfactual_fixture_ready_score` SHALL be `1.0` only when every family and
+axis meets count, causality, exactness, balance, leakage, token-parity, and
+split gates; otherwise it SHALL be `0.0` with reasons.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `causal_axis_definitions`,
+`family_axis_cell_counts`, `exact_label_and_minimality_receipts`,
+`constraint_ablation_receipts`, `proof_preserving_surface_receipts`,
+`token_budget_parity`, `split_definition_and_hashes`,
+`target_leakage_checks`, `row_file_receipt`,
+`counterfactual_fixture_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal fixture state distinguishes complete exact data from a partial file.
+- `preconditions_checked`: Gate, hashes, counts, headroom, resources, and outputs prevent fabricated readiness.
+- `upstream_artifact_hashes`: Hashes bind the fixture to the independently qualified stream.
+- `causal_axis_definitions`: Two frozen interventions separate candidate correctness from constraint presence.
+- `family_axis_cell_counts`: Disaggregated counts prevent a pooled majority family from carrying readiness.
+- `exact_label_and_minimality_receipts`: Exact solvers prove correct versus one-minimal-violation pairing.
+- `constraint_ablation_receipts`: Only the intended constraint may change on the ablation axis.
+- `proof_preserving_surface_receipts`: Surface variants test invariance without changing constraint truth.
+- `token_budget_parity`: Matched envelopes prevent length and truncation shortcuts.
+- `split_definition_and_hashes`: Frozen label-blind partitions prevent science leakage.
+- `target_leakage_checks`: Identity, answer, duplicate, and target-derived features must be absent.
+- `row_file_receipt`: Path, row count, and hash make the exact corpus auditable.
+- `counterfactual_fixture_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5841.
+- `duration_s`: Measured time exposes bootstrap-only fixture generation.
+- `inference_substrate`: `deterministic_exact_counterfactual_generation_no_llm` states the true path.
+- `verifier_is_oracle`: True records exact solvers as labels, never a learned-verifier moat.
+- `field_provenance`: Every aggregate traces to exact rows, validators, and split receipts.
+- `test_commands`: Commands document causality, exactness, counts, leakage, and file integrity.
+- `test_exit_codes`: Exit codes prevent failed fixture checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects row, split, validator, or surface drift.
+- `honest_verdict`: A terminal prefix states ready, null, or blocked outcome honestly.
+
+### SCENARIO-VERIFY-5840-PAIRS: Causal Pair Axes Are Exact
+
+Given Exp5839 qualifies the Exp5826 constraint stream and the exact row stream
+is replayable, when Exp5840 builds the counterfactual rows, then every primary
+family has at least 30 `candidate_correctness` pairs and at least 30
+`constraint_ablation` pairs, exact validators label every condition, every
+candidate-correctness pair changes only the candidate, every ablation pair
+changes only the intended target constraint, and the ready score is the bare
+scalar `1.0`.
+
+### SCENARIO-VERIFY-5840-LEAKAGE: Feature Inputs Are Masked And Split-Safe
+
+Given Exp5840 emits pair condition texts for future embedding extraction, when
+the fixture validates learner-visible surfaces, then no model input contains
+explicit family names, model identifiers, labels, oracle fields, row ids,
+target answers, or source provenance; token counts are matched exactly; duplicate
+and near-duplicate checks pass; and label-blind train/dev/science partitions
+have no overlapping pair, group, or condition ids.
+
+### SCENARIO-VERIFY-5840-FAIL-CLOSED: Bad Gates Cannot Look Ready
+
+Given missing Exp5839 evidence, an unqualified stream score, stale Exp5826 row
+hashes, insufficient family/axis counts, failed exact or ablation receipts,
+target leakage, token-budget imbalance, split overlap, failed tests, or
+unwritable outputs, when Exp5840 validates the terminal artifact, then
+`counterfactual_fixture_ready_score` SHALL be `0.0`, `status` SHALL be
+`blocked`, and `honest_verdict` SHALL start with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5840)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5840 | Planned (`python/carnot/experiment_5840_exact_counterfactual_embedding_fixture.py`, `results/experiment_5840_exact_counterfactual_embedding_fixture.json`) | Planned (`tests/python/test_experiment_5840_exact_counterfactual_embedding_fixture.py`) |
