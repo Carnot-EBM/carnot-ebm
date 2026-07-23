@@ -12,7 +12,11 @@ SCENARIO-ARC-WMTE-5830-SUPPORT-ON-LEVELUP
 
 from __future__ import annotations
 
-from carnot.agentic.arc_goal_verifier import GoalVerifier, extract_goal
+from carnot.agentic.arc_goal_verifier import (
+    GoalVerifier,
+    extract_goal,
+    progress_indicates_completion,
+)
 
 
 class TestExtractGoal:
@@ -95,3 +99,26 @@ class TestGoalVerifier:
         gv.maybe_falsify()
         s = gv.stats()
         assert s["falsified_goals"] == ["g"] and s["goal_switches"] == 1
+
+
+class TestCompletionFalsification:
+    def test_progress_completion_detected(self):
+        assert progress_indicates_completion("PROGRESS: column 63 is filled with 15s") is True
+        assert progress_indicates_completion("PROGRESS: all grid cells are state 1") is True
+
+    def test_progress_incomplete_not_detected(self):
+        assert progress_indicates_completion("PROGRESS: clicked a few cells, exploring") is False
+        assert progress_indicates_completion("RULES: click toggles") is False
+
+    def test_falsify_on_reported_completion(self):
+        gv = GoalVerifier()
+        gv.set_goal("fill column 63")
+        gv.observe(frame_changed=True, leveled_up=False)  # real activity, no level-up
+        assert gv.falsify_on_reported_completion("PROGRESS: column 63 is filled") is True
+        assert "fill column 63" in gv.falsified
+
+    def test_no_completion_falsify_if_leveled_up(self):
+        gv = GoalVerifier()
+        gv.set_goal("reach exit")
+        gv.observe(frame_changed=True, leveled_up=True)
+        assert gv.falsify_on_reported_completion("PROGRESS: reached and completed") is False
