@@ -484,6 +484,10 @@ def test_scenario_report_5862_schema_checksum_and_protection(tmp_path: Path) -> 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(report)
     assert report["paper_ready"] is True
     assert report["publication_action_taken"] is False
+    for receipt in report["adversarial_verifier_receipts"].values():
+        assert {"command", "exit_code", "stdout_json", "flag_count", "max_severity", "receipt_hash"} <= set(
+            receipt
+        )
     assert report["docs_reconciled"]["ops_status_md"] == "deferred_by_operator_stop_rule"
     assert report["docs_reconciled"]["ops_changelog_md"] == "deferred_by_operator_stop_rule"
     assert report["docs_reconciled"]["traceability_md"] == "deferred_by_operator_stop_rule"
@@ -549,6 +553,58 @@ def test_scenario_report_5862_schema_checksum_and_protection(tmp_path: Path) -> 
         mod.validate_artifact(checksum_drift)
 
 
+def test_scenario_report_5862_ignores_prior_self_output_for_stability(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-5862-SCHEMA: prior capstone JSON cannot perturb reruns."""
+
+    _make_root(tmp_path)
+    without_prior = _build(tmp_path)
+    _write_json(
+        tmp_path,
+        mod.RESULT_RELATIVE_PATH,
+        {
+            "status": "stale",
+            "honest_verdict": "mixed: stale fixture that must not become evidence",
+            "reproducibility_checksum": "sha256:not-real",
+        },
+    )
+    with_prior = _build(tmp_path)
+
+    assert with_prior == without_prior
+    matrix_row = with_prior["exact_task_and_deliverable_matrix"][
+        "exp5862-v521-capstone-reconciliation"
+    ]
+    assert matrix_row["self_output_not_upstream_evidence"] is True
+    assert matrix_row["present"] is False
+    assert (
+        "exp5862-v521-capstone-reconciliation"
+        not in with_prior["preconditions_checked"]["declared_deliverable_hashes"]
+    )
+    mod.validate_artifact(with_prior)
+
+
+def test_scenario_report_5862_failed_required_checks_block_closure(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-5862-SCHEMA: failed required checks cannot close the capstone."""
+
+    _make_root(tmp_path)
+    report = mod.build_report(
+        tmp_path,
+        adversarial_receipts=_receipts(),
+        publication_gate=_publication_gate(),
+        tests_run=[
+            {"command": ".venv/bin/pytest tests/python -q", "exit_code": 2},
+        ],
+        modification_overrides={rel_path: False for rel_path in mod.PROTECTED_FILE_PATHS},
+        duration_s=1.0,
+    )
+
+    assert report["status"] == "blocked"
+    assert report["honest_verdict"].startswith("blocked:")
+    assert report["preconditions_checked"]["failed_required_test_commands"] == [
+        ".venv/bin/pytest tests/python -q"
+    ]
+    mod.validate_artifact(report)
+
+
 def test_req_report_5862_helpers_cover_defensive_and_complete_paths(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -599,7 +655,16 @@ def test_req_report_5862_helpers_cover_defensive_and_complete_paths(
     assert mod._compare(2, "!=", 1) is False
     assert mod._roadmap_gates({"tasks": ["not-a-map"]})
     assert mod._normalize_receipts(None) == {}
-    assert mod._normalize_receipts([{"task_id": "x", "ok": True}]) == {"x": {"task_id": "x", "ok": True}}
+    assert mod._normalize_receipts([{"task_id": "x", "ok": True}]) == {
+        "x": {
+            "task_id": "x",
+            "ok": True,
+            "flag_count": 0,
+            "max_severity": -1,
+            "flags": [],
+            "receipt_hash": mod.sha256_json({}),
+        }
+    }
     assert mod._receipt_flag_count({"stdout_json": {"flagged_count": 3}}) == 3
     assert mod._receipt_flags({"stdout_json": {"reports": [{"flags": "not-list"}]}}) == []
     assert mod._tests_run_rows(None)[0]["status"] == "not_recorded"
