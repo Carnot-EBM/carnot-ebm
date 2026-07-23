@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.519",
+  "generated_at": "2026-07-23T03:42:49Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.2,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Time-windowed post-V519 literature and implementation freshness receipt",
+      "duration_minutes": 0.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Archive terminal .518 evidence, retire finite-ID answer transport, and allocate ",
+      "duration_minutes": 0.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5828 durable memory: transfer-selective replay and recurrence audit",
+      "duration_minutes": 0.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5825 contract: chronological out-of-template constraint structure st",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5826 stream: minimal-core and active-query structural acquisition A/",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Seven experiments completed in 1.2 minutes, including two compute-bound tasks. The 0.97-minute synthesis-only freshness receipt was the largest recorded item; the longest named compute-bound item took 0.16 minutes, and the locked task-conditioned GPU-idle flag is false.",
+  "bottlenecks_identified": [
+    "Freshness-receipt synthesis concentrated most of the observed wall time.",
+    "Disk-mtime reconstruction provides no phase breakdown, so the cause of the longest named compute-bound duration cannot be determined.",
+    "The supplied records do not identify the other compute-bound task or state whether any task loaded multiple models concurrently, leaving runner-selection efficiency unmeasured."
+  ],
+  "improvements_suggested": [
+    "Make the freshness receipt content-addressed and incremental so unchanged literature and implementation inputs reuse prior receipts.",
+    "Persist monotonic phase timings in every experiment artifact instead of relying only on disk modification times.",
+    "Record task-time GPU samples and declared model concurrency; choose DualGPURunner only when multiple models are actually loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add change detection and receipt caching to the freshness scan.",
+    "Emit phase-level start, stop, and elapsed timing with each experiment result.",
+    "Capture model concurrency and task-correlated GPU telemetry for compute-bound work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports optimizing the synthesis receipt and improving observability, but it does not supply a measured faster-path counterfactual, so no nonzero savings metric is asserted. The idle GPU snapshot is not attributed to compute execution because the locked task-conditioned field is false."
+}
