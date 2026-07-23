@@ -1,0 +1,113 @@
+{
+  "acceptance_gate": {
+    "condition": "any tested game reaches a real levelup that no prior mechanism (induce-then-plan, bare reactive-filter, small-budget tool-loop-lookahead) reached",
+    "passed": false,
+    "principle": "Every prior mechanism scored 0 new levels across every measurement on these exact games -- ANY real levelup here is decisive, unambiguous evidence the larger-budget lookahead closes a real gap."
+  },
+  "duration_note": "Real, non-mocked run across 3 games, max_nodes=300 (20x the first run's 15), depth_cap=40, up to 12 tool-calling turns per search-node decision.",
+  "duration_s": 62.985,
+  "experiment": "outer_loop_tool_loop_lookahead_ab_largebudget_20260723",
+  "field_provenance": {
+    "acceptance_gate": {
+      "principle": "A single real levelup where every prior mechanism scored exactly 0 is decisive evidence with real headroom (oracle depths 6-10 levels, well above the live baseline of 0 for every mechanism tried so far)."
+    }
+  },
+  "honest_verdict": "complete_tool_loop_lookahead_largebudget_still_no_levelup_still_budget_short_of_registry_documented_per_level_action_counts",
+  "inference_substrate": "live_llm_inference",
+  "narrative": "Follow-up to the budget-inconclusive first run (max_nodes=15, states_expanded 16-18 total). Raises max_nodes to 300 and depth_cap to 40. Recalibration found while preparing this run (see module docstring): ops/arc_solve_registry.yaml shows these games' FULL solves required per-game hand-engineering across many outer-loop sessions (e.g. lf52's registry cites a 146-action L3 sequence, a 927-action L8+ probe) -- so even this 20x-larger budget is not provably sufficient for these SPECIFIC games; a null result here still narrows rather than closes the open question, and that must be reported honestly rather than overclaimed as definitive.",
+  "per_game": [
+    {
+      "error": null,
+      "final_reached_level": 0,
+      "game": "sc25",
+      "game_wall_s": 24.908,
+      "levels_gained": 0,
+      "path_length": 0,
+      "prior_baselines": {
+        "induce_then_plan": {
+          "levels_gained": 0
+        },
+        "oracle_levels": 6,
+        "reactive_filter": {
+          "levels_gained": 0
+        },
+        "tool_loop_lookahead_smallbudget": {
+          "levels_gained": 0,
+          "source": "outer_loop_tool_loop_lookahead_ab_20260723.json",
+          "states_expanded": 16
+        }
+      },
+      "solved": false,
+      "states_expanded": 95,
+      "tool_loop_calls": 27
+    },
+    {
+      "error": null,
+      "final_reached_level": 0,
+      "game": "lf52",
+      "game_wall_s": 0.718,
+      "levels_gained": 0,
+      "path_length": 0,
+      "prior_baselines": {
+        "induce_then_plan": {
+          "levels_gained": 0
+        },
+        "oracle_levels": 10,
+        "reactive_filter": {
+          "levels_gained": 0
+        },
+        "tool_loop_lookahead_smallbudget": {
+          "levels_gained": 0,
+          "source": "outer_loop_tool_loop_lookahead_ab_20260723.json",
+          "states_expanded": 16
+        }
+      },
+      "solved": false,
+      "states_expanded": 3,
+      "tool_loop_calls": 2
+    },
+    {
+      "error": null,
+      "final_reached_level": 0,
+      "game": "bp35",
+      "game_wall_s": 37.359,
+      "levels_gained": 0,
+      "path_length": 0,
+      "prior_baselines": {
+        "induce_then_plan": {
+          "levels_gained": 0
+        },
+        "oracle_levels": 9,
+        "reactive_filter": {
+          "levels_gained": 0
+        },
+        "tool_loop_lookahead_smallbudget": {
+          "levels_gained": 0,
+          "source": "outer_loop_tool_loop_lookahead_ab_20260723.json",
+          "states_expanded": 18
+        }
+      },
+      "solved": false,
+      "states_expanded": 302,
+      "tool_loop_calls": 76
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "arc_tool_loop_lookahead_module_shipped"
+    },
+    {
+      "available": true,
+      "resource": "cuda_gpu1_pinned"
+    }
+  ],
+  "random_seed": 58280,
+  "random_seed_note": "Deliberately a DIFFERENT seed from the small-budget run's 5828 -- this is a genuinely larger independent search, not a re-run of the identical seeded trajectory extended. Same llama.cpp /completion seed mechanism, offset per search-node decision and per tool-loop turn (see arc_tool_loop_lookahead.py docstrings).",
+  "reproducibility_checksum": "a02c9e8272ec4dcb6ae95dbe8a3b137ca5333f7def47509b51bba07a8da94f68",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_tool_loop_lookahead_ab.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_provenance_note": "Adapter-free (no per-game hand-authored win condition, no hardcoded action sequence) -- the mechanism CLASS matches live_agent_self_discovery's definition. Caveat honestly disclosed: this run itself executes via the offline dev-twin search backbone (arc_solver_kit.OfflineSolver) directly, NOT via a path the scored E3AgentPolicy cascade could invoke (arc_tool_loop_lookahead.py is not yet in either live entrypoint's import closure -- see the operator's own question this run responds to and the ops/known-issues.md entry addressing it).",
+  "target_model": "unsloth/Qwen3.5-9B-MTP-GGUF"
+}
