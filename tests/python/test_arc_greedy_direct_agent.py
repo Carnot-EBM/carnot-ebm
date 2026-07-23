@@ -19,6 +19,7 @@ from carnot.agentic.arc_greedy_direct_agent import (
     _parse_sequence,
     _render_objects,
     decide_sequence,
+    reflect,
 )
 
 
@@ -104,6 +105,29 @@ class TestObjectPerception:
         )
         # object 0 is the color-7 region centered near row 2-3, col 3-4
         assert len(seq) == 1 and seq[0]["a"] == 6 and "x" in seq[0] and "y" in seq[0]
+
+
+class TestReflection:
+    """v3: Reki/forge-style persistent reflection memory (REQ-ARC-WMTE-5829)."""
+
+    def test_reflect_rewrites_notes_primed_with_rules(self, monkeypatch):
+        proposer = _FakeProposer([" click color 7 toggles it\nGOAL: fill the target"])
+        _patch(monkeypatch, proposer)
+        notes = reflect(proposer, "(none yet)", ["6 (3,4) -> changed"])
+        assert notes.startswith("RULES:")
+        assert "GOAL:" in notes
+
+    def test_reflect_keeps_prior_notes_on_failed_completion(self, monkeypatch):
+        proposer = _FakeProposer([])  # no scripted response -> _complete returns (False, ...)
+        _patch(monkeypatch, proposer)
+        prior = "RULES: click toggles\nGOAL: fill target"
+        assert reflect(proposer, prior, ["4 -> no change"]) == prior
+
+    def test_reflect_caps_length(self, monkeypatch):
+        proposer = _FakeProposer([" " + "x" * 5000])
+        _patch(monkeypatch, proposer)
+        notes = reflect(proposer, "", ["1 -> moved"])
+        assert len(notes) <= 1200
 
 
 class _FakeProposer:

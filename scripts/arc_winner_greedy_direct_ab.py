@@ -46,7 +46,9 @@ def _oracle_levels() -> dict:
     }
 
 
-def _run_arm(label: str, proposer, games, *, budget, max_turns, max_seq, perception) -> list[dict]:
+def _run_arm(
+    label: str, proposer, games, *, budget, max_turns, max_seq, perception, reflect_iv
+) -> list[dict]:
     from carnot.agentic.arc_greedy_direct_agent import run_greedy_direct
 
     rows = []
@@ -61,6 +63,7 @@ def _run_arm(label: str, proposer, games, *, budget, max_turns, max_seq, percept
                 max_seq=max_seq,
                 seed=SEED,
                 perception=perception,
+                reflection_interval=reflect_iv,
             )
             row = {
                 "game": game,
@@ -71,6 +74,7 @@ def _run_arm(label: str, proposer, games, *, budget, max_turns, max_seq, percept
                 "game_over": r.game_over,
                 "wall_s": r.wall_s,
                 "transcript_sample": r.transcript_sample,
+                "final_notes": r.final_notes,
                 "error": None,
             }
         except Exception as exc:  # noqa: BLE001 - a policy crash on a game is a datum
@@ -99,10 +103,11 @@ def main() -> None:
     max_seq = int(_arg("--max-seq", "5"))
     also_9b = "--also-9b" in argv
     perception = _arg("--perception", "objects")
+    reflect_iv = int(_arg("--reflect", "0"))
 
     print(
         f"== winner greedy-direct A/B: games={games} budget={budget} "
-        f"max_turns={max_turns} max_seq={max_seq} perception={perception} also_9b={also_9b} ==",
+        f"max_turns={max_turns} max_seq={max_seq} perception={perception} reflect={reflect_iv} also_9b={also_9b} ==",
         flush=True,
     )
     t0 = time.time()
@@ -126,6 +131,7 @@ def main() -> None:
         max_turns=max_turns,
         max_seq=max_seq,
         perception=perception,
+        reflect_iv=reflect_iv,
     )
 
     if also_9b:
@@ -146,6 +152,7 @@ def main() -> None:
             max_turns=max_turns,
             max_seq=max_seq,
             perception=perception,
+            reflect_iv=reflect_iv,
         )
 
     oracle = _oracle_levels()
@@ -192,6 +199,7 @@ def main() -> None:
             "max_seq": max_seq,
             "games": games,
             "perception": perception,
+            "reflection_interval": reflect_iv,
         },
         "honest_verdict": verdict,
         "narrative": (
