@@ -137,9 +137,9 @@ def main() -> int:
     os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")  # outer-loop owns GPU 1
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
-    # PRECONDITIONS: the 31B GGUF must be cached (fail honest, do not fabricate).
-    from carnot.agentic.arc_solver_kit import _hf_cache_has  # type: ignore[attr-defined]
-
+    # PRECONDITION is handled by LocalGGUFProposer._ensure_server(): if the GGUF is uncached or the
+    # llama-server fails to start, _complete() returns (False, reason) -- an honest failure datum, never
+    # a fabricated goal. So no separate cache check is needed.
     t0 = time.time()
     proposer = LocalGGUFProposer(
         repo_substr="gemma-4-31B-it",
