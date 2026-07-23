@@ -24520,3 +24520,126 @@ or resource-cap overflow
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5829 | Implemented (`python/carnot/experiment_5829_transfer_selective_replay_audit.py`, `results/experiment_5829_transfer_selective_replay_audit.json`) | Implemented (`tests/python/test_experiment_5829_transfer_selective_replay_audit.py`) |
+
+## REQ-LEARN-5839: V519 Evidence Qualification
+
+The self-learning tier SHALL provide Exp5839, an independent deterministic
+qualification audit at
+`python/carnot/experiment_5839_v519_evidence_qualification.py` that consumes the
+sealed Exp5825 contract, immutable Exp5826 rows, Exp5827 structural evidence,
+adversarially stamped Exp5828 lifecycle evidence, and Exp5829 replay evidence,
+then writes `results/experiment_5839_v519_evidence_qualification.json`.
+Exp5839 SHALL classify its substrate as
+`deterministic_exact_verifier_and_replay_no_llm` and SHALL preserve
+`verifier_is_oracle=true` because exact row solvers and the live artifact
+verifier are the scoring authorities.
+
+Before scoring any branch, Exp5839 SHALL hash all upstream JSON artifacts,
+Exp5826 JSONL rows, source modules, exact-validator version constants, split
+definitions, random seeds, OpenSpec text, the adversarial verifier, and the
+new module/test files. It SHALL verify RAM, disk, and a clean temporary
+reconstruction path. Missing or corrupt evidence SHALL write the same result
+path as a terminal blocked artifact with every qualified scalar equal to `0.0`.
+
+Exp5839 SHALL reconstruct row evidence from Exp5826 JSONL bytes without
+importing trusted aggregate metrics from Exp5827, Exp5828, or Exp5829 into
+recomputation. The reconstruction SHALL replay row hashes, row-file hashes,
+canonical event/state counts, chronological order, train/dev/science/future
+visibility, family/surface/change balance, exact label availability, solver
+independence, state hash lineage, rollback/restart receipts, and
+protected-prefix evidence. It SHALL recompute load-bearing row aggregates,
+paired deltas, CI95 intervals, family lower bounds, promotion decisions,
+unsafe-update counts, rollback/restart results, and replay resource scalars
+from row/state receipts and source-code replay rules.
+
+Exp5839 SHALL run shortcut and no-information controls before assigning a
+clean scalar: label permutation, target-preserving feature perturbation,
+target-derived-feature ablation, signature-collision injection, future-label
+access injection, no-information control, and duplicate-row weighting. Any
+surviving shortcut SHALL disqualify the affected branch. The live
+`scripts/adversarial_verify.py` check SHALL be run against the new artifact and
+its full receipt SHALL be preserved. Exp5839 SHALL NOT mutate Exp5828 or any
+other historical artifact.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `independent_row_reconstruction`,
+`chronology_and_visibility_audit`, `exact_validator_independence`,
+`recomputed_metrics`, `shortcut_and_no_information_controls`,
+`state_rollback_restart_receipts`, `adversarial_verifier_receipt`,
+`constraint_stream_qualified_score`,
+`structural_acquisition_qualified_score`,
+`adaptive_memory_lifecycle_qualified_score`,
+`selective_replay_qualified_score`, `promotion_eligibility_matrix`,
+`historical_artifacts_mutated`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal qualification state distinguishes a completed null from a partial audit.
+- `preconditions_checked`: Hashes, validators, splits, seeds, resources, and temp paths prevent fabricated replay.
+- `upstream_artifact_hashes`: Exact hashes bind qualification to immutable `.519` evidence.
+- `independent_row_reconstruction`: Fresh row derivation prevents trusted aggregate fields from validating themselves.
+- `chronology_and_visibility_audit`: Monotone events and sealed science labels are required for prospective learning.
+- `exact_validator_independence`: Solver/version receipts expose circular target construction or label reuse.
+- `recomputed_metrics`: Row-derived aggregates make every credited scalar reproducible.
+- `shortcut_and_no_information_controls`: Permutation, perturbation, ablation, collision, and null controls expose target leakage.
+- `state_rollback_restart_receipts`: Exact hashes test durable state rather than narrative lifecycle claims.
+- `adversarial_verifier_receipt`: The live verifier is the terminal artifact-quality authority.
+- `constraint_stream_qualified_score`: EMIT BARE scalar; only 1.0 permits Exp5840.
+- `structural_acquisition_qualified_score`: EMIT BARE scalar separating clean structural evidence from later lifecycle claims.
+- `adaptive_memory_lifecycle_qualified_score`: EMIT BARE scalar; only 1.0 permits Exp5843 and Exp5846.
+- `selective_replay_qualified_score`: EMIT BARE scalar; flagged-upstream replay is provisional unless independently clean.
+- `promotion_eligibility_matrix`: Per-branch classes keep flagged, provisional, null, and clean evidence disjoint.
+- `historical_artifacts_mutated`: Must be false; qualification cannot unstamp or rewrite history.
+- `duration_s`: Measured wall time exposes the same bootstrap-only failure mode under audit.
+- `inference_substrate`: `deterministic_exact_verifier_and_replay_no_llm` declares the true compute path.
+- `verifier_is_oracle`: True records exact solvers as scoring authority and forbids a verifier-moat claim.
+- `field_provenance`: Each field maps to rows, source, state hashes, or verifier receipts.
+- `test_commands`: Commands document reconstruction, shortcuts, statistics, state, and verifier checks.
+- `test_exit_codes`: Exit codes prevent failed controls from becoming qualification.
+- `reproducibility_checksum`: A checksum detects row, code, split, seed, or metric drift.
+- `honest_verdict`: A terminal prefix states qualified, disqualified, mixed, or blocked evidence honestly.
+
+### SCENARIO-LEARN-5839-RECONSTRUCT: Immutable Rows Drive Qualification
+
+**Given** Exp5826 JSONL rows and upstream `.519` artifacts are present
+**When** Exp5839 rebuilds the qualification evidence
+**Then** row hashes, row-file hashes, family/change/surface balances,
+chronology, visibility, exact-validator agreement, protected-prefix receipts,
+and canonical state/event counts are derived from row bytes and not from
+Exp5827-Exp5829 aggregate fields.
+
+### SCENARIO-LEARN-5839-SHORTCUTS: Controls Disqualify Leakage Paths
+
+**Given** label permutation, target-preserving perturbation,
+target-derived-feature ablation, signature collision, future-label access,
+no-information, and duplicate-row controls
+**When** Exp5839 runs shortcut qualification
+**Then** all shortcut controls must fail closed or remain non-surviving before
+any qualified scalar can be `1.0`.
+
+### SCENARIO-LEARN-5839-MIXED: Flagged Lifecycle Prevents Laundering
+
+**Given** Exp5828 is adversarially CRITICAL-flagged and Exp5829 depends on the
+Exp5828 lifecycle artifact
+**When** Exp5839 computes separate branch scalars
+**Then** clean stream and structural evidence may qualify independently
+**And** lifecycle and replay scalars remain `0.0` unless their own provenance,
+controls, duration, recomputation, and live verifier gates are clean.
+
+### SCENARIO-LEARN-5839-FAIL-CLOSED: Missing Evidence Blocks Promotion
+
+**Given** missing upstream artifacts, corrupt rows, stale checksums, failed
+tests, shortcut survivors, historical mutation, or a flagged live verifier
+receipt
+**When** Exp5839 validates the artifact
+**Then** every qualified scalar SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`, `disqualified:`, or
+`mixed:`.
+
+## Implementation Status (Exp 5839)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5839 | Planned (`python/carnot/experiment_5839_v519_evidence_qualification.py`, `results/experiment_5839_v519_evidence_qualification.json`) | Planned (`tests/python/test_experiment_5839_v519_evidence_qualification.py`) |
