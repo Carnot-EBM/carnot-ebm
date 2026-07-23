@@ -215,3 +215,31 @@ them. So the perception fix must RE-AUTHOR, not augment: (a) retract any learned
 detected HUD band; (b) propose the mover's nearest distinct object as the candidate target; (c) improve mover
 recall. That is the concrete next iteration -- and it is a sharper, better-grounded target than "add a
 perception detector," which this negative result earned.
+
+## Re-authoring fix (5834): detector perception, corrected framing -> 0/8 to 4/8, zero HUD fixation
+
+The negative said the fix must REPLACE the framing, not augment it. `reauthor_framing` does exactly that:
+retract any learned rule referencing a detected HUD band, name the mover's nearest object as the candidate
+target, and override the counter-fixation. Re-run the end-to-end gate with everything else identical:
+
+| condition | correct | partial | wrong |
+|-----------|---------|---------|-------|
+| plain detector perception (5834) | 0 | 2 | 6 |
+| **re-authored (5834 fix)** | **4** | 2 | 2 |
+| hand-authored oracle (5832) | 7 | 1 | 0 |
+
+Every game flipped from "fill/change the counter" to "move the player to a target." Correct on the 4
+navigate/move-to-target games (sc25 "move PLAYER to the TARGET at (20,14)"; tu93; bp35 "reach the gem";
+r11l "move the piece to a target pad") -- **including the 3 where no mover was detected, because retracting
+the wrong HUD rule alone was enough to stop the fixation.** ZERO games still fixate on the HUD (the plain
+gate had 6). Two partials (ls20 missing the morph, cn04 vague pairing).
+
+**Residual + next step.** It OVERCORRECTS the 2 non-navigate games (lf52 block-merge, ft09 hidden-CSP) into a
+navigate frame, because the block asserts "move player to a target" even when no mover was detected. The fix:
+gate the player-target assertion on mover-detected; for no-mover games use a neutral "arrange the game
+objects; the counters are not the goal" frame. Then wire `reauthor_framing` into the live `E3AgentPolicy`
+perception + the greedy-direct reflection, and add the execution/dynamics half.
+
+**The complete chain.** diagnosis (perception is the wall, 8/8 never hypothesized) -> oracle proof (correct
+entities flip 0->7/8) -> detectors (recover HUD/mover from frames) -> re-authoring (0->4/8 correct from
+frames alone, no HUD fixation). Each step a real measurement that earned the next.
