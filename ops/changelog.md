@@ -11761,3 +11761,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-23: Accepted adaptive operations ABI conformance (⚠️ Blocked) — honest_verdict=blocked: adaptive_state_microkernel_conformance_incomplete; results/experiment_5859_adaptive_state_microkernel_parity.json
 - 2026-07-23: Accepted adaptive operations ABI conformance (⚠️ Blocked) — honest_verdict=blocked: adaptive_state_microkernel_conformance_incomplete; results/experiment_5859_adaptive_state_microkernel_parity.json
 - 2026-07-23: Accepted adaptive operations ABI conformance (⚠️ Blocked) — honest_verdict=blocked: adaptive_state_microkernel_conformance_incomplete; results/experiment_5859_adaptive_state_microkernel_parity.json
+- 2026-07-23: Closed-loop visual probing under equal action budgets (✅ Complete) — honest_verdict=complete_null: active_observation_no_positive_preregistered_lower_bound_no_registry_credit; results/experiment_5860_live_active_observation_ab.json
