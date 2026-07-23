@@ -58,6 +58,7 @@ class GreedyDirectResult:
     game_over: bool
     wall_s: float
     transcript_sample: list[str] = field(default_factory=list)
+    final_notes: str = ""
 
 
 def _complete(
@@ -98,6 +99,7 @@ _ORIENT_FRAME = (
     "The frame is a {h}x{w} grid of hex colors (row 0 = top, col 0 = left); click x=COLUMN, y=ROW as "
     "indices into THIS grid:\n{grid}\n"
     "Available actions this frame: {avail}\n"
+    "LEARNED NOTES (your evolving understanding of THIS game -- authoritative but revisable):\n{notes}\n"
     "Recent (your last moves -> observed effect):\n{recent}\n"
     "EXPLORE to find what the game responds to: if an action in your history shows 'no change', do "
     "NOT repeat it -- try a DIFFERENT action id or a DIFFERENT location. Vary moves vs clicks.\n"
@@ -121,6 +123,7 @@ _ORIENT_FRAME_OBJ = (
     "The frame is a {h}x{w} grid. Its DISCRETE OBJECTS (connected same-color regions; the large "
     "uniform background is omitted) are:\n{objects}\n"
     "Available actions this frame: {avail}\n"
+    "LEARNED NOTES (your evolving understanding of THIS game -- authoritative but revisable):\n{notes}\n"
     "Recent (your last moves -> observed effect):\n{recent}\n"
     "EXPLORE to find what the game responds to: if an action in your history shows 'no change', do NOT "
     "repeat it -- try a DIFFERENT object or a move. Vary moves (1-4) vs clicks (6).\n"
@@ -160,6 +163,40 @@ def _render_objects(logical: np.ndarray) -> tuple[str, list[dict]]:
         for o in objects
     )
     return text, objects
+
+
+# v3 persistent reflection memory (2026-07-23): Reki/forge's key mechanism (winner audit) -- an NL
+# notes doc the model periodically REWRITES from its accumulated play and that is re-injected into every
+# decision. v1/v2 gave the model only thin recent-history; without a durable, self-authored model of the
+# game's rules/goal it re-explored blindly. This closes that gap.
+_REFLECT_FRAME = (
+    "You are learning an unknown grid game by playing it. Below are your CURRENT NOTES and your RECENT "
+    "moves with their observed effects. REWRITE your notes to capture what you have learned so far -- "
+    "concise, concrete, only what is useful for winning. Do not include reasoning, just the notes.\n\n"
+    "CURRENT NOTES:\n{notes}\n\n"
+    "RECENT MOVES (action -> effect):\n{recent}\n\n"
+    "Rewrite under these headings (one short line each):\n"
+    "RULES: what each move/click actually does in THIS game\n"
+    "GOAL: your best hypothesis for how to level up / win\n"
+    "PROGRESS: what you've achieved or definitively ruled out\n"
+    "AVOID: specific actions/objects/locations that do nothing (dead-ends)\n\n"
+)
+_REFLECT_TOKENS = 300
+_NOTES_MAX_CHARS = 1200
+
+
+def reflect(proposer: Any, notes: str, recent: list[str], *, seed: Optional[int] = None) -> str:
+    """Rewrite the persistent game notes from accumulated play (Reki/forge's reflection). Primed with
+    'RULES:' so gemma writes the notes directly instead of derailing into its reasoning channel."""
+    prompt = _REFLECT_FRAME.format(
+        notes=notes or "(none yet)", recent="\n".join(recent[-20:]) or "(none yet)"
+    )
+    ok, text = _complete(
+        proposer, prompt + "RULES:", max_tokens=_REFLECT_TOKENS, stop=["\n\n\n"], seed=seed
+    )
+    if not ok or not text.strip():
+        return notes  # keep prior notes on a failed reflection
+    return ("RULES:" + text).strip()[:_NOTES_MAX_CHARS]
 
 
 def _parse_sequence(
@@ -231,10 +268,11 @@ def decide_sequence(
     max_seq: int = MAX_SEQ,
     seed: Optional[int] = None,
     perception: str = "grid",
+    notes: str = "",
 ) -> tuple[list[dict], list[str]]:
     """One decision: up to `max_turns` tool-inspection turns, then a committed action sequence (in
     LOGICAL grid coords for clicks). Returns (sequence, transcript). `perception`: "grid" (raw hex,
-    v1) or "objects" (winner-style segmentation view, v2)."""
+    v1) or "objects" (winner-style segmentation view, v2). `notes`: persistent reflection memory (v3)."""
     h, w = logical.shape if logical.ndim == 2 else (0, 0)
     dispatch = _ToolDispatch(logical, recent, avail)
     transcript: list[str] = []
@@ -248,6 +286,7 @@ def decide_sequence(
             h=h,
             w=w,
             avail=avail,
+            notes=notes or "(none yet -- explore to learn the game)",
             recent="\n".join(recent[-6:]) or "(none yet)",
             urgency=_URGENCY if remaining <= _URGENCY_TURNS else "",
             remaining=remaining,
@@ -304,9 +343,12 @@ def run_greedy_direct(
     seed: Optional[int] = None,
     arcade: Any = None,
     perception: str = "grid",
+    reflection_interval: int = 0,
 ) -> GreedyDirectResult:
     """The Duck-Harness-style greedy-direct loop against the offline arcade (adapter-free, no search).
-    `perception`: "grid" (raw hex, v1) or "objects" (winner-style segmentation view, v2)."""
+    `perception`: "grid" (raw hex, v1) or "objects" (winner-style segmentation view, v2).
+    `reflection_interval` (v3): if >0, the model rewrites its persistent notes every N actions
+    (Reki/forge's reflection memory), re-injected into every decision. 0 disables it."""
     from arcengine import GameAction
     from carnot.agentic.arc_agi3_live_adapter import (
         _game_action,
@@ -325,6 +367,8 @@ def run_greedy_direct(
     start_level = frame_level(frame)
     max_level = start_level
     recent: list[str] = []
+    notes = ""
+    actions_at_last_reflect = 0
     actions_taken = 0
     orientations = 0
     transcript_sample: list[str] = []
@@ -334,6 +378,15 @@ def run_greedy_direct(
         cell = detect_cell(raw)
         logical = to_logical(raw, cell)
         avail = _available_action_ids(frame) or [1, 2, 3, 4, 6]
+        # v3: periodically rewrite the persistent notes from accumulated play (Reki/forge reflection).
+        if (
+            reflection_interval > 0
+            and actions_taken - actions_at_last_reflect >= reflection_interval
+        ):
+            notes = reflect(proposer, notes, recent, seed=(seed + actions_taken if seed else None))
+            actions_at_last_reflect = actions_taken
+            if orientations <= 3 or (orientations % 20 == 0):
+                transcript_sample.append(f"[reflect@{actions_taken}] {notes[:180]}")
         seq, transcript = decide_sequence(
             logical,
             recent,
@@ -343,6 +396,7 @@ def run_greedy_direct(
             max_seq=max_seq,
             seed=seed,
             perception=perception,
+            notes=notes,
         )
         orientations += 1
         if orientations <= 3:
@@ -386,4 +440,5 @@ def run_greedy_direct(
         game_over=_game_over(frame),
         wall_s=round(time.time() - t0, 1),
         transcript_sample=transcript_sample,
+        final_notes=notes,
     )
