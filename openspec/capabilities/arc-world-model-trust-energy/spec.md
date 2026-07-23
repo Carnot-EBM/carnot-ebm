@@ -16725,3 +16725,85 @@ support a usable plan (`plan_found_rate=0.0`, `mean_heldout_accuracy=0.0`), so
 corroborating, independently and on a game outside the prior 6-game roster
 (`project_arc_actions_to_progress_metric` memory), that dynamics-induction quality is the
 binding constraint on the frozen generator, not per-game adapter absence.
+
+### REQ-ARC-WMTE-5827: Verifier-Filtered Reactive Loop (No Upfront Symbolic World-Model Induction)
+
+**Origin:** 2026-07-22, operator-directed architectural pivot, following the pre-registered branch-2
+decision path in `docs/research-notes/arc-induction-quality-improvement-design-2026-07-20.md` §5:
+CEGIS-style counterexample-guided refinement of an induced symbolic world model was measured and
+found NOT to lift a frozen small model's induction quality (`GAP-ARC-INDUCTION-REFINEMENT-NULL`,
+`results/experiment_5760_cegis_refinement_induction_ab.json` +
+`results/experiment_5766_gemma31b_cegis_refinement_ab.json`, `positive_game_frac=0.0` on BOTH a
+ThinkingCap-27B and a gemma-4-31B arm) -- corroborating arXiv:2606.31511 ("Falsification, Not
+Exposure"): frozen small models cannot self-correct from feedback; only comparison against real,
+external ground truth reliably filters bad outputs (a falsification/filter role, not a correction
+role). Per that design doc's own §2 architectural reasoning, the pivot away from explicit symbolic
+induction MUST preserve Carnot's verification-first thesis (not delete the verifier, per the Duck
+Harness comparison's own warning) -- so the reactive loop's generator proposals are filtered by a
+real, oracle-distinct verifier before any commit to the environment, not executed blind.
+
+`carnot.agentic.arc_reactive_verifier_filter.run_reactive_verifier_filter_progress` SHALL implement
+this loop: at each step, the frozen generator proposes ONE next action (a proposal task, not a
+program-synthesis task) given the current frame and recent observed transitions; the proposal SHALL
+be filtered by (a) an exact-match reject against the agent's own observed dead-end/no-op history
+(zero-cost, fully grounded, no model involved) and (b) ranking by the already-trained, already
+live-validated `FrameChangeScorer` CNN (`arc_frame_change_predictor.py`, oracle-distinct: it predicts
+real pixel-level change from training on real observed transitions, and never reads the environment's
+own win/level flag). No `engine()`/`is_level_complete()` symbolic model SHALL be synthesized or
+required by this loop. A proposal rejected by BOTH filters (all candidates are known dead-ends) SHALL
+fall back to one structured-exploration step (`rich_action_candidates`) rather than stalling.
+
+The loop SHALL reuse existing infrastructure rather than reinvent it: the LLM-proposal prompt/parse
+helpers from `arc_llm_guided_solve.py` (`_prompt`, `_parse_actions`, `_delta_desc`), the offline
+arcade (`arc_solver_kit.offline_arcade`), and the submitted `FrameChangeScorer`
+(`arc_competition_agent._load_submitted_frame_change_scorer`) -- the SAME scorer instance the scored
+Kaggle kernel uses, not a new one.
+
+**A real completion-path bug SHALL be documented, not silently worked around.**
+`LocalGGUFProposer.generate()` (the method `arc_llm_guided_solve.py`'s own proposal loop calls) is
+hardcoded for Python code synthesis -- it unconditionally runs `_extract_python`/`ast.parse`
+regardless of its `validate` argument. A free-text JSON-line proposal is not valid Python, so this
+call structurally fails on every invocation for a non-code task; `arc_llm_guided_solve.py`'s proposal
+loop has therefore likely never worked (no result artifact for it exists in this project's history).
+This requirement's implementation SHALL use its own minimal completion path
+(`_raw_llm_completion`) instead. Two further real failure modes SHALL be avoided, both found via
+direct measurement, not assumed: (1) a plain, unprimed prompt on the raw `/completion` endpoint does
+NOT reliably suppress this GGUF's reasoning -- the model derails mid-answer into an unparseable
+`<think>` block; (2) switching to the `/v1/chat/completions` endpoint does not fix this either -- the
+model spends its entire token budget reasoning and never reaches a final answer (the SAME failure
+mode `REQ-ARC-WMTE-5714` already found for the induce task, "reasoned ~7000+ tokens ... never emitted
+the functions"). The fix that DOES work: PRIME the completion by opening the answer structure in the
+prompt itself (`ACTIONS_JSON: [`) with a stop sequence at the array's close, reusing the exact
+mechanism the project's own `_L2_CODEONLY_DIRECTIVE` already proved effective for the induce task
+(`arc_executable_world_model.py:1110`, prompt-primed code-fence + stop-sequence).
+
+### SCENARIO-ARC-WMTE-5827-DEAD-END-FILTER-REJECTS-KNOWN-NOOP
+
+**Given** a proposed action whose (state, action, data) key exactly matches a previously-observed
+no-op transition
+**When** the reactive loop filters candidates
+**Then** that candidate is rejected before it ever reaches the model-based scorer, and the rejection
+is counted in `dead_end_rejections` -- the deterministic, zero-cost check always runs first.
+
+### SCENARIO-ARC-WMTE-5827-FRAME-CHANGE-SCORER-RANKS-SURVIVORS
+
+**Given** multiple proposed candidates, none of which are known dead-ends
+**When** the reactive loop filters candidates with the submitted `FrameChangeScorer` available
+**Then** the candidate with the highest `candidate_score(frame, candidate)` is chosen, and the
+`GroundTruthValidatedFrameChangeScorer` wrapper's validation gate is kept satisfied by calling
+`observe_transition` after every real step (mirroring `arc_competition_agent.py:1739`'s live-path
+call) -- an unvalidated scorer returns a flat `0.0` for every candidate, silently degenerating the
+ranking to first-survivor-wins if this call is omitted.
+
+### SCENARIO-ARC-WMTE-5827-REAL-EMPIRICAL-TEST-VS-INDUCE-BASELINE
+
+**Given** the three worst live/oracle-gap games from exp5727's 2026-07-19 full-registry sweep
+(`sc25`/`lf52`/`bp35`, all showing `live_levels=0` under the induce-then-plan mechanism at a
+400-action budget)
+**When** the verifier-filtered reactive loop runs on the SAME games at the SAME budget
+(`scripts/arc_reactive_verifier_filter_ab.py`,
+`results/outer_loop_reactive_verifier_filter_ab_20260722.json`)
+**Then** the result is reported honestly regardless of outcome -- a real level-up on ANY of these
+games is decisive evidence favoring the new mechanism (the baseline scores exactly 0 across multiple
+independent prior measurements, so this is not a FALSE_NEGATIVE_RISK-flaggable degenerate test); an
+honest negative (no level-up on any game) is reported as such, not reframed as a partial success.
