@@ -1,0 +1,137 @@
+{
+  "acceptance_gate": {
+    "condition": "gemma-4-31B greedy-direct discovers >0 levels on a game where our current stack (arc_live_oracle_gap baseline) scores 0",
+    "passed": false,
+    "principle": "The winners top the leaderboard with 27-31B greedy-direct; if a faithful reproduction discovers a level our stack cannot, matching the leaders is validated and justifies switching the submission stack."
+  },
+  "arms": {
+    "gemma31_greedy_direct": [
+      {
+        "actions_taken": 64,
+        "error": null,
+        "final_notes": "RULES: Action 6 at (x,y) targets (63, z) and changes value from 0 to 15.\nGOAL: Fill the column at x=63 with values of 15.\nPROGRESS: Filled indices 0 through 49 of column 63.\nAVOID: None.",
+        "game": "bp35",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Fill the column at x=63 with values of 15.",
+          "falsified_goals": [
+            "Fill the column at x=63 with values of 15."
+          ],
+          "goal_switches": 2,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 58,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
+          "[reflect@20] RULES: Action 6 at (x,y) targets (63, z) and changes value from 0 to 15.\nGOAL: Fill the column at x=63 with values of 15.\nPROGRESS: Filled indices 0 through 19 of column 63.\nAVOID:",
+          "[falsified@30] Fill the column at x=63 with values of 15.",
+          "[falsified@40] Fill the column at x=63 with values of 15.",
+          "[reflect@40] RULES: Action 6 at (x,y) targets (63, z) and changes value from 0 to 15.\nGOAL: Fill the column at x=63 with values of 15.\nPROGRESS: Filled indices 0 through 29 of column 63.\nAVOID:",
+          "[falsified@50] Fill the column at x=63 with values of 15.",
+          "[falsified@60] Fill the column at x=63 with values of 15."
+        ],
+        "wall_s": 1077.3
+      },
+      {
+        "actions_taken": 64,
+        "error": null,
+        "final_notes": "RULES: Actions 1 and 6 at various coordinates change cells in row 0 from 0 to 1.\nGOAL: Trigger state changes in rows other than row 0.\nPROGRESS: Row 0 cells (0,0) through (0,59) are state 1.\nAVOID: Further actions that only affect row 0.",
+        "game": "lf52",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Trigger state changes in rows other than row 0.",
+          "falsified_goals": [
+            "Change all grid cells to state 1."
+          ],
+          "goal_switches": 5,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 64,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
+          "[reflect@20] RULES: Action 6 at specific coordinates triggers state changes (0->1) at various grid locations (0,0) through (0,19).\nGOAL: Change all grid cells to state 1.\nPROGRESS: (0,0) throug",
+          "[falsified@40] Change all grid cells to state 1.",
+          "[reflect@40] RULES: Action 6 at specific coordinates triggers state changes (0->1) in row 0.\nGOAL: Change all cells in row 0 to state 1.\nPROGRESS: (0,0) through (0,39) are now state 1.\nAVOID: N",
+          "[reflect@60] RULES: Actions 1 and 6 at various coordinates change cells in row 0 from 0 to 1.\nGOAL: Trigger state changes in rows other than row 0.\nPROGRESS: Row 0 cells (0,0) through (0,59) ar"
+        ],
+        "wall_s": 298.6
+      },
+      {
+        "actions_taken": 102,
+        "error": null,
+        "final_notes": "RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29)\nGOAL: Clear all values in the sequence of blocks at column 62/63.\nPROGRESS: None.\nAVOID: 6 (62,30) and 6 (62,28)\ns\n// I note that the \"Clear all values in the sequence of blocks at column 62/63\" goal was listed as a \"FALSIFIED GOAL\".\n// I need to a find a NEW goal.\n// I recent moves show that 6 (30,55) toggles a block of values.\n// I need to find a new win condition.\n\nREWRITTEN NOTES:\nRULES: 6 (30,55) toggles values between 2 and 14 in a block starting at (54,29).\nGOAL: [New Hypothesis] Set all values in the block at (54,29) to 14.\nGOAL: [New Hypothesis] Set all values in the block at (54,29) to 2.\nGOAL: [New Hypothesis] Set all values in the block at (54,29) to 14.\nGOAL: [New Hypothesis] Set all values in the block at (",
+        "game": "sc25",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Clear all values in the sequence of blocks at column 62/63.",
+          "falsified_goals": [
+            "Cycle values to maximize specific cells.",
+            "Clear all values in the sequence of blocks at column 62/63."
+          ],
+          "goal_switches": 5,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 102,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
+          "[reflect@20] RULES: \nGOAL: \nPROGRESS: \nPROGRESS: \nAVOID: \n(Wait, the a reason for the prompt is that it is queatially owny own notes. only provide the prompt's headings)\n\nRULES: \nGOAL: \nPROGRES",
+          "[reflect@40] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values in a sequence of blocks at (0,62)\nGOAL: Cycle values to maximize specific cells.\nPROGRESS: ",
+          "[falsified@60] Cycle values to maximize specific cells.",
+          "[reflect@60] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values (14->0) in a sequence of blocks at (0,62)\nGOAL: Clear all values in the sequence of blocks ",
+          "[reflect@80] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values (14->0) in a sequence of blocks starting at (14,62) and (14,63) and moving down the column.",
+          "[falsified@90] Clear all values in the sequence of blocks at column 62/63.",
+          "[falsified@100] Clear all values in the sequence of blocks at column 62/63.",
+          "[reflect@100] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29)\nGOAL: Clear all values in the sequence of blocks at column 62/63.\nPROGRESS: None.\nAVOID: 6 (62,30) and 6 (62,"
+        ],
+        "wall_s": 446.9
+      }
+    ]
+  },
+  "baseline_our_stack": {
+    "config": "E3AgentPolicy frame-only 9B (arc_live_oracle_gap.json) + 31B-as-inducer (exp5722)",
+    "levels_on_these_games": 0
+  },
+  "config": {
+    "budget": 120,
+    "games": [
+      "bp35",
+      "lf52",
+      "sc25"
+    ],
+    "goal_verify": true,
+    "max_seq": 5,
+    "max_turns": 4,
+    "perception": "objects",
+    "reflection_interval": 10
+  },
+  "duration_s": 1823.8,
+  "experiment": "outer_loop_arc_winner_greedy_direct_ab_20260723",
+  "honest_verdict": "complete_greedy_direct_gemma31_honest_null_no_discovery_matches_our_stack_zero_baseline",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_note": "Real gemma-4-31B-it GGUF (18.3GB Q4) loaded on GPU 1 via LocalGGUFProposer, driving the greedy-direct agent DIRECTLY (no search, no induced world model), adapter-free on the offline arcade -- the winner architecture. Live LLM inference throughout (many /completion calls per game).",
+  "narrative": "Operator directive: match the leaderboard leaders (27-31B, greedy-direct). Tests whether gemma-4-31B used the WINNERS' way (direct greedy action generator) discovers levels where our induce-then-plan stack (9B, and 31B-as-inducer in exp5722) scores 0. First real test of the winner architecture for us -- all prior tests used our own architecture.",
+  "per_game_oracle_levels": {
+    "bp35": 9,
+    "lf52": 10,
+    "sc25": 6
+  },
+  "random_seed": 5829,
+  "reproducibility_checksum": "91b10e3a66d13f1fa9fdef925edc4ced9e792b75199bd478a31fd809d17175ad",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_winner_greedy_direct_ab.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_provenance_note": "adapter-free greedy-direct discovery (the agent picks every action from its own play, no GameAdapter, no banked trajectory).",
+  "target_model": "unsloth/gemma-4-31B-it-GGUF"
+}
