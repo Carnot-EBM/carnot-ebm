@@ -14176,3 +14176,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 12:05 UTC | Exact terminal-boundary handoff from .520 into .52 | OK | cache hit: 87 passed, 1 warning in 10.33s |
 | 2026-07-23 13:28 UTC | Dated web evidence sweep after the V521 marker | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: nal generated- |
 | 2026-07-23 13:58 UTC | Dated web evidence sweep after the V521 marker | OK | 117 passed, 2 warnings in 15.50s |
+| 2026-07-23 14:32 UTC | Exact replay substrate contract and false-compute- | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5851_determi |
