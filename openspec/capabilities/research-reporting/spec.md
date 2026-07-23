@@ -45260,3 +45260,153 @@ verdict starts with `ready:`, `failed:`, or `blocked:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5851 | Planned (`python/carnot/experiment_5851_deterministic_replay_provenance_contract.py`, `results/experiment_5851_deterministic_replay_provenance_contract.json`) | Planned (`tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py`) |
+
+### REQ-REPORT-5862: V521 Capstone Reconciliation Preserves Gates, Flags, And Retirements
+
+The Exp5862 workflow SHALL read the exact active `.521` roadmap task ids and
+declared deliverables for Exp5849 through Exp5862, SHALL NOT select artifacts
+by globbed numeric prefix, and SHALL write
+`results/experiment_5862_v521_capstone_reconciliation.json`. It SHALL parse the
+active roadmap and optional `research-roadmap-next.yaml`; missing optional
+next-roadmap input SHALL remain an explicit precondition state, not a repair
+action. It SHALL hash every declared `.521` deliverable that exists, row file
+that exists, conductor outcome source, exclusion manifest, V521 reference
+marker, OpenSpec sources, and protected files before deciding terminal status.
+It SHALL verify atomic output writability, disk/RAM resources, and live
+`scripts/adversarial_verify.py` availability before writing the artifact.
+
+The workflow SHALL replay every structured gate from bare upstream artifact
+fields. Exp5854 SHALL remain gate-skipped when Exp5853 reports
+`paired_embedding_integrity_ready_score=0.0`; Exp5855 SHALL remain a gated skip
+or missing gated deliverable unless Exp5854 reports
+`portable_comparative_energy_ready_score=1.0`; Exp5856, Exp5857, Exp5858, and
+Exp5859 SHALL use only the replayed bare gate scores from Exp5851, Exp5856,
+Exp5857, and Exp5858. A skipped science branch SHALL NOT be executed or
+promoted by the capstone.
+
+The workflow SHALL run or preserve fresh live adversarial-verifier receipts for
+every present declared deliverable. The receipt for each present artifact SHALL
+record command, exit code, parsed JSON report, flag count, maximum severity, and
+receipt hash. A deliverable with CRITICAL or WARN verifier findings, an artifact
+field such as `flagged_adversarial=true`, a missing declared path, a blocked gate
+receipt, unsafe accepts, off-path provenance, or a software/hardware fallback
+SHALL NOT become a clean positive outcome.
+
+The workflow SHALL produce independent ledgers for transition/source,
+representation energy, lifecycle/replay, continuous self-learning, microkernel,
+ARC active observation, and hardware. It SHALL recompute load-bearing row
+metrics when row files are present and SHALL record row counts and row-file
+hashes. Exact validators and exact replay remain release and promotion
+authority; learned energy, active observation, and board receipts cannot replace
+validator authority.
+
+The workflow SHALL mechanically apply prior-failure retirement rules without
+editing historical artifacts. A repeated flagged lifecycle/replay verdict, a
+repeated all-control/null final-embedding verdict, a repeated blocked/no-lift
+reduced-oracle verdict, or a clean registered active-observation null SHALL
+record a bounded retirement recommendation. A positive clean lifecycle,
+positive reduced-oracle result, or flagged active-observation null SHALL record
+that the corresponding retirement predicate was not satisfied.
+
+The workflow SHALL verify headline LLM rows use mandated current local GGUF hub
+ids and SHALL explicitly reject promotion from tiny models, `AutoTokenizer`,
+mock/source-read paths, adapters, registry replay, software fallback, requested
+topology, or other prohibited paths. It SHALL report the stable publication gate
+from `scripts/publication_gate.py --json`, keep `publication_action_taken=false`,
+and SHALL NOT modify `ops/north-star.md`, `scripts/research_conductor.py`, or
+operator-owned ops/status, changelog, or traceability files when the task prompt
+delegates those updates to a separate reconciler.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`exact_task_and_deliverable_matrix`, `structured_gate_replay`,
+`adversarial_verifier_receipts`, `outcome_classification`,
+`transition_and_source_decision`, `comparative_energy_decision`,
+`lifecycle_and_replay_decision`, `continuous_self_learning_decision`,
+`microkernel_decision`, `arc_active_observation_decision`,
+`hardware_capability_decision`, `model_compliance_receipts`,
+`authority_and_prohibited_path_receipts`, `prior_failure_retirement_decisions`,
+`missing_or_flagged_evidence`, `docs_reconciled`, `protected_files_unchanged`,
+`paper_ready`, `publication_action_taken`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty field-provenance entry and
+principle.
+
+Required field principles:
+
+- `status`: principle "A terminal capstone state distinguishes complete reconciliation from partial aggregation."
+- `preconditions_checked`: principle "Roadmaps, hashes, conductor outcomes, verifier, resources, and protected files prevent fabricated closure."
+- `exact_task_and_deliverable_matrix`: principle "Declared identities and paths are the only evidence index."
+- `structured_gate_replay`: principle "Bare upstream fields mechanically explain every executed or skipped branch."
+- `adversarial_verifier_receipts`: principle "Fresh live verification owns artifact eligibility."
+- `outcome_classification`: principle "Disjoint terminal classes stop missing, flagged, unsafe, or off-path work becoming success."
+- `transition_and_source_decision`: principle "Boundary integrity and source currency are reported separately from science."
+- `comparative_energy_decision`: principle "Portability requires held-family lower bounds beyond every control."
+- `lifecycle_and_replay_decision`: principle "Only provenance-clean exact replay can promote adaptive memory."
+- `continuous_self_learning_decision`: principle "FR-11 requires prospective lift, efficiency, retention, safety, bounded state, and immutable weights."
+- `microkernel_decision`: principle "Cross-language parity cannot outrun its scientific upstream."
+- `arc_active_observation_decision`: principle "Agent-owned evidence metrics are separate from solve credit."
+- `hardware_capability_decision`: principle "Only authenticated observed execution may support a board claim."
+- `model_compliance_receipts`: principle "Headline LLM rows must use mandated current local GGUF families."
+- `authority_and_prohibited_path_receipts`: principle "Exact authority and source/adapter/BFS/fallback exclusions remain explicit."
+- `prior_failure_retirement_decisions`: principle "Same-verdict reruns become mechanically bounded."
+- `missing_or_flagged_evidence`: principle "Unavailable or disqualified evidence remains visible."
+- `docs_reconciled`: principle "Internal specs, traceability, and ops prose match exact artifacts."
+- `protected_files_unchanged`: principle "Operator-curated and user-owned files remain immutable."
+- `paper_ready`: principle "Preserve the mechanical FoVer publication-gate result without extending it to new claims."
+- `publication_action_taken`: principle "Must be false; external publication is operator-only."
+- `duration_s`: principle "Measured aggregation time exposes bootstrap-only capstones."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` declares no new experiment inference."
+- `field_provenance`: principle "Every decision traces to exact artifact fields, rows, gates, verifier receipts, and docs."
+- `test_commands`: principle "Commands document identity, gates, verifier, model compliance, reconciliation, and protection."
+- `test_exit_codes`: principle "Exit codes prevent failed capstone checks becoming closure."
+- `reproducibility_checksum`: principle "A checksum detects artifact, gate, decision, or documentation drift."
+- `honest_verdict`: principle "A `complete:`, `mixed:`, or `blocked:` prefix states milestone closure honestly."
+
+#### SCENARIO-REPORT-5862-GATE-REPLAY: Exact V521 Gates Explain Terminal Branches
+
+**Given** the active `.521` roadmap declares Exp5849 through Exp5862 and their
+exact deliverables
+**And** Exp5853 reports `paired_embedding_integrity_ready_score=0.0`
+**And** Exp5856, Exp5857, and Exp5858 report their ready/qualified scores as
+bare scalars
+**When** the Exp5862 workflow replays gates
+**Then** Exp5854 and Exp5855 remain gated skips, Exp5856 through Exp5858 remain
+clean positives, Exp5859 is classified from its own blocked artifact rather
+than from its upstream gate, and no skipped science branch is promoted.
+
+#### SCENARIO-REPORT-5862-FLAGS-AND-RETIREMENTS: Flags And Nulls Stay Visible
+
+**Given** Exp5860 reports a null active-observation result and carries
+adversarial flags
+**And** Exp5856 and Exp5858 report clean positive scores
+**When** prior-failure retirement rules are applied
+**Then** active observation is not promoted as clean, lifecycle and
+reduced-oracle scopes are not retired, and every missing, flagged, gated, or
+blocked piece of evidence appears in `missing_or_flagged_evidence`.
+
+#### SCENARIO-REPORT-5862-MODEL-AUTHORITY: Mandated Models And Prohibited Paths Are Explicit
+
+**Given** Exp5852 and Exp5860 declare current local GGUF model ids
+**And** exact validators, agent-owned tape, and hardware receipt boundaries are
+available in their artifacts
+**When** the Exp5862 workflow reconciles model and authority receipts
+**Then** mandated hub ids are listed, tiny-model and `AutoTokenizer` paths are
+not promoted, exact validation remains release authority, registry replay and
+source/BFS/adapters remain excluded, and software fallback cannot support a
+board claim.
+
+#### SCENARIO-REPORT-5862-SCHEMA: Required Fields, Checksums, And Protected Files Are Stable
+
+**Given** the Exp5862 artifact is emitted
+**When** its schema is validated
+**Then** all required fields, principles, field provenance, test commands, test
+exit codes, publication-gate result, checksum, and protected-file immutability
+receipts are present, `publication_action_taken=false`, and the terminal
+verdict starts with `complete:`, `mixed:`, or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5862)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5862 | Implemented (`python/carnot/experiment_5862_v521_capstone_reconciliation.py`, `results/experiment_5862_v521_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5862_v521_capstone_reconciliation.py`) |

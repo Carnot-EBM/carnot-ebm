@@ -97,3 +97,47 @@ and directly on Carnot's core value proposition.
   confirms); `arc-top-project-search-architecture-audit-2026-07-20.md` (the winner audit).
 - `ops/verifier_gaps.md` `GAP-ARCH-GOAL-NOT-VERIFIED` (the goal-verifier lever this points to);
   `experiment_5722` (31B-as-inducer null).
+
+## Decisive re-diagnosis (REQ-ARC-WMTE-5831): the wall is UPSTREAM of goal induction
+
+After the goal verifier (REQ-ARC-WMTE-5830) + the full winner recipe still nulled on an 8-game sweep
+(bp35/lf52/sc25/ls20/tu93/cn04/r11l/ft09, adapter-free, budget 120 —
+`results/outer_loop_arc_winner_greedy_direct_ab_v5sweep8_20260723.json`, 0 discovery on all 8), I ran the
+decisive test: 8 independent analyst agents each READ the game source (offline dev analysis, authorized per
+the public-games source-reading discipline; never used in the hidden submission) to extract the TRUE win
+condition, then compared it against the exact goal-hypothesis trajectory gemma-4-31B produced.
+
+**Question:** did gemma-4-31B ever hypothesize the true win condition for any game?
+**Answer: 8/8 NO** (0 yes, 0 partial). `results/outer_loop_arc_goal_hypothesis_coverage_diagnosis_20260723.json`.
+
+| game | true win condition (from source) | model's fixated goal | root cause | budget helps? |
+|------|----------------------------------|----------------------|-----------|---------------|
+| bp35 | land the player on the gem (gravity platformer) | "fill column 63 with 15s" (= the move-budget LOSE bar) | dynamics-not-learned | no (64 acts → lose) |
+| lf52 | reduce colored blocks to 1 via select-then-aim merge | "trigger changes outside row 0" (= the HUD bar) | perception | no |
+| sc25 | navigate the wizard onto the exit tile | "clear values at col 62/63" (= the mana meter) | perception | no |
+| ls20 | morph avatar's (shape,color,rotation) to match a goal pad, then stand on it | "Undetermined" | perception | no |
+| tu93 | navigate the token onto the exit block | "clear all value-6 cells" (= the step-counter, the LOSE cond) | perception | no |
+| cn04 | spatial endpoint-pairing after move/rotate | "clear cells of color 4/12/14" (decoy/background colors) | perception | no |
+| r11l | slide each object onto its matching pad | "paint cells to value 5" | dynamics-not-learned | no |
+| ft09 | hidden adjacency-color CSP in per-tile 3×3 pixels | "Unknown" (abandoned its only lever as "ineffective") | dynamics-not-learned | no |
+
+**The pivotal implication.** The goal-hypothesis generator is NOT the first failure. Several true goals are
+canonical, LLM-plausible goals — "navigate the avatar into the exit" (sc25, tu93), "slide each object onto
+its matching pad" (r11l, ls20) — that a text LLM reasoning over a proper object list WOULD plausibly
+hypothesize. It never did, because its perception fixated on the HUD/budget-bar and never *represented* the
+player avatar, the exit tile, or the target blocks. 5/8 = perception; 3/8 = dynamics-not-learned; 0/8 helped
+by budget. In bp35 and tu93 the budget bar it dutifully fills IS the lose timer, so its fixated goal is
+literally the anti-goal.
+
+**What this means for the goal verifier.** REQ-ARC-WMTE-5830 is correct and necessary (it demonstrably
+falsifies the exact wrong goals the winner recipe fixated on), but it cannot manufacture a right goal when
+the right goal is structurally unreachable given broken perception — falsifying wrong goals just walks the
+model across a hypothesis space that does not contain the answer.
+
+**Next ARC lever (evidence-backed, corrected).** NOT more goal machinery, more budget, or the verifier. It
+is: **(1) HUD/budget-bar vs game-board perceptual disambiguation** (mask the every-action monotone register;
+it is maximally salient and least relevant), and **(2) action-effect dynamics induction** (find the connected
+component that translates under directional actions — that is the player token — and register it as a
+first-class entity the goal-hypothesizer must reference). Filed as `GAP-ARC-PERCEPTION-HUD-VS-BOARD` in
+`ops/verifier_gaps.md`. This independently corroborates `project_arc_live_agent_learning_gaps` (perception is
+the binding constraint) — now confirmed to still hold at 31B + the full leaderboard-winner recipe.

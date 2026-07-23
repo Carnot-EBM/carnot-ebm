@@ -1,0 +1,130 @@
+{
+  "experiment": "outer_loop_arc_goal_hypothesis_coverage_diagnosis",
+  "experiment_id": "REQ-ARC-WMTE-5831",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_goal_hypothesis_coverage_diagnosis.v1",
+  "title": "Did the winner-recipe agent (gemma-4-31B, greedy-direct + object-seg + reflection + goal-verifier) ever hypothesize the TRUE win condition? Per-game source-grounded diagnosis of the 8-game 0-discovery sweep.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methodology_note": "8 independent analyst agents (Opus 4.8), one per public game, each READ the game source (offline dev analysis, authorized per CLAUDE.md public-games source-reading discipline; NEVER used in the hidden submission) to extract the TRUE level-up condition, then compared it against the exact goal-hypothesis trajectory (falsified goals + final goal + reflection notes) gemma-4-31B produced during the v5 8-game sweep (results/outer_loop_arc_winner_greedy_direct_ab_v5sweep8_20260723.json, 0 discovery on all 8).",
+  "verifier_is_oracle": false,
+  "random_seed": 5831,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "REQ-ARC-WMTE-5829",
+      "artifact": "results/outer_loop_arc_winner_greedy_direct_ab_v5sweep8_20260723.json",
+      "fields_imported": [
+        "per_game goal trajectories",
+        "falsified goals",
+        "final reflection notes"
+      ]
+    },
+    {
+      "experiment_id": "REQ-ARC-WMTE-5830",
+      "artifact": "python/carnot/agentic/arc_goal_verifier.py",
+      "fields_imported": [
+        "falsified goal list per game"
+      ]
+    }
+  ],
+  "games": [
+    "bp35",
+    "lf52",
+    "sc25",
+    "ls20",
+    "tu93",
+    "cn04",
+    "r11l",
+    "ft09"
+  ],
+  "n_games": 8,
+  "headline": "8/8 games: the true goal was NEVER hypothesized (0 yes, 0 partial, 8 no). The wall is UPSTREAM of goal induction: 5/8 perception (fixated on HUD/budget-bar, never represented the player/exit/target entities), 3/8 dynamics-not-learned (never induced that actions move a player). 0/8 would larger budget help; in 3 (bp35,tu93) the budget bar it fills IS the lose timer, so more budget actively loses.",
+  "counts": {
+    "true_goal_ever_hypothesized": {
+      "no": 8
+    },
+    "root_cause": {
+      "mechanics_not_learned": 3,
+      "perception": 5
+    },
+    "would_larger_budget_help": {
+      "no": 8
+    }
+  },
+  "per_game": [
+    {
+      "game": "bp35",
+      "true_win_condition": "Gravity puzzle-platformer: maneuver the single player sprite so it falls onto / lands on the GEM tile (internal object \"fjlzdjxhant\", render layer 9), which calls win() -> sets nkuphphdgrp=True -> next_level(). Movement: Action 3 steps the player left, Action 4 steps it right; after each step the player falls under gravity (fsvnqdbzrp) until it hits a support. Landing on a spike (\"ubhhgljbnpu\"/\"hzusueifitk\") calls lose(). Action 6 clicks manipulate the level (toggle solid blocks oonshderxef<->yuuqpmlxorv, spawn etlsaqqtjvn blocks, activate qclfkhjnaac, or FLIP GRAVITY via lrpkmzabbfa) to build a reachable path to the gem. Row 63 is a MOVE-BUDGET bar, not part of the puzzle: every action fills one more cell of row 63 with color 15 (ebbemwaevan), and reaching 64 moves calls lose(). Filling row 63 is the LOSE condition, the opposite of the goal.",
+      "model_best_hypothesis": "\"Fill the column at x=63 with values of 15\" (falsified), final: \"fill the entire grid or a specific pattern\" \u2014 the model correctly noticed row 63 fills with color 15 as it acts, but interpreted this cosmetic move-budget/lose-timer as the objective; it never referenced the player, the gem, movement, or gravity, so its best hypothesis was actually pursuing the LOSE condition.",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "mechanics_not_learned",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model correctly observed that row 63 fills with color-15 cells as it acts, but mis-attributed this to its clicks and mistook the move-budget lose-timer for the goal, never learning that Action 3/4 move the player and gravity drops it onto the gem \u2014 so it never hypothesized the true win condition (land the player on the gem \"fjlzdjxhant\") and instead pursued the anti-goal; more budget hurts, since 64 actions auto-trigger lose()."
+    },
+    {
+      "game": "lf52",
+      "true_win_condition": "A select-then-aim peg-solitaire-style block-MERGE puzzle. Each level (8x8 logical grid, rendered ~6px/cell) holds several colored target blocks (`fozwvlovdui`, e.g. 5 on Level 1, line 5243). To win you must reduce the block count to exactly 1 (to 2 on levels 6-7). Interaction is a compound two-click: ACTION6 clicking ON a block's pixels selects it (`dghsidbuet`->`xpcuvjyrgu`, 5334/5353), which lights up aim-lines (`lgbyiaitpdi`) only in directions where `qikmikecdf` holds \u2014 a MATCHING block sits exactly one cell away with a clear cell beyond (5649-5669). Clicking a lit aim-line (`cfilhtifcb`, 5374) jumps the selected block over/into the adjacent matching block, consuming it and decrementing `ddaguepwkt=len(fozwvlovdui)` (5375). When `ddaguepwkt==1` after a merge, `tdcblgbfxw`->`win()` sets `iajuzrgttrv=True` (5581->5646->2088), and `step()` calls `next_level()` (5763-5764). ACTION1-4 (`tmhxwcojkh(dx,dy)`, 5276) shift `hupkpseyuim2` blocks directionally. Lose if the move counter `asqvqzpfdi` exceeds the budget (>=64 on L1, line 5771). CRITICAL: row 0 of the frame is a move-counter HUD bar (`bcvezkazgy`, 5683-5695: fills `arr[0,:j%64]=1` as `apiwkxksucg` action-count grows), NOT the game board.",
+      "model_best_hypothesis": "\"Trigger state changes in rows other than row 0.\" \u2014 the closest it got: it eventually recognized its earlier hypothesis (the row-0 changes) was a dead end and that the real answer lay elsewhere in the frame, but it never named blocks, colors, merging, counts, or reduction.",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "perception",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The agent's entire hypothesis chain (falsified \"change all cells to state 1\"; final \"trigger state changes outside row 0\") describes the row-0 move-counter HUD bar, which it misread as the game board \u2014 it never represented the colored target blocks, their matching-merge, or the \"reduce to one block\" win condition at all; the true goal was a select-then-aim peg-solitaire merge that its object/grid perception, dominated by the every-action HUD change, could not even foreground, let alone induce."
+    },
+    {
+      "game": "sc25",
+      "true_win_condition": "Spatial navigation to an exit. ACTION1-4 move the player avatar 'pluyoo' (scale-2 sprite with facing) around the 64x64 grid via try_move(\"pluyoo\",dx,dy) (sc25.py:2713). When a move lands the player onto the exit sprite 'exydhv' (a distinct 5x6 bordered 'door', layer 2, collidable; defined 754-767), line 2731 detects it, snaps the player in via deymuvatgy() (2746) -> abvgsmnbrj() -> self.next_level() (1856), advancing the level. Each of the 6 levels places one pluyoo and one exydhv at different coordinates. The 3x3 'clzbxlm-sptivk-slsrhr' grid (ACTION6 toggles cells, 2647-2672) is a spell/terrain tool, and the vertical 'action-ui' sprite at grid col (62,0) is the move/mana BUDGET METER filled from rrinmfkkstu/eyxbonasvgm; overrunning it calls lose() (1895-1896, 2665-2666). Win = walk the avatar into the exit within budget; neither cell-grid is the goal.",
+      "model_best_hypothesis": "\"Clear all values in the sequence of blocks at column 62/63\" (its final/current goal) \u2014 this targets the action/mana budget METER, not the exit. Its only accurate learning was the ACTION6 mechanic (\"6 (30,55) toggles values between 2 and 14\"), a real spell-toggle observation but never connected to winning. It never got closer than the value-UI frame.",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "perception",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model correctly reverse-engineered the ACTION6 spell-toggle mechanic and the col-62/63 meter, but its perception/world-model collapsed entirely onto the two value-bearing UI grids and never registered that ACTION1-4 move a player avatar toward a distinct exit tile \u2014 so all 5 goal switches stayed inside a \"configure the cell values\" frame and the true win (navigate the wizard into the 'exydhv' exit), an ordinary in-distribution hypothesis given proper perceptual inputs, was never even approximated."
+    },
+    {
+      "game": "ls20",
+      "true_win_condition": "A level advances (Ls20.pbznecvnfr line 2042 -> next_level line 1979) only when EVERY goal slot (rjlbuycveu sprite) is satisfied. A goal is satisfied (line 2044) when the player avatar (sfqyzhzkij/gudziatsk) stands EXACTLY on the goal cell AND bejndxqqzf() (line 2039) is true: avatar.shape == goal.shape AND avatar.color == goal.color AND avatar.rotation == goal.rotation. The avatar's hidden (shape,color,rotation) 3-tuple is mutated ONLY by moving onto gadget tiles that increment it: ttfwljgohq cycles shape, soyhouuebz cycles color, rhsxkxzdjz cycles rotation (lines 1893-1909). Concretely Level 1: player starts (34,45) as shape5/color9/rot270, single goal at (34,10) needs shape5/color9/rot0, so the sole solution is to route through the one rotation gadget at (19,30) (flips 270deg->0deg) then step onto (34,10). It is a spatial-navigation-plus-latent-attribute-matching puzzle within a 42-step budget and 3 lives, viewed through a 16x16 camera over a 64x64 maze.",
+      "model_best_hypothesis": "Its closest approach to the truth was a partial dynamics model of the controls: it correctly noted \"Action 1 and 2 are inverses\" and tracked local pixel-color transitions (e.g. \"Action 1: 3/5 -> 12\", i.e. floor colors 3/5 replaced by the avatar's color 12). Its goal hypothesis was literally \"Undetermined.\" throughout; it never proposed an avatar, a goal tile, a target pattern, or attribute-matching. The true win condition was never approximated.",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "perception",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model correctly read pixels but modeled the game as a local color state-machine (it encoded its own avatar's movement as floor colors flipping to player-color 12), so it never resolved the avatar-as-moving-object, the off-screen goal tiles, or the (shape,color,rotation) attributes that define the win \u2014 leaving the true goal (morph your 3-tuple to match a goal slot, then stand on it) structurally outside its hypothesis space, a perception/ontology failure that no amount of extra action budget would repair."
+    },
+    {
+      "game": "tu93",
+      "true_win_condition": "Navigation/routing puzzle: steer the player token (sprite 0016ihgrljrgpq, color 9, tag 0017unajnymcki) so it lands exactly on the exit block (sprite 0014mzhhvzrazi, solid color 14, tag 0015msvpvzxhqf) \u2014 same x AND y \u2014 before the step counter empties. Actions 1/2/3/4 move up/down/left/right node-to-node, permitted only when the board cell 3 units away in that direction has value 2 (the track/rail; value-0 = nodes, -1 = empty). When every player sprite coincides with an exit, step() phase-2 (lines 1261-1264) calls self.next_level(). Lose if the player is destroyed by a moving obstacle (no tokens left) or steps run out (line 1265-1266). Value-6 cells are NOT gameplay: 6 (wmwvcifkjo) is used only in render_interface (lines 979-984) to draw the step-counter bar on frame row 63; each action decrements steps and shrinks that bar.",
+      "model_best_hypothesis": "\"Clear all cells with value 6.\" (its only hypothesis; final reflection: \"Action 1 and 3 clear cells with value 6 ... GOAL: Clear all cells with value 6 ... PROGRESS: Clearing cells in column 63\")",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "perception",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model correctly noticed actions consume value-6 cells but fatally misperceived the depleting step-counter HUD bar (row 63, color 6) as the game objective, forming one self-reinforcing goal (\"clear all value-6 cells\") that is literally the lose condition, and never perceived the real entities \u2014 a color-9 agent token, a color-14 exit block, and value-2 rails \u2014 so it never generated the canonical, easily-expressible true goal of navigating the token onto the exit."
+    },
+    {
+      "game": "cn04",
+      "true_win_condition": "A spatial endpoint-pairing (\"connect the terminals\" / jigsaw-assembly) puzzle. Each sprite is a puzzle piece carrying sparse terminal-marker pixels of color 8 and color 13. The win check `sjwqloivve()` (lines 1023-1049) takes each visible sprite's original pixel map (`hlxyvcmpk`), marks every 8/13 pixel that is in the paired set `iahpylgry` as resolved (color 3), and returns True (level solved -> `rqolqpqwo=True` -> `next_level()`, lines 1051-1055) ONLY when no unpaired 8 or 13 marker remains on any visible sprite. A marker becomes paired (built in `uqlndqojuf`, lines 977-988) only when exactly two 8-pixels, or exactly two 13-pixels, coincide at the same grid coordinate. You achieve this by SELECTING a piece (ACTION6), then TRANSLATING it (ACTION1-4) and ROTATING/shape-cycling it (ACTION5) so its 8/13 terminals overlap matching terminals on other pieces. The win check is evaluated ONLY inside the move (1127-1129) and rotate (1098-1100) branches, never after ACTION6. On levels 3-6, GreyMasking=True masks all piece body pixels to background color 4, so ONLY the 8/13 markers are visible -- the markers are the entire point.",
+      "model_best_hypothesis": "Reflection note: \"Action 6 at trigger coordinates toggles/clears values in other cells\" + \"Identified triggers.\" This is the closest it got -- it correctly noticed there are special trigger coordinates and that acting on a piece changes the board -- but it wrapped that kernel in a \"clearing\" interpretation and never reached \"move/rotate pieces to pair up the 8/13 terminal markers.\"",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "perception",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model correctly noticed pieces exist and that acting at \"trigger coordinates\" changes the board, but its object/segmentation perception surfaced body/background colors (4, 12, 14) as salient and misread the ACTION6 selection re-render (body pixels -> 0) as \"clearing cells,\" anchoring all 5 hypotheses in an elimination frame; it never surfaced the load-bearing 8/13 terminal markers or the move/rotate-to-align mechanic, so its hypothesis loop could only ever generate wrong \"clear color X\" goals over decoy colors (4 is the very background GreyMasking paints in), and could not reach the true spatial endpoint-pairing goal -- which additionally can only trigger after a MOVE/ROTATE, not the ACTION6 clicks it favored, so more budget in that frame would never win."
+    },
+    {
+      "game": "r11l",
+      "true_win_condition": "A spatial \"slide each piece home to its matching pad\" puzzle. Interaction is a two-click select-then-move: click a control-handle cell (roefwulewcui-{key}) to SELECT its piece (a subtle color-remap, step() lines 1819-1833), then click a non-wall destination to animate that piece sliding there (hcpsunmfnx/ltkvhywjqa). The level advances via the sole next_level() at line 1706, reachable only when uyawyyswbya=True (line 1783), which is set only when the win-check loop (lines 1758-1785) finds that EVERY non-decoy object roefwu-{key} (keys containing \"dirwzt\" are skipped, line 1763) collides_with its own matching target pad flkdtg-{key}. Multi-part whkxtx assemblies must instead cover the pad with a matching color set (ldzvchvkvp). Walls (wakneh-*) block moves; 5 terrain (defgjl-*) collisions or exceeding the 60-action cap = lose. Level 1: slide the single pumlzd piece onto flkdtg-pumlzd at (36,18).",
+      "model_best_hypothesis": "Its closest approach was the NEGATIVE realization \"Setting all cells to 5 is NOT the win condition\" plus one correct-but-shallow action-effect fact: \"Action 6 at (27,57) toggles cells (21,0)-(42,0) between 0 and 5.\" That is still entirely inside a cell-painting ontology (goal = some cell-value configuration); it never approximated \"move a piece onto its matching pad.\"",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "mechanics_not_learned",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model correctly learned ONE local action-effect (a click recolors a band of handle cells) but mis-read that selection recolor as the game's purpose, locking into a \"paint cells to a value\" ontology; it never discovered the two-click select-then-move mechanic, so it never surfaced the pieces/target-pads/motion primitives needed to hypothesize the true goal (\"slide each object onto its matching pad\") \u2014 which is itself an LLM-plausible \"match the target\" goal, but was structurally unreachable without first inducing the hidden second-click movement dynamic."
+    },
+    {
+      "game": "ft09",
+      "true_win_condition": "A hidden color-constraint-satisfaction puzzle solved with the single available action (action 6 = coordinate click). Clicking a colored block (Hkx) cycles it to the next color in the level palette cwU (RfH.color_remap, lines 2422-2424); clicking a special NTi tool-block cycles its 4 orthogonal neighbors. The level advances (next_level, line 2427) the instant cgj() is True \u2014 i.e. when EVERY bsT clue tile's neighborhood coloring is simultaneously satisfied: each tile's 3x3 pixel pattern says which adjacent blocks must EQUAL its center target color (pixel==0) and which must NOT (pixel!=0), checked over all 8 neighbors (lines 2436-2520). A per-level click budget (battery kCv=32/96/128, drained by lph()) forces a loss if exhausted first. So: recolor the block grid, by clicking blocks to cycle their palette color, until all invisible adjacency-color constraints hold, within the click budget.",
+      "model_best_hypothesis": "None of its hypotheses approximated the true goal. The closest it got was correctly identifying action 6 (the click) as the only lever available \u2014 but it then concluded that lever was \"ineffective\" and resolved to AVOID it, ending with RULES=Unknown, GOAL=Unknown, and zero falsified goals. It never hypothesized \"click blocks to cycle their colors\" nor anything resembling constraint satisfaction over the clue tiles.",
+      "true_goal_ever_hypothesized": "no",
+      "root_cause": "mechanics_not_learned",
+      "would_larger_budget_help": "no",
+      "gap_summary": "The model never induced its one action's true effect \u2014 it labeled action 6 (the click) \"ineffective\" and chose to avoid it, because the click only does anything when it lands exactly on a small colored block and even then produces only a one-block, one-step color change with no partial-progress signal (level-up fires only on full constraint satisfaction), so off-target clicks looked inert; having abandoned its only lever it could form no goal (RULES/GOAL=Unknown, 0 falsified), and even correct mechanics would likely not have sufficed since the true win predicate is a hidden adjacency-color CSP encoded in per-tile 3x3 pixel patterns that is essentially outside what an object-list/hex-grid reasoning loop can hypothesize (a deeper hypothesis_coverage wall)."
+    }
+  ],
+  "honest_verdict": "complete_perception_and_dynamics_are_the_wall_not_goal_induction: the goal-hypothesis generator never received a correct entity/dynamics representation to reason over, so it could not generate the true goal for ANY of 8 games; the goal verifier (REQ-ARC-WMTE-5830) correctly falsifies wrong goals but cannot help when the right goal is structurally unreachable given broken perception. Several true goals are canonical LLM-plausible goals (navigate avatar to exit; match target pad) that the model WOULD plausibly hypothesize if perception surfaced the right objects.",
+  "implication": "Next ARC lever is NOT more goal-hypothesis machinery, more budget, or the goal verifier. It is (1) HUD/budget-bar vs game-board perceptual disambiguation and (2) action-effect dynamics induction (does an action move a player token?). Corroborates project_arc_live_agent_learning_gaps (perception is the binding constraint) at 31B + full winner recipe.",
+  "reproducibility_checksum": "sha256:c3661808671c5b2e644b6f3e3abc7ad36f0f7ae5525aef792c0901619e092fb4"
+}
