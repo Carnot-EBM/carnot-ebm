@@ -18,6 +18,7 @@ from carnot.agentic.arc_tool_loop_lookahead import (
     MAX_CANDIDATES,
     ToolLoopLookaheadSession,
     _candidates_from_payload,
+    _completion,
     _parse_turn,
     _ToolDispatch,
     run_tool_loop,
@@ -44,8 +45,8 @@ class _FakeProposer:
 def _patch_completion(monkeypatch, proposer: _FakeProposer) -> None:
     import carnot.agentic.arc_tool_loop_lookahead as mod
 
-    def fake_completion(p, prompt, *, max_tokens):
-        del p, prompt, max_tokens
+    def fake_completion(p, prompt, *, max_tokens, seed=None):
+        del p, prompt, max_tokens, seed
         idx = proposer.calls
         proposer.calls += 1
         if idx >= len(proposer.responses):
@@ -112,6 +113,59 @@ class TestCandidatesFromPayload:
         assert cands[0].data is None
 
 
+class _FakeUrlopenResponse:
+    def __init__(self, payload: dict) -> None:
+        self._payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def read(self):
+        import json as _json
+
+        return _json.dumps(self._payload).encode()
+
+
+class TestCompletionSeedPayload:
+    """Direct regression coverage for the adversarial_verify.py METHODOLOGY_MISSING(random_seed)
+    fix: _completion() must include a "seed" field in the llama.cpp /completion request body
+    when a caller supplies one, and must omit it (server default, non-reproducible) otherwise --
+    never silently drop a caller-supplied seed."""
+
+    def _fake_proposer(self):
+        proposer = _FakeProposer([])
+        return proposer
+
+    def _capture_request_body(self, monkeypatch):
+        import json as _json
+        import urllib.request as _urlreq
+
+        captured = {}
+
+        def fake_urlopen(req, timeout=None):
+            del timeout
+            captured["body"] = _json.loads(req.data.decode())
+            return _FakeUrlopenResponse({"content": "ok"})
+
+        monkeypatch.setattr(_urlreq, "urlopen", fake_urlopen)
+        return captured
+
+    def test_seed_present_in_request_payload_when_given(self, monkeypatch):
+        captured = self._capture_request_body(monkeypatch)
+        ok, text = _completion(self._fake_proposer(), "prompt", max_tokens=10, seed=42)
+        assert ok is True
+        assert captured["body"]["seed"] == 42
+
+    def test_seed_omitted_from_request_payload_when_not_given(self, monkeypatch):
+        captured = self._capture_request_body(monkeypatch)
+        ok, text = _completion(self._fake_proposer(), "prompt", max_tokens=10)
+        assert ok is True
+        assert "seed" not in captured["body"]
+
+
 class TestToolDispatch:
     def test_inspect_cell_reports_color(self):
         grid = np.zeros((5, 5), dtype=int)
@@ -176,6 +230,42 @@ class TestRunToolLoopScripted:
         outcome = run_tool_loop(np.zeros((5, 5), dtype=int), [], [1], proposer, max_turns=12)
         assert outcome.ok is True
         assert any("already asked" in line for line in outcome.transcript)
+
+    def test_seed_is_threaded_through_to_completion_offset_per_turn(self, monkeypatch):
+        # Regression coverage for the adversarial_verify.py METHODOLOGY_MISSING(random_seed)
+        # flag on the empirical A/B artifact: run_tool_loop must actually pass a seed down to
+        # _completion (not just accept and drop the parameter), offset per turn so a multi-turn
+        # decision doesn't resample identically every turn.
+        import carnot.agentic.arc_tool_loop_lookahead as mod
+
+        seen_seeds = []
+
+        def fake_completion(p, prompt, *, max_tokens, seed=None):
+            del p, prompt, max_tokens
+            seen_seeds.append(seed)
+            if len(seen_seeds) == 1:
+                return True, "TOOL: inspect_frame"
+            return True, 'ACTION: [{"a":1,"confidence":0.5}]'
+
+        monkeypatch.setattr(mod, "_completion", fake_completion)
+        proposer = _FakeProposer([])
+        run_tool_loop(np.zeros((5, 5), dtype=int), [], [1], proposer, max_turns=12, seed=100)
+        assert seen_seeds == [100, 101]
+
+    def test_omitted_seed_passes_none_through(self, monkeypatch):
+        import carnot.agentic.arc_tool_loop_lookahead as mod
+
+        seen_seeds = []
+
+        def fake_completion(p, prompt, *, max_tokens, seed=None):
+            del p, prompt, max_tokens
+            seen_seeds.append(seed)
+            return True, 'ACTION: [{"a":1,"confidence":0.5}]'
+
+        monkeypatch.setattr(mod, "_completion", fake_completion)
+        proposer = _FakeProposer([])
+        run_tool_loop(np.zeros((5, 5), dtype=int), [], [1], proposer, max_turns=12)
+        assert seen_seeds == [None]
 
     def test_exhausts_budget_without_commit_returns_not_ok(self, monkeypatch):
         proposer = _FakeProposer(["TOOL: inspect_frame"] * 3)

@@ -60,9 +60,7 @@ INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
 STATE_IDENTITY_RULE = (
     "state_id=state::<schema_version>::<source_adapter>::<sequence>::<state_hash_prefix>"
 )
-EVENT_IDENTITY_RULE = (
-    "event_id=event::<schema_version>::<source_adapter>::<sequence>::<event_type>::<payload_hash_prefix>"
-)
+EVENT_IDENTITY_RULE = "event_id=event::<schema_version>::<source_adapter>::<sequence>::<event_type>::<payload_hash_prefix>"
 
 SPEC_REFS = (
     "REQ-LEARN-5825",
@@ -296,7 +294,9 @@ def collect_preconditions(
 
     root = Path(root)
     result_path = Path(result_path or (root / RESULT_RELATIVE_PATH))
-    upstream_hashes = {name: _hash_path(root, relative) for name, relative in UPSTREAM_PATHS.items()}
+    upstream_hashes = {
+        name: _hash_path(root, relative) for name, relative in UPSTREAM_PATHS.items()
+    }
     blocked: list[str] = []
     if any(value == "missing" for value in upstream_hashes.values()):
         blocked.append("missing_upstream_artifact")
@@ -348,19 +348,40 @@ def collect_preconditions(
                     for receipt in artifacts["exp5763"].get("query_label_receipts", [])
                 }
             ),
+            "exp5785_exact_validators": (
+                artifacts["exp5785"].get("preconditions_checked") or {}
+            ).get("exact_validators")
+            or {},
+            "exp5785_row_validator_versions": sorted(
+                {
+                    str(version)
+                    for receipt in (
+                        artifacts["exp5785"].get("exact_validator_receipts") or {}
+                    ).values()
+                    for version in (
+                        (receipt.get("primary") or {}).get("validator_version"),
+                        (receipt.get("independent") or {}).get("validator_version"),
+                    )
+                    if version
+                }
+            ),
             "exp5785_validator_receipt_count": len(
                 artifacts["exp5785"].get("exact_validator_receipts", [])
             ),
         }
-        if not validators["exp5761_solver_versions"]:
+        if (
+            not validators["exp5761_solver_versions"]
+            or not validators["exp5785_exact_validators"]
+            or not validators["exp5785_row_validator_versions"]
+        ):
             blocked.append("missing_exact_validator_versions")
         split_hashes = {
             "exp5761": (artifacts["exp5761"].get("split_manifest") or {}).get("split_hashes") or {},
             "exp5762_science": artifacts["exp5762"].get("science_split_hash"),
             "exp5763_stream": artifacts["exp5763"].get("stream_root_hash"),
-            "exp5785": (
-                artifacts["exp5785"].get("chronological_split_receipts") or {}
-            ).get("split_hashes")
+            "exp5785": (artifacts["exp5785"].get("chronological_split_receipts") or {}).get(
+                "split_hashes"
+            )
             or {},
         }
         if not split_hashes["exp5761"] or not split_hashes["exp5785"]:
@@ -701,9 +722,7 @@ def _adapt_exp5761(
                     "variant_kind": variant.get("variant_kind"),
                     "expected_repair_hash": variant.get("expected_repair_hash"),
                     "distinguishing_query_hash": variant.get("distinguishing_query_hash"),
-                    "minimal": (variant.get("distinguishing_query_receipt") or {}).get(
-                        "minimal"
-                    ),
+                    "minimal": (variant.get("distinguishing_query_receipt") or {}).get("minimal"),
                     "receipt_hash": variant_hash,
                 },
                 operation="minimal_core",
@@ -818,6 +837,30 @@ def _adapt_exp5762(
             operation="quarantine",
             oracle=_base_oracle("exp5762_contradiction_validator"),
         )
+    for receipt in artifact.get("constraint_refinement_receipts", []):
+        source_hash = str(receipt["receipt_hash"])
+        sequence = _add_event(
+            events,
+            states,
+            event_type="recurrence",
+            source_adapter="exp5762",
+            sequence=sequence,
+            source_artifact=EXP5762_ARTIFACT_RELATIVE_PATH.as_posix(),
+            source_artifact_hash=str(upstream_hashes["exp5762_artifact"]),
+            source_hash=source_hash,
+            visibility="science",
+            axes=_axes(change="constraint_refinement"),
+            payload={
+                "episode_id": receipt["episode_id"],
+                "operation": receipt["operation"],
+                "reason": receipt["reason"],
+                "broad_candidate_hash": receipt["broad_candidate_hash"],
+                "refined_constraint_hash": receipt["refined_constraint_hash"],
+                "receipt_hash": source_hash,
+            },
+            operation="recurrence",
+            oracle=_base_oracle("exp5762_refinement_validator"),
+        )
     for receipt in artifact.get("constraint_supersession_receipts", []):
         sequence = _add_event(
             events,
@@ -857,7 +900,8 @@ def _adapt_exp5762(
                 "rollback_hash_matches": receipt["rollback_hash_matches"],
                 "protected_prefix_hash": receipt["final_state_hash"],
                 "replay_passed": bool(
-                    receipt["restart_hash_matches"] is True and receipt["rollback_hash_matches"] is True
+                    receipt["restart_hash_matches"] is True
+                    and receipt["rollback_hash_matches"] is True
                 ),
                 "receipt_hash": receipt["ledger_row_hash"],
             },
@@ -868,6 +912,7 @@ def _adapt_exp5762(
         len(artifact.get("membership_query_receipts", []))
         + len(artifact.get("constraint_birth_receipts", []))
         + len(artifact.get("constraint_quarantine_receipts", []))
+        + len(artifact.get("constraint_refinement_receipts", []))
         + len(artifact.get("constraint_supersession_receipts", []))
         + len(artifact.get("constraint_lifecycle_ledger", []))
     )
@@ -949,7 +994,9 @@ def _adapt_exp5763(
                 "restart_state_hash": receipt["restart_state_hash"],
                 "rollback_state_hash": receipt["rollback_state_hash"],
                 "expected_state_hash": (
-                    receipt["pre_state_hash"] if operation == "rollback" else receipt["post_state_hash"]
+                    receipt["pre_state_hash"]
+                    if operation == "rollback"
+                    else receipt["post_state_hash"]
                 ),
                 "restored_state_hash": receipt["rollback_state_hash"],
                 "receipt_hash": receipt["transition_hash"],
@@ -997,9 +1044,7 @@ def _adapt_exp5763(
                 "boundary": receipt["boundary"],
                 "expected_state_hash": receipt["expected_state_hash"],
                 "restored_state_hash": receipt["restored_state_hash"],
-                "rejected_update_propagation_count": receipt[
-                    "rejected_update_propagation_count"
-                ],
+                "rejected_update_propagation_count": receipt["rejected_update_propagation_count"],
                 "receipt_hash": receipt["recovery_hash"],
             },
             operation="rollback",
@@ -1089,7 +1134,9 @@ def adapt_all_upstreams(root: Path = REPO_ROOT) -> JsonDict:
 
     root = Path(root)
     artifacts, rows = _load_upstream_bundle(root)
-    upstream_hashes = {name: _hash_path(root, relative) for name, relative in UPSTREAM_PATHS.items()}
+    upstream_hashes = {
+        name: _hash_path(root, relative) for name, relative in UPSTREAM_PATHS.items()
+    }
     all_events: list[JsonDict] = []
     all_states: dict[str, JsonDict] = {}
     receipts: JsonDict = {"schema": SCHEMA + ".adapter_receipts", "adapters": {}}
@@ -1199,7 +1246,10 @@ def validate_event_stream(
             "future_test",
         }:
             errors.append(_event_error("hidden_science_label_access", event))
-        if provenance.get("forged_label") is True or provenance.get("authority") != "exact_solver_or_validator":
+        if (
+            provenance.get("forged_label") is True
+            or provenance.get("authority") != "exact_solver_or_validator"
+        ):
             errors.append(_event_error("forged_oracle_label", event))
         payload = dict(event.get("payload") or {})
         if (
@@ -1536,9 +1586,7 @@ def build_artifact(
     result_path = Path(result_path or (root / RESULT_RELATIVE_PATH))
     preconditions = collect_preconditions(root, result_path=result_path)
     measured_duration = (
-        float(duration_s)
-        if duration_s is not None
-        else round(time.perf_counter() - started, 6)
+        float(duration_s) if duration_s is not None else round(time.perf_counter() - started, 6)
     )
     bundle: JsonDict = {"events": [], "states": [], "receipts": {"adapters": {}}}
     schema_errors = _blocked_schema_errors(preconditions)
@@ -1547,7 +1595,11 @@ def build_artifact(
         bundle = adapt_all_upstreams(root)
         chronology = chronology_and_visibility_checks(bundle["events"], bundle["states"])
         schema_errors = [str(error["error_code"]) for error in chronology["schema_errors"]]
-    status = "complete" if preconditions["preconditions_ready"] is True and not schema_errors else "blocked"
+    status = (
+        "complete"
+        if preconditions["preconditions_ready"] is True and not schema_errors
+        else "blocked"
+    )
     artifact: JsonDict = {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,

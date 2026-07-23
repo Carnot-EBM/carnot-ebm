@@ -115,7 +115,24 @@ def test_scenario_learn_5825_artifact_ready_and_written(tmp_path: Path) -> None:
         "exp5761_instances": 120,
         "exp5785_rows": 360,
     }
-    assert all(value.startswith("sha256:") for value in artifact["upstream_artifact_hashes"].values())
+    assert artifact["preconditions_checked"]["exact_validator_versions"][
+        "exp5785_exact_validators"
+    ] == {
+        "available": True,
+        "independent": "exp5785_enumeration_independent_validator_v1",
+        "primary": "exp5785_z3_primary_exact_validator_v1",
+    }
+    assert set(
+        artifact["preconditions_checked"]["exact_validator_versions"][
+            "exp5785_row_validator_versions"
+        ]
+    ) == {
+        "exp5785_enumeration_independent_validator_v1",
+        "exp5785_z3_primary_exact_validator_v1",
+    }
+    assert all(
+        value.startswith("sha256:") for value in artifact["upstream_artifact_hashes"].values()
+    )
     assert artifact["canonical_event_schema"]["event_types"] == list(mod.REQUIRED_EVENT_TYPES)
     assert artifact["canonical_state_schema"]["identity_rule"] == mod.STATE_IDENTITY_RULE
     assert artifact["chronology_and_visibility_checks"]["all_passed"] is True
@@ -125,8 +142,7 @@ def test_scenario_learn_5825_artifact_ready_and_written(tmp_path: Path) -> None:
         for receipt in artifact["adapter_round_trip_receipts"]["adapters"].values()
     )
     assert all(
-        receipt["passed"] is True
-        for receipt in artifact["adversarial_contract_results"].values()
+        receipt["passed"] is True for receipt in artifact["adversarial_contract_results"].values()
     )
     for field, principle in mod.REQUIRED_FIELD_PRINCIPLES.items():
         assert artifact["field_provenance"][field]["principle"] == principle
@@ -151,7 +167,8 @@ def test_scenario_learn_5825_adapters_round_trip_every_available_source() -> Non
     assert set(event["event_type"] for event in events) >= set(mod.REQUIRED_EVENT_TYPES)
     assert receipts["adapters"]["exp5761"]["source_row_count"] == 120
     assert receipts["adapters"]["exp5761"]["canonical_event_count"] == 600
-    assert receipts["adapters"]["exp5762"]["source_event_count"] == 520
+    assert receipts["adapters"]["exp5762"]["source_event_count"] == 600
+    assert receipts["adapters"]["exp5762"]["canonical_event_count"] == 680
     assert receipts["adapters"]["exp5763"]["source_event_count"] == 288
     assert receipts["adapters"]["exp5785"]["source_row_count"] == 360
     assert receipts["total_canonical_event_count"] == len(events)
@@ -227,7 +244,10 @@ def test_scenario_learn_5825_artifact_validation_rejects_tampering() -> None:
             lambda item: item.update({"adaptive_memory_contract_ready_score": 0.0}),
             "adaptive_memory_contract_ready_score",
         ),
-        (lambda item: item["schema_errors"].append("late_error"), "adaptive_memory_contract_ready_score"),
+        (
+            lambda item: item["schema_errors"].append("late_error"),
+            "adaptive_memory_contract_ready_score",
+        ),
         (
             lambda item: item["chronology_and_visibility_checks"].update({"all_passed": False}),
             "adaptive_memory_contract_ready_score",
@@ -260,7 +280,7 @@ def test_req_learn_5825_precondition_and_io_edge_cases_fail_closed(
     scalar_json = tmp_path / "scalar.json"
     scalar_json.write_text("[]", encoding="utf-8")
     blank_jsonl = tmp_path / "blank.jsonl"
-    blank_jsonl.write_text("\n{\"ok\": true}\n", encoding="utf-8")
+    blank_jsonl.write_text('\n{"ok": true}\n', encoding="utf-8")
     scalar_jsonl = tmp_path / "scalar.jsonl"
     scalar_jsonl.write_text("1\n", encoding="utf-8")
 
@@ -272,9 +292,7 @@ def test_req_learn_5825_precondition_and_io_edge_cases_fail_closed(
     assert mod._source_hash({"receipt_hash": "sha256:receipt"}) == "sha256:receipt"
     assert mod._source_hash({"unhashed": "payload"}).startswith("sha256:")
 
-    present_hashes = {
-        name: "sha256:" + name for name in mod.UPSTREAM_PATHS
-    }
+    present_hashes = {name: "sha256:" + name for name in mod.UPSTREAM_PATHS}
     monkeypatch.setattr(
         mod,
         "_hash_path",
@@ -282,7 +300,9 @@ def test_req_learn_5825_precondition_and_io_edge_cases_fail_closed(
             next(name for name, path in mod.UPSTREAM_PATHS.items() if path == relative)
         ],
     )
-    monkeypatch.setattr(mod, "_load_upstream_bundle", lambda root: (_ for _ in ()).throw(ValueError("bad")))
+    monkeypatch.setattr(
+        mod, "_load_upstream_bundle", lambda root: (_ for _ in ()).throw(ValueError("bad"))
+    )
     corrupt = mod.collect_preconditions(tmp_path, result_path=tmp_path / "out.json")
     assert "corrupt_upstream_artifact" in corrupt["blocked_reasons"]
     assert corrupt["corrupt_upstream_errors"] == ["ValueError"]
@@ -357,7 +377,9 @@ def test_scenario_learn_5825_schema_validation_edge_cases() -> None:
     assert mod.assert_valid_event_stream(events, states) is True
 
     duplicate_state_errors = mod.validate_event_stream(events, [states[0], states[0]])
-    assert any(error["error_code"] == "duplicate_state_identity" for error in duplicate_state_errors)
+    assert any(
+        error["error_code"] == "duplicate_state_identity" for error in duplicate_state_errors
+    )
 
     bad_state = deepcopy(states[0])
     bad_state["source_artifact_hash"] = "missing"
