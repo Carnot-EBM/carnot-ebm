@@ -14189,3 +14189,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 16:51 UTC | Clean-upstream selective replay with hard-case neg | OK | 87 passed, 1 warning in 16.61s |
 | 2026-07-23 16:53 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
 | 2026-07-23 17:12 UTC | Reduced-oracle versioned constraint memory on seal | OK | 87 passed, 1 warning in 12.25s |
+| 2026-07-23 17:47 UTC | Accepted adaptive operations ABI conformance | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5859_adaptiv |
