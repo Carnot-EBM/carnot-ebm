@@ -4,6 +4,10 @@
 Covers the two error-prone pieces without a GPU: the primed-sequence parser and the
 tool-inspection-then-commit orientation loop (scripted proposer). The full env loop
 (run_greedy_direct) is validated separately by the real single-game smoke.
+
+Spec: REQ-ARC-WMTE-5829, SCENARIO-ARC-WMTE-5829-COMMIT-WITHIN-BUDGET,
+SCENARIO-ARC-WMTE-5829-CLICK-COORD-MAPPING
+(openspec/capabilities/arc-world-model-trust-energy/spec.md).
 """
 
 from __future__ import annotations
