@@ -4,6 +4,68 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-22 (outer-loop, operator-directed architectural pivot): verifier-filtered reactive loop tested — honest negative, real diagnosis of why (myopic, not induction-quality)
+
+**Operator directive:** "Stop inducing an explicit symbolic world model up front and instead adopt
+a Duck-Harness-style reactive loop: the verifier filters a capable model's turn-by-turn action
+choices directly, rather than trying to correct a wrong symbolic model after the fact." This follows
+the pre-registered branch-2 decision in `docs/research-notes/arc-induction-quality-improvement-design-2026-07-20.md`
+§5, after CEGIS refinement of the induced world model was measured and found not to help
+(`GAP-ARC-INDUCTION-REFINEMENT-NULL`).
+
+**What was built:** `python/carnot/agentic/arc_reactive_verifier_filter.py`
+(`run_reactive_verifier_filter_progress`, REQ-ARC-WMTE-5827) — at each step, the frozen 9B generator
+proposes ONE next action (a proposal task, not a synthesis task); a real verifier filters it before
+commit: (1) an exact-match reject against the agent's own observed dead-end/no-op history (zero-cost,
+fully grounded), and (2) ranking survivors by the already-trained, already live-validated
+`FrameChangeScorer` CNN — the SAME scorer the scored Kaggle kernel uses, oracle-distinct (predicts
+real pixel change, never reads the env's win flag). Preserves Carnot's verification-first thesis
+rather than adopting Duck Harness's unverified reactive loop wholesale (the design doc's own §2
+warning). No `engine()` symbolic model synthesized or required.
+
+**Two real bugs found and fixed while building this (not assumed):**
+1. `arc_llm_guided_solve.py`'s own proposal loop calls `proposer.generate()`, which is hardcoded for
+   Python code synthesis (`ast.parse` regardless of the `validate` argument) — a free-text JSON
+   proposal structurally cannot pass it. This means that "residual" tool has likely never actually
+   worked; no result artifact for it exists anywhere in this project's history.
+2. The obvious fixes (raw `/completion`, then `/v1/chat/completions`) both failed to suppress this
+   GGUF's reasoning for a non-chat-templated prompt — the model either derailed mid-answer into an
+   unparseable `<think>` block, or spent its entire token budget reasoning and never reached a final
+   answer (the SAME failure mode `REQ-ARC-WMTE-5714` already found for the induce task). The fix that
+   works: reuse the project's own proven fence-priming + stop-sequence pattern
+   (`_L2_CODEONLY_DIRECTIVE`) — prime the completion by opening the answer structure
+   (`ACTIONS_JSON: [`) in the prompt itself, stop at the array's close.
+
+**Real empirical result (2026-07-22, `results/outer_loop_reactive_verifier_filter_ab_20260722.json`,
+`scripts/arc_reactive_verifier_filter_ab.py`):** ran on the 3 worst live/oracle-gap games from
+exp5727's 2026-07-19 full-registry sweep (sc25 oracle=6, lf52 oracle=10, bp35 oracle=9, all baseline
+live=0). All three ran cleanly (`error: null`, `adversarial_verify.py` 0-flagged), with the filter
+mechanism genuinely active every round (`frame_change_rejections` 518/596/600 — real discrimination
+among ~4 candidates/round; `dead_end_rejections` 85/0/0). **`levels_gained=0` on all three — an
+honest negative, matching the induce-then-plan baseline exactly.**
+
+**Diagnosed root cause (`ops/verifier_gaps.md` `GAP-ARC-REACTIVE-FILTER-MYOPIC`) — a genuinely
+different failure mode, not a restatement of the induction-quality gap:** the filter's two signals
+(dead-end rejection, change-prediction) are both purely LOCAL/single-step; neither encodes direction
+toward a distant goal. These games need deep (13-33+ action), narrow winning sequences with no
+intermediate reward a local filter can climb. The induce-then-plan architecture's `plan_in_model`
+step was supposed to supply exactly this multi-step lookahead — but the induced model is too
+inaccurate for that search to matter. The reactive-filter architecture gives up lookahead entirely
+in exchange for per-step correctness. **Neither architecture, as built, combines a reliable per-step
+signal with goal-directed multi-step search — that combination is the real missing capability.**
+Candidate next step: n-step rollout search using the (real, working) filter as the step-evaluator,
+or a general cross-game learned goal-progress signal (closes `GAP-ARCH-GOAL-NOT-VERIFIED`) for the
+search to optimize toward.
+
+**Scope note:** this is a Phase-Prototype-discipline measurement (`python/carnot/agentic/
+arc_reactive_verifier_filter.py` is NOT yet wired into `E3AgentPolicy`/the scored live path) — the
+correct sequencing per CLAUDE.md's Phase Prototype + Adversarial Check discipline is prototype-first,
+wire-in only if proven. This result says: not yet proven as a standalone fix; the next attempt needs
+lookahead added, not just a bare reactive-filter variant retried.
+
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5827.
+**Tests:** `tests/python/test_arc_reactive_verifier_filter.py` (10 tests, pure filter logic).
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
 
 **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered
