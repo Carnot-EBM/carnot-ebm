@@ -1,0 +1,294 @@
+{
+  "acceptance_gate": {
+    "condition": "gemma-4-31B greedy-direct discovers >0 levels on a game where our current stack (arc_live_oracle_gap baseline) scores 0",
+    "passed": false,
+    "principle": "The winners top the leaderboard with 27-31B greedy-direct; if a faithful reproduction discovers a level our stack cannot, matching the leaders is validated and justifies switching the submission stack."
+  },
+  "arms": {
+    "gemma31_greedy_direct": [
+      {
+        "actions_taken": 64,
+        "error": null,
+        "final_notes": "RULES: Action 6 at (x, y) changes (63, x) to 15.\nGOAL: [Hypothesize a new goal based on the same mechanics, perhaps filling the entire grid or a specific pattern]\nPROGRESS: Filled (63, 0-62).\nPROGRESS: Ruled out filling only column 63 with 15s.\nPROGRESS: Filled (63, 0-62).\nAVOID: None.\n\n**Wait, look at the move (63, 46) -> (63, 46). Here, x=63, y=46. The result is (63, 63) becomes 15? No, the move was 6 (63, 46) -> (63, 46)0->15.**\n**If Action 6 at (x, y) changes (63, x) to 15, then Action 6 at (63, 46) should change (63, 63) to 15. But the move says it changed (63, 46) to 15.**\n**Let's re-examine the moves:**\n- (15, 43) -> (63, 43)\n- (44, 63) -> (63, 4",
+        "game": "bp35",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "[Hypothesize a new goal based on the same mechanics, perhaps filling the entire grid or a specific pattern]",
+          "falsified_goals": [
+            "Fill the column at x=63 with values of 15."
+          ],
+          "goal_switches": 3,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 56,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
+          "[reflect@20] RULES: Action 6 at (x,y) targets (63, z) and changes value from 0 to 15.\nGOAL: Fill the column at x=63 with values of 15.\nPROGRESS: Filled indices 0 through 19 of column 63.\nAVOID:",
+          "[falsified@30] Fill the column at x=63 with values of 15.",
+          "[falsified@40] Fill the column at x=63 with values of 15.",
+          "[reflect@40] RULES: Action 6 at (x,y) targets (63, z) and changes value from 0 to 15.\nGOAL: Fill the column at x=63 with values of 15.\nPROGRESS: Filled indices 0 through 39 of column 63.\nAVOID:",
+          "[falsified@50] Fill the column at x=63 with values of 15.",
+          "[falsified@63] Fill the column at x=63 with values of 15."
+        ],
+        "wall_s": 175.7
+      },
+      {
+        "actions_taken": 64,
+        "error": null,
+        "final_notes": "RULES: Actions 1 and 6 at various coordinates change cells in row 0 from 0 to 1.\nGOAL: Trigger state changes in rows other than row 0.\nPROGRESS: Row 0 cells (0,0) through (0,59) are state 1.\nAVOID: Further actions that only affect row 0.",
+        "game": "lf52",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Trigger state changes in rows other than row 0.",
+          "falsified_goals": [
+            "Change all grid cells to state 1."
+          ],
+          "goal_switches": 5,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 64,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
+          "[reflect@20] RULES: Action 6 at specific coordinates triggers state changes (0->1) at various grid locations (0,0) through (0,19).\nGOAL: Change all grid cells to state 1.\nPROGRESS: (0,0) throug",
+          "[falsified@40] Change all grid cells to state 1.",
+          "[reflect@40] RULES: Action 6 at specific coordinates triggers state changes (0->1) in row 0.\nGOAL: Change all cells in row 0 to state 1.\nPROGRESS: (0,0) through (0,39) are now state 1.\nAVOID: N",
+          "[reflect@60] RULES: Actions 1 and 6 at various coordinates change cells in row 0 from 0 to 1.\nGOAL: Trigger state changes in rows other than row 0.\nPROGRESS: Row 0 cells (0,0) through (0,59) ar"
+        ],
+        "wall_s": 261.8
+      },
+      {
+        "actions_taken": 102,
+        "error": null,
+        "final_notes": "RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29)\nGOAL: Clear all values in the sequence of blocks at column 62/63.\nPROGRESS: None.\nAVOID: 6 (62,30) and 6 (62,28)\ns\n// I note that the \"Clear all values in the sequence of blocks at column 62/63\" goal was listed as a \"FALSIFIED GOAL\".\n// I need to a find a NEW goal.\n// I recent moves show that 6 (30,55) toggles a block of values.\n// I need to find a new win condition.\n\nREWRITTEN NOTES:\nRULES: 6 (30,55) toggles values between 2 and 14 in a block starting at (54,29).\nGOAL: [New Hypothesis] Set all values in the block at (54,29) to 14.\nGOAL: [New Hypothesis] Set all values in the block at (54,29) to 2.\nGOAL: [New Hypothesis] Set all values in the block at (54,29) to 14.\nGOAL: [New Hypothesis] Set all values in the block at (",
+        "game": "sc25",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Clear all values in the sequence of blocks at column 62/63.",
+          "falsified_goals": [
+            "Cycle values to maximize specific cells.",
+            "Clear all values in the sequence of blocks at column 62/63."
+          ],
+          "goal_switches": 5,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 102,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
+          "[reflect@20] RULES: \nGOAL: \nPROGRESS: \nPROGRESS: \nAVOID: \n(Wait, the a reason for the prompt is that it is queatially owny own notes. only provide the prompt's headings)\n\nRULES: \nGOAL: \nPROGRES",
+          "[reflect@40] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values in a sequence of blocks at (0,62)\nGOAL: Cycle values to maximize specific cells.\nPROGRESS: ",
+          "[falsified@60] Cycle values to maximize specific cells.",
+          "[reflect@60] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values (14->0) in a sequence of blocks at (0,62)\nGOAL: Clear all values in the sequence of blocks ",
+          "[reflect@80] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values (14->0) in a sequence of blocks starting at (14,62) and (14,63) and moving down the column.",
+          "[falsified@90] Clear all values in the sequence of blocks at column 62/63.",
+          "[falsified@100] Clear all values in the sequence of blocks at column 62/63.",
+          "[reflect@100] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29)\nGOAL: Clear all values in the sequence of blocks at column 62/63.\nPROGRESS: None.\nAVOID: 6 (62,30) and 6 (62,"
+        ],
+        "wall_s": 446.4
+      },
+      {
+        "actions_taken": 120,
+        "error": null,
+        "final_notes": "RULES: Action 1: 3/5 -> 12; Action 2: 12 -> 3/5, 3 <-> 11; Action 4: 11 -> 3.\nGOAL: Undetermined.\nPROGRESS: Action 1 and 2 are inverses.\nAVOID: None.",
+        "game": "ls20",
+        "game_over": false,
+        "goal_verifier_stats": {
+          "current_goal": "Undetermined.",
+          "falsified_goals": [
+            "Undetermined.",
+            "PROGRESS:"
+          ],
+          "goal_switches": 4,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 120,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] unparseable/empty action: ' {\"a\": 6, \"obj\": 1} ' | [t1] unparseable/empty action: '{\"a\": 6, \"obj\": 1}' | [t2] unparseable/empty action: '{\"a\": 6, \"obj\": 1}' | [t3] unparseable/empty action: '6, 1'",
+          "orient#2: [t0] unparseable/empty action: '6, 1' | [t1] unparseable/empty action: ' {\"a\": 6, \"obj\": 1} ' | [t2] unparseable/empty action: '6, 1' | [t3] unparseable/empty action: '6, 1'",
+          "orient#3: [t0] unparseable/empty action: '6, 1' | [t1] unparseable/empty action: '6, 1' | [t2] unparseable/empty action: '6, 1' | [t3] unparseable/empty action: ' {\"a\": 6, \"obj\": 1} '",
+          "[reflect@20] RULES: Action 1 changes values (3 or 5) to 12 across wide areas. Action 2 reverts these values back to (3 or 5).\nGOAL: Undetermined.\nPROGRESS: Identified that Action 1 and Action 2",
+          "[falsified@40] Undetermined.",
+          "[reflect@40] RULES:\nGOAL:\nPROGRESS:\nPROGRESS:\nAVOID:\n```\n\nRULES:\nGOAL:\nPROGRESS:\nAVOID:\n```\n\n```\nRULES:\nGOAL:\nPROGRESS:\nAVOID:\nAVOID:\n```\n\nWait, the same format as requested:\n\n```\nRULES:\nGOAL:\n",
+          "[falsified@60] PROGRESS:",
+          "[reflect@60] RULES: Action 2 changes cell values (e.g., 12->3, 11->3, 12->5).\nGOAL: Undetermined.\nPROGRESS: Action 1 does not change the grid or trigger a win.\nAVOID: Action 1.\n```",
+          "[falsified@80] Undetermined.",
+          "[reflect@80] RULES: Action 1 changes 3 -> 12. Action 2 changes 12/11 -> 3.\nGOAL: Undetermined.\nPROGRESS: Action 1 is the inverse of Action 2.\nAVOID: Action 1.\n\nWait, the me recent moves show Ac",
+          "[falsified@90] Undetermined.",
+          "[falsified@100] Undetermined.",
+          "[reflect@100] RULES: Action 1: 3/5 -> 12; Action 2: 12 -> 3/5; Action 4: 11 -> 3.\nGOAL: Undetermined.\nPROGRESS: Action 1 and 2 are inverses.\nAVOID: None.\n\nWait, let me me check the 11 <-> 3 agai",
+          "[falsified@110] Undetermined."
+        ],
+        "wall_s": 1922.6
+      },
+      {
+        "actions_taken": 50,
+        "error": null,
+        "final_notes": "RULES: Action 1 and 3 clear cells with value 6.\nGOAL: Clear all cells with value 6.\nPROGRESS: Clearing cells in column 63 from row 51 to 63.\nAVOID: (none)",
+        "game": "tu93",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Clear all cells with value 6.",
+          "falsified_goals": [
+            "Clear all cells with value 6."
+          ],
+          "goal_switches": 1,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 50,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] unparseable/empty action: ' {\"a\": 6, \"obj\": 11} ' | [t1] unparseable/empty action: '{\"a\": 6, \"obj\": 11}' | [t2] unparseable/empty action: ' {\"a\": 6, \"obj\": 11} ' | [t3] unparseable/empty action: ' {\"a\": 6, \"obj\": 11} '",
+          "orient#2: [t0] unparseable/empty action: '{\"a\":6,\"obj\":11}' | [t1] unparseable/empty action: '{\"a\":6,\"obj\":11}' | [t2] unparseable/empty action: '{\"a\":6,\"obj\":11}' | [t3] unparseable/empty action: '{\"a\":6,\"obj\":11}'",
+          "orient#3: [t0] unparseable/empty action: '{\"a\":6,\"obj\":11}' | [t1] unparseable/empty action: '{\"a\":6,\"obj\":11}' | [t2] unparseable/empty action: ' {\"a\": 6, \"obj\": 11} ' | [t3] unparseable/empty action: '{\"a\":6,\"obj\":11}'",
+          "[reflect@20] RULES: Action 1 clears cells with value 6.\nGOAL: Clear all cells with value 6.\nPROGRESS: Clearing cells in column 63 from row 51 to 63.\nAVOID: (none)",
+          "[falsified@30] Clear all cells with value 6.",
+          "[falsified@40] Clear all cells with value 6.",
+          "[reflect@40] RULES: Action 1 and 3 clear cells with value 6.\nGOAL: Clear all cells with value 6.\nPROGRESS: Clearing cells in column 63 from row 51 to 63.\nAVOID: (none)"
+        ],
+        "wall_s": 215.3
+      },
+      {
+        "actions_taken": 75,
+        "error": null,
+        "final_notes": "RULES: Action 6 at trigger coordinates toggles/clears values in other cells.\nGOAL: Clear all cells with values (potentially including 4, 12, and 14).\nPROGRESS: Identified triggers (45,39), (15,27), (18,17), (34,0), (35,0), (36,0), (37,0), (38,0), (39,36), (39,36), (41,0).\nPROGRESS: Clear cells with value 4 or 12.\nCs: (15,27) toggles 12s; (45,39) clears 4s; (18,17) clears 4s; (39,36) clears 14s.\nTherefore, the same trigger can have different effects based on the same action.\n}\n}\n}\n}\ns: (15,27) -> (0,37)4->0, (0,38)4->0, (0,39)4->0, (0,40)4->0, (11,11)12->0, (11,12)12->0, (11,13)12->0, (11,",
+        "game": "cn04",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Clear all cells with values (potentially including 4, 12, and 14).",
+          "falsified_goals": [
+            "Clear cells with value 4 or 12."
+          ],
+          "goal_switches": 5,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 75,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] unparseable/empty action: 'gpu llama-server failed to start' | [t1] unparseable/empty action: '6, 1' | [t2] COMMIT [{'a': 6, 'x': 18, 'y': 17}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 45, 'y': 39}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 32, 'y': 0}]",
+          "[reflect@20] RULES: Action 6 at specific coordinates triggers changes in other cells; some coordinates (18,17) and (34,0) may have decaying effects or limited charges.\nGOAL: Clear cells with va",
+          "[reflect@40] RULES: Action 6 at trigger coordinates toggles or clears values in other cells.\nGOAL: Clear cells with value 4 or 12.\nPROGRESS: Active triggers for Action 6: (45,39), (15,27), (18,",
+          "[falsified@50] Clear cells with value 4 or 12.",
+          "[reflect@60] RULES: Action 6 at trigger coordinates toggles/clears values in other cells.\nGOAL: Clear all cells with values (potentially including 4, 12, and 14).\nPROGRESS: Identified triggers "
+        ],
+        "wall_s": 683.7
+      },
+      {
+        "actions_taken": 60,
+        "error": null,
+        "final_notes": "RULES: Action 6 at (27, 57) toggles cells (21, 0) through (42, 0) between 0 and 5.\nGOAL: Unknown (Setting all cells to 5 is NOT the win condition).\nPROGRESS: Identified the range of cells affected by Action 6 at (27, 57).\nAVOID: Repeatedly applying Action 6 at (27, 57) once cells (21, 0)-(42, 0) are 5.",
+        "game": "r11l",
+        "game_over": true,
+        "goal_verifier_stats": {
+          "current_goal": "Unknown (Setting all cells to 5 is NOT the win condition).",
+          "falsified_goals": [
+            "Set all grid cells to 5."
+          ],
+          "goal_switches": 3,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 60,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 38, 'y': 18}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 32, 'y': 38}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 48}]",
+          "[reflect@20] RULES: Action 6 at (x,y) toggles cell values (0 <-> 5) in a cross-like pattern and at specific distant coordinates.\nGOAL: Set all grid cells to 5.\nPROGRESS: Discovered Action 6 aff",
+          "[falsified@40] Set all grid cells to 5.",
+          "[reflect@40] RULES: Action 6 at (27, 57) toggles cells (21,0) through (42,0) to 5.\nGOAL: Set all grid cells to 5.\nPROGRESS: Identified that Action 6 at (27, 57) affects cells (21,0) through (42",
+          "[falsified@50] Set all grid cells to 5."
+        ],
+        "wall_s": 722.9
+      },
+      {
+        "actions_taken": 120,
+        "error": null,
+        "final_notes": "RULES: Unknown\nGOAL: Unknown\nPROGRESS: Action 6 is ineffective.\nAVOID: Action 6.",
+        "game": "ft09",
+        "game_over": false,
+        "goal_verifier_stats": {
+          "current_goal": "Unknown",
+          "falsified_goals": [],
+          "goal_switches": 2,
+          "supported_goals": []
+        },
+        "levels_gained": 0,
+        "orientations": 120,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] unparseable/empty action: '6' | [t1] unparseable/empty action: '6' | [t2] unparseable/empty action: '6' | [t3] unparseable/empty action: '6'",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 6, 'y': 4}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 12, 'y': 10}]",
+          "[reflect@20] RULES: \nGOAL: \nPROGRESS: \nAVOID: \n```\n\nRULES: Unknown\nGOAL: Unknown\nPROGRESS: Action 6 has no effect on the game state across multiple coordinates.\nAVOID: Action 6.\n```",
+          "[reflect@40] RULES: Unknown\nGOAL: Unknown\nPROGRESS: Action 6 has no effect on the game state.\nAVOID: Action 6.\n```\n\nREWRITE:\nRULES: Unknown\nGOAL: Unknown\nPROGRESS: Confirmed Action 6 does not c",
+          "[reflect@60] RULES: Unknown\nGOAL: Unknown\nPROGRESS: Action 6 is ineffective.\nAVOID: Action 6.",
+          "[reflect@80] RULES: Unknown\nGOAL: Unknown\nPROGRESS: Action 6 is ineffective.\nAVOID: Action 6.",
+          "[reflect@100] RULES: Unknown\nGOAL: Unknown\nPROGRESS: Action 6 is ineffective.\nAVOID: Action 6."
+        ],
+        "wall_s": 452.7
+      }
+    ]
+  },
+  "baseline_our_stack": {
+    "config": "E3AgentPolicy frame-only 9B (arc_live_oracle_gap.json) + 31B-as-inducer (exp5722)",
+    "levels_on_these_games": 0
+  },
+  "config": {
+    "budget": 120,
+    "games": [
+      "bp35",
+      "lf52",
+      "sc25",
+      "ls20",
+      "tu93",
+      "cn04",
+      "r11l",
+      "ft09"
+    ],
+    "goal_verify": true,
+    "max_seq": 5,
+    "max_turns": 4,
+    "perception": "objects",
+    "reflection_interval": 10
+  },
+  "duration_s": 4881.6,
+  "experiment": "outer_loop_arc_winner_greedy_direct_ab_20260723",
+  "honest_verdict": "complete_greedy_direct_gemma31_honest_null_no_discovery_matches_our_stack_zero_baseline",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_note": "Real gemma-4-31B-it GGUF (18.3GB Q4) loaded on GPU 1 via LocalGGUFProposer, driving the greedy-direct agent DIRECTLY (no search, no induced world model), adapter-free on the offline arcade -- the winner architecture. Live LLM inference throughout (many /completion calls per game).",
+  "narrative": "Operator directive: match the leaderboard leaders (27-31B, greedy-direct). Tests whether gemma-4-31B used the WINNERS' way (direct greedy action generator) discovers levels where our induce-then-plan stack (9B, and 31B-as-inducer in exp5722) scores 0. First real test of the winner architecture for us -- all prior tests used our own architecture.",
+  "per_game_oracle_levels": {
+    "bp35": 9,
+    "cn04": 6,
+    "ft09": 6,
+    "lf52": 10,
+    "ls20": 7,
+    "r11l": 6,
+    "sc25": 6,
+    "tu93": 9
+  },
+  "random_seed": 5829,
+  "reproducibility_checksum": "a459c41f064e8d041b196f26fef8f0b50191696319d8a724995ab4dd5c43e2f0",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_winner_greedy_direct_ab.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_provenance_note": "adapter-free greedy-direct discovery (the agent picks every action from its own play, no GameAdapter, no banked trajectory).",
+  "target_model": "unsloth/gemma-4-31B-it-GGUF"
+}
