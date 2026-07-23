@@ -1,0 +1,58 @@
+{
+  "acceptance_gate": {
+    "condition": "flag ON discovers MORE levels or greater depth than flag OFF on at least one game, with no regression",
+    "passed": false,
+    "principle": "The deliverable is LIVE hidden-game discovery, not candidate coverage of a known adapter trajectory. Only a real levels/depth gain on the scored frame-only path counts; a coverage improvement that does not move discovery is proxy-polishing (per the adversarial lens of triangulation wqn31sxaz)."
+  },
+  "budget_per_game": 400,
+  "duration_s": 3893.271,
+  "experiment": "outer_loop_arc_grid_fallback_live_discovery_ab_20260723",
+  "honest_verdict": "complete_grid_fallback_live_discovery_honest_null_no_level_or_depth_gain_on_any_game_coverage_fix_is_not_discovery_relevant_at_this_budget",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_note": "REAL E3AgentPolicy scored cascade run FRAME-ONLY (no GameAdapter, proposer=None -> no LLM), byte-identical config to the standing arc_live_oracle_gap.json baseline (--policy e3, budget=400, seed=20260719). The grid-fallback flag is env-read inside rich_action_candidates, which E3AgentPolicy._candidates (arc_competition_agent.py:1400) calls on the explorer hot path (used at :1870/:1907), so setting it activates the fix on the scored path.",
+  "narrative": "Validates GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS's surviving class-level finding (the live generator cannot click the most-common color) against the REAL metric (live discovery) instead of candidate coverage, per the 2026-07-23 lever triangulation. Honest prior: expected to null on discovered levels because the binding constraint is sequence-routing/induction, not per-action candidate availability -- a null is a real datum (coverage fix is proxy-only).",
+  "per_game": [
+    {
+      "delta_levels": 0,
+      "delta_reached": 0,
+      "game": "bp35",
+      "off": {
+        "actions": 393,
+        "levels": 0,
+        "reached": 0,
+        "wall_s": 1642.45
+      },
+      "on": {
+        "actions": 393,
+        "levels": 0,
+        "reached": 0,
+        "wall_s": 2250.82
+      },
+      "oracle_levels": 9
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "arc_grid_fallback_flag_env_read_in_rich_action_candidates"
+    },
+    {
+      "available": true,
+      "resource": "e3_policy_frame_only_no_adapter_no_llm"
+    }
+  ],
+  "random_seed": 20260719,
+  "reproducibility_checksum": "fcf10c3e0708c1614810ea04bef3b59d842d2e9650904c8ed63f671242a9a52e",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_grid_fallback_live_discovery_ab.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_provenance_note": "GameAdapters DISABLED (E3AgentPolicy frame-only); this is the Generalization-Testing-Floor protocol -- the agent must DISCOVER progress from its own exploration, not replay a hand-built trajectory. Measures the deliverable metric (levels discovered), NOT candidate coverage.",
+  "summary": {
+    "improved_games": [],
+    "n_games": 1,
+    "off_total_levels": 0,
+    "on_total_levels": 0,
+    "regressed_games": []
+  },
+  "target_model": "none_proposer_none_explorer_tier_only"
+}
