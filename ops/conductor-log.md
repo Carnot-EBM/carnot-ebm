@@ -14159,3 +14159,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed, 1 warning in 28.86s |
 | 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed, 1 warning in 21.45s |
 | 2026-07-23 02:52 UTC | Gated on Exp5827 structural lift: future-validated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5828_future_ |
+| 2026-07-23 03:14 UTC | Gated on Exp5827 structural lift: future-validated | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

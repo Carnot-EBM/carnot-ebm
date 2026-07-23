@@ -5958,5 +5958,18 @@
     "self_learning_spec": "sha256:6b26d4b91d71995e3f70dbeb6818937bcad917cd5187111b5c53a5008321aa95",
     "tests": "sha256:fddd13a8b250e7ecc3dc25f3604fee990a737333c0d816b3e930b11e6be77597"
   },
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.793358 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }
