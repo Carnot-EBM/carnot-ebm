@@ -23985,3 +23985,113 @@ checks, visibility checks, schema checks, and adversarial controls pass
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5825 | Implemented (`python/carnot/experiment_5825_certified_adaptive_memory_contract.py`, `results/experiment_5825_certified_adaptive_memory_contract.json`) | Implemented (`tests/python/test_experiment_5825_certified_adaptive_memory_contract.py`) |
+
+## REQ-LEARN-5826: Out-of-Template Chronological Constraint Stream
+
+The self-learning tier SHALL provide Exp5826, a deterministic no-LLM stream
+builder at `python/carnot/experiment_5826_out_of_template_constraint_stream.py`
+that writes
+`results/experiment_5826_out_of_template_constraint_stream.json` and
+`results/experiment_5826_out_of_template_constraint_stream.rows.jsonl`. The
+experiment substrate SHALL be
+`deterministic_exact_solver_dataset_generation_no_llm`. Exp5826 SHALL consume
+the Exp5825 certified event/state contract, the Exp5761 exact acquisition
+benchmark, the Exp5762 frozen template lifecycle artifact, and the Exp5785
+hardness/surface fixture without calling an LLM, training a learner, or exposing
+ground-truth target structure inside learner-facing rows.
+
+Before constructing rows, Exp5826 SHALL replay the structured gate by hashing
+the contract and upstream source fixtures, checking Exp5761 and Exp5785 exact
+solver/validator versions, RAM, disk, deterministic seeds, and writable result
+and row checkpoint paths. Any missing, stale, malformed, unwritable, or
+resource-failed precondition SHALL write a terminal blocked artifact with
+`constraint_event_stream_ready_score=0.0` and explicit blocked reasons rather
+than continuing collection.
+
+Exp5826 SHALL predeclare at least four primary constraint families and at least
+three chronological changes per family covering addition, supersession, and
+recurrence. It SHALL cross solver-hardness bins with at least two
+proof-preserving surfaces from Exp5785. Every primary family/change cell SHALL
+contain at least 30 independent science units; each unit SHALL preserve
+instance, family, surface, change, seed, row, and parent-state hashes and SHALL
+checkpoint atomically.
+
+Every science target constraint SHALL have a machine-checked
+out-of-template witness showing that its relation, arity, and composition
+signature is absent from the Exp5762 frozen candidate-template library. The
+witness SHALL compare normalized signatures rather than relying on family or
+constraint names.
+
+Every row in the JSONL stream SHALL use the Exp5825 event/state contract and
+SHALL include chronological observations, exact membership-query outcomes,
+minimal unsat/core or distinguishing-assignment receipts, protected-prefix
+receipts, sealed future suffix receipts, a separate sealed ground-truth
+structure hash, parent-state hash, and a replayable row hash. Future labels and
+ground-truth structure SHALL be sealed from learner inputs. Leakage audit count
+SHALL be zero for readiness.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `stream_manifest`, `out_of_template_witnesses`,
+`chronology_and_change_receipts`, `exact_query_and_core_receipts`,
+`sealed_future_batch_receipts`, `protected_prefix_receipts`,
+`sample_size_and_justification`, `row_file_and_sha256`, `leakage_audit`,
+`constraint_event_stream_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal collection state distinguishes a ready stream from a partial checkpoint.
+- `preconditions_checked`: Gate, solver, fixture, resource, and output checks prevent fabricated collection.
+- `upstream_artifact_hashes`: Hashes bind every row to the canonical contract and credited exact fixtures.
+- `stream_manifest`: Family, change, surface, hardness, and split counts make sampling auditable.
+- `out_of_template_witnesses`: Machine-checked non-expressibility distinguishes structural acquisition from Exp5762 replay.
+- `chronology_and_change_receipts`: Additions, supersessions, and recurrences must occur in a preregistered order.
+- `exact_query_and_core_receipts`: Exact boundary evidence supports later learning without exposing sealed structure labels.
+- `sealed_future_batch_receipts`: Immutable future suffixes make promotion decisions prospective rather than post hoc.
+- `protected_prefix_receipts`: Protected examples make retention and unsafe propagation measurable.
+- `sample_size_and_justification`: At least 30 independent units per primary cell support paired uncertainty estimates.
+- `row_file_and_sha256`: A row hash makes checkpoint/resume and downstream replay exact.
+- `leakage_audit`: Zero hidden-label exposure is required for a valid chronological stream.
+- `constraint_event_stream_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5827 and Exp5830.
+- `duration_s`: Measured wall time exposes bootstrap-only collection.
+- `inference_substrate`: `deterministic_exact_solver_dataset_generation_no_llm` identifies the true substrate.
+- `verifier_is_oracle`: True records that exact solvers define labels and forbid a verifier-moat claim.
+- `field_provenance`: Every aggregate traces to rows, solver receipts, or sealed manifests.
+- `test_commands`: Commands document counts, exactness, sealing, leakage, and replay tests.
+- `test_exit_codes`: Exit codes prevent a failed generator from appearing ready.
+- `reproducibility_checksum`: A checksum detects later row, manifest, or generator drift.
+- `honest_verdict`: A `complete:` or `blocked:` prefix makes collection terminal.
+
+### SCENARIO-LEARN-5826-STREAM: Chronological Rows Are Balanced And Sealed
+
+**Given** clean Exp5825, Exp5761, Exp5762, and Exp5785 upstream artifacts
+**When** Exp5826 builds its row stream
+**Then** every predeclared family/change cell has at least 30 science units
+**And** addition, supersession, and recurrence occur in each family's declared
+chronological order
+**And** row-file hashes, parent-state hashes, protected-prefix receipts, and
+sealed future suffix receipts replay exactly.
+
+### SCENARIO-LEARN-5826-OUT-OF-TEMPLATE: Targets Are Machine-Checked Outside Exp5762
+
+**Given** the Exp5762 frozen candidate-template relation signatures
+**When** Exp5826 constructs target constraints
+**Then** every target emits a normalized relation/arity/composition signature
+absent from that frozen library
+**And** readiness remains `0.0` if any target is expressible by the library.
+
+### SCENARIO-LEARN-5826-FAIL-CLOSED: Blocked Preconditions Or Leakage Cannot Look Ready
+
+**Given** missing upstream evidence, failed exact validators, missing test exit
+codes, row-hash mismatch, exposed future labels, or ground-truth structure in a
+learner-facing row
+**When** Exp5826 validates the artifact
+**Then** `constraint_event_stream_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`.
+
+## Implementation Status (Exp 5826)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5826 | Implemented (`python/carnot/experiment_5826_out_of_template_constraint_stream.py`, `results/experiment_5826_out_of_template_constraint_stream.json`) | Implemented (`tests/python/test_experiment_5826_out_of_template_constraint_stream.py`) |
