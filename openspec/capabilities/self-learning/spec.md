@@ -24853,3 +24853,155 @@ mutation, failed contract validation, or a flagged live verifier receipt
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5856 | Implemented (`python/carnot/experiment_5856_provenance_correct_lifecycle.py`, `results/experiment_5856_provenance_correct_lifecycle.json`, `results/experiment_5856_provenance_correct_lifecycle.rows.jsonl`) | Implemented (`tests/python/test_experiment_5856_provenance_correct_lifecycle.py`) |
+
+## REQ-LEARN-5857: Clean-Lifecycle Transfer-Selective Replay Requalification
+
+The self-learning tier SHALL provide Exp5857, a deterministic exact-replay
+requalification of transfer-selective replay at
+`python/carnot/experiment_5857_clean_transfer_selective_replay.py` that consumes
+the clean Exp5856 lifecycle artifact and row receipts, hashes Exp5829 only as
+comparison evidence, and writes
+`results/experiment_5857_clean_transfer_selective_replay.json`. Exp5857 SHALL
+use the substrate `deterministic_exact_verifier_and_replay_no_llm` and
+`verifier_is_oracle=true`. It SHALL recompute all metrics from clean Exp5856
+rows and new replay receipts rather than importing Exp5829 aggregate decisions.
+
+Before scoring, Exp5857 SHALL replay the Exp5856 ready gate, hash the Exp5856
+aggregate, Exp5856 row receipts, Exp5856 state/restart manifests, Exp5829
+comparison artifact, frozen signature definitions, exact validators, split
+definitions, seed manifests, this module, this test, OpenSpec text, live
+adversarial verifier, and root-clutter guard. It SHALL verify per-family and
+per-hardness headroom counts, RAM, disk, monotonic timer, and a writable atomic
+result path. A missing, malformed, unsafe, stale, unbalanced, resource-failed,
+or unwritable precondition SHALL emit a terminal blocked artifact with
+`selective_replay_qualified_score=0.0`.
+
+Exp5857 SHALL freeze signature computation and compatible/incompatible
+thresholds before science scoring. The signature rule SHALL be label-blind: it
+may use only row-visible structural receipt fields from Exp5856 such as event
+count, state count, membership-query count, future-suffix candidate count,
+hardness bin, surface, source split, and sealed receipt/rule hashes. It SHALL
+NOT derive compatibility from future labels, row IDs, family labels, chronology
+positions, replay outcomes, or post-hoc metric improvements.
+
+Exp5857 SHALL replay identical chronological events under exactly three arms:
+`no_replay`, `all_replay`, and `signature_compatible_replay`. Each arm SHALL
+receive identical current evidence, event budget, memory budget, cap,
+checkpoint/restart rules, validator authority, scorer, and seeds. Replay rows
+SHALL be prior chronological rows only. All-replay and compatible-replay arms
+SHALL report their selected replay rows and incompatible event counts under the
+same per-task event cap so selection value is isolated from resource budgets.
+
+Exp5857 SHALL report forward transfer, recurrence recovery,
+protected-prefix retention, easy/medium/hard strata, family lower bounds,
+incompatible negative transfer, unsafe transfer, replay precision/recall, state
+size, cap pressure, and restart equivalence separately. Compatible replay SHALL
+be credited only when it has positive prospective lower bounds over both
+no-replay and all-replay controls, no hard-case or family negative lower bound,
+zero unsafe transfers, exact protected-prefix retention, exact restart
+equivalence, and bounded resources.
+
+Exp5857 SHALL run signature permutation, collision injection, all-compatible,
+none-compatible, and duplicate-row controls. Broken selectors SHALL NOT retain
+the claimed positive lower-bound pattern. A compatibility rule derived from
+future labels SHALL be forbidden and SHALL fail validation. A complete clean
+null SHALL be reported honestly rather than promoted.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`clean_lifecycle_hashes`, `frozen_signature_definition`,
+`replay_arm_definitions_and_budget_parity`, `forward_transfer_and_recurrence`,
+`protected_prefix_and_hard_case_results`,
+`family_lower_bounds_and_group_bootstraps`,
+`incompatible_negative_transfer`,
+`signature_permutation_collision_and_null_controls`,
+`unsafe_transfer_count`, `replay_resource_accounting`,
+`restart_equivalence`, `selective_replay_qualified_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal replay state distinguishes qualification from a clean null.
+- `preconditions_checked`: Gate, hashes, signatures, validators, splits, seeds, counts, and resources prevent invalid replay.
+- `clean_lifecycle_hashes`: Replay can inherit only verifier-clean lifecycle evidence.
+- `frozen_signature_definition`: Compatibility cannot be tuned on future outcomes.
+- `replay_arm_definitions_and_budget_parity`: Equal memory and event budgets isolate selection value.
+- `forward_transfer_and_recurrence`: New-task benefit and returning-task recovery are distinct objectives.
+- `protected_prefix_and_hard_case_results`: Average transfer cannot hide forgetting or hard-case harm.
+- `family_lower_bounds_and_group_bootstraps`: Each family and event group owns its lower bound.
+- `incompatible_negative_transfer`: Wrong transfer must be measured directly.
+- `signature_permutation_collision_and_null_controls`: Broken selectors must not retain the claimed benefit.
+- `unsafe_transfer_count`: Any unsafe promoted transfer blocks qualification.
+- `replay_resource_accounting`: Selective replay must remain bounded.
+- `restart_equivalence`: Serialized replay state must reproduce exactly.
+- `selective_replay_qualified_score`: EMIT BARE scalar; only 1.0 permits Exp5858.
+- `duration_s`: Measured deterministic replay time exposes bootstrap-only work.
+- `inference_substrate`: `deterministic_exact_verifier_and_replay_no_llm` declares the true path.
+- `verifier_is_oracle`: True records exact outcome authority.
+- `field_provenance`: Every metric traces to events, selections, validators, state, and controls.
+- `test_commands`: Commands document parity, transfer, retention, controls, resources, and restart.
+- `test_exit_codes`: Exit codes prevent failed replay checks becoming qualification.
+- `reproducibility_checksum`: A checksum detects signature, event, split, seed, or state drift.
+- `honest_verdict`: A terminal prefix states qualified, null, unsafe, or blocked outcome.
+
+`selective_replay_qualified_score` SHALL be the bare scalar `1.0` only when
+Exp5856 is clean and ready, every required test exit code is zero, compatible
+replay has positive prospective lower bounds over both controls, every family
+and hardness lower bound is non-negative with the family aggregate positive,
+unsafe transfers are zero, protected-prefix retention and restart equivalence
+are exactly `1.0`, and resource cap pressure is bounded. Otherwise it SHALL be
+the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5857-CLEAN-GATE: Clean Lifecycle Preconditions Are Replayed
+
+**Given** Exp5856 aggregate and row receipts are present and Exp5829 is only
+comparison evidence
+**When** Exp5857 checks preconditions
+**Then** it replays the Exp5856 ready gate, hashes lifecycle rows, validators,
+splits, seeds, signature definitions, state manifests, resources, and atomic
+outputs
+**And** failed clean-lifecycle or resource evidence blocks qualification.
+
+### SCENARIO-LEARN-5857-SIGNATURE-FREEZE: Compatibility Is Prospective
+
+**Given** clean Exp5856 rows with sealed future evidence
+**When** Exp5857 freezes signatures and thresholds before replay scoring
+**Then** the rule uses only label-blind row-visible structural receipt fields
+**And** any future-label, family-label, row-ID, chronology, or metric-derived
+selector fails validation.
+
+### SCENARIO-LEARN-5857-THREE-ARMS: Replay Budgets Are Matched
+
+**Given** no-replay, all-replay, and signature-compatible replay arms
+**When** Exp5857 replays chronological events
+**Then** the arms share current evidence, event budget, memory budget, seeds,
+cap, validator, scorer, and checkpoint/restart rules
+**And** all selected replay rows are prior chronological rows.
+
+### SCENARIO-LEARN-5857-DISAGGREGATED-METRICS: Transfer Cannot Hide Harm
+
+**Given** family groups, hardness strata, protected prefixes, recurrence rows,
+and incompatible replay selections
+**When** Exp5857 computes replay metrics
+**Then** forward transfer, recurrence recovery, prefix retention, hard-case
+retention, family lower bounds, incompatible negative transfer, unsafe transfer,
+precision/recall, state size, cap pressure, and restart equivalence are reported
+separately
+**And** compatible replay credit requires positive lower bounds over both
+controls with no family or hard-case negative lower bound.
+
+### SCENARIO-LEARN-5857-CONTROLS: Broken Selectors Fail Closed
+
+**Given** signature permutation, collision injection, all-compatible,
+none-compatible, duplicate-row, and future-label-derived selector controls
+**When** Exp5857 validates the artifact
+**Then** broken selectors do not retain the claimed benefit
+**And** future-label-derived compatibility, unsafe transfer, failed tests, or
+restart/resource mismatch forces `selective_replay_qualified_score=0.0`.
+
+## Implementation Status (Exp 5857)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5857 | Implemented (`python/carnot/experiment_5857_clean_transfer_selective_replay.py`, `results/experiment_5857_clean_transfer_selective_replay.json`) | Implemented (`tests/python/test_experiment_5857_clean_transfer_selective_replay.py`) |
