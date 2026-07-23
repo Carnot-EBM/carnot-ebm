@@ -141,3 +141,45 @@ component that translates under directional actions — that is the player token
 first-class entity the goal-hypothesizer must reference). Filed as `GAP-ARC-PERCEPTION-HUD-VS-BOARD` in
 `ops/verifier_gaps.md`. This independently corroborates `project_arc_live_agent_learning_gaps` (perception is
 the binding constraint) — now confirmed to still hold at 31B + the full leaderboard-winner recipe.
+
+## Counterfactual: oracle perception flips goal induction from 0/8 to 7/8 (REQ-ARC-WMTE-5832)
+
+Before building perception detectors, I tested whether the named lever pays off. The oracle-perception
+ablation hands the same gemma-4-31B the *correct entities* (what a perfect detector would output — presence
+and role only, never the goal) and measures whether its goal hypothesis flips. Same model, same learned
+RULES per game (held constant — testing perception, not rule-learning), three conditions: A = naive (only
+the HUD/decoy the segmentation actually surfaced), B = +true entities (HUD not labeled), C = oracle (entities
++ HUD explicitly identified as a non-goal counter). Result
+(`results/outer_loop_arc_oracle_perception_goal_ablation_20260723.json`):
+
+| condition | correct | partial | wrong |
+|-----------|---------|---------|-------|
+| A naive   | 0/8     | 0       | 8/8   |
+| B +entities | 6/8   | 1 (lf52)| 1 (bp35) |
+| C oracle  | **7/8** | 1 (lf52)| 0     |
+
+Examples (A → C): tu93 "consume all value-6 cells" (the LOSE condition) → **"move the player token to the
+exit block"** (exact); ls20 "recolor floor 3/5→12" → **"move the avatar to a goal-pad while matching its
+required shape, color, and rotation"**; bp35 "fill row 63 with color-15" (the anti-goal) → **"reach the
+gem"**; r11l/ft09 (the dynamics / hypothesis-coverage contrast cases) also flipped to their true goals.
+
+**Conclusion: the goal-hypothesis generator is not the bottleneck.** A fluent 31B produces the true win
+condition the instant perception delivers the right entities. The entire wall is upstream perception —
+exactly as the source-grounded diagnosis said.
+
+**Both halves of the fix are load-bearing.** bp35 flipped only under C, not B: adding the player/gem entities
+was *not* enough; you also had to identify the row-63 bar as a lose-timer. So the detector work is two
+pieces: (a) a **mover/entity detector** (surface the player token — the component that translates under
+directional actions — and the distinct target/exit tiles), and (b) a **HUD-register detector** (mask the
+monotone every-action band so it stops dominating perception).
+
+**Honest scope.** This measures goal-hypothesis correctness, not level discovery. The right goal is necessary
+but not sufficient — the agent still has to *execute* it, which needs the dynamics/action model (bp35 gravity,
+r11l two-click select-then-move remain execution gaps even with the correct goal). Single temperature (0.3),
+2 seeds, goals highly stable; small n (8 games). Oracle facts were hand-authored from source (offline dev,
+authorized; never in the hidden submission) — a real detector must produce them autonomously from frames,
+which is the build this ablation justifies.
+
+**Next build (evidence-backed):** the mover/entity detector + HUD-register detector on the live E3 path,
+gated by re-running this goal-hypothesis measurement under *detector-produced* perception (not hand-authored)
+to confirm it recovers the ~7/8 goal-correctness.

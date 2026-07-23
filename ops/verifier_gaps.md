@@ -2593,8 +2593,25 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   `GAP-ARC-PERCEPTION-HUD-VS-BOARD` below.
 
 ### GAP-ARC-PERCEPTION-HUD-VS-BOARD: perception fixates on the HUD/budget-bar, never represents the real game entities
-- status: open
+- status: open (CONFIRMED as the lever by a counterfactual — see below)
 - priority: high (the evidence-backed #1 ARC lever as of 2026-07-23, ahead of goal machinery)
+- **CONFIRMED BY COUNTERFACTUAL 2026-07-23 (REQ-ARC-WMTE-5832, oracle-perception goal ablation,
+  `results/outer_loop_arc_oracle_perception_goal_ablation_20260723.json`).** Before building the detectors,
+  we tested the decisive question: if we HAND the same gemma-4-31B the correct entities (what a perfect
+  detector would output — entity presence/role ONLY, never the goal), does its goal hypothesis flip? Same
+  model, same learned RULES per game, 3 perception conditions. Result: **A (naive) 0/8 correct** (replicates
+  the 8/8-never-hypothesized diagnosis); **C (oracle: entities + HUD labeled) 7/8 correct + 1/8 partial
+  (lf52), 0 wrong.** tu93 "Move the PLAYER token to the EXIT block" (exact; naive was the LOSE condition);
+  ls20 recovered the shape/color/rotation attribute-matching; bp35 flipped to "reach the GEM"; r11l/ft09
+  (the dynamics/hypothesis-coverage contrast cases) ALSO flipped. **So the goal-hypothesis generator is NOT
+  the bottleneck — it produces the true win condition the instant perception delivers the right entities.
+  The wall is entirely upstream perception.** KEY SECONDARY FINDING: bp35 flipped ONLY under C, not under B
+  (entities added but HUD not labeled) — i.e. surfacing the player/gem was NOT enough; you ALSO had to
+  identify the row-63 bar as a lose-timer. **Both halves of the fix are load-bearing: (a) surface the real
+  entities AND (b) suppress/label the every-action HUD register.** This justifies building the two detectors
+  below. HONEST SCOPE: this measures GOAL-HYPOTHESIS correctness, not level DISCOVERY — the right goal is
+  necessary but not sufficient; execution still needs the dynamics/action model (bp35 gravity, r11l two-click
+  remain execution gaps even with the correct goal). Note `arc-winner-recipe-reproduction-2026-07-23.md`.
 - evidence: REQ-ARC-WMTE-5831 source-grounded diagnosis
   (`results/outer_loop_arc_goal_hypothesis_coverage_diagnosis_20260723.json`): across 8 public games, a
   gemma-4-31B agent with object-segmentation perception + reflection memory + a working goal verifier
