@@ -59,6 +59,7 @@ class GreedyDirectResult:
     wall_s: float
     transcript_sample: list[str] = field(default_factory=list)
     final_notes: str = ""
+    goal_verifier_stats: Optional[dict] = None
 
 
 def _complete(
@@ -100,6 +101,7 @@ _ORIENT_FRAME = (
     "indices into THIS grid:\n{grid}\n"
     "Available actions this frame: {avail}\n"
     "LEARNED NOTES (your evolving understanding of THIS game -- authoritative but revisable):\n{notes}\n"
+    "{falsified}"
     "Recent (your last moves -> observed effect):\n{recent}\n"
     "EXPLORE to find what the game responds to: if an action in your history shows 'no change', do "
     "NOT repeat it -- try a DIFFERENT action id or a DIFFERENT location. Vary moves vs clicks.\n"
@@ -124,6 +126,7 @@ _ORIENT_FRAME_OBJ = (
     "uniform background is omitted) are:\n{objects}\n"
     "Available actions this frame: {avail}\n"
     "LEARNED NOTES (your evolving understanding of THIS game -- authoritative but revisable):\n{notes}\n"
+    "{falsified}"
     "Recent (your last moves -> observed effect):\n{recent}\n"
     "EXPLORE to find what the game responds to: if an action in your history shows 'no change', do NOT "
     "repeat it -- try a DIFFERENT object or a move. Vary moves (1-4) vs clicks (6).\n"
@@ -185,11 +188,27 @@ _REFLECT_TOKENS = 300
 _NOTES_MAX_CHARS = 1200
 
 
-def reflect(proposer: Any, notes: str, recent: list[str], *, seed: Optional[int] = None) -> str:
+def reflect(
+    proposer: Any,
+    notes: str,
+    recent: list[str],
+    *,
+    seed: Optional[int] = None,
+    falsified_feedback: str = "",
+) -> str:
     """Rewrite the persistent game notes from accumulated play (Reki/forge's reflection). Primed with
-    'RULES:' so gemma writes the notes directly instead of derailing into its reasoning channel."""
+    'RULES:' so gemma writes the notes directly instead of derailing into its reasoning channel.
+    `falsified_feedback` (v4): the goal-verifier's list of REJECTED goal hypotheses, so the rewrite
+    picks a DIFFERENT goal instead of restating a falsified one."""
+    reflect_note = ""
+    if falsified_feedback:
+        reflect_note = (
+            "\nIMPORTANT -- "
+            + falsified_feedback
+            + " Your rewritten GOAL must be DIFFERENT from these.\n"
+        )
     prompt = _REFLECT_FRAME.format(
-        notes=notes or "(none yet)", recent="\n".join(recent[-20:]) or "(none yet)"
+        notes=(notes or "(none yet)") + reflect_note, recent="\n".join(recent[-20:]) or "(none yet)"
     )
     ok, text = _complete(
         proposer, prompt + "RULES:", max_tokens=_REFLECT_TOKENS, stop=["\n\n\n"], seed=seed
@@ -269,6 +288,7 @@ def decide_sequence(
     seed: Optional[int] = None,
     perception: str = "grid",
     notes: str = "",
+    falsified: str = "",
 ) -> tuple[list[dict], list[str]]:
     """One decision: up to `max_turns` tool-inspection turns, then a committed action sequence (in
     LOGICAL grid coords for clicks). Returns (sequence, transcript). `perception`: "grid" (raw hex,
@@ -287,6 +307,7 @@ def decide_sequence(
             w=w,
             avail=avail,
             notes=notes or "(none yet -- explore to learn the game)",
+            falsified=(falsified + "\n") if falsified else "",
             recent="\n".join(recent[-6:]) or "(none yet)",
             urgency=_URGENCY if remaining <= _URGENCY_TURNS else "",
             remaining=remaining,
@@ -344,11 +365,17 @@ def run_greedy_direct(
     arcade: Any = None,
     perception: str = "grid",
     reflection_interval: int = 0,
+    goal_verify: bool = False,
 ) -> GreedyDirectResult:
     """The Duck-Harness-style greedy-direct loop against the offline arcade (adapter-free, no search).
     `perception`: "grid" (raw hex, v1) or "objects" (winner-style segmentation view, v2).
     `reflection_interval` (v3): if >0, the model rewrites its persistent notes every N actions
-    (Reki/forge's reflection memory), re-injected into every decision. 0 disables it."""
+    (Reki/forge's reflection memory), re-injected into every decision. 0 disables it.
+    `goal_verify` (v4, REQ-ARC-WMTE-5830): if True (requires reflection), the GoalVerifier falsifies a
+    goal hypothesis when it is pursued with real activity but the level counter never advances, and
+    feeds the rejected goals back so the model hypothesizes a DIFFERENT win condition -- the goal
+    VERIFIER the winner recipe lacks."""
+    from carnot.agentic.arc_goal_verifier import GoalVerifier, extract_goal
     from arcengine import GameAction
     from carnot.agentic.arc_agi3_live_adapter import (
         _game_action,
@@ -368,6 +395,7 @@ def run_greedy_direct(
     max_level = start_level
     recent: list[str] = []
     notes = ""
+    gv = GoalVerifier() if goal_verify else None
     actions_at_last_reflect = 0
     actions_taken = 0
     orientations = 0
@@ -383,8 +411,20 @@ def run_greedy_direct(
             reflection_interval > 0
             and actions_taken - actions_at_last_reflect >= reflection_interval
         ):
-            notes = reflect(proposer, notes, recent, seed=(seed + actions_taken if seed else None))
+            # v4: BEFORE re-reflecting, let the goal verifier falsify the goal that was just pursued
+            # (pursued with real activity but no level-up) so the rewrite must pick a DIFFERENT goal.
+            if gv is not None and gv.maybe_falsify():
+                transcript_sample.append(f"[falsified@{actions_taken}] {gv.current_goal[:120]}")
+            notes = reflect(
+                proposer,
+                notes,
+                recent,
+                seed=(seed + actions_taken if seed else None),
+                falsified_feedback=(gv.feedback() if gv is not None else ""),
+            )
             actions_at_last_reflect = actions_taken
+            if gv is not None:
+                gv.set_goal(extract_goal(notes))
             if orientations <= 3 or (orientations % 20 == 0):
                 transcript_sample.append(f"[reflect@{actions_taken}] {notes[:180]}")
         seq, transcript = decide_sequence(
@@ -397,6 +437,7 @@ def run_greedy_direct(
             seed=seed,
             perception=perception,
             notes=notes,
+            falsified=(gv.feedback() if gv is not None else ""),
         )
         orientations += 1
         if orientations <= 3:
@@ -425,7 +466,10 @@ def run_greedy_direct(
             coord = f" ({step.get('x')},{step.get('y')})" if aid == 6 else ""
             recent.append(f"{aid}{coord} -> {delta}")
             lvl = frame_level(frame)
-            if lvl > max_level:
+            leveled = lvl > max_level
+            if gv is not None:
+                gv.observe(frame_changed=(delta not in ("no change", "?")), leveled_up=leveled)
+            if leveled:
                 max_level = lvl
                 recent.append(f"** LEVEL UP -> L{lvl} **")
                 break  # re-orient on progress
@@ -441,4 +485,5 @@ def run_greedy_direct(
         wall_s=round(time.time() - t0, 1),
         transcript_sample=transcript_sample,
         final_notes=notes,
+        goal_verifier_stats=(gv.stats() if gv is not None else None),
     )
