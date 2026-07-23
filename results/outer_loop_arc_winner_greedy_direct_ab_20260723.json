@@ -9,82 +9,47 @@
       {
         "actions_taken": 64,
         "error": null,
-        "final_notes": "RULES: Action 6 at (x, 63) or (63, y) sets cell (63, y) to 15.\nGOAL: Fill column 63 with 15s.\nPROGRESS: Indices 0 through 39 of column 63 are filled.\nAVOID: None.\n\nWait, looking at thes recent moves, I see that 6 (42,63) -> (63,42)0->15.\nThis means action 6 at (x, 63) sets cell (63, x) to 15.\nAnd 6 (63, y) sets cell (63, y) to 15.\nSo to fill (63, y), you can use action 6 at either (63, y) or (y, 63).\n\nRULES: Action 6 at (63, y) or (y, 63) sets cell (63, y) to 15.\nGOAL: Fill column 63 with 15s.\nPROGRESS: Indices 0 through 49 of column 63 are filled.\nAVOID: None.",
         "game": "bp35",
         "game_over": true,
-        "goal_verifier_stats": {
-          "current_goal": "Fill column 63 with 15s.",
-          "falsified_goals": [],
-          "goal_switches": 3,
-          "supported_goals": []
-        },
-        "levels_gained": 0,
-        "orientations": 56,
-        "reached_level": 0,
-        "transcript_sample": [
-          "orient#1: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
-          "orient#2: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
-          "orient#3: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 38}]",
-          "[reflect@20] RULES: Action 6 at (x,y) targets (63, z) and changes value from 0 to 15.\nGOAL: Fill the column at x=63 with values of 15.\nPROGRESS: Filled indices 0 through 19 of column 63.\nAVOID:",
-          "[reflect@40] RULES: Action 6 at (x, 63) or (63, y) sets cell (63, y) to 15.\nGOAL: Fill column 63 with 15s.\nPROGRESS: Indices 0 through 39 of column 63 are filled.\nAVOID: None."
-        ],
-        "wall_s": 163.5
-      },
-      {
-        "actions_taken": 64,
-        "error": null,
-        "final_notes": "RULES: Action 6 at (x,y) sets cell (0,z) to state 1.\nGOAL: Set all grid cells to state 1.\nPROGRESS: Cells (0,0) through (0,59) are state 1.\nAVOID: None.",
-        "game": "lf52",
-        "game_over": true,
-        "goal_verifier_stats": {
-          "current_goal": "Set all grid cells to state 1.",
-          "falsified_goals": [],
-          "goal_switches": 3,
-          "supported_goals": []
-        },
         "levels_gained": 0,
         "orientations": 64,
         "reached_level": 0,
         "transcript_sample": [
-          "orient#1: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
-          "orient#2: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
-          "orient#3: [t0] COMMIT [{'a': 6, 'x': 34, 'y': 28}]",
-          "[reflect@20] RULES: Action 6 at specific coordinates triggers state changes (0->1) at various grid locations (0,0) through (0,19).\nGOAL: Change all grid cells to state 1.\nPROGRESS: (0,0) throug",
-          "[reflect@40] RULES: Action 6 at (21,30) -> (0,10); (36,50) -> (0,11); (50,39) -> (0,12)-(0,17), (0,20)-(0,21), (0,25), (0,27); (42,50) -> (0,18)-(0,19); (34,28) -> (0,22)-(0,39).\nGOAL: Set all ",
-          "[reflect@60] RULES: Action 6 at (x,y) sets cell (0,z) to state 1.\nGOAL: Set all grid cells to state 1.\nPROGRESS: Cells (0,0) through (0,59) are state 1.\nAVOID: None."
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 16, 'y': 40}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 17, 'y': 41}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 17, 'y': 41}]"
         ],
-        "wall_s": 273.2
+        "wall_s": 978.0
       },
       {
-        "actions_taken": 93,
+        "actions_taken": 64,
         "error": null,
-        "final_notes": "RULES: 6 (30,55) toggles values between 2 and 14 in block (54,29) to (55,31) and clears values (14->0) in cells around (x,62)\nGOAL: Clear all 14s from the grid.\nGOAL: Set all cells in block (54,29) to (55,31) to 14.\ns\nPROGRESS: Ruled out maximizing specific cells.\nAVOID: 6 (13,20), 6 (62,58), 6 (62,26), 6 (29,20), 6 (62,62)",
-        "game": "sc25",
+        "game": "lf52",
         "game_over": true,
-        "goal_verifier_stats": {
-          "current_goal": "Clear all 14s from the grid.",
-          "falsified_goals": [
-            "Cycle values to maximize specific cells."
-          ],
-          "goal_switches": 4,
-          "supported_goals": []
-        },
         "levels_gained": 0,
-        "orientations": 93,
+        "orientations": 64,
         "reached_level": 0,
         "transcript_sample": [
-          "orient#1: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
-          "orient#2: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
-          "orient#3: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 20}]",
-          "[reflect@20] RULES: \nGOAL: \nPROGRESS: \nPROGRESS: \nAVOID: \n(Wait, the a reason for the prompt is that it is queatially owny own notes. only provide the prompt's headings)\n\nRULES: \nGOAL: \nPROGRES",
-          "[reflect@40] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values in a sequence of blocks at (0,62)\nGOAL: Cycle values to maximize specific cells.\nPROGRESS: ",
-          "[reflect@60] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values in a sequence of blocks at (0,62)\nRULES: 6 (30,55) toggles values between 2 and 14 in a blo",
-          "[falsified@70] Cycle values to maximize specific cells.",
-          "[falsified@80] Cycle values to maximize specific cells.",
-          "[reflect@80] RULES: 6 (30,55) toggles values between 2 and 14 in a block at (54,29) and clears values in a sequence of blocks at (0,62)\nRULES: 6 (30,55) toggles values between 2 and 14 (54,29) ",
-          "[falsified@90] Cycle values to maximize specific cells."
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 19, 'y': 19}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 19}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 19, 'y': 18}]"
         ],
-        "wall_s": 379.8
+        "wall_s": 529.9
+      },
+      {
+        "actions_taken": 91,
+        "error": null,
+        "game": "sc25",
+        "game_over": true,
+        "levels_gained": 0,
+        "orientations": 91,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 31, 'y': 52}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 30, 'y': 52}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 49}]"
+        ],
+        "wall_s": 833.2
       }
     ]
   },
@@ -99,13 +64,10 @@
       "lf52",
       "sc25"
     ],
-    "goal_verify": true,
     "max_seq": 5,
-    "max_turns": 4,
-    "perception": "objects",
-    "reflection_interval": 10
+    "max_turns": 4
   },
-  "duration_s": 817.1,
+  "duration_s": 2341.7,
   "experiment": "outer_loop_arc_winner_greedy_direct_ab_20260723",
   "honest_verdict": "complete_greedy_direct_gemma31_honest_null_no_discovery_matches_our_stack_zero_baseline",
   "inference_substrate": "live_llm_inference",
