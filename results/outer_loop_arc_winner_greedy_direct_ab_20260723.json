@@ -1,0 +1,88 @@
+{
+  "acceptance_gate": {
+    "condition": "gemma-4-31B greedy-direct discovers >0 levels on a game where our current stack (arc_live_oracle_gap baseline) scores 0",
+    "passed": false,
+    "principle": "The winners top the leaderboard with 27-31B greedy-direct; if a faithful reproduction discovers a level our stack cannot, matching the leaders is validated and justifies switching the submission stack."
+  },
+  "arms": {
+    "gemma31_greedy_direct": [
+      {
+        "actions_taken": 64,
+        "error": null,
+        "game": "bp35",
+        "game_over": true,
+        "levels_gained": 0,
+        "orientations": 64,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 16, 'y': 40}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 17, 'y': 41}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 17, 'y': 41}]"
+        ],
+        "wall_s": 978.0
+      },
+      {
+        "actions_taken": 64,
+        "error": null,
+        "game": "lf52",
+        "game_over": true,
+        "levels_gained": 0,
+        "orientations": 64,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 19, 'y': 19}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 21, 'y': 19}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 19, 'y': 18}]"
+        ],
+        "wall_s": 529.9
+      },
+      {
+        "actions_taken": 91,
+        "error": null,
+        "game": "sc25",
+        "game_over": true,
+        "levels_gained": 0,
+        "orientations": 91,
+        "reached_level": 0,
+        "transcript_sample": [
+          "orient#1: [t0] COMMIT [{'a': 6, 'x': 31, 'y': 52}]",
+          "orient#2: [t0] COMMIT [{'a': 6, 'x': 30, 'y': 52}]",
+          "orient#3: [t0] COMMIT [{'a': 6, 'x': 29, 'y': 49}]"
+        ],
+        "wall_s": 833.2
+      }
+    ]
+  },
+  "baseline_our_stack": {
+    "config": "E3AgentPolicy frame-only 9B (arc_live_oracle_gap.json) + 31B-as-inducer (exp5722)",
+    "levels_on_these_games": 0
+  },
+  "config": {
+    "budget": 120,
+    "games": [
+      "bp35",
+      "lf52",
+      "sc25"
+    ],
+    "max_seq": 5,
+    "max_turns": 4
+  },
+  "duration_s": 2341.7,
+  "experiment": "outer_loop_arc_winner_greedy_direct_ab_20260723",
+  "honest_verdict": "complete_greedy_direct_gemma31_honest_null_no_discovery_matches_our_stack_zero_baseline",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_note": "Real gemma-4-31B-it GGUF (18.3GB Q4) loaded on GPU 1 via LocalGGUFProposer, driving the greedy-direct agent DIRECTLY (no search, no induced world model), adapter-free on the offline arcade -- the winner architecture. Live LLM inference throughout (many /completion calls per game).",
+  "narrative": "Operator directive: match the leaderboard leaders (27-31B, greedy-direct). Tests whether gemma-4-31B used the WINNERS' way (direct greedy action generator) discovers levels where our induce-then-plan stack (9B, and 31B-as-inducer in exp5722) scores 0. First real test of the winner architecture for us -- all prior tests used our own architecture.",
+  "per_game_oracle_levels": {
+    "bp35": 9,
+    "lf52": 10,
+    "sc25": 6
+  },
+  "random_seed": 5829,
+  "reproducibility_checksum": "91b10e3a66d13f1fa9fdef925edc4ced9e792b75199bd478a31fd809d17175ad",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_winner_greedy_direct_ab.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_provenance_note": "adapter-free greedy-direct discovery (the agent picks every action from its own play, no GameAdapter, no banked trajectory).",
+  "target_model": "unsloth/gemma-4-31B-it-GGUF"
+}
