@@ -2547,6 +2547,25 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   recipe lacks and what Carnot's verification-first thesis is built to add.** Oracle-distinct,
   sovereignty-safe, on Carnot's core value proposition. This is the evidence-backed highest-value ARC
   build lever as of 2026-07-23.
+- **BUILT + PARTIALLY VALIDATED 2026-07-23 (REQ-ARC-WMTE-5830, `python/carnot/agentic/arc_goal_verifier.py`,
+  operator directive "build a goal-verifier"):** the goal verifier is implemented and demonstrably WORKS.
+  It falsifies a goal hypothesis against the ONLY ground-truth win signal a hidden-game agent legitimately
+  observes -- the level counter (`verifier_is_oracle=False`: it never reads the win predicate, only whether
+  a level-up fired). Two falsification signals: (a) DEFINITIVE -- the model's own PROGRESS reports it
+  COMPLETED the goal yet no level-up fired (the exact observed bp35 "column 63 filled" failure); (b)
+  activity-count -- pursued with real frame-changes for `goal_patience` actions with no level-up. Wired
+  into the winner greedy-direct agent (`run_greedy_direct(goal_verify=True)`), feeding falsified goals into
+  the reflection + decision prompts. **Measured (v4,
+  `results/outer_loop_arc_winner_greedy_direct_ab_v4goalverify_20260723.json`): the mechanism works -- it
+  falsified the EXACT wrong goals the winner recipe fixated on (bp35 "fill column 63 with 15s", lf52
+  "change all cells to state 1", sc25 two goals) and forced gemma to hypothesize genuinely DIFFERENT win
+  conditions (lf52 jumped to "trigger state changes in rows other than row 0"; 5 goal switches/game).**
+  STILL 0 discovery on bp35/lf52/sc25 at budget 120: the verifier is necessary and correct, but on these
+  hard games (bp35/lf52 hard-cap at ~64 actions) the model's goal-HYPOTHESIS space does not contain the
+  true win condition within budget. **Remaining gap: hypothesis COVERAGE + budget, NOT the verifier.**
+  Status: verifier BUILT + mechanically validated; needs a broader/easier-game sweep, larger budgets where
+  the game allows, or richer hypothesis generation to demonstrate an actual discovery. 38 unit tests; spec
+  REQ-ARC-WMTE-5830; research note `arc-winner-recipe-reproduction-2026-07-23.md`.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
