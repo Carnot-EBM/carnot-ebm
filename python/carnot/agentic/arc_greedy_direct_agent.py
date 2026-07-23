@@ -195,11 +195,14 @@ def reflect(
     *,
     seed: Optional[int] = None,
     falsified_feedback: str = "",
+    perception_correction: str = "",
 ) -> str:
     """Rewrite the persistent game notes from accumulated play (Reki/forge's reflection). Primed with
     'RULES:' so gemma writes the notes directly instead of derailing into its reasoning channel.
     `falsified_feedback` (v4): the goal-verifier's list of REJECTED goal hypotheses, so the rewrite
-    picks a DIFFERENT goal instead of restating a falsified one."""
+    picks a DIFFERENT goal instead of restating a falsified one. `perception_correction` (v5,
+    REQ-ARC-WMTE-5834): the detector-produced re-authored framing (player/target/counters-to-ignore) so the
+    GOAL rewrite is grounded in the real entities, not the HUD the model was fixating on."""
     reflect_note = ""
     if falsified_feedback:
         reflect_note = (
@@ -210,6 +213,8 @@ def reflect(
     prompt = _REFLECT_FRAME.format(
         notes=(notes or "(none yet)") + reflect_note, recent="\n".join(recent[-20:]) or "(none yet)"
     )
+    if perception_correction:
+        prompt = perception_correction + "\n\n" + prompt
     ok, text = _complete(
         proposer, prompt + "RULES:", max_tokens=_REFLECT_TOKENS, stop=["\n\n\n"], seed=seed
     )
@@ -289,10 +294,13 @@ def decide_sequence(
     perception: str = "grid",
     notes: str = "",
     falsified: str = "",
+    perception_correction: str = "",
 ) -> tuple[list[dict], list[str]]:
     """One decision: up to `max_turns` tool-inspection turns, then a committed action sequence (in
     LOGICAL grid coords for clicks). Returns (sequence, transcript). `perception`: "grid" (raw hex,
-    v1) or "objects" (winner-style segmentation view, v2). `notes`: persistent reflection memory (v3)."""
+    v1) or "objects" (winner-style segmentation view, v2). `notes`: persistent reflection memory (v3).
+    `perception_correction` (v5, REQ-ARC-WMTE-5834): the detector-produced re-authored framing, prepended to
+    every decision prompt so the agent acts on the real entities (player/target) and ignores the HUD."""
     h, w = logical.shape if logical.ndim == 2 else (0, 0)
     dispatch = _ToolDispatch(logical, recent, avail)
     transcript: list[str] = []
@@ -320,6 +328,8 @@ def decide_sequence(
     for turn in range(max_turns):
         remaining = max_turns - turn
         base = _prompt(remaining)
+        if perception_correction:
+            base = perception_correction + "\n" + base
         # Ask for one line; if it's a tool call (and turns remain) honor it, else commit an action.
         ok, line = _complete(
             proposer,
@@ -366,6 +376,7 @@ def run_greedy_direct(
     perception: str = "grid",
     reflection_interval: int = 0,
     goal_verify: bool = False,
+    reauthor: bool = False,
 ) -> GreedyDirectResult:
     """The Duck-Harness-style greedy-direct loop against the offline arcade (adapter-free, no search).
     `perception`: "grid" (raw hex, v1) or "objects" (winner-style segmentation view, v2).
@@ -383,6 +394,11 @@ def run_greedy_direct(
         _available_action_ids,
     )
     from carnot.agentic.arc_agi3_world_model import grid_of
+    from carnot.agentic.arc_entity_hud_perception import (
+        Transition,
+        perceive_entities,
+        reauthor_framing,
+    )
     from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
     from carnot.agentic.arc_solver_kit import offline_arcade, frame_level
     from carnot.agentic.arc_llm_guided_solve import _delta_desc
@@ -400,6 +416,8 @@ def run_greedy_direct(
     actions_taken = 0
     orientations = 0
     transcript_sample: list[str] = []
+    transitions: list[Transition] = []  # v5: (before, action, after) for the entity+HUD detectors
+    perception_correction = ""  # v5: the re-authored framing, recomputed each reflection
 
     while actions_taken < action_budget and not _game_over(frame):
         raw = grid_of(frame)
@@ -417,12 +435,22 @@ def run_greedy_direct(
             # activity-count -- pursued with real activity for goal_patience actions with no level-up.
             if gv is not None and (gv.falsify_on_reported_completion(notes) or gv.maybe_falsify()):
                 transcript_sample.append(f"[falsified@{actions_taken}] {gv.current_goal[:120]}")
+            # v5 (REQ-ARC-WMTE-5834): run the entity+HUD detectors on the agent's own transitions and
+            # RE-AUTHOR the framing -- retract HUD-band rules, name the mover's target, override the
+            # counter-fixation -- so the GOAL rewrite (and every subsequent decision) is grounded in the real
+            # entities, not the HUD. Offline this flips the goal-hypothesis gate 0/8 -> 4/8.
+            if reauthor and transitions:
+                percept = perceive_entities(logical, transitions)
+                notes, perception_correction = reauthor_framing(notes, percept)
+                if orientations <= 3 or (orientations % 20 == 0):
+                    transcript_sample.append(f"[reauthor@{actions_taken}] {perception_correction[:180]}")
             notes = reflect(
                 proposer,
                 notes,
                 recent,
                 seed=(seed + actions_taken if seed else None),
                 falsified_feedback=(gv.feedback() if gv is not None else ""),
+                perception_correction=perception_correction,
             )
             actions_at_last_reflect = actions_taken
             if gv is not None:
@@ -440,6 +468,7 @@ def run_greedy_direct(
             perception=perception,
             notes=notes,
             falsified=(gv.feedback() if gv is not None else ""),
+            perception_correction=perception_correction,
         )
         orientations += 1
         if orientations <= 3:
@@ -462,7 +491,19 @@ def run_greedy_direct(
             actions_taken += 1
             new_raw = grid_of(frame)
             try:
-                delta = _delta_desc(to_logical(prev_raw, cell), to_logical(new_raw, cell))
+                before_logical = to_logical(prev_raw, cell)
+                after_logical = to_logical(new_raw, cell)
+                delta = _delta_desc(before_logical, after_logical)
+                if reauthor:  # v5: record the transition for the entity+HUD detectors
+                    transitions.append(
+                        Transition(
+                            before=before_logical,
+                            action=aid,
+                            after=after_logical,
+                            x=step.get("x"),
+                            y=step.get("y"),
+                        )
+                    )
             except Exception:
                 delta = "?"
             coord = f" ({step.get('x')},{step.get('y')})" if aid == 6 else ""
