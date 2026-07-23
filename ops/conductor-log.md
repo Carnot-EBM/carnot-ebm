@@ -14193,3 +14193,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 18:07 UTC | Accepted adaptive operations ABI conformance | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5859_adaptiv |
 | 2026-07-23 19:27 UTC | Accepted adaptive operations ABI conformance | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5859_adaptiv |
 | 2026-07-23 20:05 UTC | Closed-loop visual probing under equal action budg | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-23 20:23 UTC | KV260 PolarFire GateMate physical capability ledge | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5861_attache |
