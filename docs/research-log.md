@@ -5987,7 +5987,7 @@ The critical path for milestone .250:
 - acceptance: no data available this milestone
 
 ### Milestone 2026.07.519
-- exp_range: exp5825-exp5828 (only IDs present in the authoritative timing data; the complete milestone range is not available)
+- exp_range: exp5825-exp5828 (visible-ID bounds only; no complete milestone range is available)
 - theme: incremental freshness handling is the clearest throughput opportunity in a synthesis-heavy closeout
 - key result: bounded operational negative -- no compute-task GPU idle or concurrent multi-model runner miss is established, while coarse modification-time reconstruction cannot explain compute phases
-- acceptance: 4/4 operational questions answered
+- acceptance: no data available this milestone

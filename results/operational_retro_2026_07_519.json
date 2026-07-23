@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.07.519",
-  "generated_at": "2026-07-23T03:42:49Z",
+  "generated_at": "2026-07-23T04:46:05Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 1.2,
   "experiments_completed": 7,
@@ -36,22 +36,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "Seven experiments completed in 1.2 minutes, including two compute-bound tasks. The 0.97-minute synthesis-only freshness receipt was the largest recorded item; the longest named compute-bound item took 0.16 minutes, and the locked task-conditioned GPU-idle flag is false.",
+  "summary": "The milestone completed 7 experiments in 1.2 minutes, with 2 marked compute-bound. The longest listed item was the 0.97-minute synthesis-only freshness receipt; the longest named compute-bound item took 0.16 minutes. The locked task-conditioned indicator reports no compute-bound GPU idle, but task-time utilization efficiency cannot be established from the monitor snapshot.",
   "bottlenecks_identified": [
-    "Freshness-receipt synthesis concentrated most of the observed wall time.",
-    "Disk-mtime reconstruction provides no phase breakdown, so the cause of the longest named compute-bound duration cannot be determined.",
-    "The supplied records do not identify the other compute-bound task or state whether any task loaded multiple models concurrently, leaving runner-selection efficiency unmeasured."
+    "The synthesis-only freshness receipt was the largest observed elapsed item, making incremental freshness handling the clearest recorded throughput opportunity.",
+    "Disk-modification-time reconstruction does not separate queueing, setup, inference, or teardown, so the cause of the named compute-bound duration is unavailable.",
+    "The bounded slowest list names only one compute-bound item even though the locked count shows two; the other compute path cannot be ranked or diagnosed from the supplied evidence.",
+    "No task-level model-concurrency or runner-selection evidence is available, so a missed DualGPURunner engagement cannot be identified."
   ],
   "improvements_suggested": [
-    "Make the freshness receipt content-addressed and incremental so unchanged literature and implementation inputs reuse prior receipts.",
-    "Persist monotonic phase timings in every experiment artifact instead of relying only on disk modification times.",
-    "Record task-time GPU samples and declared model concurrency; choose DualGPURunner only when multiple models are actually loaded in parallel."
+    "Cache freshness inputs by content and reuse unchanged literature and implementation receipts.",
+    "Write monotonic phase timings directly into each experiment artifact instead of depending on disk modification times.",
+    "Attach task-scoped GPU samples, declared model count, and selected runner to each compute artifact; use DualGPURunner only for parallel multi-model loads."
   ],
   "top_3_highest_leverage_actions": [
-    "Add change detection and receipt caching to the freshness scan.",
-    "Emit phase-level start, stop, and elapsed timing with each experiment result.",
-    "Capture model concurrency and task-correlated GPU telemetry for compute-bound work."
+    "Add content-addressed reuse to the freshness-receipt path.",
+    "Persist phase-level timing receipts with every experiment result.",
+    "Record model concurrency, runner choice, and task-correlated GPU telemetry for compute-bound work."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The evidence supports optimizing the synthesis receipt and improving observability, but it does not supply a measured faster-path counterfactual, so no nonzero savings metric is asserted. The idle GPU snapshot is not attributed to compute execution because the locked task-conditioned field is false."
+  "meta_reflection": "The evidence supports better timing and concurrency observability plus freshness-receipt reuse, but it does not support a nonzero savings forecast because no measured faster path is supplied. The idle monitor snapshot is not assigned to compute execution because the locked task-conditioned field is false."
 }
