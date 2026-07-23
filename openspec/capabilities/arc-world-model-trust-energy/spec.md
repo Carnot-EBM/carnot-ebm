@@ -17143,3 +17143,47 @@ the model will not pursue it again.
 **Given** a goal hypothesis under which a level-up fired
 **When** the verifier is asked for its verdict
 **Then** it returns `supported` and never falsifies that goal -- a level-up is decisive positive evidence.
+
+### REQ-ARC-WMTE-5833: Entity + HUD Perception Detectors (the perception fix the goal wall demands)
+
+**Origin:** 2026-07-23, mandated by the REQ-ARC-WMTE-5831 source-grounded diagnosis (perception is the ARC
+wall: on 5/8 games the winner-recipe agent fixated on the every-action HUD/budget-bar and never represented
+the player/exit/target entities) and gated by the REQ-ARC-WMTE-5832 oracle-perception counterfactual (handing
+the model the correct entities flips goal induction 0/8 -> 7/8, and bp35 shows BOTH surfacing entities AND
+suppressing the HUD are necessary). The fix must run off the agent's OWN transitions -- a hidden-game agent
+reads no source and gets no oracle -- so it is oracle-distinct and sovereignty-safe.
+
+`carnot.agentic.arc_entity_hud_perception` SHALL, from a sequence of the agent's own `Transition`
+(before, action, after) observations:
+- `detect_hud_registers` SHALL identify edge rows/columns whose non-background cell count changes
+  MONOTONICALLY (fill or deplete) on MOST frame-changing actions -- the signature of a status counter that
+  advances regardless of where/what you acted -- via a `monotone_ratio` (|net count change| / sum|per-step
+  change|) threshold and a `changed_fraction` threshold, and SHALL NOT flag an interactive board region
+  (which oscillates and only changes when acted upon).
+- `detect_mover` SHALL identify the PLAYER as the non-background color whose blob centroid consistently
+  translates in the DIRECTION of the directional action (1=up 2=down 3=left 4=right) used, requiring a small
+  rigid shift and directional-alignment evidence across at least `min_evidence` transitions; a static object
+  SHALL NOT be selected.
+- `perceive_entities` SHALL compose them: segment the current frame, label/exclude the detected HUD bands,
+  label the detected mover as the PLAYER, and emit a corrected object view (entity presence/role ONLY, never
+  the goal) -- the detector-produced analogue of REQ-ARC-WMTE-5832's hand-authored oracle facts.
+
+### SCENARIO-ARC-WMTE-5833-HUD-FILL
+
+**Given** a play sequence in which the last row fills one counter cell per action while the player moves
+**When** `detect_hud_registers` runs over the transitions
+**Then** it returns a `HudBand` on that row with `direction="fill"`, high `monotone_ratio`, and high
+`changed_fraction`, and does NOT flag the static interactive board region.
+
+### SCENARIO-ARC-WMTE-5833-MOVER
+
+**Given** transitions in which one color's centroid slides with the directional action used
+**When** `detect_mover` runs
+**Then** it returns that color as the player with high alignment, and never selects a static object color.
+
+### SCENARIO-ARC-WMTE-5833-COMPOSE
+
+**Given** a current frame plus the play transitions
+**When** `perceive_entities` runs
+**Then** its text labels the player token, lists the non-HUD objects as candidate targets, and flags the
+HUD band as a counter to ignore for the goal.
