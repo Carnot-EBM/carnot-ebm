@@ -35337,3 +35337,136 @@ unwritable outputs, when Exp5840 validates the terminal artifact, then
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5840 | Planned (`python/carnot/experiment_5840_exact_counterfactual_embedding_fixture.py`, `results/experiment_5840_exact_counterfactual_embedding_fixture.json`) | Planned (`tests/python/test_experiment_5840_exact_counterfactual_embedding_fixture.py`) |
+
+### REQ-VERIFY-5852: Three-Family Paired GGUF Embedding Corpus
+
+The repository SHALL provide Exp5852 at
+`python/carnot/experiment_5852_three_family_paired_embeddings.py` that consumes
+the complete Exp5840 exact counterfactual fixture and writes
+`results/experiment_5852_three_family_paired_embeddings.json` plus
+`results/experiment_5852_three_family_paired_embeddings.rows.jsonl`. Exp5852
+SHALL change the scientific surface from a one-model absolute probe to
+causal paired differences across all three mandated current local GGUF
+families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Before model loading, Exp5852 SHALL require Exp5840
+`counterfactual_fixture_ready_score == 1.0`, hash the Exp5840 JSON artifact,
+JSONL rows, row hash root, split receipts, validator receipts, verification
+spec, module, tests, and protected conductor file, resolve the three mandated
+GGUF files through the canonical cached-SOTA registry, verify embedded GGUF
+tokenizers without `AutoTokenizer`, collect GPU count/VRAM, disk/RAM, llama.cpp
+version, deterministic loader configuration, and atomic checkpoint/output
+paths. If any mandated model, tokenizer, GPU, resource, fixture, or output
+precondition is unavailable, Exp5852 SHALL write a terminal blocked artifact
+with `paired_embedding_corpus_ready_score=0.0`; legacy tiny models MAY appear
+only in smoke-test notes and SHALL NOT satisfy readiness.
+
+Exp5852 SHALL extract output-free final embeddings through a llama.cpp-backed
+`Gemma4QuantizedLoader`-compatible path with deterministic settings. It SHALL
+NOT use transformers-native loading, `AutoTokenizer`, hidden hooks, output
+logits, generated answers, generated text scoring, or label/model identity in
+learner-facing feature columns. For every Exp5840 pair row and each mandated
+model, Exp5852 SHALL preserve the original pair/group/split/source provenance,
+embed both causal members, emit an aligned `condition_b_minus_a` paired
+difference, and keep labels, family names, and model identity outside learned
+feature columns.
+
+Exp5852 SHALL checkpoint by model and row group. Resume SHALL verify the
+fixture hashes, model file hashes, tokenizer receipts, deterministic embedding
+configuration, row-group identity, and existing checkpoint row hashes before
+continuation; mixed-version continuation SHALL be refused. Row order SHALL be
+the exact Exp5840 row order crossed with the mandated model order, and every
+model-row cell SHALL appear exactly once.
+
+Exp5852 SHALL verify finite embedding shapes, consistent dimensions per model,
+no constant dimensions after declared preprocessing, pair completeness, exact
+row order, model-token-count parity after neutral padding, no truncation
+asymmetry, row/model uniqueness, family/axis/model cell completeness, and
+JSONL row-file integrity. The bare
+`paired_embedding_corpus_ready_score` SHALL be `1.0` only when all three
+models, both causal axes, every constraint family, all science groups, every
+Exp5840 row, and every integrity check are complete and clean; otherwise it
+SHALL be `0.0` with an honest terminal verdict.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`model_specs`, `models_used`, `model_file_and_tokenizer_receipts`,
+`gpu_and_loader_receipts`, `upstream_fixture_hashes`,
+`deterministic_embedding_config`, `model_axis_family_cell_counts`,
+`embedding_shape_and_finiteness`, `pair_alignment_receipts`,
+`token_and_truncation_parity`, `checkpoint_resume_receipts`,
+`row_file_receipt`, `paired_embedding_corpus_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal corpus state distinguishes complete extraction from partial checkpoints.
+- `preconditions_checked`: Fixture, model, tokenizer, device, resource, and output checks prevent fallback masquerading.
+- `model_specs`: Exact SOTA hub IDs, paths, hashes, and device assignments make the live surface reproducible.
+- `models_used`: The artifact must explicitly list all three mandated families.
+- `model_file_and_tokenizer_receipts`: Embedded GGUF tokenizer provenance prevents token-ID mismatches.
+- `gpu_and_loader_receipts`: Actual llama.cpp device placement distinguishes live extraction from mock execution.
+- `upstream_fixture_hashes`: Hashes bind embeddings to the clean exact causal corpus.
+- `deterministic_embedding_config`: Identical settings isolate representation differences from decoding randomness.
+- `model_axis_family_cell_counts`: Disaggregated counts prevent a partial family from carrying readiness.
+- `embedding_shape_and_finiteness`: Finite aligned vectors are required before any learned energy.
+- `pair_alignment_receipts`: Every difference must join exact members from the same causal pair.
+- `token_and_truncation_parity`: Length or truncation cannot encode the target.
+- `checkpoint_resume_receipts`: Hash-bound resumes prevent mixed model or data versions.
+- `row_file_receipt`: Path, count, and hash make the full corpus auditable.
+- `paired_embedding_corpus_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5853.
+- `duration_s`: Measured multi-model wall time exposes mock or bootstrap-only execution.
+- `inference_substrate`: `live_llm_embedding_extraction` declares the true compute path.
+- `verifier_is_oracle`: True records exact labels; embeddings are not release authority.
+- `field_provenance`: Every aggregate traces to exact row, model, tokenizer, and device receipts.
+- `test_commands`: Commands document model resolution, extraction, alignment, parity, and schema checks.
+- `test_exit_codes`: Exit codes prevent partial extraction becoming readiness.
+- `reproducibility_checksum`: A checksum detects row, model, split, or configuration drift.
+- `honest_verdict`: A terminal prefix states ready, partial, or blocked outcome.
+
+### SCENARIO-VERIFY-5852-COMPLETE: All Three GGUF Families Produce Aligned Pair Differences
+
+Given Exp5840 is complete, all three mandated GGUF files and embedded
+tokenizers are available, llama.cpp can load output-free final embeddings, and
+GPU/resource/output preconditions pass, when Exp5852 runs, then it writes one
+JSONL model-row cell for every Exp5840 pair crossed with every mandated model,
+embeds both causal members, records finite equal-width vectors and
+`condition_b_minus_a` differences, preserves pair/group row order, records
+model/file/tokenizer/GPU receipts, and sets the bare
+`paired_embedding_corpus_ready_score` to `1.0`.
+
+### SCENARIO-VERIFY-5852-PARITY: Token And Feature Shortcuts Are Blocked
+
+Given Exp5852 prepares model inputs for paired embedding extraction, when it
+validates learner-facing feature columns, then labels, exact family names, and
+model identities are absent from learned feature columns; model-token counts
+are parity matched within every pair after neutral padding; no member is
+truncated asymmetrically; every model-row cell is unique; and no constant
+embedding dimension remains after the declared preprocessing.
+
+### SCENARIO-VERIFY-5852-RESUME: Hash-Bound Checkpoints Cannot Mix Versions
+
+Given a partial Exp5852 checkpoint exists for a model and row group, when
+Exp5852 resumes, then it SHALL compare stored fixture hashes, model file hash,
+tokenizer receipt hash, deterministic embedding configuration hash, and
+row-group hash before accepting checkpoint rows. If any hash differs, the
+resume SHALL be refused and the terminal artifact SHALL remain blocked or
+partial rather than silently mixing fixture or model versions.
+
+### SCENARIO-VERIFY-5852-BLOCKED: Missing Mandated Model Cannot Become Ready
+
+Given any mandated model file, embedded tokenizer, GPU/device receipt, Exp5840
+readiness gate, output path, checkpoint hash, extraction shape, pair alignment,
+token parity, test exit code, or row-file integrity check fails, when Exp5852
+validates the artifact, then `paired_embedding_corpus_ready_score` SHALL be the
+bare scalar `0.0`, `status` SHALL be `blocked` or `partial`, and
+`honest_verdict` SHALL start with `blocked:` or `partial:`.
+
+## Implementation Status (REQ-VERIFY-5852)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5852 | Planned (`python/carnot/experiment_5852_three_family_paired_embeddings.py`, `results/experiment_5852_three_family_paired_embeddings.json`) | Planned (`tests/python/test_experiment_5852_three_family_paired_embeddings.py`) |
