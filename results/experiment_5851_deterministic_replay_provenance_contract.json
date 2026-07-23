@@ -1,0 +1,554 @@
+{
+  "adversarial_verifier_receipt": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5851_deterministic_replay_provenance_contract.json",
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_5851_deterministic_replay_provenance_contract.json",
+    "exit_code": 0,
+    "exp_id": 5851,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "failed: failed_test_exit_codes",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "contract_schema": {
+    "canonical_inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+    "fail_closed": true,
+    "live_inference_min_duration_s": 60.0,
+    "schema": "carnot.experiment_5851.deterministic_replay_provenance_contract.v1",
+    "version": "v1"
+  },
+  "deterministic_replay_contract_ready_score": 0.0,
+  "duration_s": 0.24202,
+  "exp5828_regression_receipt": {
+    "aggregate_metrics_positive": false,
+    "decision": "rejected",
+    "false_compute_markers_detected": [
+      "corrigendum_pending.0.detail:CUDA",
+      "corrigendum_pending.0.detail:GGUF",
+      "corrigendum_pending.0.detail:live model",
+      "corrigendum_pending.1.detail:model_specs",
+      "corrigendum_pending.1.detail:target_model",
+      "field_provenance.model_weight_mutation.principle:GGUF"
+    ],
+    "fixture_name": "unnamed_fixture",
+    "historical_artifact": "results/experiment_5828_future_validated_structural_memory.json",
+    "historical_artifact_hash": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+    "historical_artifact_mutated": false,
+    "historical_corrigendum_pending": [
+      {
+        "detail": "duration_s=0.793358 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "historical_duration_s": 0.793358,
+    "historical_flagged_adversarial": true,
+    "historical_ready_score": 1.0,
+    "historical_status": "complete",
+    "inference_substrate": "online_exact_membership_query_sidecar_no_llm",
+    "missing_exact_replay_fields": [
+      "source_row_hashes",
+      "validator_versions",
+      "deterministic_seeds",
+      "state_hashes",
+      "checkpoint_hashes",
+      "monotonic_timestamps",
+      "measured_duration_s",
+      "restart_receipts",
+      "rollback_receipts"
+    ],
+    "passed": false,
+    "reasons": [
+      "inference_substrate",
+      "live_compute_duration_too_short",
+      "live_compute_requires_model_specs",
+      "missing_exact_replay_fields"
+    ],
+    "receipt_hash": "sha256:47554b883f3524ca0791775ff6702069a6f8596627c0a4962a3bf3bc9056c825",
+    "scientific_row_semantics_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "experiment": 5851,
+  "experiment_id": "experiment_5851_deterministic_replay_provenance_contract",
+  "false_compute_marker_rejection_receipts": [
+    {
+      "aggregate_metrics_positive": true,
+      "decision": "rejected",
+      "false_compute_markers_detected": [
+        "false_compute_claim:CUDA",
+        "false_compute_claim:GGUF",
+        "false_compute_claim:GPU",
+        "false_compute_claim:embedding",
+        "false_compute_claim:generation",
+        "false_compute_claim:live_inference",
+        "false_compute_claim:tokenizer",
+        "model_specs:model_specs",
+        "model_weight_mutation_principle:GGUF"
+      ],
+      "fixture_name": "exp5828_shaped_false_compute_marker",
+      "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+      "missing_exact_replay_fields": [],
+      "passed": false,
+      "reasons": [
+        "forbidden_compute_markers_on_deterministic_substrate"
+      ],
+      "receipt_hash": "sha256:584fad0ad215b87f9792baca9359eb8c06ff9b3d9a69bd59e150a7995e0856f0",
+      "scientific_row_semantics_hash": "sha256:eef0560a06d505dc49f7b8d27185914369eb212c35e3fbcf638d26c9e9766718"
+    },
+    {
+      "aggregate_metrics_positive": true,
+      "decision": "rejected",
+      "false_compute_markers_detected": [],
+      "fixture_name": "aggregate_only_positive_metrics",
+      "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+      "missing_exact_replay_fields": [
+        "source_row_hashes",
+        "validator_versions",
+        "deterministic_seeds",
+        "state_hashes",
+        "checkpoint_hashes",
+        "monotonic_timestamps",
+        "measured_duration_s",
+        "restart_receipts",
+        "rollback_receipts"
+      ],
+      "passed": false,
+      "reasons": [
+        "missing_exact_replay_fields"
+      ],
+      "receipt_hash": "sha256:0bf7c9beda91eb83a4cc4b4aa65fb314c1fcf5b63d14a4266b9dd9e9331b022a",
+      "scientific_row_semantics_hash": "sha256:eef0560a06d505dc49f7b8d27185914369eb212c35e3fbcf638d26c9e9766718"
+    },
+    {
+      "aggregate_metrics_positive": true,
+      "decision": "rejected",
+      "false_compute_markers_detected": [
+        "live_compute_claim:CUDA",
+        "live_compute_claim:GGUF",
+        "live_compute_claim:GPU",
+        "live_compute_claim:embedding",
+        "live_compute_claim:generation",
+        "live_compute_claim:live model",
+        "live_compute_claim:tokenizer"
+      ],
+      "fixture_name": "live_marker_without_methodology",
+      "inference_substrate": "live_llm_inference",
+      "missing_exact_replay_fields": [],
+      "passed": false,
+      "reasons": [
+        "inference_substrate",
+        "live_compute_duration_too_short",
+        "live_compute_requires_model_specs"
+      ],
+      "receipt_hash": "sha256:14e318d07f9aea01316001ed84357d63ea5f9317e38f1d2bc5fdd8fe6865717d",
+      "scientific_row_semantics_hash": "sha256:eef0560a06d505dc49f7b8d27185914369eb212c35e3fbcf638d26c9e9766718"
+    }
+  ],
+  "field_provenance": {
+    "adversarial_verifier_receipt": {
+      "principle": "The live verifier remains terminal artifact authority.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "contract_schema": {
+      "principle": "A versioned schema makes the no-LLM replay boundary explicit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "deterministic_replay_contract_ready_score": {
+      "principle": "EMIT BARE scalar; only 1.0 permits Exp5856.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time is part of substrate honesty.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "exp5828_regression_receipt": {
+      "principle": "The exact historical failure shape anchors the repair.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "false_compute_marker_rejection_receipts": {
+      "principle": "Negative fixtures prove the root failure is mechanically caught.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every contract decision traces to fixtures, code, hashes, or verifier output.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "forbidden_compute_markers": {
+      "principle": "A deterministic replay must not impersonate live model or GPU work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "historical_artifacts_mutated": {
+      "principle": "Must be false; repair cannot unflag or rewrite Exp5828.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix states ready, failed, or blocked outcome honestly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`deterministic_exact_verifier_and_replay_no_llm` is the only allowed value.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "positive_fixture_receipts": {
+      "principle": "Valid deterministic receipts prove the contract is usable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes, timers, resources, and outputs prevent fabricated provenance checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects schema or fixture drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "required_exact_replay_fields": {
+      "principle": "Rows, validators, seeds, state hashes, timing, restart, and rollback are mandatory evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "status": {
+      "principle": "A terminal contract state distinguishes usable validation from partial scaffolding.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document positive, negative, historical, and live-verifier checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed contract tests becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "python/carnot/experiment_5851_deterministic_replay_provenance_contract.py",
+        "tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5839_v519_evidence_qualification.json",
+        "scripts/adversarial_verify.py"
+      ]
+    }
+  },
+  "forbidden_compute_markers": [
+    "model_specs",
+    "target_model",
+    "CUDA",
+    "GPU",
+    "GGUF",
+    "tokenizer",
+    "generation",
+    "embedding",
+    "live_inference",
+    "live-inference",
+    "live model",
+    "live_model"
+  ],
+  "historical_artifacts_mutated": false,
+  "honest_verdict": "failed: failed_test_exit_codes",
+  "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+  "milestone": "2026.07.521",
+  "positive_fixture_receipts": [
+    {
+      "aggregate_metrics_positive": true,
+      "decision": "accepted",
+      "false_compute_markers_detected": [],
+      "fixture_name": "corrected_deterministic_replay_no_llm",
+      "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+      "missing_exact_replay_fields": [],
+      "passed": true,
+      "reasons": [],
+      "receipt_hash": "sha256:6b9fd684d289c48e9f25a395a8a8660de3a0776fa49eff93e66b85b0d445a355",
+      "scientific_row_semantics_hash": "sha256:eef0560a06d505dc49f7b8d27185914369eb212c35e3fbcf638d26c9e9766718"
+    }
+  ],
+  "preconditions_checked": {
+    "atomic_outputs": {
+      "atomic_probe_write_ok": true,
+      "atomic_suffix": ".tmp",
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5851_deterministic_replay_provenance_contract.json",
+      "result_writable": true
+    },
+    "blocked_reasons": [],
+    "corrupt_historical_errors": [],
+    "deterministic_seeds": {
+      "ok": true,
+      "random_seeds": {
+        "base_seed": 5851,
+        "false_marker_fixture_seed": 5851002,
+        "positive_fixture_seed": 5851001,
+        "regression_fixture_seed": 5851003
+      },
+      "seed_manifest_hash": "sha256:a49c4e1f4da54b5542ce4a83c94d4d5b0d92102d4409e106d713a832b4927aae"
+    },
+    "historical_status": {
+      "exp5828": {
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: future_validated_structural_memory_lifecycle_credited",
+        "status": "complete"
+      },
+      "exp5839": {
+        "flagged_adversarial": false,
+        "honest_verdict": "mixed: constraint_stream_and_structural_qualified_lifecycle_and_replay_disqualified",
+        "status": "complete"
+      }
+    },
+    "preconditions_ready": true,
+    "python": {
+      "available": true,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1171137,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 77465,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "run_date": "20260723",
+    "schema": "carnot.experiment_5851.deterministic_replay_provenance_contract.v1.preconditions",
+    "timer_resolution": {
+      "clock": "perf_counter",
+      "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+      "monotonic": true,
+      "ok": true,
+      "resolution_s": 1e-09
+    },
+    "upstream_hashes": {
+      "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+      "exp5826_artifact": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+      "exp5826_rows": "sha256:d0d513b081478be94a9de3df08b33e20a93865a08175bdb4fd3707aed0cc121d",
+      "exp5828_artifact": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+      "exp5828_module": "sha256:35457462598ebe8507e2b0f7dc86c3fc28822d9645fbc112b3318c65148a8363",
+      "exp5839_artifact": "sha256:f9e5449a033b739e40d54568c1b4646c9314815c818e72e1e569c6266e59a170",
+      "exp5839_module": "sha256:3c1231b7d5532e60cbbf095ea77fba9ca1819c1a6bc2fb7911076acb5a66147a",
+      "module": "sha256:408e0607aed78cee5abdf6584a4b19d98990628d2432b642ef2cd430eded669e",
+      "research_reporting_spec": "sha256:de53fe95b082143f79ee40d5a1e0427b78b073770187dcf0f0928c21c3cc5d9d",
+      "self_learning_spec": "sha256:498cdc6723c3b0a47cf9dc5cdc5363524dff3c3b4f8717d1c330c56200198868",
+      "tests": "sha256:5f453470f33ecaad57103e2a589c922e0f65c0882dd7b520f3744a88c3ee2910"
+    }
+  },
+  "random_seed": 5851,
+  "random_seeds": {
+    "base_seed": 5851,
+    "false_marker_fixture_seed": 5851002,
+    "positive_fixture_seed": 5851001,
+    "regression_fixture_seed": 5851003
+  },
+  "reproducibility_checksum": "sha256:6c7f255bc9a54e7bdeac023352113d2b96abd1ff5a087d5cc5dc3d27624389bc",
+  "required_exact_replay_fields": [
+    "source_row_hashes",
+    "validator_versions",
+    "deterministic_seeds",
+    "state_hashes",
+    "checkpoint_hashes",
+    "monotonic_timestamps",
+    "measured_duration_s",
+    "restart_receipts",
+    "rollback_receipts",
+    "inference_substrate"
+  ],
+  "result_path": "results/experiment_5851_deterministic_replay_provenance_contract.json",
+  "run_date": "20260723",
+  "schema": "carnot.experiment_5851.deterministic_replay_provenance_contract.v1",
+  "spec_refs": [
+    "REQ-REPORT-5851",
+    "REQ-LEARN-5851",
+    "SCENARIO-REPORT-5851-POSITIVE",
+    "SCENARIO-REPORT-5851-FALSE-MARKER",
+    "SCENARIO-REPORT-5851-AGGREGATE-BLOCK",
+    "SCENARIO-REPORT-5851-IMMUTABILITY",
+    "SCENARIO-REPORT-5851-SCHEMA",
+    "SCENARIO-LEARN-5851-POSITIVE",
+    "SCENARIO-LEARN-5851-FALSE-MARKER",
+    "SCENARIO-LEARN-5851-IMMUTABLE"
+  ],
+  "status": "failed",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py -m pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py --fail-under=100",
+    ".venv/bin/ruff check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5851_deterministic_replay_provenance_contract.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py -m pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5851_deterministic_replay_provenance_contract.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py": 0
+  }
+}

@@ -45149,3 +45149,114 @@ are present, and the checksum is stable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5850 | Implemented (`python/carnot/experiment_5850_v521_source_delta_ingestion.py`, `results/experiment_5850_v521_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5850_v521_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5851: Deterministic Replay Provenance Contract Fails Closed On False Compute Markers
+
+The Exp5851 workflow SHALL write
+`results/experiment_5851_deterministic_replay_provenance_contract.json` and
+SHALL declare
+`inference_substrate="deterministic_exact_verifier_and_replay_no_llm"`. It
+SHALL validate deterministic lifecycle/replay artifacts using a versioned
+exact-replay receipt rather than a new LLM run. The receipt SHALL require
+source-row hashes, validator versions, deterministic seeds, state hashes,
+checkpoint hashes, monotonic start/end timestamps, measured duration,
+restart receipts, rollback receipts, and the canonical no-LLM replay substrate.
+
+The contract SHALL forbid `model_specs`, `target_model`, CUDA/GPU, GGUF,
+tokenizer, generation, embedding, and live-inference markers on the
+deterministic exact-replay substrate. Conversely, when any such marker appears
+outside the deterministic substrate, validation SHALL require model
+specifications and credible live-inference timing. Strong aggregate lifecycle
+metrics SHALL NOT qualify a receipt when exact replay fields are missing or
+false compute markers are present.
+
+The workflow SHALL include positive deterministic fixtures and negative
+false-compute-marker fixtures. The negative Exp5828-shaped fixture SHALL fail
+for the same root failure as historical Exp5828: a short-duration deterministic
+artifact carrying live-model/CUDA/GGUF-shaped compute markers without model
+specifications. A corrected deterministic fixture with identical scientific row
+semantics SHALL pass after those markers are removed. Historical Exp5828 and
+Exp5839 artifacts SHALL remain byte-for-byte unchanged.
+
+The live `scripts/adversarial_verify.py` verifier SHALL be run against the new
+Exp5851 artifact, and the full receipt SHALL be recorded. The bare scalar
+`deterministic_replay_contract_ready_score` SHALL be `1.0` only if all positive
+fixtures pass, all false-marker fixtures fail, historical artifacts remain
+unchanged, and the live verifier is clean. Otherwise it SHALL be `0.0` with a
+terminal `blocked:` or `failed:` verdict.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`contract_schema`, `required_exact_replay_fields`,
+`forbidden_compute_markers`, `positive_fixture_receipts`,
+`false_compute_marker_rejection_receipts`, `exp5828_regression_receipt`,
+`historical_artifacts_mutated`, `adversarial_verifier_receipt`,
+`deterministic_replay_contract_ready_score`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: principle "A terminal contract state distinguishes usable validation from partial scaffolding."
+- `preconditions_checked`: principle "Hashes, timers, resources, and outputs prevent fabricated provenance checks."
+- `contract_schema`: principle "A versioned schema makes the no-LLM replay boundary explicit."
+- `required_exact_replay_fields`: principle "Rows, validators, seeds, state hashes, timing, restart, and rollback are mandatory evidence."
+- `forbidden_compute_markers`: principle "A deterministic replay must not impersonate live model or GPU work."
+- `positive_fixture_receipts`: principle "Valid deterministic receipts prove the contract is usable."
+- `false_compute_marker_rejection_receipts`: principle "Negative fixtures prove the root failure is mechanically caught."
+- `exp5828_regression_receipt`: principle "The exact historical failure shape anchors the repair."
+- `historical_artifacts_mutated`: principle "Must be false; repair cannot unflag or rewrite Exp5828."
+- `adversarial_verifier_receipt`: principle "The live verifier remains terminal artifact authority."
+- `deterministic_replay_contract_ready_score`: principle "EMIT BARE scalar; only 1.0 permits Exp5856."
+- `duration_s`: principle "Measured wall time is part of substrate honesty."
+- `inference_substrate`: principle "`deterministic_exact_verifier_and_replay_no_llm` is the only allowed value."
+- `field_provenance`: principle "Every contract decision traces to fixtures, code, hashes, or verifier output."
+- `test_commands`: principle "Commands document positive, negative, historical, and live-verifier checks."
+- `test_exit_codes`: principle "Exit codes prevent failed contract tests becoming readiness."
+- `reproducibility_checksum`: principle "A checksum detects schema or fixture drift."
+- `honest_verdict`: principle "A terminal prefix states ready, failed, or blocked outcome honestly."
+
+#### SCENARIO-REPORT-5851-POSITIVE: Deterministic Exact Replay Fixture Passes
+
+**Given** a corrected deterministic replay fixture with source-row hashes,
+validator versions, seeds, state/checkpoint hashes, monotonic timing, restart
+receipts, rollback receipts, and the canonical no-LLM substrate
+**When** the Exp5851 contract validates it
+**Then** the receipt passes and records the decision in
+`positive_fixture_receipts`.
+
+#### SCENARIO-REPORT-5851-FALSE-MARKER: Exp5828-Shaped Markers Are Rejected
+
+**Given** a receipt with Exp5828-shaped strong lifecycle metrics, short
+duration, missing model specifications, and GGUF/CUDA/live-inference markers
+on a deterministic substrate
+**When** the Exp5851 contract validates it
+**Then** the receipt fails for false compute markers and appears in
+`false_compute_marker_rejection_receipts`.
+
+#### SCENARIO-REPORT-5851-AGGREGATE-BLOCK: Positive Metrics Alone Cannot Bless A Receipt
+
+**Given** a receipt with positive aggregate metrics but missing required
+exact-replay fields
+**When** the Exp5851 contract validates it
+**Then** readiness remains `0.0` and the failure cites missing replay evidence.
+
+#### SCENARIO-REPORT-5851-IMMUTABILITY: Historical Artifacts Are Preserved
+
+**Given** Exp5828 and Exp5839 hashes are captured before contract validation
+**When** Exp5851 writes its new artifact
+**Then** Exp5828 and Exp5839 hashes after validation match their before hashes,
+`historical_artifacts_mutated=false`, and Exp5828 remains flagged.
+
+#### SCENARIO-REPORT-5851-SCHEMA: Terminal Artifact Is Auditable
+
+**Given** the Exp5851 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required top-level field has field provenance, the checksum is
+stable, the live adversarial verifier receipt is clean, and the terminal
+verdict starts with `ready:`, `failed:`, or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5851)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5851 | Planned (`python/carnot/experiment_5851_deterministic_replay_provenance_contract.py`, `results/experiment_5851_deterministic_replay_provenance_contract.json`) | Planned (`tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py`) |
