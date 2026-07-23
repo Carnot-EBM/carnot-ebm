@@ -195,40 +195,40 @@ def detect_hud_registers(
     return bands
 
 
-def _largest_blob_per_color(grid: np.ndarray) -> dict[int, ColorBlob]:
-    """The biggest connected component of each color (connected_color_blobs already suppresses huge
-    background fills). Using the LARGEST connected blob -- not the color's global centroid -- is what makes
-    mover detection robust to a scattered non-entity color whose global centroid drifts as cells flicker."""
-    out: dict[int, ColorBlob] = {}
-    for b in connected_color_blobs(grid):
-        cur = out.get(int(b.color))
-        if cur is None or b.pixel_count > cur.pixel_count:
-            out[int(b.color)] = b
-    return out
+def _bounded_color_centroid(
+    grid: np.ndarray, color: int, *, max_area_fraction: float
+) -> Optional[tuple[float, float]]:
+    """Centroid of a color's cells if the color occupies at most `max_area_fraction` of the grid (an
+    entity, not a background-like fill). Global centroid -- not a rigid same-color blob match -- so a
+    MORPHING avatar (ls20 changes color as it moves) stays trackable on the transitions where the color is
+    present in both frames."""
+    ys, xs = np.nonzero(grid == color)
+    n = int(ys.size)
+    if n == 0 or n > max_area_fraction * grid.size:
+        return None
+    return (float(ys.mean()), float(xs.mean()))
 
 
 def detect_mover(
     transitions: list[Transition],
     *,
-    min_evidence: int = 2,
-    align_min: float = 0.5,
+    min_evidence: int = 4,
+    align_min: float = 0.7,
     max_shift: float = 4.0,
     max_area_fraction: float = 0.15,
-    min_density: float = 0.35,
-    size_tol: float = 0.5,
 ) -> Optional[Mover]:
-    """Find the PLAYER: the color whose COMPACT connected blob translates RIGIDLY in the direction of the
-    directional action (1-4) used. For each directional transition we match each non-background color's
-    largest blob before -> after and score how well its centroid shift aligns with the action's unit vector,
-    requiring a small real shift (~1 cell) and a size-preserving match (a rigid slide, not a recolor).
+    """Find the PLAYER: the color whose centroid consistently translates in the direction of the directional
+    action (1-4) used. For each directional transition and each entity-sized non-background color present in
+    both frames, we score how well its centroid shift aligns with the action's unit vector (dot of the unit
+    shift with the unit direction), requiring a small real shift (~1 cell, not a whole-board recolor). The
+    color with the strongest, best-supported alignment is the player.
 
-    Two guards keep a non-entity color from masquerading as the player: (a) `max_area_fraction` excludes a
-    color occupying too much of the grid (a void/background-like region), and (b) `min_density`
-    (pixel_count / bbox_area) requires the blob to be COMPACT -- a real sprite fills its bounding box; a
-    scattered set of flickering cells does not. Measured need: cn04's color-0 void was selected as the mover
-    with alignment 1.0 under a global-centroid rule (its centroid drifts as the board changes); requiring a
-    compact, rigidly-translating connected blob removes it while keeping the sc25/ls20 avatar (a dense
-    sprite)."""
+    Robustness comes from the SIGNAL STRENGTH bar, not a compactness heuristic: a real avatar slides with the
+    keys on nearly every directional action (measured align ~0.9-1.0, evidence 24-43 across sc25/ls20),
+    whereas a scattered non-entity color (cn04's color-0 void) only drifts incidentally (align ~0.55, low
+    evidence). Requiring `align_min`>=0.7 over `min_evidence`>=4 directional transitions keeps the avatars
+    and drops the void, without a density heuristic that mis-rejected real avatars whose color is shared with
+    other cells. Global centroid keeps a morphing avatar trackable."""
     scores: dict[int, list[float]] = {}
     for t in transitions:
         d = _DIR.get(int(t.action))
@@ -239,21 +239,17 @@ def detect_mover(
         if before.shape != after.shape or not _frame_changed(before, after):
             continue
         bg = _background_color(before)
-        area = before.size
         dir_vec = np.asarray(d, dtype=float)
         dir_unit = dir_vec / np.linalg.norm(dir_vec)
-        lb = _largest_blob_per_color(before)
-        la = _largest_blob_per_color(after)
-        for color, bb in lb.items():
-            if color == bg or bb.pixel_count > max_area_fraction * area:
+        for color in np.unique(before):
+            color = int(color)
+            if color == bg:
                 continue
-            bbox_area = bb.height * bb.width
-            if bbox_area <= 0 or (bb.pixel_count / bbox_area) < min_density:
-                continue  # scattered -> not a compact entity (kills the cn04 void FP)
-            ab = la.get(color)
-            if ab is None or abs(ab.pixel_count - bb.pixel_count) > size_tol * bb.pixel_count:
-                continue  # no size-preserving match -> not a rigid slide
-            shift = np.asarray(ab.centroid) - np.asarray(bb.centroid)
+            cb = _bounded_color_centroid(before, color, max_area_fraction=max_area_fraction)
+            ca = _bounded_color_centroid(after, color, max_area_fraction=max_area_fraction)
+            if cb is None or ca is None:
+                continue
+            shift = np.asarray(ca) - np.asarray(cb)
             mag = float(np.linalg.norm(shift))
             if mag < 0.3 or mag > max_shift:
                 continue

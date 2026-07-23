@@ -8,7 +8,7 @@
   "verifier_is_oracle": false,
   "solve_provenance": "development_proxy",
   "random_seed": 5833,
-  "reproducibility_checksum": "sha256:e68bc6df0f530965afed0c10770b816919446162576e53b7f6103147b5791f73",
+  "reproducibility_checksum": "sha256:aebf1de5a766dca0a5a0ecc1224a05d38f6b4d20eddd143233c706b82be3645a",
   "methodology_note": "Offline arcade stepping with a FIXED scripted exploration (deterministic, no LLM). Detectors use ONLY the agent's own observed transitions; source ground truth is used for offline judging only, never fed to the detectors. Public-game frames stepped for offline dev validation (authorized); never in the hidden submission.",
   "per_game": [
     {
@@ -66,15 +66,15 @@
       ],
       "hud_bands": [],
       "mover": {
-        "color": 2,
-        "alignment": 1.0,
-        "evidence": 24
+        "color": 9,
+        "alignment": 0.92,
+        "evidence": 47
       },
       "ground_truth": {
         "hud": "cols ~62/63 (mana/move meter)",
         "player": "yes (avatar moves 1-4)"
       },
-      "perception_text": "PLAYER token (color 2) at row=20 col=29 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=30 col=62 size=120\n  #1 color=9 at row=20 col=13 size=14\n  #2 color=10 at row=20 col=14 size=16\n  #4 color=10 at row=20 col=40 size=8\n  #5 color=9 at row=20 col=42 size=8\n  #6 color=3 at row=55 col=30 size=208\n  #8 color=0 at row=50 col=30 size=9\n  #10 color=3 at row=54 col=16 size=36\n  #12 color=15 at row=52 col=16 size=4\n  #13 color=15 at row=54 col=12 size=4\n  #14 color=15 at row=54 col=18 size=4\n  #15 color=0 at row=55 col=25 size=9"
+      "perception_text": "PLAYER token (color 9) at row=20 col=13 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=30 col=62 size=120\n  #2 color=10 at row=20 col=14 size=16\n  #3 color=2 at row=20 col=29 size=76\n  #4 color=10 at row=20 col=40 size=8\n  #6 color=3 at row=55 col=30 size=208\n  #7 color=2 at row=50 col=25 size=9\n  #8 color=0 at row=50 col=30 size=9\n  #9 color=2 at row=50 col=35 size=9\n  #10 color=3 at row=54 col=16 size=36\n  #11 color=2 at row=54 col=16 size=48\n  #12 color=15 at row=52 col=16 size=4\n  #13 color=15 at row=54 col=12 size=4"
     },
     {
       "game": "tu93",
@@ -115,12 +115,16 @@
           "monotone_ratio": 0.0
         }
       ],
-      "mover": null,
+      "mover": {
+        "color": 9,
+        "alignment": 1.0,
+        "evidence": 59
+      },
       "ground_truth": {
         "hud": "(none prominent)",
         "player": "yes (avatar color ~9 moves 1-4)"
       },
-      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=5 at row=26 col=2 size=208\n  #1 color=3 at row=35 col=35 size=892\n  #2 color=5 at row=12 col=36 size=43\n  #3 color=9 at row=12 col=36 size=5\n  #4 color=9 at row=13 col=35 size=1\n  #5 color=4 at row=38 col=30 size=100\n  #6 color=0 at row=32 col=21 size=3\n  #7 color=1 at row=32 col=20 size=1\n  #8 color=1 at row=33 col=21 size=1\n  #9 color=12 at row=46 col=41 size=10\n  #10 color=9 at row=48 col=41 size=15\n  #11 color=5 at row=58 col=6 size=76\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 62 (counter counter)."
+      "perception_text": "PLAYER token (color 9) at row=12 col=36 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=5 at row=26 col=2 size=208\n  #1 color=3 at row=35 col=35 size=892\n  #2 color=5 at row=12 col=36 size=43\n  #5 color=4 at row=38 col=30 size=100\n  #6 color=0 at row=32 col=21 size=3\n  #7 color=1 at row=32 col=20 size=1\n  #8 color=1 at row=33 col=21 size=1\n  #9 color=12 at row=46 col=41 size=10\n  #11 color=5 at row=58 col=6 size=76\n  #14 color=5 at row=62 col=38 size=112\n  #15 color=3 at row=62 col=21 size=34\n  #16 color=11 at row=62 col=42 size=50\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 62 (counter counter)."
     },
     {
       "game": "cn04",
@@ -141,7 +145,7 @@
       "mover": {
         "color": 8,
         "alignment": 1.0,
-        "evidence": 8
+        "evidence": 40
       },
       "ground_truth": {
         "hud": "(none prominent)",
@@ -188,5 +192,5 @@
       "perception_text": "Other distinct objects (candidate targets):\n  #0 color=9 at row=4 col=6 size=36\n  #1 color=8 at row=4 col=14 size=36\n  #2 color=9 at row=4 col=22 size=36\n  #3 color=9 at row=4 col=40 size=36\n  #4 color=8 at row=4 col=48 size=36\n  #5 color=9 at row=4 col=56 size=36\n  #6 color=8 at row=12 col=6 size=36\n  #7 color=2 at row=10 col=12 size=4\n  #8 color=0 at row=10 col=14 size=4\n  #9 color=2 at row=12 col=16 size=8\n  #10 color=9 at row=12 col=22 size=36\n  #11 color=8 at row=12 col=40 size=36"
     }
   ],
-  "duration_s": 2.81
+  "duration_s": 1.5
 }

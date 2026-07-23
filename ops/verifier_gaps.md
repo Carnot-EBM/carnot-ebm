@@ -2653,9 +2653,19 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   not just an area guard; (2) sc25's col-62/63 meter missed (0.63 change-rate, below the near-every-action
   bar); (3) r11l/ft09 under-explored (8 transitions -- the fixed exploration plan is filtered by per-game
   action availability; a harness gap, not a detector gap); (4) tu93 token mover not surfaced by the scripted
-  moves. Next: fix (1)+(3), then the END-TO-END gate -- re-run the REQ-ARC-WMTE-5832 goal measurement under
-  DETECTOR-produced perception (not hand-authored) to confirm it recovers the ~7/8 goal-correctness, then
-  the execution/dynamics half for the navigate games.
+  moves.
+- **RESIDUALS (1)+(3) FIXED 2026-07-23 (same session).** (3) Exploration made ADAPTIVE (pick the next
+  pattern action that is actually available this frame) -> all 8 games now gather 50-60 transitions (was 8 on
+  r11l/ft09). (1) The mover FP was addressed by the SIGNAL-STRENGTH bar, not a compactness heuristic (two
+  heuristics -- rigid same-color blob match, then global density -- each mis-rejected a real avatar: the
+  same-color match drops ls20's MORPHING avatar, and global density drops an avatar whose color is shared
+  with other cells). Raising `align_min`>=0.7 over `min_evidence`>=4 keeps the strong avatar signal
+  (sc25 color-9 align 0.92/ev 47; ls20 color-9 align 1.0/ev 59) and drops the weak void drift; cn04 now
+  surfaces color-8, a REAL marker piece that moves, instead of the color-0 void. Remaining minor residuals:
+  (2) sc25 meter still not flagged (0.63 change-rate), and tu93's token mover not surfaced by the scripted
+  moves -- both minor and not blocking. Next: the END-TO-END gate -- re-run the REQ-ARC-WMTE-5832 goal
+  measurement under DETECTOR-produced perception (not hand-authored) to confirm it recovers the ~7/8
+  goal-correctness, then the execution/dynamics half for the navigate games.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
