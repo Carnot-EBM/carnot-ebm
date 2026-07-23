@@ -5985,3 +5985,9 @@ The critical path for milestone .250:
 - theme: a gated changed-mechanism canary concentrated an otherwise short operational closeout
 - key result: operational limitation -- the 12-minute compute-bound canary dominated 13 minutes of wall time, but phase-level causes and task-time GPU efficiency remain unmeasured, and no concurrent multi-model runner miss is evidenced
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.519
+- exp_range: exp5825-exp5828 (only IDs present in the authoritative timing data; the complete milestone range is not available)
+- theme: incremental freshness handling is the clearest throughput opportunity in a synthesis-heavy closeout
+- key result: bounded operational negative -- no compute-task GPU idle or concurrent multi-model runner miss is established, while coarse modification-time reconstruction cannot explain compute phases
+- acceptance: 4/4 operational questions answered
