@@ -14184,3 +14184,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 16:07 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
 | 2026-07-23 16:09 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
 | 2026-07-23 16:11 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
+| 2026-07-23 16:30 UTC | Prospective adaptive-memory lifecycle on an honest | OK | 87 passed, 1 warning in 15.95s |
+| 2026-07-23 16:32 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
