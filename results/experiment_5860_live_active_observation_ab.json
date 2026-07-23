@@ -779,5 +779,18 @@
     ".venv/bin/pytest tests/python/test_experiment_5860_live_active_observation_ab.py -q -o addopts=": 0,
     "coverage run --include='*/python/carnot/experiment_5860_live_active_observation_ab.py' -m pytest tests/python/test_experiment_5860_live_active_observation_ab.py -q -o addopts='' && coverage report --fail-under=100 --show-missing": 0
   },
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=53.853 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
