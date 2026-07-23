@@ -24378,3 +24378,145 @@ restart mismatch, mutable model weights, or cap overflow
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5828 | Implemented (`python/carnot/experiment_5828_future_validated_structural_memory.py`, `results/experiment_5828_future_validated_structural_memory.json`) | Implemented (`tests/python/test_experiment_5828_future_validated_structural_memory.py`) |
+
+## REQ-LEARN-5829: Transfer-Selective Replay Audit
+
+The self-learning tier SHALL provide Exp5829, a deterministic no-LLM audit at
+`python/carnot/experiment_5829_transfer_selective_replay_audit.py` that consumes
+the accepted Exp5828 future-validated structural memory lifecycle, the sealed
+Exp5826 chronological row stream, the Exp5763 dependent-task acquisition
+artifact, the Exp5762 query-driven lifecycle module, and the Tier 2 constraint
+memory module, then writes
+`results/experiment_5829_transfer_selective_replay_audit.json`. Exp5829 SHALL
+separate forward transfer, retention, forgetting, and recurrence rather than
+using a single pooled "memory helps" score. Its inference substrate SHALL be
+`aggregation_from_upstream_artifacts`, and `verifier_is_oracle` SHALL be
+exactly `true` because exact solvers score the replayed lifecycle.
+
+Before replay, Exp5829 SHALL replay the structured gate by validating Exp5828
+and Exp5826, verifying Exp5826 row-file hashes, hashing the lifecycle artifact,
+stream artifact, stream rows, event/state schema contract, Exp5762 lifecycle
+module, Exp5763 artifact, constraint-memory module, research references, spec,
+module, and test files, checking held-out family/surface/recurrence splits,
+headroom, deterministic seeds, RAM, disk, and writable result/checkpoint paths.
+Any missing, stale, malformed, leaked, resource-failed, seed-failed, or
+unwritable precondition SHALL write a terminal blocked artifact rather than
+continuing the audit.
+
+Exp5829 SHALL define task signatures before scoring replay rows. The signatures
+SHALL be label-blind with respect to science labels and SHALL be derived only
+from normalized constraint arity/type/composition, variable/domain shape,
+hard/soft role, proof-preserving surface, and exact prefix behavior available
+before future-suffix scoring. The compatibility rule SHALL be frozen from
+train/dev-only structural evidence and specification constants before science
+replay; it SHALL NOT select rows using family labels, held-out outcomes,
+future-suffix labels, row IDs, chronology positions, or post-hoc metric
+improvements.
+
+Exp5829 SHALL compare exactly four replay arms:
+`reset_no_replay`, `all_replay`, `random_matched_count_replay`, and
+`signature_compatible_replay`. All arms SHALL receive identical current-task
+evidence, query budget, learner, stopping rule, memory cap, checkpoint rules,
+and future-suffix scorer. Replay rows SHALL be restricted to prior
+chronological rows, and matched-count arms SHALL use the same replay count for
+each current task. Random replay SHALL use deterministic seeds and the same
+count as compatible replay. No state row, replay row, future suffix, or heldout
+label may cross its science boundary.
+
+Exp5829 SHALL hold out constraint family/surface combinations, include
+recurrent earlier regimes, and preregister headroom before computing arm
+metrics. It SHALL report forward transfer on each task's first exposure before
+its future suffix opens, backward retention on old-regime rows, forgetting,
+recurrence recovery, dynamic regret, unsafe transfer, abstention, replay
+bytes/events, latency, and memory-cap pressure separately. Paired CI95 SHALL be
+reported for compatible replay versus no replay, all replay, and random
+matched-count replay, with family heterogeneity visible before any pooled
+credit.
+
+Compatible replay SHALL be credited only when its forward-transfer lower bound
+over no replay is positive, retention is non-inferior to all replay, unsafe
+transfer is zero, recurrence recovery improves over no replay, and replay
+resource use stays within the Exp5828 frozen memory cap. If these gates do not
+all pass, Exp5829 SHALL still emit a complete terminal null or negative audit
+when replay completed cleanly.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `task_signature_and_compatibility_rule`,
+`arm_definitions_and_replay_parity`, `heldout_split_and_leakage_receipts`,
+`forward_transfer_metrics`, `retention_and_forgetting_metrics`,
+`recurrence_recovery_metrics`, `paired_deltas_and_ci95`,
+`unsafe_transfer_count`, `replay_resource_accounting`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal audit state distinguishes complete null evidence from an incomplete replay.
+- `preconditions_checked`: Gate, split, headroom, resource, and checkpoint checks prevent fabricated transfer.
+- `upstream_artifact_hashes`: Hashes bind replay to the accepted lifecycle and sealed stream.
+- `task_signature_and_compatibility_rule`: A frozen label-blind rule prevents science-label selection.
+- `arm_definitions_and_replay_parity`: Matched counts, budgets, learner, and cap isolate selection quality.
+- `heldout_split_and_leakage_receipts`: Family/surface isolation is required for a transfer claim.
+- `forward_transfer_metrics`: First-exposure performance measures useful reuse rather than retention.
+- `retention_and_forgetting_metrics`: Old-regime performance measures stability separately from transfer.
+- `recurrence_recovery_metrics`: Reappearing regimes test durable rather than one-pass memory.
+- `paired_deltas_and_ci95`: Paired intervals quantify replay effects without point-estimate promotion.
+- `unsafe_transfer_count`: A bare zero is required before compatible replay is credited.
+- `replay_resource_accounting`: Events, bytes, latency, and cap pressure make transfer cost explicit.
+- `duration_s`: Measured wall time exposes bootstrap-only audits.
+- `inference_substrate`: `aggregation_from_upstream_artifacts` plus exact replay declares no LLM inference.
+- `verifier_is_oracle`: True records that exact solvers score the lifecycle and prevent a moat claim.
+- `field_provenance`: Every aggregate traces to held-out episodes and replay receipts.
+- `test_commands`: Commands document parity, leakage, transfer, retention, recurrence, and resource checks.
+- `test_exit_codes`: Exit codes prevent failed transfer checks from becoming credit.
+- `reproducibility_checksum`: A checksum detects split, signature, replay, or metric drift.
+- `honest_verdict`: A terminal prefix states positive, null, negative, or blocked outcome honestly.
+
+### SCENARIO-LEARN-5829-SIGNATURE-FREEZE: Compatibility Is Label-Blind
+
+**Given** Exp5826 science rows with sealed future labels and Exp5828 accepted
+structural memory receipts
+**When** Exp5829 constructs task signatures and freezes the compatibility rule
+**Then** signatures contain normalized arity/type, domain shape, hard/soft
+role, proof-preserving surface, and exact prefix behavior
+**And** the compatibility rule records train/dev-only calibration sources,
+rejects family-label and future-label selectors, and remains stable under
+replay.
+
+### SCENARIO-LEARN-5829-REPLAY-PARITY: Arms Differ Only By Replay Selection
+
+**Given** reset/no replay, all replay, random matched-count replay, and
+signature-compatible replay arms
+**When** Exp5829 replays the chronological stream
+**Then** all arms use identical current-task evidence, query budget, learner,
+stopping rule, memory cap, and scorer
+**And** all selected replay rows are prior chronological rows with matched
+counts for the selection-quality comparison.
+
+### SCENARIO-LEARN-5829-TRANSFER-RETENTION-RECURRENCE: Metrics Are Separate
+
+**Given** held-out family/surface combinations, old-regime rows, and recurrence
+rows
+**When** Exp5829 computes metrics
+**Then** forward transfer, retention, forgetting, recurrence recovery, dynamic
+regret, unsafe transfer, abstention, resource use, paired CI95, and family
+heterogeneity are reported separately
+**And** compatible replay credit requires positive forward-transfer lower
+bound, retention non-inferior to all replay, zero unsafe transfer, recurrence
+improvement, and memory-cap compliance.
+
+### SCENARIO-LEARN-5829-FAIL-CLOSED: Bad Gates Cannot Look Credited
+
+**Given** missing upstream artifacts, stale hashes, failed row replay, invalid
+heldout splits, no headroom, failed test exit codes, unsafe compatible replay,
+or resource-cap overflow
+**When** Exp5829 validates the artifact
+**Then** compatible replay SHALL NOT be credited
+**And** `honest_verdict` SHALL start with `blocked:`, `null:`, or `negative:`.
+
+## Implementation Status (Exp 5829)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5829 | Implemented (`python/carnot/experiment_5829_transfer_selective_replay_audit.py`, `results/experiment_5829_transfer_selective_replay_audit.json`) | Implemented (`tests/python/test_experiment_5829_transfer_selective_replay_audit.py`) |
