@@ -17187,3 +17187,28 @@ reads no source and gets no oracle -- so it is oracle-distinct and sovereignty-s
 **When** `perceive_entities` runs
 **Then** its text labels the player token, lists the non-HUD objects as candidate targets, and flags the
 HUD band as a counter to ignore for the goal.
+
+### REQ-ARC-WMTE-5834: End-to-End Goal Gate + Re-Authoring Perception Requirement
+
+**Origin:** 2026-07-23, the gate closing REQ-ARC-WMTE-5831/5832/5833. It fed DETECTOR-produced perception
+(`perceive_entities` on real offline-arcade transitions) to gemma-4-31B's goal prompt, same learned rules as
+the 5832 oracle ablation, to test whether the detectors recover the oracle's 7/8 goal-correctness from frames
+alone. Result: an honest NEGATIVE (0 correct, 2 partial, 6 wrong) -- because the model's own wrong learned
+rules dominate the detector's weaker "ignore this band" note, and the detector cannot name which object is
+the target.
+
+The gate SHALL be reproducible via `scripts/arc_end_to_end_goal_gate.py` and record per-game the detector
+perception, the resulting goal hypothesis, and the true win condition. The finding SHALL drive the perception
+requirement: `perceive_entities` (or a wrapper) SHALL RE-AUTHOR the model's framing rather than augment it --
+(a) retract any learned rule that references a detected HUD band, (b) propose the mover's nearest distinct
+object as the candidate target, (c) improve mover recall on games where directional exploration does not
+surface the player. Until it does, wiring detector output alongside the model's own wrong rules does NOT flip
+goal induction; this is the measured gate result, not a hypothesis.
+
+### SCENARIO-ARC-WMTE-5834-DETECTOR-PERCEPTION-BELOW-ORACLE
+
+**Given** detector-produced perception fed to the goal prompt with the model's own wrong learned rules
+**When** the goal hypothesis is measured against the true win condition across the 8 games
+**Then** goal-correctness is materially below the hand-authored oracle's 7/8 (measured: 0 correct, 2 partial),
+because the wrong rules dominate the detector's ignore-note and targets are unnamed -- establishing the
+re-authoring requirement above.
