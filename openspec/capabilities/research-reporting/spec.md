@@ -44331,3 +44331,145 @@ superseding definitions and test commands.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5811 | Implemented (`python/carnot/experiment_5811_exp5799_event_provenance_audit.py`, `results/experiment_5811_exp5799_event_provenance_audit.json`) | Implemented (`tests/python/test_experiment_5811_exp5799_event_provenance_audit.py`) |
+
+### REQ-REPORT-5823: V519 Transition Archives Terminal V518 And Retires Generated-Answer Transport
+
+The Exp5823 workflow SHALL read the terminal `.518` completion ledger, active
+roadmap, optional `research-roadmap-next.yaml`, vNEXT proposal document,
+conductor log, exclusion manifest, Exp5809 through Exp5814 declared
+deliverables, and the Exp5813 row file. It SHALL write
+`results/experiment_5823_transition_v519.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL not treat numeric-prefix matches or proposal-only tasks as execution
+evidence, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL define canonical identity as the tuple
+`(milestone, task_id, declared_deliverable)`. It SHALL resolve exactly the
+seven activated `.518` task ids Exp5809 through Exp5815 from exact declared
+paths plus conductor outcomes. Exp5813 SHALL be classified as a clean negative
+when its artifact reports `answer_channel_ready_score=0.0`, zero qualified
+SOTA families or models, two exact labels out of 144 rows, 138 parser failures,
+and 134 truncations; it SHALL NOT be recorded as generated-answer or
+output-channel success. Exp5814 SHALL be classified as gate-blocked, and
+Exp5815 SHALL be classified as pre-emptively skipped when the conductor records
+an upstream-retired skip, even when its declared deliverable is absent.
+
+The workflow SHALL preserve outcome classes as disjoint task-id lists:
+clean-positive, clean-null, clean-negative, gate-blocked, pre-emptively
+skipped, flagged, missing, and proposal-only. Exp5809, Exp5811, and Exp5812
+SHALL be clean-positive when their exact artifacts are terminal complete.
+Exp5810 SHALL be clean-null when `accepted_finding_count=0`. Exp5816 through
+Exp5822 SHALL be recorded in `reserved_unactivated_task_ids` as proposal-only
+tombstones, not as completed or reusable work.
+
+The workflow SHALL append `.518` completion evidence exactly once only if no
+exact `.518` completion block is present. When completion history already
+contains exact `.518` blocks, it SHALL set
+`research_complete_append_count=0`, leave `research-complete.yaml`
+byte-for-byte unchanged, and report pre-existing duplication diagnostically
+without rewriting, deduplicating, reordering, or normalizing history.
+
+The workflow SHALL add or verify an exclusion-manifest retirement entry whose
+scope covers same-mechanism finite-ID, shared-budget, split-budget, grammar,
+stop, and parser retries on the current GGUF generated-answer path. The entry
+SHALL set `retire_if_same_verdict=true`, SHALL preserve embeddings and other
+materially different non-generation surfaces as open, and SHALL record Exp5813
+as the terminal same-verdict evidence.
+
+The workflow SHALL scan Exp5823 through Exp5836 across active and optional
+next roadmaps, the vNEXT proposal document, completion history, exclusion
+manifest, results, and prior transition allocations. Active-roadmap and vNEXT
+proposal mentions MAY be recorded as allowed allocation references, and the
+Exp5823 result path MAY be owned by this workflow. Any unowned result file,
+completion-history entry, exclusion-manifest entry, next-roadmap entry, or
+prior-transition allocation that occupies Exp5823 through Exp5836 SHALL make
+the artifact terminal `blocked:` with bare integer
+`next_range_collision_count > 0`. A complete allocation SHALL require
+`next_range_collision_count=0`.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `declared_deliverable_matrix`,
+`outcome_classification`, `answer_transport_retirement`,
+`reserved_unactivated_task_ids`, `research_complete_append_count`,
+`next_task_range`, bare `next_range_collision_count`, `docs_reconciled`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty principle entry. The
+transition-owned reconciliation for this task SHALL be limited to spec, test,
+implementation, manifest, and result artifacts; operator-owned status,
+changelog, and traceability reconciliation may be explicitly deferred to the
+conductor reconciler when the task prompt forbids touching those files.
+
+Required field principles:
+
+- `status`: principle "A normalized terminal state distinguishes a complete transition from a bootstrap artifact."
+- `preconditions_checked`: principle "Exact hashes and resource checks prevent archival against missing or ambiguous evidence."
+- `milestone_transition`: principle "Explicit source and destination milestones prevent numeric-prefix aliasing."
+- `declared_deliverable_matrix`: principle "Declared paths plus conductor outcomes are the authority for activated task identity."
+- `outcome_classification`: principle "Disjoint evidence classes prevent clean negatives and gate blocks from becoming successes."
+- `answer_transport_retirement`: principle "A scope-keyed retirement prevents another same-mechanism generated-answer retry while preserving embeddings."
+- `reserved_unactivated_task_ids`: principle "Proposal-only identities remain tombstoned and cannot silently collide."
+- `research_complete_append_count`: principle "An exact append count prevents duplicate milestone history."
+- `next_task_range`: principle "A declared interval makes downstream task allocation auditable."
+- `next_range_collision_count`: principle "Only a bare zero authorizes Exp5823-Exp5836."
+- `docs_reconciled`: principle "Specs, traceability, and ops summaries must match the archived evidence classes."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only execution."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` prevents archival work from masquerading as inference."
+- `field_provenance`: principle "Per-field sources make the transition independently auditable."
+- `test_commands`: principle "Recorded commands show which identity, retirement, and collision checks ran."
+- `test_exit_codes`: principle "Exit codes prevent failed checks from being narrated as passing."
+- `reproducibility_checksum`: principle "A content hash detects later ledger or allocation drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
+
+#### SCENARIO-REPORT-5823: Exact V518 Evidence Archives Into V519
+
+**Given** exact `.518` completion blocks declare Exp5809 through Exp5815
+**And** Exp5809 through Exp5814 declared artifacts and the Exp5813 row file are
+readable and hashable
+**And** conductor evidence records Exp5814 as gate-blocked and Exp5815 as
+pre-emptively skipped behind a retired upstream
+**And** Exp5823 through Exp5836 have no unowned collisions
+**When** the Exp5823 workflow runs
+**Then** it writes a complete transition artifact, classifies Exp5809,
+Exp5811, and Exp5812 as clean-positive, Exp5810 as clean-null, Exp5813 as
+clean-negative, Exp5814 as gate-blocked, Exp5815 as pre-emptively skipped,
+records Exp5816 through Exp5822 as reserved unactivated ids, sets
+`research_complete_append_count=0` when `.518` history is already present, and
+leaves the active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5823-RETIREMENT: Same-Mechanism Generated-Answer Retry Is Retired
+
+**Given** Exp5813 reports `answer_channel_ready_score=0.0`, no qualified SOTA
+family, 2/144 exact labels, 138 parser failures, and 134 truncations
+**When** the Exp5823 workflow reconciles retirement state
+**Then** the exclusion manifest contains a same-mechanism generated-answer
+retirement entry with `retire_if_same_verdict=true`, generated-answer retry
+patterns for finite-ID/shared-budget/split-budget/grammar/stop/parser variants,
+and an explicit preserved-open list for embeddings and materially different
+non-generation surfaces.
+
+#### SCENARIO-REPORT-5823-COLLISION-BLOCK: Occupied V519 Ids Fail Closed
+
+**Given** any unowned result, completion-history, exclusion-manifest,
+next-roadmap, or prior-transition allocation occupies Exp5823 through Exp5836
+**When** the Exp5823 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records a bare integer
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+completion history to hide the collision.
+
+#### SCENARIO-REPORT-5823-FIELD-PROVENANCE: Required Fields Are Auditable
+
+**Given** the Exp5823 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required field has a matching principle and field-provenance
+entry, the checksum is stable, `inference_substrate` equals
+`aggregation_from_upstream_artifacts`, `next_task_range` equals
+`exp5823-exp5836`, and the terminal verdict starts with `complete:` or
+`blocked:`.
+
+## Implementation Status (REQ-REPORT-5823)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5823 | Implemented (`python/carnot/experiment_5823_transition_v519.py`, `results/experiment_5823_transition_v519.json`) | Implemented (`tests/python/test_experiment_5823_transition_v519.py`) |
