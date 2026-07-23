@@ -1,0 +1,722 @@
+{
+  "adaptive_memory_lifecycle_qualified_score": 0.0,
+  "adversarial_verifier_receipt": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5839_v519_evidence_qualification.json",
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_5839_v519_evidence_qualification.json",
+    "exit_code": 0,
+    "exp_id": 5839,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "mixed: constraint_stream_and_structural_qualified_lifecycle_and_replay_disqualif",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "chronology_and_visibility_audit": {
+    "cell_counts": {
+      "finite_domain_csp|addition": 30,
+      "finite_domain_csp|recurrence": 30,
+      "finite_domain_csp|supersession": 30,
+      "finite_state_planning|addition": 30,
+      "finite_state_planning|recurrence": 30,
+      "finite_state_planning|supersession": 30,
+      "hard_soft_packing|addition": 30,
+      "hard_soft_packing|recurrence": 30,
+      "hard_soft_packing|supersession": 30,
+      "weighted_maxsat|addition": 30,
+      "weighted_maxsat|recurrence": 30,
+      "weighted_maxsat|supersession": 30
+    },
+    "change_order_ok": true,
+    "chronology_monotone": true,
+    "family_change_balance_ok": true,
+    "family_change_order": {
+      "finite_domain_csp": [
+        "addition",
+        "supersession",
+        "recurrence"
+      ],
+      "finite_state_planning": [
+        "addition",
+        "supersession",
+        "recurrence"
+      ],
+      "hard_soft_packing": [
+        "addition",
+        "supersession",
+        "recurrence"
+      ],
+      "weighted_maxsat": [
+        "addition",
+        "supersession",
+        "recurrence"
+      ]
+    },
+    "future_labels_visible_to_learner_count": 0,
+    "ground_truth_cleartext_visible_count": 0,
+    "hardness_counts": {
+      "high": 120,
+      "low": 120,
+      "medium": 120
+    },
+    "minimum_cell_count": 30,
+    "protected_prefix_count": 360,
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.chronology_visibility_audit",
+    "split_counts": {
+      "science": 360
+    },
+    "surface_counts": {
+      "order_paraphrase": 180,
+      "symbol_relabel": 180
+    },
+    "surface_hardness_balance_ok": true,
+    "train_dev_science_visibility_ok": true
+  },
+  "constraint_stream_qualified_score": 1.0,
+  "duration_s": 0.047646,
+  "exact_validator_independence": {
+    "exact_membership_answer_only_count": 720,
+    "future_label_access_count": 0,
+    "independent_validator_versions": [
+      "exp5826_independent_reversed_domain_validator_v1"
+    ],
+    "membership_label_count": 720,
+    "primary_validator_versions": [
+      "exp5826_primary_finite_domain_exact_validator_v1"
+    ],
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.exact_validator_independence",
+    "solver_independence_passed": true,
+    "validator_disagreement_count": 0,
+    "validators_agree_count": 360
+  },
+  "experiment": 5839,
+  "experiment_id": "experiment_5839_v519_evidence_qualification",
+  "field_provenance": {
+    "adaptive_memory_lifecycle_qualified_score": {
+      "principle": "EMIT BARE scalar; only 1.0 permits Exp5843 and Exp5846.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "adversarial_verifier_receipt": {
+      "principle": "The live verifier is the terminal artifact-quality authority.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "chronology_and_visibility_audit": {
+      "principle": "Monotone events and sealed science labels are required for prospective learning.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "constraint_stream_qualified_score": {
+      "principle": "EMIT BARE scalar; only 1.0 permits Exp5840.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes the same bootstrap-only failure mode under audit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "exact_validator_independence": {
+      "principle": "Solver/version receipts expose circular target construction or label reuse.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each field maps to rows, source, state hashes, or verifier receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "historical_artifacts_mutated": {
+      "principle": "Must be false; qualification cannot unstamp or rewrite history.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix states qualified, disqualified, mixed, or blocked evidence honestly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "independent_row_reconstruction": {
+      "principle": "Fresh row derivation prevents trusted aggregate fields from validating themselves.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`deterministic_exact_verifier_and_replay_no_llm` declares the true compute path.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes, validators, splits, seeds, resources, and temp paths prevent fabricated replay.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "promotion_eligibility_matrix": {
+      "principle": "Per-branch classes keep flagged, provisional, null, and clean evidence disjoint.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "recomputed_metrics": {
+      "principle": "Row-derived aggregates make every credited scalar reproducible.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects row, code, split, seed, or metric drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "row_reconstruction_sources": [
+      "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl",
+      "results/experiment_5826_out_of_template_constraint_stream.json"
+    ],
+    "selective_replay_qualified_score": {
+      "principle": "EMIT BARE scalar; flagged-upstream replay is provisional unless independently clean.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "shortcut_and_no_information_controls": {
+      "principle": "Permutation, perturbation, ablation, collision, and null controls expose target leakage.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "source_replay_modules": [
+      "python/carnot/experiment_5827_minimal_core_structural_acquisition_ab.py",
+      "python/carnot/experiment_5828_future_validated_structural_memory.py",
+      "python/carnot/experiment_5829_transfer_selective_replay_audit.py"
+    ],
+    "state_rollback_restart_receipts": {
+      "principle": "Exact hashes test durable state rather than narrative lifecycle claims.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "status": {
+      "principle": "A terminal qualification state distinguishes a completed null from a partial audit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "structural_acquisition_qualified_score": {
+      "principle": "EMIT BARE scalar separating clean structural evidence from later lifecycle claims.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document reconstruction, shortcuts, statistics, state, and verifier checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed controls from becoming qualification.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "upstream_artifact_hashes": {
+      "principle": "Exact hashes bind qualification to immutable `.519` evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True records exact solvers as scoring authority and forbids a verifier-moat claim.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5839_v519_evidence_qualification.py",
+        "tests/python/test_experiment_5839_v519_evidence_qualification.py"
+      ]
+    }
+  },
+  "historical_artifacts_mutated": false,
+  "honest_verdict": "mixed: constraint_stream_and_structural_qualified_lifecycle_and_replay_disqualified",
+  "independent_row_reconstruction": {
+    "canonical_event_count": 2160,
+    "canonical_event_hash_root": "sha256:e9d34887f9ccb8a87d16c5b6918ab64cb407b8d29b5a25a13d9cf767034c68ed",
+    "canonical_state_count": 4320,
+    "canonical_state_hash_root": "sha256:531b7f73cf2bceea09beb1479b7410e6385bc5589b4727993df2b5837a1a7a1c",
+    "checkpoint_atomicity_count": 360,
+    "row_count": 360,
+    "row_file_commitment_hash_ok": false,
+    "row_file_sha256": "sha256:d0d513b081478be94a9de3df08b33e20a93865a08175bdb4fd3707aed0cc121d",
+    "row_file_sha256_ok": true,
+    "row_hash_mismatch_count": 0,
+    "row_hash_mismatches": [],
+    "row_hash_root": "sha256:e8ebf4f9004842d75a53da466cf5a96d29ea1f254a4361c1d5be4505cb1185bd",
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.independent_row_reconstruction",
+    "source_aggregate_metrics_imported": false,
+    "trusted_aggregate_artifacts_read_for_metrics": []
+  },
+  "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+  "milestone": "2026.07.520",
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "corrupt_upstream_errors": [],
+    "deterministic_seeds": {
+      "ok": true,
+      "random_seeds": {
+        "base_seed": 5839,
+        "replay_audit_seed": 5839003,
+        "row_reconstruction_seed": 5839001,
+        "shortcut_control_seed": 5839002
+      },
+      "seed_manifest_hash": "sha256:7b0d30010cc6dddd90598f7fbf3efb2b2f212bcce0d7b47180a85f202cb72c9a"
+    },
+    "exact_validator_versions": {
+      "independent": [
+        "exp5826_independent_reversed_domain_validator_v1"
+      ],
+      "ok": true,
+      "primary": [
+        "exp5826_primary_finite_domain_exact_validator_v1"
+      ],
+      "source": "results/experiment_5826_out_of_template_constraint_stream.rows.jsonl"
+    },
+    "output_path": {
+      "atomic_checkpoint_suffix": ".tmp",
+      "result_path": "results/experiment_5839_v519_evidence_qualification.json",
+      "result_writable": true
+    },
+    "preconditions_ready": true,
+    "python": {
+      "available": true,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1171924,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 78147,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "row_count": 360,
+    "run_date": "20260723",
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.preconditions",
+    "split_definition_hash": "sha256:4f3a21b2f223b7e3b2d5534db26cf339fb89c042c66bb6e50bf49fe73764d654",
+    "split_definitions": {
+      "future_test": "sealed_future_suffix only",
+      "science": "Exp5826 immutable science rows",
+      "train_dev": "upstream calibration only; not used for qualification scoring"
+    },
+    "temp_reconstruction_path": {
+      "clean": true,
+      "exists_or_created": true,
+      "path": "clean_temporary_reconstruction_path"
+    },
+    "upstream_artifact_hashes": {
+      "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+      "exp5825_contract": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+      "exp5826_module": "sha256:21f627f42cbdf5f66bd52b942c0e19535be292fadc1fe22ad08f4d4c1b290c47",
+      "exp5826_stream_artifact": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+      "exp5826_stream_rows": "sha256:d0d513b081478be94a9de3df08b33e20a93865a08175bdb4fd3707aed0cc121d",
+      "exp5827_module": "sha256:b3503a8c0afc3612fc411fa90aa7ccef1a4d46afb47f631c37361c95b97371c3",
+      "exp5827_structural_artifact": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+      "exp5828_lifecycle_artifact": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+      "exp5828_module": "sha256:35457462598ebe8507e2b0f7dc86c3fc28822d9645fbc112b3318c65148a8363",
+      "exp5829_module": "sha256:0dc0046da80458294ff6fc43de4c5eecd09979e36c8eeb295ba62c5354e66d90",
+      "exp5829_replay_artifact": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+      "module": "sha256:3c1231b7d5532e60cbbf095ea77fba9ca1819c1a6bc2fb7911076acb5a66147a",
+      "self_learning_spec": "sha256:abcca42e3cb47666177152fe6d8729881c7632938611a605a8f76ca6642ad84f",
+      "test": "sha256:f5ef83316cfdc0a23489bde1db3b45c68be50247310eabfa164188d2c0a8e127",
+      "verification_spec": "sha256:b86d8f0944cb430e7750e92bec8e7dd332425b654da37d6ef2c26fc3ec2eca19"
+    },
+    "upstream_status": {
+      "exp5825": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: certified_adaptive_memory_contract_ready",
+        "status": "complete"
+      },
+      "exp5826": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: out_of_template_constraint_event_stream_ready",
+        "status": "complete"
+      },
+      "exp5827": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: structural_learning_credited",
+        "status": "complete"
+      },
+      "exp5828": {
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: future_validated_structural_memory_lifecycle_credited",
+        "status": "complete"
+      },
+      "exp5829": {
+        "flagged_adversarial": false,
+        "honest_verdict": "positive: signature_compatible_replay_credited",
+        "status": "complete"
+      }
+    }
+  },
+  "promotion_eligibility_matrix": {
+    "adaptive_memory_lifecycle": {
+      "class": "disqualified_flagged_upstream",
+      "score": 0.0
+    },
+    "constraint_stream": {
+      "class": "qualified_clean",
+      "score": 1.0
+    },
+    "exp5840": {
+      "eligible": true,
+      "requires": [
+        "constraint_stream_qualified_score"
+      ]
+    },
+    "exp5843": {
+      "eligible": false,
+      "requires": [
+        "adaptive_memory_lifecycle_qualified_score"
+      ]
+    },
+    "exp5846": {
+      "eligible": false,
+      "requires": [
+        "adaptive_memory_lifecycle_qualified_score"
+      ]
+    },
+    "selective_replay": {
+      "class": "provisional_flagged_upstream",
+      "score": 0.0
+    },
+    "structural_acquisition": {
+      "class": "qualified_clean",
+      "score": 1.0
+    }
+  },
+  "random_seed": 5839,
+  "random_seeds": {
+    "base_seed": 5839,
+    "replay_audit_seed": 5839003,
+    "row_reconstruction_seed": 5839001,
+    "shortcut_control_seed": 5839002
+  },
+  "recomputed_metrics": {
+    "adaptive_memory_lifecycle": {
+      "adversarially_flagged_upstream": true,
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=0.793358 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "memory_cap_compliance": 1.0,
+      "pooled_delta": {
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          0.755556,
+          0.813889
+        ],
+        "mean_delta": 0.786111,
+        "n": 360
+      },
+      "promotion_decision": "disqualified_flagged_upstream",
+      "qualified_after_provenance": 0.0,
+      "raw_recomputed_ready_score": 1.0,
+      "restart_equivalence": 1.0,
+      "rollback_hash_mismatch_count": 0,
+      "source_aggregate_metrics_imported": false,
+      "unsafe_update_count": 0
+    },
+    "aggregate_json_metrics_imported": false,
+    "constraint_stream": {
+      "family_lower_bounds": {
+        "finite_domain_csp": 1.0,
+        "finite_state_planning": 1.0,
+        "hard_soft_packing": 1.0,
+        "weighted_maxsat": 1.0
+      },
+      "minimum_cell_count": 30,
+      "paired_delta": {
+        "bootstrap_repetitions": 0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_delta": 1.0,
+        "n": 360
+      },
+      "promotion_decision": "qualified",
+      "ready_score": 1.0,
+      "row_count": 360
+    },
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.recomputed_metrics",
+    "selective_replay": {
+      "forward_transfer_delta": {
+        "ci95": [
+          0.725926,
+          0.786111
+        ],
+        "mean_delta": 0.758333,
+        "n": 360
+      },
+      "inherits_flagged_lifecycle_upstream": true,
+      "promotion_decision": "provisional_flagged_upstream",
+      "qualified_after_provenance": 0.0,
+      "raw_recomputed_ready_score": 1.0,
+      "recurrence_delta": {
+        "ci95": [
+          0.755555,
+          0.858333
+        ],
+        "mean_delta": 0.808333,
+        "n": 120
+      },
+      "replay_resource_accounting": {
+        "cap_compliance": true,
+        "max_memory_cap_pressure": 0.125,
+        "max_replay_events_per_task": 8
+      },
+      "resource_scalar": 1.0,
+      "retention_delta": {
+        "ci95": [
+          0.02,
+          0.02
+        ],
+        "mean_delta": 0.02,
+        "n": 120
+      },
+      "source_aggregate_metrics_imported": false,
+      "unsafe_transfer_count": 0
+    },
+    "structural_acquisition": {
+      "active_precision": 1.0,
+      "credited_family_count": 4,
+      "family_lower_bounds": {
+        "finite_domain_csp": 0.481482,
+        "finite_state_planning": 0.5,
+        "hard_soft_packing": 0.203704,
+        "weighted_maxsat": 0.375
+      },
+      "pooled_delta": {
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          0.388074,
+          0.420396
+        ],
+        "mean_delta": 0.405093,
+        "n": 324
+      },
+      "promotion_decision": "qualified",
+      "protected_prefix_regression_count": 0,
+      "raw_recomputed_ready_score": 1.0,
+      "source_aggregate_metrics_imported": false,
+      "unsafe_propagation_count": 0
+    }
+  },
+  "reproducibility_checksum": "sha256:a59b4f0731ff2e68cf209445f176ee5be1d703bf376034c43eb705bbe8c791e1",
+  "result_path": "results/experiment_5839_v519_evidence_qualification.json",
+  "run_date": "20260723",
+  "schema": "carnot.experiment_5839.v519_evidence_qualification.v1",
+  "selective_replay_qualified_score": 0.0,
+  "shortcut_and_no_information_controls": {
+    "all_controls_passed": true,
+    "control_receipt_hash": "sha256:718e18a0e2e5cb6648d4f0f63c5d957fcef1b989ce67692c36dd522f49edbf13",
+    "duplicate_row_weighting": {
+      "duplicate_weighting_changed_decision": false,
+      "survived": false
+    },
+    "future_label_access": {
+      "future_label_access_injected": true,
+      "future_label_access_rejected": true,
+      "survived": false
+    },
+    "label_permutation": {
+      "control_detected": true,
+      "permuted_label_ready_score": 0.0,
+      "survived": false
+    },
+    "no_information": {
+      "null_score": 0.0,
+      "qualified": false,
+      "survived": false
+    },
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.shortcut_controls",
+    "signature_collision": {
+      "collision_injected": true,
+      "collision_rejected": true,
+      "survived": false
+    },
+    "surviving_shortcut_count": 0,
+    "surviving_shortcuts": [],
+    "target_derived_feature_ablation": {
+      "qualified_without_target_derived_features": true,
+      "survived": false,
+      "target_derived_features_removed": true
+    },
+    "target_preserving_feature_perturbation": {
+      "qualified_score_stable": true,
+      "row_hashes_changed": true,
+      "survived": false,
+      "target_preserved": true
+    }
+  },
+  "spec_refs": [
+    "REQ-LEARN-5839",
+    "SCENARIO-LEARN-5839-RECONSTRUCT",
+    "SCENARIO-LEARN-5839-SHORTCUTS",
+    "SCENARIO-LEARN-5839-MIXED",
+    "SCENARIO-LEARN-5839-FAIL-CLOSED"
+  ],
+  "state_rollback_restart_receipts": {
+    "lifecycle": {
+      "full_state_hash": "sha256:826ea0fc57f798d8d61cf46f4ab3d52b0d1df9e94e7c36053472176da307c6b8",
+      "restart_equivalence": 1.0,
+      "resumed_state_hash": "sha256:826ea0fc57f798d8d61cf46f4ab3d52b0d1df9e94e7c36053472176da307c6b8",
+      "rollback_hash_mismatch_count": 0
+    },
+    "protected_prefix": {
+      "receipt_count": 360,
+      "replay_failure_count": 0,
+      "unsafe_propagation_count": 0
+    },
+    "receipt_hash": "sha256:e198a188c43f29b75f6d2827b32310547b6c368cb463234aef035ede03349a75",
+    "replay": {
+      "full_replay_hash": "sha256:ce5cb5c3497cfe00cb1b49206c0b5314fb48dad852e396edda7efbf184bafe1a",
+      "restart_equivalence": 1.0,
+      "resumed_replay_hash": "sha256:ce5cb5c3497cfe00cb1b49206c0b5314fb48dad852e396edda7efbf184bafe1a"
+    },
+    "schema": "carnot.experiment_5839.v519_evidence_qualification.v1.state_rollback_restart"
+  },
+  "status": "complete",
+  "structural_acquisition_qualified_score": 1.0,
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5839_v519_evidence_qualification.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5839_v519_evidence_qualification.py -m pytest tests/python/test_experiment_5839_v519_evidence_qualification.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5839_v519_evidence_qualification.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5839_v519_evidence_qualification.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5839_v519_evidence_qualification.py -m pytest tests/python/test_experiment_5839_v519_evidence_qualification.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5839_v519_evidence_qualification.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5839_v519_evidence_qualification.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5839_v519_evidence_qualification.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "upstream_artifact_hashes": {
+    "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+    "exp5825_contract": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+    "exp5826_module": "sha256:21f627f42cbdf5f66bd52b942c0e19535be292fadc1fe22ad08f4d4c1b290c47",
+    "exp5826_stream_artifact": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+    "exp5826_stream_rows": "sha256:d0d513b081478be94a9de3df08b33e20a93865a08175bdb4fd3707aed0cc121d",
+    "exp5827_module": "sha256:b3503a8c0afc3612fc411fa90aa7ccef1a4d46afb47f631c37361c95b97371c3",
+    "exp5827_structural_artifact": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+    "exp5828_lifecycle_artifact": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+    "exp5828_module": "sha256:35457462598ebe8507e2b0f7dc86c3fc28822d9645fbc112b3318c65148a8363",
+    "exp5829_module": "sha256:0dc0046da80458294ff6fc43de4c5eecd09979e36c8eeb295ba62c5354e66d90",
+    "exp5829_replay_artifact": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+    "module": "sha256:3c1231b7d5532e60cbbf095ea77fba9ca1819c1a6bc2fb7911076acb5a66147a",
+    "self_learning_spec": "sha256:abcca42e3cb47666177152fe6d8729881c7632938611a605a8f76ca6642ad84f",
+    "test": "sha256:f5ef83316cfdc0a23489bde1db3b45c68be50247310eabfa164188d2c0a8e127",
+    "verification_spec": "sha256:b86d8f0944cb430e7750e92bec8e7dd332425b654da37d6ef2c26fc3ec2eca19"
+  },
+  "verifier_is_oracle": true
+}
