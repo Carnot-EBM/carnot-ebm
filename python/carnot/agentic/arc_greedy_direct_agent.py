@@ -411,9 +411,11 @@ def run_greedy_direct(
             reflection_interval > 0
             and actions_taken - actions_at_last_reflect >= reflection_interval
         ):
-            # v4: BEFORE re-reflecting, let the goal verifier falsify the goal that was just pursued
-            # (pursued with real activity but no level-up) so the rewrite must pick a DIFFERENT goal.
-            if gv is not None and gv.maybe_falsify():
+            # v4: BEFORE re-reflecting, let the goal verifier falsify the goal that was just pursued so
+            # the rewrite must pick a DIFFERENT goal. Two signals: (a) definitive -- the model's PROGRESS
+            # reports it COMPLETED the goal yet no level-up fired (the exact observed bp35 failure); (b)
+            # activity-count -- pursued with real activity for goal_patience actions with no level-up.
+            if gv is not None and (gv.falsify_on_reported_completion(notes) or gv.maybe_falsify()):
                 transcript_sample.append(f"[falsified@{actions_taken}] {gv.current_goal[:120]}")
             notes = reflect(
                 proposer,
