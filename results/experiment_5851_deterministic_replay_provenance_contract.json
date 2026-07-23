@@ -6,7 +6,7 @@
     "exp_id": 5851,
     "flag_count": 0,
     "flags": [],
-    "honest_verdict": "failed: failed_test_exit_codes",
+    "honest_verdict": "ready: deterministic_replay_provenance_contract_clean",
     "loaded": true,
     "max_severity": -1,
     "title": ""
@@ -18,8 +18,8 @@
     "schema": "carnot.experiment_5851.deterministic_replay_provenance_contract.v1",
     "version": "v1"
   },
-  "deterministic_replay_contract_ready_score": 0.0,
-  "duration_s": 0.24202,
+  "deterministic_replay_contract_ready_score": 1.0,
+  "duration_s": 0.279305,
   "exp5828_regression_receipt": {
     "aggregate_metrics_positive": false,
     "decision": "rejected",
@@ -400,7 +400,7 @@
     "live_model"
   ],
   "historical_artifacts_mutated": false,
-  "honest_verdict": "failed: failed_test_exit_codes",
+  "honest_verdict": "ready: deterministic_replay_provenance_contract_clean",
   "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
   "milestone": "2026.07.521",
   "positive_fixture_receipts": [
@@ -460,12 +460,12 @@
     },
     "resources": {
       "disk": {
-        "available_mb": 1171137,
+        "available_mb": 1171134,
         "ok": true,
         "required_mb": 512
       },
       "memory": {
-        "available_mb": 77465,
+        "available_mb": 77446,
         "ok": true,
         "required_mb": 512
       }
@@ -500,7 +500,7 @@
     "positive_fixture_seed": 5851001,
     "regression_fixture_seed": 5851003
   },
-  "reproducibility_checksum": "sha256:6c7f255bc9a54e7bdeac023352113d2b96abd1ff5a087d5cc5dc3d27624389bc",
+  "reproducibility_checksum": "sha256:9fae21eac71fa8b483c262a9f5e36440555c5a3b5f4b55379da34dc5da974163",
   "required_exact_replay_fields": [
     "source_row_hashes",
     "validator_versions",
@@ -528,12 +528,10 @@
     "SCENARIO-LEARN-5851-FALSE-MARKER",
     "SCENARIO-LEARN-5851-IMMUTABLE"
   ],
-  "status": "failed",
+  "status": "ready",
   "test_commands": [
     ".venv/bin/pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0",
     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py -m pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py --fail-under=100",
-    ".venv/bin/ruff check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
-    ".venv/bin/ruff format --check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py",
     ".venv/bin/pytest tests/python -q",
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5851_deterministic_replay_provenance_contract.json",
@@ -542,13 +540,11 @@
   ],
   "test_exit_codes": {
     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py -m pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5851_deterministic_replay_provenance_contract.py --fail-under=100": 0,
-    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python -q": 0,
     ".venv/bin/pytest tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py -q --no-cov -n 0": 0,
     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5851_deterministic_replay_provenance_contract.json": 0,
-    ".venv/bin/python scripts/check_spec_coverage.py": 1,
-    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
-    ".venv/bin/ruff check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py": 0,
-    ".venv/bin/ruff format --check python/carnot/experiment_5851_deterministic_replay_provenance_contract.py tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py": 0
+    ".venv/bin/python scripts/check_spec_coverage.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
   }
 }
