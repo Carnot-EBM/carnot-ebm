@@ -14186,3 +14186,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 16:11 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
 | 2026-07-23 16:30 UTC | Prospective adaptive-memory lifecycle on an honest | OK | 87 passed, 1 warning in 15.95s |
 | 2026-07-23 16:32 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
+| 2026-07-23 16:51 UTC | Clean-upstream selective replay with hard-case neg | OK | 87 passed, 1 warning in 16.61s |
+| 2026-07-23 16:53 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
