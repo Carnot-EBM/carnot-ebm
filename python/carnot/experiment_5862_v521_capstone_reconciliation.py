@@ -502,6 +502,17 @@ def _artifact_payloads(root: Path) -> tuple[dict[str, JsonDict], dict[str, JsonD
     payloads: dict[str, JsonDict] = {}
     metadata: dict[str, JsonDict] = {}
     for task_id, rel_path in TASK_ARTIFACT_PATHS.items():
+        if task_id == EXPERIMENT_ID:
+            payloads[task_id] = {}
+            metadata[task_id] = {
+                "path": (root / rel_path).as_posix(),
+                "present": False,
+                "loadable": False,
+                "sha256": None,
+                "error": "self_output_not_upstream_evidence",
+                "self_output_not_upstream_evidence": True,
+            }
+            continue
         payload, meta = _read_json_mapping(root / rel_path)
         payloads[task_id] = payload
         metadata[task_id] = meta
@@ -658,8 +669,25 @@ def _normalize_receipts(
     if receipts is None:
         return {}
     if isinstance(receipts, Mapping):
-        return {str(key): dict(value) for key, value in receipts.items()}
-    return {str(row.get("task_id")): dict(row) for row in receipts}
+        return {
+            str(key): _complete_receipt(dict(value))
+            for key, value in receipts.items()
+            if isinstance(value, Mapping)
+        }
+    return {
+        str(row.get("task_id")): _complete_receipt(dict(row))
+        for row in receipts
+        if isinstance(row, Mapping)
+    }
+
+
+def _complete_receipt(receipt: JsonMap) -> JsonDict:
+    row = dict(receipt)
+    row["flag_count"] = _receipt_flag_count(row)
+    row["max_severity"] = _receipt_max_severity(row)
+    row["flags"] = _receipt_flags(row)
+    row.setdefault("receipt_hash", sha256_json(row.get("stdout_json", {})))
+    return row
 
 
 def run_live_adversarial_receipts(root: Path = REPO_ROOT) -> dict[str, JsonDict]:  # pragma: no cover
@@ -686,6 +714,7 @@ def run_live_adversarial_receipts(root: Path = REPO_ROOT) -> dict[str, JsonDict]
             "stderr": result.stderr,
             "receipt_hash": sha256_json(stdout_json),
         }
+        receipts[task_id] = _complete_receipt(receipts[task_id])
     return receipts
 
 
@@ -797,6 +826,7 @@ def _exact_task_matrix(
             "present": bool(meta.get("present")),
             "loadable": bool(meta.get("loadable")),
             "sha256": meta.get("sha256"),
+            "self_output_not_upstream_evidence": task_id == EXPERIMENT_ID,
             "row_file_receipt": row_receipts.get(task_id),
             "conductor": conductor.get(task_id, {}),
         }
@@ -1216,6 +1246,14 @@ def _test_exit_codes(tests_run: Sequence[JsonMap] | None) -> JsonDict:
     return {str(row["command"]): row.get("exit_code") for row in _tests_run_rows(tests_run)}
 
 
+def _failed_required_test_commands(test_rows: Sequence[JsonMap]) -> list[str]:
+    return [
+        str(row.get("command"))
+        for row in test_rows
+        if row.get("exit_code") is not None and row.get("exit_code") != 0
+    ]
+
+
 def _preconditions(root: Path, roadmap: JsonMap, next_meta: JsonMap) -> JsonDict:
     task_ids = [row.get("id") for row in roadmap.get("tasks", []) if isinstance(row, Mapping)]
     declared_paths = {
@@ -1298,8 +1336,11 @@ def build_report(
     retirements = _retirements(payloads, arc, comparative)
     protected = _protected_files(root, modification_overrides)
     publication = dict(publication_gate) if publication_gate is not None else _load_publication_gate(root)  # pragma: no cover
+    test_rows = _tests_run_rows(tests_run)
+    failed_test_commands = _failed_required_test_commands(test_rows)
 
     preconditions = _preconditions(root, roadmap, next_meta)
+    preconditions["failed_required_test_commands"] = failed_test_commands
     preconditions["roadmap_loadable"] = bool(roadmap_meta.get("loadable"))
     preconditions["declared_deliverable_hashes"] = {
         task_id: {
@@ -1313,12 +1354,16 @@ def build_report(
     }
     preconditions["conductor_outcomes"] = conductor
 
-    if all(row.get("unchanged") for row in protected.values()):
-        status = "mixed" if any(classes[key] for key in ("flagged", "gated_skip", "blocked", "disqualified", "missing", "unsafe", "off_path")) else "complete"
-    else:
+    if not all(row.get("unchanged") for row in protected.values()):
         status = "blocked"
+    elif failed_test_commands:
+        status = "blocked"
+    else:
+        status = "mixed" if any(classes[key] for key in ("flagged", "gated_skip", "blocked", "disqualified", "missing", "unsafe", "off_path")) else "complete"
 
-    if status == "blocked":
+    if failed_test_commands:
+        honest = "blocked: required capstone checks failed during V521 reconciliation"
+    elif status == "blocked":
         honest = "blocked: protected files or preconditions failed during V521 capstone reconciliation"
     elif status == "mixed":
         honest = (
@@ -1329,7 +1374,6 @@ def build_report(
     else:
         honest = "complete: v521 reconciled with no missing, flagged, blocked, or gated evidence"
 
-    test_rows = _tests_run_rows(tests_run)
     payload: JsonDict = {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,
