@@ -14196,3 +14196,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 20:23 UTC | KV260 PolarFire GateMate physical capability ledge | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5861_attache |
 | 2026-07-23 21:02 UTC | KV260 PolarFire GateMate physical capability ledge | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5861_attache |
 | 2026-07-23 21:09 UTC | KV260 PolarFire GateMate physical capability ledge | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5861_attache |
+| 2026-07-23 22:33 UTC | Four-branch terminal decision ledger and milestone | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: gate=_publicat |

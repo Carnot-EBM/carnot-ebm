@@ -2566,6 +2566,60 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   Status: verifier BUILT + mechanically validated; needs a broader/easier-game sweep, larger budgets where
   the game allows, or richer hypothesis generation to demonstrate an actual discovery. 38 unit tests; spec
   REQ-ARC-WMTE-5830; research note `arc-winner-recipe-reproduction-2026-07-23.md`.
+- **DECISIVE RE-DIAGNOSIS 2026-07-23 (REQ-ARC-WMTE-5831,
+  `results/outer_loop_arc_goal_hypothesis_coverage_diagnosis_20260723.json`) -- the "hypothesis COVERAGE +
+  budget" conclusion above is REFUTED; the real wall is UPSTREAM of goal induction.** After the goal
+  verifier + full winner recipe still nulled on an 8-game sweep (bp35/lf52/sc25/ls20/tu93/cn04/r11l/ft09,
+  budget 120, `..._v5sweep8_20260723.json`), 8 independent analyst agents READ each game's source (offline
+  dev analysis, authorized) to answer the decisive question: **did gemma-4-31B EVER hypothesize the true
+  win condition?** Verdict: **8/8 NO -- not one game, not even "partial."** Breakdown: 5/8 root cause =
+  PERCEPTION (the object/grid perception fixated on the wrong entities -- HUD bars, value meters, the
+  move-budget/lose-timer bar -- and never *represented* the load-bearing entities: the player avatar, the
+  exit tile, the target blocks); 3/8 = DYNAMICS-NOT-LEARNED (never induced that ACTION 3/4 move a player
+  under gravity (bp35), the two-click select-then-move (r11l), or that its only lever did anything (ft09)).
+  0/8 would larger budget help; in bp35+tu93 the budget bar it dutifully fills IS the lose timer, so the
+  fixated goal ("clear all value-6 cells" / "fill column 63") is literally the LOSE condition -- more
+  budget actively loses. **The pivotal implication: the goal-hypothesis generator is NOT the first failure.
+  Several true goals are canonical, LLM-plausible goals ("navigate the avatar into the exit" sc25/tu93,
+  "slide each object onto its matching pad" r11l/ls20) that a text LLM WOULD plausibly hypothesize -- IF
+  perception had surfaced the right objects. It never did.** The goal verifier (REQ-ARC-WMTE-5830) is
+  correct and necessary but cannot help when the right goal is structurally unreachable given broken
+  perception -- falsifying wrong goals just walks the model across a hypothesis space that does not contain
+  the answer. **Next ARC lever is therefore NOT more goal machinery, more budget, or the verifier: it is
+  (1) HUD/budget-bar vs game-board perceptual disambiguation and (2) action-effect dynamics induction (does
+  an action move a player token?).** This independently corroborates `project_arc_live_agent_learning_gaps`
+  (perception is the binding constraint, frame-only order-1 features LOO=chance) -- now confirmed to still
+  hold at 31B + the full leaderboard-winner recipe. See the new sibling gap
+  `GAP-ARC-PERCEPTION-HUD-VS-BOARD` below.
+
+### GAP-ARC-PERCEPTION-HUD-VS-BOARD: perception fixates on the HUD/budget-bar, never represents the real game entities
+- status: open
+- priority: high (the evidence-backed #1 ARC lever as of 2026-07-23, ahead of goal machinery)
+- evidence: REQ-ARC-WMTE-5831 source-grounded diagnosis
+  (`results/outer_loop_arc_goal_hypothesis_coverage_diagnosis_20260723.json`): across 8 public games, a
+  gemma-4-31B agent with object-segmentation perception + reflection memory + a working goal verifier
+  represented the WRONG entities on 5/8 (lf52/sc25/ls20/tu93/cn04) -- it foregrounded the every-action HUD
+  bar (lf52 row-0 move counter; sc25 col-62/63 mana meter; tu93/bp35 row-63 move-budget lose-timer) and
+  never surfaced the player avatar, the exit tile, or the colored target blocks. Because those entities were
+  never in its state representation, the true goal was structurally outside its hypothesis space.
+- failure mode: the object/salience front-end cannot distinguish a persistent every-action HUD/budget
+  register (which changes on EVERY action and is therefore maximally salient to a naive frame-diff) from the
+  actual interactive game board. The most-salient thing is the least-relevant thing. The model then
+  rationalizes the HUD change as the objective (and in the lose-timer cases, pursues the anti-goal).
+- missing discriminator: a perceptual signal that separates (a) a HUD/counter register -- monotone, changes
+  on every action regardless of position, spatially confined to a row/column edge -- from (b) game-board
+  entities that respond to SPECIFIC actions at SPECIFIC positions. Candidate: an action-conditioned
+  saliency that down-weights cells whose change is uncorrelated with WHERE/WHAT action was taken (a HUD bar
+  advances identically no matter where you click), and an object-persistence/motion tracker that surfaces a
+  player-token that MOVES under directional actions.
+- candidate design: (1) HUD-register detector: flag any row/column band that increments on every action
+  independent of action identity/position, mask it out of the goal-relevant state. (2) Mover-detection:
+  after directional actions (1-4), find the connected component whose centroid translates -- that is the
+  player avatar; register it as a first-class entity the goal-hypothesizer must reference. Both are
+  oracle-distinct, use only the agent's own observed transitions, and are directly on the live E3 path.
+- cross-ref: `project_arc_live_agent_learning_gaps` (perception = binding constraint), `GAP-ARCH-GOAL-NOT-VERIFIED`
+  (the downstream gap this unblocks), `GAP-ARCH-GRID-ONLY-STATE` (the HUD-register representation gap this
+  shares a root with).
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
