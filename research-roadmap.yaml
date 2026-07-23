@@ -1,21 +1,26 @@
-milestone: "2026.07.520"
-milestone_title: "Evidence-Qualified Adaptive Memory, Comparative Internal Energy, and Live World Feedback"
+milestone: "2026.07.521"
+milestone_title: "Provenance-Correct Self-Learning, Portable Comparative Energy, and Active Observation"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp5837-transition-v520
-    milestone: "2026.07.520"
-    title: "Archive terminal .519 evidence and allocate .520"
+  - id: exp5849-transition-v521
+    milestone: "2026.07.521"
+    title: "Exact terminal-boundary handoff from .520 into .521"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_5837_transition_v520.json
+    deliverable: results/experiment_5849_transition_v521.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 100
-    estimated_wall_time_min: 120
+    estimated_wall_time_min: 180
     requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5837-transition-v520
+        verdict: "blocked: exp5837 transition preconditions failed: test_failures=['.venv/bin/pytest tests/python -q', '.venv/bin/python scripts/check_spec_coverage.py']"
+        addressed_by: "This handoff records pre-existing repository-wide test debt separately from task-owned transition failures, archives exact activated identities, and requires focused transition checks instead of bootstrap-blocking on unrelated global failures."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Milestone 2026.07.519 is terminal with seven activated tasks. Exp5823-Exp5827 completed cleanly. Exp5828 reported a positive lifecycle result but the live adversarial verifier stamped it CRITICAL for DURATION_TOO_SHORT and WARN for METHODOLOGY_MISSING. Exp5829 reported positive selective replay but declares flagged Exp5828 upstream, so it is provisional. Exp5830-Exp5836 were proposal-only and never activated. Historical artifacts are immutable. Today is {date}.
+      Milestone 2026.07.520 is terminal with four activated identities. Exp5837 is a terminal blocked transition artifact; Exp5838 completed with zero accepted source deltas; Exp5839 qualified the exact stream and structural acquisition but disqualified lifecycle and replay; Exp5840 produced a clean exact counterfactual fixture. Exp5841-Exp5848 were proposal-only and never activated. Historical artifacts and adversarial stamps are immutable. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -25,76 +30,75 @@ tasks:
       - {project_root}/research-complete.yaml
       - {project_root}/ops/conductor-log.md
       - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/results/experiment_5823_transition_v519.json
-      - {project_root}/results/experiment_5824_v519_source_delta_ingestion.json
-      - {project_root}/results/experiment_5825_certified_adaptive_memory_contract.json
-      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.json
-      - {project_root}/results/experiment_5827_minimal_core_structural_acquisition_ab.json
-      - {project_root}/results/experiment_5828_future_validated_structural_memory.json
-      - {project_root}/results/experiment_5829_transfer_selective_replay_audit.json
+      - {project_root}/results/experiment_5837_transition_v520.json
+      - {project_root}/results/experiment_5838_v520_source_delta_ingestion.json
+      - {project_root}/results/experiment_5839_v519_evidence_qualification.json
+      - {project_root}/results/experiment_5840_exact_counterfactual_embedding_fixture.json
       - {project_root}/scripts/evidence_index_collision_preflight.py
       - {project_root}/scripts/in_process_doc_reconcile.py
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Archive terminal `.519` evidence by exact activated identity, preserve the Exp5828 adversarial stamp and Exp5829 upstream taint, tombstone proposal-only Exp5830-Exp5836, prove Exp5837-Exp5848 collision-free, and write results/experiment_5837_transition_v520.json.
+      Archive the exact terminal `.520` identities without laundering blocked or disqualified evidence, tombstone proposal-only Exp5841-Exp5848, prove Exp5849-Exp5862 collision-free, and write results/experiment_5849_transition_v521.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: parse both roadmaps; hash the completion ledger, conductor log, exclusion manifest, and every declared `.519` deliverable; record disk/RAM and writable paths. Fail closed on ambiguous activated identity or any real Exp5837-Exp5848 collision.
-      1. Add or extend REQ-* requirements and tests before implementation. Resolve tasks by `(milestone, task_id, declared_deliverable)`, never by numeric prefix alone.
-      2. Classify exactly Exp5823-Exp5829 as clean positive, clean null/negative, blocked/skipped, flagged, flagged-upstream/provisional, missing, or proposal-only. Do not clear or mutate an existing adversarial stamp.
-      3. Independently run the live adversarial verifier on Exp5825-Exp5829 and record its command, exit code, receipt hash, CRITICAL/WARN findings, and headline eligibility.
-      4. Append `.519` to research-complete.yaml exactly once only if its exact milestone block is absent. Never deduplicate, normalize, reorder, or rewrite historical blocks.
-      5. Record Exp5830-Exp5836 as `reserved_unactivated_task_ids`. Scan roadmaps, completion history, proposals, exclusion manifest, results, and transition allocations for Exp5837-Exp5848; require `next_range_collision_count=0`.
-      6. Reconcile only transition-owned internal specs, traceability, status, and changelog. Leave research-roadmap.yaml and scripts/research_conductor.py byte-for-byte unchanged.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, declared_deliverable_matrix, adversarial_verifier_receipts, outcome_classification, flagged_evidence_preserved, reserved_unactivated_task_ids, research_complete_append_count, next_task_range, next_range_collision_count, docs_reconciled, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+      0. PRECONDITIONS: parse both roadmaps; hash completion history, conductor log, exclusion manifest, and all four declared `.520` deliverables; verify writable atomic output and disk/RAM. Distinguish pre-existing repository-wide test/spec debt from transition-owned failures before deciding status.
+      1. Add or extend REQ-* requirements and focused tests before implementation. Resolve identity by `(milestone, task_id, declared_deliverable)`, never numeric prefix alone.
+      2. Classify Exp5837-Exp5840 as blocked, clean zero-delta, mixed-qualified, or clean-ready using fresh live adversarial-verifier receipts. Preserve every existing stamp and reason.
+      3. Append `.520` to research-complete.yaml exactly once only if its exact milestone block is absent. Record global test/spec failures as non-owned debt; fail the transition only for ambiguity, missing owned evidence, append failure, collision, or focused transition-test failure.
+      4. Record Exp5841-Exp5848 as reserved unactivated identities. Scan active/next roadmaps, completion history, proposals, exclusion manifest, results, and prior transition allocations for Exp5849-Exp5862; require a bare `next_range_collision_count=0`.
+      5. Reconcile only transition-owned internal specs, traceability, ops/status.md, ops/changelog.md, and ops/conductor-log.md. Leave research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, and protected user files byte-for-byte unchanged.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, activated_identity_matrix, adversarial_verifier_receipts, outcome_classification, blocked_and_disqualified_evidence_preserved, reserved_unactivated_task_ids, pre_existing_repository_debt, research_complete_append_count, next_task_range, next_range_collision_count, docs_reconciled, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
          status:
-           principle: "A normalized terminal state distinguishes a complete transition from a bootstrap artifact."
+           principle: "A normalized terminal state distinguishes a completed handoff from a bootstrap artifact."
          preconditions_checked:
-           principle: "Exact hashes and resource checks prevent archival against missing or ambiguous evidence."
+           principle: "Exact hashes, identity checks, resources, and focused-test availability prevent ambiguous archival."
          milestone_transition:
-           principle: "Explicit source and destination milestones prevent numeric-prefix aliasing."
-         declared_deliverable_matrix:
-           principle: "Declared paths plus conductor outcomes are the authority for activated task identity."
+           principle: "Explicit source and destination milestones prevent prefix aliasing."
+         activated_identity_matrix:
+           principle: "Declared paths plus conductor outcomes define the four activated `.520` identities."
          adversarial_verifier_receipts:
-           principle: "Fresh command and exit-code receipts preserve the live quality authority."
+           principle: "Fresh verifier commands preserve the live artifact-quality authority."
          outcome_classification:
-           principle: "Disjoint classes prevent flagged or provisional evidence from becoming a clean success."
-         flagged_evidence_preserved:
-           principle: "True proves the transition did not launder Exp5828 or its downstream taint."
+           principle: "Disjoint evidence classes stop blocked or disqualified work becoming success."
+         blocked_and_disqualified_evidence_preserved:
+           principle: "True proves the handoff did not launder Exp5837 or Exp5839 branch decisions."
          reserved_unactivated_task_ids:
-           principle: "Proposal-only identities remain tombstoned and cannot silently collide."
+           principle: "Proposal-only Exp5841-Exp5848 remain tombstoned."
+         pre_existing_repository_debt:
+           principle: "Unrelated global failures are recorded without being mistaken for task-owned failure."
          research_complete_append_count:
-           principle: "An exact append count prevents duplicate milestone history."
+           principle: "An exact count prevents missing or duplicate history."
          next_task_range:
-           principle: "A declared interval makes downstream allocation auditable."
+           principle: "A declared finite interval makes allocation auditable."
          next_range_collision_count:
-           principle: "Only a bare zero authorizes Exp5837-Exp5848."
+           principle: "Only a bare zero authorizes Exp5849-Exp5862."
          docs_reconciled:
-           principle: "Specs, traceability, and ops summaries must match archived evidence classes."
+           principle: "Internal specs and ops summaries must match exact archived evidence."
          duration_s:
            principle: "Measured wall time exposes bootstrap-only execution."
          inference_substrate:
-           principle: "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference."
+           principle: "`aggregation_from_upstream_artifacts` identifies archival, not model inference."
          field_provenance:
-           principle: "Per-field paths and hashes make the transition independently auditable."
+           principle: "Every field traces to paths, hashes, commands, or exact roadmap records."
          test_commands:
-           principle: "Recorded commands show which identity, verifier, and collision checks ran."
+           principle: "Recorded commands document identity, verifier, append, and collision checks."
          test_exit_codes:
-           principle: "Exit codes prevent failed checks from being narrated as passing."
+           principle: "Exit codes prevent failed owned checks being narrated as passing."
          reproducibility_checksum:
-           principle: "A content hash detects later ledger or allocation drift."
+           principle: "A checksum detects later ledger or allocation drift."
          honest_verdict:
-           principle: "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
-      8. Run YAML parse, exact-path/hash, duplicate-history, adversarial-verifier, task-alias, exclusion-manifest, reserved-range, collision, terminal-verdict, reconciliation, spec-coverage, root-clutter, and protected-file immutability tests.
+           principle: "A `complete:` or `blocked:` prefix makes the handoff terminal."
+      7. Run focused transition unit/coverage, YAML parse, exact-path/hash, duplicate-history, adversarial-verifier, alias, exclusion-manifest, reserved-range, collision, protected-file immutability, reconciliation, spec-coverage reporting, and root-clutter checks. Report global suite debt separately.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5838-v520-source-delta-ingestion
-    milestone: "2026.07.520"
-    title: "Dated primary-source and implementation receipt for V520"
+  - id: exp5850-v521-source-delta-ingestion
+    milestone: "2026.07.521"
+    title: "Dated web evidence sweep after the V521 marker"
+    operator_override: "2026-05-29 operator directive (standing): recurring source-scope audit false-positive; this task names retired scopes only to exclude them and cannot execute or reopen cross-game value transfer."
     priority: high
     track: research
-    deliverable: results/experiment_5838_v520_source_delta_ingestion.json
+    deliverable: results/experiment_5850_v521_source_delta_ingestion.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 30
@@ -102,7 +106,7 @@ tasks:
     requires_gpu: false
     prompt: |
       CONTEXT:
-      The planning sweep is recorded at `V520-PLANNER-REFRESH-20260723-END` in research-references.md. This execution refresh may ingest only newer evidence and add bounded controls inside already allocated tasks. It may not rewrite IDs, structured gates, mandatory SOTA models, retired scopes, hardware claims, or headline authority. Zero accepted findings is complete. Today is {date}.
+      The planning sweep is sealed at `V521-PLANNER-REFRESH-20260723-END` in research-references.md. This execution refresh may accept only newer, non-duplicate evidence and may add bounded controls inside existing Exp5851-Exp5861 scopes. It may not change task identities, structured gates, mandatory SOTA models, retired scopes, or authority boundaries. Zero accepted findings is complete. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -113,240 +117,1231 @@ tasks:
       - {project_root}/research-roadmap-next.yaml
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_5824_v519_source_delta_ingestion.json
+      - {project_root}/results/experiment_5838_v520_source_delta_ingestion.json
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Run a bounded post-marker primary/secondary source refresh, append only non-duplicate actionable deltas to research-references.md, and write results/experiment_5838_v520_source_delta_ingestion.json.
+      Search the bounded post-marker window, classify every source receipt, append only actionable non-duplicate deltas to research-references.md, and write results/experiment_5850_v521_source_delta_ingestion.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash the V520 marker, next-roadmap IDs/gates, references, exclusion manifest, and active roadmap; record network/source availability. Report unavailable routes instead of inventing results.
-      1. Add or extend REQ-* reporting requirements and tests for the time window, source provenance, duplicate suppression, retired-scope protection, and roadmap immutability.
-      2. Search arXiv first for post-marker EBM verification/reasoning, neural CSPs, Ising/sampling, hallucination verification, KANs, constrained decoding, probabilistic hardware, continual learning, and live world-feedback acquisition.
-      3. Check OpenReview, Hugging Face Papers, direct Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery, Extropic writing/hardware, and Logical Intelligence public pages. Preserve queries, URLs, dates, and access outcomes.
-      4. Classify every item as accepted, duplicate, watch-only, inaccessible, or excluded. An accepted item must map to Exp5839-Exp5847 without reopening finite-ID generated-answer transport, external generated-text/logprob PHASE D, tempering, ARC CEGIS/public solves, unchanged board probes, TSU execution, or Kona execution.
-      5. Append one dated execution-refresh block only for accepted non-duplicates; otherwise leave research-references.md unchanged. Do not alter experiment identities or structured gates.
+      0. PRECONDITIONS: hash the V521 marker, roadmap IDs/gates, references, exclusion manifest, and active roadmap; record network and source availability. Unavailable routes are explicit outcomes, never invented results.
+      1. Add or extend REQ-* reporting requirements and tests for time-window novelty, primary-source provenance, duplicate suppression, retired-scope protection, and roadmap immutability.
+      2. Search arXiv first for newer EBM verification/reasoning, neural CSPs, Ising/sampling, hallucination verification, KANs, energy-guided decoding, probabilistic hardware, continual learning, and active observation.
+      3. Check OpenReview, Hugging Face Papers, direct Semantic Scholar citation APIs for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery, Extropic writing/hardware, and Logical Intelligence public pages. Record queries, URLs, dates, and access outcomes.
+      4. Classify every item as accepted, duplicate, watch-only, inaccessible, or excluded. Accepted items must map to an existing task without reopening generated-answer transport, PHASE D output-text/logit work, tempering, public ARC solves, cross-game value transfer, unchanged board probes, TSU execution, or Kona execution.
+      5. Append one dated execution-refresh block only if accepted findings exist; otherwise leave research-references.md unchanged. Do not rewrite existing reference history.
       6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, planner_marker_and_search_window, source_receipts, citation_trail_receipts, finding_classification, accepted_finding_count, references_modified, roadmap_immutability_receipts, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
          status:
-           principle: "A terminal refresh state distinguishes a complete zero delta from a failed search."
+           principle: "A terminal state distinguishes a complete zero delta from failed research."
          preconditions_checked:
-           principle: "Marker and network checks prevent stale-window or fabricated-source claims."
+           principle: "Marker, hash, and network checks prevent stale-window or fabricated-source claims."
          planner_marker_and_search_window:
-           principle: "A sealed time boundary makes novelty claims falsifiable."
+           principle: "A sealed time boundary makes novelty falsifiable."
          source_receipts:
-           principle: "Queries, URLs, dates, and access outcomes distinguish primary evidence from discovery metadata."
+           principle: "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata."
          citation_trail_receipts:
            principle: "Direct EBT and ARM-EBM checks prevent unsupported citation claims."
          finding_classification:
-           principle: "Explicit classes stop duplicates and watch items from becoming experiments."
+           principle: "Explicit classes stop duplicates and watch items becoming experiments."
          accepted_finding_count:
-           principle: "A bare scalar zero is a valid complete result and prevents forced novelty."
+           principle: "A bare zero is a valid complete result."
          references_modified:
            principle: "The artifact discloses whether the shared source ledger changed."
          roadmap_immutability_receipts:
-           principle: "Freshness work cannot silently redesign identities, gates, or closed scopes."
+           principle: "Freshness work cannot silently redesign allocated tasks."
          duration_s:
-           principle: "Measured time exposes a bootstrap-only search receipt."
+           principle: "Measured time exposes a bootstrap-only receipt."
          inference_substrate:
-           principle: "`aggregation_from_upstream_artifacts` identifies metadata synthesis rather than experiment inference."
+           principle: "`aggregation_from_external_primary_sources` declares literature synthesis, not experiment inference."
          field_provenance:
-           principle: "Every accepted finding points to its source and allocated experiment hook."
+           principle: "Every accepted finding maps to its source and existing task hook."
          test_commands:
            principle: "Commands document date, duplicate, citation, and immutability checks."
          test_exit_codes:
-           principle: "Exit codes prevent failed provenance checks from becoming success."
+           principle: "Exit codes prevent failed provenance checks becoming success."
          reproducibility_checksum:
-           principle: "A checksum detects later marker, reference, or classification drift."
+           principle: "A checksum detects marker, reference, or classification drift."
          honest_verdict:
-           principle: "A `complete:` or `blocked:` prefix makes the outcome terminal."
-      7. Run URL/provenance, date-window, duplicate, citation-receipt, exclusion-manifest, roadmap-immutability, YAML, schema, spec-coverage, and root-clutter tests.
+           principle: "A `complete:` or `blocked:` prefix makes the refresh terminal."
+      7. Run URL/provenance, date-window, duplicate, citation, exclusion-manifest, roadmap-immutability, YAML, schema, spec-coverage, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5839-v519-evidence-qualification
-    milestone: "2026.07.520"
-    title: "Independent .519 row-level evidence and lifecycle qualification"
+  - id: exp5851-deterministic-replay-provenance-contract
+    milestone: "2026.07.521"
+    title: "Exact replay substrate contract and false-compute-marker rejection"
     priority: critical
-    track: self-learning
-    deliverable: results/experiment_5839_v519_evidence_qualification.json
+    track: infrastructure
+    deliverable: results/experiment_5851_deterministic_replay_provenance_contract.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 100
-    estimated_wall_time_min: 300
+    estimated_wall_time_min: 240
     requires_gpu: false
     prior_failures:
       - experiment_id: exp5828-future-validated-structural-memory
-        verdict: "complete: future_validated_structural_memory_lifecycle_credited; flagged_adversarial=true (CRITICAL DURATION_TOO_SHORT, WARN METHODOLOGY_MISSING)"
-        addressed_by: "This task independently reconstructs rows and metrics, audits chronology and target leakage, adds permutation/perturbation/no-information controls, and reruns the live verifier without mutating the flagged artifact."
+        verdict: "complete: future_validated_structural_memory_lifecycle_credited"
+        addressed_by: "Exp5828 was CRITICAL-flagged because a sub-second deterministic replay advertised GGUF/CUDA compute and omitted model methodology; this task creates an explicit no-LLM exact-replay contract and proves those false markers fail closed."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5825 and Exp5826 established a canonical contract and chronological exact stream. Exp5827 reported strong structural acquisition and passes the live verifier. Exp5828 reported lifecycle readiness but is adversarially CRITICAL-flagged; Exp5829 reported selective replay on that flagged upstream. Promotion or extension requires independent row-level replay, shortcut controls, provenance checks, and separate qualification scalars. Today is {date}.
+      Exp5839 recomputed strong lifecycle metrics but disqualified the branch because Exp5828's 0.793-second artifact referenced live-model/CUDA compute without model specifications. The repair is a reusable deterministic exact-replay receipt, not another LLM run. Historical Exp5828 remains immutable and flagged. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/results/experiment_5825_certified_adaptive_memory_contract.json
-      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.json
-      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.rows.jsonl
-      - {project_root}/results/experiment_5827_minimal_core_structural_acquisition_ab.json
       - {project_root}/results/experiment_5828_future_validated_structural_memory.json
-      - {project_root}/results/experiment_5829_transfer_selective_replay_audit.json
-      - {project_root}/python/carnot/experiment_5826_out_of_template_constraint_stream.py
-      - {project_root}/python/carnot/experiment_5827_minimal_core_structural_acquisition_ab.py
+      - {project_root}/results/experiment_5839_v519_evidence_qualification.json
       - {project_root}/python/carnot/experiment_5828_future_validated_structural_memory.py
-      - {project_root}/python/carnot/experiment_5829_transfer_selective_replay_audit.py
+      - {project_root}/python/carnot/experiment_5839_v519_evidence_qualification.py
       - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/scripts/experiment_template.py
       - {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Implement and validate a fail-closed provenance contract for deterministic lifecycle/replay artifacts, demonstrate rejection of Exp5828-shaped false compute markers, and write results/experiment_5851_deterministic_replay_provenance_contract.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash Exp5828, Exp5839, their source modules, specs, and live adversarial verifier; record Python, disk/RAM, timer resolution, and writable atomic outputs.
+      1. Add REQ-* requirements and tests first. Define an exact-replay receipt with source-row hashes, validator versions, seeds, state/checkpoint hashes, monotonic start/end timestamps, measured duration, restart/rollback receipts, and `inference_substrate=deterministic_exact_verifier_and_replay_no_llm`.
+      2. Forbid `model_specs`, `target_model`, CUDA/GPU, GGUF, tokenizer, generation, embedding, and live-inference markers on this substrate. Conversely, require model specifications and credible live-inference timing when any such marker appears.
+      3. Build positive and negative contract fixtures. The negative Exp5828-shaped fixture must fail for false compute markers; a corrected deterministic fixture with identical scientific row semantics must pass.
+      4. Ensure validation never mutates historical artifacts and cannot bless a result merely because aggregate metrics are positive.
+      5. Run the live adversarial verifier on the new contract artifact and record the complete receipt.
+      6. Emit bare `deterministic_replay_contract_ready_score=1.0` only if all positive fixtures pass, all false-marker fixtures fail, historical artifacts remain unchanged, and the live verifier is clean.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, contract_schema, required_exact_replay_fields, forbidden_compute_markers, positive_fixture_receipts, false_compute_marker_rejection_receipts, exp5828_regression_receipt, historical_artifacts_mutated, adversarial_verifier_receipt, deterministic_replay_contract_ready_score, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal contract state distinguishes usable validation from partial scaffolding."
+         preconditions_checked:
+           principle: "Hashes, timers, resources, and outputs prevent fabricated provenance checks."
+         contract_schema:
+           principle: "A versioned schema makes the no-LLM replay boundary explicit."
+         required_exact_replay_fields:
+           principle: "Rows, validators, seeds, state hashes, timing, restart, and rollback are mandatory evidence."
+         forbidden_compute_markers:
+           principle: "A deterministic replay must not impersonate live model or GPU work."
+         positive_fixture_receipts:
+           principle: "Valid deterministic receipts prove the contract is usable."
+         false_compute_marker_rejection_receipts:
+           principle: "Negative fixtures prove the root failure is mechanically caught."
+         exp5828_regression_receipt:
+           principle: "The exact historical failure shape anchors the repair."
+         historical_artifacts_mutated:
+           principle: "Must be false; repair cannot unflag or rewrite Exp5828."
+         adversarial_verifier_receipt:
+           principle: "The live verifier remains terminal artifact authority."
+         deterministic_replay_contract_ready_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5856."
+         duration_s:
+           principle: "Measured wall time is part of substrate honesty."
+         inference_substrate:
+           principle: "`deterministic_exact_verifier_and_replay_no_llm` is the only allowed value."
+         field_provenance:
+           principle: "Every contract decision traces to fixtures, code, hashes, or verifier output."
+         test_commands:
+           principle: "Commands document positive, negative, historical, and live-verifier checks."
+         test_exit_codes:
+           principle: "Exit codes prevent failed contract tests becoming readiness."
+         reproducibility_checksum:
+           principle: "A checksum detects schema or fixture drift."
+         honest_verdict:
+           principle: "A terminal prefix states ready, failed, or blocked outcome honestly."
+      8. Run focused unit/coverage, schema round-trip, false-marker property tests, Exp5828 regression, timing, immutability, adversarial-verify, spec-coverage, root-clutter, and protected-file checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5852-three-family-paired-embeddings
+    milestone: "2026.07.521"
+    title: "Current-SOTA causal-pair embedding extraction across three model families"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5852_three_family_paired_embeddings.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 480
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
+        verdict: "complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"
+        addressed_by: "Exp5200 used one older model and absolute final states; this task uses exact correct/incorrect and constraint-present/ablated pairs across all three mandated current GGUF families with label-blind extraction and no classifier training."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5840 is a clean, verifier-ready exact counterfactual fixture over correct/one-minimal-violation candidates and constraint-present/ablated contexts. Exp5200's one-model absolute probe was negative. This task changes the scientific surface to causal paired differences across all three mandated current local GGUF families. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5840_exact_counterfactual_embedding_fixture.json
+      - {project_root}/results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl
+      - {project_root}/results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/python/carnot/inference/gemma4_quantized_loader.py
+      - {project_root}/python/carnot/verify
       - {project_root}/openspec/capabilities/verification/spec.md
 
       TASK:
-      Independently recompute and adversarially qualify the `.519` exact stream, structural acquisition, lifecycle, and replay evidence, then write results/experiment_5839_v519_evidence_qualification.json.
+      Extract aligned, output-free causal-pair embeddings from all three mandated SOTA GGUF families, preserve exact row/model provenance, and write results/experiment_5852_three_family_paired_embeddings.json plus results/experiment_5852_three_family_paired_embeddings.rows.jsonl.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash all upstream artifacts, row files, source modules, exact-validator versions, split definitions, and seeds; verify RAM/disk and a clean temporary reconstruction path. Missing evidence writes a terminal blocked artifact.
-      1. Add REQ-* requirements and tests before implementation. Do not import trusted aggregate metrics from Exp5827-Exp5829 into recomputation.
-      2. Reconstruct canonical events from immutable Exp5826 rows. Audit chronological order, train/dev/science visibility, family/surface/change balance, label availability, solver independence, state hashes, rollback, restart, and protected-prefix evidence.
-      3. Recompute every load-bearing row aggregate, paired delta, CI95, family lower bound, promotion decision, unsafe-update count, rollback/restart result, and replay resource scalar from row/state receipts.
-      4. Test label permutation, target-preserving feature perturbation, target-derived-feature ablation, signature collisions, future-label access, no-information controls, and duplicate-row weighting. Any surviving shortcut is disqualifying.
-      5. Classify the substrate as deterministic exact verifier/replay, not live LLM inference. Run the live adversarial verifier on this new artifact and preserve its full receipt.
-      6. Emit bare `constraint_stream_qualified_score`, `structural_acquisition_qualified_score`, `adaptive_memory_lifecycle_qualified_score`, and `selective_replay_qualified_score`. A scalar is 1.0 only if its own provenance, recomputation, controls, methodology, duration, and live verifier checks pass. Never mutate Exp5828.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_artifact_hashes, independent_row_reconstruction, chronology_and_visibility_audit, exact_validator_independence, recomputed_metrics, shortcut_and_no_information_controls, state_rollback_restart_receipts, adversarial_verifier_receipt, constraint_stream_qualified_score, structural_acquisition_qualified_score, adaptive_memory_lifecycle_qualified_score, selective_replay_qualified_score, promotion_eligibility_matrix, historical_artifacts_mutated, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+      0. PRECONDITIONS: require Exp5840 `counterfactual_fixture_ready_score==1.0`; hash fixture rows/splits/validators; resolve cached GGUF files, embedded tokenizer metadata, GPU count/VRAM, disk/RAM, and atomic checkpoint/output paths. If any mandated model is unavailable, write a terminal blocked artifact; legacy tiny models may run smoke tests only and cannot satisfy readiness.
+      1. Add REQ-* requirements and tests before implementation. Use `cached_sota_pair()` or the same canonical cached-SOTA registry and llama.cpp-backed `Gemma4QuantizedLoader`; never use AutoTokenizer, transformers-native loading, hidden hooks, output logits, or generated answers.
+      2. Declare MODEL_SPECS with exact hub IDs: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Record exact local paths, quantization names, file hashes, embedded tokenizer metadata, device assignment, context length, and llama.cpp version.
+      3. Extract final output-free embeddings for every correct/incorrect and constraint-present/ablated member using identical token envelopes and deterministic inference settings. Preserve pair/group alignment and never expose labels or family/model identity inside learned feature columns.
+      4. Checkpoint by model and row group. On resume, verify input/model hashes and refuse mixed-version continuation.
+      5. Verify finite shapes, no constant dimensions after declared preprocessing, pair completeness, exact row order, token-count parity, no truncation asymmetry, and no duplicate or missing model-row cells.
+      6. Emit bare `paired_embedding_corpus_ready_score=1.0` only if all three models, both causal axes, every constraint family, and all science groups are complete and integrity-clean.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, model_specs, models_used, model_file_and_tokenizer_receipts, gpu_and_loader_receipts, upstream_fixture_hashes, deterministic_embedding_config, model_axis_family_cell_counts, embedding_shape_and_finiteness, pair_alignment_receipts, token_and_truncation_parity, checkpoint_resume_receipts, row_file_receipt, paired_embedding_corpus_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
          status:
-           principle: "A terminal qualification state distinguishes a completed null from a partial audit."
+           principle: "A terminal corpus state distinguishes complete extraction from partial checkpoints."
          preconditions_checked:
-           principle: "Hashes, validators, splits, seeds, resources, and temp paths prevent fabricated replay."
-         upstream_artifact_hashes:
-           principle: "Exact hashes bind qualification to immutable `.519` evidence."
-         independent_row_reconstruction:
-           principle: "Fresh row derivation prevents trusted aggregate fields from validating themselves."
-         chronology_and_visibility_audit:
-           principle: "Monotone events and sealed science labels are required for prospective learning."
-         exact_validator_independence:
-           principle: "Solver/version receipts expose circular target construction or label reuse."
-         recomputed_metrics:
-           principle: "Row-derived aggregates make every credited scalar reproducible."
-         shortcut_and_no_information_controls:
-           principle: "Permutation, perturbation, ablation, collision, and null controls expose target leakage."
-         state_rollback_restart_receipts:
-           principle: "Exact hashes test durable state rather than narrative lifecycle claims."
-         adversarial_verifier_receipt:
-           principle: "The live verifier is the terminal artifact-quality authority."
-         constraint_stream_qualified_score:
-           principle: "EMIT BARE scalar; only 1.0 permits Exp5840."
-         structural_acquisition_qualified_score:
-           principle: "EMIT BARE scalar separating clean structural evidence from later lifecycle claims."
-         adaptive_memory_lifecycle_qualified_score:
-           principle: "EMIT BARE scalar; only 1.0 permits Exp5843 and Exp5846."
-         selective_replay_qualified_score:
-           principle: "EMIT BARE scalar; flagged-upstream replay is provisional unless independently clean."
-         promotion_eligibility_matrix:
-           principle: "Per-branch classes keep flagged, provisional, null, and clean evidence disjoint."
-         historical_artifacts_mutated:
-           principle: "Must be false; qualification cannot unstamp or rewrite history."
+           principle: "Fixture, model, tokenizer, device, resource, and output checks prevent fallback masquerading."
+         model_specs:
+           principle: "Exact SOTA hub IDs, paths, hashes, and device assignments make the live surface reproducible."
+         models_used:
+           principle: "The artifact must explicitly list all three mandated families."
+         model_file_and_tokenizer_receipts:
+           principle: "Embedded GGUF tokenizer provenance prevents token-ID mismatches."
+         gpu_and_loader_receipts:
+           principle: "Actual llama.cpp device placement distinguishes live extraction from mock execution."
+         upstream_fixture_hashes:
+           principle: "Hashes bind embeddings to the clean exact causal corpus."
+         deterministic_embedding_config:
+           principle: "Identical settings isolate representation differences from decoding randomness."
+         model_axis_family_cell_counts:
+           principle: "Disaggregated counts prevent a partial family from carrying readiness."
+         embedding_shape_and_finiteness:
+           principle: "Finite aligned vectors are required before any learned energy."
+         pair_alignment_receipts:
+           principle: "Every difference must join exact members from the same causal pair."
+         token_and_truncation_parity:
+           principle: "Length or truncation cannot encode the target."
+         checkpoint_resume_receipts:
+           principle: "Hash-bound resumes prevent mixed model or data versions."
+         row_file_receipt:
+           principle: "Path, count, and hash make the full corpus auditable."
+         paired_embedding_corpus_ready_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5853."
          duration_s:
-           principle: "Measured wall time exposes the same bootstrap-only failure mode under audit."
+           principle: "Measured multi-model wall time exposes mock or bootstrap-only execution."
          inference_substrate:
-           principle: "`deterministic_exact_verifier_and_replay_no_llm` declares the true compute path."
+           principle: "`live_llm_embedding_extraction` declares the true compute path."
          verifier_is_oracle:
-           principle: "True records exact solvers as scoring authority and forbids a verifier-moat claim."
+           principle: "True records exact labels; embeddings are not release authority."
          field_provenance:
-           principle: "Each field maps to rows, source, state hashes, or verifier receipts."
+           principle: "Every aggregate traces to exact row, model, tokenizer, and device receipts."
          test_commands:
-           principle: "Commands document reconstruction, shortcuts, statistics, state, and verifier checks."
+           principle: "Commands document model resolution, extraction, alignment, parity, and schema checks."
          test_exit_codes:
-           principle: "Exit codes prevent failed controls from becoming qualification."
+           principle: "Exit codes prevent partial extraction becoming readiness."
          reproducibility_checksum:
-           principle: "A checksum detects row, code, split, seed, or metric drift."
+           principle: "A checksum detects row, model, split, or configuration drift."
          honest_verdict:
-           principle: "A terminal prefix states qualified, disqualified, mixed, or blocked evidence honestly."
-      8. Run focused unit/coverage, row/hash, chronology, visibility, target-leakage, solver-independence, permutation, perturbation, collision, no-information, metric/CI recomputation, rollback/restart, duration, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file immutability tests.
+           principle: "A terminal prefix states ready, partial, or blocked outcome."
+      8. Run focused unit/coverage, cached-model resolution, embedded-tokenizer, GPU placement, row/model completeness, shape/finiteness, pair alignment, token/truncation parity, checkpoint-resume, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file immutability tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5840-exact-counterfactual-embedding-fixture
-    milestone: "2026.07.520"
-    title: "Gated on Exp5839 stream qualification: exact causal counterfactual fixture"
+  - id: exp5853-paired-embedding-integrity-audit
+    milestone: "2026.07.521"
+    title: "Claim-flip, evaluator-swap, and identity-shortcut audit for paired representations"
     priority: critical
     track: verification
-    deliverable: results/experiment_5840_exact_counterfactual_embedding_fixture.json
+    deliverable: results/experiment_5853_paired_embedding_integrity_audit.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 240
     requires_gpu: false
     gated_on:
-      - upstream: exp5839-v519-evidence-qualification
-        artifact_field: constraint_stream_qualified_score
+      - upstream: exp5852-three-family-paired-embeddings
+        artifact_field: paired_embedding_corpus_ready_score
         op: "=="
         value: 1.0
+    prior_failures:
+      - experiment_id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
+        verdict: "complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"
+        addressed_by: "This is a pre-training causal integrity audit, not another absolute probe: individual claim flips, independent evaluator swaps, identity masking, perturbations, and no-information controls must all pass before a classifier can run."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5839 must qualify the exact chronological stream before representation work begins. CrossHallu and CORTEX motivate comparative rather than absolute internal states, but Carnot needs exact causal pairs, label-blind splits, proof-preserving surfaces, and fixed token envelopes before any SOTA embedding extraction. This task performs no LLM inference. Today is {date}.
+      Exp5852 must provide the complete three-model paired corpus. Recent activation-decoding work shows that representation agreement may preserve gist while ignoring a specific false claim, and that evaluator swaps can expose co-adapted codes. This task audits the causal corpus before any headline model training. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
       - {project_root}/research-references.md
-      - {project_root}/results/experiment_5839_v519_evidence_qualification.json
-      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.json
-      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.rows.jsonl
-      - {project_root}/python/carnot/experiment_5826_out_of_template_constraint_stream.py
+      - {project_root}/results/experiment_5852_three_family_paired_embeddings.json
+      - {project_root}/results/experiment_5852_three_family_paired_embeddings.rows.jsonl
+      - {project_root}/results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl
+      - {project_root}/python/carnot/verify
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+
+      TASK:
+      Independently audit causal sensitivity, evaluator independence, and shortcut resistance in the paired embedding corpus, then write results/experiment_5853_paired_embedding_integrity_audit.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay the structured gate; hash Exp5852 aggregate/rows, Exp5840 rows, exact validators, split manifests, and audit code; verify disk/RAM and writable atomic output.
+      1. Add REQ-* requirements and tests first. Reconstruct all joins from immutable row IDs instead of trusting aggregate counts.
+      2. Measure paired sensitivity to each one-minimal constraint violation and to each constraint ablation. Require sign/direction consistency to be preregistered label-blind; do not choose a favorable sign on science data.
+      3. Run independent evaluator swaps: primary exact validator versus independently implemented validator/version, grounded-versus-true crosses, and feature consumer reinitialization. Record disagreement and any co-adaptation.
+      4. Run label permutation, pair-member swaps, model/family identity prediction, identity masking, token-count and norm-only baselines, target-preserving perturbations, duplicate-group reweighting, and no-information controls.
+      5. Test all controls within each model, causal axis, constraint family, hardness cell, and proof-preserving surface; pooled success cannot hide a failed cell.
+      6. Emit bare `paired_embedding_integrity_ready_score=1.0` only if every required cell is complete, no forbidden shortcut survives, claim flips are detectable beyond preregistered null bounds, and evaluator swaps preserve the exact target without private-code behavior.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_hashes_and_row_reconstruction, claim_flip_sensitivity, constraint_ablation_sensitivity, evaluator_swap_receipts, grounded_vs_true_cross, label_and_pair_permutation_controls, identity_masking_and_prediction_controls, length_norm_and_truncation_controls, perturbation_duplicate_and_no_information_controls, disaggregated_cell_decisions, surviving_shortcuts, paired_embedding_integrity_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal audit state separates clean causal data from unusable embeddings."
+         preconditions_checked:
+           principle: "Gate, hashes, validators, splits, resources, and outputs prevent fabricated auditing."
+         upstream_hashes_and_row_reconstruction:
+           principle: "Fresh row joins prevent aggregate self-validation."
+         claim_flip_sensitivity:
+           principle: "A representation energy must react to the specific violated claim, not only gist."
+         constraint_ablation_sensitivity:
+           principle: "Removing the owning constraint must change only the intended causal comparison."
+         evaluator_swap_receipts:
+           principle: "Independent evaluators expose co-adapted target codes."
+         grounded_vs_true_cross:
+           principle: "Grounding agreement and exact truth must remain distinguishable and jointly checked."
+         label_and_pair_permutation_controls:
+           principle: "Shuffled or reversed targets must collapse predictability."
+         identity_masking_and_prediction_controls:
+           principle: "Model or constraint identity cannot substitute for correctness."
+         length_norm_and_truncation_controls:
+           principle: "Token envelope and vector scale cannot carry the label."
+         perturbation_duplicate_and_no_information_controls:
+           principle: "Robustness and null tests expose target leakage or duplicate inflation."
+         disaggregated_cell_decisions:
+           principle: "Every model, axis, family, and hardness cell owns its decision."
+         surviving_shortcuts:
+           principle: "Any non-empty forbidden shortcut list blocks promotion."
+         paired_embedding_integrity_ready_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5854."
+         duration_s:
+           principle: "Measured audit time exposes bootstrap-only execution."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` declares a no-new-inference audit."
+         verifier_is_oracle:
+           principle: "True records exact validators as target authority."
+         field_provenance:
+           principle: "Every decision traces to rows, controls, validators, and code."
+         test_commands:
+           principle: "Commands document every causal and shortcut control."
+         test_exit_codes:
+           principle: "Exit codes prevent failed controls becoming readiness."
+         reproducibility_checksum:
+           principle: "A checksum detects row, control, or evaluator drift."
+         honest_verdict:
+           principle: "A terminal prefix states ready, disqualified, or blocked outcome."
+      8. Run focused unit/coverage, gate replay, row reconstruction, claim-flip, evaluator-swap, permutation, identity, length/norm, perturbation, duplicate, no-information, disaggregation, schema, adversarial-verify, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5854-portable-comparative-energy-controls
+    milestone: "2026.07.521"
+    title: "Held-model and held-constraint comparative energy with matched controls"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5854_portable_comparative_energy_controls.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5853-paired-embedding-integrity-audit
+        artifact_field: paired_embedding_integrity_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
+        verdict: "complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"
+        addressed_by: "The new attempt uses exact causal differences from three current GGUF families, claim/evaluator integrity gates, identity masking, full model-family and constraint-family holdouts, and matched logistic/MLP/KAN/simple controls."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5853 must establish that the paired representations encode individual constraint changes without forbidden shortcuts. The scientific question is portability: can one scalar energy transfer to a held-out model family and held-out constraint family beyond simple baselines? A within-family win alone is not sufficient. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5852_three_family_paired_embeddings.rows.jsonl
+      - {project_root}/results/experiment_5853_paired_embedding_integrity_audit.json
+      - {project_root}/results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json
+      - {project_root}/python/carnot/kan
       - {project_root}/python/carnot/verify
       - {project_root}/openspec/capabilities/verification/spec.md
 
       TASK:
-      Build an exact, causal, leakage-resistant counterfactual fixture for comparative GGUF embeddings and write results/experiment_5840_exact_counterfactual_embedding_fixture.json plus results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl.
+      Evaluate preregistered comparative energy models and simple controls under held-model and held-constraint splits, decide the bounded final-embedding route, and write results/experiment_5854_portable_comparative_energy_controls.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: replay the structured gate; hash Exp5839, the exact stream rows, validators, and family registry; verify at least 30 eligible pairs per family, split headroom, disk/RAM, and writable atomic outputs. Failure writes a terminal blocked artifact.
-      1. Add REQ-* requirements and tests before implementation. Reuse canonical event/family vocabulary and exact validators.
-      2. Construct both causal axes per family: correct candidate versus one-minimal-violation candidate with context fixed, and constraint-present versus constraint-ablated context with candidate fixed.
-      3. Include at least 30 pairs per family per axis, preregister train/dev/science family and surface partitions, hardness/change cells, proof-preserving paraphrases, and pair/group bootstrap units.
-      4. Match token-budget envelopes without answer-bearing padding. Mask family/model/label identity from feature consumers while retaining provenance outside model inputs.
-      5. Run exact label checks, minimal-violation proof checks, ablation-causality checks, target-leakage scans, duplicate/near-duplicate scans, and split-overlap tests.
-      6. Emit bare `counterfactual_fixture_ready_score=1.0` only if every family and axis meets count, causality, exactness, balance, leakage, and split gates; otherwise 0.0 with reasons.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_artifact_hashes, causal_axis_definitions, family_axis_cell_counts, exact_label_and_minimality_receipts, constraint_ablation_receipts, proof_preserving_surface_receipts, token_budget_parity, split_definition_and_hashes, target_leakage_checks, row_file_receipt, counterfactual_fixture_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+      0. PRECONDITIONS: replay the structured gate; hash Exp5852 rows, Exp5853 audit, split manifests, feature transformations, and seeds; verify per-holdout class/group headroom, CPU/RAM, and atomic output.
+      1. Add REQ-* requirements and tests first. Freeze train/dev/science partitions and all thresholds before science scoring. Group all members of a causal pair and proof-preserving surface together.
+      2. Build label-blind paired-difference features using only Exp5853-approved transformations. Compare absolute-state, cosine/distance, norm-only, logistic regression, a capacity-matched two-layer MLP, and a compact KAN with parameter/optimization budgets reported.
+      3. Run leave-one-model-family-out and leave-one-constraint-family-out evaluations, plus the intersection where headroom permits. Mask identity and report residual model/family predictability.
+      4. Report AUROC, AUPRC, balanced accuracy, ECE, pairwise ranking accuracy, group-bootstrap CI95, seed dispersion, and within-to-cross-family degradation for every control and holdout.
+      5. A portable energy qualifies only if its preregistered primary metric lower bound is above tuned self-consistency/absolute-state/cosine/logistic/MLP/KAN controls on every required model and constraint holdout, with no shortcut or calibration failure. KAN has no privileged status.
+      6. Emit bare `portable_comparative_energy_ready_score`. A clean no-control-win result is complete and sets 0.0; do not rescue it with post-hoc subsets or thresholds.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_hashes, frozen_split_and_seed_manifest, approved_feature_definition, control_model_specs_and_parameter_counts, held_model_results, held_constraint_results, joint_holdout_results, within_vs_cross_family_degradation, calibration_and_identity_leakage, group_bootstrap_receipts, all_control_comparison, retirement_decision, portable_comparative_energy_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
          status:
-           principle: "A terminal fixture state distinguishes complete exact data from a partial file."
+           principle: "A terminal evaluation state distinguishes a clean null from incomplete training."
          preconditions_checked:
-           principle: "Gate, hashes, counts, headroom, resources, and outputs prevent fabricated readiness."
-         upstream_artifact_hashes:
-           principle: "Hashes bind the fixture to the independently qualified stream."
-         causal_axis_definitions:
-           principle: "Two frozen interventions separate candidate correctness from constraint presence."
-         family_axis_cell_counts:
-           principle: "Disaggregated counts prevent a pooled majority family from carrying readiness."
-         exact_label_and_minimality_receipts:
-           principle: "Exact solvers prove correct versus one-minimal-violation pairing."
-         constraint_ablation_receipts:
-           principle: "Only the intended constraint may change on the ablation axis."
-         proof_preserving_surface_receipts:
-           principle: "Surface variants test invariance without changing constraint truth."
-         token_budget_parity:
-           principle: "Matched envelopes prevent length and truncation shortcuts."
-         split_definition_and_hashes:
-           principle: "Frozen label-blind partitions prevent science leakage."
-         target_leakage_checks:
-           principle: "Identity, answer, duplicate, and target-derived features must be absent."
-         row_file_receipt:
-           principle: "Path, row count, and hash make the exact corpus auditable."
-         counterfactual_fixture_ready_score:
-           principle: "EMIT BARE scalar; only 1.0 permits Exp5841."
+           principle: "Gate, hashes, headroom, seeds, resources, and outputs prevent invalid comparisons."
+         upstream_hashes:
+           principle: "The evaluation is bound to the integrity-qualified embedding rows."
+         frozen_split_and_seed_manifest:
+           principle: "Preregistered group partitions prevent science leakage and seed shopping."
+         approved_feature_definition:
+           principle: "Only transformations surviving Exp5853 may enter training."
+         control_model_specs_and_parameter_counts:
+           principle: "Capacity and optimization parity make KAN/MLP/logistic comparisons fair."
+         held_model_results:
+           principle: "A portable claim requires whole-family model transfer."
+         held_constraint_results:
+           principle: "A portable claim requires unseen constraint-family transfer."
+         joint_holdout_results:
+           principle: "The hardest available intersection exposes identity shortcuts."
+         within_vs_cross_family_degradation:
+           principle: "Transfer cost must be visible rather than pooled away."
+         calibration_and_identity_leakage:
+           principle: "Ranking signal must not reduce to model identity or uncalibrated confidence."
+         group_bootstrap_receipts:
+           principle: "Pairs and paraphrase groups, not duplicated rows, are the resampling unit."
+         all_control_comparison:
+           principle: "Promotion requires beating every preregistered simple and learned control."
+         retirement_decision:
+           principle: "The same bounded null permanently closes the final-embedding route."
+         portable_comparative_energy_ready_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5855."
          duration_s:
-           principle: "Measured time exposes bootstrap-only fixture generation."
+           principle: "Measured training/evaluation time exposes bootstrap-only results."
          inference_substrate:
-           principle: "`deterministic_exact_counterfactual_generation_no_llm` states the true path."
+           principle: "`learned_energy_from_frozen_live_llm_embeddings` declares stored-embedding training, not new LLM inference."
          verifier_is_oracle:
-           principle: "True records exact solvers as labels, never a learned-verifier moat."
+           principle: "True records exact labels and forbids a release-authority claim."
          field_provenance:
-           principle: "Every aggregate traces to exact rows, validators, and split receipts."
+           principle: "Every metric traces to rows, splits, seeds, model config, and control code."
          test_commands:
-           principle: "Commands document causality, exactness, counts, leakage, and file integrity."
+           principle: "Commands document splits, controls, metrics, bootstraps, and retirement."
          test_exit_codes:
-           principle: "Exit codes prevent failed fixture checks from becoming readiness."
+           principle: "Exit codes prevent failed controls becoming a positive."
          reproducibility_checksum:
-           principle: "A checksum detects row, split, validator, or surface drift."
+           principle: "A checksum detects row, split, seed, feature, or model drift."
          honest_verdict:
-           principle: "A terminal prefix states ready, null, or blocked outcome honestly."
-      8. Run focused unit/coverage, structured-gate replay, exact/minimality, ablation isolation, N>=30 per cell, family/axis balance, token parity, surface invariance, duplicate/split leakage, schema, spec-coverage, root-clutter, and protected-file immutability tests.
+           principle: "A terminal prefix states portable, null, or blocked outcome."
+      8. Run focused unit/coverage, gate replay, split/group leakage, model capacity, deterministic seeds, holdout completeness, metric recomputation, bootstrap, calibration, identity prediction, all-control dominance, schema, adversarial-verify, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5855-exact-release-shadow-routing
+    milestone: "2026.07.521"
+    title: "Exact-authority shadow routing after a portable energy result"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5855_exact_release_shadow_routing.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 240
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5854-portable-comparative-energy-controls
+        artifact_field: portable_comparative_energy_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
+        verdict: "complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"
+        addressed_by: "This downstream runs only after a held-family control win and uses the learned energy strictly to order or abstain before mandatory exact validation; it cannot repeat Exp5200's direct probe claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5854 must first establish a portable comparative signal. Carnot's learned energy may rank, route, or abstain, but exact validators remain mandatory release authority. This task measures whether candidate ordering reduces exact work without any false acceptance. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5854_portable_comparative_energy_controls.json
+      - {project_root}/results/experiment_5852_three_family_paired_embeddings.rows.jsonl
+      - {project_root}/python/carnot/verify
+      - {project_root}/openspec/capabilities/verification/spec.md
+
+      TASK:
+      Replay the portable energy as a frozen shadow ordering/abstention layer before mandatory exact validation, compare matched controls, and write results/experiment_5855_exact_release_shadow_routing.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay the gate; hash the selected Exp5854 checkpoint/config, science rows, exact validators, thresholds, and seeds; verify resource and output paths.
+      1. Add REQ-* requirements and tests first. Freeze the energy and every threshold; use only science rows not used for fit or selection.
+      2. Compare exact-only input order, random order, tuned self-consistency, best logistic/MLP/KAN control, and portable energy. Every arm must eventually call the same exact release validator.
+      3. Measure candidates checked before first exact-valid result, exact calls, abstention, false accepts, false rejects, ordering regret, CPU time, and total wall time. Report verifier execution cost separately from energy cost.
+      4. Test shuffled energy, reversed ranking, no-information, and score-tie controls. Do not claim saved exact calls if the replay simply omits release validation.
+      5. Emit bare `exact_release_shadow_ready_score=1.0` only if false accepts are zero, exact authority is universal, and a preregistered efficiency lower bound is positive over every matched control.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, frozen_router_receipt, exact_release_authority_receipts, arm_definitions_and_budget_parity, per_arm_efficiency_and_safety, ordering_and_abstention_metrics, shuffled_reversed_and_null_controls, exact_call_accounting, wall_time_accounting, exact_release_shadow_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal shadow state separates safe utility from a completed null."
+         preconditions_checked:
+           principle: "Gate, checkpoint, rows, validators, thresholds, seeds, and resources prevent post-hoc routing."
+         frozen_router_receipt:
+           principle: "No science-time fitting or threshold tuning is allowed."
+         exact_release_authority_receipts:
+           principle: "Every released candidate must carry an exact validation receipt."
+         arm_definitions_and_budget_parity:
+           principle: "Identical candidates and budgets isolate ordering utility."
+         per_arm_efficiency_and_safety:
+           principle: "Efficiency cannot hide a safety regression."
+         ordering_and_abstention_metrics:
+           principle: "Ranking, ties, and abstentions expose where the energy helps."
+         shuffled_reversed_and_null_controls:
+           principle: "Destroyed signal must not preserve the claimed gain."
+         exact_call_accounting:
+           principle: "Saved work counts only exact calls genuinely avoided before an exact-valid release."
+         wall_time_accounting:
+           principle: "End-to-end cost includes energy and verifier execution."
+         exact_release_shadow_ready_score:
+           principle: "EMIT BARE scalar for capstone classification."
+         duration_s:
+           principle: "Measured replay time exposes fabricated speed claims."
+         inference_substrate:
+           principle: "`deterministic_shadow_replay_no_new_llm` declares the true path."
+         verifier_is_oracle:
+           principle: "True forbids an oracle-distinct moat claim."
+         field_provenance:
+           principle: "Every release and metric traces to row, score, validator, and timing receipts."
+         test_commands:
+           principle: "Commands document freeze, authority, parity, controls, and accounting."
+         test_exit_codes:
+           principle: "Exit codes prevent unsafe or incomplete replay becoming ready."
+         reproducibility_checksum:
+           principle: "A checksum detects router, threshold, row, or validator drift."
+         honest_verdict:
+           principle: "A terminal prefix states useful, null, unsafe, or blocked outcome."
+      7. Run focused unit/coverage, gate replay, frozen-checkpoint, exact-authority, budget parity, control, metric/timing recomputation, zero-false-accept, schema, adversarial-verify, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5856-provenance-correct-lifecycle
+    milestone: "2026.07.521"
+    title: "Prospective adaptive-memory lifecycle on an honest deterministic substrate"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5856_provenance_correct_lifecycle.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5851-deterministic-replay-provenance-contract
+        artifact_field: deterministic_replay_contract_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5828-future-validated-structural-memory
+        verdict: "complete: future_validated_structural_memory_lifecycle_credited"
+        addressed_by: "The scientific row mechanism is replayed under Exp5851's explicit deterministic no-LLM contract with false GGUF/CUDA markers removed, fresh row/state receipts, and a new live adversarial-verifier decision."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5839 found that Exp5828's row-level lifecycle metrics were positive but promotion-ineligible solely because its artifact falsely advertised live-model compute. Exp5851 must mechanically define the honest deterministic substrate. This task reruns the lifecycle from immutable exact rows; it does not unflag or rewrite Exp5828. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.json
+      - {project_root}/results/experiment_5826_out_of_template_constraint_stream.rows.jsonl
+      - {project_root}/results/experiment_5827_minimal_core_structural_acquisition_ab.json
+      - {project_root}/results/experiment_5828_future_validated_structural_memory.json
+      - {project_root}/results/experiment_5839_v519_evidence_qualification.json
+      - {project_root}/results/experiment_5851_deterministic_replay_provenance_contract.json
+      - {project_root}/python/carnot/experiment_5828_future_validated_structural_memory.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK:
+      Rebuild and execute the future-validated adaptive-memory lifecycle under the honest deterministic replay contract, preserve exact chronology and safety, and write results/experiment_5856_provenance_correct_lifecycle.json plus results/experiment_5856_provenance_correct_lifecycle.rows.jsonl.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay the gate; hash Exp5826 rows, Exp5827 source evidence, Exp5828 for comparison only, Exp5839 qualification, Exp5851 contract, validators, splits, and seeds; verify disk/RAM, timer, and atomic state/output paths.
+      1. Add REQ-* requirements and tests first. Do not load any LLM, GGUF, tokenizer, CUDA runtime, or model specifications.
+      2. Reconstruct chronological per-family events and sealed future batches from immutable rows. Prove future labels and cleartext targets are unavailable before prediction/promotion.
+      3. Run frozen versus adaptive external-state arms with identical events. The adaptive arm may acquire exact minimal cores, quarantine, validate on the next sealed batch, promote, reject, roll back, restart, and serialize; model weights remain immutable.
+      4. Recompute prospective lift, family lower bounds, protected-prefix retention, unsafe accepts, state size, cap pressure, rollback hashes, restart equivalence, and seed/group-bootstrap CI95 from new row receipts.
+      5. Apply Exp5851's contract and the live adversarial verifier. Preserve Exp5828 unchanged and compare scientific metrics without importing its aggregate decision.
+      6. Emit bare `adaptive_memory_lifecycle_ready_score=1.0` only if positive lower bounds, exact retention, zero unsafe accepts, exact rollback/restart, bounded state, no label leakage, correct substrate, and clean live verifier all pass.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_hashes, deterministic_replay_contract_receipt, chronology_and_visibility_receipts, frozen_and_adaptive_arm_definitions, prospective_row_metrics, family_lower_bounds_and_group_bootstraps, promotion_quarantine_and_rejection_receipts, protected_prefix_retention, rollback_restart_and_serialization_receipts, memory_cap_accounting, no_model_weight_mutation, historical_artifacts_mutated, adversarial_verifier_receipt, adaptive_memory_lifecycle_ready_score, row_file_receipt, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal lifecycle state separates a clean rerun from partial replay."
+         preconditions_checked:
+           principle: "Gate, hashes, validators, splits, seeds, timers, resources, and outputs prevent fabricated lifecycle evidence."
+         upstream_hashes:
+           principle: "The rerun is bound to immutable clean stream and structural evidence."
+         deterministic_replay_contract_receipt:
+           principle: "Substrate honesty is a promotion prerequisite, not metadata decoration."
+         chronology_and_visibility_receipts:
+           principle: "Future labels must remain sealed until their prospective evaluation point."
+         frozen_and_adaptive_arm_definitions:
+           principle: "Matched arms isolate external-state learning."
+         prospective_row_metrics:
+           principle: "Every credited delta is derived from new chronological rows."
+         family_lower_bounds_and_group_bootstraps:
+           principle: "No pooled family or duplicated surface can carry the claim."
+         promotion_quarantine_and_rejection_receipts:
+           principle: "Only future-validated safe updates enter reusable memory."
+         protected_prefix_retention:
+           principle: "Learning new constraints cannot erase certified old behavior."
+         rollback_restart_and_serialization_receipts:
+           principle: "Exact hashes prove durable versioned state."
+         memory_cap_accounting:
+           principle: "External memory remains bounded."
+         no_model_weight_mutation:
+           principle: "Must be true; self-learning is versioned external state only."
+         historical_artifacts_mutated:
+           principle: "Must be false; Exp5828 remains immutable and flagged."
+         adversarial_verifier_receipt:
+           principle: "The fresh live verifier owns promotion eligibility."
+         adaptive_memory_lifecycle_ready_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5857 and Exp5858."
+         row_file_receipt:
+           principle: "Path, count, and hash make lifecycle evidence auditable."
+         duration_s:
+           principle: "Measured exact-replay time must match the declared substrate."
+         inference_substrate:
+           principle: "`deterministic_exact_verifier_and_replay_no_llm` is mandatory."
+         verifier_is_oracle:
+           principle: "True records exact validators as promotion authority."
+         field_provenance:
+           principle: "Every metric traces to rows, state hashes, validators, and timers."
+         test_commands:
+           principle: "Commands document chronology, metrics, state, contract, and live verifier."
+         test_exit_codes:
+           principle: "Exit codes prevent failed lifecycle checks becoming readiness."
+         reproducibility_checksum:
+           principle: "A checksum detects row, split, seed, state, or contract drift."
+         honest_verdict:
+           principle: "A terminal prefix states credited, null, retired, or blocked outcome."
+      8. Run focused unit/coverage, gate replay, chronology/visibility, independent metrics, family/group bootstrap, quarantine, protected-prefix, rollback/restart/serialization, memory cap, weight immutability, Exp5828 immutability, contract, schema, adversarial-verify, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5857-clean-transfer-selective-replay
+    milestone: "2026.07.521"
+    title: "Clean-upstream selective replay with hard-case negative-transfer accounting"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5857_clean_transfer_selective_replay.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5856-provenance-correct-lifecycle
+        artifact_field: adaptive_memory_lifecycle_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5828-future-validated-structural-memory
+        verdict: "complete: future_validated_structural_memory_lifecycle_credited"
+        addressed_by: "Exp5829's positive replay remained provisional because it inherited flagged Exp5828; this task starts only from Exp5856's clean lifecycle and adds hard-case negative-transfer, all-replay, and no-replay controls."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5829 reported strong signature-compatible replay but inherited a flagged lifecycle upstream. Exp5856 must first establish a clean lifecycle. Recent continual-memory work warns that forward transfer can coexist with hard-case forgetting, so the replay qualification must disaggregate both. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5829_transfer_selective_replay_audit.json
+      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.json
+      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.rows.jsonl
+      - {project_root}/python/carnot/experiment_5829_transfer_selective_replay_audit.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK:
+      Requalify transfer-selective replay from the clean lifecycle using compatible, all-replay, and no-replay arms with explicit hard-case accounting, then write results/experiment_5857_clean_transfer_selective_replay.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay the gate; hash Exp5856 aggregate/rows/state manifests, Exp5829 for comparison only, signature definitions, validators, splits, and seeds; verify per-family/headroom counts, disk/RAM, and atomic output.
+      1. Add REQ-* requirements and tests first. Freeze signature computation and compatible/incompatible thresholds before science scoring.
+      2. Replay identical chronological events under no replay, all replay, and signature-compatible replay with identical memory/event budgets.
+      3. Report forward transfer, recurrence recovery, protected-prefix retention, easy/medium/hard strata, family lower bounds, incompatible negative transfer, unsafe transfer, replay precision/recall, state size, cap pressure, and restart equivalence.
+      4. Run signature permutation, collision injection, all-compatible, none-compatible, and duplicate-row controls. A compatibility rule derived from future labels is forbidden.
+      5. Recompute all metrics from clean Exp5856 rows and new replay receipts; do not import Exp5829 aggregate decisions.
+      6. Emit bare `selective_replay_qualified_score=1.0` only if compatible replay has positive prospective lower bounds over both controls, no hard-case/family negative lower bound, zero unsafe transfers, exact retention/restart, and bounded resources.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, clean_lifecycle_hashes, frozen_signature_definition, replay_arm_definitions_and_budget_parity, forward_transfer_and_recurrence, protected_prefix_and_hard_case_results, family_lower_bounds_and_group_bootstraps, incompatible_negative_transfer, signature_permutation_collision_and_null_controls, unsafe_transfer_count, replay_resource_accounting, restart_equivalence, selective_replay_qualified_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal replay state distinguishes qualification from a clean null."
+         preconditions_checked:
+           principle: "Gate, hashes, signatures, validators, splits, seeds, counts, and resources prevent invalid replay."
+         clean_lifecycle_hashes:
+           principle: "Replay can inherit only verifier-clean lifecycle evidence."
+         frozen_signature_definition:
+           principle: "Compatibility cannot be tuned on future outcomes."
+         replay_arm_definitions_and_budget_parity:
+           principle: "Equal memory and event budgets isolate selection value."
+         forward_transfer_and_recurrence:
+           principle: "New-task benefit and returning-task recovery are distinct objectives."
+         protected_prefix_and_hard_case_results:
+           principle: "Average transfer cannot hide forgetting or hard-case harm."
+         family_lower_bounds_and_group_bootstraps:
+           principle: "Each family and event group owns its lower bound."
+         incompatible_negative_transfer:
+           principle: "Wrong transfer must be measured directly."
+         signature_permutation_collision_and_null_controls:
+           principle: "Broken selectors must not retain the claimed benefit."
+         unsafe_transfer_count:
+           principle: "Any unsafe promoted transfer blocks qualification."
+         replay_resource_accounting:
+           principle: "Selective replay must remain bounded."
+         restart_equivalence:
+           principle: "Serialized replay state must reproduce exactly."
+         selective_replay_qualified_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5858."
+         duration_s:
+           principle: "Measured deterministic replay time exposes bootstrap-only work."
+         inference_substrate:
+           principle: "`deterministic_exact_verifier_and_replay_no_llm` declares the true path."
+         verifier_is_oracle:
+           principle: "True records exact outcome authority."
+         field_provenance:
+           principle: "Every metric traces to events, selections, validators, state, and controls."
+         test_commands:
+           principle: "Commands document parity, transfer, retention, controls, resources, and restart."
+         test_exit_codes:
+           principle: "Exit codes prevent failed replay checks becoming qualification."
+         reproducibility_checksum:
+           principle: "A checksum detects signature, event, split, seed, or state drift."
+         honest_verdict:
+           principle: "A terminal prefix states qualified, null, unsafe, or blocked outcome."
+      8. Run focused unit/coverage, gate replay, signature freeze, budget parity, metric/bootstrap recomputation, hard-case/family bounds, collision/permutation/null controls, safety, resources, restart, schema, adversarial-verify, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5858-reduced-oracle-continuous-self-learning
+    milestone: "2026.07.521"
+    title: "Reduced-oracle versioned constraint memory on sealed future streams"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5858_reduced_oracle_continuous_self_learning.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 480
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5856-provenance-correct-lifecycle
+        artifact_field: adaptive_memory_lifecycle_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp5857-clean-transfer-selective-replay
+        artifact_field: selective_replay_qualified_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5773-prospective-constraint-acquisition-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5773 was blocked on an unready parse-failed stream; this attempt uses Exp5839's clean exact chronological stream plus Exp5856/Exp5857 provenance-qualified lifecycle and replay, and changes the question to reduced exact-query availability."
+        retire_if_same_verdict: true
+      - experiment_id: exp5787-validation-gated-constraint-skill-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5787 repeated the unready-stream gate failure; the new task has clean N>=30-per-family exact events, prospective visibility seals, and structured gates that skip before agent work if lifecycle or replay is not qualified."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the milestone's mandatory continuous self-learning experiment. Exp5856 and Exp5857 must first make lifecycle and replay promotion-eligible. The remaining gap is feedback scarcity: can frozen-model external constraint memory learn safely when exact labels are queried selectively rather than supplied for every candidate? Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5839_v519_evidence_qualification.json
+      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.json
+      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.rows.jsonl
+      - {project_root}/results/experiment_5857_clean_transfer_selective_replay.json
+      - {project_root}/results/experiment_5773_prospective_constraint_acquisition_ab.json
+      - {project_root}/results/experiment_5787_validation_gated_constraint_skill_ab.json
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK:
+      Run a prospective frozen/full-oracle/reduced-oracle adaptive-memory A/B with query selection, rejected-update buffering, versioned consolidation, exact rollback, and immutable model weights, then write results/experiment_5858_reduced_oracle_continuous_self_learning.json plus results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay both gates; hash clean lifecycle/replay rows, event stream, validators, visibility masks, split manifests, state schema, and seeds; require at least 30 prospective events per family and change type, adequate query-budget headroom, disk/RAM, and atomic checkpoint/output paths.
+      1. Add REQ-* requirements and tests first. Preregister exact-query budgets, acquisition policy, promotion objectives, rollback rules, memory caps, and all thresholds before science evaluation.
+      2. Run matched frozen, full-oracle, random-query, and reduced-oracle adaptive arms on the same chronological events. The reduced arm may select queries using only current/past state, buffer rejected edits, consolidate slowly, and reuse only Exp5857-qualified replay.
+      3. Keep future labels sealed until their event arrives. Exact validators own query answers and promotion; GGUF/model weights are immutable and no direct label-derived feature enters the selector.
+      4. Measure prospective accuracy/lift, exact queries used, lift per query, acquisition precision/recall, forward transfer, recurrence, protected-prefix retention, easy/medium/hard strata, family lower bounds, unsafe accepts, rejected-buffer behavior, state size/cap pressure, rollback, restart, and seed/group-bootstrap CI95.
+      5. Run query-order permutation, random-query, always-query, never-query, shuffled-label rejection, selector-feature ablation, memory reset, and duplicate-group controls.
+      6. Qualify only if reduced-oracle learning has a positive prospective lower bound over frozen and random-query controls, retains a preregistered fraction of full-oracle lift at lower exact-query cost, has no family/hard-case regression, zero unsafe accepts, exact retention/rollback/restart, bounded state, and no weight mutation.
+      7. Emit bare `continuous_self_learning_ready_score`; a safe null is complete and retires this sparse-oracle extension.
+      8. REQUIRED ARTIFACT FIELDS: status, continuous_self_learning_task, preconditions_checked, upstream_hashes_and_gate_receipts, frozen_protocol_and_query_budgets, arm_definitions_and_event_parity, chronology_and_visibility_receipts, query_selection_and_rejected_buffer_receipts, versioned_consolidation_and_promotion, prospective_and_query_efficiency_metrics, forward_transfer_recurrence_and_retention, hard_case_and_family_lower_bounds, unsafe_accept_count, rollback_restart_and_state_hashes, memory_cap_accounting, no_model_weight_mutation, null_and_ablation_controls, retirement_decision, continuous_self_learning_ready_score, row_file_receipt, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal A/B state distinguishes self-learning evidence from a partial stream."
+         continuous_self_learning_task:
+           principle: "Must be true and identifies the milestone's FR-11 experiment."
+         preconditions_checked:
+           principle: "Gates, hashes, counts, budgets, validators, splits, seeds, resources, and outputs prevent invalid learning."
+         upstream_hashes_and_gate_receipts:
+           principle: "Only clean lifecycle and replay evidence may enter."
+         frozen_protocol_and_query_budgets:
+           principle: "Science-time policy and budget changes are forbidden."
+         arm_definitions_and_event_parity:
+           principle: "Identical chronological events isolate adaptive-state and query effects."
+         chronology_and_visibility_receipts:
+           principle: "No future label can influence a current decision."
+         query_selection_and_rejected_buffer_receipts:
+           principle: "Sparse feedback and failed edits remain auditable."
+         versioned_consolidation_and_promotion:
+           principle: "Only held-out exact validation can promote external memory."
+         prospective_and_query_efficiency_metrics:
+           principle: "Learning value and exact feedback cost are jointly measured."
+         forward_transfer_recurrence_and_retention:
+           principle: "New learning cannot hide forgetting or failed recovery."
+         hard_case_and_family_lower_bounds:
+           principle: "Negative transfer on hard cases or one family blocks readiness."
+         unsafe_accept_count:
+           principle: "Must be bare zero."
+         rollback_restart_and_state_hashes:
+           principle: "Versioned state must restore and resume exactly."
+         memory_cap_accounting:
+           principle: "Continuous learning remains bounded."
+         no_model_weight_mutation:
+           principle: "Must be true; immutable GGUF weights are a hard boundary."
+         null_and_ablation_controls:
+           principle: "Random, never, always, shuffled, reset, and feature ablations test causality."
+         retirement_decision:
+           principle: "Same blocked/no-lift outcome closes the reduced-oracle scope."
+         continuous_self_learning_ready_score:
+           principle: "EMIT BARE scalar; only 1.0 permits Exp5859."
+         row_file_receipt:
+           principle: "Path, row count, and hash expose all prospective decisions."
+         duration_s:
+           principle: "Measured wall time exposes bootstrap-only learning."
+         inference_substrate:
+           principle: "`deterministic_exact_verifier_and_replay_no_llm` declares external-state learning without model inference."
+         verifier_is_oracle:
+           principle: "True records exact labels and promotion authority."
+         field_provenance:
+           principle: "Every metric and state edit traces to events, queries, validators, and hashes."
+         test_commands:
+           principle: "Commands document gates, visibility, arms, metrics, controls, state, and safety."
+         test_exit_codes:
+           principle: "Exit codes prevent unsafe or incomplete learning becoming readiness."
+         reproducibility_checksum:
+           principle: "A checksum detects event, budget, selector, seed, or state drift."
+         honest_verdict:
+           principle: "A terminal prefix states ready, null, unsafe, retired, or blocked outcome."
+      9. Run focused unit/coverage, gate replay, N>=30 cells, visibility, budget parity, query selector, rejected buffer, promotion, metric/bootstrap, hard-case/family, safety, null/ablation, rollback/restart, memory cap, weight immutability, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5859-adaptive-state-microkernel-parity
+    milestone: "2026.07.521"
+    title: "Accepted adaptive operations ABI conformance"
+    priority: high
+    track: infrastructure
+    deliverable: results/experiment_5859_adaptive_state_microkernel_parity.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5858-reduced-oracle-continuous-self-learning
+        artifact_field: continuous_self_learning_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Exp5858 must first qualify the exact operations and bounds of continuous self-learning. This task maps only those accepted operations into a small deterministic Python/Rust ABI suitable for later attached-board evaluation. It is portability work, not new learning science. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
+      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl
+      - {project_root}/python/carnot
+      - {project_root}/crates
+      - {project_root}/Cargo.toml
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Implement a bounded versioned adaptive-state microkernel in Python and Rust, prove exact operation/state/hash parity and serialization round trips, and write results/experiment_5859_adaptive_state_microkernel_parity.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay the gate; hash Exp5858 operation schema/rows, Python/Rust workspace manifests, toolchains, serialization versions, and existing bindings; verify disk/RAM and atomic outputs.
+      1. Add REQ-* requirements and tests before implementation. Keep code inside existing packages/crates; put no scratch scripts in the repository root.
+      2. Define the minimal bounded ABI from Exp5858-qualified operations only: apply event, acquire core, quarantine, promote, select replay, roll back, serialize, restore, and compute canonical state hash.
+      3. Use fixed-width integer/fixed-point fields, stable ordering, explicit capacities, deterministic eviction, versioned schema tags, and no vendor-specific imports in core.
+      4. Implement Python and Rust reference paths plus the smallest existing binding surface. Generate randomized valid and invalid operation traces from test fixtures, not science labels.
+      5. Require identical accept/reject decisions, version IDs, state bytes or canonical form, hashes, rollback states, replay selections, cap behavior, and restart results across languages.
+      6. Run malformed-input, capacity, overflow, duplicate-event, out-of-order, rollback-past-root, corrupted-checkpoint, and property tests. Measure bounded per-operation latency descriptively without a speedup claim.
+      7. Emit bare `adaptive_state_microkernel_ready_score=1.0` only if conformance, safety, bounds, round trips, and focused E2E checks all pass.
+      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, qualified_operation_mapping, abi_schema_and_bounds, python_implementation_receipt, rust_implementation_receipt, binding_receipt, cross_language_operation_parity, canonical_state_and_hash_parity, serialization_restart_and_rollback_parity, invalid_input_and_capacity_controls, per_operation_latency_receipts, adaptive_state_microkernel_ready_score, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal conformance state distinguishes a usable kernel from partial bindings."
+         preconditions_checked:
+           principle: "Gate, schema, toolchain, manifests, resources, and outputs prevent incompatible builds."
+         qualified_operation_mapping:
+           principle: "Only scientifically accepted Exp5858 operations enter the kernel."
+         abi_schema_and_bounds:
+           principle: "Fixed types, capacities, ordering, and versions make hardware mapping finite."
+         python_implementation_receipt:
+           principle: "The Python reference owns readable state semantics."
+         rust_implementation_receipt:
+           principle: "The Rust path owns deterministic deployable execution."
+         binding_receipt:
+           principle: "The cross-language call surface must be explicit and tested."
+         cross_language_operation_parity:
+           principle: "Every operation must accept, reject, and transition identically."
+         canonical_state_and_hash_parity:
+           principle: "Equivalent states must produce identical canonical hashes."
+         serialization_restart_and_rollback_parity:
+           principle: "Durable state must round-trip and restore identically."
+         invalid_input_and_capacity_controls:
+           principle: "Malformed or unbounded inputs fail closed."
+         per_operation_latency_receipts:
+           principle: "Measured timing is descriptive and cannot imply speedup."
+         adaptive_state_microkernel_ready_score:
+           principle: "EMIT BARE scalar for optional board parity."
+         duration_s:
+           principle: "Measured build/test time exposes bootstrap-only work."
+         inference_substrate:
+           principle: "`deterministic_cross_language_state_execution_no_llm` declares the true path."
+         field_provenance:
+           principle: "Every result traces to operation traces, implementations, toolchains, and hashes."
+         test_commands:
+           principle: "Commands document Python, Rust, binding, property, and E2E checks."
+         test_exit_codes:
+           principle: "Exit codes prevent failed conformance becoming readiness."
+         reproducibility_checksum:
+           principle: "A checksum detects ABI, implementation, trace, or toolchain drift."
+         honest_verdict:
+           principle: "A terminal prefix states parity, mismatch, or blocked outcome."
+      9. Run focused Python and Rust unit/coverage, property tests, PyO3/binding round trip, serialization cross-language E2E, invalid/capacity controls, clippy/format as applicable, spec-coverage, root-clutter, adversarial-verify, and protected-file checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5860-live-active-observation-ab
+    milestone: "2026.07.521"
+    title: "Closed-loop visual probing under equal action budgets"
+    priority: critical
+    track: arc-generalization
+    deliverable: results/experiment_5860_live_active_observation_ab.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 100
+    estimated_wall_time_min: 600
+    requires_gpu: true
+    prompt: |
+      CONTEXT:
+      All public ARC-AGI-3 games are registry-complete and must not be re-solved. Recent adapter-disabled E3 and tool-loop tests are null on hard games; the binding gaps are dynamics induction, distant progress signal, and evidence acquisition. ActiveVision, SAGE, and WorldScape motivate a different question: can a game-blind observer acquire more useful agent-owned transition evidence under the same action budget? This task has no level-solve target. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/arc_live_oracle_gap.json
+      - {project_root}/results/outer_loop_holdout_generalization_probe_sc25_20260722.json
+      - {project_root}/results/outer_loop_tool_loop_lookahead_ab_largebudget_corrected_20260723.json
+      - {project_root}/scripts/arc_live_agent.py
+      - {project_root}/scripts/arc_loop_solve.py
+      - {project_root}/python/carnot/agentic/arc_tool_loop_lookahead.py
+      - {project_root}/python/carnot/agentic/arc_reactive_verifier_filter.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+
+      TASK:
+      Implement and evaluate a bounded game-blind active-observation controller on the real adapter-disabled E3 path against matched current-policy, random, and periodic controls, then write results/experiment_5860_live_active_observation_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: registry-precheck all candidate games and confirm this is not a solve task; hash live entrypoints, SDK version, policy/config, prior null artifacts, game manifests, and seeds; verify source/adapters/registry trajectories are inaccessible to the controller, live environment availability, cached SOTA GGUF, GPU/VRAM, action budgets, disk/RAM, and atomic outputs.
+      1. Add REQ-* requirements and tests first. Use the canonical scored E3 entrypoint. Disable every GameAdapter, public source read, offline ground-truth BFS, registry trajectory, per-game model, hand rule, and outer-loop counterexample channel.
+      2. Configure at least one mandated live proposer through llama.cpp and the embedded tokenizer. Preferred MODEL_SPECS are `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`; at minimum `unsloth/Qwen3.6-35B-A3B-GGUF` must produce headline rows. Tiny legacy models are smoke-only.
+      3. Build a write-protected agent-owned tape from legal actions and exact runtime observations. Partition retrieval into global-history, local-active, and event-boundary views without inserting goal labels, adapter facts, or event captions from outside the agent.
+      4. Compare current E3, random legal probes, periodic probes, and an active observer under identical legal-action, wall-clock, model-call, token, and reset budgets. The active observer selects probes using only current/past ambiguity and exact observed outcomes.
+      5. Preregister short-, medium-, and long-horizon proposal-support metrics. Report ambiguity resolved per action, transition alias disambiguation, invalid/dead-end/no-op actions, novel causal relation confirmations, proposal coverage per horizon, model calls, actions, latency, and levels only as descriptive outcome.
+      6. Run shuffled-tape, view-ablation, random-priority, no-memory, and identical-budget controls. A descriptive level gain is not credited as a solve and must not update registry credit.
+      7. Emit bare `active_observation_ready_score=1.0` only if the active observer has positive preregistered lower bounds over all matched controls on ambiguity resolution or proposal support without action/latency budget violation. A clean null is complete.
+      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, registry_precheck, live_path_and_sdk_receipts, adapter_source_bfs_and_registry_exclusion_receipts, model_specs, models_used, gpu_and_llama_cpp_receipts, agent_owned_tape_schema_and_hashes, history_view_definitions, arm_definitions_and_budget_parity, short_medium_long_horizon_metrics, ambiguity_and_transition_evidence_metrics, action_model_call_and_latency_accounting, descriptive_level_outcomes, solve_provenance, shuffled_tape_view_ablation_and_null_controls, registry_modified, active_observation_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal live A/B state distinguishes a clean null from partial interaction."
+         preconditions_checked:
+           principle: "Registry, live path, exclusions, models, resources, budgets, seeds, and outputs prevent off-path credit."
+         registry_precheck:
+           principle: "All public solves are already complete; this task cannot duplicate them."
+         live_path_and_sdk_receipts:
+           principle: "Only the canonical scored E3 interaction path supports a live claim."
+         adapter_source_bfs_and_registry_exclusion_receipts:
+           principle: "Forbidden outer-loop knowledge must be mechanically inaccessible."
+         model_specs:
+           principle: "At least one mandated current SOTA GGUF must generate headline live rows."
+         models_used:
+           principle: "Exact hub IDs disclose which live proposer actually ran."
+         gpu_and_llama_cpp_receipts:
+           principle: "Device and embedded-tokenizer evidence distinguish live inference from fallback."
+         agent_owned_tape_schema_and_hashes:
+           principle: "Every memory item must come from the agent's own legal action and exact observation."
+         history_view_definitions:
+           principle: "Global, local-active, and event-boundary ablations must be game-blind."
+         arm_definitions_and_budget_parity:
+           principle: "Equal legal-action and inference budgets isolate active observation."
+         short_medium_long_horizon_metrics:
+           principle: "Proposal quality is measured separately across temporal scales."
+         ambiguity_and_transition_evidence_metrics:
+           principle: "The primary outcome is acquired runtime evidence, not a re-solve."
+         action_model_call_and_latency_accounting:
+           principle: "Accuracy and efficiency remain jointly first-class."
+         descriptive_level_outcomes:
+           principle: "Levels are reported honestly but receive no solve credit."
+         solve_provenance:
+           principle: "Set `live_agent_self_discovery`; any incidental nonzero level outcome comes only from the live agent's own attempts and runtime observations, never outer-loop RE or a development proxy."
+         shuffled_tape_view_ablation_and_null_controls:
+           principle: "Broken memory or priorities must not retain the claimed gain."
+         registry_modified:
+           principle: "Must be false; this task cannot add solve credit."
+         active_observation_ready_score:
+           principle: "EMIT BARE scalar for capstone classification."
+         duration_s:
+           principle: "Measured live wall time exposes smoke-only execution."
+         inference_substrate:
+           principle: "`live_llm_inference` declares the real proposer path."
+         verifier_is_oracle:
+           principle: "False for learned observation selection; exact observations remain evidence authority, not a candidate-answer oracle."
+         field_provenance:
+           principle: "Every metric traces to live actions, observations, tape items, budgets, and model receipts."
+         test_commands:
+           principle: "Commands document live path, exclusions, model, parity, metrics, controls, and registry immutability."
+         test_exit_codes:
+           principle: "Exit codes prevent off-path or budget-violating runs becoming ready."
+         reproducibility_checksum:
+           principle: "A checksum detects policy, game, model, tape, seed, or budget drift."
+         honest_verdict:
+           principle: "A terminal prefix states positive, null, budget-bound, or blocked result without solve language."
+      9. Run focused unit/coverage, registry duplicate precheck, canonical-live-path, source/adapter/BFS/registry exclusion, cached-SOTA/embedded-tokenizer/GPU, tape immutability, budget parity, horizon metrics, control ablations, registry immutability, schema, adversarial-verify, ARC orphan/live-path lints, spec-coverage, and root-clutter tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5861-attached-board-state-receipts
+    milestone: "2026.07.521"
+    title: "KV260 PolarFire GateMate physical capability ledger"
+    priority: high
+    track: hardware
+    deliverable: results/experiment_5861_attached_board_state_receipts.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 100
+    estimated_wall_time_min: 360
+    requires_gpu: false
+    prompt: |
+      CONTEXT:
+      KV260 is the terminal sovereignty POC, PolarFire has validated prior workloads, and GateMate remains opportunistic. No new FPGA redesign or speedup claim is authorized. If Exp5859 is ready and a board has an authenticated changed execution precondition, this task may run a bounded same-input state-operation parity receipt; otherwise it records an explicit no-change or blocked capability state. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_5859_adaptive_state_microkernel_parity.json
+      - {project_root}/hardware
+      - {project_root}/scripts/kv260
+      - {project_root}/scripts/polarfire
+      - {project_root}/scripts/gatemate
+      - {project_root}/openspec/capabilities/hardware-acceleration/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Produce authenticated current capability receipts for KV260, PolarFire, and GateMate, optionally run bounded adaptive-state parity only on a genuinely reachable hardware path, and write results/experiment_5861_attached_board_state_receipts.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash hardware specs, prior terminal receipts, tool versions, bitstream/program images, board identities, and Exp5859 if present; record reachability, permissions, cable/JTAG/SSH state, disk/RAM, and atomic outputs before any build or board command.
+      1. Add REQ-* requirements and tests first. Do not use the retired KV260 host `/dev/mmcblk*` SD-card precondition and do not redesign a bitstream.
+      2. Build a per-board capability matrix distinguishing unreachable, toolchain-only, software fallback, programmed image, authenticated physical execution, and measured state-update dynamics. Requested topology or compile success is not execution.
+      3. If Exp5859 `adaptive_state_microkernel_ready_score==1.0` and a board has a changed authenticated route, map only bounded supported operations and run identical fixtures on CPU reference and board. Record inputs, outputs, state hashes, timing source, board identity, logs, and parity.
+      4. If the precondition is unchanged or unavailable, issue no repeated high-cost probe; write a terminal blocked/no-change receipt with the exact missing external action.
+      5. Report capacity, precision, stochastic-update capability, observability, supported operations, and parity. Never claim speedup, power, energy, thermalization, convergence, TSU/Kona execution, or sovereignty beyond the known POC.
+      6. Emit bare `authenticated_state_operation_parity_score=1.0` only for same-input physical execution with exact accepted tolerance; otherwise 0.0 without implying failure of the software kernel.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, prior_receipt_hashes, board_capability_matrix, per_board_access_and_toolchain_receipts, requested_vs_programmed_vs_observed_dynamics, exp5859_input_receipt, bounded_operation_mapping, cpu_reference_receipts, authenticated_physical_execution_receipts, same_input_state_and_hash_parity, capacity_precision_stochasticity_and_observability, timing_source_and_raw_logs, software_fallback_disclosed, unchanged_precondition_actions_avoided, prohibited_claims_absent, authenticated_state_operation_parity_score, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal per-board capability state distinguishes execution, no-change, and block."
+         preconditions_checked:
+           principle: "Identity, access, tools, images, permissions, resources, and outputs precede board commands."
+         prior_receipt_hashes:
+           principle: "Existing terminal evidence prevents redundant probes."
+         board_capability_matrix:
+           principle: "Each board owns a separate authenticated state."
+         per_board_access_and_toolchain_receipts:
+           principle: "Host tools and physical reachability are distinct."
+         requested_vs_programmed_vs_observed_dynamics:
+           principle: "An intended energy/state topology does not prove realized updates."
+         exp5859_input_receipt:
+           principle: "Only a qualified bounded kernel may be mapped."
+         bounded_operation_mapping:
+           principle: "Unsupported operations and capacities remain explicit."
+         cpu_reference_receipts:
+           principle: "Same-input software authority anchors parity."
+         authenticated_physical_execution_receipts:
+           principle: "Board identity and raw logs are required for a hardware claim."
+         same_input_state_and_hash_parity:
+           principle: "Physical and reference outputs must match within declared exact tolerance."
+         capacity_precision_stochasticity_and_observability:
+           principle: "Backend semantics matter more than requested topology."
+         timing_source_and_raw_logs:
+           principle: "Timing is auditable and cannot become a speedup claim."
+         software_fallback_disclosed:
+           principle: "Fallback can never masquerade as board execution."
+         unchanged_precondition_actions_avoided:
+           principle: "Repeated blocked probes are not scientific progress."
+         prohibited_claims_absent:
+           principle: "No speed, power, energy, convergence, TSU, Kona, or unsupported sovereignty claim."
+         authenticated_state_operation_parity_score:
+           principle: "EMIT BARE scalar; zero is honest when hardware execution did not occur."
+         duration_s:
+           principle: "Measured wall time exposes bootstrap-only hardware receipts."
+         inference_substrate:
+           principle: "`authenticated_hardware_state_execution_or_capability_receipt_no_llm` states the observed path."
+         field_provenance:
+           principle: "Every field traces to board identity, command, log, image, reference, or prior receipt."
+         test_commands:
+           principle: "Commands document preconditions, capabilities, parity, claims, and E2E checks."
+         test_exit_codes:
+           principle: "Exit codes prevent failed or fallback paths becoming hardware success."
+         reproducibility_checksum:
+           principle: "A checksum detects board, image, tool, fixture, or log drift."
+         honest_verdict:
+           principle: "A terminal prefix states physical parity, no-change, or blocked outcome."
+      8. Run focused unit/coverage, precondition, board-identity, fallback-disclosure, requested/observed-dynamics, same-input parity when applicable, prohibited-claim, hardware E2E checks from ops/e2e-test-plan.md, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5862-v521-capstone-reconciliation
+    milestone: "2026.07.521"
+    title: "Four-branch terminal decision ledger and milestone reconciliation"
+    priority: critical
+    track: integration
+    deliverable: results/experiment_5862_v521_capstone_reconciliation.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 100
+    estimated_wall_time_min: 240
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5716-v510-capstone-reconciliation
+        verdict: "blocked: v510 reconciled; exp5708_stream_promoted=False; exp5709_promoted=False; exp5710_promoted=False; arc_registry_delta=0; arc_solve_credited=False; one_axis_rust_parity=True; one_axis_quality_restart=True; timing_claimed=false; hardware_speedup_claimed=false"
+        addressed_by: "The .521 capstone consumes a new clean exact stream, structured bare-field gates, provenance-correct lifecycle/replay branches, and no dependency on the failed .510 generated stream."
+        retire_if_same_verdict: true
+      - experiment_id: exp5728-v511-capstone-reconciliation
+        verdict: "blocked: v511 reconciled; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; arc_solve_credited=false"
+        addressed_by: "The .521 capstone evaluates different exact-event, comparative-embedding, active-observation, and reduced-oracle deliverables; it preserves blocked branches without requiring the retired answer channel."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone `.521` asks four independent questions: provenance-correct lifecycle, portable comparative energy, reduced-oracle continuous self-learning, and live active observation, with bounded portability receipts. Gated skips and clean nulls are terminal evidence. The capstone must not promote blocked, disqualified, shortcut-bearing, unsafe, off-path, fallback, or missing work. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5849_transition_v521.json
+      - {project_root}/results/experiment_5850_v521_source_delta_ingestion.json
+      - {project_root}/results/experiment_5851_deterministic_replay_provenance_contract.json
+      - {project_root}/results/experiment_5852_three_family_paired_embeddings.json
+      - {project_root}/results/experiment_5853_paired_embedding_integrity_audit.json
+      - {project_root}/results/experiment_5854_portable_comparative_energy_controls.json
+      - {project_root}/results/experiment_5855_exact_release_shadow_routing.json
+      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.json
+      - {project_root}/results/experiment_5857_clean_transfer_selective_replay.json
+      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
+      - {project_root}/results/experiment_5859_adaptive_state_microkernel_parity.json
+      - {project_root}/results/experiment_5860_live_active_observation_ab.json
+      - {project_root}/results/experiment_5861_attached_board_state_receipts.json
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/scripts/in_process_doc_reconcile.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Recompute exact terminal decisions for every `.521` branch, apply gates and retirement rules, reconcile internal specs and ops documents, and write results/experiment_5862_v521_capstone_reconciliation.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: parse both roadmaps; hash every declared `.521` deliverable that exists, conductor outcomes, exclusion manifest, reference marker, specs, and protected files; verify writable atomic output, disk/RAM, and live verifier availability. Missing or malformed inputs remain explicit.
+      1. Add or extend REQ-* reporting requirements and tests before implementation. Resolve exact task identities and declared paths, never globbed numeric prefixes.
+      2. Replay every structured gate from bare upstream fields. Classify tasks as clean positive, clean null/negative, blocked, gated skip, flagged, unsafe, missing, or off-path. Do not execute skipped science in the capstone.
+      3. Run the live adversarial verifier on every present deliverable and preserve complete receipts. Recompute load-bearing scalar decisions from row files where present.
+      4. Produce independent decision ledgers for transition/source, representation energy, lifecycle/replay, continuous self-learning, microkernel, live ARC observation, and hardware. Exact validators remain release/promotion authority.
+      5. Apply prior-failure retirement rules mechanically. If lifecycle repeats the flagged verdict, final embeddings repeat the all-control null, reduced-oracle learning repeats blocked/no-lift, or active observation is cleanly null under its registered rule, record a bounded retirement recommendation without editing historical artifacts.
+      6. Verify all LLM tasks used mandated SOTA hub IDs for headline rows; verify no tiny-model, AutoTokenizer, mock, source-read, adapter, registry replay, software fallback, or requested topology was promoted.
+      7. Reconcile only internal `openspec/`, `_bmad/traceability.md`, ops/status.md, ops/changelog.md, and ops/conductor-log.md to exact evidence. Do not edit ops/north-star.md or publish/submit externally.
+      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, exact_task_and_deliverable_matrix, structured_gate_replay, adversarial_verifier_receipts, outcome_classification, transition_and_source_decision, comparative_energy_decision, lifecycle_and_replay_decision, continuous_self_learning_decision, microkernel_decision, arc_active_observation_decision, hardware_capability_decision, model_compliance_receipts, authority_and_prohibited_path_receipts, prior_failure_retirement_decisions, missing_or_flagged_evidence, docs_reconciled, protected_files_unchanged, paper_ready, publication_action_taken, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status:
+           principle: "A terminal capstone state distinguishes complete reconciliation from partial aggregation."
+         preconditions_checked:
+           principle: "Roadmaps, hashes, conductor outcomes, verifier, resources, and protected files prevent fabricated closure."
+         exact_task_and_deliverable_matrix:
+           principle: "Declared identities and paths are the only evidence index."
+         structured_gate_replay:
+           principle: "Bare upstream fields mechanically explain every executed or skipped branch."
+         adversarial_verifier_receipts:
+           principle: "Fresh live verification owns artifact eligibility."
+         outcome_classification:
+           principle: "Disjoint terminal classes stop missing, flagged, unsafe, or off-path work becoming success."
+         transition_and_source_decision:
+           principle: "Boundary integrity and source currency are reported separately from science."
+         comparative_energy_decision:
+           principle: "Portability requires held-family lower bounds beyond every control."
+         lifecycle_and_replay_decision:
+           principle: "Only provenance-clean exact replay can promote adaptive memory."
+         continuous_self_learning_decision:
+           principle: "FR-11 requires prospective lift, efficiency, retention, safety, bounded state, and immutable weights."
+         microkernel_decision:
+           principle: "Cross-language parity cannot outrun its scientific upstream."
+         arc_active_observation_decision:
+           principle: "Agent-owned evidence metrics are separate from solve credit."
+         hardware_capability_decision:
+           principle: "Only authenticated observed execution may support a board claim."
+         model_compliance_receipts:
+           principle: "Headline LLM rows must use mandated current local GGUF families."
+         authority_and_prohibited_path_receipts:
+           principle: "Exact authority and source/adapter/BFS/fallback exclusions remain explicit."
+         prior_failure_retirement_decisions:
+           principle: "Same-verdict reruns become mechanically bounded."
+         missing_or_flagged_evidence:
+           principle: "Unavailable or disqualified evidence remains visible."
+         docs_reconciled:
+           principle: "Internal specs, traceability, and ops prose match exact artifacts."
+         protected_files_unchanged:
+           principle: "Operator-curated and user-owned files remain immutable."
+         paper_ready:
+           principle: "Preserve the mechanical FoVer publication-gate result without extending it to new claims."
+         publication_action_taken:
+           principle: "Must be false; external publication is operator-only."
+         duration_s:
+           principle: "Measured aggregation time exposes bootstrap-only capstones."
+         inference_substrate:
+           principle: "`aggregation_from_upstream_artifacts` declares no new experiment inference."
+         field_provenance:
+           principle: "Every decision traces to exact artifact fields, rows, gates, verifier receipts, and docs."
+         test_commands:
+           principle: "Commands document identity, gates, verifier, model compliance, reconciliation, and protection."
+         test_exit_codes:
+           principle: "Exit codes prevent failed capstone checks becoming closure."
+         reproducibility_checksum:
+           principle: "A checksum detects artifact, gate, decision, or documentation drift."
+         honest_verdict:
+           principle: "A `complete:`, `mixed:`, or `blocked:` prefix states milestone closure honestly."
+      9. Run focused unit/coverage, YAML/schema, exact identity/path/hash, gate replay, row metric recomputation, live adversarial-verifier, model compliance, exclusion/retirement, ARC path/provenance, hardware claim, protected-file immutability, doc reconciliation, spec-coverage, publication-gate read-only, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
