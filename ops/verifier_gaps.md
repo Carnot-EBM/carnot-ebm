@@ -3323,13 +3323,20 @@ its number). bp35 stayed budget-bound (300/300, up marginally from the buggy run
 `max_nodes` by a rounding artifact of the bug — now exactly at budget). `levels_gained=0` on all three in
 the corrected run too — the bug affected exploration DEPTH, not the ultimate null outcome.
 
-**Broader impact caveat (honest, not yet verified):** this bug lives in shared `arc_solver_kit.py`
-infrastructure used by ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — e.g.
-`arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in CLAUDE.md's ARC Live-Path
-Reachability Discipline, "states_expanded 2947 → 2859"). That specific historical measurement was NOT
-re-verified as part of this fix (out of scope for this session); the fix is forward-looking, and any
-`move_pruner`-based numbers from BEFORE 2026-07-23 should be read with this caveat rather than assumed
-unaffected.
+**Broader impact caveat — VERIFIED CLEAN 2026-07-23 (same day, operator-directed follow-up: "what next" →
+"yes" to checking tu93/HazardMovePruner).** This bug lives in shared `arc_solver_kit.py` infrastructure
+used by ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — the obvious other
+consumer to check was `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in
+CLAUDE.md's ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859 (−88, the exact
+pruned-move count)"). Re-ran BOTH arms post-fix via `scripts/arc_loop_solve.py --game tu93
+--target-level 3` (hazard-prune ON, the default) and `--no-hazard-prune` (OFF): **ON =
+`states_expanded=2859` (`hazard_pruner_stats: {observed: 2859, pruned: 88, ...}`), OFF =
+`states_expanded=2947`, delta = −88 — an EXACT match to the historical numbers in every digit.** This
+confirms tu93's specific measurement was never affected by the aliasing bug (its search apparently never
+hit the failure mode that corrupted lf52's), closing the caveat with real verification rather than
+leaving it as an assumption. `results/arc_loop_solve_tu93.json` (a shared, tracked per-game output file)
+was restored to its pre-verification tracked content afterward via `git checkout --` — these were
+verification runs, not a new canonical measurement.
 
 **Recalibration that changes how "conclusive" should be read here (found while preparing the large-budget
 run, not known when the first budget was picked):** `ops/arc_solve_registry.yaml` shows all three games
