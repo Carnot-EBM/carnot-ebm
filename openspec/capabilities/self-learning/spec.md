@@ -25179,3 +25179,121 @@ budget, or model-weight mutation
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5858 | Implemented (`python/carnot/experiment_5858_reduced_oracle_continuous_self_learning.py`, `results/experiment_5858_reduced_oracle_continuous_self_learning.json`, `results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl`) | Implemented (`tests/python/test_experiment_5858_reduced_oracle_continuous_self_learning.py`) |
+
+## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
+
+The self-learning tier SHALL provide Exp5859, a deterministic bounded
+adaptive-state microkernel at `python/carnot/adaptive_state.py` and
+`crates/carnot-core/src/adaptive_state.rs`, with a minimal PyO3 binding exposed
+as `RustAdaptiveStateKernel`. Exp5859 consumes only Exp5858-qualified reduced
+oracle operations and writes
+`results/experiment_5859_adaptive_state_microkernel_parity.json`. It is
+portability work, not new learning science: no LLM, tokenizer, model-weight
+update, embedding, CUDA/GPU, vendor SDK, or live generation path may be loaded.
+
+The microkernel ABI SHALL be versioned and finite. It SHALL support only these
+operations: `apply_event`, `acquire_core`, `quarantine`, `promote`,
+`select_replay`, `roll_back`, `serialize`, `restore`, and
+`canonical_state_hash`. Exp5858 row changes map into the ABI as follows:
+`addition` MAY become accepted core acquisition plus promotion when the
+reduced-oracle arm promoted the event, `supersession` MAY become quarantine
+without promotion, and `recurrence` MAY become deterministic replay selection.
+No other science label, family label, or oracle outcome may enter the ABI.
+
+State SHALL use explicit capacities, fixed-width integer-compatible bounds,
+fixed-point confidence scores, stable lexicographic ordering, deterministic
+oldest-then-key eviction, explicit schema tags, and canonical byte
+serialization. Event IDs, signatures, payload hashes, checkpoint bytes, replay
+limits, versions, epochs, and capacities SHALL be checked for malformed input,
+overflow, duplicate events, out-of-order chronology, corrupted checkpoints,
+rollback past root, and capacity abuse. Every invalid case SHALL fail closed
+without partially mutating state.
+
+The Python reference path and Rust reference path SHALL produce identical
+accept/reject decisions, error codes, version IDs, canonical state forms,
+canonical bytes, SHA-256 hashes, rollback states, replay selections, capacity
+behavior, serialization round trips, and restart results for deterministic
+fixture traces plus randomized valid and invalid traces generated from bounded
+test fixtures. The PyO3 binding SHALL expose the smallest explicit call surface
+needed to run the same operations from Python and compare binding results to
+the pure-Python reference.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`qualified_operation_mapping`, `abi_schema_and_bounds`,
+`python_implementation_receipt`, `rust_implementation_receipt`,
+`binding_receipt`, `cross_language_operation_parity`,
+`canonical_state_and_hash_parity`,
+`serialization_restart_and_rollback_parity`,
+`invalid_input_and_capacity_controls`, `per_operation_latency_receipts`,
+`adaptive_state_microkernel_ready_score`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal conformance state distinguishes a usable kernel from partial bindings.
+- `preconditions_checked`: Gate, schema, toolchain, manifests, resources, and outputs prevent incompatible builds.
+- `qualified_operation_mapping`: Only scientifically accepted Exp5858 operations enter the kernel.
+- `abi_schema_and_bounds`: Fixed types, capacities, ordering, and versions make hardware mapping finite.
+- `python_implementation_receipt`: The Python reference owns readable state semantics.
+- `rust_implementation_receipt`: The Rust path owns deterministic deployable execution.
+- `binding_receipt`: The cross-language call surface must be explicit and tested.
+- `cross_language_operation_parity`: Every operation must accept, reject, and transition identically.
+- `canonical_state_and_hash_parity`: Equivalent states must produce identical canonical hashes.
+- `serialization_restart_and_rollback_parity`: Durable state must round-trip and restore identically.
+- `invalid_input_and_capacity_controls`: Malformed or unbounded inputs fail closed.
+- `per_operation_latency_receipts`: Measured timing is descriptive and cannot imply speedup.
+- `adaptive_state_microkernel_ready_score`: EMIT BARE scalar for optional board parity.
+- `duration_s`: Measured build/test time exposes bootstrap-only work.
+- `inference_substrate`: `deterministic_cross_language_state_execution_no_llm` declares the true path.
+- `field_provenance`: Every result traces to operation traces, implementations, toolchains, and hashes.
+- `test_commands`: Commands document Python, Rust, binding, property, and E2E checks.
+- `test_exit_codes`: Exit codes prevent failed conformance becoming readiness.
+- `reproducibility_checksum`: A checksum detects ABI, implementation, trace, or toolchain drift.
+- `honest_verdict`: A terminal prefix states parity, mismatch, or blocked outcome.
+
+`adaptive_state_microkernel_ready_score` SHALL be the bare scalar `1.0` only
+when Exp5858 is ready, preconditions pass, Python/Rust/binding tests pass,
+canonical hashes match across languages, serialization and restart round trips
+match across languages, rollback parity holds, invalid inputs fail closed,
+capacity behavior is deterministic, focused E2E checks pass, and every recorded
+test exit code is zero. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5859-PRECONDITIONS: Gate And Workspace Drift Are Hashed
+
+**Given** Exp5858 result rows, workspace manifests, toolchain metadata,
+serialization versions, existing bindings, RAM, disk, and output paths
+**When** Exp5859 checks preconditions
+**Then** all inputs are hashed, Exp5858 readiness is replayed, resources are
+adequate, and atomic output paths are writable before conformance is credited.
+
+### SCENARIO-LEARN-5859-OPERATION-PARITY: Qualified Operations Match
+
+**Given** deterministic and randomized bounded operation traces generated from
+Exp5858-qualified operations
+**When** Python, Rust, and the PyO3 binding apply the traces
+**Then** every operation accepts, rejects, returns an error code, updates a
+version, evicts under cap, and selects replay identically.
+
+### SCENARIO-LEARN-5859-STATE-HASH-ROUNDTRIP: Canonical State Is Durable
+
+**Given** promoted, quarantined, evicted, rolled-back, and restarted kernel
+states
+**When** state is serialized, restored, hashed, rolled back, and replayed
+**Then** Python, Rust, and binding outputs have identical canonical forms,
+bytes, hashes, rollback roots, and restart final states.
+
+### SCENARIO-LEARN-5859-FAIL-CLOSED: Malformed Or Unbounded Input Does Not Mutate
+
+**Given** malformed event IDs, duplicate events, out-of-order chronology,
+overflowing fixed-width fields, invalid capacities, excessive replay limits,
+rollback past root, and corrupted checkpoints
+**When** the microkernel receives the operation
+**Then** it rejects the input with a deterministic error code and preserves the
+pre-operation canonical state hash.
+
+## Implementation Status (Exp 5859)
+
+| Requirement | Python | Rust | Tests |
+|---|---|---|---|
+| REQ-LEARN-5859 | Implemented (`python/carnot/adaptive_state.py`, `results/experiment_5859_adaptive_state_microkernel_parity.json`) | Implemented (`crates/carnot-core/src/adaptive_state.rs`, `crates/carnot-python/src/adaptive_state.rs`) | Implemented (`tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py`, Rust unit tests) |
