@@ -1,0 +1,2425 @@
+{
+  "clean_lifecycle_hashes": {
+    "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+    "exp5829_comparison": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+    "exp5829_comparison_only": true,
+    "exp5856_aggregate": "sha256:5ace8c926b515004d569ed0fed40f2a54b1ee3886407a78f48822dc56ab11bf6",
+    "exp5856_row_file_receipt": "sha256:7d048f2f90936d35665cf761410492aac83e041256cafa2bd7757dcfebf44ea2",
+    "exp5856_rows": "sha256:91e4918216c6d08cf74386c157902129342ca55e7ceca7dd5315ccb4dd624ecc",
+    "exp5856_seed_manifest": "sha256:94561c771d37e0a646e5bb76c821217842f63689d2a5481f35ce69581250a8f8",
+    "exp5856_split_manifest": "sha256:54673042b9605138908d8c6426f042b291419ce6f595c50e61c6942ce7993931",
+    "exp5856_state_manifest": "sha256:ef3e66b65846e98a71bb7c36de36c544209586dfdf4ea40379f20dbcc3d55e25",
+    "exp5856_validator_manifest": "sha256:99a6a03b0d8e9a314d697b11bd0d4d8f139f800c9bff125040d8d39bf10798c4",
+    "module": "sha256:ba3a9f71094fc63f0d6e4a766c6f6896b17d9638e3d2dca55bd4bd01d7481025",
+    "root_clutter_sweep": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+    "self_learning_spec": "sha256:0e8d1f1e24bafe31a8a7a08c15b7b553e8593cd47450fde33887b69de3cd14d4",
+    "signature_definition": "sha256:909d49ab78c17b48db1d81221f54cdae1f6e1be14768ab3c908a78a1e1972018",
+    "tests": "sha256:0ea8cd0db6a8febd97627b26451ef3a5ce02ee171f3ba2166dadf3f3fa791f03"
+  },
+  "duration_s": 1.232393,
+  "experiment": 5857,
+  "experiment_id": "experiment_5857_clean_transfer_selective_replay",
+  "family_lower_bounds_and_group_bootstraps": {
+    "all_family_lcbs_positive_over_both_controls": true,
+    "event_group_bootstrap_ci95": {
+      "bootstrap_repetitions": 400,
+      "ci95": [
+        0.725,
+        0.808333
+      ],
+      "delta_key": "compatible_minus_no",
+      "group_key": "change",
+      "groups": [
+        "addition",
+        "recurrence",
+        "supersession"
+      ],
+      "n_groups": 3
+    },
+    "family_lcb95_over_all_replay": {
+      "finite_domain_csp": 0.582089,
+      "finite_state_planning": 0.379467,
+      "hard_soft_packing": 0.591289,
+      "weighted_maxsat": 0.561267
+    },
+    "family_lcb95_over_no_replay": {
+      "finite_domain_csp": 0.877778,
+      "finite_state_planning": 0.451852,
+      "hard_soft_packing": 0.811111,
+      "weighted_maxsat": 0.740741
+    },
+    "family_summaries": {
+      "finite_domain_csp": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.582089,
+            0.693356
+          ],
+          "mean_delta": 0.640467,
+          "n": 90
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.877778,
+            0.988889
+          ],
+          "mean_delta": 0.933333,
+          "n": 90
+        },
+        "row_count": 90
+      },
+      "finite_state_planning": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.379467,
+            0.443467
+          ],
+          "mean_delta": 0.412333,
+          "n": 90
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.451852,
+            0.548148
+          ],
+          "mean_delta": 0.5,
+          "n": 90
+        },
+        "row_count": 90
+      },
+      "hard_soft_packing": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.591289,
+            0.649237
+          ],
+          "mean_delta": 0.622333,
+          "n": 90
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.811111,
+            0.874074
+          ],
+          "mean_delta": 0.844445,
+          "n": 90
+        },
+        "row_count": 90
+      },
+      "weighted_maxsat": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.561267,
+            0.681156
+          ],
+          "mean_delta": 0.621333,
+          "n": 90
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.740741,
+            0.866667
+          ],
+          "mean_delta": 0.8,
+          "n": 90
+        },
+        "row_count": 90
+      }
+    },
+    "group_bootstrap_ci95": {
+      "bootstrap_repetitions": 400,
+      "ci95": [
+        0.575,
+        0.9
+      ],
+      "delta_key": "compatible_minus_no",
+      "group_key": "family",
+      "groups": [
+        "finite_domain_csp",
+        "finite_state_planning",
+        "hard_soft_packing",
+        "weighted_maxsat"
+      ],
+      "n_groups": 4
+    },
+    "no_family_negative_lower_bound": true,
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.family_lower_bounds_group_bootstraps"
+  },
+  "field_provenance": {
+    "clean_lifecycle_hashes": {
+      "principle": "Replay can inherit only verifier-clean lifecycle evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured deterministic replay time exposes bootstrap-only work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "family_lower_bounds_and_group_bootstraps": {
+      "principle": "Each family and event group owns its lower bound.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every metric traces to events, selections, validators, state, and controls.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "forward_transfer_and_recurrence": {
+      "principle": "New-task benefit and returning-task recovery are distinct objectives.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "frozen_signature_definition": {
+      "principle": "Compatibility cannot be tuned on future outcomes.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix states qualified, null, unsafe, or blocked outcome.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "incompatible_negative_transfer": {
+      "principle": "Wrong transfer must be measured directly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`deterministic_exact_verifier_and_replay_no_llm` declares the true path.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Gate, hashes, signatures, validators, splits, seeds, counts, and resources prevent invalid replay.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "protected_prefix_and_hard_case_results": {
+      "principle": "Average transfer cannot hide forgetting or hard-case harm.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "replay_arm_definitions_and_budget_parity": {
+      "principle": "Equal memory and event budgets isolate selection value.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "replay_resource_accounting": {
+      "principle": "Selective replay must remain bounded.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects signature, event, split, seed, or state drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "restart_equivalence": {
+      "principle": "Serialized replay state must reproduce exactly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "selective_replay_qualified_score": {
+      "principle": "EMIT BARE scalar; only 1.0 permits Exp5858.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "signature_permutation_collision_and_null_controls": {
+      "principle": "Broken selectors must not retain the claimed benefit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "status": {
+      "principle": "A terminal replay state distinguishes qualification from a clean null.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document parity, transfer, retention, controls, resources, and restart.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed replay checks becoming qualification.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "unsafe_transfer_count": {
+      "principle": "Any unsafe promoted transfer blocks qualification.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True records exact outcome authority.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5857_clean_transfer_selective_replay.py",
+        "tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5856_provenance_correct_lifecycle.rows.jsonl",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py",
+        "scripts/root_clutter_sweep.py"
+      ]
+    }
+  },
+  "forward_transfer_and_recurrence": {
+    "all_required_lower_bounds_positive": true,
+    "arm_metrics": {
+      "all_replay": {
+        "abstention_count": 120,
+        "accuracy": 0.409217,
+        "dynamic_regret": 0.590783,
+        "unsafe_transfer_count": 357
+      },
+      "no_replay": {
+        "abstention_count": 360,
+        "accuracy": 0.213889,
+        "dynamic_regret": 0.786111,
+        "unsafe_transfer_count": 0
+      },
+      "signature_compatible_replay": {
+        "abstention_count": 6,
+        "accuracy": 0.983333,
+        "dynamic_regret": 0.016667,
+        "unsafe_transfer_count": 0
+      }
+    },
+    "compatible_minus_all_replay": {
+      "bootstrap_repetitions": 400,
+      "ci95": [
+        0.546998,
+        0.599563
+      ],
+      "mean_delta": 0.574117,
+      "n": 360
+    },
+    "compatible_minus_no_replay": {
+      "bootstrap_repetitions": 400,
+      "ci95": [
+        0.737037,
+        0.799074
+      ],
+      "mean_delta": 0.769444,
+      "n": 360
+    },
+    "recurrence": {
+      "compatible_minus_all_replay": {
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          0.44915,
+          0.48915
+        ],
+        "mean_delta": 0.4704,
+        "n": 120
+      },
+      "compatible_minus_no_replay": {
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          0.761111,
+          0.85
+        ],
+        "mean_delta": 0.808333,
+        "n": 120
+      },
+      "row_count": 120
+    },
+    "row_count": 360,
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.forward_transfer_recurrence"
+  },
+  "frozen_signature_definition": {
+    "calibration_split": "train_dev_constants_before_science_scoring",
+    "compatibility_rule_frozen": true,
+    "compatible_threshold": {
+      "decision": "all_components_equal",
+      "minimum_component_matches": 8
+    },
+    "forbidden_selector_fields": [
+      "future_label",
+      "future_labels",
+      "family",
+      "row_id",
+      "chronology",
+      "metric_delta",
+      "posthoc",
+      "outcome"
+    ],
+    "incompatible_threshold": {
+      "decision": "one_or_more_component_mismatches",
+      "maximum_component_mismatches": 8
+    },
+    "label_blind_to_future_outcomes": true,
+    "sample_signature_receipts": [
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+        "source_row_hash": "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+        "source_row_hash": "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+        "source_row_hash": "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+        "source_row_hash": "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+        "source_row_hash": "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+        "source_row_hash": "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "hard",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+        "source_row_hash": "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "hard",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+        "source_row_hash": "sha256:4207a4cca6bbb9dd3e92a86c7ba67c1a5d9692cd366a1e3bc7080c5aedf7e284"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "hard",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+        "source_row_hash": "sha256:abf90b6953532bb7b583dd390cd75c665bdb0cff78e93bedcbb4e451d999d96b"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a",
+        "source_row_hash": "sha256:f0cf06605b465da686dfe92a29987ab33defb3f741c2825060cb4f1956ede033"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a",
+        "source_row_hash": "sha256:726fb66602760f6085d1196592d8a5d81ec8440ca9f9336be050c05b2a99ddf1"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a",
+        "source_row_hash": "sha256:f2ad4dfec7d3eda7e4ccdc3bb2f6f7eac396daab7635ecd3f154db511585538c"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:ca6f1f33e9133eda3ea8af54263eb9d9c181130a72690ea37f6fa418acaa5c0b",
+        "source_row_hash": "sha256:cdc01c6966c22cad471d067bbf5edd99723a55e0a96764dd07f46ed426413be4"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:ca6f1f33e9133eda3ea8af54263eb9d9c181130a72690ea37f6fa418acaa5c0b",
+        "source_row_hash": "sha256:d9ad96e2b7804773109e7dcfbd956394dec2906a922815cc28bbca7532e2db52"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:ca6f1f33e9133eda3ea8af54263eb9d9c181130a72690ea37f6fa418acaa5c0b",
+        "source_row_hash": "sha256:f1a7f389988a1e609b0e9eb03fc613463836f5d926a350bea99c214700faeec2"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "hard",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:23ccecd6df195b33b5c99d30511fa2709bd40879144959fe12a8f3888de4f65d",
+        "source_row_hash": "sha256:4181bb6bc397c2879a7b1d68ede73e61f9b5d4b6e059faf24503f516a8e34e6d"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "hard",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:23ccecd6df195b33b5c99d30511fa2709bd40879144959fe12a8f3888de4f65d",
+        "source_row_hash": "sha256:b881c8148e4efd8bd5ccd8ac34506139623a4bc0c23cc3fb1f35e083f277d1cd"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "hard",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:23ccecd6df195b33b5c99d30511fa2709bd40879144959fe12a8f3888de4f65d",
+        "source_row_hash": "sha256:bd1123ad01bccd9da2554b98ff2816fbca4482b95415fd2409841eeb4a3f17ca"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+        "source_row_hash": "sha256:ea0123c367f153b28b10fd2304d23412c18c99a1ef2d9a8b8a58bd86a2175eb1"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+        "source_row_hash": "sha256:d222523bd3c47bc60eb7d51f4f49b08fb6647fdd8ecc3c0946d6e2a6e0288099"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "easy",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "symbol_relabel"
+        },
+        "signature_hash": "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+        "source_row_hash": "sha256:bcc459ab065f9f31549da1ec496cd2a9b433c362da72401daa823d5fbee72341"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+        "source_row_hash": "sha256:9cf614b4325ab7731315576364238bf4e5663e4138fc5df712fa235ae7955aef"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+        "source_row_hash": "sha256:b3c73516e15e90f1adb34ab245501e534245df59fb9eff708979dae6af6bf39c"
+      },
+      {
+        "signature": {
+          "event_count": 6,
+          "future_suffix_candidate_count": 3,
+          "hardness_stratum": "medium",
+          "membership_query_count": 2,
+          "oracle_authority": "exact_validator",
+          "source_split": "science",
+          "state_count": 12,
+          "surface": "order_paraphrase"
+        },
+        "signature_hash": "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+        "source_row_hash": "sha256:86de9da8d8d63f89fe711625ff7ccb5a20467cf62a8101949860ad04b7e8fa6d"
+      }
+    ],
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.signature_definition",
+    "signature_components": [
+      "event_count",
+      "state_count",
+      "membership_query_count",
+      "future_suffix_candidate_count",
+      "hardness_stratum",
+      "surface",
+      "source_split",
+      "oracle_authority"
+    ],
+    "signature_count": 360,
+    "signature_definition_hash": "sha256:909d49ab78c17b48db1d81221f54cdae1f6e1be14768ab3c908a78a1e1972018",
+    "signature_root_hash": "sha256:765eedecf43998664e5c825254e591f2285038ddc085bf043f31617d9806f48c",
+    "uses_chronology_positions": false,
+    "uses_family_labels": false,
+    "uses_future_labels": false,
+    "uses_posthoc_metric_selection": false,
+    "uses_row_ids": false,
+    "version": "exp5857_clean_label_blind_signature_v1"
+  },
+  "honest_verdict": "qualified: clean_lifecycle_signature_compatible_replay",
+  "incompatible_negative_transfer": {
+    "all_replay_incompatible_event_count": 2484,
+    "all_replay_incompatible_negative_transfer_event_count": 357,
+    "all_replay_unsafe_transfer_count": 357,
+    "compatible_replay_incompatible_event_count": 0,
+    "compatible_unsafe_transfer_count": 0,
+    "mean_incompatible_event_penalty": -0.117429,
+    "replay_precision_recall": {
+      "all_replay": {
+        "compatible_selected_events": 360,
+        "precision": 0.126582,
+        "recall_against_capped_selection": 0.126582,
+        "selected_replay_events": 2844
+      },
+      "signature_compatible_replay": {
+        "compatible_selected_events": 2664,
+        "precision": 1.0,
+        "recall_against_capped_selection": 1.0,
+        "selected_replay_events": 2664
+      }
+    },
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.incompatible_negative_transfer"
+  },
+  "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+  "milestone": "2026.07.522",
+  "preconditions_checked": {
+    "atomic_output": {
+      "atomic_probe_write_ok": true,
+      "atomic_suffix": ".tmp",
+      "declared_path": "results/experiment_5857_clean_transfer_selective_replay.json",
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true,
+      "target_writable": true
+    },
+    "blocked_errors": [],
+    "blocked_reasons": [],
+    "clean_lifecycle_gate": {
+      "adaptive_memory_lifecycle_ready_score": 1.0,
+      "exp5856_status": "complete",
+      "inference_substrate": "deterministic_exact_verifier_and_replay_no_llm",
+      "ok": true,
+      "row_count": 360,
+      "row_file_hash_matches": true,
+      "row_file_sha256": "sha256:91e4918216c6d08cf74386c157902129342ca55e7ceca7dd5315ccb4dd624ecc",
+      "verifier_is_oracle": true
+    },
+    "clean_lifecycle_hashes": {
+      "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+      "exp5829_comparison": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+      "exp5829_comparison_only": true,
+      "exp5856_aggregate": "sha256:5ace8c926b515004d569ed0fed40f2a54b1ee3886407a78f48822dc56ab11bf6",
+      "exp5856_row_file_receipt": "sha256:7d048f2f90936d35665cf761410492aac83e041256cafa2bd7757dcfebf44ea2",
+      "exp5856_rows": "sha256:91e4918216c6d08cf74386c157902129342ca55e7ceca7dd5315ccb4dd624ecc",
+      "exp5856_seed_manifest": "sha256:94561c771d37e0a646e5bb76c821217842f63689d2a5481f35ce69581250a8f8",
+      "exp5856_split_manifest": "sha256:54673042b9605138908d8c6426f042b291419ce6f595c50e61c6942ce7993931",
+      "exp5856_state_manifest": "sha256:ef3e66b65846e98a71bb7c36de36c544209586dfdf4ea40379f20dbcc3d55e25",
+      "exp5856_validator_manifest": "sha256:99a6a03b0d8e9a314d697b11bd0d4d8f139f800c9bff125040d8d39bf10798c4",
+      "module": "sha256:ba3a9f71094fc63f0d6e4a766c6f6896b17d9638e3d2dca55bd4bd01d7481025",
+      "root_clutter_sweep": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+      "self_learning_spec": "sha256:0e8d1f1e24bafe31a8a7a08c15b7b553e8593cd47450fde33887b69de3cd14d4",
+      "signature_definition": "sha256:909d49ab78c17b48db1d81221f54cdae1f6e1be14768ab3c908a78a1e1972018",
+      "tests": "sha256:0ea8cd0db6a8febd97627b26451ef3a5ce02ee171f3ba2166dadf3f3fa791f03"
+    },
+    "family_headroom_counts": {
+      "counts": {
+        "finite_domain_csp": 90,
+        "finite_state_planning": 90,
+        "hard_soft_packing": 90,
+        "weighted_maxsat": 90
+      },
+      "group_key": "family",
+      "minimum_required_per_group": 30,
+      "ok": true,
+      "positive_headroom_counts": {
+        "finite_domain_csp": 90,
+        "finite_state_planning": 90,
+        "hard_soft_packing": 90,
+        "weighted_maxsat": 90
+      }
+    },
+    "hardness_headroom_counts": {
+      "counts": {
+        "high": 120,
+        "low": 120,
+        "medium": 120
+      },
+      "group_key": "hardness",
+      "minimum_required_per_group": 30,
+      "ok": true,
+      "positive_headroom_counts": {
+        "high": 120,
+        "low": 120,
+        "medium": 120
+      }
+    },
+    "preconditions_ready": true,
+    "python": {
+      "available": true,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1169354,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 78860,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "run_date": "20260723",
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.preconditions",
+    "seeds": {
+      "exp5856": {
+        "base_seed": 5856,
+        "bootstrap_seed": 5856001,
+        "group_bootstrap_seed": 5856002,
+        "serialization_seed": 5856003
+      },
+      "exp5856_seed_receipt": {
+        "expected": {
+          "exp5826": {
+            "base_seed": 5826,
+            "family_seed": 5826002,
+            "future_suffix_seed": 5826004,
+            "stream_seed": 5826001,
+            "surface_seed": 5826003
+          },
+          "exp5827": {
+            "active_query_seed": 5827001,
+            "base_seed": 5827,
+            "bootstrap_seed": 5827003,
+            "checkpoint_seed": 5827004,
+            "random_query_seed": 5827002
+          },
+          "exp5839": {
+            "base_seed": 5839,
+            "replay_audit_seed": 5839003,
+            "row_reconstruction_seed": 5839001,
+            "shortcut_control_seed": 5839002
+          },
+          "exp5851": {
+            "base_seed": 5851,
+            "false_marker_fixture_seed": 5851002,
+            "positive_fixture_seed": 5851001,
+            "regression_fixture_seed": 5851003
+          },
+          "exp5856": {
+            "base_seed": 5856,
+            "bootstrap_seed": 5856001,
+            "group_bootstrap_seed": 5856002,
+            "serialization_seed": 5856003
+          }
+        },
+        "observed": {
+          "exp5826": {
+            "base_seed": 5826,
+            "family_seed": 5826002,
+            "future_suffix_seed": 5826004,
+            "stream_seed": 5826001,
+            "surface_seed": 5826003
+          },
+          "exp5827": {
+            "active_query_seed": 5827001,
+            "base_seed": 5827,
+            "bootstrap_seed": 5827003,
+            "checkpoint_seed": 5827004,
+            "random_query_seed": 5827002
+          },
+          "exp5839": {
+            "base_seed": 5839,
+            "replay_audit_seed": 5839003,
+            "row_reconstruction_seed": 5839001,
+            "shortcut_control_seed": 5839002
+          },
+          "exp5851": {
+            "base_seed": 5851,
+            "false_marker_fixture_seed": 5851002,
+            "positive_fixture_seed": 5851001,
+            "regression_fixture_seed": 5851003
+          },
+          "exp5856": {
+            "base_seed": 5856,
+            "bootstrap_seed": 5856001,
+            "group_bootstrap_seed": 5856002,
+            "serialization_seed": 5856003
+          }
+        },
+        "ok": true,
+        "seed_manifest_hash": "sha256:070d3807dfc11cc8e3cc7733076fcfa56fe395a594d20dac48dd21498893b2a1"
+      },
+      "exp5857": {
+        "base_seed": 5857,
+        "bootstrap_seed": 5857001,
+        "group_bootstrap_seed": 5857002,
+        "restart_seed": 5857004,
+        "signature_permutation_seed": 5857003
+      },
+      "ok": true
+    },
+    "splits": {
+      "canonical_event_order": true,
+      "cell_counts": {
+        "finite_domain_csp|addition": 30,
+        "finite_domain_csp|recurrence": 30,
+        "finite_domain_csp|supersession": 30,
+        "finite_state_planning|addition": 30,
+        "finite_state_planning|recurrence": 30,
+        "finite_state_planning|supersession": 30,
+        "hard_soft_packing|addition": 30,
+        "hard_soft_packing|recurrence": 30,
+        "hard_soft_packing|supersession": 30,
+        "weighted_maxsat|addition": 30,
+        "weighted_maxsat|recurrence": 30,
+        "weighted_maxsat|supersession": 30
+      },
+      "family_change_order": {
+        "finite_domain_csp": [
+          "addition",
+          "supersession",
+          "recurrence"
+        ],
+        "finite_state_planning": [
+          "addition",
+          "supersession",
+          "recurrence"
+        ],
+        "hard_soft_packing": [
+          "addition",
+          "supersession",
+          "recurrence"
+        ],
+        "weighted_maxsat": [
+          "addition",
+          "supersession",
+          "recurrence"
+        ]
+      },
+      "minimum_cell_count": 30,
+      "ok": true,
+      "row_count": 360,
+      "split_counts": {
+        "science": 360
+      }
+    },
+    "state_manifest": {
+      "checkpoint_hash_root": "sha256:4d099698890e416f1d89b473a51ccdd89995b7cb4edba1ef0ff9f9b0ee707673",
+      "full_event_hash": "sha256:88ae5f6fac5c5bf8203949811f95194262ab19296dea563cc50fc604fa3cd344",
+      "full_state_hash": "sha256:826ea0fc57f798d8d61cf46f4ab3d52b0d1df9e94e7c36053472176da307c6b8",
+      "ok": true,
+      "restart_equivalence": 1.0,
+      "resumed_event_hash": "sha256:88ae5f6fac5c5bf8203949811f95194262ab19296dea563cc50fc604fa3cd344",
+      "resumed_state_hash": "sha256:826ea0fc57f798d8d61cf46f4ab3d52b0d1df9e94e7c36053472176da307c6b8",
+      "rollback_hash_mismatch_count": 0,
+      "serialization_equivalence": 1.0
+    },
+    "timer": {
+      "clock": "perf_counter",
+      "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+      "monotonic": true,
+      "ok": true,
+      "resolution_s": 1e-09
+    },
+    "validators": {
+      "independent_validator_versions": [
+        "exp5826_independent_reversed_domain_validator_v1"
+      ],
+      "ok": true,
+      "primary_validator_versions": [
+        "exp5826_primary_finite_domain_exact_validator_v1"
+      ],
+      "receipt_hash": "sha256:67be21d74f3c0694e3bba5e40b9e697cf7986c8999cbfb240af307af779dd3b0",
+      "row_count": 360,
+      "validators_agree_count": 360
+    }
+  },
+  "protected_prefix_and_hard_case_results": {
+    "hard_case_forgetting_count": 0,
+    "hard_case_results": {
+      "easy": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.528394,
+            0.614006
+          ],
+          "mean_delta": 0.573217,
+          "n": 120
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.719444,
+            0.813889
+          ],
+          "mean_delta": 0.769444,
+          "n": 120
+        },
+        "row_count": 120
+      },
+      "hard": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.532022,
+            0.6166
+          ],
+          "mean_delta": 0.575017,
+          "n": 120
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.719444,
+            0.813889
+          ],
+          "mean_delta": 0.769444,
+          "n": 120
+        },
+        "row_count": 120
+      },
+      "medium": {
+        "compatible_minus_all_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.533256,
+            0.615089
+          ],
+          "mean_delta": 0.574117,
+          "n": 120
+        },
+        "compatible_minus_no_replay": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            0.716667,
+            0.816667
+          ],
+          "mean_delta": 0.769444,
+          "n": 120
+        },
+        "row_count": 120
+      }
+    },
+    "no_hard_case_negative_lower_bound": true,
+    "protected_prefix_retention": {
+      "all_replay": 1.0,
+      "no_replay": 1.0,
+      "signature_compatible_replay": 1.0
+    },
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.protected_prefix_hard_case"
+  },
+  "random_seed": 5857,
+  "random_seeds": {
+    "base_seed": 5857,
+    "bootstrap_seed": 5857001,
+    "group_bootstrap_seed": 5857002,
+    "restart_seed": 5857004,
+    "signature_permutation_seed": 5857003
+  },
+  "replay_arm_definitions_and_budget_parity": {
+    "arms": [
+      "no_replay",
+      "all_replay",
+      "signature_compatible_replay"
+    ],
+    "budget_parity_passed": true,
+    "definitions": {
+      "all_replay": {
+        "checkpoint_restart_rule": "hash_replay_receipts_and_seed_manifest",
+        "current_evidence": "clean_exp5856_row_receipt_current_event",
+        "event_budget": 8,
+        "memory_budget": 64,
+        "scorer": "row_receipt_frozen_vs_adaptive_accuracy",
+        "seed_manifest": {
+          "base_seed": 5857,
+          "bootstrap_seed": 5857001,
+          "group_bootstrap_seed": 5857002,
+          "restart_seed": 5857004,
+          "signature_permutation_seed": 5857003
+        },
+        "selection_rule": "select_recent_prior_rows",
+        "validator_authority": "exact_validator"
+      },
+      "no_replay": {
+        "checkpoint_restart_rule": "hash_replay_receipts_and_seed_manifest",
+        "current_evidence": "clean_exp5856_row_receipt_current_event",
+        "event_budget": 8,
+        "memory_budget": 64,
+        "scorer": "row_receipt_frozen_vs_adaptive_accuracy",
+        "seed_manifest": {
+          "base_seed": 5857,
+          "bootstrap_seed": 5857001,
+          "group_bootstrap_seed": 5857002,
+          "restart_seed": 5857004,
+          "signature_permutation_seed": 5857003
+        },
+        "selection_rule": "select_no_prior_rows",
+        "validator_authority": "exact_validator"
+      },
+      "signature_compatible_replay": {
+        "checkpoint_restart_rule": "hash_replay_receipts_and_seed_manifest",
+        "current_evidence": "clean_exp5856_row_receipt_current_event",
+        "event_budget": 8,
+        "memory_budget": 64,
+        "scorer": "row_receipt_frozen_vs_adaptive_accuracy",
+        "seed_manifest": {
+          "base_seed": 5857,
+          "bootstrap_seed": 5857001,
+          "group_bootstrap_seed": 5857002,
+          "restart_seed": 5857004,
+          "signature_permutation_seed": 5857003
+        },
+        "selection_rule": "select_recent_prior_rows_matching_frozen_signature",
+        "validator_authority": "exact_validator"
+      }
+    },
+    "prior_only_selection_passed": true,
+    "sample_replay_receipts": [
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 0,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:39815f36902570a991daddcf8c5098f229f58b83e5502317acefd16add3df40c",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-000-addition",
+        "row_index": 0,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 2,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 0,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:9f77164b0da16246b7afdec075db9d4972dc0bf2e34f280f15d67333bcf737b7",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-000-addition",
+        "row_index": 0,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 2,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 0,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:00cea8c4054b5728b1fd90205c29f9112bbcc0bf42d56bb4b90d3163480b11d2",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-000-addition",
+        "row_index": 0,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 2,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 1,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:ded91b69dfbbf051ce3c87f1628e4d7d8e64c90407182ab7e0c690f407f499c4",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-000-supersession",
+        "row_index": 1,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 5,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 1,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.012624,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:8d9e62f6b3841a87339e14343946b1292e6ccad26eda9e00e30ebe3401a64bc4",
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-000-supersession",
+        "row_index": 1,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32"
+        ],
+        "state_size_after_row": 5,
+        "total_replay_bytes": 124
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 1,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.012624,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:e7c36a7cf8367caab48845d2342c693d5429f62f1f340aa67361518cd64ef728",
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-000-supersession",
+        "row_index": 1,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32"
+        ],
+        "state_size_after_row": 5,
+        "total_replay_bytes": 124
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 2,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:96aa9e217a1dff5589a74d28cae0ca9e38eaec0290caf4cee0b72d8759bbb177",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-000-recurrence",
+        "row_index": 2,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 7,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 2,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.015251,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:7da29042afb085ea09c6c2a56a40638f21c9a638032773d0287ba9d8b7607f66",
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-000-recurrence",
+        "row_index": 2,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104"
+        ],
+        "state_size_after_row": 7,
+        "total_replay_bytes": 251
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 2,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.015251,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:a3a759caf274c6f3e2c5dd4ff79e3697029e1b67e9c14ad9732ab3af4de33472",
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-000-recurrence",
+        "row_index": 2,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104"
+        ],
+        "state_size_after_row": 7,
+        "total_replay_bytes": 251
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 3,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:bcbf67648b6ac0f8fe5329b621f20d5beadbb1a1a44dfa35d51788145e63136d",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-001-addition",
+        "row_index": 3,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 8,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 3,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 3,
+        "latency_ms": 0.017876,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:e10859b269f68d8d4de35c7489fe8ca03ba601e4a254573ad0eadae3131e36c7",
+        "replay_count": 3,
+        "row_id": "exp5826-science-finite-domain-csp-001-addition",
+        "row_index": 3,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87"
+        ],
+        "state_size_after_row": 8,
+        "total_replay_bytes": 376
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 3,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:f4c31a9ae74444c25dd4ab6ab0a4ac63c6ec37d8e809882354e66b43a5a3d67a",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-001-addition",
+        "row_index": 3,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 8,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 4,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:8d6e68570dd608af5c7ee9e0788a31d36422d684adbc03e4ecb647a374d61bec",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-001-supersession",
+        "row_index": 4,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 9,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 4,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 3,
+        "latency_ms": 0.020499,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:29dbcc88f47ccfd09c07ed5665e792fff6df5a50224cc44147476530c11c81b0",
+        "replay_count": 4,
+        "row_id": "exp5826-science-finite-domain-csp-001-supersession",
+        "row_index": 4,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0"
+        ],
+        "state_size_after_row": 9,
+        "total_replay_bytes": 499
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 4,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.012624,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:60affae38205f99c152b6c5adfdae57703c97a1df9f9ccc707a5a11400459f71",
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-001-supersession",
+        "row_index": 4,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-001-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0"
+        ],
+        "state_size_after_row": 9,
+        "total_replay_bytes": 124
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 5,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:88ff827023704e07d044d824dd96af107fc1671caad86a1423b2a48073c1e46a",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-001-recurrence",
+        "row_index": 5,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 10,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 5,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 3,
+        "latency_ms": 0.023126,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:402d487fb57ba2fd7166ffdaf67aa339ae14de39429f0351f97144bf381bcce0",
+        "replay_count": 5,
+        "row_id": "exp5826-science-finite-domain-csp-001-recurrence",
+        "row_index": 5,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99"
+        ],
+        "state_size_after_row": 10,
+        "total_replay_bytes": 626
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 5,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.015251,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:0437795ed047c6944b83943381d2e797287fc299ac498bea11cd3c387a2278f9",
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-001-recurrence",
+        "row_index": 5,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99"
+        ],
+        "state_size_after_row": 10,
+        "total_replay_bytes": 251
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 6,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:d9156ad3720dda778ee7e6b9fa27bb6136c82e4f4ea9766f7281f86877939897",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-002-addition",
+        "row_index": 6,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 11,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 6,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 6,
+        "latency_ms": 0.025751,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:a7fb99df2cffecae734dd0e341e429316a4e69bcafb286291fe40508d3916edb",
+        "replay_count": 6,
+        "row_id": "exp5826-science-finite-domain-csp-002-addition",
+        "row_index": 6,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession",
+          "exp5826-science-finite-domain-csp-001-recurrence"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99",
+          "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3"
+        ],
+        "state_size_after_row": 11,
+        "total_replay_bytes": 751
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 6,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:a075d882014f3c0f0ebcc7659f4244fc3abda4e58f9c459b00f6f76358e4c0b7",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-002-addition",
+        "row_index": 6,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 11,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 7,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:cffe9e88cb89443f45e61497486534409a5b830d8e4452a3e2af65e349e2a871",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-002-supersession",
+        "row_index": 7,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 12,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 7,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 6,
+        "latency_ms": 0.028374,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:f944000ed8fbe79f8f699a7e93ee05f8676865cad2ad9da85bdee1fa970e8976",
+        "replay_count": 7,
+        "row_id": "exp5826-science-finite-domain-csp-002-supersession",
+        "row_index": 7,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession",
+          "exp5826-science-finite-domain-csp-001-recurrence",
+          "exp5826-science-finite-domain-csp-002-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99",
+          "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3",
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38"
+        ],
+        "state_size_after_row": 12,
+        "total_replay_bytes": 874
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 7,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.012624,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:3920e59376db7491e8d23df9a11683cb790d2326c0419689707405aa6516bad7",
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-002-supersession",
+        "row_index": 7,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-002-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38"
+        ],
+        "state_size_after_row": 12,
+        "total_replay_bytes": 124
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 8,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:78a9ccb4f7f1610fbffd8a9a6a80b89a9e8883da5f7690d3d248a74ec6ee0e4d",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-002-recurrence",
+        "row_index": 8,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 13,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 8,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 6,
+        "latency_ms": 0.031001,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:03d8e666d4818af0353a4745dd5f347664b9c179dc0462af7669b11d42596b3c",
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-002-recurrence",
+        "row_index": 8,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-addition",
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession",
+          "exp5826-science-finite-domain-csp-001-recurrence",
+          "exp5826-science-finite-domain-csp-002-addition",
+          "exp5826-science-finite-domain-csp-002-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:75619e39108f1eab4522a6d6c3b00d16ab6195cc2cae8f324505ffd610286b32",
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99",
+          "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3",
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38",
+          "sha256:4207a4cca6bbb9dd3e92a86c7ba67c1a5d9692cd366a1e3bc7080c5aedf7e284"
+        ],
+        "state_size_after_row": 13,
+        "total_replay_bytes": 1001
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 8,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.015251,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:d681c115ca21c80be8131cde8b3275c553290e6f5b6783ffb0f67974f10796fe",
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-002-recurrence",
+        "row_index": 8,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-002-addition",
+          "exp5826-science-finite-domain-csp-002-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38",
+          "sha256:4207a4cca6bbb9dd3e92a86c7ba67c1a5d9692cd366a1e3bc7080c5aedf7e284"
+        ],
+        "state_size_after_row": 13,
+        "total_replay_bytes": 251
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 9,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:12c03579a41869e94aa0204c654cda0264c0bb598aecfaf0f2cdd59c3768e828",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-003-addition",
+        "row_index": 9,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 14,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 9,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 8,
+        "latency_ms": 0.031003,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:344bb4aea21667715078900992c40202f425963cb451cbd357c1e25919237139",
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-003-addition",
+        "row_index": 9,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-supersession",
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession",
+          "exp5826-science-finite-domain-csp-001-recurrence",
+          "exp5826-science-finite-domain-csp-002-addition",
+          "exp5826-science-finite-domain-csp-002-supersession",
+          "exp5826-science-finite-domain-csp-002-recurrence"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:15a0b43df26a5e721b5c7bd846c18f6880a70867c6623fbbbe349f5c5be47104",
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99",
+          "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3",
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38",
+          "sha256:4207a4cca6bbb9dd3e92a86c7ba67c1a5d9692cd366a1e3bc7080c5aedf7e284",
+          "sha256:abf90b6953532bb7b583dd390cd75c665bdb0cff78e93bedcbb4e451d999d96b"
+        ],
+        "state_size_after_row": 14,
+        "total_replay_bytes": 1003
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 9,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:a3b4bc55ae44c179d39e2b777e3ffa0ca47b7e7263561a1512cf4ddb1d37d6d5",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-003-addition",
+        "row_index": 9,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 14,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 10,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:8d9f9c1db8282970312c1e1e83d7a60e349f6f28fe2e54b78aca45184f568cd0",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-003-supersession",
+        "row_index": 10,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 15,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 10,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 7,
+        "latency_ms": 0.030999,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:0b352c7c93593c3b81dc98a85f49eb90b30e84fba11e6f47df870b007885d4ac",
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-003-supersession",
+        "row_index": 10,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-000-recurrence",
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession",
+          "exp5826-science-finite-domain-csp-001-recurrence",
+          "exp5826-science-finite-domain-csp-002-addition",
+          "exp5826-science-finite-domain-csp-002-supersession",
+          "exp5826-science-finite-domain-csp-002-recurrence",
+          "exp5826-science-finite-domain-csp-003-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:6c337c32b7f266993586068dc38019dadee14832925f45c7fb43ae4b5f8f527f",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:e507fedce80e6b37501f8fa18c4d56b3a2462b337852da5022d344b0a922ce87",
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99",
+          "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3",
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38",
+          "sha256:4207a4cca6bbb9dd3e92a86c7ba67c1a5d9692cd366a1e3bc7080c5aedf7e284",
+          "sha256:abf90b6953532bb7b583dd390cd75c665bdb0cff78e93bedcbb4e451d999d96b",
+          "sha256:f0cf06605b465da686dfe92a29987ab33defb3f741c2825060cb4f1956ede033"
+        ],
+        "state_size_after_row": 15,
+        "total_replay_bytes": 999
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 10,
+        "compatible_hits": 1,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.012624,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:fe7cf069d9f05409aec5497cb51421be09c682ba91ace083dac1eeffc53f50f4",
+        "replay_count": 1,
+        "row_id": "exp5826-science-finite-domain-csp-003-supersession",
+        "row_index": 10,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-003-addition"
+        ],
+        "selected_signature_hashes": [
+          "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:f0cf06605b465da686dfe92a29987ab33defb3f741c2825060cb4f1956ede033"
+        ],
+        "state_size_after_row": 15,
+        "total_replay_bytes": 124
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "no_replay",
+        "chronology_index": 11,
+        "compatible_hits": 0,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.010002,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:df33b0ca2626c3a26aae3b341fec98907b178f0fcf8835df7776d52b80e34b33",
+        "replay_count": 0,
+        "row_id": "exp5826-science-finite-domain-csp-003-recurrence",
+        "row_index": 11,
+        "selected_row_ids": [],
+        "selected_signature_hashes": [],
+        "selected_source_row_hashes": [],
+        "state_size_after_row": 16,
+        "total_replay_bytes": 2
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "all_replay",
+        "chronology_index": 11,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 6,
+        "latency_ms": 0.031001,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:b9d25ec833f72a4b6e4640ad1e7cac7b53e6a9b1b73351fce598be5c39bbd2f7",
+        "replay_count": 8,
+        "row_id": "exp5826-science-finite-domain-csp-003-recurrence",
+        "row_index": 11,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-001-addition",
+          "exp5826-science-finite-domain-csp-001-supersession",
+          "exp5826-science-finite-domain-csp-001-recurrence",
+          "exp5826-science-finite-domain-csp-002-addition",
+          "exp5826-science-finite-domain-csp-002-supersession",
+          "exp5826-science-finite-domain-csp-002-recurrence",
+          "exp5826-science-finite-domain-csp-003-addition",
+          "exp5826-science-finite-domain-csp-003-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:266935b5acd1e42cf02d779065dbdb4468b137c571fb97e7780b53bddfd17bfc",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:0b535e81ac4927ac8b420b7058e308bd53f0640c5ff74d9f277d01b9f5f03ada",
+          "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a",
+          "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:f53a8fd95cfc3b6a865e390219e7d183b874427900211cef6dd3bf691377f3f0",
+          "sha256:6ff63dbbce709947012edd587f45c30ab7f7fb61c64e7ab433dffe8221602f99",
+          "sha256:2e33eb7daccf39a93673eb89ccc32bd24a1409fef53529c07bb96fdfe7254dc3",
+          "sha256:529618c2e364bb20316201584ff2d29f25db6b09c93c35c065eaf18842538a38",
+          "sha256:4207a4cca6bbb9dd3e92a86c7ba67c1a5d9692cd366a1e3bc7080c5aedf7e284",
+          "sha256:abf90b6953532bb7b583dd390cd75c665bdb0cff78e93bedcbb4e451d999d96b",
+          "sha256:f0cf06605b465da686dfe92a29987ab33defb3f741c2825060cb4f1956ede033",
+          "sha256:726fb66602760f6085d1196592d8a5d81ec8440ca9f9336be050c05b2a99ddf1"
+        ],
+        "state_size_after_row": 16,
+        "total_replay_bytes": 1001
+      },
+      {
+        "all_selected_rows_prior": true,
+        "arm": "signature_compatible_replay",
+        "chronology_index": 11,
+        "compatible_hits": 2,
+        "future_suffix_rows_selected": 0,
+        "incompatible_event_count": 0,
+        "latency_ms": 0.015251,
+        "memory_cap": 64,
+        "receipt_hash": "sha256:3c98ce85c69daed67cb20b17b4cf444244a9cad59f810f0593f6b26b6560704d",
+        "replay_count": 2,
+        "row_id": "exp5826-science-finite-domain-csp-003-recurrence",
+        "row_index": 11,
+        "selected_row_ids": [
+          "exp5826-science-finite-domain-csp-003-addition",
+          "exp5826-science-finite-domain-csp-003-supersession"
+        ],
+        "selected_signature_hashes": [
+          "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a",
+          "sha256:56b8811535a43f164fec322c1b6f01a510415c1a33a711498faffd4013ae8c8a"
+        ],
+        "selected_source_row_hashes": [
+          "sha256:f0cf06605b465da686dfe92a29987ab33defb3f741c2825060cb4f1956ede033",
+          "sha256:726fb66602760f6085d1196592d8a5d81ec8440ca9f9336be050c05b2a99ddf1"
+        ],
+        "state_size_after_row": 16,
+        "total_replay_bytes": 251
+      }
+    ],
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.arm_definitions_budget_parity"
+  },
+  "replay_resource_accounting": {
+    "by_arm": {
+      "all_replay": {
+        "cap_pressure": 0.84375,
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.031035,
+          "mean_ms": 0.030742,
+          "p95_ms": 0.031035
+        },
+        "max_replay_events": 8,
+        "state_size_max": 54,
+        "total_replay_bytes": 357151,
+        "total_replay_events": 2844
+      },
+      "no_replay": {
+        "cap_pressure": 0.84375,
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.010002,
+          "mean_ms": 0.010002,
+          "p95_ms": 0.010002
+        },
+        "max_replay_events": 0,
+        "state_size_max": 54,
+        "total_replay_bytes": 720,
+        "total_replay_events": 0
+      },
+      "signature_compatible_replay": {
+        "cap_pressure": 0.84375,
+        "latency_ms": {
+          "count": 360,
+          "max_ms": 0.031035,
+          "mean_ms": 0.029428,
+          "p95_ms": 0.031033
+        },
+        "max_replay_events": 8,
+        "state_size_max": 54,
+        "total_replay_bytes": 333906,
+        "total_replay_events": 2664
+      }
+    },
+    "cap_compliance": true,
+    "max_cap_pressure": 0.84375,
+    "max_replay_events_per_task": 8,
+    "max_state_size": 54,
+    "memory_cap": 64,
+    "replay_event_cap": 8,
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.resource_accounting"
+  },
+  "reproducibility_checksum": "sha256:4931b20c00a721a8010a6959f0f928f6c3c0ffa4cdd158727271c4fc5f422a5f",
+  "restart_equivalence": {
+    "full_replay_state_hash": "sha256:672f4b00ddf6ac2c211bcf5fc0fdbc53dd2a100a0fb998b1347d4da250d7bbf6",
+    "replay_receipt_hash_root": "sha256:5f996f7ada95c6ea57ace552f68c680fa8aa010dd2cb2fb3e6a3ab03e7ac694f",
+    "restart_equivalence": 1.0,
+    "resumed_replay_state_hash": "sha256:672f4b00ddf6ac2c211bcf5fc0fdbc53dd2a100a0fb998b1347d4da250d7bbf6",
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.restart_equivalence",
+    "serialized_replay_state_reproduces": true
+  },
+  "result_path": "results/experiment_5857_clean_transfer_selective_replay.json",
+  "run_date": "20260723",
+  "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1",
+  "selective_replay_qualified_score": 1.0,
+  "signature_permutation_collision_and_null_controls": {
+    "all_compatible": {
+      "control_passed": true,
+      "qualified_score": 0.0,
+      "selector_treats_every_prior_row_as_compatible": true,
+      "unsafe_incompatible_selection_detected": true
+    },
+    "all_controls_fail_closed": true,
+    "collision_injection": {
+      "control_passed": true,
+      "injected_signature_count": 1,
+      "qualified_score": 0.0,
+      "unsafe_incompatible_selection_detected": true
+    },
+    "duplicate_row": {
+      "control_passed": true,
+      "duplicate_weighting_detected": true,
+      "qualified_score": 0.0
+    },
+    "future_label_derived": {
+      "control_passed": true,
+      "forbidden": true,
+      "qualified_score": 0.0,
+      "reason": "compatibility_rule_derived_from_future_labels_is_forbidden"
+    },
+    "none_compatible": {
+      "compatible_minus_no_replay_lcb": 0.0,
+      "control_passed": true,
+      "qualified_score": 0.0,
+      "selector_treats_no_prior_row_as_compatible": true
+    },
+    "schema": "carnot.experiment_5857.clean_transfer_selective_replay.v1.selector_controls",
+    "signature_permutation": {
+      "control_passed": true,
+      "permutation_matches_original": 66,
+      "qualified_score": 0.0
+    }
+  },
+  "spec_refs": [
+    "REQ-LEARN-5857",
+    "SCENARIO-LEARN-5857-CLEAN-GATE",
+    "SCENARIO-LEARN-5857-SIGNATURE-FREEZE",
+    "SCENARIO-LEARN-5857-THREE-ARMS",
+    "SCENARIO-LEARN-5857-DISAGGREGATED-METRICS",
+    "SCENARIO-LEARN-5857-CONTROLS"
+  ],
+  "status": "qualified",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5857_clean_transfer_selective_replay.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5857_clean_transfer_selective_replay.py -m pytest tests/python/test_experiment_5857_clean_transfer_selective_replay.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5857_clean_transfer_selective_replay.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5857_clean_transfer_selective_replay.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5857_clean_transfer_selective_replay.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5857_clean_transfer_selective_replay.py -m pytest tests/python/test_experiment_5857_clean_transfer_selective_replay.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5857_clean_transfer_selective_replay.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5857_clean_transfer_selective_replay.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5857_clean_transfer_selective_replay.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5857_clean_transfer_selective_replay.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "unsafe_transfer_count": 0,
+  "verifier_is_oracle": true
+}
