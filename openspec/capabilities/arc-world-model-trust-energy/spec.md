@@ -16823,3 +16823,73 @@ intermediate reward a local filter can climb. This is a genuinely different fail
 reactive loop's per-step correctness is real, but it lacks the multi-step lookahead the (failing)
 induce-then-plan architecture was trying to provide. Neither architecture alone, as built, combines
 reliable per-step signal with goal-directed multi-step search.
+
+### REQ-ARC-WMTE-5828: Tool-Calling Orientation + Multi-Step Lookahead Search
+
+**Origin:** 2026-07-23, operator directive following the `GAP-ARC-REACTIVE-FILTER-MYOPIC`
+diagnosis (REQ-ARC-WMTE-5827): "add real multi-step lookahead, and allow up to 12 tool-calling/REPL
+turns per decision, inspect history, reason, then commit one action." This directly targets the two
+things that diagnosis named as the actual missing capability -- neither induce-then-plan (a wrong
+symbolic model makes lookahead meaningless) nor the bare reactive filter (purely local, single-step
+signals, no lookahead at all) has BOTH a reliable per-step signal and goal-directed multi-step
+search at once.
+
+`carnot.agentic.arc_tool_loop_lookahead.run_tool_loop` SHALL give the generator up to 12 turns per
+decision point to call tools before committing. The tool surface SHALL be a small, SAFE, named-
+function dispatch table (`inspect_frame`, `inspect_cell`, `count_color`, `inspect_history`,
+`list_available_actions`) -- NOT arbitrary Python code execution. This is a disclosed scope
+reduction from Duck Harness's own full sandboxed-REPL mechanism, justified by this session's own
+prior finding that the frozen 9B generator already struggles with reliable structured output for a
+single JSON array; unconstrained free-form code from this model would be materially less reliable,
+and a full sandbox adds a security surface (`CARNOT_USE_SANDBOX`) this task does not need. The final
+commit turn SHALL request a RANKED SET of up to `MAX_CANDIDATES` (3) candidate actions with
+self-reported confidence, not a single action -- a single forced-greedy choice would make any reused
+search engine degenerate to a straight-line rollout with no real backtracking/lookahead.
+
+`carnot.agentic.arc_tool_loop_lookahead.ToolLoopLookaheadSession` SHALL supply
+`arc_solver_kit.OfflineSolver`'s three pluggable hooks (`action_labels`, `apply`, `verifier`, plus a
+`state_key` and a `move_pruner`) rather than a new search algorithm -- OfflineSolver's already-built,
+already-tested-across-25-games best-first search with replay-from-reset backtracking IS the
+multi-step lookahead mechanism; this module's only job is to make the tool-loop's ranked candidate
+set and self-reported confidence available at OfflineSolver's existing extension points.
+`verifier()` SHALL use `1.0 - confidence` (OfflineSolver's convention is LOWER=closer to the win) --
+the LLM's own self-reported confidence is a genuine, if noisy, goal-directed signal, standing in for
+the hand-authored `hand_verifier` that does not exist for un-adaptered games (the exact missing
+piece `GAP-ARC-REACTIVE-FILTER-MYOPIC` named). `move_pruner` SHALL reuse (not reimplement)
+REQ-ARC-WMTE-5827's exact-match dead-end filter.
+
+**A real, non-obvious bug SHALL be avoided, not assumed away:** `OfflineSolver`'s own `_replay()`
+re-applies `warmup_label` on every node visit and every sibling-restoration replay
+(`arc_solver_kit.py:5241`) -- if `apply()` recorded every call into the model-facing history, that
+history would be flooded with repeated fake warmup entries the model never actually chose. The
+naive fix (comparing the applied label's ACTION VALUE against the warmup action) is ALSO wrong,
+found directly via a real smoke test: when the model's own genuine search choice happens to be the
+same action as the warmup action, it gets silently swallowed as "just the warmup" too, corrupting
+the recorded history. `ToolLoopLookaheadSession.WARMUP_LABEL` SHALL be a sentinel string that is not
+valid JSON (unlike every genuine `_json_action_label()`-encoded candidate), so a label-STRING
+comparison in `apply()` can never collide with a genuine choice regardless of which action it is.
+
+### SCENARIO-ARC-WMTE-5828-TOOL-LOOP-COMMITS-WITHIN-BUDGET
+
+**Given** the generator emits a valid `ACTION: [...]` line at some turn within the 12-turn budget
+**When** `run_tool_loop` processes that turn
+**Then** it returns immediately with `ok=True` and the ranked candidate set, without consuming any
+further turns.
+
+### SCENARIO-ARC-WMTE-5828-DEDUP-PREVENTS-REPEAT-QUERY
+
+**Given** the generator calls the exact same tool with the exact same arguments twice in one
+decision's turn sequence (a real observed failure mode -- an early un-mitigated version looped on
+`inspect_cell 3 2` five times without ever committing)
+**When** the second identical call is processed
+**Then** it is short-circuited locally (no new LLM completion spent re-answering a question already
+answered) and a note is appended to the transcript, without ending the loop.
+
+### SCENARIO-ARC-WMTE-5828-WARMUP-SENTINEL-NEVER-COLLIDES-WITH-GENUINE-CHOICE
+
+**Given** `ToolLoopLookaheadSession.WARMUP_LABEL` and any genuine `_json_action_label()`-encoded
+candidate, for any action id
+**When** compared
+**Then** they are never equal -- the sentinel is deliberately not valid JSON, so `apply()`'s
+warmup-skip check can never misclassify a real model choice as internal search bookkeeping (the
+exact class of bug a value-based comparison, e.g. "is this action 1", would reintroduce).
