@@ -14156,3 +14156,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 00:33 UTC | Time-windowed post-V519 literature and implementat | OK | 88 passed, 2 warnings in 11.65s |
 | 2026-07-23 01:15 UTC | Canonical certified-event and adaptive-memory pref | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5825_certifi |
 | 2026-07-23 01:34 UTC | Canonical certified-event and adaptive-memory pref | OK | 140 passed, 1 warning in 26.89s |
+| 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed, 1 warning in 28.86s |
