@@ -1,0 +1,99 @@
+{
+  "acceptance_gate": {
+    "condition": "any tested game reaches a real levelup (levels_gained > 0) that the induce-then-plan baseline did not reach",
+    "passed": false,
+    "principle": "The induce-then-plan mechanism scores 0 new levels across every recent measurement on these exact games -- ANY real levelup is a genuine, unambiguous win for the new mechanism, not a noisy delta requiring a large sample to distinguish from zero."
+  },
+  "duration_note": "Real, non-mocked run across 3 games at budget=400 each.",
+  "duration_s": 977.881,
+  "experiment": "outer_loop_reactive_verifier_filter_ab_20260722",
+  "field_provenance": {
+    "acceptance_gate": {
+      "principle": "A single real levelup where the baseline scored exactly 0 across multiple independent prior measurements is decisive evidence with real headroom -- not a FALSE_NEGATIVE_RISK-flaggable degenerate test (the oracle depths for these games are 6-10 levels, well above the live baseline of 0)."
+    }
+  },
+  "honest_verdict": "complete_reactive_verifier_filter_honest_negative_no_levelup_matches_induce_baseline",
+  "inference_substrate": "live_llm_inference",
+  "narrative": "Operator-directed architectural pivot away from explicit symbolic world-model induction toward a verifier-filtered reactive loop: propose one action at a time (a proposal task, not a synthesis task), let a real verifier (exact-match dead-end rejection + the already-trained, already live-validated FrameChangeScorer CNN) filter it before commit, no upfront engine() synthesis. Tested on the three worst live/oracle-gap games from exp5727's 2026-07-19 full-registry sweep (or this session's own sc25 held-out probe, for sc25 specifically, which was outside exp5727's own roster), at the SAME 400-action budget.",
+  "per_game": [
+    {
+      "baseline": {
+        "live_levels": null,
+        "oracle_levels": 6
+      },
+      "baseline_source": "results/outer_loop_holdout_generalization_probe_sc25_20260722.json (this session, induce-then-plan mechanism, same 9B generator)",
+      "dead_end_rejections": 85,
+      "error": null,
+      "fallback_explore_steps": 13,
+      "first_levelup_actions": null,
+      "frame_change_rejections": 518,
+      "game": "sc25",
+      "game_wall_s": 634.31,
+      "levels_gained": 0,
+      "llm_calls": 150,
+      "reached_level": 0,
+      "solved": false,
+      "start_level": 0,
+      "total_actions": 174,
+      "wall_s": 634.309
+    },
+    {
+      "baseline": {
+        "live_levels": 0,
+        "oracle_levels": 10
+      },
+      "baseline_source": "results/experiment_5727_arc_generalization_live_oracle_gap_v511.json (2026-07-19 full-registry sweep)",
+      "dead_end_rejections": 0,
+      "error": null,
+      "fallback_explore_steps": 1,
+      "first_levelup_actions": null,
+      "frame_change_rejections": 596,
+      "game": "lf52",
+      "game_wall_s": 213.916,
+      "levels_gained": 0,
+      "llm_calls": 150,
+      "reached_level": 0,
+      "solved": false,
+      "start_level": 0,
+      "total_actions": 174,
+      "wall_s": 213.916
+    },
+    {
+      "baseline": {
+        "live_levels": 0,
+        "oracle_levels": 9
+      },
+      "baseline_source": "results/experiment_5727_arc_generalization_live_oracle_gap_v511.json (2026-07-19 full-registry sweep)",
+      "dead_end_rejections": 0,
+      "error": null,
+      "fallback_explore_steps": 0,
+      "first_levelup_actions": null,
+      "frame_change_rejections": 600,
+      "game": "bp35",
+      "game_wall_s": 129.655,
+      "levels_gained": 0,
+      "llm_calls": 150,
+      "reached_level": 0,
+      "solved": false,
+      "start_level": 0,
+      "total_actions": 174,
+      "wall_s": 129.654
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "arc_reactive_verifier_filter_module_shipped"
+    },
+    {
+      "available": true,
+      "resource": "cuda_gpu1_pinned"
+    }
+  ],
+  "random_seed": 20260722,
+  "reproducibility_checksum": "4b74fd87c3870c1c62542c168131e02033d628e3515f9ee8013f91bdc9b70c7f",
+  "run_date": "2026-07-22",
+  "schema": "carnot.arc_reactive_verifier_filter_ab.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "target_model": "unsloth/Qwen3.5-9B-MTP-GGUF"
+}

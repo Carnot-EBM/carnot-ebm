@@ -3163,3 +3163,52 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   refinement-loop variant on a frozen local model without a NEW mechanism (per `retire_if_same_verdict` in
   both REQs' `preregistration` blocks) — the next move is model class or architecture, both operator-only
   decisions given the GPU-day-scale cost of either.
+
+### GAP-ARC-REACTIVE-FILTER-MYOPIC: verifier-filtered reactive loop is real but LOCAL, not GOAL-DIRECTED
+- status: tested_and_null — the candidate design (b) above from GAP-ARC-INDUCTION-REFINEMENT-NULL, run for
+  real, honest negative, with a genuine architectural diagnosis of WHY (not just "it didn't work")
+- evidence: `results/outer_loop_reactive_verifier_filter_ab_20260722.json`
+  (`carnot.agentic.arc_reactive_verifier_filter.run_reactive_verifier_filter_progress`, REQ-ARC-WMTE-5827,
+  operator-directed 2026-07-22). Real, non-mocked run on the 3 worst live/oracle-gap games
+  (sc25 oracle=6, lf52 oracle=10, bp35 oracle=9, all baseline live=0), frozen Qwen3.5-9B-MTP, 150 LLM calls /
+  ~174 actions per game (the LLM-call cap bound before the 400-action budget did — disclosed, not hidden).
+  `levels_gained=0` on all three, `error=None` on all three (clean runs, no crashes). `adversarial_verify.py`
+  0-flagged. The filter mechanism itself demonstrably ran for real: `frame_change_rejections` 518/596/600
+  (the already-trained, live-validated FrameChangeScorer CNN genuinely ranked ~4 candidates per round every
+  round) and `dead_end_rejections` 85/0/0 (the zero-cost history filter fired where relevant, e.g. sc25's
+  known non-idempotent-reset/state-cycling gotchas, and correctly did NOT fire on games without that
+  pattern).
+- failure mode: this is a DIFFERENT failure mode from GAP-ARC-INDUCTION-REFINEMENT-NULL's, not the same gap
+  restated. The induce-then-plan mechanism fails because the SYNTHESIZED symbolic model is wrong
+  (`heldout_accuracy≈0`). The reactive-filter mechanism's per-step filtering signals are demonstrably
+  correct/real (they visibly discriminate candidates every round) — but the mechanism is structurally
+  **MYOPIC**: dead-end rejection and change-prediction are both LOCAL, single-step signals ("is this action
+  a known repeat of nothing happening" / "does this action plausibly change the frame at all"). NEITHER
+  signal encodes DIRECTION toward a distant goal. Per the project's own hard-tail characterization
+  (`docs/research-notes/arc-improve-bridge-result-2026-06-23.md`): winning sequences on these games are deep
+  (13-33+ actions), narrow, and specifically ordered, with no intermediate reward signal a purely local
+  filter could climb. The induce-then-plan architecture's `plan_in_model` step was SUPPOSED to supply exactly
+  this multi-step lookahead (search inside the induced model to find a sequence reaching the goal) — but the
+  induced model is too inaccurate for that search to be meaningful. The reactive-filter architecture,
+  meanwhile, gives up lookahead ENTIRELY in exchange for per-step correctness. Neither, as currently built,
+  has BOTH a reliable per-step signal AND multi-step goal-directed lookahead at once — that combination is
+  the actual missing capability, not "induction" or "reactive filtering" as separate architecture choices.
+- missing discriminator: a GOAL-DIRECTED signal usable WITHOUT a per-game hand-crafted `hand_verifier`
+  (which only exists for adaptered games, defeating generalization) -- something that estimates progress
+  toward whatever the level's win condition turns out to be, learned or inferred FROM the game's own
+  observed structure (e.g. object interactions, color-state changes that correlate with prior wins across
+  games), not authored per-game. This is the same shape as `GAP-ARCH-GOAL-NOT-VERIFIED` (world-model verifier
+  scores dynamics but never the goal predicate) and `GAP-ARCH-NO-HIERARCHICAL-SEARCH` (no subgoal/landmark
+  engine wired) — this result is fresh empirical evidence that BOTH of those pre-existing gaps are still
+  load-bearing, now demonstrated on the reactive-filter architecture specifically, not just the induce-plan
+  one.
+- candidate design: (a) combine the two architectures rather than choosing between them — keep the
+  per-step verifier-filter (it is real and correct) but ALSO give it multi-step lookahead via a cheap
+  n-step rollout search using the filter itself as the step-evaluator (best-first search over filtered
+  candidate sequences, not a symbolic engine, not pure greedy either); (b) a general, cross-game LEARNED
+  goal-progress signal (the `GAP-ARCH-GOAL-NOT-VERIFIED` fix) that the search in (a) could optimize toward,
+  trained on the growing self-play/registry corpus rather than authored per-game.
+- priority: high — directly informs the next architectural step after both the induce-then-plan AND the
+  naive reactive-filter approaches have now been empirically closed as standalone fixes. `retire_if_same_
+  verdict: true` for a bare reactive-filter variant with no lookahead addition — the next attempt in this
+  family must add multi-step search/lookahead or a goal-progress signal, not just retune the local filter.

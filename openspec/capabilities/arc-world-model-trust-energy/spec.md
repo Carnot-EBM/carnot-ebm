@@ -16807,3 +16807,19 @@ ranking to first-survivor-wins if this call is omitted.
 games is decisive evidence favoring the new mechanism (the baseline scores exactly 0 across multiple
 independent prior measurements, so this is not a FALSE_NEGATIVE_RISK-flaggable degenerate test); an
 honest negative (no level-up on any game) is reported as such, not reframed as a partial success.
+
+**RESULT (verified 2026-07-22):** honest negative. All three games ran cleanly (`error: null` on
+all three, `adversarial_verify.py` 0-flagged) with the filter mechanism genuinely active every round
+(`frame_change_rejections` 518/596/600, `dead_end_rejections` 85/0/0 -- both signals visibly
+discriminating candidates), but `levels_gained=0` on all three
+(`honest_verdict: complete_reactive_verifier_filter_honest_negative_no_levelup_matches_induce_baseline`).
+The run's `max_llm_calls=150` cap bound before the 400-action budget did (174 actions/game, not 400
+-- disclosed, not hidden). Diagnosed root cause (`ops/verifier_gaps.md`
+`GAP-ARC-REACTIVE-FILTER-MYOPIC`): the filter's two signals (exact-match dead-end rejection,
+change-prediction ranking) are both purely LOCAL/single-step; neither encodes direction toward a
+distant goal, and these games require deep (13-33+ action) narrow winning sequences with no
+intermediate reward a local filter can climb. This is a genuinely different failure mode from
+`GAP-ARC-INDUCTION-REFINEMENT-NULL` (a wrong symbolic model), not a restatement of it -- the
+reactive loop's per-step correctness is real, but it lacks the multi-step lookahead the (failing)
+induce-then-plan architecture was trying to provide. Neither architecture alone, as built, combines
+reliable per-step signal with goal-directed multi-step search.
