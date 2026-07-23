@@ -14182,3 +14182,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 16:02 UTC | Claim-flip, evaluator-swap, and identity-shortcut  | OK | 87 passed, 1 warning in 11.98s |
 | 2026-07-23 16:04 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
 | 2026-07-23 16:07 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
+| 2026-07-23 16:09 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
+| 2026-07-23 16:11 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
