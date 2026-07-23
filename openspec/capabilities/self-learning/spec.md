@@ -24236,3 +24236,145 @@ protected-prefix replay
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5827 | Planned (`python/carnot/experiment_5827_minimal_core_structural_acquisition_ab.py`, `results/experiment_5827_minimal_core_structural_acquisition_ab.json`) | Planned (`tests/python/test_experiment_5827_minimal_core_structural_acquisition_ab.py`) |
+
+## REQ-LEARN-5828: Future-Validated Structural Memory Lifecycle
+
+The self-learning tier SHALL provide Exp5828, a deterministic no-LLM
+future-validated structural memory lifecycle at
+`python/carnot/experiment_5828_future_validated_structural_memory.py` that
+consumes the sealed Exp5826 chronological row stream and the credited Exp5827
+minimal-core structural learner, then writes
+`results/experiment_5828_future_validated_structural_memory.json`. Exp5828
+SHALL evaluate continuous self-learning under immutable model weights: all
+learning happens in versioned structural memory and `model_weight_mutation`
+SHALL be exactly `false`. The inference substrate SHALL be
+`online_exact_membership_query_sidecar_no_llm`, and `verifier_is_oracle` SHALL
+be exactly `true` because exact solvers gate promotion and rollback.
+
+Before learner or memory access, Exp5828 SHALL replay the structured gate by
+hashing Exp5826, Exp5827, and the Exp5825 contract, checking that Exp5826 has
+balanced multiple-change coverage, sealed future batches, exact solvers,
+deterministic seeds, RAM and disk resources, and writable atomic result and
+checkpoint paths. Any missing, stale, malformed, unsealed, solver-failed,
+resource-failed, seed-failed, or unwritable precondition SHALL write a terminal
+blocked artifact with `future_validated_lifecycle_ready_score=0.0`.
+
+Exp5828 SHALL freeze exactly three arms before replay:
+`no_adaptive_memory`, `immediate_structural_promotion`, and
+`future_validated_write_protected_promotion`. The arms SHALL receive identical
+chronological inputs, query budgets, structural learner, memory cap, stopping
+rule, protected-prefix checks, and exact-solver validation surface. The
+future-validated arm SHALL store every proposal in quarantine with parent hash,
+proposal hash, evidence receipts, and pre/post state hashes before any
+promotion attempt.
+
+The future-validated arm SHALL promote a quarantined structural proposal only
+after a sealed future validation suffix opens prospectively and passes all of
+the following gates: positive paired lower bound versus no adaptive memory,
+exact protected-prefix retention, zero unsafe propagation, and zero reuse of
+membership-query labels as validation labels. Ambiguous bindings SHALL emit
+collision-splitting receipts, stale rules SHALL emit explicit supersession
+receipts, recurring rules SHALL emit reactivation receipts, rejected or control
+updates SHALL emit transactional rollback receipts with exact hash restoration,
+and bounded state growth SHALL emit memory-cap and eviction receipts. Every
+operation SHALL record a reason plus pre-update and post-update state hashes.
+
+Exp5828 SHALL execute at least three preregistered changes per primary family
+and SHALL inject interruption/resume checkpoints at multiple lifecycle
+boundaries. Full-run and resumed state/event hashes SHALL match exactly.
+Metrics SHALL include future-suffix exact accuracy, promotion precision and
+recall, false promotion, rollback fidelity, protected-prefix retention, unsafe
+propagation, dynamic regret, memory growth, recurrence recovery, update
+latency, restart equivalence, and paired CI95, disaggregated by family and
+change.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `model_weight_mutation`,
+`arm_definitions_and_parity`, `quarantine_promotion_rollback_ledger`,
+`collision_supersession_recurrence_receipts`,
+`sealed_future_validation_receipts`, `per_family_change_metrics`,
+`paired_deltas_and_ci95`, `protected_prefix_retention`,
+`unsafe_update_count`, `rollback_hash_mismatch_count`,
+`restart_equivalence`, `memory_cap_receipts`,
+`future_validated_lifecycle_ready_score`, `retire_if_same_verdict`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a complete lifecycle result from an interrupted checkpoint.
+- `preconditions_checked`: Gate, sealed batches, solvers, resources, seeds, and checkpoint checks prevent fabricated execution.
+- `upstream_artifact_hashes`: Hashes bind the lifecycle to its learner, stream, and contract.
+- `model_weight_mutation`: False proves continuous learning occurred in versioned memory with frozen GGUF weights.
+- `arm_definitions_and_parity`: Matched inputs, budgets, learner, and cap isolate future validation.
+- `quarantine_promotion_rollback_ledger`: Transactional receipts make every accepted or rejected edit replayable.
+- `collision_supersession_recurrence_receipts`: Explicit structural events test nonstationarity rather than one-shot memorization.
+- `sealed_future_validation_receipts`: Prospective suffix evidence prevents post-hoc promotion.
+- `per_family_change_metrics`: Disaggregated outcomes expose family harm and recurrence failures.
+- `paired_deltas_and_ci95`: Paired intervals quantify future lift under identical episodes.
+- `protected_prefix_retention`: Exact retention prevents new rules from corrupting earlier facts.
+- `unsafe_update_count`: A bare zero is required for safe propagation.
+- `rollback_hash_mismatch_count`: A bare zero proves rejected edits leave no state residue.
+- `restart_equivalence`: Exact full/resumed hashes make learning durable across process boundaries.
+- `memory_cap_receipts`: Bounded state growth is necessary for continual and hardware-portable operation.
+- `future_validated_lifecycle_ready_score`: EMIT BARE scalar; only 1.0 permits replay transfer and kernel work.
+- `retire_if_same_verdict`: A repeated blocked outcome mechanically retires this reattempt.
+- `duration_s`: Measured wall time exposes bootstrap-only execution.
+- `inference_substrate`: `online_exact_membership_query_sidecar_no_llm` declares exact oracle-guided memory learning.
+- `verifier_is_oracle`: True records that exact solvers gate promotion and forbid a verifier-moat claim.
+- `field_provenance`: Every field traces to event, state, query, validation, or replay receipts.
+- `test_commands`: Commands document chronology, sealing, transactions, retention, restart, and statistics.
+- `test_exit_codes`: Exit codes prevent failed lifecycle checks from becoming success.
+- `reproducibility_checksum`: A checksum detects state, event, seed, or metric drift.
+- `honest_verdict`: A terminal prefix states credited, null, negative, or blocked outcome honestly.
+
+`future_validated_lifecycle_ready_score` SHALL be the bare scalar `1.0` only
+when future-validated memory beats no memory with a positive pooled lower bound
+and no family harm, promotion precision is at least `0.95`,
+`protected_prefix_retention=1.0`, `unsafe_update_count=0`,
+`rollback_hash_mismatch_count=0`, `restart_equivalence=1.0`, and memory cap
+compliance is `1.0`. Otherwise it SHALL be the bare scalar `0.0` with a
+terminal blocked, null, or negative verdict.
+
+### SCENARIO-LEARN-5828-FUTURE-PROMOTION: Quarantine Opens Only On Prospective Suffix Lift
+
+**Given** the credited Exp5827 structural learner proposes out-of-template
+rules from Exp5826 chronological rows
+**When** Exp5828 stores proposals in quarantine and then opens sealed future
+suffixes
+**Then** a proposal is promoted only when suffix lift has a positive lower
+bound, protected-prefix retention is exact, unsafe propagation is zero, and
+validation labels were not reused from proposal evidence.
+
+### SCENARIO-LEARN-5828-STRUCTURAL-OPS: Collisions, Supersession, And Recurrence Are Explicit
+
+**Given** Exp5826 rows exercise addition, supersession, and recurrence in every
+primary family
+**When** Exp5828 processes the lifecycle
+**Then** ambiguous bindings emit split receipts, stale active rules emit
+supersession receipts, recurring rules emit reactivation receipts, and every
+receipt includes pre/post state hashes and a reason.
+
+### SCENARIO-LEARN-5828-RESTART-CAP: Rollback, Restart, And Memory Cap Are Exact
+
+**Given** rejected control edits, rollback probes, bounded memory, and
+interruption/resume checkpoints at multiple lifecycle boundaries
+**When** Exp5828 compares full-run and resumed execution
+**Then** rollback mismatches are zero, full/resumed state and event hashes
+match exactly, and cap compliance remains `1.0`.
+
+### SCENARIO-LEARN-5828-FAIL-CLOSED: Bad Gates Cannot Look Ready
+
+**Given** missing upstream artifacts, unsealed future batches, solver mismatch,
+failed tests, unsafe propagation, validation-label reuse, rollback mismatch,
+restart mismatch, mutable model weights, or cap overflow
+**When** Exp5828 validates the artifact
+**Then** `future_validated_lifecycle_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`, `null:`, or `negative:`.
+
+## Implementation Status (Exp 5828)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5828 | Planned (`python/carnot/experiment_5828_future_validated_structural_memory.py`, `results/experiment_5828_future_validated_structural_memory.json`) | Planned (`tests/python/test_experiment_5828_future_validated_structural_memory.py`) |
