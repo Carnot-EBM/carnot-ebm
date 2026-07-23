@@ -2679,6 +2679,19 @@ EXACTLY the 21 measured misses, all clicks on color-5 cells.
 - **Candidate next step (not done in this pass):** validate the 8px tile pitch / fallback-budget interaction
   on a broader set of games before considering the flag for the live default; consider whether a smaller
   tile pitch or a different fallback-ranking heuristic closes more of the residual 15/57 at the real budget.
+- **CLASS-LEVEL REFRAME + CORRECTED VALIDATION GATE (2026-07-23, triangulation `wqn31sxaz` adversarial lens,
+  `docs/research-notes/arc-lever-triangulation-2026-07-23.md`):** the bp35-SPECIFIC 8px-tile fix, validated
+  by candidate COVERAGE of a hand-built adapter's known trajectory, is per-game proxy-polishing — coverage of
+  a KNOWN winning path is necessary-not-sufficient for DISCOVERING an unknown one, and the fix is not wired
+  into the scored `E3AgentPolicy._candidates` path, so its current hidden-game score impact is zero. What is
+  genuinely deliverable-relevant is the CLASS-LEVEL defect underneath it: **the live candidate generator can
+  never propose a click on the single most-common color** (`object_centric_digest` excludes it wholesale as
+  background), a real live-path bug that would bite ANY hidden game with a dominant-interactive-background
+  mechanic. **Corrected validation gate:** do NOT wire the flag to the submitted default on coverage
+  evidence. Instead validate it by the Generalization-Testing-Floor task-class-1 protocol — wire the flag
+  into the scored `E3AgentPolicy._candidates` (opt-in), then measure whether it lets the LIVE agent DISCOVER
+  (>0 levels) on a dominant-background game with its GameAdapter DISABLED. Coverage is the proxy; live
+  held-out discovery is the deliverable.
 
 ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
 - status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
@@ -3219,6 +3232,16 @@ EXACTLY the 21 measured misses, all clicks on color-5 cells.
   closing it is a world-model/goal-conditioned build, not a cheap salience tweak. Keep
   `CARNOT_ARC_SMALL_OBJECT_FIRST` OFF (operator-only whether to flip); this entry is the falsification
   record, NOT an edit to `ops/exclusion_manifest.yaml`.
+- **CORROBORATED + CONSOLIDATED 2026-07-23** (triangulation workflow `wqn31sxaz`,
+  `docs/research-notes/arc-lever-triangulation-2026-07-23.md`): an independent replication of the attribution
+  on 3 DISJOINT games (lf52/bp35/re86) reproduced this exact signal — the threshold-robust selection gap is
+  ~11.6% pooled and is monochromatically a CLICK-ranking problem (winning clicks at ranks 26-43 of ~52),
+  same as 5757's. A full prior-art audit confirmed re-ranking is now nulled across **7-9 distinct A/Bs**
+  (tier-schedule, small-object-first, learned candidate-router, spatial value-head, frame-change scorer,
+  imitation/object-history action-prior, structural-energy rerank). **A new static/learned candidate-ranking
+  build for this gap would violate the Failed-Experiment Rerun Discipline** — the only forward move is the
+  goal-conditioned/world-model-predicted selector in candidate design (a) above, which is the induction lever
+  (`GAP-ARCH-GOAL-NOT-VERIFIED`), NOT another reorder.
 
 ## GAP-ARC-INDUCTION-REFINEMENT-NULL: verifier-grounded CEGIS refinement does not lift world-model induction quality, on either a small or a substantially larger frozen local model (2026-07-21)
 
