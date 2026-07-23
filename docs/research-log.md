@@ -5991,3 +5991,9 @@ The critical path for milestone .250:
 - theme: incremental freshness handling is the clearest throughput opportunity in a synthesis-heavy closeout
 - key result: bounded operational negative -- no compute-task GPU idle or concurrent multi-model runner miss is established, while coarse modification-time reconstruction cannot explain compute phases
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.520
+- exp_range: exp5839-exp5839 (only experiment ID present in the authoritative timing data; the complete milestone range is not available)
+- theme: synthesis-heavy closeout led by the dated evidence receipt under coarse timing reconstruction
+- key result: honest operational result -- the only compute-bound entry recorded 0.01 minutes and was not classified as GPU-idle; no concurrent multi-model task is supplied, so no missed DualGPURunner engagement is established
+- acceptance: no data available this milestone

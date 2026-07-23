@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.520",
+  "generated_at": "2026-07-23T09:22:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 2.1,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Dated primary-source and implementation receipt for V520",
+      "duration_minutes": 1.78,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Archive terminal .519 evidence and allocate .520",
+      "duration_minutes": 0.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5839 stream qualification: exact causal counterfactual fixture",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent .519 row-level evidence and lifecycle qualification",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Four experiments completed in 2.1 minutes. The 1.78-minute synthesis-only receipt dominated elapsed time; the only compute-bound entry, the 0.01-minute gated exact causal counterfactual fixture, was therefore the longest compute task, but the reconstructed timing does not explain its duration. Compute-task GPU idle is false, and no supplied record shows a concurrent multi-model task or missed DualGPURunner engagement.",
+  "bottlenecks_identified": [
+    "The 1.78-minute dated primary-source and implementation receipt was the largest recorded task and dominated the 2.1-minute milestone wall time.",
+    "Disk-mtime reconstruction lacks phase-level attribution, so gate, setup, execution, and artifact-write costs cannot be separated for the only compute-bound entry.",
+    "The GPU snapshot is not correlated to task execution or model concurrency, limiting direct validation of utilization and runner selection; the locked compute-task idle classification remains false."
+  ],
+  "improvements_suggested": [
+    "Add an incremental cache keyed by the prior source cutoff and implementation manifest so an unchanged dated receipt can reuse already-scanned evidence.",
+    "Emit gate, setup, execution, and artifact-write timers for every compute-bound task.",
+    "Record task-correlated GPU samples, concurrent model count, and selected runner so DualGPURunner can be required only when models actually run in parallel.",
+    "Add a milestone-boundary cleanup check for lingering idle GPU allocations without treating synthesis-only GPU idle as a defect."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache unchanged primary-source and implementation receipt inputs and report cache-hit timing.",
+    "Add phase timers and task-correlated GPU utilization to compute-bound execution receipts.",
+    "Persist concurrent model count and runner choice, selecting DualGPURunner only for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This was a short, synthesis-heavy milestone reconstructed from file modification times, so its ranking is useful but its causal attribution is weak. The next retrospective should use task-correlated phase, GPU, and concurrency telemetry before assigning a nonzero savings forecast."
+}
