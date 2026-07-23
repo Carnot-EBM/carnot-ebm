@@ -2666,6 +2666,24 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   moves -- both minor and not blocking. Next: the END-TO-END gate -- re-run the REQ-ARC-WMTE-5832 goal
   measurement under DETECTOR-produced perception (not hand-authored) to confirm it recovers the ~7/8
   goal-correctness, then the execution/dynamics half for the navigate games.
+- **END-TO-END GATE = HONEST NEGATIVE 2026-07-23 (REQ-ARC-WMTE-5834,
+  `results/outer_loop_arc_end_to_end_goal_gate_20260723.json`).** Fed DETECTOR-produced perception
+  (`perceive_entities` on real arcade transitions) to gemma-4-31B's goal prompt, same learned RULES as the
+  5832 oracle ablation (only the perception SOURCE changed: hand-authored oracle -> detector output). Result:
+  **0 correct, 2 partial (ls20, cn04 -- the games where a mover was detected both produced the RIGHT SHAPE
+  "move the player to a target"), 6 wrong -- FAR below the oracle's 7/8.** Diagnosed root causes: (1) the
+  model's OWN WRONG learned RULES dominate -- bp35 "action 6 changes (63,x) to 15", lf52 "actions change
+  row 0" -- and the detector's "ignore this counter band" note is WEAKER than a rule the model already
+  believes, so gemma follows the rule and re-fixates on the HUD even when the HUD is correctly flagged;
+  (2) the detector NAMES the player (mover) but cannot NAME which object is the exit/target, so even the
+  mover-games stayed vague; (3) the mover was MISSED on 4/8 (tu93/bp35/lf52/r11l), leaving no player concept.
+  **KEY INSIGHT: the oracle worked (7/8) because it REPLACED the framing (explicitly "the bar is a lose-timer,
+  NOT the objective" + named the exit); the detector ADDS entities ALONGSIDE the wrong rules instead of
+  CORRECTING them.** So the perception fix must RE-AUTHOR, not augment: (a) RETRACT any learned rule that
+  references a detected HUD band; (b) propose the mover's nearest distinct object as the candidate TARGET so
+  "move the player to X" is concrete; (c) improve mover recall on the 4 missed games. This is the honest
+  next iteration -- the detectors are validated (they recover the HUD/mover from frames) but wiring their
+  output ALONGSIDE the model's own wrong rules does not flip goal induction; it must overwrite the framing.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
