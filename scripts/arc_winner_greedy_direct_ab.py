@@ -64,6 +64,7 @@ def _run_arm(
                 seed=SEED,
                 perception=perception,
                 reflection_interval=reflect_iv,
+                goal_verify=goal_verify,
             )
             row = {
                 "game": game,
@@ -75,6 +76,7 @@ def _run_arm(
                 "wall_s": r.wall_s,
                 "transcript_sample": r.transcript_sample,
                 "final_notes": r.final_notes,
+                "goal_verifier_stats": r.goal_verifier_stats,
                 "error": None,
             }
         except Exception as exc:  # noqa: BLE001 - a policy crash on a game is a datum
@@ -104,10 +106,11 @@ def main() -> None:
     also_9b = "--also-9b" in argv
     perception = _arg("--perception", "objects")
     reflect_iv = int(_arg("--reflect", "0"))
+    goal_verify = "--goal-verify" in argv
 
     print(
         f"== winner greedy-direct A/B: games={games} budget={budget} "
-        f"max_turns={max_turns} max_seq={max_seq} perception={perception} reflect={reflect_iv} also_9b={also_9b} ==",
+        f"max_turns={max_turns} max_seq={max_seq} perception={perception} reflect={reflect_iv} goal_verify={goal_verify} also_9b={also_9b} ==",
         flush=True,
     )
     t0 = time.time()
@@ -132,6 +135,7 @@ def main() -> None:
         max_seq=max_seq,
         perception=perception,
         reflect_iv=reflect_iv,
+        goal_verify=goal_verify,
     )
 
     if also_9b:
@@ -153,6 +157,7 @@ def main() -> None:
             max_seq=max_seq,
             perception=perception,
             reflect_iv=reflect_iv,
+            goal_verify=goal_verify,
         )
 
     oracle = _oracle_levels()
@@ -200,6 +205,7 @@ def main() -> None:
             "games": games,
             "perception": perception,
             "reflection_interval": reflect_iv,
+            "goal_verify": goal_verify,
         },
         "honest_verdict": verdict,
         "narrative": (

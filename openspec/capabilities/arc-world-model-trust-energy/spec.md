@@ -17108,3 +17108,38 @@ preregistered evidence metric without any budget violation.
 `live_agent_self_discovery`, `verifier_is_oracle=false`, the honest verdict uses positive/null/budget-
 bound/blocked language without solve credit, and the reproducibility checksum changes if games, seeds,
 models, budgets, tape hashes, or policy receipts drift.
+
+### REQ-ARC-WMTE-5830: Goal-Hypothesis Verifier (the goal VERIFIER the winner recipe lacks)
+
+**Origin:** 2026-07-23, follow-up to the winner-recipe reproduction (REQ-ARC-WMTE-5829,
+`docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md`): the faithfully-rebuilt winner recipe
+(gemma-4-31B + greedy-direct + object segmentation + reflection memory) discovers 0 levels because the
+model induces the WRONG GOAL -- it learns real dynamics and pursues a systematic goal hypothesis (bp35:
+"fill column 63 with 15s"), completes it, and never wins. The winner recipe is a fluent goal
+HYPOTHESIZER but has NO goal VERIFIER. This is exactly Carnot's verification-first thesis
+(`ops/verifier_gaps.md` GAP-ARCH-GOAL-NOT-VERIFIED). Operator directive: "build a goal-verifier."
+
+`carnot.agentic.arc_goal_verifier.GoalVerifier` SHALL falsify a goal hypothesis against the ONLY
+ground-truth win signal a hidden-game agent legitimately observes: the LEVEL COUNTER (level-up events).
+A goal is `falsified` when it has been the active goal for at least `goal_patience` actions with at least
+`min_activity` frame-changing actions but ZERO level-ups; `supported` when a level-up fired while
+pursuing it; `pending` otherwise. It SHALL be ORACLE-DISTINCT (`verifier_is_oracle=False`): it never
+reads the true win predicate (`is_level_complete`), only whether a level-up happened -- the reward signal,
+not the win definition, so it is not circular. Falsified goals SHALL be fed back into the agent's
+reflection + decision prompts so the model hypothesizes a DIFFERENT win condition instead of burning its
+budget on one wrong goal. `run_greedy_direct(goal_verify=True)` SHALL wire it into the greedy-direct loop
+(requires `reflection_interval>0`).
+
+### SCENARIO-ARC-WMTE-5830-FALSIFY-ON-NO-LEVELUP
+
+**Given** a goal hypothesis that has been actively pursued (frame-changing actions >= `min_activity`) for
+at least `goal_patience` actions with no level-up
+**When** the verifier is asked for its verdict
+**Then** it returns `falsified`, records the goal in `falsified`, and its `feedback()` names the goal so
+the model will not pursue it again.
+
+### SCENARIO-ARC-WMTE-5830-SUPPORT-ON-LEVELUP
+
+**Given** a goal hypothesis under which a level-up fired
+**When** the verifier is asked for its verdict
+**Then** it returns `supported` and never falsifies that goal -- a level-up is decisive positive evidence.
