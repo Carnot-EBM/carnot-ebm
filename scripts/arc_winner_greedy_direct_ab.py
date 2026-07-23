@@ -46,12 +46,12 @@ def _oracle_levels() -> dict:
     }
 
 
-def _run_arm(label: str, proposer, games, *, budget, max_turns, max_seq) -> list[dict]:
+def _run_arm(label: str, proposer, games, *, budget, max_turns, max_seq, perception) -> list[dict]:
     from carnot.agentic.arc_greedy_direct_agent import run_greedy_direct
 
     rows = []
     for game in games:
-        print(f"\n-- [{label}] {game} (budget={budget}) --", flush=True)
+        print(f"\n-- [{label}] {game} (budget={budget}, perception={perception}) --", flush=True)
         try:
             r = run_greedy_direct(
                 game,
@@ -60,6 +60,7 @@ def _run_arm(label: str, proposer, games, *, budget, max_turns, max_seq) -> list
                 max_turns=max_turns,
                 max_seq=max_seq,
                 seed=SEED,
+                perception=perception,
             )
             row = {
                 "game": game,
@@ -97,10 +98,11 @@ def main() -> None:
     max_turns = int(_arg("--max-turns", "4"))
     max_seq = int(_arg("--max-seq", "5"))
     also_9b = "--also-9b" in argv
+    perception = _arg("--perception", "objects")
 
     print(
         f"== winner greedy-direct A/B: games={games} budget={budget} "
-        f"max_turns={max_turns} max_seq={max_seq} also_9b={also_9b} ==",
+        f"max_turns={max_turns} max_seq={max_seq} perception={perception} also_9b={also_9b} ==",
         flush=True,
     )
     t0 = time.time()
@@ -117,7 +119,13 @@ def main() -> None:
     arms = {}
     print("Loading gemma-4-31B on GPU 1...", flush=True)
     arms["gemma31_greedy_direct"] = _run_arm(
-        "gemma31", gemma, games, budget=budget, max_turns=max_turns, max_seq=max_seq
+        "gemma31",
+        gemma,
+        games,
+        budget=budget,
+        max_turns=max_turns,
+        max_seq=max_seq,
+        perception=perception,
     )
 
     if also_9b:
@@ -131,7 +139,13 @@ def main() -> None:
             no_think_prefix="",
         )
         arms["qwen9b_greedy_direct"] = _run_arm(
-            "qwen9b", qwen, games, budget=budget, max_turns=max_turns, max_seq=max_seq
+            "qwen9b",
+            qwen,
+            games,
+            budget=budget,
+            max_turns=max_turns,
+            max_seq=max_seq,
+            perception=perception,
         )
 
     oracle = _oracle_levels()
@@ -172,7 +186,13 @@ def main() -> None:
         "random_seed": SEED,
         "reproducibility_checksum": hashlib.sha256(checksum_input).hexdigest(),
         "duration_s": duration_s,
-        "config": {"budget": budget, "max_turns": max_turns, "max_seq": max_seq, "games": games},
+        "config": {
+            "budget": budget,
+            "max_turns": max_turns,
+            "max_seq": max_seq,
+            "games": games,
+            "perception": perception,
+        },
         "honest_verdict": verdict,
         "narrative": (
             "Operator directive: match the leaderboard leaders (27-31B, greedy-direct). Tests whether "

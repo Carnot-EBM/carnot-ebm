@@ -15,7 +15,11 @@ from __future__ import annotations
 import numpy as np
 
 from carnot.agentic import arc_greedy_direct_agent as gda
-from carnot.agentic.arc_greedy_direct_agent import _parse_sequence, decide_sequence
+from carnot.agentic.arc_greedy_direct_agent import (
+    _parse_sequence,
+    _render_objects,
+    decide_sequence,
+)
 
 
 class TestParseSequence:
@@ -63,6 +67,43 @@ class TestParseSequence:
     def test_loose_two_numbers_is_ambiguous_dropped(self):
         # 2 numbers can't be [a] or [a,x,y] -- do not guess.
         assert _parse_sequence("6, 18]", max_seq=5, avail=[6]) == []
+
+
+class TestObjectPerception:
+    """v2: winner-style object segmentation view (REQ-ARC-WMTE-5829)."""
+
+    def test_render_objects_lists_discrete_regions(self):
+        grid = np.full((16, 16), 5, dtype=int)  # 5 = dominant background (excluded)
+        grid[2:4, 3:5] = 7  # one small object
+        grid[10:12, 10:13] = 9  # another
+        text, objects = _render_objects(grid)
+        assert len(objects) == 2
+        colors = {o["color"] for o in objects}
+        assert colors == {7, 9}
+        assert "#0" in text and "color=" in text
+
+    def test_parse_resolves_object_reference_to_centroid(self):
+        objects = [
+            {"id": 0, "color": 7, "row": 2, "col": 4, "size": 4},
+            {"id": 1, "color": 9, "row": 11, "col": 11, "size": 6},
+        ]
+        seq = _parse_sequence('{"a":6,"obj":1}]', max_seq=5, avail=[1, 6], objects=objects)
+        assert seq == [{"a": 6, "x": 11, "y": 11}]  # object 1's (col,row) centroid
+
+    def test_parse_drops_unknown_object_id(self):
+        objects = [{"id": 0, "color": 7, "row": 2, "col": 4, "size": 4}]
+        assert _parse_sequence('{"a":6,"obj":9}]', max_seq=5, avail=[6], objects=objects) == []
+
+    def test_decide_sequence_objects_mode_commits_object_click(self, monkeypatch):
+        grid = np.full((16, 16), 5, dtype=int)
+        grid[2:4, 3:5] = 7
+        proposer = _FakeProposer(["commit", '{"a":6,"obj":0}]'])
+        _patch(monkeypatch, proposer)
+        seq, transcript = decide_sequence(
+            grid, [], [1, 6], proposer, max_turns=4, max_seq=5, perception="objects"
+        )
+        # object 0 is the color-7 region centered near row 2-3, col 3-4
+        assert len(seq) == 1 and seq[0]["a"] == 6 and "x" in seq[0] and "y" in seq[0]
 
 
 class _FakeProposer:
