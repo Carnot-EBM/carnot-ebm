@@ -1,0 +1,184 @@
+{
+  "experiment": "outer_loop_arc_end_to_end_goal_gate",
+  "experiment_id": "REQ-ARC-WMTE-5834",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_end_to_end_goal_gate.v1",
+  "title": "Does DETECTOR-produced perception (HUD + mover, from real arcade frames) recover gemma-4-31B's goal induction, matching the hand-authored oracle's 7/8?",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5834,
+  "random_seeds_used": [
+    5834,
+    5835
+  ],
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-GGUF",
+      "repo": "unsloth/gemma-4-31B-it-GGUF",
+      "gpu": 1,
+      "port": 8958
+    }
+  ],
+  "methodology_note": "Same model + same learned RULES per game as REQ-ARC-WMTE-5832; the ONLY change is the perception SOURCE -- hand-authored oracle facts (5832) replaced by perceive_entities() output run on real offline-arcade transitions (5833 detectors). Compares detector perception to the oracle's 7/8. Detectors + arcade use no LLM. Public-game frames stepped for offline dev validation (authorized), never in the hidden submission.",
+  "baseline_oracle_result": "REQ-ARC-WMTE-5832 hand-authored oracle: 7/8 correct + 1 partial, 0 wrong (naive was 0/8).",
+  "per_game": [
+    {
+      "game": "sc25",
+      "true_win": "navigate the player avatar onto the exit tile",
+      "perception_blocked": true,
+      "n_transitions": 60,
+      "detector_perception": "PLAYER token (color 9) at row=20 col=13 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=30 col=62 size=120\n  #2 color=10 at row=20 col=14 size=16\n  #3 color=2 at row=20 col=29 size=76\n  #4 color=10 at row=20 col=40 size=8\n  #6 color=3 at row=55 col=30 size=208\n  #7 color=2 at row=50 col=25 size=9\n  #8 color=0 at row=50 col=30 size=9\n  #9 color=2 at row=50 col=35 size=9\n  #10 color=3 at row=54 col=16 size=36\n  #11 color=2 at row=54 col=16 size=48\n  #12 color=15 at row=52 col=16 size=4\n  #13 color=15 at row=54 col=12 size=4",
+      "detector_hud": [],
+      "detector_mover": 9,
+      "goals_under_detector_perception": [
+        "Change the values of the block near (54,29) to 14.",
+        "Change the block at (54,16) from color 2 to color 14."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "mover DETECTED (color9) but gemma ignored it and followed the wrong learned RULE about the value block (54,29)."
+      }
+    },
+    {
+      "game": "tu93",
+      "true_win": "navigate the player token onto the exit block",
+      "perception_blocked": true,
+      "n_transitions": 50,
+      "detector_perception": "Other distinct objects (candidate targets):\n  #0 color=0 at row=16 col=16 size=9\n  #1 color=2 at row=16 col=19 size=9\n  #2 color=0 at row=16 col=22 size=9\n  #3 color=0 at row=16 col=28 size=9\n  #4 color=2 at row=16 col=31 size=9\n  #5 color=0 at row=16 col=34 size=9\n  #6 color=2 at row=16 col=37 size=9\n  #7 color=0 at row=16 col=40 size=9\n  #8 color=2 at row=19 col=22 size=9\n  #9 color=2 at row=19 col=28 size=9\n  #10 color=5 at row=19 col=34 size=27\n  #11 color=2 at row=19 col=40 size=9\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter).",
+      "detector_hud": [
+        "row63/counter"
+      ],
+      "detector_mover": null,
+      "goals_under_detector_perception": [
+        "Click on the object with color 5.",
+        "Click on the object with color 5."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "mover MISSED -> no player concept; 'click color 5' = the background. HUD row63 flagged but didn't help."
+      }
+    },
+    {
+      "game": "ls20",
+      "true_win": "morph the avatar's shape/color/rotation to match a goal pad, then stand on it",
+      "perception_blocked": true,
+      "n_transitions": 60,
+      "detector_perception": "PLAYER token (color 9) at row=12 col=36 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=5 at row=26 col=2 size=208\n  #1 color=3 at row=35 col=35 size=892\n  #2 color=5 at row=12 col=36 size=43\n  #5 color=4 at row=38 col=30 size=100\n  #6 color=0 at row=32 col=21 size=3\n  #7 color=1 at row=32 col=20 size=1\n  #8 color=1 at row=33 col=21 size=1\n  #9 color=12 at row=46 col=41 size=10\n  #11 color=5 at row=58 col=6 size=76\n  #14 color=5 at row=62 col=38 size=112\n  #15 color=3 at row=62 col=21 size=34\n  #16 color=11 at row=62 col=42 size=50\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 62 (counter counter).",
+      "detector_hud": [
+        "row62/counter"
+      ],
+      "detector_mover": 9,
+      "goals_under_detector_perception": [
+        "Move the player token to a specific color and click it.",
+        "Move the player token to a specific object and click it."
+      ],
+      "judgment": {
+        "verdict": "partial",
+        "note": "mover USED: 'move the player token to a specific...' -- right SHAPE (navigate) but vague/adds a click, no attribute-matching."
+      }
+    },
+    {
+      "game": "cn04",
+      "true_win": "move/rotate pieces so their terminal markers pair up (spatial endpoint pairing)",
+      "perception_blocked": true,
+      "n_transitions": 60,
+      "detector_perception": "PLAYER token (color 8) at row=27 col=15 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #2 color=0 at row=17 col=18 size=135\n  #5 color=14 at row=39 col=45 size=144\n  #6 color=10 at row=39 col=45 size=45\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 0 (counter counter).",
+      "detector_hud": [
+        "row0/counter"
+      ],
+      "detector_mover": 8,
+      "goals_under_detector_perception": [
+        "Move the player token to a specific target cell and click it.",
+        "Move the player token to a specific location and click."
+      ],
+      "judgment": {
+        "verdict": "partial",
+        "note": "mover USED: 'move the player token to a target cell' -- right shape (approx pairing) but vague."
+      }
+    },
+    {
+      "game": "lf52",
+      "true_win": "merge blocks until only one (goal count) remains",
+      "perception_blocked": true,
+      "n_transitions": 60,
+      "detector_perception": "Other distinct objects (candidate targets):\n  #2 color=5 at row=28 col=34 size=172\n  #3 color=0 at row=27 col=35 size=644\n  #4 color=9 at row=39 col=50 size=63\n  #5 color=1 at row=14 col=12 size=16\n  #6 color=1 at row=14 col=18 size=16\n  #7 color=1 at row=14 col=24 size=16\n  #8 color=1 at row=14 col=30 size=16\n  #9 color=1 at row=14 col=36 size=16\n  #10 color=1 at row=14 col=42 size=16\n  #11 color=1 at row=14 col=48 size=16\n  #12 color=3 at row=20 col=18 size=20\n  #13 color=1 at row=20 col=12 size=16\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 0 (counter counter).",
+      "detector_hud": [
+        "row0/counter"
+      ],
+      "detector_mover": null,
+      "goals_under_detector_perception": [
+        "Change all cells in row 0 from 0 to 1.",
+        "Change all cells in row 0 from 0 to 1."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "HUD row0 flagged as counter-to-ignore, but gemma followed the wrong RULE ('actions change row 0') anyway -> the ignore-note is weaker than the rule."
+      }
+    },
+    {
+      "game": "bp35",
+      "true_win": "maneuver the player sprite (via gravity) onto the gem tile",
+      "perception_blocked": false,
+      "n_transitions": 22,
+      "detector_perception": "Other distinct objects (candidate targets):\n  #0 color=5 at row=19 col=29 size=1291\n  #1 color=10 at row=6 col=42 size=276\n  #2 color=3 at row=1 col=2 size=1\n  #3 color=3 at row=1 col=8 size=1\n  #4 color=3 at row=1 col=13 size=1\n  #5 color=14 at row=3 col=15 size=21\n  #6 color=3 at row=1 col=17 size=1\n  #7 color=3 at row=1 col=19 size=1\n  #8 color=14 at row=3 col=21 size=21\n  #9 color=3 at row=1 col=23 size=1\n  #10 color=3 at row=1 col=25 size=1\n  #11 color=14 at row=3 col=27 size=21\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter).",
+      "detector_hud": [
+        "row63/counter"
+      ],
+      "detector_mover": null,
+      "goals_under_detector_perception": [
+        "Change cell (63, x) to color 15.",
+        "Change cell (63, x) to color 15."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "mover missed; goal = 'change (63,x) to 15' = the anti-goal, straight from the wrong learned rule, despite the row63 HUD flag."
+      }
+    },
+    {
+      "game": "r11l",
+      "true_win": "slide each piece onto its matching target pad",
+      "perception_blocked": false,
+      "n_transitions": 60,
+      "detector_perception": "Other distinct objects (candidate targets):\n  #0 color=2 at row=2 col=24 size=240\n  #1 color=2 at row=7 col=59 size=134\n  #2 color=15 at row=18 col=38 size=1\n  #3 color=15 at row=18 col=40 size=1\n  #4 color=15 at row=19 col=37 size=1\n  #5 color=15 at row=19 col=41 size=1\n  #6 color=15 at row=20 col=36 size=1\n  #7 color=15 at row=20 col=42 size=1\n  #8 color=15 at row=22 col=36 size=1\n  #9 color=15 at row=22 col=42 size=1\n  #10 color=15 at row=23 col=37 size=1\n  #11 color=15 at row=23 col=41 size=1\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): col 0 (deplete counter).",
+      "detector_hud": [
+        "col0/deplete"
+      ],
+      "detector_mover": null,
+      "goals_under_detector_perception": [
+        "Change cells (21,0) through (42,0) to 5.",
+        "Change cells (21,0) through (42,0) to a specific value."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "mover missed; followed the wrong learned rule about the (21,0)-(42,0) band."
+      }
+    },
+    {
+      "game": "ft09",
+      "true_win": "satisfy the hidden adjacency-color pattern constraint over the tiles",
+      "perception_blocked": false,
+      "n_transitions": 60,
+      "detector_perception": "Other distinct objects (candidate targets):\n  #0 color=9 at row=4 col=6 size=36\n  #1 color=8 at row=4 col=14 size=36\n  #2 color=9 at row=4 col=22 size=36\n  #3 color=9 at row=4 col=40 size=36\n  #4 color=8 at row=4 col=48 size=36\n  #5 color=9 at row=4 col=56 size=36\n  #6 color=8 at row=12 col=6 size=36\n  #7 color=2 at row=10 col=12 size=4\n  #8 color=0 at row=10 col=14 size=4\n  #9 color=2 at row=12 col=16 size=8\n  #10 color=9 at row=12 col=22 size=36\n  #11 color=8 at row=12 col=40 size=36",
+      "detector_hud": [],
+      "detector_mover": null,
+      "goals_under_detector_perception": [
+        "Reach a target object of a specific color.",
+        "Reach a target object of a specific color."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "no mover/HUD; vague 'reach a target object'."
+      }
+    }
+  ],
+  "duration_s": 26.23,
+  "reproducibility_checksum": "sha256:0a6c72dc7f9243e112ed965de361b673561c2858211416ede803b4cac082feca",
+  "judgment_summary": {
+    "wrong": 6,
+    "partial": 2
+  },
+  "headline": "HONEST NEGATIVE: detector-produced perception did NOT recover the hand-authored oracle's 7/8. Result: 0 correct, 2 partial (ls20, cn04 -- the games where a mover was detected, both produced the RIGHT SHAPE 'move the player to a target'), 6 wrong. Root causes: (1) the model's OWN WRONG learned RULES (e.g. bp35 'action 6 changes (63,x) to 15', lf52 'actions change row 0') DOMINATE -- the detector's 'ignore this counter band' note is weaker than a rule the model already believes; (2) the detector NAMES the player but cannot NAME which object is the exit/target, so even mover-games stay vague; (3) the mover was missed on 4/8 games (tu93/bp35/lf52/r11l), leaving no player concept. The oracle worked because it REPLACED the framing (explicitly 'the bar is a lose-timer, NOT the objective' + named the exit); the detector ADDS entities alongside the wrong rules instead of correcting them.",
+  "next_step": "The perception fix must RE-AUTHOR, not augment: (a) RETRACT any learned rule that references a detected HUD band ('your note that action 6 changes row 63 describes a status counter -- discard it as the goal'); (b) propose the mover's nearest distinct object as the candidate TARGET so 'move the player to X' is concrete; (c) improve mover recall on the 4 missed games. This converts 'adds entities beside wrong rules' into 'corrects the wrong framing' -- what the oracle did to get 7/8.",
+  "honest_verdict": "complete_negative_detector_perception_does_not_yet_recover_goal_induction_rules_dominate"
+}
