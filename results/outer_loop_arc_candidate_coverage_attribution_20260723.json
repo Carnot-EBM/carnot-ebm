@@ -1,0 +1,126 @@
+{
+  "acceptance_gate": {
+    "condition": "fraction(a)>0.5 -> generation/perception gap CONFIRMED; fraction(b)>0.3 -> search/lookahead lever RE-OPENED; fraction(c)>0.3 -> selection/ranking gap CONFIRMED (pre-registered, decisive in every branch, per arc-top-project-search-architecture-audit-2026-07-20.md section 4)",
+    "principle": "Unlike a level-gain delta (which returns 'no change' on a near-zero-headroom corpus and cannot distinguish 'component useless' from 'no headroom'), this is a structural attribution with no delta to be null on -- it can only localize the gap.",
+    "verdicts_triggered": [
+      "NO_SINGLE_BUCKET_DOMINATES_below_all_thresholds"
+    ]
+  },
+  "duration_note": "Real, non-mocked offline replay across 3 games, 155 total progress-actions classified.",
+  "duration_s": 5.58,
+  "experiment": "outer_loop_arc_candidate_coverage_attribution_20260723",
+  "field_provenance": {
+    "acceptance_gate": {
+      "principle": "Pre-registered thresholds (0.5 for (a), 0.3 for (b) and (c)) were fixed in the design note BEFORE this run, not tuned to the result."
+    }
+  },
+  "honest_verdict": "complete_candidate_coverage_attribution_no_single_bucket_dominates_below_all_thresholds",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_note": "Pure offline replay of pre-existing, reproduction-gated banked trajectories (results/arc_loop_solve_<game>.json) against the live candidate generator (arc_graph_explore.rich_action_candidates) -- no LLM call, no GPU, no sampling anywhere in this script.",
+  "per_action_detail_path": "see per_game[].per_action_count; full per-action records omitted from top-level summary for size -- written separately below",
+  "per_game": [
+    {
+      "counts": {
+        "a_generation_miss": 0,
+        "b_lookahead_signal": 0,
+        "c_selection_miss": 25,
+        "clean": 17
+      },
+      "fractions": {
+        "a_generation_miss": 0.0,
+        "b_lookahead_signal": 0.0,
+        "c_selection_miss": 0.5952,
+        "clean": 0.4048
+      },
+      "game": "lf52",
+      "n_progress_actions": 42,
+      "per_action_count": 42
+    },
+    {
+      "counts": {
+        "a_generation_miss": 21,
+        "b_lookahead_signal": 0,
+        "c_selection_miss": 4,
+        "clean": 32
+      },
+      "fractions": {
+        "a_generation_miss": 0.3684,
+        "b_lookahead_signal": 0.0,
+        "c_selection_miss": 0.0702,
+        "clean": 0.5614
+      },
+      "game": "bp35",
+      "n_progress_actions": 57,
+      "per_action_count": 57
+    },
+    {
+      "counts": {
+        "a_generation_miss": 0,
+        "b_lookahead_signal": 0,
+        "c_selection_miss": 7,
+        "clean": 49
+      },
+      "fractions": {
+        "a_generation_miss": 0.0,
+        "b_lookahead_signal": 0.0,
+        "c_selection_miss": 0.125,
+        "clean": 0.875
+      },
+      "game": "re86",
+      "n_progress_actions": 56,
+      "per_action_count": 56
+    }
+  ],
+  "pooled": {
+    "bootstrap_95ci": {
+      "a_generation_miss": [
+        0.0839,
+        0.1935
+      ],
+      "b_lookahead_signal": [
+        0.0,
+        0.0
+      ],
+      "c_selection_miss": [
+        0.1742,
+        0.3032
+      ],
+      "clean": [
+        0.5548,
+        0.7097
+      ]
+    },
+    "counts": {
+      "a_generation_miss": 21,
+      "b_lookahead_signal": 0,
+      "c_selection_miss": 36,
+      "clean": 98
+    },
+    "fractions": {
+      "a_generation_miss": 0.1355,
+      "b_lookahead_signal": 0.0,
+      "c_selection_miss": 0.2323,
+      "clean": 0.6323
+    },
+    "n_total": 155
+  },
+  "pre_registration": {
+    "excluded": {
+      "sc25": "no registered GameAdapter (adapters.get_adapter('sc25') is None); its banked plan uses a bespoke label DSL requiring a separate decoder, out of scope for this pass"
+    },
+    "games": [
+      "lf52",
+      "bp35",
+      "re86"
+    ],
+    "target_n_per_game": 30,
+    "tolerance_px": 2,
+    "top_k_ranked_low_threshold": 3
+  },
+  "random_seed": null,
+  "random_seed_note": "N/A -- deterministic replay of fixed banked action sequences; the bootstrap CI uses a fixed content-hash-seeded LCG, not wall-clock randomness, so the whole run is exactly reproducible given the same banked trajectory inputs.",
+  "reproducibility_checksum": "7df6902a7797fc5c9e3e77122fd9aa3c99c9b03afd9d54d73b0f187f65a7329d",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_candidate_coverage_attribution.v1",
+  "solve_provenance": "development_proxy"
+}
