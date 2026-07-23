@@ -24643,3 +24643,73 @@ receipt
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5839 | Planned (`python/carnot/experiment_5839_v519_evidence_qualification.py`, `results/experiment_5839_v519_evidence_qualification.json`) | Planned (`tests/python/test_experiment_5839_v519_evidence_qualification.py`) |
+
+## REQ-LEARN-5851: Deterministic Lifecycle Replay Provenance Contract
+
+The self-learning tier SHALL provide Exp5851, a deterministic exact-replay
+provenance contract at
+`python/carnot/experiment_5851_deterministic_replay_provenance_contract.py`
+that validates lifecycle and replay receipts without invoking any LLM, GPU,
+CUDA, GGUF, tokenizer, generation, embedding, or live-inference substrate. The
+only allowed deterministic replay substrate SHALL be
+`deterministic_exact_verifier_and_replay_no_llm`.
+
+An exact-replay receipt SHALL include source-row hashes, validator versions,
+deterministic seeds, state hashes, checkpoint hashes, monotonic start/end
+timestamps, measured duration, restart receipts, rollback receipts, and the
+canonical no-LLM substrate. A deterministic replay receipt that carries
+`model_specs`, `target_model`, CUDA/GPU, GGUF, tokenizer, generation,
+embedding, or live-inference markers SHALL fail closed. If any such marker is
+present outside the deterministic substrate, the artifact SHALL require model
+specifications and credible live-inference timing rather than deterministic
+replay credit.
+
+Exp5851 SHALL demonstrate a positive deterministic fixture with the same
+scientific row semantics as the recomputed `.519` lifecycle replay and SHALL
+demonstrate negative false-compute fixtures shaped like Exp5828. The negative
+fixtures SHALL fail mechanically because they include live-model/CUDA/GGUF-style
+markers without live-model methodology. The corrected deterministic fixture
+SHALL pass with the same row hashes, validator versions, seeds, state hashes,
+checkpoint hashes, restart receipts, and rollback receipts after the false
+markers are removed.
+
+Validation SHALL never mutate Exp5828, Exp5839, or any historical upstream
+artifact. Validation SHALL NOT bless a receipt merely because aggregate metrics
+or raw lifecycle scores are positive. The terminal readiness scalar
+`deterministic_replay_contract_ready_score` SHALL be bare `1.0` only when every
+positive fixture passes, every false-compute-marker fixture fails, historical
+artifacts remain byte-for-byte unchanged, and the live adversarial verifier is
+clean; otherwise it SHALL be bare `0.0`.
+
+### SCENARIO-LEARN-5851-POSITIVE: Corrected Deterministic Lifecycle Receipt Passes
+
+**Given** a deterministic exact-replay fixture with source-row hashes,
+validator versions, seeds, state/checkpoint hashes, monotonic timing,
+restart receipts, rollback receipts, and
+`deterministic_exact_verifier_and_replay_no_llm`
+**When** Exp5851 validates the fixture
+**Then** the fixture passes without requiring model specifications or live
+inference timing.
+
+### SCENARIO-LEARN-5851-FALSE-MARKER: Exp5828-Shaped Compute Markers Fail
+
+**Given** an Exp5828-shaped receipt that reports strong aggregate lifecycle
+metrics but also carries GGUF, CUDA/GPU, tokenizer, generation, embedding, or
+live-inference markers on a deterministic substrate
+**When** Exp5851 validates the receipt
+**Then** the receipt fails closed for false compute markers and positive
+aggregate metrics do not override the rejection.
+
+### SCENARIO-LEARN-5851-IMMUTABLE: Historical Evidence Is Not Rewritten
+
+**Given** Exp5828 and Exp5839 historical artifacts are readable before
+validation
+**When** Exp5851 builds its repair receipt
+**Then** their hashes remain unchanged and the repair records Exp5828 as
+historically flagged rather than unstamping it.
+
+## Implementation Status (Exp 5851)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5851 | Planned (`python/carnot/experiment_5851_deterministic_replay_provenance_contract.py`, `results/experiment_5851_deterministic_replay_provenance_contract.json`) | Planned (`tests/python/test_experiment_5851_deterministic_replay_provenance_contract.py`) |
