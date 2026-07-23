@@ -24095,3 +24095,144 @@ learner-facing row
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5826 | Implemented (`python/carnot/experiment_5826_out_of_template_constraint_stream.py`, `results/experiment_5826_out_of_template_constraint_stream.json`) | Implemented (`tests/python/test_experiment_5826_out_of_template_constraint_stream.py`) |
+
+## REQ-LEARN-5827: Minimal-Core Structural Constraint Acquisition
+
+The self-learning tier SHALL provide Exp5827, a deterministic no-LLM active
+structural learner at
+`python/carnot/experiment_5827_minimal_core_structural_acquisition_ab.py` that
+consumes the sealed Exp5826 chronological row stream and writes
+`results/experiment_5827_minimal_core_structural_acquisition_ab.json`. Exp5827
+SHALL extend the Exp5762 exact membership lifecycle surface with minimal-core
+structural synthesis rather than introducing a separate memory store. The
+experiment substrate SHALL be
+`online_exact_membership_query_sidecar_no_llm`, and the verifier SHALL remain
+an exact oracle, so the artifact SHALL NOT claim a generated-text verifier moat
+or an oracle-distinct validator.
+
+Before any deployable learner receives row evidence, Exp5827 SHALL replay the
+Exp5826 structured gate, hash the Exp5826 artifact, rows, generator module,
+learner module, test module, OpenSpec schema text, and Exp5762 artifact, verify
+the 360-row count, at least 30 rows per family/change cell, headroom witnesses,
+out-of-template witnesses, exact solver/validator versions, deterministic
+seeds, free RAM, free disk, and writable result/checkpoint paths. Any missing,
+stale, malformed, leaked, unwritable, or resource-failed input SHALL write a
+terminal blocked artifact with `structural_learner_ready_score=0.0` rather
+than continuing.
+
+Exp5827 SHALL freeze all arms before assigning science labels: `no_update`,
+`exp5762_matched_template_query_learner`, `passive_minimal_core_synthesis`,
+`random_query_structure_synthesis`,
+`active_discriminating_query_minimal_core_synthesis`, and
+`exact_structure_upper_bound`. The upper-bound arm SHALL be explicitly
+non-deployable. All deployable arms SHALL receive identical chronological row
+order, learner-facing examples, query budget, structural grammar, candidate
+operations, stopping rule, protected-prefix replay, and update opportunities.
+Every query SHALL return only exact membership/outcome evidence available under
+the Exp5826 contract. No deployable arm may read sealed ground-truth structure
+labels, target cleartext, future labels, science labels outside the query
+sidecar, or LLM output.
+
+The structural hypothesis grammar SHALL be frozen before replay and SHALL
+allow bounded relation composition, arity, quantification, and hard/soft role
+operations. The grammar SHALL strictly exceed the Exp5762 frozen template
+library while recording normalized overlap with that library. Deployable
+minimal-core synthesis SHALL choose the simplest exact-consistent structure
+from observed membership/core evidence; active synthesis SHALL choose
+discriminating membership queries that split surviving structural hypotheses
+until the stopping rule or query budget is reached.
+
+Exp5827 SHALL score constraint precision, recall, F1, exact behavioral
+recovery, sample efficiency, query efficiency, dynamic regret,
+wrong-structure acceptance, unsafe propagation, and complexity per arm,
+family, change, surface, and hardness. It SHALL report paired deltas and
+bootstrap CI95 by family/change/surface and pooled only after heterogeneity
+checks. Structural-learning credit SHALL be restricted to headroom-present,
+out-of-template rows where the active minimal-core arm beats the Exp5762
+matched-template baseline with a positive paired lower bound, precision
+`>=0.95`, zero oracle-boundary violations, and no protected-prefix regression.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_artifact_hashes`, `arm_definitions_and_budget_parity`,
+`structural_hypothesis_grammar`, `query_and_minimal_core_receipts`,
+`per_arm_family_change_metrics`, `paired_deltas_and_ci95`,
+`structural_recovery_and_headroom`, `protected_prefix_and_safety`,
+`oracle_boundary_violation_count`, `structural_learner_ready_score`,
+`retire_if_same_verdict`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal experiment state distinguishes completed negative evidence from an incomplete run.
+- `preconditions_checked`: Gate, hashes, headroom, solvers, resources, and checkpoints prevent fabricated execution.
+- `upstream_artifact_hashes`: Hashes bind learning to the sealed certified event stream.
+- `arm_definitions_and_budget_parity`: Matched evidence and query budgets isolate the structural method.
+- `structural_hypothesis_grammar`: A frozen grammar makes out-of-template expressivity and complexity auditable.
+- `query_and_minimal_core_receipts`: Exact boundary evidence shows how each structure was learned without leaking labels.
+- `per_arm_family_change_metrics`: Disaggregated results prevent a pooled average from hiding family failures.
+- `paired_deltas_and_ci95`: Paired intervals quantify lift over the successful template baseline.
+- `structural_recovery_and_headroom`: Credit is restricted to genuinely expressible, headroom-present science rows.
+- `protected_prefix_and_safety`: Zero regression and unsafe propagation are required for adaptive learning.
+- `oracle_boundary_violation_count`: A bare zero proves deployable arms never read sealed structure labels.
+- `structural_learner_ready_score`: EMIT BARE scalar; only 1.0 permits the future-validated lifecycle.
+- `retire_if_same_verdict`: A repeated blocked outcome mechanically retires this reattempt.
+- `duration_s`: Measured wall time exposes bootstrap-only artifacts.
+- `inference_substrate`: `online_exact_membership_query_sidecar_no_llm` declares the actual learning surface.
+- `verifier_is_oracle`: True records that exact solvers label and gate updates, so no moat claim is allowed.
+- `field_provenance`: Every metric traces to rows, queries, cores, or state receipts.
+- `test_commands`: Commands document parity, leakage, recovery, statistics, and safety checks.
+- `test_exit_codes`: Exit codes prevent failed evaluations from becoming readiness.
+- `reproducibility_checksum`: A checksum detects drift in arms, rows, seeds, or metrics.
+- `honest_verdict`: A terminal prefix states credited, null, negative, or blocked outcome honestly.
+
+`structural_learner_ready_score` SHALL be the bare scalar `1.0` only when the
+credited conditions hold in at least three of four primary families and the
+pooled active-minus-template lower bound is positive. Otherwise it SHALL be
+the bare scalar `0.0` with a method-limitation verdict, and
+`retire_if_same_verdict` SHALL mechanically signal retirement when the prior
+blocked verdict repeats.
+
+### SCENARIO-LEARN-5827-ACTIVE-CORE: Active Minimal-Core Learns Out-Of-Template Structure
+
+**Given** the sealed Exp5826 stream with headroom-present, out-of-template
+science rows
+**When** the active discriminating-query minimal-core arm replays rows under
+the frozen structural grammar
+**Then** it uses only exact membership/core receipts, recovers the behavior of
+the target structural relation on headroom-present rows, records query and
+minimal-core receipts, and never reads sealed ground-truth structure labels.
+
+### SCENARIO-LEARN-5827-MATCHED-ARMS: Structural Lift Uses Budget-Parity Controls
+
+**Given** no-update, Exp5762 matched-template, passive minimal-core, random
+query, active minimal-core, and exact upper-bound arms
+**When** Exp5827 scores family/change/surface cells
+**Then** deployable arms have identical chronological examples, query budgets,
+candidate operations, update opportunities, and stopping rules, while the
+exact upper bound is marked non-deployable.
+
+### SCENARIO-LEARN-5827-READY-GATE: Credit Requires Disaggregated Positive Bounds
+
+**Given** paired deltas by family/change/surface, protected-prefix replay,
+safety receipts, and oracle-boundary leakage checks
+**When** Exp5827 computes readiness
+**Then** `structural_learner_ready_score` is `1.0` only when at least three
+families have positive active-over-template lower bounds, pooled heterogeneity
+is acceptable, pooled lower bound is positive, precision is at least `0.95`,
+oracle-boundary violations are zero, and protected-prefix regression is zero.
+
+### SCENARIO-LEARN-5827-FAIL-CLOSED: Missing Inputs Or Leakage Cannot Look Ready
+
+**Given** missing Exp5826 rows, failed test exit codes, stale checksums,
+exposed future labels, exposed ground-truth structure labels, or failed
+protected-prefix replay
+**When** Exp5827 validates the artifact
+**Then** `structural_learner_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`, `null:`, or `negative:`.
+
+## Implementation Status (Exp 5827)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5827 | Planned (`python/carnot/experiment_5827_minimal_core_structural_acquisition_ab.py`, `results/experiment_5827_minimal_core_structural_acquisition_ab.json`) | Planned (`tests/python/test_experiment_5827_minimal_core_structural_acquisition_ab.py`) |
