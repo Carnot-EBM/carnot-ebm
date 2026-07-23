@@ -2684,6 +2684,24 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   "move the player to X" is concrete; (c) improve mover recall on the 4 missed games. This is the honest
   next iteration -- the detectors are validated (they recover the HUD/mover from frames) but wiring their
   output ALONGSIDE the model's own wrong rules does not flip goal induction; it must overwrite the framing.
+- **RE-AUTHORING FIX WORKS 2026-07-23 (REQ-ARC-WMTE-5834, `reauthor_framing`,
+  `results/outer_loop_arc_end_to_end_goal_gate_reauthored_20260723.json`).** Implemented the re-authoring the
+  negative demanded: RETRACT any learned rule referencing a detected HUD band, NAME the mover's nearest
+  object as the candidate target, and OVERRIDE the counter-fixation (so the correction REPLACES the wrong
+  framing rather than sitting beside it). Same model/games/gather/seeds as the plain gate -- only the framing
+  changed. Result: **0/8 -> 4/8 correct (+2 partial, 2 wrong), and ZERO games still fixate on the HUD**
+  (plain gate: 0 correct/2 partial/6 wrong; oracle: 7/1/0). Every game flipped from "fill/change the counter"
+  to "move the player to a target." Correct on the 4 navigate/move-to-target games (sc25/tu93/bp35/r11l) --
+  including the 3 where NO mover was detected, because retracting the wrong HUD rule alone was enough to stop
+  the fixation. Two partials (ls20 missing the morph, cn04 vague pairing). RESIDUAL: it OVERCORRECTS the 2
+  non-navigate games (lf52 block-merge, ft09 hidden-CSP) into a navigate frame, because the block asserts
+  "move player to a target" even when no mover was detected. **NEXT: gate the player-target assertion on
+  mover-detected -- for no-mover games use a neutral "arrange the game objects; the counters are not the
+  goal" frame -- which should recover lf52/ft09 without losing the 4 navigate wins; then wire
+  `reauthor_framing` into the live E3AgentPolicy perception + greedy-direct reflection, and add the
+  execution/dynamics half.** This is the strongest ARC perception result of the session: the diagnosis
+  (perception is the wall) -> oracle proof (fix flips 0->7/8) -> detectors (recover HUD/mover from frames) ->
+  re-authoring (0->4/8 correct from frames alone, no HUD fixation) is a complete, measured chain.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open

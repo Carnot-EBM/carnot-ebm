@@ -1,0 +1,190 @@
+{
+  "experiment": "outer_loop_arc_end_to_end_goal_gate_reauthored",
+  "experiment_id": "REQ-ARC-WMTE-5834",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_end_to_end_goal_gate_reauthored.v1",
+  "title": "Does RE-AUTHORED detector perception (retract HUD rules + name target + override framing) recover gemma-4-31B goal induction toward the oracle's 7/8?",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5834,
+  "random_seeds_used": [
+    5834,
+    5835
+  ],
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-GGUF",
+      "repo": "unsloth/gemma-4-31B-it-GGUF",
+      "gpu": 1,
+      "port": 8958
+    }
+  ],
+  "methodology_note": "Identical to REQ-ARC-WMTE-5834 (same model/games/gather/seeds) EXCEPT reauthor_framing replaces the plain perceive_entities text: retract HUD-band rules, name the mover's nearest object as target, override the counter-fixation. Isolates the re-authoring delta. Public-game frames stepped for offline dev validation (authorized), never in the hidden submission.",
+  "baseline_plain_gate": "REQ-ARC-WMTE-5834 plain: 0 correct, 2 partial, 6 wrong. Oracle (5832): 7/8 correct.",
+  "per_game": [
+    {
+      "game": "sc25",
+      "true_win": "navigate the player avatar onto the exit tile",
+      "n_transitions": 60,
+      "detector_mover": 9,
+      "detector_hud": [],
+      "corrected_rules": "Action 6 at (30,55) toggles values between 2 and 14 in a block near (54,29).",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- PLAYER: color 9 at row 20 col 13; it MOVES with actions 1/2/3/4.\n- candidate TARGET: object color 10 at row 20 col 14 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 2 at row 20 col 29 (the goal likely requires the player to reach/act on it).\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the PLAYER to the same cell as a TARGET.",
+        "Move the PLAYER to the TARGET at row 20 col 14."
+      ],
+      "judgment": {
+        "verdict": "correct",
+        "note": "'Move the PLAYER to the TARGET at (20,14)' = navigate to exit. Flipped from the value-block fixation."
+      }
+    },
+    {
+      "game": "tu93",
+      "true_win": "navigate the player token onto the exit block",
+      "n_transitions": 50,
+      "detector_mover": null,
+      "detector_hud": [
+        "row63/counter"
+      ],
+      "corrected_rules": "Actions 1 and 3 consume cells with value 6.",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- candidate TARGET: object color 5 at row 19 col 34 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 0 at row 16 col 16 (the goal likely requires the player to reach/act on it).\n- IGNORE these STATUS COUNTERS (row 63): they advance on EVERY action and are a score/budget readout, NOT the game board. Filling or changing them is NOT the objective.\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the player to a target object.",
+        "Move the player to a target object."
+      ],
+      "judgment": {
+        "verdict": "correct",
+        "note": "'Move the player to a target object' = navigate to exit. Flipped from 'consume value-6' (the lose cond) despite no mover detected -- the retracted HUD framing did it."
+      }
+    },
+    {
+      "game": "ls20",
+      "true_win": "morph the avatar's shape/color/rotation to match a goal pad, then stand on it",
+      "n_transitions": 60,
+      "detector_mover": 9,
+      "detector_hud": [
+        "row62/counter"
+      ],
+      "corrected_rules": "Action 1 recolors floor 3/5 to 12; actions 1 and 2 are inverses; some actions swap 3<->11 or 11->3.",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- PLAYER: color 9 at row 12 col 36; it MOVES with actions 1/2/3/4.\n- candidate TARGET: object color 5 at row 12 col 36 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 3 at row 35 col 35 (the goal likely requires the player to reach/act on it).\n- IGNORE these STATUS COUNTERS (row 62): they advance on EVERY action and are a score/budget readout, NOT the game board. Filling or changing them is NOT the objective.\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the PLAYER to the position of the object color 3 at row 35 col 35.",
+        "Move the PLAYER to the TARGET of color 3 at row 35 col 35."
+      ],
+      "judgment": {
+        "verdict": "partial",
+        "note": "'Move the PLAYER to the TARGET color 3 at (35,35)' -- navigate-to-pad right, missing the shape/color/rotation morph."
+      }
+    },
+    {
+      "game": "cn04",
+      "true_win": "move/rotate pieces so their terminal markers pair up (spatial endpoint pairing)",
+      "n_transitions": 60,
+      "detector_mover": 8,
+      "detector_hud": [
+        "row0/counter"
+      ],
+      "corrected_rules": "Action 6 at trigger coordinates toggles/clears values in other cells.",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- PLAYER: color 8 at row 27 col 15; it MOVES with actions 1/2/3/4.\n- candidate TARGET: object color 0 at row 17 col 18 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 14 at row 39 col 45 (the goal likely requires the player to reach/act on it).\n- IGNORE these STATUS COUNTERS (row 0): they advance on EVERY action and are a score/budget readout, NOT the game board. Filling or changing them is NOT the objective.\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the PLAYER to a TARGET.",
+        "Move the PLAYER to a TARGET."
+      ],
+      "judgment": {
+        "verdict": "partial",
+        "note": "'Move the PLAYER to a TARGET' -- approximates marker-pairing but vague."
+      }
+    },
+    {
+      "game": "lf52",
+      "true_win": "merge blocks until only one (goal count) remains",
+      "n_transitions": 60,
+      "detector_mover": null,
+      "detector_hud": [
+        "row0/counter"
+      ],
+      "corrected_rules": "(no reliable rules yet)",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- candidate TARGET: object color 0 at row 27 col 35 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 5 at row 28 col 34 (the goal likely requires the player to reach/act on it).\n- IGNORE these STATUS COUNTERS (row 0): they advance on EVERY action and are a score/budget readout, NOT the game board. Filling or changing them is NOT the objective.\n- DISREGARD these earlier notes -- they describe a counter advancing as a side-effect, not the objective: Actions 1 and 6 at various coordinates change cells in row 0 from 0 to 1.\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the player to a target object.",
+        "Move the player to a target object."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "OVERCORRECTED: 'move player to target' imposed on a block-MERGE game (no player). Stopped the HUD fixation but wrong frame."
+      }
+    },
+    {
+      "game": "bp35",
+      "true_win": "maneuver the player sprite (via gravity) onto the gem tile",
+      "n_transitions": 22,
+      "detector_mover": null,
+      "detector_hud": [
+        "row63/counter"
+      ],
+      "corrected_rules": "(no reliable rules yet)",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- candidate TARGET: object color 15 at row 49 col 31 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 5 at row 19 col 29 (the goal likely requires the player to reach/act on it).\n- IGNORE these STATUS COUNTERS (row 63): they advance on EVERY action and are a score/budget readout, NOT the game board. Filling or changing them is NOT the objective.\n- DISREGARD these earlier notes -- they describe a counter advancing as a side-effect, not the objective: Action 6 at (x, y) changes cell (63, x) to color 15.\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the player to a target object.",
+        "Move the player to a target object."
+      ],
+      "judgment": {
+        "verdict": "correct",
+        "note": "'Move the player to a target object' = reach the gem (the true goal; gravity is the execution). Flipped from 'fill row 63' (the anti-goal)."
+      }
+    },
+    {
+      "game": "r11l",
+      "true_win": "slide each piece onto its matching target pad",
+      "n_transitions": 60,
+      "detector_mover": null,
+      "detector_hud": [
+        "col0/deplete"
+      ],
+      "corrected_rules": "(no reliable rules yet)",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- candidate TARGET: object color 2 at row 2 col 24 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 2 at row 58 col 54 (the goal likely requires the player to reach/act on it).\n- IGNORE these STATUS COUNTERS (col 0): they advance on EVERY action and are a score/budget readout, NOT the game board. Filling or changing them is NOT the objective.\n- DISREGARD these earlier notes -- they describe a counter advancing as a side-effect, not the objective: Action 6 at (27,57) toggles cells (21,0) through (42,0) between 0 and 5.\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the player to a target object of color 2.",
+        "Move the player to a target object of color 2."
+      ],
+      "judgment": {
+        "verdict": "correct",
+        "note": "'Move the player to a target object of color 2' = slide piece to matching pad. Flipped from 'set (21,0)-(42,0) to 5'."
+      }
+    },
+    {
+      "game": "ft09",
+      "true_win": "satisfy the hidden adjacency-color pattern constraint over the tiles",
+      "n_transitions": 60,
+      "detector_mover": null,
+      "detector_hud": [],
+      "corrected_rules": "Action 6 appears to do nothing.",
+      "perception_block": "PERCEPTION (corrected -- this OVERRIDES any rule about changing counter cells):\n- candidate TARGET: object color 4 at row 46 col 46 (the goal likely requires the player to reach/act on it).\n- candidate TARGET: object color 12 at row 63 col 32 (the goal likely requires the player to reach/act on it).\n- The GOAL almost certainly involves moving the PLAYER to a TARGET (or arranging the game objects), NOT filling/changing a counter band.",
+      "goals_under_reauthored_perception": [
+        "Move the PLAYER to a TARGET.",
+        "Move the PLAYER to a TARGET."
+      ],
+      "judgment": {
+        "verdict": "wrong",
+        "note": "OVERCORRECTED: 'move player to target' imposed on a hidden-CSP game (no navigate)."
+      }
+    }
+  ],
+  "duration_s": 11.69,
+  "reproducibility_checksum": "sha256:c6da39efcf99e095f9d181c0b492e348f1474cc17ecc0e7482bb23f90268ee77",
+  "judgment_summary": {
+    "correct": 4,
+    "partial": 2,
+    "wrong": 2
+  },
+  "comparison": {
+    "plain_gate_5834": "0 correct, 2 partial, 6 wrong",
+    "reauthored": "4 correct, 2 partial, 2 wrong",
+    "oracle_5832": "7 correct, 1 partial, 0 wrong"
+  },
+  "headline": "RE-AUTHORING WORKS: 0/8 -> 4/8 correct (+2 partial), and ZERO games still fixate on the HUD. Retracting the HUD-band rules + naming the mover's target + overriding the counter-framing flipped every game from 'fill/change the counter' to 'move the player to a target'. Correct on the 4 navigate/move-to-target games (sc25/tu93/bp35/r11l -- even the 3 where no mover was detected, because retracting the wrong rule was enough). Residual: it OVERCORRECTS the 2 non-navigate games (lf52 merge, ft09 CSP) into a navigate frame -- because the block asserts 'move player to target' even when NO mover was detected. Approaches the oracle's 7/8 but not yet there (the oracle named the specific per-game entity + mechanic).",
+  "next_step": "Gate the 'move player to a target' assertion on mover-detected: when no mover is found, use a neutral 'arrange the game objects; the counters are not the goal' frame instead of imposing navigation. That should recover lf52/ft09 without losing the 4 navigate wins. Then wire reauthor_framing into the live E3AgentPolicy perception + the greedy-direct reflection, and add the execution/dynamics half.",
+  "honest_verdict": "complete_reauthoring_flips_goal_induction_0of8_to_4of8_correct_zero_hud_fixation_overcorrects_2_nonnavigate"
+}
