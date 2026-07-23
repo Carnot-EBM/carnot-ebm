@@ -301,6 +301,32 @@ candidate set could ever have found it. Logged as `GAP-ARC-BP35-CLICK-CANDIDATE-
 design); `REQ-ARC-FCP-5757` (the original run); `ops/verifier_gaps.md` `GAP-ARCH-NO-HIERARCHICAL-SEARCH`
 (independent-replication addendum) and the new `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` entry.
 
+### 2026-07-23 (outer-loop, operator: "validate the survivor live"): the bp35 perception fix NULLS against the real metric — coverage-only, do NOT wire to the default
+
+**Follow-up to the triangulation** (`docs/research-notes/arc-lever-triangulation-2026-07-23.md`): the ONE
+surviving deliverable-relevant finding was the class-level perception bug (the live generator can't click
+the single most-common color). The operator chose to validate it against the REAL metric (live discovery),
+not candidate coverage.
+
+**Result (`results/outer_loop_arc_grid_fallback_live_discovery_ab_20260723.json`,
+`scripts/arc_grid_fallback_live_discovery_ab.py`, adversarial-verify 0-flagged):** ran the real
+E3AgentPolicy cascade FRAME-ONLY (adapter disabled, proposer=None, budget=400, seed=20260719 — matches the
+`arc_live_oracle_gap.json` baseline), flag OFF vs ON, paired, on bp35 (the characterized game). **Both
+arms: `levels=0, reached=L0, 393 actions` — zero discovery delta.** The coverage improvement (21->15
+generation misses) does NOT move the deliverable metric. The ON arm is also **37% slower** (2251s vs
+1642s) from the up-to-64-candidates/frame blowup — a real efficiency regression.
+
+**Decision:** `CARNOT_ARC_GRID_FALLBACK_CANDIDATES` stays opt-in/default-OFF permanently for the scored
+path (documented coverage-diagnosis tool, not a live improvement). This is the honest close of the loop:
+built a fix, measured it against coverage (looked good), measured it against the DELIVERABLE (null),
+reported the truth. Confirms candidate-coverage is a proxy and the binding constraint is upstream
+(induction/sequence-routing), exactly as the triangulation found. The 25-game generalization sweep was
+deliberately NOT run (~25h for a near-certain all-null; bp35 — the most-relevant game — already nulled).
+
+**Wall-time / process note:** each arm took ~27-37 min (no-LLM explorer at budget=400). A prior UNTRACKED
+copy of the driver script was swept mid-run by the conductor's shared-tree checkpoint (silent data loss,
+exactly the Never-Stash-Commit-First failure mode); the script is now committed-first before running.
+
 ### 2026-07-23 (outer-loop, same-day follow-up, operator: "yes" to fixing bp35's click-candidate generation gap): opt-in fix shipped and measured — 21/57 generation misses closed to 15/57 on bp35's real winning trajectory
 
 **Root cause found via direct tracing.** `object_centric_digest` (`python/carnot/agentic/arc_solver_kit.py`

@@ -2692,6 +2692,24 @@ EXACTLY the 21 measured misses, all clicks on color-5 cells.
   into the scored `E3AgentPolicy._candidates` (opt-in), then measure whether it lets the LIVE agent DISCOVER
   (>0 levels) on a dominant-background game with its GameAdapter DISABLED. Coverage is the proxy; live
   held-out discovery is the deliverable.
+- **LIVE VALIDATION RESULT (2026-07-23, `results/outer_loop_arc_grid_fallback_live_discovery_ab_20260723.json`,
+  `scripts/arc_grid_fallback_live_discovery_ab.py`) — decisive NULL against the real metric; do NOT wire to
+  the submitted default.** Ran the corrected validation gate exactly as specified above: the REAL
+  E3AgentPolicy cascade FRAME-ONLY (adapter disabled, proposer=None, budget=400, seed=20260719 — byte-
+  identical to the `arc_live_oracle_gap.json` baseline), flag OFF vs ON, PAIRED, on bp35 (the characterized
+  dominant-background game). **Both arms: `levels=0, reached=L0, 393 actions` — ZERO discovery delta.** The
+  coverage fix (21->15 generation misses) does not move the deliverable metric at all. And the ON arm is
+  **37% SLOWER** (2251s vs 1642s wall) from the up-to-64-extra-candidates/frame blowup — a real efficiency
+  regression at fixed action budget (matters for the Kaggle 12h wall budget). This confirms the
+  triangulation prediction (`docs/research-notes/arc-lever-triangulation-2026-07-23.md`) and the
+  adversarial lens: the fix was **coverage-only proxy-polishing, not discovery-relevant**. The binding
+  constraint (sequence-routing / world-model induction) is untouched by making one more candidate
+  available. **Decision: `CARNOT_ARC_GRID_FALLBACK_CANDIDATES` stays OPT-IN / default-OFF permanently for
+  the scored path** — it is a documented coverage-diagnosis tool, NOT a live-default improvement. The
+  full 25-game generalization sweep was deliberately NOT run (disclosed, not silently skipped): at
+  ~27-37 min/game/arm it would be ~25h for a near-certain all-null, and bp35 — the game where the gap is
+  most relevant — already decisively nulled. Status of this gap: **CLOSED as coverage-only; the underlying
+  binding constraint remains the induction lever, not perception.**
 
 ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
 - status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
