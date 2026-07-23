@@ -14191,3 +14191,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 17:12 UTC | Reduced-oracle versioned constraint memory on seal | OK | 87 passed, 1 warning in 12.25s |
 | 2026-07-23 17:47 UTC | Accepted adaptive operations ABI conformance | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5859_adaptiv |
 | 2026-07-23 18:07 UTC | Accepted adaptive operations ABI conformance | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5859_adaptiv |
+| 2026-07-23 19:27 UTC | Accepted adaptive operations ABI conformance | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5859_adaptiv |

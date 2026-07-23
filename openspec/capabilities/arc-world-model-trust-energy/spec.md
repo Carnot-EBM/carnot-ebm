@@ -17029,3 +17029,82 @@ detected cell size is `c`
 **When** the greedy-direct loop executes it
 **Then** the raw pixel passed to `env.step` is the cell-block center `(col*c + c//2, row*c + c//2)`
 clamped to `[0,63]` -- never the raw logical index.
+
+### REQ-ARC-WMTE-5860: Bounded Game-Blind Active Observation A/B
+
+**Origin:** 2026-07-23, after the adapter-disabled E3, reactive-filter, and tool-loop-lookahead
+measurements all returned null on the hard public games while the registry already records full public
+game clears via development-proxy `GameAdapter`s. Experiment 5860 is NOT a solve attempt and SHALL NOT
+update registry credit. Its question is narrower: under an identical legal-action budget, can a
+game-blind observer acquire more agent-owned transition evidence than current E3, random, periodic,
+and null-control policies?
+
+`carnot.experiment_5860_live_active_observation_ab` SHALL implement a bounded active-observation
+controller that runs through the canonical adapter-disabled E3 interaction substrate (`E3AgentPolicy`
+/ offline arcade live-agent path for the current-policy arm, and the same legal env action interface
+for probe arms). Before any run it SHALL precheck the candidate games against
+`ops/arc_solve_registry.yaml` and report that public registry completion makes this a no-credit
+measurement, not a re-solve. The controller SHALL mechanically exclude every `GameAdapter`, public
+source read, offline ground-truth BFS, registry trajectory, per-game model, hand rule, and outer-loop
+counterexample channel from the probe-selection path.
+
+The experiment SHALL configure at least one mandated current SOTA GGUF proposer through llama.cpp and
+the GGUF embedded tokenizer. The preferred headline model is
+`unsloth/Qwen3.6-35B-A3B-GGUF`; `unsloth/gemma-4-31B-it-GGUF` MAY be an additional arm. Tiny legacy
+models SHALL be smoke-only and SHALL NOT populate headline active-observation rows.
+
+The active observer SHALL build an append-only, write-protected agent-owned tape from legal actions
+and exact runtime observations only. Retrieval views SHALL be partitioned into `global_history`,
+`local_active`, and `event_boundary` views without inserting goal labels, adapter facts, public-source
+facts, registry trajectories, or event captions from outside the agent's own runtime. The active arm
+SHALL select probes only from current/past ambiguity and exact observed outcomes. Current E3, random
+legal probes, periodic probes, shuffled-tape, view-ablation, random-priority, and no-memory controls
+SHALL run or be scored under identical legal-action, wall-clock, model-call, token, and reset budgets.
+
+Experiment 5860 SHALL preregister short-, medium-, and long-horizon proposal-support metrics and SHALL
+report ambiguity resolved per action, transition-alias disambiguation, invalid/dead-end/no-op actions,
+novel causal relation confirmations, proposal coverage per horizon, model calls, actions, latency, and
+levels only as descriptive outcomes. `active_observation_ready_score` SHALL be the bare scalar `1.0`
+only when the active observer has positive preregistered lower bounds over all matched controls on
+ambiguity resolution or proposal support without any action/latency/model-call/token/reset budget
+violation. A clean null SHALL emit `active_observation_ready_score: 0.0` with a terminal
+`honest_verdict` and complete artifact fields.
+
+Experiment 5860 SHALL write `results/experiment_5860_live_active_observation_ab.json` with the bare
+top-level fields `status`, `preconditions_checked`, `registry_precheck`,
+`live_path_and_sdk_receipts`, `adapter_source_bfs_and_registry_exclusion_receipts`, `model_specs`,
+`models_used`, `gpu_and_llama_cpp_receipts`, `agent_owned_tape_schema_and_hashes`,
+`history_view_definitions`, `arm_definitions_and_budget_parity`,
+`short_medium_long_horizon_metrics`, `ambiguity_and_transition_evidence_metrics`,
+`action_model_call_and_latency_accounting`, `descriptive_level_outcomes`, `solve_provenance`,
+`shuffled_tape_view_ablation_and_null_controls`, `registry_modified`,
+`active_observation_ready_score`, `duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Field principles SHALL be included for every required field and SHALL trace each
+metric to live actions, exact observations, tape items, budget receipts, model receipts, or null-control
+transformations.
+
+### SCENARIO-ARC-WMTE-5860-TAPE-IS-AGENT-OWNED
+
+**Given** legal action records and exact before/after runtime observations
+**When** Experiment 5860 appends them to its tape
+**Then** the resulting tape is append-only/write-protected, hash-addressed, and rejects adapter facts,
+goal labels, registry trajectories, public-source hints, hand rules, and outer-loop counterexamples.
+
+### SCENARIO-ARC-WMTE-5860-BUDGET-PARITY-AND-READY-GATE
+
+**Given** current E3, random, periodic, active, shuffled-tape, view-ablation, random-priority, and
+no-memory arms
+**When** Experiment 5860 builds the A/B artifact
+**Then** every arm has identical declared legal-action, wall-clock, model-call, token, and reset budgets,
+and `active_observation_ready_score` is `1.0` only when the active arm beats every matched control on a
+preregistered evidence metric without any budget violation.
+
+### SCENARIO-ARC-WMTE-5860-STABLE-ARTIFACT
+
+**Given** either a live A/B run or a blocked live-precondition check
+**When** Experiment 5860 writes its result JSON
+**Then** all required fields are present, `registry_modified=false`, `solve_provenance` is
+`live_agent_self_discovery`, `verifier_is_oracle=false`, the honest verdict uses positive/null/budget-
+bound/blocked language without solve credit, and the reproducibility checksum changes if games, seeds,
+models, budgets, tape hashes, or policy receipts drift.

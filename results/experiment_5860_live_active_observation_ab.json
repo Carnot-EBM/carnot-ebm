@@ -1,0 +1,783 @@
+{
+  "action_model_call_and_latency_accounting": {
+    "active_observer": {
+      "actions": 3,
+      "latency_s": 0.009789,
+      "model_calls": 3,
+      "resets": 3,
+      "tokens": 24
+    },
+    "current_e3": {
+      "actions": 3,
+      "latency_s": 0.007992,
+      "model_calls": 0,
+      "resets": 3,
+      "tokens": 0
+    },
+    "periodic": {
+      "actions": 3,
+      "latency_s": 0.006682,
+      "model_calls": 0,
+      "resets": 3,
+      "tokens": 0
+    },
+    "random_legal": {
+      "actions": 3,
+      "latency_s": 0.005608,
+      "model_calls": 0,
+      "resets": 3,
+      "tokens": 0
+    }
+  },
+  "active_observation_ready_score": 0.0,
+  "adapter_source_bfs_and_registry_exclusion_receipts": {
+    "controller_forbidden_imports": [
+      "adapter_fact",
+      "event_caption",
+      "game_adapter_label",
+      "goal_label",
+      "hand_rule",
+      "offline_bfs_path",
+      "outer_loop_counterexample",
+      "public_source_hint",
+      "registry_trajectory"
+    ],
+    "game_adapters_enabled": false,
+    "hand_rule_enabled": false,
+    "offline_ground_truth_bfs_enabled": false,
+    "outer_loop_counterexample_channel_enabled": false,
+    "per_game_model_enabled": false,
+    "public_source_read_enabled": false,
+    "registry_trajectory_enabled": false
+  },
+  "agent_owned_tape_schema_and_hashes": {
+    "per_arm": {
+      "active_observer": {
+        "content_hash": "sha256:e0d1b773617ccfb56ee111da41250f1c1a211604db2cb81ae98f8471f5014e68",
+        "items": 3
+      },
+      "current_e3": {
+        "content_hash": "sha256:57b56aa88fdb8e8f03a3345bb7945684ec998c27b4e16729d19f0aef8673a9a6",
+        "items": 3
+      },
+      "periodic": {
+        "content_hash": "sha256:d3f7763e29bd63064d86a783c82156b5e0d6b1b7a037ccf0dd7e9e0ac8a79bec",
+        "items": 3
+      },
+      "random_legal": {
+        "content_hash": "sha256:d4ec6eda048b825b50aa3ea07810c26ae606cc67ae2e63c3541d48cc05ffac6d",
+        "items": 3
+      }
+    },
+    "schema": {
+      "forbidden_keys": [
+        "adapter_fact",
+        "event_caption",
+        "game_adapter_label",
+        "goal_label",
+        "hand_rule",
+        "offline_bfs_path",
+        "outer_loop_counterexample",
+        "public_source_hint",
+        "registry_trajectory"
+      ],
+      "observation_fields": [
+        "observation_id",
+        "frame_hash",
+        "grid_hash",
+        "grid_shape",
+        "available_actions",
+        "level",
+        "raw_observation_hash"
+      ],
+      "required_fields": [
+        "game",
+        "arm",
+        "step_index",
+        "action",
+        "before",
+        "after",
+        "latency_s",
+        "model_call_id"
+      ],
+      "source": "agent_runtime_observation"
+    },
+    "write_protected": true
+  },
+  "ambiguity_and_transition_evidence_metrics": {
+    "active_observer": {
+      "actions": 3,
+      "ambiguity_resolved_per_action": 0.333333,
+      "dead_end_actions": 1,
+      "invalid_actions": 0,
+      "no_op_actions": 1,
+      "novel_causal_relation_confirmations": 2,
+      "proposal_support": {
+        "long": 0.666667,
+        "medium": 0.5,
+        "short": 0.666667
+      },
+      "transition_alias_disambiguation": 1
+    },
+    "current_e3": {
+      "actions": 3,
+      "ambiguity_resolved_per_action": 0.333333,
+      "dead_end_actions": 1,
+      "invalid_actions": 0,
+      "no_op_actions": 1,
+      "novel_causal_relation_confirmations": 2,
+      "proposal_support": {
+        "long": 0.666667,
+        "medium": 1.0,
+        "short": 0.666667
+      },
+      "transition_alias_disambiguation": 1
+    },
+    "periodic": {
+      "actions": 3,
+      "ambiguity_resolved_per_action": 0.333333,
+      "dead_end_actions": 1,
+      "invalid_actions": 0,
+      "no_op_actions": 1,
+      "novel_causal_relation_confirmations": 2,
+      "proposal_support": {
+        "long": 0.666667,
+        "medium": 0.5,
+        "short": 0.666667
+      },
+      "transition_alias_disambiguation": 1
+    },
+    "random_legal": {
+      "actions": 3,
+      "ambiguity_resolved_per_action": 0.333333,
+      "dead_end_actions": 1,
+      "invalid_actions": 0,
+      "no_op_actions": 1,
+      "novel_causal_relation_confirmations": 2,
+      "proposal_support": {
+        "long": 0.666667,
+        "medium": 0.5,
+        "short": 0.666667
+      },
+      "transition_alias_disambiguation": 1
+    }
+  },
+  "arm_definitions_and_budget_parity": {
+    "arms": {
+      "active_observer": {
+        "budgets": {
+          "games": [
+            "sc25",
+            "lf52",
+            "bp35"
+          ],
+          "legal_action_budget": 3,
+          "model_call_budget": 3,
+          "per_game_legal_action_budget": 1,
+          "per_game_model_call_budget": 1,
+          "per_game_reset_budget": 2,
+          "per_game_token_budget": 64,
+          "reset_budget": 6,
+          "token_budget": 192,
+          "wall_clock_budget_s": 900.0
+        },
+        "definition": "ambiguity-prioritized legal probes using only agent-owned tape evidence",
+        "forbidden_channels": {
+          "game_adapter": false,
+          "hand_rule": false,
+          "offline_ground_truth_bfs": false,
+          "outer_loop_counterexample": false,
+          "per_game_model": false,
+          "public_source": false,
+          "registry_trajectory": false
+        }
+      },
+      "current_e3": {
+        "budgets": {
+          "games": [
+            "sc25",
+            "lf52",
+            "bp35"
+          ],
+          "legal_action_budget": 3,
+          "model_call_budget": 3,
+          "per_game_legal_action_budget": 1,
+          "per_game_model_call_budget": 1,
+          "per_game_reset_budget": 2,
+          "per_game_token_budget": 64,
+          "reset_budget": 6,
+          "token_budget": 192,
+          "wall_clock_budget_s": 900.0
+        },
+        "definition": "standing E3AgentPolicy, adapter-disabled, no banked registry trajectory",
+        "forbidden_channels": {
+          "game_adapter": false,
+          "hand_rule": false,
+          "offline_ground_truth_bfs": false,
+          "outer_loop_counterexample": false,
+          "per_game_model": false,
+          "public_source": false,
+          "registry_trajectory": false
+        }
+      },
+      "periodic": {
+        "budgets": {
+          "games": [
+            "sc25",
+            "lf52",
+            "bp35"
+          ],
+          "legal_action_budget": 3,
+          "model_call_budget": 3,
+          "per_game_legal_action_budget": 1,
+          "per_game_model_call_budget": 1,
+          "per_game_reset_budget": 2,
+          "per_game_token_budget": 64,
+          "reset_budget": 6,
+          "token_budget": 192,
+          "wall_clock_budget_s": 900.0
+        },
+        "definition": "deterministic periodic legal probes cycling current frame available_actions",
+        "forbidden_channels": {
+          "game_adapter": false,
+          "hand_rule": false,
+          "offline_ground_truth_bfs": false,
+          "outer_loop_counterexample": false,
+          "per_game_model": false,
+          "public_source": false,
+          "registry_trajectory": false
+        }
+      },
+      "random_legal": {
+        "budgets": {
+          "games": [
+            "sc25",
+            "lf52",
+            "bp35"
+          ],
+          "legal_action_budget": 3,
+          "model_call_budget": 3,
+          "per_game_legal_action_budget": 1,
+          "per_game_model_call_budget": 1,
+          "per_game_reset_budget": 2,
+          "per_game_token_budget": 64,
+          "reset_budget": 6,
+          "token_budget": 192,
+          "wall_clock_budget_s": 900.0
+        },
+        "definition": "uniform random legal probes from current frame available_actions",
+        "forbidden_channels": {
+          "game_adapter": false,
+          "hand_rule": false,
+          "offline_ground_truth_bfs": false,
+          "outer_loop_counterexample": false,
+          "per_game_model": false,
+          "public_source": false,
+          "registry_trajectory": false
+        }
+      }
+    },
+    "budget_parity": true,
+    "budget_violations": {}
+  },
+  "descriptive_level_outcomes": {
+    "active_observer": {
+      "bp35": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "lf52": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "sc25": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      }
+    },
+    "current_e3": {
+      "bp35": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "lf52": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "sc25": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      }
+    },
+    "periodic": {
+      "bp35": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "lf52": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "sc25": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      }
+    },
+    "random_legal": {
+      "bp35": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "lf52": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      },
+      "sc25": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "start_level": 0
+      }
+    }
+  },
+  "duration_s": 53.853,
+  "field_provenance": {
+    "action_model_call_and_latency_accounting": {
+      "principle": "Accuracy and efficiency remain jointly first-class.",
+      "source": "per-arm runner counters"
+    },
+    "active_observation_ready_score": {
+      "principle": "EMIT BARE scalar for capstone classification.",
+      "source": "active_observation_ready_score gate"
+    },
+    "adapter_source_bfs_and_registry_exclusion_receipts": {
+      "principle": "Forbidden outer-loop knowledge must be mechanically inaccessible.",
+      "source": "static controller-channel exclusions"
+    },
+    "agent_owned_tape_schema_and_hashes": {
+      "principle": "Every memory item must come from the agent's own legal action and exact observation.",
+      "source": "AgentOwnedTape content hashes"
+    },
+    "ambiguity_and_transition_evidence_metrics": {
+      "principle": "The primary outcome is acquired runtime evidence, not a re-solve.",
+      "source": "score_tape transition evidence fields"
+    },
+    "arm_definitions_and_budget_parity": {
+      "principle": "Equal legal-action and inference budgets isolate active observation.",
+      "source": "build_arm_definitions parity contract"
+    },
+    "descriptive_level_outcomes": {
+      "principle": "Levels are reported honestly but receive no solve credit.",
+      "source": "runtime level counters only, no registry credit"
+    },
+    "duration_s": {
+      "principle": "Measured live wall time exposes smoke-only execution.",
+      "source": "monotonic wall-clock measurement"
+    },
+    "field_provenance": {
+      "principle": "Every metric traces to live actions, observations, tape items, budgets, and model receipts.",
+      "source": "this provenance table"
+    },
+    "gpu_and_llama_cpp_receipts": {
+      "principle": "Device and embedded-tokenizer evidence distinguish live inference from fallback.",
+      "source": "nvidia-smi, llama-server path, embedded tokenizer preflight"
+    },
+    "history_view_definitions": {
+      "principle": "Global, local-active, and event-boundary ablations must be game-blind.",
+      "source": "history_views partition definitions"
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix states positive, null, budget-bound, or blocked result without solve language.",
+      "source": "derived from status and ready score"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference declares the real proposer path.",
+      "source": "declared live llama.cpp proposer path"
+    },
+    "live_path_and_sdk_receipts": {
+      "principle": "Only the canonical scored E3 interaction path supports a live claim.",
+      "source": "canonical E3 entrypoint hashes and arcengine version"
+    },
+    "model_specs": {
+      "principle": "At least one mandated current SOTA GGUF must generate headline live rows.",
+      "source": "carnot.inference.sota_models mandated GGUF registry"
+    },
+    "models_used": {
+      "principle": "Exact hub IDs disclose which live proposer actually ran.",
+      "source": "proposer construction and live model-call accounting"
+    },
+    "preconditions_checked": {
+      "principle": "Registry, live path, exclusions, models, resources, budgets, seeds, and outputs prevent off-path credit.",
+      "source": "pre-run filesystem, registry, model, GPU, budget, and output checks"
+    },
+    "registry_modified": {
+      "principle": "Must be false; this task cannot add solve credit.",
+      "source": "before/after registry hash comparison"
+    },
+    "registry_precheck": {
+      "principle": "All public solves are already complete; this task cannot duplicate them.",
+      "source": "ops/arc_solve_registry.yaml precheck only; not passed to controller"
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects policy, game, model, tape, seed, or budget drift.",
+      "source": "canonical JSON checksum excluding checksum field"
+    },
+    "short_medium_long_horizon_metrics": {
+      "principle": "Proposal quality is measured separately across temporal scales.",
+      "source": "score_tape proposal_support fields"
+    },
+    "shuffled_tape_view_ablation_and_null_controls": {
+      "principle": "Broken memory or priorities must not retain the claimed gain.",
+      "source": "null_control_metrics transformations"
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- runtime observations only, never outer-loop RE or a development proxy.",
+      "source": "constant live_agent_self_discovery provenance declaration"
+    },
+    "status": {
+      "principle": "A terminal live A/B state distinguishes a clean null from partial interaction.",
+      "source": "derived from preconditions, live rows, metrics, and budget checks"
+    },
+    "test_commands": {
+      "principle": "Commands document live path, exclusions, model, parity, metrics, controls, and registry immutability.",
+      "source": "operator/test runner supplied command receipts"
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent off-path or budget-violating runs becoming ready.",
+      "source": "operator/test runner supplied exit-code receipts"
+    },
+    "verifier_is_oracle": {
+      "principle": "False for learned observation selection; exact observations remain evidence authority, not a candidate-answer oracle.",
+      "source": "constant false for learned observation selection"
+    }
+  },
+  "gpu_and_llama_cpp_receipts": {
+    "cache_root": "/home/ianblenke/.cache/huggingface/hub",
+    "embedded_tokenizer": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "ok": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "ok": true
+      }
+    },
+    "llama_cpp_server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "llama_cpp_server_exists": true,
+    "nvidia_smi": [
+      "NVIDIA GeForce RTX 3090, 24576 MiB, 23681 MiB",
+      "NVIDIA GeForce RTX 3090, 24576 MiB, 24120 MiB"
+    ],
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot"
+  },
+  "history_view_definitions": {
+    "event_boundary": {
+      "definition": "agent-owned items whose exact observation hash or level counter changed",
+      "outside_labels_inserted": false
+    },
+    "global_history": {
+      "definition": "all agent-owned action/observation tape items in runtime order",
+      "outside_labels_inserted": false
+    },
+    "local_active": {
+      "definition": "most recent agent-owned tape items for the active decision window",
+      "outside_labels_inserted": false
+    }
+  },
+  "honest_verdict": "complete_null: active_observation_no_positive_preregistered_lower_bound_no_registry_credit",
+  "inference_substrate": "live_llm_inference",
+  "live_path_and_sdk_receipts": {
+    "arc_sdk_version": "0.1.0",
+    "canonical_scored_entrypoint": "python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy",
+    "entrypoint_hashes": {
+      "arc_competition_agent.py": "sha256:c470180a7ecf7c82d08ac3e56e063b54d10e25a729bc86d681285e131f7c7181",
+      "arc_leaderboard_eval.py": "sha256:e2d48a7bc4b11aadc34cf5a0e5a67eb33e58fe7e5e7b73608f7c6d98055ae244",
+      "arc_live_agent.py": "missing",
+      "arc_loop_solve.py": "sha256:444761539f0e8acf796cbd3c9bdc1f80e8946c1af64d1a8c5e7d00fedf1f2086"
+    },
+    "requested_missing_entrypoints": {
+      "python/carnot/agentic/arc_competition_agent.py": true,
+      "scripts/arc_leaderboard_eval.py": true,
+      "scripts/arc_live_agent.py": false,
+      "scripts/arc_loop_solve.py": true
+    },
+    "standing_eval_entrypoint": "scripts/arc_leaderboard_eval.py"
+  },
+  "model_specs": [
+    {
+      "active_params_b": 3.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 31.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "total_params_b": 31.0
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "atomic_output_path_checked": true,
+    "codex_md_read": true,
+    "embedded_tokenizer_verified": true,
+    "forbidden_controller_channels_excluded": true,
+    "gpu_vram_checked": true,
+    "live_ab_executed": true,
+    "live_environment_available": true,
+    "not_a_solve_task": true,
+    "registry_precheck_complete": true,
+    "sota_qwen_cached": true,
+    "spec_req_5860_present": true
+  },
+  "registry_modified": false,
+  "registry_precheck": {
+    "all_candidate_games_registry_complete": true,
+    "candidate_games": [
+      "sc25",
+      "lf52",
+      "bp35"
+    ],
+    "not_a_solve_task": true,
+    "per_game": {
+      "bp35": {
+        "full_game_clear": true,
+        "levels_reproduced": 9,
+        "mechanic_class": "goal_directed_navigation_local_obstacle_clear",
+        "registry_row_present": true,
+        "reproducibility": "reproduced"
+      },
+      "lf52": {
+        "full_game_clear": true,
+        "levels_reproduced": 10,
+        "mechanic_class": "rail_carried_peg_jump",
+        "registry_row_present": true,
+        "reproducibility": "reproduced"
+      },
+      "sc25": {
+        "full_game_clear": true,
+        "levels_reproduced": 6,
+        "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+        "registry_row_present": true,
+        "reproducibility": "reproduced"
+      }
+    },
+    "registry_total_public_games": 25,
+    "registry_total_reproducible_levels": 183
+  },
+  "reproducibility_checksum": "sha256:111a48751efea4289daf39b9ee454894c870651f035b5cfdd09b41d316d4ba30",
+  "short_medium_long_horizon_metrics": {
+    "active_observer": {
+      "long": 0.666667,
+      "medium": 0.5,
+      "short": 0.666667
+    },
+    "current_e3": {
+      "long": 0.666667,
+      "medium": 1.0,
+      "short": 0.666667
+    },
+    "periodic": {
+      "long": 0.666667,
+      "medium": 0.5,
+      "short": 0.666667
+    },
+    "random_legal": {
+      "long": 0.666667,
+      "medium": 0.5,
+      "short": 0.666667
+    }
+  },
+  "shuffled_tape_view_ablation_and_null_controls": {
+    "active_observer": {
+      "no_memory": {
+        "ambiguity_resolved_per_action": 0.0,
+        "proposal_support": {
+          "long": 0.0,
+          "medium": 0.0,
+          "short": 0.0
+        }
+      },
+      "random_priority": {
+        "ambiguity_resolved_per_action": 0.083333,
+        "proposal_support": {
+          "long": 0.166667,
+          "medium": 0.125,
+          "short": 0.166667
+        }
+      },
+      "shuffled_tape": {
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.25,
+          "short": 0.333334
+        }
+      },
+      "view_ablation": {
+        "ablated_views": [
+          "local_active",
+          "event_boundary"
+        ],
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.25,
+          "short": 0.333334
+        }
+      }
+    },
+    "current_e3": {
+      "no_memory": {
+        "ambiguity_resolved_per_action": 0.0,
+        "proposal_support": {
+          "long": 0.0,
+          "medium": 0.0,
+          "short": 0.0
+        }
+      },
+      "random_priority": {
+        "ambiguity_resolved_per_action": 0.083333,
+        "proposal_support": {
+          "long": 0.166667,
+          "medium": 0.25,
+          "short": 0.166667
+        }
+      },
+      "shuffled_tape": {
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.5,
+          "short": 0.333334
+        }
+      },
+      "view_ablation": {
+        "ablated_views": [
+          "local_active",
+          "event_boundary"
+        ],
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.5,
+          "short": 0.333334
+        }
+      }
+    },
+    "periodic": {
+      "no_memory": {
+        "ambiguity_resolved_per_action": 0.0,
+        "proposal_support": {
+          "long": 0.0,
+          "medium": 0.0,
+          "short": 0.0
+        }
+      },
+      "random_priority": {
+        "ambiguity_resolved_per_action": 0.083333,
+        "proposal_support": {
+          "long": 0.166667,
+          "medium": 0.125,
+          "short": 0.166667
+        }
+      },
+      "shuffled_tape": {
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.25,
+          "short": 0.333334
+        }
+      },
+      "view_ablation": {
+        "ablated_views": [
+          "local_active",
+          "event_boundary"
+        ],
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.25,
+          "short": 0.333334
+        }
+      }
+    },
+    "random_legal": {
+      "no_memory": {
+        "ambiguity_resolved_per_action": 0.0,
+        "proposal_support": {
+          "long": 0.0,
+          "medium": 0.0,
+          "short": 0.0
+        }
+      },
+      "random_priority": {
+        "ambiguity_resolved_per_action": 0.083333,
+        "proposal_support": {
+          "long": 0.166667,
+          "medium": 0.125,
+          "short": 0.166667
+        }
+      },
+      "shuffled_tape": {
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.25,
+          "short": 0.333334
+        }
+      },
+      "view_ablation": {
+        "ablated_views": [
+          "local_active",
+          "event_boundary"
+        ],
+        "ambiguity_resolved_per_action": 0.166666,
+        "proposal_support": {
+          "long": 0.333334,
+          "medium": 0.25,
+          "short": 0.333334
+        }
+      }
+    }
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "status": "complete_null",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5860_live_active_observation_ab.py -q -o addopts=",
+    "coverage run --include='*/python/carnot/experiment_5860_live_active_observation_ab.py' -m pytest tests/python/test_experiment_5860_live_active_observation_ab.py -q -o addopts='' && coverage report --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5860_live_active_observation_ab.py -q -o addopts=": 0,
+    "coverage run --include='*/python/carnot/experiment_5860_live_active_observation_ab.py' -m pytest tests/python/test_experiment_5860_live_active_observation_ab.py -q -o addopts='' && coverage report --fail-under=100 --show-missing": 0
+  },
+  "verifier_is_oracle": false
+}
