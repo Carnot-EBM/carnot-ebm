@@ -25005,3 +25005,177 @@ restart/resource mismatch forces `selective_replay_qualified_score=0.0`.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5857 | Implemented (`python/carnot/experiment_5857_clean_transfer_selective_replay.py`, `results/experiment_5857_clean_transfer_selective_replay.json`) | Implemented (`tests/python/test_experiment_5857_clean_transfer_selective_replay.py`) |
+
+## REQ-LEARN-5858: Reduced-Oracle Continuous Self-Learning With Query Selection
+
+The self-learning tier SHALL provide Exp5858, a prospective deterministic
+frozen/full-oracle/random-query/reduced-oracle A/B at
+`python/carnot/experiment_5858_reduced_oracle_continuous_self_learning.py`
+that consumes only promotion-eligible Exp5856 lifecycle evidence and Exp5857
+selective replay evidence, then writes
+`results/experiment_5858_reduced_oracle_continuous_self_learning.json` and
+`results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl`.
+Exp5858 SHALL use the substrate
+`deterministic_exact_verifier_and_replay_no_llm`, SHALL keep
+`verifier_is_oracle=true`, and SHALL keep `no_model_weight_mutation=true`.
+
+Before science scoring, Exp5858 SHALL replay both upstream gates and hash the
+clean lifecycle rows, lifecycle aggregate, replay aggregate, event stream,
+exact validators, visibility masks, split manifests, state schema, seed
+manifest, OpenSpec text, this module, this test, root-clutter guard, and
+protected-file guard. It SHALL require at least 30 prospective events per
+family and change type, sufficient exact-query budget headroom, RAM, disk,
+monotonic timing, writable atomic checkpoint/output paths, bounded memory caps,
+and deterministic seeds. Any failed precondition SHALL write a terminal blocked
+artifact with `continuous_self_learning_ready_score=0.0`.
+
+Exp5858 SHALL preregister the exact-query budgets, acquisition policy,
+promotion objectives, rollback rules, memory caps, state schema, control arms,
+bootstrap seeds, and all thresholds before evaluation. The query selector SHALL
+be label-blind: it may use only current or past row-visible state such as prior
+compatible replay count, current hardness stratum, change type, cap pressure,
+state size, membership-query count, and sealed receipt hashes. It SHALL NOT use
+future labels, row IDs, family labels, model logits, direct label-derived
+features, post-hoc outcomes, or any model-weight mutation.
+
+Exp5858 SHALL replay identical chronological events under matched
+`frozen`, `full_oracle`, `random_query`, and `reduced_oracle` arms. The full
+oracle arm MAY query exact labels for every candidate. The reduced-oracle arm
+MAY query exact labels only when the preregistered selector fires under its
+budget, SHALL buffer rejected edits without promotion, SHALL consolidate slowly
+under versioned checkpoints, and SHALL reuse only Exp5857-qualified prior replay
+rows. Random-query, always-query, never-query, query-order permutation,
+shuffled-label rejection, selector-feature ablation, memory-reset, and
+duplicate-group controls SHALL be evaluated against the same chronological
+events and budgets.
+
+Future labels SHALL remain sealed until their event arrives. Exact validators
+own query answers and promotion decisions. Held-out exact validation, not the
+selector, SHALL promote external memory. Rollback SHALL restore exact state
+hashes for rejected or unsafe edits, and restart SHALL reproduce the final row
+stream and state hash exactly. Model weights, GGUF files, tokenizers, CUDA/GPU
+state, embeddings, and live generation are outside scope and SHALL remain
+unloaded and immutable.
+
+Exp5858 SHALL report prospective accuracy and lift, exact queries used, lift
+per query, acquisition precision/recall, forward transfer, recurrence,
+protected-prefix retention, easy/medium/hard strata, family lower bounds, unsafe
+accepts, rejected-buffer behavior, state size, cap pressure, rollback, restart,
+seed/group-bootstrap CI95 intervals, and the null/ablation controls. The
+reduced-oracle arm SHALL be credited only when it has a positive prospective
+lower bound over frozen and random-query controls, retains the preregistered
+fraction of full-oracle lift at lower exact-query cost, has no family or hard
+case regression, has zero unsafe accepts, exact retention, exact rollback,
+exact restart, bounded state, and no weight mutation. A safe null is complete
+and retires this sparse-oracle extension.
+
+The terminal artifact MUST include `status`,
+`continuous_self_learning_task`, `preconditions_checked`,
+`upstream_hashes_and_gate_receipts`, `frozen_protocol_and_query_budgets`,
+`arm_definitions_and_event_parity`, `chronology_and_visibility_receipts`,
+`query_selection_and_rejected_buffer_receipts`,
+`versioned_consolidation_and_promotion`,
+`prospective_and_query_efficiency_metrics`,
+`forward_transfer_recurrence_and_retention`,
+`hard_case_and_family_lower_bounds`, `unsafe_accept_count`,
+`rollback_restart_and_state_hashes`, `memory_cap_accounting`,
+`no_model_weight_mutation`, `null_and_ablation_controls`,
+`retirement_decision`, `continuous_self_learning_ready_score`,
+`row_file_receipt`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal A/B state distinguishes self-learning evidence from a partial stream.
+- `continuous_self_learning_task`: Must be true and identifies the milestone's FR-11 experiment.
+- `preconditions_checked`: Gates, hashes, counts, budgets, validators, splits, seeds, resources, and outputs prevent invalid learning.
+- `upstream_hashes_and_gate_receipts`: Only clean lifecycle and replay evidence may enter.
+- `frozen_protocol_and_query_budgets`: Science-time policy and budget changes are forbidden.
+- `arm_definitions_and_event_parity`: Identical chronological events isolate adaptive-state and query effects.
+- `chronology_and_visibility_receipts`: No future label can influence a current decision.
+- `query_selection_and_rejected_buffer_receipts`: Sparse feedback and failed edits remain auditable.
+- `versioned_consolidation_and_promotion`: Only held-out exact validation can promote external memory.
+- `prospective_and_query_efficiency_metrics`: Learning value and exact feedback cost are jointly measured.
+- `forward_transfer_recurrence_and_retention`: New learning cannot hide forgetting or failed recovery.
+- `hard_case_and_family_lower_bounds`: Negative transfer on hard cases or one family blocks readiness.
+- `unsafe_accept_count`: Must be bare zero.
+- `rollback_restart_and_state_hashes`: Versioned state must restore and resume exactly.
+- `memory_cap_accounting`: Continuous learning remains bounded.
+- `no_model_weight_mutation`: Must be true; immutable GGUF weights are a hard boundary.
+- `null_and_ablation_controls`: Random, never, always, shuffled, reset, and feature ablations test causality.
+- `retirement_decision`: Same blocked/no-lift outcome closes the reduced-oracle scope.
+- `continuous_self_learning_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5859.
+- `row_file_receipt`: Path, row count, and hash expose all prospective decisions.
+- `duration_s`: Measured wall time exposes bootstrap-only learning.
+- `inference_substrate`: `deterministic_exact_verifier_and_replay_no_llm` declares external-state learning without model inference.
+- `verifier_is_oracle`: True records exact labels and promotion authority.
+- `field_provenance`: Every metric and state edit traces to events, queries, validators, and hashes.
+- `test_commands`: Commands document gates, visibility, arms, metrics, controls, state, and safety.
+- `test_exit_codes`: Exit codes prevent unsafe or incomplete learning becoming readiness.
+- `reproducibility_checksum`: A checksum detects event, budget, selector, seed, or state drift.
+- `honest_verdict`: A terminal prefix states ready, null, unsafe, retired, or blocked outcome.
+
+`continuous_self_learning_ready_score` SHALL be the bare scalar `1.0` only when
+Exp5856 and Exp5857 gates are clean, every required test exit code is zero,
+reduced-oracle lift lower bounds over frozen and random-query controls are
+positive, reduced-oracle retains at least `0.70` of full-oracle lift while using
+at most `0.40` of full-oracle exact-query cost, every family and hardness lower
+bound is non-negative with aggregate positive lower bounds, unsafe accepts are
+zero, protected-prefix retention is exactly `1.0`, rollback and restart hashes
+match exactly, state remains under cap, all controls fail closed, and model
+weights remain immutable. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5858-PRECONDITIONS: Clean Gates And Headroom Are Required
+
+**Given** Exp5856 lifecycle rows and Exp5857 replay evidence are present
+**When** Exp5858 checks preconditions
+**Then** both promotion gates are replayed, all required upstream files and
+schemas are hashed, every family and change type has at least 30 events, query
+budget headroom and resources are adequate, and atomic result/checkpoint paths
+are writable.
+
+### SCENARIO-LEARN-5858-QUERY-SELECTION: Reduced Oracle Is Prospective
+
+**Given** frozen, full-oracle, random-query, and reduced-oracle arms
+**When** Exp5858 replays chronological events
+**Then** every arm receives the same events, seeds, validators, memory cap, and
+checkpoint rules
+**And** the reduced-oracle selector uses only current or past label-blind state
+**And** future labels stay sealed until the event arrives.
+
+### SCENARIO-LEARN-5858-PROMOTION-ROLLBACK: Sparse Updates Are Versioned
+
+**Given** exact-query answers, rejected edits, held-out validation, and slow
+consolidation
+**When** the reduced-oracle arm updates external memory
+**Then** accepted memory is promoted only by exact validation, rejected edits are
+buffered without promotion, rollback restores exact pre-edit hashes, restart
+reproduces the same final state, and model weights remain immutable.
+
+### SCENARIO-LEARN-5858-METRICS-CONTROLS: Sparse Oracle Credit Is Causal
+
+**Given** query-order permutation, random-query, always-query, never-query,
+shuffled-label rejection, selector-feature ablation, memory reset, and
+duplicate-group controls
+**When** Exp5858 computes query efficiency and transfer metrics
+**Then** reduced-oracle credit requires positive lower bounds over frozen and
+random-query controls, a preregistered fraction of full-oracle lift at lower
+query cost, no hard-case or family regression, zero unsafe accepts, bounded
+state, and all controls failing closed.
+
+### SCENARIO-LEARN-5858-FAIL-CLOSED: Unsafe Or Null Evidence Does Not Promote
+
+**Given** missing gates, failed tests, selector leakage, unsafe accepts,
+rollback mismatch, restart mismatch, memory-cap overflow, exhausted query
+budget, or model-weight mutation
+**When** Exp5858 validates the artifact
+**Then** `continuous_self_learning_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`, `unsafe:`, `null:`, or
+`retired:`.
+
+## Implementation Status (Exp 5858)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5858 | Implemented (`python/carnot/experiment_5858_reduced_oracle_continuous_self_learning.py`, `results/experiment_5858_reduced_oracle_continuous_self_learning.json`, `results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl`) | Implemented (`tests/python/test_experiment_5858_reduced_oracle_continuous_self_learning.py`) |
