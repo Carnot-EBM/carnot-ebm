@@ -16,6 +16,7 @@ RUST_AVAILABLE: bool
 
 try:
     from carnot._rust import (  # type: ignore[import-not-found]
+        RustAdaptiveStateKernel,
         RustBoltzmannModel,
         RustGibbsModel,
         RustHMCSampler,
@@ -33,6 +34,7 @@ try:
     RUST_AVAILABLE = True
 except ImportError:
     RUST_AVAILABLE = False
+    RustAdaptiveStateKernel = None  # type: ignore[assignment,misc]
     RustIsingModel = None  # type: ignore[assignment,misc]
     RustGibbsModel = None  # type: ignore[assignment,misc]
     RustBoltzmannModel = None  # type: ignore[assignment,misc]
@@ -48,6 +50,7 @@ except ImportError:
 
 __all__ = [
     "RUST_AVAILABLE",
+    "RustAdaptiveStateKernel",
     "RustBoltzmannModel",
     "RustGibbsModel",
     "RustHMCSampler",

@@ -38,13 +38,14 @@
 use ndarray::{Array1, ArrayView1, ArrayView2};
 use std::collections::HashMap;
 
+pub mod adaptive_state;
 pub mod benchmarks;
 pub mod error;
 pub mod init;
 pub mod math;
 pub mod serialize;
-pub mod verify;
 pub mod verification_learning;
+pub mod verify;
 
 pub use error::CarnotError;
 

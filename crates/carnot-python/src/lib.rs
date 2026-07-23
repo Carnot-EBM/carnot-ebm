@@ -10,6 +10,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 
+mod adaptive_state;
 mod kv260;
 mod one_axis_tempering;
 mod pipeline;
@@ -449,6 +450,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Verification learning
     verification_learning::register_verification_learning_module(m)?;
+
+    // Adaptive-state microkernel
+    adaptive_state::register_adaptive_state_module(m)?;
 
     // KV260 Potts hardware sampler
     kv260::register_kv260_module(m)?;
