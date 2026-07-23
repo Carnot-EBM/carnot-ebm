@@ -379,6 +379,7 @@ class ToolLoopLookaheadSession:
         from carnot.agentic.arc_agi3_world_model import grid_of
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
         from carnot.agentic.arc_game_adapters import _json_action_label
+        from carnot.agentic.arc_graph_explore import rich_action_candidates
 
         if frame is None:
             return []
@@ -391,13 +392,38 @@ class ToolLoopLookaheadSession:
         outcome = run_tool_loop(grid, self.recent, avail, self.proposer, max_turns=self.max_turns)
         self._tool_loop_calls += 1
         self._transcripts.append(outcome.transcript)
-        if not outcome.ok or not outcome.candidates:
-            return []
-        labels = []
-        for cand in outcome.candidates:
-            label = _json_action_label(cand.action_id, cand.data)
-            self._pending_confidence[label] = cand.confidence
-            labels.append(label)
+        labels: list[str] = []
+        seen_labels: set[str] = set()
+        if outcome.ok:
+            for cand in outcome.candidates:
+                label = _json_action_label(cand.action_id, cand.data)
+                self._pending_confidence[label] = cand.confidence
+                labels.append(label)
+                seen_labels.add(label)
+        # A real diagnosed failure mode (found via a direct trace, not assumed): if the tool
+        # loop's ONLY candidate turns out to be a no-op (a real risk with a 9B model's often
+        # uninformed first guess -- observed directly: a click on empty background), that
+        # candidate's resulting state hashes IDENTICAL to the parent and never gets pushed to
+        # the search frontier at all (correctly -- it is not a new state). With only one
+        # candidate offered, the search then has NOTHING left to explore and dies after one
+        # wasted node, regardless of the 12-turn tool-loop budget or the max_nodes search
+        # budget -- neither ever gets to matter. Padding with a couple of cheap, STRUCTURED
+        # fallback candidates (the same rich_action_candidates() salience ranking the rest of
+        # the project's search machinery already uses) guarantees the search always has real
+        # alternatives to branch into, even when the tool loop's own judgment is a dead end.
+        # Given a LOW confidence (0.1, well below any genuine LLM judgment) so best-first order
+        # still tries the tool loop's own choices first when they exist.
+        if len(labels) < 2:
+            try:
+                for cand in rich_action_candidates(frame)[:3]:
+                    fallback_label = _json_action_label(cand.action_id, cand.data)
+                    if fallback_label in seen_labels:
+                        continue
+                    self._pending_confidence[fallback_label] = 0.1
+                    labels.append(fallback_label)
+                    seen_labels.add(fallback_label)
+            except Exception:
+                pass
         # apply() (below) is called by OfflineSolver with frame=None during search expansion
         # (arc_solver_kit.py:5275,5329 -- only _replay's own top-level call passes the real
         # frame). action_labels() is the only hook that reliably receives the node's real
