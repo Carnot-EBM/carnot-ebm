@@ -44474,6 +44474,150 @@ entry, the checksum is stable, `inference_substrate` equals
 |---|---|---|
 | REQ-REPORT-5823 | Implemented (`python/carnot/experiment_5823_transition_v519.py`, `results/experiment_5823_transition_v519.json`) | Implemented (`tests/python/test_experiment_5823_transition_v519.py`) |
 
+### REQ-REPORT-5837: V520 Transition Archives Terminal V519 Without Laundering Flagged Evidence
+
+The Exp5837 workflow SHALL read the terminal `.519` completion ledger, active
+roadmap, optional `research-roadmap-next.yaml`, vNEXT proposal document,
+conductor log, exclusion manifest, Exp5823 through Exp5829 declared
+deliverables, `scripts/evidence_index_collision_preflight.py`,
+`scripts/in_process_doc_reconcile.py`, and this spec. It SHALL write
+`results/experiment_5837_transition_v520.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL resolve activated evidence only by the exact tuple
+`(milestone, task_id, declared_deliverable)`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL parse both roadmap inputs when present; hash the completion
+ledger, conductor log, exclusion manifest, helper scripts, spec, and every
+declared `.519` deliverable; record disk, RAM, and writable-path receipts; and
+fail closed when the exact `.519` activated identity set is ambiguous, a
+declared deliverable is missing or malformed, or a protected file changes. It
+SHALL append `.519` to `research-complete.yaml` exactly once only when the
+exact `.519` milestone block is absent, and otherwise SHALL leave historical
+completion blocks byte-for-byte unchanged without deduplicating, normalizing,
+reordering, or rewriting history.
+
+The workflow SHALL classify exactly Exp5823 through Exp5829 into disjoint
+classes: clean positive, clean null/negative, blocked/skipped, flagged,
+flagged-upstream/provisional, missing, and proposal-only. Exp5823, Exp5825,
+Exp5826, and Exp5827 SHALL be clean positive when their exact artifacts are
+terminal complete and clean under the fresh verifier receipts. Exp5824 SHALL
+be clean null when it completes with zero accepted post-V519 source deltas.
+Exp5828 SHALL remain flagged when its artifact preserves
+`flagged_adversarial=true` plus CRITICAL `DURATION_TOO_SHORT` and WARN
+`METHODOLOGY_MISSING`; the transition SHALL NOT clear, rewrite, or mutate that
+stamp. Exp5829 SHALL be flagged-upstream/provisional when it reports positive
+selective replay while declaring the flagged Exp5828 lifecycle artifact as an
+upstream input. Flagged or provisional evidence SHALL NOT appear in clean
+success or headline-eligible lists.
+
+The workflow SHALL independently run the live adversarial verifier on Exp5825
+through Exp5829 and record, per artifact, the command, exit code, receipt hash,
+CRITICAL findings, WARN findings, and headline eligibility. The expected
+complete transition requires Exp5825, Exp5826, Exp5827, and Exp5829 to have no
+fresh CRITICAL findings; Exp5828's fresh receipt SHALL preserve the existing
+CRITICAL `DURATION_TOO_SHORT` and WARN `METHODOLOGY_MISSING` findings instead
+of treating the nonzero verifier exit as a transition failure.
+
+The workflow SHALL record Exp5830 through Exp5836 as
+`reserved_unactivated_task_ids`. It SHALL scan active and optional next
+roadmaps, vNEXT proposals, completion history, exclusion manifest, result
+files, and prior transition allocation artifacts for Exp5837 through Exp5848.
+Active-roadmap and vNEXT proposal mentions MAY be recorded as allowed
+allocation references, and the Exp5837 result path MAY be owned by this
+workflow. Any unowned result file, completion-history entry,
+exclusion-manifest entry, optional next-roadmap entry, or prior-transition
+allocation that occupies Exp5837 through Exp5848 SHALL make the artifact
+terminal `blocked:` with bare integer `next_range_collision_count > 0`. A
+complete allocation SHALL require `next_range_collision_count=0`.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `declared_deliverable_matrix`,
+`adversarial_verifier_receipts`, `outcome_classification`,
+`flagged_evidence_preserved`, `reserved_unactivated_task_ids`,
+`research_complete_append_count`, `next_task_range`, bare
+`next_range_collision_count`, `docs_reconciled`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty principle entry. The
+transition-owned reconciliation for this task SHALL be limited to spec, test,
+implementation, and result artifacts; operator-owned status, changelog, and
+traceability reconciliation may be explicitly deferred when the task prompt
+forbids touching those files.
+
+Required field principles:
+
+- `status`: principle "A normalized terminal state distinguishes a complete transition from a bootstrap artifact."
+- `preconditions_checked`: principle "Exact hashes and resource checks prevent archival against missing or ambiguous evidence."
+- `milestone_transition`: principle "Explicit source and destination milestones prevent numeric-prefix aliasing."
+- `declared_deliverable_matrix`: principle "Declared paths plus conductor outcomes are the authority for activated task identity."
+- `adversarial_verifier_receipts`: principle "Fresh command and exit-code receipts preserve the live quality authority."
+- `outcome_classification`: principle "Disjoint classes prevent flagged or provisional evidence from becoming a clean success."
+- `flagged_evidence_preserved`: principle "True proves the transition did not launder Exp5828 or its downstream taint."
+- `reserved_unactivated_task_ids`: principle "Proposal-only identities remain tombstoned and cannot silently collide."
+- `research_complete_append_count`: principle "An exact append count prevents duplicate milestone history."
+- `next_task_range`: principle "A declared interval makes downstream allocation auditable."
+- `next_range_collision_count`: principle "Only a bare zero authorizes Exp5837-Exp5848."
+- `docs_reconciled`: principle "Specs, traceability, and ops summaries must match archived evidence classes."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only execution."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference."
+- `field_provenance`: principle "Per-field paths and hashes make the transition independently auditable."
+- `test_commands`: principle "Recorded commands show which identity, verifier, and collision checks ran."
+- `test_exit_codes`: principle "Exit codes prevent failed checks from being narrated as passing."
+- `reproducibility_checksum`: principle "A content hash detects later ledger or allocation drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
+
+#### SCENARIO-REPORT-5837: Exact V519 Evidence Archives Into V520
+
+**Given** exact `.519` completion history declares Exp5823 through Exp5829
+**And** their exact declared artifacts are readable and hashable
+**And** fresh adversarial verifier receipts are recorded for Exp5825 through
+Exp5829
+**And** Exp5837 through Exp5848 have no unowned collisions
+**When** the Exp5837 workflow runs
+**Then** it writes a complete transition artifact, classifies Exp5823,
+Exp5825, Exp5826, and Exp5827 as clean positive, Exp5824 as clean null,
+Exp5828 as flagged, Exp5829 as flagged-upstream/provisional, records Exp5830
+through Exp5836 as reserved proposal-only ids, sets
+`research_complete_append_count=0` when `.519` history is already present, and
+leaves the active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5837-VERIFIER-RECEIPTS: Exp5828 Stamp And Exp5829 Taint Are Preserved
+
+**Given** Exp5828 already carries `flagged_adversarial=true` with CRITICAL
+`DURATION_TOO_SHORT` and WARN `METHODOLOGY_MISSING`
+**And** Exp5829 declares the flagged Exp5828 lifecycle artifact upstream
+**When** fresh verifier receipts are normalized
+**Then** Exp5828 remains headline-ineligible because of its live critical
+finding, Exp5829 remains headline-ineligible because of upstream taint, and
+neither task appears in the clean success class.
+
+#### SCENARIO-REPORT-5837-COLLISION-BLOCK: Occupied V520 Ids Fail Closed
+
+**Given** any unowned result, completion-history entry, exclusion-manifest
+entry, optional next-roadmap entry, or prior-transition allocation occupies
+Exp5837 through Exp5848
+**When** the Exp5837 workflow scans the next range
+**Then** it emits a terminal `blocked:` artifact, records a bare integer
+`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
+historical evidence to hide the collision.
+
+#### SCENARIO-REPORT-5837-FIELD-PROVENANCE: Required Fields Are Auditable
+
+**Given** the Exp5837 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required field has a matching principle and field-provenance
+entry with source paths and hashes, the checksum is stable,
+`inference_substrate` equals `aggregation_from_upstream_artifacts`,
+`next_task_range` equals `exp5837-exp5848`, and the terminal verdict starts
+with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5837)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5837 | Implemented (`python/carnot/experiment_5837_transition_v520.py`, `results/experiment_5837_transition_v520.json`) | Implemented (`tests/python/test_experiment_5837_transition_v520.py`) |
+
 ### REQ-REPORT-5824: V519 Post-Marker Source Delta Ingestion Preserves Sealed Roadmap Boundaries
 
 The Exp5824 workflow SHALL run a bounded execution refresh after the

@@ -1,0 +1,1252 @@
+{
+  "adversarial_verifier_receipts": [
+    {
+      "artifact_path": "results/experiment_5825_certified_adaptive_memory_contract.json",
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5825_certified_adaptive_memory_contract.json",
+      "critical_findings": [],
+      "exit_code": 0,
+      "headline_eligible": true,
+      "headline_ineligible_reason": "clean_live_receipt",
+      "present": true,
+      "receipt_hash": "sha256:3a8d1a53f393578bb21c18970376d8c1dc67c4cec4177c3dfb028ce886be9f4e",
+      "stdout_parse_error": null,
+      "task_id": "exp5825-certified-adaptive-memory-contract",
+      "warn_findings": []
+    },
+    {
+      "artifact_path": "results/experiment_5826_out_of_template_constraint_stream.json",
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5826_out_of_template_constraint_stream.json",
+      "critical_findings": [],
+      "exit_code": 0,
+      "headline_eligible": true,
+      "headline_ineligible_reason": "clean_live_receipt",
+      "present": true,
+      "receipt_hash": "sha256:549871b871166860bcaf3c2b4ce27c02db99d65e339fc2fda0cbcd37775403b9",
+      "stdout_parse_error": null,
+      "task_id": "exp5826-out-of-template-constraint-stream",
+      "warn_findings": []
+    },
+    {
+      "artifact_path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+      "critical_findings": [],
+      "exit_code": 0,
+      "headline_eligible": true,
+      "headline_ineligible_reason": "clean_live_receipt",
+      "present": true,
+      "receipt_hash": "sha256:76daa2e2dade62ea991ea86a1be6ff0c0e0ea8a26c48dfc5eec93e1e93d1cc33",
+      "stdout_parse_error": null,
+      "task_id": "exp5827-minimal-core-structural-acquisition-ab",
+      "warn_findings": []
+    },
+    {
+      "artifact_path": "results/experiment_5828_future_validated_structural_memory.json",
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5828_future_validated_structural_memory.json",
+      "critical_findings": [
+        {
+          "detail": "duration_s=0.793358 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "exit_code": 1,
+      "headline_eligible": false,
+      "headline_ineligible_reason": "fresh_critical_findings",
+      "present": true,
+      "receipt_hash": "sha256:a62f9b35be05d85008f589e3acc931eea0b3ccd06f7159ca7842078d0385a667",
+      "stdout_parse_error": null,
+      "task_id": "exp5828-future-validated-structural-memory",
+      "warn_findings": [
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5829_transfer_selective_replay_audit.json",
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5829_transfer_selective_replay_audit.json",
+      "critical_findings": [],
+      "exit_code": 0,
+      "headline_eligible": false,
+      "headline_ineligible_reason": "upstream_flagged_exp5828",
+      "present": true,
+      "receipt_hash": "sha256:416a94f305ac09ff51dfd895d75f615ce1ed258bc7ddd896e53911025023bd19",
+      "stdout_parse_error": null,
+      "task_id": "exp5829-transfer-selective-replay-audit",
+      "warn_findings": []
+    }
+  ],
+  "canonical_identity_contract": {
+    "canonical_path_rule": "exact declared_deliverable only",
+    "identity_tuple": [
+      "milestone",
+      "task_id",
+      "declared_deliverable"
+    ],
+    "numeric_prefix_matches": "aliases_only",
+    "proposal_only_tasks": "reserved_unactivated_not_execution_evidence",
+    "selection_policy": "exact_declared_deliverable"
+  },
+  "collision_scan": {
+    "allowed_allocation_references": [
+      {
+        "kind": "allowed_allocation_reference",
+        "path": "research-roadmap.yaml"
+      },
+      {
+        "kind": "allowed_allocation_reference",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+      }
+    ],
+    "collision_free": true,
+    "next_declared_deliverables": [
+      "results/experiment_5837_transition_v520.json",
+      "results/experiment_5838_v520_source_delta_ingestion.json",
+      "results/experiment_5839_v519_evidence_qualification.json",
+      "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+      "results/experiment_5841_sota_comparative_embedding_corpus.json",
+      "results/experiment_5842_cross_family_comparative_energy_verifier.json",
+      "results/experiment_5843_sparse_oracle_continuous_learning.json",
+      "results/experiment_5844_arc_write_protected_fact_tape.json",
+      "results/experiment_5845_arc_world_feedback_acquisition_ab.json",
+      "results/experiment_5846_bounded_adaptive_memory_microkernel.json",
+      "results/experiment_5847_attached_board_memory_receipts.json",
+      "results/experiment_5848_capstone_v520.json"
+    ],
+    "next_extra_deliverables": [
+      "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl",
+      "results/experiment_5841_sota_comparative_embedding_corpus.npz"
+    ],
+    "next_task_ids": [
+      "exp5837-transition-v520",
+      "exp5838-v520-source-delta-ingestion",
+      "exp5839-v519-evidence-qualification",
+      "exp5840-exact-counterfactual-embedding-fixture",
+      "exp5841-sota-comparative-embedding-corpus",
+      "exp5842-cross-family-comparative-energy-verifier",
+      "exp5843-sparse-oracle-continuous-learning",
+      "exp5844-arc-write-protected-fact-tape",
+      "exp5845-arc-world-feedback-acquisition-ab",
+      "exp5846-bounded-adaptive-memory-microkernel",
+      "exp5847-attached-board-memory-receipts",
+      "exp5848-capstone-v520"
+    ],
+    "preexisting_collision_count": 0,
+    "preexisting_collisions": []
+  },
+  "conductor_unchanged": true,
+  "declared_deliverable_matrix": [
+    {
+      "artifact_critical_findings": [],
+      "artifact_flagged_adversarial": false,
+      "artifact_warn_findings": [],
+      "canonical_artifact_honest_verdict": "complete: archived terminal .518 evidence by exact declared deliverables into .519; Exp5813 clean-negative answer transport retired; Exp5816-Exp5822 tombstoned; next_range_collision_count=0; research_complete_append_count=0",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5823_transition_v519.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 00:09 UTC | Archive terminal .518 evidence, retire finite-ID a | OK | 118 passed, 1 warning in 14.42s |",
+      "conductor_outcome": "OK",
+      "declared_deliverable": "results/experiment_5823_transition_v519.json",
+      "identity": [
+        "2026.07.519",
+        "exp5823-transition-v519",
+        "results/experiment_5823_transition_v519.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "clean-positive",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5823-transition-v519",
+      "title": "Archive terminal .518 evidence, retire finite-ID answer transport, and allocate .519"
+    },
+    {
+      "artifact_critical_findings": [],
+      "artifact_flagged_adversarial": false,
+      "artifact_warn_findings": [],
+      "canonical_artifact_honest_verdict": "complete: no accepted post-V519 source deltas; references unchanged",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5824_v519_source_delta_ingestion.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 00:33 UTC | Time-windowed post-V519 literature and implementat | OK | 88 passed, 2 warnings in 11.65s |",
+      "conductor_outcome": "OK",
+      "declared_deliverable": "results/experiment_5824_v519_source_delta_ingestion.json",
+      "identity": [
+        "2026.07.519",
+        "exp5824-v519-source-delta-ingestion",
+        "results/experiment_5824_v519_source_delta_ingestion.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "clean-null",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5824-v519-source-delta-ingestion",
+      "title": "Time-windowed post-V519 literature and implementation freshness receipt"
+    },
+    {
+      "adversarial_critical_findings": [],
+      "adversarial_exit_code": 0,
+      "adversarial_receipt_hash": "sha256:3a8d1a53f393578bb21c18970376d8c1dc67c4cec4177c3dfb028ce886be9f4e",
+      "adversarial_warn_findings": [],
+      "artifact_critical_findings": [],
+      "artifact_flagged_adversarial": false,
+      "artifact_warn_findings": [],
+      "canonical_artifact_honest_verdict": "complete: certified_adaptive_memory_contract_ready",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5825_certified_adaptive_memory_contract.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 01:34 UTC | Canonical certified-event and adaptive-memory pref | OK | 140 passed, 1 warning in 26.89s |",
+      "conductor_outcome": "OK",
+      "declared_deliverable": "results/experiment_5825_certified_adaptive_memory_contract.json",
+      "headline_eligible": true,
+      "identity": [
+        "2026.07.519",
+        "exp5825-certified-adaptive-memory-contract",
+        "results/experiment_5825_certified_adaptive_memory_contract.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "clean-positive",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5825-certified-adaptive-memory-contract",
+      "title": "Canonical certified-event and adaptive-memory preflight contract"
+    },
+    {
+      "adversarial_critical_findings": [],
+      "adversarial_exit_code": 0,
+      "adversarial_receipt_hash": "sha256:549871b871166860bcaf3c2b4ce27c02db99d65e339fc2fda0cbcd37775403b9",
+      "adversarial_warn_findings": [],
+      "artifact_critical_findings": [],
+      "artifact_flagged_adversarial": false,
+      "artifact_warn_findings": [],
+      "canonical_artifact_honest_verdict": "complete: out_of_template_constraint_event_stream_ready",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5826_out_of_template_constraint_stream.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed, 1 warning in 28.86s |",
+      "conductor_outcome": "OK",
+      "declared_deliverable": "results/experiment_5826_out_of_template_constraint_stream.json",
+      "headline_eligible": true,
+      "identity": [
+        "2026.07.519",
+        "exp5826-out-of-template-constraint-stream",
+        "results/experiment_5826_out_of_template_constraint_stream.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "clean-positive",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5826-out-of-template-constraint-stream",
+      "title": "Gated on Exp5825 contract: chronological out-of-template constraint structure stream"
+    },
+    {
+      "adversarial_critical_findings": [],
+      "adversarial_exit_code": 0,
+      "adversarial_receipt_hash": "sha256:76daa2e2dade62ea991ea86a1be6ff0c0e0ea8a26c48dfc5eec93e1e93d1cc33",
+      "adversarial_warn_findings": [],
+      "artifact_critical_findings": [],
+      "artifact_flagged_adversarial": false,
+      "artifact_warn_findings": [],
+      "canonical_artifact_honest_verdict": "complete: structural_learning_credited",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed, 1 warning in 21.45s |",
+      "conductor_outcome": "OK",
+      "declared_deliverable": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+      "headline_eligible": true,
+      "identity": [
+        "2026.07.519",
+        "exp5827-minimal-core-structural-acquisition-ab",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "clean-positive",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5827-minimal-core-structural-acquisition-ab",
+      "title": "Gated on Exp5826 stream: minimal-core and active-query structural acquisition A/B"
+    },
+    {
+      "adversarial_critical_findings": [
+        "DURATION_TOO_SHORT"
+      ],
+      "adversarial_exit_code": 1,
+      "adversarial_receipt_hash": "sha256:a62f9b35be05d85008f589e3acc931eea0b3ccd06f7159ca7842078d0385a667",
+      "adversarial_warn_findings": [
+        "METHODOLOGY_MISSING"
+      ],
+      "artifact_critical_findings": [
+        "DURATION_TOO_SHORT"
+      ],
+      "artifact_flagged_adversarial": true,
+      "artifact_warn_findings": [
+        "METHODOLOGY_MISSING"
+      ],
+      "canonical_artifact_honest_verdict": "complete: future_validated_structural_memory_lifecycle_credited",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5828_future_validated_structural_memory.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 03:14 UTC | Gated on Exp5827 structural lift: future-validated | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+      "conductor_outcome": "FLAGGED",
+      "declared_deliverable": "results/experiment_5828_future_validated_structural_memory.json",
+      "headline_eligible": false,
+      "identity": [
+        "2026.07.519",
+        "exp5828-future-validated-structural-memory",
+        "results/experiment_5828_future_validated_structural_memory.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "flagged",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5828-future-validated-structural-memory",
+      "title": "Gated on Exp5827 structural lift: future-validated write-protected continuous memory"
+    },
+    {
+      "adversarial_critical_findings": [],
+      "adversarial_exit_code": 0,
+      "adversarial_receipt_hash": "sha256:416a94f305ac09ff51dfd895d75f615ce1ed258bc7ddd896e53911025023bd19",
+      "adversarial_warn_findings": [],
+      "artifact_critical_findings": [],
+      "artifact_flagged_adversarial": false,
+      "artifact_warn_findings": [],
+      "canonical_artifact_honest_verdict": "positive: signature_compatible_replay_credited",
+      "canonical_artifact_loadable": true,
+      "canonical_artifact_path": "results/experiment_5829_transfer_selective_replay_audit.json",
+      "canonical_artifact_present": true,
+      "canonical_artifact_sha256": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+      "canonical_artifact_status": "complete",
+      "conductor_latest_evidence_line": "| 2026-07-23 03:37 UTC | Gated on Exp5828 durable memory: transfer-selectiv | OK | 88 passed, 1 warning in 33.81s |",
+      "conductor_outcome": "OK",
+      "declared_deliverable": "results/experiment_5829_transfer_selective_replay_audit.json",
+      "headline_eligible": false,
+      "identity": [
+        "2026.07.519",
+        "exp5829-transfer-selective-replay-audit",
+        "results/experiment_5829_transfer_selective_replay_audit.json"
+      ],
+      "milestone": "2026.07.519",
+      "outcome_class": "flagged-upstream/provisional",
+      "research_complete_result": "OK (conductor)",
+      "selection_policy": "exact_declared_deliverable",
+      "task_id": "exp5829-transfer-selective-replay-audit",
+      "title": "Gated on Exp5828 durable memory: transfer-selective replay and recurrence audit",
+      "upstream_taint_source_task_id": "exp5828-future-validated-structural-memory"
+    }
+  ],
+  "docs_reconciled": {
+    "deferred_files": [
+      "_bmad/traceability.md",
+      "ops/status.md",
+      "ops/changelog.md"
+    ],
+    "deferred_reason": "operator stop-when-done rule delegates ops/status/traceability updates",
+    "mode": "transition_owned_spec_tests_module_result_only",
+    "operator_owned_docs_deferred": true,
+    "transition_owned_files": [
+      "openspec/capabilities/research-reporting/spec.md",
+      "python/carnot/experiment_5837_transition_v520.py",
+      "tests/python/test_experiment_5837_transition_v520.py",
+      "results/experiment_5837_transition_v520.json"
+    ]
+  },
+  "duplicate_history_diagnostics": {
+    "duplicate_history_block_count": 895,
+    "duplicate_milestone_blocks": [
+      {
+        "block_count": 684,
+        "milestone": "2026.07.510",
+        "mutation": "preserved_read_only",
+        "unique_block_signature_count": 1
+      },
+      {
+        "block_count": 192,
+        "milestone": "2026.07.514",
+        "mutation": "preserved_read_only",
+        "unique_block_signature_count": 1
+      },
+      {
+        "block_count": 14,
+        "milestone": "2026.07.516",
+        "mutation": "preserved_read_only",
+        "unique_block_signature_count": 1
+      },
+      {
+        "block_count": 9,
+        "milestone": "2026.07.518",
+        "mutation": "preserved_read_only",
+        "unique_block_signature_count": 1
+      }
+    ],
+    "history_mutation_policy": "append_once_if_absent_no_dedup_sort_or_rewrite",
+    "milestone_from_block_count": 1,
+    "milestone_from_unique_signature_count": 1
+  },
+  "duration_s": 18.274926,
+  "experiment": "experiment_5837_transition_v520",
+  "experiment_id": "exp5837-transition-v520",
+  "field_principles": {
+    "adversarial_verifier_receipts": "Fresh command and exit-code receipts preserve the live quality authority.",
+    "canonical_identity_contract": "Defines canonical evidence as milestone, task id, and declared deliverable.",
+    "collision_scan": "Shows the Exp5837-Exp5848 namespace scan and collision sources.",
+    "conductor_unchanged": "Bare boolean must remain true by operator instruction.",
+    "declared_deliverable_matrix": "Declared paths plus conductor outcomes are the authority for activated task identity.",
+    "docs_reconciled": "Specs, traceability, and ops summaries must match archived evidence classes.",
+    "duplicate_history_diagnostics": "Reports duplicate history without rewriting it.",
+    "duration_s": "Measured wall time exposes bootstrap-only execution.",
+    "experiment": "Names the local experiment slug without relying on paths.",
+    "experiment_id": "Binds this receipt to the conductor task id.",
+    "field_principles": "Maps every top-level artifact field to its evidence boundary.",
+    "field_provenance": "Per-field paths and hashes make the transition independently auditable.",
+    "flagged_evidence_preserved": "True proves the transition did not launder Exp5828 or its downstream taint.",
+    "honest_verdict": "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome.",
+    "inference_substrate": "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference.",
+    "milestone_transition": "Explicit source and destination milestones prevent numeric-prefix aliasing.",
+    "next_range_collision_count": "Only a bare zero authorizes Exp5837-Exp5848.",
+    "next_task_range": "A declared interval makes downstream allocation auditable.",
+    "outcome_classification": "Disjoint classes prevent flagged or provisional evidence from becoming a clean success.",
+    "preconditions_checked": "Exact hashes and resource checks prevent archival against missing or ambiguous evidence.",
+    "random_seed": "Deterministic metadata for checksum stability; no stochastic run occurs.",
+    "reproducibility_checksum": "A content hash detects later ledger or allocation drift.",
+    "research_complete_append_count": "An exact append count prevents duplicate milestone history.",
+    "research_roadmap_unchanged": "Bare boolean must remain true because active roadmap mutation is forbidden.",
+    "reserved_unactivated_range": "Names the proposal-only `.519` identity interval.",
+    "reserved_unactivated_task_ids": "Proposal-only identities remain tombstoned and cannot silently collide.",
+    "result_path": "Names the emitted deliverable path.",
+    "run_date": "Records the operator-specified transition date as a fixed value.",
+    "same_number_alias_groups": "Records same-number files as aliases, never canonical evidence.",
+    "schema": "Identifies the versioned Exp5837 transition artifact schema.",
+    "spec_refs": "Anchors the artifact to REQ-REPORT-5837 and its scenarios.",
+    "status": "A normalized terminal state distinguishes a complete transition from a bootstrap artifact.",
+    "test_commands": "Recorded commands show which identity, verifier, and collision checks ran.",
+    "test_exit_codes": "Exit codes prevent failed checks from being narrated as passing."
+  },
+  "field_provenance": {
+    "adversarial_verifier_receipts": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Fresh command and exit-code receipts preserve the live quality authority.",
+      "sha256_by_source": {
+        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
+      },
+      "sources": [
+        "scripts/adversarial_verify.py",
+        "results/experiment_5825_certified_adaptive_memory_contract.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5829_transfer_selective_replay_audit.json"
+      ]
+    },
+    "canonical_identity_contract": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Defines canonical evidence as milestone, task id, and declared deliverable.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "collision_scan": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Shows the Exp5837-Exp5848 namespace scan and collision sources.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "conductor_unchanged": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Bare boolean must remain true by operator instruction.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "declared_deliverable_matrix": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Declared paths plus conductor outcomes are the authority for activated task identity.",
+      "sha256_by_source": {
+        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
+        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
+        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
+        "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
+        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8"
+      },
+      "sources": [
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "results/experiment_5823_transition_v519.json",
+        "results/experiment_5824_v519_source_delta_ingestion.json",
+        "results/experiment_5825_certified_adaptive_memory_contract.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5829_transfer_selective_replay_audit.json"
+      ]
+    },
+    "docs_reconciled": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Specs, traceability, and ops summaries must match archived evidence classes.",
+      "sha256_by_source": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227",
+        "tests/python/test_experiment_5837_transition_v520.py": "sha256:84e61611d64074ae4ec6f0ba9e2d3a3615c339af33f1cfa748cfe11275c9022b"
+      },
+      "sources": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "tests/python/test_experiment_5837_transition_v520.py",
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "duplicate_history_diagnostics": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Reports duplicate history without rewriting it.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "duration_s": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Measured wall time exposes bootstrap-only execution.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "experiment": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Names the local experiment slug without relying on paths.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "experiment_id": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Binds this receipt to the conductor task id.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "field_principles": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Maps every top-level artifact field to its evidence boundary.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "field_provenance": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Per-field paths and hashes make the transition independently auditable.",
+      "sha256_by_source": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "flagged_evidence_preserved": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "True proves the transition did not launder Exp5828 or its downstream taint.",
+      "sha256_by_source": {
+        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
+      },
+      "sources": [
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5829_transfer_selective_replay_audit.json",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "honest_verdict": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "inference_substrate": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "milestone_transition": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Explicit source and destination milestones prevent numeric-prefix aliasing.",
+      "sha256_by_source": {
+        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
+        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe"
+      },
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml"
+      ]
+    },
+    "next_range_collision_count": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Only a bare zero authorizes Exp5837-Exp5848.",
+      "sha256_by_source": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
+        "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
+        "research-roadmap-next.yaml": null,
+        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe",
+        "results/": null
+      },
+      "sources": [
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/"
+      ]
+    },
+    "next_task_range": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "A declared interval makes downstream allocation auditable.",
+      "sha256_by_source": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
+        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe"
+      },
+      "sources": [
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md"
+      ]
+    },
+    "outcome_classification": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Disjoint classes prevent flagged or provisional evidence from becoming a clean success.",
+      "sha256_by_source": {
+        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
+        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
+        "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
+        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8"
+      },
+      "sources": [
+        "ops/conductor-log.md",
+        "results/experiment_5823_transition_v519.json",
+        "results/experiment_5824_v519_source_delta_ingestion.json",
+        "results/experiment_5825_certified_adaptive_memory_contract.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5829_transfer_selective_replay_audit.json"
+      ]
+    },
+    "preconditions_checked": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Exact hashes and resource checks prevent archival against missing or ambiguous evidence.",
+      "sha256_by_source": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
+        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
+        "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
+        "research-roadmap-next.yaml": null,
+        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe",
+        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
+        "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
+        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+        "scripts/evidence_index_collision_preflight.py": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b",
+        "scripts/in_process_doc_reconcile.py": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
+      },
+      "sources": [
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "scripts/evidence_index_collision_preflight.py",
+        "scripts/in_process_doc_reconcile.py",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5823_transition_v519.json",
+        "results/experiment_5824_v519_source_delta_ingestion.json",
+        "results/experiment_5825_certified_adaptive_memory_contract.json",
+        "results/experiment_5826_out_of_template_constraint_stream.json",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5828_future_validated_structural_memory.json",
+        "results/experiment_5829_transfer_selective_replay_audit.json"
+      ]
+    },
+    "random_seed": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Deterministic metadata for checksum stability; no stochastic run occurs.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "A content hash detects later ledger or allocation drift.",
+      "sha256_by_source": {
+        "artifact_payload_excluding_checksum": null
+      },
+      "sources": [
+        "artifact_payload_excluding_checksum"
+      ]
+    },
+    "research_complete_append_count": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "An exact append count prevents duplicate milestone history.",
+      "sha256_by_source": {
+        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6"
+      },
+      "sources": [
+        "research-complete.yaml"
+      ]
+    },
+    "research_roadmap_unchanged": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Bare boolean must remain true because active roadmap mutation is forbidden.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "reserved_unactivated_range": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Names the proposal-only `.519` identity interval.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "reserved_unactivated_task_ids": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Proposal-only identities remain tombstoned and cannot silently collide.",
+      "sha256_by_source": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
+        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b"
+      },
+      "sources": [
+        "results/experiment_5823_transition_v519.json",
+        "openspec/change-proposals/research-roadmap-vNEXT.md"
+      ]
+    },
+    "result_path": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Names the emitted deliverable path.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "run_date": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Records the operator-specified transition date as a fixed value.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "same_number_alias_groups": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Records same-number files as aliases, never canonical evidence.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "schema": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Identifies the versioned Exp5837 transition artifact schema.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "spec_refs": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Anchors the artifact to REQ-REPORT-5837 and its scenarios.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "status": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "A normalized terminal state distinguishes a complete transition from a bootstrap artifact.",
+      "sha256_by_source": {
+        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
+      },
+      "sources": [
+        "python/carnot/experiment_5837_transition_v520.py"
+      ]
+    },
+    "test_commands": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Recorded commands show which identity, verifier, and collision checks ran.",
+      "sha256_by_source": {
+        "operator_test_receipts": null,
+        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
+      },
+      "sources": [
+        "operator_test_receipts",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "test_exit_codes": {
+      "derivation": "direct_read_or_deterministic_reconciliation",
+      "principle": "Exit codes prevent failed checks from being narrated as passing.",
+      "sha256_by_source": {
+        "operator_test_receipts": null,
+        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
+      },
+      "sources": [
+        "operator_test_receipts",
+        "scripts/adversarial_verify.py"
+      ]
+    }
+  },
+  "flagged_evidence_preserved": true,
+  "honest_verdict": "blocked: exp5837 transition preconditions failed: test_failures=['.venv/bin/pytest tests/python -q', '.venv/bin/python scripts/check_spec_coverage.py']",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_transition": {
+    "destination_milestone": "2026.07.520",
+    "source_milestone": "2026.07.519",
+    "task_identity_tuple": [
+      "milestone",
+      "task_id",
+      "declared_deliverable"
+    ]
+  },
+  "next_range_collision_count": 0,
+  "next_task_range": "exp5837-exp5848",
+  "outcome_classification": {
+    "blocked_skipped_task_ids": [],
+    "classification_by_task_id": {
+      "exp5823-transition-v519": "clean-positive",
+      "exp5824-v519-source-delta-ingestion": "clean-null",
+      "exp5825-certified-adaptive-memory-contract": "clean-positive",
+      "exp5826-out-of-template-constraint-stream": "clean-positive",
+      "exp5827-minimal-core-structural-acquisition-ab": "clean-positive",
+      "exp5828-future-validated-structural-memory": "flagged",
+      "exp5829-transfer-selective-replay-audit": "flagged-upstream/provisional"
+    },
+    "classification_policy": "clean-positive, clean-null, clean-negative, blocked/skipped, flagged, flagged-upstream/provisional, missing, and proposal-only classes are disjoint",
+    "clean_negative_task_ids": [],
+    "clean_null_task_ids": [
+      "exp5824-v519-source-delta-ingestion"
+    ],
+    "clean_positive_task_ids": [
+      "exp5823-transition-v519",
+      "exp5825-certified-adaptive-memory-contract",
+      "exp5826-out-of-template-constraint-stream",
+      "exp5827-minimal-core-structural-acquisition-ab"
+    ],
+    "clean_success_task_ids": [
+      "exp5823-transition-v519",
+      "exp5825-certified-adaptive-memory-contract",
+      "exp5826-out-of-template-constraint-stream",
+      "exp5827-minimal-core-structural-acquisition-ab"
+    ],
+    "flagged_task_ids": [
+      "exp5828-future-validated-structural-memory"
+    ],
+    "flagged_upstream_provisional_task_ids": [
+      "exp5829-transfer-selective-replay-audit"
+    ],
+    "headline_eligible_task_ids": [
+      "exp5823-transition-v519",
+      "exp5825-certified-adaptive-memory-contract",
+      "exp5826-out-of-template-constraint-stream",
+      "exp5827-minimal-core-structural-acquisition-ab"
+    ],
+    "missing_task_ids": [],
+    "proposal_only_task_ids": [
+      "exp5830-sota-paired-embedding-corpus",
+      "exp5831-cross-family-embedding-energy-verifier",
+      "exp5832-arc-write-protected-world-fact-tape",
+      "exp5833-arc-world-feedback-probe-ab",
+      "exp5834-bounded-adaptive-memory-microkernel",
+      "exp5835-attached-board-adaptive-memory-receipts",
+      "exp5836-capstone-v519"
+    ]
+  },
+  "preconditions_checked": {
+    "adversarial_verifier_receipt_count": 5,
+    "canonical_artifact_count": 7,
+    "canonical_hash_count": 7,
+    "completion_block_source": "research_complete",
+    "conductor_unchanged": true,
+    "declared_deliverable_count": 7,
+    "declared_deliverables_unambiguous": true,
+    "failed_preconditions": [
+      "test_failures=['.venv/bin/pytest tests/python -q', '.venv/bin/python scripts/check_spec_coverage.py']"
+    ],
+    "input_hashes": {
+      "declared_deliverables": {
+        "exp5823-transition-v519": {
+          "path": "results/experiment_5823_transition_v519.json",
+          "present": true,
+          "sha256": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b"
+        },
+        "exp5824-v519-source-delta-ingestion": {
+          "path": "results/experiment_5824_v519_source_delta_ingestion.json",
+          "present": true,
+          "sha256": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41"
+        },
+        "exp5825-certified-adaptive-memory-contract": {
+          "path": "results/experiment_5825_certified_adaptive_memory_contract.json",
+          "present": true,
+          "sha256": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6"
+        },
+        "exp5826-out-of-template-constraint-stream": {
+          "path": "results/experiment_5826_out_of_template_constraint_stream.json",
+          "present": true,
+          "sha256": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1"
+        },
+        "exp5827-minimal-core-structural-acquisition-ab": {
+          "path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+          "present": true,
+          "sha256": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5"
+        },
+        "exp5828-future-validated-structural-memory": {
+          "path": "results/experiment_5828_future_validated_structural_memory.json",
+          "present": true,
+          "sha256": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2"
+        },
+        "exp5829-transfer-selective-replay-audit": {
+          "path": "results/experiment_5829_transfer_selective_replay_audit.json",
+          "present": true,
+          "sha256": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8"
+        }
+      },
+      "source_files": {
+        "openspec/capabilities/research-reporting/spec.md": {
+          "present": true,
+          "sha256": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21"
+        },
+        "openspec/change-proposals/research-roadmap-vNEXT.md": {
+          "present": true,
+          "sha256": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06"
+        },
+        "ops/conductor-log.md": {
+          "present": true,
+          "sha256": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2"
+        },
+        "ops/exclusion_manifest.yaml": {
+          "present": true,
+          "sha256": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7"
+        },
+        "research-complete.yaml": {
+          "present": true,
+          "sha256": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6"
+        },
+        "research-roadmap-next.yaml": {
+          "present": false,
+          "sha256": null
+        },
+        "research-roadmap.yaml": {
+          "present": true,
+          "sha256": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe"
+        },
+        "scripts/evidence_index_collision_preflight.py": {
+          "present": true,
+          "sha256": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b"
+        },
+        "scripts/in_process_doc_reconcile.py": {
+          "present": true,
+          "sha256": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
+        }
+      }
+    },
+    "next_range_collision_count": 0,
+    "research_complete_append_count": 0,
+    "research_complete_append_receipt": {
+      "append_count": 0,
+      "appended": false,
+      "reason": "exact_milestone_block_present",
+      "sha256_after_append": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
+      "sha256_before_append": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6"
+    },
+    "research_complete_milestone_from_block_count": 1,
+    "research_roadmap_unchanged": true,
+    "resource_receipts": {
+      "disk_free_bytes": 1228600385536,
+      "disk_total_bytes": 3953289023488,
+      "mem_available_kib": 76062408,
+      "writable_paths": {
+        "/home/ianblenke/github.com/ianblenke/carnot": {
+          "present": true,
+          "writable": true
+        },
+        "/home/ianblenke/github.com/ianblenke/carnot/results": {
+          "present": true,
+          "writable": true
+        },
+        "/tmp": {
+          "present": true,
+          "writable": true
+        }
+      }
+    },
+    "roadmaps": {
+      "active": {
+        "deliverables": [
+          "results/experiment_5837_transition_v520.json",
+          "results/experiment_5838_v520_source_delta_ingestion.json",
+          "results/experiment_5839_v519_evidence_qualification.json",
+          "results/experiment_5840_exact_counterfactual_embedding_fixture.json"
+        ],
+        "error": null,
+        "milestone": "2026.07.520",
+        "parsed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "present": true,
+        "sha256": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe",
+        "task_ids": [
+          "exp5837-transition-v520",
+          "exp5838-v520-source-delta-ingestion",
+          "exp5839-v519-evidence-qualification",
+          "exp5840-exact-counterfactual-embedding-fixture"
+        ]
+      },
+      "next": {
+        "deliverables": [],
+        "error": null,
+        "milestone": null,
+        "parsed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+        "present": false,
+        "sha256": null,
+        "task_ids": []
+      }
+    },
+    "same_number_alias_group_count": 7,
+    "unique_declared_deliverable_block_count": 1
+  },
+  "random_seed": 5837,
+  "reproducibility_checksum": "sha256:dcdacd075babb8dbb76f123b137ed8c22ec313070560db56cd9318b1c89012d5",
+  "research_complete_append_count": 0,
+  "research_roadmap_unchanged": true,
+  "reserved_unactivated_range": "exp5830-exp5836",
+  "reserved_unactivated_task_ids": [
+    "exp5830-sota-paired-embedding-corpus",
+    "exp5831-cross-family-embedding-energy-verifier",
+    "exp5832-arc-write-protected-world-fact-tape",
+    "exp5833-arc-world-feedback-probe-ab",
+    "exp5834-bounded-adaptive-memory-microkernel",
+    "exp5835-attached-board-adaptive-memory-receipts",
+    "exp5836-capstone-v519"
+  ],
+  "result_path": "results/experiment_5837_transition_v520.json",
+  "run_date": "2026-07-23",
+  "same_number_alias_groups": {
+    "5823": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5823_transition_v519.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
+        "status": "complete",
+        "task_id": "exp5823-transition-v519"
+      },
+      "experiment_number": "5823",
+      "selection_policy": "exact_declared_deliverable"
+    },
+    "5824": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5824_v519_source_delta_ingestion.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
+        "status": "complete",
+        "task_id": "exp5824-v519-source-delta-ingestion"
+      },
+      "experiment_number": "5824",
+      "selection_policy": "exact_declared_deliverable"
+    },
+    "5825": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5825_certified_adaptive_memory_contract.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
+        "status": "complete",
+        "task_id": "exp5825-certified-adaptive-memory-contract"
+      },
+      "experiment_number": "5825",
+      "selection_policy": "exact_declared_deliverable"
+    },
+    "5826": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5826_out_of_template_constraint_stream.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
+        "status": "complete",
+        "task_id": "exp5826-out-of-template-constraint-stream"
+      },
+      "experiment_number": "5826",
+      "selection_policy": "exact_declared_deliverable"
+    },
+    "5827": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+        "status": "complete",
+        "task_id": "exp5827-minimal-core-structural-acquisition-ab"
+      },
+      "experiment_number": "5827",
+      "selection_policy": "exact_declared_deliverable"
+    },
+    "5828": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5828_future_validated_structural_memory.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
+        "status": "complete",
+        "task_id": "exp5828-future-validated-structural-memory"
+      },
+      "experiment_number": "5828",
+      "selection_policy": "exact_declared_deliverable"
+    },
+    "5829": {
+      "aliases": [],
+      "canonical": {
+        "path": "results/experiment_5829_transfer_selective_replay_audit.json",
+        "present": true,
+        "role": "canonical_declared_deliverable",
+        "sha256": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
+        "status": "complete",
+        "task_id": "exp5829-transfer-selective-replay-audit"
+      },
+      "experiment_number": "5829",
+      "selection_policy": "exact_declared_deliverable"
+    }
+  },
+  "schema": "carnot.experiment_5837.transition_v520.v1",
+  "spec_refs": [
+    "REQ-REPORT-5837",
+    "SCENARIO-REPORT-5837",
+    "SCENARIO-REPORT-5837-VERIFIER-RECEIPTS",
+    "SCENARIO-REPORT-5837-COLLISION-BLOCK",
+    "SCENARIO-REPORT-5837-FIELD-PROVENANCE"
+  ],
+  "status": "blocked",
+  "test_commands": [
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5825_certified_adaptive_memory_contract.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5826_out_of_template_constraint_stream.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5828_future_validated_structural_memory.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5829_transfer_selective_replay_audit.json",
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"",
+    ".venv/bin/pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py -m pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5837_transition_v520.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py",
+    ".venv/bin/ruff check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py -m pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5825_certified_adaptive_memory_contract.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5826_out_of_template_constraint_stream.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5827_minimal_core_structural_acquisition_ab.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5828_future_validated_structural_memory.json": 1,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5829_transfer_selective_replay_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5837_transition_v520.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py": 0,
+    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py": 0
+  }
+}
