@@ -66,6 +66,70 @@ lookahead added, not just a bare reactive-filter variant retried.
 **Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5827.
 **Tests:** `tests/python/test_arc_reactive_verifier_filter.py` (10 tests, pure filter logic).
 
+### 2026-07-23 (outer-loop, operator-directed follow-up): tool-calling orientation + real multi-step lookahead search built and tested — budget-inconclusive, not a clean negative
+
+**Operator directive:** "add real multi-step lookahead, and allow up to 12 tool-calling/REPL turns
+per decision, inspect history, reason, then commit one action." Directly targets the two things
+`GAP-ARC-REACTIVE-FILTER-MYOPIC` (above) named as the actual missing capability: neither
+induce-then-plan nor the bare reactive-filter has both a reliable per-step signal AND goal-directed
+multi-step search.
+
+**What was built:** `python/carnot/agentic/arc_tool_loop_lookahead.py`
+(`run_tool_loop` + `ToolLoopLookaheadSession`, REQ-ARC-WMTE-5828) — up to 12 tool-calling turns per
+decision over a small, SAFE, named-function tool surface (`inspect_frame`, `inspect_cell`,
+`count_color`, `inspect_history`, `list_available_actions` — a disclosed scope reduction from Duck
+Harness's full sandboxed REPL), ending in a RANKED SET of up to 3 candidate actions with
+self-reported confidence. `ToolLoopLookaheadSession` wires this into `arc_solver_kit.OfflineSolver`'s
+existing best-first search with replay-from-reset backtracking (reused, not reimplemented) via its
+`action_labels`/`apply`/`verifier`/`state_key`/`move_pruner` hooks; `verifier()` uses `1.0 -
+confidence` as the search's goal-directed ordering signal, and `move_pruner` reuses
+REQ-ARC-WMTE-5827's exact-match dead-end filter.
+
+**Three real, non-obvious integration bugs found and fixed while building this (via direct tracing,
+not assumed):**
+1. `OfflineSolver` calls `apply(env, label, frame=None)` during search expansion
+   (`arc_solver_kit.py:5275,5329` — only `_replay()`'s own top-level call passes the real frame), so
+   `apply()` cannot rely on its own `frame` argument for delta-description bookkeeping. Fixed by
+   capturing the pre-expansion frame in `action_labels()` (the hook that DOES reliably receive it)
+   and reading it back via `self._node_frame`.
+2. `_replay()` re-applies `warmup_label` on every node visit and every sibling-restoration replay. A
+   naive fix (comparing the applied label's ACTION VALUE against the warmup action) silently
+   swallowed genuine model choices that happened to pick the same action id as the warmup step —
+   found directly when an early smoke test's recorded history came back completely empty. Fixed with
+   a non-JSON sentinel string (`WARMUP_LABEL`) that can never collide with a genuine
+   `_json_action_label()`-encoded candidate.
+3. **The search-starving bug:** when the tool loop's only proposed candidate turned out to be a
+   genuine no-op (observed directly: a click on an empty background cell), its resulting state
+   hashed IDENTICAL to the parent and correctly never reached the search frontier — but with no
+   alternative offered, the search then had nothing left to explore and died after exactly one node,
+   regardless of the 12-turn/15-node budgets. Fixed by always padding a thin (<2) candidate set with
+   `rich_action_candidates()` structured fallbacks at low confidence. Verified fixed via three
+   successive diagnostic trace runs, the last showing full budget use with distinct states reached
+   at multiple depths.
+
+**Real empirical result (2026-07-23, `results/outer_loop_tool_loop_lookahead_ab_20260723.json`,
+`scripts/arc_tool_loop_lookahead_ab.py`):** ran on the SAME 3 worst live/oracle-gap games as
+REQ-ARC-WMTE-5827 (sc25 oracle=6, lf52 oracle=10, bp35 oracle=9). All three ran cleanly (`error:
+null`, `adversarial_verify.py` 0-flagged, `random_seed=5828` — a real llama.cpp seed threaded
+through per-node and per-turn, added after the first run correctly drew a `METHODOLOGY_MISSING`
+WARN for lacking one). **`levels_gained=0` on all three — matching both prior baselines exactly.**
+
+**Why this is budget-inconclusive, not a clean negative (`ops/verifier_gaps.md`
+`GAP-ARC-TOOL-LOOP-LOOKAHEAD-BUDGET-INCONCLUSIVE`):** `states_expanded` came back 16/16/18 and
+`tool_loop_calls` 4/4/5 across the three games — the ENTIRE search tree, across all branches,
+visited on the order of 16-18 nodes total. These games need deep (13-33+ action) narrow winning
+sequences. A tree this shallow has essentially no chance of reaching a node 13+ actions deep
+regardless of whether the added mechanism is architecturally sound. **The correct statement is
+"this specific budget was too small to test the hypothesis," not "the hypothesis was tested and
+failed."** Scaling the node budget to plausibly reach the relevant depth (likely low hundreds of
+nodes, each costing up to 12 real LLM completions) is a real, disclosed wall-clock/LLM-call cost —
+a follow-up decision for the operator to weigh, not further architecture work; the mechanism itself
+does not need more fixes before that test.
+
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5828.
+**Tests:** `tests/python/test_arc_tool_loop_lookahead.py` (28 tests, pure control-flow + payload
+logic, no GPU required).
+
 ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
 
 **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered
