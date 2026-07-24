@@ -3812,26 +3812,33 @@ class E3AgentPolicy:
                     attempt["structured_nav_is_nav_game"] = bool(is_nav)
                     if is_nav and self.root_grid is not None:
                         nav_eng, nav_isdone = nav.as_callables()
+                        # Record the standard metrics for diagnostics, but do NOT gate on the full-grid
+                        # exact-match heldout: a CORRECT avatar-only nav model scores heldout ~0 (it models
+                        # the avatar's move, not the co-moving key / step-counter HUD / rails), yet
+                        # plan_in_model + execution reach a REAL level-up (REQ-ARC-WMTE-5841 proved tu93 L1).
+                        # Gating on >=0.5 heldout REJECTED the correct model before planning (the exact
+                        # false-negative wall the 2026-07-20 diagnosis §3 named). Gate instead on nav-game-fit
+                        # + plan_found; the real level counter on execution is the oracle (a wrong plan simply
+                        # fails to level up, at bounded action cost, same as any engine path).
                         nav_vr = e3.WorldModelVerifier(active_transitions).score(nav_eng)
                         attempt["structured_nav_heldout"] = round(float(nav_vr.accuracy), 4)
                         attempt["structured_nav_cell_recall"] = round(float(nav_vr.cell_recall), 4)
-                        if float(nav_vr.accuracy) >= 0.5:
-                            _nav_diag: dict = {}
-                            nav_plan = self._call_plan_in_model(
-                                e3.plan_in_model,
-                                nav_eng,
-                                nav_isdone,
-                                self.root_grid,
-                                diagnostics=_nav_diag,
-                            )
-                            attempt["structured_nav_plan_diagnostics"] = _nav_diag
-                            if nav_plan:
-                                self._install_goal_bias(nav_isdone)
-                                self.plan = nav_plan
-                                attempt["planned"] = True
-                                attempt["plan_length"] = len(nav_plan)
-                                attempt["engine_source"] = "structured_nav_induced"
-                                return
+                        _nav_diag: dict = {}
+                        nav_plan = self._call_plan_in_model(
+                            e3.plan_in_model,
+                            nav_eng,
+                            nav_isdone,
+                            self.root_grid,
+                            diagnostics=_nav_diag,
+                        )
+                        attempt["structured_nav_plan_diagnostics"] = _nav_diag
+                        if nav_plan:
+                            self._install_goal_bias(nav_isdone)
+                            self.plan = nav_plan
+                            attempt["planned"] = True
+                            attempt["plan_length"] = len(nav_plan)
+                            attempt["engine_source"] = "structured_nav_induced"
+                            return
                 except Exception as _nav_e:
                     attempt["structured_nav_error"] = repr(_nav_e)[:120]
 
