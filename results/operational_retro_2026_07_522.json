@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.522",
+  "generated_at": "2026-07-24T07:02:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 10.3,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Adaptive-state microkernel E2E attribution and requalification",
+      "duration_minutes": 8.59,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Dated evidence refresh after the V522 planner marker",
+      "duration_minutes": 1.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .521 into .522",
+      "duration_minutes": 0.45,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Proof-hardness-controlled exact constraint fixture",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Prospective non-forgetting continuous learning through the shadow adapter",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.522 completed 6 experiments in 10.3 minutes, including 1 compute-bound experiment. The 8.59-minute synthesis-only adaptive-state requalification dominated recorded time; the compute-bound shadow-adapter experiment recorded 0.0 minutes, and the locked task-conditioned GPU-idle flag is false.",
+  "bottlenecks_identified": [
+    "Elapsed time was concentrated in Adaptive-state microkernel E2E attribution and requalification, a synthesis-only workflow that used 8.59 of the milestone's 10.3 minutes.",
+    "The only compute-bound experiment, Prospective non-forgetting continuous learning through the shadow adapter, recorded 0.0 minutes; the timing data contains no phase-level evidence explaining its runtime.",
+    "The GPU snapshot is not correlated to experiment execution, so it cannot grade utilization across the compute-bound task; the locked task-conditioned field does not identify GPU idle.",
+    "No model-concurrency or runner-selection record is available, so there is no evidence that a task with multiple models in parallel failed to engage DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Add incremental checkpoints and cache reuse to the adaptive-state attribution and requalification workflow so unchanged synthesis and validation stages do not repeat.",
+    "Emit task-correlated phase timings and GPU telemetry so future retrospectives can distinguish inference time, orchestration delay, and post-task idle snapshots.",
+    "Record model count, overlap window, and runner selection for compute-bound tasks, selecting DualGPURunner only when multiple models are loaded concurrently.",
+    "Retain the existing doomed-rerun pre-launch block as saved-time instrumentation and keep those sub-second blocks out of slow-task rankings."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Checkpoint and reuse completed stages in adaptive-state attribution and requalification.",
+    "Capture phase-level timings and GPU samples under the same task identity.",
+    "Persist model-concurrency and runner-selection metadata for every compute-bound task."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone's delay was concentrated in one synthesis-only workflow rather than in visible compute execution. The bounded data ranks tasks but cannot attribute internal stages or tie the GPU snapshot to task execution, so savings should remain unquantified until task-linked telemetry supplies a measured comparison."
+}
