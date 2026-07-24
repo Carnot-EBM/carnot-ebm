@@ -14201,3 +14201,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-23 23:34 UTC | Four-branch terminal decision ledger and milestone | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5862_v521_ca |
 | 2026-07-24 00:36 UTC | Plan milestone 2026.07.522 | OK | 7 tasks proposed |
 | 2026-07-24 00:38 UTC | Milestone 2026.07.522 activated | OK | 7 tasks queued |
+| 2026-07-24 01:26 UTC | Exact terminal-boundary handoff from .521 into .52 | OK | 87 passed, 1 warning in 13.26s |
