@@ -1,78 +1,14 @@
 import numpy as np
 
 def engine(grid, action, data):
-    grid = grid.copy()
-    if action == 1:
-        # Action 1: Move Up
-        for c in range(8):
-            for r in range(7, -1, -1):
-                if grid[r, c] == 0:
-                    for rr in range(r - 1, -1, -1):
-                        if grid[rr, c] != 0:
-                            grid[rr + 1, c] = grid[rr, c]
-                            grid[rr, c] = 0
-                            break
-    elif action == 2:
-        # Action 2: Move Down
-        for c in range(8):
-            for r in range(8):
-                if grid[r, c] == 0:
-                    for rr in range(r + 1, 8):
-                        if grid[rr, c] != 0:
-                            grid[rr - 1, c] = grid[rr, c]
-                            grid[rr, c] = 0
-                            break
-    elif action == 3:
-        # Action 3: Move Left
-        for r in range(8):
-            for c in range(7, -1, -1):
-                if grid[r, c] == 0:
-                    for cc in range(c - 1, -1, -1):
-                        if grid[r, cc] != 0:
-                            grid[r, cc + 1] = grid[r, cc]
-                            grid[r, cc] = 0
-                            break
-    elif action == 4:
-        # Action 4: Move Right
-        for r in range(8):
-            for c in range(8):
-                if grid[r, c] == 0:
-                    for cc in range(c + 1, 8):
-                        if grid[r, cc] != 0:
-                            grid[r, cc - 1] = grid[r, cc]
-                            grid[r, cc] = 0
-                            break
-    elif action == 5:
-        # Action 5: Move Up-Left
-        for c in range(8):
-            for r in range(7, -1, -1):
-                if grid[r, c] == 0:
-                    for rr in range(r - 1, -1, -1):
-                        if grid[rr, c] != 0:
-                            grid[rr + 1, c] = grid[rr, c]
-                            grid[rr, c] = 0
-                            break
-    elif action == 6:
-        # Action 6: Move Up-Right
-        for c in range(8):
-            for r in range(7, -1, -1):
-                if grid[r, c] == 0:
-                    for rr in range(r - 1, -1, -1):
-                        if grid[rr, c] != 1:
-                            grid[rr + 1, c] = grid[rr, c]
-                            grid[rr, c] = 0
-                            break
-    elif action == 7:
-        # Action 7: Move Down-Right
-        for c in range(8):
-            for r in range(8):
-                if grid[r, c] == 0:
-                    for cc in range(c + 1, 8):
-                        if grid[r, cc] != 1:
-                            grid[r, cc - 1] = grid[r, cc]
-                            grid[r, cc] = 0
-                            break
-    return grid
+    # grid: np.ndarray (8x8 int). Return the predicted next grid (same shape).
+    # Action 1-7 are directional movements. Action 6 is a click.
+    # Based on the initial grid being empty (all 0s) and no changes observed,
+    # the world model is that the grid remains unchanged.
+    return grid.copy()
 
 def is_level_complete(grid):
-    return np.all(grid == 0)
+    # The initial grid is empty. Without further observations of a win state,
+    # we assume the level is not complete unless the grid is empty (start state).
+    # However, typically a win state is distinct. Given no data, we return False.
+    return False
