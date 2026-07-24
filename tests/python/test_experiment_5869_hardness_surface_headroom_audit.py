@@ -38,7 +38,10 @@ GATE_REPLAY_COMMAND = (
     "assert m.upstream_gate_receipt()['upstream_ready'] is True\""
 )
 FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
-SPEC_COMMAND = ".venv/bin/python scripts/check_spec_coverage.py"
+SPEC_COMMAND = (
+    ".venv/bin/python scripts/check_spec_coverage.py "
+    "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+)
 ADVERSARIAL_COMMAND = (
     ".venv/bin/python scripts/adversarial_verify.py "
     "results/experiment_5869_hardness_surface_headroom_audit.json"

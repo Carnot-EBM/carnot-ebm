@@ -35838,4 +35838,4 @@ separately from exact solver release authority.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-5869 | Planned (`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`, `results/experiment_5869_hardness_surface_headroom_audit.json`) | Planned (`tests/python/test_experiment_5869_hardness_surface_headroom_audit.py`) |
+| REQ-VERIFY-5869 | Implemented (`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`, `results/experiment_5869_hardness_surface_headroom_audit.json`) | Implemented (`tests/python/test_experiment_5869_hardness_surface_headroom_audit.py`) |

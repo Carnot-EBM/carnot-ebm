@@ -188,7 +188,7 @@
     "saturation_ceiling_auroc": 0.85,
     "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.density_length_width_name_and_order_controls"
   },
-  "duration_s": 0.124511,
+  "duration_s": 0.131158,
   "experiment": 5869,
   "experiment_id": "experiment_5869_hardness_surface_headroom_audit",
   "field_provenance": {
@@ -744,9 +744,9 @@
   "preconditions_checked": {
     "blocked_reasons": [],
     "code_hashes": {
-      "module": "sha256:01dc3577cf90e7d6f4632d8eaf6ec532678c1fcc890afdca715781021a6875e3",
-      "test": "sha256:8d136d67af92bba440f9744d7b79ad0ca5b9b7672034e43c5c5f139160089a50",
-      "verification_spec": "sha256:fcee0f800e72e2a3b1fac58aba78c134eadb88c6e3ee2fa108a24c7ebef97ada"
+      "module": "sha256:7caae24983f8f198dfde3a59782944fa1ffb49db40c5e11d36dc6ab6bddc0acd",
+      "test": "sha256:3693a6c433e4feb2637d20a6a2467cc1b353ce2f61d2d2b0814753406c02ce98",
+      "verification_spec": "sha256:33c90809c1ab63a23b3b6d9e360479f5dc1eec8769a2a69c7a177aaec684464c"
     },
     "current_verifier_registry_config": {
       "ok": true,
@@ -791,12 +791,12 @@
     },
     "resources": {
       "disk": {
-        "available_mb": 1169309,
+        "available_mb": 1168939,
         "ok": true,
         "required_mb": 512
       },
       "memory": {
-        "available_mb": 76604,
+        "available_mb": 76534,
         "ok": true,
         "required_mb": 1024
       }
@@ -945,7 +945,7 @@
     },
     "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.relabel_and_certificate_group_controls"
   },
-  "reproducibility_checksum": "sha256:5495db7bdc1cecbafd3d7d884fb9a5d7b8bd48c05dd2b08c59686b474773a381",
+  "reproducibility_checksum": "sha256:6bb872dc1e0ac0635c3e1820ab2a6a4c83016b6bffb2feddf4a741acc742f3f2",
   "run_date": "20260724",
   "saturation_and_skip_decision": {
     "hardness_surface_headroom_ready_score": 0.0,
@@ -997,7 +997,7 @@
     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5869_hardness_surface_headroom_audit.py -m pytest tests/python/test_experiment_5869_hardness_surface_headroom_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5869_hardness_surface_headroom_audit.py --fail-under=100",
     ".venv/bin/python -c \"from carnot import experiment_5869_hardness_surface_headroom_audit as m; assert m.upstream_gate_receipt()['upstream_ready'] is True\"",
     ".venv/bin/pytest tests/python -q",
-    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5869_hardness_surface_headroom_audit.py",
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5869_hardness_surface_headroom_audit.json",
     ".venv/bin/python scripts/root_clutter_sweep.py",
     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
@@ -1009,7 +1009,7 @@
     ".venv/bin/python -c \"from carnot import experiment_5869_hardness_surface_headroom_audit as m; assert m.upstream_gate_receipt()['upstream_ready'] is True\"": 0,
     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5869_hardness_surface_headroom_audit.json": 0,
-    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5869_hardness_surface_headroom_audit.py": 0,
     ".venv/bin/python scripts/root_clutter_sweep.py": 0
   },
   "upstream_gate_receipt": {
