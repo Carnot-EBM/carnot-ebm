@@ -6003,3 +6003,9 @@ The critical path for milestone .250:
 - theme: long synthesis conformance and multi-family extraction exposed missing phase telemetry
 - key result: honest operational negative -- runtime ordering is clear, but the bounded data cannot causally explain the 20.4-minute compute path, grade GPU efficiency over task lifetimes, or evaluate runner selection for concurrent model loads
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.522
+- exp_range: no data available this milestone
+- theme: synthesis-only requalification dominated elapsed time while compute execution remained too coarsely timed
+- key result: honest operational negative -- the only compute-bound entry recorded 0.0 minutes, with no task-level GPU-idle finding and no evidence of concurrent model loading; phase-level causes are unavailable
+- acceptance: no data available this milestone
