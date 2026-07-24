@@ -14221,3 +14221,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 08:37 UTC | Exact terminal-boundary handoff from .522 into .52 | OK | 88 passed, 1 warning in 11.63s |
 | 2026-07-24 09:19 UTC | Dated evidence refresh after the V523 planner mark | OK | 124 passed, 2 warnings in 14.08s |
 | 2026-07-24 09:40 UTC | Changed-taxonomy audit of nuisance controls versus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5879_hardnes |
+| 2026-07-24 09:56 UTC | Changed-taxonomy audit of nuisance controls versus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5879_hardnes |
