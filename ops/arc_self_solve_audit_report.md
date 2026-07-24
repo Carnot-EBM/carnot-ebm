@@ -16,27 +16,27 @@ OK: all solver-like ARC modules are reachable from the live agent path (59 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0 self-discovery advances. 3 outer-loop RE artifacts, 1 duplicate. Reproduction proves executability—not autonomous discovery.**
+**TL;DR: 0/4 qualify as self-discovery advances — 3 OUTER_LOOP_RE, 1 DUPLICATE. Reachability lint does not establish causal live-agent discovery.**
 
-- `results/outer_loop_lf52_l8plus_probe_20260717.json`
-  - `{verdict: OUTER_LOOP_RE}`
-  - `{evidence: Explicitly read lf52 source, used a per-game source-faithful planner, a 668,532-state search, and a 372,127-state carrier BFS. The artifact correctly labels itself development_proxy.}` [Evidence](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l8plus_probe_20260717.json:53)
-  - `{recommended action: Remove L8–L10 from self-discovery credit. Retain only as a development fixture; require a cold-start entrypoint run without source, bespoke planner, or banked prefix.}`
+- `outer_loop_lf52_l8plus_probe_20260717.json`
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Explicitly read `lf52.py`, built a source-faithful per-game planner, and used large offline searches. It admits `development_proxy` provenance. Replaying through `env.step` proves executability, not discovery. [Artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l8plus_probe_20260717.json:13)
+  - **Recommended action:** Remove L8–L10 from autonomous-agent credit. Retain only as a development fixture until a clean live-entrypoint run independently rediscovers them without source-derived mechanics, planner, or trajectory.
 
-- `results/outer_loop_round26_bp35_probe_l9_20260717.json`
-  - `{verdict: OUTER_LOOP_RE}`
-  - `{evidence: The live_agent_self_discovery label is unsupported. This was round 26 of a bespoke campaign, inheriting a 342-action prefix, performing matched manual controls and exhaustive sweeps, consuming 174,508 offline steps and zero live-agent steps. No trace shows either live entrypoint conducting the discovery.}` [Evidence](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_round26_bp35_probe_l9_20260717.json:21)
-  - `{recommended action: Relabel as outer-loop development. Keep the 410-action path only as a regression fixture; demand a from-scratch entrypoint trace before claiming capability.}`
+- `outer_loop_round26_bp35_probe_l9_20260717.json`
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Despite the `live_agent_self_discovery` label, this is an `arc_outer_loop_probe` run by the outer model, targeted specifically at L9 using a stored 342-action prefix and prior-round survivor paths. It supplies no live entrypoint, policy trace, or evidence that Carnot’s live agent selected the investigative controls and winning actions. [Artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_round26_bp35_probe_l9_20260717.json:2)
+  - **Recommended action:** Relabel and revoke autonomous credit. Require a clean run through one named live entrypoint with an auditable observation→hypothesis→action trace generated inside the agent.
 
-- `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
-  - `{verdict: OUTER_LOOP_RE}`
-  - `{evidence: Source-derived camera mechanics were ported into a faithful per-game Python model and searched offline. Live L10 was merely replay validation. The artifact admits lf52 was already 10/10 and banks zero levels.}` [Evidence](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json:9) [Planner evidence](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json:18)
-  - `{recommended action: Credit only operational live-parity validation—not discovery. Require generic in-agent in-bounds replanning without source or the lf52 model.}`
+- `outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Explicit source reading, a hand-ported per-game L9 model, constrained best-first search, and replay of an already-banked route. Live validation only confirms the hand-built route executes. The artifact itself says `development_proxy` and `new_levels_banked: 0`. [Artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json:8)
+  - **Recommended action:** Keep as route/API compatibility engineering only. Do not count it as discovery or hidden-game capability.
 
-- `results/arc_loop_solve_tu93.json`
-  - `{verdict: DUPLICATE}`
-  - `{evidence: Reaches only L4 while the registry already records tu93 fully cleared through L9. It is additionally an admitted development-proxy replay using a hand verifier.}` [Artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_tu93.json:3) [Registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3169)
-  - `{recommended action: Exclude from recent-advance counts; retain solely as a standing regression/reproduction artifact.}`
+- `arc_loop_solve_tu93.json`
+  - **Verdict:** `DUPLICATE`
+  - **Evidence:** Reaches only L4 using `hand_verifier_cold_start_no_spatial_checkpoint` and an offline reproduction gate, while the registry already records `tu93` fully cleared through L9. It also declares `development_proxy`. [Artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_tu93.json:3) [Registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3169)
+  - **Recommended action:** Exclude from recent-solve and capability-delta metrics; retain only as a regression fixture.
 
-**Pattern watch:** The project is drifting toward laundering outer-loop work through `env.step`, reproduction gates, provenance strings, and banked replay reachability. Solver-module reachability does not establish that the live agent caused the solve. Per-game source models, long hand-curated campaigns, adapters, and frozen trajectories remain outer-loop capability until a live entrypoint independently discovers the advance.
+**Pattern watch:** The project is drifting toward equating “real `env.step` replay,” reproduction gates, or live validation with autonomous discovery. They are execution evidence only. The repeated outer-loop probing, banked-prefix continuation, source-derived per-game models, and offline search are exactly the forbidden outer-loop solver pattern. Provenance must be established by causal live-entrypoint traces, not labels.
 

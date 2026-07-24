@@ -14230,3 +14230,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 10:20 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
 | 2026-07-24 10:21 UTC | Gated on Exp5880 fixture: one-to-one atom groundin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5880-grounding-shortcut-fixture.groundi |
 | 2026-07-24 10:23 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5881-one-to-one-grounding-acquisition-ab) |
+| 2026-07-24 11:20 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1482s (600s silence). Last out |
+| 2026-07-24 11:22 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5881-one-to-one-grounding-acquisition-ab) |

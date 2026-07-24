@@ -31299,3 +31299,97 @@ deduplicated check for overlooked 2025-2026 sources.
   No unchanged board probe, RTL redesign, or performance claim belongs in `.523`.
 
 <!-- V523-PLANNER-REFRESH-20260724-END -->
+
+## V524 Planner Refresh - 20260724
+
+Incremental planning sweep after the terminal `.523` conductor run and after the
+same-day `V523-PLANNER-REFRESH-20260724-END` boundary. The primary pass queried
+arXiv for 2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising/p-bit hardware, hallucination detection, KANs, constrained
+generation, continual learning, and long-horizon agent memory. The secondary pass
+rechecked OpenReview, Hugging Face Papers, direct Semantic Scholar citation APIs
+for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub Trending and repository
+search, Extropic's writing/hardware pages, and Logical Intelligence's Kona/Aleph
+pages. This block promotes only sources that appeared after, or were absent from,
+the sealed V523 sweep.
+
+### New actionable deltas
+
+- **Euclid-MCP: A Model Context Protocol Server for Deterministic Logical
+  Reasoning via Prolog** - arXiv:2607.21412,
+  https://arxiv.org/abs/2607.21412; submitted 2026-07-23. Euclid-MCP introduces
+  a human-readable, engine-neutral Horn-clause IR and a
+  translate-run-inspect-repair loop with proof traces. Carnot hook: define a
+  minimal typed constraint IR that compiles to existing exact backends, then
+  compare single-pass extraction with exact-trace-guided repair on the mandated
+  local GGUF families. Exact parser, compiler, solver, and replay receipts own
+  acceptance; model prose, self-scores, and generated proof text do not. The
+  experiment must include held templates and paraphrases, invalid-IR controls,
+  exact semantic-equivalence checks, and a no-repair matched-compute control.
+- **AREX: Towards a Recursively Self-Improving Agent for Deep Research** -
+  arXiv:2607.21461, https://arxiv.org/abs/2607.21461; submitted 2026-07-23.
+  AREX exploits discovery-verification asymmetry by auditing provisional answers
+  constraint by constraint, retaining verified evidence and unresolved
+  constraints, and targeting subsequent refinement. Carnot hook: use its
+  constraint-wise unresolved-set update as a control for continuous
+  self-learning, but keep updates in bounded external state and admit them only
+  through exact future-event validation, quarantine, rollback, and zero unsafe
+  transfer. Learned compression, weight mutation, model-authored labels, and
+  external judges remain outside Carnot's authority boundary.
+- **Beyond Episodic Evaluation: Memory Architectural Bottlenecks in Sequential
+  Embodied Question Answering** - arXiv:2607.21571,
+  https://arxiv.org/abs/2607.21571; submitted 2026-07-23 and accepted to IROS
+  2026. The paper finds that simply carrying memory forward is insufficient when
+  the representation omits task-relevant visual-semantic evidence or inherits a
+  short-horizon temporal mismatch. Carnot hook: strengthen the PRO-LONG-inspired
+  ARC test into a three-arm comparison among no memory, raw append-only lossless
+  tape, and a structured evidence index over the same agent-owned tape. Require
+  exact retrieval fidelity, deletion utility, shuffled-index and stale-evidence
+  controls, bounded queries, budget matching, and the adapter-disabled live E3
+  path. This is a held-out generalization and memory-architecture experiment,
+  never a public-game re-solve.
+
+### Guarded findings and secondary-source status
+
+- **Toward Continuous Assurance for the Democratization of AI Agent Creation in
+  Industry** - arXiv:2607.21495, https://arxiv.org/abs/2607.21495, proposes
+  dependency maps, readiness contracts, scheduled checks, and lifecycle
+  governance. These are useful operations vocabulary but do not add a new
+  scientific mechanism beyond Carnot's existing preconditions, adversarial
+  verification, lifecycle ledger, and rollback contracts, so no experiment is
+  promoted.
+- **Semantic Scholar:** the direct citation APIs still return 29 EBT citing
+  records and eight ARM-EBM citing records. The newest EBT item remains
+  Solver-Hard (`2607.17047`), and the ARM-EBM list remains unchanged. Counts are
+  dated 2026-07-24 receipts, not stable bibliometric claims.
+- **OpenReview / Hugging Face Papers:** searches repeated Energy-Based Constraint
+  Networks, Distributional EBMs, data reassembly, Spilled Energy, HalluGuard,
+  V1, LLM-as-a-Verifier, and other already-indexed work. None supersedes exact
+  validators or repairs the locally disqualified final-embedding route.
+- **GitHub:** Trending contained no EBM, CSP, KAN, or verifier dependency with a
+  direct Carnot mechanism advantage. Repository search repeated PRO-LONG and
+  general EBM lists; the milestone should implement the minimal local interfaces
+  rather than import an unrelated agent harness.
+- **Extropic:** the writing index still ends in October 2025. The hardware page
+  labels Z1 as `early access 2026`, but Carnot has no authenticated XTR-0/Z1
+  route, so this is availability context rather than execution evidence.
+- **Logical Intelligence:** Kona 1.0 and Aleph continue to demonstrate the
+  translate-and-machine-check architecture boundary. Public model weights and a
+  reproducible local comparator remain unavailable; Lean-checked Aleph results
+  cannot be treated as Kona EBM evidence.
+
+### V524 planning impact
+
+- Add an engine-neutral typed-constraint extraction and exact-trace repair branch
+  instead of treating fixture construction as equivalent to real constraint
+  extraction.
+- Preserve the shortcut-resistant one-to-one grounding experiment, and test its
+  persistent learner with a constraint-wise unresolved-set control inspired by
+  AREX.
+- Compare structured ARC evidence indexing with both raw lossless tape and no
+  memory; carrying more context alone is not the hypothesis.
+- Keep intermediate-layer GGUF energy behind a public deterministic surface
+  preflight, and keep hardware conditional on a ready bounded kernel plus an
+  authenticated changed route.
+
+<!-- V524-PLANNER-REFRESH-20260724-END -->
