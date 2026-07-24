@@ -85,9 +85,13 @@ def main() -> int:
 
     per_arm: list = []
     for arm in ARMS:
+        # mtp=False (uniform): the CUDA build crashes on --spec-type draft-mtp for these -MTP- GGUFs
+        # (verified 2026-07-24: 27B loads clean on CUDA without it, crashes with it). MTP is
+        # speculative decoding -> output-preserving, so dropping it changes ONLY speed, not the
+        # induced world model or banked levels. Fair for a quality/levels A/B.
         prop = LocalGGUFProposer(
             repo_substr=arm["repo_substr"], model_path=arm["model_path"], port=arm["port"],
-            mtp=True, kv_quant="q8_0", n_ctx=arm["n_ctx"], no_think_prefix="/no_think\n",
+            mtp=False, kv_quant="q8_0", n_ctx=arm["n_ctx"], no_think_prefix="/no_think\n",
             max_tokens=INDUCE_TOKENS, timeout=1800, extra_server_args=("-fit", "off"),
         )
         server_ok = False
@@ -160,10 +164,12 @@ def main() -> int:
         "model_specs": [{"name": a["repo_substr"], "gguf": a["model_path"], "role": "e3_induction_generator",
                          "backend": f"cuda_3090_gpu{CUDA_GPU}_q4"} for a in ARMS],
         "config": {"roster": ROSTER, "budget": BUDGET, "explore_budget": EXPLORE_BUDGET,
-                   "induce_tokens": INDUCE_TOKENS, "cuda_gpu": CUDA_GPU, "object_perception": "off", "mtp": True},
+                   "induce_tokens": INDUCE_TOKENS, "cuda_gpu": CUDA_GPU, "object_perception": "off", "mtp": False},
         "methodology_note": (
             "Two arms toggle ONLY the inducer model (9B vs dense-27B), both on the 3090 GPU%s via CUDA Q4, "
-            "mtp=True. Sequential launch+run+stop. Per game: E3AgentPolicy + arc_leaderboard_eval.run_game "
+            "mtp=False (uniform; the CUDA build crashes on --spec-type draft-mtp -- MTP is output-preserving "
+            "speculative decoding so this changes only speed, not induced quality). Sequential launch+run+stop. "
+            "Per game: E3AgentPolicy + arc_leaderboard_eval.run_game "
             "(offline dev twin of the scored path -- NEVER submits); metric = banked levels. Settles the "
             "switch on the LIVE metric that exp5722 said the offline heldout gain failed to move." % CUDA_GPU
         ),

@@ -1814,6 +1814,108 @@ SCENARIO-BENCH-5896-CERTIFICATES, SCENARIO-BENCH-5896-LEAKAGE
 |---|---|---|
 | REQ-BENCH-5896 | Planned (`python/carnot/experiment_5896_typed_constraint_ir_fixture.py`, `results/experiment_5896_typed_constraint_ir_fixture.json`) | Planned (`tests/python/test_experiment_5896_typed_constraint_ir_fixture.py`) |
 
+### REQ-BENCH-5897: SOTA ConstraintIR Trace-Repair A/B
+
+Carnot MUST provide Exp5897 at
+`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py` and write
+`results/experiment_5897_sota_constraint_ir_repair_ab.json`. The experiment
+SHALL replay Exp5896's exact fixture gate before loading any model, SHALL use
+only the three mandated GGUF headline families
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL resolve them through
+`cached_sota_pair()` plus the cached third family without invoking
+`AutoTokenizer.from_pretrained()` on a GGUF repo.
+
+The runner SHALL block before model load when any headline precondition fails:
+Exp5896 replay, GGUF files and hashes, llama.cpp CUDA offload support, two
+healthy RTX 3090 receipts, adequate VRAM/RAM/disk, no protected training
+workload, GPU-offload readiness, and atomic output readiness. A blocked run
+SHALL still write the required artifact with `status="blocked_precondition"`
+and an honest verdict prefix `blocked_precondition:`.
+
+For each completed model/fixture-row cell, Exp5897 SHALL freeze prompts,
+decoding, seeds, row groups, token budgets, and promotion thresholds before
+generation, then run the following matched arms: single-pass typed IR
+extraction, one exact parser/compiler/solver-trace-guided repair, a matched
+second call with the same repair token budget and no diagnostic trace, and a
+no-information trace-shaped control. A second call alone SHALL NOT be credited
+as trace-guided repair. The trace-guided prompt SHALL expose only
+deployment-available parser, type, compile, and solver diagnostics from the
+candidate being repaired; it SHALL NOT expose hidden gold IR, answer labels,
+held-family identities, certificate solutions, model self-scores, or generated
+answer repair instructions.
+
+The exact executor SHALL be the only evaluation authority. Exp5897 SHALL
+measure parse validity, type validity, compilation, satisfiability handling,
+exact semantic equivalence, query correctness, omitted and spurious
+constraints, unsafe accepted constraints, token counts, latency, an energy
+proxy, model/family/template metrics, and group-bootstrap lower bounds over
+held groups. `trace_repair_mechanism_ready_score` SHALL be the bare value `1.0`
+only when all three headline families complete, the held-group lower bounds
+are positive for trace-guided repair over both no-trace controls, unsafe
+acceptance does not increase, and the exact-verifier boundary remains intact;
+otherwise it SHALL be `0.0`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_fixture_hashes`, `model_specs`, `model_file_hashes`,
+`loader_and_cuda_receipts`, `frozen_prompts_decoding_seeds_and_budgets`,
+`arm_definitions_and_compute_parity`, `trace_visibility_and_oracle_boundary`,
+`per_model_family_and_template_metrics`,
+`parse_type_compile_and_semantic_metrics`,
+`omitted_spurious_and_unsafe_constraint_metrics`,
+`group_bootstrap_lower_bounds`, `no_trace_and_no_information_controls`,
+`gpu_utilization_vram_and_latency_receipts`, `raw_output_receipts`,
+`protected_files_unchanged`, `trace_repair_mechanism_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+
+- `arm_definitions_and_compute_parity`: a second call alone cannot be credited as trace-guided repair.
+- `trace_visibility_and_oracle_boundary`: only deployment-available exact diagnostics may guide repair.
+- `trace_repair_mechanism_ready_score`: emit bare 1.0 only for positive held lower bounds over both controls, zero unsafe increase, and all three headline families completed.
+- `inference_substrate`: use `live_llm_inference`.
+- `verifier_is_oracle`: true for exact evaluation; the model is only an IR proposer.
+- `honest_verdict`: use `complete_positive:`, `complete_null:`, `unsafe:`, `blocked_precondition:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5897-PRECONDITIONS: Headline Resources Gate Model Load
+
+**Given** Exp5896's checked-in fixture and mandated GGUF model ids
+**When** Exp5897 checks replay, model paths, file hashes, llama.cpp CUDA
+support, dual RTX 3090 health, resource budgets, GPU-offload readiness, and
+protected training processes
+**Then** it resolves all three headline families in frozen order or writes a
+blocked-precondition artifact before any model loader is invoked.
+
+#### SCENARIO-BENCH-5897-TRACE-BOUNDARY: Repair Sees Diagnostics Only
+
+**Given** a model emits a candidate typed ConstraintIR object
+**When** the trace-guided repair arm is prompted
+**Then** the prompt includes only parser/type/compiler/solver diagnostics from
+that candidate, with matched decoding and repair token budget, and excludes
+gold IR, expected labels, held identities, certificate solutions, and
+generated-answer repair content.
+
+#### SCENARIO-BENCH-5897-EXACT-METRICS: Exact Executor Scores A/B Arms
+
+**Given** completed model/row/arm outputs
+**When** Exp5897 evaluates them through the Exp5896 parser, finite-domain
+compiler, Z3 compiler, and exact semantic behavior hashes
+**Then** it reports parse/type/compile/semantic/query, omitted/spurious,
+unsafe-accept, token, latency, energy-proxy, per-group, and grouped-bootstrap
+metrics, and only promotes trace-guided repair when it beats both no-trace
+controls without increasing unsafe acceptance.
+
+**Spec traces:** REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS,
+SCENARIO-BENCH-5897-TRACE-BOUNDARY, SCENARIO-BENCH-5897-EXACT-METRICS
+
+## Implementation Status (REQ-BENCH-5897)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5897 | Planned (`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py`, `results/experiment_5897_sota_constraint_ir_repair_ab.json`) | Planned (`tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
