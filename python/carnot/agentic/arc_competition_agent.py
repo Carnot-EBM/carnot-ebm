@@ -3791,6 +3791,50 @@ class E3AgentPolicy:
                 except Exception as filter_exc:
                     attempt["program_synthesis_filter_used"] = False
                     attempt["program_synthesis_filter_error"] = repr(filter_exc)[:160]
+            # STRUCTURED NAV INDUCER (REQ-ARC-WMTE-5842, opt-in CARNOT_ARC_STRUCTURED_NAV=1). For the
+            # 4-direction NAVIGATION family, a hand-STRUCTURED InducedNavWorldModel -- fits per-action
+            # displacement + avatar + goal from the agent's OWN transitions, correct-by-construction, NOT LLM
+            # induction (which the 2026-07-20 induction-quality diagnosis found near-universally wrong,
+            # heldout ~0.0) -- gives plan_in_model a CORRECT model. Gated by the SAME >=0.5 held-out trust bar
+            # the other engine paths use; only fires when it actually fits a nav game (nonempty displacement +
+            # a goal colour) AND earns trust AND plans a win. Non-fatal; falls through to the existing paths
+            # otherwise. This is the "mechanic-class prior" the diagnosis flagged as highest-leverage, and it
+            # makes arc_nav_world_model live-path-reachable (previously orphaned). Proven offline: with the
+            # plan_in_model regression fix (REQ-ARC-WMTE-5841), this reaches a real tu93 level-up.
+            if os.environ.get("CARNOT_ARC_STRUCTURED_NAV") == "1":
+                try:
+                    from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
+
+                    nav = InducedNavWorldModel.fit(active_transitions)
+                    is_nav = bool(getattr(nav, "displacement", None)) and (
+                        getattr(nav, "goal_color", None) is not None
+                    )
+                    attempt["structured_nav_is_nav_game"] = bool(is_nav)
+                    if is_nav and self.root_grid is not None:
+                        nav_eng, nav_isdone = nav.as_callables()
+                        nav_vr = e3.WorldModelVerifier(active_transitions).score(nav_eng)
+                        attempt["structured_nav_heldout"] = round(float(nav_vr.accuracy), 4)
+                        attempt["structured_nav_cell_recall"] = round(float(nav_vr.cell_recall), 4)
+                        if float(nav_vr.accuracy) >= 0.5:
+                            _nav_diag: dict = {}
+                            nav_plan = self._call_plan_in_model(
+                                e3.plan_in_model,
+                                nav_eng,
+                                nav_isdone,
+                                self.root_grid,
+                                diagnostics=_nav_diag,
+                            )
+                            attempt["structured_nav_plan_diagnostics"] = _nav_diag
+                            if nav_plan:
+                                self._install_goal_bias(nav_isdone)
+                                self.plan = nav_plan
+                                attempt["planned"] = True
+                                attempt["plan_length"] = len(nav_plan)
+                                attempt["engine_source"] = "structured_nav_induced"
+                                return
+                except Exception as _nav_e:
+                    attempt["structured_nav_error"] = repr(_nav_e)[:120]
+
             # PRIOR-WARM-STARTED LEARNED ENGINE (2026-06-21): try the per-game world model LEARNED from the
             # played transitions (warm-started from the cross-game CNN prior that transfers 5/5 to unseen
             # games), GATED by the same >=0.5 held-out trust bar the LLM path uses. If it earns trust and
