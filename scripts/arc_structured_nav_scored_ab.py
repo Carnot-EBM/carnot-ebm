@@ -31,7 +31,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "python"))
 
-GAMES = ["tu93", "ls20"]  # tu93 = clean nav (decisive); ls20 = morph-win negative control
+# Broader gate set (REQ-ARC-WMTE-5843): the 3 games where the nav inducer FIRES (fits + plans a win --
+# scanned no-LLM 2026-07-24: tu93/sk48/wa30) + controls where it does NOT install a plan (ls20 fits but no
+# plan -> falls through; sc25 not a nav game). Override with ARC_AB_GAMES="a,b,c".
+_DEFAULT_GAMES = ["tu93", "sk48", "wa30", "ls20", "sc25"]
+NAV_FIRE = {"tu93", "sk48", "wa30"}  # games where the structured nav inducer installs a plan
+GAMES = [g for g in os.environ.get("ARC_AB_GAMES", ",".join(_DEFAULT_GAMES)).split(",") if g]
 SEED = 5842
 BUDGET = 220
 MAX_INDUCTIONS = 3
@@ -87,9 +92,34 @@ def main() -> int:
 
     tu = next((r for r in per_game if r["game"] == "tu93"), {})
     tu_delta = tu.get("reached_delta", 0)
+    # Aggregate gate metrics
+    def _reached(row, arm):
+        return int((row.get(arm, {}) or {}).get("reached_level", 0) or 0)
+    total_off = sum(_reached(r, "baseline_off") for r in per_game)
+    total_on = sum(_reached(r, "structured_nav_on") for r in per_game)
+    nav_rows = [r for r in per_game if r["game"] in NAV_FIRE]
+    ctrl_rows = [r for r in per_game if r["game"] not in NAV_FIRE]
+    nav_improved = sum(1 for r in nav_rows if r["reached_delta"] > 0)
+    nav_regressed = sum(1 for r in nav_rows if r["reached_delta"] < 0)
+    ctrl_regressed = sum(1 for r in ctrl_rows if r["reached_delta"] < 0)
+    ctrl_improved = sum(1 for r in ctrl_rows if r["reached_delta"] > 0)
+    gate_clears = total_on >= total_off and nav_improved >= 1 and ctrl_regressed == 0 and nav_regressed == 0
+    aggregate = {
+        "n_games": len(per_game),
+        "total_reached_off": total_off,
+        "total_reached_on": total_on,
+        "total_delta": total_on - total_off,
+        "nav_games": [r["game"] for r in nav_rows],
+        "nav_improved": nav_improved,
+        "nav_regressed": nav_regressed,
+        "control_games": [r["game"] for r in ctrl_rows],
+        "control_improved": ctrl_improved,
+        "control_regressed": ctrl_regressed,
+        "gate_clears": bool(gate_clears),
+    }
     art = {
-        "experiment": "outer_loop_arc_structured_nav_scored_ab",
-        "experiment_id": "REQ-ARC-WMTE-5842",
+        "experiment": "outer_loop_arc_structured_nav_broader_ab",
+        "experiment_id": "REQ-ARC-WMTE-5843",
         "run_date": "2026-07-23",
         "schema": "carnot.arc_structured_nav_scored_ab.v1",
         "title": "Scored-path A/B: does CARNOT_ARC_STRUCTURED_NAV=1 improve the real E3AgentPolicy cascade on a navigation game (tu93)? Submission-gate evidence.",
@@ -102,17 +132,23 @@ def main() -> int:
         "methodology_note": "Same whole-loop scored cascade (run_bounded_progress -> E3AgentPolicy) as the Kaggle submission, same proposer/seed/budget; the ONLY change is CARNOT_ARC_STRUCTURED_NAV. tu93 = clean nav (decisive); ls20 = morph-win negative control (nav inducer should not help). Public-game frames for offline dev.",
         "per_game": per_game,
         "tu93_reached_delta": tu_delta,
-        "gate_evidence": ("structured nav improves the scored cascade on the clean nav game" if tu_delta > 0
-                          else "no scored improvement on tu93 -- do NOT submit on this basis"),
+        "aggregate": aggregate,
+        "gate_evidence": (
+            "GATE CLEARS: aggregate levels improved (or held) with nav gains and NO control/nav regression"
+            if gate_clears else
+            "GATE DOES NOT CLEAR -- see aggregate (regression or no net gain); do NOT submit on this basis"
+        ),
         "duration_s": round(time.time() - t0, 1),
     }
     art["honest_verdict"] = (
-        f"complete_structured_nav_scored_ab_tu93_delta_{tu_delta}"
+        f"complete_structured_nav_broader_ab_total_delta_{aggregate['total_delta']}_gate_clears_{gate_clears}"
     )
     art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(json.dumps(art, sort_keys=True, default=str).encode()).hexdigest()
-    out = ROOT / "results" / "outer_loop_arc_structured_nav_scored_ab_20260723.json"
+    out = ROOT / "results" / "outer_loop_arc_structured_nav_broader_ab_20260724.json"
     out.write_text(json.dumps(art, indent=2, default=str))
-    print(f"tu93 reached_delta = {tu_delta} | {art['gate_evidence']}")
+    print(f"AGGREGATE: total reached {total_off}->{total_on} (delta {aggregate['total_delta']}) | "
+          f"nav improved {nav_improved}/{len(nav_rows)} | control regressed {ctrl_regressed}/{len(ctrl_rows)} | "
+          f"GATE_CLEARS={gate_clears}")
     print("wrote", out, f"({art['duration_s']}s)")
     return 0
 
