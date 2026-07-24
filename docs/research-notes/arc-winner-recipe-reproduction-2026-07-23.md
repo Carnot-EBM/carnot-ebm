@@ -325,3 +325,30 @@ and the next capability is scoped: feed the perception-detected player->target a
 games aren't navigation games; the one that is (tu93) is a maze+budget needing obstacle-aware pathfinding;
 Carnot's OfflineSolver already solves it with a hand-built verifier -- the scoped fix is an AUTONOMOUS
 perception-grounded verifier feeding that existing search.
+
+## Chain PROVEN end-to-end (5837): autonomous perception -> verifier-routed search -> reproduced discovery
+
+Built detect_static_target + derive_navigation_pair (player = mover; goal = small static marker). On tu93 the
+autonomous perception layer derives (player=9, goal=14) FROM MOTION ALONE -- identical to the adapter's
+hand-RE'd pair, never hardcoded, never read from source. Fed that perception-derived verifier into Carnot's
+OfflineSolver verifier-routed search (reusing the adapter's action/apply/state machinery + the real
+reproduction gate):
+
+- hand verifier:       reached L3, reproduction gate PASSED (reproduced=True), 47-move path
+- **perception verifier: reached L3, reproduction gate PASSED (reproduced=True), 47-move path -- IDENTICAL**
+
+**This is the first actual DISCOVERY of the whole thread.** The perception fix that nulled on greedy-direct
+and on the E3 novelty-explorer WORKS the instant it feeds the proper verifier-routed search that already
+solves navigation games. Method validation (not a new solve claim -- tu93 L3 is already in the registry;
+solve_provenance=development_proxy). The complete, closed chain:
+
+1. Winner recipe -> 0 discovery. 2. Perception is the wall (8/8). 3. Oracle: fix flips goals 0->7/8.
+4. Detectors recover HUD+mover from frames. 5. Re-authoring: goal 0->4/8, wired live. 6. Discovery A/B: 0/8
+(execution wall). 7. E3 routing A/B: 0/8. 8. Full isolation: Carnot's OfflineSolver already solves tu93 with
+a hand verifier. 9. **Perception-grounded solve: the AUTONOMOUS perception verifier reproduces tu93 L3 ==
+the hand verifier.** The perception front-end now provably feeds Carnot's search a correct, autonomous target
+that closes to a reproduced solve.
+
+**Next (scoped):** wire derive_navigation_pair into the LIVE E3 path as the navigation-game verifier
+(replacing the per-game hand-built GameAdapter verifier), and generalize player/target derivation beyond the
+clean 2-color case.
