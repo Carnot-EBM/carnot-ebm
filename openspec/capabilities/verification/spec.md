@@ -35839,3 +35839,110 @@ separately from exact solver release authority.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5869 | Implemented (`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`, `results/experiment_5869_hardness_surface_headroom_audit.json`) | Implemented (`tests/python/test_experiment_5869_hardness_surface_headroom_audit.py`) |
+
+### REQ-VERIFY-5879: Hardness Headroom Taxonomy Corrigendum
+
+The repository SHALL provide Exp5879 at
+`python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py`
+that recomputes the immutable Exp5868/Exp5869 headroom audit without editing
+`results/experiment_5868_hardness_controlled_constraint_fixture.json`,
+`results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl`,
+or `results/experiment_5869_hardness_surface_headroom_audit.json`, then writes
+`results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`.
+Exp5879 SHALL be a deterministic, no-LLM control audit and SHALL declare
+`inference_substrate=deterministic_control_audit_no_llm`.
+
+Before reporting a terminal artifact, Exp5879 SHALL hash the Exp5868 summary,
+Exp5868 row file, Exp5869 artifact, Exp5869 source/test, the Exp5879
+source/test, exact solver receipts, frozen split definitions, seeds, output
+path, disk/RAM probes, and protected files including
+`scripts/research_conductor.py`. It SHALL reproduce the original Exp5869
+combined-control gate, including the historical full-suite exit debt, before
+applying the taxonomy corrigendum.
+
+Exp5879 SHALL independently replay all 84 row labels, certificates, semantic
+duplicate groups, proof-preserving relabel equivalence, certificate grouping,
+label balance, and leakage-safe split receipts from row content. The replay
+SHALL preserve exact-solver authority and every failure receipt rather than
+regenerating or editing the row file.
+
+Exp5879 SHALL assign every evaluated control feature to exactly one
+authority-aware class. The `non_oracle_nuisance` class SHALL contain density,
+surface length, clause/literal-count length proxies, clause width,
+variable-name/token controls, row order, preregistered family ID, and
+no-information shuffled/majority controls. The
+`oracle_derived_diagnostic` class SHALL contain solver conflicts, solver
+decisions, deterministic solver time, direct solver outputs, and
+certificate-checker results. Exact label fields and direct label proxies SHALL
+remain excluded rather than silently fitted.
+
+Shortcut saturation SHALL be computed only from
+`non_oracle_nuisance_control_metrics`. Solver telemetry SHALL be reported
+separately in `oracle_derived_diagnostic_metrics` with
+`verifier_is_oracle=true`; those AUROCs MAY document circular diagnostic
+telemetry but SHALL NOT count as a learned-energy win and SHALL NOT reduce
+oracle-distinct headroom.
+
+`hardness_surface_headroom_ready_score` SHALL be the bare scalar `1.0` only
+when row integrity passes, group-safe splits pass, the maximum non-oracle
+nuisance AUROC is below `0.85`, relabel/certificate stability is `1.0`, a
+nonempty held-model/held-constraint plan exists, and every Exp5879-owned
+focused check passes. If unrelated global-suite debt persists, Exp5879 SHALL
+preserve the scientific readiness matrix, classify the debt separately in
+`test_debt_classification`, emit `status=blocked`, and use an
+`honest_verdict` beginning with `blocked:` rather than claiming all checks
+passed.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_upstream_hashes`, `original_gate_reproduction`,
+`independent_row_integrity_replay`, `leakage_safe_split_receipts`,
+`control_taxonomy`, `non_oracle_nuisance_control_metrics`,
+`oracle_derived_diagnostic_metrics`, `current_verifier_circularity_matrix`,
+`relabel_and_certificate_stability`, `saturation_and_skip_decision`,
+`oracle_distinct_evaluation_design`, `held_model_and_constraint_plan`,
+`test_debt_classification`, `protected_files_unchanged`,
+`hardness_surface_headroom_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `control_taxonomy`: every feature belongs to exactly one authority-aware class.
+- `non_oracle_nuisance_control_metrics`: only these metrics determine shortcut saturation.
+- `oracle_derived_diagnostic_metrics`: solver telemetry is useful context but circular for learned-energy credit.
+- `saturation_and_skip_decision`: expensive downstream work must fail fast on leakage or failed checks.
+- `hardness_surface_headroom_ready_score`: emit a bare scalar for structured gates.
+- `inference_substrate`: use `deterministic_control_audit_no_llm`.
+- `verifier_is_oracle`: record a per-path authority matrix.
+- `honest_verdict`: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-5879-TAXONOMY: Control Classes Are Mutually Exclusive
+
+Given Exp5869 reported solver-derived AUROC saturation, when Exp5879 builds
+the corrigendum, then density/length/width/name/order/family/no-information
+controls SHALL appear only under `non_oracle_nuisance`, solver telemetry and
+exact checker outputs SHALL appear only under `oracle_derived_diagnostic`, and
+the union of evaluated features SHALL have no duplicate assignment.
+
+### SCENARIO-VERIFY-5879-HEADROOM: Oracle Telemetry Cannot Saturate Nuisance Gate
+
+Given the immutable Exp5868 rows have non-oracle maximum AUROC `0.583333` and
+oracle-derived solver AUROC `1.0`, when Exp5879 computes saturation, then
+`no_non_oracle_nuisance_control_exceeds_ceiling` SHALL be true,
+oracle-derived AUROC `1.0` SHALL be reported separately with
+`counts_as_learned_energy_win=false`, and oracle telemetry SHALL NOT reduce the
+oracle-distinct headroom score.
+
+### SCENARIO-VERIFY-5879-BLOCKED-DEBT: Suite Debt Is Not A Scientific Null
+
+Given Exp5869 and the current repository full Python suite record unrelated
+global failures, when Exp5879 writes the terminal artifact, then it SHALL keep
+the science matrix ready, classify the full-suite failure as unrelated debt,
+emit `status=blocked`, preserve every test command and exit code, and SHALL
+NOT change immutable upstream artifacts or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5879)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5879 | Planned (`python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py`, `results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`) | Planned (`tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py`) |
