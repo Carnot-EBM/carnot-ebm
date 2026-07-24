@@ -404,3 +404,25 @@ live on the scored env during play' is the next step. Method validation (tu93 L3
 tu93 L3) -> generic-adapter solve (no hand-RE) -> **scored-path integration (PerceptionNavigationPolicy
 reaches L3 via run_game, fully autonomous).** The sovereignty-aligned, oracle-distinct path -- not the winner
 recipe -- self-discovers and reproduces a navigation solve on the scored interface.
+
+## Live-search boundary (5840): reaches tu93 L1 live; deep live solving is an open problem
+
+The plan-then-replay policy (5839) searched a SEPARATE offline arcade twin -- unavailable for a hidden game.
+The true live step is to search the ONE env run_game gives (StepwiseExplorer via CarnotAgentPolicy, no
+separate arcade). Measured with the perception verifier:
+
+- tu93 (budget 2000): baseline explorer AND perception-routed both reach **L1**; NEITHER reaches L2/L3.
+- g50t: both 0 (not pure navigation).
+
+**Honest boundary.** Live single-env search reaches tu93 L1 -- limited live self-discovery on the scored env
+IS achievable. But deep solving (L2/L3) is blocked because the offline L3 solve relied on
+branch_mode='fresh_env' (a brand-new env per search node), which a single live scored env cannot supply
+(tu93's reset is non-idempotent -- a parity toggle). The perception verifier adds no advantage over the
+baseline explorer online (both L1); its proven value is in the OfflineSolver BATCH search (5837/5838/5839),
+not the online explorer. And the public set has no clean idempotent-reset navigation game for a positive
+live-search-beats-baseline demo.
+
+**So:** the autonomous perception->verifier->search chain fully closes on the OFFLINE/dev-twin path (tu93 L3,
+no hand-RE, what arc_loop_solve uses), but deep TRUE-LIVE scored solving of a non-idempotent-reset maze is a
+genuine OPEN research problem -- a parity-aware live search, or a world-model rollout that branches without
+resetting the real env -- not a wiring gap. That is the honest boundary of the whole perception-fix program.
