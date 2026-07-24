@@ -11787,3 +11787,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-24: Dated evidence refresh after the V524 planner marker (✅ Complete) — honest_verdict=complete: no accepted post-V524 source deltas; ledgers unchanged; results/experiment_5891_v524_source_delta_ingestion.json
 - 2026-07-24: Immutable hardness-headroom evidence escrow and clean admission (✅ Complete) — honest_verdict=complete_ready: headroom_evidence_escrow_admitted; results/experiment_5892_headroom_evidence_escrow.json
 - 2026-07-24: Gated on Exp5892 admission: exact grounding-shortcut fixture (✅ Complete) — honest_verdict=ready: grounding_shortcut_exact_fixture_ready; results/experiment_5893_grounding_shortcut_fixture.json
+- 2026-07-24: Gated on Exp5893 fixture: one-to-one atom-grounding acquisition A/B (✅ Complete) — honest_verdict=complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accepts; results/experiment_5894_one_to_one_grounding_ab.json
