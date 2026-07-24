@@ -2897,6 +2897,13 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   set has exactly ONE clean nav game (tu93) the autonomous inducer solves; other public games need bespoke
   mechanic-class models (snake-sequence, sokoban, spell, morph, pairing, merge, gravity, two-click, CSP) --
   each a substantial build with autonomous-mover / hidden-state complications.
+- **NAV GOAL-ENERGY BEST-FIRST 2026-07-24 (REQ-ARC-WMTE-5845).** Overnight-loop iter4 (nav robustness for
+  hidden nav games): the structured-nav path planned with plain BFS (`_goal_energy_for_plan` returns
+  None/binary by default). Added `InducedNavWorldModel.goal_energy` (player->goal Manhattan) + threaded it as
+  a `goal_energy_override` into `_call_plan_in_model` for the nav path -> best-first search. Verified on tu93:
+  890 nodes vs 1075 (~17% fewer), SAME 18-action plan, still reaches L1, confidence gate holds. Fewer nodes
+  -> more likely to find the plan within the 20000-node budget on bigger hidden nav mazes. Non-breaking
+  (override only on the nav path). 4 unit tests.
 
 ### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
 - status: DOWN-WEIGHTED (2026-07-20, REQ-ARC-FCP-5757 empirical basis) -- was "open (single biggest lever)"
