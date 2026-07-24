@@ -14239,3 +14239,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 13:47 UTC | Exact terminal-boundary handoff from .523 into .52 | OK | 88 passed, 1 warning in 13.07s |
 | 2026-07-24 16:02 UTC | Dated evidence refresh after the V524 planner mark | OK | 89 passed, 2 warnings in 15.89s |
 | 2026-07-24 17:07 UTC | Immutable hardness-headroom evidence escrow and cl | OK | 86 passed, 1 warning in 17.10s |
+| 2026-07-24 17:27 UTC | Gated on Exp5892 admission: exact grounding-shortc | OK | 87 passed, 1 warning in 16.09s |
