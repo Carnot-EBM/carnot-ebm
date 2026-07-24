@@ -3973,6 +3973,12 @@ class E3AgentPolicy:
                     enable_factored_planner=self.factored_planner,
                     factored_trust_threshold=self.factored_trust_threshold,
                     structural_goal_provider=structural_goal_provider,
+                    # LEVER #2 (REQ-ARC-WMTE-5593-4, default off): grade the induced win-predicate
+                    # against the prior-level win-state exemplar so the goal veto is not inert at a
+                    # deepening boundary. Live scored default unchanged unless the env flag is set.
+                    goal_exemplar_grading=(
+                        os.environ.get("CARNOT_ARC_GOAL_EXEMPLAR_GRADING") == "1"
+                    ),
                 )
                 attempt.update(
                     {
@@ -4093,6 +4099,9 @@ class E3AgentPolicy:
                         enable_factored_planner=self.factored_planner,
                         factored_trust_threshold=self.factored_trust_threshold,
                         structural_goal_provider=None,
+                        goal_exemplar_grading=(
+                            os.environ.get("CARNOT_ARC_GOAL_EXEMPLAR_GRADING") == "1"
+                        ),
                     )
                 except Exception as stall_exc:
                     attempt["stall_refactor_loop_used"] = False
