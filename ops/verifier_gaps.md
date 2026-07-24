@@ -4056,6 +4056,26 @@ code default-off (byte-identical live path unless flagged); offline-gated; NEVER
   marginal value is efficiency, not new first-wins. Do NOT bundle InertClickSigPruner (its own A/B is neutral-
   to-negative, keep default-off).
 
+### ARC lever A/Bs INFRA-BLOCKED on local GPU instability (2026-07-24) — reinforces the hardware-confound finding
+- Lever #1 (object-perception) offline A/B could NOT complete cleanly. Two generator servers wedged under the
+  induction load: (a) the conductor's shared Qwen server (8921) returned /health 200 but HUNG on /completion;
+  (b) a dedicated gemma-4-31B server (8923) worked at launch (0.17s /completion) then WEDGED mid-A/B — GPU 1
+  dropped from 21GB to 4MiB (model fell off the GPU) and /completion hung (HTTP 000). This matches the
+  DOCUMENTED fault in known-issues.md exp5598: the outer-loop's GPU 1 is an eGPU-hosted RTX 3090 that "fell
+  completely off the PCI bus mid-run ... required an operator power-cycle." The 31B (21GB, near the 24GB card
+  limit) under induction load is exactly the heavy case that triggers it.
+- Partial signal gathered before the wedge: a single Qwen-9B induce of tu93 gave heldout 0.000 for BOTH
+  object-perception arms (one data point, not an A/B). exp5598 (separately) already established bigger inducers
+  lift induction heldout quality (27B 0.525 vs 9B 0.100) on this same hardware before it crashed.
+- CONCLUSION: the lever CODE is done/tested/committed (5830 object-perception, 5593-4 goal grading, both
+  default-off + unit-tested; harnesses exp5831/5832 committed and ready). The offline MEASUREMENT is blocked by
+  local eGPU-3090 instability under 31B load. This STRENGTHENS the operator's 2026-07-24 hardware-confound
+  point: the scored box is a 96GB RTX Pro 6000 (9h runtime) where forge ran gemma-4-31B and scored 0.86, but
+  our local outer-loop GPU is a 24GB eGPU 3090 that can't even hold a 31B under load. Both the lever A/Bs and
+  the (unresolved) "should the live generator upgrade to 27B/31B" question need STABLE 96GB hardware to settle
+  — the scored box or a rented cloud CUDA 96GB instance — not the local eGPU. Awaiting operator decision on the
+  track-2 cloud test.
+
 ### Integration-safety sweep (iter16, 2026-07-24): the 5 outer-loop nav/hazard fixes are DOWNSTREAM-SAFE
 - Ran the CPU test files across the codebase that import the modules changed by the 5 overnight fixes
   (arc_nav_world_model, arc_executable_world_model, arc_hazard_pruner, arc_competition_agent). PASS:
