@@ -480,3 +480,18 @@ So on the scored path, the structured nav inducer self-discovers a tu93 level-up
 still applies); one public nav game; hidden-set composition unknown. Promising gate evidence, but a broader
 nav+non-nav offline A/B is needed before a submit-decision -- the improvement is opt-in + non-breaking +
 no-harm on the control, so low-risk to include once the broader eval clears the gate.
+
+## Broader scored A/B: gate clears (5843) -- submission is a defensible operator call
+
+5 games (3 nav-fire: tu93/sk48/wa30 from a no-LLM scan; 2 controls: ls20/sc25), real scored cascade, flag
+off vs on. Aggregate: **total levels 0->1 (+1), no regressions.** tu93 is a clean win (L0->L1 AND 194<214
+actions -- more effective and more efficient). sk48 neutral (no plan installed on the cascade). wa30 neutral
+(installed a non-winning plan at a negligible +4-action cost, no level regression). Controls unchanged.
+
+**Gate clears.** Per the arc3-online-gated-on-offline-beating-baselines discipline, this is the offline
+"beats-baseline" evidence a scored submission requires. The flag is opt-in + non-breaking, and HEAD carries
+two independent fixes (the plan_in_model component-unpack regression 5841 + the false-negative heldout gate)
+that benefit any submission. So a fresh submission with CARNOT_ARC_STRUCTURED_NAV=1 is a defensible operator
+decision. Honest caveats: the benefit is narrow (only tu93 among the tested public games cleanly helps -- the
+hidden-set gain depends on hidden games being clean-nav like tu93, which is unknown), and modest (+1 level;
+~0.08 is generation-wall-bounded). Operator-only decision.
