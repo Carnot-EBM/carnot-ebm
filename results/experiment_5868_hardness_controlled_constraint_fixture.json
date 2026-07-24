@@ -1,0 +1,814 @@
+{
+  "density_width_and_length_matching": {
+    "all_matching_passed": true,
+    "density_deltas": [
+      0.266667,
+      0.266667,
+      0.2051289999999999,
+      0.2051289999999999,
+      0.1666669999999999,
+      0.1666669999999999
+    ],
+    "density_tolerance": 0.45,
+    "length_tolerance_tokens": 0,
+    "max_clause_width": 3,
+    "max_clause_width_matched": true,
+    "max_density_delta": 0.266667,
+    "max_surface_token_delta": 0,
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.density_width_and_length_matching",
+    "width_failures": []
+  },
+  "deterministic_replay_receipt": {
+    "content_match": true,
+    "ok": true,
+    "replay_content_hash": "sha256:f6b0c41dbe9c7c036047a700c358c1ce1f8c5b6ee87f102ecc1df02d24051f09",
+    "replay_row_count": 84,
+    "row_content_hash": "sha256:f6b0c41dbe9c7c036047a700c358c1ce1f8c5b6ee87f102ecc1df02d24051f09",
+    "row_ids_match": true,
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.deterministic_replay_receipt"
+  },
+  "duration_s": 0.814692,
+  "experiment": 5868,
+  "experiment_id": "experiment_5868_hardness_controlled_constraint_fixture",
+  "family_and_size_bin_definitions": {
+    "all_bins_have_both_families": true,
+    "all_bins_have_both_labels": true,
+    "canonical_cell_counts": {
+      "expander_tseitin|large|satisfiable": 1,
+      "expander_tseitin|large|unsatisfiable": 1,
+      "expander_tseitin|medium|satisfiable": 1,
+      "expander_tseitin|medium|unsatisfiable": 1,
+      "expander_tseitin|small|satisfiable": 1,
+      "expander_tseitin|small|unsatisfiable": 1,
+      "ladder_tseitin|large|satisfiable": 1,
+      "ladder_tseitin|large|unsatisfiable": 1,
+      "ladder_tseitin|medium|satisfiable": 1,
+      "ladder_tseitin|medium|unsatisfiable": 1,
+      "ladder_tseitin|small|satisfiable": 1,
+      "ladder_tseitin|small|unsatisfiable": 1
+    },
+    "definition": {
+      "base_instances_per_family_size_label": 1,
+      "families": {
+        "expander_tseitin": "proof_hard_expander_family",
+        "ladder_tseitin": "proof_easy_ladder_family"
+      },
+      "labels": [
+        "satisfiable",
+        "unsatisfiable"
+      ],
+      "size_bins": [
+        {
+          "name": "small",
+          "surface_tokens": 220,
+          "vertices": 8
+        },
+        {
+          "name": "medium",
+          "surface_tokens": 280,
+          "vertices": 10
+        },
+        {
+          "name": "large",
+          "surface_tokens": 340,
+          "vertices": 12
+        }
+      ]
+    },
+    "definition_hash": "sha256:15a1fd5381f0ec5934cd6c610f18763ff7230ace35c42c2366ecc2ee4a9e971c",
+    "family_bin_counts": {
+      "expander_tseitin|large": 2,
+      "expander_tseitin|medium": 2,
+      "expander_tseitin|small": 2,
+      "ladder_tseitin|large": 2,
+      "ladder_tseitin|medium": 2,
+      "ladder_tseitin|small": 2
+    },
+    "receipt_hash": "sha256:bf9bb5b6a157a6877cbb9fc883d71ae190a0d95822101af2d31c1da6907c48e1",
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.family_and_size_bin_definitions"
+  },
+  "field_provenance": {
+    "density_width_and_length_matching": {
+      "principle": "Matched nuisance axes prevent density or text length standing in for hardness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "deterministic_replay_receipt": {
+      "principle": "A second generation must reproduce row IDs and content exactly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes bootstrap-only dataset work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "family_and_size_bin_definitions": {
+      "principle": "Proof-hard and proof-easy comparisons must be explicit within aligned bins.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every row traces to generator config, seed, solver, certificate, and source hash.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "generator_and_seed_receipts": {
+      "principle": "Deterministic generation makes every formula and relabel reproducible.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "hardness_controlled_fixture_ready_score": {
+      "principle": "EMIT BARE scalar; only 1.0 permits Exp5869.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A `complete:`, `ready:`, or `blocked:` prefix states the terminal dataset result.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`deterministic_exact_solver_labeled_dataset_no_llm` declares the true path.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "label_and_certificate_balance": {
+      "principle": "Balanced exact labels and checked witnesses create usable paired evaluation cells.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Paper, solver, generator, seed, resource, output, and protection checks prevent unverifiable data.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "proof_hardness_covariates": {
+      "principle": "Conflicts and time are analysis covariates, never truth labels.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "proof_preserving_relabel_receipts": {
+      "principle": "Equivalent formulas must retain labels and certificates after renaming.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "User and operator-owned files remain untouched.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects generator, solver, row, or control drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "row_file_receipt": {
+      "principle": "Path, count, schema, and hash expose all examples.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "solver_disagreement_and_timeout_controls": {
+      "principle": "Unsettled instances are rejected rather than guessed.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "solver_versions_and_oracle_receipts": {
+      "principle": "Exact solver outputs own labels and include versioned commands.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "source_method_receipt": {
+      "principle": "The hardness-control design traces to a real primary source without importing its results.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes a ready exact fixture from partial generation.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "surface_and_no_information_controls": {
+      "principle": "Order, padding, renaming, length, density, and null rows expose shortcuts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document generation, matching, solver, relabel, replay, and schema checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent invalid fixtures becoming ready.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True for exact labels; solver conflict covariates are not oracle scores.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py",
+        "tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py",
+        "research-references.md",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+        "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"
+      ]
+    }
+  },
+  "generator_and_seed_receipts": {
+    "generator_hashes": {
+      "module": "sha256:9d64b48df41218de9d485f1096d19c947aca99696b03e50457c955dc1579ff4b",
+      "test": "sha256:e6b2cc929f48014c6d602841abd7b5f5b5cf1aa498a0abd869ffd84d0c320033",
+      "verification_spec": "sha256:2cded3b390523eb3746ad9e5352e6ec4d9be3d41cb3d7b96285e6c0e78acdc3e"
+    },
+    "ok": true,
+    "receipt_hash": "sha256:113ff389e4b4145a6a9ded0944188a4b77509954d2166f43da9e45b07bbf1c6c",
+    "registry": {
+      "base_seed": 5868,
+      "clause_reorder_rule": "reverse_clauses_and_literals",
+      "density_mismatch_rule": "add_redundant_tautology_clauses",
+      "family_order": [
+        "expander_tseitin",
+        "ladder_tseitin"
+      ],
+      "label_order": [
+        "satisfiable",
+        "unsatisfiable"
+      ],
+      "size_bins": [
+        {
+          "name": "small",
+          "surface_tokens": 220,
+          "vertices": 8
+        },
+        {
+          "name": "medium",
+          "surface_tokens": 280,
+          "vertices": 10
+        },
+        {
+          "name": "large",
+          "surface_tokens": 340,
+          "vertices": 12
+        }
+      ],
+      "surface_control_kinds": [
+        "canonical",
+        "clause_reorder",
+        "variable_renaming",
+        "padding",
+        "density_mismatched",
+        "length_matched",
+        "no_information"
+      ],
+      "variable_relabel_rule": "new_var=((old_var+seed) mod n_vars)+1"
+    },
+    "registry_hash": "sha256:58c2585b74e12dacc1d43953c1ce03dd54cf8d8c96dfab740d9e07376affb908",
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.generator_seed_registry",
+    "solver_configurations": [
+      "dpll_lex_false_first_v1",
+      "dpll_occurrence_true_first_v1"
+    ]
+  },
+  "hardness_controlled_fixture_ready_score": 1.0,
+  "honest_verdict": "ready: hardness_controlled_exact_constraint_fixture_ready",
+  "inference_substrate": "deterministic_exact_solver_labeled_dataset_no_llm",
+  "label_and_certificate_balance": {
+    "all_certificate_checks_passed": true,
+    "all_labels_balanced": true,
+    "certificate_failure_count": 0,
+    "certificate_failures": [],
+    "family_bin_label_counts": {
+      "expander_tseitin|large|satisfiable": 7,
+      "expander_tseitin|large|unsatisfiable": 7,
+      "expander_tseitin|medium|satisfiable": 7,
+      "expander_tseitin|medium|unsatisfiable": 7,
+      "expander_tseitin|small|satisfiable": 7,
+      "expander_tseitin|small|unsatisfiable": 7,
+      "ladder_tseitin|large|satisfiable": 7,
+      "ladder_tseitin|large|unsatisfiable": 7,
+      "ladder_tseitin|medium|satisfiable": 7,
+      "ladder_tseitin|medium|unsatisfiable": 7,
+      "ladder_tseitin|small|satisfiable": 7,
+      "ladder_tseitin|small|unsatisfiable": 7
+    },
+    "label_counts": {
+      "satisfiable": 42,
+      "unsatisfiable": 42
+    },
+    "receipt_hash": "sha256:3f69eb243502efa74de5cc522886a11fcefd0d26ac5407d06ff5891cfcd63099",
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.label_and_certificate_balance"
+  },
+  "milestone": "2026.07.522",
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "generator_and_seed_receipts": {
+      "ok": true,
+      "registry": {
+        "base_seed": 5868,
+        "clause_reorder_rule": "reverse_clauses_and_literals",
+        "density_mismatch_rule": "add_redundant_tautology_clauses",
+        "family_order": [
+          "expander_tseitin",
+          "ladder_tseitin"
+        ],
+        "label_order": [
+          "satisfiable",
+          "unsatisfiable"
+        ],
+        "size_bins": [
+          {
+            "name": "small",
+            "surface_tokens": 220,
+            "vertices": 8
+          },
+          {
+            "name": "medium",
+            "surface_tokens": 280,
+            "vertices": 10
+          },
+          {
+            "name": "large",
+            "surface_tokens": 340,
+            "vertices": 12
+          }
+        ],
+        "surface_control_kinds": [
+          "canonical",
+          "clause_reorder",
+          "variable_renaming",
+          "padding",
+          "density_mismatched",
+          "length_matched",
+          "no_information"
+        ],
+        "variable_relabel_rule": "new_var=((old_var+seed) mod n_vars)+1"
+      },
+      "registry_hash": "sha256:58c2585b74e12dacc1d43953c1ce03dd54cf8d8c96dfab740d9e07376affb908",
+      "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.generator_seed_registry"
+    },
+    "generator_hashes": {
+      "module": "sha256:9d64b48df41218de9d485f1096d19c947aca99696b03e50457c955dc1579ff4b",
+      "test": "sha256:e6b2cc929f48014c6d602841abd7b5f5b5cf1aa498a0abd869ffd84d0c320033",
+      "verification_spec": "sha256:2cded3b390523eb3746ad9e5352e6ec4d9be3d41cb3d7b96285e6c0e78acdc3e"
+    },
+    "output_paths": {
+      "atomic_checkpoint_suffix": ".tmp",
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5868_hardness_controlled_constraint_fixture.json",
+      "result_writable": true,
+      "row_file_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+      "row_file_writable": true
+    },
+    "preconditions_ready": true,
+    "protected_file_hashes": {
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "python": {
+      "available": true,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1168887,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 67297,
+        "ok": true,
+        "required_mb": 1024
+      }
+    },
+    "run_date": "20260724",
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.preconditions",
+    "solver_versions": {
+      "ok": true,
+      "python_version": "3.12.13",
+      "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.solver_versions",
+      "solver_configuration_count": 2,
+      "solvers": {
+        "dpll_lex_false_first_v1": {
+          "command": "internal:solve_cnf_dpll(config=dpll_lex_false_first_v1)",
+          "complete": true,
+          "version": "carnot_exact_dpll_lex_false_first_v1"
+        },
+        "dpll_occurrence_true_first_v1": {
+          "command": "internal:solve_cnf_dpll(config=dpll_occurrence_true_first_v1)",
+          "complete": true,
+          "version": "carnot_exact_dpll_occurrence_true_first_v1"
+        }
+      }
+    },
+    "source_method_receipt": {
+      "claims_imported": false,
+      "method_boundary": "fixture_design_reference_only_no_result_import",
+      "ok": true,
+      "path": "research-references.md",
+      "receipt_found": true,
+      "receipt_hash": "sha256:39dc5d515c3682ccc23f9a8c16bc0cdc8eb87ece7443fda0df57cc162b6e3309",
+      "research_references_sha256": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+      "source_id": "arxiv:2607.17047"
+    },
+    "upstream_counterfactual_fixture": {
+      "artifact_path": "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
+      "artifact_sha256": "sha256:17f5e40f74bd28eec52edd443781be636ebe5c66615807b2bb883575db22fe5d",
+      "ok": true,
+      "ready_score": 1.0,
+      "row_count": 648,
+      "rows_path": "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl",
+      "rows_sha256": "sha256:0123a7e3c4d99d3e5595f2462ef6ff42bd54f4a3866fdbaf5f3fdc039ca1a441"
+    }
+  },
+  "proof_hardness_covariates": {
+    "conflict_count_is_label": false,
+    "covariate_boundary": "analysis_only_not_ground_truth",
+    "family_deterministic_time_proxy_s": {
+      "expander_tseitin": 0.086177,
+      "ladder_tseitin": 0.019207
+    },
+    "family_solver_conflicts": {
+      "expander_tseitin": 6647,
+      "ladder_tseitin": 1181
+    },
+    "family_solver_decisions": {
+      "expander_tseitin": 13559,
+      "ladder_tseitin": 2510
+    },
+    "receipt_hash": "sha256:f346e2cea47e96f32fb91c3573d1e1e88f9f6159913d9d9a1fda4cce157d20c7",
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.proof_hardness_covariates",
+    "time_covariate_is_label": false
+  },
+  "proof_preserving_relabel_receipts": {
+    "all_relabel_checks_passed": true,
+    "receipt_hash": "sha256:cd3a603f640317b7f965db748b882d3c581205b390591f4250b210a1fe43689c",
+    "relabel_count": 84,
+    "relabel_failure_count": 0,
+    "relabel_failures": [],
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.proof_preserving_relabel_receipts"
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "changed_files": [],
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.protected_files_unchanged"
+  },
+  "reproducibility_checksum": "sha256:ed892b218f9e87d1ae98d27e96cb785ce0a23e410d6741bccaa2f31b8dac6073",
+  "row_file_receipt": {
+    "atomic_write": true,
+    "path": "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+    "receipt_hash": "sha256:0065032730635592ad89d10fe2d1505bac3d54de321d4b315c3d310cb834da70",
+    "row_count": 84,
+    "row_hash_root": "sha256:08cb22459718bc20219c657b23b0a6b23ed98ceac75d38a3488c3f9166c18a26",
+    "row_hashes": {
+      "exp5868-expander_tseitin-large-satisfiable-canonical": "sha256:67bc2cdeeeda135ed25c8135f7e325a8a3f711fd91527a7b698f02d022052884",
+      "exp5868-expander_tseitin-large-satisfiable-clause_reorder": "sha256:0e840acc97fc711ab01fe0e1c892e8ccd2c261294b9676794b91264d9b8cfac6",
+      "exp5868-expander_tseitin-large-satisfiable-density_mismatched": "sha256:db689a249630b4790b2ba1c483bfe00ab7a5917c70decf0938a2f258a1bd37ed",
+      "exp5868-expander_tseitin-large-satisfiable-length_matched": "sha256:9e66e4e1d3f34bf087cb08fd43e7c339ab1928b052388bbe93aebbc859c56355",
+      "exp5868-expander_tseitin-large-satisfiable-no_information": "sha256:a3e2d0e13a2729afaaa774969d6aedaf8bc8af608b081cce55fcd7f172d7fa3e",
+      "exp5868-expander_tseitin-large-satisfiable-padding": "sha256:dd33d5bc34821b572f055b298f3001d394ba1ed50b0e8a06a22a51b92efab396",
+      "exp5868-expander_tseitin-large-satisfiable-variable_renaming": "sha256:7f0ccb04f32f448aed0208fa1eb78c4704a5253b091855efebc1aa5036fc0f9c",
+      "exp5868-expander_tseitin-large-unsatisfiable-canonical": "sha256:db8f27600fad26e03b84e1d71eaf78556165e37ab6e23f3ac33f33814ef14369",
+      "exp5868-expander_tseitin-large-unsatisfiable-clause_reorder": "sha256:0caa78174f5c2ca9dcb98b000bad2025c06c5430965e1f27c56bb15088fc7359",
+      "exp5868-expander_tseitin-large-unsatisfiable-density_mismatched": "sha256:dcee03b04961b41f766a83297a6796efeaf6885db3297c8937f3244a8de850b5",
+      "exp5868-expander_tseitin-large-unsatisfiable-length_matched": "sha256:cf51a5fa9138749492d118ed58ee0a4e3293f445de622827b54fd90a5296816c",
+      "exp5868-expander_tseitin-large-unsatisfiable-no_information": "sha256:9c7b697bcd5233706c6f231c2f775f08af69a4809c4574c72f0a05651bfda78d",
+      "exp5868-expander_tseitin-large-unsatisfiable-padding": "sha256:11ee4343aa2e30ae05cc4ac3e5509133de2b387ef3d013039e79d6ff9c0cf8ed",
+      "exp5868-expander_tseitin-large-unsatisfiable-variable_renaming": "sha256:fc50b84f3c2360876a7614c26779220c2fa449eab7f9cbb1154112b228a4f18a",
+      "exp5868-expander_tseitin-medium-satisfiable-canonical": "sha256:915c697ba4ae91fc71e07b2a3cd472faf96d0f27fd80f80249593fade8e26bdc",
+      "exp5868-expander_tseitin-medium-satisfiable-clause_reorder": "sha256:0ef675d02a03354ff26e50e8914c3fd1dd97b612d23ee0079b13a0edda678725",
+      "exp5868-expander_tseitin-medium-satisfiable-density_mismatched": "sha256:ae0028364000e3b73073211c3bb99dbed0e3f31fa9ea54c837dd881ff668ed98",
+      "exp5868-expander_tseitin-medium-satisfiable-length_matched": "sha256:dff6a5e602f96a9aaef7f2dd337e20943cef22cb283abf8742e7b7276d8a634e",
+      "exp5868-expander_tseitin-medium-satisfiable-no_information": "sha256:27694eecc3c395dc7e449c6bb66ef167c24aa7560060acdff282e2ec831a0d5b",
+      "exp5868-expander_tseitin-medium-satisfiable-padding": "sha256:04aeb7f2fd7c1bc34aae37c1f233711a46b73918f25b0f2a35bf732b4d4a8c79",
+      "exp5868-expander_tseitin-medium-satisfiable-variable_renaming": "sha256:3c3d2d64b1fba305ab1cd1508ffb79727c5eb79bf8eaf5ad2698d7699e2816eb",
+      "exp5868-expander_tseitin-medium-unsatisfiable-canonical": "sha256:f09ca27255bf0095955da5a5020c22fdf802c779d692023ab0d312a78523b894",
+      "exp5868-expander_tseitin-medium-unsatisfiable-clause_reorder": "sha256:752aa863114a826744400626a355a009915fe0132d3a1940fe2bd42b0ac92d7b",
+      "exp5868-expander_tseitin-medium-unsatisfiable-density_mismatched": "sha256:4bf743c2a4e3ed51045cae4d70ba774ee62ef5f71d4f7bda1a0eb64eb221693a",
+      "exp5868-expander_tseitin-medium-unsatisfiable-length_matched": "sha256:54160e029b987f4980b68e61624ffd70a4c05b5580c1db5530f8cc51f43608dd",
+      "exp5868-expander_tseitin-medium-unsatisfiable-no_information": "sha256:37eaa8a9a2dd965c46423ae0aeed5ac724abf961a64c328f48a3800bc2c60da4",
+      "exp5868-expander_tseitin-medium-unsatisfiable-padding": "sha256:06940281d803e77ba5f7029e8842b9446b93bacf479fec43073e840c897ff92a",
+      "exp5868-expander_tseitin-medium-unsatisfiable-variable_renaming": "sha256:038f2a3a7f731f5333b655598ee50e7531432408d09405235b5adcbee7e42786",
+      "exp5868-expander_tseitin-small-satisfiable-canonical": "sha256:ab5108451ea1580ef7786282ef17eab56bc34143e56c9a91772d51f8dd8a9993",
+      "exp5868-expander_tseitin-small-satisfiable-clause_reorder": "sha256:9e331f5d69f8041212315346cedba9fcca025c74ba5c18569f5f3e88ae4d46b5",
+      "exp5868-expander_tseitin-small-satisfiable-density_mismatched": "sha256:219b8a5f245d0a9d40ba51a30ef17a9abe01d7fa7f66174d19c913c88b8ff75e",
+      "exp5868-expander_tseitin-small-satisfiable-length_matched": "sha256:d187bd55e36c7342a99143fec34be5a4b716554e29378d8b0ed4f1c48a303bff",
+      "exp5868-expander_tseitin-small-satisfiable-no_information": "sha256:ea1e53a5035276f407017bb32e846cfe62baf36c90c36fcfceb41b8440502e26",
+      "exp5868-expander_tseitin-small-satisfiable-padding": "sha256:eac89c76ead84a5f68adc2096da37259c8b6ab906e46b97e652b64fa8d0acc9f",
+      "exp5868-expander_tseitin-small-satisfiable-variable_renaming": "sha256:7ac2172351fe364cae8f2f57a85b28a3fe84bdf78a536a0a329e02a878ba4de6",
+      "exp5868-expander_tseitin-small-unsatisfiable-canonical": "sha256:60938787baa5974758ffc3cf13bf3812f227717920b09fc5c86155e80fb3cc10",
+      "exp5868-expander_tseitin-small-unsatisfiable-clause_reorder": "sha256:31d6fb12b8f45984536eb9d3a65824a58a2c2b3bbd2146e2dbdb15a240a7d7e9",
+      "exp5868-expander_tseitin-small-unsatisfiable-density_mismatched": "sha256:548b4233b37e59498a4ded258210e4e2d2f9f63a0f31cbb0da1c5c9d8a04e1b9",
+      "exp5868-expander_tseitin-small-unsatisfiable-length_matched": "sha256:86d89e6fbd6dcf15e9a57706634e11a864468476e5f8b8f77fb07cb899cdc0b1",
+      "exp5868-expander_tseitin-small-unsatisfiable-no_information": "sha256:a5432d7073610412f92bd911d14bfba7dd01d3b57a99a2b4b5f69cbc26d459c1",
+      "exp5868-expander_tseitin-small-unsatisfiable-padding": "sha256:5211e7e23819b3c590c63f674a36cf7e3c641f8d3ad235ada4d0e7f3833760aa",
+      "exp5868-expander_tseitin-small-unsatisfiable-variable_renaming": "sha256:5d69e104c984129ae00e7047b7b8ce2b0561e141c2b5823b3cc9069ba12c624b",
+      "exp5868-ladder_tseitin-large-satisfiable-canonical": "sha256:3243ec7c6f71a597b8c27034ff3ac4e2d7fc711be67b361c871ea308725d0e66",
+      "exp5868-ladder_tseitin-large-satisfiable-clause_reorder": "sha256:c64fb936a69c80df19e844aa0927ef2a7a7b2aad1c1f3644460af82f50d41400",
+      "exp5868-ladder_tseitin-large-satisfiable-density_mismatched": "sha256:0d3f7ef13f0029c62d8382275de9f658ec3b18ac9ed8b001e9302ca4f1a15a4f",
+      "exp5868-ladder_tseitin-large-satisfiable-length_matched": "sha256:ffa7f55b4acb22230ab35ee47a0203d95e148d15c825d57efd1e4a4b160d28a0",
+      "exp5868-ladder_tseitin-large-satisfiable-no_information": "sha256:ece640b6844e87b0a41aa644cf3f30b152886368b7f916df393cdfdcf5fb05b1",
+      "exp5868-ladder_tseitin-large-satisfiable-padding": "sha256:422d2f0e568a0877c835e0adf386217c308818e123d769add428239e8988a68d",
+      "exp5868-ladder_tseitin-large-satisfiable-variable_renaming": "sha256:c5b1a8d0ca726f0d4f0904bdda6f091d9da0a5ec975be7d4e999b5ad46104452",
+      "exp5868-ladder_tseitin-large-unsatisfiable-canonical": "sha256:9808e24cada2fc8c58e1bf7f37b7f8510bb19a3ef18112d39e23896817383b30",
+      "exp5868-ladder_tseitin-large-unsatisfiable-clause_reorder": "sha256:307d854493e1a689396fa84f32834698c1179ba66b9b4c3f0cf67e125b114bbc",
+      "exp5868-ladder_tseitin-large-unsatisfiable-density_mismatched": "sha256:2caaec61d7888298cec9d945188a39b86543b747d477de08b8a3273849a0ff83",
+      "exp5868-ladder_tseitin-large-unsatisfiable-length_matched": "sha256:0a2f7a31cd6caa2cac21a1f27d60190d157e8fce919cb0c000105dfe88cbdd41",
+      "exp5868-ladder_tseitin-large-unsatisfiable-no_information": "sha256:e7bb3c1b3db27597a475bae27559733962b0e844d4fe06f9a31dd0e36db1afcf",
+      "exp5868-ladder_tseitin-large-unsatisfiable-padding": "sha256:dc4be762c874be1ff09a098ade3ef1658a4e1b87823980c8459a4fb41a1a3382",
+      "exp5868-ladder_tseitin-large-unsatisfiable-variable_renaming": "sha256:7d4493d755d7d50e9233943fc5f453ca4fdfd4e8cc692e9dafac56eecc03621a",
+      "exp5868-ladder_tseitin-medium-satisfiable-canonical": "sha256:a0bafb0be3c3e741969b3c14e3371bc1c0fc1346ea21adf096ad6819725f9a0a",
+      "exp5868-ladder_tseitin-medium-satisfiable-clause_reorder": "sha256:23cceeb232ff8cf1828edbdbc2fd8ba8cd91f73edf4a012b3e0fbf3b2071829e",
+      "exp5868-ladder_tseitin-medium-satisfiable-density_mismatched": "sha256:ee7261095863bc70318d074a6162158c96d2923a4c75cb3e86d218251b5d9b3c",
+      "exp5868-ladder_tseitin-medium-satisfiable-length_matched": "sha256:56162096aa1dc2c334bdf0e3b6f670b9762208e2f1e887ea4131918f74d16a37",
+      "exp5868-ladder_tseitin-medium-satisfiable-no_information": "sha256:3021cc25566b234d0d89ed09a08f4f7443f6350ac5059aba21e86e51e96b1a4e",
+      "exp5868-ladder_tseitin-medium-satisfiable-padding": "sha256:310618e12c16461f806ef2fcbb80a2485331c9cde0622a219a188da2b0394061",
+      "exp5868-ladder_tseitin-medium-satisfiable-variable_renaming": "sha256:6cba976a69be6a7e8a6ed90ae02e6bbd5f30533b9f4a83570a16c24cc2ca7285",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-canonical": "sha256:86415e63cbb526427a2d1ee2f1ee62ebe2ff21b3c15f3d708b03f792b8de35a4",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-clause_reorder": "sha256:d273cbc6f5422447dba4f1a43ed0ac5f4c2d986b26c9e32a6affbb5b87e3473c",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-density_mismatched": "sha256:7bd511009c2eeb968c13d10edad30ba78b14bac3e709d0c5b8db5bc6ab86dbc6",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-length_matched": "sha256:f6110638c203368eb831dc3a6763b454cb4affea00e9010b697e3bd105cc92c1",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-no_information": "sha256:c52a55c1514b3ea37bab8f4934c6371b53b5948814b1e2a32875620faa8074a7",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-padding": "sha256:90703cdeee57840c6881f1546288d1a017aa2f003f929873d5022dfee2ff856c",
+      "exp5868-ladder_tseitin-medium-unsatisfiable-variable_renaming": "sha256:2e368a04f26e34a50300b6f3851fc3e08f40dd8fc74dd0667a8fcdefacc462f4",
+      "exp5868-ladder_tseitin-small-satisfiable-canonical": "sha256:b46f7d990fa93ef63da6261cde69885efa976a063da717ae43d7b0900e3ad13a",
+      "exp5868-ladder_tseitin-small-satisfiable-clause_reorder": "sha256:a300636248303d5d997b0d06635774b6313d67afe402cf8d193c09599acb2fb4",
+      "exp5868-ladder_tseitin-small-satisfiable-density_mismatched": "sha256:8dbba349aa38a66cd783b966573218d6540fe0ba3647c6c53c1da950d35aea0b",
+      "exp5868-ladder_tseitin-small-satisfiable-length_matched": "sha256:abb8adb6b9c0c9d8f3c47d9c411c25ba83423e17b444c4e81055fd9dee55fce5",
+      "exp5868-ladder_tseitin-small-satisfiable-no_information": "sha256:40e36efb94cc564b29ce6c428c8164ec004f5ac30996605be5a977cea525a45b",
+      "exp5868-ladder_tseitin-small-satisfiable-padding": "sha256:cee6d9e09366711393bd8d8a094f122f80123a49c24605da913b70475618d84e",
+      "exp5868-ladder_tseitin-small-satisfiable-variable_renaming": "sha256:7057bd791bd66ab1612a955543b4d8e654579ed5180102d99043c30d71a2d713",
+      "exp5868-ladder_tseitin-small-unsatisfiable-canonical": "sha256:a3fcf3c9359ff970e9e0fecd6e4cd5c30aeea58ae578a97e424a014c92223b82",
+      "exp5868-ladder_tseitin-small-unsatisfiable-clause_reorder": "sha256:7200a431b03e3a43d05af0c0306a88fb8792a9d750b94adf26992155c23eb337",
+      "exp5868-ladder_tseitin-small-unsatisfiable-density_mismatched": "sha256:062d421c85fba16bea2e55c9af63e0cbd18274c9bda1005361c558e75c20fac7",
+      "exp5868-ladder_tseitin-small-unsatisfiable-length_matched": "sha256:54be61942616114fe15f9fb095a166eba2841b850774a5488630af1229e48a61",
+      "exp5868-ladder_tseitin-small-unsatisfiable-no_information": "sha256:4bd734d8d1e388250a7242a6492e67c95b6b8ddb777a58199f736ecfdb5d4ac8",
+      "exp5868-ladder_tseitin-small-unsatisfiable-padding": "sha256:dcbf147a07e20f6e0d77a4a8a0ab7ef73135c967315b1d923cb3ca36f9d587d8",
+      "exp5868-ladder_tseitin-small-unsatisfiable-variable_renaming": "sha256:a21f45a8b5df296f9ac126cd0b9b576df640a0f4769014456a5cd3d8f45614fa"
+    },
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.row",
+    "sha256": "sha256:f6b0c41dbe9c7c036047a700c358c1ce1f8c5b6ee87f102ecc1df02d24051f09"
+  },
+  "run_date": "20260724",
+  "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1",
+  "solver_disagreement_and_timeout_controls": {
+    "all_controls_passed": true,
+    "duplicate_row_id_count": 0,
+    "missing_certificate_validation_count": 0,
+    "receipt_hash": "sha256:d453ceb914867a6672a86e0b157b06a996e9d912a8816523e3a80785730dcaa3",
+    "rejected_unsettled_instances": true,
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.solver_disagreement_and_timeout_controls",
+    "solver_disagreement_count": 0,
+    "solver_timeout_count": 0
+  },
+  "solver_versions_and_oracle_receipts": {
+    "all_solvers_agree": true,
+    "label_failure_count": 0,
+    "label_failures": [],
+    "oracle_label_source": "exact_solver_expected_label",
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.solver_versions_and_oracle_receipts",
+    "solver_configuration_count": 2,
+    "solver_disagreement_count": 0,
+    "solver_disagreements": [],
+    "solver_timeout_count": 0,
+    "solver_timeouts": [],
+    "solver_versions": {
+      "dpll_lex_false_first_v1": {
+        "command": "internal:solve_cnf_dpll(config=dpll_lex_false_first_v1)",
+        "complete": true,
+        "version": "carnot_exact_dpll_lex_false_first_v1"
+      },
+      "dpll_occurrence_true_first_v1": {
+        "command": "internal:solve_cnf_dpll(config=dpll_occurrence_true_first_v1)",
+        "complete": true,
+        "version": "carnot_exact_dpll_occurrence_true_first_v1"
+      }
+    }
+  },
+  "source_method_receipt": {
+    "claims_imported": false,
+    "method_boundary": "fixture_design_reference_only_no_result_import",
+    "ok": true,
+    "path": "research-references.md",
+    "receipt_found": true,
+    "receipt_hash": "sha256:39dc5d515c3682ccc23f9a8c16bc0cdc8eb87ece7443fda0df57cc162b6e3309",
+    "research_references_sha256": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+    "source_id": "arxiv:2607.17047"
+  },
+  "status": "complete",
+  "surface_and_no_information_controls": {
+    "all_control_labels_preserved": true,
+    "all_controls_present": true,
+    "control_counts": {
+      "canonical": 12,
+      "clause_reorder": 12,
+      "density_mismatched": 12,
+      "length_matched": 12,
+      "no_information": 12,
+      "padding": 12,
+      "variable_renaming": 12
+    },
+    "control_label_failure_count": 0,
+    "control_label_failures": [],
+    "no_information_surface_token_count": 3360,
+    "no_information_tokens_hash": "sha256:a762bad24cf9942bb38af66f87656de2eb9c584c21e27ca6bfa34225644c65ea",
+    "receipt_hash": "sha256:8c712bc9861ae198b48790c7e9686f727c3812864a648978e93be859a3c69d7b",
+    "required_controls": [
+      "canonical",
+      "clause_reorder",
+      "variable_renaming",
+      "padding",
+      "density_mismatched",
+      "length_matched",
+      "no_information"
+    ],
+    "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.surface_and_no_information_controls"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py -m pytest tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5868_hardness_controlled_constraint_fixture.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py -m pytest tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5868_hardness_controlled_constraint_fixture.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "verifier_is_oracle": true
+}
