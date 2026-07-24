@@ -149,9 +149,13 @@ def main() -> int:
         result["perception_verifier_solve"] = {"skipped": "no navigation pair derived from recon"}
 
     print(f"[{game}] perception-derived (player,goal)={pair} vs hand {hand_pair} match={result['pair_matches_hand']}")
-    print(f"  hand_verifier:       reached L{result['hand_verifier_solve']['search_reached']} reproduced={result['hand_verifier_solve']['reproduced_levels']}")
+    hvs = result["hand_verifier_solve"]
+    print(f"  hand_verifier:       reached L{hvs['search_reached']} reproduced={hvs['reproduced_levels']}")
     pv = result["perception_verifier_solve"]
-    print(f"  perception_verifier: {pv if 'skipped' in pv else f'reached L{pv[\"search_reached\"]} reproduced={pv[\"reproduced_levels\"]}'}")
+    if "skipped" in pv:
+        print(f"  perception_verifier: {pv['skipped']}")
+    else:
+        print(f"  perception_verifier: reached L{pv['search_reached']} reproduced={pv['reproduced_levels']}")
 
     hv, pvs = result["hand_verifier_solve"], result["perception_verifier_solve"]
     proven = (pair == hand_pair or (isinstance(pvs, dict) and pvs.get("reproduced_levels") and
