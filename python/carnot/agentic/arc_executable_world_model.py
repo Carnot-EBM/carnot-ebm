@@ -1222,7 +1222,7 @@ deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
 {_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid)}
-"""
+{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}"""
 
 
 _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8
