@@ -222,6 +222,7 @@ AGGREGATION_MIN_DURATION_S = 0.0001  # 100us floor catches truly-zero/missing
 DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic_verifier",
     "deterministic_verifier_plus_replay",
+    "deterministic_exact_verifier_and_versioned_external_state_no_llm",
     "artifact_provenance_audit",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001

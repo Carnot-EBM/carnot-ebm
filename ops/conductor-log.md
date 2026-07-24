@@ -14241,3 +14241,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 17:07 UTC | Immutable hardness-headroom evidence escrow and cl | OK | 86 passed, 1 warning in 17.10s |
 | 2026-07-24 17:27 UTC | Gated on Exp5892 admission: exact grounding-shortc | OK | 87 passed, 1 warning in 16.09s |
 | 2026-07-24 17:51 UTC | Gated on Exp5893 fixture: one-to-one atom-groundin | OK | 87 passed, 1 warning in 13.93s |
+| 2026-07-24 19:14 UTC | Gated on Exp5894 mechanism: prospective shortcut-s | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "
++    bad_jso |

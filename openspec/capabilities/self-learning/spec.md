@@ -25317,6 +25317,177 @@ overflow, failed tests, or nonpositive credited lower bounds
 |---|---|---|
 | REQ-LEARN-5894 | Implemented (`python/carnot/experiment_5894_one_to_one_grounding_ab.py`, `results/experiment_5894_one_to_one_grounding_ab.json`) | Implemented (`tests/python/test_experiment_5894_one_to_one_grounding_ab.py`) |
 
+## REQ-LEARN-5895: Shortcut-Safe Continuous Self-Learning With Versioned Grounding State
+
+The self-learning tier SHALL provide Exp5895, a sealed chronological,
+reduced-oracle, versioned external-memory lifecycle for one-to-one grounding at
+`python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py` that
+consumes Exp5894 plus the Exp5893 grounding rows and writes
+`results/experiment_5895_shortcut_safe_continuous_self_learning.json`.
+Exp5895 SHALL remain default-off, SHALL NOT mutate GGUF or other model
+weights, SHALL NOT depend on the retired Exp5865-Exp5867 kernel
+requalification chain, and SHALL use
+`deterministic_exact_verifier_and_versioned_external_state_no_llm`.
+`verifier_is_oracle` SHALL be true because exact semantic and constraint
+validators retain promotion authority.
+
+Before any learning decision, Exp5895 SHALL replay the Exp5894 gate, hash
+upstream artifacts and row files, lifecycle code, exact validator code, split
+groups, seeds, budgets, output path, disk/RAM receipts, protected files, and
+real GGUF weight files. Failed preconditions SHALL emit a terminal blocked
+artifact with `shortcut_resistant_csl_ready_score=0.0`.
+
+Exp5895 SHALL seal train, quarantine-validation, future-test, recurrence, and
+protected-prefix batches before decisions. Current updates SHALL commit
+proposals before exact labels for later batches are revealed. Unsafe,
+unverified, quarantined, or rejected state SHALL NOT become future context.
+
+Exp5895 SHALL freeze these arms before scoring:
+`verified_evidence_plus_unresolved_constraints`, `fixed_validated_memory`,
+`one_to_one_reduced_oracle`, `one_to_one_full_oracle`, `soft_grounding`,
+`shuffled_grounding`, `no_memory`, and `compatible_replay`. Every arm SHALL
+receive matched event, state, replay, query, seed, and applicable budget
+receipts.
+
+Exp5895 SHALL use versioned proposals, rejected-update buffering, quarantine,
+prospective promotion, per-update non-forgetting certificates, bounded replay,
+collision/supersession handling, restart equivalence, and exact rollback.
+Rejected updates MUST never propagate. Exp5895 SHALL measure
+intended-semantic future accuracy, constraint accuracy, shortcut false
+accepts, forward transfer, recurrence, retention, dynamic regret, query
+efficiency, latency, and family/grounding/hardness lower-bound intervals.
+
+Exp5895 SHALL emit a backend-neutral hardware mapping for insert, quarantine,
+lookup, supersede, rollback, sparse ranking, fixed-width IDs, bounded records,
+deterministic hashes, update counts, and precision ranges. The mapping SHALL be
+a falsifiable contract only; it SHALL NOT execute boards or claim speedup.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`continuous_self_learning_task`, `upstream_gate_and_hash_receipts`,
+`sealed_chronological_split_and_visibility`,
+`frozen_arms_and_budget_parity`, `exact_query_policy_and_budget`,
+`verified_evidence_and_unresolved_constraint_state`,
+`versioned_promotion_quarantine_rejection_and_rollback`,
+`rejected_update_non_propagation`,
+`per_update_non_forgetting_certificates`,
+`prospective_semantic_and_constraint_metrics`,
+`shortcut_false_accept_metrics`,
+`forward_transfer_recurrence_retention_and_regret`,
+`family_grounding_hardness_lower_bounds`,
+`replay_query_resource_and_latency_accounting`,
+`memory_cap_accounting`, `rollback_restart_and_state_hashes`,
+`no_model_weight_mutation`, `null_and_ablation_controls`,
+`hardware_mapping_contract`, `retirement_decision`,
+`shortcut_resistant_csl_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes positive, null, unsafe, retired, or blocked shortcut-safe continuous learning evidence.
+- `preconditions_checked`: Gate, hashes, validators, split groups, seeds, budgets, resources, outputs, protected files, and retired-chain exclusion prevent invalid learning.
+- `continuous_self_learning_task`: Must be bare true for the milestone requirement.
+- `upstream_gate_and_hash_receipts`: Exp5894, Exp5893 rows, lifecycle code, validators, and immutable weights are the bounded evidence surface.
+- `sealed_chronological_split_and_visibility`: Future evidence cannot influence current updates.
+- `frozen_arms_and_budget_parity`: Frozen arm and budget parity isolate external-state lifecycle effects.
+- `exact_query_policy_and_budget`: Exact feedback cost and authority are explicit before promotion.
+- `verified_evidence_and_unresolved_constraint_state`: The state contains verified evidence plus unresolved constraints without treating unresolved items as accepted facts.
+- `versioned_promotion_quarantine_rejection_and_rollback`: Only exact validation can promote and every state edit has a rollback target.
+- `rejected_update_non_propagation`: Unsafe or unverified state never becomes future context.
+- `per_update_non_forgetting_certificates`: Every promoted update carries a protected-prefix retention certificate.
+- `prospective_semantic_and_constraint_metrics`: Future semantic and constraint outcomes are scored after commit.
+- `shortcut_false_accept_metrics`: Shortcut false accepts are counted by arm and type.
+- `forward_transfer_recurrence_retention_and_regret`: Prospective learning must improve transfer without forgetting or unbounded regret.
+- `family_grounding_hardness_lower_bounds`: Grouped lower bounds prevent pooled lift from hiding a failing family, grounding, or hardness cell.
+- `replay_query_resource_and_latency_accounting`: Replay, query, resource, and latency accounting expose costs without speedup claims.
+- `memory_cap_accounting`: Versioned state, replay, quarantine, and rejected buffers remain bounded.
+- `rollback_restart_and_state_hashes`: Restart and rollback must reproduce exact canonical state hashes.
+- `no_model_weight_mutation`: Immutable GGUF weights remain unchanged.
+- `null_and_ablation_controls`: Null, ablation, soft, shuffled, fixed-memory, no-memory, and compatible-replay controls test causal credit.
+- `hardware_mapping_contract`: Each learning tier retains a falsifiable hardware path without claiming execution.
+- `retirement_decision`: The next step distinguishes advancement from null, unsafe, blocked, or retired evidence.
+- `shortcut_resistant_csl_ready_score`: Emit bare 1.0 only for positive grouped future lift, zero unsafe accepts, exact retention/rollback, bounded state, and immutable weights.
+- `duration_s`: Measured wall time exposes deterministic sidecar work.
+- `inference_substrate`: Use `deterministic_exact_verifier_and_versioned_external_state_no_llm`.
+- `verifier_is_oracle`: True for exact feedback and promotion authority.
+- `field_provenance`: Every field traces to prompt, spec, rows, upstream artifacts, validators, lifecycle code, controls, or tests.
+- `test_commands`: Commands document focused unit/coverage, gate/hash, split visibility, arm/budget parity, lifecycle, non-forgetting, rejected-update, shortcut safety, grouped intervals, state cap, restart/rollback, weight immutability, hardware-schema, applicable E2E, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects gate, row, split, budget, state, metric, hardware-contract, or code drift.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:`.
+
+`shortcut_resistant_csl_ready_score` SHALL be the bare scalar `1.0` only when
+preconditions pass, Exp5894 replays as complete-positive, future-label
+visibility is zero, all arms match event/state/replay/query budgets, rejected
+updates never propagate, all per-update non-forgetting certificates pass,
+prospective grouped future lift is positive over learned controls, shortcut and
+unsafe false accepts are zero, restart and rollback hashes match exactly, state
+and buffers remain within cap, GGUF weights are unchanged, hardware mapping is
+backend-neutral and non-executing, every required test exit code is zero,
+`inference_substrate` is
+`deterministic_exact_verifier_and_versioned_external_state_no_llm`, and
+`verifier_is_oracle=true`. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5895-PRECONDITIONS: Exp5894 Gate And Retired Chain Exclusion
+
+**Given** Exp5894 and its Exp5893 rows are present
+**When** Exp5895 checks preconditions
+**Then** the Exp5894 gate, upstream row hashes, lifecycle code, validators,
+split groups, seeds, budgets, output path, resources, protected files, and
+GGUF weights are hashed
+**And** Exp5865-Exp5867 are recorded as retired/non-dependencies.
+
+### SCENARIO-LEARN-5895-SEALED-SPLITS: Commit Before Reveal
+
+**Given** train, quarantine-validation, future-test, recurrence, and
+protected-prefix batches
+**When** a current update is proposed
+**Then** future evidence remains sealed until its batch opens
+**And** the committed pre-reveal proposal hash is preserved.
+
+### SCENARIO-LEARN-5895-LIFECYCLE: Rejected Updates Never Propagate
+
+**Given** versioned proposals, quarantine, rejection, promotion, rollback, and
+bounded replay
+**When** Exp5895 processes shortcut rows
+**Then** unsafe or unverified updates stay in quarantine or the rejected buffer
+**And** no rejected update id appears in promoted state, replay context, or
+future lookup context.
+
+### SCENARIO-LEARN-5895-METRICS: Prospective Lift Is Shortcut Safe
+
+**Given** all frozen arms and matched budgets
+**When** future-test rows are scored
+**Then** the verified-evidence-plus-unresolved-constraints state has positive
+grouped future semantic lift, zero unsafe accepts, exact constraint metrics,
+non-forgetting certificates, bounded regret, and matched query/replay receipts.
+
+### SCENARIO-LEARN-5895-HARDWARE-MAPPING: Backend-Neutral Contract Only
+
+**Given** the learned state lifecycle operations
+**When** Exp5895 emits the hardware mapping
+**Then** insert, quarantine, lookup, supersede, rollback, sparse ranking,
+fixed-width ids, bounded records, deterministic hashes, update counts, and
+precision ranges are specified
+**And** no board execution or speedup is claimed.
+
+### SCENARIO-LEARN-5895-FAIL-CLOSED: Unsafe Or Null Runs Do Not Promote
+
+**Given** missing gates, future-label leakage, budget mismatch, rejected-update
+propagation, unsafe accepts, nonpositive grouped lift, non-forgetting failure,
+rollback mismatch, memory overflow, GGUF mutation, hardware speedup claims, or
+failed tests
+**When** Exp5895 validates the artifact
+**Then** `shortcut_resistant_csl_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`, `unsafe:`,
+`complete_null:`, or `retired:`.
+
+## Implementation Status (Exp 5895)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5895 | Implemented (`python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py`, `results/experiment_5895_shortcut_safe_continuous_self_learning.json`) | Implemented (`tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
