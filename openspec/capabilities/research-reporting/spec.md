@@ -45683,3 +45683,137 @@ verdict starts with `complete:` or `blocked:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5863 | Implemented (`python/carnot/experiment_5863_transition_v522.py`, `results/experiment_5863_transition_v522.json`) | Implemented (`tests/python/test_experiment_5863_transition_v522.py`) |
+
+### REQ-REPORT-5877: V523 Transition Archives Exactly Activated V522 Identities
+
+The Exp5877 workflow SHALL read `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, `research-complete.yaml`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, every declared activated
+`.522` deliverable for Exp5863 through Exp5869, `scripts/evidence_index_collision_preflight.py`,
+`scripts/in_process_doc_reconcile.py`, and this research-reporting spec. It
+SHALL write `results/experiment_5877_transition_v523.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT modify `ops/north-star.md`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL resolve terminal `.522` evidence only by exact
+`(milestone, task_id, declared_deliverable)` tuples from the completion ledger
+and active roadmap context. It SHALL NOT select artifacts by globbed numeric
+prefix. Missing declared deliverables, including Exp5866, SHALL be recorded
+explicitly as activated-but-absent evidence caused by upstream retirement
+rather than replaced by same-number aliases or counted as success.
+
+The workflow SHALL run or preserve fresh adversarial-verifier receipts for
+every present declared `.522` deliverable. Exp5865 SHALL remain retired,
+Exp5866 SHALL remain missing because its upstream retired, Exp5867 SHALL
+remain gate-blocked, Exp5868 SHALL remain ready, and Exp5869 SHALL remain
+blocked. No retired, absent, blocked, ready, verifier-warned, or no-delta
+evidence may be promoted into a clean positive transition claim.
+
+The workflow SHALL append milestone `2026.07.522` to `research-complete.yaml`
+exactly once only when its exact milestone block is absent. If the exact block
+is already present, `research_complete_append_count` SHALL be bare `0`.
+Exp5870 through Exp5876 SHALL be recorded only in `unactivated_proposal_id_receipt`
+as proposal-only identities and SHALL NOT be appended as completed work.
+Existing duplicate history for other milestones SHALL be reported but SHALL
+NOT be de-duplicated, sorted, rewritten, or amplified; `duplicate_history_amplification_count`
+SHALL be bare `0`.
+
+The workflow SHALL scan the active roadmap, optional next roadmap, completion
+history, roadmap proposals, exclusion manifest, results, source, tests, and
+prior transition allocation receipts for Exp5877 through Exp5889. References
+inside the active `.523` allocation, the roadmap vNEXT proposal, the Exp5877
+owned module/test/spec/result, or the emitted artifact itself SHALL be recorded
+as allowed owned/allocation references, not collisions. Any other pre-existing
+file in that range SHALL block the handoff. `next_range_collision_count=0`
+SHALL be required as a bare integer for completion.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`unactivated_proposal_id_receipt`, `adversarial_verifier_receipts`,
+`outcome_classification`, `retired_missing_blocked_and_ready_preserved`,
+`research_complete_append_count`, `duplicate_history_amplification_count`,
+`next_task_range`, `next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty field-provenance entry and principle.
+
+Required field principles:
+
+- `status`: principle "Terminal state distinguishes exact archival from bootstrap work."
+- `preconditions_checked`: principle "Parsed roadmaps, hashes, resources, verifier availability, atomic output, and declared deliverables ground the handoff."
+- `milestone_transition`: principle "Explicit .522-to-.523 boundary prevents prefix aliasing."
+- `activated_task_and_deliverable_matrix`: principle "Only activated task IDs and declared paths are evidence."
+- `unactivated_proposal_id_receipt`: principle "Prior prose cannot become completed work."
+- `adversarial_verifier_receipts`: principle "Fresh verifier output preserves current artifact-quality authority."
+- `outcome_classification`: principle "Disjoint terminal classes prevent laundering."
+- `retired_missing_blocked_and_ready_preserved`: principle "Retired, absent, blocked, and ready outcomes remain separate terminal classes."
+- `research_complete_append_count`: principle "Exact zero-or-one prevents duplicate history."
+- `duplicate_history_amplification_count`: principle "Must be bare zero; existing duplicate history cannot be multiplied."
+- `next_task_range`: principle "A declared finite Exp5877-Exp5889 interval makes allocation auditable."
+- `next_range_collision_count`: principle "Only bare zero authorizes the range."
+- `docs_reconciled`: principle "Transition-owned specifications and receipts disclose deferred operator reconciliation."
+- `protected_files_unchanged`: principle "Protected user and conductor files remain byte-identical."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only work."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` declares archival rather than model inference."
+- `field_provenance`: principle "Every field traces to exact paths, hashes, commands, or roadmap records."
+- `test_commands`: principle "Commands document focused, coverage, YAML, verifier, collision, protection, reconciliation, spec, and root-clutter checks."
+- `test_exit_codes`: principle "Exit codes prevent failed owned checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects ledger, artifact, or allocation drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix makes the handoff terminal."
+
+#### SCENARIO-REPORT-5877-EXACT-ARCHIVE: Terminal V522 Identities Are Preserved
+
+**Given** the completion ledger declares Exp5863 through Exp5869 under
+milestone `2026.07.522`
+**And** the declared deliverables include complete, no-delta, retired, missing,
+gate-blocked, ready, and blocked evidence classes
+**When** the Exp5877 workflow builds the transition receipt
+**Then** it records every exact `(milestone, task_id, declared_deliverable)`
+tuple, records Exp5866 as missing due to upstream retirement, preserves each
+terminal class, sets `retired_missing_blocked_and_ready_preserved=true`, and
+does not promote non-positive evidence into a clean success class.
+
+#### SCENARIO-REPORT-5877-APPEND-ONCE: Completion History Is Not Amplified
+
+**Given** `research-complete.yaml` may or may not already contain the exact
+`2026.07.522` milestone block
+**When** the Exp5877 workflow runs
+**Then** it appends that milestone block exactly once only if absent, appends
+only the seven activated task identities, otherwise sets
+`research_complete_append_count=0`, records pre-existing duplicate history,
+and sets `duplicate_history_amplification_count=0`.
+
+#### SCENARIO-REPORT-5877-UNACTIVATED-PROPOSAL: Exp5870 Through Exp5876 Are Not Evidence
+
+**Given** prior prose mentioned Exp5870 through Exp5876
+**When** the Exp5877 workflow reconciles `.522` history
+**Then** it records those IDs in `unactivated_proposal_id_receipt`, confirms
+they are absent from the appended or existing `.522` task block, and does not
+write them as completed tasks.
+
+#### SCENARIO-REPORT-5877-RANGE-COLLISION: Exp5877 Through Exp5889 Is Collision-Free
+
+**Given** the active `.523` roadmap and vNEXT proposal allocate Exp5877 through
+Exp5889
+**When** the Exp5877 workflow scans roadmaps, history, proposals, exclusions,
+results, source, tests, and prior transition receipts
+**Then** only active allocation, vNEXT proposal, and Exp5877-owned references
+are allowed, unexpected pre-existing references block completion, and
+`next_range_collision_count=0` is required as a bare integer.
+
+#### SCENARIO-REPORT-5877-SCHEMA: Required Fields, Checksums, And Protected Files Are Stable
+
+**Given** the Exp5877 artifact is emitted
+**When** its schema is validated
+**Then** all required fields, principles, field provenance, test commands, test
+exit codes, checksum, and protected-file immutability receipts are present,
+`inference_substrate="aggregation_from_upstream_artifacts"`, and the terminal
+verdict starts with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5877)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5877 | Implemented (`python/carnot/experiment_5877_transition_v523.py`, `results/experiment_5877_transition_v523.json`) | Implemented (`tests/python/test_experiment_5877_transition_v523.py`) |
