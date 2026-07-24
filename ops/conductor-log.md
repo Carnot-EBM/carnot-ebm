@@ -14250,3 +14250,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 20:20 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |
 | 2026-07-24 20:23 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |
 | 2026-07-24 20:25 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |
+| 2026-07-24 20:46 UTC | Agent-owned ARC event tape and structured evidence | OK | 107 passed, 1 warning in 22.24s |
+| 2026-07-24 20:48 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |

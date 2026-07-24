@@ -1,0 +1,59 @@
+{
+  "experiment": "experiment_5832_goal_exemplar_grading_ab",
+  "experiment_id": "REQ-ARC-WMTE-5593-4",
+  "run_date": "2026-07-24",
+  "title": "Lever #2 A/B: goal-exemplar grading vs off; offline E3 levels banked on bp35/lf52/sc25.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5832,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP-GGUF",
+      "port": 8941,
+      "role": "e3_induction_generator"
+    }
+  ],
+  "config": {
+    "games": [
+      "bp35",
+      "lf52",
+      "sc25"
+    ],
+    "budget": 600,
+    "explore_budget": 40
+  },
+  "methodology_note": "Two arms toggle ONLY CARNOT_ARC_GOAL_EXEMPLAR_GRADING; same live Qwen3.5-9B-MTP server, same budget/explore_budget per game. E3AgentPolicy offline via arc_leaderboard_eval.run_game; metric = offline levels banked. Lever only bites at L2+ (needs a prior banked level), matching where GAP-ARCH-GOAL-NOT-VERIFIED lives.",
+  "per_game": [
+    {
+      "game": "bp35",
+      "baseline_levels": 0,
+      "treatment_levels": 0,
+      "levels_delta": 0
+    },
+    {
+      "game": "lf52",
+      "baseline_levels": 0,
+      "treatment_levels": 0,
+      "levels_delta": 0
+    },
+    {
+      "game": "sc25",
+      "baseline_levels": 0,
+      "treatment_levels": 0,
+      "levels_delta": 0
+    }
+  ],
+  "games_improved": [],
+  "games_regressed": [],
+  "gate_clears": false,
+  "preconditions_checked": [
+    {
+      "resource": "llama_server_port_8941",
+      "available": true
+    }
+  ],
+  "duration_s": 8157.0,
+  "honest_verdict": "complete_goal_exemplar_grading_ab_improved_0_regressed_0_gate_clears_False",
+  "reproducibility_checksum": "sha256:066e7394e476a713ab2ebd0bc1c3ac6ec60d28b52b59744925cb2515e59e9aa2"
+}

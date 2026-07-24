@@ -1,0 +1,849 @@
+{
+  "duration_s": 0.01,
+  "exact_retrieval_fidelity_by_evidence_type": {
+    "action_effect": {
+      "answer_key": {
+        "answer": {
+          "action_signature": "a=2|d={\"x\":2,\"y\":1}",
+          "changed_count": 3,
+          "outcome": "visible_change"
+        },
+        "derivation": "action_result action_effect.outcome == visible_change",
+        "evidence_type": "action_effect",
+        "source_event_hashes": [
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364"
+        ],
+        "source_event_ids": [
+          "evt-00000006"
+        ]
+      },
+      "query_id": "action_effect_visible_change",
+      "raw_exact": false,
+      "raw_source_event_ids": [],
+      "structured_exact": true,
+      "structured_source_event_ids": [
+        "evt-00000006"
+      ]
+    },
+    "object_spatial": {
+      "answer_key": {
+        "answer": {
+          "changed_bbox": {
+            "max_x": 3,
+            "max_y": 1,
+            "min_x": 1,
+            "min_y": 1
+          },
+          "changed_count": 3
+        },
+        "derivation": "action_result spatial_relation.changed_bbox for target x=2,y=1",
+        "evidence_type": "object_spatial",
+        "source_event_hashes": [
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364"
+        ],
+        "source_event_ids": [
+          "evt-00000006"
+        ]
+      },
+      "query_id": "object_spatial_visible_change_bbox",
+      "raw_exact": false,
+      "raw_source_event_ids": [],
+      "structured_exact": true,
+      "structured_source_event_ids": [
+        "evt-00000006"
+      ]
+    },
+    "provenance": {
+      "answer_key": {
+        "answer": {
+          "agent_owned": true,
+          "source": "fixture_level_progress_probe"
+        },
+        "derivation": "level-progress action_result evidence_source.source",
+        "evidence_type": "provenance",
+        "source_event_hashes": [
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "source_event_ids": [
+          "evt-00000009"
+        ]
+      },
+      "query_id": "provenance_level_progress_source",
+      "raw_exact": false,
+      "raw_source_event_ids": [],
+      "structured_exact": true,
+      "structured_source_event_ids": [
+        "evt-00000009"
+      ]
+    },
+    "temporal": {
+      "answer_key": {
+        "answer": {
+          "action_signature": "a=5|d={\"x\":2,\"y\":2}",
+          "logical_time": 9
+        },
+        "derivation": "max action_result temporal_order.logical_time",
+        "evidence_type": "temporal",
+        "source_event_hashes": [
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "source_event_ids": [
+          "evt-00000009"
+        ]
+      },
+      "query_id": "temporal_latest_action_result",
+      "raw_exact": false,
+      "raw_source_event_ids": [
+        "evt-00000003"
+      ],
+      "structured_exact": true,
+      "structured_source_event_ids": [
+        "evt-00000009"
+      ]
+    },
+    "uncertainty": {
+      "answer_key": {
+        "answer": {
+          "action_signature": "a=3|d={\"x\":0,\"y\":2}",
+          "probability": 0.61,
+          "uncertainty_label": "frontier_ambiguous"
+        },
+        "derivation": "action_candidate uncertainty.uncertainty_label",
+        "evidence_type": "uncertainty",
+        "source_event_hashes": [
+          "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c"
+        ],
+        "source_event_ids": [
+          "evt-00000005"
+        ]
+      },
+      "query_id": "uncertainty_ambiguous_candidate",
+      "raw_exact": false,
+      "raw_source_event_ids": [],
+      "structured_exact": true,
+      "structured_source_event_ids": [
+        "evt-00000005"
+      ]
+    }
+  },
+  "experiment": "experiment_5901_arc_structured_memory_causal_audit",
+  "false_retrieval_and_eviction_loss": {
+    "baseline_false_retrieval_count": 0,
+    "eviction_loss": {
+      "eviction_has_explicit_loss_receipts": true,
+      "loss_receipt_count": 5,
+      "retained_byte_count": 3761,
+      "retained_event_count": 5,
+      "tape_hash": "sha256:e31426bec177adcfcb185bb18eb290fdeffdc6cb64f0170f2505fad6d188f10e"
+    },
+    "shuffle_false_retrieval_count": 5
+  },
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Declares the no-LLM audit duration floor used by adversarial verification.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "exact_retrieval_fidelity_by_evidence_type": {
+      "principle": "Breaks retrieval exactness down by evidence family.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "false_retrieval_and_eviction_loss": {
+      "principle": "Reports wrong-source retrieval and bounded-memory loss receipts.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "field_provenance": {
+      "principle": "Explains how each required field is satisfied.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "frozen_query_intervention_and_budget_design": {
+      "principle": "Freezes queries, interventions, seeds, and budgets before scoring.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "group_bootstrap_lower_bounds": {
+      "principle": "Requires a positive structured-over-raw lower bound by query family.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict with the task-mandated prefix.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "identical_event_byte_receipts": {
+      "principle": "Shows raw and structured arms differ only in access structure.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "inference_substrate": {
+      "principle": "Declares offline ARC runtime self-discovery without LLM inference.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "no_memory_raw_and_structured_metrics": {
+      "principle": "Reports matched-arm retrieval utility and access cost.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "preconditions_checked": {
+      "principle": "Records gates checked before interpreting retrieval results.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms conductor-managed reconciliation files were not edited.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "provenance_and_oracle_boundary": {
+      "principle": "Keeps answer keys event-derived and non-oracle for policy credit.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "public_level_solve_claimed": {
+      "principle": "Must stay false because this is not a solve attempt.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "query_byte_latency_accounting": {
+      "principle": "Accounts for bounded query, byte, and latency costs.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "registry_precheck": {
+      "principle": "Prevents duplicate public-solve targeting.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "relevant_and_irrelevant_deletion_effects": {
+      "principle": "Tests causal evidence use rather than correlation with more context.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact with this field blanked.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "shuffled_stale_growth_restart_controls": {
+      "principle": "Rejects benefits from link shuffling, stale evidence, irrelevant growth, or restart drift.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "status": {
+      "principle": "Terminal state for the deterministic causal audit.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "structured_memory_causal_ready_score": {
+      "principle": "Bare 1.0 only when exact retrieval, positive lower bound, deletion utility, and authority/budget compliance all hold.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "test_commands": {
+      "principle": "Lists verification commands used for this artifact.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "test_exit_codes": {
+      "principle": "Records command outcomes without hiding failures.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "upstream_gate_and_hashes": {
+      "principle": "Links Exp5901 to Exp5900 and hashes all load-bearing inputs.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    },
+    "verifier_is_oracle": {
+      "principle": "False for policy credit; deterministic event-derived keys audit memory fidelity only.",
+      "satisfied_by": "Exp5901 deterministic local audit"
+    }
+  },
+  "frozen_query_intervention_and_budget_design": {
+    "answer_keys_derived_from_agent_owned_events": true,
+    "budgets": {
+      "latency_budget_ms_per_query": 5.0,
+      "max_queries_per_arm": 5,
+      "max_query_bytes": 12000,
+      "max_query_events": 3,
+      "stale_after_events": 64
+    },
+    "confound_rejections": {
+      "adapter_metadata_rejected": true,
+      "extra_bytes_rejected": true,
+      "extra_queries_rejected": true,
+      "game_id_rejected": true,
+      "hand_labels_rejected": true,
+      "source_bfs_prior_access_rejected": true
+    },
+    "interventions": [
+      "no_memory",
+      "chronological_raw_scan",
+      "structured_index",
+      "relevant_deletion",
+      "irrelevant_deletion",
+      "shuffle_index_links",
+      "stale_evidence_injection",
+      "irrelevant_growth",
+      "restart_from_serialized_bounded_state",
+      "budget_and_latency_caps"
+    ],
+    "output_path": "results/experiment_5901_arc_structured_memory_causal_audit.json",
+    "queries": [
+      {
+        "answer_key_derivation": "max action_result temporal_order.logical_time",
+        "evidence_type": "temporal",
+        "query_id": "temporal_latest_action_result",
+        "question": "latest action-result evidence by logical agent time"
+      },
+      {
+        "answer_key_derivation": "action_result spatial_relation.changed_bbox for target x=2,y=1",
+        "evidence_type": "object_spatial",
+        "query_id": "object_spatial_visible_change_bbox",
+        "question": "bbox for the visible object/spatial change at the probed target"
+      },
+      {
+        "answer_key_derivation": "action_result action_effect.outcome == visible_change",
+        "evidence_type": "action_effect",
+        "query_id": "action_effect_visible_change",
+        "question": "which action produced a visible non-level state change"
+      },
+      {
+        "answer_key_derivation": "action_candidate uncertainty.uncertainty_label",
+        "evidence_type": "uncertainty",
+        "query_id": "uncertainty_ambiguous_candidate",
+        "question": "which action candidate carried the live uncertainty marker"
+      },
+      {
+        "answer_key_derivation": "level-progress action_result evidence_source.source",
+        "evidence_type": "provenance",
+        "query_id": "provenance_level_progress_source",
+        "question": "which agent-owned source recorded level-progress evidence"
+      }
+    ],
+    "seeds": {
+      "bootstrap_seed": 5901001,
+      "fixture_seed": 5901
+    }
+  },
+  "group_bootstrap_lower_bounds": {
+    "family_deltas": {
+      "action_effect": 1,
+      "object_spatial": 1,
+      "provenance": 1,
+      "temporal": 1,
+      "uncertainty": 1
+    },
+    "method": "deterministic query-family leave-one-group lower bound",
+    "positive_structured_over_raw_lower_bound": true,
+    "relevant_deletion_utility_lower_bound": 5,
+    "structured_over_raw_exact_delta_lower_bound": 1
+  },
+  "honest_verdict": "complete_positive: structured_memory_causal_audit_exact_retrieval_causal_deletion_positive_no_solve_claim",
+  "identical_event_byte_receipts": {
+    "all_paired_cells_identical_event_bytes": true,
+    "baseline_index_hash": "sha256:3946e7c3db0cd8e8df4cc2c390721ea27c98f04f0f42d69db758d72f638d3326",
+    "baseline_source_event_hashes": [
+      "sha256:86267e8a3ab720a732b449fa7e9d2ce1d3c6d49fe3a81c006edd016f58deb9fc",
+      "sha256:f5b42eaba14d59c818b21a846aa36ee92345c3e4bf0823c5a0b5877d40749320",
+      "sha256:b9be594b70d73a39e9b3b275b23c3e375c49dab1c269c89d27c576a6bc28dbe7",
+      "sha256:7c979e4803a5b9c9c66cb582407e54b42e09c91026b8b9750af740b0e87e69ff",
+      "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c",
+      "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364",
+      "sha256:7d4cdf39eb868f6608f50391ec46cd49dd43c32420e4b686da266661e164b4bf",
+      "sha256:4ae942b069e5c5d2f0d2d3fa6055cdb4a6ff4b3332c01707d6f8f62ff4293fe8",
+      "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+    ],
+    "baseline_tape_hash": "sha256:acaeca1679cd9d78e529976ecb927d8022ed6911f3ba01e880fab0131ffcdb41",
+    "paired_cells": {
+      "baseline": {
+        "raw_tape_hash": "sha256:acaeca1679cd9d78e529976ecb927d8022ed6911f3ba01e880fab0131ffcdb41",
+        "same_tape_hash": true,
+        "source_event_hashes": [
+          "sha256:86267e8a3ab720a732b449fa7e9d2ce1d3c6d49fe3a81c006edd016f58deb9fc",
+          "sha256:f5b42eaba14d59c818b21a846aa36ee92345c3e4bf0823c5a0b5877d40749320",
+          "sha256:b9be594b70d73a39e9b3b275b23c3e375c49dab1c269c89d27c576a6bc28dbe7",
+          "sha256:7c979e4803a5b9c9c66cb582407e54b42e09c91026b8b9750af740b0e87e69ff",
+          "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c",
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364",
+          "sha256:7d4cdf39eb868f6608f50391ec46cd49dd43c32420e4b686da266661e164b4bf",
+          "sha256:4ae942b069e5c5d2f0d2d3fa6055cdb4a6ff4b3332c01707d6f8f62ff4293fe8",
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "structured_tape_hash": "sha256:acaeca1679cd9d78e529976ecb927d8022ed6911f3ba01e880fab0131ffcdb41"
+      },
+      "irrelevant_deletion": {
+        "raw_tape_hash": "sha256:6032a7106ed0803ea823adf79b6269986b0a9b64c07f3da13a6b5b3724dc88d3",
+        "same_tape_hash": true,
+        "source_event_hashes": [
+          "sha256:7c979e4803a5b9c9c66cb582407e54b42e09c91026b8b9750af740b0e87e69ff",
+          "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c",
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364",
+          "sha256:7d4cdf39eb868f6608f50391ec46cd49dd43c32420e4b686da266661e164b4bf",
+          "sha256:4ae942b069e5c5d2f0d2d3fa6055cdb4a6ff4b3332c01707d6f8f62ff4293fe8",
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "structured_tape_hash": "sha256:6032a7106ed0803ea823adf79b6269986b0a9b64c07f3da13a6b5b3724dc88d3"
+      },
+      "irrelevant_growth": {
+        "raw_tape_hash": "sha256:f8b3888e22d445dbbb2316ea0fe5ea722f9dc5fa30b5221e6ddf682117e20706",
+        "same_tape_hash": true,
+        "source_event_hashes": [
+          "sha256:86267e8a3ab720a732b449fa7e9d2ce1d3c6d49fe3a81c006edd016f58deb9fc",
+          "sha256:f5b42eaba14d59c818b21a846aa36ee92345c3e4bf0823c5a0b5877d40749320",
+          "sha256:b9be594b70d73a39e9b3b275b23c3e375c49dab1c269c89d27c576a6bc28dbe7",
+          "sha256:7c979e4803a5b9c9c66cb582407e54b42e09c91026b8b9750af740b0e87e69ff",
+          "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c",
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364",
+          "sha256:7d4cdf39eb868f6608f50391ec46cd49dd43c32420e4b686da266661e164b4bf",
+          "sha256:4ae942b069e5c5d2f0d2d3fa6055cdb4a6ff4b3332c01707d6f8f62ff4293fe8",
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5",
+          "sha256:206e135079e2a5dd31e71820441225adcfa4237ffe9e74de8e930d5ed608d87e",
+          "sha256:585abeb271407b8e1fc13e015863926e8c1bffc7562649128b2ddea993a00176",
+          "sha256:3b411ded77ae97619aa97a8132100f913ba2735d706d2bc5bb0b2bd2ed15ca14",
+          "sha256:acbae124b12f566e01f99d2138ce6fe3e0d7789a103284a1dce0320e98131521",
+          "sha256:6e78786e981c946d83db2765078cfe3a216f585e4aebe707e9a2099896b3322e",
+          "sha256:efb62ec1823ba2765d0444dfaa428c4d94152d3269e0542b5fae126ae2658313",
+          "sha256:ad8674f3c19670da92de0a3981862b1c94371db701e307decb3807f4d5f1a910",
+          "sha256:126303fd8025ee7b82406ceb93cf3e7eaebb604266adf2d6a82048c129fada4c",
+          "sha256:0de5a9123464489015e082051758f645aa64521c1566749580cc9dc1f6f1f90d",
+          "sha256:2644b059a21f5233254a76ed1a30f828b737f56ee188c4eb083e03663368707e",
+          "sha256:5546981e17254dce8a0933f48109c806ce81a01d6e6826f4a7b0f7635d4912cd",
+          "sha256:534496718abc59b4941ccbbb1bb87a75865558cd7186a7f8b3fe86752325ea69"
+        ],
+        "structured_tape_hash": "sha256:f8b3888e22d445dbbb2316ea0fe5ea722f9dc5fa30b5221e6ddf682117e20706"
+      },
+      "relevant_deletion": {
+        "raw_tape_hash": "sha256:1b4156f349c2cc6d2b108b1e962cfae4088e74c3711c5948401312f87fd84198",
+        "same_tape_hash": true,
+        "source_event_hashes": [
+          "sha256:86267e8a3ab720a732b449fa7e9d2ce1d3c6d49fe3a81c006edd016f58deb9fc",
+          "sha256:f5b42eaba14d59c818b21a846aa36ee92345c3e4bf0823c5a0b5877d40749320",
+          "sha256:b9be594b70d73a39e9b3b275b23c3e375c49dab1c269c89d27c576a6bc28dbe7",
+          "sha256:7c979e4803a5b9c9c66cb582407e54b42e09c91026b8b9750af740b0e87e69ff",
+          "sha256:7d4cdf39eb868f6608f50391ec46cd49dd43c32420e4b686da266661e164b4bf",
+          "sha256:4ae942b069e5c5d2f0d2d3fa6055cdb4a6ff4b3332c01707d6f8f62ff4293fe8"
+        ],
+        "structured_tape_hash": "sha256:1b4156f349c2cc6d2b108b1e962cfae4088e74c3711c5948401312f87fd84198"
+      },
+      "restart": {
+        "raw_tape_hash": "sha256:acaeca1679cd9d78e529976ecb927d8022ed6911f3ba01e880fab0131ffcdb41",
+        "same_tape_hash": true,
+        "source_event_hashes": [
+          "sha256:86267e8a3ab720a732b449fa7e9d2ce1d3c6d49fe3a81c006edd016f58deb9fc",
+          "sha256:f5b42eaba14d59c818b21a846aa36ee92345c3e4bf0823c5a0b5877d40749320",
+          "sha256:b9be594b70d73a39e9b3b275b23c3e375c49dab1c269c89d27c576a6bc28dbe7",
+          "sha256:7c979e4803a5b9c9c66cb582407e54b42e09c91026b8b9750af740b0e87e69ff",
+          "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c",
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364",
+          "sha256:7d4cdf39eb868f6608f50391ec46cd49dd43c32420e4b686da266661e164b4bf",
+          "sha256:4ae942b069e5c5d2f0d2d3fa6055cdb4a6ff4b3332c01707d6f8f62ff4293fe8",
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "structured_tape_hash": "sha256:acaeca1679cd9d78e529976ecb927d8022ed6911f3ba01e880fab0131ffcdb41"
+      }
+    },
+    "principle": "Raw and structured paired cells intentionally use identical event bytes; only access structure changes.",
+    "raw_and_structured_arms_deliberately_identical": true,
+    "violations": []
+  },
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "no_memory_raw_and_structured_metrics": {
+    "no_memory": {
+      "bytes_scanned": 0,
+      "events_scanned": 0,
+      "exact_count": 0,
+      "exact_fraction": 0.0,
+      "false_retrieval_count": 0,
+      "latency_ms": 0.0,
+      "query_count": 5
+    },
+    "query_count": 5,
+    "raw_tape": {
+      "bytes_scanned": 11030,
+      "events_scanned": 15,
+      "exact_count": 0,
+      "exact_fraction": 0.0,
+      "false_retrieval_count": 1,
+      "latency_ms": 1.15,
+      "query_count": 5
+    },
+    "structured_index": {
+      "bytes_scanned": 4605,
+      "events_scanned": 5,
+      "exact_count": 5,
+      "exact_fraction": 1.0,
+      "false_retrieval_count": 0,
+      "latency_ms": 0.5,
+      "query_count": 5
+    },
+    "structured_over_no_memory_exact_delta": 1.0,
+    "structured_over_raw_exact_delta": 1.0
+  },
+  "preconditions_checked": [
+    "exp5900_gate_replayed",
+    "registry_precheck_no_level_target",
+    "code_event_query_seed_budget_output_disk_ram_hashes_recorded",
+    "identical_event_byte_receipts_recorded",
+    "protected_files_recorded"
+  ],
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": true,
+    "all_unchanged": true,
+    "combined_hash": "sha256:9c63c78f5a864509c0e57c055cc45a146291d8033200f1bb3d17d9c47eed15b7",
+    "hashes": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:979689284c6bed56d133022f506f6ec033f9fee712e5f7889a4cdcddc411404f",
+      "ops/status.md": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "scripts/research_conductor.py": true
+  },
+  "provenance_and_oracle_boundary": {
+    "adapter_access_count": 0,
+    "allowed_inputs": [
+      "current_agent_visible_frame",
+      "current_agent_legal_candidate",
+      "current_agent_emitted_action",
+      "current_agent_visible_action_result",
+      "current_agent_uncertainty",
+      "current_agent_provenance"
+    ],
+    "answer_key_derivation": "deterministic extractors over event payloads, uncertainty, temporal order, and provenance",
+    "deterministic_event_keys_only_audit_memory_fidelity": true,
+    "forbidden_inputs": [
+      "public_or_hidden_game_source",
+      "offline_ground_truth_bfs",
+      "game_adapter",
+      "prior_game_log",
+      "registry_trajectory",
+      "hidden_state_or_true_win_predicate"
+    ],
+    "hidden_state_read_count": 0,
+    "no_public_game_source_or_hidden_state": true,
+    "offline_bfs_count": 0,
+    "prior_game_log_access_count": 0,
+    "registry_trajectory_access_count": 0,
+    "source_bfs_adapter_and_prior_game_access_count": 0,
+    "source_read_count": 0,
+    "verifier_is_oracle_for_policy_credit": false
+  },
+  "public_level_solve_claimed": false,
+  "query_byte_latency_accounting": {
+    "budget_violations": [],
+    "budgets": {
+      "latency_budget_ms_per_query": 5.0,
+      "max_queries_per_arm": 5,
+      "max_query_bytes": 12000,
+      "max_query_events": 3,
+      "stale_after_events": 64
+    },
+    "latency_budget_violations": [],
+    "raw_rows": [
+      {
+        "answer": {
+          "action_signature": "a=1|d=null",
+          "logical_time": 3
+        },
+        "arm": "raw_tape",
+        "bytes_scanned": 2206,
+        "events_scanned": 3,
+        "exact": false,
+        "false_retrieval": true,
+        "latency_ms": 0.23,
+        "query_count": 1,
+        "query_id": "temporal_latest_action_result",
+        "source_event_hashes": [
+          "sha256:b9be594b70d73a39e9b3b275b23c3e375c49dab1c269c89d27c576a6bc28dbe7"
+        ],
+        "source_event_ids": [
+          "evt-00000003"
+        ]
+      },
+      {
+        "answer": null,
+        "arm": "raw_tape",
+        "bytes_scanned": 2206,
+        "events_scanned": 3,
+        "exact": false,
+        "false_retrieval": false,
+        "latency_ms": 0.23,
+        "query_count": 1,
+        "query_id": "object_spatial_visible_change_bbox",
+        "source_event_hashes": [],
+        "source_event_ids": []
+      },
+      {
+        "answer": null,
+        "arm": "raw_tape",
+        "bytes_scanned": 2206,
+        "events_scanned": 3,
+        "exact": false,
+        "false_retrieval": false,
+        "latency_ms": 0.23,
+        "query_count": 1,
+        "query_id": "action_effect_visible_change",
+        "source_event_hashes": [],
+        "source_event_ids": []
+      },
+      {
+        "answer": null,
+        "arm": "raw_tape",
+        "bytes_scanned": 2206,
+        "events_scanned": 3,
+        "exact": false,
+        "false_retrieval": false,
+        "latency_ms": 0.23,
+        "query_count": 1,
+        "query_id": "uncertainty_ambiguous_candidate",
+        "source_event_hashes": [],
+        "source_event_ids": []
+      },
+      {
+        "answer": null,
+        "arm": "raw_tape",
+        "bytes_scanned": 2206,
+        "events_scanned": 3,
+        "exact": false,
+        "false_retrieval": false,
+        "latency_ms": 0.23,
+        "query_count": 1,
+        "query_id": "provenance_level_progress_source",
+        "source_event_hashes": [],
+        "source_event_ids": []
+      }
+    ],
+    "structured_rows": [
+      {
+        "answer": {
+          "action_signature": "a=5|d={\"x\":2,\"y\":2}",
+          "logical_time": 9
+        },
+        "arm": "structured_index",
+        "bytes_scanned": 988,
+        "events_scanned": 1,
+        "exact": true,
+        "false_retrieval": false,
+        "latency_ms": 0.1,
+        "query_count": 1,
+        "query_id": "temporal_latest_action_result",
+        "source_event_hashes": [
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "source_event_ids": [
+          "evt-00000009"
+        ]
+      },
+      {
+        "answer": {
+          "changed_bbox": {
+            "max_x": 3,
+            "max_y": 1,
+            "min_x": 1,
+            "min_y": 1
+          },
+          "changed_count": 3
+        },
+        "arm": "structured_index",
+        "bytes_scanned": 1062,
+        "events_scanned": 1,
+        "exact": true,
+        "false_retrieval": false,
+        "latency_ms": 0.1,
+        "query_count": 1,
+        "query_id": "object_spatial_visible_change_bbox",
+        "source_event_hashes": [
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364"
+        ],
+        "source_event_ids": [
+          "evt-00000006"
+        ]
+      },
+      {
+        "answer": {
+          "action_signature": "a=2|d={\"x\":2,\"y\":1}",
+          "changed_count": 3,
+          "outcome": "visible_change"
+        },
+        "arm": "structured_index",
+        "bytes_scanned": 1062,
+        "events_scanned": 1,
+        "exact": true,
+        "false_retrieval": false,
+        "latency_ms": 0.1,
+        "query_count": 1,
+        "query_id": "action_effect_visible_change",
+        "source_event_hashes": [
+          "sha256:4e6b14c18dd4de73f50b3660772539b34da27349cde9f9fa21f586c305346364"
+        ],
+        "source_event_ids": [
+          "evt-00000006"
+        ]
+      },
+      {
+        "answer": {
+          "action_signature": "a=3|d={\"x\":0,\"y\":2}",
+          "probability": 0.61,
+          "uncertainty_label": "frontier_ambiguous"
+        },
+        "arm": "structured_index",
+        "bytes_scanned": 505,
+        "events_scanned": 1,
+        "exact": true,
+        "false_retrieval": false,
+        "latency_ms": 0.1,
+        "query_count": 1,
+        "query_id": "uncertainty_ambiguous_candidate",
+        "source_event_hashes": [
+          "sha256:3a8404395743a1e320908f83a51e69656ae3b6a6f947da3883bf29659751e89c"
+        ],
+        "source_event_ids": [
+          "evt-00000005"
+        ]
+      },
+      {
+        "answer": {
+          "agent_owned": true,
+          "source": "fixture_level_progress_probe"
+        },
+        "arm": "structured_index",
+        "bytes_scanned": 988,
+        "events_scanned": 1,
+        "exact": true,
+        "false_retrieval": false,
+        "latency_ms": 0.1,
+        "query_count": 1,
+        "query_id": "provenance_level_progress_source",
+        "source_event_hashes": [
+          "sha256:2458245cf072036d0dcd8348c5f6db91de06abc443b7c967c26e6dadd6996fe5"
+        ],
+        "source_event_ids": [
+          "evt-00000009"
+        ]
+      }
+    ]
+  },
+  "random_seed": 5901,
+  "registry_precheck": {
+    "all_public_games_cleared": true,
+    "duplicate_public_solve_target_prohibited": true,
+    "games_with_full_clear": 25,
+    "no_level_solve_targeted": true,
+    "ok": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+    "principle": "all 25 cleared games prohibit a duplicate public-solve target",
+    "public_game_count": 25,
+    "reproducible_total_games": 25,
+    "reproducible_total_levels": 183
+  },
+  "relevant_and_irrelevant_deletion_effects": {
+    "baseline_structured_exact_count": 5,
+    "irrelevant_deleted_event_ids": [
+      "evt-00000001",
+      "evt-00000002",
+      "evt-00000003"
+    ],
+    "irrelevant_deletion_exact_count": 5,
+    "principle": "promotion requires causal evidence use, not correlation with more context",
+    "promotion_requires_causal_evidence_use": true,
+    "relevant_deleted_event_ids": [
+      "evt-00000005",
+      "evt-00000006",
+      "evt-00000009"
+    ],
+    "relevant_deletion_exact_count": 0,
+    "relevant_minus_irrelevant_utility_delta": -5
+  },
+  "reproducibility_checksum": "sha256:592078f7e1ca6212a08fd6e0ce4106a87fb5f89feed833d3a9e883cd424601fe",
+  "schema": "arc_structured_memory_causal_audit.v1",
+  "shuffled_stale_growth_restart_controls": {
+    "irrelevant_growth_control": {
+      "baseline_structured_exact_count": 5,
+      "bytes_scanned": 4605,
+      "events_scanned": 5,
+      "exact_count": 5,
+      "exact_fraction": 1.0,
+      "false_retrieval_count": 0,
+      "grown_event_count": 21,
+      "grown_tape_hash": "sha256:f8b3888e22d445dbbb2316ea0fe5ea722f9dc5fa30b5221e6ddf682117e20706",
+      "latency_ms": 0.5,
+      "query_count": 5,
+      "structured_exact_count": 5
+    },
+    "restart_control": {
+      "bytes_scanned": 4605,
+      "events_scanned": 5,
+      "exact_count": 5,
+      "exact_fraction": 1.0,
+      "false_retrieval_count": 0,
+      "index_hash_reproduced": true,
+      "latency_ms": 0.5,
+      "query_count": 5,
+      "restart_from_serialized_bounded_state": true,
+      "tape_hash_reproduced": true
+    },
+    "shuffle_control": {
+      "bytes_scanned": 4062,
+      "events_scanned": 5,
+      "exact_count": 0,
+      "exact_fraction": 0.0,
+      "false_retrieval_count": 5,
+      "latency_ms": 0.5,
+      "query_count": 5
+    },
+    "stale_evidence_control": {
+      "bytes_scanned": 4609,
+      "events_scanned": 5,
+      "exact_count": 4,
+      "exact_fraction": 0.8,
+      "false_retrieval_count": 1,
+      "latency_ms": 0.5,
+      "query_count": 5,
+      "stale_source_event_ids": [
+        "evt-00000001"
+      ],
+      "stale_use_count": 0
+    }
+  },
+  "status": "complete_positive",
+  "structured_memory_causal_ready_score": 1.0,
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_arc_structured_memory_causal_audit.py -q -n0 -o addopts=''",
+    ".venv/bin/python -m coverage erase && .venv/bin/python -m coverage run --include='*/python/carnot/agentic/arc_structured_memory_causal_audit.py' -m pytest tests/python/test_arc_structured_memory_causal_audit.py -q -n0 -o addopts='' && .venv/bin/python -m coverage report --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5901_arc_structured_memory_causal_audit.json --json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_arc_structured_memory_causal_audit.py",
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --quiet -- _bmad/traceability.md ops/changelog.md ops/status.md scripts/research_conductor.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_arc_structured_memory_causal_audit.py -q -n0 -o addopts=''": 0,
+    ".venv/bin/python -m coverage erase && .venv/bin/python -m coverage run --include='*/python/carnot/agentic/arc_structured_memory_causal_audit.py' -m pytest tests/python/test_arc_structured_memory_causal_audit.py -q -n0 -o addopts='' && .venv/bin/python -m coverage report --fail-under=100 --show-missing": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5901_arc_structured_memory_causal_audit.json --json": 0,
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_arc_structured_memory_causal_audit.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "git diff --quiet -- _bmad/traceability.md ops/changelog.md ops/status.md scripts/research_conductor.py": 0,
+    "pre_implementation_focused_test_expected_failure": 2
+  },
+  "upstream_gate_and_hashes": {
+    "exp5900_gate_replayed": true,
+    "exp5900_hash": "sha256:adb2b20636747ecfed802a9b15ed50af1a7f5b45ceb7af5216b4b68fa3e7801e",
+    "exp5900_path": "results/experiment_5900_arc_structured_evidence_memory_contract.json",
+    "exp5900_ready_score": 1.0,
+    "exp5900_status": "ready",
+    "precondition_hashes": {
+      "answer_key_hash": "sha256:29e023cf008f53f32aa38d29c0b14e2b75b560d1921fd5a33242c0ab3f0cccad",
+      "budgets_hash": "sha256:19665a922bd7039b35053696c460d36882a5b383480e21a9ac47e6f54b3947a2",
+      "code_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:0cdc5ab52a627716b98b2b8f00d0dbbe617093db7e6e63a115aeb30434e211df",
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:c864994609a264bcb7d112abffc21f293cfce011aa844236f681d6348a2c4f8f",
+        "python/carnot/agentic/arc_epistemic_ledger.py": "sha256:dbc856581b49e0661317c56a70320fe0dc3ddbddba975cd5d39c9851cff8b7e8",
+        "python/carnot/agentic/arc_structured_evidence_memory.py": "sha256:904c1b41666cc71c3612aed8e75a0f6bb646b2d0396ffc489afbb0d86712173a",
+        "python/carnot/agentic/arc_structured_memory_causal_audit.py": "sha256:4aeb456c2c517dbd51ac981f94fdc0581da1b1bed668ce4d88dd1584225ff126",
+        "python/carnot/agentic/arc_typed_memory_provenance_guard.py": "sha256:e35f2b19d274ecce09237b284c1a5e691615491365f33d601760b86f43e33928",
+        "scripts/adversarial_verify.py": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de",
+        "tests/python/test_arc_structured_evidence_memory.py": "sha256:f2aac23f222038c49f3cf4a365d0c4791a14b4c21ed4e2579503eb5326789f8c",
+        "tests/python/test_arc_structured_memory_causal_audit.py": "sha256:2b2406912d80bae69f3d22e5604822d8eac3aa5b83b0eda996850b81e0e7ca2c",
+        "tests/python/test_live_trace_memory.py": "sha256:8c91ec46a682d7a17c992944a3482765ad7cb075f8d611aa3a455c1a485975c4"
+      },
+      "disk_ram_receipt_hash": "sha256:b33bbbfa3eea8028e758a427cf0cc6d15c4606bc44797c378335291cea339c94",
+      "event_fixture_hash": "sha256:acaeca1679cd9d78e529976ecb927d8022ed6911f3ba01e880fab0131ffcdb41",
+      "identical_byte_receipts_hash": "sha256:4cba5698f1441811223e725eeb530fe1e6fcb2852932210c60e1a73c6cbc016e",
+      "output_path_hash": "sha256:c297aac1b0bf30483ccee842f6559a6817f8bf704a82ad4d5b44ca292b6cdf7c",
+      "protected_files_hash": "sha256:9c63c78f5a864509c0e57c055cc45a146291d8033200f1bb3d17d9c47eed15b7",
+      "query_definition_hash": "sha256:a8cd014e0dea277fc368f605db60277a530ac53b01e1dbb320e2697cb4282214",
+      "seeds_hash": "sha256:ee0e53e3f0480dc892f61790dfceee88e03ee85818acf78478c8e30278f16fb2"
+    },
+    "precondition_hashes_combined": "sha256:58d1ceb83bf2fce75c3fee10d10492c7d1ec6574f5d9fe4e074164e21ecd2026"
+  },
+  "verifier_is_oracle": false
+}
