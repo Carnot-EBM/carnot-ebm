@@ -14254,3 +14254,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 20:48 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |
 | 2026-07-24 21:19 UTC | Gated on Exp5900 contract: ARC retrieval fidelity  | OK | 87 passed, 1 warning in 6.35s |
 | 2026-07-24 21:21 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |
+| 2026-07-24 21:43 UTC | Gated on Exp5901 causality: adapter-disabled live  | OK | 91 passed, 1 warning in 10.49s |
