@@ -2790,6 +2790,22 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   the SCORED-path wiring -- give E3AgentPolicy the OfflineSolver-style verifier-routed search for navigation
   games (its novelty-explorer navigates only partway, so the fix is the search structure + the autonomous
   verifier together, not the verifier alone).
+- **SCORED-PATH INTEGRATION COMPLETE 2026-07-23 (REQ-ARC-WMTE-5839,
+  `python/carnot/agentic/arc_perception_navigation.py`,
+  `results/outer_loop_arc_perception_navigation_scored_20260723.json`).** Built the reusable autonomous
+  navigation module: recon -> `derive_navigation_pair` (player+goal from motion) -> SELF-CORRECTING
+  branch_mode (try a mode; if the reproduction gate reproduces fewer levels than the search reached -- the
+  non-idempotent signature -- retry the other and keep the best; the gate is ground truth, so no perfect
+  idempotency oracle is needed -- this fixed the short-probe mispredict) -> generic verifier-routed
+  OfflineSolver -> gate. Result: **fully autonomous (ZERO per-game input), reproduces tu93 L3.** AND
+  `PerceptionNavigationPolicy` carries the self-discovered solve behind the SCORED `run_game`
+  interface (is_done/next_move, plan-then-replay like CarnotAgentPolicy but SELF-DISCOVERED):
+  **reached L3 (levels=3) via run_game vs the default explorer's 0.** So the SCORED agent self-discovers and
+  reproduces a navigation solve with no hand-RE. REMAINING (architectural, noted): the search runs on the
+  offline arcade in the policy __init__ then replays; 'search live on the scored env during play' (budget-
+  consuming) is the next step. Method validation (tu93 L3 registered; solve_provenance=development_proxy).
+  This CLOSES the winner-matching -> execution -> scored-path thread with a working end-to-end autonomous
+  navigation capability on the scored interface.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
