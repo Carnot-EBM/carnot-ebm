@@ -1,0 +1,152 @@
+{
+  "experiment": "outer_loop_arc_reauthor_discovery_sweep",
+  "experiment_id": "REQ-ARC-WMTE-5834",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_reauthor_discovery_sweep.v1",
+  "title": "Does re-authored perception convert the winner recipe's 0-discovery to actual levels? A/B (reauthor off vs on), 8 games.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5834,
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-GGUF",
+      "repo": "unsloth/gemma-4-31B-it-GGUF",
+      "gpu": 1,
+      "port": 8958
+    }
+  ],
+  "action_budget": 120,
+  "methodology_note": "Full winner recipe (greedy-direct + object seg + reflection + goal verifier), reauthor OFF vs ON, same budget/seed per game. Measures real-env levels_gained. Baseline: v5 winner sweep = 0 discovery on all 8. Public-game frames stepped for offline dev validation (authorized), never in the hidden submission.",
+  "totals": {
+    "baseline_levels": 0,
+    "reauthor_levels": 0
+  },
+  "per_game": [
+    {
+      "game": "bp35",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 64,
+        "final_notes": "RULES: Action 6 at (21,38) sets (63,0)-(63,46) to 15. Action 6 at (23,63) sets (63,47) to 15. Action 6 at (24,63) sets (63,48)-(63,49) to 15. Action 6 at (25,63) sets (63,50) to 15. Action 6 at (63,26) sets (63,51) to 15. Action 6 at (26,63) sets (63,52) to 15. Action 6 at (27,63) sets (63,53) to 15. Action 6 at (28,63) sets (63,54) to 15. Action 6 at (29,63) sets (63,55) to 15. Action 6 at (30,63"
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 64,
+        "final_notes": "RULES:\nGOAL:\nPROGRESS:\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)"
+      }
+    },
+    {
+      "game": "lf52",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 64,
+        "final_notes": "RULES: Action 6 at (X,Y) changes cells in row 0 from 0 to 1.\nGOAL: Clear all value 3 cells.\nPROGRESS: Changed several cells in row 0 to 1.\nAVOID: Changing all cells in row 0 to 1."
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 64,
+        "final_notes": "RULES: Click object to select/interact.\nGOAL: Reach/interact with object color 0 at (27, 35) or object color 5 at (28, 34).\nGOAL: Reach/interact with object color 0 at (27, 35) and object color 5 at (28, 34).\nGOAL: Reach/interact with object color 0 at (27, 35) and object color 5 at (28, 34) in a specific order.\nGOAL: Reach/interact with (27, 35) and (28, 34) in a specific order.\nGOAL: Reach/inter"
+      }
+    },
+    {
+      "game": "sc25",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 116,
+        "final_notes": "RULES: Action 6 at (30,55) clears 2x2 blocks of 14s at (X, 62-63) (X starts at 12, increments by 2) and toggles values at (54-55, 29-31) between 2 and 14. Action 1 clears 2x2 blocks of 14s at (50-55, 62-63). Action 2 clears 2x2 blocks of 14s at (58-59, 62-63).\nGOAL: Unknown (Not clearing all 14s).\nPROGRESS: Cleared 14s from (12,62) to (59,63). Ruled out \"Clear all 14s\" as win condition.\nAVOID: Act"
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 87,
+        "final_notes": "RULES: (no reliable rules yet)\nGOAL: (no reliable rules yet)\n(no reliable rules yet)\nAVOID: (29,20)\n\n// a la own a single most likely goal based on the perception data provided.\n// a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a l"
+      }
+    },
+    {
+      "game": "ls20",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 120,
+        "final_notes": "RULES: Action 2 toggles 11s and 3s.\nGOAL: Convert all 3s to 11s.\nPROGRESS: Ruled out converting all 11s to 3s and all 12s to 3s or 5s.\nAVOID: Action 1."
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 120,
+        "final_notes": "RULES: Actions 1-4 move the PLAYER (color 9).\nGOAL: Move the PLAYER onto a TARGET object (color 5 or color 3).\nGOAL: Move the PLAYER onto a TARGET object (color 5 or color 3).\nGOAL: Move the PLAYER onto a TARGET object (color 3).\nGOAL: Move the PLAYER onto a TARGET object (color 5).\nGOAL: Move the PLAYER onto a TARGET object (color 5 or color 3).\nGOAL: Move the PLAYER onto a TARGET and a second ta"
+      }
+    },
+    {
+      "game": "tu93",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 50,
+        "final_notes": "RULES: Action 1 and 3 clear cells with value 6.\nGOAL: Clear all cells with value 6 from the grid.\nPROGRESS: Cleared cells in row 63 from col 13 to 63.\nAVOID: None."
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 50,
+        "final_notes": "RULES: Move 4 shifts object blocks horizontally.\nGOAL: Move objects of the same color to the same cell.\n- (16,16) is color 0.\n- (19,34) is color 5.\n- Row 63 is status counters.\n- Row 63 is not the goal.\nAVOID: Row 63.\n\n- (16,16) is color 0.\n- (16,16) is not the goal.\n- Row 63 is not the goal.\n- (16,16) is not the16,16) is not the goal.\n- (16,16) is not the16,16) is not the goal.\n- (16,16) is not t"
+      }
+    },
+    {
+      "game": "cn04",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 75,
+        "final_notes": "RULES: Action 6 toggles values in distant cells (often 0 <-> 12 or 4 <-> 0).\nGOAL: [NEW HYPOTHESIS]\nPROGRESS: (15,27) toggles row 11 and (0,20-28); (39,36) toggles (29,41-46) and (0,31); (18,17) toggles (0,19, 25, 29, 30, 32); (3,4) toggles (0,22); (37,0) toggles (0,27).\nPROGRESS: Clearing cells to 0 or filling to 12 is not the win condition.\nAVOID: (45,39) and (18,17) are unreliable.\n\ns\ns\ns\ns\n6 ("
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 75,
+        "final_notes": "RULES: (no reliable rules yet)\nGOAL: Arrange/match similar objects until a target configuration is reached.\nPROGRESS: (no reliable rules yet)\n)\n)\n)\n)\n}\n)\n}\n)\n)\n)\n)\n)\n) = (no reliable rules yet)\n)\n)\n) = (no reliable rules yet)\n)\n)\n)\n)\n)\n) = (no reliable rules yet)\n)\n)\n)\n)\n)\n) = (no reliable)\n)\n)\n) = (no reliable rules yet)\n)\n) = (// own a single object of a specific color.\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)"
+      }
+    },
+    {
+      "game": "r11l",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 60,
+        "final_notes": "RULES: Action 6 at (x,y) flips states (0 <-> 5) of a range of cells (e.g., (27,57) affects cells (32,0) through (52,0) in row 0).\nGOAL: Fill a specific row or column with state 5.\nPROGRESS: Confirmed Action 6 flips large segments of cells; ruled out clearing the grid or reaching a single specific state.\nAVOID: None."
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 60,
+        "final_notes": "RULES: Click a cell to trigger a chain reaction of color changes in a surrounding area.\nGOAL: Change the color of objects at (2, 24) and (58, 54) to color 2.\nPROGRESS: Changed colors of various cells in the middle of the board.\nPROGRESS: (24,2) and (54,58) are not targets.\n(24,2) and (24,2) and (54,58) and (54,58) and (54,58) and Clicking (24,2) and (54,58) and (54,2) and (54,58) and (54,58) and ("
+      }
+    },
+    {
+      "game": "ft09",
+      "baseline": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 120,
+        "final_notes": "RULES: Action 6 has no effect.\nGOAL: Unknown.\nPROGRESS: Ruled out Action 6.\nAVOID: Action 6."
+      },
+      "reauthor": {
+        "levels_gained": 0,
+        "reached_level": 0,
+        "actions_taken": 120,
+        "final_notes": "RULES: (no reliable rules yet)\nGOAL: Arrange or match object color 4 (46, 46) and object color 12 (63, 32) to reach a target configuration.\nPROGRESS: Action 6 is ineffective on tested cells.\nAVOID: Action 6 on (32, 63), (46, 46), (34, 34)."
+      }
+    }
+  ],
+  "duration_s": 7044.2,
+  "reproducibility_checksum": "sha256:2f133de5029120304ad144c4e61f2178e1239c6616aba803297347063263a020",
+  "headline": "CLEAN NULL: 0 levels discovered on all 8 games, BOTH arms (baseline and reauthor), budget 120. The re-authored perception fix flips the GOAL HYPOTHESIS (0->4/8 on the offline gate) but does NOT convert to actual DISCOVERY. This confirms the honestly-predicted separation: perception/goal-induction was necessary (and is now fixed) but is NOT sufficient -- EXECUTION/DYNAMICS is the next binding constraint. Evidence in the action counts: bp35 loses at exactly 64 actions (the move-budget cap) on both arms; the greedy-direct architecture has NO search/planning, so even with the right goal 'move the player to the exit' the LLM must blind-guess the action sequence over a hex grid, which it cannot do within budget.",
+  "strategic_implication": "The LEADERBOARD-WINNER architecture we matched (greedy-direct, LLM picks each action, no search) is EXECUTION-LIMITED even with a correct goal. Carnot's OWN live architecture (E3AgentPolicy: verifier-routed best-first search + plan_in_model) is BETTER suited for execution because it can SEARCH toward a named target. So the earned next step is NOT to keep improving the greedy-direct winner recipe -- it is to feed the perception fix (retracted HUD rules + named target + player) into Carnot's verifier-routed search as the goal/heuristic, where the search can actually navigate to the target and the goal verifier (REQ-ARC-WMTE-5830) confirms progress via the level counter.",
+  "honest_verdict": "complete_null_perception_fix_does_not_convert_to_discovery_execution_is_the_next_wall_greedy_direct_is_execution_limited"
+}

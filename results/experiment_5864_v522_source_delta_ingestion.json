@@ -1,0 +1,881 @@
+{
+  "accepted_finding_count": 0,
+  "citation_trail_receipts": [
+    {
+      "access_outcome": "reachable_http_200_no_post_marker_actionable_citation",
+      "accessed_at": "2026-07-24T01:35:03Z",
+      "candidate_ids": [
+        "2607.17047",
+        "2607.11555",
+        "2606.22726",
+        "2606.18206",
+        "2606.15956",
+        "2605.11011",
+        "2605.07588",
+        "10.1109/ISPASS69572.2026.00062",
+        "2604.11403",
+        "2604.10272",
+        "2604.03878",
+        "2604.01577",
+        "2603.18534",
+        "2603.19117",
+        "10.64898/2025.12.09.693073",
+        "2602.03640",
+        "2602.01651",
+        "2601.03905",
+        "2512.17846",
+        "2512.16762"
+      ],
+      "citation_count_claimed": false,
+      "latest_publication_date": "2026-07-19",
+      "paper": "arXiv:2507.02092",
+      "query": "arXiv:2507.02092 citations",
+      "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
+      "receipt_summary": "The EBT citation route repeated already-indexed hardness and energy-context papers; no newer V522 control was accepted.",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
+    },
+    {
+      "access_outcome": "inaccessible_http_429_rate_limited",
+      "accessed_at": "2026-07-24T01:35:03Z",
+      "candidate_ids": [],
+      "citation_count_claimed": false,
+      "latest_publication_date": "unknown",
+      "paper": "arXiv:2512.15605",
+      "query": "arXiv:2512.15605 citations",
+      "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
+      "receipt_summary": "The ARM-EBM direct citation route returned HTTP 429, so no citation count or unseen dependency is promoted.",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
+    }
+  ],
+  "duration_s": 77.0,
+  "experiment": "experiment_5864_v522_source_delta_ingestion",
+  "experiment_id": "exp5864-v522-source-delta-ingestion",
+  "field_provenance": {
+    "accepted_finding_count": {
+      "principle": "Bare zero is a valid complete result.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "accepted_findings": [],
+    "citation_trail_receipts": {
+      "principle": "Direct EBT and ARM-EBM checks prevent unsupported citation claims.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes a bootstrap-only receipt.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "experiment": {
+      "principle": "Stable local slug ties the artifact to the implementation module.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "experiment_id": {
+      "principle": "Conductor task identity prevents numeric-prefix aliasing.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every accepted finding traces to its source and bounded task hook.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "finding_classification": {
+      "principle": "Explicit classes stop duplicates and watch items becoming experiments.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A `complete:` or `blocked:` prefix makes the refresh terminal.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`aggregation_from_external_primary_sources` declares research synthesis, not model inference.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "milestone": {
+      "principle": "Binds receipts to .522 rather than a later milestone.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "planner_marker_and_search_window": {
+      "principle": "A sealed time boundary makes novelty falsifiable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Marker, hashes, APIs, network, and outputs prevent stale-window or fabricated-source claims.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "random_seed": {
+      "principle": "Deterministic metadata for a no-randomness ledger task.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "references_after_hash": {
+      "principle": "Reference-ledger bytes after the optional append.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "references_before_hash": {
+      "principle": "Reference-ledger bytes before the optional append.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "references_modified": {
+      "principle": "The artifact discloses whether the shared source ledger changed.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects marker, source, or classification drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "result_path": {
+      "principle": "Declares the exact JSON deliverable path.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "roadmap_immutability_receipts": {
+      "principle": "Freshness work cannot silently redesign allocated tasks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "run_date": {
+      "principle": "Operator-requested execution date for the source refresh.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "schema": {
+      "principle": "Versioned schema id keeps downstream validators from guessing field meaning.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "search_finished_at": {
+      "principle": "Records when candidate disposition finished.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "search_started_at": {
+      "principle": "Records when source querying started.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "sota_to_experiment_mapping": {
+      "principle": "Every accepted method names an implementable current task hook and failure boundary.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "source_receipts": {
+      "principle": "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors make the artifact contract auditable.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes a complete zero delta from failed research.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "studying_after_hash": {
+      "principle": "Studying-ledger bytes after an optional ingestion note.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "studying_before_hash": {
+      "principle": "Studying-ledger bytes before an optional ingestion note.",
+      "sources": [
+        "local_metadata"
+      ]
+    },
+    "studying_ledger_modified": {
+      "principle": "Ingestion status changes only when a cited method was actually mapped.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document date, duplicate, citation, mapping, and immutability checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed provenance checks becoming success.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    }
+  },
+  "finding_classification": {
+    "accepted": [],
+    "all_candidates": [
+      {
+        "access_outcome": "reachable_duplicate_v522_planner_block",
+        "classification": "duplicate",
+        "publication_date": "2026-07-19",
+        "query": "arXiv:2507.02092 citations",
+        "reason": "Already indexed in the sealed V522 planner block as the hardness control signal for Exp5868 and Exp5869.",
+        "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "ebt_citation_solver_hard_2607_17047_post_v522",
+        "title": "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+        "url": "https://www.semanticscholar.org/paper/af87babbc381db8096bad9eb8467f4e0cfc36676"
+      },
+      {
+        "access_outcome": "reachable_duplicate_v522_planner_block",
+        "classification": "duplicate",
+        "publication_date": "2026-07-23",
+        "query": "V522 duplicate source ledger check",
+        "reason": "The active layer-dynamic and hardware-control findings were already sealed in the V522 planner block.",
+        "receipt_id": "huggingface_papers_2026_07_24_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "v522_layer_dynamics_bundle_post_v522",
+        "title": "V522 ICR, HARP, CORVUS, and structured SAT planner bundle",
+        "url": "research-references.md#V522-PLANNER-REFRESH-20260723"
+      },
+      {
+        "access_outcome": "reachable_http_200_totalResults_0",
+        "classification": "watch_only",
+        "publication_date": "2026-07-24",
+        "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN)",
+        "reason": "The primary route was reachable but surfaced no post-marker source to classify as accepted.",
+        "receipt_id": "arxiv_post_v522_required_topic_queries",
+        "search_timestamp": "2026-07-24T01:34:55Z",
+        "source_date": "2026-07-24",
+        "source_id": "arxiv_post_v522_required_topic_zero_result",
+        "title": "arXiv required-topic post-marker zero-result route",
+        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+      },
+      {
+        "access_outcome": "reachable_no_authenticated_local_execution_surface",
+        "classification": "watch_only",
+        "publication_date": "2025-10-29",
+        "query": "Extropic writing TSU XTR-0 Z1",
+        "reason": "Probabilistic-hardware context only; no Carnot-local XTR, Z1, TSU execution, SDK, speed, power, or correctness receipt was found.",
+        "receipt_id": "extropic_writing_post_v522",
+        "search_timestamp": "2026-07-24T01:35:04Z",
+        "source_date": "2026-07-24",
+        "source_id": "extropic_public_material_post_v522",
+        "title": "Extropic public writing pages",
+        "url": "https://extropic.ai/writing"
+      },
+      {
+        "access_outcome": "reachable_no_local_weights_or_reproducible_comparator",
+        "classification": "watch_only",
+        "publication_date": "2026-06-26",
+        "query": "Kona Aleph public pages",
+        "reason": "Architecture context only; no local weights, authenticated API receipt, or reproducible Kona/Aleph comparator is available.",
+        "receipt_id": "logical_intelligence_public_pages_post_v522",
+        "search_timestamp": "2026-07-24T01:35:05Z",
+        "source_date": "2026-07-24",
+        "source_id": "logical_intelligence_kona_public_pages_post_v522",
+        "title": "Logical Intelligence Kona and Aleph public pages",
+        "url": "https://logicalintelligence.com/"
+      },
+      {
+        "access_outcome": "excluded_by_exp5853_disqualification",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "hallucination embedding final surface",
+        "reason": "Exp5853 closed the final-embedding route; V522 may only gate a distinct supported intermediate-layer surface.",
+        "receipt_id": "arxiv_post_v522_required_topic_queries",
+        "search_timestamp": "2026-07-24T01:34:55Z",
+        "source_date": "2026-07-24",
+        "source_id": "final_embedding_reopen_post_v522",
+        "title": "Final embedding route reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "excluded_by_local_manifest",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "output logit finite transport verifier",
+        "reason": "PHASE D output-text/logit work and finite-ID output transport remain closed; source freshness cannot reopen them.",
+        "receipt_id": "arxiv_post_v522_required_topic_queries",
+        "search_timestamp": "2026-07-24T01:34:55Z",
+        "source_date": "2026-07-24",
+        "source_id": "phase_d_finite_transport_reopen_post_v522",
+        "title": "PHASE D or finite-ID output transport reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "excluded_by_local_manifest",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "world model public ARC cross-game transfer",
+        "reason": "Exp5873 and Exp5874 may use only agent-owned observed transitions and cannot claim public solves or cross-game value transfer.",
+        "receipt_id": "arxiv_post_v522_remaining_topic_queries",
+        "search_timestamp": "2026-07-24T01:35:02Z",
+        "source_date": "2026-07-24",
+        "source_id": "public_arc_transfer_reopen_post_v522",
+        "title": "Public ARC solve or cross-game transfer reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "excluded_by_missing_authenticated_local_route",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "TSU Kona authenticated execution",
+        "reason": "Public Extropic and Logical Intelligence pages do not provide authenticated local execution receipts, so no TSU or Kona execution claim can be accepted.",
+        "receipt_id": "logical_intelligence_public_pages_post_v522",
+        "search_timestamp": "2026-07-24T01:35:05Z",
+        "source_date": "2026-07-24",
+        "source_id": "tsu_kona_execution_reopen_post_v522",
+        "title": "TSU or Kona execution claim reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "classification": "inaccessible",
+        "publication_date": "unknown",
+        "query": "api.openreview.net notes energy-based constraint",
+        "reason": "The direct API route required challenge verification, so no source is fabricated from it.",
+        "receipt_id": "openreview_api_notes_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "openreview_api_notes_post_v522",
+        "title": "OpenReview notes API energy/constraint search",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      },
+      {
+        "access_outcome": "inaccessible_http_429_rate_limited",
+        "classification": "inaccessible",
+        "publication_date": "unknown",
+        "query": "arXiv:2512.15605 citations",
+        "reason": "The direct ARM-EBM citation route returned HTTP 429; no citation or count claim is fabricated from it.",
+        "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
+        "title": "ARM-EBM Semantic Scholar citation route",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
+      }
+    ],
+    "allowed_classes": [
+      "accepted",
+      "duplicate",
+      "watch_only",
+      "excluded",
+      "inaccessible"
+    ],
+    "duplicate": [
+      {
+        "access_outcome": "reachable_duplicate_v522_planner_block",
+        "classification": "duplicate",
+        "publication_date": "2026-07-19",
+        "query": "arXiv:2507.02092 citations",
+        "reason": "Already indexed in the sealed V522 planner block as the hardness control signal for Exp5868 and Exp5869.",
+        "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "ebt_citation_solver_hard_2607_17047_post_v522",
+        "title": "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+        "url": "https://www.semanticscholar.org/paper/af87babbc381db8096bad9eb8467f4e0cfc36676"
+      },
+      {
+        "access_outcome": "reachable_duplicate_v522_planner_block",
+        "classification": "duplicate",
+        "publication_date": "2026-07-23",
+        "query": "V522 duplicate source ledger check",
+        "reason": "The active layer-dynamic and hardware-control findings were already sealed in the V522 planner block.",
+        "receipt_id": "huggingface_papers_2026_07_24_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "v522_layer_dynamics_bundle_post_v522",
+        "title": "V522 ICR, HARP, CORVUS, and structured SAT planner bundle",
+        "url": "research-references.md#V522-PLANNER-REFRESH-20260723"
+      }
+    ],
+    "excluded": [
+      {
+        "access_outcome": "excluded_by_exp5853_disqualification",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "hallucination embedding final surface",
+        "reason": "Exp5853 closed the final-embedding route; V522 may only gate a distinct supported intermediate-layer surface.",
+        "receipt_id": "arxiv_post_v522_required_topic_queries",
+        "search_timestamp": "2026-07-24T01:34:55Z",
+        "source_date": "2026-07-24",
+        "source_id": "final_embedding_reopen_post_v522",
+        "title": "Final embedding route reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "excluded_by_local_manifest",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "output logit finite transport verifier",
+        "reason": "PHASE D output-text/logit work and finite-ID output transport remain closed; source freshness cannot reopen them.",
+        "receipt_id": "arxiv_post_v522_required_topic_queries",
+        "search_timestamp": "2026-07-24T01:34:55Z",
+        "source_date": "2026-07-24",
+        "source_id": "phase_d_finite_transport_reopen_post_v522",
+        "title": "PHASE D or finite-ID output transport reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "excluded_by_local_manifest",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "world model public ARC cross-game transfer",
+        "reason": "Exp5873 and Exp5874 may use only agent-owned observed transitions and cannot claim public solves or cross-game value transfer.",
+        "receipt_id": "arxiv_post_v522_remaining_topic_queries",
+        "search_timestamp": "2026-07-24T01:35:02Z",
+        "source_date": "2026-07-24",
+        "source_id": "public_arc_transfer_reopen_post_v522",
+        "title": "Public ARC solve or cross-game transfer reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "excluded_by_missing_authenticated_local_route",
+        "classification": "excluded",
+        "publication_date": "2026-07-24",
+        "query": "TSU Kona authenticated execution",
+        "reason": "Public Extropic and Logical Intelligence pages do not provide authenticated local execution receipts, so no TSU or Kona execution claim can be accepted.",
+        "receipt_id": "logical_intelligence_public_pages_post_v522",
+        "search_timestamp": "2026-07-24T01:35:05Z",
+        "source_date": "2026-07-24",
+        "source_id": "tsu_kona_execution_reopen_post_v522",
+        "title": "TSU or Kona execution claim reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      }
+    ],
+    "inaccessible": [
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "classification": "inaccessible",
+        "publication_date": "unknown",
+        "query": "api.openreview.net notes energy-based constraint",
+        "reason": "The direct API route required challenge verification, so no source is fabricated from it.",
+        "receipt_id": "openreview_api_notes_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "openreview_api_notes_post_v522",
+        "title": "OpenReview notes API energy/constraint search",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      },
+      {
+        "access_outcome": "inaccessible_http_429_rate_limited",
+        "classification": "inaccessible",
+        "publication_date": "unknown",
+        "query": "arXiv:2512.15605 citations",
+        "reason": "The direct ARM-EBM citation route returned HTTP 429; no citation or count claim is fabricated from it.",
+        "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
+        "search_timestamp": "2026-07-24T01:35:03Z",
+        "source_date": "2026-07-24",
+        "source_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
+        "title": "ARM-EBM Semantic Scholar citation route",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
+      }
+    ],
+    "watch_only": [
+      {
+        "access_outcome": "reachable_http_200_totalResults_0",
+        "classification": "watch_only",
+        "publication_date": "2026-07-24",
+        "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN)",
+        "reason": "The primary route was reachable but surfaced no post-marker source to classify as accepted.",
+        "receipt_id": "arxiv_post_v522_required_topic_queries",
+        "search_timestamp": "2026-07-24T01:34:55Z",
+        "source_date": "2026-07-24",
+        "source_id": "arxiv_post_v522_required_topic_zero_result",
+        "title": "arXiv required-topic post-marker zero-result route",
+        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+      },
+      {
+        "access_outcome": "reachable_no_authenticated_local_execution_surface",
+        "classification": "watch_only",
+        "publication_date": "2025-10-29",
+        "query": "Extropic writing TSU XTR-0 Z1",
+        "reason": "Probabilistic-hardware context only; no Carnot-local XTR, Z1, TSU execution, SDK, speed, power, or correctness receipt was found.",
+        "receipt_id": "extropic_writing_post_v522",
+        "search_timestamp": "2026-07-24T01:35:04Z",
+        "source_date": "2026-07-24",
+        "source_id": "extropic_public_material_post_v522",
+        "title": "Extropic public writing pages",
+        "url": "https://extropic.ai/writing"
+      },
+      {
+        "access_outcome": "reachable_no_local_weights_or_reproducible_comparator",
+        "classification": "watch_only",
+        "publication_date": "2026-06-26",
+        "query": "Kona Aleph public pages",
+        "reason": "Architecture context only; no local weights, authenticated API receipt, or reproducible Kona/Aleph comparator is available.",
+        "receipt_id": "logical_intelligence_public_pages_post_v522",
+        "search_timestamp": "2026-07-24T01:35:05Z",
+        "source_date": "2026-07-24",
+        "source_id": "logical_intelligence_kona_public_pages_post_v522",
+        "title": "Logical Intelligence Kona and Aleph public pages",
+        "url": "https://logicalintelligence.com/"
+      }
+    ]
+  },
+  "honest_verdict": "complete: no accepted post-V522 source deltas; references and studying ledgers unchanged",
+  "inference_substrate": "aggregation_from_external_primary_sources",
+  "milestone": "2026.07.522",
+  "planner_marker_and_search_window": {
+    "boundary_marker": "V522-PLANNER-REFRESH-20260723-END",
+    "boundary_marker_hash": "sha256:455715012b10d798d63a72af8ea9dab2333b64a4850ac0be3cd05f1439794438",
+    "boundary_marker_line": 31179,
+    "inclusion_rule": "strictly_after_V522_planner_marker_or_newly_actionable_after_marker",
+    "planner_heading": "## V522 Planner Refresh - 20260723",
+    "search_finished_at": "2026-07-24T01:36:12Z",
+    "search_started_at": "2026-07-24T01:34:55Z"
+  },
+  "preconditions_checked": {
+    "active_roadmap_hash": "sha256:aeb94849de55c15a45ec9b9f58687b6aa963ebbe2853ea13885a8965ba7f086b",
+    "active_roadmap_milestone": "2026.07.522",
+    "checked_at": "2026-07-24T01:34:55Z",
+    "conductor_hash": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "exclusion_manifest_hash": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+    "failed_preconditions": [],
+    "gated_task_count": 3,
+    "gates_hash": "sha256:fbd9049e108e4a893d8dfd780c99eec33468943d5ee29d94136bcdb07447103f",
+    "known_issues_hash": "sha256:498ac870c326f017b415adfdcd4c2f7b01728f3b2dd421fbdab5789a3ddf1ad8",
+    "network_search_available": true,
+    "output_path_available": true,
+    "planner_marker_found": true,
+    "planner_marker_hash": "sha256:455715012b10d798d63a72af8ea9dab2333b64a4850ac0be3cd05f1439794438",
+    "planner_marker_line": 31179,
+    "references_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+    "research_roadmap_next_gated_task_count": 0,
+    "research_roadmap_next_gates_hash": null,
+    "research_roadmap_next_hash": null,
+    "research_roadmap_next_ids_hash": null,
+    "research_roadmap_next_milestone": "",
+    "research_roadmap_next_read": false,
+    "research_roadmap_next_task_ids": [],
+    "roadmap_ids_hash": "sha256:371ddf98e53c39072b73ffdb2020dcdc332daf45210827bed6c09a273712b956",
+    "roadmap_task_ids": [
+      "exp5863-transition-v522",
+      "exp5864-v522-source-delta-ingestion",
+      "exp5865-adaptive-state-kernel-requalification",
+      "exp5866-adaptive-state-pipeline-shadow-adapter",
+      "exp5867-prospective-certified-continuous-learning",
+      "exp5868-hardness-controlled-constraint-fixture",
+      "exp5869-hardness-surface-headroom-audit"
+    ],
+    "source_routes_checked": [
+      "arXiv",
+      "OpenReview",
+      "Hugging Face Papers",
+      "Semantic Scholar",
+      "GitHub discovery",
+      "Extropic writing",
+      "Logical Intelligence"
+    ],
+    "studying_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+    "unavailable_source_routes": [
+      "research-roadmap-next.yaml: absent",
+      "OpenReview API: HTTP 403 challenge verification required",
+      "Semantic Scholar ARM-EBM citation route: HTTP 429",
+      "Semantic Scholar keyword helper query: HTTP 429",
+      "Extropic authenticated local execution route: unavailable",
+      "Logical Intelligence local weights/API route: unavailable"
+    ],
+    "vnext_hash": "sha256:7353fbf7e3c8a78c95e0895f6508362c29158e0d626e828058a101c21d48dbe2"
+  },
+  "random_seed": 5864,
+  "references_after_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+  "references_before_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+  "references_modified": false,
+  "reproducibility_checksum": "sha256:e43b8efe7ff7d5fc295031e6bc7f415b9b5b3dc311f30c596de1b34ebf0e3d07",
+  "result_path": "results/experiment_5864_v522_source_delta_ingestion.json",
+  "roadmap_immutability_receipts": {
+    "active_roadmap_gate_hash": "sha256:fbd9049e108e4a893d8dfd780c99eec33468943d5ee29d94136bcdb07447103f",
+    "active_roadmap_gates": [
+      {
+        "gated_on": [
+          {
+            "artifact_field": "adaptive_state_microkernel_requalified_score",
+            "op": "==",
+            "upstream": "exp5865-adaptive-state-kernel-requalification",
+            "value": 1.0
+          }
+        ],
+        "id": "exp5866-adaptive-state-pipeline-shadow-adapter"
+      },
+      {
+        "gated_on": [
+          {
+            "artifact_field": "adaptive_state_shadow_adapter_ready_score",
+            "op": "==",
+            "upstream": "exp5866-adaptive-state-pipeline-shadow-adapter",
+            "value": 1.0
+          }
+        ],
+        "id": "exp5867-prospective-certified-continuous-learning"
+      },
+      {
+        "gated_on": [
+          {
+            "artifact_field": "hardness_controlled_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp5868-hardness-controlled-constraint-fixture",
+            "value": 1.0
+          }
+        ],
+        "id": "exp5869-hardness-surface-headroom-audit"
+      }
+    ],
+    "active_roadmap_milestone": "2026.07.522",
+    "active_roadmap_task_ids": [
+      "exp5863-transition-v522",
+      "exp5864-v522-source-delta-ingestion",
+      "exp5865-adaptive-state-kernel-requalification",
+      "exp5866-adaptive-state-pipeline-shadow-adapter",
+      "exp5867-prospective-certified-continuous-learning",
+      "exp5868-hardness-controlled-constraint-fixture",
+      "exp5869-hardness-surface-headroom-audit"
+    ],
+    "active_roadmap_task_ids_hash": "sha256:371ddf98e53c39072b73ffdb2020dcdc332daf45210827bed6c09a273712b956",
+    "authority_unchanged": true,
+    "closed_scopes_reopened": false,
+    "gates_unchanged": true,
+    "hardware_claim_changed": false,
+    "headline_claim_changed": false,
+    "model_policy_unchanged": true,
+    "next_roadmap_gate_hash": null,
+    "next_roadmap_gates": [],
+    "next_roadmap_milestone": "",
+    "next_roadmap_present": false,
+    "next_roadmap_task_ids": [],
+    "next_roadmap_task_ids_hash": null,
+    "protected_scopes": [
+      "final embeddings",
+      "finite-ID output transport",
+      "generated-answer transport",
+      "PHASE D output-text/logit work",
+      "PHASE D",
+      "tempering",
+      "public ARC solves",
+      "cross-game value transfer",
+      "unchanged board probes",
+      "TSU execution",
+      "Kona execution"
+    ],
+    "references_after_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+    "references_before_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
+    "required_models_unchanged": true,
+    "roadmap_ids_unchanged": true,
+    "studying_after_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+    "studying_before_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350"
+  },
+  "run_date": "20260724",
+  "schema": "carnot.experiment_5864.v522_source_delta_ingestion.v1",
+  "search_finished_at": "2026-07-24T01:36:12Z",
+  "search_started_at": "2026-07-24T01:34:55Z",
+  "sota_to_experiment_mapping": [],
+  "source_receipts": [
+    {
+      "access_outcome": "reachable_http_200_totalResults_0",
+      "accessed_at": "2026-07-24T01:34:55Z",
+      "candidate_ids": [],
+      "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN)",
+      "receipt_id": "arxiv_post_v522_required_topic_queries",
+      "receipt_summary": "arXiv was checked first for the required post-marker EBM, constraint, hallucination, and KAN terms; the export route was reachable and returned zero results.",
+      "source_family": "arXiv",
+      "source_role": "primary",
+      "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+    },
+    {
+      "access_outcome": "reachable_http_200_totalResults_0",
+      "accessed_at": "2026-07-24T01:35:02Z",
+      "candidate_ids": [],
+      "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"neural CSP\" OR all:Ising OR all:sampling OR all:\"energy-guided decoding\" OR all:\"probabilistic hardware\" OR all:\"continual learning\" OR all:\"world model\")",
+      "receipt_id": "arxiv_post_v522_remaining_topic_queries",
+      "receipt_summary": "The remaining required arXiv topic terms were reachable and returned zero post-marker results.",
+      "source_family": "arXiv",
+      "source_role": "primary",
+      "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22neural%20CSP%22%20OR%20all:Ising%20OR%20all:sampling%20OR%20all:%22energy-guided%20decoding%22%20OR%20all:%22probabilistic%20hardware%22%20OR%20all:%22continual%20learning%22%20OR%20all:%22world%20model%22)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+    },
+    {
+      "access_outcome": "reachable_http_200_dynamic_search_page_no_candidate_extraction",
+      "accessed_at": "2026-07-24T01:35:03Z",
+      "candidate_ids": [],
+      "query": "energy-based constraint reasoning continual learning",
+      "receipt_id": "openreview_post_v522_search",
+      "receipt_summary": "The OpenReview search page loaded as a dynamic page, but no static candidate metadata was accepted as primary evidence.",
+      "source_family": "OpenReview",
+      "source_role": "secondary",
+      "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning%20continual%20learning"
+    },
+    {
+      "access_outcome": "inaccessible_http_403_challenge_required",
+      "accessed_at": "2026-07-24T01:35:03Z",
+      "candidate_ids": [],
+      "query": "api notes energy-based and constraint reasoning",
+      "receipt_id": "openreview_api_notes_post_v522",
+      "receipt_summary": "Direct OpenReview API notes returned challenge-required HTTP 403 and were not used for source claims.",
+      "source_family": "OpenReview",
+      "source_role": "secondary",
+      "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+    },
+    {
+      "access_outcome": "reachable_http_200_redirected_to_2026_07_23_feed_no_new_actionable_delta",
+      "accessed_at": "2026-07-24T01:35:03Z",
+      "candidate_ids": [],
+      "query": "daily_papers date:2026-07-24",
+      "receipt_id": "huggingface_papers_2026_07_24_post_v522",
+      "receipt_summary": "The dated Hugging Face Papers route was reachable but redirected to the 2026-07-23 feed; no newer actionable primary-source delta was promoted.",
+      "source_family": "Hugging Face Papers",
+      "source_role": "secondary",
+      "url": "https://huggingface.co/papers?date=2026-07-24"
+    },
+    {
+      "access_outcome": "reachable_http_200_total_count_0_no_repository_delta",
+      "accessed_at": "2026-07-24T01:35:04Z",
+      "candidate_ids": [],
+      "query": "\"energy-based\" constraint reasoning pushed:>2026-07-23",
+      "receipt_id": "github_post_v522_repository_discovery",
+      "receipt_summary": "GitHub repository discovery returned zero post-marker repositories for the energy-based constraint-reasoning query.",
+      "source_family": "GitHub discovery",
+      "source_role": "secondary",
+      "url": "https://api.github.com/search/repositories?q=%22energy-based%22+constraint+reasoning+pushed:%3E2026-07-23&per_page=5"
+    },
+    {
+      "access_outcome": "reachable_http_200_total_count_0_no_issue_delta",
+      "accessed_at": "2026-07-24T01:35:04Z",
+      "candidate_ids": [],
+      "query": "repo:ggml-org/llama.cpp embedding grammar updated:>2026-07-23",
+      "receipt_id": "github_post_v522_issue_discovery",
+      "receipt_summary": "GitHub issue discovery found no post-marker llama.cpp embedding or grammar issue that created a new V522 control.",
+      "source_family": "GitHub discovery",
+      "source_role": "secondary",
+      "url": "https://api.github.com/search/issues?q=repo:ggml-org/llama.cpp+embedding+grammar+updated:%3E2026-07-23&per_page=5"
+    },
+    {
+      "access_outcome": "reachable_http_200_public_writing_no_authenticated_local_route",
+      "accessed_at": "2026-07-24T01:35:04Z",
+      "candidate_ids": [
+        "tsu_101",
+        "dtms",
+        "x0_xtr0_public_material"
+      ],
+      "query": "Extropic writing index TSU XTR-0 Z1",
+      "receipt_id": "extropic_writing_post_v522",
+      "receipt_summary": "Public writing remained October 2025-era TSU/XTR context plus DTM material and exposed no Carnot-local XTR/Z1/TSU execution route.",
+      "source_family": "Extropic writing",
+      "source_role": "primary",
+      "url": "https://extropic.ai/writing"
+    },
+    {
+      "access_outcome": "reachable_http_200_public_page_no_local_weights_or_api_receipt",
+      "accessed_at": "2026-07-24T01:35:05Z",
+      "candidate_ids": [
+        "logical_homepage",
+        "published_2026_06_26",
+        "kona_1_0",
+        "aleph"
+      ],
+      "query": "Kona Aleph public pages",
+      "receipt_id": "logical_intelligence_public_pages_post_v522",
+      "receipt_summary": "Kona/Aleph pages remained architecture context without local weights, authenticated API receipts, or reproducible comparators.",
+      "source_family": "Logical Intelligence",
+      "source_role": "primary",
+      "url": "https://logicalintelligence.com/"
+    },
+    {
+      "access_outcome": "reachable_local_helpers_semantic_scholar_http_429",
+      "accessed_at": "2026-07-24T01:35:06Z",
+      "candidate_ids": [],
+      "query": "sweep_clusters.py clusters 1, 4, 6 and sweep_semscholar keyword query",
+      "receipt_id": "sweep_helpers_post_v522_availability",
+      "receipt_summary": "Cluster helper URL generation worked for EBM, hardware, and world-model clusters. sweep_semscholar hit HTTP 429 for the keyword query and produced zero arXiv ids.",
+      "source_family": "local sweep helpers",
+      "source_role": "discovery_metadata",
+      "url": "scripts/sweep_clusters.py; scripts/sweep_semscholar.py"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5864",
+    "SCENARIO-REPORT-5864-ZERO-FINDING",
+    "SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA",
+    "SCENARIO-REPORT-5864-BLOCKED-PRECONDITION",
+    "SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY",
+    "SCENARIO-REPORT-5864-SCHEMA"
+  ],
+  "status": "complete",
+  "studying_after_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+  "studying_before_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+  "studying_ledger_modified": false,
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py -m pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py --fail-under=100",
+    ".venv/bin/ruff check python/carnot/experiment_5864_v522_source_delta_ingestion.py tests/python/test_experiment_5864_v522_source_delta_ingestion.py",
+    ".venv/bin/python - <<PY_YAML_JSON_SCHEMA",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py -m pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0": 0,
+    ".venv/bin/python - <<PY_YAML_JSON_SCHEMA": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5864_v522_source_delta_ingestion.py tests/python/test_experiment_5864_v522_source_delta_ingestion.py": 0
+  }
+}

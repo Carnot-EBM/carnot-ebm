@@ -45150,6 +45150,151 @@ are present, and the checksum is stable.
 |---|---|---|
 | REQ-REPORT-5850 | Implemented (`python/carnot/experiment_5850_v521_source_delta_ingestion.py`, `results/experiment_5850_v521_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5850_v521_source_delta_ingestion.py`) |
 
+### REQ-REPORT-5864: V522 Post-Marker Source Delta Ingestion Preserves Roadmap Identity
+
+The Exp5864 workflow SHALL run a bounded execution refresh after the
+`V522-PLANNER-REFRESH-20260723-END` marker and SHALL write
+`results/experiment_5864_v522_source_delta_ingestion.json`. It SHALL first hash
+the V522 planner marker block, active roadmap task IDs and gate content,
+optional `research-roadmap-next.yaml` task IDs and gate content when present,
+`research-references.md`, `research-studying.md`,
+`ops/exclusion_manifest.yaml`, and active `research-roadmap.yaml`. It SHALL
+record network and API availability for every requested route, and SHALL record
+unavailable, rate-limited, or dynamic-only routes as explicit outcomes rather
+than inferred source claims. If the marker is absent, no primary or secondary
+route is reachable, or roadmap immutability cannot be checked, the workflow
+SHALL emit a terminal `blocked:` artifact and SHALL leave
+`research-references.md`, `research-studying.md`, `research-roadmap.yaml`,
+optional `research-roadmap-next.yaml`, and `scripts/research_conductor.py`
+unchanged.
+
+The workflow SHALL search arXiv first for newer EBM verification/reasoning,
+neural CSPs, Ising/sampling, hallucination verification, KANs,
+energy-guided decoding, probabilistic hardware, continual learning, and active
+world-model use. It SHALL then check OpenReview, Hugging Face Papers, direct
+Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`, GitHub discovery, Extropic writing, and Logical Intelligence
+public pages. Every surfaced item SHALL be classified as `accepted`,
+`duplicate`, `watch_only`, `inaccessible`, or `excluded` with URL, date, query
+or receipt id, access outcome, and reason. Direct citation-route receipts SHALL
+not make stable citation-count claims unless the checked route itself supplies a
+stable count.
+
+The workflow MAY complete with zero accepted findings. Accepted findings SHALL
+be newer than the V522 planner marker or newly actionable only after that
+sealed marker, SHALL be primary-source or explicitly linked to a primary-source
+artifact, SHALL be non-duplicate, and SHALL map to bounded controls inside
+allocated Exp5865-Exp5875 scopes. Accepted findings SHALL NOT rewrite task
+identities, structured gates, authority, required model policy, retired scopes,
+hardware claims, headline authority, or active roadmap task identity. The
+workflow SHALL NOT reopen final embeddings, PHASE D output-text/logit work,
+finite-ID output transport, tempering, public ARC solves, cross-game value
+transfer, unchanged board probes, TSU execution, or Kona execution. When no
+accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` and `research-studying.md` unchanged, set
+`accepted_finding_count=0`, `references_modified=false`, and
+`studying_ledger_modified=false`. When an accepted finding exists, it MAY append
+exactly one dated execution-refresh block without rewriting the V522 planner
+block and MAY mark a studying item ingested only when the artifact includes an
+exact method-to-task mapping and failure boundary.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`planner_marker_and_search_window`, `source_receipts`,
+`citation_trail_receipts`, `finding_classification`,
+`accepted_finding_count`, `references_modified`,
+`studying_ledger_modified`, `sota_to_experiment_mapping`,
+`roadmap_immutability_receipts`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. It SHALL set
+`inference_substrate="aggregation_from_external_primary_sources"`. Every
+required top-level field SHALL have a non-empty field-provenance principle. The
+`honest_verdict` SHALL start with `complete:` or `blocked:` so a complete zero
+delta cannot be confused with a failed search.
+
+Required field principles:
+
+- `status`: principle "A terminal state distinguishes a complete zero delta from failed research."
+- `preconditions_checked`: principle "Marker, hashes, APIs, network, and outputs prevent stale-window or fabricated-source claims."
+- `planner_marker_and_search_window`: principle "A sealed time boundary makes novelty falsifiable."
+- `source_receipts`: principle "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata."
+- `citation_trail_receipts`: principle "Direct EBT and ARM-EBM checks prevent unsupported citation claims."
+- `finding_classification`: principle "Explicit classes stop duplicates and watch items becoming experiments."
+- `accepted_finding_count`: principle "Bare zero is a valid complete result."
+- `references_modified`: principle "The artifact discloses whether the shared source ledger changed."
+- `studying_ledger_modified`: principle "Ingestion status changes only when a cited method was actually mapped."
+- `sota_to_experiment_mapping`: principle "Every accepted method names an implementable current task hook and failure boundary."
+- `roadmap_immutability_receipts`: principle "Freshness work cannot silently redesign allocated tasks."
+- `duration_s`: principle "Measured wall time exposes a bootstrap-only receipt."
+- `inference_substrate`: principle "`aggregation_from_external_primary_sources` declares research synthesis, not model inference."
+- `field_provenance`: principle "Every accepted finding traces to its source and bounded task hook."
+- `test_commands`: principle "Commands document date, duplicate, citation, mapping, and immutability checks."
+- `test_exit_codes`: principle "Exit codes prevent failed provenance checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects marker, source, or classification drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix makes the refresh terminal."
+
+#### SCENARIO-REPORT-5864-ZERO-FINDING: Complete Zero Delta Leaves Ledgers Unchanged
+
+**Given** the V522 planner marker is present, arXiv and at least one secondary
+source family are reachable, and every surfaced item is duplicate, watch-only,
+excluded, or inaccessible
+**When** the Exp5864 workflow runs
+**Then** it writes
+`results/experiment_5864_v522_source_delta_ingestion.json`, sets
+`status=complete`, records every required source family and citation route,
+sets `accepted_finding_count=0`, keeps `references_modified=false`, keeps
+`studying_ledger_modified=false`, preserves roadmap IDs and gates, preserves
+closed scopes and hardware/headline claims, emits an empty
+`sota_to_experiment_mapping`, and emits a `complete:` verdict.
+
+#### SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA: Accepted Findings Stay Inside Exp5865-Exp5875
+
+**Given** a primary source is post-marker or newly actionable after the V522
+marker, non-duplicate, and only adds a bounded control inside Exp5865-Exp5875
+**When** the source is accepted
+**Then** the artifact and optional reference append record source id, title,
+URL, date, receipt, target experiment, source hook, authority-boundary reason,
+exact method-to-task mapping, and field provenance while preserving roadmap
+IDs, structured gates, authority, model policy, retired scopes, hardware
+claims, and headline authority.
+
+#### SCENARIO-REPORT-5864-BLOCKED-PRECONDITION: Missing Marker Or Source Reachability Blocks
+
+**Given** the V522 marker is absent or no primary or secondary source route is
+reachable
+**When** the Exp5864 workflow runs
+**Then** it writes a terminal blocked artifact, records the failed
+precondition, keeps `accepted_finding_count=0`, keeps
+`references_modified=false`, keeps `studying_ledger_modified=false`, leaves
+ledgers unchanged, and starts `honest_verdict` with `blocked:`.
+
+#### SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY: Roadmap And Retired Scopes Are Protected
+
+**Given** a candidate would reopen final embeddings, PHASE D output-text/logit
+work, finite-ID output transport, tempering, public ARC solves, cross-game
+value transfer, unchanged board probes, TSU execution, Kona execution, or
+rewrite task IDs, gates, authority, model policy, hardware claims, or headline
+authority
+**When** the candidate is classified
+**Then** it is excluded or watch-only, closed scopes remain closed, roadmap
+immutability receipts stay unchanged, and no hardware or headline claim is
+altered.
+
+#### SCENARIO-REPORT-5864-SCHEMA: Required Fields And Provenance Are Stable
+
+**Given** the Exp5864 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required top-level field has field provenance, every source
+receipt has query, URL, date, and access outcome metadata, every candidate
+classification is in the allowed set, direct EBT and ARM-EBM citation receipts
+are present, every accepted finding has a SOTA-to-experiment mapping, and the
+checksum is stable.
+
+## Implementation Status (REQ-REPORT-5864)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5864 | Implemented (`python/carnot/experiment_5864_v522_source_delta_ingestion.py`, `results/experiment_5864_v522_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5864_v522_source_delta_ingestion.py`) |
+
 ### REQ-REPORT-5851: Deterministic Replay Provenance Contract Fails Closed On False Compute Markers
 
 The Exp5851 workflow SHALL write
