@@ -14235,3 +14235,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 12:09 UTC | Plan milestone 2026.07.524 | OK | 14 tasks proposed |
 | 2026-07-24 12:11 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5881-one-to-one-grounding-acquisition-ab) |
 | 2026-07-24 12:12 UTC | Milestone 2026.07.524 activated | OK | 14 tasks queued |
+| 2026-07-24 13:01 UTC | Exact terminal-boundary handoff from .523 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5890_transit |
