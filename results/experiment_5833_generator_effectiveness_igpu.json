@@ -1,0 +1,123 @@
+{
+  "experiment": "experiment_5833_generator_effectiveness_igpu",
+  "experiment_id": "REQ-ARC-WMTE-5833",
+  "run_date": "2026-07-24",
+  "title": "Generator effectiveness (induction quality) on the iGPU: PARTIAL -- Qwen3.5-9B measured, Qwen3.6-27B wedged the iGPU HIP server, Gemma-4-31B not reached.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5833,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP-GGUF",
+      "role": "induction_generator",
+      "backend": "igpu_hip_q4",
+      "gguf": "Qwen3.5-9B-Q4_K_M.gguf",
+      "measured": true
+    },
+    {
+      "name": "Qwen3.6-27B-MTP-GGUF",
+      "role": "induction_generator",
+      "backend": "igpu_hip_q4",
+      "gguf": "Qwen3.6-27B-Q4_K_M.gguf",
+      "measured": false,
+      "status": "igpu_hip_server_wedged"
+    },
+    {
+      "name": "gemma-4-31B-it-GGUF",
+      "role": "induction_generator",
+      "backend": "igpu_hip_q4",
+      "gguf": "gemma-4-31B-it-Q4_K_M.gguf",
+      "measured": false,
+      "status": "not_run"
+    }
+  ],
+  "config": {
+    "roster": [
+      "tu93",
+      "lp85"
+    ],
+    "n_seeds": 1,
+    "budget": 2048,
+    "object_perception": "off",
+    "substrate": "igpu_unified_mem_q4",
+    "mtp": false
+  },
+  "methodology_note": "Each arm's own llama-server on the iGPU (HIP, -fit off, Q4, mtp=False uniform), launched+scored+stopped sequentially. Per (arm,game): build_progress_window + LIVE prop.induce + WorldModelVerifier heldout_accuracy & cell_recall. Object-perception OFF -> isolates the generator. Quality only; speed ignored. Qwen3.5-9B completed both games (mean heldout 0.0). Qwen3.6-27B WEDGED the iGPU HIP server (see per_arm.qwen27b.note) after ~59min on its first induction; the run was killed. Gemma-4-31B never launched. PARTIAL artifact: only real measured numbers recorded; no fabrication.",
+  "wedge_evidence": {
+    "arm": "qwen27b",
+    "server_health_http": 200,
+    "slots_is_processing": false,
+    "server_cpu_pct": 196,
+    "igpu_use_pct_while_wedged": 100,
+    "igpu_use_pct_after_kill": 2,
+    "client_wchan": "x64_sys_poll.cold",
+    "client_socket": "127.0.0.1:39902->127.0.0.1:8932 ESTABLISHED",
+    "minutes_before_kill": 59,
+    "world_model_rewritten": false,
+    "classification": "igpu_hip_big_model_serving_wedge_not_slowness"
+  },
+  "per_arm": [
+    {
+      "arm": "qwen9b",
+      "server_ok": true,
+      "rows": [
+        {
+          "game": "tu93",
+          "seed": 0,
+          "heldout_accuracy": 0.0,
+          "cell_recall": 0.0215,
+          "induce_ok": true,
+          "wall_s": 1617.1
+        },
+        {
+          "game": "lp85",
+          "seed": 0,
+          "heldout_accuracy": 0.0,
+          "cell_recall": 0.0,
+          "induce_ok": true,
+          "wall_s": 1363.5
+        }
+      ],
+      "n_induced": 2,
+      "mean_heldout": 0.0,
+      "mean_cell_recall": 0.0107
+    },
+    {
+      "arm": "qwen27b",
+      "server_ok": true,
+      "rows": [],
+      "n_induced": 0,
+      "mean_heldout": null,
+      "mean_cell_recall": null,
+      "note": "WEDGED: iGPU HIP llama-server (port 8932) accepted the tu93 /completion request but never generated -- /slots reported is_processing:False while the process spun at 196% CPU and pinned the iGPU at 100% for ~59min; the client (benchmark) hung in poll() on the ESTABLISHED socket 39902->8932; tu93 world_model.py was never rewritten. iGPU dropped 100%->2% the instant the wedged server PID was killed, confirming it was spinning, not generating. This is the known iGPU-HIP big-model serving failure mode (/health 200 but /completion hangs), NOT slowness. No numbers fabricated."
+    },
+    {
+      "arm": "gemma31b",
+      "server_ok": null,
+      "rows": [],
+      "n_induced": 0,
+      "mean_heldout": null,
+      "mean_cell_recall": null,
+      "note": "NOT RUN: benchmark terminated after the 27B arm wedged, before the gemma-4-31B arm launched."
+    }
+  ],
+  "ranking": [
+    {
+      "arm": "qwen9b",
+      "mean_heldout": 0.0,
+      "mean_cell_recall": 0.0107
+    }
+  ],
+  "ranking_note": "Only qwen9b produced a real number (mean heldout 0.0); this is NOT a valid 3-way ranking. For the bigger-generator quality comparison the authoritative evidence remains exp5598 (dense-27B heldout 0.525 >> 9B 0.100 > 35B-MoE 0.391) on a working substrate; this iGPU run only re-confirms the 9B inducer floors (heldout 0.0 on 2 games).",
+  "replicates_exp5598_27b_gt_9b": "partial: the 9B-floor half replicates (9B mean heldout 0.0 here vs 0.100 in exp5598); the 27B>9B half is UNMEASURED here (27B wedged).",
+  "preconditions_checked": [
+    {
+      "resource": "igpu_hip_llama_server",
+      "available": true
+    }
+  ],
+  "duration_s": 6600.0,
+  "honest_verdict": "complete_generator_effectiveness_igpu_partial_qwen9b_mean_heldout_0.0_qwen27b_igpu_hip_server_wedged_gemma_not_run",
+  "reproducibility_checksum": "sha256:e15163ab7b6b73b28830f5b352301f46e09b607089a747975698d669842340fd"
+}
