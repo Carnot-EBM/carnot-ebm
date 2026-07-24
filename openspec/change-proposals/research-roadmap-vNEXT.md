@@ -95,6 +95,14 @@ and Logical Intelligence yielded no other source that supersedes exact
 validators or reopens final embeddings, generated-answer repair, KAN mutation,
 unchanged board probes, or public ARC solves.
 
+The final 2026-07-24 planning verification directly replayed the Semantic
+Scholar citation APIs: EBT (`2507.02092`) returned 29 citing records and
+ARM-EBM (`2512.15605`) returned eight. Solver-Hard (`2607.17047`) remains the
+newest actionable EBT-citation mechanism and is already embodied by the
+Exp5868 hardness fixture; the ARM-EBM trail added no unindexed method. The
+same-day Hugging Face Papers and GitHub Trending checks added no repository or
+paper that changes the task allocation below.
+
 ---
 
 ## Target Architecture
@@ -389,6 +397,17 @@ lookup, supersede, rollback, and sparse energy/ranking. This is an interface
 contract, not a hardware speedup claim. A future hardware task may open only
 after a ready bounded kernel and an authenticated changed route both exist.
 
+## Decentralization Implications
+
+The milestone strengthens the local-first path without making a new sovereignty
+claim: all headline model inference uses immutable cached GGUFs, all acceptance
+authority is local exact code, learned state is bounded and exportable, and the
+ARC tape contains only agent-owned observations/actions. The ConstraintIR,
+versioned self-learning state, and event-index schemas remain backend-neutral so
+they can later map to Rust, FPGA, or probabilistic accelerators. CUDA and exact
+solver dependencies are disclosed; no attached board or Extropic route is
+credited in `.524`.
+
 ---
 
 ## Failed-Experiment Discipline
@@ -399,14 +418,17 @@ failed or retired experiment:
 - Exp5892 addresses Exp5869 and Exp5879 by separating immutable scientific
   admission from producer-task retirement and by proving any remaining suite
   debt unrelated at exact node/path granularity.
+- Exp5893 addresses pre-emptively skipped Exp5880 through the changed,
+  non-retired Exp5892 evidence-admission chain.
 - Exp5894 addresses Exp5749, Exp5773, and gate-blocked Exp5881 with a non-KAN,
   exact-fixture, one-to-one grounding mechanism.
-- Exp5895 addresses Exp5750, Exp5787, and Exp5867 with a qualified grounding
-  upstream and deterministic bounded external state rather than the retired
-  adaptive-kernel chain.
-- Exp5900-Exp5902 address Exp5726, Exp5766, and Exp5860 with identical-byte raw
-  versus structured lossless memory, rather than compact cross-game summaries,
-  component interactions, or active observation selection.
+- Exp5895 addresses Exp5750, Exp5787, Exp5867, and pre-emptively skipped Exp5882
+  with a qualified grounding upstream and deterministic bounded external state
+  rather than the retired adaptive-kernel chain.
+- Exp5900-Exp5902 address the applicable Exp5726, Exp5766, and Exp5860 scopes
+  with identical-byte raw versus structured lossless memory, rather than
+  compact cross-game summaries, component interactions, or active observation
+  selection.
 - Exp5903 addresses blocked Exp5862 through branch-independent exact
   reconciliation that cannot be cascade-skipped.
 
