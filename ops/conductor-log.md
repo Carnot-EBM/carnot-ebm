@@ -14244,3 +14244,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 19:14 UTC | Gated on Exp5894 mechanism: prospective shortcut-s | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "
 +    bad_jso |
 | 2026-07-24 19:32 UTC | Gated on Exp5894 mechanism: prospective shortcut-s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-24 19:53 UTC | Engine-neutral typed ConstraintIR fixture with exa | OK | 89 passed, 1 warning in 18.26s |
