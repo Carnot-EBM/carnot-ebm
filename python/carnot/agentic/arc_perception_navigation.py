@@ -165,19 +165,10 @@ def build_nav_adapter(verifier, branch_mode: str):
     )
 
 
-def solve_navigation(game: str, target_level: int = 3, cycles: int = 3) -> dict:
-    """The full autonomous pipeline: recon -> derive verifier -> auto branch_mode -> generic
-    verifier-routed OfflineSolver -> reproduction gate. Returns a result dict; `path` is the solved action
-    labels (None if not a navigation game / no solve)."""
+def _solve_once(game: str, ad, target_level: int) -> dict:
+    """One verifier-routed OfflineSolver solve + reproduction gate under a given adapter/branch_mode."""
     from carnot.agentic import arc_solver_kit as kit
 
-    trans = recon(game, cycles=cycles)
-    verifier, pair = derive_verifier(trans)
-    if verifier is None:
-        return {"game": game, "is_navigation_game": False, "pair": None, "path": None,
-                "reached": 0, "reproduced": False}
-    branch = auto_branch_mode(game)
-    ad = build_nav_adapter(verifier, branch)
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     solver = kit.OfflineSolver(
@@ -198,9 +189,40 @@ def solve_navigation(game: str, target_level: int = 3, cycles: int = 3) -> dict:
     gate = kit.reproduce(game, full, ad.apply, warmup_label=ad.warmup_label, claimed_level=cur)
     reproduced = bool(gate.get("reproduced")) if isinstance(gate, dict) else False
     reached = int(gate.get("reached_level", cur)) if isinstance(gate, dict) else int(cur)
-    return {"game": game, "is_navigation_game": True, "pair": list(pair), "branch_mode": branch,
-            "search_reached": int(cur), "reproduced": reproduced,
-            "reproduced_level": reached if reproduced else 0, "path": full, "path_len": len(full)}
+    return {"branch_mode": ad.branch_mode, "search_reached": int(cur),
+            "reproduced": reproduced, "reproduced_level": reached if reproduced else 0,
+            "path": full, "path_len": len(full)}
+
+
+def solve_navigation(game: str, target_level: int = 3, cycles: int = 3) -> dict:
+    """The full autonomous pipeline: recon -> derive verifier -> SELF-CORRECTING branch_mode -> generic
+    verifier-routed OfflineSolver -> reproduction gate. Returns a result dict; `path` is the solved action
+    labels (None if not a navigation game / no solve).
+
+    SELF-CORRECTION (why not just trust auto_branch_mode): a cheap short-path idempotency probe cannot see a
+    WIN-CONTINGENT reset parity (tu93's reset toggles a hidden state that only matters at a level-up), so it
+    can mispredict 'replay' when 'fresh_env' is needed. Instead of a perfect predictor, we VERIFY: try the
+    guessed mode; if the reproduction gate reproduces FEWER levels than the search reached (the non-idempotent
+    signature -- the search found a win the single-env replay can't reproduce), retry the other mode and keep
+    whichever reproduces MORE levels. The reproduction gate is the ground truth, so this is robust without a
+    perfect idempotency oracle."""
+    trans = recon(game, cycles=cycles)
+    verifier, pair = derive_verifier(trans)
+    if verifier is None:
+        return {"game": game, "is_navigation_game": False, "pair": None, "path": None,
+                "reached": 0, "reproduced": False}
+    guess = auto_branch_mode(game)
+    other = "fresh_env" if guess == "replay" else "replay"
+    best = _solve_once(game, build_nav_adapter(verifier, guess), target_level)
+    # If the gate reproduced fewer levels than the search reached, the mode is wrong -> try the other.
+    if best["reproduced_level"] < best["search_reached"]:
+        alt = _solve_once(game, build_nav_adapter(verifier, other), target_level)
+        if alt["reproduced_level"] > best["reproduced_level"]:
+            best = alt
+    return {"game": game, "is_navigation_game": True, "pair": list(pair),
+            "branch_mode": best["branch_mode"], "branch_mode_guess": guess,
+            "search_reached": best["search_reached"], "reproduced": best["reproduced"],
+            "reproduced_level": best["reproduced_level"], "path": best["path"], "path_len": best["path_len"]}
 
 
 class PerceptionNavigationPolicy:
