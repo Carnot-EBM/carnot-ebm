@@ -2736,6 +2736,26 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   program honestly: it moved the wall from perception/goal-induction to execution/navigation, and the
   execution wall is not cracked by routing toward a Manhattan target -- it needs a correct exit-target + a
   search/movement model that provably reduces distance-to-goal.
+- **EXECUTION WALL FULLY ISOLATED 2026-07-23 (REQ-ARC-WMTE-5836,
+  `results/outer_loop_arc_execution_wall_isolation_tu93_20260723.json`).** Source extraction (authorized
+  offline dev) revealed the E3-null cause: 3 of the 4 tested games are NOT navigation games -- sc25 needs
+  spell-casting (transform the player), ls20 needs attribute-morphing to match the pad, cn04 needs
+  endpoint-pairing. ONLY tu93 is navigation_only (player color-9 onto exit color-14) -- and it was SKIPPED by
+  the A/B because `detect_mover`'s `max_shift=4.0` rejected its player, which JUMPS ~6 logical cells/action
+  (FIXED this session: max_shift is now relative, `0.25*min(H,W)`; tu93 now detects a mover). On tu93 with
+  source-confirmed colors: the E3 value-head-routed explorer navigates the player 60->12 (real progress) but
+  0 levels; a direct greedy-toward-exit navigator goes 60->42 then GAME-OVER at move 26. ROOT CAUSE: tu93 is
+  a MAZE (color-2 rails) with a MOVE BUDGET -- neither the novelty-explorer (nudged, not goal-directed) nor
+  greedy (bounces off rails, times out) does obstacle-aware pathfinding within budget. **KEY: Carnot's
+  OfflineSolver (verifier-routed best-first search over replay-from-reset) ALREADY solves tu93 to L5
+  (`ops/arc_solve_registry.yaml`) using a hand-built GameAdapter's player->goal Manhattan verifier. The
+  perception fix provides AUTONOMOUSLY (detect player+exit from frames) exactly what that adapter provides
+  MANUALLY.** So the wall is precisely located and the fix is scoped: feed the perception-detected
+  player->target as the OfflineSolver verifier (the mechanism that already solves navigation games), NOT the
+  weaker E3 novelty-explorer. The complete chain: perception-is-the-wall -> oracle proof (0->7/8) -> detectors
+  -> re-authoring (goal 0->4/8) -> discovery A/B (0/8, execution wall) -> E3 routing A/B (0/8) -> FULL
+  ISOLATION (execution = perception-grounded verifier-routed pathfinding; Carnot has the engine, needs the
+  autonomous verifier).
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open

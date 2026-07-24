@@ -297,3 +297,31 @@ by routing toward a Manhattan target. Likely unaddressed: the recon target may n
 (nearest-object heuristic); the search may not find the navigation path within budget even with a correct
 target; the perception arm only applied to 3/8 games. The honest end state: the perception-fix program moved
 the wall from perception/goal-induction to execution/navigation, and the execution wall stands.
+
+## Full isolation (5836): the execution wall is perception-grounded verifier-routed pathfinding
+
+Source extraction resolved the E3 null. Of the 4 games probed, only tu93 is navigation_only (player color-9
+onto exit color-14); sc25 needs spell-casting, ls20 attribute-morphing, cn04 endpoint-pairing. So the E3
+perception-target A/B ran on 3 NON-navigation games -- no player->exit heuristic can solve them -- and skipped
+the one navigation game because detect_mover's fixed max_shift=4.0 rejected tu93's player (it jumps ~6 logical
+cells/action). Fixed: max_shift is now relative (0.25*min(H,W)); tu93 detects a mover again.
+
+On tu93 with source-confirmed colors: the E3 value-head-routed explorer moves the player 60->12 (real
+navigation progress) but discovers 0 levels; a direct greedy-toward-exit navigator goes 60->42 then hits
+game-over at move 26. tu93 is a MAZE (color-2 rails) with a move budget -- neither the novelty-explorer nor
+greedy does obstacle-aware pathfinding within budget.
+
+**The key.** Carnot's OfflineSolver (verifier-routed best-first search over replay-from-reset) ALREADY solves
+tu93 to L5 (registry) using a hand-built GameAdapter's player->goal Manhattan verifier. The perception fix
+provides AUTONOMOUSLY exactly what that adapter provides MANUALLY. So the execution wall is precisely located
+and the next capability is scoped: feed the perception-detected player->target as the OfflineSolver verifier
+(the mechanism that already solves navigation games), not the weaker E3 novelty-explorer.
+
+### Complete measured chain (winner-matching -> execution isolation)
+
+1. Winner recipe -> 0 discovery. 2. Perception is the wall (8/8). 3. Oracle ablation: fix flips goals 0->7/8.
+4. Detectors recover HUD+mover from frames. 5. Re-authoring: goal gate 0->4/8, zero HUD fixation; wired live.
+6. Discovery A/B: 0/8 -- execution is the next wall. 7. E3 routing A/B: 0/8. 8. FULL ISOLATION: 3/4 tested
+games aren't navigation games; the one that is (tu93) is a maze+budget needing obstacle-aware pathfinding;
+Carnot's OfflineSolver already solves it with a hand-built verifier -- the scoped fix is an AUTONOMOUS
+perception-grounded verifier feeding that existing search.
