@@ -352,3 +352,28 @@ that closes to a reproduced solve.
 **Next (scoped):** wire derive_navigation_pair into the LIVE E3 path as the navigation-game verifier
 (replacing the per-game hand-built GameAdapter verifier), and generalize player/target derivation beyond the
 clean 2-color case.
+
+## Autonomous generic-adapter solve (5838): tu93 L3 with ZERO per-game hand-RE
+
+Closed the last gap. Solved tu93 with a FULLY GENERIC navigation adapter -- no per-game code (generic
+directional-move actions, env.step, full-grid state key) + the perception-derived verifier (colors (9,14)
+from motion). Result:
+
+- fresh_env: **reached L3, reproduction gate PASSED (L3), 47-move path -- identical to the hand-built adapter**
+- replay: reached L2 in search, gate correctly REJECTED (tu93's non-idempotent reset -> no false claim)
+
+The only remaining per-game input is branch_mode (fresh_env vs replay), an auto-detectable reset-idempotency
+property. **This is the live self-discovery capability the whole thread targeted: Carnot solves a navigation
+game from its own frames with no per-game reverse-engineering.**
+
+Remaining (scoped): auto-detect branch_mode; generalize player/target derivation beyond the clean 2-color
+case; and the SCORED-path wiring -- give E3AgentPolicy the OfflineSolver-style verifier-routed search for
+navigation games (its novelty-explorer only navigates partway, so the fix is the search structure + the
+autonomous verifier together).
+
+### The whole thread, one line
+
+We matched the leaderboard leaders (0 discovery), proved perception is the wall, fixed it from frames
+(0->7/8 goals), found the execution wall, and closed it: an AUTONOMOUS perception verifier + Carnot's
+verifier-routed search reproduces tu93 L3 with no per-game hand-RE -- the sovereignty-aligned, oracle-distinct
+path, not the winner recipe.

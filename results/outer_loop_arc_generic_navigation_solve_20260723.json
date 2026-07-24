@@ -1,0 +1,45 @@
+{
+  "experiment": "outer_loop_arc_generic_navigation_solve",
+  "experiment_id": "REQ-ARC-WMTE-5838",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_generic_navigation_solve.v1",
+  "title": "Solve tu93 with a FULLY GENERIC navigation adapter (no per-game hand-RE) + a perception-derived verifier: autonomous self-discovery of a navigation solve.",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "purpose": "method_validation_autonomous_generic_navigation",
+  "not_a_new_solve_claim": "tu93 L3 is already in the registry; this validates that a GENERIC adapter (no per-game code) + a perception-derived verifier reproduces it. No registry change.",
+  "random_seed": 5838,
+  "methodology_note": "GameAdapter built from GENERIC functions only (directional moves, env.step, full-grid state key) + a perception-derived player->goal verifier whose colors come from derive_navigation_pair on a recon (motion only, never hardcoded, never source). branch_mode tried both. Public-game frames stepped for offline dev.",
+  "result": {
+    "game": "tu93",
+    "perception_pair": [
+      9,
+      14
+    ],
+    "n_recon": 48,
+    "hand_re_pair": [
+      9,
+      14
+    ],
+    "no_hand_adapter": true,
+    "generic_fresh_env": {
+      "search_reached": 3,
+      "gate_reproduced": true,
+      "reproduced_level": 3,
+      "path_len": 47
+    },
+    "generic_replay": {
+      "search_reached": 2,
+      "gate_reproduced": false,
+      "reproduced_level": 0,
+      "path_len": 26
+    }
+  },
+  "best_reproduced_level": 3,
+  "offline_reproduced": true,
+  "reproduced_levels": 3,
+  "honest_verdict": "complete_success_generic_navigation_adapter_reproduces_tu93_L3_no_hand_re",
+  "duration_s": 112.9,
+  "reproducibility_checksum": "sha256:577f3269102a74eb38bd34ac9a9d16b2fb05ce1f083e7b7509e5f508431e9e82"
+}

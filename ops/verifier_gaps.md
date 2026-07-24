@@ -2774,6 +2774,22 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   development_proxy). NEXT (scoped): wire derive_navigation_pair into the LIVE E3 path as the verifier for
   navigation games (replacing the per-game hand-built GameAdapter verifier), and generalize the
   static-target/player derivation beyond the clean 2-color case.
+- **AUTONOMOUS GENERIC-ADAPTER SOLVE 2026-07-23 (REQ-ARC-WMTE-5838,
+  `results/outer_loop_arc_generic_navigation_solve_20260723.json`).** Closed the last gap: solved tu93 with a
+  FULLY GENERIC navigation adapter -- NO per-game hand code (generic directional-move action_labels, generic
+  env.step apply, generic full-grid state_key) + the perception-derived verifier (colors (9,14) from motion,
+  never hardcoded/source). Result: **fresh_env branch mode reached L3, reproduction gate PASSED (L3),
+  47-move path -- IDENTICAL to the hand-built `_tu93` adapter, with ZERO per-game reverse-engineering.**
+  (replay mode reached L2 in search but the gate correctly REJECTED it -- tu93's non-idempotent reset -- so
+  no false claim; fresh_env is the reproducing mode.) The ONLY remaining per-game input is `branch_mode`
+  (fresh_env vs replay), an auto-detectable reset-idempotency property. **This is the live self-discovery
+  capability the whole thread targeted: Carnot solves a navigation game from its OWN frames with no per-game
+  hand-RE.** Method validation (tu93 L3 already registered; solve_provenance=development_proxy; no registry
+  change). REMAINING (scoped): (1) auto-detect branch_mode (replay a short path twice, compare levels ->
+  fresh_env if non-idempotent); (2) generalize player/target derivation beyond the clean 2-color case; (3)
+  the SCORED-path wiring -- give E3AgentPolicy the OfflineSolver-style verifier-routed search for navigation
+  games (its novelty-explorer navigates only partway, so the fix is the search structure + the autonomous
+  verifier together, not the verifier alone).
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
