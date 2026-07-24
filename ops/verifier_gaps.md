@@ -2806,6 +2806,26 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   consuming) is the next step. Method validation (tu93 L3 registered; solve_provenance=development_proxy).
   This CLOSES the winner-matching -> execution -> scored-path thread with a working end-to-end autonomous
   navigation capability on the scored interface.
+- **LIVE-SEARCH BOUNDARY + PRIOR-ART CORRECTION 2026-07-23 (REQ-ARC-WMTE-5840,
+  `results/outer_loop_arc_live_search_characterization_20260723.json`).** True live-search = StepwiseExplorer
+  searching the ONE env run_game gives it (no separate arcade). With the perception verifier: **live
+  single-env search REACHES tu93 L1** (both baseline explorer and perception-routed) -- limited live
+  self-discovery IS achievable -- but **NEITHER reaches L2/L3 even at budget 2000**: the offline L3 solve
+  relied on `fresh_env` (a brand-new env per node), which a single live scored env cannot supply (tu93 reset
+  is non-idempotent). The perception verifier adds NO advantage over the baseline explorer online (both L1).
+  No clean idempotent-reset nav game in the public set for a positive demo (lp85/s5i5/vc33 derive no pair;
+  g50t=(9,8) not pure nav). **PRIOR-ART CORRECTION (checked the record): the two directions I first framed as
+  'untried open problems' are NOT untried.** (b) 'world-model rollout that branches without resetting the
+  real env' IS `plan_in_model` + the executable/nav world model (`arc_nav_world_model`,
+  `arc_execution_guided_world_model`) -- E3's CORE, iterated across exp4533 per-level re-induction, the
+  Family-B re-induction program, within-game L3 self-induction (cn04/cd82/sk48/sp80), and a 2026-07-20
+  induction-quality diagnosis; `arc_nav_world_model`'s docstring already found the SAME tu93-L1 ceiling
+  (works at L1, doesn't deepen because the mechanic shifts per level -> needs per-mechanic RE-INDUCTION). (a)
+  'parity-aware live search' is largely SUBSUMED: planning in the induced model never resets the real env, so
+  non-idempotency is moot. **THE REAL open bottleneck -- already known and actively worked -- is
+  DYNAMICS-INDUCTION QUALITY (heldout ~0.0; cf. `project_arc_actions_to_progress_metric`, GAP-ARCH-GRID-ONLY-
+  STATE): re-inducing the world model well enough per mechanic-shift to plan past L1.** The 5840 live-search
+  boundary RE-CONFIRMS this standing problem; it does not open a new one.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
