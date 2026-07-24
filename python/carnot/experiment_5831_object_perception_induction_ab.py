@@ -70,13 +70,33 @@ def main() -> int:
         return 0
 
     from carnot.agentic import arc_actions_to_progress as atp
-    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
-    from carnot.experiment_5726_thinkingcap_16k_dualgpu_reason_ab import run_reason_cell_budget
-
-    prop = LocalGGUFProposer(
-        repo_substr="Qwen3.5-9B-MTP", port=PORT, mtp=True, kv_quant="q8_0",
-        no_think_prefix="/no_think\n", max_tokens=BUDGET, timeout=600,
+    from carnot.agentic.arc_executable_world_model import (
+        LocalGGUFProposer,
+        WorldModelVerifier,
+        load_engine,
     )
+
+    # Generator choice. Default = gemma-4-31B-it: the scoping plan's instrument (high induce-completion, so
+    # the object-perception variable is isolated from induce-failure noise; Qwen-9B floors at heldout 0 and
+    # cannot reveal the delta). The ARC Prize 2026 box upgraded to L4/24GB (2026-06-21), so a 31B is viable
+    # offline on a single 24GB 3090. NB: the LIVE scored generator is still Qwen3.5-9B-MTP (exp5722: a 31B
+    # inducer added 0 live levels), so a 31B PASS here still needs a Qwen-9B confirmation before graduating.
+    model = os.environ.get("L1AB_MODEL", "gemma31b")
+    if model == "qwen9b":
+        prop = LocalGGUFProposer(
+            repo_substr="Qwen3.5-9B-MTP", port=PORT, mtp=True, kv_quant="q8_0",
+            no_think_prefix="/no_think\n", max_tokens=BUDGET, timeout=600,
+        )
+    else:  # gemma31b (default)
+        _gemma_gguf = (
+            Path.home()
+            / ".cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/"
+            "f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        )
+        prop = LocalGGUFProposer(
+            repo_substr="gemma-4-31B-it", model_path=str(_gemma_gguf), port=PORT, mtp=False,
+            kv_quant="q8_0", use_chat_template=True, n_ctx=32768, max_tokens=BUDGET, timeout=1800,
+        )
 
     # Build one window per game up front (shared by both arms so the object variable is isolated).
     windows: dict[str, tuple] = {}
@@ -96,17 +116,25 @@ def main() -> int:
         row: dict = {"game": game}
         for arm, flag in (("off", "0"), ("on", "1")):
             os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = flag  # set BEFORE induce (read in induce_prompt)
+            t_arm = time.time()
             try:
-                r = run_reason_cell_budget(
-                    game, prop, trial=TRIAL, window=window, full_traj=full_traj, cell=cell, budget=BUDGET
-                )
-                row[arm] = {
-                    "heldout_accuracy": r.get("heldout_accuracy"),
-                    "cell_recall": r.get("cell_recall"),
-                    "goal_predicate_accuracy": r.get("goal_predicate_accuracy"),
-                    "induce_ok": r.get("induce_ok"),
-                    "wall_s": r.get("wall_s"),
-                }
+                # LIVE induce path (the codeonly Proposer.induce -> induce_prompt path the scored agent uses;
+                # NOT the /think run_reason_cell_budget cell, which is a different config Qwen-9B can't complete).
+                ok, msg = prop.induce(game, window, cell)
+                if ok:
+                    eng, _isdone = load_engine(game)
+                    vr = WorldModelVerifier(list(window)).score(eng)
+                    row[arm] = {
+                        "heldout_accuracy": round(float(vr.accuracy), 4),
+                        "cell_recall": round(float(getattr(vr, "cell_recall", 0.0)), 4),
+                        "induce_ok": True,
+                        "wall_s": round(time.time() - t_arm, 1),
+                    }
+                else:
+                    row[arm] = {
+                        "heldout_accuracy": None, "induce_ok": False,
+                        "error": str(msg)[:150], "wall_s": round(time.time() - t_arm, 1),
+                    }
             except Exception as e:
                 row[arm] = {"heldout_accuracy": None, "error": f"{type(e).__name__}: {e}"[:200]}
         os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
