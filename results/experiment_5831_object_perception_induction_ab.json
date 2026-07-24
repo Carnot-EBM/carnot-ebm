@@ -1,0 +1,118 @@
+{
+  "experiment": "experiment_5831_object_perception_induction_ab",
+  "experiment_id": "REQ-ARC-WMTE-5830",
+  "run_date": "2026-07-24",
+  "title": "Lever #1 A/B: object-structured perception in the inducer prompt vs raw grid; heldout_accuracy.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5831,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP-GGUF",
+      "port": 8922,
+      "role": "induction_generator"
+    }
+  ],
+  "config": {
+    "roster": [
+      "ls20",
+      "tu93",
+      "r11l",
+      "lp85"
+    ],
+    "budget": 4096,
+    "trial": 0,
+    "trust_gate": 0.5
+  },
+  "methodology_note": "Two arms toggle ONLY CARNOT_ARC_OBJECT_PERCEPTION; same live Qwen3.5-9B-MTP server, same window/seed/budget per game. run_reason_cell_budget (exp5726) reused verbatim. heldout_accuracy = WorldModelVerifier exact-full-grid-match on the held-out window tail.",
+  "per_game": [
+    {
+      "game": "ls20",
+      "off": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 30.3
+      },
+      "on": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 22.1
+      },
+      "heldout_delta": null
+    },
+    {
+      "game": "tu93",
+      "off": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 28.8
+      },
+      "on": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 28.3
+      },
+      "heldout_delta": null
+    },
+    {
+      "game": "r11l",
+      "off": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 29.0
+      },
+      "on": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 11.6
+      },
+      "heldout_delta": null
+    },
+    {
+      "game": "lp85",
+      "off": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 30.4
+      },
+      "on": {
+        "heldout_accuracy": null,
+        "cell_recall": null,
+        "goal_predicate_accuracy": null,
+        "induce_ok": false,
+        "wall_s": 0.5
+      },
+      "heldout_delta": null
+    }
+  ],
+  "n_paired": 0,
+  "mean_heldout_off": null,
+  "mean_heldout_on": null,
+  "mean_heldout_delta": null,
+  "new_trust_gate_crossings": [],
+  "gate_clears": false,
+  "preconditions_checked": [
+    {
+      "resource": "llama_server_port_8922",
+      "available": true
+    }
+  ],
+  "duration_s": 217.2,
+  "honest_verdict": "complete_object_perception_ab_mean_delta_None_new_trust_0_gate_clears_False",
+  "reproducibility_checksum": "sha256:30a4348d7c5bf36e943da7874de2a98f5651cfa096d162ab8cbb70444166731a"
+}
