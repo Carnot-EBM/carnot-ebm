@@ -40,7 +40,10 @@ from carnot.agentic.arc_goal_energy_live import make_goal_energy_heuristic
 
 
 def _components_detailed(grid, *, emit_grid_fallback: bool = False) -> list:
-    """Connected non-background components with (centroid_y, centroid_x, area, color).
+    """Connected non-background components with (centroid_y, centroid_x, area, color, is_grid_fallback).
+    NOTE: the trailing ``is_grid_fallback`` field was added in the GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS
+    fix (2f0760307); consumers MUST unpack defensively (index or ``*_``), never a rigid 4-tuple assignment --
+    a rigid unpack crashed plan_in_model's ``_model_candidates`` for months of grids with components.
     Same 4-neighbour flood fill as world_model.objects(), but also returns area+color
     so candidates can be ordered by VISUAL SALIENCE (segment size × color rarity) —
     the key ingredient from the graph-explore SOTA (arXiv:2512.24156) that lets the
