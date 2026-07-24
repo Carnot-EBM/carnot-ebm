@@ -904,17 +904,36 @@ def _resource_receipts(root: Path) -> JsonDict:
 
 
 def _contains_next_range_reference(text: str) -> bool:
+    return bool(_next_range_numbers_in_text(text))
+
+
+def _next_range_numbers_in_text(text: str) -> set[int]:
     lowered = text.lower()
     if not any(marker in lowered for marker in ("exp589", "exp590", "experiment_589", "experiment_590")):
-        return False
+        return set()
+    numbers: set[int] = set()
     for task_id, rel_path in NEXT_TASK_ARTIFACT_PATHS.items():
         if task_id.lower() in lowered or rel_path.as_posix().lower() in lowered:
-            return True
-    return any(
-        re.search(rf"(?<![a-z0-9_])exp{number}(?![a-z0-9])", lowered)
-        or re.search(rf"(?<![a-z0-9_])experiment_{number}(?![a-z0-9])", lowered)
-        for number in NEXT_RANGE_NUMBERS
-    )
+            numbers.add(int(task_id[3:7]))
+    for number in NEXT_RANGE_NUMBERS:
+        if (
+            re.search(rf"(?<![a-z0-9_])exp{number}(?![a-z0-9])", lowered)
+            or re.search(rf"(?<![a-z0-9_])experiment_{number}(?![a-z0-9])", lowered)
+        ):
+            numbers.add(number)
+    return numbers
+
+
+def _allowed_range_reference_kind(rel_path: Path, reference_text: str) -> str | None:
+    if rel_path in OWNED_REFERENCE_PATHS:
+        return "transition_owned_reference"
+    if rel_path == CONDUCTOR_LOG_RELATIVE_PATH:
+        referenced_numbers = _next_range_numbers_in_text(reference_text)
+        if referenced_numbers and referenced_numbers <= {5890}:
+            return "transition_owned_conductor_attempt_reference"
+    if rel_path in ALLOWED_ALLOCATION_REFERENCE_PATHS:
+        return "allowed_allocation_reference"
+    return None
 
 
 def _scan_candidate_paths(root: Path) -> list[Path]:
@@ -954,22 +973,20 @@ def _range_collision_scan(root: Path) -> JsonDict:
     for rel_path in _scan_candidate_paths(root):
         path = root / rel_path
         reference = False
+        reference_text = rel_path.as_posix()
         if rel_path.parts[:1] == ("results",):
-            reference = _contains_next_range_reference(rel_path.as_posix())
+            reference = _contains_next_range_reference(reference_text)
             if not reference and "transition" in rel_path.name and path.stat().st_size < 2_000_000:
-                reference = _contains_next_range_reference(
-                    path.read_text(encoding="utf-8", errors="replace")
-                )
+                reference_text = path.read_text(encoding="utf-8", errors="replace")
+                reference = _contains_next_range_reference(reference_text)
         elif path.exists() and path.stat().st_size < 2_000_000:
-            reference = _contains_next_range_reference(
-                path.read_text(encoding="utf-8", errors="replace")
-            )
+            reference_text = path.read_text(encoding="utf-8", errors="replace")
+            reference = _contains_next_range_reference(reference_text)
         if not reference:
             continue
-        if rel_path in OWNED_REFERENCE_PATHS:
-            allowed.append({"path": rel_path.as_posix(), "kind": "transition_owned_reference"})
-        elif rel_path in ALLOWED_ALLOCATION_REFERENCE_PATHS:
-            allowed.append({"path": rel_path.as_posix(), "kind": "allowed_allocation_reference"})
+        allowed_kind = _allowed_range_reference_kind(rel_path, reference_text)
+        if allowed_kind is not None:
+            allowed.append({"path": rel_path.as_posix(), "kind": allowed_kind})
         else:
             collisions.append({"path": rel_path.as_posix(), "kind": "unexpected_next_range_reference"})
     collisions = sorted(
