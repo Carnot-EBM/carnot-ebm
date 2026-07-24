@@ -35593,3 +35593,128 @@ verdict SHALL begin with `disqualified:` or `blocked:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5853 | Planned (`python/carnot/experiment_5853_paired_embedding_integrity_audit.py`, `results/experiment_5853_paired_embedding_integrity_audit.json`) | Planned (`tests/python/test_experiment_5853_paired_embedding_integrity_audit.py`) |
+
+### REQ-VERIFY-5868: Hardness-Controlled Constraint Fixture
+
+The repository SHALL provide Exp5868 at
+`python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py`
+that writes
+`results/experiment_5868_hardness_controlled_constraint_fixture.json` and
+`results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl`.
+Exp5868 SHALL build a deterministic, solver-labeled, proof-hardness-controlled
+CSP corpus only. It SHALL NOT invoke an LLM, SHALL NOT extract embeddings, and
+SHALL declare
+`inference_substrate=deterministic_exact_solver_labeled_dataset_no_llm`.
+
+Before row generation, Exp5868 SHALL hash the arXiv:2607.17047 receipt already
+present in `research-references.md`, exact solver implementation and version
+receipts, the Exp5840 JSON/JSONL fixture, generator and test code when present,
+the seed registry, output paths, disk/RAM checks, and protected files including
+`scripts/research_conductor.py`. Any missing paper receipt, missing solver,
+resource failure, output failure, missing upstream fixture, or protected-file
+drift SHALL write a terminal blocked artifact with the bare scalar
+`hardness_controlled_fixture_ready_score=0.0`.
+
+Exp5868 SHALL generate proof-hard expander-Tseitin and proof-easy
+ladder-Tseitin families across aligned size bins. Within each size bin it SHALL
+near-match clause density, match maximum clause width, length-match the
+surface text within preregistered tolerances, and balance satisfiable and
+unsatisfiable labels. Optional anchor controls such as pigeonhole SHALL appear
+only if exact solvers certify them; unverified anchors SHALL be absent rather
+than guessed.
+
+For every row, Exp5868 SHALL emit canonical formula text, CNF clauses,
+deterministic row ids and hashes, generator config, seed receipts, exact
+expected label, at least one candidate certificate or parity contradiction
+witness, exact solver results from at least two deterministic exact solver
+configurations where available, solver conflict and deterministic time
+covariates, and a proof-preserving variable relabel receipt. Solver conflict
+count and time SHALL be recorded only as covariates and SHALL NOT define the
+ground-truth label.
+
+Exp5868 SHALL include label-preserving clause reorder, variable-renaming,
+padding, density-mismatched, length-matched, and no-information controls. It
+SHALL fail closed on solver disagreement, timeout, missing certificate
+validation, duplicate row ids, row-hash mismatch, relabel mismatch, invalid
+control labeling, schema failure, nondeterministic replay, failed tests, or
+protected-file drift.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`source_method_receipt`, `generator_and_seed_receipts`,
+`family_and_size_bin_definitions`, `density_width_and_length_matching`,
+`label_and_certificate_balance`, `solver_versions_and_oracle_receipts`,
+`proof_hardness_covariates`, `proof_preserving_relabel_receipts`,
+`surface_and_no_information_controls`,
+`solver_disagreement_and_timeout_controls`, `row_file_receipt`,
+`deterministic_replay_receipt`, `protected_files_unchanged`,
+`hardness_controlled_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a ready exact fixture from partial generation.
+- `preconditions_checked`: Paper, solver, generator, seed, resource, output, and protection checks prevent unverifiable data.
+- `source_method_receipt`: The hardness-control design traces to a real primary source without importing its results.
+- `generator_and_seed_receipts`: Deterministic generation makes every formula and relabel reproducible.
+- `family_and_size_bin_definitions`: Proof-hard and proof-easy comparisons must be explicit within aligned bins.
+- `density_width_and_length_matching`: Matched nuisance axes prevent density or text length standing in for hardness.
+- `label_and_certificate_balance`: Balanced exact labels and checked witnesses create usable paired evaluation cells.
+- `solver_versions_and_oracle_receipts`: Exact solver outputs own labels and include versioned commands.
+- `proof_hardness_covariates`: Conflicts and time are analysis covariates, never truth labels.
+- `proof_preserving_relabel_receipts`: Equivalent formulas must retain labels and certificates after renaming.
+- `surface_and_no_information_controls`: Order, padding, renaming, length, density, and null rows expose shortcuts.
+- `solver_disagreement_and_timeout_controls`: Unsettled instances are rejected rather than guessed.
+- `row_file_receipt`: Path, count, schema, and hash expose all examples.
+- `deterministic_replay_receipt`: A second generation must reproduce row IDs and content exactly.
+- `protected_files_unchanged`: User and operator-owned files remain untouched.
+- `hardness_controlled_fixture_ready_score`: EMIT BARE scalar; only 1.0 permits Exp5869.
+- `duration_s`: Measured wall time exposes bootstrap-only dataset work.
+- `inference_substrate`: `deterministic_exact_solver_labeled_dataset_no_llm` declares the true path.
+- `verifier_is_oracle`: True for exact labels; solver conflict covariates are not oracle scores.
+- `field_provenance`: Every row traces to generator config, seed, solver, certificate, and source hash.
+- `test_commands`: Commands document generation, matching, solver, relabel, replay, and schema checks.
+- `test_exit_codes`: Exit codes prevent invalid fixtures becoming ready.
+- `reproducibility_checksum`: A checksum detects generator, solver, row, or control drift.
+- `honest_verdict`: A `complete:`, `ready:`, or `blocked:` prefix states the terminal dataset result.
+
+### SCENARIO-VERIFY-5868-GENERATION: Hard And Easy Tseitin Families Are Matched
+
+Given the arXiv:2607.17047 source receipt and local exact solvers are present,
+when Exp5868 generates rows, then every size bin contains both
+expander-Tseitin and ladder-Tseitin rows, satisfiable and unsatisfiable labels
+are balanced, clause-density and surface-length differences are within
+preregistered tolerances, maximum clause width is matched, and the ready score
+can become the bare scalar `1.0`.
+
+### SCENARIO-VERIFY-5868-CERTIFICATES: Exact Labels And Witnesses Own Truth
+
+Given Exp5868 emits satisfiable and unsatisfiable Tseitin instances, when it
+validates labels, then satisfiable rows include checked satisfying assignments,
+unsatisfiable rows include checked parity contradiction witnesses, two exact
+solver configurations agree on every label, no timeout occurs, and solver
+conflict/time covariates are recorded without being used as labels.
+
+### SCENARIO-VERIFY-5868-RELABELS-AND-CONTROLS: Surface Changes Preserve Truth
+
+Given Exp5868 emits surface controls, when it validates proof-preserving
+variants, then clause reorder, variable renaming, padding, density-mismatched,
+length-matched, and no-information controls retain exact labels where labels
+are intended, relabeled certificates map back to the canonical formula, and
+duplicate row ids or relabel mismatches block readiness.
+
+### SCENARIO-VERIFY-5868-REPLAY-AND-BLOCKED: Bad Evidence Cannot Become Ready
+
+Given missing source receipts, solver disagreement, timeout, invalid
+certificate, duplicate row ids, failed row hash, missing control, failed test
+exit code, nondeterministic replay, or protected-file drift, when Exp5868
+validates the terminal artifact, then
+`hardness_controlled_fixture_ready_score` SHALL be the bare scalar `0.0`,
+`status` SHALL be `blocked`, and `honest_verdict` SHALL begin with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5868)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5868 | Planned (`python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py`, `results/experiment_5868_hardness_controlled_constraint_fixture.json`) | Planned (`tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py`) |
