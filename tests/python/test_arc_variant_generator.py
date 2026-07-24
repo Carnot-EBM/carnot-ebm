@@ -60,3 +60,114 @@ def test_variant_signature_is_stable_and_not_a_real_game() -> None:
     sig = vg.variant_signature("ka59", 2)
     assert sig == "ka59~color02"
     assert "~" in sig  # the ~ marks a MANUFACTURED variant, never a real eval game id
+
+
+# ---------------------------------------------------------------------------
+# VariantEnv regression tests (added 2026-07-24).
+#
+# The transform helpers above were tested from the start, but `VariantEnv` -- the
+# class that actually plugs those transforms into a play loop, and therefore the
+# only part of this module the A/B harness executes -- had NO coverage at all.
+# A terminal-frame crash consequently survived undetected: on `GameState.GAME_OVER`
+# the offline env returns a frame whose `.frame` is `[]`, and `_wrap` fed that empty
+# stack to `np.stack`, raising `ValueError: need at least one array to stack`. The
+# variant harness died on exactly the games that have a death mechanic. These tests
+# reproduce that exact incident plus the pass-through invariants it must not break.
+# ---------------------------------------------------------------------------
+
+
+class _FakeFrame:
+    """Minimal stand-in for the SDK's FrameDataRaw.
+
+    Carries the `.frame` grid stack plus the non-grid fields the harness reads
+    (`levels_completed`, `state`), and supports the `.copy()` path `_wrap` uses.
+    """
+
+    def __init__(self, frame, levels_completed=0, state="NOT_FINISHED"):
+        self.frame = frame
+        self.levels_completed = levels_completed
+        self.state = state
+
+    def copy(self):
+        return _FakeFrame(self.frame, self.levels_completed, self.state)
+
+
+class _FakeEnv:
+    """Replays a scripted list of frames, recording the action data it was handed."""
+
+    def __init__(self, frames):
+        self._frames = list(frames)
+        self.seen_data = []
+
+    def reset(self):
+        return self._frames[0]
+
+    def step(self, action, data=None):
+        self.seen_data.append(data)
+        return self._frames[min(len(self.seen_data), len(self._frames) - 1)]
+
+
+def test_variant_env_recolors_a_normal_frame_and_preserves_structure() -> None:
+    grid = np.array([[0, 1, 2], [3, 0, 4]], dtype=np.uint8)
+    env = _FakeEnv([_FakeFrame([grid.tolist()])])
+    wrapped = vg.VariantEnv(env, "tu93", 1)
+
+    out = np.array(wrapped.reset().frame)
+
+    assert out.shape == (1, 2, 3)
+    cmap = vg.color_permutation("tu93", 1)
+    assert np.array_equal(out[0], cmap[grid.astype(int)])
+    # emptiness (and therefore object structure) is invariant under the recolor
+    assert np.array_equal(out[0] != 0, grid != 0)
+
+
+def test_variant_env_passes_through_terminal_gridless_frame_without_crashing() -> None:
+    """The exact 2026-07-24 incident: a GAME_OVER frame carries `.frame == []`."""
+    over = _FakeFrame([], levels_completed=2, state="GAME_OVER")
+    env = _FakeEnv([over])
+    wrapped = vg.VariantEnv(env, "tu93", 1)
+
+    got = wrapped.reset()
+
+    assert got.frame == []
+    # the REAL game's level/state must survive untouched so `_level_of` stays honest
+    assert got.levels_completed == 2
+    assert got.state == "GAME_OVER"
+
+
+def test_variant_env_keeps_playing_after_a_terminal_frame() -> None:
+    """A death mid-run must not abort the episode -- the crash killed whole runs."""
+    grid = np.array([[0, 5], [6, 0]], dtype=np.uint8)
+    env = _FakeEnv([_FakeFrame([grid.tolist()]), _FakeFrame([], state="GAME_OVER")])
+    wrapped = vg.VariantEnv(env, "cd82", 3)
+
+    first = wrapped.reset()
+    after_death = wrapped.step("ACTION1", data=None)
+
+    assert np.array(first.frame).shape == (1, 2, 2)
+    assert after_death.frame == []
+    assert after_death.state == "GAME_OVER"
+
+
+def test_variant_env_color_permutation_does_not_remap_click_coordinates() -> None:
+    """Recolor leaves positions alone, so a click must reach the env unmodified."""
+    grid = np.zeros((4, 4), dtype=np.uint8)
+    env = _FakeEnv([_FakeFrame([grid.tolist()])])
+    wrapped = vg.VariantEnv(env, "su15", 2)
+
+    wrapped.reset()
+    wrapped.step("ACTION6", data={"x": 7, "y": 11})
+
+    assert env.seen_data == [{"x": 7, "y": 11}]
+
+
+def test_variant_env_reflection_inverse_remaps_click_coordinates() -> None:
+    """With reflection the view moves, so the click must be mapped back to the real cell."""
+    grid = np.zeros((4, 4), dtype=np.uint8)
+    env = _FakeEnv([_FakeFrame([grid.tolist()])])
+    wrapped = vg.VariantEnv(env, "su15", 2, reflect=1)
+
+    wrapped.reset()
+    wrapped.step("ACTION6", data={"x": 7, "y": 11})
+
+    assert env.seen_data == [{"x": 64 - 1 - 7, "y": 11}]

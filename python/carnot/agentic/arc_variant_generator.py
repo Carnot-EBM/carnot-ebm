@@ -122,6 +122,22 @@ class VariantEnv:
         stack = np.array(frame.frame)  # (n, H, W) pixel-grid stack
         if stack.ndim == 2:
             stack = stack[None, ...]
+        # TERMINAL / GRIDLESS FRAMES PASS THROUGH UNCHANGED (fixed 2026-07-24).
+        # When a game ends the offline env returns a frame whose `.frame` is an EMPTY
+        # list (verified on tu93: `GameState.GAME_OVER` -> `.frame == []`), which
+        # `np.array` turns into a shape-(0,) 1-D array. The old code then evaluated
+        # `range(stack.shape[0])` as `range(0)` and handed `np.stack` an empty list,
+        # raising `ValueError: need at least one array to stack` and killing the whole
+        # run. That made the variant harness crash on exactly the games that have a
+        # death mechanic (tu93 / sp80 / cd82 / lf52 all died here; su15 / vc33 / lp85,
+        # which cannot die, silently worked) -- i.e. the generalization benchmark was
+        # unusable on 4 of the 7 games the live explorer can actually win.
+        # There is nothing to recolor on a gridless frame, and every non-grid field
+        # (`levels_completed`, `state`) must pass through untouched so `_level_of` still
+        # reads the REAL game, so returning the frame as-is is both the safe and the
+        # correct behaviour.
+        if stack.ndim != 3 or stack.shape[0] == 0:
+            return frame
         out = np.stack(
             [transform_frame_grid(stack[i], self._game_id, self._variant, reflect=self._reflect)
              for i in range(stack.shape[0])]

@@ -46242,3 +46242,156 @@ stable.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5891 | Implemented (`python/carnot/experiment_5891_v524_source_delta_ingestion.py`, `results/experiment_5891_v524_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5891_v524_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5903: V524 Capstone Reconciles Activated Identities Without Cross-Branch Laundering
+
+The Exp5903 workflow SHALL read `CLAUDE.md`, `CODEX.md`,
+`research-roadmap.yaml`, optional `research-roadmap-next.yaml`,
+`research-complete.yaml`, `ops/conductor-log.md`,
+`ops/exclusion_manifest.yaml`, `ops/e2e-test-plan.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`scripts/adversarial_verify.py`, `scripts/capstone_aggregate_available.py`,
+`scripts/in_process_doc_reconcile.py`, and this research-reporting spec. It
+SHALL resolve only exact `(milestone, task_id, declared_deliverable)` identities
+from active milestone `2026.07.524`, SHALL hash every declared present
+deliverable and protected ledger, SHALL write
+`results/experiment_5903_v524_capstone_reconciliation.json`, SHALL NOT modify
+`research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/north-star.md`, or `docs/index.html`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL classify every activated `.524` task independently into one
+and only one terminal class from `ready/positive`, `null`,
+`unsafe/disqualified`, `blocked-precondition`, `blocked`, `retired`,
+`gate-blocked`, `missing`, and `unactivated`. Scalar readiness in an upstream
+artifact SHALL NOT become downstream completion when that artifact is blocked,
+gate-blocked, missing, null, unsafe, or retired. Fresh adversarial verification
+SHALL run for every present declared deliverable before branch summary. Verifier
+warnings, conductor gate receipts, declared deliverable absence, and upstream
+gate fields SHALL remain field-level provenance rather than prose-only
+assertions.
+
+The workflow SHALL summarize the grounding/continuous-self-learning,
+ConstraintIR, and ARC-memory branches independently. A gate failure or missing
+artifact in one branch SHALL NOT erase completed positive, ready, null, or
+blocked evidence in another branch. Exp5895 SHALL be recorded as the mandatory
+continuous-self-learning slot when its exact task identity is activated, even
+when its scientific verdict is null. Exp5902 SHALL be recorded as the ARC
+generalization slot when its exact task identity is activated, even when its
+live run is blocked by preconditions. The workflow SHALL confirm no public ARC
+re-solve, retired dependency use, protected-file mutation, or model-policy
+substitution is promoted.
+
+The workflow SHALL append milestone `2026.07.524` to
+`research-complete.yaml` exactly once only when all fourteen activated
+identities Exp5890 through Exp5903 have terminal classifications. If the exact
+milestone block is already present, `research_complete_append_count` SHALL be
+bare `0`; otherwise it SHALL be bare `1`. Existing duplicate history SHALL be
+reported without de-duplicating, rewriting, sorting, or amplifying it, and
+`duplicate_history_amplification_count` SHALL be bare `0`. Operator-delegated
+status files `ops/changelog.md`, `ops/status.md`, and `_bmad/traceability.md`
+SHALL be left unchanged when the capstone stop rule delegates those ledgers to
+the conductor reconciler.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_and_task_range`,
+`activated_task_and_declared_deliverable_matrix`,
+`exact_terminal_classification`,
+`missing_gate_blocked_and_unactivated_receipts`,
+`branch_independent_science_summary`,
+`continuous_self_learning_slot_receipt`,
+`arc_generalization_slot_receipt`, `model_policy_and_gpu_receipts`,
+`adversarial_verifier_receipts`, `exclusion_and_retirement_decisions`,
+`protected_files_unchanged`, `docs_reconciled`,
+`research_complete_append_count`, `duplicate_history_amplification_count`,
+`next_three_falsifiable_recommendations`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have non-empty provenance and a principle. The
+`honest_verdict` SHALL start with `complete:`, `complete_with_nulls:`, or
+`blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal capstone state over exact activated .524 identities."
+- `preconditions_checked`: principle "Roadmaps, history, ledgers, protected files, resources, verifier availability, and atomic output are checked before synthesis."
+- `milestone_and_task_range`: principle "The active milestone and Exp5890-Exp5903 denominator make the reconciliation finite."
+- `activated_task_and_declared_deliverable_matrix`: principle "Only activated task IDs and declared paths count as evidence."
+- `exact_terminal_classification`: principle "Every activated identity receives one disjoint terminal class."
+- `missing_gate_blocked_and_unactivated_receipts`: principle "Missing, gate-blocked, and unactivated identities remain receipts rather than successes."
+- `branch_independent_science_summary`: principle "Cascade blocking cannot erase completed evidence in another branch."
+- `continuous_self_learning_slot_receipt`: principle "The mandatory CSL task identity is activation-checked regardless of scientific verdict."
+- `arc_generalization_slot_receipt`: principle "The ARC generalization slot is activation-checked without public re-solve credit."
+- `model_policy_and_gpu_receipts`: principle "Model and GPU receipts cannot substitute unapproved policy or hidden compute claims."
+- `adversarial_verifier_receipts`: principle "Fresh verifier receipts ground present-artifact quality decisions."
+- `exclusion_and_retirement_decisions`: principle "Retired scopes and exclusion manifest decisions are preserved without reopening them."
+- `protected_files_unchanged`: principle "Protected roadmap, conductor, north-star, docs, ops, and traceability files remain byte-identical unless explicitly owned."
+- `docs_reconciled`: principle "Spec-owned reconciliation is recorded while delegated conductor ledgers remain untouched."
+- `research_complete_append_count`: principle "Exact zero-or-one prevents history amplification."
+- `duplicate_history_amplification_count`: principle "Existing duplicate history is measured but never multiplied."
+- `next_three_falsifiable_recommendations`: principle "Recommendations cite terminal artifact fields and exclude retired scopes."
+- `duration_s`: principle "Measured wall time exposes aggregation-only execution."
+- `inference_substrate`: principle "Use `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "Every required field traces to exact paths, hashes, receipts, commands, or classifications."
+- `test_commands`: principle "Commands document focused unit, coverage, YAML/schema, verifier, protected-file, reconciliation, E2E, spec, and root-clutter checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects later ledger, artifact, or classification drift."
+- `honest_verdict`: principle "Use `complete:`, `complete_with_nulls:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5903-EXACT-IDENTITIES: Activated V524 Denominator Is Exact
+
+**Given** `research-roadmap.yaml` names milestone `2026.07.524` and declares
+fourteen tasks Exp5890 through Exp5903
+**When** the Exp5903 workflow runs
+**Then** it records exactly those fourteen
+`(milestone, task_id, declared_deliverable)` identities, hashes every present
+declared deliverable, records absent declared deliverables without aliasing to
+other paths, and assigns one disjoint terminal class to every activated task.
+
+#### SCENARIO-REPORT-5903-BRANCH-INDEPENDENT: Branch Evidence Cannot Cascade-Erase
+
+**Given** grounding/CSL, ConstraintIR, and ARC-memory artifacts contain a mix of
+positive, ready, null, blocked-precondition, gate-blocked, and missing
+outcomes
+**When** the capstone builds `branch_independent_science_summary`
+**Then** each branch keeps its own completed evidence and failed gates, Exp5895
+remains the activated CSL slot even when null, Exp5902 remains the activated
+ARC generalization slot even when blocked, and no branch overwrites another
+branch's terminal class.
+
+#### SCENARIO-REPORT-5903-APPEND-ONCE: V524 Completion History Is Not Amplified
+
+**Given** `research-complete.yaml` may or may not already contain exact
+milestone block `2026.07.524`
+**When** every activated `.524` identity has a terminal class
+**Then** the workflow appends the `.524` block exactly once if absent, otherwise
+sets `research_complete_append_count=0`, includes only the fourteen activated
+tasks, and keeps `duplicate_history_amplification_count=0`.
+
+#### SCENARIO-REPORT-5903-PROTECTION: Retired Scopes, Protected Files, And Model Policy Stay Closed
+
+**Given** prior failures name retired or bounded scopes and protected files are
+hashed before reconciliation
+**When** the Exp5903 workflow completes
+**Then** it confirms no public ARC re-solve, retired dependency, protected-file
+mutation, or model-policy substitution is promoted, leaves
+`research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/north-star.md`, `docs/index.html`, `ops/changelog.md`, `ops/status.md`,
+and `_bmad/traceability.md` unchanged, and records exclusion/retirement
+decisions from actual task evidence.
+
+#### SCENARIO-REPORT-5903-SCHEMA: Required Fields And Recommendations Are Stable
+
+**Given** the Exp5903 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, field provenance entry, verifier
+receipt, test command, exit code, checksum, and terminal verdict prefix is
+present; the inference substrate is `aggregation_from_upstream_artifacts`; and
+the next three recommendations cite terminal artifact fields without allocating
+future IDs or reopening retired scopes.
+
+## Implementation Status (REQ-REPORT-5903)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5903 | Implemented (`python/carnot/experiment_5903_v524_capstone_reconciliation.py`, `results/experiment_5903_v524_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5903_v524_capstone_reconciliation.py`) |

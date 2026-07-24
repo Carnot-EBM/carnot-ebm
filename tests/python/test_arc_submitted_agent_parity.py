@@ -108,6 +108,19 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
         exp.program_synthesis_filter_diagnostics()["enabled"]
         == SUBMITTED_AGENT_CONFIG["program_synthesis_proposal_filter_enabled"]
     )
+    # REQ-ARC-WMTE-5836: the just-explore frontier-discipline mechanisms are wired but must ship
+    # OFF, so the submitted agent's search order is unchanged until the A/B greenlights a flip.
+    assert SUBMITTED_AGENT_CONFIG["frontier_tier_exhaustion"] is False
+    assert SUBMITTED_AGENT_CONFIG["frontier_tier_uniform_random"] is False
+    assert SUBMITTED_AGENT_CONFIG["frontier_distance_gradient"] is False
+    assert exp.tier_exhaustion_enabled == SUBMITTED_AGENT_CONFIG["frontier_tier_exhaustion"]
+    assert exp.tier_uniform_random_enabled == SUBMITTED_AGENT_CONFIG["frontier_tier_uniform_random"]
+    assert exp.frontier_gradient_enabled == SUBMITTED_AGENT_CONFIG["frontier_distance_gradient"]
+    assert exp.tier_count == SUBMITTED_AGENT_CONFIG["frontier_tier_count"]
+    fd = exp.frontier_discipline_diagnostics()
+    assert fd["tier_exhaustion_enabled"] is False
+    assert fd["frontier_gradient_enabled"] is False
+    assert fd["active_tier"] == 0
 
 
 def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
