@@ -1174,3 +1174,18 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
 - artifact: results/outer_loop_arc_oracle_perception_goal_ablation_20260723.json
+
+## outer_loop_arc_end_to_end_goal_gate_20260723.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/outer_loop_arc_end_to_end_goal_gate_20260723.json
+
+## outer_loop_arc_end_to_end_goal_gate_reauthored_20260723.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_arc_end_to_end_goal_gate_reauthored_20260723.json
+
+## outer_loop_arc_end_to_end_goal_gate_reauthored_v2neutral_20260723.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_arc_end_to_end_goal_gate_reauthored_v2neutral_20260723.json

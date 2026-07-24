@@ -31079,3 +31079,101 @@ relative to the V520 block or materially sharpen its experiment controls.
   capability evidence. No unchanged board probe or speedup claim is warranted.
 
 <!-- V521-PLANNER-REFRESH-20260723-END -->
+
+## V522 Planner Refresh - 20260723
+
+Planning-time sweep for the milestone after terminal `.521`. The search covered
+2025-2026 arXiv work on energy-based verification and reasoning, neural constraint
+satisfaction, Ising/CSP methods, hallucination detection, KANs, constrained generation,
+probabilistic hardware, continual learning, and live-agent world-model use. It also
+rechecked OpenReview, Hugging Face Papers, direct Semantic Scholar citation routes for
+EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub repository discovery, Extropic's
+writing index, and Logical Intelligence's public Kona/Aleph material. The items below
+are new relative to the V521 block or materially sharpen its next-step controls.
+
+### New actionable deltas
+
+- **ICR Probe: Tracking Hidden State Dynamics for Reliable Hallucination Detection in
+  LLMs** - arXiv:2507.16488, https://arxiv.org/abs/2507.16488; ACL 2025. ICR measures
+  how transformer modules update the residual stream across layers instead of treating
+  one isolated hidden state as the signal. Carnot hook: Exp5853 disqualified the
+  permitted final-embedding surface, not every layer-transition statistic. Before any
+  new representation experiment, qualify whether the pinned local GGUF/llama.cpp stack
+  can expose deterministic, token-aligned intermediate states without a
+  transformer-native loader, `AutoTokenizer`, or untracked activation hook. Only a
+  versioned, reproducible surface may unlock a cross-layer difference experiment.
+- **HARP: Hallucination Detection via Reasoning Subspace Projection** -
+  arXiv:2509.11536, https://arxiv.org/abs/2509.11536; ICLR 2026. HARP uses an SVD of
+  the unembedding matrix to separate a compact reasoning subspace from semantic
+  variation and reports a roughly 5% feature dimension. Carnot hook: if and only if the
+  GGUF layer-surface preflight passes, compare frozen layer-difference features with an
+  unembedding-SVD projection under held-model and held-constraint splits. Model identity,
+  norm, token length, label permutation, claim flips, and final-embedding-only features
+  remain mandatory controls. HARP's reported benchmark AUROC is not transferable
+  evidence for Carnot.
+- **CORVUS: Red-Teaming Hallucination Detectors via Internal Signal Camouflage in
+  Large Language Models** - arXiv:2601.14310,
+  https://arxiv.org/abs/2601.14310. CORVUS shows that lightweight model-side adaptation
+  can camouflage uncertainty, attention, and hidden-state signals and degrade both
+  training-free and learned probes across model families. Carnot hook: an internal
+  energy may route work but never becomes release authority. The bounded layer-dynamic
+  branch must include feature-space perturbation, family transfer, evaluator swap, and
+  exact external-grounding controls; a same-family clean split is insufficient.
+- **On Solving Structured SAT on Ising Machines: A Semiprime Factorization Study** -
+  arXiv:2511.21046, https://arxiv.org/abs/2511.21046. The manufactured-chip study finds
+  that tight constraints distort Ising dynamics and that decomposition can amplify the
+  problem; classical preprocessing plus a residual Ising subproblem more than doubles
+  the demonstrated problem size on the studied 45-spin chip. Carnot hook: attached-board
+  continuity must never map the adaptive-state ABI or a structured constraint problem
+  wholesale merely because a QUBO exists. Exact classical code owns tight constraints,
+  bounds, and release decisions; hardware may receive only a bounded residual operation
+  after an authenticated changed route and same-input CPU reference are present.
+
+### Deduplicated and secondary-source status
+
+- **Semantic Scholar:** the EBT citation API still surfaced the already-indexed
+  arXiv:2607.17047 hardness-controlled constraint diagnostic, Fixed-Point Reasoners,
+  Planning as Descent, and other existing entries. A follow-up ARM-EBM query returned
+  `HTTP 429`; no citation count or unseen dependency is promoted. The new
+  hardness-controlled diagnostic remains useful for fixture design: solver conflicts
+  and LLM difficulty are different axes, and proof-preserving relabeling is a required
+  surface-sensitivity control.
+- **OpenReview / Hugging Face Papers:** rechecks surfaced the already-indexed CerCE
+  non-forgetting constraints, cross-family verifier gain, SATQuest, Spilled Energy,
+  HalluGuard, and Fixed-Point Reasoners. These reinforce certified retention,
+  cross-family evaluation, and exact-oracle authority but do not reopen retired
+  logit-energy, generated-text, or self-verification lanes.
+- **GitHub:** repository searches sorted by recent stars found the maintained EBT
+  implementation and FPRM checkpoints, plus small new hidden-state detector
+  implementations. None exposes a supported intermediate-layer API for Carnot's pinned
+  GGUF runtime or supersedes its exact validators. No new runtime dependency is added.
+- **Extropic:** the official writing index still centers on the October 2025
+  X0/XTR-0/TSU material and THRML simulation. Carnot has no authenticated XTR-0/Z1
+  execution path, so the next milestone makes no TSU execution, power, energy,
+  convergence, or speedup claim.
+- **Logical Intelligence:** current Kona 1.0 and Aleph pages continue to frame an EBRM
+  as a constraint-enforcing layer below LLM interfaces and exact formal checking.
+  Public weights and a reproducible local comparator remain unavailable; Kona is
+  architecture context, not experiment evidence.
+
+### V522 planning impact
+
+- Requalify the already-implemented Python/Rust adaptive-state microkernel by locating
+  the repository-wide pytest exit-2 seam; do not rewrite the passing ABI, parity,
+  rollback, hash, or invalid-input mechanisms.
+- Promote continuous self-learning only through a default-off pipeline adapter and a
+  chronological, prospective non-forgetting test with frozen GGUF weights, bounded
+  state, exact validation, quarantine, and rollback.
+- Put a hard feasibility gate in front of ICR/HARP-inspired layer dynamics. If the
+  pinned GGUF runtime cannot expose reproducible intermediate states, record the
+  boundary and skip all downstream training. If it can, require the Exp5853 shortcut
+  controls plus CORVUS-inspired perturbation and family-transfer audits.
+- Replace the methodology-invalid Exp5860 active-observation lane with a game-blind,
+  agent-owned causal recurrence memory that uses only observed transitions and performs
+  no imagined rollout. Evaluate the live adapter-disabled E3 path under matched budgets;
+  claim no public-game solve.
+- Keep hardware conditional on both a ready bounded kernel and an authenticated changed
+  route. Tight constraints stay classical, and unchanged board preconditions produce a
+  no-change receipt rather than another probe.
+
+<!-- V522-PLANNER-REFRESH-20260723-END -->
