@@ -35718,3 +35718,124 @@ validates the terminal artifact, then
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5868 | Planned (`python/carnot/experiment_5868_hardness_controlled_constraint_fixture.py`, `results/experiment_5868_hardness_controlled_constraint_fixture.json`) | Planned (`tests/python/test_experiment_5868_hardness_controlled_constraint_fixture.py`) |
+
+### REQ-VERIFY-5869: Hardness Surface Headroom Audit
+
+The repository SHALL provide Exp5869 at
+`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`
+that reads
+`results/experiment_5868_hardness_controlled_constraint_fixture.json` and
+`results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl`
+before writing
+`results/experiment_5869_hardness_surface_headroom_audit.json`. Exp5869
+SHALL be a deterministic, no-LLM control audit and SHALL declare
+`inference_substrate=deterministic_control_audit_no_llm`.
+
+Before fitting or evaluating any control, Exp5869 SHALL replay the Exp5868
+gate and hash the upstream summary, row file, frozen split definitions, exact
+solver receipts, current verifier registry/config, seeds, output path,
+disk/RAM probes, and protected files including
+`scripts/research_conductor.py`. It SHALL freeze instance-, family-,
+relabel-group-, and certificate-group-aware splits, and SHALL reject duplicate
+semantic instances across train/test boundaries.
+
+Exp5869 SHALL recompute labels, certificate validity, density/length/width
+matching tolerances, row hashes, row-file hashes, solver agreement, and relabel
+equivalence from the row records rather than trusting summary prose. Exact
+solver or certificate-checker paths MAY be used to replay truth, but any path
+that executes the same exact solver or certificate checker SHALL be marked
+oracle/circular and SHALL NOT count as an oracle-distinct headroom result.
+
+Exp5869 SHALL fit or evaluate preregistered trivial controls over
+label-balanced, leakage-safe splits using only density, length, clause width,
+variable-name tokens, family ID, solver conflicts/time, norm-like counts, and
+row order as features. It SHALL include shuffled-label and majority controls,
+SHALL report balanced error rate and AUROC, SHALL identify hard/easy cells and
+held-family behavior, and SHALL fail closed if a control silently uses exact
+labels as a feature.
+
+`hardness_surface_headroom_ready_score` SHALL be the bare scalar `1.0` only
+when upstream integrity passes, frozen splits are leakage-safe, independent
+row replay passes, no trivial control exceeds the preregistered saturation
+ceiling, relabel/certificate groups are stable, no exact verifier accuracy is
+counted as oracle-distinct headroom, and a nonempty held-model/held-constraint
+evaluation design remains. Otherwise the score SHALL be the bare scalar `0.0`
+with an honest terminal verdict beginning `complete_null:` or `blocked:`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_receipt`, `independent_row_integrity_replay`,
+`leakage_safe_split_receipts`, `label_balance_and_headroom`,
+`solver_hardness_vs_label_analysis`,
+`density_length_width_name_and_order_controls`,
+`relabel_and_certificate_group_controls`, `shuffled_and_majority_controls`,
+`current_verifier_circularity_matrix`, `oracle_distinct_evaluation_design`,
+`held_family_and_constraint_cell_plan`, `saturation_and_skip_decision`,
+`protected_files_unchanged`, `hardness_surface_headroom_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal audit state distinguishes qualified headroom from shortcut saturation.
+- `preconditions_checked`: Gate, rows, solvers, splits, controls, resources, and outputs prevent post-hoc qualification.
+- `upstream_gate_receipt`: Only a ready exact fixture may be audited.
+- `independent_row_integrity_replay`: Labels and certificates are rechecked rather than trusted from prose.
+- `leakage_safe_split_receipts`: Semantic, relabel, family, and certificate groups cannot cross train/test boundaries.
+- `label_balance_and_headroom`: A usable research corpus needs both outcomes and unsaturated errors.
+- `solver_hardness_vs_label_analysis`: Solver conflicts are a separate axis from correctness.
+- `density_length_width_name_and_order_controls`: Nuisance features cannot masquerade as internal reasoning.
+- `relabel_and_certificate_group_controls`: Equivalent formulas and shared witnesses stay grouped and stable.
+- `shuffled_and_majority_controls`: No-information baselines define the noise floor.
+- `current_verifier_circularity_matrix`: Solver-backed accuracy is labeled circular and never a moat.
+- `oracle_distinct_evaluation_design`: The future learned score must be evaluated separately from exact release authority.
+- `held_family_and_constraint_cell_plan`: Portability requires whole-family and whole-constraint holdouts.
+- `saturation_and_skip_decision`: A saturated or leaky corpus must skip expensive model extraction.
+- `protected_files_unchanged`: User and operator-owned files remain untouched.
+- `hardness_surface_headroom_ready_score`: EMIT BARE scalar; only 1.0 may permit Exp5871.
+- `duration_s`: Measured time exposes bootstrap-only diagnostics.
+- `inference_substrate`: `deterministic_control_audit_no_llm` declares analysis of exact rows.
+- `verifier_is_oracle`: A per-path matrix distinguishes exact/circular verifiers from oracle-distinct controls.
+- `field_provenance`: Every metric traces to rows, groups, solvers, controls, seeds, and code hashes.
+- `test_commands`: Commands document integrity, leakage, controls, circularity, and split checks.
+- `test_exit_codes`: Exit codes prevent a failed audit becoming a compute gate.
+- `reproducibility_checksum`: A checksum detects row, split, control, or threshold drift.
+- `honest_verdict`: A `complete_ready:`, `complete_null:`, or `blocked:` prefix states the terminal audit.
+
+### SCENARIO-VERIFY-5869-INTEGRITY: Upstream Rows Are Independently Replayed
+
+Given Exp5868 reports `hardness_controlled_fixture_ready_score=1.0`, when
+Exp5869 audits the summary and row file, then it SHALL verify row hashes,
+summary-row hash agreement, exact labels from row clauses, certificate
+validity, solver agreement, matching tolerances, and relabel preservation
+before any control result can affect the terminal score.
+
+### SCENARIO-VERIFY-5869-SPLITS: Semantic Groups Cannot Leak Across Splits
+
+Given Exp5868 emits surface controls and proof-preserving relabels, when
+Exp5869 freezes training and test definitions, then no base instance,
+canonical formula, relabel group, family holdout, or certificate group SHALL
+cross a declared train/test boundary, and any duplicate semantic instance
+across boundaries SHALL force `hardness_surface_headroom_ready_score=0.0`.
+
+### SCENARIO-VERIFY-5869-CONTROLS: Shortcut Saturation Blocks Readiness
+
+Given Exp5869 evaluates density, length, clause-width, variable-token,
+family-ID, solver-conflict/time, norm-count, row-order, shuffled-label, and
+majority controls, when any preregistered trivial control exceeds the
+saturation ceiling, then the artifact SHALL report the saturated controls,
+keep exact verifier paths marked circular, skip model extraction, and emit the
+bare scalar `hardness_surface_headroom_ready_score=0.0`.
+
+### SCENARIO-VERIFY-5869-DESIGN: Oracle-Distinct Follow-Up Is Nonempty
+
+Given upstream integrity and relabel stability are known, when Exp5869 writes
+its terminal audit, then it SHALL include a nonempty held-model and
+held-constraint-cell evaluation design whose future learned score is evaluated
+separately from exact solver release authority.
+
+## Implementation Status (REQ-VERIFY-5869)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5869 | Planned (`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`, `results/experiment_5869_hardness_surface_headroom_audit.json`) | Planned (`tests/python/test_experiment_5869_hardness_surface_headroom_audit.py`) |
