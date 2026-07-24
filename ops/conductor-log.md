@@ -14207,3 +14207,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 04:44 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5865_adaptiv |
 | 2026-07-24 05:04 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5865_adaptiv |
 | 2026-07-24 05:06 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |
+| 2026-07-24 05:07 UTC | Prospective non-forgetting continuous learning thr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5866-adaptive-state-pipeline-shadow-ada |
+| 2026-07-24 05:09 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |
