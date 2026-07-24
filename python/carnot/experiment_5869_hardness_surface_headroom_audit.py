@@ -134,7 +134,8 @@ DEFAULT_TEST_COMMANDS = (
     "experiment_5869_hardness_surface_headroom_audit as m; "
     "assert m.upstream_gate_receipt()['upstream_ready'] is True\"",
     ".venv/bin/pytest tests/python -q",
-    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_spec_coverage.py "
+    "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py",
     ".venv/bin/python scripts/adversarial_verify.py "
     "results/experiment_5869_hardness_surface_headroom_audit.json",
     ".venv/bin/python scripts/root_clutter_sweep.py",
