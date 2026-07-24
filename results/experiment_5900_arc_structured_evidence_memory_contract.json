@@ -1,0 +1,370 @@
+{
+  "agent_owned_event_schema": {
+    "append_only": true,
+    "event_types": [
+      "observation",
+      "candidate_set",
+      "action_candidate",
+      "action_result",
+      "loss_receipt"
+    ],
+    "loss_receipts_required": true,
+    "payloads": [
+      "visible_frame_grid",
+      "legal_candidate_rows",
+      "emitted_action",
+      "visible_after_frame_grid",
+      "level_counter_delta",
+      "uncertainty",
+      "provenance"
+    ],
+    "schema_version": "arc_structured_evidence_memory.v1",
+    "timestamp": "logical_agent_step"
+  },
+  "bounded_bytes_queries_and_eviction": {
+    "bounded_probe_loss_receipt_count_positive": true,
+    "bounded_probe_retained_byte_count": 3726,
+    "bounded_probe_retained_event_count": 5,
+    "eviction_has_explicit_loss_receipts": true,
+    "max_bytes_default": 262144,
+    "max_events_default": 256,
+    "max_query_bytes_default": 65536,
+    "max_query_events_default": 64,
+    "query_cap_enforced": true
+  },
+  "deletion_restart_stale_evidence_receipts": {
+    "delete_cleared_tape_and_index": true,
+    "delete_receipt": {
+      "deleted_event_count": 5,
+      "deleted_index_hash": "sha256:f747e74a99c6cab358c1ebc2d8e76d1cac36f9990ecef3a7c808491d8ed758bd",
+      "deleted_tape_hash": "sha256:8277fb9bd1585808e2af1676e25114222d11c974405fd9118c9b2844bafd4581"
+    },
+    "fresh_raw_source_event_ids": [
+      "evt-00000007",
+      "evt-00000009"
+    ],
+    "fresh_structured_source_event_ids": [
+      "evt-00000007",
+      "evt-00000009"
+    ],
+    "restart_from_tape_bytes_reproduced_index_hash": true,
+    "restart_from_tape_bytes_reproduced_tape_hash": true,
+    "stale_raw_event_ids": [
+      "evt-00000008"
+    ],
+    "stale_structured_event_ids": [
+      "evt-00000008"
+    ]
+  },
+  "duration_s": 0.01,
+  "feature_default_off_and_disabled_equivalence": {
+    "default_constructs_memory": false,
+    "disabled_queries_index": false,
+    "disabled_writes_event_bytes": false,
+    "explicit_false_constructs_memory": false,
+    "first_bootstrap_move_default_equals_explicit_disabled": true,
+    "submitted_config_value": false,
+    "submitted_flag": "SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED",
+    "submitted_value": false
+  },
+  "field_provenance": {
+    "agent_owned_event_schema": {
+      "principle": "Defines the only event bytes the agent may append.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "bounded_bytes_queries_and_eviction": {
+      "principle": "Prevents unbounded memory growth and requires loss receipts.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "deletion_restart_stale_evidence_receipts": {
+      "principle": "Proves lifecycle safety for deletion, restart, and stale filtering.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "duration_s": {
+      "principle": "Real wall-clock accounting for this no-LLM contract build.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "feature_default_off_and_disabled_equivalence": {
+      "principle": "Protects byte-equivalent submitted behavior when the feature is disabled.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "field_provenance": {
+      "principle": "Explains how every required field is satisfied.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "honest_verdict": {
+      "principle": "Terminal ready/null/unsafe/blocked prefix for audit routing.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "inference_substrate": {
+      "principle": "Declares offline arcade live-agent runtime self-discovery without LLM inference.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "live_path_reachability_tests": {
+      "principle": "Anchors the contract to tests, not prose.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "preconditions_checked": {
+      "principle": "Records registry, code hash, SDK, disk, RAM, output, and protected-file checks before claiming readiness.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms the conductor and reconciliation files were not touched.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "provenance_and_authority_receipts": {
+      "principle": "Documents agent-owned visible evidence and zero off-path authority.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "public_level_solve_claimed": {
+      "principle": "Must stay false; this task improves reusable live-agent memory, not public-game credit.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "raw_tape_and_structured_index_identical_byte_receipt": {
+      "principle": "Structure, not extra evidence, is the treatment.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "registry_precheck": {
+      "principle": "All 25 cleared public games prohibit duplicate public-solve targeting.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash over this artifact with the checksum field blanked.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "source_bfs_adapter_and_prior_game_access_count": {
+      "principle": "Must be bare zero for credited live discovery.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "status": {
+      "principle": "Terminal contract state for conductor and audit routing.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "structured_evidence_index_schema": {
+      "principle": "Lists deterministic facets derived from identical event bytes.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "structured_evidence_memory_contract_ready_score": {
+      "principle": "Bare 1.0 only for deterministic adapter-disabled live reachability and authority compliance.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "submitted_live_path_receipt": {
+      "principle": "Shows the scored E3 boundary can construct, update, query, and consume the memory when explicitly enabled.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "test_commands": {
+      "principle": "Lists verification commands actually run.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "test_exit_codes": {
+      "principle": "Records command outcomes without hiding interrupted or failed attempts.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    },
+    "verifier_is_oracle": {
+      "principle": "False because the tape/index records visible agent-owned evidence only.",
+      "satisfied_by": "Exp5900 local contract implementation/test receipt"
+    }
+  },
+  "honest_verdict": "ready: structured_evidence_memory_contract_live_reachable_no_solve_claim",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "live_path_reachability_tests": {
+    "artifact_schema_test_pending_at_write_time": true,
+    "covered_paths": [
+      "default_off",
+      "identical_tape_index_bytes",
+      "bounds_delete_restart_stale",
+      "live_e3_reachability"
+    ],
+    "focused_unit_pre_artifact": "4 selected tests passed before pytest teardown hang was terminated"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "check": "registry_precheck_all_public_games",
+      "receipt": "25 public games / 183 reproducible levels; no level solve targeted"
+    },
+    {
+      "available": true,
+      "check": "hash_E3AgentPolicy_ast",
+      "sha256": "sha256:0a5cdbb9ac948f97a031aafdabb9ca16eb3b4b0d38ad7eb08efae9a80fb4efad"
+    },
+    {
+      "available": true,
+      "check": "hash_existing_ledger_memory_code",
+      "paths": {
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:c864994609a264bcb7d112abffc21f293cfce011aa844236f681d6348a2c4f8f",
+        "python/carnot/agentic/arc_epistemic_ledger.py": "sha256:dbc856581b49e0661317c56a70320fe0dc3ddbddba975cd5d39c9851cff8b7e8",
+        "python/carnot/agentic/arc_structured_evidence_memory.py": "sha256:904c1b41666cc71c3612aed8e75a0f6bb646b2d0396ffc489afbb0d86712173a",
+        "python/carnot/agentic/arc_typed_memory_provenance_guard.py": "sha256:e35f2b19d274ecce09237b284c1a5e691615491365f33d601760b86f43e33928"
+      }
+    },
+    {
+      "available": true,
+      "check": "hash_submitted_path_tests",
+      "paths": {
+        "tests/python/test_arc_structured_evidence_memory.py": "sha256:f2aac23f222038c49f3cf4a365d0c4791a14b4c21ed4e2579503eb5326789f8c",
+        "tests/python/test_arc_submitted_agent_parity.py": "sha256:a5b1805cf10d283a8f08a36dde3052150d7226814e73165060f3d03fd3f4e94e",
+        "tests/python/test_live_trace_memory.py": "sha256:8c91ec46a682d7a17c992944a3482765ad7cb075f8d611aa3a455c1a485975c4"
+      }
+    },
+    {
+      "available": true,
+      "check": "arc_agi_sdk_version",
+      "version": "0.9.8"
+    },
+    {
+      "available": true,
+      "check": "output_path",
+      "path": "results/experiment_5900_arc_structured_evidence_memory_contract.json",
+      "path_hash": "sha256:95f2ad4bfb62ebcaf147f0aff33b0863ea9863d378abd1267f402631449d37ad"
+    },
+    {
+      "available": true,
+      "check": "disk_and_ram",
+      "disk": {
+        "free": 1223633858560,
+        "total": 3953289023488,
+        "used": 2729655164928
+      },
+      "meminfo": {
+        "Active": "5002116 kB",
+        "Buffers": "376 kB",
+        "Cached": "94553644 kB",
+        "Inactive": "98231244 kB",
+        "MemAvailable": "105635536 kB",
+        "MemFree": "12428364 kB",
+        "MemTotal": "131157332 kB",
+        "SwapCached": "12 kB"
+      }
+    },
+    {
+      "available": true,
+      "check": "protected_file_hashes",
+      "paths": {
+        "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "ops/changelog.md": "sha256:b0af49ad12551d21ae4fdcdfeb84872f61e2a8c9bcfe21dfffb92651cd0fbd0b",
+        "ops/status.md": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      }
+    },
+    {
+      "available": true,
+      "check": "no_source_bfs_prior_log_or_adapter_available_to_new_path",
+      "counts": {
+        "adapter_access_count": 0,
+        "offline_bfs_count": 0,
+        "prior_game_log_access_count": 0,
+        "source_read_count": 0
+      }
+    }
+  ],
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": true,
+    "hashes": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:b0af49ad12551d21ae4fdcdfeb84872f61e2a8c9bcfe21dfffb92651cd0fbd0b",
+      "ops/status.md": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "scripts/research_conductor.py": true
+  },
+  "provenance_and_authority_receipts": {
+    "agent_owned_visible_evidence_only": true,
+    "allowed_inputs": [
+      "current_agent_visible_frame",
+      "current_agent_legal_candidate",
+      "current_agent_emitted_action",
+      "current_agent_visible_action_result",
+      "current_agent_uncertainty",
+      "current_agent_provenance"
+    ],
+    "counts": {
+      "adapter_access_count": 0,
+      "hidden_state_read_count": 0,
+      "offline_bfs_count": 0,
+      "prior_game_log_access_count": 0,
+      "registry_trajectory_access_count": 0,
+      "source_read_count": 0
+    },
+    "forbidden_inputs": [
+      "public_or_hidden_game_source",
+      "offline_ground_truth_bfs",
+      "game_adapter",
+      "prior_game_log",
+      "registry_trajectory",
+      "hidden_state_or_true_win_predicate"
+    ]
+  },
+  "public_level_solve_claimed": false,
+  "raw_tape_and_structured_index_identical_byte_receipt": {
+    "principle": "structure, not extra evidence, is the treatment",
+    "raw_source_event_hashes": [
+      "sha256:052b137a57b498ba4fccb3bbcfcdb635034d802ace4f07dfbc754f8dc9c9a59c",
+      "sha256:f78172e5c0d4c516c28876c25076ca227b42fcc28335570bed4ee6478de4d845"
+    ],
+    "raw_source_event_ids": [
+      "evt-00000004",
+      "evt-00000005"
+    ],
+    "raw_tape_hash": "sha256:b01b97487a2d56eba4459853ec4a1580aefe845eb3aa9fee748659b82170021a",
+    "same_source_event_sets": true,
+    "structured_index_hash": "sha256:536d4293b374c2edca388f3077f23bc7a1e29305b8f2c056a007d821a2e5a665",
+    "structured_query_tape_hash": "sha256:b01b97487a2d56eba4459853ec4a1580aefe845eb3aa9fee748659b82170021a",
+    "structured_source_event_hashes": [
+      "sha256:052b137a57b498ba4fccb3bbcfcdb635034d802ace4f07dfbc754f8dc9c9a59c",
+      "sha256:f78172e5c0d4c516c28876c25076ca227b42fcc28335570bed4ee6478de4d845"
+    ],
+    "structured_source_event_ids": [
+      "evt-00000004",
+      "evt-00000005"
+    ]
+  },
+  "registry_precheck": {
+    "all_public_games_cleared": true,
+    "duplicate_public_solve_target_prohibited": true,
+    "no_level_solve_targeted": true,
+    "ok": true,
+    "principle": "all 25 cleared games prohibit a duplicate public-solve target",
+    "public_game_count": 25,
+    "reproducible_total_games": 25,
+    "reproducible_total_levels": 183
+  },
+  "reproducibility_checksum": "sha256:5b4bcc4babef0f0d719dcb8405351d8d2c01dcae2018fc847b434de4cc33ad02",
+  "source_bfs_adapter_and_prior_game_access_count": 0,
+  "status": "ready",
+  "structured_evidence_index_schema": {
+    "derived_from": "canonical_event_bytes_only",
+    "facets": [
+      "object_glyph_identity",
+      "spatial_relation",
+      "action_effect",
+      "temporal_order",
+      "uncertainty",
+      "evidence_source"
+    ],
+    "may_invent_per_game_rules": false,
+    "may_read_hidden_state": false,
+    "may_reorder_or_retrieve": true
+  },
+  "structured_evidence_memory_contract_ready_score": 1.0,
+  "submitted_live_path_receipt": {
+    "action_write": "E3AgentPolicy.next_move.after_transition / StepwiseExplorer._ingest -> observe_action_result",
+    "adapter_disabled": true,
+    "candidate_query_and_consume": "StepwiseExplorer._candidates -> rank_candidates -> query_raw + query_index",
+    "constructor_param": "structured_evidence_memory",
+    "policy": "E3AgentPolicy",
+    "scored_boundary": "python/carnot/agentic/arc_competition_agent.py",
+    "solve_targeted": false,
+    "state_write": "E3AgentPolicy.next_move.before_routing -> observe_state",
+    "stepwise_param": "structured_evidence_memory"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_arc_structured_evidence_memory.py -q -n0 -k 'not repository_artifact'"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_arc_structured_evidence_memory.py -q -n0 -k 'not repository_artifact'": "interrupted_after_4_selected_tests_passed_due_pytest_teardown_hang"
+  },
+  "verifier_is_oracle": false
+}

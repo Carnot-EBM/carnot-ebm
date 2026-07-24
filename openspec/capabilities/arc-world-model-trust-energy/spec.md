@@ -17212,3 +17212,90 @@ goal induction; this is the measured gate result, not a hypothesis.
 **Then** goal-correctness is materially below the hand-authored oracle's 7/8 (measured: 0 correct, 2 partial),
 because the wrong rules dominate the detector's ignore-note and targets are unnamed -- establishing the
 re-authoring requirement above.
+
+### REQ-ARC-WMTE-5900: Default-Off Structured Evidence Memory Contract
+
+The live `E3AgentPolicy` SHALL expose a default-off, adapter-disabled,
+agent-owned structured evidence memory at the scored boundary. When disabled,
+the submitted policy behavior SHALL remain equivalent to the previous
+submitted path: no event tape instance is constructed, no event bytes are
+written, no index query is consumed, and `SUBMITTED_AGENT_CONFIG` SHALL record
+the feature as disabled. When explicitly enabled for measurement, the memory
+SHALL be reachable from the same live path that observes states, proposes legal
+candidates, and records action results.
+
+The memory SHALL maintain an append-only event tape containing only the current
+agent's own logical timestamps, visible observations, candidate/action records,
+action results, exact no-op/dead-end evidence, uncertainty, and provenance. It
+SHALL use bounded byte/event/query caps, deterministic append ordering, and
+explicit loss receipts for every evicted event. It SHALL expose deletion,
+restart-from-tape-bytes, and stale-evidence filtering receipts.
+
+The memory SHALL derive a deterministic structured evidence index over exactly
+the same canonical event bytes as the raw tape. The index MAY reorder and
+retrieve evidence, but SHALL NOT invent per-game rules, read hidden state, read
+public game source, import or call a `GameAdapter`, use offline BFS, inspect
+prior-game logs, or consume registry trajectories. The index schema SHALL cover
+object/glyph identity, spatial relation, action effect, temporal order,
+uncertainty, and evidence source. Raw-tape and structured-index query
+interfaces SHALL report identical source-event sets and deterministic hashes
+for the same query.
+
+Experiment 5900 SHALL write
+`results/experiment_5900_arc_structured_evidence_memory_contract.json` with
+bare top-level fields `status`, `preconditions_checked`,
+`registry_precheck`, `public_level_solve_claimed`,
+`submitted_live_path_receipt`, `feature_default_off_and_disabled_equivalence`,
+`agent_owned_event_schema`,
+`raw_tape_and_structured_index_identical_byte_receipt`,
+`structured_evidence_index_schema`,
+`provenance_and_authority_receipts`,
+`bounded_bytes_queries_and_eviction`,
+`deletion_restart_stale_evidence_receipts`,
+`source_bfs_adapter_and_prior_game_access_count`,
+`live_path_reachability_tests`, `protected_files_unchanged`,
+`structured_evidence_memory_contract_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. `registry_precheck` SHALL record that all 25 cleared public
+games prohibit a duplicate public-solve target.
+`raw_tape_and_structured_index_identical_byte_receipt` SHALL prove structure,
+not extra evidence, is the treatment.
+`source_bfs_adapter_and_prior_game_access_count` SHALL be bare zero for source,
+BFS, adapter, and prior-game access. `structured_evidence_memory_contract_ready_score`
+SHALL be the bare scalar `1.0` only for bounded deterministic
+adapter-disabled live reachability and authority compliance.
+`inference_substrate` SHALL be
+`offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`verifier_is_oracle` SHALL be `false`, and `honest_verdict` SHALL begin with
+`ready:`, `complete_null:`, `unsafe:`, or `blocked:`.
+
+### SCENARIO-ARC-WMTE-5900-IDENTICAL-BYTES
+
+**Given** agent-owned visible observations, candidate rows, and action-result
+events on the structured evidence memory
+**When** the raw tape query and structured index query are run with the same
+filter
+**Then** both interfaces return the identical source-event-id set, the index
+entries cite the same canonical event byte hashes, and the index hash changes
+when and only when the underlying tape bytes change.
+
+### SCENARIO-ARC-WMTE-5900-BOUNDS-DELETE-RESTART-STALE
+
+**Given** a memory configured with small event, byte, and query caps
+**When** enough live events are appended to exceed those caps, the tape is
+deleted, restarted from retained tape bytes, and queried with stale filtering
+**Then** every eviction is represented by an explicit loss receipt, byte/query
+caps are enforced, restart reproduces deterministic hashes, deletion clears the
+tape and index, and stale evidence is excluded from both raw and structured
+queries with the same source-event set.
+
+### SCENARIO-ARC-WMTE-5900-LIVE-E3-REACHABILITY
+
+**Given** the submitted `E3AgentPolicy` path with the structured evidence
+feature explicitly enabled
+**When** the policy observes a visible frame, builds legal candidates, consumes
+the structured rank interface, and records an action result
+**Then** the memory records only live agent-owned evidence, both raw and
+structured query arms are exercised, no adapter/source/BFS/prior-game authority
+is used, and no public level solve is claimed or targeted.

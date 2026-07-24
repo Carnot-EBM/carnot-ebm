@@ -45,6 +45,7 @@ from carnot.agentic.arc_program_synthesis_filter import (
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
+from carnot.agentic.arc_structured_evidence_memory import coerce_structured_evidence_memory
 from carnot.agentic.arc_generic_causal_primitives import coerce_generic_causal_primitive
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
@@ -197,6 +198,8 @@ MATM_SIMILARITY_BUCKET_WIDTH = 0.25
 MATM_SIMILARITY_MAX_CANDIDATES = 8
 SUBMITTED_EPISTEMIC_LEDGER_ENABLED = True
 SUBMITTED_EPISTEMIC_LEDGER_MODE = "agent_owned_visible_state_hypothesis_ledger"
+SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED = False
+SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_MODE = "agent_owned_event_tape_plus_identical_byte_index"
 # E1 (arXiv:2512.24156, the hidden-leaderboard 3rd-place "just-explore" solver) status-bar
 # masking. `StepwiseExplorer.hud_mask` has existed as a constructor param since before this
 # flag (see `_hash`, which already collapses masked cells) but was never populated on the
@@ -275,6 +278,7 @@ _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
 _DEFAULT_GOAL_BIAS = object()
 _DEFAULT_EPISTEMIC_LEDGER = object()
+_DEFAULT_STRUCTURED_EVIDENCE_MEMORY = object()
 # REQ-ARC-FCP-5703 / GAP-5703: thresholds for goal_bias_diagnostics()'s degenerate-score
 # self-audit. Mirrors GoalEnergyCandidateGuidance's arms_non_degenerate variance floor
 # (arc_goal_energy_live.py: `variance > 1e-12`); the minimum-sample floor guards against a
@@ -738,6 +742,7 @@ class StepwiseExplorer:
         transition_cycle_verifier: Any | None = None,
         generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any | bool | None = None,
+        structured_evidence_memory: Any | bool | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         self.auto_hud_mask = bool(auto_hud_mask)
@@ -815,6 +820,9 @@ class StepwiseExplorer:
         self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
         self.candidate_router = candidate_router
         self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
+        self.structured_evidence_memory = coerce_structured_evidence_memory(
+            structured_evidence_memory
+        )
         if isinstance(dense_curiosity, DenseCuriosityProgress):
             self.dense_curiosity: DenseCuriosityProgress | None = dense_curiosity
         elif dense_curiosity:
@@ -1503,7 +1511,7 @@ class StepwiseExplorer:
         rows = self._apply_controllable_novelty_order(frame, rows)
         if self.epistemic_ledger is not None and rows:
             try:
-                return self.epistemic_ledger.rank_candidates(
+                rows = self.epistemic_ledger.rank_candidates(
                     frame,
                     rows,
                     runtime_receipts={
@@ -1512,7 +1520,19 @@ class StepwiseExplorer:
                     },
                 )
             except Exception:
-                return rows
+                pass
+        if self.structured_evidence_memory is not None and rows:
+            try:
+                rows = self.structured_evidence_memory.rank_candidates(
+                    frame,
+                    rows,
+                    provenance={
+                        "source": "StepwiseExplorer._candidates",
+                        "candidate_count": len(rows),
+                    },
+                )
+            except Exception:
+                pass
         return rows
 
     def _apply_amortized_prior_order(
@@ -1785,6 +1805,23 @@ class StepwiseExplorer:
                         o.get("data"),
                         latest,
                         leveled_up=bool(level_increased),
+                    )
+                except Exception:
+                    pass
+            structured_evidence_memory = getattr(self, "structured_evidence_memory", None)
+            if structured_evidence_memory is not None and o.get("previous_frame") is not None:
+                try:
+                    structured_evidence_memory.observe_action_result(
+                        o.get("previous_frame") or o.get("grid"),
+                        int(o["action"]),
+                        o.get("data"),
+                        latest,
+                        level_before=int(o.get("level_before") or 0),
+                        level_after=int(lvl),
+                        provenance={
+                            "source": "StepwiseExplorer._ingest.after_transition",
+                            "level_increased": bool(level_increased),
+                        },
                     )
                 except Exception:
                     pass
@@ -2768,6 +2805,7 @@ class E3AgentPolicy:
         transition_cycle_verifier: Any | None = None,
         generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any = _DEFAULT_EPISTEMIC_LEDGER,
+        structured_evidence_memory: Any = _DEFAULT_STRUCTURED_EVIDENCE_MEMORY,
     ) -> None:
         import os
 
@@ -2818,6 +2856,11 @@ class E3AgentPolicy:
         if epistemic_ledger is _DEFAULT_EPISTEMIC_LEDGER:
             epistemic_ledger = SUBMITTED_EPISTEMIC_LEDGER_ENABLED
         self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
+        if structured_evidence_memory is _DEFAULT_STRUCTURED_EVIDENCE_MEMORY:
+            structured_evidence_memory = SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED
+        self.structured_evidence_memory = coerce_structured_evidence_memory(
+            structured_evidence_memory
+        )
         self.approach_recommendation["strategy"] = self.strategy_route
         self._route_from_frame_checked = False
         self._feature_router_checked = False
@@ -2878,6 +2921,7 @@ class E3AgentPolicy:
             similarity_retrieval=similarity_retrieval,
             generic_causal_primitive=generic_causal_primitive,
             epistemic_ledger=self.epistemic_ledger,
+            structured_evidence_memory=self.structured_evidence_memory,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -3395,7 +3439,20 @@ class E3AgentPolicy:
     def _next_plan_move(self) -> tuple:
         step = self.plan[self.pi]
         self.pi += 1
-        return (step["action"], step.get("data"))
+        move = (step["action"], step.get("data"))
+        if self.structured_evidence_memory is not None:
+            try:
+                self.structured_evidence_memory.observe_action_candidate(
+                    int(move[0]),
+                    move[1],
+                    provenance={
+                        "source": "E3AgentPolicy._next_plan_move",
+                        "phase": self.phase,
+                    },
+                )
+            except Exception:
+                pass
+        return move
 
     def _remember_active_probe_origin(self, move: tuple, latest: Any) -> None:
         if self._active_probe_pending is None or latest is None:
@@ -3626,6 +3683,18 @@ class E3AgentPolicy:
                 )
             except Exception:
                 pass
+        if self.structured_evidence_memory is not None and latest is not None:
+            try:
+                self.structured_evidence_memory.observe_state(
+                    latest,
+                    phase=self.phase,
+                    provenance={
+                        "source": "E3AgentPolicy.next_move.before_routing",
+                        "frames_seen": len(frames),
+                    },
+                )
+            except Exception:
+                pass
         self._maybe_route_from_frame(latest)
         # collect a transition from the last action's outcome
         if self._prev is not None and latest is not None:
@@ -3658,6 +3727,22 @@ class E3AgentPolicy:
                                 level_before=int(self._prev_level),
                                 level_after=int(_level_of(latest)),
                                 runtime_receipts={
+                                    "source": "E3AgentPolicy.next_move.after_transition",
+                                    "admitted_world_model_update": True,
+                                },
+                            )
+                        except Exception:
+                            pass
+                    if self.structured_evidence_memory is not None:
+                        try:
+                            self.structured_evidence_memory.observe_action_result(
+                                self._prev[0],
+                                int(aid),
+                                data,
+                                g1,
+                                level_before=int(self._prev_level),
+                                level_after=int(_level_of(latest)),
+                                provenance={
                                     "source": "E3AgentPolicy.next_move.after_transition",
                                     "admitted_world_model_update": True,
                                 },
@@ -3706,6 +3791,18 @@ class E3AgentPolicy:
                     if mv[0] not in ("RESET", None):
                         self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
                         self._prev_level = _level_of(latest)
+                        if self.structured_evidence_memory is not None:
+                            try:
+                                self.structured_evidence_memory.observe_action_candidate(
+                                    int(mv[0]),
+                                    mv[1],
+                                    provenance={
+                                        "source": "E3AgentPolicy.next_move.selected_action",
+                                        "phase": self.phase,
+                                    },
+                                )
+                            except Exception:
+                                pass
                     else:
                         self._prev = None
                 # VERIFIER-ROUTED CASCADE escalation: hand off to the tier-3 induction path on
@@ -4469,6 +4566,8 @@ SUBMITTED_AGENT_CONFIG = {
     "matm_similarity_retrieval_mode": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE,
     "epistemic_ledger_enabled": SUBMITTED_EPISTEMIC_LEDGER_ENABLED,
     "epistemic_ledger_mode": SUBMITTED_EPISTEMIC_LEDGER_MODE,
+    "structured_evidence_memory_enabled": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED,
+    "structured_evidence_memory_mode": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_MODE,
     "auto_hud_mask_enabled": SUBMITTED_AUTO_HUD_MASK_ENABLED,
     "auto_hud_mask_mode": SUBMITTED_AUTO_HUD_MASK_MODE,
     "router_wired": True,
