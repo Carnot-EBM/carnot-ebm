@@ -495,3 +495,15 @@ that benefit any submission. So a fresh submission with CARNOT_ARC_STRUCTURED_NA
 decision. Honest caveats: the benefit is narrow (only tu93 among the tested public games cleanly helps -- the
 hidden-set gain depends on hidden games being clean-nav like tu93, which is unknown), and modest (+1 level;
 ~0.08 is generation-wall-bounded). Operator-only decision.
+
+## Overnight loop iter 3 (2026-07-24): ruled out a suspected root_grid live bug
+
+Probed the diagnosis §6 open question ("even a perfect model executes to 0 level-up") for a broad live bug:
+does the live planner plan from the WRONG state? NEGATIVE -- no bug. `E3AgentPolicy.next_move`
+(arc_competition_agent.py:3669-3675) UPDATES `self.root_grid` to the current frame on every level boundary
+(`_observe_level_boundary` -> boundary_events), so `plan_in_model` correctly starts from the CURRENT level's
+state, not the game start. The `full_traj[0].grid` mismatch is confined to the `run_seeded_progress`
+DIAGNOSTIC harness (arc_actions_to_progress.py), not the scored live path -- and the diagnosis already noted
+it as a known harness limitation (§6). So the live root_grid is correct; this rules out that hypothesis and
+future sessions need not re-investigate it. (The remaining part of the perfect-model->0-levelup question was
+the plan_in_model component-unpack regression, already fixed in 5841.)
