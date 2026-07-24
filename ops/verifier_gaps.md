@@ -4044,14 +4044,28 @@ result here actually proves out.
   test_arc_goal_predicate_live_veto (4), test_e3_world_model_candidates_os_import (2),
   test_goal_repair_degenerate_predicate (6), test_arc_world_model_trust_energy (7 pass). Every test that
   exercises a changed code path passes -> the 5 fixes introduced no downstream regression.
-- **PRE-EXISTING issue found (NOT caused by the outer-loop fixes; flagged, not fixed):**
-  `tests/python/test_e3_agent_policy_degenerate_frame_robustness.py::test_next_move_*` HANGS (>120s, SIGTERM)
-  under `E3AgentPolicy(proposer=None)` on a degenerate frame -- the file's pure `detect_cell`/`to_logical`
-  tests pass fast (3), but every `next_move` test hangs. Proven NOT outer-loop-caused: the only session change
-  to arc_competition_agent.py (commit 9362f98d5) is a single line INSIDE the
-  `CARNOT_ARC_STRUCTURED_NAV=="1"` flag-gated block, and this test never sets that flag, so the changed line is
-  never reached; the other 4 nav/hazard changes are behind the same flag or the hazard pruner (also inactive
-  here). The hang is in E3AgentPolicy.next_move's non-structured-nav path and predates this session. A real
-  bug (a suite test that hangs would stall CI) but OUT OF SCOPE for the nav/hazard robustness loop -- a
-  separate E3-cascade investigation. Also 1 pre-existing live-resource ERROR
+- **PRE-EXISTING slow test found (NOT caused by the outer-loop fixes; diagnosed, not fixed):**
+  `tests/python/test_e3_agent_policy_degenerate_frame_robustness.py::test_next_move_*` takes ~600s (exceeds
+  the 120s pytest/bash limit -> SIGTERM 143, which is what terminated the sweep batches). Root cause located
+  via a bounded `faulthandler.dump_traceback_later` probe (iter17): the degenerate frame drives next_move ->
+  `_induce_and_plan` (arc_competition_agent.py:4077) -> the stall-refactor loop
+  `execute_bounded_llm_reinduction` -> `refactor` -> `_gen_to_file` -> `generate`
+  (arc_executable_world_model.py:1735) -> a REAL `urllib.urlopen` to the local generator server with
+  `timeout=self.timeout`. `proposer=None` is NOT "no proposer" -- `E3AgentPolicy._proposer()` (line 3445)
+  lazily builds the LIVE default `LocalGGUFProposer` (Qwen3.5-9B-MTP, timeout=600, INTENTIONAL: "the ARC eval
+  has no internal time limit"). So the test makes a real HTTP call that waits the full 600s when the server
+  doesn't answer for a degenerate-frame prompt. NOT an infinite hang, NOT a production bug (600s is a
+  deliberate live-eval choice), and NOT outer-loop-caused (the only session arc_competition_agent.py change,
+  commit 9362f98d5, is one line inside the `CARNOT_ARC_STRUCTURED_NAV=="1"` block this test never sets). It is
+  a TEST-ISOLATION gap: a unit test should not make a real 600s HTTP call. Clean fixes for OPERATOR review
+  (out of the nav/hazard loop's scope -- a test the loop did not author): set `CARNOT_ARC_STALL_REFACTOR_LOOP=0`
+  in the test (the existing flag at arc_competition_agent.py:4063 that disables the reinduction loop; prod
+  default "1" unchanged), or pass a short-`timeout` / stubbed proposer so the generate call fails fast and
+  next_move takes its graceful fallthrough. Also 1 pre-existing live-resource ERROR
   (test_arc_world_model_trust_energy::...live_policy... -- needs a live policy/model, env-related).
+- **Process-killing diagnosis (iter17, in response to operator asking whether to stop the conductor):** the
+  ~120s SIGTERM on the sweep batches was NOT the conductor and NOT the `carnot-orphan-cleanup` janitor. That
+  janitor (`~/.carnot/orphan-cleanup.sh`, every 30 min) only `kill -9`s python/pytest older than 120 MINUTES
+  and never touches conductor descendants -- it cannot hit a seconds-old sweep, and SIGKILL is 137 not 143.
+  The real terminator is the 120s pytest/bash time limit hitting the ~600s test above. So stopping the
+  conductor was unnecessary and was not done.
