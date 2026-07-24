@@ -45416,3 +45416,125 @@ verdict starts with `complete:`, `mixed:`, or `blocked:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5862 | Implemented (`python/carnot/experiment_5862_v521_capstone_reconciliation.py`, `results/experiment_5862_v521_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5862_v521_capstone_reconciliation.py`) |
+
+### REQ-REPORT-5863: V522 Transition Archives Terminal V521 Without Laundering Evidence
+
+The Exp5863 workflow SHALL read `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, `research-complete.yaml`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, every declared `.521`
+deliverable for Exp5849 through Exp5862, `scripts/evidence_index_collision_preflight.py`,
+`scripts/in_process_doc_reconcile.py`, and this research-reporting spec. It
+SHALL write `results/experiment_5863_transition_v522.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT modify `ops/north-star.md`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL resolve terminal `.521` identities by exact
+`(milestone, task_id, declared_deliverable)` tuples from the completion ledger
+and active roadmap context. It SHALL NOT select artifacts by globbed numeric
+prefix. Missing declared deliverables, including gate-skipped Exp5855, SHALL be
+recorded explicitly rather than replaced by same-number aliases.
+
+The workflow SHALL run or preserve fresh adversarial-verifier receipts for
+every present declared `.521` deliverable. Exp5853 SHALL remain
+scientifically disqualified, Exp5854 and Exp5855 SHALL remain gate-skipped,
+Exp5859 SHALL remain blocked, Exp5860 SHALL remain a flagged null, Exp5861
+SHALL remain no-change, and Exp5862 SHALL remain blocked unless their exact
+source artifacts say otherwise. No blocked, disqualified, skipped, flagged,
+or no-change evidence may be promoted into a clean positive transition claim.
+
+The workflow SHALL append milestone `2026.07.521` to `research-complete.yaml`
+exactly once only when its exact milestone block is absent. If the exact block
+is already present, `research_complete_append_count` SHALL be bare `0`.
+Existing duplicate history for other milestones SHALL be reported but SHALL
+NOT be de-duplicated, sorted, rewritten, or amplified; `duplicate_history_amplification_count`
+SHALL be bare `0`.
+
+The workflow SHALL scan the active roadmap, optional next roadmap, completion
+history, roadmap proposals, exclusion manifest, results, source, tests, and
+prior transition allocation receipts for Exp5863 through Exp5876. References
+inside the active `.522` allocation, the roadmap vNEXT proposal, the Exp5863
+owned module/test/spec/result, or the emitted artifact itself SHALL be recorded
+as allowed owned/allocation references, not collisions. Any other pre-existing
+file in that range SHALL block the handoff. `next_range_collision_count=0`
+SHALL be required as a bare integer for completion.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `exact_task_and_deliverable_matrix`,
+`adversarial_verifier_receipts`, `outcome_classification`,
+`blocked_disqualified_skipped_flagged_and_no_change_preserved`,
+`research_complete_append_count`, `duplicate_history_amplification_count`,
+`next_task_range`, `next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty field-provenance entry and principle.
+
+Required field principles:
+
+- `status`: principle "A terminal state distinguishes an exact handoff from a bootstrap artifact."
+- `preconditions_checked`: principle "Hashes, resources, verifier, outputs, and exact identities prevent ambiguous archival."
+- `milestone_transition`: principle "Explicit source and destination milestones prevent prefix aliasing."
+- `exact_task_and_deliverable_matrix`: principle "Declared task IDs and paths are the only evidence index."
+- `adversarial_verifier_receipts`: principle "Fresh verifier output preserves current artifact-quality authority."
+- `outcome_classification`: principle "Disjoint terminal classes prevent negative or missing work becoming success."
+- `blocked_disqualified_skipped_flagged_and_no_change_preserved`: principle "True proves the handoff did not launder the terminal `.521` evidence."
+- `research_complete_append_count`: principle "An exact zero-or-one count prevents a missing or duplicate milestone append."
+- `duplicate_history_amplification_count`: principle "Must be bare zero; existing duplicate history cannot be multiplied."
+- `next_task_range`: principle "A declared finite interval makes allocation auditable."
+- `next_range_collision_count`: principle "Only bare zero authorizes Exp5863-Exp5876."
+- `docs_reconciled`: principle "Internal specifications and operations summaries must match archived evidence."
+- `protected_files_unchanged`: principle "Operator-curated and user-owned files remain byte-identical."
+- `duration_s`: principle "Measured wall time exposes bootstrap-only work."
+- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` declares archival rather than model inference."
+- `field_provenance`: principle "Every field traces to exact paths, hashes, commands, or roadmap records."
+- `test_commands`: principle "Commands document identity, append, verifier, collision, and protection checks."
+- `test_exit_codes`: principle "Exit codes prevent failed owned checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects ledger, artifact, or allocation drift."
+- `honest_verdict`: principle "A `complete:` or `blocked:` prefix makes the handoff terminal."
+
+#### SCENARIO-REPORT-5863-EXACT-ARCHIVE: Terminal V521 Identities Are Preserved
+
+**Given** the completion ledger declares Exp5849 through Exp5862 under
+milestone `2026.07.521`
+**And** the declared deliverables include completed, disqualified,
+gate-skipped, blocked, flagged, no-change, and missing evidence classes
+**When** the Exp5863 workflow builds the transition receipt
+**Then** it records every exact `(milestone, task_id, declared_deliverable)`
+tuple, records missing deliverables explicitly, preserves each terminal class,
+sets `blocked_disqualified_skipped_flagged_and_no_change_preserved=true`, and
+does not promote negative evidence into a clean success class.
+
+#### SCENARIO-REPORT-5863-APPEND-ONCE: Completion History Is Not Amplified
+
+**Given** `research-complete.yaml` may or may not already contain the exact
+`2026.07.521` milestone block
+**When** the Exp5863 workflow runs
+**Then** it appends that milestone block exactly once only if absent, otherwise
+sets `research_complete_append_count=0`, records pre-existing duplicate
+history, and sets `duplicate_history_amplification_count=0`.
+
+#### SCENARIO-REPORT-5863-RANGE-COLLISION: Exp5863 Through Exp5876 Is Collision-Free
+
+**Given** the active `.522` roadmap and vNEXT proposal allocate Exp5863 through
+Exp5876
+**When** the Exp5863 workflow scans roadmaps, history, proposals, exclusions,
+results, source, tests, and prior transition receipts
+**Then** only active allocation and Exp5863-owned references are allowed,
+unexpected pre-existing references block completion, and
+`next_range_collision_count=0` is required as a bare integer.
+
+#### SCENARIO-REPORT-5863-SCHEMA: Required Fields, Checksums, And Protected Files Are Stable
+
+**Given** the Exp5863 artifact is emitted
+**When** its schema is validated
+**Then** all required fields, principles, field provenance, test commands, test
+exit codes, checksum, and protected-file immutability receipts are present,
+`inference_substrate="aggregation_from_upstream_artifacts"`, and the terminal
+verdict starts with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5863)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5863 | Implemented (`python/carnot/experiment_5863_transition_v522.py`, `results/experiment_5863_transition_v522.json`) | Implemented (`tests/python/test_experiment_5863_transition_v522.py`) |
