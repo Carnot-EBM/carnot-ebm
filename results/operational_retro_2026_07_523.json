@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.523",
+  "generated_at": "2026-07-24T10:28:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.8,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Dated evidence refresh after the V523 planner marker",
+      "duration_minutes": 5.42,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .522 into .523",
+      "duration_minutes": 0.36,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Changed-taxonomy audit of nuisance controls versus oracle-derived solver telemet",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5880 fixture: one-to-one atom grounding structural-acquisition A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 experiments in 5.8 minutes; all 4 were synthesis-only and 0 were compute-bound. No compute-bound duration, task-level GPU efficiency, concurrent multi-model load, or DualGPURunner miss can be assessed; the 5.42-minute evidence refresh is the sole observed optimization target.",
+  "bottlenecks_identified": [
+    "The 5.42-minute dated evidence refresh accounted for nearly all of the 5.8-minute milestone wall time, but aggregate timing does not identify which refresh phase consumed it.",
+    "Disk-mtime reconstruction supplies experiment totals without phase boundaries, preventing causal attribution or a measured savings forecast."
+  ],
+  "improvements_suggested": [
+    "Add a planner-marker-keyed source manifest so dated evidence refreshes can scan only sources changed since the prior marker.",
+    "Record monotonic subphase timers and cache hit or miss counts for evidence discovery, validation, and artifact writing.",
+    "Persist exact experiment identifiers and start or stop events outside git history so fallback timing retains a complete milestone range and execution trace."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement incremental, source-hash-based evidence refresh.",
+    "Instrument evidence-refresh subphases and cache behavior.",
+    "Persist experiment identity and timing provenance independently of git commits."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Aggregate GPU idleness is expected for this synthesis-only workload and must not be treated as wasted compute. The evidence supports optimizing the refresh path and its telemetry, but not attributing cause or claiming measurable savings."
+}
