@@ -528,6 +528,36 @@
     "wa30"
   ],
   "duration_s": 195.3,
-  "honest_verdict": "complete_perception_grounding_audit_order1_auc_0.6898_object_auc_0.6564_delta_-0.0334_gate_clears_False",
-  "reproducibility_checksum": "sha256:2ab05aaeada40cd76f2d1f848a334b53486f0660f8a06b8363c33fcbab57f811"
+  "honest_verdict": "complete_perception_grounding_audit_VOID_corrigendum_unpassable_gate_and_clock_label_no_conclusion_licensed",
+  "corrigendum_pending": true,
+  "flagged_conclusion_void": true,
+  "corrigendum": {
+    "date": "2026-07-24",
+    "status": "CONCLUSION VOID -- original numbers preserved unchanged above per never-prune discipline.",
+    "raised_by": "adversarial workflow arc-next-lever-analysis (wf_0ca00a25-bd5), independently re-verified by the outer loop",
+    "defects": [
+      {
+        "id": "D1-UNPASSABLE-GATE",
+        "detail": "The pre-registered gate is a conjunction including `order1_auc <= 0.56`, encoding the ASSUMPTION that order-1 sits at chance as a REQUIREMENT for the object arm to pass. Measured order1=0.6898, so gate_clears is False for EVERY possible object value.",
+        "verification": "Recomputed: object=0.6564 -> False; object=1.00 (perfect) -> False. The reported gate failure carries zero information about object perception."
+      },
+      {
+        "id": "D2-LABEL-IS-A-CLOCK",
+        "detail": "The label level_progress(row, step_index) is a pure function of step_index and row metadata; it never reads the frame. The measured task is 'how far into this replay is this frame', not perception.",
+        "verification": "inspect.signature -> (row, step_index); the token 'frame' does not appear in the function body."
+      },
+      {
+        "id": "D3-CLOCK-BEATS-BOTH-ARMS",
+        "detail": "A zero-perception predictor using ONLY step_index scores 0.9234 LOO-AUC on the same label, far above both feature arms (order1 0.6898, object 0.6564). Both 'perception' arms are WORSE than a clock at the task actually measured.",
+        "verification": "25-game LOO logistic regression on step_index alone, cap 1500/game."
+      }
+    ],
+    "what_is_retracted": [
+      "That object-level perception was tested at all, or ruled out as a fix direction.",
+      "That order-1 features are 'a decent 0.69 for progress prediction', and the derived claim that the standing order-1-at-chance (GAP-4891) finding is task-specific. The 0.69 is largely clock leakage."
+    ],
+    "what_still_stands": "Only this: a 54-dim hand-rolled blob-aggregate vector did not outperform cross_game_features_v2 at predicting trajectory POSITION on winning human replays (delta -0.0334, n=25 games). This measures neither object perception nor anything the live agent does.",
+    "lesson": "Pre-registered gates must not encode an assumption about the BASELINE arm as a pass-requirement for the TREATMENT arm; and a progress label must be verified to actually depend on the input being featurized (a positive control -- here, the trivial step-index predictor -- would have caught this before the run)."
+  },
+  "reproducibility_checksum": "sha256:4a7295675ac0c0e99cecef469d5dbe142465b20abcf617bd0ce142af73920073"
 }
