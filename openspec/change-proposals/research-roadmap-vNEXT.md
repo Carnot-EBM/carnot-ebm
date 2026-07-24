@@ -1,432 +1,449 @@
-# Carnot Research Roadmap vNEXT — Milestone 2026.07.522
+# Carnot Research Roadmap vNEXT — Milestone 2026.07.523
 
-**Milestone:** 2026.07.522  
-**Title:** Certified Adaptive Memory, Layer-Dynamic Energy, and Live Causal Recurrence  
+**Milestone:** 2026.07.523  
+**Title:** Shortcut-Resistant Self-Learning, Layer-Dynamic Energy, and Lossless Live Memory  
 **Status:** Proposed  
-**Task range:** Exp5863-Exp5876 (14 experiments)  
+**Task range:** Exp5877-Exp5889 (13 experiments)  
 **Execution file:** `research-roadmap-next.yaml`  
-**Date planned:** 2026-07-23
+**Date planned:** 2026-07-24
 
 ## Thesis
 
-Milestone `.521` produced a clean positive continuous-self-learning result and a
-substantially implemented Python/Rust state kernel, but it did not produce a
-promotion-ready end-to-end system. Exp5856-Exp5858 qualified versioned lifecycle,
-selective replay, and reduced-oracle learning with immutable model weights. Exp5859
-then demonstrated exact cross-language operation, hash, serialization, rollback, and
-invalid-input parity, but its readiness score stayed zero because the repository-wide
-Python suite exited 2. Rewriting that kernel would discard evidence; `.522` first
-attributes and repairs only the failing end-to-end seam.
+Milestone `.522` delivered one strong new asset and two important boundaries. Exp5868
+created an exact 84-row, balanced, proof-hardness-controlled constraint fixture with
+proof-preserving relabels and passing end-to-end checks. Exp5869 independently
+confirmed row integrity, low non-oracle nuisance leakage, exact relabel stability, and
+a nonempty held-model/held-constraint design, but its gate incorrectly treated
+oracle-derived solver telemetry as a trivial surface shortcut and the global Python
+suite exited 2. The artifact therefore remained blocked. Exp5865 separately retired
+adaptive-state kernel requalification after the same unrelated global-suite class
+blocked an otherwise passing focused Python/Rust matrix. Its dependent integration
+tasks never became scientific evidence.
 
-The representation branch ended more decisively. Exp5852 extracted paired final
-embeddings from the three mandated current GGUF families, but Exp5853 disqualified
-the route under claim-flip, disaggregated-cell, label-permutation, norm/length, and
-model-identity controls. Exp5854 and Exp5855 correctly gate-skipped. The final
-embedding is therefore closed. Recent ICR and HARP work suggests a materially
-different surface—cross-layer residual updates and a compact unembedding-derived
-reasoning subspace—but the pinned GGUF runtime may not expose those tensors. `.522`
-puts a hard public-API feasibility gate before extraction or training and imports
-CORVUS-style camouflage controls if the surface exists.
+The correct next move is not to rerun the retired kernel or to relabel blocked work as
+success. `.523` separates three scientific questions:
 
-The ARC branch also needs a true mechanism change. Exp5860 was a null, but not a clean
-one: its artifact declared `live_llm_inference`, recorded approximately 10 ms model
-calls, omitted the seed, ran below the compute-duration floor, and retained a failing
-global suite exit. Repeating the active observer would not advance the live path.
-`.522` instead builds a game-blind recurrence memory from the live agent's own
-observed transitions. It performs no imagined rollout or lookahead. Its job is to
-remember repeated causal signatures, contradiction evidence, and action outcomes
-within an episode, then route legal proposals under a matched budget. It claims no
-public-game solve.
+1. Can exact structural self-learning remain beneficial when the stream contains
+   semantically wrong but constraint-satisfying groundings?
+2. Does the pinned local GGUF runtime expose a public, deterministic intermediate-layer
+   surface that supports a portable layer-dynamic energy after the final-embedding
+   route was disqualified?
+3. Can a live adapter-disabled ARC agent use a lossless, searchable record of its own
+   episode more effectively than the compact epistemic ledger and active-observation
+   mechanisms that already returned clean nulls?
 
-The milestone makes four falsifiable claims:
+The first question imports the one-to-one logical-atom grounding result from
+arXiv:2607.21185. The third imports PRO-LONG's lossless Read/Grep/programmatic memory
+pattern from arXiv:2607.20064 without importing its closed-provider harness or public
+scores. The second preserves V522's hard feasibility gate: no untracked activation
+hook, transformer-native loader, `AutoTokenizer`, or CPU-hidden headline run may be
+used to manufacture an internal-state result.
 
-1. The existing adaptive-state kernel can become promotion-ready by closing its
-   actual end-to-end test seam without changing already-passing semantics.
-2. A default-off shadow adapter plus a chronological future stream can continuously
-   improve bounded external state while certifying retention, safety, rollback, and
-   immutable GGUF weights.
-3. If the pinned GGUF stack exposes a reproducible intermediate-layer surface,
-   cross-layer dynamics can beat hardness, surface, identity, and final-embedding
-   controls on held-model and held-constraint splits. If the surface is unavailable
-   or the controls survive, the bounded route closes.
-4. Observed-transition recurrence improves live E3 evidence efficiency or proposal
-   support under matched action and model-call budgets. A clean null retires this
-   mechanism.
+## What milestone 2026.07.522 proved
 
-## What milestone 2026.07.521 proved
+Only the seven tasks activated in `research-roadmap.yaml` count as `.522` evidence.
+Exp5870-Exp5876 appeared in the prior proposal but were never activated and are not
+results.
 
-| Branch | Terminal evidence | Consequence for `.522` |
+| Branch | Terminal evidence | Consequence for `.523` |
 |---|---|---|
-| Transition | Exp5849 archived the exact `.520` boundary and allocated Exp5849-Exp5862 without collision. | Exp5863 must archive every activated `.521` identity, including blocked, gate-skipped, disqualified, flagged, and no-change outcomes, without laundering them. |
-| Source currency | Exp5850 found zero accepted post-marker findings. Its artifact received a methodology warning because non-LLM source aggregation was incorrectly subjected to model-spec expectations. | Exp5864 starts after `V522-PLANNER-REFRESH-20260723-END`, declares external-source aggregation honestly, and treats zero accepted deltas as complete. |
-| Replay provenance | Exp5851 established deterministic exact replay as the honest substrate and rejected false compute markers. | All adaptive-memory tasks must use deterministic exact-verifier receipts rather than CUDA/GGUF language when no model runs. |
-| Current-model final embeddings | Exp5852 ran all three mandated SOTA GGUF families and emitted the paired corpus. The artifact was usable but warned for missing seed provenance. | Preserve the corpus and warning; do not claim current-model portability from extraction alone. |
-| Final-embedding integrity | Exp5853 disqualified the route: claim-flip direction and disaggregated cells failed; label/pair permutation survived; norm/length controls failed; raw dimensions exposed model identity. | Final embeddings are not retried. Exp5870-Exp5872 may proceed only on a distinct, reproducible intermediate-layer surface and carry Exp5200/Exp5853 prior-failure records. |
-| Downstream representation work | Exp5854 and Exp5855 gate-skipped after Exp5853. | Preserve the skips. No energy training or release routing may consume the disqualified surface. |
-| Adaptive lifecycle | Exp5856 produced clean, deterministic, versioned promotion/quarantine/rollback evidence. | Use it as the semantic upstream for the kernel and adapter; do not rerun lifecycle science. |
-| Selective replay | Exp5857 qualified transfer-selective replay with clean provenance. | The prospective stream may use bounded compatible replay with all-replay, no-replay, and shuffled controls. |
-| Reduced-oracle learning | Exp5858 qualified continuous self-learning with zero unsafe accepts. | `.522` must test the same scientific claim through the actual pipeline shadow boundary and future chronological batches. |
-| Python/Rust kernel | Exp5859 passed focused Python/Rust parity, hash, serialization, rollback, binding, lint, clippy, and invalid-input checks. Readiness remained zero only because `.venv/bin/pytest tests/python -q` exited 2. | Exp5865 attributes the failing suite seam and requalifies the existing kernel; it does not redesign the ABI. |
-| ARC active observation | Exp5860 reported a null, but adversarial verification raised `DURATION_TOO_SHORT` and missing-seed flags; its model-call accounting is inconsistent with real local inference. | Do not use the null as clean mechanism evidence and do not repeat active observation. Replace it with observed-transition causal recurrence and require real model/GPU/seed receipts. |
-| Hardware | Exp5861 recorded no changed authenticated state-operation route: KV260 retained the programmed-image POC, PolarFire retained a prior physical workload only, and GateMate remained IDCODE-blocked. | Exp5875 is conditional on a requalified kernel and a changed authenticated route; unchanged preconditions produce a no-change receipt without repeated board commands. |
-| Capstone | Exp5862 stayed blocked because required checks included the disqualified representation branch, blocked kernel, flagged ARC artifact, and no-change hardware receipt. | `.522` must classify independent branches rather than require every scientific hypothesis to be positive. |
+| Transition | Exp5863 archived the exact `.521` task/deliverable identities and preserved blocked, disqualified, skipped, flagged, and no-change outcomes. | Exp5877 must archive exactly the seven activated `.522` tasks and allocate Exp5877-Exp5889 without treating the unactivated V522 proposal tail as completed work. |
+| Source currency | Exp5864 found zero accepted findings after the V522 marker. | Exp5878 searches only after `V523-PLANNER-REFRESH-20260724-END`; zero accepted deltas remains a valid complete result. |
+| Adaptive kernel | Exp5865 passed its focused Python/Rust, binding, build, lint, coverage, rollback, and parity checks, but `.venv/bin/pytest tests/python -q` exited 2. The task honestly retired requalification as blocked by unrelated global-suite debt. | Do not rerun, rename, or depend on the retired requalification. `.523` keeps adaptive science in a deterministic external-state sidecar and emits only a future hardware mapping contract. |
+| Kernel-dependent adapter | Exp5866 was skipped because its required upstream was retired. No artifact exists. | No task may claim the adapter shipped or use Exp5866 as a ready dependency. |
+| Kernel-dependent prospective learning | Exp5867 gate-blocked. | Its production-shadow scope remains unproved. `.523` tests a materially different scientific scope—grounding-shortcut resistance—on the already qualified external-state lifecycle. |
+| Exact hardness fixture | Exp5868 produced 84 balanced exact rows across two Tseitin families, solver/certificate receipts, surface controls, relabel equivalence, deterministic replay, and a passing full Python suite. | This immutable fixture is the base for the audit corrigendum and grounding-shortcut extension. |
+| Headroom audit | Exp5869 found all 84 rows intact, maximum non-oracle nuisance AUROC 0.583333, oracle-derived solver telemetry AUROC 1.0, relabel/certificate stability 1.0, and a nonempty oracle-distinct evaluation plan. It nevertheless set readiness to zero by mixing solver telemetry with nuisance controls and also recorded a full-suite exit 2. | Exp5879 performs a changed-taxonomy corrigendum from immutable evidence, keeps solver telemetry explicitly oracle-derived, reruns owned checks, and gates every representation experiment. |
 
 ## The three biggest gaps to the PRD vision
 
-### Gap 1 — FR-11 is scientifically positive but not integrated
+### Gap 1 — Continuous self-learning has not faced semantic grounding shortcuts
 
-The PRD requires autonomous ongoing learning, validation, bounded retention, and
-rollback. Carnot now has positive exact-stream science and almost-complete
-cross-language state semantics, but the state kernel is not promotion-ready and the
-production verify/repair path does not consume it through a default-off protocol.
-There is no prospective pipeline receipt showing that chronological updates improve
-future batches without changing GGUF weights or release authority.
+Exp5858 showed a large prospective lift with only 1.67% of the full exact-query budget,
+zero unsafe accepts, exact rollback, protected-prefix retention, and bounded external
+state. That is meaningful FR-11 progress. It did not test a learner that can satisfy a
+logical constraint through the wrong concept-to-atom mapping. Such a shortcut would
+look valid to a shallow constraint check while violating the intended task semantics.
+The PRD requires autonomous learning that remains safe under changing constraint
+structure, not only under clean symbolic identifiers.
 
-### Gap 2 — the verifier moat has no portable oracle-distinct internal energy
+`.523` builds exact constraint-satisfaction and cognition-shortcut controls, tests
+one-to-one atom grounding against soft/distributed groundings, then runs a sealed
+future continuous-learning lifecycle with sparse exact feedback. Frozen GGUF weights,
+bounded state, quarantine, per-update non-forgetting certificates, rollback, and exact
+release authority remain mandatory.
 
-The stable FoVer headline is execution-grounded. PHASE D external text/logprob
-rankers are retired, Exp5200's absolute hidden-state probe was negative, and
-Exp5853 closed the final-embedding comparative route. The remaining live research
-question is whether a reproducible layer-dynamic signal exists on current local
-models and survives model-family transfer, constraint-family transfer, surface
-relabeling, perturbation, and simple controls. Runtime feasibility is currently
-unknown and must be settled before another GPU-scale probe.
+### Gap 2 — Carnot lacks a portable oracle-distinct learned energy on current models
 
-### Gap 3 — the live ARC agent does not retain useful causal structure online
+The final-embedding route is closed by Exp5853. Its claim-flip direction failed,
+per-cell performance failed, permutations survived, nuisance controls failed, and raw
+dimensions exposed model identity. ICR and HARP suggest layer-transition statistics
+instead of a terminal embedding, while CORVUS warns that internal signals may be
+camouflaged or model-specific. Carnot has not established that its pinned
+llama.cpp/GGUF stack can expose those states through a supported reproducible API.
 
-All public game levels are already registry-reproduced, yet the adapter-disabled E3
-path still fails on hard held-out games. Candidate coverage and lookahead have both
-shown limited or zero deliverable headroom, and Exp5860 did not perform verifiable
-live LLM observation selection. The live agent needs a reusable, game-blind
-within-episode state that learns only from its own actions and exact observations,
-routes future proposals, and is evaluated on efficiency and evidence quality rather
-than another public solve.
+`.523` first fixes the Exp5869 headroom taxonomy, then runs a public-API preflight on
+all three mandated SOTA GGUF families. Only a deterministic, token-aligned,
+GPU-offloaded, versioned surface can unlock layer-dynamic extraction. A downstream
+portability/camouflage audit holds out model and constraint families and retains exact
+solvers as release authority.
 
-## 2025-2026 research update and experiment hooks
+### Gap 3 — The live ARC path loses useful episode history
 
-The dated source ledger is in `research-references.md` under
-`V522-PLANNER-REFRESH-20260723-END`.
+The compact epistemic ledger (Exp5726), leave-one-game-out component interactions
+(Exp5766), and active observation (Exp5860) produced no held-out live lift. Current
+known-issues evidence also closes lookahead and candidate-coverage variants on the
+disjoint sc25/lf52/bp35 diagnostics. The remaining plausible gap is not another action
+selector: it is whether the agent can recover exact prior observations when history is
+long.
 
-| Finding | Carnot implication | Experiment hook |
+PRO-LONG keeps a lossless interaction record and delegates retrieval to programmatic
+Read/Grep queries. `.523` ports only that mechanism into a default-off, game-blind E3
+component. It stores the live agent's own current-episode actions, observations, and
+outcomes; it contains no game source, banked solver, adapter, offline BFS, or prior-game
+memory. Exact retrieval fidelity and deletion utility gate a budget-matched live A/B.
+This is the required ARC generalization-floor task and claims no public-game solve.
+
+## Fresh research incorporated
+
+The dated source record is
+`research-references.md#v523-planner-refresh---20260724`.
+
+| Source | Local experiment hook | Boundary |
 |---|---|---|
-| [ICR Probe](https://arxiv.org/abs/2507.16488) | Cross-layer residual-stream updates can carry information absent from one isolated state. | Exp5870 first proves a supported GGUF layer surface; Exp5871 uses token-aligned layer differences only if that gate passes. |
-| [HARP](https://arxiv.org/abs/2509.11536) | An unembedding-SVD reasoning subspace may remove semantic noise and reduce dimensionality. | Exp5871 freezes the projection before labels; Exp5872 compares it with raw layer differences, logistic, MLP, KAN, and final-embedding controls. |
-| [CORVUS](https://arxiv.org/abs/2601.14310) | Internal telemetry can be camouflaged and same-family probe success is insufficient. | Exp5872 adds bounded feature perturbation, evaluator swap, family transfer, and exact-grounding audits. The learned score is never release authority. |
-| [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047) | SAT solver conflicts, clause density, surface form, and model difficulty are distinct axes. | Exp5868 builds proof-hard/proof-easy near-density-matched fixtures and proof-preserving relabels; Exp5869 establishes headroom and control behavior before GPU extraction. |
-| [CerCE](https://openreview.net/forum?id=Anh6VfNM22) | Continual updates need explicit non-forgetting constraints rather than retention prose. | Exp5867 requires a per-update retention certificate and automatic rollback on any protected-cell regression. |
-| [Current Agents Fail to Leverage World Models as Tools](https://arxiv.org/abs/2601.03905) | The bottleneck is often when and how agents use evidence, not simulator availability. | Exp5873-Exp5874 avoid imagined rollouts and instead test observed causal recurrence as a routing primitive. |
-| [Structured SAT on Ising Machines](https://arxiv.org/abs/2511.21046) | Tight constraints can distort physical Ising dynamics; hybrid classical preprocessing is safer. | Exp5875 keeps tight bounds and release checks classical and maps only bounded residual operations after authenticated route change. |
+| Differentiable Logic Programming to Mitigate Reasoning Shortcuts in Neurosymbolic Systems (`2607.21185`) | Exp5880-Exp5882: exact shortcut fixture, one-to-one atom grounding A/B, prospective shortcut-resistant self-learning | Exact validators and semantic ground truth own labels; learned scores never release results. |
+| PRO-LONG (`2607.20064v2`) | Exp5886-Exp5888: lossless typed tape, programmatic retrieval audit, live adapter-disabled A/B | Import the Read/Grep mechanism, not public scores, closed APIs, Docker harness, prior-game logs, or public solve credit. |
+| Pipelined FPGA p-computer (`2607.21077`) | Hardware requirements and future ABI context only | Exp5865 retired and Exp5861 found no changed route; no RTL redesign, board command, or speedup claim in `.523`. |
+| Curvature-based KAN grid adaptation (`2601.18672`) | Guarded watch item only | Exp5749 found the matched KAN mechanism residual negative; a new paper does not reopen it. |
+| EvoLib / energy-based data reassembly | Guarded memory controls only | Exp5857/Exp5858 already qualified safer exact-authority replay with no remaining measured headroom for these mechanisms. |
 
-## Architecture
+## Target architecture
 
 ```text
-                        immutable authority boundary
-             exact validators / exact observations / state hashes
-                                   │
-            ┌──────────────────────┼──────────────────────┐
-            │                      │                      │
-            ▼                      ▼                      ▼
-   Exp5856-5859 evidence   Exp5868 exact CSP corpus   live E3 observations
-            │                      │                      │
-            ▼                      ▼                      ▼
-   Exp5865 kernel          Exp5869 headroom and      Exp5873 causal
-   requalification         shortcut qualification   recurrence controller
-            │                      │                      │
-            ▼                      ▼                      ▼
-   Exp5866 default-off     Exp5870 pinned-GGUF       Exp5874 matched live A/B
-   pipeline adapter        layer-surface preflight   (no solve credit)
-            │                      │
-            ▼                      ├── blocked → skip Exp5871/5872
-   Exp5867 prospective     │
-   certified CSL           ▼
-                    Exp5871 three-family layer dynamics
-                             │
-                             ▼
-                    Exp5872 portability + camouflage audit
-            │                      │                      │
-            └──────────────┬───────┴──────────────────────┘
-                           ▼
-                 Exp5875 conditional board receipt
-                           │
-                           ▼
-                 Exp5876 capstone reconciliation
+                         EXACT AUTHORITY PLANE
+   Exp5868 rows ──> Exp5879 taxonomy ───────────────┐
+       │                    │                       │
+       │                    └── headroom gate ──> Exp5883 public layer API
+       │                                             │
+       │                              surface==1 ──> Exp5884 layer dynamics
+       │                                             │
+       │                              candidate==1 -> Exp5885 portability/
+       │                                               camouflage audit
+       │
+       └──> Exp5880 grounding-shortcut fixture
+                    │
+        fixture==1 -> Exp5881 one-to-one atom A/B
+                    │
+        mechanism==1 -> Exp5882 prospective continuous self-learning
+                         [versioned external state; frozen GGUF weights;
+                          exact queries; quarantine; rollback; bounded memory]
 
-Cross-cutting:
-  Exp5863 exact transition/archive
-  Exp5864 post-marker SOTA ingestion
+   LIVE ARC PLANE
+   E3 own action/observation tape ──> Exp5886 append-only typed index
+                                           │
+                              contract==1 -> Exp5887 retrieval/deletion audit
+                                           │
+                                causal==1 -> Exp5888 live matched A/B
+                                [adapter off; episode-local; no solve claim]
+
+   Exp5877 boundary + Exp5878 source receipt + every terminal branch
+                                  └──────────────> Exp5889 reconciliation
 ```
 
-Learned scores may rank or route candidates. Exact solvers and validators remain
-label, promotion, and release authority. The adaptive learner changes versioned
-external state only. ARC memory contains only the live agent's own transitions.
-Hardware never converts a requested topology, simulator, or fallback into physical
-execution evidence.
+Authority does not move:
 
-## Phase 0 — Exact Boundary and Promotion Seam (Exp5863-Exp5865)
+- exact solvers and certificate validators own constraint labels and release;
+- frozen GGUF representations may route work only after held-family controls;
+- the live ARC SDK owns observations and outcomes;
+- historical artifacts are immutable;
+- no hardware result exists without an authenticated physical receipt.
 
-### Exp5863: Archive `.521` and allocate `.522`
+## Phase 0 — Boundary and exact-headroom repair (Exp5877-Exp5879)
 
-Archive all 14 activated `.521` identities with exact paths and conductor outcomes.
-Preserve Exp5853 as disqualified, Exp5854-Exp5855 as gate-skipped, Exp5859 as
-blocked, Exp5860 as flagged null, Exp5861 as no-change, and Exp5862 as blocked.
-Append `.521` to completion history exactly once if absent and prove
-Exp5863-Exp5876 collision-free.
+### Exp5877 — Exact `.522` transition and collision-free allocation
 
-**Deliverable:** `results/experiment_5863_transition_v522.json`
+Archive the seven activated `.522` tasks exactly, append `.522` to
+`research-complete.yaml` once if absent, preserve retirement/skips/blocks, and prove
+Exp5877-Exp5889 collision-free. The unactivated prior proposal tail is recorded as
+unexecuted, not missing evidence.
 
-### Exp5864: Post-V522 SOTA delta ingestion
+**Deliverable:** `results/experiment_5877_transition_v523.json`  
+**Success:** exact activated-task matrix, no outcome laundering, append count zero or
+one, duplicate amplification zero, and collision count zero.
 
-Run the low-concurrency post-marker source refresh required by the SOTA-ingestion
-discipline. Accept only newer, non-duplicate findings that sharpen existing task
-controls. It cannot change identities, gates, authority, or retired scopes. Zero
-accepted findings is complete.
+### Exp5878 — Post-V523 source-delta receipt
 
-**Deliverable:** `results/experiment_5864_v522_source_delta_ingestion.json`
+Search only after the V523 marker across the mandated sources. Accepted findings may
+sharpen controls for already allocated `.523` tasks but cannot change identities,
+gates, authority, or retired scopes.
 
-### Exp5865: Adaptive-state kernel E2E attribution and requalification
+**Deliverable:** `results/experiment_5878_v523_source_delta_ingestion.json`  
+**Success:** complete dated provenance even when `accepted_finding_count=0`.
 
-Reproduce the Exp5859 repository-wide exit 2, identify exact failing collection
-nodes or environment preconditions, and separate task-owned failures from unrelated
-workspace debt. Preserve the already-passing ABI and conformance traces. Fix only an
-owned seam, rerun focused and applicable end-to-end checks, and emit readiness only
-when every claimed command exits zero.
+### Exp5879 — Oracle-derived telemetry taxonomy corrigendum
 
-**Deliverable:** `results/experiment_5865_adaptive_state_kernel_requalification.json`
+Consume Exp5868/Exp5869 immutably. Recompute the audit with two disjoint control
+classes: non-oracle nuisance features determine shortcut saturation; solver
+conflicts/decisions/time remain oracle-derived diagnostic covariates and cannot
+invalidate non-oracle headroom. Preserve any test failure separately.
 
-## Phase 1 — Certified Self-Learning and Hardness Controls (Exp5866-Exp5869)
+**Deliverable:** `results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`  
+**Gate:** `hardness_surface_headroom_ready_score == 1.0` only when row integrity,
+group-safe splits, non-oracle control ceiling, relabel stability, owned tests, spec
+coverage, and adversarial verification pass.
 
-### Exp5866: Default-off adaptive-state pipeline shadow adapter
+## Phase 1 — Shortcut-resistant continuous self-learning (Exp5880-Exp5882)
 
-Behind the Exp5865 gate, add the smallest protocol-based adapter that mirrors
-verify/repair events into the requalified kernel. The default path and user-visible
-outputs must be byte-identical with the adapter off and on in shadow mode. Exact
-validators keep release authority; shadow state cannot change acceptance.
+### Exp5880 — Exact grounding-shortcut fixture
 
-**Deliverable:** `results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json`
+Extend the exact constraint corpus with paired concept-to-atom groundings that expose:
 
-### Exp5867: Prospective certified continuous self-learning
+- constraint-satisfaction shortcuts: a mapping satisfies the encoded clauses but not
+  the intended semantic task;
+- cognition shortcuts: biased frequencies permit a semantically inverted mapping;
+- one-to-one canonical grounding, soft/distributed grounding, shuffled grounding, and
+  no-information controls;
+- held grounding, held constraint family, relabel, and certificate groups.
 
-Run a chronological future-batch experiment through the shadow boundary. Compare
-compatible replay, all replay, no replay, shuffled replay, and reset-state controls.
-Every accepted update must carry an exact future-lift receipt and a non-forgetting
-certificate over protected prior cells. Regression, unsafe acceptance, capacity
-overflow, or restart mismatch forces rollback. GGUF weights remain immutable.
+**Deliverables:**  
+`results/experiment_5880_grounding_shortcut_fixture.json`  
+`results/experiment_5880_grounding_shortcut_fixture.rows.jsonl`
 
-**Deliverable:** `results/experiment_5867_prospective_certified_continuous_learning.json`
+**Gate:** `grounding_shortcut_fixture_ready_score == 1.0`.
 
-### Exp5868: Hardness-controlled constraint fixture
+### Exp5881 — One-to-one atom grounding A/B
 
-Construct solver-labeled proof-hard and proof-easy Tseitin families with
-near-matched clause density, matched width, satisfiable/unsatisfiable balance,
-candidate certificates, length controls, and proof-preserving variable relabels.
-Store every row and solver receipt. This is exact dataset infrastructure, not a model
-claim.
+On a chronological exact stream, compare a unified rule/constraint matrix with
+one-to-one atom grounding against soft/fuzzy distributed grounding, the frozen
+template baseline, shuffled grounding, and no learner. Measure shortcut false accepts,
+held-family recovery, forward transfer, recurrence, protected-prefix retention, and
+query cost. This is not a KAN retry.
 
-**Deliverable:** `results/experiment_5868_hardness_controlled_constraint_fixture.json`
+**Deliverable:** `results/experiment_5881_one_to_one_grounding_acquisition_ab.json`  
+**Gate:** `one_to_one_grounding_ready_score == 1.0`, zero unsafe accepts, positive
+group-bootstrap lower bounds over every preregistered learned control, and no
+hard/family regression.
 
-### Exp5869: Headroom, surface, and oracle-distinctness qualification
+### Exp5882 — Prospective shortcut-resistant continuous self-learning
 
-Audit the Exp5868 corpus before model compute. Quantify label balance, solver-conflict
-separation, density/length leakage, relabel equivalence, trivial surface-control
-performance, current exact-verifier circularity, and the remaining oracle-distinct
-headroom. Only a clean corpus with non-saturated controls can feed the representation
-branch.
+Run the accepted one-to-one mechanism through the provenance-correct Exp5856-Exp5858
+external-state lifecycle on sealed future batches. Use reduced exact feedback,
+versioned promotion, rejected-update buffering, compatible replay, per-update
+non-forgetting certificates, bounded memory, restart, and rollback. Compare frozen,
+random-query, soft-grounding, shuffled-grounding, full-oracle, and one-to-one
+reduced-oracle arms.
 
-**Deliverable:** `results/experiment_5869_hardness_surface_headroom_audit.json`
+**Deliverable:** `results/experiment_5882_shortcut_resistant_continuous_self_learning.json`  
+**Continuous self-learning requirement:** this is the milestone's mandatory FR-11
+task.  
+**Gate:** `shortcut_resistant_continuous_self_learning_ready_score == 1.0`, positive
+held-family and hard-case lower bounds, zero unsafe accepts, exact rollback/restart,
+bounded state, and no model-weight mutation.
 
-## Phase 2 — Layer-Dynamic Moat and Live ARC Generalization (Exp5870-Exp5874)
+## Phase 2 — Layer-dynamic current-model energy (Exp5883-Exp5885)
 
-### Exp5870: Pinned GGUF intermediate-layer surface preflight
+### Exp5883 — Public intermediate-layer GGUF surface preflight
 
-Inspect the exact installed llama.cpp/llama-cpp-python versions and public C/Python
-APIs. Using a mandated cached GGUF and embedded tokenizer, determine whether
-deterministic token-aligned intermediate states can be extracted twice with stable
-shape, layer identity, device, and checksum. No custom runtime fork,
-`AutoTokenizer`, transformer-native weight load, monkey patch, or undocumented
-activation hook is allowed. A clean unavailable result closes the branch and skips
-Exp5871-Exp5872.
-
-**Deliverable:** `results/experiment_5870_gguf_layer_surface_preflight.json`
-
-### Exp5871: Three-family layer-dynamic causal representations
-
-Only if Exp5869 and Exp5870 pass, run non-generative forward extraction over the
-exact paired CSP rows using:
+After Exp5879 qualifies headroom, inspect and execute only supported, pinned
+llama.cpp/llama-cpp-python APIs on:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Freeze layer selection and any HARP-style unembedding-SVD basis without test labels.
-Emit token-aligned cross-layer deltas and a complete row ledger. No generated answer,
-logprob reranker, or final-embedding reopening is permitted.
+Require deterministic token alignment, stable layer identity, reproducible tensor
+hashes, versioned model/runtime receipts, CUDA visibility, GPU layer offload, and
+nontrivial GPU utilization. Do not patch llama.cpp, use a private graph callback,
+load transformer weights, or reconstruct tokens with `AutoTokenizer`.
 
-**Deliverable:** `results/experiment_5871_three_family_layer_dynamics.json`
+**Deliverable:** `results/experiment_5883_gguf_intermediate_layer_surface_preflight.json`  
+**Gate:** `public_intermediate_layer_surface_ready_score == 1.0`. Unavailable is a
+valid terminal null and skips Exp5884-Exp5885.
 
-### Exp5872: Portable energy and camouflage audit
+### Exp5884 — Three-family layer-dynamic energy candidate
 
-Train only small interpretable scorers over cached Exp5871 features. Require held-model
-and held-constraint lower bounds over logistic, MLP, compact KAN, raw layer-delta,
-HARP projection, solver-conflict, density/length, identity, and Exp5853 final-embedding
-controls. Run claim flips, relabels, permutations, evaluator swaps, bounded feature
-perturbations, and no-information controls. The score never releases an answer.
+If the public surface exists, extract normalized cross-layer update statistics from
+exact correct/incorrect candidate pairs under constraint-present and
+constraint-ablated contexts. Compare layer differences, HARP-style
+unembedding-subspace projections where public data permit them, final embeddings,
+norm/length, token count, family identity, label permutation, and no-information
+controls. Freeze all preprocessing before held-family evaluation.
 
-**Deliverable:** `results/experiment_5872_layer_dynamic_portability_audit.json`
+**Deliverable:** `results/experiment_5884_three_family_layer_dynamic_energy.json`  
+**Gate:** `layer_dynamic_candidate_ready_score == 1.0`, positive lower bounds on
+held-model and held-constraint cells over every preregistered non-oracle control.
 
-### Exp5873: Game-blind causal recurrence controller
+### Exp5885 — Portability and camouflage audit
 
-Implement a default-off live-E3 component that stores bounded transition signatures,
-legal actions, exact frame-difference outcomes, contradiction evidence, and recurrence
-counts from the current episode. It may route legal proposals but cannot simulate
-future frames, use registry trajectories, inspect source, invoke adapters, or read
-offline BFS. Recorded-tape tests must prove determinism, capacity, reset, shuffle,
-and forbidden-channel behavior before a live run.
+Audit Exp5884 without new model fitting. Apply family holdout, evaluator swap,
+feature-space perturbation, layer-index jitter, norm/length matching, claim flips,
+identity masking, label/pair permutation, and CORVUS-inspired camouflage controls.
+Exact solvers remain release authority.
 
-**Deliverable:** `results/experiment_5873_arc_causal_recurrence_controller.json`
+**Deliverable:** `results/experiment_5885_layer_dynamic_portability_camouflage_audit.json`  
+**Gate:** `layer_dynamic_portability_ready_score == 1.0`. The same disqualified or
+nonportable outcome retires this bounded layer-dynamic route.
 
-### Exp5874: Matched live causal-recurrence A/B
+## Phase 3 — Lossless live memory and synthesis (Exp5886-Exp5889)
 
-Run the controller on the canonical adapter-disabled E3 path with real current local
-GGUF inference, explicit non-null seeds, GPU receipts, and matched action/model/token
-budgets. Compare current E3, recurrence memory, shuffled memory, and reset/no-memory
-controls across held-out public games without re-solving or updating the registry.
-Primary metrics are verified transition-prediction error, proposal support, no-op and
-invalid-action rate, evidence gained per action, and actions to first observed progress.
-Any incidental level result is descriptive only and must have
-`solve_provenance: live_agent_self_discovery`.
+### Exp5886 — Lossless programmatic E3 memory contract
 
-**Deliverable:** `results/experiment_5874_arc_live_causal_recurrence_ab.json`
+Add a default-off, game-blind, append-only typed tape to the submitted E3 path. The
+tape stores only the current live episode's action, exact observation, delta, score,
+outcome, and event boundary. Provide deterministic Read/Grep/structured-filter
+queries with bounded returned rows/bytes. Reset between episodes and games. No game
+source, banked solver, public walkthrough, adapter, offline BFS, or free-form summary
+may populate state.
 
-## Phase 3 — Conditional Hardware and Reconciliation (Exp5875-Exp5876)
+**Deliverable:** `results/experiment_5886_arc_programmatic_memory_contract.json`  
+**Gate:** `programmatic_memory_contract_ready_score == 1.0`.
 
-### Exp5875: Changed-route attached-board state-operation receipt
+### Exp5887 — Retrieval fidelity and causal necessity audit
 
-Run only after Exp5865 readiness. Recheck whether KV260, PolarFire, or GateMate has a
-changed authenticated route. If none changed, avoid repeated programming/probing and
-record no-change. If one changed, execute only bounded same-input state operations
-against the CPU reference, retain tight constraints and release logic classically, and
-report exact state/hash parity. No speed, power, energy, thermalization, TSU, Kona, or
-sovereignty claim is authorized.
+On agent-owned recorded live tapes, preregister generic query templates and evaluate
+exact event retrieval, pivotal-transition recall, query latency, returned-token cost,
+deletion utility, shuffled-index controls, truncated-history controls, and
+leave-one-game-out behavior. No held game's source or banked artifact may inform a
+query.
 
-**Deliverable:** `results/experiment_5875_attached_board_adaptive_state_receipt.json`
+**Deliverable:** `results/experiment_5887_arc_programmatic_memory_causal_audit.json`  
+**Gate:** `programmatic_memory_causal_ready_score == 1.0`, perfect exact-row fidelity,
+positive deletion utility lower bound, and no shuffled-index or game-identity shortcut.
 
-### Exp5876: Four-branch capstone and documentation reconciliation
+### Exp5888 — Adapter-disabled live programmatic-memory A/B
 
-Replay every structured gate, run fresh adversarial verification, recompute load-bearing
-metrics, classify each task independently, and apply same-verdict retirement rules.
-Reconcile internal OpenSpec, traceability, status, changelog, and conductor records.
-External publication remains operator-only.
+Run current E3, lossless programmatic memory, shuffled index, and bounded recent-window
+controls under identical action, model-call, token, and wall-time budgets. Use cached
+mandated SOTA GGUFs with verified GPU offload. Precheck the solve registry, disable
+all per-game adapters and prior-game artifacts, reset the tape, and report evidence
+efficiency/proposal support before descriptive level outcomes.
 
-**Deliverable:** `results/experiment_5876_v522_capstone_reconciliation.json`
+**Deliverable:** `results/experiment_5888_arc_programmatic_memory_live_ab.json`  
+**ARC provenance:** `solve_provenance=live_agent_self_discovery`; no level solve is a
+target or headline, and the registry must remain unchanged.  
+**Gate:** `programmatic_memory_live_ready_score == 1.0` only for a preregistered
+positive lower bound over current E3 with no budget, provenance, or source violation.
+A clean repeated null retires this mechanism.
+
+### Exp5889 — Milestone reconciliation
+
+Aggregate every activated `.523` artifact and classify the continuous-learning,
+representation, and ARC branches independently. A valid negative or gate-skip is a
+scientific outcome, not a capstone failure. Reconcile internal specs, traceability,
+status, changelog, and conductor evidence without modifying the north star or
+publishing externally.
+
+**Deliverable:** `results/experiment_5889_v523_capstone_reconciliation.json`  
+**Success:** exact task matrix, terminal branch decisions, no outcome laundering,
+hardware boundary preserved, and a falsifiable recommendation for `.524`.
 
 ## Dependency graph
 
 ```text
-Exp5863 transition ───────────────────────────────────────────────┐
-Exp5864 source ingestion ────────────────────────────────────────┤
-                                                                 │
-Exp5856-5859 ── Exp5865 kernel requalification                   │
-                         │                                       │
-                         ├── Exp5866 shadow adapter ── Exp5867 CSL
-                         └─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ Exp5875 hardware
-                                                                 │
-Exp5868 exact CSP fixture ── Exp5869 headroom audit               │
-                                      │                           │
-Exp5870 GGUF layer preflight ─────────┤                           │
-                                      ▼                           │
-                             Exp5871 layer dynamics               │
-                                      │                           │
-                                      ▼                           │
-                             Exp5872 portability audit            │
-                                                                 │
-Exp5873 ARC recurrence controller ── Exp5874 live matched A/B     │
-                                                                 │
-all terminal outcomes ────────────────────────────────────────────┤
-                                                                 ▼
-                                                        Exp5876 capstone
+Exp5877 transition ───────────────────────────────────────────────┐
+Exp5878 source receipt ───────────────────────────────────────────┤
+                                                                  │
+Exp5868 + Exp5869 ──> Exp5879 headroom taxonomy                   │
+                           ├──> Exp5880 shortcut fixture           │
+                           │        └──> Exp5881 grounding A/B     │
+                           │                  └──> Exp5882 CSL     │
+                           │                                      │
+                           └──> Exp5883 layer API preflight        │
+                                    └──> Exp5884 layer dynamics   │
+                                              └──> Exp5885 audit  │
+                                                                  ├──> Exp5889
+Exp5726/5766/5860 evidence ──> Exp5886 memory contract             │
+                                     └──> Exp5887 causal audit    │
+                                               └──> Exp5888 live  │
+                                                                  │
+All terminal artifacts, including gated skips/nulls ──────────────┘
 ```
 
-Structured conductor gates:
+Structured gates are conjunctive and live in `research-roadmap-next.yaml`, so a failed
+prerequisite skips downstream agent calls before synthesis cost is incurred.
 
-- Exp5866 requires `Exp5865.adaptive_state_microkernel_requalified_score == 1.0`.
-- Exp5867 requires `Exp5866.adaptive_state_shadow_adapter_ready_score == 1.0`.
-- Exp5869 requires `Exp5868.hardness_controlled_fixture_ready_score == 1.0`.
-- Exp5871 requires both
-  `Exp5869.hardness_surface_headroom_ready_score == 1.0` and
-  `Exp5870.gguf_intermediate_layer_surface_ready_score == 1.0`.
-- Exp5872 requires `Exp5871.layer_dynamic_representation_ready_score == 1.0`.
-- Exp5874 requires `Exp5873.causal_recurrence_controller_ready_score == 1.0`.
-- Exp5875 requires `Exp5865.adaptive_state_microkernel_requalified_score == 1.0`;
-  board-route change is checked inside the task because it is an external precondition,
-  not an upstream artifact field.
+## Model and inference policy
 
-## Prior-failure discipline
+Every conductor task uses the current repository default:
+`agent_type: codex`, `model: gpt-5.5`. LLM experiments have explicit `MODEL_SPECS`:
 
-| New task | Prior evidence | Material change |
+| Experiment | Required local models | Headline boundary |
 |---|---|---|
-| Exp5865 | Exp5859 `blocked: adaptive_state_microkernel_conformance_incomplete` | Reproduces and attributes the sole failing global-suite seam; preserves already-passing ABI semantics. Same verdict retires requalification. |
-| Exp5866 | Exp5775/Exp5789 `blocked_gate_check_failed` | Clean lifecycle, replay, reduced-oracle, and requalified-kernel artifacts now exist before adapter work. |
-| Exp5867 | Exp5709 and Exp5773/Exp5787 `blocked_gate_check_failed` | Uses the clean exact stream and real shadow adapter instead of missing or parse-unqualified generated streams. |
-| Exp5871 | Exp5200 absolute hidden-state negative; Exp5853 final-embedding disqualification | Cross-layer dynamics and unembedding subspaces are distinct from absolute/final embeddings and are feasibility-gated. |
-| Exp5872 | Exp5853 disqualification | Adds held-family lower bounds, HARP/ICR features, hardness controls, and CORVUS-style perturbations; same control-surviving result retires the layer route. |
-| Exp5873/Exp5874 | Exp5860 flagged `complete_null` | Replaces active observation with observed-transition recurrence, real model receipts, non-null seeds, and no imagined rollouts. A clean repeated null retires recurrence. |
-| Exp5875 | Exp5861 no-change | Requires a requalified kernel and changed authenticated route; unchanged state is recorded without repeated probing and same verdict retires this mapping attempt. |
+| Exp5883 | all three mandated GGUF families | Public API and GPU-offload feasibility only |
+| Exp5884 | all three mandated GGUF families | Held-model and held-constraint layer dynamics |
+| Exp5888 | Qwen3.6-35B-A3B plus Gemma-4-26B-A4B | Live ARC matched A/B |
 
-No task reuses a retired experiment ID. No `requires` chain references a retired
-upstream ID.
+Legacy Qwen3.5-0.8B and Gemma-4-E4B may be used only for CPU smoke tests and never for
+headline metrics. Missing cached flagship weights, absent CUDA, missing GPU-offload
+support, or CPU-hidden execution produces an honest blocked artifact. GGUFs are loaded
+through llama.cpp with their embedded tokenizers; `AutoTokenizer` is forbidden.
 
-## Model policy
+## Hardware requirements and boundary
 
-Every LLM-using experiment declares `MODEL_SPECS` with at least one mandated current
-local GGUF:
+| Resource | Tasks | Requirement |
+|---|---|---|
+| CPU/RAM/disk | Exp5877-Exp5882, Exp5885-Exp5887, Exp5889 | Existing host; deterministic exact solvers, row artifacts, replay, and bounded state |
+| Dual RTX 3090 CUDA | Exp5883, Exp5884, Exp5888 | Cached GGUF paths, healthy CUDA, GPU-layer offload, utilization/VRAM receipts, no concurrent protected training process |
+| KV260 | No `.523` command | Keep prior programmed-image POC frozen; no latency or speedup claim |
+| PolarFire SoC | No `.523` command | Keep prior physical-workload receipt frozen; no new dispatch without changed authenticated state |
+| GateMate | No `.523` command | Physical/JTAG IDCODE block remains; operator must change cable/port/power before another probe |
+| Extropic TSU / Kona | None available | Public context only; no authenticated execution path |
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF` — flagship MoE
-- `unsloth/gemma-4-31B-it-GGUF` — flagship dense
-- `unsloth/gemma-4-26B-A4B-it-GGUF` — middle MoE
+Exp5882 emits a backend-neutral hardware mapping contract for accepted state operations:
+fixed-width atom IDs, bounded versioned records, exact rollback, deterministic hashes,
+and update-cost accounting. It does not claim board execution. The new pipelined
+p-computer paper is future design context only.
 
-Exp5871 uses all three for headline representation rows. Exp5870 uses the cached
-Qwen flagship for the runtime feasibility receipt. Exp5874 uses the flagship MoE and
-flagship dense families for live and replication rows. GGUF files are loaded by local
-path through llama.cpp with their embedded tokenizers. `AutoTokenizer` on a GGUF repo,
-mock inference, CPU smoke presented as GPU evidence, and legacy small-model headline
-rows are prohibited.
+## Prior-failure and retirement discipline
 
-## Hardware requirements
+The YAML carries full `prior_failures` blocks for every matching scope:
 
-| Experiment | Compute and access | Memory/storage | Estimated time | Hard boundary |
-|---|---|---:|---:|---|
-| 5863-5864 | CPU, network for 5864 | 8 GB RAM | 1-3 h each | No external writes except the internal source ledger; no publication |
-| 5865-5867 | CPU, Rust/PyO3 toolchain | 16 GB RAM, 10 GB free | 2-6 h each | Preserve passing ABI; no GGUF weight mutation |
-| 5868-5869 | CPU, PySAT/Z3/current exact solvers | 16 GB RAM | 2-5 h each | Solver is label authority; conflicts are a covariate, not truth confidence |
-| 5870 | Dual RTX 3090 llama.cpp stack, one cached flagship GGUF | 24 GB VRAM aggregate minimum, 40 GB model cache | 1-3 h | Public/pinned runtime API only; unavailable is terminal |
-| 5871 | Dual RTX 3090, all three cached SOTA GGUFs | 48 GB total VRAM, 120 GB cache/results headroom | 4-12 h | Non-generative forward extraction; embedded tokenizers |
-| 5872 | CPU/GPU for small scorers | 16 GB RAM, optional 8 GB VRAM | 3-8 h | No release claim; held-family and perturbation controls |
-| 5873 | CPU unit/E2E harness | 16 GB RAM | 3-6 h | Default-off; no source, adapter, BFS, registry replay, or simulator |
-| 5874 | Live ARC SDK/network plus dual RTX 3090 and cached Qwen/Gemma | 48 GB total VRAM | 4-12 h | Canonical E3 path, matched budgets, non-null seeds, no registry update |
-| 5875 | KV260 SSH, PolarFire/GateMate only if authenticated route changed; Rust/board toolchains | 16 GB RAM | 0.5-8 h | Never touch KV260 `/dev/mmcblk*`; no unchanged probe or performance claim |
-| 5876 | CPU aggregation | 16 GB RAM | 2-5 h | No new science and no external publication |
+- Exp5879 addresses Exp5869 with a changed oracle/nuisance taxonomy.
+- Exp5881-Exp5882 replace KAN/unready-stream attempts with exact one-to-one grounding
+  and a ready external-state lifecycle.
+- Exp5883-Exp5885 address Exp5200/Exp5853 through a distinct intermediate-layer
+  surface and retain retirement on the same verdict.
+- Exp5886-Exp5888 address the compact-ledger, leave-one-game-out, and active-observer
+  nulls with lossless episode-local programmatic retrieval.
+- Exp5889 addresses the blocked Exp5862 capstone by classifying independent branches
+  rather than demanding all hypotheses be positive.
 
-Attached-board state at planning time:
+Every entry includes `retire_if_same_verdict: true`. No task reuses a retired ID or
+depends on a retired upstream ID. No operator override is used to reopen scientific
+scope.
 
-- **KV260:** programmed-image sovereignty POC exists; access is SSH-only. No raw
-  block-device command is allowed.
-- **PolarFire:** prior physical workload evidence exists, but no current adaptive-state
-  mapping is authenticated.
-- **GateMate:** IDCODE/toolchain path remains blocked and opportunistic.
-- **Extropic XTR-0/Z1 and Kona:** no authenticated local execution route or public
-  reproducible weights; they are references only.
+## Milestone success criteria
 
-## Explicitly deferred or prohibited
+The milestone succeeds operationally when all activated tasks reach honest terminal
+artifacts and required documentation reconciles. Scientific branches remain
+independent:
 
-- Reopening final-embedding, generated-text/logprob PHASE D, spilled-energy, finite-ID
-  answer transport, grammar-only, tempering, or two-axis clamping mechanisms.
-- Loading GGUF repos through `AutoTokenizer`, transformers, or an untracked activation
-  hook.
-- Training or mutating Qwen/Gemma weights as continuous self-learning.
-- Public ARC game re-solves, source inspection, offline ground-truth BFS, per-game
-  adapters, registry trajectory replay, or solver credit from a development proxy.
-- A new FPGA bitstream redesign, unchanged board probing, or speed/power/energy claims
-  without authenticated physical execution and matched CPU receipts.
-- TSU or Kona execution claims.
-- External arXiv, leaderboard, email, or publication action; those remain
-  operator-only.
+1. **Continuous self-learning:** shortcut-resistant prospective lift has positive
+   held-family/hard-case lower bounds, zero unsafe accepts, exact rollback/restart,
+   bounded state, and frozen model weights.
+2. **Layer-dynamic energy:** the public GGUF surface exists and a candidate survives
+   held-model/held-constraint, nuisance, identity, permutation, and camouflage
+   controls. A clean unavailable/null result closes the route without failing the
+   milestone.
+3. **ARC generalization:** lossless programmatic memory improves a preregistered live
+   evidence-efficiency or proposal-support metric under equal budgets, with adapters
+   disabled and no registry credit. A clean null retires the mechanism.
+4. **Evidence integrity:** solver telemetry remains explicitly oracle-derived; exact
+   release authority, provenance, model policy, and protected files are preserved.
+
+## Explicitly out of scope
+
+- rerunning Exp5865 or rebuilding the retired adaptive-state kernel;
+- executing or claiming Exp5866/Exp5867 as completed upstreams;
+- final-embedding probes, PHASE D external text/logit scorers, generated-answer
+  repair, finite-ID answer transport, self-verification, or two-axis tempering;
+- KAN continual-learning retries after Exp5749's matched negative residual;
+- active observation, reactive filtering, lookahead, candidate-coverage fallback, or
+  another public ARC level solve;
+- source inspection, offline ground-truth BFS, hand GameAdapters, per-game memory, or
+  prior-game log leakage;
+- private llama.cpp activation hooks, transformer-native weight loading, or
+  `AutoTokenizer` for GGUFs;
+- FPGA redesign, unchanged board probes, TSU/Kona execution, or hardware speed,
+  energy, power, thermalization, and convergence claims;
+- leaderboard submission, public paper edits, release, or push.

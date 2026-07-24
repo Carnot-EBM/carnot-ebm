@@ -31177,3 +31177,125 @@ are new relative to the V521 block or materially sharpen its next-step controls.
   no-change receipt rather than another probe.
 
 <!-- V522-PLANNER-REFRESH-20260723-END -->
+
+## V523 Planner Refresh - 20260724
+
+Planning-time sweep for the milestone after terminal `.522`. The search covered
+2025-2026 arXiv work on energy-based verification and reasoning, neural constraint
+satisfaction, Ising/CSP hardware, hallucination detection, KANs, constrained
+generation, continual/online learning, and live-agent memory. It also rechecked
+OpenReview, Hugging Face Papers, direct Semantic Scholar citation routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), GitHub trending and repository discovery,
+Extropic's writing index, and Logical Intelligence's Kona/Aleph pages. Because the
+V522 block was written on 2026-07-23, this is an incremental one-day delta plus a
+deduplicated check for overlooked 2025-2026 sources.
+
+### New actionable deltas
+
+- **Differentiable Logic Programming to Mitigate Reasoning Shortcuts in
+  Neurosymbolic Systems** - arXiv:2607.21185,
+  https://arxiv.org/abs/2607.21185; submitted 2026-07-23 and published in the ICLP
+  2026 proceedings. The paper distinguishes constraint-satisfaction shortcuts from
+  cognition shortcuts, unifies rules and constraints in one matrix semantics, and
+  reports that one-to-one grounding of neural outputs to logical atoms reduces both
+  shortcut types relative to soft probability groundings. Carnot hook: extend the
+  exact hardness-controlled fixture with semantically wrong-but-constraint-satisfying
+  and biased-grounding controls, then compare one-to-one atom grounding with
+  distributed/fuzzy grounding under identical chronological events. Exact solvers
+  own labels and promotion; the learned sidecar must show positive held-family lower
+  bounds, zero unsafe accepts, protected-prefix retention, bounded state, quarantine,
+  and rollback before continuous self-learning receives credit.
+- **PRO-LONG: Programmatic Memory Enables Long-Horizon Reasoning** -
+  arXiv:2607.20064v2, https://arxiv.org/abs/2607.20064; revised 2026-07-23, with the
+  public implementation at https://github.com/alexisfox7/PRO-LONG. PRO-LONG keeps a
+  complete structured interaction log and lets a coding agent retrieve evidence with
+  Read/Grep/programmatic queries instead of compressing history into lossy summaries.
+  Its ARC-AGI-3 public-set numbers are not transferable evidence for Carnot, but the
+  mechanism directly addresses the post-Exp5860 residual: active action selection was
+  null while lossless access to the agent's own earlier observations was not tested.
+  Carnot hook: add a default-off, append-only, agent-owned programmatic tape index to
+  the submitted E3 path; first require exact retrieval fidelity, deletion utility,
+  shuffled-index and bounded-query controls, then run a budget-matched
+  adapter-disabled live A/B. This is a generalization task, not a public-game re-solve;
+  source inspection, offline BFS, per-game adapters, prior-game leakage, and registry
+  credit remain forbidden.
+
+### Guarded findings and non-promotions
+
+- **A scalable and resource-efficient pipelined p-computer for probabilistic Ising
+  machines** - arXiv:2607.21077, https://arxiv.org/abs/2607.21077; submitted
+  2026-07-23. The paper reports a deeply pipelined FPGA p-bit update path and
+  bandwidth-aware on-chip storage for dense fully connected Ising workloads, with
+  512-2048 p-bit configurations at coefficient precisions from 16 to 2 bits. This is
+  useful future hardware context, but it does not reopen an RTL task in `.523`:
+  Exp5865 retired adaptive-kernel requalification behind unrelated global-suite debt,
+  Exp5861 found no changed authenticated board state-operation route, and Carnot's
+  hardware policy forbids redesign or speedup claims without a board-executed,
+  same-input reference receipt. Record the source now; revisit only after a ready
+  bounded operation and an authenticated changed route exist.
+- **A Dynamic Framework for Grid Adaptation in Kolmogorov-Arnold Networks** -
+  arXiv:2601.18672, https://arxiv.org/abs/2601.18672; revised 2026-04-22 and accepted
+  at IJCNN 2026. Curvature-based importance density functions are a plausible
+  alternative to input-density knot placement, but Carnot does not promote them:
+  Exp5749 found a negative render- and parameter-matched KAN mechanism residual,
+  Exp5750 was correctly gate-blocked, and Exp5858's exact structural memory already
+  reached its preregistered prospective target without KAN mutation. A new paper alone
+  is not evidence that the locally retired KAN mechanism has regained headroom.
+- **Test-Time Learning with an Evolving Library** - arXiv:2605.14477,
+  https://arxiv.org/abs/2605.14477, and **Beyond Buffer Limits: Energy-Based Data
+  Reassembly for Continual Learning** - OpenReview ICML 2026 forum
+  `cbicSAXMWQ`. Both support bounded external state and memory-efficient replay, but
+  neither supersedes Carnot's stronger exact-authority lifecycle: Exp5857 achieved
+  qualified signature-compatible replay with zero unsafe transfer, and Exp5858
+  retained the full-oracle lift with 1.67% of its exact-query budget. Unsupervised
+  reflective skill promotion and patch-reassembled examples are therefore controls or
+  watch items, not `.523` experiment mechanisms.
+- **HalluScope** - arXiv:2607.21105, surfaced in the 2026-07-24 arXiv/Hugging Face
+  pass. Its multimodal diagnostic taxonomy and trained feedback model do not fit the
+  current text/constraint exact-validator surface and do not reopen generated-answer
+  repair, self-verification, or external text-scoring lanes.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the public citation-list endpoint returned 29 EBT citing
+  records and eight ARM-EBM citing records on 2026-07-24. The newest EBT item remained
+  Solver-Hard (`2607.17047`), already embodied by Exp5868; the ARM-EBM trail remained
+  Path-Measure Dynamics, Distributional EBM, LoopUS, safe distillation, ontology,
+  graph-energy, false-first-step planning, and energy-based Gibbs alignment. Direct
+  metadata requests were intermittently rate-limited (`HTTP 429`), so counts are a
+  dated receipt rather than a stable claim.
+- **OpenReview / Hugging Face Papers:** OpenReview searches surfaced the data-reassembly
+  item above plus already-indexed Energy-Based Constraint Networks, Distributional EBM,
+  and frozen-LLM energy-world-model work. Hugging Face surfaced HalluScope and repeated
+  already-indexed HalluGuard, Spilled Energy, internal-state, and verifier papers. No
+  source supersedes exact validators or the immutable local GGUF boundary.
+- **GitHub:** the PRO-LONG implementation is the only new repository with a direct
+  Carnot mechanism hook. Its relevant idea is the Read/Grep/programmatic search over a
+  lossless log; `.523` should implement the minimal compatible interface locally rather
+  than import its closed-provider/Docker harness. GitHub Trending and recent EBM, CSP,
+  Ising, and KAN searches exposed no maintained dependency that replaces Carnot's
+  validators, E3 entrypoint, sampler backends, or KAN controls.
+- **Extropic:** the official writing index still ends at the October 2025
+  X0/XTR-0/TSU material. There is no authenticated local XTR-0/Z1 route, so no TSU
+  execution, power, energy, convergence, thermalization, or speedup claim is available.
+- **Logical Intelligence:** Kona 1.0 and the June 2026 Aleph/formal-verification pages
+  continue to describe a constraint-enforcement layer beneath LLM interfaces. Public
+  weights, an authenticated endpoint, and a reproducible local comparator remain
+  unavailable; Kona stays architecture context rather than experiment evidence.
+
+### V523 planning impact
+
+- Repair the Exp5869 audit taxonomy without changing the immutable 84-row fixture:
+  nuisance surface controls and oracle-derived solver telemetry must not be conflated.
+- Stress the positive reduced-oracle self-learning result against shortcut groundings,
+  using the new ICLP 2026 one-to-one atom mechanism and exact future validation.
+- Give the live adapter-disabled E3 path a lossless programmatic-memory experiment
+  after active observation's clean null. Memory retrieval, not another probing,
+  lookahead, or public-solve attempt, is the changed mechanism.
+- Preserve V522's hard feasibility gate for intermediate GGUF layer states. Layer
+  dynamics run only if the pinned llama.cpp surface is public, deterministic,
+  token-aligned, GPU-offloaded, and reproducible.
+- Keep attached boards and the pipelined p-computer as conditional hardware context.
+  No unchanged board probe, RTL redesign, or performance claim belongs in `.523`.
+
+<!-- V523-PLANNER-REFRESH-20260724-END -->
