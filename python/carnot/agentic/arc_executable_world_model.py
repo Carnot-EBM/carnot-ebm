@@ -2031,7 +2031,14 @@ def _model_candidates(grid: np.ndarray) -> list[dict]:
 
         cc = Counter(int(v) for v in grid.flatten().tolist())
         comps.sort(key=lambda c: c[2] * (1.0 + 1.0 / (1 + cc.get(c[3], 0))), reverse=True)
-        for cy, cx, _a, _c in comps[:32]:
+        # Defensive unpack (`*_` absorbs any extra trailing fields): `_components_detailed` was widened
+        # from a 4-tuple (cy, cx, area, color) to a 5-tuple (+ is_grid_fallback) in the
+        # GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS fix (commit 2f0760307), which updated the
+        # arc_graph_explore consumer defensively but MISSED this one -- a rigid `cy, cx, _a, _c` unpack then
+        # crashed plan_in_model on ANY grid with components (e.g. tu93's 65), silently disabling the entire
+        # world-model planning tier for those games. `*_` handles both the 4-tuple (test doubles monkeypatch
+        # the old shape) and the 5-tuple (real) forms. (REQ-ARC-WMTE-5841 regression fix.)
+        for cy, cx, _a, _c, *_ in comps[:32]:
             cands.append({"action": 6, "data": {"x": int(cx), "y": int(cy)}})
     return cands
 
