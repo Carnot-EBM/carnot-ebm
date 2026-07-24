@@ -1,13 +1,13 @@
-milestone: "2026.07.522"
-milestone_title: "Certified Adaptive Memory, Layer-Dynamic Energy, and Live Causal Recurrence"
+milestone: "2026.07.523"
+milestone_title: "Shortcut-Resistant Self-Learning, Layer-Dynamic Energy, and Lossless Live Memory"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp5863-transition-v522
-    milestone: "2026.07.522"
-    title: "Exact terminal-boundary handoff from .521 into .522"
+  - id: exp5877-transition-v523
+    milestone: "2026.07.523"
+    title: "Exact terminal-boundary handoff from .522 into .523"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_5863_transition_v522.json
+    deliverable: results/experiment_5877_transition_v523.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 100
@@ -15,7 +15,7 @@ tasks:
     requires_gpu: false
     prompt: |
       CONTEXT:
-      Milestone 2026.07.521 is terminal. Exp5849-Exp5852, Exp5856-Exp5858 completed; Exp5853 was scientifically disqualified; Exp5854-Exp5855 gate-skipped; Exp5859 was blocked by repository-wide pytest exit 2 despite focused parity passing; Exp5860 is a methodology-flagged null; Exp5861 is no-change; Exp5862 is blocked. Historical artifacts and adversarial stamps are immutable. The next collision-free range is Exp5863-Exp5876. Today is {date}.
+      Milestone 2026.07.522 is terminal after seven activated tasks, Exp5863-Exp5869. Exp5863 completed the transition; Exp5864 found no accepted source delta; Exp5865 retired adaptive-kernel requalification behind unrelated global-suite debt; Exp5866 never emitted an artifact because its upstream retired; Exp5867 gate-blocked; Exp5868 produced the ready exact fixture; Exp5869 emitted useful audit metrics but remained blocked. The prior proposal mentioned Exp5870-Exp5876, but those tasks were never activated and are not evidence. Historical artifacts and adversarial stamps are immutable. The next range is Exp5877-Exp5889. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -25,85 +25,45 @@ tasks:
       - {project_root}/research-complete.yaml
       - {project_root}/ops/conductor-log.md
       - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/results/experiment_5849_transition_v521.json
-      - {project_root}/results/experiment_5850_v521_source_delta_ingestion.json
-      - {project_root}/results/experiment_5851_deterministic_replay_provenance_contract.json
-      - {project_root}/results/experiment_5852_three_family_paired_embeddings.json
-      - {project_root}/results/experiment_5853_paired_embedding_integrity_audit.json
-      - {project_root}/results/experiment_5854_portable_comparative_energy_controls.json
-      - {project_root}/results/experiment_5855_exact_release_shadow_routing.json
-      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.json
-      - {project_root}/results/experiment_5857_clean_transfer_selective_replay.json
-      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
-      - {project_root}/results/experiment_5859_adaptive_state_microkernel_parity.json
-      - {project_root}/results/experiment_5860_live_active_observation_ab.json
-      - {project_root}/results/experiment_5861_attached_board_state_receipts.json
-      - {project_root}/results/experiment_5862_v521_capstone_reconciliation.json
+      - {project_root}/results/experiment_5863_transition_v522.json
+      - {project_root}/results/experiment_5864_v522_source_delta_ingestion.json
+      - {project_root}/results/experiment_5865_adaptive_state_kernel_requalification.json
+      - {project_root}/results/experiment_5867_prospective_certified_continuous_learning.json
+      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.json
+      - {project_root}/results/experiment_5869_hardness_surface_headroom_audit.json
       - {project_root}/scripts/evidence_index_collision_preflight.py
       - {project_root}/scripts/in_process_doc_reconcile.py
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Archive the exact terminal `.521` identities without laundering blocked, disqualified, gate-skipped, flagged, or no-change evidence; append `.521` to completion history exactly once if absent; prove Exp5863-Exp5876 collision-free; and write results/experiment_5863_transition_v522.json.
+      Archive exactly the activated `.522` identities without laundering retired, absent, blocked, or ready outcomes; append `.522` to research-complete.yaml exactly once if absent; prove Exp5877-Exp5889 collision-free; and write results/experiment_5877_transition_v523.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: parse both roadmaps; hash completion history, conductor log, exclusion manifest, all declared `.521` deliverables that exist, and protected files; verify atomic output, disk/RAM, and live verifier availability. Record missing deliverables explicitly.
-      1. Add or extend REQ-* reporting requirements and focused tests before implementation. Resolve identities by `(milestone, task_id, declared_deliverable)`, never numeric prefix alone.
-      2. Run fresh adversarial verification on every present `.521` deliverable. Preserve Exp5853 disqualification, Exp5854-Exp5855 skips, Exp5859 block, Exp5860 flags, Exp5861 no-change, and Exp5862 block exactly.
-      3. Append milestone `.521` to research-complete.yaml exactly once only if its exact milestone block is absent. Store each activated task once; do not amplify existing duplicate history.
-      4. Scan active/next roadmaps, completion history, proposals, exclusion manifest, results, source, tests, and prior allocation receipts for Exp5863-Exp5876. Require bare `next_range_collision_count=0`.
-      5. Reconcile only transition-owned internal specs, traceability, ops/status.md, ops/changelog.md, and ops/conductor-log.md. Leave research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, and protected user files unchanged.
-      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, exact_task_and_deliverable_matrix, adversarial_verifier_receipts, outcome_classification, blocked_disqualified_skipped_flagged_and_no_change_preserved, research_complete_append_count, duplicate_history_amplification_count, next_task_range, next_range_collision_count, docs_reconciled, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal state distinguishes an exact handoff from a bootstrap artifact."
-         preconditions_checked:
-           principle: "Hashes, resources, verifier, outputs, and exact identities prevent ambiguous archival."
-         milestone_transition:
-           principle: "Explicit source and destination milestones prevent prefix aliasing."
-         exact_task_and_deliverable_matrix:
-           principle: "Declared task IDs and paths are the only evidence index."
-         adversarial_verifier_receipts:
-           principle: "Fresh verifier output preserves current artifact-quality authority."
-         outcome_classification:
-           principle: "Disjoint terminal classes prevent negative or missing work becoming success."
-         blocked_disqualified_skipped_flagged_and_no_change_preserved:
-           principle: "True proves the handoff did not launder the terminal `.521` evidence."
-         research_complete_append_count:
-           principle: "An exact zero-or-one count prevents a missing or duplicate milestone append."
-         duplicate_history_amplification_count:
-           principle: "Must be bare zero; existing duplicate history cannot be multiplied."
-         next_task_range:
-           principle: "A declared finite interval makes allocation auditable."
-         next_range_collision_count:
-           principle: "Only bare zero authorizes Exp5863-Exp5876."
-         docs_reconciled:
-           principle: "Internal specifications and operations summaries must match archived evidence."
-         protected_files_unchanged:
-           principle: "Operator-curated and user-owned files remain byte-identical."
-         duration_s:
-           principle: "Measured wall time exposes bootstrap-only work."
-         inference_substrate:
-           principle: "`aggregation_from_upstream_artifacts` declares archival rather than model inference."
-         field_provenance:
-           principle: "Every field traces to exact paths, hashes, commands, or roadmap records."
-         test_commands:
-           principle: "Commands document identity, append, verifier, collision, and protection checks."
-         test_exit_codes:
-           principle: "Exit codes prevent failed owned checks becoming success."
-         reproducibility_checksum:
-           principle: "A checksum detects ledger, artifact, or allocation drift."
-         honest_verdict:
-           principle: "A `complete:` or `blocked:` prefix makes the handoff terminal."
+      0. PRECONDITIONS: parse both roadmaps; hash completion history, conductor log, exclusion manifest, protected files, and every declared activated `.522` deliverable that exists. Verify disk/RAM, atomic output, and adversarial-verifier availability. Record Exp5866 as an activated task with a missing deliverable caused by upstream retirement, not as success.
+      1. Add or extend REQ-* reporting requirements and focused tests before implementation. Resolve evidence by `(milestone, task_id, declared_deliverable)`, never by numeric prefix.
+      2. Run fresh adversarial verification on every present `.522` artifact. Preserve Exp5865 retirement, Exp5866 absence, Exp5867 gate block, Exp5868 readiness, and Exp5869 block exactly.
+      3. Append `.522` to research-complete.yaml exactly once only if its exact milestone block is absent. Store only the seven activated tasks; label Exp5870-Exp5876 unactivated proposal IDs and do not append them.
+      4. Scan active/next roadmaps, completion history, proposals, exclusion manifest, results, source, tests, and allocation receipts for Exp5877-Exp5889. Require bare `next_range_collision_count=0`.
+      5. Reconcile only transition-owned internal specs, _bmad/traceability.md, ops/status.md, ops/changelog.md, and ops/conductor-log.md. Leave research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, and protected user files unchanged.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, activated_task_and_deliverable_matrix, unactivated_proposal_id_receipt, adversarial_verifier_receipts, outcome_classification, retired_missing_blocked_and_ready_preserved, research_complete_append_count, duplicate_history_amplification_count, next_task_range, next_range_collision_count, docs_reconciled, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status principle: terminal state distinguishes exact archival from bootstrap work.
+         activated_task_and_deliverable_matrix principle: only activated task IDs and declared paths are evidence.
+         unactivated_proposal_id_receipt principle: prior prose cannot become completed work.
+         outcome_classification principle: disjoint terminal classes prevent laundering.
+         research_complete_append_count principle: exact zero-or-one prevents duplicate history.
+         next_range_collision_count principle: only bare zero authorizes the range.
+         inference_substrate principle: use `aggregation_from_upstream_artifacts`.
+         honest_verdict principle: use a `complete:` or `blocked:` prefix.
       7. Run focused unit/coverage, YAML parse, exact-path/hash, duplicate-history, adversarial-verifier, alias, exclusion-manifest, range-collision, protected-file, reconciliation, spec-coverage, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5864-v522-source-delta-ingestion
-    milestone: "2026.07.522"
-    title: "Dated evidence refresh after the V522 planner marker"
+  - id: exp5878-v523-source-delta-ingestion
+    milestone: "2026.07.523"
+    title: "Dated evidence refresh after the V523 planner marker"
     operator_override: "2026-05-29 operator directive (standing): recurring source-scope audit false-positive; this task names retired scopes only to exclude them and cannot execute or reopen those mechanisms."
     priority: high
     track: research
-    deliverable: results/experiment_5864_v522_source_delta_ingestion.json
+    deliverable: results/experiment_5878_v523_source_delta_ingestion.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 30
@@ -111,7 +71,7 @@ tasks:
     requires_gpu: false
     prompt: |
       CONTEXT:
-      The planning sweep is sealed at `V522-PLANNER-REFRESH-20260723-END` in research-references.md. This SOTA-ingestion task may accept only newer, primary-source, non-duplicate evidence and may sharpen controls inside Exp5865-Exp5875 without changing identities, structured gates, authority, model policy, or retired scopes. Zero accepted findings is complete. Today is {date}.
+      The planning sweep is sealed at `V523-PLANNER-REFRESH-20260724-END` in research-references.md. It accepted arXiv:2607.21185 for shortcut-resistant one-to-one grounding and arXiv:2607.20064v2 for lossless programmatic ARC memory. It recorded arXiv:2607.21077, curvature-adaptive KANs, EvoLib, data reassembly, HalluScope, Extropic, and Kona as guarded or watch-only findings. This task may accept only newer primary-source evidence and may sharpen controls inside existing `.523` tasks without changing task identities, gates, authority, model policy, or retired scopes. Zero accepted findings is complete. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -123,294 +83,244 @@ tasks:
       - {project_root}/research-roadmap-next.yaml
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_5850_v521_source_delta_ingestion.json
+      - {project_root}/results/experiment_5864_v522_source_delta_ingestion.json
       - {project_root}/scripts/sweep_clusters.py
       - {project_root}/scripts/sweep_semscholar.py
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Search the bounded post-marker window through reliable low-concurrency sources, classify every receipt, append only actionable non-duplicate deltas to research-references.md, update research-studying.md only for genuinely ingested work, and write results/experiment_5864_v522_source_delta_ingestion.json.
+      Search the bounded post-marker window through reliable low-concurrency sources, classify every receipt, append only actionable non-duplicate deltas to research-references.md, update research-studying.md only for genuinely ingested work, and write results/experiment_5878_v523_source_delta_ingestion.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash the V522 marker, roadmap IDs/gates, reference and studying ledgers, exclusion manifest, and active roadmap; record network, API, and output availability. Unavailable routes are explicit outcomes.
-      1. Add or extend REQ-* reporting requirements and tests for time-window novelty, primary-source provenance, duplicate suppression, retired-scope protection, and roadmap immutability.
-      2. Search arXiv first for newer EBM verification/reasoning, neural CSPs, Ising/sampling, hallucination verification, KANs, energy-guided decoding, probabilistic hardware, continual learning, and active world-model use.
-      3. Recheck OpenReview, Hugging Face Papers, direct Semantic Scholar citation APIs for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery, Extropic writing, and Logical Intelligence public pages. Record exact queries, URLs, dates, and access outcomes.
-      4. Classify each source as accepted, duplicate, watch-only, inaccessible, or excluded. Accepted items must map to an existing `.522` task and cannot reopen final embeddings, PHASE D, finite-ID output transport, tempering, public ARC solves, cross-game value transfer, unchanged board probes, TSU execution, or Kona execution.
-      5. Append one dated execution-refresh block only when accepted findings exist. Mark a studying item ingested only when the artifact includes an exact method-to-task mapping. Do not rewrite prior reference history.
-      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, planner_marker_and_search_window, source_receipts, citation_trail_receipts, finding_classification, accepted_finding_count, references_modified, studying_ledger_modified, sota_to_experiment_mapping, roadmap_immutability_receipts, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal state distinguishes a complete zero delta from failed research."
-         preconditions_checked:
-           principle: "Marker, hashes, APIs, network, and outputs prevent stale-window or fabricated-source claims."
-         planner_marker_and_search_window:
-           principle: "A sealed time boundary makes novelty falsifiable."
-         source_receipts:
-           principle: "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata."
-         citation_trail_receipts:
-           principle: "Direct EBT and ARM-EBM checks prevent unsupported citation claims."
-         finding_classification:
-           principle: "Explicit classes stop duplicates and watch items becoming experiments."
-         accepted_finding_count:
-           principle: "Bare zero is a valid complete result."
-         references_modified:
-           principle: "The artifact discloses whether the shared source ledger changed."
-         studying_ledger_modified:
-           principle: "Ingestion status changes only when a cited method was actually mapped."
-         sota_to_experiment_mapping:
-           principle: "Every accepted method names an implementable current task hook and failure boundary."
-         roadmap_immutability_receipts:
-           principle: "Freshness work cannot silently redesign allocated tasks."
-         duration_s:
-           principle: "Measured wall time exposes a bootstrap-only receipt."
-         inference_substrate:
-           principle: "`aggregation_from_external_primary_sources` declares research synthesis, not model inference."
-         field_provenance:
-           principle: "Every accepted finding traces to its source and bounded task hook."
-         test_commands:
-           principle: "Commands document date, duplicate, citation, mapping, and immutability checks."
-         test_exit_codes:
-           principle: "Exit codes prevent failed provenance checks becoming success."
-         reproducibility_checksum:
-           principle: "A checksum detects marker, source, or classification drift."
-         honest_verdict:
-           principle: "A `complete:` or `blocked:` prefix makes the refresh terminal."
+      0. PRECONDITIONS: hash the V523 marker, roadmap IDs/gates, reference/studying ledgers, exclusion manifest, and active roadmap; record network, API, output, disk, and RAM availability.
+      1. Add or extend REQ-* requirements and tests for time-window novelty, primary-source provenance, duplicate suppression, retired-scope protection, and roadmap immutability.
+      2. Search arXiv first for newer EBM verification/reasoning, neural CSPs, Ising/sampling, hallucination verification, KANs, energy-guided decoding, probabilistic hardware, continual learning, and live-agent memory.
+      3. Recheck OpenReview, Hugging Face Papers, direct Semantic Scholar citation APIs for EBT 2507.02092 and ARM-EBM 2512.15605, GitHub discovery/trending, Extropic writing, and Logical Intelligence public pages. Record exact queries, URLs, dates, and access outcomes.
+      4. Classify each source as accepted, duplicate, watch-only, inaccessible, or excluded. Accepted items must map to an existing `.523` task and cannot reopen final embeddings, PHASE D, generated-answer repair, KAN residuals, active observation/lookahead, public ARC solves, unchanged board probes, TSU execution, or Kona execution.
+      5. Append one dated execution-refresh block only when accepted findings exist. Mark a studying item ingested only with an exact method-to-task mapping. Do not rewrite prior reference history.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, planner_marker_and_search_window, source_receipts, citation_trail_receipts, finding_classification, accepted_finding_count, references_modified, studying_ledger_modified, sota_to_experiment_mapping, guarded_finding_receipts, roadmap_immutability_receipts, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         planner_marker_and_search_window principle: sealed time boundary makes novelty falsifiable.
+         source_receipts principle: primary pages and dated access outcomes ground each claim.
+         finding_classification principle: duplicates and watch items cannot become experiments.
+         accepted_finding_count principle: bare zero is valid and complete.
+         roadmap_immutability_receipts principle: freshness work cannot redesign allocation.
+         inference_substrate principle: use `aggregation_from_external_primary_sources`.
+         honest_verdict principle: use a `complete:` or `blocked:` prefix.
       7. Run URL/provenance, date-window, duplicate, citation, exclusion-manifest, roadmap-immutability, YAML, schema, spec-coverage, and root-clutter tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5865-adaptive-state-kernel-requalification
-    milestone: "2026.07.522"
-    title: "Adaptive-state microkernel E2E attribution and requalification"
+  - id: exp5879-hardness-headroom-taxonomy-corrigendum
+    milestone: "2026.07.523"
+    title: "Changed-taxonomy audit of nuisance controls versus oracle-derived solver telemetry"
     priority: critical
-    track: infrastructure
-    deliverable: results/experiment_5865_adaptive_state_kernel_requalification.json
+    track: verification
+    deliverable: results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json
     agent_type: codex
     model: gpt-5.5
-    max_turns: 100
-    estimated_wall_time_min: 360
+    max_turns: 30
+    estimated_wall_time_min: 180
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp5859-adaptive-state-microkernel-parity
-        verdict: "blocked: adaptive_state_microkernel_conformance_incomplete"
-        addressed_by: "Exp5859 already passed focused Python/Rust ABI, state/hash, serialization, rollback, invalid-input, binding, lint, and coverage checks; this attempt reproduces and fixes only the repository-wide pytest exit-2 seam, with exact failing-node attribution."
+      - experiment_id: exp5869-hardness-surface-headroom-audit
+        verdict: "blocked: test_exit_codes"
+        addressed_by: "Exp5869 mixed oracle-derived solver conflicts/decisions/time into the nuisance-control saturation gate even though its non-oracle maximum AUROC was 0.583333; this corrigendum freezes the 84 rows, separates the two taxonomies, and reruns only the owned audit/test surface."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5859 implemented the bounded adaptive-state kernel and passed its focused Python and Rust conformance work. Its only recorded nonzero test exit is `.venv/bin/pytest tests/python -q` with exit 2, which forced readiness to 0.0. This task must diagnose that exact seam, preserve passing semantics, and avoid a broad rewrite. If the same conformance-incomplete verdict remains after one materially targeted repair, retire requalification. Today is {date}.
+      Exp5868 produced a ready 84-row exact fixture. Exp5869 independently found row integrity, balanced labels, relabel/certificate stability 1.0, non-oracle nuisance-control maximum AUROC 0.583333, and oracle-derived solver conflicts/decisions/time AUROC 1.0. It nevertheless set `no_trivial_control_exceeds_ceiling=false` because the gate conflated oracle telemetry with nuisance features, and its full Python suite exited 2. Historical artifacts are immutable. This task changes the taxonomy and audit contract, not the rows or observed metrics. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
-      - {project_root}/results/experiment_5859_adaptive_state_microkernel_parity.json
-      - {project_root}/python/carnot/adaptive_state.py
-      - {project_root}/crates/carnot-core/src/adaptive_state.rs
-      - {project_root}/crates/carnot-python/src/adaptive_state.rs
-      - {project_root}/tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py
-      - {project_root}/pyproject.toml
-      - {project_root}/Cargo.toml
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.json
+      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl
+      - {project_root}/results/experiment_5869_hardness_surface_headroom_audit.json
+      - {project_root}/python/carnot/experiment_5869_hardness_surface_headroom_audit.py
+      - {project_root}/tests/python/test_experiment_5869_hardness_surface_headroom_audit.py
+      - {project_root}/python/carnot/verify
+      - {project_root}/scripts/adversarial_verify.py
       - {project_root}/ops/e2e-test-plan.md
-      - {project_root}/ops/known-issues.md
-      - {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
 
       TASK:
-      Reproduce and attribute Exp5859's repository-wide pytest exit 2, repair only a task-owned collection or conformance seam, rerun exact focused and applicable end-to-end checks, and write results/experiment_5865_adaptive_state_kernel_requalification.json without overwriting Exp5859.
+      Recompute the immutable Exp5868 headroom audit with disjoint non-oracle nuisance and oracle-derived telemetry classes, preserve exact-solver authority and every failure receipt, and write results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash Exp5858/Exp5859, all adaptive-state sources/tests, manifests, Python/Rust toolchains, installed extensions, collection environment, output path, disk/RAM, and protected files. Capture the exact pytest version/plugins and reproduce collection with full logs before editing.
-      1. Add REQ-* requalification requirements and failing tests first. Classify every nonzero node or collection failure as adaptive-state-owned, pre-existing unrelated debt, environment/toolchain, or protected user-work conflict.
-      2. Recompute Exp5859 focused parity from immutable fixtures and prove operation decisions, version IDs, canonical states/hashes, restart, rollback, capacity, and invalid-input receipts still match.
-      3. If the exit-2 root cause is owned, make the smallest fix inside existing package/test/config locations. Do not change the qualified operation set, schema version, capacities, ordering, fixed-width fields, or failure codes unless a failing REQ-* test proves a correctness defect.
-      4. If the failure is unrelated repository debt or overlaps protected user changes, do not patch it. Run the exact applicable E2E slice from ops/e2e-test-plan.md and report the global blocker separately; readiness still requires every command claimed by this artifact to exit zero.
-      5. Rebuild the PyO3 binding, run Python/Rust conformance twice, restart from serialized state, and compare the complete operation trace and checksum with Exp5859.
-      6. Emit bare `adaptive_state_microkernel_requalified_score=1.0` only when all required parity, safety, focused, binding, lint, spec, adversarial, and applicable E2E commands exit zero and no passing semantic receipt regresses.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, exp5859_input_receipt, original_nonzero_exit_reproduction, root_cause_classification, failing_collection_and_node_receipts, semantic_change_scope, qualified_operation_mapping, abi_schema_and_bounds, python_rust_binding_receipts, cross_language_operation_parity, canonical_state_and_hash_parity, serialization_restart_and_rollback_parity, invalid_input_and_capacity_controls, before_after_test_matrix, global_suite_debt_classification, applicable_e2e_receipts, protected_files_unchanged, adaptive_state_microkernel_requalified_score, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal state distinguishes requalified parity from a documented remaining block."
-         preconditions_checked:
-           principle: "Hashes, toolchains, plugins, resources, outputs, and protected files prevent blind repair."
-         exp5859_input_receipt:
-           principle: "The new result must consume the exact blocked artifact without rewriting history."
-         original_nonzero_exit_reproduction:
-           principle: "A failing seam must be observed before it can be attributed or repaired."
-         root_cause_classification:
-           principle: "Owned, unrelated, environment, and protected-work failures require different actions."
-         failing_collection_and_node_receipts:
-           principle: "Exact logs and node IDs replace a generic exit-code narrative."
-         semantic_change_scope:
-           principle: "Only a proven owned defect may alter already-passing kernel semantics."
-         qualified_operation_mapping:
-           principle: "Only Exp5858-qualified operations remain in the ABI."
-         abi_schema_and_bounds:
-           principle: "Version, types, capacities, and ordering remain finite and hardware-mappable."
-         python_rust_binding_receipts:
-           principle: "The deployable call surface must build and import on the tested toolchain."
-         cross_language_operation_parity:
-           principle: "Every accepted and rejected operation must match across implementations."
-         canonical_state_and_hash_parity:
-           principle: "Equivalent states must produce identical canonical hashes."
-         serialization_restart_and_rollback_parity:
-           principle: "Durable state must restore and roll back identically."
-         invalid_input_and_capacity_controls:
-           principle: "Malformed, duplicate, out-of-order, overflow, and unbounded input fail closed."
-         before_after_test_matrix:
-           principle: "No pre-existing passing receipt may regress during seam repair."
-         global_suite_debt_classification:
-           principle: "Unrelated failures stay visible and cannot be silently waived."
-         applicable_e2e_receipts:
-           principle: "Promotion requires the exact end-to-end checks relevant to the kernel path."
-         protected_files_unchanged:
-           principle: "User work and operator-curated files remain untouched."
-         adaptive_state_microkernel_requalified_score:
-           principle: "EMIT BARE scalar; only 1.0 permits Exp5866 and Exp5875."
-         duration_s:
-           principle: "Measured wall time exposes bootstrap-only requalification."
-         inference_substrate:
-           principle: "`deterministic_cross_language_state_execution_no_llm` declares the actual path."
-         field_provenance:
-           principle: "Every decision traces to logs, fixtures, source hashes, toolchains, and outputs."
-         test_commands:
-           principle: "Commands document reproduction, parity, binding, regression, and E2E checks."
-         test_exit_codes:
-           principle: "Every claimed readiness command must have exit code zero."
-         reproducibility_checksum:
-           principle: "A checksum detects ABI, fixture, toolchain, or test drift."
-         honest_verdict:
-           principle: "A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome."
-      8. Run focused unit/coverage, reproduced collection, Python full/applicable suite, Rust unit/clippy/fmt, PyO3 build/import, randomized trace, restart/rollback, invalid-input, adversarial-verify, spec-coverage, root-clutter, and protected-file checks.
+      0. PRECONDITIONS: hash Exp5868 summary/rows, Exp5869, source/tests, solver versions, split definitions, seeds, output path, disk/RAM, and protected files. Reproduce the original classification and full-suite exit before editing.
+      1. Add REQ-* requirements and failing tests first for mutually exclusive control classes, group-safe splits, oracle flags, and an honest distinction between scientific readiness and unrelated suite debt.
+      2. Independently replay all 84 labels, certificates, semantic duplicate groups, relabel equivalence, and balance. Do not regenerate or edit the row file.
+      3. Freeze `non_oracle_nuisance` controls to density, length, width, names, order, family ID where preregistered, and no-information controls. Freeze `oracle_derived_diagnostic` to solver conflicts, decisions, time, direct solver outputs, and certificate-checker results.
+      4. Compute saturation only from non-oracle nuisance controls. Report oracle telemetry separately with `verifier_is_oracle=true`; its AUROC cannot count as a learned-energy win or reduce oracle-distinct headroom.
+      5. Rerun focused coverage, relevant full suite, applicable E2E, spec coverage, and adversarial verification. If an unrelated global failure persists, preserve the science matrix and emit blocked; never claim checks passed.
+      6. Emit bare `hardness_surface_headroom_ready_score=1.0` only when row integrity, group-safe splits, non-oracle maximum AUROC below 0.85, relabel stability, a nonempty held-model/held-constraint plan, and every required owned check pass.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, immutable_upstream_hashes, original_gate_reproduction, independent_row_integrity_replay, leakage_safe_split_receipts, control_taxonomy, non_oracle_nuisance_control_metrics, oracle_derived_diagnostic_metrics, current_verifier_circularity_matrix, relabel_and_certificate_stability, saturation_and_skip_decision, oracle_distinct_evaluation_design, held_model_and_constraint_plan, test_debt_classification, protected_files_unchanged, hardness_surface_headroom_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         control_taxonomy principle: every feature belongs to exactly one authority-aware class.
+         non_oracle_nuisance_control_metrics principle: only these metrics determine shortcut saturation.
+         oracle_derived_diagnostic_metrics principle: solver telemetry is useful context but circular for learned-energy credit.
+         saturation_and_skip_decision principle: expensive downstream work must fail fast on leakage or failed checks.
+         hardness_surface_headroom_ready_score principle: emit a bare scalar for structured gates.
+         inference_substrate principle: use `deterministic_control_audit_no_llm`.
+         verifier_is_oracle principle: record a per-path authority matrix.
+         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
+      8. Run focused unit/coverage, immutable-hash, independent labels, duplicate/leakage groups, taxonomy exclusivity, nuisance ceiling, relabel stability, circularity, held-cell plan, applicable E2E, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5866-adaptive-state-pipeline-shadow-adapter
-    milestone: "2026.07.522"
-    title: "Default-off adaptive-state adapter at the verify-repair boundary"
-    priority: critical
-    track: integration
-    deliverable: results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json
+  - id: exp5880-grounding-shortcut-fixture
+    milestone: "2026.07.523"
+    title: "Gated on Exp5879 headroom: exact constraint-satisfaction and cognition-shortcut fixture"
+    priority: high
+    track: self-learning
+    deliverable: results/experiment_5880_grounding_shortcut_fixture.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 300
     requires_gpu: false
     gated_on:
-      - upstream: exp5865-adaptive-state-kernel-requalification
-        artifact_field: adaptive_state_microkernel_requalified_score
+      - upstream: exp5879-hardness-headroom-taxonomy-corrigendum
+        artifact_field: hardness_surface_headroom_ready_score
         op: "=="
         value: 1.0
-    prior_failures:
-      - experiment_id: exp5775-constraint-sidecar-shadow-integration
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "The prior adapter had a missing transfer-audit input; this adapter runs only after clean Exp5856-Exp5858 lifecycle/replay/self-learning evidence and an Exp5865-requalified Python/Rust kernel, and it mirrors structured events rather than a generated-text sidecar."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5865 must requalify the deterministic adaptive-state kernel. Exp5856-Exp5858 already own lifecycle, replay, and reduced-oracle science. The integration goal is a small protocol boundary: mirror structured verify/repair events into versioned external state while leaving acceptance, repair, and user-visible output unchanged. The adapter is default-off and never becomes release authority. Today is {date}.
+      arXiv:2607.21185 distinguishes constraint-satisfaction shortcuts, where a logical constraint is satisfied without the intended task, from cognition shortcuts, where biased data supports a semantically wrong concept mapping. It reports one-to-one neural-output-to-atom grounding as a mitigation relative to soft distributed probabilities. Carnot needs an exact symbolic analogue before testing learning. Exp5868/Exp5879 provide a qualified hardness and surface-controlled base. This task builds data only and makes no learned-model claim. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/_bmad/architecture.md
-      - {project_root}/results/experiment_5856_provenance_correct_lifecycle.json
-      - {project_root}/results/experiment_5857_clean_transfer_selective_replay.json
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.json
+      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl
+      - {project_root}/results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json
       - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
-      - {project_root}/results/experiment_5865_adaptive_state_kernel_requalification.json
-      - {project_root}/results/experiment_5789_constraint_skill_shadow_adapter.json
-      - {project_root}/python/carnot/adaptive_state.py
-      - {project_root}/python/carnot/pipeline
+      - {project_root}/python/carnot/datasets
       - {project_root}/python/carnot/verify
-      - {project_root}/crates/carnot-python/src/adaptive_state.rs
-      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/tests/python
       - {project_root}/openspec/capabilities/self-learning/spec.md
-      - {project_root}/openspec/capabilities/pipeline/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
 
       TASK:
-      Add a default-off protocol-based shadow adapter at the existing verify/repair boundary, prove output and authority non-interference plus exact Python/Rust shadow-state parity, and write results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json.
+      Build a deterministic exact fixture of canonical, constraint-satisfaction-shortcut, cognition-shortcut, one-to-one, soft/distributed, shuffled, and no-information grounding pairs; write results/experiment_5880_grounding_shortcut_fixture.json and results/experiment_5880_grounding_shortcut_fixture.rows.jsonl.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: replay the Exp5865 gate; hash lifecycle/replay/self-learning artifacts, kernel schema, pipeline entrypoints, Python/Rust bindings, environment configuration, output path, disk/RAM, and protected files.
-      1. Add REQ-* pipeline/self-learning requirements and tests first. Define an `AdaptiveStateKernelProtocol` or equivalent existing-style abstraction with no vendor imports in core.
-      2. Map only structured events already accepted by Exp5858: addition, supersession, recurrence, promotion, quarantine, replay selection, rollback, serialize, and restore. Reject free-form text, missing IDs, unbounded payloads, and out-of-order events.
-      3. Keep the feature default-off. With it off, preserve byte-identical outputs, decisions, logs, and state. With it on in shadow mode, exact validators still own acceptance and repair; kernel state cannot influence the current response.
-      4. Exercise both Python and Rust kernels on the same pipeline event traces. Require identical accept/reject decisions, versions, canonical state hashes, replay selections, rollback, and restart.
-      5. Test failure injection: binding unavailable, corrupt checkpoint, capacity full, duplicate event, out-of-order event, shadow write failure, and restart. Fail closed without changing release output.
-      6. Emit bare `adaptive_state_shadow_adapter_ready_score=1.0` only when default-off compatibility, shadow non-interference, cross-language parity, bounded state, and applicable pipeline E2E checks all pass.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_gate_receipt, adapter_protocol_and_event_mapping, default_off_receipt, shadow_mode_configuration, exact_authority_receipt, output_and_decision_non_interference, python_rust_shadow_state_parity, version_hash_restart_and_rollback_receipts, invalid_event_and_failure_injection_controls, state_capacity_and_latency_accounting, applicable_pipeline_e2e_receipts, protected_files_unchanged, adaptive_state_shadow_adapter_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal state distinguishes a safe adapter from partial wiring."
-         preconditions_checked:
-           principle: "Gates, hashes, entrypoints, bindings, resources, and outputs prevent incompatible integration."
-         upstream_gate_receipt:
-           principle: "Only a requalified kernel may enter the pipeline."
-         adapter_protocol_and_event_mapping:
-           principle: "A bounded protocol prevents sidecar text or vendor details entering core."
-         default_off_receipt:
-           principle: "The normal product path remains unchanged unless explicitly enabled."
-         shadow_mode_configuration:
-           principle: "Shadow state is observable and testable but cannot affect the current answer."
-         exact_authority_receipt:
-           principle: "Exact validators retain promotion, acceptance, repair, and release authority."
-         output_and_decision_non_interference:
-           principle: "Byte-identical outputs and decisions prove shadow isolation."
-         python_rust_shadow_state_parity:
-           principle: "Both state owners must accept, reject, and transition identically."
-         version_hash_restart_and_rollback_receipts:
-           principle: "Versioned state must be durable, reproducible, and reversible."
-         invalid_event_and_failure_injection_controls:
-           principle: "Malformed input and integration failures fail closed without release impact."
-         state_capacity_and_latency_accounting:
-           principle: "Bounded memory and descriptive overhead prevent hidden unbounded cost."
-         applicable_pipeline_e2e_receipts:
-           principle: "Unit parity alone cannot qualify an integration surface."
-         protected_files_unchanged:
-           principle: "User and operator-owned files remain untouched."
-         adaptive_state_shadow_adapter_ready_score:
-           principle: "EMIT BARE scalar; only 1.0 permits Exp5867."
-         duration_s:
-           principle: "Measured wall time exposes bootstrap-only wiring."
-         inference_substrate:
-           principle: "`deterministic_pipeline_shadow_state_no_llm` declares structured integration without model inference."
-         verifier_is_oracle:
-           principle: "True for the exact validators that own release; the shadow state is not an oracle."
-         field_provenance:
-           principle: "Every event and decision traces to pipeline fixtures, validators, kernels, and hashes."
-         test_commands:
-           principle: "Commands document default-off, non-interference, parity, failure, and E2E behavior."
-         test_exit_codes:
-           principle: "Exit codes prevent unsafe or incomplete wiring becoming ready."
-         reproducibility_checksum:
-           principle: "A checksum detects protocol, event, binding, state, or config drift."
-         honest_verdict:
-           principle: "A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome."
-      8. Run focused unit/coverage, gate replay, default-off compatibility, byte-output equality, exact-authority, Python/Rust trace parity, failure injection, capacity, restart/rollback, pipeline E2E, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file checks.
+      0. PRECONDITIONS: replay Exp5879's gate; hash the source receipt, immutable base rows, exact solvers, generator code, seeds, output paths, disk/RAM, and protected files.
+      1. Add REQ-* dataset requirements and tests before implementation. Define `concept`, `logical_atom`, `grounding`, `intended_semantics`, `encoded_constraint`, and `exact_outcome` separately.
+      2. Generate at least two exact constraint families and multiple held grounding regimes. Include pairs where many-to-one or probability-mass-swapped groundings satisfy the encoded formula while violating intended semantics; include biased-frequency cognition shortcuts that remain exact-label balanced.
+      3. For every shortcut row, produce a canonical one-to-one counterpart, exact semantic label, exact constraint label, certificate/witness, grounding matrix, provenance, relabel group, family group, chronology batch, and deterministic row ID.
+      4. Add soft/fuzzy, distributed, one-to-one, shuffled-grounding, label-permutation, frequency-balanced, surface-matched, and no-information controls. Keep semantic duplicates and grounding variants in the same split group.
+      5. Run independent exact solvers/checkers and reject disagreement, ambiguous intended semantics, missing witnesses, duplicate semantic instances across splits, or replay drift.
+      6. Emit bare `grounding_shortcut_fixture_ready_score=1.0` only when both shortcut types have headroom, all labels/witnesses replay, groups are leakage-safe, controls are matched, and deterministic regeneration is byte-identical.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_gate_receipt, source_method_receipt, concept_atom_and_grounding_schema, shortcut_type_definitions, family_grounding_and_chronology_design, generator_and_seed_receipts, exact_semantic_and_constraint_oracle_receipts, one_to_one_soft_distributed_and_shuffled_controls, bias_and_frequency_controls, split_and_group_leakage_receipts, label_witness_and_headroom_balance, row_file_receipt, deterministic_replay_receipt, protected_files_unchanged, grounding_shortcut_fixture_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         concept_atom_and_grounding_schema principle: semantic identity cannot be conflated with a soft model output.
+         shortcut_type_definitions principle: the two failure modes remain separately measurable.
+         exact_semantic_and_constraint_oracle_receipts principle: exact checks own both task intent and formula satisfaction.
+         split_and_group_leakage_receipts principle: variants of one semantic problem never cross evaluation boundaries.
+         grounding_shortcut_fixture_ready_score principle: emit a bare scalar for Exp5881.
+         inference_substrate principle: use `deterministic_exact_solver_labeled_dataset_no_llm`.
+         honest_verdict principle: use `ready:`, `complete_null:`, or `blocked:`.
+      8. Run focused unit/coverage, generator determinism, exact semantic/constraint labels, witness, shortcut headroom, control matching, group leakage, row schema/hash, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5867-prospective-certified-continuous-learning
-    milestone: "2026.07.522"
-    title: "Prospective non-forgetting continuous learning through the shadow adapter"
+  - id: exp5881-one-to-one-grounding-acquisition-ab
+    milestone: "2026.07.523"
+    title: "Gated on Exp5880 fixture: one-to-one atom grounding structural-acquisition A/B"
     priority: critical
     track: self-learning
-    deliverable: results/experiment_5867_prospective_certified_continuous_learning.json
+    deliverable: results/experiment_5881_one_to_one_grounding_acquisition_ab.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
-    estimated_wall_time_min: 480
+    estimated_wall_time_min: 360
     requires_gpu: false
     gated_on:
-      - upstream: exp5866-adaptive-state-pipeline-shadow-adapter
-        artifact_field: adaptive_state_shadow_adapter_ready_score
+      - upstream: exp5880-grounding-shortcut-fixture
+        artifact_field: grounding_shortcut_fixture_ready_score
         op: "=="
         value: 1.0
     prior_failures:
-      - experiment_id: exp5709-fr11-prospective-shadow-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "The prior stream was blocked by an unready parse-dependent upstream; this task consumes the exact Exp5856-Exp5858 stream and a requalified structured shadow adapter with no generated-answer dependency."
+      - experiment_id: exp5749-csl-render-matched-mechanism-audit
+        verdict: "complete: kan_mechanism_residual_negative_fr11_safety_retained"
+        addressed_by: "This task does not retry KAN rendering or spline mutation; it tests the distinct ICLP-2026 one-to-one logical-atom grounding mechanism against soft/distributed groundings on an exact shortcut fixture."
         retire_if_same_verdict: true
       - experiment_id: exp5773-prospective-constraint-acquisition-ab
         verdict: "blocked_gate_check_failed"
-        addressed_by: "The prior acquisition attempt lacked a clean stream; this task starts from the qualified exact-event lifecycle, uses prospective chronological partitions, and requires per-update non-forgetting certificates plus rollback."
+        addressed_by: "Exp5773 depended on an unready prospective stream; Exp5881 is gated by a deterministic exact shortcut fixture with independent semantic and constraint labels."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5866 must provide a default-off, non-interfering pipeline adapter. Exp5858 qualified reduced-oracle learning on deterministic exact events. This task tests the PRD's continuous-self-learning claim through the real shadow boundary: bounded external state adapts over chronological batches, exact validators reveal only a preregistered subset of outcomes, and every promotion must preserve protected prior behavior. GGUF weights remain immutable. Today is {date}.
+      Exp5858 qualified reduced-oracle external-state learning, but it did not challenge concept-to-atom semantics. Exp5749 found no matched KAN-specific residual, so KAN is excluded. Exp5880 must provide exact chronological rows with constraint-satisfaction and cognition shortcuts. The hypothesis is that one-to-one atom grounding with a unified rule/constraint representation prevents false semantic acquisition better than soft or distributed grounding under equal data and query budgets. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5880_grounding_shortcut_fixture.json
+      - {project_root}/results/experiment_5880_grounding_shortcut_fixture.rows.jsonl
+      - {project_root}/results/experiment_5827_minimal_core_structural_acquisition_ab.json
+      - {project_root}/results/experiment_5857_clean_transfer_selective_replay.json
+      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
+      - {project_root}/results/experiment_5749_csl_render_matched_mechanism_audit.json
+      - {project_root}/python/carnot/self_learning
+      - {project_root}/python/carnot/training
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK:
+      Implement and evaluate a bounded one-to-one atom-grounding structural learner against soft/fuzzy distributed grounding and exact controls on the chronological shortcut fixture; write results/experiment_5881_one_to_one_grounding_acquisition_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay Exp5880's gate; hash rows, split groups, exact oracles, current lifecycle/learner code, seeds, budgets, output path, disk/RAM, and protected files.
+      1. Add REQ-* learner and evaluation requirements plus failing tests before implementation. Keep the mechanism default-off and outside production pipeline integration.
+      2. Freeze arms before reading held batches: one-to-one unified rule/constraint grounding; soft-probability grounding; fuzzy t-norm grounding; distributed many-to-one grounding; current exact template baseline; shuffled grounding; and no learner.
+      3. Match chronological events, exact-query count, replay count, state capacity, initialization, and decision threshold across learned arms. No arm may inspect future batches or exact labels before committing its decision.
+      4. Measure intended-semantic accuracy, encoded-constraint accuracy, shortcut false accepts by type, forward transfer, recurrence, retention, query efficiency, abstention, protected-prefix regression, and per-family/grounding/hardness group-bootstrap confidence intervals.
+      5. Run label permutation, atom relabel, grounding permutation, frequency rebalance, family holdout, and no-information controls. Report pooled metrics only after heterogeneity and all-family lower-bound checks.
+      6. Emit bare `one_to_one_grounding_ready_score=1.0` only when one-to-one grounding has positive preregistered lower bounds over every learned control on intended semantics, zero unsafe accepts, no protected-prefix/hard/family regression, bounded state, and exact replay.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_gate_and_row_hashes, frozen_arm_definitions_and_budget_parity, one_to_one_rule_constraint_representation, chronology_and_visibility_receipts, semantic_vs_constraint_outcomes, shortcut_false_accept_metrics, forward_transfer_recurrence_and_retention, family_grounding_hardness_lower_bounds, query_replay_and_state_accounting, permutation_relabel_rebalance_and_null_controls, protected_prefix_and_safety, oracle_boundary_violation_count, one_to_one_grounding_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         semantic_vs_constraint_outcomes principle: satisfying a formula cannot stand in for solving the intended task.
+         shortcut_false_accept_metrics principle: each shortcut type remains separately falsifiable.
+         family_grounding_hardness_lower_bounds principle: pooled lift cannot hide a failing cell.
+         protected_prefix_and_safety principle: new learning cannot erase certified prior behavior.
+         one_to_one_grounding_ready_score principle: emit a bare scalar for Exp5882.
+         inference_substrate principle: use `online_exact_membership_query_sidecar_no_llm`.
+         verifier_is_oracle principle: true for labels/promotion, never for learned-score credit.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:`.
+      8. Run focused unit/coverage, gate replay, chronology visibility, arm/budget parity, semantic-vs-constraint labels, shortcut metrics, grouped confidence intervals, permutations, safety, memory cap, deterministic replay, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5882-shortcut-resistant-continuous-self-learning
+    milestone: "2026.07.523"
+    title: "Gated on Exp5881 mechanism: prospective shortcut-resistant continuous self-learning"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5882_shortcut_resistant_continuous_self_learning.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 420
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5881-one-to-one-grounding-acquisition-ab
+        artifact_field: one_to_one_grounding_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5750-dependent-task-continuous-self-learning
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5750 depended on a negative KAN residual; Exp5882 uses a qualified non-KAN one-to-one atom mechanism and the already validated external-state lifecycle."
+        retire_if_same_verdict: true
+      - experiment_id: exp5787-validation-gated-constraint-skill-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5787 lacked its required qualified stream; Exp5882 is gated by exact shortcut rows and a positive mechanism artifact with immutable hashes."
+        retire_if_same_verdict: true
+      - experiment_id: exp5867-prospective-certified-continuous-learning
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5867 depended on the retired adaptive-state kernel chain; Exp5882 explicitly stays in deterministic bounded external state and tests grounding-shortcut science rather than production adapter integration."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the mandatory continuous self-learning experiment for milestone `.523`. Exp5856-Exp5858 qualified versioned external-state lifecycle, compatible replay, reduced exact feedback, zero unsafe accepts, bounded memory, and frozen GGUF weights. Exp5865 retired kernel requalification, so this task must not depend on or rewrite that kernel. Exp5881 must qualify one-to-one grounding against semantic shortcuts. The question is whether that mechanism continues to improve on sealed future batches without forgetting, unsafe promotion, or unbounded state. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -420,269 +330,38 @@ tasks:
       - {project_root}/results/experiment_5856_provenance_correct_lifecycle.json
       - {project_root}/results/experiment_5857_clean_transfer_selective_replay.json
       - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.json
-      - {project_root}/results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl
-      - {project_root}/results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json
-      - {project_root}/results/experiment_5709_fr11_prospective_shadow_stream.json
-      - {project_root}/results/experiment_5773_prospective_constraint_acquisition_ab.json
+      - {project_root}/results/experiment_5865_adaptive_state_kernel_requalification.json
+      - {project_root}/results/experiment_5880_grounding_shortcut_fixture.json
+      - {project_root}/results/experiment_5880_grounding_shortcut_fixture.rows.jsonl
+      - {project_root}/results/experiment_5881_one_to_one_grounding_acquisition_ab.json
+      - {project_root}/python/carnot/self_learning
       - {project_root}/python/carnot/adaptive_state.py
-      - {project_root}/python/carnot/pipeline
-      - {project_root}/python/carnot/verify
-      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/tests/python
       - {project_root}/openspec/capabilities/self-learning/spec.md
 
       TASK:
-      Run a chronological, prospective, reduced-oracle continuous-learning A/B through the shadow adapter with per-update non-forgetting certificates, bounded replay, automatic rollback, and immutable model weights; then write results/experiment_5867_prospective_certified_continuous_learning.json plus results/experiment_5867_prospective_certified_continuous_learning.rows.jsonl.
+      Run a sealed chronological, reduced-oracle, versioned external-memory lifecycle for one-to-one grounding; certify prospective lift, non-forgetting, safety, rollback, bounded state, and a backend-neutral hardware mapping; write results/experiment_5882_shortcut_resistant_continuous_self_learning.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: replay the Exp5866 gate; hash all upstream artifacts/rows, event schema, adapter/kernel versions, exact validators, chronological split, random seeds, output paths, disk/RAM, memory caps, and protected files.
-      1. Add REQ-* self-learning requirements and tests before implementation. Seal chronological train/update/future partitions and family/hard-case cells before scoring.
-      2. Use a fixed preregistered exact-oracle budget lower than one query per candidate. Compare compatible replay, all replay, no replay, shuffled replay, reset-state, always-query, and never-query arms under matched event and memory budgets.
-      3. For each proposed addition, supersession, or recurrence update, compute a certificate over protected prior cells. Accept only if the update improves its sealed future objective, introduces zero unsafe accepts, and does not regress any protected retention lower bound.
-      4. Automatically quarantine and roll back updates that fail safety, retention, hard-case, capacity, or restart checks. Record rejected updates and reasons; never relabel them as learning.
-      5. Measure future lift, forward transfer, recurrence recovery, retention, query efficiency, unsafe accepts, state size, replay pressure, latency, and rollback/restart equivalence with paired confidence intervals where applicable.
-      6. Hash GGUF/model files before and after and require `no_model_weight_mutation=true`. This task performs no LLM inference and must not declare CUDA/GGUF compute substrate merely because weights are protected.
-      7. Emit bare `prospective_certified_continuous_learning_ready_score=1.0` only if future and hard-case lower bounds are positive over all preregistered controls, retention certificates hold, unsafe accepts are zero, restart/rollback is exact, state stays bounded, and no weights change.
-      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_gate_receipt, sealed_chronological_split_and_hashes, arm_definitions_and_budget_parity, exact_oracle_budget_and_query_policy, per_update_non_forgetting_certificates, accepted_quarantined_rejected_and_rolled_back_updates, prospective_future_metrics_and_confidence_intervals, forward_transfer_recurrence_and_retention, hard_case_and_family_lower_bounds, unsafe_accept_count, replay_and_query_efficiency, rollback_restart_and_state_hashes, memory_cap_accounting, no_model_weight_mutation, null_and_ablation_controls, row_file_receipt, retirement_decision, prospective_certified_continuous_learning_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal state distinguishes safe prospective learning from null, unsafe, or blocked behavior."
-         preconditions_checked:
-           principle: "Gates, hashes, sealed splits, seeds, budgets, caps, resources, and outputs prevent leakage."
-         upstream_gate_receipt:
-           principle: "Only a qualified shadow adapter may carry the stream."
-         sealed_chronological_split_and_hashes:
-           principle: "Future batches must remain unseen until each decision is committed."
-         arm_definitions_and_budget_parity:
-           principle: "Matched event, memory, replay, and oracle budgets isolate adaptive value."
-         exact_oracle_budget_and_query_policy:
-           principle: "Feedback scarcity and selection cost are explicit, not hidden in labels."
-         per_update_non_forgetting_certificates:
-           principle: "Every promotion proves protected prior cells remain above preregistered bounds."
-         accepted_quarantined_rejected_and_rolled_back_updates:
-           principle: "All state mutations and non-mutations remain auditable."
-         prospective_future_metrics_and_confidence_intervals:
-           principle: "Only sealed future lift with uncertainty supports self-learning."
-         forward_transfer_recurrence_and_retention:
-           principle: "New learning cannot hide forgetting or failed recovery."
-         hard_case_and_family_lower_bounds:
-           principle: "Negative transfer in one hard or family cell blocks readiness."
-         unsafe_accept_count:
-           principle: "Must be bare zero."
-         replay_and_query_efficiency:
-           principle: "Learning value and exact feedback cost are jointly measured."
-         rollback_restart_and_state_hashes:
-           principle: "Versioned state must restore and resume exactly."
-         memory_cap_accounting:
-           principle: "Continuous learning remains bounded."
-         no_model_weight_mutation:
-           principle: "Must be true; frozen GGUF weights are a hard boundary."
-         null_and_ablation_controls:
-           principle: "No, all, compatible, shuffled, reset, always-query, and never-query controls test causality."
-         row_file_receipt:
-           principle: "Path, row count, and hash expose every prospective decision."
-         retirement_decision:
-           principle: "A same blocked or no-lift outcome closes this production-shadow scope."
-         prospective_certified_continuous_learning_ready_score:
-           principle: "EMIT BARE scalar for capstone promotion."
-         duration_s:
-           principle: "Measured wall time exposes bootstrap-only learning."
-         inference_substrate:
-           principle: "`deterministic_exact_verifier_and_shadow_state_no_llm` declares external-state learning."
-         verifier_is_oracle:
-           principle: "True records exact labels and promotion authority."
-         field_provenance:
-           principle: "Every metric and state edit traces to events, queries, validators, versions, and hashes."
-         test_commands:
-           principle: "Commands document gates, visibility, arms, certificates, safety, state, and E2E behavior."
-         test_exit_codes:
-           principle: "Exit codes prevent unsafe or incomplete learning becoming ready."
-         reproducibility_checksum:
-           principle: "A checksum detects split, event, budget, selector, seed, or state drift."
-         honest_verdict:
-           principle: "A `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:` prefix states the outcome."
-      9. Run focused unit/coverage, gate replay, split visibility, budget parity, non-forgetting certificate, promotion/quarantine/rejection, hard-case/family, safety, null/ablation, rollback/restart, memory cap, weight immutability, pipeline E2E, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5868-hardness-controlled-constraint-fixture
-    milestone: "2026.07.522"
-    title: "Proof-hardness-controlled exact constraint fixture"
-    priority: high
-    track: infrastructure
-    deliverable: results/experiment_5868_hardness_controlled_constraint_fixture.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 300
-    requires_gpu: false
-    prompt: |
-      CONTEXT:
-      arXiv:2607.17047 shows that SAT solver conflicts, clause density, surface form, and LLM difficulty are different axes. Carnot needs an exact, surface-controlled corpus before spending GPU time on any new internal representation. This task builds solver-labeled fixtures only; it makes no LLM or learned-verifier claim. Today is {date}.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/research-references.md
-      - {project_root}/results/experiment_5840_exact_counterfactual_embedding_fixture.json
-      - {project_root}/results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl
-      - {project_root}/python/carnot/verify
-      - {project_root}/python/carnot/datasets
-      - {project_root}/tests/python
-      - {project_root}/scripts/adversarial_verify.py
-      - {project_root}/openspec/capabilities/verification/spec.md
-
-      TASK:
-      Build a deterministic, solver-labeled, proof-hardness-controlled CSP corpus with proof-preserving relabels and candidate certificates, then write results/experiment_5868_hardness_controlled_constraint_fixture.json plus results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: hash the source paper receipt already in research-references.md, current exact solvers and versions, existing counterfactual fixture, generator/test code, seeds, output paths, disk/RAM, and protected files.
-      1. Add REQ-* dataset requirements and tests before implementation. Use deterministic local generation inside existing packages/tests; put no scratch script in the repository root.
-      2. Generate proof-hard expander-Tseitin and proof-easy ladder-Tseitin families across matched size bins, near-matched clause density, matched maximum clause width, and balanced satisfiable/unsatisfiable or valid/invalid certificate labels. Add pigeonhole or other preregistered anchor controls only when exact solvers certify them.
-      3. For every instance, generate canonical formula text, at least one candidate certificate or contradiction witness, exact expected label, solver result, conflict/time covariates, and proof-preserving variable relabels. Keep surface lengths within preregistered tolerances.
-      4. Include label-preserving reorder, variable-renaming, padding, density-mismatched, length-matched, and no-information controls. Never treat solver conflict count as the ground-truth label.
-      5. Run at least two exact solver configurations where available and fail closed on disagreement, timeout, missing certificate validation, duplicate row IDs, or relabel mismatch.
-      6. Emit bare `hardness_controlled_fixture_ready_score=1.0` only when row counts, balance, matching tolerances, exact labels, certificate checks, relabel equivalence, and deterministic replay all pass.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, source_method_receipt, generator_and_seed_receipts, family_and_size_bin_definitions, density_width_and_length_matching, label_and_certificate_balance, solver_versions_and_oracle_receipts, proof_hardness_covariates, proof_preserving_relabel_receipts, surface_and_no_information_controls, solver_disagreement_and_timeout_controls, row_file_receipt, deterministic_replay_receipt, protected_files_unchanged, hardness_controlled_fixture_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal state distinguishes a ready exact fixture from partial generation."
-         preconditions_checked:
-           principle: "Paper, solver, generator, seed, resource, output, and protection checks prevent unverifiable data."
-         source_method_receipt:
-           principle: "The hardness-control design traces to a real primary source without importing its results."
-         generator_and_seed_receipts:
-           principle: "Deterministic generation makes every formula and relabel reproducible."
-         family_and_size_bin_definitions:
-           principle: "Proof-hard and proof-easy comparisons must be explicit within aligned bins."
-         density_width_and_length_matching:
-           principle: "Matched nuisance axes prevent density or text length standing in for hardness."
-         label_and_certificate_balance:
-           principle: "Balanced exact labels and checked witnesses create usable paired evaluation cells."
-         solver_versions_and_oracle_receipts:
-           principle: "Exact solver outputs own labels and include versioned commands."
-         proof_hardness_covariates:
-           principle: "Conflicts and time are analysis covariates, never truth labels."
-         proof_preserving_relabel_receipts:
-           principle: "Equivalent formulas must retain labels and certificates after renaming."
-         surface_and_no_information_controls:
-           principle: "Order, padding, renaming, length, density, and null rows expose shortcuts."
-         solver_disagreement_and_timeout_controls:
-           principle: "Unsettled instances are rejected rather than guessed."
-         row_file_receipt:
-           principle: "Path, count, schema, and hash expose all examples."
-         deterministic_replay_receipt:
-           principle: "A second generation must reproduce row IDs and content exactly."
-         protected_files_unchanged:
-           principle: "User and operator-owned files remain untouched."
-         hardness_controlled_fixture_ready_score:
-           principle: "EMIT BARE scalar; only 1.0 permits Exp5869."
-         duration_s:
-           principle: "Measured wall time exposes bootstrap-only dataset work."
-         inference_substrate:
-           principle: "`deterministic_exact_solver_labeled_dataset_no_llm` declares the true path."
-         verifier_is_oracle:
-           principle: "True for exact labels; solver conflict covariates are not oracle scores."
-         field_provenance:
-           principle: "Every row traces to generator config, seed, solver, certificate, and source hash."
-         test_commands:
-           principle: "Commands document generation, matching, solver, relabel, replay, and schema checks."
-         test_exit_codes:
-           principle: "Exit codes prevent invalid fixtures becoming ready."
-         reproducibility_checksum:
-           principle: "A checksum detects generator, solver, row, or control drift."
-         honest_verdict:
-           principle: "A `complete:`, `ready:`, or `blocked:` prefix states the terminal dataset result."
-      8. Run focused unit/coverage, generator determinism, family/bin, matching tolerance, label/certificate, multi-solver, relabel, control, duplicate-ID, row schema/hash, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5869-hardness-surface-headroom-audit
-    milestone: "2026.07.522"
-    title: "Constraint headroom, surface leakage, and oracle-distinctness audit"
-    priority: critical
-    track: verification
-    deliverable: results/experiment_5869_hardness_surface_headroom_audit.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    estimated_wall_time_min: 180
-    requires_gpu: false
-    gated_on:
-      - upstream: exp5868-hardness-controlled-constraint-fixture
-        artifact_field: hardness_controlled_fixture_ready_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT:
-      Exp5868 must provide an exact hardness-controlled corpus. Before any internal-state extraction, this diagnostic must show that labels are not saturated by density, length, variable names, solver conflicts, or the current exact verifier itself. The exact solver is label authority; a solver-backed verifier is circular and cannot count as an oracle-distinct win. Today is {date}.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/ops/north-star.md
-      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.json
-      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl
-      - {project_root}/results/experiment_5853_paired_embedding_integrity_audit.json
-      - {project_root}/python/carnot/verify
-      - {project_root}/scripts/adversarial_verify.py
-      - {project_root}/openspec/capabilities/verification/spec.md
-
-      TASK:
-      Qualify the exact corpus for oracle-distinct representation research by measuring headroom, nuisance-control leakage, proof-preserving stability, and verifier circularity; then write results/experiment_5869_hardness_surface_headroom_audit.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: replay the Exp5868 gate; hash summary/rows, split definitions, exact solver receipts, current verifier registry/config, seeds, output path, disk/RAM, and protected files.
-      1. Add REQ-* audit requirements and tests before implementation. Freeze instance-, family-, relabel-group-, and certificate-group-aware splits before fitting any control.
-      2. Recompute labels, certificate validity, matching tolerances, and relabel equivalence independently from rows. Reject duplicate semantic instances across splits.
-      3. Fit or evaluate preregistered trivial controls using density, length, clause width, variable-name tokens, family ID, solver conflicts/time, norm-like counts, and row order. Include shuffled-label and majority controls.
-      4. Evaluate current deterministic/exact verifier paths separately and declare `verifier_is_oracle=true` for any path that executes the same solver or certificate checker. Such accuracy does not reduce oracle-distinct headroom.
-      5. Quantify headroom for a non-oracle internal signal: balanced error rate, maximum trivial-control AUROC, hard/easy cells, relabel stability, and held-family baseline. No control may silently use exact labels.
-      6. Emit bare `hardness_surface_headroom_ready_score=1.0` only when corpus integrity passes, no trivial control exceeds the preregistered saturation ceiling, relabels are stable, and a nonempty held-model/held-constraint evaluation design remains.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_gate_receipt, independent_row_integrity_replay, leakage_safe_split_receipts, label_balance_and_headroom, solver_hardness_vs_label_analysis, density_length_width_name_and_order_controls, relabel_and_certificate_group_controls, shuffled_and_majority_controls, current_verifier_circularity_matrix, oracle_distinct_evaluation_design, held_family_and_constraint_cell_plan, saturation_and_skip_decision, protected_files_unchanged, hardness_surface_headroom_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status:
-           principle: "A terminal audit state distinguishes qualified headroom from shortcut saturation."
-         preconditions_checked:
-           principle: "Gate, rows, solvers, splits, controls, resources, and outputs prevent post-hoc qualification."
-         upstream_gate_receipt:
-           principle: "Only a ready exact fixture may be audited."
-         independent_row_integrity_replay:
-           principle: "Labels and certificates are rechecked rather than trusted from prose."
-         leakage_safe_split_receipts:
-           principle: "Semantic, relabel, family, and certificate groups cannot cross train/test boundaries."
-         label_balance_and_headroom:
-           principle: "A usable research corpus needs both outcomes and unsaturated errors."
-         solver_hardness_vs_label_analysis:
-           principle: "Solver conflicts are a separate axis from correctness."
-         density_length_width_name_and_order_controls:
-           principle: "Nuisance features cannot masquerade as internal reasoning."
-         relabel_and_certificate_group_controls:
-           principle: "Equivalent formulas and shared witnesses stay grouped and stable."
-         shuffled_and_majority_controls:
-           principle: "No-information baselines define the noise floor."
-         current_verifier_circularity_matrix:
-           principle: "Solver-backed accuracy is labeled circular and never a moat."
-         oracle_distinct_evaluation_design:
-           principle: "The future learned score must be evaluated separately from exact release authority."
-         held_family_and_constraint_cell_plan:
-           principle: "Portability requires whole-family and whole-constraint holdouts."
-         saturation_and_skip_decision:
-           principle: "A saturated or leaky corpus must skip expensive model extraction."
-         protected_files_unchanged:
-           principle: "User and operator-owned files remain untouched."
-         hardness_surface_headroom_ready_score:
-           principle: "EMIT BARE scalar; only 1.0 may permit Exp5871."
-         duration_s:
-           principle: "Measured time exposes bootstrap-only diagnostics."
-         inference_substrate:
-           principle: "`deterministic_control_audit_no_llm` declares analysis of exact rows."
-         verifier_is_oracle:
-           principle: "A per-path matrix distinguishes exact/circular verifiers from oracle-distinct controls."
-         field_provenance:
-           principle: "Every metric traces to rows, groups, solvers, controls, seeds, and code hashes."
-         test_commands:
-           principle: "Commands document integrity, leakage, controls, circularity, and split checks."
-         test_exit_codes:
-           principle: "Exit codes prevent a failed audit becoming a compute gate."
-         reproducibility_checksum:
-           principle: "A checksum detects row, split, control, or threshold drift."
-         honest_verdict:
-           principle: "A `complete_ready:`, `complete_null:`, or `blocked:` prefix states the terminal audit."
-      8. Run focused unit/coverage, gate replay, independent labels, duplicate/leakage groups, nuisance controls, relabel stability, circularity matrix, held-cell plan, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
+      0. PRECONDITIONS: replay Exp5881's gate; hash every upstream artifact/row, lifecycle code, exact validators, split groups, seeds, budgets, output path, disk/RAM, and protected files. Assert the retired Exp5865/Exp5866 chain is not a dependency.
+      1. Add REQ-* prospective-learning, safety, and hardware-mapping requirements plus failing tests before implementation. Keep the path default-off and all GGUF weights immutable.
+      2. Seal chronological train, quarantine-validation, future-test, recurrence, and protected-prefix batches before decisions. Enforce commit-before-reveal visibility and exact per-event receipts.
+      3. Freeze arms: one-to-one reduced-oracle; one-to-one full-oracle; frozen memory; random-query; soft-grounding reduced-oracle; shuffled-grounding; no replay; all replay; and compatible replay. Match event, memory, replay, and applicable query budgets.
+      4. Use versioned proposals, rejected-update buffer, quarantine, prospective promotion, per-update non-forgetting certificates, bounded compatible replay, collision/supersession handling, restart, and exact rollback.
+      5. Measure intended-semantic future accuracy, constraint accuracy, shortcut false accepts, forward transfer, recurrence, retention, dynamic regret, query efficiency, resource/update latency, and family/grounding/hardness group-bootstrap intervals.
+      6. Emit a backend-neutral `hardware_mapping_contract` for accepted operations with fixed-width atom IDs, version IDs, bounded records, deterministic hashes, rollback codes, update counts, and precision ranges. Do not execute attached boards or claim hardware performance.
+      7. Emit bare `shortcut_resistant_continuous_self_learning_ready_score=1.0` only when prospective and grouped lower bounds are positive over preregistered controls, unsafe accepts are zero, protected prefixes and hard cells do not regress, restart/rollback is exact, state remains bounded, and model weights remain byte-identical.
+      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, continuous_self_learning_task, upstream_gate_and_hash_receipts, sealed_chronological_split_and_visibility, frozen_arms_and_budget_parity, exact_query_policy_and_budget, versioned_promotion_quarantine_rejection_and_rollback, per_update_non_forgetting_certificates, prospective_semantic_and_constraint_metrics, shortcut_false_accept_metrics, forward_transfer_recurrence_retention_and_regret, family_grounding_hardness_lower_bounds, replay_query_resource_and_latency_accounting, memory_cap_accounting, rollback_restart_and_state_hashes, no_model_weight_mutation, null_and_ablation_controls, hardware_mapping_contract, retirement_decision, shortcut_resistant_continuous_self_learning_ready_score, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         continuous_self_learning_task principle: must be bare true for the milestone requirement.
+         sealed_chronological_split_and_visibility principle: future evidence cannot influence current updates.
+         per_update_non_forgetting_certificates principle: every promotion protects prior certified cells.
+         shortcut_false_accept_metrics principle: formula satisfaction cannot hide semantic failure.
+         memory_cap_accounting principle: continuous learning remains bounded.
+         no_model_weight_mutation principle: must be true with before/after hashes.
+         hardware_mapping_contract principle: every learning tier retains a falsifiable hardware path without claiming execution.
+         shortcut_resistant_continuous_self_learning_ready_score principle: emit a bare terminal scalar.
+         inference_substrate principle: use `deterministic_exact_verifier_and_versioned_external_state_no_llm`.
+         verifier_is_oracle principle: true for exact feedback/promotion authority.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:`.
+      9. Run focused unit/coverage, gate/hash, split visibility, arm/budget parity, query policy, lifecycle, non-forgetting, shortcut safety, grouped intervals, replay/resource, memory cap, restart/rollback, weight immutability, hardware-schema, applicable E2E, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
