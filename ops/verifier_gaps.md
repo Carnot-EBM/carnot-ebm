@@ -3979,3 +3979,21 @@ result here actually proves out.
   is a bigger redesign requiring the tu93 3/3 solve + {9,4} recovery + L3 calibration as regression gates;
   deferred to a dedicated cycle. Until then the OPEN gap stands with the mitigation above (is_confident_nav
   fail-safe) as the practical guard.
+
+### plan_in_model best-first: PROBED, CONFIRMED ROBUST (iter10, 2026-07-24) — no gap, no fix
+- Adversarial CPU-only probe of `arc_executable_world_model.plan_in_model`'s best-first (goal_energy) search
+  vs the blind BFS, on controlled mazes: open, a local-minimum TRAP (the only exit forces moving AWAY from
+  the goal first), a serpentine detour, and a large 30x30 walled-pocket (avatar starts near the goal in
+  Manhattan terms but must travel the long way round). Checked three properties: (1) neither planner ever
+  returns a NON-winning plan (every returned plan replayed through the engine satisfies is_level_complete);
+  (2) COMPLETENESS PARITY -- best-first finds a plan wherever BFS does (no greedy local-minimum trap defeats
+  it); (3) the efficiency win holds (best-first expands FEWER or equal nodes every maze: 81 vs 263 open, 274
+  vs 472 trap, 194 vs 204 serpentine, 3020 vs 6356 large-pocket).
+- Why it is robust (not luck): best-first retains the FULL frontier + a global seen-set, so it explores the
+  entire reachable state space in energy order; the reachable nav-state count stays well under the 20000-node
+  budget, and the win state (goal covered -> energy 0, the global minimum) is popped immediately once any
+  path generates it. The seen-set dedups by the FULL grid ascii, so two paths reaching an identical grid are
+  genuinely equivalent -- pruning cannot drop a needed state for a pure grid->grid model.
+- Conclusion: no gap here; this retires the "best-first could be led astray / prune a needed state" concern.
+  Do NOT re-probe plan_in_model best-first correctness in a future cycle without a NEW angle (e.g. a
+  non-monotone goal_energy, or a model with hidden state where the grid-ascii seen-key is incomplete).
