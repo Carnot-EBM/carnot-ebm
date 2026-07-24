@@ -426,3 +426,34 @@ live-search-beats-baseline demo.
 no hand-RE, what arc_loop_solve uses), but deep TRUE-LIVE scored solving of a non-idempotent-reset maze is a
 genuine OPEN research problem -- a parity-aware live search, or a world-model rollout that branches without
 resetting the real env -- not a wiring gap. That is the honest boundary of the whole perception-fix program.
+
+## Dig into induction quality (5841): a plan_in_model regression + a structured-nav-model live solve
+
+Digging into the 2026-07-20 induction-quality diagnosis's open question #6 ("why does even a PERFECT induction
+execute to 0 real level-up with plan_len=1?"), the outer loop found the concrete cause: a REGRESSION.
+
+**The bug.** `arc_graph_explore._components_detailed` was widened from a 4-tuple (cy,cx,area,color) to a
+5-tuple (+is_grid_fallback) in commit 2f0760307 (GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS). That fix
+updated the arc_graph_explore consumer defensively but MISSED plan_in_model's `_model_candidates`, whose rigid
+`for cy,cx,_a,_c in comps` unpack then raised ValueError on ANY grid with components (tu93 has 65). The
+live/harness call sites catch the exception, so it SILENTLY disabled the entire plan_in_model world-model
+planning tier for every object-bearing game. (The diagnosis, dated 07-20, predates the regression.)
+
+**The fix.** Defensive `for cy, cx, _a, _c, *_ in comps` unpack + a corrected docstring + a regression test.
+
+**The downstream win.** With the fix AND a STRUCTURED nav world model (`InducedNavWorldModel` -- correct by
+construction for the 4-direction navigation family, fitting per-action displacement + avatar + goal from the
+agent's own transitions; the "mechanic-class prior" the diagnosis §6 flagged as highest-leverage, NOT the
+near-universally-wrong LLM induction), `plan_in_model` finds an **18-action navigation plan that reaches a
+REAL tu93 level-up (hv 60->6), reproducible 3/3.**
+
+**Why this matters for live search.** plan_in_model plans IN IMAGINATION then executes ONCE from reset -- no
+per-node resets -- so it SIDESTEPS tu93's non-idempotent-reset blocker that defeated the
+OfflineSolver/StepwiseExplorer live search (5840). This is a **live-compatible** navigation solve, and it
+uses the structured inducer the diagnosis pointed at.
+
+**The concrete next unblock.** `InducedNavWorldModel` is currently ORPHANED from the live E3 path (imported
+only by scripts/tests). Route navigation games (detected via `derive_navigation_pair`) to it instead of the
+LLM induction, and feed its engine+is_level_complete to the live plan_in_model tier -- giving E3 a correct
+model for nav games. That is the highest-leverage lever the 2026-07-20 diagnosis identified, now with a
+working end-to-end proof and a same-day planner regression removed from its path.

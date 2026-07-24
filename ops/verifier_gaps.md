@@ -2838,6 +2838,30 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - missing discriminator: extend E3 state to (grid, registers) with induced HUD/counter scalars; let
   is_level_complete read them.
 - priority: high
+- **REGRESSION FOUND + FIXED 2026-07-23 (REQ-ARC-WMTE-5841,
+  `results/outer_loop_arc_plan_in_model_nav_solve_20260723.json`) -- digging into the 2026-07-20
+  induction-quality diagnosis's open question ("why does even a PERFECT induction execute to 0 level-up with
+  plan_len=1?").** Concrete cause: a REGRESSION. `arc_graph_explore._components_detailed` was widened from a
+  4-tuple `(cy,cx,area,color)` to a 5-tuple `(+is_grid_fallback)` in commit 2f0760307
+  (GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS); that fix updated the arc_graph_explore consumer DEFENSIVELY
+  but MISSED `plan_in_model`'s `_model_candidates`, whose rigid `for cy,cx,_a,_c in comps` unpack then raised
+  ValueError on ANY grid with components (tu93 has 65) -- and since the live/harness call sites catch the
+  exception, it SILENTLY disabled the entire `plan_in_model` world-model planning tier for every
+  object-bearing game (the diagnosis, dated 07-20, was BEFORE the regression, so it still saw plan_found=11).
+  FIX: defensive `for cy, cx, _a, _c, *_ in comps` unpack + a corrected `_components_detailed` docstring + a
+  regression test (`tests/python/test_plan_in_model_component_unpack.py`, 2 tests; the rigid unpack raises on
+  a 5-tuple -- confirmed). **DOWNSTREAM WIN: with the fix AND a STRUCTURED nav world model
+  (`InducedNavWorldModel` -- correct-by-construction for the 4-direction navigation family, the
+  "mechanic-class prior" the diagnosis §6 flagged as highest-leverage, NOT the near-universally-wrong LLM
+  induction), `plan_in_model` finds an 18-action navigation plan that reaches a REAL tu93 level-up (hv
+  60->6), REPRODUCIBLE 3/3.** CRUCIALLY, plan_in_model plans IN IMAGINATION then executes ONCE from reset --
+  no per-node resets -- so it SIDESTEPS tu93's non-idempotent-reset blocker that defeated the
+  OfflineSolver/StepwiseExplorer live search (REQ-ARC-WMTE-5840): **this is a LIVE-COMPATIBLE navigation
+  solve.** CONCRETE UNBLOCK (next): `InducedNavWorldModel` is currently ORPHANED from the live E3 path
+  (imported only by scripts/tests); route navigation games (detected via `derive_navigation_pair`) to it
+  instead of the LLM induction and feed its engine+is_level_complete to the live `plan_in_model` tier --
+  giving E3 a CORRECT model for nav games. This is the highest-leverage lever the induction-quality diagnosis
+  identified, now with a working end-to-end proof + a same-day planner regression removed from its path.
 
 ### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
 - status: DOWN-WEIGHTED (2026-07-20, REQ-ARC-FCP-5757 empirical basis) -- was "open (single biggest lever)"
