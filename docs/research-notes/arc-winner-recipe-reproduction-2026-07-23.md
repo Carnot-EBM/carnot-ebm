@@ -278,3 +278,22 @@ target.
 6. Re-authoring -> goal gate **0 -> 4/8**, zero HUD fixation; wired into the live agent
 7. Discovery A/B -> **0/8 both arms** -> perception necessary, not sufficient; **execution/dynamics is next**;
    feed the perception fix into Carnot's verifier-routed search (not the greedy-direct winner recipe)
+
+## E3 search A/B (5835): routing the perception target into Carnot's search is also a null
+
+Executed the redirect the discovery null pointed to: fed a perception-derived target (nearest non-HUD object
+to the detected player, from a perceive_entities recon) into Carnot's LLM-free tier-1 explorer as a
+player->target Manhattan value_head, routed (value_weight=1, best_first, navigation_cost_tiebreak=False), A/B
+vs the default explorer, 8 games, scored by run_game.
+
+**Result: 0 discovery, both arms, all 8 -- robust across search mode** (depth_first_ride vw3 also 0). The
+value_head engages (instrumented ~41 calls/run, sane distances) but the player->target distance hovers at ~9
+and never decreases: the search does not navigate the player to the target.
+
+**What this bounds.** Combined with the greedy-direct null (5834): the perception fix is validated
+(goal-framing 0->4/8 offline, 0->7/8 oracle) but NEITHER greedy-direct NOR value-head-routed search converts
+it to a solved level out of the box. Execution/navigation is a genuinely hard, separate problem -- not cracked
+by routing toward a Manhattan target. Likely unaddressed: the recon target may not be the true exit
+(nearest-object heuristic); the search may not find the navigation path within budget even with a correct
+target; the perception arm only applied to 3/8 games. The honest end state: the perception-fix program moved
+the wall from perception/goal-induction to execution/navigation, and the execution wall stands.
