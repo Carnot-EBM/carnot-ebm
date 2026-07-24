@@ -1,0 +1,2436 @@
+{
+  "continuous_self_learning_task": true,
+  "duration_s": 0.290844,
+  "exact_query_policy_and_budget": {
+    "full_oracle": {
+      "exact_queries_used": 144,
+      "query_rule": "all_rows_exact_ceiling_not_learned_credit"
+    },
+    "one_to_one_reduced_oracle": {
+      "authority": "exact_validator_for_promotion_only",
+      "exact_queries_used": 96
+    },
+    "oracle_boundary_violation_count": 0,
+    "principle": "Exact feedback cost and authority are explicit before promotion.",
+    "query_budget_frozen_before_scoring": true,
+    "reduced_oracle": {
+      "exact_queries_used": 96,
+      "query_fraction_of_full": 0.666667,
+      "query_rule": "train_plus_quarantine_validation_only_after_commit",
+      "uses_future_labels": false
+    },
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.exact_query_policy_budget",
+    "verifier_authority": "exact_semantic_and_constraint_validators",
+    "verifier_is_oracle": true
+  },
+  "experiment": 5895,
+  "experiment_id": "experiment_5895_shortcut_safe_continuous_self_learning",
+  "family_grounding_hardness_lower_bounds": {
+    "all_group_lower_bounds_positive": true,
+    "credited_cell_definition": "heldout shortcut rows grouped by family, grounding regime, and hardness",
+    "credited_cells": [
+      {
+        "axis": "family",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 3,
+        "value": "exactly_one_route"
+      },
+      {
+        "axis": "family",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 3,
+        "value": "implication_chain"
+      },
+      {
+        "axis": "family",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 3,
+        "value": "parity_xor"
+      },
+      {
+        "axis": "grounding",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 3,
+        "value": "cognition_biased_permutation"
+      },
+      {
+        "axis": "grounding",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 3,
+        "value": "constraint_satisfaction_many_to_one"
+      },
+      {
+        "axis": "grounding",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 3,
+        "value": "constraint_satisfaction_soft_mass_swap"
+      },
+      {
+        "axis": "hardness",
+        "minimum_lcb": 1.0,
+        "per_control": {
+          "compatible_replay": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          },
+          "soft_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          }
+        },
+        "positive": true,
+        "primary_semantic_accuracy": 1.0,
+        "row_count": 9,
+        "value": "hard_shortcut"
+      }
+    ],
+    "group_bootstrap_intervals": {
+      "family": {
+        "axis": "family",
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "minimum_lcb": 1.0,
+        "n_groups": 3
+      },
+      "grounding": {
+        "axis": "grounding",
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "minimum_lcb": 1.0,
+        "n_groups": 3
+      },
+      "hardness": {
+        "axis": "hardness",
+        "bootstrap_repetitions": 1,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "minimum_lcb": 1.0,
+        "n_groups": 1
+      }
+    },
+    "minimum_credited_lcb": 1.0,
+    "pooled_lift_cannot_hide_failing_cell": true,
+    "principle": "Grouped lower bounds prevent pooled lift from hiding a failing family, grounding, or hardness cell.",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.family_grounding_hardness_lower_bounds"
+  },
+  "field_provenance": {
+    "continuous_self_learning_task": {
+      "principle": "Must be bare true for the milestone requirement.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes deterministic sidecar work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "exact_query_policy_and_budget": {
+      "principle": "Exact feedback cost and authority are explicit before promotion.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "family_grounding_hardness_lower_bounds": {
+      "principle": "Grouped lower bounds prevent pooled lift from hiding a failing family, grounding, or hardness cell.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to prompt, spec, rows, upstream artifacts, validators, lifecycle code, controls, or tests.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "forward_transfer_recurrence_retention_and_regret": {
+      "principle": "Prospective learning must improve transfer without forgetting or unbounded regret.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "frozen_arms_and_budget_parity": {
+      "principle": "Frozen arm and budget parity isolate external-state lifecycle effects.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "hardware_mapping_contract": {
+      "principle": "Each learning tier retains a falsifiable hardware path without claiming execution.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `deterministic_exact_verifier_and_versioned_external_state_no_llm`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "memory_cap_accounting": {
+      "principle": "Versioned state, replay, quarantine, and rejected buffers remain bounded.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "no_model_weight_mutation": {
+      "principle": "Immutable GGUF weights remain unchanged.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "null_and_ablation_controls": {
+      "principle": "Null, ablation, soft, shuffled, fixed-memory, no-memory, and compatible-replay controls test causal credit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "per_update_non_forgetting_certificates": {
+      "principle": "Every promoted update carries a protected-prefix retention certificate.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Gate, hashes, validators, split groups, seeds, budgets, resources, outputs, protected files, and retired-chain exclusion prevent invalid learning.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "prospective_semantic_and_constraint_metrics": {
+      "principle": "Future semantic and constraint outcomes are scored after commit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "rejected_update_non_propagation": {
+      "principle": "Unsafe or unverified state never becomes future context.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "replay_query_resource_and_latency_accounting": {
+      "principle": "Replay, query, resource, and latency accounting expose costs without speedup claims.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects gate, row, split, budget, state, metric, hardware-contract, or code drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "retirement_decision": {
+      "principle": "The next step distinguishes advancement from null, unsafe, blocked, or retired evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "rollback_restart_and_state_hashes": {
+      "principle": "Restart and rollback must reproduce exact canonical state hashes.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "sealed_chronological_split_and_visibility": {
+      "principle": "Future evidence cannot influence current updates.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "shortcut_false_accept_metrics": {
+      "principle": "Shortcut false accepts are counted by arm and type.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "shortcut_resistant_csl_ready_score": {
+      "principle": "Emit bare 1.0 only for positive grouped future lift, zero unsafe accepts, exact retention/rollback, bounded state, and immutable weights.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes positive, null, unsafe, retired, or blocked shortcut-safe continuous learning evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/coverage, gate/hash, split visibility, arm/budget parity, lifecycle, non-forgetting, rejected-update, shortcut safety, grouped intervals, state cap, restart/rollback, weight immutability, hardware-schema, applicable E2E, schema, adversarial-verify, spec-coverage, root-clutter, and protected-file checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "upstream_gate_and_hash_receipts": {
+      "principle": "Exp5894, Exp5893 rows, lifecycle code, validators, and immutable weights are the bounded evidence surface.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "verified_evidence_and_unresolved_constraint_state": {
+      "principle": "The state contains verified evidence plus unresolved constraints without treating unresolved items as accepted facts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True for exact feedback and promotion authority.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    },
+    "versioned_promotion_quarantine_rejection_and_rollback": {
+      "principle": "Only exact validation can promote and every state edit has a rollback target.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+        "results/experiment_5894_one_to_one_grounding_ab.json",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5856_provenance_correct_lifecycle.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "python/carnot/adaptive_state.py",
+        "ops/e2e-test-plan.md"
+      ]
+    }
+  },
+  "forward_transfer_recurrence_retention_and_regret": {
+    "dynamic_regret": {
+      "compatible_replay": 0.388889,
+      "fixed_validated_memory": 0.416667,
+      "no_memory": 0.583333,
+      "one_to_one_full_oracle": 0.0,
+      "one_to_one_reduced_oracle": 0.083333,
+      "shuffled_grounding": 0.388889,
+      "soft_grounding": 0.333333,
+      "verified_evidence_plus_unresolved_constraints": 0.083333
+    },
+    "forward_transfer": {
+      "future_rows": 36,
+      "primary_minus_best_shortcut_control": {
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          0.111111,
+          0.416667
+        ],
+        "mean_delta": 0.25,
+        "n": 36
+      }
+    },
+    "principle": "Prospective learning must improve transfer without forgetting or unbounded regret.",
+    "recurrence": {
+      "row_count": 6,
+      "semantic_accuracy": 1.0,
+      "shortcut_false_accept_count": 0
+    },
+    "retention": {
+      "protected_prefix_count": 12,
+      "protected_prefix_retention": 1.0,
+      "retention_regression_count": 0
+    },
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.forward_transfer_recurrence_retention_regret"
+  },
+  "frozen_arms_and_budget_parity": {
+    "applicable_query_budget_parity": true,
+    "arms": [
+      "verified_evidence_plus_unresolved_constraints",
+      "fixed_validated_memory",
+      "one_to_one_reduced_oracle",
+      "one_to_one_full_oracle",
+      "soft_grounding",
+      "shuffled_grounding",
+      "no_memory",
+      "compatible_replay"
+    ],
+    "definitions": {
+      "compatible_replay": {
+        "learned_credit": false,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "fixed_validated_memory": {
+        "learned_credit": false,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "no_memory": {
+        "learned_credit": false,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "one_to_one_full_oracle": {
+        "learned_credit": false,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": true,
+        "uses_future_labels": false
+      },
+      "one_to_one_reduced_oracle": {
+        "learned_credit": true,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "shuffled_grounding": {
+        "learned_credit": false,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "soft_grounding": {
+        "learned_credit": false,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "verified_evidence_plus_unresolved_constraints": {
+        "learned_credit": true,
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      }
+    },
+    "event_budget_parity": true,
+    "frozen_before_scoring": true,
+    "lifecycle_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+    "per_arm_budgets": {
+      "compatible_replay": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "fixed_validated_memory": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "no_memory": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "one_to_one_full_oracle": {
+        "event_count": 72,
+        "exact_query_count": 144,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "full_oracle",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "one_to_one_reduced_oracle": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "shuffled_grounding": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "soft_grounding": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      },
+      "verified_evidence_plus_unresolved_constraints": {
+        "event_count": 72,
+        "exact_query_count": 96,
+        "initialization_hash": "sha256:6730fb5a7f2d338e35faee17bca643048aba658a78cfea5a2c6093ff8c4d6146",
+        "query_budget_class": "reduced_or_control",
+        "replay_limit": 4,
+        "state_capacity": 16
+      }
+    },
+    "primary_arm": "verified_evidence_plus_unresolved_constraints",
+    "principle": "Frozen arm and budget parity isolate external-state lifecycle effects.",
+    "replay_budget_parity": true,
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.frozen_arms_budget_parity",
+    "state_budget_parity": true
+  },
+  "hardware_mapping_contract": {
+    "backend_neutral": true,
+    "board_execution_performed": false,
+    "falsifiable": true,
+    "learning_tiers": {
+      "tier_1_insert_quarantine": {
+        "falsifiable": true,
+        "hardware_path": "streaming_record_fifo"
+      },
+      "tier_2_lookup_supersede": {
+        "falsifiable": true,
+        "hardware_path": "hash_table_or_cam"
+      },
+      "tier_3_rollback": {
+        "falsifiable": true,
+        "hardware_path": "versioned_checkpoint_bram_or_dram"
+      },
+      "tier_4_sparse_ranking": {
+        "falsifiable": true,
+        "hardware_path": "bounded_topk_sorter"
+      }
+    },
+    "operation_contracts": {
+      "bounded_records": "promoted<=16, quarantine<=32, rejected<=16",
+      "deterministic_hashes": "sha256 canonical json receipts",
+      "fixed_width_ids": "u64-compatible truncated deterministic hashes plus u32 version ids",
+      "insert": "append bounded verified record after exact validation",
+      "lookup": "deterministic hash-id lookup over promoted records",
+      "precision_ranges": "u16 q16 confidence and integer event/version counters",
+      "quarantine": "append unresolved record without replay visibility",
+      "rollback": "restore prior canonical state hash by version id",
+      "sparse_ranking": "rank promoted records by q16 confidence then chronology",
+      "supersede": "move collided or shortcut candidate to quarantine",
+      "update_counts": "proposal, promotion, quarantine, rejection, rollback counts"
+    },
+    "operations": [
+      "insert",
+      "quarantine",
+      "lookup",
+      "supersede",
+      "rollback",
+      "sparse_ranking",
+      "fixed_width_ids",
+      "bounded_records",
+      "deterministic_hashes",
+      "update_counts",
+      "precision_ranges"
+    ],
+    "principle": "Each learning tier retains a falsifiable hardware path without claiming execution.",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.hardware_mapping_contract",
+    "speedup_claimed": false,
+    "update_counts": {
+      "promoted": 18,
+      "quarantined": 18,
+      "rejected": 9,
+      "rollback": 3
+    }
+  },
+  "honest_verdict": "complete_null: shortcut_safe_csl_not_promotion_eligible",
+  "inference_substrate": "deterministic_exact_verifier_and_versioned_external_state_no_llm",
+  "memory_cap_accounting": {
+    "cap_compliance": true,
+    "cap_pressure": 1.0,
+    "max_quarantine_records": 18,
+    "max_rejected_records": 9,
+    "max_state_records": 16,
+    "memory_cap": 16,
+    "principle": "Versioned state, replay, quarantine, and rejected buffers remain bounded.",
+    "quarantine_cap": 32,
+    "rejected_buffer_cap": 16,
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.memory_cap_accounting",
+    "state_size_series_hash": "sha256:d0695d58490b80858aa80c8ad1be6c425f13a038de6e16074e7f87acb07705b1"
+  },
+  "milestone": "2026.07.524",
+  "no_model_weight_mutation": {
+    "all_unchanged": true,
+    "content_hash_strategy": "not_loaded_or_rehashed_large_gguf_stat_immutability_receipt",
+    "gguf_weight_mutation_count": 0,
+    "model_execution_loaded": false,
+    "post_run_stat_receipts": {
+      "receipt_hash": "sha256:e5f524ded1ec52bdb6ba2d55bce4b0379f54a8913d795a81cb566680b3cfb033",
+      "receipts": [
+        {
+          "inode": 4838788046,
+          "mode": 33188,
+          "mtime_ns": 1776792141541613663,
+          "path": "models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf",
+          "size_bytes": 11624759232
+        }
+      ],
+      "strategy": "stat_receipt_no_weight_load",
+      "weight_file_count": 1
+    },
+    "pre_run_stat_receipts": {
+      "receipt_hash": "sha256:e5f524ded1ec52bdb6ba2d55bce4b0379f54a8913d795a81cb566680b3cfb033",
+      "receipts": [
+        {
+          "inode": 4838788046,
+          "mode": 33188,
+          "mtime_ns": 1776792141541613663,
+          "path": "models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf",
+          "size_bytes": 11624759232
+        }
+      ],
+      "strategy": "stat_receipt_no_weight_load",
+      "weight_file_count": 1
+    },
+    "principle": "Immutable GGUF weights remain unchanged.",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.no_model_weight_mutation",
+    "weight_update_path_enabled": false
+  },
+  "null_and_ablation_controls": {
+    "all_controls_passed": true,
+    "compatible_replay_control_detects_shortcuts": true,
+    "fixed_validated_memory_control": {
+      "credited_for_promotion": false,
+      "future_semantic_accuracy": 0.583333
+    },
+    "label_ablation_passed": true,
+    "no_memory_not_credited_for_promotion": true,
+    "principle": "Null, ablation, soft, shuffled, fixed-memory, no-memory, and compatible-replay controls test causal credit.",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.null_ablation_controls",
+    "shuffled_grounding_control_detects_shortcuts": true,
+    "soft_grounding_control_detects_shortcuts": true,
+    "unresolved_constraint_ablation_blocks_promotion": true
+  },
+  "per_update_non_forgetting_certificates": {
+    "certificate_count": 18,
+    "certificate_hash_root": "sha256:8b49915e738b239d3d5868415e7168e94e61e584de221bc375b8c88c418abc54",
+    "certificate_rate": 1.0,
+    "failed_certificate_count": 0,
+    "minimum_protected_prefix_retention": 1.0,
+    "principle": "Every promoted update carries a protected-prefix retention certificate.",
+    "sample_certificates": [
+      {
+        "certificate_hash": "sha256:6dccf0643af60c9012a057e9b02df7db9651c0959b2f90f34af6d96935c25e15",
+        "passed": true,
+        "protected_prefix_count": 12,
+        "protected_prefix_retention": 1.0,
+        "row_id": "exp5893-exactly_one_route-case0-canonical",
+        "unsafe_accept_count": 0,
+        "update_id": "e5895-000"
+      },
+      {
+        "certificate_hash": "sha256:6b649261b981f7bb464d8b428dca11e567956833b151a7a94838bfe01b529ea9",
+        "passed": true,
+        "protected_prefix_count": 12,
+        "protected_prefix_retention": 1.0,
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-true",
+        "unsafe_accept_count": 0,
+        "update_id": "e5895-005"
+      },
+      {
+        "certificate_hash": "sha256:20270f692098021b4143e7e8a45a4db5f2d85593e0103105ff6655fc4c053651",
+        "passed": true,
+        "protected_prefix_count": 12,
+        "protected_prefix_retention": 1.0,
+        "row_id": "exp5893-exactly_one_route-case0-label-permutation-control",
+        "unsafe_accept_count": 0,
+        "update_id": "e5895-006"
+      },
+      {
+        "certificate_hash": "sha256:e37f2d95c71e7691435e95c7a7eb05479f93ef3578c1980568f549b17eea7dd3",
+        "passed": true,
+        "protected_prefix_count": 12,
+        "protected_prefix_retention": 1.0,
+        "row_id": "exp5893-exactly_one_route-case0-shuffled-control",
+        "unsafe_accept_count": 0,
+        "update_id": "e5895-009"
+      },
+      {
+        "certificate_hash": "sha256:40243a71366d913786ea95c144c211dea153d59a053222ad0491cd6231c52cfb",
+        "passed": true,
+        "protected_prefix_count": 12,
+        "protected_prefix_retention": 1.0,
+        "row_id": "exp5893-exactly_one_route-case0-soft-distributed-control",
+        "unsafe_accept_count": 0,
+        "update_id": "e5895-010"
+      },
+      {
+        "certificate_hash": "sha256:8b4e2439945294c499cf880e8bc9480732881f304ae7bf3aa9bb64c24cc49994",
+        "passed": true,
+        "protected_prefix_count": 12,
+        "protected_prefix_retention": 1.0,
+        "row_id": "exp5893-exactly_one_route-case0-surface-matched-control",
+        "unsafe_accept_count": 0,
+        "update_id": "e5895-011"
+      }
+    ],
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.per_update_non_forgetting_certificates"
+  },
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "checks": {
+      "budgets": true,
+      "disk": true,
+      "exact_validators": true,
+      "exp5893_rows": true,
+      "exp5894_gate": true,
+      "memory": true,
+      "output_path": true,
+      "protected_files_present": true,
+      "python": true,
+      "retired_chain_excluded": true,
+      "seeds": true,
+      "source_hashes_present": true,
+      "split_groups": true
+    },
+    "output_path": {
+      "atomic_probe_write_ok": true,
+      "atomic_suffix": ".tmp",
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+      "target_writable": true
+    },
+    "preconditions_ready": true,
+    "principle": "Gate, hashes, validators, split groups, seeds, budgets, resources, outputs, protected files, and retired-chain exclusion prevent invalid learning.",
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1168319,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 99724,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "run_date": "20260724",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.preconditions",
+    "upstream_gate_and_hash_receipts": {
+      "budget_registry": {
+        "ok": true,
+        "registry": {
+          "event_count": 72,
+          "full_exact_queries": 144,
+          "held_count": 36,
+          "memory_cap": 16,
+          "quarantine_cap": 32,
+          "reduced_exact_queries": 96,
+          "rejected_buffer_cap": 16,
+          "replay_limit": 4,
+          "train_count": 36
+        },
+        "registry_hash": "sha256:3b839bbacd876e0c136d6e75aac3d7eaf0369059d818a286a14e633d8cb77d82"
+      },
+      "exact_validators": {
+        "alternate_constraint_oracle": "constraint_replay_formula_v1",
+        "authority": "exact_semantic_and_constraint_validators",
+        "constraint_oracle": "constraint_direct_formula_v1",
+        "ok": true,
+        "semantic_oracle": "semantic_exact_match_v1",
+        "validator_code_hashes": {
+          "exp5893_fixture": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+          "exp5894_lifecycle_code": "sha256:9694e936cf6a2ac78f6102c6467a4c7c20fe2501a374900f85f935afb7091c29",
+          "semantic_grounding": "sha256:8cf0ba094c16b67e0b45f98056829e902fc3fcd288ad1408a6dc62fc5c36f0b3"
+        }
+      },
+      "exp5893_rows": {
+        "exact_oracles_replayed": true,
+        "ok": true,
+        "path": "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "row_count": 72,
+        "row_hash_root": "sha256:a3487c97de454bb36e528f62bcf9f6b63cd8bc028eea86cc7f66fcc798f0dc9e",
+        "row_hashes_match": true,
+        "sha256": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+        "split_groups_isolated": true
+      },
+      "exp5894_gate": {
+        "honest_verdict": "complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accepts",
+        "ok": true,
+        "path": "results/experiment_5894_one_to_one_grounding_ab.json",
+        "ready_score": 1.0,
+        "sha256": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+        "status": "complete_positive",
+        "validates": true
+      },
+      "exp5894_replay": {
+        "gate_replayed": true,
+        "replay_boundary": "artifact_validation_without_mutating_exp5894_output",
+        "validates": true
+      },
+      "gguf_weight_stat_receipts": {
+        "receipt_hash": "sha256:e5f524ded1ec52bdb6ba2d55bce4b0379f54a8913d795a81cb566680b3cfb033",
+        "receipts": [
+          {
+            "inode": 4838788046,
+            "mode": 33188,
+            "mtime_ns": 1776792141541613663,
+            "path": "models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf",
+            "size_bytes": 11624759232
+          }
+        ],
+        "strategy": "stat_receipt_no_weight_load",
+        "weight_file_count": 1
+      },
+      "ok": true,
+      "principle": "Exp5894, Exp5893 rows, lifecycle code, validators, and immutable weights are the bounded evidence surface.",
+      "protected_files_unchanged": {
+        "after_hashes": {
+          "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+          "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+          "results/experiment_5894_one_to_one_grounding_ab.json": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+          "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+        },
+        "all_unchanged": true,
+        "before_hashes": {
+          "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+          "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+          "results/experiment_5894_one_to_one_grounding_ab.json": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+          "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+        },
+        "changed_files": []
+      },
+      "retired_chain_exclusion": {
+        "artifact_statuses": {
+          "experiment_5865": {
+            "dependency": false,
+            "honest_verdict": "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt",
+            "path": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+            "sha256": "sha256:911b5efdcaeb9578173d9ba5a70f29b5d23431e3404f45483c8751c1b3acfe3a",
+            "status": "retired",
+            "used_for_promotion": false
+          },
+          "experiment_5867": {
+            "dependency": false,
+            "honest_verdict": "blocked_gate_check_failed",
+            "path": "results/experiment_5867_prospective_certified_continuous_learning.json",
+            "sha256": "sha256:a7272117e8619a359fa72cd620c23758a28063000adbff5c6ee58a1e62b1d0c1",
+            "status": "blocked",
+            "used_for_promotion": false
+          }
+        },
+        "assertion": "Exp5865-Exp5867 chain is retired context only, not an Exp5895 dependency",
+        "dependency_used": false,
+        "ok": true,
+        "retired_context_artifacts": [
+          "experiment_5865",
+          "experiment_5867"
+        ]
+      },
+      "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.upstream_gate_and_hash_receipts",
+      "seed_registry": {
+        "ok": true,
+        "registry": {
+          "base_seed": 5895,
+          "bootstrap_seed": 5895001,
+          "replay_seed": 5895003,
+          "rollback_seed": 5895004,
+          "split_seed": 5895002
+        },
+        "registry_hash": "sha256:3ea2d26885526c97d66487a6aac3718dfc06907aad1d8da62f23ca37fb2d047d"
+      },
+      "source_hashes": {
+        "adaptive_state_lifecycle_code": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
+        "adversarial_verify": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de",
+        "claude_instructions": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+        "codex_instructions": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "e2e_plan": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "exact_semantic_grounding_validator": "sha256:8cf0ba094c16b67e0b45f98056829e902fc3fcd288ad1408a6dc62fc5c36f0b3",
+        "exp5856_lifecycle": "sha256:5ace8c926b515004d569ed0fed40f2a54b1ee3886407a78f48822dc56ab11bf6",
+        "exp5857_replay": "sha256:5768b1141664f1c7574666773540b369beef751b6e1a856725fcc9384f22cfb8",
+        "exp5858_reduced_oracle": "sha256:de906c4b6a267deea4ed416bb0571403f1788987c9dc255f2eab16ecf15ca361",
+        "exp5893_artifact": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+        "exp5893_rows": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+        "exp5894_artifact": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+        "exp5894_lifecycle_code": "sha256:9694e936cf6a2ac78f6102c6467a4c7c20fe2501a374900f85f935afb7091c29",
+        "exp5894_tests": "sha256:d15d64f8a4d44dd307d3576eed41759826d79b960eab42216f7c19b26a880a21",
+        "exp5895_module": "sha256:e950fc1045201e1b33b8f0221f60b8ae8172cb12431445e8556018225a15712a",
+        "exp5895_tests": "sha256:3cd1565af4e70ee95cd0fbaa1c826bc5e6e8fc39dc9081d4eb1adbfaddf2dba9",
+        "prd": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+        "protected_file_guard": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "research_program": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "root_clutter_sweep": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "self_learning_spec": "sha256:77a68ac02d8a832b9b060a2e77ff93ca350ec95166f89c2f4b16cdad60902933"
+      },
+      "split_groups": {
+        "group_count": 6,
+        "registry_hash": "sha256:32c4eb593f3a05b2f8f5426d58851a4c5c041821da885d2ad7e7171fc64500e2",
+        "split_groups_isolated": true
+      }
+    }
+  },
+  "prospective_semantic_and_constraint_metrics": {
+    "arm_metrics": {
+      "compatible_replay": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "constraint_accuracy": 0.944444,
+        "constraint_correct": 34,
+        "false_accept_count": 11,
+        "future_semantic_accuracy": 0.611111,
+        "n": 36,
+        "semantic_accuracy": 0.611111,
+        "semantic_correct": 22,
+        "shortcut_false_accept_count": 9
+      },
+      "fixed_validated_memory": {
+        "abstention_count": 30,
+        "abstention_rate": 0.833333,
+        "constraint_accuracy": 0.416667,
+        "constraint_correct": 15,
+        "false_accept_count": 0,
+        "future_semantic_accuracy": 0.583333,
+        "n": 36,
+        "semantic_accuracy": 0.583333,
+        "semantic_correct": 21,
+        "shortcut_false_accept_count": 0
+      },
+      "no_memory": {
+        "abstention_count": 36,
+        "abstention_rate": 1.0,
+        "constraint_accuracy": 0.25,
+        "constraint_correct": 9,
+        "false_accept_count": 0,
+        "future_semantic_accuracy": 0.416667,
+        "n": 36,
+        "semantic_accuracy": 0.416667,
+        "semantic_correct": 15,
+        "shortcut_false_accept_count": 0
+      },
+      "one_to_one_full_oracle": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "constraint_accuracy": 1.0,
+        "constraint_correct": 36,
+        "false_accept_count": 0,
+        "future_semantic_accuracy": 1.0,
+        "n": 36,
+        "semantic_accuracy": 1.0,
+        "semantic_correct": 36,
+        "shortcut_false_accept_count": 0
+      },
+      "one_to_one_reduced_oracle": {
+        "abstention_count": 3,
+        "abstention_rate": 0.083333,
+        "constraint_accuracy": 0.75,
+        "constraint_correct": 27,
+        "false_accept_count": 0,
+        "future_semantic_accuracy": 0.916667,
+        "n": 36,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 33,
+        "shortcut_false_accept_count": 0
+      },
+      "shuffled_grounding": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "constraint_accuracy": 0.944444,
+        "constraint_correct": 34,
+        "false_accept_count": 11,
+        "future_semantic_accuracy": 0.611111,
+        "n": 36,
+        "semantic_accuracy": 0.611111,
+        "semantic_correct": 22,
+        "shortcut_false_accept_count": 9
+      },
+      "soft_grounding": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "constraint_accuracy": 1.0,
+        "constraint_correct": 36,
+        "false_accept_count": 9,
+        "future_semantic_accuracy": 0.666667,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      },
+      "verified_evidence_plus_unresolved_constraints": {
+        "abstention_count": 3,
+        "abstention_rate": 0.083333,
+        "constraint_accuracy": 0.75,
+        "constraint_correct": 27,
+        "false_accept_count": 0,
+        "future_semantic_accuracy": 0.916667,
+        "n": 36,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 33,
+        "shortcut_false_accept_count": 0
+      }
+    },
+    "constraint_accuracy_reported_separately": true,
+    "exact_validator_retains_authority": true,
+    "formula_satisfaction_cannot_promote": true,
+    "future_row_count": 36,
+    "primary_minus_best_shortcut_control": {
+      "bootstrap_repetitions": 400,
+      "ci95": [
+        0.111111,
+        0.416667
+      ],
+      "mean_delta": 0.25,
+      "n": 36
+    },
+    "principle": "Future semantic and constraint outcomes are scored after commit.",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.prospective_semantic_constraint_metrics"
+  },
+  "random_seed": 5895,
+  "random_seeds": {
+    "base_seed": 5895,
+    "bootstrap_seed": 5895001,
+    "replay_seed": 5895003,
+    "rollback_seed": 5895004,
+    "split_seed": 5895002
+  },
+  "rejected_update_non_propagation": {
+    "future_context_rejected_update_count": 0,
+    "future_lookup_context_hash_root": "sha256:de605f4f59b4243572d6db02d08d6a31dfbbefccad7856fbf6530abf074ddcb3",
+    "principle": "Unsafe or unverified state never becomes future context.",
+    "promoted_rejected_update_count": 0,
+    "rejected_update_count": 9,
+    "rejected_update_hash_root": "sha256:d38c18c256e2c9a74d823967b7f81a40a2e6e2620b4de3352670f6cb7c6f307e",
+    "rejected_update_ids_disjoint_from_promoted": true,
+    "rejected_update_ids_disjoint_from_replay": true,
+    "replay_context_rejected_update_count": 0,
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.rejected_update_non_propagation"
+  },
+  "replay_query_resource_and_latency_accounting": {
+    "event_budget_parity": true,
+    "latency_accounting": {
+      "claim": "descriptive_only_no_speedup_claim",
+      "per_arm": {
+        "compatible_replay": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        },
+        "fixed_validated_memory": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        },
+        "no_memory": {
+          "count": 72,
+          "max_ms": 0.014,
+          "mean_ms": 0.01,
+          "p95_ms": 0.012
+        },
+        "one_to_one_full_oracle": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        },
+        "one_to_one_reduced_oracle": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        },
+        "shuffled_grounding": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        },
+        "soft_grounding": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        },
+        "verified_evidence_plus_unresolved_constraints": {
+          "count": 72,
+          "max_ms": 0.022,
+          "mean_ms": 0.018,
+          "p95_ms": 0.02
+        }
+      }
+    },
+    "per_arm_replay_count": {
+      "compatible_replay": 72,
+      "fixed_validated_memory": 72,
+      "no_memory": 72,
+      "one_to_one_full_oracle": 72,
+      "one_to_one_reduced_oracle": 72,
+      "shuffled_grounding": 72,
+      "soft_grounding": 72,
+      "verified_evidence_plus_unresolved_constraints": 72
+    },
+    "principle": "Replay, query, resource, and latency accounting expose costs without speedup claims.",
+    "query_efficiency": {
+      "full_oracle_exact_queries": 144,
+      "full_oracle_lift_per_exact_query": 0.004051,
+      "primary_exact_queries": 96,
+      "primary_lift_per_exact_query": 0.005208
+    },
+    "replay_limit": 4,
+    "resource_accounting": {
+      "quarantine_cap": 32,
+      "rejected_buffer_cap": 16,
+      "state_capacity": 16,
+      "total_replay_events_upper_bound": 288
+    },
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.replay_query_resource_latency_accounting"
+  },
+  "reproducibility_checksum": "sha256:f2a0c93737346d0659e5cf0429e1df6721670eea80ea8c3e7aeeb05c2815f8e5",
+  "result_path": "results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+  "retirement_decision": {
+    "decision": "do_not_promote",
+    "principle": "The next step distinguishes advancement from null, unsafe, blocked, or retired evidence.",
+    "reason": "readiness_gate_failed",
+    "retired_dependency_chain_used": false,
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.retirement_decision"
+  },
+  "rollback_restart_and_state_hashes": {
+    "checkpoint_hash": "sha256:456ed7441c663a9634f4e27456b79e107c5cdd8bc50e1826c25ee508e23383c2",
+    "full_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+    "principle": "Restart and rollback must reproduce exact canonical state hashes.",
+    "restart_equivalence": 1.0,
+    "resumed_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+    "rollback_hash_mismatch_count": 0,
+    "rollback_receipt_hash_root": "sha256:c72bdec66625192572155030e11a2424b2730d08f4b634d11252f9faab02a9da",
+    "sample_state_hashes": [
+      {
+        "post_state_hash": "sha256:a10ad04d0b06868a58d6f3ac196947367b7543f44db222c04836d6639fa8fdf0",
+        "state_version": 3,
+        "update_id": "e5895-000"
+      },
+      {
+        "post_state_hash": "sha256:d385d339dd911414e3adb565565566c3d3350a8cad989228371eecb1e345e153",
+        "state_version": 14,
+        "update_id": "e5895-005"
+      },
+      {
+        "post_state_hash": "sha256:8038885e91ea7a830335e483a480a06333692ad6a1e3ef78a54e1d0ca5d3f374",
+        "state_version": 17,
+        "update_id": "e5895-006"
+      },
+      {
+        "post_state_hash": "sha256:fd4422960574633effd9473ac200e6d687e7345a180d149a853b2f442af88305",
+        "state_version": 24,
+        "update_id": "e5895-009"
+      },
+      {
+        "post_state_hash": "sha256:75c465a64f890155ad4a02ebf14ce7af0487d1425a54479c7f3c5a2fde5e502d",
+        "state_version": 27,
+        "update_id": "e5895-010"
+      },
+      {
+        "post_state_hash": "sha256:aa19f4a57324f9f149638777d08694605d8b257414bb4fb303b251dd354a5f72",
+        "state_version": 30,
+        "update_id": "e5895-011"
+      }
+    ],
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.rollback_restart_state_hashes"
+  },
+  "run_date": "20260724",
+  "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1",
+  "sealed_chronological_split_and_visibility": {
+    "batch_counts": {
+      "future_test": 9,
+      "protected_prefix": 12,
+      "quarantine_validation": 12,
+      "recurrence": 6,
+      "train": 36
+    },
+    "batches_sealed_before_decision": true,
+    "commit_before_reveal": true,
+    "direct_label_visible_before_prediction_count": 0,
+    "event_count": 72,
+    "future_evidence_visible_before_current_update_count": 0,
+    "future_test_start_index": 37,
+    "principle": "Future evidence cannot influence current updates.",
+    "sample_commit_receipts": [
+      {
+        "event_index": 0,
+        "label_visible_before_commit": false,
+        "proposal_hash_before_reveal": "sha256:6b5b7e101a4003a8d7d88f7ec44d9ca8c1250321ac1c2d89fb14f67278d558cf",
+        "roles": [
+          "train",
+          "protected_prefix"
+        ],
+        "row_id": "exp5893-exactly_one_route-case0-canonical",
+        "visible_feature_hash": "sha256:520d635e77546740e76937bb27b4269f07bd92152b9d95bc2aba34189325ce00"
+      },
+      {
+        "event_index": 1,
+        "label_visible_before_commit": false,
+        "proposal_hash_before_reveal": "sha256:15974adc08dc3d6137343604f5dc18684b2965abfd14dbf7773b4b993c7b7d8a",
+        "roles": [
+          "train"
+        ],
+        "row_id": "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+        "visible_feature_hash": "sha256:1cfca9a1db20ae300a72ecd568d3d6fe5dca8801670e25d3746315c8f007f764"
+      },
+      {
+        "event_index": 2,
+        "label_visible_before_commit": false,
+        "proposal_hash_before_reveal": "sha256:25a69926248249e498dae647b2eb1090123cf359391dc28d3e192aba94c5c665",
+        "roles": [
+          "train"
+        ],
+        "row_id": "exp5893-exactly_one_route-case0-constraint-many-to-one",
+        "visible_feature_hash": "sha256:334bbb327a8ad649e24f152fd9125e55411b70d1f6a0f8ad5b13f2180604c8a9"
+      },
+      {
+        "event_index": 3,
+        "label_visible_before_commit": false,
+        "proposal_hash_before_reveal": "sha256:bbdd6e933300faf2af9b0abc743fff9a5e001e4a5d3f8d0a602b6e06084b3927",
+        "roles": [
+          "train"
+        ],
+        "row_id": "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+        "visible_feature_hash": "sha256:4a255325ae409cfa614af73c5b9f56d405feb91642abdfbfb5c9dc6d65fd117a"
+      },
+      {
+        "event_index": 4,
+        "label_visible_before_commit": false,
+        "proposal_hash_before_reveal": "sha256:3b4a410b2f6ce76379288b94610d28dfd9ee3818a473d6575d35912e17e96542",
+        "roles": [
+          "train",
+          "protected_prefix"
+        ],
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-false",
+        "visible_feature_hash": "sha256:555faf73f7f1485a112d3f0656f328c6043c09714523e6899293f5124015ca2b"
+      },
+      {
+        "event_index": 5,
+        "label_visible_before_commit": false,
+        "proposal_hash_before_reveal": "sha256:599902cffbe4eee3783ff9d4293bea2d3c4139253fbb12411c272abbb602d4ff",
+        "roles": [
+          "train",
+          "protected_prefix"
+        ],
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-true",
+        "visible_feature_hash": "sha256:bb32a2ddef3e9bd328a272e7883570a5c2209e0495e5b631518bb9227ff4cb4b"
+      }
+    ],
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.sealed_chronological_split_visibility",
+    "sealed_batch_registry_hash": "sha256:6a519630a8c988a93763d5aa94afc9902e358e9c1b447829d8151267f69c1c4b"
+  },
+  "shortcut_false_accept_metrics": {
+    "by_arm": {
+      "compatible_replay": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      },
+      "fixed_validated_memory": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "no_memory": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "one_to_one_full_oracle": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "one_to_one_reduced_oracle": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "shuffled_grounding": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      },
+      "soft_grounding": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      },
+      "verified_evidence_plus_unresolved_constraints": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      }
+    },
+    "primary_zero_false_accepts": true,
+    "principle": "Shortcut false accepts are counted by arm and type.",
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.shortcut_false_accept_metrics",
+    "shortcut_row_count": 18,
+    "unsafe_accept_count": 0
+  },
+  "shortcut_resistant_csl_ready_score": 0.0,
+  "source_arxiv_id": "2607.21461",
+  "spec_refs": [
+    "REQ-LEARN-5895",
+    "SCENARIO-LEARN-5895-PRECONDITIONS",
+    "SCENARIO-LEARN-5895-SEALED-SPLITS",
+    "SCENARIO-LEARN-5895-LIFECYCLE",
+    "SCENARIO-LEARN-5895-METRICS",
+    "SCENARIO-LEARN-5895-HARDWARE-MAPPING",
+    "SCENARIO-LEARN-5895-FAIL-CLOSED"
+  ],
+  "status": "complete_null",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py -m pytest tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py -m pytest tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5895_shortcut_safe_continuous_self_learning.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "upstream_gate_and_hash_receipts": {
+    "budget_registry": {
+      "ok": true,
+      "registry": {
+        "event_count": 72,
+        "full_exact_queries": 144,
+        "held_count": 36,
+        "memory_cap": 16,
+        "quarantine_cap": 32,
+        "reduced_exact_queries": 96,
+        "rejected_buffer_cap": 16,
+        "replay_limit": 4,
+        "train_count": 36
+      },
+      "registry_hash": "sha256:3b839bbacd876e0c136d6e75aac3d7eaf0369059d818a286a14e633d8cb77d82"
+    },
+    "exact_validators": {
+      "alternate_constraint_oracle": "constraint_replay_formula_v1",
+      "authority": "exact_semantic_and_constraint_validators",
+      "constraint_oracle": "constraint_direct_formula_v1",
+      "ok": true,
+      "semantic_oracle": "semantic_exact_match_v1",
+      "validator_code_hashes": {
+        "exp5893_fixture": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+        "exp5894_lifecycle_code": "sha256:9694e936cf6a2ac78f6102c6467a4c7c20fe2501a374900f85f935afb7091c29",
+        "semantic_grounding": "sha256:8cf0ba094c16b67e0b45f98056829e902fc3fcd288ad1408a6dc62fc5c36f0b3"
+      }
+    },
+    "exp5893_rows": {
+      "exact_oracles_replayed": true,
+      "ok": true,
+      "path": "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+      "row_count": 72,
+      "row_hash_root": "sha256:a3487c97de454bb36e528f62bcf9f6b63cd8bc028eea86cc7f66fcc798f0dc9e",
+      "row_hashes_match": true,
+      "sha256": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+      "split_groups_isolated": true
+    },
+    "exp5894_gate": {
+      "honest_verdict": "complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accepts",
+      "ok": true,
+      "path": "results/experiment_5894_one_to_one_grounding_ab.json",
+      "ready_score": 1.0,
+      "sha256": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+      "status": "complete_positive",
+      "validates": true
+    },
+    "exp5894_replay": {
+      "gate_replayed": true,
+      "replay_boundary": "artifact_validation_without_mutating_exp5894_output",
+      "validates": true
+    },
+    "gguf_weight_stat_receipts": {
+      "receipt_hash": "sha256:e5f524ded1ec52bdb6ba2d55bce4b0379f54a8913d795a81cb566680b3cfb033",
+      "receipts": [
+        {
+          "inode": 4838788046,
+          "mode": 33188,
+          "mtime_ns": 1776792141541613663,
+          "path": "models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf",
+          "size_bytes": 11624759232
+        }
+      ],
+      "strategy": "stat_receipt_no_weight_load",
+      "weight_file_count": 1
+    },
+    "ok": true,
+    "principle": "Exp5894, Exp5893 rows, lifecycle code, validators, and immutable weights are the bounded evidence surface.",
+    "protected_files_unchanged": {
+      "after_hashes": {
+        "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+        "results/experiment_5894_one_to_one_grounding_ab.json": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "all_unchanged": true,
+      "before_hashes": {
+        "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+        "results/experiment_5894_one_to_one_grounding_ab.json": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "changed_files": []
+    },
+    "retired_chain_exclusion": {
+      "artifact_statuses": {
+        "experiment_5865": {
+          "dependency": false,
+          "honest_verdict": "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt",
+          "path": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+          "sha256": "sha256:911b5efdcaeb9578173d9ba5a70f29b5d23431e3404f45483c8751c1b3acfe3a",
+          "status": "retired",
+          "used_for_promotion": false
+        },
+        "experiment_5867": {
+          "dependency": false,
+          "honest_verdict": "blocked_gate_check_failed",
+          "path": "results/experiment_5867_prospective_certified_continuous_learning.json",
+          "sha256": "sha256:a7272117e8619a359fa72cd620c23758a28063000adbff5c6ee58a1e62b1d0c1",
+          "status": "blocked",
+          "used_for_promotion": false
+        }
+      },
+      "assertion": "Exp5865-Exp5867 chain is retired context only, not an Exp5895 dependency",
+      "dependency_used": false,
+      "ok": true,
+      "retired_context_artifacts": [
+        "experiment_5865",
+        "experiment_5867"
+      ]
+    },
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.upstream_gate_and_hash_receipts",
+    "seed_registry": {
+      "ok": true,
+      "registry": {
+        "base_seed": 5895,
+        "bootstrap_seed": 5895001,
+        "replay_seed": 5895003,
+        "rollback_seed": 5895004,
+        "split_seed": 5895002
+      },
+      "registry_hash": "sha256:3ea2d26885526c97d66487a6aac3718dfc06907aad1d8da62f23ca37fb2d047d"
+    },
+    "source_hashes": {
+      "adaptive_state_lifecycle_code": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
+      "adversarial_verify": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de",
+      "claude_instructions": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "codex_instructions": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "e2e_plan": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "exact_semantic_grounding_validator": "sha256:8cf0ba094c16b67e0b45f98056829e902fc3fcd288ad1408a6dc62fc5c36f0b3",
+      "exp5856_lifecycle": "sha256:5ace8c926b515004d569ed0fed40f2a54b1ee3886407a78f48822dc56ab11bf6",
+      "exp5857_replay": "sha256:5768b1141664f1c7574666773540b369beef751b6e1a856725fcc9384f22cfb8",
+      "exp5858_reduced_oracle": "sha256:de906c4b6a267deea4ed416bb0571403f1788987c9dc255f2eab16ecf15ca361",
+      "exp5893_artifact": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+      "exp5893_rows": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+      "exp5894_artifact": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+      "exp5894_lifecycle_code": "sha256:9694e936cf6a2ac78f6102c6467a4c7c20fe2501a374900f85f935afb7091c29",
+      "exp5894_tests": "sha256:d15d64f8a4d44dd307d3576eed41759826d79b960eab42216f7c19b26a880a21",
+      "exp5895_module": "sha256:e950fc1045201e1b33b8f0221f60b8ae8172cb12431445e8556018225a15712a",
+      "exp5895_tests": "sha256:3cd1565af4e70ee95cd0fbaa1c826bc5e6e8fc39dc9081d4eb1adbfaddf2dba9",
+      "prd": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+      "protected_file_guard": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "research_program": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "root_clutter_sweep": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+      "self_learning_spec": "sha256:77a68ac02d8a832b9b060a2e77ff93ca350ec95166f89c2f4b16cdad60902933"
+    },
+    "split_groups": {
+      "group_count": 6,
+      "registry_hash": "sha256:32c4eb593f3a05b2f8f5426d58851a4c5c041821da885d2ad7e7171fc64500e2",
+      "split_groups_isolated": true
+    }
+  },
+  "verified_evidence_and_unresolved_constraint_state": {
+    "arex_inspired_source": "arxiv:2607.21461",
+    "canonical_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+    "max_records": 16,
+    "principle": "The state contains verified evidence plus unresolved constraints without treating unresolved items as accepted facts.",
+    "sample_unresolved_constraints": [
+      {
+        "accepted_as_evidence": false,
+        "constraint_label": true,
+        "family": "exactly_one_route",
+        "grounding_regime": "cognition_biased_permutation",
+        "row_id": "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+        "semantic_label": false,
+        "shortcut_type": "cognition_shortcut",
+        "update_id": "e5895-001"
+      },
+      {
+        "accepted_as_evidence": false,
+        "constraint_label": true,
+        "family": "exactly_one_route",
+        "grounding_regime": "constraint_satisfaction_many_to_one",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-many-to-one",
+        "semantic_label": false,
+        "shortcut_type": "constraint_satisfaction_shortcut",
+        "update_id": "e5895-002"
+      },
+      {
+        "accepted_as_evidence": false,
+        "constraint_label": true,
+        "family": "exactly_one_route",
+        "grounding_regime": "constraint_satisfaction_soft_mass_swap",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+        "semantic_label": false,
+        "shortcut_type": "constraint_satisfaction_shortcut",
+        "update_id": "e5895-003"
+      },
+      {
+        "accepted_as_evidence": false,
+        "constraint_label": false,
+        "family": "exactly_one_route",
+        "grounding_regime": "frequency_balanced_control",
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-false",
+        "semantic_label": false,
+        "shortcut_type": "none",
+        "update_id": "e5895-004"
+      },
+      {
+        "accepted_as_evidence": false,
+        "constraint_label": false,
+        "family": "exactly_one_route",
+        "grounding_regime": "no_information_control",
+        "row_id": "exp5893-exactly_one_route-case0-no-information-control",
+        "semantic_label": true,
+        "shortcut_type": "none",
+        "update_id": "e5895-007"
+      },
+      {
+        "accepted_as_evidence": false,
+        "constraint_label": false,
+        "family": "exactly_one_route",
+        "grounding_regime": "one_to_one_negative_control",
+        "row_id": "exp5893-exactly_one_route-case0-one-to-one-negative",
+        "semantic_label": false,
+        "shortcut_type": "none",
+        "update_id": "e5895-008"
+      }
+    ],
+    "sample_verified_evidence": [
+      {
+        "family": "exactly_one_route",
+        "grounding_regime": "canonical_one_to_one",
+        "proposal_hash": "sha256:ad639377d503fee5b9c1d1f37796b8c86fe74405883246ddc480fe03d0deb543",
+        "row_id": "exp5893-exactly_one_route-case0-canonical",
+        "state_version": 3,
+        "update_id": "e5895-000",
+        "validator": "exact_semantic_and_constraint_validators"
+      },
+      {
+        "family": "exactly_one_route",
+        "grounding_regime": "frequency_balanced_control",
+        "proposal_hash": "sha256:f39938a7daeaf1e1b2d8c7ee0ab11ffe0d9e0b3741e96f70a47b789034149bf6",
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-true",
+        "state_version": 14,
+        "update_id": "e5895-005",
+        "validator": "exact_semantic_and_constraint_validators"
+      },
+      {
+        "family": "exactly_one_route",
+        "grounding_regime": "label_permutation_control",
+        "proposal_hash": "sha256:705c44725d66f64ff5d03529d4e3ea77d57cfbb00a7e1184e794cbb1a5278ee4",
+        "row_id": "exp5893-exactly_one_route-case0-label-permutation-control",
+        "state_version": 17,
+        "update_id": "e5895-006",
+        "validator": "exact_semantic_and_constraint_validators"
+      },
+      {
+        "family": "exactly_one_route",
+        "grounding_regime": "shuffled_control",
+        "proposal_hash": "sha256:549644b676cbc02e92928f60af883fbde7acd9c8d904cb0d2af793dc97f43312",
+        "row_id": "exp5893-exactly_one_route-case0-shuffled-control",
+        "state_version": 24,
+        "update_id": "e5895-009",
+        "validator": "exact_semantic_and_constraint_validators"
+      },
+      {
+        "family": "exactly_one_route",
+        "grounding_regime": "soft_distributed_control",
+        "proposal_hash": "sha256:efb30a66a2427c5ff2c8f29d319ec65f51f26aeec7839a0ad5753a20a4c38cf5",
+        "row_id": "exp5893-exactly_one_route-case0-soft-distributed-control",
+        "state_version": 27,
+        "update_id": "e5895-010",
+        "validator": "exact_semantic_and_constraint_validators"
+      },
+      {
+        "family": "exactly_one_route",
+        "grounding_regime": "surface_matched_control",
+        "proposal_hash": "sha256:cd95066abfada5107f9f676c41f2708d9be4ba1a81c19a0524e04d41a545ff38",
+        "row_id": "exp5893-exactly_one_route-case0-surface-matched-control",
+        "state_version": 30,
+        "update_id": "e5895-011",
+        "validator": "exact_semantic_and_constraint_validators"
+      }
+    ],
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.verified_evidence_unresolved_constraint_state",
+    "state_type": "verified_evidence_plus_unresolved_constraints",
+    "state_version": 90,
+    "unresolved_buffer_cap": 32,
+    "unresolved_constraint_count": 18,
+    "unresolved_constraint_hash_root": "sha256:b52bf5a224ce48757339c12b5e5c3dd2c2c91ce642cd4e2caf29efff8afa290b",
+    "unresolved_constraints_accepted_as_evidence": false,
+    "verified_evidence_count": 18,
+    "verified_evidence_hash_root": "sha256:490b7ef927ffc705a4f360aa9bdb395642cb13c735e4ab2423b5072518513c84"
+  },
+  "verifier_is_oracle": true,
+  "versioned_promotion_quarantine_rejection_and_rollback": {
+    "bounded_replay_limit": 4,
+    "collision_and_supersession_policy": "event_id_collision_rejects_and_shortcuts_supersede_to_quarantine",
+    "principle": "Only exact validation can promote and every state edit has a rollback target.",
+    "promoted_update_count": 18,
+    "promotion_hash_root": "sha256:8b22e765d7cc0d3896e21974dd04dfebfd62e16c2a4df9d30a73814487c777cc",
+    "proposal_count": 36,
+    "prospective_promotion_authority": "exact_validator",
+    "quarantine_hash_root": "sha256:0ea48582d8e343d14f4bdff10fc47c42267b12fbe9e80f7962cf716205329156",
+    "quarantined_update_count": 18,
+    "rejected_update_count": 9,
+    "rejection_hash_root": "sha256:b792f42b2fdc22af7f832d8b755aebe7b70a7a38b6cfada3ab149e3b5ab5ccbf",
+    "rollback_mismatch_count": 0,
+    "rollback_receipt_count": 3,
+    "sample_promotion_receipts": [
+      {
+        "acquire_code": "OK",
+        "apply_code": "OK",
+        "post_state_hash": "sha256:a10ad04d0b06868a58d6f3ac196947367b7543f44db222c04836d6639fa8fdf0",
+        "pre_state_hash": "sha256:dc16883c022bcdde3fdf3f3931831bf9e09a3f2e7b0e4331999b9de6fed8284e",
+        "promote_code": "OK",
+        "receipt_hash": "sha256:0c8b25c441a698b69e6ffab36d23f3a32e45079252589eb3940712837318f0b0",
+        "row_id": "exp5893-exactly_one_route-case0-canonical",
+        "state_version": 3,
+        "update_id": "e5895-000",
+        "validation_authority": "exact_validator"
+      },
+      {
+        "acquire_code": "OK",
+        "apply_code": "OK",
+        "post_state_hash": "sha256:d385d339dd911414e3adb565565566c3d3350a8cad989228371eecb1e345e153",
+        "pre_state_hash": "sha256:2bd597a558ec9c99389e884fb48f4b015d3da5782c765744b95f2f647b725276",
+        "promote_code": "OK",
+        "receipt_hash": "sha256:fdd95d8b803706b29ae6e405c7c7c24943839a9dabd99a44b6d63ba56746cb61",
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-true",
+        "state_version": 14,
+        "update_id": "e5895-005",
+        "validation_authority": "exact_validator"
+      },
+      {
+        "acquire_code": "OK",
+        "apply_code": "OK",
+        "post_state_hash": "sha256:8038885e91ea7a830335e483a480a06333692ad6a1e3ef78a54e1d0ca5d3f374",
+        "pre_state_hash": "sha256:d385d339dd911414e3adb565565566c3d3350a8cad989228371eecb1e345e153",
+        "promote_code": "OK",
+        "receipt_hash": "sha256:fca68615e86dfc504f608cac35ffcaad9bfe67ac2b42f243dd5def36023ca9cd",
+        "row_id": "exp5893-exactly_one_route-case0-label-permutation-control",
+        "state_version": 17,
+        "update_id": "e5895-006",
+        "validation_authority": "exact_validator"
+      },
+      {
+        "acquire_code": "OK",
+        "apply_code": "OK",
+        "post_state_hash": "sha256:fd4422960574633effd9473ac200e6d687e7345a180d149a853b2f442af88305",
+        "pre_state_hash": "sha256:d91757c68fa62a2370e174121b9233c6e534869f080a64d52a5f0436a018bd2f",
+        "promote_code": "OK",
+        "receipt_hash": "sha256:32421e0f4d2927ff4f64a0909ce8e511517284e1862a4a6c6c27c431b69efaca",
+        "row_id": "exp5893-exactly_one_route-case0-shuffled-control",
+        "state_version": 24,
+        "update_id": "e5895-009",
+        "validation_authority": "exact_validator"
+      },
+      {
+        "acquire_code": "OK",
+        "apply_code": "OK",
+        "post_state_hash": "sha256:75c465a64f890155ad4a02ebf14ce7af0487d1425a54479c7f3c5a2fde5e502d",
+        "pre_state_hash": "sha256:fd4422960574633effd9473ac200e6d687e7345a180d149a853b2f442af88305",
+        "promote_code": "OK",
+        "receipt_hash": "sha256:bcf99a758fc3b3e2efe01908d56e42356116ee32e121305c8650e37955be25e0",
+        "row_id": "exp5893-exactly_one_route-case0-soft-distributed-control",
+        "state_version": 27,
+        "update_id": "e5895-010",
+        "validation_authority": "exact_validator"
+      },
+      {
+        "acquire_code": "OK",
+        "apply_code": "OK",
+        "post_state_hash": "sha256:aa19f4a57324f9f149638777d08694605d8b257414bb4fb303b251dd354a5f72",
+        "pre_state_hash": "sha256:75c465a64f890155ad4a02ebf14ce7af0487d1425a54479c7f3c5a2fde5e502d",
+        "promote_code": "OK",
+        "receipt_hash": "sha256:db9866a3f5c351f4d0dc30afec32c4d18384b42c6de2ca50cf499fa7fee3b73c",
+        "row_id": "exp5893-exactly_one_route-case0-surface-matched-control",
+        "state_version": 30,
+        "update_id": "e5895-011",
+        "validation_authority": "exact_validator"
+      }
+    ],
+    "sample_proposal_receipts": [
+      {
+        "committed_version": 0,
+        "label_visible_before_commit": false,
+        "pre_commit_state_hash": "sha256:dc16883c022bcdde3fdf3f3931831bf9e09a3f2e7b0e4331999b9de6fed8284e",
+        "proposal_hash": "sha256:ad639377d503fee5b9c1d1f37796b8c86fe74405883246ddc480fe03d0deb543",
+        "row_id": "exp5893-exactly_one_route-case0-canonical",
+        "update_id": "e5895-000"
+      },
+      {
+        "committed_version": 3,
+        "label_visible_before_commit": false,
+        "pre_commit_state_hash": "sha256:a10ad04d0b06868a58d6f3ac196947367b7543f44db222c04836d6639fa8fdf0",
+        "proposal_hash": "sha256:631c3aae681ec49db18c5cfc8718af61f07c48a5af5d1208a8cf0dfae4c8b145",
+        "row_id": "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+        "update_id": "e5895-001"
+      },
+      {
+        "committed_version": 5,
+        "label_visible_before_commit": false,
+        "pre_commit_state_hash": "sha256:7bbea9349a8f58b1b8f4bf5e8b2aef28d2fed58a7d51b8abd7b4282fbb33d2cb",
+        "proposal_hash": "sha256:d8961e95bf84c1c5c5c3b131c32eb0f4da28d3867897ba7a64bf137e11b1023a",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-many-to-one",
+        "update_id": "e5895-002"
+      },
+      {
+        "committed_version": 7,
+        "label_visible_before_commit": false,
+        "pre_commit_state_hash": "sha256:d116e8c54682b672405b32f06df39fde26ab3a31395aca69288196d4b1db25c9",
+        "proposal_hash": "sha256:bad607e222df44f916b07c73f3648076b1e1b12c732868d1f9c3057e65849882",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+        "update_id": "e5895-003"
+      },
+      {
+        "committed_version": 9,
+        "label_visible_before_commit": false,
+        "pre_commit_state_hash": "sha256:583f79234b454b802c5f046b3a3fb82d27105287495ebe4bb6c773cab6200a28",
+        "proposal_hash": "sha256:2973409f1a8f9f418e7bdbb26d7b5760d3ff5ad927e206f34c32539759879bb8",
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-false",
+        "update_id": "e5895-004"
+      },
+      {
+        "committed_version": 11,
+        "label_visible_before_commit": false,
+        "pre_commit_state_hash": "sha256:2bd597a558ec9c99389e884fb48f4b015d3da5782c765744b95f2f647b725276",
+        "proposal_hash": "sha256:f39938a7daeaf1e1b2d8c7ee0ab11ffe0d9e0b3741e96f70a47b789034149bf6",
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-true",
+        "update_id": "e5895-005"
+      }
+    ],
+    "sample_quarantine_receipts": [
+      {
+        "apply_code": "OK",
+        "post_state_hash": "sha256:7bbea9349a8f58b1b8f4bf5e8b2aef28d2fed58a7d51b8abd7b4282fbb33d2cb",
+        "pre_state_hash": "sha256:a10ad04d0b06868a58d6f3ac196947367b7543f44db222c04836d6639fa8fdf0",
+        "quarantine_code": "OK",
+        "reason": "unresolved_or_shortcut_candidate",
+        "receipt_hash": "sha256:e6d94b20aebeb0ca1ee403a52f246ca08bbd4e31544eea7c663b3081f138dca9",
+        "row_id": "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+        "update_id": "e5895-001"
+      },
+      {
+        "apply_code": "OK",
+        "post_state_hash": "sha256:d116e8c54682b672405b32f06df39fde26ab3a31395aca69288196d4b1db25c9",
+        "pre_state_hash": "sha256:7bbea9349a8f58b1b8f4bf5e8b2aef28d2fed58a7d51b8abd7b4282fbb33d2cb",
+        "quarantine_code": "OK",
+        "reason": "unresolved_or_shortcut_candidate",
+        "receipt_hash": "sha256:119a81f5709b93e74c3476ceb7d76ea984226f33dea62b23d1f44afd2946ca52",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-many-to-one",
+        "update_id": "e5895-002"
+      },
+      {
+        "apply_code": "OK",
+        "post_state_hash": "sha256:583f79234b454b802c5f046b3a3fb82d27105287495ebe4bb6c773cab6200a28",
+        "pre_state_hash": "sha256:d116e8c54682b672405b32f06df39fde26ab3a31395aca69288196d4b1db25c9",
+        "quarantine_code": "OK",
+        "reason": "unresolved_or_shortcut_candidate",
+        "receipt_hash": "sha256:2d9fd38f6812c1e16598c71145dd05b894a3b9c3c0496b3c5363ffba2ab655db",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+        "update_id": "e5895-003"
+      },
+      {
+        "apply_code": "OK",
+        "post_state_hash": "sha256:2bd597a558ec9c99389e884fb48f4b015d3da5782c765744b95f2f647b725276",
+        "pre_state_hash": "sha256:583f79234b454b802c5f046b3a3fb82d27105287495ebe4bb6c773cab6200a28",
+        "quarantine_code": "OK",
+        "reason": "unresolved_or_shortcut_candidate",
+        "receipt_hash": "sha256:e44fbab83256a4f3395e52eec95a8eb3294c691ef3f578dda1b8ff7b9709cd5d",
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-false",
+        "update_id": "e5895-004"
+      },
+      {
+        "apply_code": "OK",
+        "post_state_hash": "sha256:a8c1637d7d26ceea5eda2a01e65628e7281376b0b897b794b140ad3dd8472880",
+        "pre_state_hash": "sha256:8038885e91ea7a830335e483a480a06333692ad6a1e3ef78a54e1d0ca5d3f374",
+        "quarantine_code": "OK",
+        "reason": "unresolved_or_shortcut_candidate",
+        "receipt_hash": "sha256:51cb7e4e3f0759e8f502559f15fc1eda22797b338d78befb77508cab272f9af7",
+        "row_id": "exp5893-exactly_one_route-case0-no-information-control",
+        "update_id": "e5895-007"
+      },
+      {
+        "apply_code": "OK",
+        "post_state_hash": "sha256:d91757c68fa62a2370e174121b9233c6e534869f080a64d52a5f0436a018bd2f",
+        "pre_state_hash": "sha256:a8c1637d7d26ceea5eda2a01e65628e7281376b0b897b794b140ad3dd8472880",
+        "quarantine_code": "OK",
+        "reason": "unresolved_or_shortcut_candidate",
+        "receipt_hash": "sha256:932193143479c4189815f4f3de6ec2f1f0065b3fb9c198dcaf0d5f8cb782f39d",
+        "row_id": "exp5893-exactly_one_route-case0-one-to-one-negative",
+        "update_id": "e5895-008"
+      }
+    ],
+    "sample_rejection_receipts": [
+      {
+        "promoted": false,
+        "reason": "shortcut_false_accept_risk",
+        "receipt_hash": "sha256:11f9cb15a77b65f6f31c06399ef5d5c337a858135025bfdfd6b2f1267ac9d1ad",
+        "row_id": "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+        "update_id": "e5895-001"
+      },
+      {
+        "promoted": false,
+        "reason": "shortcut_false_accept_risk",
+        "receipt_hash": "sha256:a12f4489191a252beaa867a002bfc10b84ff07e14f28dd5c300d3bb148798162",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-many-to-one",
+        "update_id": "e5895-002"
+      },
+      {
+        "promoted": false,
+        "reason": "shortcut_false_accept_risk",
+        "receipt_hash": "sha256:854494b833798e303d11f28864349e0420c6b911e408a5ad24d06e33cee227ff",
+        "row_id": "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+        "update_id": "e5895-003"
+      },
+      {
+        "promoted": false,
+        "reason": "shortcut_false_accept_risk",
+        "receipt_hash": "sha256:e41c8bc6f09b222e7b22e180ee991bbc15a0dcf08cb99999552e5a6bebc329a5",
+        "row_id": "exp5893-implication_chain-case0-cognition-biased-permutation",
+        "update_id": "e5895-013"
+      },
+      {
+        "promoted": false,
+        "reason": "shortcut_false_accept_risk",
+        "receipt_hash": "sha256:a53491c727b88795a35e6c5e26d7e54ed2e5407e22267b85e1c74d382e22ac00",
+        "row_id": "exp5893-implication_chain-case0-constraint-many-to-one",
+        "update_id": "e5895-014"
+      },
+      {
+        "promoted": false,
+        "reason": "shortcut_false_accept_risk",
+        "receipt_hash": "sha256:4c037947db43027e0765cb4b5edbe54978c7011bdca2d21c1dac5b1b7cdb791a",
+        "row_id": "exp5893-implication_chain-case0-constraint-soft-mass-swap",
+        "update_id": "e5895-015"
+      }
+    ],
+    "sample_rollback_receipts": [
+      {
+        "post_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+        "pre_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+        "receipt_hash": "sha256:cbb7ea563fa4dbabaf33f8fccef8d9526fea3ab6ea5aea968866aa89b9379e7b",
+        "restored_exact_hash": true,
+        "rollback_version": 90,
+        "source_rejected_update_id": "e5895-001"
+      },
+      {
+        "post_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+        "pre_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+        "receipt_hash": "sha256:eaf6b6daf88906fbcb219f7b50dca495c4492970fdf7a14b8c4dd193d9902a11",
+        "restored_exact_hash": true,
+        "rollback_version": 90,
+        "source_rejected_update_id": "e5895-002"
+      },
+      {
+        "post_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+        "pre_state_hash": "sha256:3e9f368f1ea104b626b851faaf0740b7b9a619a412d47e7ba937fe11561735e4",
+        "receipt_hash": "sha256:219710b448bbc4caf6497576dc38bf09e0380d71acd7d42f18fb6f1d588431be",
+        "restored_exact_hash": true,
+        "rollback_version": 90,
+        "source_rejected_update_id": "e5895-003"
+      }
+    ],
+    "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.versioned_promotion_quarantine_rejection_rollback",
+    "versioned_proposals_enabled": true
+  }
+}
