@@ -35945,4 +35945,4 @@ NOT change immutable upstream artifacts or `scripts/research_conductor.py`.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-5879 | Planned (`python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py`, `results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`) | Planned (`tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py`) |
+| REQ-VERIFY-5879 | Implemented (`python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py`, `results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`) | Implemented (`tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py`) |
