@@ -77,13 +77,28 @@ class _NormalFrame:
         self.levels_completed = level
 
 
+def _isolated_proposer():
+    """A LocalGGUFProposer that FAST-FAILS its generate() without any network I/O -- so next_move's
+    stall-refactor loop (execute_bounded_llm_reinduction -> refactor -> generate) is still EXERCISED but
+    returns in ~0.01s instead of making a real ~600s HTTP call to the live generator. Rationale (2026-07-24):
+    `proposer=None` is NOT "no proposer" -- E3AgentPolicy._proposer() lazily builds the LIVE default generator
+    (Qwen3.5-9B, timeout=600, intentional for the eval which has no internal time limit), so these robustness
+    tests were inadvertently making a real HTTP call that waited the full 600s and blew the pytest 120s limit
+    (SIGTERM). Pointing at an unresolvable model + a dead port makes `_ensure_server()` return False
+    immediately (no server launch, no socket read), so generate() returns (False, ...) at once and next_move
+    takes its graceful fallthrough -- preserving the degenerate-frame robustness this file verifies."""
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
+    return LocalGGUFProposer(repo_substr="__unit_test_no_model__", model_path=None, port=1, timeout=1)
+
+
 def test_next_move_survives_a_degenerate_frame_after_a_real_one() -> None:
     """A degenerate frame immediately following a real one must not crash
     next_move -- the exact sequence exp5587 hit (a normal frame sets self._prev,
     then a subsequent degenerate frame makes to_logical's grid.shape unpack
     fail)."""
 
-    policy = E3AgentPolicy("cd82", proposer=None, value_head=lambda _f: 0.0)
+    policy = E3AgentPolicy("cd82", proposer=_isolated_proposer(), value_head=lambda _f: 0.0)
 
     first = _NormalFrame(value=1)
     policy.next_move([], first)
@@ -107,7 +122,7 @@ def test_next_move_continues_normally_after_recovering_from_a_degenerate_frame()
     subsequent normal frames -- the fix must not leave the policy in a broken
     state."""
 
-    policy = E3AgentPolicy("cd82", proposer=None, value_head=lambda _f: 0.0)
+    policy = E3AgentPolicy("cd82", proposer=_isolated_proposer(), value_head=lambda _f: 0.0)
 
     first = _NormalFrame(value=1)
     policy.next_move([], first)
@@ -130,7 +145,7 @@ def test_next_move_survives_a_degenerate_frame_on_the_tier1_explore_tick() -> No
     policy stays in phase == "explore", not escalating to induction) followed
     by a degenerate one must not crash."""
 
-    policy = E3AgentPolicy("cd82", proposer=None, value_head=lambda _f: 0.0)
+    policy = E3AgentPolicy("cd82", proposer=_isolated_proposer(), value_head=lambda _f: 0.0)
 
     frames: list = []
     latest = None
