@@ -1,0 +1,124 @@
+{
+  "experiment": "experiment_5834_generator_live_levels_ab",
+  "experiment_id": "REQ-ARC-WMTE-5834",
+  "run_date": "2026-07-24",
+  "title": "Generator live-levels A/B: Qwen3.5-9B vs dense Qwen3.6-27B, banked E3 levels on the 3090.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5834,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "role": "e3_induction_generator",
+      "backend": "cuda_3090_gpu1_q4"
+    },
+    {
+      "name": "Qwen3.6-27B-MTP",
+      "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+      "role": "e3_induction_generator",
+      "backend": "cuda_3090_gpu1_q4"
+    }
+  ],
+  "config": {
+    "roster": [
+      "tu93",
+      "lp85",
+      "r11l"
+    ],
+    "budget": 500,
+    "explore_budget": 40,
+    "induce_tokens": 2560,
+    "cuda_gpu": "1",
+    "object_perception": "off",
+    "mtp": false
+  },
+  "methodology_note": "Two arms toggle ONLY the inducer model (9B vs dense-27B), both on the 3090 GPU1 via CUDA Q4, mtp=False (uniform; the CUDA build crashes on --spec-type draft-mtp -- MTP is output-preserving speculative decoding so this changes only speed, not induced quality). Sequential launch+run+stop. Per game: E3AgentPolicy + arc_leaderboard_eval.run_game (offline dev twin of the scored path -- NEVER submits); metric = banked levels. Settles the switch on the LIVE metric that exp5722 said the offline heldout gain failed to move.",
+  "per_arm": [
+    {
+      "arm": "qwen9b",
+      "server_ok": true,
+      "rows": [
+        {
+          "game": "tu93",
+          "levels": 1,
+          "ok": true,
+          "wall_s": 173.0
+        },
+        {
+          "game": "lp85",
+          "levels": 1,
+          "ok": true,
+          "wall_s": 19.6
+        },
+        {
+          "game": "r11l",
+          "levels": 0,
+          "ok": true,
+          "wall_s": 103.8
+        }
+      ],
+      "n_games": 3,
+      "total_levels": 2
+    },
+    {
+      "arm": "qwen27b",
+      "server_ok": true,
+      "rows": [
+        {
+          "game": "tu93",
+          "levels": 1,
+          "ok": true,
+          "wall_s": 863.2
+        },
+        {
+          "game": "lp85",
+          "levels": 1,
+          "ok": true,
+          "wall_s": 26.0
+        },
+        {
+          "game": "r11l",
+          "levels": 0,
+          "ok": true,
+          "wall_s": 374.7
+        }
+      ],
+      "n_games": 3,
+      "total_levels": 2
+    }
+  ],
+  "per_game_delta": [
+    {
+      "game": "tu93",
+      "qwen9b_levels": 1,
+      "qwen27b_levels": 1,
+      "delta": 0
+    },
+    {
+      "game": "lp85",
+      "qwen9b_levels": 1,
+      "qwen27b_levels": 1,
+      "delta": 0
+    },
+    {
+      "game": "r11l",
+      "qwen9b_levels": 0,
+      "qwen27b_levels": 0,
+      "delta": 0
+    }
+  ],
+  "games_improved_27b": 0,
+  "games_regressed_27b": 0,
+  "gate_clears": false,
+  "preconditions_checked": [
+    {
+      "resource": "cuda_3090_gpu1",
+      "available": true
+    }
+  ],
+  "duration_s": 1578.9,
+  "honest_verdict": "complete_generator_live_levels_ab_qwen9b_total_2_qwen27b_total_2_improved_0_regressed_0_gate_clears_False",
+  "reproducibility_checksum": "sha256:2f0037ca5c413917be744384f4e1b8a4666bb2a0bf8a8ddded4514df3ca62735"
+}

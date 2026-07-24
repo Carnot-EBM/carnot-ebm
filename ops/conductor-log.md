@@ -14248,3 +14248,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 20:16 UTC | Gated on Exp5896 fixture: three-family translate-r | OK | 87 passed, 1 warning in 19.66s |
 | 2026-07-24 20:18 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |
 | 2026-07-24 20:20 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |
+| 2026-07-24 20:23 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |
+| 2026-07-24 20:25 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |

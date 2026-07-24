@@ -1,66 +1,104 @@
-import numpy as np
-
 def engine(grid, action, data):
-    # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
-    # The game appears to be a "click to fill" or "paint" mechanic where clicking on a
-    # specific region (likely the left border or a specific target area) changes the
-    # color of the leftmost cell of a row to 5 (gray).
-    # Observations:
-    # - Action 6 is a click.
-    # - Clicks at various coordinates result in changing grid[row][0] to 5.
-    # - The row index seems to correspond to the y-coordinate of the click, possibly
-    #   adjusted or mapped. However, looking at the data:
-    #   Click y=2 -> r0c0 changes.
-    #   Click y=6 -> r1c0 changes.
-    #   Click y=6 -> r2c0 changes.
-    #   ...
-    #   This suggests a cumulative or sequential effect, or perhaps the click targets
-    #   a specific "cursor" or "active row" that moves.
-    #   Alternatively, it might be simpler: clicking anywhere on the left side (col 0)
-    #   or a specific zone changes the cell at (row, 0) to 5.
-    #   Let's look at the y-coordinates vs row indices:
-    #   y=2 -> row 0
-    #   y=6 -> row 1
-    #   y=6 -> row 2
-    #   y=6 -> row 3
-    #   y=6 -> row 4
-    #   y=6 -> row 5
-    #   This is inconsistent for a direct mapping. It might be that the click
-    #   increments a counter or moves a pointer.
-    #   However, a simpler rule often found in ARC is: clicking on a cell changes it.
-    #   But here, the click coordinates (23,2) changed (0,0). (59,6) changed (1,0).
-    #   This implies a global state or a specific target.
-    #   Given the lack of clear movement logic, and the fact that only (row, 0) changes
-    #   to 5, let's assume the rule is: clicking changes the leftmost cell of the
-    #   "current" row to 5. The "current" row might be tracked by a hidden state,
-    #   but since we only have the grid, we must infer it.
-    #   Wait, looking at the initial grid, column 0 is all 0s.
-    #   The changes are always setting grid[row][0] = 5.
-    #   Let's assume the click's y-coordinate determines the row, but with an offset
-    #   or mapping. Or perhaps it's simpler: the click targets the first 0 in column 0
-    #   from the top?
-    #   Let's check:
-    #   Initial: all col 0 are 0.
-    #   Click 1: y=2. Changes r0. (First 0 from top is r0).
-    #   Click 2: y=6. Changes r1. (First 0 from top is now r1).
-    #   Click 3: y=6. Changes r2. (First 0 from top is now r2).
-    #   This fits! The rule is: clicking changes the topmost cell in column 0 that is
-    #   not 5 (or is 0) to 5.
+    """
+    Simulates one step of the environment.
     
-    new_grid = grid.copy()
+    Args:
+        grid: The current state of the grid (list of lists or numpy array).
+        action: The action taken (integer).
+        data: Additional data for the action (dict).
+        
+    Returns:
+        The new grid state after applying the action.
+    """
+    import copy
+    import numpy as np
+    
+    # Make a deep copy of the grid to avoid modifying the original
+    new_grid = copy.deepcopy(grid)
+    
+    # If grid is a list of lists, convert to numpy for easier manipulation
+    if isinstance(new_grid, list):
+        new_grid = np.array(new_grid)
+    
+    # Action 6 seems to be a "place" or "draw" action based on the data
+    # data contains 'x' and 'y' coordinates
     if action == 6:
-        # Find the first row where grid[row, 0] is not 5 (or is 0)
-        for r in range(grid.shape[0]):
-            if new_grid[r, 0] != 5:
-                new_grid[r, 0] = 5
-                break
+        x = data['x']
+        y = data['y']
+        
+        # Based on the failing cases, it seems like action 6 places two values
+        # at consecutive rows or columns. Let's analyze the pattern:
+        
+        # Case 1 (i=7):
+        # true_change: [[7, 0, 0, 5], [8, 0, 0, 5]]
+        # This suggests placing 7 at some position and 8 at another
+        
+        # Case 2 (i=22):
+        # true_change: [[23, 0, 0, 5], [24, 0, 0, 5]]
+        # This suggests placing 23 at some position and 24 at another
+        
+        # The pattern seems to be:
+        # - Place a value at (y, x) 
+        # - Place value+1 at (y+1, x) or similar
+        
+        # Looking at the coordinates x=59, y=6, these seem like global coordinates
+        # But the grid changes are small (2x4 arrays), so maybe x and y are indices
+        
+        # Let's assume the grid is 2D and we need to place values at specific positions
+        # The true_change shows 2 rows of 4 columns each
+        
+        # Hypothesis: action 6 places two consecutive numbers at positions determined by x and y
+        # The numbers placed seem to be related to the step number or some counter
+        
+        # Since we don't have the full context, let's try a general approach:
+        # Place data['x'] at (y, 0) and data['x']+1 at (y+1, 0) if within bounds
+        
+        # But wait, the true_change shows [7, 0, 0, 5] and [8, 0, 0, 5]
+        # This means at row y, col 0: value 7
+        # At row y+1, col 0: value 8
+        # And col 3 has value 5 in both rows
+        
+        # Let's try: place x at (y, 0) and x+1 at (y+1, 0)
+        if y < new_grid.shape[0] and 0 < new_grid.shape[1]:
+            new_grid[y, 0] = data['x']
+        if y + 1 < new_grid.shape[0] and 0 < new_grid.shape[1]:
+            new_grid[y + 1, 0] = data['x'] + 1
+            
+        # Also, it seems like column 3 gets value 5
+        if y < new_grid.shape[0] and 3 < new_grid.shape[1]:
+            new_grid[y, 3] = 5
+        if y + 1 < new_grid.shape[0] and 3 < new_grid.shape[1]:
+            new_grid[y + 1, 3] = 5
+            
+    # Convert back to list if original was list
+    if isinstance(grid, list):
+        new_grid = new_grid.tolist()
+        
     return new_grid
 
+
 def is_level_complete(grid):
-    # The level is complete when all cells in column 0 are 5?
-    # Or perhaps when a specific pattern is formed.
-    # Given the limited data, let's assume the goal is to fill column 0 with 5s.
-    # However, usually ARC tasks have a more visual goal.
-    # Let's check if there are any other changes. The deltas only show changes in col 0.
-    # So the win condition might be when col 0 is all 5s.
-    return np.all(grid[:, 0] == 5)
+    """
+    Checks if the level is complete.
+    
+    Args:
+        grid: The current state of the grid.
+        
+    Returns:
+        True if the level is complete, False otherwise.
+    """
+    # A simple heuristic: level is complete if no zeros remain
+    # or if some specific condition is met
+    import numpy as np
+    
+    if isinstance(grid, list):
+        grid = np.array(grid)
+    
+    # Check if there are any zeros in the grid
+    # If no zeros, the level might be complete
+    if np.all(grid != 0):
+        return True
+    
+    # Alternatively, check if all cells have been filled with non-zero values
+    # This is a placeholder; the actual condition depends on the game rules
+    return False
