@@ -1098,6 +1098,70 @@ def _transitions_block(
     return "\n".join(out)
 
 
+def objects_block(
+    trans: list[Transition],
+    *,
+    previous_level_complete_grid: Optional[np.ndarray] = None,
+    max_objects: int = 60,
+) -> str:
+    """LEVER #1 (REQ-ARC-WMTE-5830): object-structured serialization of the layout grid (and WIN state,
+    if observed) for the induction prompt. Reuses `arc_color_blob_salience.blob_topology` unchanged.
+    Objects are the connected-component partition; `object_hash` is a TRANSLATION-INVARIANT shape id so
+    the LLM can recognize the SAME object across frames after it moves -- the raw run-length grid gives
+    only order-1 position features that cannot. Defensive by construction: any failure returns "" so
+    induction falls back to the raw-grid-only prompt (never breaks the default path), and the per-grid
+    object table is capped at `max_objects` to bound prompt length on dense/large boards."""
+    try:
+        from carnot.agentic.arc_color_blob_salience import blob_topology
+    except Exception:
+        return ""
+    changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
+    layout = (changed[0] if changed else trans[0]).grid
+
+    def _table(grid: np.ndarray, title: str) -> str:
+        topo = blob_topology(np.asarray(grid))
+        blobs = topo.get("blobs", [])
+        hashes = topo.get("object_hashes", {})
+        n = len(blobs)
+        # Show the largest-by-pixel objects first; keep ORIGINAL ids so containment/adjacency stay valid.
+        order = sorted(range(n), key=lambda i: -int(getattr(blobs[i], "pixel_count", 0)))[:max_objects]
+        shown = set(order)
+        header = (
+            f"{title} OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> "
+            f"shape=<translation-invariant id>)"
+        )
+        if n > len(order):
+            header += f"  [showing largest {len(order)} of {n}]"
+        rows = [header + ":"]
+        for i in order:
+            b = blobs[i]
+            cy, cx = getattr(b, "centroid", (0.0, 0.0))
+            rows.append(
+                f"  obj{i}: color={int(b.color)} bbox={tuple(int(v) for v in b.bbox)} "
+                f"px={int(b.pixel_count)} centroid=({float(cy):.1f},{float(cx):.1f}) shape={hashes.get(i)}"
+            )
+        children = {p: cs for p, cs in topo.get("children", {}).items() if cs and p in shown}
+        adjacency = [pair for pair in topo.get("adjacency_list", []) if all(j in shown for j in pair)]
+        rows.append(f"  containment (parent->children): {children}")
+        rows.append(f"  adjacency (touching id pairs): {adjacency}")
+        rows.append(
+            "  NOTE: two objects with the SAME shape id are the SAME object type regardless of "
+            "position; use this to track objects across the transition deltas above."
+        )
+        return "\n".join(rows)
+
+    try:
+        parts = [_table(layout, "INITIAL")]
+        win = next((t.next_grid for t in trans if t.level_after > t.level_before), None)
+        if win is None and previous_level_complete_grid is not None:
+            win = np.asarray(previous_level_complete_grid)
+        if win is not None:
+            parts.append(_table(win, "WIN STATE"))
+        return "\n\n".join(parts)
+    except Exception:
+        return ""  # never break the default induction path
+
+
 # A forceful CODE-ONLY directive for the L2+ induction call. The L2 induce prompt carries a WIN
 # STATE exemplar, which makes Qwen3.5-9B burn its ENTIRE token budget on win-state chain-of-thought
 # before reaching the code block (stop_type='limit', 0 code emitted -> goal_predicate_satisfiable
@@ -1127,6 +1191,18 @@ def _induce_transitions_k() -> int:
 
     override = os.environ.get("CARNOT_ARC_INDUCE_TRANSITIONS_K")
     return int(override) if override else 8
+
+
+def _object_perception_on() -> bool:
+    """LEVER #1 (REQ-ARC-WMTE-5830): DEV-ONLY (unset -> byte-identical pre-existing prompt). When
+    CARNOT_ARC_OBJECT_PERCEPTION=1, induce_prompt appends a connected-component OBJECT table
+    (translation-invariant object_hash for cross-frame identity, containment tree, adjacency)
+    ALONGSIDE the raw run-length grid -- feeding the inducer the object structure that today only
+    feeds the (gated-off) search salience prior. Attacks GAP-ARCH-FEATURES: the raw grid gives the LLM
+    order-1 position-only features (can't track an object across frames after it moves); object_hash can."""
+    import os
+
+    return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION") == "1"
 
 
 # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
