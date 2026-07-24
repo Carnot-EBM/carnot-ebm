@@ -452,3 +452,66 @@ def reauthor_framing(rules_text: str, percept: PerceptionResult) -> tuple[str, s
             "State the single most likely goal."
         )
     return corrected_rules, "\n".join(lines)
+
+
+# --- Navigation target derivation (REQ-ARC-WMTE-5837) --------------------------------------------------
+# The execution-wall isolation (REQ-ARC-WMTE-5836) showed navigation games (tu93) are solved by Carnot's
+# OfflineSolver + a player->goal Manhattan verifier -- but the (player, goal) colors were hand-RE'd. These
+# derive them AUTONOMOUSLY from the agent's own transitions: the PLAYER is the mover; the GOAL is a small,
+# STATIC, distinct object (a marker that does not translate as you act, unlike the player and unlike the
+# large background/rail fills). This is what lets the perception layer FEED the verifier the hand-adapter
+# provided manually -- closing the perception -> verifier-routed-search -> discovery chain.
+
+def detect_static_target(
+    transitions: list[Transition],
+    *,
+    max_area_fraction: float = 0.12,
+    max_centroid_var: float = 1.5,
+    min_frames: int = 3,
+    exclude: tuple[int, ...] = (),
+) -> Optional[int]:
+    """The GOAL color: the smallest, most-STATIC distinct non-background color across the recent frames. A
+    goal marker stays put while the player moves; the large background/rail fills are excluded by
+    `max_area_fraction`. Returns the color with the lowest centroid variance among small candidates, or None."""
+    if len(transitions) < int(min_frames):
+        return None
+    frames = [_as_grid(t.after) for t in transitions[-max(min_frames, 8):]]
+    g0 = frames[0]
+    bg = _background_color(_as_grid(transitions[0].before))
+    area = g0.size
+    best: Optional[tuple[float, int, int]] = None  # (var, count, color) -> pick lowest var
+    for color in np.unique(g0):
+        color = int(color)
+        if color == bg or color in exclude:
+            continue
+        cents = []
+        for g in frames:
+            c = _bounded_color_centroid(g, color, max_area_fraction=max_area_fraction)
+            if c is not None:
+                cents.append(c)
+        if len(cents) < int(min_frames):
+            continue
+        arr = np.asarray(cents)
+        var = float(arr.var(axis=0).sum())
+        count = int((frames[-1] == color).sum())
+        if count > max_area_fraction * area or var > max_centroid_var:
+            continue
+        cand = (var, count, color)
+        if best is None or cand < best:
+            best = cand
+    return None if best is None else best[2]
+
+
+def derive_navigation_pair(transitions: list[Transition]) -> Optional[tuple[int, int]]:
+    """(player_color, goal_color) for a navigation game, both derived from the agent's own transitions:
+    player = the mover (detect_mover); goal = the small static distinct marker (detect_static_target),
+    excluding the player. Returns None if either cannot be derived (i.e. this is not a clean nav game or the
+    recon lacks the evidence). This is the autonomous analogue of a hand-RE'd (PLAYER, GOAL) adapter pair."""
+    mover = detect_mover(transitions)
+    if mover is None:
+        return None
+    hud_idx = {b.index for b in detect_hud_registers(transitions)}  # noqa: F841 (reserved for exclude ext)
+    goal = detect_static_target(transitions, exclude=(mover.color,))
+    if goal is None:
+        return None
+    return (mover.color, goal)

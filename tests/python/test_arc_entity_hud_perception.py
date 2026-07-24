@@ -195,3 +195,29 @@ class TestReauthorFraming:
         _, block = reauthor_framing("Actions change cells in row 0 to 1.", percept)
         assert "PLAYER: color" not in block  # no player asserted
         assert "arrange/match/merge" in block  # neutral options, not forced navigation
+
+
+class TestNavigationPair:
+    """REQ-ARC-WMTE-5837: autonomously derive (player, goal) for a navigation game -- the pair the tu93
+    hand-adapter hardcoded (9, 14). player = mover; goal = a small static distinct marker."""
+
+    def test_detect_static_target_picks_the_static_small_marker(self):
+        from carnot.agentic.arc_entity_hud_perception import detect_static_target
+
+        # _play: player=color5 (moves), target=color9 (static 2x2), HUD=color7 (row15, grows -> not static)
+        target = detect_static_target(_play(), exclude=(5,))
+        assert target == 9  # the static color-9 marker, not the moving player or the growing HUD
+
+    def test_derive_navigation_pair(self):
+        from carnot.agentic.arc_entity_hud_perception import derive_navigation_pair
+
+        pair = derive_navigation_pair(_play())
+        assert pair == (5, 9)  # (player mover, goal static marker)
+
+    def test_derive_returns_none_without_a_mover(self):
+        from carnot.agentic.arc_entity_hud_perception import Transition, derive_navigation_pair
+
+        # only clicks -> no mover -> no nav pair
+        clicks = [Transition(before=_scene((8, 8), k), action=6, after=_scene((8, 8), k + 1), x=k, y=15)
+                  for k in range(5)]
+        assert derive_navigation_pair(clicks) is None
