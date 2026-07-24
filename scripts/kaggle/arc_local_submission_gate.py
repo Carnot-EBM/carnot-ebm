@@ -500,7 +500,52 @@ def _actions_by_game(measurement: dict) -> dict[str, int]:
     return out
 
 
+def stable_core_from_runs(runs: "list[dict]") -> set[str]:
+    """SEED-STABLE CORE: the games solved in EVERY baseline run, not just one lucky run.
+
+    WHY THIS EXISTS (2026-07-24). The 2026-06-20 CORE set-containment redesign states its intent in
+    `measure()`'s comment: a knife-edge marginal solve that flips purely from order-perturbation
+    noise (the A1/A2 lesson -- a 5%-recall prune that removed ~nothing still reshuffled a chaotic
+    ~7800-action trajectory and dropped m0r0) must NOT count as a regression. That redesign
+    delivered the COUNT half of the intent: a lever can no longer fail merely by solving a
+    different same-size set. But it did NOT deliver the other half. `_verdict` hard-FAILs on
+    `core - cur_solved` being non-empty, and CORE was defined as "whatever the baseline happened to
+    solve in ONE run at ONE budget". So a chaotic near-budget solve can enter CORE from a single
+    lucky baseline run and thereafter veto any lever that merely reshuffles search order -- exactly
+    the failure the comment says it wanted to prevent.
+
+    The existing stability machinery (`select_headroom_budget` / `stable_vs_1_5x`) does not cover
+    this: it checks stability along the BUDGET axis (does the solved SET hold at 1.5x budget) and
+    is used to pick a budget. Raising the budget only ever helps a marginal solve, so it cannot
+    detect instability along the SEED / SEARCH-ORDER axis, which is the axis a lever perturbs.
+
+    THE FIX IS TO TIGHTEN CORE, NOT TO WEAKEN CONTAINMENT. Weakening containment would re-open the
+    hole the 2026-06-20 redesign closed (a lever trading CORE solves for fringe ones, e.g. A2
+    swapping 3 core for 2 fringe). Instead, a game earns CORE membership only by solving
+    REPRODUCIBLY across runs. Unstable solves are still reported -- they simply lose the power to
+    veto, because a coin-flip cannot be evidence of regression in either direction.
+
+    Backward compatible: callers that have only a single run keep the previous behaviour.
+    """
+    solved_sets = [_solved_set(run) for run in runs if run]
+    if not solved_sets:
+        return set()
+    stable = set(solved_sets[0])
+    for other in solved_sets[1:]:
+        stable &= other
+    return stable
+
+
 def _baseline_core(base: dict) -> set[str]:
+    """The veto set. Prefers the seed-stable core when the baseline recorded one.
+
+    `core_stable_games` is written by `--update-baseline` when it measured more than one run (see
+    `stable_core_from_runs`). When absent -- every baseline written before 2026-07-24 -- this falls
+    back to the single-run solved set, preserving the historical behaviour exactly.
+    """
+    stable = base.get("core_stable_games")
+    if stable is not None:
+        return {str(game) for game in stable}
     base_acts = _actions_by_game(base)
     return set(base.get("solved_games") or base_acts.keys())
 
