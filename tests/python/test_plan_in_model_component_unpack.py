@@ -33,3 +33,18 @@ def test_model_candidates_handles_component_grid_without_crashing():
 def test_model_candidates_empty_on_blank_grid():
     cands = _model_candidates(np.zeros((8, 8), dtype=np.int16))
     assert [c["action"] for c in cands] == [1, 2, 3, 4, 5]  # no components -> only directional/confirm
+
+
+def test_plan_in_model_keeps_goal_energy_and_diagnostics_params():
+    # Regression guard for the REQ-ARC-WMTE-5845 nav goal-energy wiring: E3AgentPolicy._call_plan_in_model
+    # only forwards goal_energy/diagnostics when the planner's signature accepts them
+    # (_planner_accepts_goal_energy). If someone drops these params from plan_in_model, the nav best-first
+    # override would silently degrade to plain BFS -- this catches that.
+    import inspect
+
+    from carnot.agentic.arc_executable_world_model import plan_in_model
+
+    params = inspect.signature(plan_in_model).parameters
+    assert "goal_energy" in params
+    assert "diagnostics" in params
+    assert "max_nodes" in params
