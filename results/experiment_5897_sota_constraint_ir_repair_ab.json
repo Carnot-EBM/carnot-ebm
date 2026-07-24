@@ -1,0 +1,498 @@
+{
+  "arm_definitions_and_compute_parity": {
+    "arms": {
+      "matched_two_call_no_trace": {
+        "calls": 2,
+        "diagnostic_trace": false,
+        "max_tokens": 1536,
+        "principle": "A second call with matched budget controls for extra compute alone."
+      },
+      "no_information_trace_control": {
+        "calls": 2,
+        "diagnostic_trace": "uninformative",
+        "max_tokens": 1536,
+        "principle": "A trace-shaped block with no diagnostics controls for prompt format."
+      },
+      "single_pass": {
+        "calls": 1,
+        "diagnostic_trace": false,
+        "max_tokens": 1536,
+        "principle": "Baseline extraction gets one proposal call and no exact diagnostics."
+      },
+      "trace_guided_repair": {
+        "calls": 2,
+        "diagnostic_trace": true,
+        "max_tokens": 1536,
+        "principle": "Only deployment-visible exact diagnostics may guide the second proposal."
+      }
+    },
+    "principle": "A second call alone cannot be credited as trace-guided repair.",
+    "second_call_budget_parity": {
+      "trace_vs_no_information": true,
+      "trace_vs_no_trace": true
+    }
+  },
+  "duration_s": 96.785687,
+  "experiment_id": "experiment_5897_sota_constraint_ir_repair_ab",
+  "field_provenance": {
+    "arm_definitions_and_compute_parity": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "duration_s": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "field_provenance": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "frozen_prompts_decoding_seeds_and_budgets": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "gpu_utilization_vram_and_latency_receipts": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "group_bootstrap_lower_bounds": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "honest_verdict": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "inference_substrate": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "loader_and_cuda_receipts": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "model_file_hashes": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "model_specs": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "no_trace_and_no_information_controls": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "omitted_spurious_and_unsafe_constraint_metrics": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "parse_type_compile_and_semantic_metrics": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "per_model_family_and_template_metrics": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "preconditions_checked": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "protected_files_unchanged": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "raw_output_receipts": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "reproducibility_checksum": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "status": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "test_commands": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "test_exit_codes": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "trace_repair_mechanism_ready_score": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "trace_visibility_and_oracle_boundary": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "upstream_gate_and_fixture_hashes": "generated_by_exp5897_sota_constraint_ir_repair_ab",
+    "verifier_is_oracle": "generated_by_exp5897_sota_constraint_ir_repair_ab"
+  },
+  "frozen_prompts_decoding_seeds_and_budgets": {
+    "arm_budgets": {
+      "matched_two_call_no_trace": 1536,
+      "no_information_trace_control": 1536,
+      "single_pass": 1536,
+      "trace_guided_repair": 1536
+    },
+    "base_random_seed": 5897,
+    "decoding": {
+      "repeat_penalty": 1.05,
+      "stop": [
+        "</s>",
+        "<eos>"
+      ],
+      "temperature": 0.0,
+      "top_p": 1.0
+    },
+    "promotion_thresholds": {
+      "held_group_lower_bound_min": 0.0,
+      "max_unsafe_delta": 0.0,
+      "required_completed_headline_families": 3
+    },
+    "prompt_sha256": {
+      "matched_two_call_no_trace": "sha256:a96f71b372dc8ce0c26009eb6b0b20aa49bc635aa44aa7354832a42e05d9897d",
+      "no_information_trace_control": "sha256:fc477373df58b864e21c31097b6b80990ca2ff4e6be154e43dd8870f135d9f70",
+      "single_pass": "sha256:0ac955bb6e41f9a5523ada8b2aa9b1e6ea66bbd10b1c6e760daf8cbc69c65a70",
+      "trace_guided_repair": "sha256:b6f92215012e62149bf5fd9b570b1702453b55a823f20a499bcb8f16442438c7"
+    },
+    "prompt_version": "exp5897.constraint_ir_ab.v1",
+    "row_groups_frozen_by_exp5896": true
+  },
+  "gpu_utilization_vram_and_latency_receipts": {
+    "energy_proxy_gpu_utilization_pct_s_total": 0,
+    "gpu_receipts": {},
+    "latency_s_total": 0,
+    "row_count": 0
+  },
+  "group_bootstrap_lower_bounds": {
+    "method": "deterministic_group_bootstrap_5th_percentile_over_heldout_valid_rows",
+    "trace_vs_matched_two_call_no_trace": 0.0,
+    "trace_vs_no_information_trace_control": 0.0
+  },
+  "honest_verdict": "blocked_precondition: exp5896_gate_replayed",
+  "inference_substrate": "live_llm_inference",
+  "loader_and_cuda_receipts": {
+    "environment": {
+      "atomic_output": {
+        "detail": "tempfile_replace_supported",
+        "ok": true
+      },
+      "disk": {
+        "available_mb": 1166955,
+        "ok": true,
+        "required_mb": 8192
+      },
+      "gpu_health": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_free_mb": 23037,
+            "memory_total_mb": 24576,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 5935,
+            "memory_total_mb": 24576,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 97
+          }
+        ],
+        "ok": true,
+        "returncode": 0
+      },
+      "llama_cpp_cuda_support": {
+        "detail": "llama_supports_gpu_offload=True",
+        "ok": true
+      },
+      "llama_cpp_import": {
+        "detail": "llama_cpp 0.3.33",
+        "ok": true
+      },
+      "protected_workload": {
+        "ok": true,
+        "protected_pids": []
+      },
+      "ram": {
+        "available_mb": 99076,
+        "ok": true,
+        "required_mb": 32768
+      }
+    },
+    "model_resolution": {
+      "cached_sota_pair_called_with": {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ]
+      },
+      "cached_sota_pair_error": null,
+      "cached_sota_pair_returned": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "resolved_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "third_family_resolved_by_individual_cache": true
+    },
+    "tokenizer_receipts": [
+      {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "ok": true
+      },
+      {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "ok": true
+      },
+      {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "ok": true
+      }
+    ]
+  },
+  "model_file_hashes": {
+    "all_hashed": true,
+    "files": [
+      {
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "size_bytes": 22134528992
+      },
+      {
+        "exists": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "size_bytes": 18323731456
+      },
+      {
+        "exists": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "size_bytes": 16947539744
+      }
+    ]
+  },
+  "model_specs": [
+    {
+      "family": "qwen_moe",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_moe"
+    },
+    {
+      "family": "gemma_dense",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_dense"
+    },
+    {
+      "family": "gemma_moe",
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_vram_gb": 16,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "middle_moe"
+    }
+  ],
+  "no_trace_and_no_information_controls": {
+    "matched_two_call_no_trace": {
+      "compile_rate": 0.0,
+      "energy_proxy_gpu_utilization_pct_s": 0,
+      "exact_semantic_equivalence_rate": 0.0,
+      "latency_s": 0,
+      "n": 0,
+      "parse_valid_rate": 0.0,
+      "query_correct_rate": 0.0,
+      "satisfiability_correct_rate": 0.0,
+      "semantic_n": 0,
+      "total_tokens": 0,
+      "type_valid_rate": 0.0,
+      "unsafe_accept_rate": 0.0
+    },
+    "no_information_trace_control": {
+      "compile_rate": 0.0,
+      "energy_proxy_gpu_utilization_pct_s": 0,
+      "exact_semantic_equivalence_rate": 0.0,
+      "latency_s": 0,
+      "n": 0,
+      "parse_valid_rate": 0.0,
+      "query_correct_rate": 0.0,
+      "satisfiability_correct_rate": 0.0,
+      "semantic_n": 0,
+      "total_tokens": 0,
+      "type_valid_rate": 0.0,
+      "unsafe_accept_rate": 0.0
+    },
+    "principle": "A second call alone cannot be credited as trace-guided repair."
+  },
+  "omitted_spurious_and_unsafe_constraint_metrics": {
+    "by_arm": {
+      "matched_two_call_no_trace": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepted_constraints": 0
+      },
+      "no_information_trace_control": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepted_constraints": 0
+      },
+      "single_pass": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepted_constraints": 0
+      },
+      "trace_guided_repair": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepted_constraints": 0
+      }
+    },
+    "overall": {
+      "omitted_constraints": 0,
+      "spurious_constraints": 0,
+      "unsafe_accepted_constraints": 0
+    }
+  },
+  "parse_type_compile_and_semantic_metrics": {
+    "by_arm": {
+      "matched_two_call_no_trace": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 0,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 0,
+        "n": 0,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 0,
+        "total_tokens": 0,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "no_information_trace_control": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 0,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 0,
+        "n": 0,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 0,
+        "total_tokens": 0,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "single_pass": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 0,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 0,
+        "n": 0,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 0,
+        "total_tokens": 0,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "trace_guided_repair": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 0,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 0,
+        "n": 0,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 0,
+        "total_tokens": 0,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    },
+    "overall": {
+      "compile_rate": 0.0,
+      "energy_proxy_gpu_utilization_pct_s": 0,
+      "exact_semantic_equivalence_rate": 0.0,
+      "latency_s": 0,
+      "n": 0,
+      "parse_valid_rate": 0.0,
+      "query_correct_rate": 0.0,
+      "satisfiability_correct_rate": 0.0,
+      "semantic_n": 0,
+      "total_tokens": 0,
+      "type_valid_rate": 0.0,
+      "unsafe_accept_rate": 0.0
+    }
+  },
+  "per_model_family_and_template_metrics": {
+    "by_family": {},
+    "by_model": {},
+    "by_template": {}
+  },
+  "preconditions_checked": {
+    "block_reason": "exp5896_gate_replayed",
+    "blocked_before_model_load": true,
+    "headline_checks": {
+      "adequate_disk": true,
+      "adequate_ram": true,
+      "adequate_vram": true,
+      "all_model_files_exist": true,
+      "all_model_hashes_recorded": true,
+      "all_three_model_specs_resolved": true,
+      "atomic_output_ready": true,
+      "embedded_gguf_tokenizers_load": true,
+      "exp5896_gate_replayed": false,
+      "llama_cpp_cuda_support": true,
+      "llama_cpp_import_ok": true,
+      "no_protected_workload": true,
+      "two_healthy_rtx_3090s": true
+    },
+    "run_order": "exp5896_replay_and_resource_checks_before_any_model_load"
+  },
+  "protected_files_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "path": "scripts/research_conductor.py",
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/changelog.md",
+        "sha256": "sha256:a623bdcd37b13f845239410c7825fc940a879affa3fd6933a6532cc7b1258030",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/status.md",
+        "sha256": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "_bmad/traceability.md",
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "unchanged": true
+      }
+    ],
+    "unchanged": true
+  },
+  "random_seed": 5897,
+  "raw_output_receipts": {
+    "path": "results/experiment_5897_sota_constraint_ir_repair_ab.raw.jsonl",
+    "raw_output_hashes": [],
+    "row_count": 0,
+    "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reproducibility_checksum": "sha256:26ae526e756245975a3301d218ef04f5e4efcb5c944c706f89e7799512b54424",
+  "run_date": "20260724",
+  "schema": "carnot.experiment_5897.sota_constraint_ir_repair_ab.v1",
+  "status": "blocked_precondition",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py -m pytest tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5897_sota_constraint_ir_repair_ab.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {},
+  "trace_repair_mechanism_ready_score": 0.0,
+  "trace_visibility_and_oracle_boundary": {
+    "generated_answer_repair": false,
+    "model_self_scores_excluded": true,
+    "principle": "Only deployment-available exact diagnostics may guide repair.",
+    "visible_to_trace_repair": [
+      "parser_status",
+      "parser_error",
+      "type_status",
+      "compiler_status",
+      "compiler_error",
+      "solver_status",
+      "cross_backend_agreement"
+    ],
+    "withheld_from_model": [
+      "hidden_gold_ir",
+      "answer_labels",
+      "held_family_identity",
+      "certificate_solutions",
+      "gold_behavior_hash",
+      "model_self_scores"
+    ]
+  },
+  "upstream_gate_and_fixture_hashes": {
+    "artifact_path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+    "artifact_sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+    "replay_error": "ConstraintIRReplayError: artifact reproducibility checksum mismatch",
+    "replay_ok": false,
+    "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "row_path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl"
+  },
+  "verifier_is_oracle": true
+}
