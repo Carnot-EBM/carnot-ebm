@@ -329,6 +329,30 @@ class InducedNavWorldModel:
     def as_callables(self):
         return self.engine, self.is_level_complete
 
+    def is_confident_nav(self, *, min_directions: int = 3) -> bool:
+        """A HIGH-CONFIDENCE navigation fit -- used to gate the live inducer so it does NOT fire on
+        non-navigation games where the fit is spurious (REQ-ARC-WMTE-5844). Two tells separate the one real
+        nav game (tu93: avatar={9,4}, all 4 directions, goal=14) from the source-verified NON-nav games the
+        fitter still fit a model for (sk48 = two-snake sequence-match, avatar={0,1}, only [1,2]; wa30 =
+        Sokoban crate-push, avatar={0,14}, win reads CRATE positions not the avatar):
+
+          1. The avatar must NOT include colour 0. Colour 0 is the PADDING/letterbox/void in the ARC render
+             (confirmed in wa30 source, PADDING_COLOR=0); a genuine avatar sprite is non-padding, so an
+             avatar that captured colour 0 has latched onto static frame-edge padding -> a corrupt fit.
+          2. The avatar must translate in at least `min_directions` (default 3) of the 4 directional actions.
+             A free-moving grid avatar moves in most directions; a fit that only saw <3 (sk48's orientation-
+             locked snake, only up/down) is not a free 4-direction navigator.
+
+        Plus a real goal colour. This is a CONSERVATIVE gate: a missed real nav game costs at most a
+        forgone level-up (no harm), whereas firing on a non-nav game installs a plan that cannot win and
+        wastes real actions (the wa30 A/B cost). tu93 passes (no 0, 4 directions, goal=14); sk48/wa30 fail.
+        """
+        if self.goal_color is None:
+            return False
+        if 0 in set(self.avatar_colors):
+            return False
+        return len({a for a in self.displacement if a in _NAV_ACTIONS}) >= int(min_directions)
+
 
 def _blobs(mask):
     """Connected components (4-neighbour) of a boolean mask -> list of (centre_row, centre_col, size)."""

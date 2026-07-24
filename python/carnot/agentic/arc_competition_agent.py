@@ -3806,10 +3806,18 @@ class E3AgentPolicy:
                     from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
 
                     nav = InducedNavWorldModel.fit(active_transitions)
+                    # CONFIDENCE-GATED (REQ-ARC-WMTE-5844): only fire on a HIGH-confidence nav fit -- the
+                    # fitter also fits a (spurious) model for source-verified NON-nav games (sk48 two-snake
+                    # sequence-match; wa30 Sokoban crate-push), where firing installs a plan that cannot win
+                    # and wastes actions. is_confident_nav rejects those (avatar captured padding-0, or <3
+                    # directions) while keeping tu93.
                     is_nav = bool(getattr(nav, "displacement", None)) and (
                         getattr(nav, "goal_color", None) is not None
                     )
+                    is_confident = is_nav and nav.is_confident_nav()
                     attempt["structured_nav_is_nav_game"] = bool(is_nav)
+                    attempt["structured_nav_confident"] = bool(is_confident)
+                    is_nav = is_confident
                     if is_nav and self.root_grid is not None:
                         nav_eng, nav_isdone = nav.as_callables()
                         # Record the standard metrics for diagnostics, but do NOT gate on the full-grid
