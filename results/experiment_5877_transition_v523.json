@@ -1,0 +1,1160 @@
+{
+  "activated_task_and_deliverable_matrix": {
+    "exp5863-transition-v522": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 01:26 UTC | Exact terminal-boundary handoff from .521 into .52 | OK | 87 passed, 1 warning in 13.26s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5863_transition_v522.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5863_transition_v522.json",
+      "honest_verdict": "complete: archived terminal .521 identities by exact declared deliverables into .522; blocked, disqualified, gate-skipped, flagged, no-change, and missing evidence preserved; next_range_collision_count=0",
+      "identity": [
+        "2026.07.522",
+        "exp5863-transition-v522",
+        "results/experiment_5863_transition_v522.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.522",
+      "missing_reason": null,
+      "missing_recorded_explicitly": false,
+      "present": true,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:f8d6623c2fc879ac7b504103d0c5e113c8970214f4bb8b0cbdc96a974bc824cb",
+      "status": "complete",
+      "task_id": "exp5863-transition-v522",
+      "title": "Exact terminal-boundary handoff from .521 into .522"
+    },
+    "exp5864-v522-source-delta-ingestion": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 01:59 UTC | Dated evidence refresh after the V522 planner mark | OK | 88 passed, 2 warnings in 11.50s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5864_v522_source_delta_ingestion.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5864_v522_source_delta_ingestion.json",
+      "honest_verdict": "complete: no accepted post-V522 source deltas; references and studying ledgers unchanged",
+      "identity": [
+        "2026.07.522",
+        "exp5864-v522-source-delta-ingestion",
+        "results/experiment_5864_v522_source_delta_ingestion.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.522",
+      "missing_reason": null,
+      "missing_recorded_explicitly": false,
+      "present": true,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:fbbc4a9f38ce8a3db7ae9af38de05241d23ee604bf0279e7077f5f4c67d84f5a",
+      "status": "complete",
+      "task_id": "exp5864-v522-source-delta-ingestion",
+      "title": "Dated evidence refresh after the V522 planner marker"
+    },
+    "exp5865-adaptive-state-kernel-requalification": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-07-24 05:04 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5865_adaptiv |",
+        "latest_status": "FAIL"
+      },
+      "declared_deliverable": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+      "honest_verdict": "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt",
+      "identity": [
+        "2026.07.522",
+        "exp5865-adaptive-state-kernel-requalification",
+        "results/experiment_5865_adaptive_state_kernel_requalification.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.522",
+      "missing_reason": null,
+      "missing_recorded_explicitly": false,
+      "present": true,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:911b5efdcaeb9578173d9ba5a70f29b5d23431e3404f45483c8751c1b3acfe3a",
+      "status": "retired",
+      "task_id": "exp5865-adaptive-state-kernel-requalification",
+      "title": "Adaptive-state microkernel E2E attribution and requalification"
+    },
+    "exp5866-adaptive-state-pipeline-shadow-adapter": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-07-24 05:11 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json",
+      "honest_verdict": "",
+      "identity": [
+        "2026.07.522",
+        "exp5866-adaptive-state-pipeline-shadow-adapter",
+        "results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json"
+      ],
+      "loadable": false,
+      "milestone": "2026.07.522",
+      "missing_reason": "upstream_retired_exp5865",
+      "missing_recorded_explicitly": true,
+      "present": false,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": null,
+      "status": "",
+      "task_id": "exp5866-adaptive-state-pipeline-shadow-adapter",
+      "title": "Default-off adaptive-state adapter at the verify-repair boundary"
+    },
+    "exp5867-prospective-certified-continuous-learning": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-07-24 05:11 UTC | Prospective non-forgetting continuous learning thr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5866-adaptive-state-pipeline-shadow-ada |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_5867_prospective_certified_continuous_learning.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5867_prospective_certified_continuous_learning.json",
+      "honest_verdict": "blocked_gate_check_failed",
+      "identity": [
+        "2026.07.522",
+        "exp5867-prospective-certified-continuous-learning",
+        "results/experiment_5867_prospective_certified_continuous_learning.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.522",
+      "missing_reason": null,
+      "missing_recorded_explicitly": false,
+      "present": true,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:a7272117e8619a359fa72cd620c23758a28063000adbff5c6ee58a1e62b1d0c1",
+      "status": "blocked",
+      "task_id": "exp5867-prospective-certified-continuous-learning",
+      "title": "Prospective non-forgetting continuous learning through the shadow adapter"
+    },
+    "exp5868-hardness-controlled-constraint-fixture": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 05:38 UTC | Proof-hardness-controlled exact constraint fixture | OK | 88 passed, 1 warning in 15.50s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+      "honest_verdict": "ready: hardness_controlled_exact_constraint_fixture_ready",
+      "identity": [
+        "2026.07.522",
+        "exp5868-hardness-controlled-constraint-fixture",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.522",
+      "missing_reason": null,
+      "missing_recorded_explicitly": false,
+      "present": true,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:bb8e645d5b8fdd2c057ded57ff6d2abf7a563e28e4a090bb2109f0f5eaef3bcc",
+      "status": "complete",
+      "task_id": "exp5868-hardness-controlled-constraint-fixture",
+      "title": "Proof-hardness-controlled exact constraint fixture"
+    },
+    "exp5869-hardness-surface-headroom-audit": {
+      "activated": true,
+      "completion_row_result": "OK (conductor)",
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-07-24 06:56 UTC | Constraint headroom, surface leakage, and oracle-d | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5869_hardnes |",
+        "latest_status": "FAIL"
+      },
+      "declared_deliverable": "results/experiment_5869_hardness_surface_headroom_audit.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5869_hardness_surface_headroom_audit.json",
+      "honest_verdict": "blocked: test_exit_codes",
+      "identity": [
+        "2026.07.522",
+        "exp5869-hardness-surface-headroom-audit",
+        "results/experiment_5869_hardness_surface_headroom_audit.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.522",
+      "missing_reason": null,
+      "missing_recorded_explicitly": false,
+      "present": true,
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:ed15c408b807d8aa0426cc9d20b25541abdcc458b3d176b1c0891071ef7a1870",
+      "status": "blocked",
+      "task_id": "exp5869-hardness-surface-headroom-audit",
+      "title": "Constraint headroom, surface leakage, and oracle-distinctness audit"
+    }
+  },
+  "adversarial_verifier_receipts": {
+    "exp5863-transition-v522": {
+      "artifact_path": "results/experiment_5863_transition_v522.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5863_transition_v522.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:605a629626a6ddf198bc2b23226d4e2ed8012b0cfc5d6053d29d5bc91a18ce8f",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5863_transition_v522.json",
+            "exp_id": "experiment_5863_transition_v522",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete: archived terminal .521 identities by exact declared deliverables into ",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5863-transition-v522"
+    },
+    "exp5864-v522-source-delta-ingestion": {
+      "artifact_path": "results/experiment_5864_v522_source_delta_ingestion.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5864_v522_source_delta_ingestion.json",
+      "exit_code": 1,
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "max_severity": 1,
+      "receipt_hash": "sha256:b6b4a37c3162ee199c52c81c193d50040c6364bd4233927c7252e7295f6ee4f7",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 1,
+        "reports": [
+          {
+            "artifact": "results/experiment_5864_v522_source_delta_ingestion.json",
+            "exp_id": "experiment_5864_v522_source_delta_ingestion",
+            "flag_count": 1,
+            "flags": [
+              {
+                "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+                "kind": "METHODOLOGY_MISSING",
+                "severity": "warn"
+              }
+            ],
+            "honest_verdict": "complete: no accepted post-V522 source deltas; references and studying ledgers u",
+            "loaded": true,
+            "max_severity": 1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5864-v522-source-delta-ingestion"
+    },
+    "exp5865-adaptive-state-kernel-requalification": {
+      "artifact_path": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5865_adaptive_state_kernel_requalification.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:f920f8bcdb90258dc5e3676175a523bd41c85679a9972e803477939d48847b23",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+            "exp_id": null,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5865-adaptive-state-kernel-requalification"
+    },
+    "exp5867-prospective-certified-continuous-learning": {
+      "artifact_path": "results/experiment_5867_prospective_certified_continuous_learning.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5867_prospective_certified_continuous_learning.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:74badcedbc1bcfcf7890feef9ff39a06dfbe45d813fa9b19b94954179f3afb89",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5867_prospective_certified_continuous_learning.json",
+            "blocked_gate_artifact": true,
+            "flags": [],
+            "loaded": true
+          }
+        ]
+      },
+      "task_id": "exp5867-prospective-certified-continuous-learning"
+    },
+    "exp5868-hardness-controlled-constraint-fixture": {
+      "artifact_path": "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5868_hardness_controlled_constraint_fixture.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:644ffbf4f8262f1ebf931d0f0bdfaf2479b891a4f542eadb56f8ddcafde32283",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+            "exp_id": 5868,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "ready: hardness_controlled_exact_constraint_fixture_ready",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5868-hardness-controlled-constraint-fixture"
+    },
+    "exp5869-hardness-surface-headroom-audit": {
+      "artifact_path": "results/experiment_5869_hardness_surface_headroom_audit.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5869_hardness_surface_headroom_audit.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:254b4ecf10c5ef5336b300bd42a2050ad08bd6c936661b5249904f2c4c0f6a84",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5869_hardness_surface_headroom_audit.json",
+            "exp_id": 5869,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "blocked: test_exit_codes",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5869-hardness-surface-headroom-audit"
+    }
+  },
+  "docs_reconciled": {
+    "files_modified_by_this_workflow": [
+      "openspec/capabilities/research-reporting/spec.md",
+      "tests/python/test_experiment_5877_transition_v523.py",
+      "python/carnot/experiment_5877_transition_v523.py",
+      "results/experiment_5877_transition_v523.json"
+    ],
+    "openspec_research_reporting": "reconciled_by_REQ_REPORT_5877",
+    "ops_changelog_md": "deferred_by_operator_stop_rule",
+    "ops_conductor_log_md": "read_only_evidence_source",
+    "ops_status_md": "deferred_by_operator_stop_rule",
+    "traceability_md": "deferred_by_operator_stop_rule"
+  },
+  "duplicate_history_amplification_count": 0,
+  "duration_s": 21.414609,
+  "experiment": "experiment_5877_transition_v523",
+  "experiment_id": "exp5877-transition-v523",
+  "field_principles": {
+    "activated_task_and_deliverable_matrix": "Only activated task IDs and declared paths are evidence.",
+    "adversarial_verifier_receipts": "Fresh verifier output preserves current artifact-quality authority.",
+    "docs_reconciled": "Transition-owned specifications and receipts disclose deferred operator reconciliation.",
+    "duplicate_history_amplification_count": "Must be bare zero; existing duplicate history cannot be multiplied.",
+    "duration_s": "Measured wall time exposes bootstrap-only work.",
+    "field_provenance": "Every field traces to exact paths, hashes, commands, or roadmap records.",
+    "honest_verdict": "A `complete:` or `blocked:` prefix makes the handoff terminal.",
+    "inference_substrate": "`aggregation_from_upstream_artifacts` declares archival rather than model inference.",
+    "milestone_transition": "Explicit .522-to-.523 boundary prevents prefix aliasing.",
+    "next_range_collision_count": "Only bare zero authorizes the range.",
+    "next_task_range": "A declared finite Exp5877-Exp5889 interval makes allocation auditable.",
+    "outcome_classification": "Disjoint terminal classes prevent laundering.",
+    "preconditions_checked": "Parsed roadmaps, hashes, resources, verifier availability, atomic output, and declared deliverables ground the handoff.",
+    "protected_files_unchanged": "Protected user and conductor files remain byte-identical.",
+    "reproducibility_checksum": "A checksum detects ledger, artifact, or allocation drift.",
+    "research_complete_append_count": "Exact zero-or-one prevents duplicate history.",
+    "retired_missing_blocked_and_ready_preserved": "Retired, absent, blocked, and ready outcomes remain separate terminal classes.",
+    "status": "Terminal state distinguishes exact archival from bootstrap work.",
+    "test_commands": "Commands document focused, coverage, YAML, verifier, collision, protection, reconciliation, spec, and root-clutter checks.",
+    "test_exit_codes": "Exit codes prevent failed owned checks becoming success.",
+    "unactivated_proposal_id_receipt": "Prior prose cannot become completed work."
+  },
+  "field_provenance": {
+    "activated_task_and_deliverable_matrix": {
+      "principle": "Only activated task IDs and declared paths are evidence.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "adversarial_verifier_receipts": {
+      "principle": "Fresh verifier output preserves current artifact-quality authority.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "docs_reconciled": {
+      "principle": "Transition-owned specifications and receipts disclose deferred operator reconciliation.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "duplicate_history_amplification_count": {
+      "principle": "Must be bare zero; existing duplicate history cannot be multiplied.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes bootstrap-only work.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to exact paths, hashes, commands, or roadmap records.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "A `complete:` or `blocked:` prefix makes the handoff terminal.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "`aggregation_from_upstream_artifacts` declares archival rather than model inference.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "milestone_transition": {
+      "principle": "Explicit .522-to-.523 boundary prevents prefix aliasing.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "next_range_collision_count": {
+      "principle": "Only bare zero authorizes the range.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "next_task_range": {
+      "principle": "A declared finite Exp5877-Exp5889 interval makes allocation auditable.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "outcome_classification": {
+      "principle": "Disjoint terminal classes prevent laundering.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Parsed roadmaps, hashes, resources, verifier availability, atomic output, and declared deliverables ground the handoff.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected user and conductor files remain byte-identical.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects ledger, artifact, or allocation drift.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "research_complete_append_count": {
+      "principle": "Exact zero-or-one prevents duplicate history.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "retired_missing_blocked_and_ready_preserved": {
+      "principle": "Retired, absent, blocked, and ready outcomes remain separate terminal classes.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "status": {
+      "principle": "Terminal state distinguishes exact archival from bootstrap work.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused, coverage, YAML, verifier, collision, protection, reconciliation, spec, and root-clutter checks.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed owned checks becoming success.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    },
+    "unactivated_proposal_id_receipt": {
+      "principle": "Prior prose cannot become completed work.",
+      "sources": [
+        "research-complete.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "scripts/adversarial_verify.py"
+      ]
+    }
+  },
+  "honest_verdict": "complete: archived terminal .522 identities by exact declared deliverables into .523; retired, missing, gate-blocked, ready, blocked, no-delta, and verifier-warn outcomes preserved; next_range_collision_count=0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_transition": {
+    "destination_milestone": "2026.07.523",
+    "source_milestone": "2026.07.522",
+    "task_identity_tuple": [
+      "milestone",
+      "task_id",
+      "declared_deliverable"
+    ]
+  },
+  "next_range_collision_count": 0,
+  "next_task_range": {
+    "declared_deliverables": [
+      "results/experiment_5877_transition_v523.json",
+      "results/experiment_5878_v523_source_delta_ingestion.json",
+      "results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json",
+      "results/experiment_5880_grounding_shortcut_fixture.json",
+      "results/experiment_5881_one_to_one_grounding_acquisition_ab.json",
+      "results/experiment_5882_shortcut_resistant_continuous_self_learning.json",
+      "results/experiment_5883_gguf_intermediate_layer_surface_preflight.json",
+      "results/experiment_5884_three_family_layer_dynamic_energy.json",
+      "results/experiment_5885_layer_dynamic_portability_camouflage_audit.json",
+      "results/experiment_5886_arc_programmatic_memory_contract.json",
+      "results/experiment_5887_arc_programmatic_memory_causal_audit.json",
+      "results/experiment_5888_arc_programmatic_memory_live_ab.json",
+      "results/experiment_5889_v523_capstone_reconciliation.json"
+    ],
+    "end": "exp5889",
+    "start": "exp5877",
+    "task_ids": [
+      "exp5877-transition-v523",
+      "exp5878-v523-source-delta-ingestion",
+      "exp5879-hardness-headroom-taxonomy-corrigendum",
+      "exp5880-grounding-shortcut-fixture",
+      "exp5881-one-to-one-grounding-acquisition-ab",
+      "exp5882-shortcut-resistant-continuous-self-learning",
+      "exp5883-gguf-intermediate-layer-surface-preflight",
+      "exp5884-three-family-layer-dynamic-energy",
+      "exp5885-layer-dynamic-portability-camouflage-audit",
+      "exp5886-arc-programmatic-memory-contract",
+      "exp5887-arc-programmatic-memory-causal-audit",
+      "exp5888-arc-programmatic-memory-live-ab",
+      "exp5889-v523-capstone-reconciliation"
+    ]
+  },
+  "outcome_classification": {
+    "blocked_task_ids": [
+      "exp5869-hardness-surface-headroom-audit"
+    ],
+    "complete_transition_task_ids": [
+      "exp5863-transition-v522"
+    ],
+    "gate_blocked_task_ids": [
+      "exp5867-prospective-certified-continuous-learning"
+    ],
+    "missing_declared_deliverable_task_ids": [
+      "exp5866-adaptive-state-pipeline-shadow-adapter"
+    ],
+    "no_accepted_source_delta_task_ids": [
+      "exp5864-v522-source-delta-ingestion"
+    ],
+    "off_path_task_ids": [],
+    "ready_task_ids": [
+      "exp5868-hardness-controlled-constraint-fixture"
+    ],
+    "retired_task_ids": [
+      "exp5865-adaptive-state-kernel-requalification"
+    ],
+    "terminal_class_by_task_id": {
+      "exp5863-transition-v522": "complete_transition",
+      "exp5864-v522-source-delta-ingestion": "no_accepted_source_delta",
+      "exp5865-adaptive-state-kernel-requalification": "retired",
+      "exp5866-adaptive-state-pipeline-shadow-adapter": "missing_upstream_retired",
+      "exp5867-prospective-certified-continuous-learning": "gate_blocked",
+      "exp5868-hardness-controlled-constraint-fixture": "ready",
+      "exp5869-hardness-surface-headroom-audit": "blocked"
+    },
+    "verifier_warn_task_ids": [
+      "exp5864-v522-source-delta-ingestion"
+    ]
+  },
+  "preconditions_checked": {
+    "active_roadmap": {
+      "deliverables": [
+        "results/experiment_5877_transition_v523.json",
+        "results/experiment_5878_v523_source_delta_ingestion.json",
+        "results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json",
+        "results/experiment_5880_grounding_shortcut_fixture.json",
+        "results/experiment_5881_one_to_one_grounding_acquisition_ab.json",
+        "results/experiment_5882_shortcut_resistant_continuous_self_learning.json"
+      ],
+      "error": null,
+      "loadable": true,
+      "milestone": "2026.07.523",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:c10238792f4952078ed9ebe60a75e4c976a041455f921d7cf0649e5eaec44124",
+      "task_count": 6,
+      "task_ids": [
+        "exp5877-transition-v523",
+        "exp5878-v523-source-delta-ingestion",
+        "exp5879-hardness-headroom-taxonomy-corrigendum",
+        "exp5880-grounding-shortcut-fixture",
+        "exp5881-one-to-one-grounding-acquisition-ab",
+        "exp5882-shortcut-resistant-continuous-self-learning"
+      ]
+    },
+    "atomic_output": {
+      "atomic_probe_write_ok": true,
+      "declared_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5877_transition_v523.json",
+      "error": null,
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true
+    },
+    "declared_activated_deliverable_hashes": {
+      "exp5863-transition-v522": {
+        "loadable": true,
+        "missing_reason": null,
+        "path": "results/experiment_5863_transition_v522.json",
+        "present": true,
+        "sha256": "sha256:f8d6623c2fc879ac7b504103d0c5e113c8970214f4bb8b0cbdc96a974bc824cb"
+      },
+      "exp5864-v522-source-delta-ingestion": {
+        "loadable": true,
+        "missing_reason": null,
+        "path": "results/experiment_5864_v522_source_delta_ingestion.json",
+        "present": true,
+        "sha256": "sha256:fbbc4a9f38ce8a3db7ae9af38de05241d23ee604bf0279e7077f5f4c67d84f5a"
+      },
+      "exp5865-adaptive-state-kernel-requalification": {
+        "loadable": true,
+        "missing_reason": null,
+        "path": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+        "present": true,
+        "sha256": "sha256:911b5efdcaeb9578173d9ba5a70f29b5d23431e3404f45483c8751c1b3acfe3a"
+      },
+      "exp5866-adaptive-state-pipeline-shadow-adapter": {
+        "loadable": false,
+        "missing_reason": "upstream_retired_exp5865",
+        "path": "results/experiment_5866_adaptive_state_pipeline_shadow_adapter.json",
+        "present": false,
+        "sha256": null
+      },
+      "exp5867-prospective-certified-continuous-learning": {
+        "loadable": true,
+        "missing_reason": null,
+        "path": "results/experiment_5867_prospective_certified_continuous_learning.json",
+        "present": true,
+        "sha256": "sha256:a7272117e8619a359fa72cd620c23758a28063000adbff5c6ee58a1e62b1d0c1"
+      },
+      "exp5868-hardness-controlled-constraint-fixture": {
+        "loadable": true,
+        "missing_reason": null,
+        "path": "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "present": true,
+        "sha256": "sha256:bb8e645d5b8fdd2c057ded57ff6d2abf7a563e28e4a090bb2109f0f5eaef3bcc"
+      },
+      "exp5869-hardness-surface-headroom-audit": {
+        "loadable": true,
+        "missing_reason": null,
+        "path": "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "present": true,
+        "sha256": "sha256:ed15c408b807d8aa0426cc9d20b25541abdcc458b3d176b1c0891071ef7a1870"
+      }
+    },
+    "declared_deliverable_mismatches": [],
+    "duplicate_history": {
+      "after_duplicate_block_count": 895,
+      "amplification_count": 0,
+      "before_duplicate_block_count": 895
+    },
+    "failed_nonblocking_test_commands": [
+      ".venv/bin/python scripts/check_spec_coverage.py",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5864_v522_source_delta_ingestion.json"
+    ],
+    "failed_preconditions": [],
+    "failed_required_test_commands": [],
+    "live_verifier": {
+      "path": "scripts/adversarial_verify.py",
+      "present": true,
+      "present_declared_deliverable_count": 6,
+      "present_declared_deliverables_without_receipts": [],
+      "receipts_for_present_deliverables": 6
+    },
+    "missing_declared_deliverables": [
+      "exp5866-adaptive-state-pipeline-shadow-adapter"
+    ],
+    "protected_files": {
+      "_bmad/traceability.md": {
+        "check_source": "git_status",
+        "modified_by_exp5877": false,
+        "present": true,
+        "sha256_after": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "sha256_before": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "check_source": "git_status",
+        "modified_by_exp5877": false,
+        "present": true,
+        "sha256_after": "sha256:f28f8e3e4e9775eaca0a08cb1d2e8b0fa8343ee1a1ca39165cda53ad4b113a27",
+        "sha256_before": "sha256:f28f8e3e4e9775eaca0a08cb1d2e8b0fa8343ee1a1ca39165cda53ad4b113a27",
+        "unchanged": true
+      },
+      "ops/north-star.md": {
+        "check_source": "git_status",
+        "modified_by_exp5877": false,
+        "present": true,
+        "sha256_after": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "sha256_before": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "check_source": "git_status",
+        "modified_by_exp5877": false,
+        "present": true,
+        "sha256_after": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+        "sha256_before": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "check_source": "git_status",
+        "modified_by_exp5877": false,
+        "present": true,
+        "sha256_after": "sha256:c10238792f4952078ed9ebe60a75e4c976a041455f921d7cf0649e5eaec44124",
+        "sha256_before": "sha256:c10238792f4952078ed9ebe60a75e4c976a041455f921d7cf0649e5eaec44124",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "check_source": "git_status",
+        "modified_by_exp5877": false,
+        "present": true,
+        "sha256_after": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "sha256_before": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      }
+    },
+    "range_collision_scan": {
+      "allowed_references": [
+        {
+          "kind": "allowed_allocation_reference",
+          "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+        },
+        {
+          "kind": "transition_owned_reference",
+          "path": "python/carnot/experiment_5877_transition_v523.py"
+        },
+        {
+          "kind": "allowed_allocation_reference",
+          "path": "research-roadmap.yaml"
+        },
+        {
+          "kind": "transition_owned_reference",
+          "path": "tests/python/test_experiment_5877_transition_v523.py"
+        }
+      ],
+      "collision_count": 0,
+      "collision_free": true,
+      "collisions": [],
+      "range": {
+        "end": "exp5889",
+        "numbers": [
+          5877,
+          5878,
+          5879,
+          5880,
+          5881,
+          5882,
+          5883,
+          5884,
+          5885,
+          5886,
+          5887,
+          5888,
+          5889
+        ],
+        "start": "exp5877"
+      }
+    },
+    "research_complete": {
+      "append_receipt": {
+        "after_duplicate_block_count": 895,
+        "after_sha256": "sha256:e6dbc4661a80da383e2c5890faed7a054aab2101bb6a60b00bfbf88cee56ece5",
+        "append_count": 0,
+        "appended": false,
+        "before_duplicate_block_count": 895,
+        "before_sha256": "sha256:e6dbc4661a80da383e2c5890faed7a054aab2101bb6a60b00bfbf88cee56ece5",
+        "duplicate_history_amplification_count": 0,
+        "reason": "exact_milestone_block_present"
+      },
+      "error": null,
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "present": true,
+      "sha256": "sha256:e6dbc4661a80da383e2c5890faed7a054aab2101bb6a60b00bfbf88cee56ece5"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1169347,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 76500,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "roadmap_next": {
+      "deliverables": [],
+      "error": "missing",
+      "loadable": false,
+      "milestone": null,
+      "missing_recorded_explicitly": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null,
+      "task_count": 0,
+      "task_ids": []
+    },
+    "run_date": "20260724",
+    "source_hashes": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2"
+      },
+      "openspec/capabilities/research-reporting/spec.md": {
+        "present": true,
+        "sha256": "sha256:fcf376cd4e30f35b876a49950530066d58cbaf46b3cfa8932c0d49cb0b8011ab"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:f3f60ec4be60f1c8343889fb218fd72aaf4e83fdef025480588ccf336f033a9b"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:f28f8e3e4e9775eaca0a08cb1d2e8b0fa8343ee1a1ca39165cda53ad4b113a27"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:2cf8c5a78aea118c722b14d829f4ac962ab644703d0461fc333796fb84af0e7c"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7"
+      },
+      "ops/north-star.md": {
+        "present": true,
+        "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2"
+      },
+      "research-complete.yaml": {
+        "present": true,
+        "sha256": "sha256:e6dbc4661a80da383e2c5890faed7a054aab2101bb6a60b00bfbf88cee56ece5"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:c10238792f4952078ed9ebe60a75e4c976a041455f921d7cf0649e5eaec44124"
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
+      },
+      "scripts/evidence_index_collision_preflight.py": {
+        "present": true,
+        "sha256": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b"
+      },
+      "scripts/in_process_doc_reconcile.py": {
+        "present": true,
+        "sha256": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      }
+    }
+  },
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": {
+      "check_source": "git_status",
+      "modified_by_exp5877": false,
+      "present": true,
+      "sha256_after": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "sha256_before": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "unchanged": true
+    },
+    "ops/changelog.md": {
+      "check_source": "git_status",
+      "modified_by_exp5877": false,
+      "present": true,
+      "sha256_after": "sha256:f28f8e3e4e9775eaca0a08cb1d2e8b0fa8343ee1a1ca39165cda53ad4b113a27",
+      "sha256_before": "sha256:f28f8e3e4e9775eaca0a08cb1d2e8b0fa8343ee1a1ca39165cda53ad4b113a27",
+      "unchanged": true
+    },
+    "ops/north-star.md": {
+      "check_source": "git_status",
+      "modified_by_exp5877": false,
+      "present": true,
+      "sha256_after": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "sha256_before": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "unchanged": true
+    },
+    "ops/status.md": {
+      "check_source": "git_status",
+      "modified_by_exp5877": false,
+      "present": true,
+      "sha256_after": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+      "sha256_before": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+      "unchanged": true
+    },
+    "research-roadmap.yaml": {
+      "check_source": "git_status",
+      "modified_by_exp5877": false,
+      "present": true,
+      "sha256_after": "sha256:c10238792f4952078ed9ebe60a75e4c976a041455f921d7cf0649e5eaec44124",
+      "sha256_before": "sha256:c10238792f4952078ed9ebe60a75e4c976a041455f921d7cf0649e5eaec44124",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "check_source": "git_status",
+      "modified_by_exp5877": false,
+      "present": true,
+      "sha256_after": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "sha256_before": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "unchanged": true
+    }
+  },
+  "random_seed": 5877,
+  "reproducibility_checksum": "sha256:bfd31ae940f193714bd0ab54e5f01b67a0a212ebe9d1e90244d22a379e981cd5",
+  "research_complete_append_count": 0,
+  "result_path": "results/experiment_5877_transition_v523.json",
+  "retired_missing_blocked_and_ready_preserved": true,
+  "run_date": "20260724",
+  "schema": "carnot.experiment_5877.transition_v523.v1",
+  "spec_refs": [
+    "REQ-REPORT-5877",
+    "SCENARIO-REPORT-5877-EXACT-ARCHIVE",
+    "SCENARIO-REPORT-5877-APPEND-ONCE",
+    "SCENARIO-REPORT-5877-UNACTIVATED-PROPOSAL",
+    "SCENARIO-REPORT-5877-RANGE-COLLISION",
+    "SCENARIO-REPORT-5877-SCHEMA"
+  ],
+  "status": "complete",
+  "test_commands": [
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"",
+    ".venv/bin/pytest tests/python/test_experiment_5877_transition_v523.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5877_transition_v523.py -m pytest tests/python/test_experiment_5877_transition_v523.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5877_transition_v523.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5863_transition_v522.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5864_v522_source_delta_ingestion.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5865_adaptive_state_kernel_requalification.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5867_prospective_certified_continuous_learning.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5868_hardness_controlled_constraint_fixture.json",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5869_hardness_surface_headroom_audit.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5877_transition_v523.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5877_transition_v523.py -m pytest tests/python/test_experiment_5877_transition_v523.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5877_transition_v523.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5863_transition_v522.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5864_v522_source_delta_ingestion.json": 1,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5865_adaptive_state_kernel_requalification.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5867_prospective_certified_continuous_learning.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5868_hardness_controlled_constraint_fixture.json": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5869_hardness_surface_headroom_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "unactivated_proposal_id_receipt": {
+    "activation_status": "unactivated",
+    "appended_as_completed": false,
+    "declared_deliverables": {
+      "exp5870-gguf-layer-surface-preflight": "results/experiment_5870_gguf_layer_surface_preflight.json",
+      "exp5871-three-family-layer-dynamics": "results/experiment_5871_three_family_layer_dynamics.json",
+      "exp5872-layer-dynamic-portability-audit": "results/experiment_5872_layer_dynamic_portability_audit.json",
+      "exp5873-arc-causal-recurrence-controller": "results/experiment_5873_arc_causal_recurrence_controller.json",
+      "exp5874-arc-live-causal-recurrence-ab": "results/experiment_5874_arc_live_causal_recurrence_ab.json",
+      "exp5875-attached-board-adaptive-state-receipt": "results/experiment_5875_attached_board_adaptive_state_receipt.json",
+      "exp5876-v522-capstone-reconciliation": "results/experiment_5876_v522_capstone_reconciliation.json"
+    },
+    "present_in_activated_completion_block": [],
+    "principle": "Prior prose cannot become completed work.",
+    "proposal_only_source": "prior .522 proposal prose",
+    "receipt_hash": "sha256:90b73b459fdc749942ec37b978fbb69327d4afaeccdbd84754632649eab1fe21",
+    "task_ids": [
+      "exp5870-gguf-layer-surface-preflight",
+      "exp5871-three-family-layer-dynamics",
+      "exp5872-layer-dynamic-portability-audit",
+      "exp5873-arc-causal-recurrence-controller",
+      "exp5874-arc-live-causal-recurrence-ab",
+      "exp5875-attached-board-adaptive-state-receipt",
+      "exp5876-v522-capstone-reconciliation"
+    ]
+  }
+}
