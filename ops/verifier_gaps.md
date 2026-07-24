@@ -4035,3 +4035,23 @@ result here actually proves out.
 - Chosen over an `is_level_complete`/`plan_in_model` change because those are memoryless per-grid (cannot tell
   "goal covered" from "goal never present") and generic; gating at the confidence layer where the plan-start
   grid IS available is the clean, low-risk, fully-testable fix.
+
+### Integration-safety sweep (iter16, 2026-07-24): the 5 outer-loop nav/hazard fixes are DOWNSTREAM-SAFE
+- Ran the CPU test files across the codebase that import the modules changed by the 5 overnight fixes
+  (arc_nav_world_model, arc_executable_world_model, arc_hazard_pruner, arc_competition_agent). PASS:
+  test_arc_nav_world_model, test_arc_hazard_pruner, test_nav_world_model_confidence,
+  test_plan_in_model_component_unpack, test_arc_goal_energy (12), test_arc_goal_predicate_consistency (5),
+  test_arc_goal_predicate_live_veto (4), test_e3_world_model_candidates_os_import (2),
+  test_goal_repair_degenerate_predicate (6), test_arc_world_model_trust_energy (7 pass). Every test that
+  exercises a changed code path passes -> the 5 fixes introduced no downstream regression.
+- **PRE-EXISTING issue found (NOT caused by the outer-loop fixes; flagged, not fixed):**
+  `tests/python/test_e3_agent_policy_degenerate_frame_robustness.py::test_next_move_*` HANGS (>120s, SIGTERM)
+  under `E3AgentPolicy(proposer=None)` on a degenerate frame -- the file's pure `detect_cell`/`to_logical`
+  tests pass fast (3), but every `next_move` test hangs. Proven NOT outer-loop-caused: the only session change
+  to arc_competition_agent.py (commit 9362f98d5) is a single line INSIDE the
+  `CARNOT_ARC_STRUCTURED_NAV=="1"` flag-gated block, and this test never sets that flag, so the changed line is
+  never reached; the other 4 nav/hazard changes are behind the same flag or the hazard pruner (also inactive
+  here). The hang is in E3AgentPolicy.next_move's non-structured-nav path and predates this session. A real
+  bug (a suite test that hangs would stall CI) but OUT OF SCOPE for the nav/hazard robustness loop -- a
+  separate E3-cascade investigation. Also 1 pre-existing live-resource ERROR
+  (test_arc_world_model_trust_energy::...live_policy... -- needs a live policy/model, env-related).
