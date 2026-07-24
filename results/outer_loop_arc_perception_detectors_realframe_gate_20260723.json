@@ -8,7 +8,7 @@
   "verifier_is_oracle": false,
   "solve_provenance": "development_proxy",
   "random_seed": 5833,
-  "reproducibility_checksum": "sha256:aebf1de5a766dca0a5a0ecc1224a05d38f6b4d20eddd143233c706b82be3645a",
+  "reproducibility_checksum": "sha256:8e95fdfb79d82edec134ddcd0eb1b268ed832eca4e9c504b9ffb8d7fddbdc81a",
   "methodology_note": "Offline arcade stepping with a FIXED scripted exploration (deterministic, no LLM). Detectors use ONLY the agent's own observed transitions; source ground truth is used for offline judging only, never fed to the detectors. Public-game frames stepped for offline dev validation (authorized); never in the hidden submission.",
   "per_game": [
     {
@@ -27,12 +27,16 @@
           "monotone_ratio": 0.0
         }
       ],
-      "mover": null,
+      "mover": {
+        "color": 11,
+        "alignment": 1.0,
+        "evidence": 15
+      },
       "ground_truth": {
         "hud": "fill on last row (move-budget/lose bar)",
         "player": "yes (moves 3/4 under gravity)"
       },
-      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=5 at row=19 col=29 size=1291\n  #1 color=10 at row=6 col=42 size=276\n  #2 color=3 at row=1 col=2 size=1\n  #3 color=3 at row=1 col=8 size=1\n  #4 color=3 at row=1 col=13 size=1\n  #5 color=14 at row=3 col=15 size=21\n  #6 color=3 at row=1 col=17 size=1\n  #7 color=3 at row=1 col=19 size=1\n  #8 color=14 at row=3 col=21 size=21\n  #9 color=3 at row=1 col=23 size=1\n  #10 color=3 at row=1 col=25 size=1\n  #11 color=14 at row=3 col=27 size=21\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter)."
+      "perception_text": "A PLAYER entity (color 11) moves with actions 1/2/3/4 (not visible as a discrete object in this frame).\nOther distinct objects (candidate targets):\n  #0 color=5 at row=19 col=29 size=1291\n  #1 color=10 at row=6 col=42 size=276\n  #2 color=3 at row=1 col=2 size=1\n  #3 color=3 at row=1 col=8 size=1\n  #4 color=3 at row=1 col=13 size=1\n  #5 color=14 at row=3 col=15 size=21\n  #6 color=3 at row=1 col=17 size=1\n  #7 color=3 at row=1 col=19 size=1\n  #8 color=14 at row=3 col=21 size=21\n  #9 color=3 at row=1 col=23 size=1\n  #10 color=3 at row=1 col=25 size=1\n  #11 color=14 at row=3 col=27 size=21\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter)."
     },
     {
       "game": "lf52",
@@ -92,12 +96,16 @@
           "monotone_ratio": 0.0
         }
       ],
-      "mover": null,
+      "mover": {
+        "color": 4,
+        "alignment": 1.0,
+        "evidence": 24
+      },
       "ground_truth": {
         "hud": "deplete on last row (step counter)",
         "player": "yes (token color ~9 moves 1-4)"
       },
-      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=0 at row=16 col=16 size=9\n  #1 color=2 at row=16 col=19 size=9\n  #2 color=0 at row=16 col=22 size=9\n  #3 color=0 at row=16 col=28 size=9\n  #4 color=2 at row=16 col=31 size=9\n  #5 color=0 at row=16 col=34 size=9\n  #6 color=2 at row=16 col=37 size=9\n  #7 color=0 at row=16 col=40 size=9\n  #8 color=2 at row=19 col=22 size=9\n  #9 color=2 at row=19 col=28 size=9\n  #10 color=5 at row=19 col=34 size=27\n  #11 color=2 at row=19 col=40 size=9\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter)."
+      "perception_text": "PLAYER token (color 4) at row=23 col=22 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=16 col=16 size=9\n  #1 color=2 at row=16 col=19 size=9\n  #2 color=0 at row=16 col=22 size=9\n  #3 color=0 at row=16 col=28 size=9\n  #4 color=2 at row=16 col=31 size=9\n  #5 color=0 at row=16 col=34 size=9\n  #6 color=2 at row=16 col=37 size=9\n  #7 color=0 at row=16 col=40 size=9\n  #8 color=2 at row=19 col=22 size=9\n  #9 color=2 at row=19 col=28 size=9\n  #10 color=5 at row=19 col=34 size=27\n  #11 color=2 at row=19 col=40 size=9\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 63 (counter counter)."
     },
     {
       "game": "ls20",
@@ -192,5 +200,5 @@
       "perception_text": "Other distinct objects (candidate targets):\n  #0 color=9 at row=4 col=6 size=36\n  #1 color=8 at row=4 col=14 size=36\n  #2 color=9 at row=4 col=22 size=36\n  #3 color=9 at row=4 col=40 size=36\n  #4 color=8 at row=4 col=48 size=36\n  #5 color=9 at row=4 col=56 size=36\n  #6 color=8 at row=12 col=6 size=36\n  #7 color=2 at row=10 col=12 size=4\n  #8 color=0 at row=10 col=14 size=4\n  #9 color=2 at row=12 col=16 size=8\n  #10 color=9 at row=12 col=22 size=36\n  #11 color=8 at row=12 col=40 size=36"
     }
   ],
-  "duration_s": 1.5
+  "duration_s": 2.45
 }
