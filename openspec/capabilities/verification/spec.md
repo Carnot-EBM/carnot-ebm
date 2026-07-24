@@ -36076,3 +36076,124 @@ checksum.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5892 | Implemented (`python/carnot/experiment_5892_headroom_evidence_escrow.py`, `results/experiment_5892_headroom_evidence_escrow.json`) | Implemented (`tests/python/test_experiment_5892_headroom_evidence_escrow.py`) |
+
+### REQ-VERIFY-5893: Grounding Shortcut Exact Fixture
+
+The repository SHALL provide Exp5893 at
+`python/carnot/experiment_5893_grounding_shortcut_fixture.py` that writes
+`results/experiment_5893_grounding_shortcut_fixture.json` and
+`results/experiment_5893_grounding_shortcut_fixture.rows.jsonl`. Exp5893
+SHALL build an exact, deterministic, no-LLM dataset only; it SHALL make no
+learned-model claim and SHALL declare
+`inference_substrate=deterministic_exact_solver_labeled_dataset_no_llm`.
+
+Before row generation, Exp5893 SHALL replay Exp5892's non-retired admission
+gate, hash the arXiv:2607.21185 receipt in `research-references.md`, immutable
+Exp5868 base rows, exact semantic and constraint oracle code, generator and
+test code, seed registry, declared output paths, disk/RAM probes, and protected
+files including `scripts/research_conductor.py`. A missing receipt, retired or
+blocked Exp5892 admission, resource failure, output failure, protected-file
+drift, solver disagreement, ambiguous intended semantics, missing witness,
+cross-split semantic duplicate, byte-replay drift, or failed owned check SHALL
+write a terminal blocked artifact with bare scalar
+`grounding_shortcut_fixture_ready_score=0.0`.
+
+Exp5893 SHALL define concept, logical atom, grounding, intended semantics,
+encoded constraint, and exact outcome separately. It SHALL generate at least
+three exact constraint families and multiple held grounding regimes. The rows
+SHALL include canonical one-to-one rows, constraint-satisfaction-shortcut rows
+where non-injective or soft probability groundings satisfy the encoded formula
+without satisfying the intended task, and cognition-shortcut rows where biased
+frequency evidence supports a semantically wrong atom grounding while exact
+labels remain balanced. The two shortcut failure modes SHALL remain separately
+measurable.
+
+For every shortcut row, Exp5893 SHALL emit a canonical one-to-one counterpart,
+exact semantic label, exact constraint label, certificate or witness, grounding
+matrix, provenance, relabel group, family group, chronology batch, deterministic
+row id, and deterministic row hash. It SHALL also include soft/fuzzy,
+distributed, shuffled, label-permutation, frequency-balanced, surface-matched,
+and no-information controls. Semantic duplicates and grounding variants SHALL
+remain in the same split group and SHALL never cross evaluation boundaries.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_receipt`, `source_method_receipt`,
+`concept_atom_and_grounding_schema`, `shortcut_type_definitions`,
+`family_grounding_and_chronology_design`, `generator_and_seed_receipts`,
+`exact_semantic_and_constraint_oracle_receipts`,
+`one_to_one_soft_distributed_and_shuffled_controls`,
+`bias_and_frequency_controls`, `split_and_group_leakage_receipts`,
+`label_witness_and_headroom_balance`, `row_file_receipt`,
+`deterministic_replay_receipt`, `protected_files_unchanged`,
+`grounding_shortcut_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a ready grounding-shortcut fixture from blocked or null evidence.
+- `preconditions_checked`: Gate, source, rows, solvers, generator, seeds, resources, outputs, and protected files prevent fabricated data.
+- `upstream_gate_receipt`: Exp5892 must provide non-retired hardness admission before Exp5893 extends the exact fixture lane.
+- `source_method_receipt`: arXiv:2607.21185 is used as design motivation only, not as imported results.
+- `concept_atom_and_grounding_schema`: Concepts, logical atoms, grounding matrices, intended semantics, encoded constraints, and exact outcomes are distinct fields.
+- `shortcut_type_definitions`: The two failure modes remain separately measurable.
+- `family_grounding_and_chronology_design`: Family cells, held regimes, and chronology batches are preregistered before row generation.
+- `generator_and_seed_receipts`: Deterministic generation makes row ids, controls, and replay reproducible.
+- `exact_semantic_and_constraint_oracle_receipts`: Exact checks own both task intent and formula satisfaction.
+- `one_to_one_soft_distributed_and_shuffled_controls`: One-to-one, soft, distributed, shuffled, label-permutation, surface, and no-information controls expose grounding shortcuts.
+- `bias_and_frequency_controls`: Biased-frequency rows must keep exact labels balanced so frequency alone cannot become the label.
+- `split_and_group_leakage_receipts`: Variants of one semantic problem never cross evaluation boundaries.
+- `label_witness_and_headroom_balance`: Both exact labels, witnesses, and shortcut headroom must replay for both shortcut types.
+- `row_file_receipt`: Path, count, schema, row hashes, and hash root expose every generated row.
+- `deterministic_replay_receipt`: A second generation must reproduce row ids and bytes exactly.
+- `protected_files_unchanged`: Operator-owned and immutable upstream files remain untouched.
+- `grounding_shortcut_fixture_ready_score`: Emit bare `1.0` only when all labels/witnesses replay and both shortcut types retain headroom.
+- `duration_s`: Measured wall time exposes bootstrap-only dataset work.
+- `inference_substrate`: Use `deterministic_exact_solver_labeled_dataset_no_llm`.
+- `verifier_is_oracle`: True for label authority and never credited as learned energy.
+- `field_provenance`: Every field traces to prompt, spec, source receipt, rows, generator, tests, or exact oracle receipts.
+- `test_commands`: Commands document focused unit, coverage, determinism, labels, witnesses, headroom, controls, leakage, schema/hash, adversarial, spec, root-clutter, and protected-file checks.
+- `test_exit_codes`: Exit codes prevent failed checks from silently promoting.
+- `reproducibility_checksum`: A checksum detects source, seed, row, oracle, control, or gate drift.
+- `honest_verdict`: Use `ready:`, `complete_null:`, or `blocked:`.
+
+### SCENARIO-VERIFY-5893-SCHEMA: Concepts, Atoms, Groundings, And Outcomes Are Separate
+
+Given Exp5892 admission is non-retired and the arXiv:2607.21185 receipt is
+present, when Exp5893 builds rows, then every row SHALL expose separate concept
+definitions, logical atom definitions, intended semantic assignment, encoded
+constraint, grounding matrix, exact semantic label, exact constraint label,
+exact outcome, witness, and deterministic row hash.
+
+### SCENARIO-VERIFY-5893-SHORTCUTS: Shortcut Modes Retain Paired Headroom
+
+Given canonical one-to-one counterparts exist, when Exp5893 emits shortcut
+rows, then every constraint-satisfaction-shortcut and cognition-shortcut row
+SHALL have `exact_semantic_label=false`, `exact_constraint_label=true`, a
+canonical one-to-one counterpart in the same split group, a witness explaining
+the semantic/constraint disagreement, and nonzero headroom counts for both
+shortcut types.
+
+### SCENARIO-VERIFY-5893-CONTROLS: Controls Are Matched And Label-Balanced
+
+Given Exp5893 emits one-to-one, soft/distributed, shuffled,
+label-permutation, frequency-balanced, surface-matched, and no-information
+controls, when controls are replayed, then all exact labels and witnesses
+validate, frequency-biased cognition rows keep exact semantic and constraint
+labels balanced, no-information rows expose no answer-bearing grounding, and
+surface-matched controls stay within the registered length tolerance.
+
+### SCENARIO-VERIFY-5893-REPLAY-AND-LEAKAGE: Bad Evidence Cannot Become Ready
+
+Given solver disagreement, ambiguous semantics, missing witnesses,
+cross-split semantic duplicates, byte-replay drift, failed owned checks, or
+protected-file drift, when Exp5893 validates the terminal artifact, then
+`grounding_shortcut_fixture_ready_score` SHALL be the bare scalar `0.0`,
+`status` SHALL be `blocked`, and `honest_verdict` SHALL begin with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5893)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5893 | Planned (`python/carnot/experiment_5893_grounding_shortcut_fixture.py`, `results/experiment_5893_grounding_shortcut_fixture.json`) | Planned (`tests/python/test_experiment_5893_grounding_shortcut_fixture.py`) |
