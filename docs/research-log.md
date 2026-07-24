@@ -6009,3 +6009,9 @@ The critical path for milestone .250:
 - theme: synthesis-only requalification dominated elapsed time while compute execution remained too coarsely timed
 - key result: honest operational negative -- the only compute-bound entry recorded 0.0 minutes, with no task-level GPU-idle finding and no evidence of concurrent model loading; phase-level causes are unavailable
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.523
+- exp_range: no data available this milestone
+- theme: synthesis-only execution concentrated in the dated evidence refresh
+- key result: honest operational negative -- no compute-bound experiment was present, so GPU efficiency and concurrent-model runner engagement cannot be assessed; the dated evidence refresh is the only observed optimization target
+- acceptance: no data available this milestone
