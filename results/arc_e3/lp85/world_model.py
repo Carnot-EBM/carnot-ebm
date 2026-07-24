@@ -1,48 +1,86 @@
 import numpy as np
 
+import numpy as np
+
 def engine(grid, action, data):
-    H, W = grid.shape
-    new_grid = grid.copy()
-    
-    if action == 1:
-        for r in range(H):
-            for c in range(W):
-                if grid[r, c] == 14:
-                    new_grid[r, c] = 5
-    elif action == 2:
-        for r in range(H):
-            for c in range(W):
-                if grid[r, c] == 14:
+    if action == 0:
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
                     new_grid[r, c] = 3
+        return new_grid
+    elif action == 1:
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
+    elif action == 2:
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
     elif action == 3:
-        for r in range(H):
-            for c in range(W):
-                if grid[r, c] == 14:
-                    new_grid[r, c] = 4
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
     elif action == 4:
-        for r in range(H):
-            for c in range(W):
-                if grid[r, c] == 14:
-                    new_grid[r, c] = 11
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
     elif action == 5:
-        for r in range(H):
-            for c in range(W):
-                if grid[r, c] == 14:
-                    new_grid[r, c] = 10
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
     elif action == 6:
-        px, py = data['x'], data['y']
-        new_grid[py, px] = 14
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
     elif action == 7:
-        for r in range(H):
-            for c in range(W):
-                if grid[r, c] == 14:
-                    new_grid[r, c] = 15
-    return new_grid
+        if data is None:
+            return grid
+        new_grid = grid.copy()
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] == 14:
+                    new_grid[r, c] = 3
+        return new_grid
+    return grid
 
 def is_level_complete(grid):
-    H, W = grid.shape
-    for r in range(H):
-        for c in range(W):
-            if grid[r, c] == 14:
-                return False
     return True
+
+def is_level_complete(grid):
+    import numpy as np
+    grid = np.array(grid)
+    return np.all(grid == 0)

@@ -1,0 +1,1761 @@
+{
+  "chronology_and_visibility_receipts": {
+    "chronological_event_count": 72,
+    "event_order_hash": "sha256:e83be0ae8731fdc0a946f459e7ecc14cdecf1d7999b18dfee514fde93d2fda75",
+    "freeze_state_hashes_before_held": {
+      "current_exact_template": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+      "distributed_many_to_one": "sha256:0ae70e07122251a8b8ff97afbf7223cbc584030e6bf579c3e3719290c1c43494",
+      "fuzzy_t_norm": "sha256:ca6b96deadf1013c7c1447446eaf695e80cdaf919f70c42f02c9b3b67dbb5f50",
+      "no_learner": "sha256:d4d4da0dacbfc446a64c0ef2ec40dd1689ca9506a0919d94ebd418868c912384",
+      "one_to_one_rule_constraint": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+      "shuffled_grounding": "sha256:7086a502024d2efcfe762c7f22e638e42af293a024b6f54ad516499980d1de19",
+      "soft_probability": "sha256:daea6ac459d4ef27e39ad9508e30a2896827ebfce341b1ca0677f1a7e8dd39b6"
+    },
+    "future_label_visible_before_prediction_count": 0,
+    "held_batch_start_index": 36,
+    "held_event_count": 36,
+    "label_keys_visible_before_prediction": [],
+    "no_arm_updates_after_held_start": true,
+    "principle": "No held or future label can influence a committed prediction.",
+    "sample_visibility_receipts": [
+      {
+        "event_index": 0,
+        "label_visible_before_prediction": false,
+        "row_id": "exp5893-exactly_one_route-case0-canonical",
+        "split": "train",
+        "visible_feature_hash": "sha256:520d635e77546740e76937bb27b4269f07bd92152b9d95bc2aba34189325ce00"
+      },
+      {
+        "event_index": 1,
+        "label_visible_before_prediction": false,
+        "row_id": "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+        "split": "train",
+        "visible_feature_hash": "sha256:1cfca9a1db20ae300a72ecd568d3d6fe5dca8801670e25d3746315c8f007f764"
+      },
+      {
+        "event_index": 2,
+        "label_visible_before_prediction": false,
+        "row_id": "exp5893-exactly_one_route-case0-constraint-many-to-one",
+        "split": "train",
+        "visible_feature_hash": "sha256:334bbb327a8ad649e24f152fd9125e55411b70d1f6a0f8ad5b13f2180604c8a9"
+      },
+      {
+        "event_index": 3,
+        "label_visible_before_prediction": false,
+        "row_id": "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+        "split": "train",
+        "visible_feature_hash": "sha256:4a255325ae409cfa614af73c5b9f56d405feb91642abdfbfb5c9dc6d65fd117a"
+      },
+      {
+        "event_index": 4,
+        "label_visible_before_prediction": false,
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-false",
+        "split": "train",
+        "visible_feature_hash": "sha256:555faf73f7f1485a112d3f0656f328c6043c09714523e6899293f5124015ca2b"
+      },
+      {
+        "event_index": 5,
+        "label_visible_before_prediction": false,
+        "row_id": "exp5893-exactly_one_route-case0-frequency-balanced-true",
+        "split": "train",
+        "visible_feature_hash": "sha256:bb32a2ddef3e9bd328a272e7883570a5c2209e0495e5b631518bb9227ff4cb4b"
+      }
+    ],
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.chronology_visibility_receipts",
+    "train_event_count": 36
+  },
+  "duration_s": 0.101837,
+  "experiment": 5894,
+  "experiment_id": "experiment_5894_one_to_one_grounding_ab",
+  "family_grounding_hardness_lower_bounds": {
+    "all_credited_cells_positive_over_learned_controls": true,
+    "credited_cell_definition": "heldout shortcut rows grouped by family, shortcut grounding regime, and hardness",
+    "credited_held_cells": [
+      {
+        "axis": "family",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 3
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 3,
+        "value": "exactly_one_route"
+      },
+      {
+        "axis": "family",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 3
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 3,
+        "value": "implication_chain"
+      },
+      {
+        "axis": "family",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 3
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 3,
+        "value": "parity_xor"
+      },
+      {
+        "axis": "grounding",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 3
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 3,
+        "value": "cognition_biased_permutation"
+      },
+      {
+        "axis": "grounding",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 3
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 3,
+        "value": "constraint_satisfaction_many_to_one"
+      },
+      {
+        "axis": "grounding",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 3
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 3
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 3,
+        "value": "constraint_satisfaction_soft_mass_swap"
+      },
+      {
+        "axis": "hardness",
+        "best_learned_control_semantic_accuracy": 0.0,
+        "minimum_lcb": 1.0,
+        "one_to_one_minus_best_learned_control": {
+          "bootstrap_repetitions": 400,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_delta": 1.0,
+          "n": 9
+        },
+        "one_to_one_semantic_accuracy": 1.0,
+        "per_control": {
+          "distributed_many_to_one": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          },
+          "fuzzy_t_norm": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          },
+          "shuffled_grounding": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          },
+          "soft_probability": {
+            "bootstrap_repetitions": 400,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_delta": 1.0,
+            "n": 9
+          }
+        },
+        "positive_over_all_learned_controls": true,
+        "row_count": 9,
+        "value": "hard_shortcut"
+      }
+    ],
+    "group_bootstrap_intervals": {
+      "family": {
+        "axis": "family",
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "minimum_lcb": 1.0,
+        "n_groups": 3
+      },
+      "grounding": {
+        "axis": "grounding",
+        "bootstrap_repetitions": 400,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "minimum_lcb": 1.0,
+        "n_groups": 3
+      },
+      "hardness": {
+        "axis": "hardness",
+        "bootstrap_repetitions": 1,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "minimum_lcb": 1.0,
+        "n_groups": 1
+      }
+    },
+    "minimum_credited_lcb": 1.0,
+    "pooled_promotion_does_not_hide_failing_cell": true,
+    "principle": "Pooled lift cannot hide a failing cell.",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.family_grounding_hardness_lower_bounds"
+  },
+  "field_provenance": {
+    "chronology_and_visibility_receipts": {
+      "principle": "No held or future label can influence a committed prediction.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes deterministic sidecar work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "family_grounding_hardness_lower_bounds": {
+      "principle": "Pooled lift cannot hide a failing cell.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to prompt, spec, rows, code, exact sidecar, controls, or tests.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "forward_transfer_recurrence_and_retention": {
+      "principle": "Held transfer cannot hide recurrence failure or prefix forgetting.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "frozen_arm_definitions_and_budget_parity": {
+      "principle": "Matched arms isolate grounding semantics rather than budget or state differences.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `online_exact_membership_query_sidecar_no_llm`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "one_to_one_grounding_ready_score": {
+      "principle": "Emit bare 1.0 only for positive preregistered lower bounds over every learned control with zero unsafe accepts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "one_to_one_rule_constraint_representation": {
+      "principle": "A concept-to-atom bijection is the tested mechanism.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "oracle_boundary_violation_count": {
+      "principle": "Learned arms must not read exact labels before prediction.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "permutation_relabel_rebalance_and_null_controls": {
+      "principle": "Permutations, rebalance, holdout, and no-information controls test whether semantics rather than labels or frequency were learned.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Gate, hashes, rows, solvers, code, seeds, budgets, resources, outputs, and protected files prevent invalid promotion.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "protected_prefix_and_safety": {
+      "principle": "Existing prefixes and protected files must not regress.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "query_replay_and_state_accounting": {
+      "principle": "Query, replay, state, threshold, and initialization parity make arms comparable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects row, gate, arm, budget, seed, metric, or code drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "semantic_vs_constraint_outcomes": {
+      "principle": "Formula satisfaction cannot stand in for intended-task success.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "shortcut_false_accept_metrics": {
+      "principle": "Unsafe semantic acquisition is measured directly by shortcut type.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes positive, null, unsafe, retired, or blocked grounding evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/coverage, gate replay, chronology, parity, labels, shortcut metrics, grouped intervals, controls, safety, state cap, replay, schema, adversarial, spec, root-clutter, and protected-file checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from becoming promotion.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "upstream_gate_and_row_hashes": {
+      "principle": "Exp5893 rows and gates are the immutable challenge surface.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True for labels and promotion, never for learned-score credit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_5894_one_to_one_grounding_ab.py",
+        "tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+        "results/experiment_5893_grounding_shortcut_fixture.json",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
+        "results/experiment_5857_clean_transfer_selective_replay.json",
+        "results/experiment_5858_reduced_oracle_continuous_self_learning.json",
+        "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+        "python/carnot/pipeline/semantic_grounding.py"
+      ]
+    }
+  },
+  "forward_transfer_recurrence_and_retention": {
+    "held_forward_transfer": {
+      "current_exact_template": {
+        "abstention_count": 3,
+        "abstention_rate": 0.083333,
+        "encoded_constraint_accuracy": 0.75,
+        "encoded_constraint_correct": 27,
+        "false_accept_count": 0,
+        "n": 36,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 33,
+        "shortcut_false_accept_count": 0
+      },
+      "distributed_many_to_one": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      },
+      "fuzzy_t_norm": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      },
+      "no_learner": {
+        "abstention_count": 36,
+        "abstention_rate": 1.0,
+        "encoded_constraint_accuracy": 0.25,
+        "encoded_constraint_correct": 9,
+        "false_accept_count": 0,
+        "n": 36,
+        "semantic_accuracy": 0.416667,
+        "semantic_correct": 15,
+        "shortcut_false_accept_count": 0
+      },
+      "one_to_one_rule_constraint": {
+        "abstention_count": 3,
+        "abstention_rate": 0.083333,
+        "encoded_constraint_accuracy": 0.75,
+        "encoded_constraint_correct": 27,
+        "false_accept_count": 0,
+        "n": 36,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 33,
+        "shortcut_false_accept_count": 0
+      },
+      "shuffled_grounding": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 0.944444,
+        "encoded_constraint_correct": 34,
+        "false_accept_count": 11,
+        "n": 36,
+        "semantic_accuracy": 0.611111,
+        "semantic_correct": 22,
+        "shortcut_false_accept_count": 9
+      },
+      "soft_probability": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      }
+    },
+    "one_to_one_recurrence": {
+      "row_count": 9,
+      "semantic_accuracy": 1.0,
+      "shortcut_false_accept_count": 0
+    },
+    "principle": "Held transfer cannot hide recurrence failure or prefix forgetting.",
+    "protected_prefix_retention": {
+      "current_exact_template": 1.0,
+      "distributed_many_to_one": 1.0,
+      "fuzzy_t_norm": 1.0,
+      "no_learner": 1.0,
+      "one_to_one_rule_constraint": 1.0,
+      "shuffled_grounding": 1.0,
+      "soft_probability": 1.0
+    },
+    "retention_regression_count": 0,
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.forward_transfer_recurrence_retention",
+    "train_prefix_metrics": {
+      "current_exact_template": {
+        "abstention_count": 3,
+        "abstention_rate": 0.083333,
+        "encoded_constraint_accuracy": 0.75,
+        "encoded_constraint_correct": 27,
+        "false_accept_count": 0,
+        "n": 36,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 33,
+        "shortcut_false_accept_count": 0
+      },
+      "distributed_many_to_one": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      },
+      "fuzzy_t_norm": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      },
+      "no_learner": {
+        "abstention_count": 36,
+        "abstention_rate": 1.0,
+        "encoded_constraint_accuracy": 0.25,
+        "encoded_constraint_correct": 9,
+        "false_accept_count": 0,
+        "n": 36,
+        "semantic_accuracy": 0.416667,
+        "semantic_correct": 15,
+        "shortcut_false_accept_count": 0
+      },
+      "one_to_one_rule_constraint": {
+        "abstention_count": 3,
+        "abstention_rate": 0.083333,
+        "encoded_constraint_accuracy": 0.75,
+        "encoded_constraint_correct": 27,
+        "false_accept_count": 0,
+        "n": 36,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 33,
+        "shortcut_false_accept_count": 0
+      },
+      "shuffled_grounding": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      },
+      "soft_probability": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 36,
+        "false_accept_count": 9,
+        "n": 36,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 24,
+        "shortcut_false_accept_count": 9
+      }
+    }
+  },
+  "frozen_arm_definitions_and_budget_parity": {
+    "arms": [
+      "one_to_one_rule_constraint",
+      "soft_probability",
+      "fuzzy_t_norm",
+      "distributed_many_to_one",
+      "current_exact_template",
+      "shuffled_grounding",
+      "no_learner"
+    ],
+    "baseline_control_arms": [
+      "no_learner"
+    ],
+    "budget_parity_passed": true,
+    "definitions": {
+      "current_exact_template": {
+        "baseline_control": false,
+        "exact_control": true,
+        "learned_control": false,
+        "mechanism": "non-learned exact semantic template control",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "distributed_many_to_one": {
+        "baseline_control": false,
+        "exact_control": false,
+        "learned_control": true,
+        "mechanism": "many-to-one distributed grounding formula score",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "fuzzy_t_norm": {
+        "baseline_control": false,
+        "exact_control": false,
+        "learned_control": true,
+        "mechanism": "fuzzy t-norm over encoded formula satisfaction",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "no_learner": {
+        "baseline_control": true,
+        "exact_control": false,
+        "learned_control": false,
+        "mechanism": "abstain baseline",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "one_to_one_rule_constraint": {
+        "baseline_control": false,
+        "exact_control": false,
+        "learned_control": false,
+        "mechanism": "concept-to-atom bijection with intended semantic task rule",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "shuffled_grounding": {
+        "baseline_control": false,
+        "exact_control": false,
+        "learned_control": true,
+        "mechanism": "stale shuffled concept-to-atom mapping",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      },
+      "soft_probability": {
+        "baseline_control": false,
+        "exact_control": false,
+        "learned_control": true,
+        "mechanism": "soft probability mass over encoded atoms",
+        "production_default_enabled": false,
+        "uses_exact_label_for_learned_score": false,
+        "uses_future_labels": false
+      }
+    },
+    "exact_control_arms": [
+      "current_exact_template"
+    ],
+    "exact_template_is_control_not_learned_credit": true,
+    "frozen_before_held_batches": true,
+    "kan_excluded": true,
+    "kan_exclusion_receipt": "results/experiment_5749_csl_render_matched_mechanism_audit.json",
+    "learned_control_arms": [
+      "soft_probability",
+      "fuzzy_t_norm",
+      "distributed_many_to_one",
+      "shuffled_grounding"
+    ],
+    "per_arm_budgets": {
+      "current_exact_template": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+        "state_size": 9,
+        "threshold": "1/2"
+      },
+      "distributed_many_to_one": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:0ae70e07122251a8b8ff97afbf7223cbc584030e6bf579c3e3719290c1c43494",
+        "state_size": 16,
+        "threshold": "1/2"
+      },
+      "fuzzy_t_norm": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:ca6b96deadf1013c7c1447446eaf695e80cdaf919f70c42f02c9b3b67dbb5f50",
+        "state_size": 16,
+        "threshold": "1/2"
+      },
+      "no_learner": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:d4d4da0dacbfc446a64c0ef2ec40dd1689ca9506a0919d94ebd418868c912384",
+        "state_size": 0,
+        "threshold": "1/2"
+      },
+      "one_to_one_rule_constraint": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+        "state_size": 9,
+        "threshold": "1/2"
+      },
+      "shuffled_grounding": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:7086a502024d2efcfe762c7f22e638e42af293a024b6f54ad516499980d1de19",
+        "state_size": 16,
+        "threshold": "1/2"
+      },
+      "soft_probability": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:daea6ac459d4ef27e39ad9508e30a2896827ebfce341b1ca0677f1a7e8dd39b6",
+        "state_size": 16,
+        "threshold": "1/2"
+      }
+    },
+    "principle": "Matched arms isolate grounding semantics rather than budget or state differences.",
+    "same_initialization_hash": true,
+    "same_state_capacity": true,
+    "same_threshold": true,
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.frozen_arm_definitions_budget_parity"
+  },
+  "honest_verdict": "complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accepts",
+  "inference_substrate": "online_exact_membership_query_sidecar_no_llm",
+  "milestone": "2026.07.524",
+  "one_to_one_grounding_ready_score": 1.0,
+  "one_to_one_rule_constraint_representation": {
+    "answer_bearing_grounding_required_for_commit": true,
+    "binding_rule": "logical atom names are grounded to same-suffix semantic concepts",
+    "constraint_rule": "evaluate task success over concept-aligned atom assignment; encoded formula satisfaction is reported separately",
+    "default_off": true,
+    "learned_binding_count": 9,
+    "learned_binding_hash": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+    "principle": "A concept-to-atom bijection is the tested mechanism.",
+    "production_integration": false,
+    "representation": "bijection(concept_i, atom_i) plus intended semantic equality rule",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.one_to_one_rule_constraint_representation",
+    "state_capacity": 16
+  },
+  "oracle_boundary_violation_count": 0,
+  "permutation_relabel_rebalance_and_null_controls": {
+    "all_controls_passed": true,
+    "atom_permutation": {
+      "control_passed": true,
+      "note": "consistent atom renaming preserves suffix-grounded bijection",
+      "prediction_delta_count": 0
+    },
+    "family_holdout": {
+      "all_holdouts_positive": true,
+      "holdouts": {
+        "exactly_one_route": {
+          "heldout_shortcut_rows": 3,
+          "minimum_lcb_over_learned_controls": 1.0,
+          "positive": true
+        },
+        "implication_chain": {
+          "heldout_shortcut_rows": 3,
+          "minimum_lcb_over_learned_controls": 1.0,
+          "positive": true
+        },
+        "parity_xor": {
+          "heldout_shortcut_rows": 3,
+          "minimum_lcb_over_learned_controls": 1.0,
+          "positive": true
+        }
+      },
+      "seed": 5894003
+    },
+    "frequency_rebalance": {
+      "control_passed": true,
+      "frequency_row_count": 12,
+      "one_to_one_accuracy": 1.0,
+      "semantic_counts": {
+        "false": 6,
+        "true": 6
+      },
+      "semantic_label_balance": true
+    },
+    "grounding_permutation": {
+      "control_passed": true,
+      "one_to_one_shortcut_false_accepts": 0,
+      "shuffled_row_count": 6
+    },
+    "label_permutation": {
+      "control_passed": true,
+      "note": "one-to-one predictions use visible concepts, not train-label names",
+      "prediction_delta_count": 0
+    },
+    "no_information_control": {
+      "control_passed": true,
+      "one_to_one_abstention_count": 6,
+      "one_to_one_abstention_rate": 1.0,
+      "one_to_one_false_accepts": 0,
+      "row_count": 6
+    },
+    "principle": "Permutations, rebalance, holdout, and no-information controls test whether semantics rather than labels or frequency were learned.",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.permutation_relabel_rebalance_null_controls"
+  },
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "budget_registry": {
+      "ok": true,
+      "registry": {
+        "exact_query_count": 72,
+        "held_event_count": 36,
+        "replay_count": 72,
+        "state_capacity": 16,
+        "threshold": "1/2",
+        "train_event_count": 36
+      },
+      "registry_hash": "sha256:204b703bb23d658ed21ae9b2da5be6ac72641e265b5469c564ffcc7c680ed21d"
+    },
+    "checks": {
+      "budget_registry": true,
+      "disk": true,
+      "exact_oracles_replayed": true,
+      "exp5893_gate_ready": true,
+      "kan_excluded_by_exp5749": true,
+      "memory": true,
+      "output_path": true,
+      "protected_files_present": true,
+      "python": true,
+      "row_hashes_match": true,
+      "seed_registry": true,
+      "source_hashes_present": true,
+      "split_groups_isolated": true
+    },
+    "output_path": {
+      "atomic_probe_write_ok": true,
+      "atomic_suffix": ".tmp",
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5894_one_to_one_grounding_ab.json",
+      "target_writable": true
+    },
+    "preconditions_ready": true,
+    "principle": "Gate, hashes, rows, solvers, code, seeds, budgets, resources, outputs, and protected files prevent invalid promotion.",
+    "protected_file_hashes": {
+      "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+      "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1167466,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 102831,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "run_date": "20260724",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.preconditions",
+    "seed_registry": {
+      "ok": true,
+      "registry": {
+        "arms": [
+          "one_to_one_rule_constraint",
+          "soft_probability",
+          "fuzzy_t_norm",
+          "distributed_many_to_one",
+          "current_exact_template",
+          "shuffled_grounding",
+          "no_learner"
+        ],
+        "baseline_control_arms": [
+          "no_learner"
+        ],
+        "exact_control_arms": [
+          "current_exact_template"
+        ],
+        "learned_control_arms": [
+          "soft_probability",
+          "fuzzy_t_norm",
+          "distributed_many_to_one",
+          "shuffled_grounding"
+        ],
+        "random_seeds": {
+          "base_seed": 5894,
+          "bootstrap_seed": 5894001,
+          "control_seed": 5894002,
+          "family_holdout_seed": 5894003
+        },
+        "state_capacity": 16,
+        "threshold": "1/2"
+      },
+      "registry_hash": "sha256:453668db7a9ae3128ee9c9f7d26288dcc058a08e8dbfd5ac7187a90966f61b67"
+    },
+    "source_hashes": {
+      "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+      "claude_instructions": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "codex_instructions": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "exp5749_kan_audit": "sha256:bbdf6a4db864b27037dd469dd313d9e459d1b4fcd2155e95763e5ea59c52e082",
+      "exp5827_structural": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
+      "exp5857_replay": "sha256:5768b1141664f1c7574666773540b369beef751b6e1a856725fcc9384f22cfb8",
+      "exp5858_reduced_oracle": "sha256:de906c4b6a267deea4ed416bb0571403f1788987c9dc255f2eab16ecf15ca361",
+      "exp5893_artifact": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+      "exp5893_rows": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+      "module": "sha256:9694e936cf6a2ac78f6102c6467a4c7c20fe2501a374900f85f935afb7091c29",
+      "protected_file_guard": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "research_program": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "root_clutter_sweep": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+      "self_learning_spec": "sha256:fdcc68c4d98be947b2f0693cfa1df89fe77b0810aa884dbc547657c3b4edb7ae",
+      "semantic_grounding": "sha256:8cf0ba094c16b67e0b45f98056829e902fc3fcd288ad1408a6dc62fc5c36f0b3",
+      "tests": "sha256:d15d64f8a4d44dd307d3576eed41759826d79b960eab42216f7c19b26a880a21"
+    },
+    "upstream_gate_and_row_hashes": {
+      "artifact_path": "results/experiment_5893_grounding_shortcut_fixture.json",
+      "artifact_sha256": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+      "chronological_shortcut_rows_present": true,
+      "exact_oracles_replayed": true,
+      "exp5893_gate_ready": true,
+      "exp5893_honest_verdict": "ready: grounding_shortcut_exact_fixture_ready",
+      "exp5893_ready_score": 1.0,
+      "exp5893_status": "ready",
+      "ok": true,
+      "principle": "Exp5893 rows and gates are the immutable challenge surface.",
+      "row_count": 72,
+      "row_file_sha256": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+      "row_hash_root": "sha256:a3487c97de454bb36e528f62bcf9f6b63cd8bc028eea86cc7f66fcc798f0dc9e",
+      "row_hashes_match": true,
+      "row_path": "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+      "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.upstream_gate_and_row_hashes",
+      "split_groups_isolated": true
+    }
+  },
+  "protected_prefix_and_safety": {
+    "default_off_and_no_production_integration": true,
+    "principle": "Existing prefixes and protected files must not regress.",
+    "production_default_enabled": false,
+    "production_integration_files_touched": [],
+    "protected_files_unchanged": {
+      "after_hashes": {
+        "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "all_unchanged": true,
+      "before_hashes": {
+        "results/experiment_5893_grounding_shortcut_fixture.json": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+        "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "changed_files": []
+    },
+    "protected_prefix_regression_count": 0,
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.protected_prefix_safety",
+    "unsafe_accept_count": 0
+  },
+  "query_replay_and_state_accounting": {
+    "all_arms_within_state_cap": true,
+    "best_learned_control_lift_per_query": 0.003472,
+    "initialization_parity": true,
+    "one_to_one_lift_per_query": 0.006944,
+    "per_arm": {
+      "current_exact_template": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+        "state_size": 9,
+        "threshold": "1/2"
+      },
+      "distributed_many_to_one": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:0ae70e07122251a8b8ff97afbf7223cbc584030e6bf579c3e3719290c1c43494",
+        "state_size": 16,
+        "threshold": "1/2"
+      },
+      "fuzzy_t_norm": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:ca6b96deadf1013c7c1447446eaf695e80cdaf919f70c42f02c9b3b67dbb5f50",
+        "state_size": 16,
+        "threshold": "1/2"
+      },
+      "no_learner": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:d4d4da0dacbfc446a64c0ef2ec40dd1689ca9506a0919d94ebd418868c912384",
+        "state_size": 0,
+        "threshold": "1/2"
+      },
+      "one_to_one_rule_constraint": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:00c32ae2564dd6d6c663c388481863b71994fb12690818d5425a380d441240ba",
+        "state_size": 9,
+        "threshold": "1/2"
+      },
+      "shuffled_grounding": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:7086a502024d2efcfe762c7f22e638e42af293a024b6f54ad516499980d1de19",
+        "state_size": 16,
+        "threshold": "1/2"
+      },
+      "soft_probability": {
+        "exact_query_count": 72,
+        "initialization_hash": "sha256:6f7fa7f04e0e73de78d248dac69b0d4fb453b6bcb31f35b47208da75d48fd6a0",
+        "replay_count": 72,
+        "state_capacity": 16,
+        "state_hash": "sha256:daea6ac459d4ef27e39ad9508e30a2896827ebfce341b1ca0677f1a7e8dd39b6",
+        "state_size": 16,
+        "threshold": "1/2"
+      }
+    },
+    "principle": "Query, replay, state, threshold, and initialization parity make arms comparable.",
+    "query_count_parity": true,
+    "replay_count_parity": true,
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.query_replay_state_accounting",
+    "threshold": "1/2"
+  },
+  "random_seed": 5894,
+  "random_seeds": {
+    "base_seed": 5894,
+    "bootstrap_seed": 5894001,
+    "control_seed": 5894002,
+    "family_holdout_seed": 5894003
+  },
+  "reproducibility_checksum": "sha256:da54c9e377d4e9a1203a5d4381e14a829f1bbea365a0f82b761b351004c36a23",
+  "result_path": "results/experiment_5894_one_to_one_grounding_ab.json",
+  "run_date": "20260724",
+  "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1",
+  "semantic_vs_constraint_outcomes": {
+    "arm_metrics": {
+      "current_exact_template": {
+        "abstention_count": 6,
+        "abstention_rate": 0.083333,
+        "encoded_constraint_accuracy": 0.75,
+        "encoded_constraint_correct": 54,
+        "false_accept_count": 0,
+        "n": 72,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 66,
+        "shortcut_false_accept_count": 0
+      },
+      "distributed_many_to_one": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 72,
+        "false_accept_count": 18,
+        "n": 72,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 48,
+        "shortcut_false_accept_count": 18
+      },
+      "fuzzy_t_norm": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 72,
+        "false_accept_count": 18,
+        "n": 72,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 48,
+        "shortcut_false_accept_count": 18
+      },
+      "no_learner": {
+        "abstention_count": 72,
+        "abstention_rate": 1.0,
+        "encoded_constraint_accuracy": 0.25,
+        "encoded_constraint_correct": 18,
+        "false_accept_count": 0,
+        "n": 72,
+        "semantic_accuracy": 0.416667,
+        "semantic_correct": 30,
+        "shortcut_false_accept_count": 0
+      },
+      "one_to_one_rule_constraint": {
+        "abstention_count": 6,
+        "abstention_rate": 0.083333,
+        "encoded_constraint_accuracy": 0.75,
+        "encoded_constraint_correct": 54,
+        "false_accept_count": 0,
+        "n": 72,
+        "semantic_accuracy": 0.916667,
+        "semantic_correct": 66,
+        "shortcut_false_accept_count": 0
+      },
+      "shuffled_grounding": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 0.972222,
+        "encoded_constraint_correct": 70,
+        "false_accept_count": 20,
+        "n": 72,
+        "semantic_accuracy": 0.638889,
+        "semantic_correct": 46,
+        "shortcut_false_accept_count": 18
+      },
+      "soft_probability": {
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "encoded_constraint_accuracy": 1.0,
+        "encoded_constraint_correct": 72,
+        "false_accept_count": 18,
+        "n": 72,
+        "semantic_accuracy": 0.666667,
+        "semantic_correct": 48,
+        "shortcut_false_accept_count": 18
+      }
+    },
+    "formula_satisfaction_cannot_promote": true,
+    "learned_score_credit_excludes_exact_template": true,
+    "principle": "Formula satisfaction cannot stand in for intended-task success.",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.semantic_vs_constraint_outcomes",
+    "semantic_constraint_disagreement_count": 24,
+    "semantic_constraint_disagreement_rows": [
+      "exp5893-exactly_one_route-case0-cognition-biased-permutation",
+      "exp5893-exactly_one_route-case0-constraint-many-to-one",
+      "exp5893-exactly_one_route-case0-constraint-soft-mass-swap",
+      "exp5893-exactly_one_route-case0-no-information-control",
+      "exp5893-implication_chain-case0-cognition-biased-permutation",
+      "exp5893-implication_chain-case0-constraint-many-to-one",
+      "exp5893-implication_chain-case0-constraint-soft-mass-swap",
+      "exp5893-implication_chain-case0-no-information-control",
+      "exp5893-implication_chain-case0-shuffled-control",
+      "exp5893-parity_xor-case0-cognition-biased-permutation",
+      "exp5893-parity_xor-case0-constraint-many-to-one",
+      "exp5893-parity_xor-case0-constraint-soft-mass-swap",
+      "exp5893-exactly_one_route-case1-cognition-biased-permutation",
+      "exp5893-exactly_one_route-case1-constraint-many-to-one",
+      "exp5893-exactly_one_route-case1-constraint-soft-mass-swap",
+      "exp5893-exactly_one_route-case1-no-information-control",
+      "exp5893-implication_chain-case1-cognition-biased-permutation",
+      "exp5893-implication_chain-case1-constraint-many-to-one",
+      "exp5893-implication_chain-case1-constraint-soft-mass-swap",
+      "exp5893-implication_chain-case1-no-information-control",
+      "exp5893-implication_chain-case1-shuffled-control",
+      "exp5893-parity_xor-case1-cognition-biased-permutation",
+      "exp5893-parity_xor-case1-constraint-many-to-one",
+      "exp5893-parity_xor-case1-constraint-soft-mass-swap"
+    ]
+  },
+  "shortcut_false_accept_metrics": {
+    "by_arm": {
+      "current_exact_template": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "distributed_many_to_one": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      },
+      "fuzzy_t_norm": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      },
+      "no_learner": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "one_to_one_rule_constraint": {
+        "by_type": {
+          "cognition_shortcut": 0,
+          "constraint_satisfaction_shortcut": 0
+        },
+        "rate": 0.0,
+        "total": 0
+      },
+      "shuffled_grounding": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      },
+      "soft_probability": {
+        "by_type": {
+          "cognition_shortcut": 6,
+          "constraint_satisfaction_shortcut": 12
+        },
+        "rate": 1.0,
+        "total": 18
+      }
+    },
+    "one_to_one_zero_false_accepts": true,
+    "principle": "Unsafe semantic acquisition is measured directly by shortcut type.",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.shortcut_false_accept_metrics",
+    "shortcut_row_count": 18,
+    "unsafe_accept_count": 0
+  },
+  "spec_refs": [
+    "REQ-LEARN-5894",
+    "SCENARIO-LEARN-5894-PRECONDITIONS",
+    "SCENARIO-LEARN-5894-ARM-PARITY",
+    "SCENARIO-LEARN-5894-SEMANTIC-VS-CONSTRAINT",
+    "SCENARIO-LEARN-5894-CONTROLS-AND-LOWER-BOUNDS",
+    "SCENARIO-LEARN-5894-FAIL-CLOSED"
+  ],
+  "status": "complete_positive",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5894_one_to_one_grounding_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5894_one_to_one_grounding_ab.py -m pytest tests/python/test_experiment_5894_one_to_one_grounding_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5894_one_to_one_grounding_ab.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5894_one_to_one_grounding_ab.py",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5894_one_to_one_grounding_ab.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5894_one_to_one_grounding_ab.py -m pytest tests/python/test_experiment_5894_one_to_one_grounding_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5894_one_to_one_grounding_ab.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5894_one_to_one_grounding_ab.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5894_one_to_one_grounding_ab.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5894_one_to_one_grounding_ab.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "upstream_gate_and_row_hashes": {
+    "artifact_path": "results/experiment_5893_grounding_shortcut_fixture.json",
+    "artifact_sha256": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+    "chronological_shortcut_rows_present": true,
+    "exact_oracles_replayed": true,
+    "exp5893_gate_ready": true,
+    "exp5893_honest_verdict": "ready: grounding_shortcut_exact_fixture_ready",
+    "exp5893_ready_score": 1.0,
+    "exp5893_status": "ready",
+    "ok": true,
+    "principle": "Exp5893 rows and gates are the immutable challenge surface.",
+    "row_count": 72,
+    "row_file_sha256": "sha256:2933de236bffd925dd112ae3c6145306e65e7d9c1600a93dda1397ac58df14f8",
+    "row_hash_root": "sha256:a3487c97de454bb36e528f62bcf9f6b63cd8bc028eea86cc7f66fcc798f0dc9e",
+    "row_hashes_match": true,
+    "row_path": "results/experiment_5893_grounding_shortcut_fixture.rows.jsonl",
+    "schema": "carnot.experiment_5894.one_to_one_grounding_ab.v1.upstream_gate_and_row_hashes",
+    "split_groups_isolated": true
+  },
+  "verifier_is_oracle": true
+}
