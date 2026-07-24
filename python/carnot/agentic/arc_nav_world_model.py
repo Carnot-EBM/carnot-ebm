@@ -306,11 +306,26 @@ class InducedNavWorldModel:
         H, W = g.shape
         if nr < 0 or nc < 0 or nr + h > H or nc + w > W:
             return g
-        # swept mid-gap blocking check
-        my, mx = r0 + dy // 2, c0 + dx // 2
-        gap = g[max(0, my) : my + h, max(0, mx) : mx + w]
-        if self.wall_colors and np.any(np.isin(gap, list(self.wall_colors))):
-            return g
+        # Swept-footprint blocking check. The avatar translates in a straight line from its origin
+        # footprint to (nr,nc); the move is blocked by a wall colour in ANY cell the avatar would
+        # ENTER -- every footprint from the first step through the DESTINATION, exclusive of the origin.
+        # We step cell-by-cell along the (unit) move direction. The prior "mid-gap" heuristic
+        # (`r0 + dy//2`) degenerated to the avatar's OWN origin cell for a 1-cell step (dy//2 == 0), so
+        # it never inspected the destination and walked the avatar straight through 1-cell-adjacent walls
+        # -- silent on tu93 (its avatar jumps ~6 cells/action, so the mid-gap sampled real intermediate
+        # cells) but wrong for any hidden nav game with unit-step movement (REQ-ARC-WMTE-5879).
+        if self.wall_colors:
+            walls = list(self.wall_colors)
+            sy = (dy > 0) - (dy < 0)  # unit sign of the row step
+            sx = (dx > 0) - (dx < 0)  # unit sign of the col step
+            n_steps = max(abs(dy), abs(dx))
+            for k in range(1, n_steps + 1):
+                ky, kx = r0 + sy * k, c0 + sx * k
+                if ky < 0 or kx < 0 or ky + h > H or kx + w > W:
+                    return g  # a swept footprint leaves the board -> conservatively block
+                foot = g[ky : ky + h, kx : kx + w]
+                if np.any(np.isin(foot, walls)):
+                    return g
         stamp = g[r0 : r1 + 1, c0 : c1 + 1].copy()
         g[r0 : r1 + 1, c0 : c1 + 1] = self.floor_color  # leave floor behind
         g[nr : nr + h, nc : nc + w] = stamp  # draw avatar at destination (covers goal if present)
