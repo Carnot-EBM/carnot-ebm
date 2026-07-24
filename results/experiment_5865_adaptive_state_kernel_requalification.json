@@ -1,0 +1,479 @@
+{
+  "abi_schema_and_bounds": {
+    "abi_version": 1,
+    "canonical_encoding": "json_sort_keys_ascii_no_spaces_utf8",
+    "checkpoint_schema": "carnot.adaptive_state_microkernel.v1.checkpoint",
+    "deterministic_eviction": "oldest_promoted_version_then_event_id",
+    "event_fields": [
+      "event_id",
+      "chronology_index",
+      "change",
+      "signature_hash",
+      "payload_hash",
+      "confidence_q16"
+    ],
+    "fixed_width_fields": {
+      "capacity": "u32_bounded_1_to_64",
+      "chronology_index": "u32",
+      "confidence_q16": "u16_fixed_point",
+      "history_capacity": "u32_bounded_2_to_128",
+      "version_id": "u32"
+    },
+    "max_event_id_len": 64,
+    "max_reason_len": 32,
+    "max_replay_limit": 64,
+    "stable_ordering": "lexicographic_event_id_and_replay_confidence_desc",
+    "state_schema": "carnot.adaptive_state_microkernel.v1.state"
+  },
+  "adaptive_state_microkernel_requalified_score": 0.0,
+  "applicable_e2e_receipts": {
+    "E2E-003 PyO3 Binding Round-Trip": {
+      "commands": [
+        "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+        "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+        ".venv/bin/python -c \"import carnot._rust as rust; print(rust.RustAdaptiveStateKernel)\"",
+        ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0"
+      ],
+      "exit_code": 0,
+      "receipt": "RustAdaptiveStateKernel imported and focused Python/Rust binding operation parity passed."
+    },
+    "E2E-004 Serialization Cross-Language": {
+      "commands": [
+        ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0",
+        ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0  # second pass"
+      ],
+      "exit_code": 0,
+      "receipt": "Focused serialization, restart, rollback, canonical byte, and hash parity passed twice."
+    }
+  },
+  "before_after_test_matrix": {
+    "exp5859_focused_python_rust_parity": {
+      "after_pass_1": 0,
+      "after_pass_2": 0,
+      "before_exp5859_recorded": 0
+    },
+    "exp5865_new_code_coverage": {
+      "after_edge_tests": 0,
+      "coverage": "100%",
+      "initial_after_module": 2
+    },
+    "exp5865_tests_first": {
+      "after_module_implemented": 0,
+      "before_module_exists": 2
+    },
+    "lint_spec_root_clutter": {
+      "root_clutter": 0,
+      "ruff_check": 0,
+      "ruff_format_check": 0,
+      "spec_5859": 0,
+      "spec_5865": 0
+    },
+    "pyO3_build_import": {
+      "build": 0,
+      "copy": 0,
+      "import": 0
+    },
+    "repository_wide_pytest": {
+      "classification": "unrelated_repository_debt",
+      "exp5859_recorded_exit": 2,
+      "exp5865_natural_exit": null
+    },
+    "rust_core_adaptive_state": {
+      "after": 0
+    }
+  },
+  "canonical_state_and_hash_parity": {
+    "canonical_form_parity": true,
+    "hash_parity": true,
+    "py_final_hashes": [
+      "sha256:c52b3500a9cc871a4597342393349414ae87c2b30024cf53df0c1e7d2a1010b2",
+      "sha256:7421fa7c1f11410bc3b2814faf2eb075953790ca59f48f47f605cfaa00a480ce",
+      "sha256:71ad75bca68812606cec9896547ab51b83a63788839fde32ef26802b21256e7c",
+      "sha256:d2f4639fd8d7a816c172171249db41a4ccd2d16d1478a2b7fe6cfb2b93c6ce87",
+      "sha256:9a7fc77351efc73cf212ce6f5deef28895302a7232a740188dab582191ad0ac6"
+    ],
+    "rust_final_hashes": [
+      "sha256:c52b3500a9cc871a4597342393349414ae87c2b30024cf53df0c1e7d2a1010b2",
+      "sha256:7421fa7c1f11410bc3b2814faf2eb075953790ca59f48f47f605cfaa00a480ce",
+      "sha256:71ad75bca68812606cec9896547ab51b83a63788839fde32ef26802b21256e7c",
+      "sha256:d2f4639fd8d7a816c172171249db41a4ccd2d16d1478a2b7fe6cfb2b93c6ce87",
+      "sha256:9a7fc77351efc73cf212ce6f5deef28895302a7232a740188dab582191ad0ac6"
+    ]
+  },
+  "cross_language_operation_parity": {
+    "accept_reject_parity": true,
+    "operation_count": 67,
+    "parity_failures": [],
+    "trace_count": 5
+  },
+  "duration_s": 4306.0,
+  "exp5859_input_receipt": {
+    "adaptive_state_microkernel_ready_score": 0.0,
+    "checksum_valid": true,
+    "honest_verdict": "blocked: adaptive_state_microkernel_conformance_incomplete",
+    "path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+    "recorded_full_suite_exit_code": 2,
+    "sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
+    "status": "blocked"
+  },
+  "failing_collection_and_node_receipts": [
+    {
+      "classification": "unrelated_repository_debt",
+      "log_line": 256,
+      "nodeid": "tests/python/test_experiment_3494.py::test_run_p01_gate_required_fields_present",
+      "receipt": "Fatal Python error: Aborted while JAX compiled python/carnot/phase3/sudoku_p01_gate.py run_p01_gate."
+    },
+    {
+      "classification": "unrelated_repository_debt",
+      "log_line": 355,
+      "nodeid": "tests/python/test_experiment_3394_kona_global_opt.py::test_run_sudoku_optimization",
+      "receipt": "Fatal Python error: Aborted while JAX compiled scripts/experiment_3394_kona_global_opt.py run_sudoku_optimization."
+    },
+    {
+      "classification": "unrelated_repository_debt",
+      "log_line": 296,
+      "nodeid": "xdist::gw1",
+      "receipt": "node down: Not properly terminated; xdist replaced crashed worker."
+    },
+    {
+      "classification": "unrelated_repository_debt",
+      "log_line": 395,
+      "nodeid": "xdist::gw0",
+      "receipt": "node down: Not properly terminated; xdist replaced crashed worker."
+    },
+    {
+      "classification": "protected_user_work_conflict",
+      "nodeid": "concurrent-process::tests/python/test_plan_in_model_component_unpack.py",
+      "receipt": "A separate process edited and tested this file while the baseline full-suite reproduction was running; Exp5865 did not touch or revert it."
+    }
+  ],
+  "field_provenance": {
+    "exp5859_checksum": "sha256:f5f70baccbb81e7df4c85daba30e80b17a9d31d4da1103eaf00116ac038893c1",
+    "field_principles": {
+      "abi_schema_and_bounds": "Version, types, capacities, and ordering remain finite and hardware-mappable.",
+      "adaptive_state_microkernel_requalified_score": "EMIT BARE scalar; only 1.0 permits Exp5866 and Exp5875.",
+      "applicable_e2e_receipts": "Promotion requires the exact end-to-end checks relevant to the kernel path.",
+      "before_after_test_matrix": "No pre-existing passing receipt may regress during seam repair.",
+      "canonical_state_and_hash_parity": "Equivalent states must produce identical canonical hashes.",
+      "cross_language_operation_parity": "Every accepted and rejected operation must match across implementations.",
+      "duration_s": "Measured wall time exposes bootstrap-only requalification.",
+      "exp5859_input_receipt": "The new result must consume the exact blocked artifact without rewriting history.",
+      "failing_collection_and_node_receipts": "Exact logs and node IDs replace a generic exit-code narrative.",
+      "field_provenance": "Every decision traces to logs, fixtures, source hashes, toolchains, and outputs.",
+      "global_suite_debt_classification": "Unrelated failures stay visible and cannot be silently waived.",
+      "honest_verdict": "A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome.",
+      "inference_substrate": "`deterministic_cross_language_state_execution_no_llm` declares the actual path.",
+      "invalid_input_and_capacity_controls": "Malformed, duplicate, out-of-order, overflow, and unbounded input fail closed.",
+      "original_nonzero_exit_reproduction": "A failing seam must be observed before it can be attributed or repaired.",
+      "preconditions_checked": "Hashes, toolchains, plugins, resources, outputs, and protected files prevent blind repair.",
+      "protected_files_unchanged": "User work and operator-curated files remain untouched.",
+      "python_rust_binding_receipts": "The deployable call surface must build and import on the tested toolchain.",
+      "qualified_operation_mapping": "Only Exp5858-qualified operations remain in the ABI.",
+      "reproducibility_checksum": "A checksum detects ABI, fixture, toolchain, or test drift.",
+      "root_cause_classification": "Owned, unrelated, environment, and protected-work failures require different actions.",
+      "semantic_change_scope": "Only a proven owned defect may alter already-passing kernel semantics.",
+      "serialization_restart_and_rollback_parity": "Durable state must restore and roll back identically.",
+      "status": "A terminal state distinguishes requalified parity from a documented remaining block.",
+      "test_commands": "Commands document reproduction, parity, binding, regression, and E2E checks.",
+      "test_exit_codes": "Every claimed readiness command must have exit code zero."
+    },
+    "operation_trace_hash": "sha256:6c7b430741d18f25e3d60ffd42dc1c8749ddaf656b9d3a15a29fbef0b4437669",
+    "result_path": "results/experiment_5865_adaptive_state_kernel_requalification.json",
+    "source_hashes": {
+      "crates/carnot-core/src/adaptive_state.rs": "sha256:605fdd95db528eaa43d6091292d8b8038b8766b738aa4a1b52544cf8a39ed599",
+      "crates/carnot-python/src/adaptive_state.rs": "sha256:b37a32f567c044ab9749adcad88d2512f902aabab79f13c69bda3e6a3f3c6566",
+      "openspec/capabilities/self-learning/spec.md": "sha256:2e1858775a9e6e18762452f113089fd29d975ce15a3f5934de438144c7c01777",
+      "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5865_adaptive_state_kernel_requalification.json",
+      "python/carnot/adaptive_state.py": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
+      "python/carnot/adaptive_state_requalification.py": "sha256:f093ec59fea49371a67aa59e999427669aeb60985183e118bd03a11d4a802b40",
+      "results/experiment_5859_adaptive_state_microkernel_parity.json": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
+      "results/experiment_5865_adaptive_state_kernel_requalification.json": "sha256:3da29f9b39629015b67dc0bcee202078286d3d2ad6ce18acfa98f8b0db4286ab",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py": "sha256:b66da8b4f553af87f33732f769954a69698151d8d03c5165fbb859305e70674a",
+      "tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": "sha256:38e1ce171aa4fee1449381130bc79cd0119c492976d42574c18a93f9b0fe5eb4"
+    }
+  },
+  "global_suite_debt_classification": {
+    "blocking": true,
+    "classification": "unrelated_repository_debt",
+    "owned_by_adaptive_state": false,
+    "protected_user_work_conflict": true,
+    "retire_requalification": true,
+    "summary": "Repository-wide pytest collected 50,873 items, then failed outside adaptive-state with JAX Phase3/global optimization worker aborts and many unrelated failures."
+  },
+  "honest_verdict": "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt",
+  "inference_substrate": "deterministic_cross_language_state_execution_no_llm",
+  "invalid_input_and_capacity_controls": {
+    "accepted_control_event": true,
+    "capacity": 2,
+    "fail_closed": true,
+    "invalid_case_count": 4,
+    "receipts": [
+      {
+        "case": "duplicate_event",
+        "expected_code": "DUPLICATE_EVENT",
+        "observed_code": "DUPLICATE_EVENT",
+        "state_preserved": true
+      },
+      {
+        "case": "out_of_order",
+        "expected_code": "OUT_OF_ORDER_EVENT",
+        "observed_code": "OUT_OF_ORDER_EVENT",
+        "state_preserved": true
+      },
+      {
+        "case": "overflow",
+        "expected_code": "FIXED_WIDTH_OVERFLOW",
+        "observed_code": "FIXED_WIDTH_OVERFLOW",
+        "state_preserved": true
+      },
+      {
+        "case": "corrupted_checkpoint",
+        "expected_code": "checkpoint is not valid adaptive-state JSON",
+        "observed_code": "checkpoint is not valid adaptive-state JSON",
+        "state_preserved": true
+      }
+    ]
+  },
+  "original_nonzero_exit_reproduction": {
+    "collection_items": 50873,
+    "collection_phase_reached": true,
+    "command": ".venv/bin/pytest tests/python -q",
+    "full_log_path": "/tmp/exp5865_pytest_before.log",
+    "full_log_sha256": "sha256:c00ab89ac05007caca2e13c96f7c63979fe1513605f78e47517d239b5fbaebf2",
+    "log_size_bytes": 63921,
+    "natural_exit_reached": false,
+    "observed_exit_code": null,
+    "recorded_exp5859_exit_code": 2,
+    "script_done_after_interrupt": "2026-07-24T00:31:43-04:00",
+    "script_started": "2026-07-23T23:28:00-04:00",
+    "why_not_terminal": "Interrupted after repeated unrelated JAX worker aborts and dense unrelated failures; no adaptive-state collection failure appeared.",
+    "wrapper_exit_code_after_interrupt": 0
+  },
+  "preconditions_checked": {
+    "atomic_output": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5865_adaptive_state_kernel_requalification.json"
+    },
+    "binding_hashes": [
+      {
+        "path": "python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "sha256:e762e7e8532c8da63851a1bc5d930c762312cc94a98cc2a2fdbdc5a469b9ba28"
+      }
+    ],
+    "exp5858_gate": {
+      "continuous_self_learning_ready_score": 1.0,
+      "honest_verdict": "ready: reduced_oracle_continuous_self_learning",
+      "ok": true,
+      "status": "ready"
+    },
+    "exp5858_operation_schema": {
+      "qualified_changes": [
+        "addition",
+        "recurrence",
+        "supersession"
+      ],
+      "row_count": 360,
+      "schema_hash": "sha256:8a94e27716ff3bd9478f327c9741d248c6005a08196d08952f6c9d6ece736469"
+    },
+    "file_hashes": {
+      "Cargo.lock": "sha256:a1e23eaa9806224fa95dec250f904815c8cb6d8616330d6655725fc5d03e6985",
+      "Cargo.toml": "sha256:0c6abc4d25d793846356b5c62d0add1cd1035a10cf174e4176d8bae02a51d49f",
+      "crates/carnot-core/Cargo.toml": "sha256:86fe56ce6709ac9324af4b9a323cefb90971dbd5d243d163ae9fd453c52b7ad9",
+      "crates/carnot-core/src/adaptive_state.rs": "sha256:605fdd95db528eaa43d6091292d8b8038b8766b738aa4a1b52544cf8a39ed599",
+      "crates/carnot-python/Cargo.toml": "sha256:b207674b5c91a0b8c8a323d2ca54e06c38ab15fe1e856da6b931318a2143f4fa",
+      "crates/carnot-python/src/adaptive_state.rs": "sha256:b37a32f567c044ab9749adcad88d2512f902aabab79f13c69bda3e6a3f3c6566",
+      "openspec/capabilities/self-learning/spec.md": "sha256:2e1858775a9e6e18762452f113089fd29d975ce15a3f5934de438144c7c01777",
+      "pyproject.toml": "sha256:e2667155a00f0baa5cfe48eee29db51a58cc7ac51ff35dac7698249cdd156e25",
+      "python/carnot/adaptive_state.py": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
+      "results/experiment_5858_reduced_oracle_continuous_self_learning.json": "sha256:de906c4b6a267deea4ed416bb0571403f1788987c9dc255f2eab16ecf15ca361",
+      "results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl": "sha256:8ed8d12d0fcd64d539b949af24b76ca1c67722a3809125d102e4b1793eba905f",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py": "sha256:b66da8b4f553af87f33732f769954a69698151d8d03c5165fbb859305e70674a"
+    },
+    "preconditions_ready": true,
+    "resources": {
+      "disk": {
+        "available_mb": 1168902,
+        "ok": true,
+        "required_mb": 512
+      },
+      "ram": {
+        "available_mb": 29444,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "serialization_versions": {
+      "abi_version": 1,
+      "checkpoint_schema": "carnot.adaptive_state_microkernel.v1.checkpoint",
+      "state_schema": "carnot.adaptive_state_microkernel.v1.state"
+    },
+    "toolchains": {
+      "cargo": {
+        "available": true,
+        "command": [
+          "cargo",
+          "--version"
+        ],
+        "duration_ms": 8.125,
+        "returncode": 0,
+        "version": "cargo 1.97.0 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.0-1.1)"
+      },
+      "python": "3.12.13",
+      "rustc": {
+        "available": true,
+        "command": [
+          "rustc",
+          "--version"
+        ],
+        "duration_ms": 11.582,
+        "returncode": 0,
+        "version": "rustc 1.97.0 (2d8144b78 2026-07-07) (Arch Linux rust 1:1.97.0-1.1)"
+      },
+      "system": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43"
+    }
+  },
+  "protected_files_unchanged": {
+    "baseline_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "current_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+    "path": "scripts/research_conductor.py",
+    "unchanged": true
+  },
+  "python_rust_binding_receipts": {
+    "binding": {
+      "binding_available": true,
+      "class_name": "RustAdaptiveStateKernel",
+      "methods": [
+        "apply_event",
+        "acquire_core",
+        "quarantine",
+        "promote",
+        "select_replay",
+        "roll_back",
+        "serialize",
+        "restore",
+        "canonical_state_hash"
+      ]
+    },
+    "python_implementation": {
+      "path": "python/carnot/adaptive_state.py",
+      "sha256": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
+      "state_owner": "readable_reference_semantics"
+    },
+    "rust_implementation": {
+      "path": "crates/carnot-core/src/adaptive_state.rs",
+      "sha256": "sha256:605fdd95db528eaa43d6091292d8b8038b8766b738aa4a1b52544cf8a39ed599",
+      "state_owner": "deterministic_deployable_execution"
+    }
+  },
+  "qualified_operation_mapping": {
+    "exp5858_changes": [
+      "addition",
+      "supersession",
+      "recurrence"
+    ],
+    "mapping": {
+      "addition": [
+        "apply_event",
+        "acquire_core",
+        "promote"
+      ],
+      "recurrence": [
+        "apply_event",
+        "select_replay"
+      ],
+      "supersession": [
+        "apply_event",
+        "quarantine"
+      ]
+    },
+    "operations": [
+      "apply_event",
+      "acquire_core",
+      "quarantine",
+      "promote",
+      "select_replay",
+      "roll_back",
+      "serialize",
+      "restore",
+      "canonical_state_hash"
+    ],
+    "source": "results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl"
+  },
+  "reproducibility_checksum": "sha256:4cdfb7b2b84789f08d5df7a6349e3e98cbad272621ec8a0f02d75ba376441bbb",
+  "root_cause_classification": {
+    "adaptive_state_owned_failure_count": 0,
+    "classification_counts": {
+      "protected_user_work_conflict": 1,
+      "unrelated_repository_debt": 4
+    },
+    "owned_repair_performed": false,
+    "primary": "unrelated_repository_debt",
+    "protected_user_work_conflict": true
+  },
+  "semantic_change_scope": {
+    "abi_changed": false,
+    "capacity_or_bound_changed": false,
+    "code_semantics_changed": false,
+    "failure_codes_changed": false,
+    "operation_set_changed": false,
+    "ordering_changed": false,
+    "schema_version_changed": false,
+    "summary": "No adaptive-state kernel semantic changes were made."
+  },
+  "serialization_restart_and_rollback_parity": {
+    "restart_parity": true,
+    "rollback_parity": true,
+    "round_trip_parity": true
+  },
+  "status": "retired",
+  "test_commands": [
+    "script -q -e -c \".venv/bin/pytest tests/python -q\" /tmp/exp5865_pytest_before.log",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0  # expected tests-first failure before module existed",
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+    "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+    ".venv/bin/python -c \"import carnot._rust as rust; print(rust.RustAdaptiveStateKernel)\"",
+    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0",
+    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0  # second pass",
+    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py -m pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py --fail-under=100",
+    "cargo test -p carnot-core adaptive_state --lib",
+    ".venv/bin/ruff check python/carnot/adaptive_state.py python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py",
+    ".venv/bin/ruff format --check python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py",
+    "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs",
+    "cargo clippy -p carnot-core --lib -- -D warnings",
+    "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff -- scripts/research_conductor.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5865_adaptive_state_kernel_requalification.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py -m pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0  # second pass": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0  # expected tests-first failure before module existed": 2,
+    ".venv/bin/python -c \"import carnot._rust as rust; print(rust.RustAdaptiveStateKernel)\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5865_adaptive_state_kernel_requalification.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/adaptive_state.py python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": 0,
+    ".venv/bin/ruff format --check python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": 0,
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python": 0,
+    "cargo clippy -p carnot-core --lib -- -D warnings": 0,
+    "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments": 0,
+    "cargo test -p carnot-core adaptive_state --lib": 0,
+    "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so": 0,
+    "git diff -- scripts/research_conductor.py": 0,
+    "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs": 0,
+    "script -q -e -c \".venv/bin/pytest tests/python -q\" /tmp/exp5865_pytest_before.log": 0
+  }
+}

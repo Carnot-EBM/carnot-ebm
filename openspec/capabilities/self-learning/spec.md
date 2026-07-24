@@ -25297,3 +25297,96 @@ pre-operation canonical state hash.
 | Requirement | Python | Rust | Tests |
 |---|---|---|---|
 | REQ-LEARN-5859 | Implemented (`python/carnot/adaptive_state.py`, `results/experiment_5859_adaptive_state_microkernel_parity.json`) | Implemented (`crates/carnot-core/src/adaptive_state.rs`, `crates/carnot-python/src/adaptive_state.rs`) | Implemented (`tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py`, Rust unit tests) |
+
+## REQ-LEARN-5865: Adaptive-State Kernel Requalification Attribution
+
+The self-learning tier SHALL provide Exp5865, a bounded requalification wrapper
+for the Exp5859 adaptive-state microkernel. The wrapper SHALL consume
+`results/experiment_5859_adaptive_state_microkernel_parity.json` without
+overwriting it, reproduce the repository-wide pytest seam before editing,
+classify every observed nonzero node or collection failure as
+adaptive-state-owned, pre-existing unrelated debt, environment/toolchain, or
+protected user-work conflict, and write
+`results/experiment_5865_adaptive_state_kernel_requalification.json`.
+
+Exp5865 SHALL NOT change the Exp5858-qualified operation set, ABI schema
+version, capacities, stable ordering, fixed-width fields, or failure codes
+unless a failing REQ- or SCENARIO-anchored test proves an adaptive-state
+correctness defect. When the global suite blocker is unrelated repository debt
+or protected concurrent user work, Exp5865 SHALL preserve already-passing
+adaptive-state semantics, run focused parity and applicable E2E checks, and
+report the global blocker separately instead of patching it.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`exp5859_input_receipt`, `original_nonzero_exit_reproduction`,
+`root_cause_classification`, `failing_collection_and_node_receipts`,
+`semantic_change_scope`, `qualified_operation_mapping`,
+`abi_schema_and_bounds`, `python_rust_binding_receipts`,
+`cross_language_operation_parity`, `canonical_state_and_hash_parity`,
+`serialization_restart_and_rollback_parity`,
+`invalid_input_and_capacity_controls`, `before_after_test_matrix`,
+`global_suite_debt_classification`, `applicable_e2e_receipts`,
+`protected_files_unchanged`, `adaptive_state_microkernel_requalified_score`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes requalified parity from a documented remaining block.
+- `preconditions_checked`: Hashes, toolchains, plugins, resources, outputs, and protected files prevent blind repair.
+- `exp5859_input_receipt`: The new result must consume the exact blocked artifact without rewriting history.
+- `original_nonzero_exit_reproduction`: A failing seam must be observed before it can be attributed or repaired.
+- `root_cause_classification`: Owned, unrelated, environment, and protected-work failures require different actions.
+- `failing_collection_and_node_receipts`: Exact logs and node IDs replace a generic exit-code narrative.
+- `semantic_change_scope`: Only a proven owned defect may alter already-passing kernel semantics.
+- `qualified_operation_mapping`: Only Exp5858-qualified operations remain in the ABI.
+- `abi_schema_and_bounds`: Version, types, capacities, and ordering remain finite and hardware-mappable.
+- `python_rust_binding_receipts`: The deployable call surface must build and import on the tested toolchain.
+- `cross_language_operation_parity`: Every accepted and rejected operation must match across implementations.
+- `canonical_state_and_hash_parity`: Equivalent states must produce identical canonical hashes.
+- `serialization_restart_and_rollback_parity`: Durable state must restore and roll back identically.
+- `invalid_input_and_capacity_controls`: Malformed, duplicate, out-of-order, overflow, and unbounded input fail closed.
+- `before_after_test_matrix`: No pre-existing passing receipt may regress during seam repair.
+- `global_suite_debt_classification`: Unrelated failures stay visible and cannot be silently waived.
+- `applicable_e2e_receipts`: Promotion requires the exact end-to-end checks relevant to the kernel path.
+- `protected_files_unchanged`: User work and operator-curated files remain untouched.
+- `adaptive_state_microkernel_requalified_score`: EMIT BARE scalar; only 1.0 permits Exp5866 and Exp5875.
+- `duration_s`: Measured wall time exposes bootstrap-only requalification.
+- `inference_substrate`: `deterministic_cross_language_state_execution_no_llm` declares the actual path.
+- `field_provenance`: Every decision traces to logs, fixtures, source hashes, toolchains, and outputs.
+- `test_commands`: Commands document reproduction, parity, binding, regression, and E2E checks.
+- `test_exit_codes`: Every claimed readiness command must have exit code zero.
+- `reproducibility_checksum`: A checksum detects ABI, fixture, toolchain, or test drift.
+- `honest_verdict`: A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome.
+
+`adaptive_state_microkernel_requalified_score` SHALL be the bare scalar `1.0`
+only when all required parity, safety, focused, binding, lint, spec,
+adversarial, applicable E2E, and repository-wide commands claimed by Exp5865
+exit zero, no passing Exp5859 semantic receipt regresses, no protected file is
+changed, and no unrelated global-suite blocker remains. Otherwise it SHALL be
+the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5865-ATTRIBUTION: Global Pytest Seam Is Classified
+
+**Given** Exp5859 records `.venv/bin/pytest tests/python -q` as the only
+nonzero readiness command
+**When** Exp5865 reproduces the command and observes collection, node, crash,
+or protected-work receipts
+**Then** each nonzero receipt is classified without mutating unrelated files
+**And** adaptive-state requalification is retired rather than broadened when
+the blocker is unrelated repository debt or protected concurrent user work.
+
+### SCENARIO-LEARN-5865-PARITY-PRESERVED: Focused Kernel Semantics Do Not Regress
+
+**Given** immutable Exp5858 and Exp5859 fixtures
+**When** Exp5865 reruns deterministic, randomized, restart, rollback,
+invalid-input, capacity, and PyO3 binding checks
+**Then** operation decisions, version IDs, canonical states, canonical hashes,
+serialization bytes, rollback roots, restart states, and rejection codes remain
+identical to Exp5859.
+
+## Implementation Status (Exp 5865)
+
+| Requirement | Python | Rust | Tests |
+|---|---|---|---|
+| REQ-LEARN-5865 | Implemented (`python/carnot/adaptive_state_requalification.py`, `results/experiment_5865_adaptive_state_kernel_requalification.json`) | N/A (reuses Exp5859 Rust kernel without semantic changes) | Implemented (`tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py`) |
