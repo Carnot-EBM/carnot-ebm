@@ -3358,10 +3358,19 @@ class E3AgentPolicy:
             param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
         )
 
-    def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid, *, diagnostics=None):
+    def _call_plan_in_model(
+        self, plan_in_model, engine, is_done, start_grid, *, diagnostics=None, goal_energy_override=None
+    ):
         import os
 
-        goal_energy = self._goal_energy_for_plan(is_done)
+        # goal_energy_override (REQ-ARC-WMTE-5845): a caller-supplied, model-specific energy (e.g. the
+        # structured nav model's player->goal Manhattan) takes precedence over the generic exemplar/novelty
+        # derivation -- a strong nav-specific gradient makes plan_in_model best-first + more robust (fewer
+        # nodes -> finds the plan within budget on bigger mazes). None (all other paths) preserves the
+        # existing auto-derivation exactly.
+        goal_energy = (
+            goal_energy_override if goal_energy_override is not None else self._goal_energy_for_plan(is_done)
+        )
         kwargs: dict = {}
         if goal_energy is not None and self._planner_accepts_goal_energy(plan_in_model):
             kwargs["goal_energy"] = goal_energy
@@ -3838,6 +3847,7 @@ class E3AgentPolicy:
                             nav_isdone,
                             self.root_grid,
                             diagnostics=_nav_diag,
+                            goal_energy_override=nav.goal_energy,  # REQ-ARC-WMTE-5845: nav-specific best-first
                         )
                         attempt["structured_nav_plan_diagnostics"] = _nav_diag
                         if nav_plan:

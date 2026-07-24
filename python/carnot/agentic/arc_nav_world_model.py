@@ -353,6 +353,23 @@ class InducedNavWorldModel:
             return False
         return len({a for a in self.displacement if a in _NAV_ACTIONS}) >= int(min_directions)
 
+    def goal_energy(self, grid) -> float:
+        """A player->goal Manhattan energy (LOWER = closer to the win) for BEST-FIRST plan_in_model search.
+        Plan_in_model with this strong, nav-specific gradient reaches the win in FEWER search nodes than plain
+        BFS (measured tu93: 890 vs 1075 nodes, same 18-action plan, still reproduces the level-up), so it is
+        more likely to find the plan within the node budget on a bigger/harder hidden nav maze (REQ-ARC-WMTE-
+        5845). Uses the fitted avatar bbox centre + the goal-colour centroid. Returns 0 when the goal is
+        already covered (avatar on the win state) and a large constant when either is missing."""
+        g = np.asarray(grid)
+        bb = self._avatar_bbox(g)
+        if bb is None or self.goal_color is None:
+            return 999.0
+        ar, ac = (bb[0] + bb[2]) / 2.0, (bb[1] + bb[3]) / 2.0
+        gys, gxs = np.where(g == self.goal_color)
+        if gys.size == 0:
+            return 0.0  # goal covered/gone -> at (or past) the win state
+        return abs(ar - float(gys.mean())) + abs(ac - float(gxs.mean()))
+
 
 def _blobs(mask):
     """Connected components (4-neighbour) of a boolean mask -> list of (centre_row, centre_col, size)."""

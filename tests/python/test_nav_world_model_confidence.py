@@ -44,3 +44,40 @@ def test_no_goal_not_confident():
 def test_too_few_directions_not_confident():
     # a clean avatar but only 2 directions -> not confident (default min 3)
     assert _model({9}, [1, 2], 14).is_confident_nav() is False
+
+
+class TestGoalEnergy:
+    """REQ-ARC-WMTE-5845: the nav model's player->goal Manhattan energy for best-first plan_in_model
+    (fewer search nodes than plain BFS -> more robust within the node budget on bigger mazes)."""
+
+    def _m(self, avatar=(9,), goal=14):
+        return InducedNavWorldModel(
+            displacement={1: (1, 0), 2: (-1, 0), 3: (0, 1), 4: (0, -1)},
+            avatar_colors=frozenset(avatar), bg_color=5, floor_color=5,
+            wall_colors=frozenset(), goal_color=goal,
+        )
+
+    def test_manhattan_distance(self):
+        import numpy as np
+        g = np.full((10, 10), 5, dtype=np.int16)
+        g[1, 1] = 9   # avatar at (1,1)
+        g[4, 5] = 14  # goal at (4,5) -> |4-1|+|5-1| = 7
+        assert abs(self._m().goal_energy(g) - 7.0) < 1e-6
+
+    def test_zero_when_goal_gone(self):
+        import numpy as np
+        g = np.full((8, 8), 5, dtype=np.int16)
+        g[2, 2] = 9  # avatar present, no goal color -> at/past win
+        assert self._m().goal_energy(g) == 0.0
+
+    def test_large_when_avatar_missing(self):
+        import numpy as np
+        g = np.full((8, 8), 5, dtype=np.int16)
+        g[3, 3] = 14  # goal present, no avatar
+        assert self._m().goal_energy(g) >= 999.0
+
+    def test_none_goal_color_is_large(self):
+        import numpy as np
+        g = np.full((8, 8), 5, dtype=np.int16)
+        g[1, 1] = 9
+        assert self._m(goal=None).goal_energy(g) >= 999.0
