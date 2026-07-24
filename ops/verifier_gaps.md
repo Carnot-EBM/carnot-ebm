@@ -3885,3 +3885,23 @@ unproven, expensive mechanism to the actual scored path risks hurting the live a
 (RHAE) for no demonstrated correctness benefit. The offline dev-twin wiring is the correct sequencing per
 the Phase-Prototype-and-Validation discipline; scored-path wiring is the right NEXT step only once a
 result here actually proves out.
+
+### GAP-ARC-NAV-ENGINE-UNIT-STEP-WALL-BLOCK: FIXED (REQ-ARC-WMTE-5879) — status: filled (InducedNavWorldModel.engine swept-footprint check)
+- Found by an outer-loop synthetic robustness probe of the world-model planning path (iter6, 2026-07-24),
+  CPU-only, no live env. The probe fit an `InducedNavWorldModel` from synthetic transitions and hand-built a
+  model that KNEW a wall colour, then checked whether `engine` blocks a move into it.
+- The silent bug: `engine`'s blocking check used a "swept mid-gap" cell at `r0 + dy//2, c0 + dx//2`. For a
+  1-cell-per-action step (dy or dx == ±1) `dy//2 == 0`, so the sampled cell was the avatar's OWN origin, and
+  the DESTINATION cell was never inspected — the engine stamped the avatar straight through a 1-cell-adjacent
+  wall. It also missed destination-only walls for multi-step moves (mid-gap sampled the middle, not the end).
+- Why it was invisible: tu93 (the ONLY clean public nav game, hence the only test bed) has an avatar that
+  jumps ~6 cells/action, so `dy//2 == 3` sampled real intermediate wall cells and masked the defect. Any
+  HIDDEN nav game with unit-step movement (the common case) would have `plan_in_model` route straight through
+  walls, producing plans that fail the instant the executor replays them in the real env — a pure
+  live-hidden-game robustness loss with zero offline signal on the public set.
+- Fix: replace the single mid-gap sample with a swept-footprint check — step the avatar footprint cell-by-cell
+  along the unit move direction from the first step through the destination inclusive, blocking on any wall
+  colour in any entered cell. Verified: 1-step down/right into a wall now blocks; 1-step into free / onto goal
+  still works; multi-step blocked by mid-wall AND by destination-only wall; clear multi-step still moves; tu93
+  still solves 3/3 (`arc_plan_in_model_nav_solve.py`, reproducible=True, no regression). Regression tests:
+  `tests/python/test_nav_world_model_confidence.py::TestEngineWallBlocking` (6 cases).

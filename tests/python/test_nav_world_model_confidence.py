@@ -81,3 +81,82 @@ class TestGoalEnergy:
         g = np.full((8, 8), 5, dtype=np.int16)
         g[1, 1] = 9
         assert self._m(goal=None).goal_energy(g) >= 999.0
+
+
+class TestEngineWallBlocking:
+    """REQ-ARC-WMTE-5879: the induced nav engine must BLOCK a move into a wall regardless of the avatar's
+    per-action STEP SIZE. The prior 'mid-gap' blocking heuristic (r0 + dy//2) degenerated to the avatar's
+    OWN origin cell for a 1-cell step (dy//2 == 0), so it never inspected the destination and walked the
+    avatar straight through 1-cell-adjacent walls. tu93 masked this (its avatar jumps ~6 cells/action, so the
+    mid-gap sampled real intermediate cells); a hidden nav game with unit-step movement would plan through
+    walls -> plans that fail in the real env. The fix is a swept-footprint check over every cell the avatar
+    enters, from the first step through the destination.
+    """
+
+    BG = FLOOR = 5
+    AV = 9
+    GOAL = 14
+    WALL = 3
+
+    def _model(self, disp):
+        return InducedNavWorldModel(
+            displacement=disp, avatar_colors=frozenset({self.AV}), bg_color=self.BG,
+            floor_color=self.FLOOR, wall_colors=frozenset({self.WALL}), goal_color=self.GOAL,
+        )
+
+    def _avpos(self, g):
+        import numpy as np
+        w = np.argwhere(np.asarray(g) == self.AV)
+        return tuple(int(x) for x in w[0]) if w.size else None
+
+    def test_unit_step_down_into_wall_is_blocked(self):
+        import numpy as np
+        m = self._model({1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)})
+        g = np.full((6, 6), self.BG, dtype=int)
+        g[4, 3] = self.WALL
+        g[3, 3] = self.AV
+        # move DOWN (action 2) into the wall at (4,3) -> must stay at (3,3)
+        assert self._avpos(m.engine(g, 2, None)) == (3, 3)
+
+    def test_unit_step_right_into_wall_is_blocked(self):
+        import numpy as np
+        m = self._model({1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)})
+        g = np.full((6, 6), self.BG, dtype=int)
+        g[3, 4] = self.WALL
+        g[3, 3] = self.AV
+        assert self._avpos(m.engine(g, 4, None)) == (3, 3)
+
+    def test_unit_step_into_free_cell_still_moves(self):
+        import numpy as np
+        m = self._model({4: (0, 1)})
+        g = np.full((6, 6), self.BG, dtype=int)
+        g[3, 3] = self.AV
+        assert self._avpos(m.engine(g, 4, None)) == (3, 4)
+
+    def test_unit_step_onto_goal_still_covers_it(self):
+        import numpy as np
+        m = self._model({4: (0, 1)})
+        g = np.full((6, 6), self.BG, dtype=int)
+        g[3, 4] = self.GOAL
+        g[3, 3] = self.AV
+        out = np.asarray(m.engine(g, 4, None))
+        assert self._avpos(out) == (3, 4)
+        assert not bool((out == self.GOAL).any())  # goal covered
+
+    def test_multi_step_blocked_by_destination_wall(self):
+        # A 6-cell jump whose ONLY wall is at the destination must also block (the old mid-gap check
+        # sampled the middle cell, not the destination, so it missed destination-only walls even for
+        # multi-step moves).
+        import numpy as np
+        m = self._model({4: (0, 6)})
+        g = np.full((3, 12), self.BG, dtype=int)
+        g[1, 0] = self.AV
+        g[1, 6] = self.WALL
+        assert self._avpos(m.engine(g, 4, None)) == (1, 0)
+
+    def test_multi_step_clear_path_moves(self):
+        import numpy as np
+        m = self._model({4: (0, 6)})
+        g = np.full((3, 12), self.BG, dtype=int)
+        g[1, 0] = self.AV
+        assert self._avpos(m.engine(g, 4, None)) == (1, 6)
