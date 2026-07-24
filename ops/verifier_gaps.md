@@ -2702,6 +2702,23 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   execution/dynamics half.** This is the strongest ARC perception result of the session: the diagnosis
   (perception is the wall) -> oracle proof (fix flips 0->7/8) -> detectors (recover HUD/mover from frames) ->
   re-authoring (0->4/8 correct from frames alone, no HUD fixation) is a complete, measured chain.
+- **DISCOVERY A/B = CLEAN NULL 2026-07-23 (REQ-ARC-WMTE-5834,
+  `results/outer_loop_arc_reauthor_discovery_sweep_20260723.json`).** Wired `reauthor_framing` into the live
+  greedy-direct agent (`run_greedy_direct(reauthor=True)`) and ran the full winner recipe reauthor OFF vs ON,
+  same budget(120)/seed, on all 8 games. Result: **0 levels discovered, BOTH arms, all 8 games.** The
+  perception fix flips the GOAL HYPOTHESIS (0->4/8 offline) but does NOT convert to actual DISCOVERY. This
+  confirms the predicted separation: perception/goal-induction was necessary (now fixed) but is NOT
+  sufficient -- **EXECUTION/DYNAMICS is the next binding constraint.** Evidence in the action counts: bp35
+  loses at exactly 64 actions (the move-budget cap) on both arms; the greedy-direct architecture has NO
+  search/planning, so even with the right goal the LLM must blind-guess the action sequence over a hex grid,
+  which it cannot do within budget. **STRATEGIC IMPLICATION (earned by the data): the leaderboard-winner
+  architecture we matched (greedy-direct, no search) is EXECUTION-LIMITED even with a correct goal. Carnot's
+  OWN live architecture (E3AgentPolicy: verifier-routed best-first search + plan_in_model) is better suited
+  for execution -- it can SEARCH toward a named target. So the next step is NOT to keep improving the
+  greedy-direct winner recipe; it is to feed the perception fix (retracted HUD rules + named target + player)
+  into Carnot's verifier-routed search as the goal/heuristic, where the search can navigate to the target and
+  the goal verifier (REQ-ARC-WMTE-5830) confirms progress via the level counter.** This closes the
+  winner-matching investigation with a clear, measured redirect back to Carnot's search-based strength.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
