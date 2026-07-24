@@ -1,0 +1,113 @@
+{
+  "experiment": "outer_loop_arc_plan_in_model_nav_solve",
+  "experiment_id": "REQ-ARC-WMTE-5841",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_plan_in_model_nav_solve.v1",
+  "title": "plan_in_model regression fix (5-tuple component unpack) + structured-nav-model live navigation solve of tu93.",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "purpose": "regression_fix_plus_method_validation",
+  "not_a_new_solve_claim": "tu93 L1 already registered; this validates (a) the plan_in_model regression fix and (b) that a structured InducedNavWorldModel + plan_in_model reaches a real tu93 level-up live. No registry change.",
+  "random_seed": 5841,
+  "regression": {
+    "bug": "_model_candidates unpacked _components_detailed as a 4-tuple; the field was widened to a 5-tuple (+is_grid_fallback) in commit 2f0760307 -> ValueError on any grid with components -> plan_in_model silently disabled for object-bearing games.",
+    "fix": "defensive `for cy, cx, _a, _c, *_ in comps` unpack in arc_executable_world_model._model_candidates; docstring on arc_graph_explore._components_detailed corrected to note the 5-tuple + the defensive-unpack requirement.",
+    "regression_test": "tests/python/test_plan_in_model_component_unpack.py (2 tests; the rigid 4-unpack raises ValueError on a 5-tuple, confirmed)."
+  },
+  "methodology_note": "InducedNavWorldModel.fit derives per-action displacement + avatar + goal from the agent's OWN recon transitions (structured, correct-by-construction for the nav family -- NOT LLM induction). plan_in_model plans in-model (no env), then _execute_plan_measure executes ONCE from a fresh reset and checks the REAL level counter (not a heuristic). No LLM. Public-game frames for offline dev.",
+  "runs": [
+    {
+      "displacement": {
+        "4": [
+          0,
+          6
+        ],
+        "2": [
+          6,
+          0
+        ],
+        "1": [
+          -6,
+          0
+        ],
+        "3": [
+          0,
+          -6
+        ]
+      },
+      "goal_color": 14,
+      "plan_len": 18,
+      "termination": "plan_found",
+      "nodes_expanded": 1075,
+      "reached_levelup": true,
+      "actions_to_levelup": 18,
+      "start_hv": 60.125,
+      "best_hv": 6.125
+    },
+    {
+      "displacement": {
+        "4": [
+          0,
+          6
+        ],
+        "2": [
+          6,
+          0
+        ],
+        "1": [
+          -6,
+          0
+        ],
+        "3": [
+          0,
+          -6
+        ]
+      },
+      "goal_color": 14,
+      "plan_len": 18,
+      "termination": "plan_found",
+      "nodes_expanded": 1075,
+      "reached_levelup": true,
+      "actions_to_levelup": 18,
+      "start_hv": 60.125,
+      "best_hv": 6.125
+    },
+    {
+      "displacement": {
+        "4": [
+          0,
+          6
+        ],
+        "2": [
+          6,
+          0
+        ],
+        "1": [
+          -6,
+          0
+        ],
+        "3": [
+          0,
+          -6
+        ]
+      },
+      "goal_color": 14,
+      "plan_len": 18,
+      "termination": "plan_found",
+      "nodes_expanded": 1075,
+      "reached_levelup": true,
+      "actions_to_levelup": 18,
+      "start_hv": 60.125,
+      "best_hv": 6.125
+    }
+  ],
+  "reached_levelup_count": 3,
+  "reached_levelup_reproducible": true,
+  "sidesteps_nonidempotent_reset": "plan_in_model plans in imagination + executes once from reset -> no per-node resets -> the non-idempotent-reset blocker (REQ-ARC-WMTE-5840) does not apply.",
+  "headline": "REGRESSION FOUND + FIXED: plan_in_model crashed on component-grids since 2f0760307 (5-tuple _components_detailed), silently disabling E3's world-model planner. After the fix, a structured InducedNavWorldModel + plan_in_model reaches a REAL tu93 level-up in 3/3 runs (e.g. 18-action plan, hv 60.125->6.125). plan_in_model plans in imagination + executes once from reset -> sidesteps the non-idempotent-reset blocker -> live-compatible navigation solve.",
+  "next_step": "InducedNavWorldModel (the structured nav inducer) is currently ORPHANED from the live E3 path (imported only by scripts/tests). The concrete unblock: route navigation games (detected via derive_navigation_pair) to InducedNavWorldModel instead of the LLM induction, and feed its engine+is_level_complete to the live plan_in_model tier -- giving E3 a CORRECT model for nav games instead of the near-universally-wrong LLM one. This is the 'mechanic-class prior' direction the 2026-07-20 diagnosis \u00a76 flagged as highest-leverage.",
+  "honest_verdict": "complete_success_regression_fixed_and_structured_nav_model_planinmodel_reaches_tu93_levelup_live",
+  "duration_s": 8.8,
+  "reproducibility_checksum": "sha256:d885aefe2d23d427883081a95f73a02f14210d32bd4544ed3d70c95444e6cd65"
+}
