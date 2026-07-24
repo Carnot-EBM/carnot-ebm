@@ -14205,3 +14205,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 01:59 UTC | Dated evidence refresh after the V522 planner mark | OK | 88 passed, 2 warnings in 11.50s |
 | 2026-07-24 03:22 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: eas. I’m waiti |
 | 2026-07-24 04:44 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5865_adaptiv |
+| 2026-07-24 05:04 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5865_adaptiv |
+| 2026-07-24 05:06 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |
