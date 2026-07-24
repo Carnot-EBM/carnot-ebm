@@ -4036,6 +4036,26 @@ result here actually proves out.
   "goal covered" from "goal never present") and generic; gating at the confidence layer where the plan-start
   grid IS available is the clean, low-risk, fully-testable fix.
 
+### ARC score levers (2026-07-24, operator-directed from the strategy synthesis) — status
+Three levers approved from the "how top scoreboards win vs Carnot's measured bottleneck" synthesis. All
+code default-off (byte-identical live path unless flagged); offline-gated; NEVER auto-submitted.
+- **Lever #2 goal-exemplar grading** (REQ-ARC-WMTE-5593-4, commit ec4e58ccb): CODE DONE + unit-tested +
+  submitted-parity green. Closes GAP-ARCH-GOAL-NOT-VERIFIED by injecting the prior-level win-state grid as a
+  synthetic ground-truth positive so the (previously inert) goal-consistency veto fires at deepening
+  boundaries. Flag `CARNOT_ARC_GOAL_EXEMPLAR_GRADING`. OFFLINE A/B (bp35/lf52/sc25 E3 level-ups, GPU) PENDING.
+- **Lever #1 object-perception induction** (REQ-ARC-WMTE-5830, commit bf380e5df): CODE DONE + unit-tested.
+  `objects_block()` injects a connected-component object table (translation-invariant object_hash + containment
+  + adjacency) into the inducer prompt behind `CARNOT_ARC_OBJECT_PERCEPTION`. NB: also fixed a conductor
+  commit-race that had committed the injection line WITHOUT its two helper defs -> induce_prompt NameError'd on
+  every live call (a real regression; now guarded by test_induce_prompt_default_path_never_crashes). OFFLINE
+  heldout-accuracy A/B (induction diagnostic corpus, GPU) PENDING.
+- **Lever #3 exploration diversity** (`CARNOT_ARC_EXPLORE_DIVERSITY`): already shipped in the kernel;
+  RE-CONFIRMED 2026-07-24 via arc_compete_sim explorer A/B: ON efficiency-sum 2.2941 vs OFF 2.1168 (+0.177,
+  RHAE metric), no regression -> keep ON. HONEST: both arms now reach 5/11 first-win (the original
+  1/11->4/11 first-win gain has been absorbed by baseline explorer improvements since arc-008); the surviving
+  marginal value is efficiency, not new first-wins. Do NOT bundle InertClickSigPruner (its own A/B is neutral-
+  to-negative, keep default-off).
+
 ### Integration-safety sweep (iter16, 2026-07-24): the 5 outer-loop nav/hazard fixes are DOWNSTREAM-SAFE
 - Ran the CPU test files across the codebase that import the modules changed by the 5 overnight fixes
   (arc_nav_world_model, arc_executable_world_model, arc_hazard_pruner, arc_competition_agent). PASS:
