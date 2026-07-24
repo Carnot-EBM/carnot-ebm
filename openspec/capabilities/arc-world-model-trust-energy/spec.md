@@ -17379,3 +17379,120 @@ source/BFS/adapter/prior-game authority
 **Then** all required fields are present, `public_level_solve_claimed` is false,
 the verifier is declared non-oracle for policy credit, protected files remain
 unchanged, and the honest verdict makes no public level solve claim.
+
+### REQ-ARC-WMTE-5902: Structured Memory Live LLM A/B Gate
+
+Experiment 5902 SHALL run a preregistered, budget-matched,
+adapter-disabled live `E3AgentPolicy` A/B for no memory, raw agent-owned event
+tape, and structured evidence indexing on held-out measurement episodes. The
+experiment SHALL target held generalization only; all 25 public games are
+cleared, no public level solve may be targeted or headlined, and the registry
+SHALL NOT be updated.
+
+Before any model load or inference, Exp5902 SHALL run the registry precheck and
+replay Exp5901's structured-memory causal gate. It SHALL define `MODEL_SPECS`
+from current SOTA local GGUF inference with at least
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; it MAY include
+`unsloth/gemma-4-31B-it-GGUF` only when cache and budget permit and never as a
+replacement for the first two. Models SHALL be resolved through
+`cached_sota_pair()`, hash verified as concrete GGUF files, and tokenizer
+preflight SHALL use the embedded GGUF tokenizer rather than HuggingFace
+`AutoTokenizer`. The gate SHALL verify public llama-cpp CUDA support, two
+healthy RTX 3090 GPUs, VRAM/RAM/disk headroom, real offload/utilization
+receipts, output path writability, and protected workload safety. Any failure
+SHALL produce a terminal `blocked_precondition` artifact before inference.
+
+The preregistration SHALL freeze held episodes/groups, arm order
+counterbalancing, no-memory/raw/structured arms, seeds, action/token/
+wall-clock/query/byte budgets, prompts, decoding, state isolation, primary
+held-episode accuracy and efficiency metrics, safety metrics, and confidence
+thresholds before outcomes. The raw and structured arms SHALL consume identical
+agent-owned event bytes and identical proposal prompts/decoding; memory
+structure SHALL be the only treatment. Each cell SHALL instantiate a fresh
+adapter-disabled `E3AgentPolicy` and SHALL prohibit game source, offline BFS,
+per-game adapter, prior-game log, hidden state, registry trajectory, and
+per-game constants.
+
+If live inference clears the gate, Exp5902 SHALL measure environment
+score/progress, incidental levels completed, actions, invalid/no-op/repeated
+actions, tokens, latency, GPU receipts, query count, bytes, evidence
+utilization, and per-model/game/episode intervals. It SHALL also run
+structured-index shuffle and relevant-evidence deletion controls on a bounded
+confirmatory subset to connect live effects to Exp5901 causality. An incidental
+new solve remains non-headline and receives no registry credit unless an
+independent future task reproduces it with the same submitted live mechanism
+and credited live-agent provenance.
+
+Experiment 5902 SHALL write
+`results/experiment_5902_arc_structured_memory_live_ab.json` with bare
+top-level fields `status`, `preconditions_checked`,
+`upstream_gate_and_hashes`, `registry_precheck`,
+`public_level_solve_claimed`,
+`preregistered_episode_group_and_arm_design`, `model_specs`,
+`model_file_hashes`,
+`loader_cuda_gpu_utilization_and_vram_receipts`,
+`submitted_e3_and_adapter_disabled_receipts`,
+`identical_event_byte_and_budget_parity`,
+`no_memory_raw_and_structured_live_metrics`,
+`accuracy_efficiency_and_safety_metrics`,
+`per_model_game_episode_lower_bounds`,
+`shuffled_and_deletion_confirmatory_controls`,
+`evidence_utilization_receipts`,
+`source_bfs_adapter_prior_game_and_hidden_state_access_count`,
+`incidental_solve_receipts`, `protected_files_unchanged`,
+`structured_memory_live_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. `public_level_solve_claimed` SHALL be bare `false`.
+`identical_event_byte_and_budget_parity` SHALL prove memory structure is the
+only treatment. `source_bfs_adapter_prior_game_and_hidden_state_access_count`
+SHALL be bare zero for credited live evidence. `structured_memory_live_ready_score`
+SHALL be the bare scalar `1.0` only for positive preregistered
+structured-over-raw and structured-over-none lower bounds with no safety or
+budget regression. `inference_substrate` SHALL be `live_llm_inference`,
+`verifier_is_oracle` SHALL be `false`, and `honest_verdict` SHALL begin with
+`complete_positive:`, `complete_null:`, `unsafe:`,
+`blocked_precondition:`, or `blocked:`.
+
+Required field provenance principles SHALL include:
+
+- `public_level_solve_claimed`: principle "must be bare false because the experiment targets held generalization, not a cleared level."
+- `identical_event_byte_and_budget_parity`: principle "memory structure is the only treatment."
+- `source_bfs_adapter_prior_game_and_hidden_state_access_count`: principle "must be bare zero for credited live evidence."
+- `structured_memory_live_ready_score`: principle "bare 1.0 only for positive preregistered structured-over-raw and structured-over-none lower bounds with no safety or budget regression."
+- `inference_substrate`: principle "use live_llm_inference."
+- `verifier_is_oracle`: principle "false; policy memory consumes only visible agent-owned events."
+- `honest_verdict`: principle "use complete_positive:, complete_null:, unsafe:, blocked_precondition:, or blocked:."
+
+### SCENARIO-ARC-WMTE-5902-PRECONDITION-BLOCK
+
+**Given** the registry, Exp5901 gate, GGUF model cache, llama-cpp CUDA, dual
+RTX 3090 health, resource, output-path, and protected-workload checks
+**When** any required precondition fails before model load
+**Then** Exp5902 writes a complete blocked artifact with all required fields,
+zero live inference rows, no public solve claim, source/BFS/adapter/prior/
+hidden-state access count equal to zero, and an honest verdict beginning with
+`blocked_precondition:`.
+
+### SCENARIO-ARC-WMTE-5902-MATCHED-LIVE-AB
+
+**Given** all preconditions pass and the submitted `E3AgentPolicy` is created
+with adapters disabled for every model/game/episode/arm cell
+**When** no-memory, raw-tape, and structured-index arms run in the
+preregistered counterbalanced order
+**Then** prompts, decoding, action/token/wall-clock/query/byte budgets, and
+agent-owned event bytes are matched; the artifact reports held-episode
+accuracy, efficiency, safety, GPU, query-byte, evidence-utilization, and
+per-model/game/episode interval metrics without updating the registry.
+
+### SCENARIO-ARC-WMTE-5902-CAUSAL-CONTROLS
+
+**Given** the structured-index treatment has live evidence utilization on the
+bounded confirmatory subset
+**When** relevant evidence is deleted and structured links are shuffled under
+the same budgets
+**Then** relevant deletion reduces structured utility, shuffling does not
+preserve the live effect, safety and budget regressions are reported, and
+`structured_memory_live_ready_score` remains `0.0` unless both preregistered
+structured lower bounds are positive with clean safety and budget receipts.
