@@ -2720,6 +2720,23 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   the goal verifier (REQ-ARC-WMTE-5830) confirms progress via the level counter.** This closes the
   winner-matching investigation with a clear, measured redirect back to Carnot's search-based strength.
 
+- **E3 SEARCH A/B = ROBUST NULL 2026-07-23 (REQ-ARC-WMTE-5835,
+  `results/outer_loop_arc_e3_perception_target_ab_20260723.json`).** Executed the redirect: fed a
+  perception-derived target (nearest non-HUD object to the detected player, from a `perceive_entities` recon)
+  into Carnot's LLM-free tier-1 explorer as a player->target Manhattan value_head, routed (value_weight=1,
+  best_first, navigation_cost_tiebreak=False). A/B vs the default explorer, 8 games, scored by `run_game`.
+  Result: **0 discovery, both arms, all 8 -- robust across search mode (depth_first_ride vw3 also 0).** The
+  value_head engages (instrumented) but the player->target distance never decreases: the search does not
+  navigate the player to the target. So, combined with the greedy-direct null (5834): the perception fix is
+  validated (goal-framing 0->4/8) but NEITHER greedy-direct NOR value-head-routed search converts it to a
+  solved level out of the box. EXECUTION/NAVIGATION is a genuinely hard, separate problem. Likely unaddressed
+  factors (next investigation): (a) the recon target may not be the true exit (nearest-object heuristic);
+  (b) the state-space search may not find the navigation path within budget even with a correct target;
+  (c) the perception arm only applied to 3/8 games (player+target detected). This bounds the perception-fix
+  program honestly: it moved the wall from perception/goal-induction to execution/navigation, and the
+  execution wall is not cracked by routing toward a Manhattan target -- it needs a correct exit-target + a
+  search/movement model that provably reduces distance-to-goal.
+
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open
 - evidence: induce prompt fixes state as "HxW integer grid" (`arc_executable_world_model.py:276-292`); the
