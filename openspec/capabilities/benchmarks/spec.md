@@ -1726,6 +1726,94 @@ SCENARIO-BENCH-5786-BLOCKERS
 |---|---|---|
 | REQ-BENCH-5786 | Planned (`python/carnot/experiment_5786_sota_constraint_stream.py`, `results/experiment_5786_sota_constraint_stream.json`) | Planned (`tests/python/test_experiment_5786_sota_constraint_stream.py`) |
 
+### REQ-BENCH-5896: Typed ConstraintIR Exact Fixture
+
+Carnot MUST provide Exp5896 at
+`python/carnot/experiment_5896_typed_constraint_ir_fixture.py` and write
+`results/experiment_5896_typed_constraint_ir_fixture.json` plus
+`results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl`. The fixture
+SHALL define a minimal engine-neutral typed ConstraintIR schema with canonical
+nodes for entities, finite domains, facts, Horn implications, predicates,
+arithmetic relations, explicit negation, conjunction, and query goals. The
+schema SHALL be versioned, parser-checked, type-checked, and fail closed on
+unknown, ambiguous, unsupported, or ill-typed constructs.
+
+The generator SHALL compile every supported valid IR row to the deterministic
+Python finite-domain evaluator and the Z3 backend. If an optional Prolog
+backend is installed, the artifact SHALL record its applicability; otherwise it
+SHALL explicitly record that Prolog was not used. Whenever two exact backends
+apply, their query behavior and satisfiability labels SHALL agree before the
+row is accepted. Every row SHALL carry an exact certificate or counterexample,
+and fixture labels SHALL be replayed by executable behavior over the finite
+domain rather than by string equality, model judgment, or backend-specific
+prompt tuning.
+
+The row fixture SHALL contain at least three constraint families and include
+held templates, natural-language paraphrases, symbol renamings, order
+permutations, invalid IR, unsatisfiable IR, type errors, omitted constraints,
+and semantic-non-equivalence controls. Paraphrases, renamings, and order
+permutations of a single semantic problem SHALL share a group id and SHALL NOT
+cross train/dev/held-out boundaries. The benchmark SHALL run no LLM and SHALL
+keep the new path default-off.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`constraint_ir_schema_and_version`, `supported_and_rejected_fragments`,
+`parser_and_typecheck_receipts`, `backend_compiler_receipts`,
+`cross_backend_agreement`, `family_template_and_holdout_design`,
+`exact_semantic_equivalence_contract`,
+`invalid_unsat_and_nonequivalence_controls`,
+`split_and_group_leakage_receipts`,
+`label_certificate_and_balance_receipts`, `row_file_receipt`,
+`deterministic_replay_receipt`, `protected_files_unchanged`,
+`typed_constraint_ir_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles:
+
+- `constraint_ir_schema_and_version`: engine-neutral contract prevents backend-specific prompt tuning from defining success.
+- `exact_semantic_equivalence_contract`: executable behavior and certificates own equivalence.
+- `split_and_group_leakage_receipts`: paraphrases and renamings of one problem never cross held boundaries.
+- `typed_constraint_ir_fixture_ready_score`: emit bare 1.0 only for deterministic exact replay, backend agreement, and nontrivial held headroom.
+- `inference_substrate`: use `deterministic_exact_solver_labeled_dataset_no_llm`.
+- `verifier_is_oracle`: true for fixture labels/certificates and never a learned-verifier claim.
+- `honest_verdict`: use `ready:`, `complete_null:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5896-SCHEMA: Typed IR Rejects Ambiguous Constructs
+
+**Given** an Exp5896 ConstraintIR object with the declared schema version
+**When** the parser and typechecker inspect supported nodes, unknown fields,
+unsupported node kinds, ambiguous expressions, and wrong-domain arguments
+**Then** supported rows compile to typed IR receipts while invalid or ill-typed
+rows fail closed with deterministic parser/typecheck receipts.
+
+#### SCENARIO-BENCH-5896-CERTIFICATES: Exact Backends Own Labels
+
+**Given** a supported valid or unsatisfiable Exp5896 IR row
+**When** the Python finite-domain backend and Z3 backend replay the row
+**Then** their satisfiability, query bindings, certificates, or
+counterexamples agree exactly; any disagreement blocks
+`typed_constraint_ir_fixture_ready_score`.
+
+#### SCENARIO-BENCH-5896-LEAKAGE: Semantic Variants Stay Grouped
+
+**Given** canonical rows, paraphrases, symbol renamings, order permutations,
+held templates, omitted constraints, and semantic-non-equivalence controls
+**When** Exp5896 builds train/dev/held-out splits
+**Then** every semantic variant shares its group boundary, no group crosses a
+split, semantic equivalence is decided by finite-domain behavior plus replayed
+certificates, and held-out rows contain nontrivial valid and control examples.
+
+**Spec traces:** REQ-BENCH-5896, SCENARIO-BENCH-5896-SCHEMA,
+SCENARIO-BENCH-5896-CERTIFICATES, SCENARIO-BENCH-5896-LEAKAGE
+
+## Implementation Status (REQ-BENCH-5896)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5896 | Planned (`python/carnot/experiment_5896_typed_constraint_ir_fixture.py`, `results/experiment_5896_typed_constraint_ir_fixture.json`) | Planned (`tests/python/test_experiment_5896_typed_constraint_ir_fixture.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.

@@ -2432,5 +2432,18 @@
     ],
     "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.versioned_promotion_quarantine_rejection_rollback",
     "versioned_proposals_enabled": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.290844 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }

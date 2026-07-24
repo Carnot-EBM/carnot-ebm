@@ -1,120 +1,68 @@
-import numpy as np
-
-import numpy as np
-
 def engine(grid, action, data):
-    H, W = grid.shape
-    new_grid = grid.copy()
-    
-    if action == 2:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 0
-            new_grid[py, px-1] = 9
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 9
-        else:
-            new_grid[29, 33] = 0
-            new_grid[29, 34] = 9
-            new_grid[29, 35] = 9
-            new_grid[29, 36] = 9
-    elif action == 3:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 9
-            new_grid[py, px-1] = 4
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 9
-            new_grid[py, px-4] = 9
-            new_grid[py, px-5] = 9
-            new_grid[py, px-6] = 9
-        else:
-            new_grid[33, 27] = 9
-            new_grid[33, 28] = 4
-            new_grid[33, 29] = 9
-            new_grid[33, 30] = 9
-            new_grid[33, 31] = 9
-            new_grid[33, 32] = 9
-            new_grid[33, 33] = 9
-    elif action == 4:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 9
-            new_grid[py, px-1] = 9
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 4
-            new_grid[py, px-4] = 9
-            new_grid[py, px-5] = 9
-            new_grid[py, px-6] = 9
-        else:
-            new_grid[39, 21] = 9
-            new_grid[39, 22] = 9
-            new_grid[39, 23] = 9
-            new_grid[39, 24] = 4
-            new_grid[39, 25] = 9
-            new_grid[39, 26] = 9
-            new_grid[39, 27] = 9
-    elif action == 6:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 0
-            new_grid[py, px-1] = 9
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 9
-    elif action == 1:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 0
-            new_grid[py, px-1] = 9
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 9
-    elif action == 5:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 0
-            new_grid[py, px-1] = 9
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 9
-    elif action == 7:
-        if data is not None:
-            px, py = data['x'], data['y']
-            new_grid[py, px] = 0
-            new_grid[py, px-1] = 9
-            new_grid[py, px-2] = 9
-            new_grid[py, px-3] = 9
+    # action: 0=up, 1=down, 2=left, 3=right, 4=rotate
+    # grid: list of lists of ints (0=empty, 63=wall, 6=player)
+    # data: None or dict with 'level' key
+    # Returns: new grid after applying action
+    #
+    # Rules:
+    # - Player (6) moves one step in direction unless blocked by wall (63) or edge
+    # - Rotate (4) rotates player 90 degrees clockwise in place
+    # - Level complete when player reaches goal (1)
+    # - No other changes to grid
+    #
+    # Implementation:
+    # - Find player position
+    # - Apply movement or rotation based on action
+    # - Return new grid with updated player position
 
-    return new_grid
+    # Find player position
+    player_pos = None
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] == 6:
+                player_pos = (i, j)
+                break
+        if player_pos:
+            break
+
+    if player_pos is None:
+        return grid
+
+    # Apply action
+    if action == 4:  # Rotate
+        # Rotate player 90 degrees clockwise in place
+        # Since we don't have orientation in grid, we just keep player at same position
+        # The rotation is just for the player's internal state
+        # We don't need to change grid for rotation
+        return grid
+
+    elif action in [0, 1, 2, 3]:  # Move
+        i, j = player_pos
+        new_i, new_j = i, j
+
+        if action == 0:  # Up
+            new_i = i - 1
+        elif action == 1:  # Down
+            new_i = i + 1
+        elif action == 2:  # Left
+            new_j = j - 1
+        elif action == 3:  # Right
+            new_j = j + 1
+
+        # Check if move is valid
+        if 0 <= new_i < len(grid) and 0 <= new_j < len(grid[0]):
+            if grid[new_i][new_j] != 63:  # Not a wall
+                # Update grid
+                grid[i][j] = 0  # Clear old position
+                grid[new_i][new_j] = 6  # Set new position
+                return grid
+
+    return grid
 
 def is_level_complete(grid):
-    H, W = grid.shape
-    for r in range(H):
-        if r < 21:
-            if not np.all(grid[r] == 5):
-                return False
-        elif r < 24:
-            if not np.all(grid[r] == 5):
-                return False
-        elif r < 27:
-            if not np.all(grid[r] == 5):
-                return False
-        elif r < 30:
-            if not np.all(grid[r] == 5):
-                return False
-        elif r < 36:
-            if not np.all(grid[r] == 5):
-                return False
-        elif r < 48:
-            if not np.all(grid[r] == 5):
-                return False
-        elif r < 63:
-            if not np.all(grid[r] == 5):
-                return False
-        else:
-            if grid[r, 0] != 6:
-                return False
-    return True
-
-def is_level_complete(grid):
-    import numpy as np
-    g = np.array(grid)
-    return g[0, 0] == 1 and g[0, 1] == 1 and g[1, 0] == 1 and g[1, 1] == 1
+    # Check if player has reached goal (1)
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] == 1:
+                return True
+    return False
