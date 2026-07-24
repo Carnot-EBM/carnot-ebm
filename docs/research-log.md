@@ -6015,3 +6015,9 @@ The critical path for milestone .250:
 - theme: synthesis-only execution concentrated in the dated evidence refresh
 - key result: honest operational negative -- no compute-bound experiment was present, so GPU efficiency and concurrent-model runner engagement cannot be assessed; the dated evidence refresh is the only observed optimization target
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.524
+- exp_range: exp5896-exp5901 (only IDs present in the authoritative timing data; the complete milestone range is not available)
+- theme: compute-path GPU disengagement surfaced during a short, synthesis-heavy operational closeout
+- key result: honest operational negative -- the 2-minute three-family repair A/B and 1-minute live E3 structured-memory A/B led the compute tail while the available monitor showed both GPUs idle; causal phase timing and evidence of a concurrent multi-model DualGPURunner miss are unavailable
+- acceptance: 4/4 operational questions answered
