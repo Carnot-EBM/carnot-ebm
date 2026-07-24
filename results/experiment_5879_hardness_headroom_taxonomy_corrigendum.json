@@ -1,0 +1,967 @@
+{
+  "control_taxonomy": {
+    "all_features_assigned_once": true,
+    "assigned_feature_count": 17,
+    "class_overlap": [],
+    "classes": {
+      "excluded_label_proxy": [
+        "certificate_kind_as_label_proxy",
+        "expected_label",
+        "solver_result_label"
+      ],
+      "non_oracle_nuisance": [
+        "clause_count",
+        "clause_width",
+        "density",
+        "family_id",
+        "length",
+        "majority_control",
+        "n_vars",
+        "norm_abs_literal_sum",
+        "norm_literal_count",
+        "row_order",
+        "shuffled_label_control",
+        "variable_name_tokens"
+      ],
+      "oracle_derived_diagnostic": [
+        "certificate_checker_results",
+        "direct_solver_outputs",
+        "solver_conflicts",
+        "solver_decisions",
+        "solver_time"
+      ]
+    },
+    "excluded_label_proxy_features": [
+      "certificate_kind_as_label_proxy",
+      "expected_label",
+      "solver_result_label"
+    ],
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.control_taxonomy",
+    "taxonomy_hash": "sha256:220cb7d1db3dc26ffc90be39a901feeeee42d884ebda0fe3671b9690457cd55a",
+    "unique_assigned_feature_count": 17
+  },
+  "current_verifier_circularity_matrix": {
+    "all_exact_paths_marked_oracle": true,
+    "authority_matrix": {
+      "certificate_checker": {
+        "counts_as_oracle_distinct_headroom": false,
+        "verifier_is_oracle": true
+      },
+      "dpll_lex_false_first_v1": {
+        "counts_as_oracle_distinct_headroom": false,
+        "verifier_is_oracle": true
+      },
+      "dpll_occurrence_true_first_v1": {
+        "counts_as_oracle_distinct_headroom": false,
+        "verifier_is_oracle": true
+      }
+    },
+    "matrix_hash": "sha256:fc6903fb16ed0ecd886416ba6507c63f45d1cc8b876c6f904d53ecda74d7eb8b",
+    "non_oracle_nuisance_controls_are_oracle": false,
+    "oracle_accuracy_reduces_headroom": false,
+    "paths": {
+      "certificate_checker": {
+        "accuracy": 1.0,
+        "counts_as_oracle_distinct_headroom": false,
+        "executes_certificate_checker": true,
+        "executes_same_exact_solver": false,
+        "verifier_is_oracle": true
+      },
+      "dpll_lex_false_first_v1": {
+        "accuracy": 1.0,
+        "counts_as_oracle_distinct_headroom": false,
+        "executes_certificate_checker": false,
+        "executes_same_exact_solver": true,
+        "verifier_is_oracle": true
+      },
+      "dpll_occurrence_true_first_v1": {
+        "accuracy": 1.0,
+        "counts_as_oracle_distinct_headroom": false,
+        "executes_certificate_checker": false,
+        "executes_same_exact_solver": true,
+        "verifier_is_oracle": true
+      }
+    },
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.current_verifier_circularity_matrix"
+  },
+  "duration_s": 0.109919,
+  "experiment": 5879,
+  "experiment_id": "experiment_5879_hardness_headroom_taxonomy_corrigendum",
+  "field_provenance": {
+    "control_taxonomy": {
+      "principle": "every feature belongs to exactly one authority-aware class.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "hardness_surface_headroom_ready_score": {
+      "principle": "emit a bare scalar for structured gates.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "use `deterministic_control_audit_no_llm`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "non_oracle_nuisance_control_metrics": {
+      "principle": "only these metrics determine shortcut saturation.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "oracle_derived_diagnostic_metrics": {
+      "principle": "solver telemetry is useful context but circular for learned-energy credit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "saturation_and_skip_decision": {
+      "principle": "expensive downstream work must fail fast on leakage or failed checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "record a per-path authority matrix.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verification/spec.md",
+        "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+        "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+        "results/experiment_5869_hardness_surface_headroom_audit.json",
+        "python/carnot/experiment_5869_hardness_surface_headroom_audit.py",
+        "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
+      ]
+    }
+  },
+  "hardness_surface_headroom_ready_score": 1.0,
+  "held_model_and_constraint_plan": {
+    "constraint_cell_count": 84,
+    "example_cells": [
+      "expander_tseitin|large|canonical|satisfiable",
+      "expander_tseitin|large|canonical|unsatisfiable",
+      "expander_tseitin|large|clause_reorder|satisfiable",
+      "expander_tseitin|large|clause_reorder|unsatisfiable",
+      "expander_tseitin|large|density_mismatched|satisfiable",
+      "expander_tseitin|large|density_mismatched|unsatisfiable",
+      "expander_tseitin|large|length_matched|satisfiable",
+      "expander_tseitin|large|length_matched|unsatisfiable",
+      "expander_tseitin|large|no_information|satisfiable",
+      "expander_tseitin|large|no_information|unsatisfiable",
+      "expander_tseitin|large|padding|satisfiable",
+      "expander_tseitin|large|padding|unsatisfiable"
+    ],
+    "labels": [
+      "satisfiable",
+      "unsatisfiable"
+    ],
+    "nonempty_plan": true,
+    "plan_hash": "sha256:9e027a2ee74c86f0e149ae310cf42e727a2a09a570294dac6c38b1dad78bddb9",
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.held_model_and_constraint_plan",
+    "size_bins": [
+      "large",
+      "medium",
+      "small"
+    ],
+    "whole_constraint_holdouts": [
+      "canonical",
+      "clause_reorder",
+      "density_mismatched",
+      "length_matched",
+      "no_information",
+      "padding",
+      "variable_renaming"
+    ],
+    "whole_family_holdouts": [
+      "expander_tseitin",
+      "ladder_tseitin"
+    ]
+  },
+  "honest_verdict": "blocked: science_ready_but_unrelated_global_suite_debt",
+  "immutable_upstream_hashes": {
+    "all_present": true,
+    "hashes": {
+      "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+      "exp5868_rows": "sha256:f6b0c41dbe9c7c036047a700c358c1ce1f8c5b6ee87f102ecc1df02d24051f09",
+      "exp5868_summary": "sha256:bb8e645d5b8fdd2c057ded57ff6d2abf7a563e28e4a090bb2109f0f5eaef3bcc",
+      "exp5869_artifact": "sha256:ed15c408b807d8aa0426cc9d20b25541abdcc458b3d176b1c0891071ef7a1870",
+      "exp5869_module": "sha256:7caae24983f8f198dfde3a59782944fa1ffb49db40c5e11d36dc6ab6bddc0acd",
+      "exp5869_test": "sha256:3693a6c433e4feb2637d20a6a2467cc1b353ce2f61d2d2b0814753406c02ce98",
+      "exp5879_module": "sha256:6a34b2a74614fd6025397cee88bc8eb3d7cb24e6b468c5bb07fac8a3595184c6",
+      "exp5879_test": "sha256:334d775accc67420528c22d9c35a1059db8c3b658dcec5116ee166248febfaa2",
+      "research_conductor": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "verification_spec": "sha256:1e03d0fefced891894c19cf64a94f194dc9d6fa30e207bd563c61d7ee0b575b3",
+      "verify_dir_hash_root": "sha256:e062fed768f17e836a9f2ef99467dfcb17152bbcdb13ddd76c63e8cdf4295e0a",
+      "verify_registry": "sha256:2d0db39c84bb4ef08e4b1839770d6070836bcbb020c85e694d0e9654f3046f2a"
+    },
+    "immutable_artifacts_not_rewritten": true,
+    "protected_files": [
+      "scripts/research_conductor.py"
+    ],
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.immutable_upstream_hashes"
+  },
+  "independent_row_integrity_replay": {
+    "all_integrity_checks_passed": true,
+    "certificate_failure_count": 0,
+    "certificate_failures": [],
+    "control_counts": {
+      "canonical": 12,
+      "clause_reorder": 12,
+      "density_mismatched": 12,
+      "length_matched": 12,
+      "no_information": 12,
+      "padding": 12,
+      "variable_renaming": 12
+    },
+    "duplicate_row_id_count": 0,
+    "exact_label_disagreement_count": 0,
+    "exact_label_disagreements": [],
+    "label_counts": {
+      "satisfiable": 42,
+      "unsatisfiable": 42
+    },
+    "matching_tolerance_passed": true,
+    "matching_tolerance_receipt": {
+      "all_matching_passed": true,
+      "density_deltas": [
+        0.266667,
+        0.266667,
+        0.2051289999999999,
+        0.2051289999999999,
+        0.1666669999999999,
+        0.1666669999999999
+      ],
+      "density_tolerance": 0.45,
+      "length_tolerance_tokens": 0,
+      "max_clause_width": 3,
+      "max_clause_width_matched": true,
+      "max_density_delta": 0.266667,
+      "max_surface_token_delta": 0,
+      "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.density_width_and_length_matching",
+      "width_failures": []
+    },
+    "receipt_hash": "sha256:a32bfa4f72fe0b938e123a2850b7cd907eca920deb88de3ec9b32ae3c265f178",
+    "relabel_equivalence_failure_count": 0,
+    "relabel_equivalence_failures": [],
+    "row_count": 84,
+    "row_hash_mismatch_count": 0,
+    "row_hash_mismatches": [],
+    "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.independent_row_integrity_replay",
+    "solver_replay_disagreement_count": 0,
+    "solver_replay_disagreements": [],
+    "summary_row_hash_mismatch_count": 0,
+    "summary_row_hash_mismatches": []
+  },
+  "inference_substrate": "deterministic_control_audit_no_llm",
+  "leakage_safe_split_receipts": {
+    "all_splits_leakage_safe": true,
+    "control_fit_policy": "controls_evaluated_only_after_this_frozen_split_receipt",
+    "duplicate_semantic_instances_across_splits": [],
+    "family_holdout_splits": {
+      "holdout_expander_tseitin": {
+        "group_axis_intersections": {
+          "canonical_formula_hash": [],
+          "certificate_group": [],
+          "relabel_group": [],
+          "semantic_instance": []
+        },
+        "held_family": "expander_tseitin",
+        "leakage_safe": true,
+        "test_label_counts": {
+          "satisfiable": 21,
+          "unsatisfiable": 21
+        },
+        "test_row_count": 42,
+        "train_label_counts": {
+          "satisfiable": 21,
+          "unsatisfiable": 21
+        },
+        "train_row_count": 42
+      },
+      "holdout_ladder_tseitin": {
+        "group_axis_intersections": {
+          "canonical_formula_hash": [],
+          "certificate_group": [],
+          "relabel_group": [],
+          "semantic_instance": []
+        },
+        "held_family": "ladder_tseitin",
+        "leakage_safe": true,
+        "test_label_counts": {
+          "satisfiable": 21,
+          "unsatisfiable": 21
+        },
+        "test_row_count": 42,
+        "train_label_counts": {
+          "satisfiable": 21,
+          "unsatisfiable": 21
+        },
+        "train_row_count": 42
+      }
+    },
+    "instance_group_split": {
+      "group_axis_intersections": {
+        "canonical_formula_hash": [],
+        "certificate_group": [],
+        "relabel_group": [],
+        "semantic_instance": []
+      },
+      "leakage_safe": true,
+      "name": "small_medium_train_large_test",
+      "test_groups": [
+        "exp5868-expander_tseitin-large-satisfiable",
+        "exp5868-expander_tseitin-large-unsatisfiable",
+        "exp5868-ladder_tseitin-large-satisfiable",
+        "exp5868-ladder_tseitin-large-unsatisfiable"
+      ],
+      "test_label_counts": {
+        "satisfiable": 14,
+        "unsatisfiable": 14
+      },
+      "test_row_count": 28,
+      "train_groups": [
+        "exp5868-expander_tseitin-medium-satisfiable",
+        "exp5868-expander_tseitin-medium-unsatisfiable",
+        "exp5868-expander_tseitin-small-satisfiable",
+        "exp5868-expander_tseitin-small-unsatisfiable",
+        "exp5868-ladder_tseitin-medium-satisfiable",
+        "exp5868-ladder_tseitin-medium-unsatisfiable",
+        "exp5868-ladder_tseitin-small-satisfiable",
+        "exp5868-ladder_tseitin-small-unsatisfiable"
+      ],
+      "train_label_counts": {
+        "satisfiable": 28,
+        "unsatisfiable": 28
+      },
+      "train_row_count": 56
+    },
+    "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.leakage_safe_split_receipts",
+    "split_definition_hash": "sha256:c8e7b00e446886924b1abe86655f13e1537af751b4e92890a88c9476019e375e",
+    "split_seed": 5869001,
+    "splits_frozen_before_controls": true
+  },
+  "milestone": "2026.07.524",
+  "non_oracle_nuisance_control_metrics": {
+    "control_metrics": {
+      "clause_count": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "clause_count",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "clause_width": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "clause_width",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "density": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "density",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "family_id": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "family_id",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "length": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "length",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "majority_control": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "majority_label_from_train_split",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "n_vars": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "n_vars",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "norm_abs_literal_sum": {
+        "all_rows_auroc": 0.500283,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "norm_abs_literal_sum",
+        "orientation_free_auroc": 0.500283,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "norm_literal_count": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "norm_literal_count",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "row_order": {
+        "all_rows_auroc": 0.583333,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "row_order",
+        "orientation_free_auroc": 0.583333,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "shuffled_label_control": {
+        "all_rows_auroc": 0.52381,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "shuffled_labels_no_information_control",
+        "orientation_free_auroc": 0.52381,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      },
+      "variable_name_tokens": {
+        "all_rows_auroc": 0.5,
+        "authority_class": "non_oracle_nuisance",
+        "counts_for_shortcut_saturation": true,
+        "feature_source": "variable_name_tokens",
+        "orientation_free_auroc": 0.5,
+        "saturated": false,
+        "split_test_balanced_error_rate": 0.5,
+        "uses_exact_label_feature": false,
+        "verifier_is_oracle": false
+      }
+    },
+    "control_names": [
+      "clause_count",
+      "clause_width",
+      "density",
+      "family_id",
+      "length",
+      "majority_control",
+      "n_vars",
+      "norm_abs_literal_sum",
+      "norm_literal_count",
+      "row_order",
+      "shuffled_label_control",
+      "variable_name_tokens"
+    ],
+    "label_feature_used": false,
+    "max_non_oracle_nuisance_auroc": 0.583333,
+    "no_non_oracle_nuisance_control_exceeds_ceiling": true,
+    "principle": "only these metrics determine shortcut saturation.",
+    "receipt_hash": "sha256:6a966ae48e793a8e2d5016d8587899625f1a14a20a358151959823a5805bf72e",
+    "saturated_control_names": [],
+    "saturation_ceiling_auroc": 0.85,
+    "saturation_source": "non_oracle_nuisance_only",
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.non_oracle_nuisance_control_metrics"
+  },
+  "oracle_derived_diagnostic_metrics": {
+    "control_metrics": {
+      "certificate_checker_results": {
+        "all_rows_auroc": 1.0,
+        "authority_class": "oracle_derived_diagnostic",
+        "counts_as_learned_energy_win": false,
+        "diagnostic_saturated": true,
+        "feature_source": "certificate_checker",
+        "orientation_free_auroc": 1.0,
+        "reduces_oracle_distinct_headroom": false,
+        "split_test_balanced_error_rate": 0.0,
+        "verifier_is_oracle": true
+      },
+      "direct_solver_outputs": {
+        "all_rows_auroc": 1.0,
+        "authority_class": "oracle_derived_diagnostic",
+        "counts_as_learned_energy_win": false,
+        "diagnostic_saturated": true,
+        "feature_source": "solver_results.label",
+        "orientation_free_auroc": 1.0,
+        "reduces_oracle_distinct_headroom": false,
+        "split_test_balanced_error_rate": 0.0,
+        "verifier_is_oracle": true
+      },
+      "solver_conflicts": {
+        "all_rows_auroc": 1.0,
+        "authority_class": "oracle_derived_diagnostic",
+        "counts_as_learned_energy_win": false,
+        "diagnostic_saturated": true,
+        "feature_source": "solver_conflicts",
+        "orientation_free_auroc": 1.0,
+        "reduces_oracle_distinct_headroom": false,
+        "split_test_balanced_error_rate": 0.0,
+        "verifier_is_oracle": true
+      },
+      "solver_decisions": {
+        "all_rows_auroc": 1.0,
+        "authority_class": "oracle_derived_diagnostic",
+        "counts_as_learned_energy_win": false,
+        "diagnostic_saturated": true,
+        "feature_source": "solver_decisions",
+        "orientation_free_auroc": 1.0,
+        "reduces_oracle_distinct_headroom": false,
+        "split_test_balanced_error_rate": 0.0,
+        "verifier_is_oracle": true
+      },
+      "solver_time": {
+        "all_rows_auroc": 1.0,
+        "authority_class": "oracle_derived_diagnostic",
+        "counts_as_learned_energy_win": false,
+        "diagnostic_saturated": true,
+        "feature_source": "solver_time",
+        "orientation_free_auroc": 1.0,
+        "reduces_oracle_distinct_headroom": false,
+        "split_test_balanced_error_rate": 0.0,
+        "verifier_is_oracle": true
+      }
+    },
+    "control_names": [
+      "certificate_checker_results",
+      "direct_solver_outputs",
+      "solver_conflicts",
+      "solver_decisions",
+      "solver_time"
+    ],
+    "counts_as_learned_energy_win": false,
+    "diagnostic_only": true,
+    "max_oracle_derived_auroc": 1.0,
+    "principle": "solver telemetry is useful context but circular for learned-energy credit.",
+    "receipt_hash": "sha256:a52287457a528b2d8ff96961b58ac1de8915b8f215ee1887406e6f35a280426f",
+    "reduces_oracle_distinct_headroom": false,
+    "saturated_diagnostic_names": [
+      "certificate_checker_results",
+      "direct_solver_outputs",
+      "solver_conflicts",
+      "solver_decisions",
+      "solver_time"
+    ],
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.oracle_derived_diagnostic_metrics",
+    "verifier_is_oracle": true
+  },
+  "oracle_distinct_evaluation_design": {
+    "allowed_training_inputs": [
+      "frozen_train_rows_without_expected_label_as_feature",
+      "non-oracle_internal_state_features"
+    ],
+    "design_hash": "sha256:9b45959974c6cd219973330267d280bdbf112bd16d42c9a5b65bb72bc67c084d",
+    "exact_release_authority_separate": true,
+    "forbidden_inputs": [
+      "expected_label",
+      "solver_result_label",
+      "certificate_kind_as_label_proxy",
+      "exact_verifier_accuracy_as_headroom"
+    ],
+    "future_signal_source": "internal_state_or_learned_energy_score",
+    "held_constraint_design": [
+      "whole_family_holdout",
+      "whole_surface_control_holdout"
+    ],
+    "held_model_design": [
+      "held_local_model_internal_state_probe"
+    ],
+    "nonempty_held_model_and_constraint_design": true
+  },
+  "original_gate_reproduction": {
+    "historical_exp5869_artifact_sha256": "sha256:ed15c408b807d8aa0426cc9d20b25541abdcc458b3d176b1c0891071ef7a1870",
+    "historical_full_suite_exit_code": 2,
+    "historical_honest_verdict": "blocked: test_exit_codes",
+    "historical_status": "blocked",
+    "old_gate_conflated_oracle_telemetry_with_nuisance_features": true,
+    "recomputed_combined_no_trivial_control_exceeds_ceiling": false,
+    "recomputed_combined_saturated_controls": [
+      "solver_conflicts",
+      "solver_decisions",
+      "solver_time"
+    ],
+    "recomputed_max_all_trivial_control_auroc": 1.0,
+    "recomputed_max_non_oracle_control_auroc": 0.583333,
+    "recomputed_original_honest_verdict": "complete_null: trivial_or_solver_control_saturation=solver_conflicts,solver_decisions,solver_time",
+    "recomputed_original_status_with_owned_tests_assumed_zero": "complete_null",
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.original_gate_reproduction"
+  },
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "checks": {
+      "exp5879_code_hashes": true
+    },
+    "code_hashes": {
+      "adversarial_verify": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48",
+      "exp5869_module": "sha256:7caae24983f8f198dfde3a59782944fa1ffb49db40c5e11d36dc6ab6bddc0acd",
+      "exp5869_test": "sha256:3693a6c433e4feb2637d20a6a2467cc1b353ce2f61d2d2b0814753406c02ce98",
+      "exp5879_module": "sha256:6a34b2a74614fd6025397cee88bc8eb3d7cb24e6b468c5bb07fac8a3595184c6",
+      "exp5879_test": "sha256:334d775accc67420528c22d9c35a1059db8c3b658dcec5116ee166248febfaa2",
+      "verification_spec": "sha256:1e03d0fefced891894c19cf64a94f194dc9d6fa30e207bd563c61d7ee0b575b3"
+    },
+    "current_verifier_registry_config": {
+      "ok": true,
+      "registry_path": "ops/verifier_registry.yaml",
+      "registry_sha256": "sha256:2d0db39c84bb4ef08e4b1839770d6070836bcbb020c85e694d0e9654f3046f2a",
+      "verifier_file_count": 218,
+      "verifier_file_hash_root": "sha256:e062fed768f17e836a9f2ef99467dfcb17152bbcdb13ddd76c63e8cdf4295e0a",
+      "verify_dir": "python/carnot/verify"
+    },
+    "exact_solver_receipts": {
+      "exp5868_module_sha256": "sha256:9d64b48df41218de9d485f1096d19c947aca99696b03e50457c955dc1579ff4b",
+      "ok": true,
+      "python_version": "3.12.13",
+      "schema": "carnot.experiment_5868.hardness_controlled_constraint_fixture.v1.solver_versions",
+      "solver_configuration_count": 2,
+      "solvers": {
+        "dpll_lex_false_first_v1": {
+          "command": "internal:solve_cnf_dpll(config=dpll_lex_false_first_v1)",
+          "complete": true,
+          "version": "carnot_exact_dpll_lex_false_first_v1"
+        },
+        "dpll_occurrence_true_first_v1": {
+          "command": "internal:solve_cnf_dpll(config=dpll_occurrence_true_first_v1)",
+          "complete": true,
+          "version": "carnot_exact_dpll_occurrence_true_first_v1"
+        }
+      }
+    },
+    "output_paths": {
+      "atomic_checkpoint_suffix": ".tmp",
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json",
+      "result_writable": true,
+      "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.output_path_receipt"
+    },
+    "preconditions_ready": true,
+    "protected_file_hashes": {
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true,
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1169333,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 76749,
+        "ok": true,
+        "required_mb": 1024
+      }
+    },
+    "run_date": "20260724",
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.preconditions",
+    "seeds": {
+      "base_seed": 5869,
+      "shuffle_seed": 5869002,
+      "split_seed": 5869001,
+      "upstream_seed": 5868
+    },
+    "split_definition_hash": "sha256:c8e7b00e446886924b1abe86655f13e1537af751b4e92890a88c9476019e375e",
+    "split_definitions": {
+      "family_holdout_splits": {
+        "holdout_expander_tseitin": {
+          "held_family": "expander_tseitin",
+          "test_groups": [
+            "exp5868-expander_tseitin-large-satisfiable",
+            "exp5868-expander_tseitin-large-unsatisfiable",
+            "exp5868-expander_tseitin-medium-satisfiable",
+            "exp5868-expander_tseitin-medium-unsatisfiable",
+            "exp5868-expander_tseitin-small-satisfiable",
+            "exp5868-expander_tseitin-small-unsatisfiable"
+          ],
+          "train_groups": [
+            "exp5868-ladder_tseitin-large-satisfiable",
+            "exp5868-ladder_tseitin-large-unsatisfiable",
+            "exp5868-ladder_tseitin-medium-satisfiable",
+            "exp5868-ladder_tseitin-medium-unsatisfiable",
+            "exp5868-ladder_tseitin-small-satisfiable",
+            "exp5868-ladder_tseitin-small-unsatisfiable"
+          ]
+        },
+        "holdout_ladder_tseitin": {
+          "held_family": "ladder_tseitin",
+          "test_groups": [
+            "exp5868-ladder_tseitin-large-satisfiable",
+            "exp5868-ladder_tseitin-large-unsatisfiable",
+            "exp5868-ladder_tseitin-medium-satisfiable",
+            "exp5868-ladder_tseitin-medium-unsatisfiable",
+            "exp5868-ladder_tseitin-small-satisfiable",
+            "exp5868-ladder_tseitin-small-unsatisfiable"
+          ],
+          "train_groups": [
+            "exp5868-expander_tseitin-large-satisfiable",
+            "exp5868-expander_tseitin-large-unsatisfiable",
+            "exp5868-expander_tseitin-medium-satisfiable",
+            "exp5868-expander_tseitin-medium-unsatisfiable",
+            "exp5868-expander_tseitin-small-satisfiable",
+            "exp5868-expander_tseitin-small-unsatisfiable"
+          ]
+        }
+      },
+      "group_axes": [
+        "base_instance_id",
+        "canonical_formula_hash",
+        "proof_preserving_relabel_group",
+        "certificate_group",
+        "family_holdout"
+      ],
+      "instance_group_split": {
+        "name": "small_medium_train_large_test",
+        "test_groups": [
+          "exp5868-expander_tseitin-large-satisfiable",
+          "exp5868-expander_tseitin-large-unsatisfiable",
+          "exp5868-ladder_tseitin-large-satisfiable",
+          "exp5868-ladder_tseitin-large-unsatisfiable"
+        ],
+        "train_groups": [
+          "exp5868-expander_tseitin-medium-satisfiable",
+          "exp5868-expander_tseitin-medium-unsatisfiable",
+          "exp5868-expander_tseitin-small-satisfiable",
+          "exp5868-expander_tseitin-small-unsatisfiable",
+          "exp5868-ladder_tseitin-medium-satisfiable",
+          "exp5868-ladder_tseitin-medium-unsatisfiable",
+          "exp5868-ladder_tseitin-small-satisfiable",
+          "exp5868-ladder_tseitin-small-unsatisfiable"
+        ]
+      },
+      "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.frozen_splits",
+      "split_definition_hash": "sha256:c8e7b00e446886924b1abe86655f13e1537af751b4e92890a88c9476019e375e",
+      "split_seed": 5869001
+    },
+    "upstream_gate_receipt": {
+      "artifact_path": "results/experiment_5868_hardness_controlled_constraint_fixture.json",
+      "artifact_sha256": "sha256:bb8e645d5b8fdd2c057ded57ff6d2abf7a563e28e4a090bb2109f0f5eaef3bcc",
+      "row_count": 84,
+      "row_file_verified": true,
+      "rows_path": "results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl",
+      "rows_sha256": "sha256:f6b0c41dbe9c7c036047a700c358c1ce1f8c5b6ee87f102ecc1df02d24051f09",
+      "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.upstream_gate_receipt",
+      "test_exit_codes_all_zero": true,
+      "upstream_honest_verdict": "ready: hardness_controlled_exact_constraint_fixture_ready",
+      "upstream_ready": true,
+      "upstream_ready_score": 1.0,
+      "upstream_row_hash_root": "sha256:08cb22459718bc20219c657b23b0a6b23ed98ceac75d38a3488c3f9166c18a26"
+    }
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "changed_files": [],
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.protected_files_unchanged"
+  },
+  "relabel_and_certificate_stability": {
+    "all_group_controls_passed": true,
+    "certificate_group_count": 12,
+    "certificate_groups_cross_split": [],
+    "certificate_stability_rate": 1.0,
+    "relabel_group_count": 12,
+    "relabel_groups_cross_split": [],
+    "relabel_stability_rate": 1.0,
+    "rows_per_certificate_group": {
+      "exp5868-expander_tseitin-large-satisfiable|satisfying_assignment|sha256:cec51a6a361d4543bf6c259b3a266ca93d3227e0fb8b9c9a386e02616a700faa": 7,
+      "exp5868-expander_tseitin-large-unsatisfiable|tseitin_parity_contradiction|sha256:022cfcc9b7f51a438d81d4a07325c768a7f401477af44f3278bf064e340ebd2f": 7,
+      "exp5868-expander_tseitin-medium-satisfiable|satisfying_assignment|sha256:62b47aa9f0dd57130b8a9de84f8f6aab4dcf94d89ca26177eb67f615cf979a48": 7,
+      "exp5868-expander_tseitin-medium-unsatisfiable|tseitin_parity_contradiction|sha256:5ffec5320dc786b8d6d2fa7e276a22c01c18ab448ebdbf711b62c2404356a3d0": 7,
+      "exp5868-expander_tseitin-small-satisfiable|satisfying_assignment|sha256:78130ba9b913743b42f4aa3e6bdb46baf6afc4b75dc329664a700a1441457b3f": 7,
+      "exp5868-expander_tseitin-small-unsatisfiable|tseitin_parity_contradiction|sha256:d8335590265482cd2c343e1e4512041f92dc9a773a13a84d6c76833c13262ef3": 7,
+      "exp5868-ladder_tseitin-large-satisfiable|satisfying_assignment|sha256:5b1b408fe8f7d0a566cfd0c2172bd1df8523802fb246d3765f3bdcfd2d9b2bf3": 7,
+      "exp5868-ladder_tseitin-large-unsatisfiable|tseitin_parity_contradiction|sha256:6df58ba6fdbf0f287bf29fa2e0a9a652a89798b22d621dfea94c0827efb086aa": 7,
+      "exp5868-ladder_tseitin-medium-satisfiable|satisfying_assignment|sha256:166ccb2d7986b324c850ab74da8a1777148733b8552d1cf86e477f7fb472163e": 7,
+      "exp5868-ladder_tseitin-medium-unsatisfiable|tseitin_parity_contradiction|sha256:1746509d5586592516c13a77fba1b9af0a4348efb36a5c734dc22113e78276f3": 7,
+      "exp5868-ladder_tseitin-small-satisfiable|satisfying_assignment|sha256:81b7d63508f001322fb81227ae714570149ef74b472791602c4295bd4861f435": 7,
+      "exp5868-ladder_tseitin-small-unsatisfiable|tseitin_parity_contradiction|sha256:9b1c7200e17c599cbe5fb66f5121708af991df4b30c758c2820e04f1488d4416": 7
+    },
+    "rows_per_relabel_group": {
+      "exp5868-expander_tseitin-large-satisfiable": 7,
+      "exp5868-expander_tseitin-large-unsatisfiable": 7,
+      "exp5868-expander_tseitin-medium-satisfiable": 7,
+      "exp5868-expander_tseitin-medium-unsatisfiable": 7,
+      "exp5868-expander_tseitin-small-satisfiable": 7,
+      "exp5868-expander_tseitin-small-unsatisfiable": 7,
+      "exp5868-ladder_tseitin-large-satisfiable": 7,
+      "exp5868-ladder_tseitin-large-unsatisfiable": 7,
+      "exp5868-ladder_tseitin-medium-satisfiable": 7,
+      "exp5868-ladder_tseitin-medium-unsatisfiable": 7,
+      "exp5868-ladder_tseitin-small-satisfiable": 7,
+      "exp5868-ladder_tseitin-small-unsatisfiable": 7
+    },
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.relabel_and_certificate_stability",
+    "stability_hash": "sha256:25d8edc1132523e1aac4661f6fc658baae87fd3f6452e3484c0e752af8b62c31"
+  },
+  "reproducibility_checksum": "sha256:c4e49e63dbff3e1b1aaf04b2c693ad4694ed7e6bb84f7fdf8074a65816b77002",
+  "run_date": "20260724",
+  "saturation_and_skip_decision": {
+    "gate_receipts": {
+      "group_safe_splits": true,
+      "held_model_and_constraint_plan": true,
+      "label_feature_absent": true,
+      "non_oracle_nuisance_below_ceiling": true,
+      "relabel_and_certificate_stability": true,
+      "row_integrity": true
+    },
+    "hardness_surface_headroom_ready_score": 1.0,
+    "no_non_oracle_nuisance_control_exceeds_ceiling": true,
+    "principle": "expensive downstream work must fail fast on leakage or failed checks.",
+    "saturated_non_oracle_control_names": [],
+    "saturation_ceiling_auroc": 0.85,
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.saturation_and_skip_decision",
+    "skip_model_extraction_for_science": false,
+    "skip_reason": ""
+  },
+  "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1",
+  "status": "blocked",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py -m pytest tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_debt_classification": {
+    "blocks_terminal_ready_status": true,
+    "classification": "unrelated_global_suite_debt",
+    "failed_commands": {
+      ".venv/bin/pytest tests/python -q": 2
+    },
+    "full_suite_command": ".venv/bin/pytest tests/python -q",
+    "full_suite_exit_code": 2,
+    "owned_checks_passed": true,
+    "owned_commands": [
+      ".venv/bin/pytest tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py -m pytest tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py --fail-under=100",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+    ],
+    "owned_failed_commands": {},
+    "schema": "carnot.experiment_5879.hardness_headroom_taxonomy_corrigendum.v1.test_debt_classification",
+    "science_matrix_ready": true,
+    "unrelated_global_suite_debt": true
+  },
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py -m pytest tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0
+  },
+  "verifier_is_oracle": true
+}
