@@ -3928,3 +3928,36 @@ result here actually proves out.
   ('col',(1,0)):56}` confirms tu93 L3 has BOTH row- and col-facing chargers, so the per-axis LOS path is
   genuinely exercised on the real game. All 28 existing nav+hazard tests pass; new regression test
   `tests/python/test_arc_nav_world_model.py::test_omni_los_uses_per_charger_facing_axis_not_fitted_axis`.
+
+### GAP-ARC-HAZARD-FACING-WRONG-MARKER: FIXED (REQ-ARC-WMTE-5881) — status: filled (HazardAwareNavWorldModel._charger_facing nearest-marker + centered=None)
+- Found by an outer-loop synthetic probe (iter8, 2026-07-24) of `_charger_facing` (reads a charger's facing
+  from its centre-marker offset; consumed by omni-mode `is_lethal`). Two edge-case bugs:
+  (a1) it took `near[0]` (row-major-FIRST marker in the +-4 window), so with two chargers close together a
+  NEIGHBOUR's marker could be picked and this charger's facing INVERTED -> wrong lethality side. (a2) a marker
+  sitting essentially ON the blob centre (zero offset) returned a spurious definite facing instead of None.
+- Concrete counterexample (verified): charger A (marker below -> faces down) with a neighbour marker at
+  row-major-first position returned facing (-1,0) up (should be (1,0) down); a centered marker returned (0,-1)
+  (should be None).
+- Fix: pick the marker NEAREST the charger's blob centre (Manhattan), and return None when the offset is
+  < 0.5 cell on both axes (unknown facing -> is_lethal's both-axis fallback). Verified: counterexamples now
+  correct; tu93 L3 calibration stays CLEAN (FN=0 FP=0 win_path_pruned=0, unchanged -- its chargers are far
+  enough apart that nearest==first there); 30 nav+hazard tests pass; new regression test
+  `test_charger_facing_picks_nearest_marker_and_handles_centered`.
+
+### GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: OPEN (priority: medium) — deferred from iter8 for a careful cycle
+- Found same probe (iter8): `InducedNavWorldModel.fit`'s avatar-by-co-translation step absorbed an
+  INDEPENDENTLY-moving decoy object into the avatar set. A decoy that translates a fixed direction each step
+  co-shifts with the real avatar's anchor on the subset of moves where directions align (~25% for a random
+  walk), and the current `agree >= 2` (absolute count) threshold is satisfied by those coincidental matches.
+- Missing discriminator: a TRUE rigid avatar component (e.g. tu93's colour-4 centre inside the colour-9 body)
+  co-shifts with the anchor in a HIGH FRACTION of the anchor's move transitions (~1.0), whereas a coincidental
+  co-mover matches only the aligned subset. Candidate fix: require the co-shift agreement to be a majority of
+  the anchor's shift-transitions (a RATE threshold, e.g. >= 0.5), not just an absolute count >= 2.
+- Why deferred (not fixed this cycle): the change touches the CORE co-translation logic that tu93's multi-
+  colour {9,4} avatar recovery depends on; it needs the tu93 fit-recovery ({9,4}) AND the tu93 3/3 solve as
+  regression checks, plus care that a legitimately-occluded avatar component isn't dropped. A separate,
+  careful cycle -- not bundled with the contained _charger_facing fix.
+- Scope note: partly mitigated in practice by `is_confident_nav` (games with autonomous movers are often
+  correctly gated off the pure-nav path), and the single autonomous mover the model DOES handle (the charger)
+  is covered by HazardAwareNavWorldModel -- so a corrupted avatar fit on a decoy-bearing game most likely
+  results in a (correct) non-fire rather than a wrong plan. Still worth hardening for robustness.

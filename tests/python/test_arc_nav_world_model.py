@@ -247,3 +247,33 @@ def test_omni_los_uses_per_charger_facing_axis_not_fitted_axis():
     # UP move ends the avatar on the charger's column, in range: lethal WITHOUT the wall, SAFE WITH it
     assert m.is_lethal(grid(False), 1) is True
     assert m.is_lethal(grid(True), 1) is False
+
+
+def test_charger_facing_picks_nearest_marker_and_handles_centered():
+    """REQ-ARC-WMTE-5881: _charger_facing must read THIS charger's OWN marker (nearest to its blob centre),
+    not the row-major-first marker in the +-4 window -- otherwise, with two chargers close together, a
+    neighbour's marker inverts this charger's facing. And a marker sitting essentially ON the centre carries
+    no directional signal -> return None (unknown), so is_lethal falls back to both-axis rather than a
+    spurious definite facing."""
+    from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+    BG_, AV_, WALL_, HZ_, CTR_, GOAL_ = 5, 9, 3, 8, 15, 14
+    m = HazardAwareNavWorldModel(
+        displacement={1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)}, avatar_colors=frozenset({AV_}),
+        bg_color=BG_, floor_color=BG_, wall_colors=frozenset({WALL_}), goal_color=GOAL_,
+        hazard_colors=frozenset({HZ_, CTR_}), hazard_center_color=CTR_, hazard_axis="row",
+        charge_range=4, lethal_mode="omni", align_tol=1,
+    )
+    # Charger A body at (10,10) with its marker BELOW -> faces DOWN. A NEIGHBOUR charger's marker sits at
+    # (8,10), which is inside A's +-4 window AND row-major-first. A's facing must still read DOWN (1,0).
+    g = np.full((20, 20), BG_, dtype=int)
+    g[10, 10] = HZ_
+    g[11, 10] = CTR_  # A's own marker, below A -> faces down
+    g[8, 12] = HZ_
+    g[8, 10] = CTR_   # neighbour marker, row-major-first, would invert to (-1,0) if wrongly picked
+    assert m._charger_facing(g, 10, 10) == (1, 0)
+    # Centered marker (marker exactly on the blob centroid) -> None (unknown facing)
+    g2 = np.full((12, 12), BG_, dtype=int)
+    g2[5, 5] = HZ_
+    g2[5, 7] = HZ_
+    g2[5, 6] = CTR_  # 3-cell blob centroid (5,6); marker at (5,6) -> zero offset
+    assert m._charger_facing(g2, 5, 6) is None

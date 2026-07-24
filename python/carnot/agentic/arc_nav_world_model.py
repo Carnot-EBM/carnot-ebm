@@ -595,8 +595,16 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
         near = [(int(y), int(x)) for y, x in zip(ys, xs) if abs(y - hy) <= 4 and abs(x - hx) <= 4]
         if not near:
             return None
-        my, mx = near[0]
+        # Pick the marker NEAREST this charger's blob centre. With multiple chargers close together several
+        # markers can fall in the +-4 window, and row-major-first (near[0]) can grab a DIFFERENT charger's
+        # marker -> this charger's facing gets inverted/wrong -> is_lethal checks the wrong side (REQ-ARC-WMTE-
+        # 5881). Nearest-by-Manhattan is correct when one marker belongs to this charger and is closest to it.
+        my, mx = min(near, key=lambda p: abs(p[0] - hy) + abs(p[1] - hx))
         ody, odx = my - hy, mx - hx
+        if abs(ody) < 0.5 and abs(odx) < 0.5:
+            # marker sits essentially ON the blob centre -> no directional offset to read; return "unknown"
+            # so is_lethal's f-is-None fallback (both-axis) applies rather than a spurious definite facing.
+            return None
         if abs(odx) >= abs(ody):
             return (0, 1 if odx > 0 else -1)  # faces along the row (horizontal charger)
         return (1 if ody > 0 else -1, 0)  # faces along the column (vertical charger)
