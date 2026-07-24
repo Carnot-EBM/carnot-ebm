@@ -17299,3 +17299,83 @@ the structured rank interface, and records an action result
 **Then** the memory records only live agent-owned evidence, both raw and
 structured query arms are exercised, no adapter/source/BFS/prior-game authority
 is used, and no public level solve is claimed or targeted.
+
+### REQ-ARC-WMTE-5901: Structured Memory Causal Retrieval Audit
+
+Experiment 5901 SHALL run a deterministic, no-LLM causal audit over Exp5900's
+agent-owned structured evidence memory contract before any expensive live LLM
+evaluation. The audit SHALL compare no-memory, chronological raw-tape, and
+structured-index access arms over identical retained event bytes. The arms SHALL
+share frozen query definitions, answer keys derived only from agent-owned event
+payloads/provenance/uncertainty, seeds, per-query event/byte budgets, and output
+path. It SHALL replay Exp5900's registry and authority gate, hash code, event
+fixtures, identical-byte receipts, query definitions, seeds, budgets, output
+path, disk/RAM, and protected files, and SHALL assert that no level solve target
+is selected.
+
+The audit SHALL measure exact retrieval fidelity for temporal,
+object/spatial, action-effect, uncertainty, and provenance evidence questions.
+It SHALL run paired interventions that delete causally relevant indexed
+evidence, delete matched irrelevant evidence, shuffle index links, inject stale
+evidence, grow irrelevant tape, restart from serialized bounded state, and
+enforce query/byte/latency budgets. In every paired raw/structured cell the raw
+tape and structured index SHALL cite identical event byte hashes; the treatment
+is access structure, not extra context.
+
+Experiment 5901 SHALL write
+`results/experiment_5901_arc_structured_memory_causal_audit.json` with bare
+top-level fields `status`, `preconditions_checked`,
+`upstream_gate_and_hashes`, `registry_precheck`,
+`frozen_query_intervention_and_budget_design`,
+`identical_event_byte_receipts`,
+`no_memory_raw_and_structured_metrics`,
+`exact_retrieval_fidelity_by_evidence_type`,
+`relevant_and_irrelevant_deletion_effects`,
+`shuffled_stale_growth_restart_controls`,
+`false_retrieval_and_eviction_loss`, `query_byte_latency_accounting`,
+`group_bootstrap_lower_bounds`, `provenance_and_oracle_boundary`,
+`public_level_solve_claimed`, `protected_files_unchanged`,
+`structured_memory_causal_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. `relevant_and_irrelevant_deletion_effects` SHALL require
+causal evidence use rather than correlation with more context.
+`identical_event_byte_receipts` SHALL prove raw and structured arms differ only
+in access structure. `structured_memory_causal_ready_score` SHALL be the bare
+scalar `1.0` only when exact structured retrieval, a positive structured-over
+budget-matched-raw lower bound, relevant-deletion utility, and zero
+authority/budget violations all hold. `inference_substrate` SHALL be
+`offline_arcade_live_agent_runtime_self_discovery_no_llm`, `verifier_is_oracle`
+SHALL be `false`, and `honest_verdict` SHALL begin with `complete_positive:`,
+`complete_null:`, `unsafe:`, or `blocked:`.
+
+### SCENARIO-ARC-WMTE-5901-IDENTICAL-BYTE-RETRIEVAL
+
+**Given** frozen temporal, object/spatial, action-effect, uncertainty, and
+provenance queries over agent-owned event bytes
+**When** no-memory, raw-tape, and structured-index access arms answer those
+queries under the same event and byte budget
+**Then** the structured arm retrieves the event-derived answer keys exactly,
+the budget-matched raw arm cannot explain the benefit by scanning more bytes or
+using more queries, and every paired raw/structured query reports identical
+underlying tape and event hashes.
+
+### SCENARIO-ARC-WMTE-5901-CAUSAL-CONTROLS
+
+**Given** the structured index has retrieved the causally relevant event bytes
+**When** the audit deletes relevant evidence, deletes matched irrelevant
+evidence, shuffles index links, injects stale evidence, grows irrelevant tape,
+and restarts from serialized bounded state
+**Then** relevant deletion reduces structured utility, irrelevant deletion does
+not produce the same effect, shuffled/stale/growth controls do not create false
+retrieval, restart reproduces bounded state hashes, and eviction loss is
+reported explicitly.
+
+### SCENARIO-ARC-WMTE-5901-ARTIFACT-BOUNDARY
+
+**Given** the deterministic audit has completed without invoking an LLM or any
+source/BFS/adapter/prior-game authority
+**When** the Exp5901 artifact is written
+**Then** all required fields are present, `public_level_solve_claimed` is false,
+the verifier is declared non-oracle for policy credit, protected files remain
+unchanged, and the honest verdict makes no public level solve claim.
