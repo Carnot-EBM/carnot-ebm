@@ -18,6 +18,7 @@ from typing import Any, Callable, Mapping, Sequence
 import numpy as np
 
 from carnot.agentic.arc_executable_world_model import (
+    Transition,
     WorldModelVerifier,
     score_goal_predicate_consistency,
 )
@@ -673,6 +674,7 @@ def execute_bounded_llm_reinduction(
     enable_factored_planner: bool = False,
     factored_trust_threshold: float = 0.75,
     structural_goal_provider: Callable[[np.ndarray], Any] | None = None,
+    goal_exemplar_grading: bool = False,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -872,7 +874,28 @@ def execute_bounded_llm_reinduction(
                 # (CLAUDE.md FALSE_NEGATIVE_RISK discipline) -- an all-no-op window makes
                 # ANY predicate, including a constant-False stub, score a trivial 1.0, so a
                 # veto there would be judging the predicate on uninformative data.
-                consistency = score_goal_predicate_consistency(selected_goal, list(transitions))
+                # LEVER #2 (REQ-ARC-WMTE-5593-4, default-off via goal_exemplar_grading): the veto above
+                # only fires when the window has a real level-up, but the toward-NEXT-level window has
+                # zero (the episode-transition-start reset at each level boundary,
+                # arc_competition_agent.py) -> the goal veto is structurally INERT exactly when it is
+                # needed (a correct-dynamics / WRONG-win-predicate model at a deepening boundary is still
+                # trusted -> GAP-ARCH-GOAL-NOT-VERIFIED). Fix (exp4020 insight): inject the already-captured
+                # PRIOR-LEVEL win-state grid as one synthetic ground-truth POSITIVE so n_real_levelups>=1
+                # and the induced is_level_complete must return True on a real win state (catches the
+                # false-negative predicate) while still returning False on the real no-level-up window
+                # (catches the too-loose predicate). Oracle-distinct: the predicate never reads the level
+                # counter; the exemplar is a grid the agent itself banked live.
+                consistency_window = list(transitions)
+                if goal_exemplar_grading and previous_level_complete_grid is not None:
+                    _exemplar = np.asarray(previous_level_complete_grid)
+                    consistency_window = [
+                        Transition(
+                            grid=_exemplar, action=0, data=None, next_grid=_exemplar,
+                            level_before=0, level_after=1,
+                        ),
+                        *consistency_window,
+                    ]
+                consistency = score_goal_predicate_consistency(selected_goal, consistency_window)
                 row["goal_predicate_consistency_accuracy"] = round(float(consistency.accuracy), 6)
                 row["goal_predicate_consistency_n_real_levelups"] = int(consistency.n_real_levelups)
                 if (
