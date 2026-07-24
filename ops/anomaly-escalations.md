@@ -1194,3 +1194,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['perception-overclaim'] on a non-negative verdict
 - artifact: results/outer_loop_arc_generic_navigation_solve_20260723.json
+
+## experiment_5902_arc_structured_memory_live_ab.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_5902_arc_structured_memory_live_ab.json

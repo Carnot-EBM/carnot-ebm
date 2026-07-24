@@ -1,0 +1,1787 @@
+{
+  "activated_task_and_declared_deliverable_matrix": {
+    "exp5890-transition-v524": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 2,
+        "latest_line": "| 2026-07-24 13:47 UTC | Exact terminal-boundary handoff from .523 into .52 | OK | 88 passed, 1 warning in 13.07s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5890_transition_v524.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5890_transition_v524.json",
+      "gated_on": [],
+      "honest_verdict": "complete: archived terminal .523 identities by exact declared deliverables into .524; Exp5879 retirement and science-ready scalar, Exp5880/Exp5882 missing deliverables, Exp5881 gate block, no-delta, and verifier-warn outcomes preserved; next_range_collision_count=0",
+      "identity": [
+        "2026.07.524",
+        "exp5890-transition-v524",
+        "results/experiment_5890_transition_v524.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:45658f639678a15411265e55f711e66eca27c4e6fde385ec7be890cdd278c4ab",
+      "status": "complete",
+      "task_id": "exp5890-transition-v524",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Exact terminal-boundary handoff from .523 into .524"
+    },
+    "exp5891-v524-source-delta-ingestion": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 16:02 UTC | Dated evidence refresh after the V524 planner mark | OK | 89 passed, 2 warnings in 15.89s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5891_v524_source_delta_ingestion.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5891_v524_source_delta_ingestion.json",
+      "gated_on": [],
+      "honest_verdict": "complete: no accepted post-V524 source deltas; ledgers unchanged",
+      "identity": [
+        "2026.07.524",
+        "exp5891-v524-source-delta-ingestion",
+        "results/experiment_5891_v524_source_delta_ingestion.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:85da3f28d41efd119d34b83b2b388f1ac8815ebd54bdc8736412592ae7b81813",
+      "status": "complete",
+      "task_id": "exp5891-v524-source-delta-ingestion",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Dated evidence refresh after the V524 planner marker"
+    },
+    "exp5892-headroom-evidence-escrow": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 17:07 UTC | Immutable hardness-headroom evidence escrow and cl | OK | 86 passed, 1 warning in 17.10s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5892_headroom_evidence_escrow.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5892_headroom_evidence_escrow.json",
+      "gated_on": [],
+      "honest_verdict": "complete_ready: headroom_evidence_escrow_admitted",
+      "identity": [
+        "2026.07.524",
+        "exp5892-headroom-evidence-escrow",
+        "results/experiment_5892_headroom_evidence_escrow.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This task does not rerun or mutate Exp5869; it escrows immutable rows and recomputes only admission predicates with exact owned-check and unrelated-debt attribution.",
+          "experiment_id": "exp5869-hardness-surface-headroom-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked: test_exit_codes"
+        },
+        {
+          "addressed_by": "Exp5879's science-ready scalar was stranded inside a retired producer artifact; Exp5892 is a new immutable evidence-admission contract with terminal freshness, owned checks, and exact node/path debt isolation.",
+          "experiment_id": "exp5879-hardness-headroom-taxonomy-corrigendum",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked: science_ready_but_unrelated_global_suite_debt"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:4cb962ddc8037ee526fb1d3685d3db49a30f6fa07895b26dd664d4a47598a6e4",
+      "status": "complete_ready",
+      "task_id": "exp5892-headroom-evidence-escrow",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Immutable hardness-headroom evidence escrow and clean admission"
+    },
+    "exp5893-grounding-shortcut-fixture": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 17:27 UTC | Gated on Exp5892 admission: exact grounding-shortc | OK | 87 passed, 1 warning in 16.09s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5893_grounding_shortcut_fixture.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5893_grounding_shortcut_fixture.json",
+      "gated_on": [
+        {
+          "artifact_field": "headroom_admission_ready_score",
+          "op": "==",
+          "upstream": "exp5892-headroom-evidence-escrow",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "ready: grounding_shortcut_exact_fixture_ready",
+      "identity": [
+        "2026.07.524",
+        "exp5893-grounding-shortcut-fixture",
+        "results/experiment_5893_grounding_shortcut_fixture.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp5880 never emitted a deliverable because it depended on retired Exp5879; Exp5893 depends on the changed clean Exp5892 evidence-escrow artifact.",
+          "experiment_id": "exp5880-grounding-shortcut-fixture",
+          "retire_if_same_verdict": true,
+          "verdict": "preemptive_skip_upstream_retired"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+      "status": "ready",
+      "task_id": "exp5893-grounding-shortcut-fixture",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5892 admission: exact grounding-shortcut fixture"
+    },
+    "exp5894-one-to-one-grounding-ab": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 17:51 UTC | Gated on Exp5893 fixture: one-to-one atom-groundin | OK | 87 passed, 1 warning in 13.93s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5894_one_to_one_grounding_ab.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5894_one_to_one_grounding_ab.json",
+      "gated_on": [
+        {
+          "artifact_field": "grounding_shortcut_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp5893-grounding-shortcut-fixture",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accepts",
+      "identity": [
+        "2026.07.524",
+        "exp5894-one-to-one-grounding-ab",
+        "results/experiment_5894_one_to_one_grounding_ab.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This task excludes KAN rendering and tests the distinct one-to-one logical-atom grounding mechanism on an exact shortcut fixture.",
+          "experiment_id": "exp5749-csl-render-matched-mechanism-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: kan_mechanism_residual_negative_fr11_safety_retained"
+        },
+        {
+          "addressed_by": "Exp5773 depended on an unready stream; Exp5894 is gated by a deterministic exact fixture with independent semantic and constraint labels.",
+          "experiment_id": "exp5773-prospective-constraint-acquisition-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp5881 was gate-blocked by an absent fixture; Exp5894 has a changed non-retired Exp5892-to-Exp5893 prerequisite chain.",
+          "experiment_id": "exp5881-one-to-one-grounding-acquisition-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+      "status": "complete_positive",
+      "task_id": "exp5894-one-to-one-grounding-ab",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5893 fixture: one-to-one atom-grounding acquisition A/B"
+    },
+    "exp5895-shortcut-safe-continuous-self-learning": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 2,
+        "latest_line": "| 2026-07-24 19:32 UTC | Gated on Exp5894 mechanism: prospective shortcut-s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+        "latest_status": "FLAGGED"
+      },
+      "declared_deliverable": "results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+      "gated_on": [
+        {
+          "artifact_field": "one_to_one_grounding_ready_score",
+          "op": "==",
+          "upstream": "exp5894-one-to-one-grounding-ab",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "complete_null: shortcut_safe_csl_not_promotion_eligible",
+      "identity": [
+        "2026.07.524",
+        "exp5895-shortcut-safe-continuous-self-learning",
+        "results/experiment_5895_shortcut_safe_continuous_self_learning.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp5750 depended on a negative KAN residual; this task uses a qualified non-KAN grounding mechanism and validated versioned external state.",
+          "experiment_id": "exp5750-dependent-task-continuous-self-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp5787 lacked a qualified stream; this task is gated by exact shortcut rows and a positive grounding artifact.",
+          "experiment_id": "exp5787-validation-gated-constraint-skill-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp5867 depended on a retired adaptive-kernel chain; this task stays in deterministic bounded external state and excludes adapter integration.",
+          "experiment_id": "exp5867-prospective-certified-continuous-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp5882 never emitted a deliverable; this attempt has the changed Exp5892-Exp5894 clean prerequisite chain and adds an exact unresolved-constraint control.",
+          "experiment_id": "exp5882-shortcut-resistant-continuous-self-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "preemptive_skip_upstream_retired"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:f313154d7b63ccb3bb17c9caeef803fc5bcde62db9d792c510c9f9bae20cb8a3",
+      "status": "complete_null",
+      "task_id": "exp5895-shortcut-safe-continuous-self-learning",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5894 mechanism: prospective shortcut-safe continuous self-learning"
+    },
+    "exp5896-typed-constraint-ir-fixture": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 19:53 UTC | Engine-neutral typed ConstraintIR fixture with exa | OK | 89 passed, 1 warning in 18.26s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5896_typed_constraint_ir_fixture.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5896_typed_constraint_ir_fixture.json",
+      "gated_on": [],
+      "honest_verdict": "ready: deterministic typed ConstraintIR fixture replays with Python/Z3 agreement",
+      "identity": [
+        "2026.07.524",
+        "exp5896-typed-constraint-ir-fixture",
+        "results/experiment_5896_typed_constraint_ir_fixture.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+      "status": "ready",
+      "task_id": "exp5896-typed-constraint-ir-fixture",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Engine-neutral typed ConstraintIR fixture with exact certificates"
+    },
+    "exp5897-sota-constraint-ir-repair-ab": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 20:16 UTC | Gated on Exp5896 fixture: three-family translate-r | OK | 87 passed, 1 warning in 19.66s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+      "gated_on": [
+        {
+          "artifact_field": "typed_constraint_ir_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp5896-typed-constraint-ir-fixture",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "blocked_precondition: exp5896_gate_replayed",
+      "identity": [
+        "2026.07.524",
+        "exp5897-sota-constraint-ir-repair-ab",
+        "results/experiment_5897_sota_constraint_ir_repair_ab.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp1592 inherited an unready DCCD gate and repaired generated outputs; Exp5897 has a new exact typed-IR fixture, repairs only constraint representations, and compares exact traces with matched two-call controls.",
+          "experiment_id": "exp1592-dccd-repair-sota",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp3100 lacked the mandated cached SOTA pair; Exp5897 hard-gates on all three cached current GGUF families, real llama-cpp CUDA receipts, and a fixture with executable semantic-equivalence certificates.",
+          "experiment_id": "exp3100-z3-oracle-feedback-v2",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_headline: formal_feedback_v2_ready=false; reason=cached_sota_pair_unavailable; z3_available=True; dafny_available=False; guided_success_count=0; solver_only_success_count=2"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d",
+      "status": "blocked_precondition",
+      "task_id": "exp5897-sota-constraint-ir-repair-ab",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5896 fixture: three-family translate-run-inspect-repair A/B"
+    },
+    "exp5898-recursive-constraint-improvement": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-07-24 20:23 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_5898_recursive_constraint_improvement.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5898_recursive_constraint_improvement.json",
+      "gated_on": [
+        {
+          "artifact_field": "trace_repair_mechanism_ready_score",
+          "op": "==",
+          "upstream": "exp5897-sota-constraint-ir-repair-ab",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "identity": [
+        "2026.07.524",
+        "exp5898-recursive-constraint-improvement",
+        "results/experiment_5898_recursive_constraint_improvement.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:5b2d61c91f201ec7599c14e9008883aa8ce5dfd6de98f66bc516f2f3b0a2658b",
+      "status": "blocked",
+      "task_id": "exp5898-recursive-constraint-improvement",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5897 trace lift: constraint-wise recursive improvement"
+    },
+    "exp5899-constraint-repair-portability-audit": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-07-24 21:21 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_5899_constraint_repair_portability_audit.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5899_constraint_repair_portability_audit.json",
+      "gated_on": [
+        {
+          "artifact_field": "recursive_constraint_improvement_ready_score",
+          "op": "==",
+          "upstream": "exp5898-recursive-constraint-improvement",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "",
+      "identity": [
+        "2026.07.524",
+        "exp5899-constraint-repair-portability-audit",
+        "results/experiment_5899_constraint_repair_portability_audit.json"
+      ],
+      "loadable": false,
+      "milestone": "2026.07.524",
+      "present": false,
+      "prior_failures": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": null,
+      "status": "",
+      "task_id": "exp5899-constraint-repair-portability-audit",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5898 recursion: portability, leakage, and camouflage audit"
+    },
+    "exp5900-arc-structured-evidence-memory-contract": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 20:46 UTC | Agent-owned ARC event tape and structured evidence | OK | 107 passed, 1 warning in 22.24s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5900_arc_structured_evidence_memory_contract.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5900_arc_structured_evidence_memory_contract.json",
+      "gated_on": [],
+      "honest_verdict": "ready: structured_evidence_memory_contract_live_reachable_no_solve_claim",
+      "identity": [
+        "2026.07.524",
+        "exp5900-arc-structured-evidence-memory-contract",
+        "results/experiment_5900_arc_structured_evidence_memory_contract.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp5726 compressed cross-game hypotheses; this task records an append-only same-episode event tape and derives a structured task-evidence index over identical bytes.",
+          "experiment_id": "exp5726-arc-epistemic-ledger-live-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: epistemic_ledger_live_ab_null_no_promotion"
+        },
+        {
+          "addressed_by": "Exp5766 audited existing components; this task adds a materially different lossless same-episode evidence representation with deletion-testable provenance.",
+          "experiment_id": "exp5766-arc-loo-component-interaction-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+        },
+        {
+          "addressed_by": "Exp5860 changed observation selection; this task leaves action/observation policy unchanged and tests task-relevant persistence versus raw identical bytes.",
+          "experiment_id": "exp5860-live-active-observation-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: active_observation_no_positive_preregistered_lower_bound_no_registry_credit"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:adb2b20636747ecfed802a9b15ed50af1a7f5b45ceb7af5216b4b68fa3e7801e",
+      "status": "ready",
+      "task_id": "exp5900-arc-structured-evidence-memory-contract",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Agent-owned ARC event tape and structured evidence-index contract"
+    },
+    "exp5901-arc-structured-memory-causal-audit": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 21:19 UTC | Gated on Exp5900 contract: ARC retrieval fidelity  | OK | 87 passed, 1 warning in 6.35s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5901_arc_structured_memory_causal_audit.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5901_arc_structured_memory_causal_audit.json",
+      "gated_on": [
+        {
+          "artifact_field": "structured_evidence_memory_contract_ready_score",
+          "op": "==",
+          "upstream": "exp5900-arc-structured-evidence-memory-contract",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "complete_positive: structured_memory_causal_audit_exact_retrieval_causal_deletion_positive_no_solve_claim",
+      "identity": [
+        "2026.07.524",
+        "exp5901-arc-structured-memory-causal-audit",
+        "results/experiment_5901_arc_structured_memory_causal_audit.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This audit compares raw and structured retrieval over identical same-episode bytes and requires deletion utility, unlike the compact cross-game ledger.",
+          "experiment_id": "exp5726-arc-epistemic-ledger-live-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: epistemic_ledger_live_ab_null_no_promotion"
+        },
+        {
+          "addressed_by": "This task preregisters representation-specific deletion, shuffle, stale, and irrelevant-growth interventions rather than re-auditing the old component set.",
+          "experiment_id": "exp5766-arc-loo-component-interaction-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7",
+      "status": "complete_positive",
+      "task_id": "exp5901-arc-structured-memory-causal-audit",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5900 contract: ARC retrieval fidelity and causal necessity"
+    },
+    "exp5902-arc-structured-memory-live-ab": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-07-24 21:43 UTC | Gated on Exp5901 causality: adapter-disabled live  | OK | 91 passed, 1 warning in 10.49s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_5902_arc_structured_memory_live_ab.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5902_arc_structured_memory_live_ab.json",
+      "gated_on": [
+        {
+          "artifact_field": "structured_memory_causal_ready_score",
+          "op": "==",
+          "upstream": "exp5901-arc-structured-memory-causal-audit",
+          "value": 1.0
+        }
+      ],
+      "honest_verdict": "blocked_precondition: live_runner_permission",
+      "identity": [
+        "2026.07.524",
+        "exp5902-arc-structured-memory-live-ab",
+        "results/experiment_5902_arc_structured_memory_live_ab.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This live A/B uses lossless same-episode structured evidence over identical bytes, not compact cross-game hypothesis transfer.",
+          "experiment_id": "exp5726-arc-epistemic-ledger-live-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: epistemic_ledger_live_ab_null_no_promotion"
+        },
+        {
+          "addressed_by": "This task evaluates a new causally qualified memory architecture under preregistered held episodes rather than recombining the prior null components.",
+          "experiment_id": "exp5766-arc-loo-component-interaction-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+        },
+        {
+          "addressed_by": "This task keeps observation/action generation fixed and changes only the same-episode evidence retrieval representation.",
+          "experiment_id": "exp5860-live-active-observation-ab",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: active_observation_no_positive_preregistered_lower_bound_no_registry_credit"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595",
+      "status": "blocked_precondition",
+      "task_id": "exp5902-arc-structured-memory-live-ab",
+      "terminal_evidence_source": "declared_deliverable",
+      "title": "Gated on Exp5901 causality: adapter-disabled live E3 structured-memory A/B"
+    },
+    "exp5903-v524-capstone-reconciliation": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "current Exp5903 capstone runtime",
+        "latest_status": "CURRENT_RUNTIME"
+      },
+      "declared_deliverable": "results/experiment_5903_v524_capstone_reconciliation.json",
+      "declared_path_matches_expected": true,
+      "expected_deliverable": "results/experiment_5903_v524_capstone_reconciliation.json",
+      "gated_on": [],
+      "honest_verdict": "",
+      "identity": [
+        "2026.07.524",
+        "exp5903-v524-capstone-reconciliation",
+        "results/experiment_5903_v524_capstone_reconciliation.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This capstone reconciles each branch and deliverable independently, remains ungated, records missing/gate-blocked states explicitly, and cannot cascade-skip on one failed branch.",
+          "experiment_id": "exp5862-v521-capstone-reconciliation",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked: required capstone checks failed during V521 reconciliation"
+        }
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "current_capstone_runtime_pending_atomic_write",
+      "status": "current_runtime",
+      "task_id": "exp5903-v524-capstone-reconciliation",
+      "terminal_evidence_source": "current_capstone_runtime",
+      "title": "Branch-independent terminal reconciliation for milestone .524"
+    }
+  },
+  "adversarial_verifier_receipts": [
+    {
+      "artifact_path": "results/experiment_5890_transition_v524.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5890_transition_v524.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:e5ab3e0e58f0014ef0b91400104d89d64e798e3fd668fcd843042839b3cf2b81",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5890_transition_v524.json",
+            "exp_id": "experiment_5890_transition_v524",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete: archived terminal .523 identities by exact declared deliverables into ",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5890-transition-v524"
+    },
+    {
+      "artifact_path": "results/experiment_5891_v524_source_delta_ingestion.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5891_v524_source_delta_ingestion.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:599f8ca0b1b612efe01fa77e0cc272b9c5be84160e7d77af85347e0392b3c95f",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5891_v524_source_delta_ingestion.json",
+            "exp_id": "experiment_5891_v524_source_delta_ingestion",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete: no accepted post-V524 source deltas; ledgers unchanged",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5891-v524-source-delta-ingestion"
+    },
+    {
+      "artifact_path": "results/experiment_5892_headroom_evidence_escrow.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5892_headroom_evidence_escrow.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:4de5fc4c9d9aeae73c9d00eae2b4fe0337fefa3c35c94f361641f10ca686456e",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5892_headroom_evidence_escrow.json",
+            "exp_id": 5892,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete_ready: headroom_evidence_escrow_admitted",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5892-headroom-evidence-escrow"
+    },
+    {
+      "artifact_path": "results/experiment_5893_grounding_shortcut_fixture.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5893_grounding_shortcut_fixture.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:3507fb485b0a2cb891d1044355a22f6573352ce0c655c9563251ecb507ba88df",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5893_grounding_shortcut_fixture.json",
+            "exp_id": 5893,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "ready: grounding_shortcut_exact_fixture_ready",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5893-grounding-shortcut-fixture"
+    },
+    {
+      "artifact_path": "results/experiment_5894_one_to_one_grounding_ab.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5894_one_to_one_grounding_ab.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:fe036ad2432a6ad6d976f77101b687db6130dd402a57ec4c3b62916e4a45484f",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5894_one_to_one_grounding_ab.json",
+            "exp_id": 5894,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accep",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5894-one-to-one-grounding-ab"
+    },
+    {
+      "artifact_path": "results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:670cfa35c0bda7c07681191fc2fe5a9be86e847a3f7975904d67518fd49f5391",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+            "exp_id": 5895,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete_null: shortcut_safe_csl_not_promotion_eligible",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5895-shortcut-safe-continuous-self-learning"
+    },
+    {
+      "artifact_path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5896_typed_constraint_ir_fixture.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:20bcdbcf6a0ecc6a95530f18c2e610b03d95f476683a65b55f14c039de192ca0",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5896_typed_constraint_ir_fixture.json",
+            "exp_id": "experiment_5896_typed_constraint_ir_fixture",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "ready: deterministic typed ConstraintIR fixture replays with Python/Z3 agreement",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5896-typed-constraint-ir-fixture"
+    },
+    {
+      "artifact_path": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5897_sota_constraint_ir_repair_ab.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:db867e45746151a472c530bf9671618e7d647e54f10727f23604564aa4649432",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+            "exp_id": "experiment_5897_sota_constraint_ir_repair_ab",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "blocked_precondition: exp5896_gate_replayed",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5897-sota-constraint-ir-repair-ab"
+    },
+    {
+      "artifact_path": "results/experiment_5898_recursive_constraint_improvement.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5898_recursive_constraint_improvement.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:5cafe0b12bc7d0a711c29e639da8b355f65ead9aaff785a5c7ad8aaffc068c24",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5898_recursive_constraint_improvement.json",
+            "blocked_gate_artifact": true,
+            "flags": [],
+            "loaded": true
+          }
+        ]
+      },
+      "task_id": "exp5898-recursive-constraint-improvement"
+    },
+    {
+      "artifact_path": "results/experiment_5900_arc_structured_evidence_memory_contract.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5900_arc_structured_evidence_memory_contract.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:db7eeb54cc4867c0d7f3061b1d8292abb90d1d0703d66e417db76dfa3c89474c",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5900_arc_structured_evidence_memory_contract.json",
+            "exp_id": null,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "ready: structured_evidence_memory_contract_live_reachable_no_solve_claim",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5900-arc-structured-evidence-memory-contract"
+    },
+    {
+      "artifact_path": "results/experiment_5901_arc_structured_memory_causal_audit.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5901_arc_structured_memory_causal_audit.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:926e86f022c8af90c9f8056e3127a33a637b963fb0727c3352336398953a4250",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5901_arc_structured_memory_causal_audit.json",
+            "exp_id": "experiment_5901_arc_structured_memory_causal_audit",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete_positive: structured_memory_causal_audit_exact_retrieval_causal_deletio",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5901-arc-structured-memory-causal-audit"
+    },
+    {
+      "artifact_path": "results/experiment_5902_arc_structured_memory_live_ab.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5902_arc_structured_memory_live_ab.json",
+      "exit_code": 0,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "receipt_hash": "sha256:ee27539fafc7389b5b9f952ce231b8266352cad1e14badd049ba892241a86d32",
+      "stderr": "",
+      "stdout_json": {
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "results/experiment_5902_arc_structured_memory_live_ab.json",
+            "exp_id": "experiment_5902_arc_structured_memory_live_ab",
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "blocked_precondition: live_runner_permission",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ]
+      },
+      "task_id": "exp5902-arc-structured-memory-live-ab"
+    }
+  ],
+  "arc_generalization_slot_receipt": {
+    "activated": true,
+    "blocked_reason": "blocked_precondition: live_runner_permission",
+    "declared_deliverable": "results/experiment_5902_arc_structured_memory_live_ab.json",
+    "principle": "The ARC generalization slot is activation-checked without public re-solve credit.",
+    "public_arc_re_solve_claimed": false,
+    "registry_updated": false,
+    "structured_memory_live_ready_score": 0.0,
+    "task_id": "exp5902-arc-structured-memory-live-ab",
+    "terminal_class": "blocked-precondition"
+  },
+  "branch_independent_science_summary": {
+    "arc_memory": {
+      "blocked_precondition_task_ids": [
+        "exp5902-arc-structured-memory-live-ab"
+      ],
+      "branch_terminal_class": "mixed_positive_and_blocked",
+      "gate_blocked_task_ids": [],
+      "missing_task_ids": [],
+      "null_task_ids": [],
+      "positive_task_ids": [
+        "exp5900-arc-structured-evidence-memory-contract",
+        "exp5901-arc-structured-memory-causal-audit"
+      ],
+      "task_ids": [
+        "exp5900-arc-structured-evidence-memory-contract",
+        "exp5901-arc-structured-memory-causal-audit",
+        "exp5902-arc-structured-memory-live-ab"
+      ],
+      "terminal_class_by_task_id": {
+        "exp5900-arc-structured-evidence-memory-contract": "ready/positive",
+        "exp5901-arc-structured-memory-causal-audit": "ready/positive",
+        "exp5902-arc-structured-memory-live-ab": "blocked-precondition"
+      }
+    },
+    "boundary_and_source": {
+      "blocked_precondition_task_ids": [],
+      "branch_terminal_class": "mixed_positive_and_null",
+      "gate_blocked_task_ids": [],
+      "missing_task_ids": [],
+      "null_task_ids": [
+        "exp5891-v524-source-delta-ingestion"
+      ],
+      "positive_task_ids": [
+        "exp5890-transition-v524"
+      ],
+      "task_ids": [
+        "exp5890-transition-v524",
+        "exp5891-v524-source-delta-ingestion"
+      ],
+      "terminal_class_by_task_id": {
+        "exp5890-transition-v524": "ready/positive",
+        "exp5891-v524-source-delta-ingestion": "null"
+      }
+    },
+    "branch_overwrite_detected": false,
+    "constraint_ir": {
+      "blocked_precondition_task_ids": [
+        "exp5897-sota-constraint-ir-repair-ab"
+      ],
+      "branch_terminal_class": "mixed_positive_and_blocked",
+      "gate_blocked_task_ids": [
+        "exp5898-recursive-constraint-improvement",
+        "exp5899-constraint-repair-portability-audit"
+      ],
+      "missing_task_ids": [],
+      "null_task_ids": [],
+      "positive_task_ids": [
+        "exp5896-typed-constraint-ir-fixture"
+      ],
+      "task_ids": [
+        "exp5896-typed-constraint-ir-fixture",
+        "exp5897-sota-constraint-ir-repair-ab",
+        "exp5898-recursive-constraint-improvement",
+        "exp5899-constraint-repair-portability-audit"
+      ],
+      "terminal_class_by_task_id": {
+        "exp5896-typed-constraint-ir-fixture": "ready/positive",
+        "exp5897-sota-constraint-ir-repair-ab": "blocked-precondition",
+        "exp5898-recursive-constraint-improvement": "gate-blocked",
+        "exp5899-constraint-repair-portability-audit": "gate-blocked"
+      }
+    },
+    "grounding_and_continuous_self_learning": {
+      "blocked_precondition_task_ids": [],
+      "branch_terminal_class": "mixed_positive_and_null",
+      "gate_blocked_task_ids": [],
+      "missing_task_ids": [],
+      "null_task_ids": [
+        "exp5895-shortcut-safe-continuous-self-learning"
+      ],
+      "positive_task_ids": [
+        "exp5892-headroom-evidence-escrow",
+        "exp5893-grounding-shortcut-fixture",
+        "exp5894-one-to-one-grounding-ab"
+      ],
+      "task_ids": [
+        "exp5892-headroom-evidence-escrow",
+        "exp5893-grounding-shortcut-fixture",
+        "exp5894-one-to-one-grounding-ab",
+        "exp5895-shortcut-safe-continuous-self-learning"
+      ],
+      "terminal_class_by_task_id": {
+        "exp5892-headroom-evidence-escrow": "ready/positive",
+        "exp5893-grounding-shortcut-fixture": "ready/positive",
+        "exp5894-one-to-one-grounding-ab": "ready/positive",
+        "exp5895-shortcut-safe-continuous-self-learning": "null"
+      }
+    },
+    "principle": "Cascade blocking cannot erase completed evidence in another branch."
+  },
+  "continuous_self_learning_slot_receipt": {
+    "activated": true,
+    "continuous_self_learning_task": true,
+    "declared_deliverable": "results/experiment_5895_shortcut_safe_continuous_self_learning.json",
+    "model_weight_mutation_allowed": false,
+    "principle": "The mandatory CSL task identity is activation-checked regardless of scientific verdict.",
+    "promoted_as_ready": false,
+    "retired_dependency_chain_used": false,
+    "scientific_verdict_class": "null",
+    "shortcut_resistant_csl_ready_score": 0.0,
+    "task_id": "exp5895-shortcut-safe-continuous-self-learning",
+    "terminal_class": "null"
+  },
+  "docs_reconciled": {
+    "docs_index_modified": false,
+    "openspec_research_reporting_updated": true,
+    "ops_changelog_deferred_to_conductor": true,
+    "ops_status_deferred_to_conductor": true,
+    "traceability_deferred_to_conductor": true
+  },
+  "duplicate_history_amplification_count": 0,
+  "duration_s": 9.112738,
+  "exact_terminal_classification": {
+    "all_activated_terminal": true,
+    "allowed_terminal_classes": [
+      "ready/positive",
+      "null",
+      "unsafe/disqualified",
+      "blocked-precondition",
+      "blocked",
+      "retired",
+      "gate-blocked",
+      "missing",
+      "unactivated"
+    ],
+    "disjoint_terminal_class_count": 14,
+    "nonterminal_task_ids": [],
+    "principle": "Every activated identity receives one disjoint terminal class.",
+    "task_ids_by_terminal_class": {
+      "blocked": [],
+      "blocked-precondition": [
+        "exp5897-sota-constraint-ir-repair-ab",
+        "exp5902-arc-structured-memory-live-ab"
+      ],
+      "gate-blocked": [
+        "exp5898-recursive-constraint-improvement",
+        "exp5899-constraint-repair-portability-audit"
+      ],
+      "missing": [],
+      "null": [
+        "exp5891-v524-source-delta-ingestion",
+        "exp5895-shortcut-safe-continuous-self-learning"
+      ],
+      "ready/positive": [
+        "exp5890-transition-v524",
+        "exp5892-headroom-evidence-escrow",
+        "exp5893-grounding-shortcut-fixture",
+        "exp5894-one-to-one-grounding-ab",
+        "exp5896-typed-constraint-ir-fixture",
+        "exp5900-arc-structured-evidence-memory-contract",
+        "exp5901-arc-structured-memory-causal-audit",
+        "exp5903-v524-capstone-reconciliation"
+      ],
+      "retired": [],
+      "unactivated": [],
+      "unsafe/disqualified": []
+    },
+    "terminal_class_by_task_id": {
+      "exp5890-transition-v524": "ready/positive",
+      "exp5891-v524-source-delta-ingestion": "null",
+      "exp5892-headroom-evidence-escrow": "ready/positive",
+      "exp5893-grounding-shortcut-fixture": "ready/positive",
+      "exp5894-one-to-one-grounding-ab": "ready/positive",
+      "exp5895-shortcut-safe-continuous-self-learning": "null",
+      "exp5896-typed-constraint-ir-fixture": "ready/positive",
+      "exp5897-sota-constraint-ir-repair-ab": "blocked-precondition",
+      "exp5898-recursive-constraint-improvement": "gate-blocked",
+      "exp5899-constraint-repair-portability-audit": "gate-blocked",
+      "exp5900-arc-structured-evidence-memory-contract": "ready/positive",
+      "exp5901-arc-structured-memory-causal-audit": "ready/positive",
+      "exp5902-arc-structured-memory-live-ab": "blocked-precondition",
+      "exp5903-v524-capstone-reconciliation": "ready/positive"
+    }
+  },
+  "exclusion_and_retirement_decisions": {
+    "csl_retirement_decision": {
+      "decision": "do_not_promote",
+      "principle": "The next step distinguishes advancement from null, unsafe, blocked, or retired evidence.",
+      "reason": "readiness_gate_failed",
+      "retired_dependency_chain_used": false,
+      "schema": "carnot.experiment_5895.shortcut_safe_continuous_self_learning.v1.retirement_decision"
+    },
+    "exclusion_manifest_sha256": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+    "model_policy_substitution_promoted": false,
+    "principle": "Retired scopes and exclusion manifest decisions are preserved without reopening them.",
+    "prior_failure_task_ids": [
+      "exp5892-headroom-evidence-escrow",
+      "exp5893-grounding-shortcut-fixture",
+      "exp5894-one-to-one-grounding-ab",
+      "exp5895-shortcut-safe-continuous-self-learning",
+      "exp5897-sota-constraint-ir-repair-ab",
+      "exp5900-arc-structured-evidence-memory-contract",
+      "exp5901-arc-structured-memory-causal-audit",
+      "exp5902-arc-structured-memory-live-ab",
+      "exp5903-v524-capstone-reconciliation"
+    ],
+    "protected_file_mutation_promoted": false,
+    "public_arc_re_solve_promoted": false,
+    "retired_dependency_promoted": false
+  },
+  "experiment": "experiment_5903_v524_capstone_reconciliation",
+  "experiment_id": "exp5903-v524-capstone-reconciliation",
+  "field_provenance": {
+    "activated_task_and_declared_deliverable_matrix": {
+      "principle": "Only activated task IDs and declared paths count as evidence.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "adversarial_verifier_receipts": {
+      "principle": "Fresh verifier receipts ground present-artifact quality decisions.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "arc_generalization_slot_receipt": {
+      "principle": "The ARC generalization slot is activation-checked without public re-solve credit.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "branch_independent_science_summary": {
+      "principle": "Cascade blocking cannot erase completed evidence in another branch.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "continuous_self_learning_slot_receipt": {
+      "principle": "The mandatory CSL task identity is activation-checked regardless of scientific verdict.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "docs_reconciled": {
+      "principle": "Spec-owned reconciliation is recorded while delegated conductor ledgers remain untouched.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "duplicate_history_amplification_count": {
+      "principle": "Existing duplicate history is measured but never multiplied.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes aggregation-only execution.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "exact_terminal_classification": {
+      "principle": "Every activated identity receives one disjoint terminal class.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "exclusion_and_retirement_decisions": {
+      "principle": "Retired scopes and exclusion manifest decisions are preserved without reopening them.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field traces to exact paths, hashes, receipts, commands, or classifications.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete:`, `complete_with_nulls:`, or `blocked:`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "milestone_and_task_range": {
+      "principle": "The active milestone and Exp5890-Exp5903 denominator make the reconciliation finite.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "missing_gate_blocked_and_unactivated_receipts": {
+      "principle": "Missing, gate-blocked, and unactivated identities remain receipts rather than successes.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "model_policy_and_gpu_receipts": {
+      "principle": "Model and GPU receipts cannot substitute unapproved policy or hidden compute claims.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "next_three_falsifiable_recommendations": {
+      "principle": "Recommendations cite terminal artifact fields and exclude retired scopes.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Roadmaps, history, ledgers, protected files, resources, verifier availability, and atomic output are checked before synthesis.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected roadmap, conductor, north-star, docs, ops, and traceability files remain byte-identical unless explicitly owned.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects later ledger, artifact, or classification drift.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "research_complete_append_count": {
+      "principle": "Exact zero-or-one prevents history amplification.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "status": {
+      "principle": "Terminal capstone state over exact activated .524 identities.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit, coverage, YAML/schema, verifier, protected-file, reconciliation, E2E, spec, and root-clutter checks.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks becoming success.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "openspec/capabilities/research-reporting/spec.md"
+      ]
+    }
+  },
+  "honest_verdict": "complete_with_nulls: all 14 activated .524 identities are terminal with null, blocked-precondition, and gate-blocked receipts preserved",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.524",
+  "milestone_and_task_range": {
+    "milestone": "2026.07.524",
+    "task_identity_tuple": [
+      "milestone",
+      "task_id",
+      "declared_deliverable"
+    ],
+    "task_range": {
+      "count": 14,
+      "end": "exp5903",
+      "start": "exp5890"
+    }
+  },
+  "missing_gate_blocked_and_unactivated_receipts": {
+    "declared_deliverable_missing_but_gate_blocked_task_ids": [
+      "exp5899-constraint-repair-portability-audit"
+    ],
+    "gate_blocked_task_ids": [
+      "exp5898-recursive-constraint-improvement",
+      "exp5899-constraint-repair-portability-audit"
+    ],
+    "missing_task_ids": [],
+    "principle": "Missing, gate-blocked, and unactivated identities remain receipts rather than successes.",
+    "receipts": [
+      {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-07-24 20:23 UTC | Gated on Exp5897 trace lift: constraint-wise recur | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5897-sota-constraint-ir-repair-ab.trace |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "declared_deliverable": "results/experiment_5898_recursive_constraint_improvement.json",
+        "present": true,
+        "task_id": "exp5898-recursive-constraint-improvement",
+        "terminal_class": "gate-blocked",
+        "treated_as_success": false
+      },
+      {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-07-24 21:21 UTC | Gated on Exp5898 recursion: portability, leakage, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5898-recursive-constraint-improvement) |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "declared_deliverable": "results/experiment_5899_constraint_repair_portability_audit.json",
+        "present": false,
+        "task_id": "exp5899-constraint-repair-portability-audit",
+        "terminal_class": "gate-blocked",
+        "treated_as_success": false
+      }
+    ],
+    "unactivated_task_ids": []
+  },
+  "model_policy_and_gpu_receipts": {
+    "gpu_receipt_task_ids": [
+      "exp5897-sota-constraint-ir-repair-ab",
+      "exp5902-arc-structured-memory-live-ab"
+    ],
+    "inference_substrates": {
+      "exp5897-sota-constraint-ir-repair-ab": "live_llm_inference",
+      "exp5902-arc-structured-memory-live-ab": "live_llm_inference"
+    },
+    "model_file_hash_receipts_present": {
+      "exp5897-sota-constraint-ir-repair-ab": true,
+      "exp5902-arc-structured-memory-live-ab": true
+    },
+    "model_policy_substitution_detected": false,
+    "principle": "Model and GPU receipts cannot substitute unapproved policy or hidden compute claims.",
+    "required_pair_preserved": true
+  },
+  "next_three_falsifiable_recommendations": [
+    {
+      "evidence_field": "continuous_self_learning_slot_receipt",
+      "falsifiable_success_condition": "shortcut_resistant_csl_ready_score == 1.0 with continuous_self_learning_task=true and retired_dependency_chain_used=false",
+      "future_id_allocated": false,
+      "recommendation": "Before another CSL promotion attempt, require Exp5895's exact slot to move from null to a positive ready score while preserving no_model_weight_mutation.",
+      "retired_scope_reopened": false,
+      "terminal_evidence": "exp5895 terminal_class=null and promoted_as_ready=false"
+    },
+    {
+      "evidence_field": "branch_independent_science_summary",
+      "falsifiable_success_condition": "exp5897 trace_repair_mechanism_ready_score == 1.0 before Exp5898 or Exp5899 executes",
+      "future_id_allocated": false,
+      "recommendation": "Repair the ConstraintIR replay precondition before rerunning trace repair or portability; do not treat Exp5896's scalar as Exp5897 completion.",
+      "retired_scope_reopened": false,
+      "terminal_evidence": "constraint_ir has Exp5897 blocked-precondition and Exp5898/Exp5899 gate-blocked"
+    },
+    {
+      "evidence_field": "arc_generalization_slot_receipt",
+      "falsifiable_success_condition": "structured_memory_live_ready_score == 1.0 with public_arc_re_solve_claimed=false and registry_updated=false",
+      "future_id_allocated": false,
+      "recommendation": "For ARC memory, acquire the live-runner permission and keep public solve credit disabled while testing Exp5902's held generalization slot.",
+      "retired_scope_reopened": false,
+      "terminal_evidence": "exp5902 terminal_class=blocked-precondition, public_arc_re_solve_claimed=false"
+    }
+  ],
+  "preconditions_checked": {
+    "adversarial_verifier_available": true,
+    "atomic_output": {
+      "declared_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5903_v524_capstone_reconciliation.json",
+      "ok": true,
+      "parent_exists": true
+    },
+    "declared_present_deliverable_hashes": {
+      "exp5890-transition-v524": "sha256:45658f639678a15411265e55f711e66eca27c4e6fde385ec7be890cdd278c4ab",
+      "exp5891-v524-source-delta-ingestion": "sha256:85da3f28d41efd119d34b83b2b388f1ac8815ebd54bdc8736412592ae7b81813",
+      "exp5892-headroom-evidence-escrow": "sha256:4cb962ddc8037ee526fb1d3685d3db49a30f6fa07895b26dd664d4a47598a6e4",
+      "exp5893-grounding-shortcut-fixture": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d",
+      "exp5894-one-to-one-grounding-ab": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586",
+      "exp5895-shortcut-safe-continuous-self-learning": "sha256:f313154d7b63ccb3bb17c9caeef803fc5bcde62db9d792c510c9f9bae20cb8a3",
+      "exp5896-typed-constraint-ir-fixture": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+      "exp5897-sota-constraint-ir-repair-ab": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d",
+      "exp5898-recursive-constraint-improvement": "sha256:5b2d61c91f201ec7599c14e9008883aa8ce5dfd6de98f66bc516f2f3b0a2658b",
+      "exp5900-arc-structured-evidence-memory-contract": "sha256:adb2b20636747ecfed802a9b15ed50af1a7f5b45ceb7af5216b4b68fa3e7801e",
+      "exp5901-arc-structured-memory-causal-audit": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7",
+      "exp5902-arc-structured-memory-live-ab": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595"
+    },
+    "research_complete_sha256_before_append": "sha256:f1f1a27c59fc89843d153761891ab2a31fd80d55f5df3a3453037297ac7329be",
+    "resource_receipts": {
+      "disk": {
+        "available_mb": 1167217,
+        "ok": true,
+        "required_mb": 512
+      },
+      "memory": {
+        "available_mb": 117327,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "roadmap": {
+      "error": null,
+      "loadable": true,
+      "milestone": "2026.07.524",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:d9e7355ea0441238294171ed63d8e1ff84e37fde1f3fb93db3ea6182a502c7a9",
+      "task_count": 14,
+      "task_ids": [
+        "exp5890-transition-v524",
+        "exp5891-v524-source-delta-ingestion",
+        "exp5892-headroom-evidence-escrow",
+        "exp5893-grounding-shortcut-fixture",
+        "exp5894-one-to-one-grounding-ab",
+        "exp5895-shortcut-safe-continuous-self-learning",
+        "exp5896-typed-constraint-ir-fixture",
+        "exp5897-sota-constraint-ir-repair-ab",
+        "exp5898-recursive-constraint-improvement",
+        "exp5899-constraint-repair-portability-audit",
+        "exp5900-arc-structured-evidence-memory-contract",
+        "exp5901-arc-structured-memory-causal-audit",
+        "exp5902-arc-structured-memory-live-ab",
+        "exp5903-v524-capstone-reconciliation"
+      ]
+    },
+    "roadmap_next_present": false,
+    "source_hashes": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2"
+      },
+      "docs/index.html": {
+        "present": true,
+        "sha256": "sha256:e736b7c40d646b61f2c20bb86c1b02caea18c1b4df1416f077b29601df735f81"
+      },
+      "openspec/capabilities/research-reporting/spec.md": {
+        "present": true,
+        "sha256": "sha256:1b05043b0984b216ea1cb0a9b76177918554e9e96e4ee317030f813158b81532"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:e1b88c240e2a5a176bf741ead9e471f749a83b394f5c8082d8e352753ad95207"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:8e93be04a8e8d1167f7460addc39ddfc2970e8b3996e30eb86914d874af27698"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:81d656818e8aed4a3615047924ddeef4291b1af23fac459f5ea4889debd400f1"
+      },
+      "ops/e2e-test-plan.md": {
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7"
+      },
+      "ops/north-star.md": {
+        "present": true,
+        "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2"
+      },
+      "research-complete.yaml": {
+        "present": true,
+        "sha256": "sha256:2101cbf7d0dedbae545db737e338dafbd9154b1cc356dc6b4496a80a23ee6d88"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:d9e7355ea0441238294171ed63d8e1ff84e37fde1f3fb93db3ea6182a502c7a9"
+      },
+      "results/experiment_5890_transition_v524.json": {
+        "present": true,
+        "sha256": "sha256:45658f639678a15411265e55f711e66eca27c4e6fde385ec7be890cdd278c4ab"
+      },
+      "results/experiment_5891_v524_source_delta_ingestion.json": {
+        "present": true,
+        "sha256": "sha256:85da3f28d41efd119d34b83b2b388f1ac8815ebd54bdc8736412592ae7b81813"
+      },
+      "results/experiment_5892_headroom_evidence_escrow.json": {
+        "present": true,
+        "sha256": "sha256:4cb962ddc8037ee526fb1d3685d3db49a30f6fa07895b26dd664d4a47598a6e4"
+      },
+      "results/experiment_5893_grounding_shortcut_fixture.json": {
+        "present": true,
+        "sha256": "sha256:338c703a9ccedd777928adce8b983f3651592299a6abc5b03939d68357a4802d"
+      },
+      "results/experiment_5894_one_to_one_grounding_ab.json": {
+        "present": true,
+        "sha256": "sha256:dc0156d53012c8922da396e25c2c434ce084a2a6c5bcac89d292c8949abb2586"
+      },
+      "results/experiment_5895_shortcut_safe_continuous_self_learning.json": {
+        "present": true,
+        "sha256": "sha256:f313154d7b63ccb3bb17c9caeef803fc5bcde62db9d792c510c9f9bae20cb8a3"
+      },
+      "results/experiment_5896_typed_constraint_ir_fixture.json": {
+        "present": true,
+        "sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea"
+      },
+      "results/experiment_5897_sota_constraint_ir_repair_ab.json": {
+        "present": true,
+        "sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d"
+      },
+      "results/experiment_5898_recursive_constraint_improvement.json": {
+        "present": true,
+        "sha256": "sha256:5b2d61c91f201ec7599c14e9008883aa8ce5dfd6de98f66bc516f2f3b0a2658b"
+      },
+      "results/experiment_5899_constraint_repair_portability_audit.json": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_5900_arc_structured_evidence_memory_contract.json": {
+        "present": true,
+        "sha256": "sha256:adb2b20636747ecfed802a9b15ed50af1a7f5b45ceb7af5216b4b68fa3e7801e"
+      },
+      "results/experiment_5901_arc_structured_memory_causal_audit.json": {
+        "present": true,
+        "sha256": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7"
+      },
+      "results/experiment_5902_arc_structured_memory_live_ab.json": {
+        "present": true,
+        "sha256": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595"
+      },
+      "results/experiment_5903_v524_capstone_reconciliation.json": {
+        "present": false,
+        "sha256": null
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de"
+      },
+      "scripts/capstone_aggregate_available.py": {
+        "present": true,
+        "sha256": "sha256:e68ff8ffb923912c3657e60e39c810aa0073e4e42930244c1978a62f4c2a53dd"
+      },
+      "scripts/in_process_doc_reconcile.py": {
+        "present": true,
+        "sha256": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      }
+    },
+    "validation_tools": {
+      "capstone_helper_present": true,
+      "doc_reconcile_present": true
+    }
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "_bmad/traceability.md": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "unchanged": true
+      },
+      "docs/index.html": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:e736b7c40d646b61f2c20bb86c1b02caea18c1b4df1416f077b29601df735f81",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:8e93be04a8e8d1167f7460addc39ddfc2970e8b3996e30eb86914d874af27698",
+        "unchanged": true
+      },
+      "ops/north-star.md": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:d9e7355ea0441238294171ed63d8e1ff84e37fde1f3fb93db3ea6182a502c7a9",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "modified_by_exp5903": false,
+        "present": true,
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      }
+    },
+    "principle": "Protected roadmap, conductor, north-star, docs, ops, and traceability files remain byte-identical unless explicitly owned."
+  },
+  "random_seed": 5903,
+  "reproducibility_checksum": "sha256:817bea7ce2a315c5531aef7d0a73332084b139c63b5cf96e463c3330b2bda4e9",
+  "research_complete_append_count": 1,
+  "research_complete_append_receipt": {
+    "after_duplicate_block_count": 895,
+    "after_sha256": "sha256:2101cbf7d0dedbae545db737e338dafbd9154b1cc356dc6b4496a80a23ee6d88",
+    "append_count": 1,
+    "appended": true,
+    "before_duplicate_block_count": 895,
+    "before_sha256": "sha256:f1f1a27c59fc89843d153761891ab2a31fd80d55f5df3a3453037297ac7329be",
+    "duplicate_history_amplification_count": 0,
+    "reason": "exact_milestone_block_absent"
+  },
+  "result_path": "results/experiment_5903_v524_capstone_reconciliation.json",
+  "run_date": "2026-07-24",
+  "schema": "carnot.experiment_5903.v524_capstone_reconciliation.v1",
+  "spec_refs": [
+    "REQ-REPORT-5903",
+    "SCENARIO-REPORT-5903-EXACT-IDENTITIES",
+    "SCENARIO-REPORT-5903-BRANCH-INDEPENDENT",
+    "SCENARIO-REPORT-5903-APPEND-ONCE",
+    "SCENARIO-REPORT-5903-PROTECTION",
+    "SCENARIO-REPORT-5903-SCHEMA"
+  ],
+  "status": "complete_with_nulls",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5903_v524_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5903_v524_capstone_reconciliation.py -m pytest tests/python/test_experiment_5903_v524_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5903_v524_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5890_transition_v524.json results/experiment_5891_v524_source_delta_ingestion.json results/experiment_5892_headroom_evidence_escrow.json results/experiment_5893_grounding_shortcut_fixture.json results/experiment_5894_one_to_one_grounding_ab.json results/experiment_5895_shortcut_safe_continuous_self_learning.json results/experiment_5896_typed_constraint_ir_fixture.json results/experiment_5897_sota_constraint_ir_repair_ab.json results/experiment_5898_recursive_constraint_improvement.json results/experiment_5900_arc_structured_evidence_memory_contract.json results/experiment_5901_arc_structured_memory_causal_audit.json results/experiment_5902_arc_structured_memory_live_ab.json",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py --check",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5903_v524_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5903_v524_capstone_reconciliation.py -m pytest tests/python/test_experiment_5903_v524_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5903_v524_capstone_reconciliation.py --fail-under=100",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5890_transition_v524.json results/experiment_5891_v524_source_delta_ingestion.json results/experiment_5892_headroom_evidence_escrow.json results/experiment_5893_grounding_shortcut_fixture.json results/experiment_5894_one_to_one_grounding_ab.json results/experiment_5895_shortcut_safe_continuous_self_learning.json results/experiment_5896_typed_constraint_ir_fixture.json results/experiment_5897_sota_constraint_ir_repair_ab.json results/experiment_5898_recursive_constraint_improvement.json results/experiment_5900_arc_structured_evidence_memory_contract.json results/experiment_5901_arc_structured_memory_causal_audit.json results/experiment_5902_arc_structured_memory_live_ab.json",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py --check",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": null,
+      "status": "not_run_in_default_artifact"
+    }
+  ]
+}

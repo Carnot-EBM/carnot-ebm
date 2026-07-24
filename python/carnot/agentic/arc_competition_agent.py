@@ -45,6 +45,13 @@ from carnot.agentic.arc_program_synthesis_filter import (
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
+from carnot.agentic.arc_frontier_discipline import (
+    TIER_COUNT as FRONTIER_TIER_COUNT,
+    TierExhaustionPolicy,
+    annotate_tiers as annotate_frontier_tiers,
+    frontier_distance_field,
+    nearest_open_node,
+)
 from carnot.agentic.arc_structured_evidence_memory import coerce_structured_evidence_memory
 from carnot.agentic.arc_generic_causal_primitives import coerce_generic_causal_primitive
 from carnot.agentic.arc_frame_change_predictor import (
@@ -240,6 +247,32 @@ SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
 # arc_executable_world_model.induce_prompt reads that env var, so BOTH the flag path here and
 # the env path there must agree before any exemplar text is injected).
 SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED = False
+# REQ-ARC-WMTE-5836: the two just-explore (arXiv:2512.24156) FRONTIER-DISCIPLINE mechanisms,
+# grafted from python/carnot/agentic/arc_frontier_discipline.py -- read that module's docstring
+# for the full WHY. In one sentence each:
+#   * TIER EXHAUSTION -- a strict GLOBAL priority barrier: no tier-N+1 action ANYWHERE in the
+#     graph until every tier-<=N action EVERYWHERE has been tried. This is NOT the already-
+#     measured-null CARNOT_ARC_TIER_SCHEDULE sort (that reorders within one node; this gates
+#     across all nodes). The 5-tier predicate is shared with that sort deliberately so an A/B
+#     difference cannot be a predicate difference.
+#   * DISTANCE GRADIENT -- pick the frontier target that is navigation-NEAREST to where the
+#     agent is standing (one multi-source reverse BFS over known-working edges), instead of
+#     the shallowest-from-root node, which can be arbitrarily far away and costs a full
+#     RESET+replay every time.
+#   * TIER UNIFORM RANDOM -- draw uniformly among the tier-eligible candidates instead of
+#     taking the first. The reference does this (random.choice); Carnot's live pop(0) is the
+#     fully-greedy opposite, and three prior experiments found that replacing the reference's
+#     uniform draw with ANY Carnot-scored order LOST solves. So the greedy draw is itself a
+#     suspect and the A/B must be able to vary it independently of the barrier.
+# ALL THREE DEFAULT OFF, so the submitted agent's behaviour is byte-identical until the
+# matched-budget offline A/B (experiment_5836_frontier_discipline_ab) greenlights a flip --
+# same discipline as every other freshly-wired-but-unvalidated lever in this file.
+SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED = False
+SUBMITTED_FRONTIER_TIER_EXHAUSTION_MODE = "just_explore_global_priority_group_exhaustion"
+SUBMITTED_FRONTIER_TIER_COUNT = FRONTIER_TIER_COUNT
+SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED = False
+SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED = False
+SUBMITTED_FRONTIER_DISTANCE_GRADIENT_MODE = "multi_source_reverse_bfs_over_known_working_edges"
 
 
 def _playbook_exemplars_gate_on() -> bool:
@@ -719,6 +752,11 @@ class StepwiseExplorer:
         early_stop_grace: Optional[int] = None,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
+        tier_exhaustion: bool | None = None,
+        tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
+        tier_uniform_random: bool | None = None,
+        frontier_gradient: bool | None = None,
+        frontier_discipline_seed: int = 20260724,
         candidate_router: Any | None = None,
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
@@ -818,6 +856,48 @@ class StepwiseExplorer:
         self.explored_out = False
         self.frontier_batch_size = self._normalize_frontier_batch_size(frontier_batch_size)
         self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
+        # REQ-ARC-WMTE-5836: the two just-explore frontier-discipline mechanisms. Resolution
+        # order is explicit-kwarg > env override > SUBMITTED_* default, matching the
+        # CARNOT_ARC_EXPLORE_DIVERSITY pattern below. The env path exists so the A/B harness can
+        # flip an arm without mutating module globals (which would leak across arms inside one
+        # process); the kwarg path exists so a test can construct a specific arm directly.
+        import os as _fd_os
+
+        def _fd_gate(explicit: bool | None, env_name: str, default: bool) -> bool:
+            if explicit is not None:
+                return bool(explicit)
+            raw = _fd_os.environ.get(env_name)
+            if raw is not None:
+                return raw not in ("", "0", "false", "False")
+            return bool(default)
+
+        self.tier_exhaustion_enabled = _fd_gate(
+            tier_exhaustion,
+            "CARNOT_ARC_FRONTIER_TIER_EXHAUSTION",
+            SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED,
+        )
+        self.tier_uniform_random_enabled = _fd_gate(
+            tier_uniform_random,
+            "CARNOT_ARC_FRONTIER_TIER_UNIFORM_RANDOM",
+            SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED,
+        )
+        self.frontier_gradient_enabled = _fd_gate(
+            frontier_gradient,
+            "CARNOT_ARC_FRONTIER_GRADIENT",
+            SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED,
+        )
+        self.tier_count = max(1, int(tier_count))
+        self.tier_policy = TierExhaustionPolicy(tier_count=self.tier_count)
+        self._active_tier = 0
+        self._tier_advances = 0
+        self._tier_deferrals = 0
+        # Reverse index (target -> [(action, origin)]) over KNOWN-WORKING edges only, maintained
+        # incrementally alongside self.adj because the gradient's multi-source BFS walks backward.
+        # See arc_frontier_discipline.reverse_adjacency for the reference definition it must match.
+        self.radj: dict[str, list] = {}
+        self._gradient_targets = 0
+        self._gradient_misses = 0
+        self._fd_rng = __import__("random").Random(int(frontier_discipline_seed))
         self.candidate_router = candidate_router
         self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
         self.structured_evidence_memory = coerce_structured_evidence_memory(
@@ -1533,6 +1613,17 @@ class StepwiseExplorer:
                 )
             except Exception:
                 pass
+        # REQ-ARC-WMTE-5836: stamp the just-explore priority tier LAST, after every ranker has
+        # run. Deliberate ordering: the tier decides WHETHER a candidate is admitted yet, and the
+        # existing rankers keep deciding the order WITHIN an admitted tier -- so the barrier is
+        # additive to (not a replacement for) the proven candidate ordering. A stamping failure
+        # leaves rows un-stamped, which reads back as tier 0 = always eligible = today's behaviour
+        # (fails OPEN, never stalls the search).
+        if self.tier_exhaustion_enabled and rows:
+            try:
+                rows = annotate_frontier_tiers(rows, frame)
+            except Exception:
+                pass
         return rows
 
     def _apply_amortized_prior_order(
@@ -1649,6 +1740,12 @@ class StepwiseExplorer:
             return
         edges.append((act, next_hash))
         self._nav_edges_recorded += 1
+        # REQ-ARC-WMTE-5836: mirror into the reverse index the distance gradient walks. Kept in
+        # lock-step with self.adj HERE (the single forward-edge write path) rather than rebuilt on
+        # demand, so the two indices cannot drift. Only state-CHANGING edges reach this point (the
+        # self-edge guard above), which is exactly the reference's "success == 1" edge set -- a
+        # gradient built over no-op edges would promise routes that do not exist.
+        self.radj.setdefault(next_hash, []).append((act, origin))
 
     def _similarity_descriptor(self, frame: Any) -> tuple[int, ...] | None:
         """REQ-ARC-WMTE-4933: deterministic coarse key for within-game near-state lookup."""
@@ -1849,6 +1946,15 @@ class StepwiseExplorer:
                 except Exception:
                     self._transition_cycle_abstained += 1
             if level_increased:
+                # REQ-ARC-WMTE-5836: reset the GLOBAL tier barrier on a level-up. The reference
+                # goes further and discards its whole graph on level-up; Carnot deliberately keeps
+                # its graph (cross-level navigation and the banked path are load-bearing here in a
+                # way they are not there), so only the barrier is reset. Rationale: a new level is a
+                # NEW board, and an active tier of 3 carried over from the previous level would
+                # start the fresh board by clicking dull/large segments while its button-like
+                # tier-0 objects sat untried -- inverting the mechanism's entire point.
+                if self.tier_exhaustion_enabled and self._active_tier != 0:
+                    self._active_tier = 0
                 fcs = getattr(self, "frame_change_scorer", None)
                 if fcs is not None and hasattr(fcs, "reset"):
                     try:
@@ -1973,16 +2079,24 @@ class StepwiseExplorer:
         # baseline (the weak head misroutes from shallow wins), so the blend keeps depth load-bearing.
         use_value = self.value_head is not None and self.value_weight != 0.0
         w = self.value_weight
+        # REQ-ARC-WMTE-5836: advance the GLOBAL tier barrier BEFORE computing eligibility, so a
+        # milestone where the active tier just went empty everywhere admits the next tier in the
+        # same decision instead of reporting a spurious "explored out". No-op when the flag is off.
+        self._maybe_advance_tier()
         eligible: list[tuple[str, dict, int, float, float, float, float]] = []
         for h, node in self.graph.items():
-            if not node["untested"]:
-                self._record_discriminative_features(
-                    node.get("discriminative_features"),
-                    label=0,
-                    source="frontier_exhausted",
-                    node_hash=h,
-                    path=node.get("path") or [],
-                )
+            if not self._node_has_open_tier(node):
+                # A node whose remaining work is merely TIER-DEFERRED is not exhausted -- do not
+                # feed the online discriminator a false negative for it (see
+                # _node_is_tier_deferred). Genuinely-empty nodes are recorded exactly as before.
+                if not self._node_is_tier_deferred(node):
+                    self._record_discriminative_features(
+                        node.get("discriminative_features"),
+                        label=0,
+                        source="frontier_exhausted",
+                        node_hash=h,
+                        path=node.get("path") or [],
+                    )
                 continue
             on_path = self._node_on_path_proba(node)
             node["on_path_proba"] = on_path
@@ -2034,6 +2148,16 @@ class StepwiseExplorer:
                         and self.go_explore_archive is None
                     ):
                         node["frame"] = None
+
+        # REQ-ARC-WMTE-5836 MECHANISM (b): prefer the navigation-NEAREST eligible node over the
+        # shallowest-from-root one. Applied here, AFTER discriminative pruning and the tier gate,
+        # so the gradient can only ever choose among nodes the existing machinery already deemed
+        # expandable -- it reorders, it never widens. Falls through to the historical key ordering
+        # whenever the gradient has no opinion (nothing reachable over known-working edges).
+        if self.frontier_gradient_enabled and eligible:
+            gradient_target = self._gradient_frontier_target([h for h, *_ in eligible])
+            if gradient_target is not None:
+                return gradient_target
 
         best = None
         best_key = None
@@ -2333,6 +2457,19 @@ class StepwiseExplorer:
         limit = (
             len(node["untested"]) if self.frontier_batch_size is None else self.frontier_batch_size
         )
+        if self.tier_exhaustion_enabled:
+            # REQ-ARC-WMTE-5836: batch only TIER-ADMITTED rows. Popping a deferred row here would
+            # silently defeat the barrier (the batch is expanded unconditionally downstream), and
+            # popping nothing at all would leave next_move with an empty pending queue -> the
+            # _serve() IndexError. Callers therefore only reach here when _node_has_open_tier is
+            # true, and this returns at least one row whenever that holds.
+            eligible = self.tier_policy.eligible_indices(node["untested"], self._active_tier)
+            count = min(int(limit), len(eligible))
+            picked = eligible[:count]
+            actions = [node["untested"][i] for i in picked]
+            for i in sorted(picked, reverse=True):
+                del node["untested"][i]
+            return actions
         count = min(int(limit), len(node["untested"]))
         actions = node["untested"][:count]
         del node["untested"][:count]
@@ -2342,8 +2479,24 @@ class StepwiseExplorer:
         """Pop the next untested action: the most-salient (pop(0)) normally; but when hybrid diversity is on
         AND the search has STALLED (no new level for _stall_threshold moves), pop a RANDOM one among the
         top-K -- the injection that recovers the structure-missed wins (r11l/sp80) the depth-first ride over-
-        commits past. Flag OFF -> always pop(0) -> byte-identical to the submitted behavior."""
+        commits past. Flag OFF -> always pop(0) -> byte-identical to the submitted behavior.
+
+        REQ-ARC-WMTE-5836: when the just-explore tier barrier is on, the pop is restricted to rows
+        the GLOBAL active tier admits (and, on the uniform-random arm, drawn uniformly among them
+        rather than greedily). This IS the live click decision the whole graft targets -- the
+        coordinate-blind learned router leaves this line deciding the order by itself."""
         lst = node["untested"]
+        if self.tier_exhaustion_enabled:
+            rng = self._fd_rng if self.tier_uniform_random_enabled else None
+            top_k = self._div_topk if self.tier_uniform_random_enabled else None
+            idx = self.tier_policy.select_index(lst, self._active_tier, rng=rng, top_k=top_k)
+            if idx is not None:
+                return lst.pop(idx)
+            # Nothing admitted at this tier. Defensive only: every caller gates on
+            # _node_has_open_tier first, so reaching here means the barrier state and the node
+            # disagree. Fail OPEN (take the row) rather than crash the live agent.
+            self._tier_deferrals += 1
+            return lst.pop(0)
         if (
             self._hybrid_diversity
             and self._steps_since_progress > self._stall_threshold
@@ -2351,6 +2504,92 @@ class StepwiseExplorer:
         ):
             return lst.pop(self._div_rng.randrange(min(len(lst), self._div_topk)))
         return lst.pop(0)
+
+    def _node_has_open_tier(self, node: Mapping[str, Any] | None) -> bool:
+        """Does this node still have untested work the GLOBAL barrier admits?
+
+        With the barrier off this is exactly the historical ``bool(node["untested"])`` test, so
+        every call site below stays byte-identical in the default configuration."""
+
+        if not node:
+            return False
+        rows = node.get("untested") or []
+        if not self.tier_exhaustion_enabled:
+            return bool(rows)
+        return self.tier_policy.node_has_open_tier(rows, self._active_tier)
+
+    def _node_is_tier_deferred(self, node: Mapping[str, Any] | None) -> bool:
+        """True when a node has untested work but ALL of it sits above the active tier.
+
+        Needed to keep the online discriminative learner honest: ``_frontier`` records a
+        NEGATIVE training sample ("frontier_exhausted") for every node it skips, and a
+        merely-DEFERRED node is not exhausted -- it will be expanded later, once the barrier
+        advances. Labelling it 0 now would teach the discriminator that a perfectly good node is
+        a dead end, i.e. the barrier would silently poison a component that has nothing to do
+        with it."""
+
+        if not node:
+            return False
+        rows = node.get("untested") or []
+        if not rows:
+            return False
+        return not self._node_has_open_tier(node)
+
+    def _maybe_advance_tier(self) -> None:
+        """Advance the GLOBAL priority barrier when NOTHING anywhere is still open at it.
+
+        Delegates the decision to the pure ``TierExhaustionPolicy.next_active_tier`` (see that
+        method's docstring for why global set-exhaustion is the faithful Carnot analogue of the
+        reference's unreachability trigger, and why it may skip several tiers at once). This
+        wrapper only owns the mutable state and the telemetry."""
+
+        if not self.tier_exhaustion_enabled:
+            return
+        new_tier = self.tier_policy.next_active_tier(
+            (node.get("untested") or [] for node in self.graph.values()),
+            self._active_tier,
+        )
+        if new_tier != self._active_tier:
+            self._tier_advances += new_tier - self._active_tier
+            self._active_tier = new_tier
+
+    def _gradient_frontier_target(self, eligible_hashes: Sequence[str]) -> Optional[str]:
+        """MECHANISM (b): the navigation-NEAREST eligible frontier node, or None (no opinion).
+
+        One multi-source reverse BFS seeded at every eligible node labels the whole known graph
+        with hops-to-nearest-open-node; following the next-hop chain from ``self.cur`` names the
+        node the gradient leads to. Returning None (nothing open, or no known-working route from
+        here) makes the caller fall back to its existing depth-primary ordering -- the gradient is
+        a PREFERENCE, never a veto, so it can never render a reachable node unreachable."""
+
+        if not self.frontier_gradient_enabled or self.cur is None or not eligible_hashes:
+            return None
+        try:
+            field_ = frontier_distance_field(self.radj, eligible_hashes)
+            target = nearest_open_node(field_, self.cur)
+        except Exception:
+            return None
+        if target is None or target not in self.graph:
+            self._gradient_misses += 1
+            return None
+        self._gradient_targets += 1
+        return str(target)
+
+    def frontier_discipline_diagnostics(self) -> dict[str, Any]:
+        """A/B telemetry for the two just-explore frontier-discipline mechanisms."""
+
+        return {
+            "tier_exhaustion_enabled": bool(self.tier_exhaustion_enabled),
+            "tier_uniform_random_enabled": bool(self.tier_uniform_random_enabled),
+            "frontier_gradient_enabled": bool(self.frontier_gradient_enabled),
+            "tier_count": int(self.tier_count),
+            "active_tier": int(self._active_tier),
+            "tier_advances": int(self._tier_advances),
+            "tier_deferral_fallbacks": int(self._tier_deferrals),
+            "gradient_targets_chosen": int(self._gradient_targets),
+            "gradient_misses": int(self._gradient_misses),
+            "reverse_edges": int(sum(len(v) for v in self.radj.values())),
+        }
 
     def _qd_sequence_for_node(self, node: Mapping[str, Any]) -> list[dict[str, Any]]:
         """REQ-ARC-WMTE-4653: generate one additive multi-action sequence for a frontier node."""
@@ -2440,7 +2679,10 @@ class StepwiseExplorer:
         if (
             self.go_explore_archive is not None
             and cur_node
-            and (not cur_node["untested"] or len(cur_node["path"]) >= self.max_depth)
+            # REQ-ARC-WMTE-5836: "exhausted" must mean "exhausted AT THE ACTIVE TIER" when the
+            # barrier is on, or the go-explore replay would fire for a node that still has
+            # perfectly good deferred work. Identical to the historical test when the flag is off.
+            and (not self._node_has_open_tier(cur_node) or len(cur_node["path"]) >= self.max_depth)
         ):
             replay = self._go_explore_replay_sequence(current_path=cur_node.get("path") or [])
             if replay:
@@ -2452,7 +2694,7 @@ class StepwiseExplorer:
         if (
             self.search_mode == "depth_first_ride"
             and cur_node
-            and cur_node["untested"]
+            and self._node_has_open_tier(cur_node)
             and len(cur_node["path"]) < self.max_depth
         ):
             qd_sequence = self._qd_sequence_for_node(cur_node)
@@ -2471,6 +2713,17 @@ class StepwiseExplorer:
         # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
         #    depth_first_ride it fires when the current node is exhausted / dead-end / depth-capped.
         th = self._frontier()
+        if th is None and self.tier_exhaustion_enabled:
+            # REQ-ARC-WMTE-5836: with the barrier on, "no eligible frontier" would be catastrophic
+            # if it were ever reported while lower-priority work remained -- the run would end
+            # early and the A/B would read as a null for a purely mechanical reason rather than a
+            # behavioural one. _frontier already advances the barrier on entry (so the common case
+            # is handled there, in the same decision), but the check is cheap and idempotent, so it
+            # is repeated here as a belt-and-braces guard against any future call path that reaches
+            # explored_out without having gone through _frontier's advance. A genuine explored-out
+            # (nothing open even at the last tier) returns None from both calls.
+            self._maybe_advance_tier()
+            th = self._frontier()
         if th is None:
             self.explored_out = True
             return (None, None)
@@ -2677,6 +2930,10 @@ class CarnotAgentPolicy:
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
+        tier_exhaustion: bool | None = None,
+        tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
+        tier_uniform_random: bool | None = None,
+        frontier_gradient: bool | None = None,
         candidate_router: Any | None = None,
         similarity_retrieval: bool | None = None,
     ) -> None:
@@ -2709,6 +2966,10 @@ class CarnotAgentPolicy:
                 lazy_value_top_k=lazy_value_top_k,
                 frontier_batch_size=frontier_batch_size,
                 navigation_cost_tiebreak=navigation_cost_tiebreak,
+                tier_exhaustion=tier_exhaustion,
+                tier_count=tier_count,
+                tier_uniform_random=tier_uniform_random,
+                frontier_gradient=frontier_gradient,
                 candidate_router=candidate_router,
                 similarity_retrieval=similarity_retrieval,
             )
@@ -2770,6 +3031,10 @@ class E3AgentPolicy:
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
+        tier_exhaustion: bool | None = None,
+        tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
+        tier_uniform_random: bool | None = None,
+        frontier_gradient: bool | None = None,
         candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER,
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
@@ -2895,6 +3160,10 @@ class E3AgentPolicy:
             lazy_value_top_k=lazy_value_top_k,
             frontier_batch_size=frontier_batch_size,
             navigation_cost_tiebreak=navigation_cost_tiebreak,
+            tier_exhaustion=tier_exhaustion,
+            tier_count=tier_count,
+            tier_uniform_random=tier_uniform_random,
+            frontier_gradient=frontier_gradient,
             candidate_router=candidate_router,
             dense_curiosity=(
                 DenseCuriosityProgress(
@@ -4526,6 +4795,15 @@ SUBMITTED_AGENT_CONFIG = {
     "lazy_value_top_k": SUBMITTED_LAZY_VALUE_TOP_K,
     "frontier_batch_size": SUBMITTED_FRONTIER_BATCH_SIZE,
     "navigation_cost_tiebreak": SUBMITTED_NAVIGATION_COST_TIEBREAK,
+    # REQ-ARC-WMTE-5836: the two just-explore frontier-discipline mechanisms + the
+    # within-tier draw knob. All THREE default OFF -> the submitted agent is unchanged
+    # until the matched-budget offline A/B greenlights a flip.
+    "frontier_tier_exhaustion": SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED,
+    "frontier_tier_exhaustion_mode": SUBMITTED_FRONTIER_TIER_EXHAUSTION_MODE,
+    "frontier_tier_count": SUBMITTED_FRONTIER_TIER_COUNT,
+    "frontier_tier_uniform_random": SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED,
+    "frontier_distance_gradient": SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED,
+    "frontier_distance_gradient_mode": SUBMITTED_FRONTIER_DISTANCE_GRADIENT_MODE,
     "frame_change_predictor_enabled": SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED,
     "frame_change_ranking_mode": SUBMITTED_FRAME_CHANGE_RANKING_MODE,
     "frame_change_prune_threshold": None,
