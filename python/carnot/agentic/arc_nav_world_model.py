@@ -623,6 +623,10 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
         for hy, hx, _sz in self._hazard_blobs(grid):
             on_row = abs(acy - hy) <= tol  # avatar ends ALIGNED on the charger's row
             on_col = abs(acx - hx) <= tol  # avatar ends ALIGNED on the charger's column
+            # Collect the AXIS/AXES along which THIS charger's charge would reach the avatar's destination.
+            # The line-of-sight wall check below must be run along the SAME axis the charge travels -- see
+            # the _charge_unobstructed docstring for why using self.hazard_axis unconditionally was wrong.
+            lethal_axes: list = []
             if self.lethal_mode == "omni":
                 # FACING-AWARE (calibrated vs tu93 L3's BFS ground truth): each charger kills only when the
                 # avatar's DESTINATION is on the charger's facing line (aligned on the perpendicular axis),
@@ -635,33 +639,53 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
                 # the charger) -- every observed death is a charge INTERCEPTION at distance 1..reach on the
                 # charger's facing side, so the lethal zone is strictly 0 < dist <= reach.
                 f = self._charger_facing(grid, hy, hx)
-                if f is None:
-                    lethal = (on_row and 0 < abs(acx - hx) <= rng) or (
-                        on_col and 0 < abs(acy - hy) <= rng
-                    )
-                elif f[0] == 0:  # horizontal charger (faces left/right)
-                    lethal = on_row and 0 < (acx - hx) * f[1] <= rng
-                else:  # vertical charger (faces up/down)
-                    lethal = on_col and 0 < (acy - hy) * f[0] <= rng
+                if f is None:  # facing unknown -> either axis alignment can be lethal
+                    if on_row and 0 < abs(acx - hx) <= rng:
+                        lethal_axes.append("row")
+                    if on_col and 0 < abs(acy - hy) <= rng:
+                        lethal_axes.append("col")
+                elif f[0] == 0:  # horizontal charger (faces left/right) -> charges along its ROW
+                    if on_row and 0 < (acx - hx) * f[1] <= rng:
+                        lethal_axes.append("row")
+                else:  # vertical charger (faces up/down) -> charges along its COLUMN
+                    if on_col and 0 < (acy - hy) * f[0] <= rng:
+                        lethal_axes.append("col")
             else:
                 # 'toward' (single learned axis): charge only on an along-axis approach (tu93 L2's horizontal
                 # charger tolerates the perpendicular step-on / on-line-not-approaching cases).
                 if self.hazard_axis == "row":
-                    lethal = on_row and (hx - bcx) * dx > 0 and abs(acx - hx) <= rng
+                    if on_row and (hx - bcx) * dx > 0 and abs(acx - hx) <= rng:
+                        lethal_axes.append("row")
                 else:
-                    lethal = on_col and (hy - bcy) * dy > 0 and abs(acy - hy) <= rng
-            if lethal and self._charge_unobstructed(g, hy, hx, acy, acx):
-                return True
+                    if on_col and (hy - bcy) * dy > 0 and abs(acy - hy) <= rng:
+                        lethal_axes.append("col")
+            # The charge intercepts only if its straight line to the avatar (ALONG THE CHARGING AXIS) is not
+            # wall-blocked. Checking the LOS on the axis the charge actually travels is the fix for
+            # REQ-ARC-WMTE-5880 (see _charge_unobstructed docstring).
+            for ax in lethal_axes:
+                if self._charge_unobstructed(g, hy, hx, acy, acx, axis=ax):
+                    return True
         return False
 
-    def _charge_unobstructed(self, g, hy, hx, acy, acx):
-        """The charger can only intercept if its straight charge along the axis to the avatar is NOT blocked
-        by a wall (line-of-sight). Without this, the model forbids on-line-within-range cells that are
-        actually SAFE because a wall shields them -- the over-pruning that left tu93 L3 with no plan."""
+    def _charge_unobstructed(self, g, hy, hx, acy, acx, axis=None):
+        """The charger can only intercept if its straight charge to the avatar is NOT blocked by a wall
+        (line-of-sight). Without this, the model forbids on-line-within-range cells that are actually SAFE
+        because a wall shields them -- the over-pruning that left tu93 L3 with no plan.
+
+        ``axis`` is the axis the charge TRAVELS ('row' = horizontal charge -> check the row segment between
+        the charger and the avatar; 'col' = vertical). It defaults to ``self.hazard_axis`` for backward
+        compatibility ('toward' mode has a single learned axis). Passing the per-charger axis is the fix for
+        REQ-ARC-WMTE-5880: in 'omni' mode each charger's charging axis comes from its OWN facing
+        (``_charger_facing``) and can DIFFER from the single fitted ``self.hazard_axis``. Checking the LOS on
+        ``self.hazard_axis`` unconditionally meant an omni charger facing the perpendicular axis had its wall
+        shielding checked on the WRONG axis -- a wall on the true charging line was missed, and a
+        genuinely-safe move (shielded by that wall) was flagged lethal -> exactly the over-pruning this
+        method exists to prevent, just on the other axis."""
         if not self.wall_colors:
             return True
+        ax = axis if axis is not None else self.hazard_axis
         H, W = g.shape
-        if self.hazard_axis == "row":
+        if ax == "row":
             r = int(round((hy + acy) / 2))
             c0, c1 = sorted((int(round(hx)), int(round(acx))))
             seg = g[max(0, r), max(0, c0 + 1) : c1] if 0 <= r < H else np.array([])

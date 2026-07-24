@@ -214,3 +214,36 @@ def test_omni_mode_is_facing_directional():
     assert m.is_lethal(grid_with_avatar(16, 26), 1) is False
     # landing exactly ON the charger (collision) -> NOT lethal (it is defeated/passed, not a kill)
     assert m.is_lethal(grid_with_avatar(16, 20), 1) is False
+
+
+def test_omni_los_uses_per_charger_facing_axis_not_fitted_axis():
+    """REQ-ARC-WMTE-5880: in 'omni' mode the wall line-of-sight check must run along the axis the charge
+    actually TRAVELS (each charger's OWN facing), not the single fitted self.hazard_axis. A VERTICAL charger
+    (faces down its column) with a wall on that column between it and the avatar must NOT be able to charge
+    THROUGH the wall -- even when hazard_axis was fitted as 'row'. Before the fix, _charge_unobstructed
+    checked the row segment (no wall there), missed the column wall, and flagged the shielded move lethal ->
+    over-pruning a genuinely-safe move."""
+    from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+    BG = FLOOR_ = 5
+    AV_, WALL_, HZ_, CTR_, GOAL_ = 9, 3, 8, 15, 14
+    m = HazardAwareNavWorldModel(
+        displacement={1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)},
+        avatar_colors=frozenset({AV_}), bg_color=BG, floor_color=FLOOR_, wall_colors=frozenset({WALL_}),
+        goal_color=GOAL_, hazard_colors=frozenset({HZ_, CTR_}), hazard_center_color=CTR_,
+        hazard_axis="row", charge_range=4, lethal_mode="omni", align_tol=1,
+    )
+
+    def grid(with_wall):
+        g = np.full((8, 10), BG, dtype=int)
+        g[2, 5] = HZ_
+        g[3, 5] = CTR_  # centre marker one row below the body -> faces DOWN (vertical / column charger)
+        if with_wall:
+            g[4, 5] = WALL_  # wall on the charging COLUMN, between charger (row 2) and avatar dest (row 5)
+        g[6, 5] = AV_
+        return g
+
+    # facing is read correctly as vertical/down
+    assert m._charger_facing(grid(False), 2, 5) == (1, 0)
+    # UP move ends the avatar on the charger's column, in range: lethal WITHOUT the wall, SAFE WITH it
+    assert m.is_lethal(grid(False), 1) is True
+    assert m.is_lethal(grid(True), 1) is False
