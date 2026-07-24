@@ -46004,9 +46004,12 @@ The workflow SHALL scan the active roadmap, optional next roadmap, completion
 history, roadmap proposals, exclusion manifest, results, source, tests, and
 prior transition allocation receipts for Exp5890 through Exp5903. References
 inside the active `.524` allocation, the roadmap vNEXT proposal, the Exp5890
-owned module/test/spec/result, or the emitted artifact itself SHALL be
-recorded as allowed owned/allocation references, not collisions. Any other
-pre-existing file or bare reference in that range SHALL block the handoff.
+owned module/test/spec/result, the emitted artifact itself, or current-task
+Exp5890 attempt lines in `ops/conductor-log.md` SHALL be recorded as allowed
+owned/allocation references, not collisions. `ops/conductor-log.md` references
+to any other Exp5891 through Exp5903 identity SHALL remain collisions. Any
+other pre-existing file or bare reference in that range SHALL block the
+handoff.
 `next_range_collision_count=0` SHALL be required as a bare integer for
 completion.
 

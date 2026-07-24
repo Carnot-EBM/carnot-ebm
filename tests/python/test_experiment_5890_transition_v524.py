@@ -140,6 +140,7 @@ def _conductor_log() -> str:
             "| 2026-07-24 10:23 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired |",
             "| 2026-07-24 11:22 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired |",
             "| 2026-07-24 12:11 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired |",
+            "| 2026-07-24 13:01 UTC | Exact terminal-boundary handoff from .523 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5890_transit |",
         ]
     )
 
@@ -261,6 +262,7 @@ def test_req_report_5890_spec_declares_exact_transition_contract() -> None:
     assert "SCENARIO-REPORT-5890-UNACTIVATED-PROPOSAL" in section
     assert "SCENARIO-REPORT-5890-RANGE-COLLISION" in section
     assert "Exp5890 through Exp5903" in section
+    assert "ops/conductor-log.md" in section
     assert "next_range_collision_count=0" in section
     for field in mod.REQUIRED_ARTIFACT_FIELDS:
         assert f"`{field}`" in section
@@ -328,6 +330,10 @@ def test_scenario_report_5890_archives_terminal_v523_by_exact_identity(
     ]
     assert all(row["treated_as_success"] is False for row in receipts["receipts"])
     assert report["next_range_collision_count"] == 0
+    assert {
+        "path": "ops/conductor-log.md",
+        "kind": "transition_owned_conductor_attempt_reference",
+    } in report["preconditions_checked"]["range_collision_scan"]["allowed_references"]
     assert report["next_task_range"]["start"] == "exp5890"
     assert report["next_task_range"]["end"] == "exp5903"
     assert len(report["adversarial_verifier_receipts"]) == 4
@@ -417,6 +423,21 @@ def test_scenario_report_5890_unexpected_range_reference_blocks_completion(
         "results/experiment_5892_stale_collision.json"
     )
     mod.validate_artifact(report)
+
+    conductor_root = tmp_path / "conductor-collision"
+    _make_root(conductor_root)
+    _write_text(
+        conductor_root,
+        mod.CONDUCTOR_LOG_RELATIVE_PATH,
+        _conductor_log()
+        + "\n| 2026-07-24 13:02 UTC | Exp5892 downstream task | FAIL | deliverable=results/experiment_5892_headroom_evidence_escrow.json |\n",
+    )
+    conductor_report = _build(conductor_root)
+    assert conductor_report["status"] == "blocked"
+    assert conductor_report["next_range_collision_count"] == 1
+    assert conductor_report["preconditions_checked"]["range_collision_scan"]["collisions"] == [
+        {"path": "ops/conductor-log.md", "kind": "unexpected_next_range_reference"}
+    ]
 
 
 def test_scenario_report_5890_schema_checksum_and_protection(tmp_path: Path) -> None:

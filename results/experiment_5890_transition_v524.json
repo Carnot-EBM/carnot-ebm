@@ -309,7 +309,7 @@
     "traceability_md": "deferred_by_operator_stop_rule"
   },
   "duplicate_history_amplification_count": 0,
-  "duration_s": 20.41873,
+  "duration_s": 24.517482,
   "experiment": "experiment_5890_transition_v524",
   "experiment_id": "exp5890-transition-v524",
   "field_principles": {
@@ -580,7 +580,7 @@
       ]
     }
   },
-  "honest_verdict": "blocked: exp5890 transition preconditions failed: required_test_command_failed",
+  "honest_verdict": "complete: archived terminal .523 identities by exact declared deliverables into .524; Exp5879 retirement and science-ready scalar, Exp5880/Exp5882 missing deliverables, Exp5881 gate block, no-delta, and verifier-warn outcomes preserved; next_range_collision_count=0",
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "milestone_transition": {
     "destination_milestone": "2026.07.524",
@@ -825,14 +825,11 @@
       "before_duplicate_block_count": 895
     },
     "failed_nonblocking_test_commands": [
-      ".venv/bin/python scripts/check_spec_coverage.py"
-    ],
-    "failed_preconditions": [
-      "required_test_command_failed"
-    ],
-    "failed_required_test_commands": [
+      ".venv/bin/python scripts/check_spec_coverage.py",
       ".venv/bin/pytest tests/python -q"
     ],
+    "failed_preconditions": [],
+    "failed_required_test_commands": [],
     "live_verifier": {
       "path": "scripts/adversarial_verify.py",
       "present": true,
@@ -857,8 +854,8 @@
         "check_source": "git_status",
         "modified_by_exp5890": false,
         "present": true,
-        "sha256_after": "sha256:ed0fae37551f076e47f825a877d5081fc864bf311d4da9e2a715d40f690339e5",
-        "sha256_before": "sha256:ed0fae37551f076e47f825a877d5081fc864bf311d4da9e2a715d40f690339e5",
+        "sha256_after": "sha256:5272f95f4e6a204fd7e4e4494f3977c807e183c0ba8c82c945ad580acc3450db",
+        "sha256_before": "sha256:5272f95f4e6a204fd7e4e4494f3977c807e183c0ba8c82c945ad580acc3450db",
         "unchanged": true
       },
       "ops/north-star.md": {
@@ -901,12 +898,20 @@
           "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
         },
         {
+          "kind": "transition_owned_conductor_attempt_reference",
+          "path": "ops/conductor-log.md"
+        },
+        {
           "kind": "transition_owned_reference",
           "path": "python/carnot/experiment_5890_transition_v524.py"
         },
         {
           "kind": "allowed_allocation_reference",
           "path": "research-roadmap.yaml"
+        },
+        {
+          "kind": "transition_owned_reference",
+          "path": "results/experiment_5890_transition_v524.json"
         },
         {
           "kind": "transition_owned_reference",
@@ -956,12 +961,12 @@
     },
     "resources": {
       "disk": {
-        "available_mb": 1169288,
+        "available_mb": 1169327,
         "ok": true,
         "required_mb": 512
       },
       "memory": {
-        "available_mb": 76054,
+        "available_mb": 74803,
         "ok": true,
         "required_mb": 512
       }
@@ -998,7 +1003,7 @@
       },
       "openspec/capabilities/research-reporting/spec.md": {
         "present": true,
-        "sha256": "sha256:44779313f810edbd03483e10dc01ef41d20fa7b770201925070c483784669be5"
+        "sha256": "sha256:16e0846c528901836e28783afef6a72ef77e8ea5db5222f59fd7987cae795277"
       },
       "openspec/change-proposals/research-roadmap-vNEXT.md": {
         "present": true,
@@ -1006,11 +1011,11 @@
       },
       "ops/changelog.md": {
         "present": true,
-        "sha256": "sha256:ed0fae37551f076e47f825a877d5081fc864bf311d4da9e2a715d40f690339e5"
+        "sha256": "sha256:5272f95f4e6a204fd7e4e4494f3977c807e183c0ba8c82c945ad580acc3450db"
       },
       "ops/conductor-log.md": {
         "present": true,
-        "sha256": "sha256:0e0212c4d08c9c7b3576cdd5bbb815df7b9e3a1842afa23fd4127e82e88f5420"
+        "sha256": "sha256:c9aad47c618599a088b2ff9a2a30ab6fa2ee503f838cb0ae349490a95db31c91"
       },
       "ops/exclusion_manifest.yaml": {
         "present": true,
@@ -1091,8 +1096,8 @@
       "check_source": "git_status",
       "modified_by_exp5890": false,
       "present": true,
-      "sha256_after": "sha256:ed0fae37551f076e47f825a877d5081fc864bf311d4da9e2a715d40f690339e5",
-      "sha256_before": "sha256:ed0fae37551f076e47f825a877d5081fc864bf311d4da9e2a715d40f690339e5",
+      "sha256_after": "sha256:5272f95f4e6a204fd7e4e4494f3977c807e183c0ba8c82c945ad580acc3450db",
+      "sha256_before": "sha256:5272f95f4e6a204fd7e4e4494f3977c807e183c0ba8c82c945ad580acc3450db",
       "unchanged": true
     },
     "ops/north-star.md": {
@@ -1129,7 +1134,7 @@
     }
   },
   "random_seed": 5890,
-  "reproducibility_checksum": "sha256:2a127c3fdc610f376d803e63c1d04a89098ef74c029a62aed62c4e4b96d79820",
+  "reproducibility_checksum": "sha256:9bfdbf416934d9123e6cc59ba49bc92adec4b835fbaa04bac3b66314f70dd2b1",
   "research_complete_append_count": 0,
   "result_path": "results/experiment_5890_transition_v524.json",
   "retired_and_science_ready_preserved": true,
@@ -1143,23 +1148,23 @@
     "SCENARIO-REPORT-5890-RANGE-COLLISION",
     "SCENARIO-REPORT-5890-SCHEMA"
   ],
-  "status": "blocked",
+  "status": "complete",
   "test_commands": [
     ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"",
     ".venv/bin/pytest tests/python/test_experiment_5890_transition_v524.py -q --no-cov -n 0",
-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py -m pytest tests/python/test_experiment_5890_transition_v524.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py --fail-under=100",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py -m pytest tests/python/test_experiment_5890_transition_v524.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py --fail-under=100",
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5890_transition_v524.py",
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/python scripts/root_clutter_sweep.py",
     ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5877_transition_v523.json results/experiment_5878_v523_source_delta_ingestion.json results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json results/experiment_5881_one_to_one_grounding_acquisition_ab.json",
-    ".venv/bin/python - <<'PY'\nfrom carnot import experiment_5890_transition_v524 as m\nr = m.build_report(tests_run=[{'command':'preflight','exit_code':0}])\nprint('status', r['status'])\nprint('failed', r['preconditions_checked']['failed_preconditions'])\nprint('next_range_collision_count', r['next_range_collision_count'])\nprint('research_complete_append_count', r['research_complete_append_count'])\nprint('preserved', r['retired_and_science_ready_preserved'])\nprint('receipts', sorted(r['adversarial_verifier_receipts']))\nPY",
     ".venv/bin/pytest tests/python -q"
   ],
   "test_exit_codes": {
-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py -m pytest tests/python/test_experiment_5890_transition_v524.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py --fail-under=100": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5890_transition_v524.py -m pytest tests/python/test_experiment_5890_transition_v524.py -q --no-cov -n 0": 0,
     ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/pytest tests/python/test_experiment_5890_transition_v524.py -q --no-cov -n 0": 0,
-    ".venv/bin/python - <<'PY'\nfrom carnot import experiment_5890_transition_v524 as m\nr = m.build_report(tests_run=[{'command':'preflight','exit_code':0}])\nprint('status', r['status'])\nprint('failed', r['preconditions_checked']['failed_preconditions'])\nprint('next_range_collision_count', r['next_range_collision_count'])\nprint('research_complete_append_count', r['research_complete_append_count'])\nprint('preserved', r['retired_and_science_ready_preserved'])\nprint('receipts', sorted(r['adversarial_verifier_receipts']))\nPY": 0,
     ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"": 0,
     ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5877_transition_v523.json results/experiment_5878_v523_source_delta_ingestion.json results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json results/experiment_5881_one_to_one_grounding_acquisition_ab.json": 1,
     ".venv/bin/python scripts/check_spec_coverage.py": 1,
