@@ -1,0 +1,184 @@
+{
+  "experiment": "outer_loop_arc_structured_nav_broader_ab",
+  "experiment_id": "REQ-ARC-WMTE-5843",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_structured_nav_scored_ab.v1",
+  "title": "Scored-path A/B: does CARNOT_ARC_STRUCTURED_NAV=1 improve the real E3AgentPolicy cascade on a navigation game (tu93)? Submission-gate evidence.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5842,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP-GGUF",
+      "gpu": 1,
+      "role": "world_model_induction_proposer"
+    }
+  ],
+  "config": {
+    "budget": 220,
+    "max_inductions": 3,
+    "explore_budget": 24,
+    "wall_s": 420.0
+  },
+  "methodology_note": "Same whole-loop scored cascade (run_bounded_progress -> E3AgentPolicy) as the Kaggle submission, same proposer/seed/budget; the ONLY change is CARNOT_ARC_STRUCTURED_NAV. tu93 = clean nav (decisive); ls20 = morph-win negative control (nav inducer should not help). Public-game frames for offline dev.",
+  "per_game": [
+    {
+      "game": "tu93",
+      "structured_nav_on": {
+        "reached_level": 1,
+        "levels_gained": 1,
+        "solved": true,
+        "n_inductions": 2,
+        "n_plans_found": 1,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.8981,
+        "total_actions": 194,
+        "wall_s": 53.7
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.7983,
+        "total_actions": 214,
+        "wall_s": 88.8
+      },
+      "reached_delta": 1
+    },
+    {
+      "game": "sk48",
+      "structured_nav_on": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 1.0,
+        "hv_progress": 0.0,
+        "total_actions": 219,
+        "wall_s": 115.8
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 1.0,
+        "hv_progress": 0.0,
+        "total_actions": 219,
+        "wall_s": 139.1
+      },
+      "reached_delta": 0
+    },
+    {
+      "game": "wa30",
+      "structured_nav_on": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 1,
+        "mean_heldout_accuracy": null,
+        "hv_progress": null,
+        "total_actions": 217,
+        "wall_s": 10.9
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.125,
+        "hv_progress": null,
+        "total_actions": 213,
+        "wall_s": 196.2
+      },
+      "reached_delta": 0
+    },
+    {
+      "game": "ls20",
+      "structured_nav_on": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.1163,
+        "total_actions": 215,
+        "wall_s": 115.7
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.1163,
+        "total_actions": 215,
+        "wall_s": 154.6
+      },
+      "reached_delta": 0
+    },
+    {
+      "game": "sc25",
+      "structured_nav_on": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": null,
+        "total_actions": 215,
+        "wall_s": 187.5
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": null,
+        "total_actions": 215,
+        "wall_s": 158.1
+      },
+      "reached_delta": 0
+    }
+  ],
+  "tu93_reached_delta": 1,
+  "aggregate": {
+    "n_games": 5,
+    "total_reached_off": 0,
+    "total_reached_on": 1,
+    "total_delta": 1,
+    "nav_games": [
+      "tu93",
+      "sk48",
+      "wa30"
+    ],
+    "nav_improved": 1,
+    "nav_regressed": 0,
+    "control_games": [
+      "ls20",
+      "sc25"
+    ],
+    "control_improved": 0,
+    "control_regressed": 0,
+    "gate_clears": true
+  },
+  "gate_evidence": "GATE CLEARS: aggregate levels improved (or held) with nav gains and NO control/nav regression",
+  "duration_s": 1222.0,
+  "honest_verdict": "complete_gate_clears_offline_defensible_submission_narrow_benefit_operator_decides",
+  "reproducibility_checksum": "sha256:7f4e64514965560149a7581efdda26bb8fc7ab403bb55a820979300445e3837a",
+  "headline": "GATE CLEARS (broader 5-game scored A/B): total levels 0->1 (+1), NO regressions (nav or control). tu93 is a CLEAN win -- L0->L1 AND fewer actions (194 vs 214, more efficient). The other 2 nav-fire games are neutral (sk48 no plan installed on the cascade; wa30 installed a wrong plan at a NEGLIGIBLE +4-action cost, no level regression). Controls (ls20/sc25) unchanged. So the flag helps 1/3 tested nav games cleanly (level + efficiency), harms none.",
+  "submission_recommendation": "The offline gate CLEARS per the arc3-online-gated-on-offline-beating-baselines discipline: a real offline improvement (+1 level, tu93 also more efficient) with no regressions. The flag is opt-in + non-breaking, and HEAD carries two independent fixes (the plan_in_model component-unpack regression 5841, and the false-negative heldout gate) that benefit any submission. THEREFORE a fresh scored submission with CARNOT_ARC_STRUCTURED_NAV=1 is now a DEFENSIBLE operator decision. HONEST CAVEATS: (1) the benefit is NARROW -- only tu93 among the tested public games cleanly benefits, so the hidden-set gain depends on the hidden games being clean-navigation-family like tu93 (unknown, unverifiable); (2) the level gain is modest (+1) and ~0.08 is generation-wall-bounded, so expect at most a small score change, not a step-change; (3) wa30 shows the flag CAN install a non-winning plan on an ambiguous nav game (bounded 4-action cost here). The evidence supports a submission; the upside is real but bounded; the downside is negligible. Operator-only decision (CLAUDE.md Operator-Only External Publication)."
+}

@@ -2875,7 +2875,16 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   promising but NOT yet a submit-decision -- one public nav game, hidden-set composition unknown, and the gate
   discipline needs "beats the prior submitted run"; run a broader nav+non-nav offline A/B first. Modest honest
   gain (L1 not L3 -- the non-idempotent-reset live limit REQ-ARC-WMTE-5840 still applies), opt-in + no-harm
-  control -> low-risk to include in a future submission once the broader eval clears the gate.
+  control -> low-risk to include in a future submission once the broader eval clears the gate. **BROADER 5-GAME SCORED A/B: GATE CLEARS 2026-07-24 (REQ-ARC-WMTE-5843,
+  `results/outer_loop_arc_structured_nav_broader_ab_20260724.json`).** 3 nav-fire games (tu93/sk48/wa30,
+  no-LLM scan) + 2 controls (ls20/sc25), scored cascade, flag off vs on. Aggregate: total levels 0->1 (+1),
+  NO regressions. tu93 = CLEAN win (L0->L1 AND 194<214 actions -- more effective AND more efficient); sk48
+  neutral (no plan installed on the cascade); wa30 neutral (installed a wrong plan, negligible +4-action cost,
+  no level regression); controls unchanged. GATE CLEARS -> a fresh submission with CARNOT_ARC_STRUCTURED_NAV=1
+  is a DEFENSIBLE operator decision (opt-in + non-breaking + HEAD carries the 5841 plan_in_model regression fix
+  + the false-negative-gate fix). HONEST: benefit is NARROW (1/3 tested nav games cleanly helps; hidden-set
+  gain depends on hidden games being clean-nav like tu93, unknown); modest (+1 level; ~0.08 generation-wall-
+  bounded). Operator-only.
 
 ### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
 - status: DOWN-WEIGHTED (2026-07-20, REQ-ARC-FCP-5757 empirical basis) -- was "open (single biggest lever)"

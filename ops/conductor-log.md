@@ -14211,3 +14211,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 05:09 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |
 | 2026-07-24 05:09 UTC | Prospective non-forgetting continuous learning thr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5866-adaptive-state-pipeline-shadow-ada |
 | 2026-07-24 05:11 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |
+| 2026-07-24 05:11 UTC | Prospective non-forgetting continuous learning thr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5866-adaptive-state-pipeline-shadow-ada |
