@@ -3944,7 +3944,28 @@ result here actually proves out.
   enough apart that nearest==first there); 30 nav+hazard tests pass; new regression test
   `test_charger_facing_picks_nearest_marker_and_handles_centered`.
 
-### GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: OPEN (priority: medium) — deferred from iter8 for a careful cycle
+### GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: FIXED (REQ-ARC-WMTE-5882) — status: filled (InducedNavWorldModel.fit spatial-adjacency prune)
+- **RESOLVED iter11 (2026-07-24) via SPATIAL ADJACENCY, after two MOTION-based dead-ends.** The winning
+  insight: the discriminator between a real avatar component and a coincidental co-mover is NOT motion (both
+  co-shift) but SPATIAL CONTIGUITY -- a rigid avatar's colours adjoin each other (tu93's colour-4 centre
+  marker sits INSIDE the colour-9 body), whereas an independent decoy sits elsewhere on the grid. Fix: a
+  post-process prune (`_adjoins` + the prune block in `fit`) that keeps the existing co-shift detection
+  UNCHANGED, then drops any avatar colour whose cells do not adjoin the LARGEST (body) avatar colour's bbox
+  in a majority of frames. tu93's avatar stays EXACTLY {9,4} (marker adjoins body) -> zero regression; a
+  distant decoy is dropped. Verified: synthetic 3x3-avatar+distant-decoy probe keeps {9,4} and rejects the
+  decoy (incl. 30% marker occlusion); tu93 fit recovers {9,4}; tu93 solves 3/3 (reproducible); tu93 L3
+  hazard calibration CLEAN unchanged (FN=0 FP=0 win_path_pruned=0); 31 nav+hazard tests pass; regression
+  test `test_fit_prunes_distant_codirectional_decoy_keeps_contiguous_marker`.
+- **Why the two motion-based approaches were dead-ends (do NOT retry):** (iter9) a co-shift RATE gate and
+  (iter11-first-half) a per-action DOMINANT-shift co-membership BOTH broke or couldn't recover tu93, because
+  tu93's marker centroid genuinely moves DIFFERENTLY from the body (marker ±8 vs body ±6; per-action mode
+  match 0/4) -- its centroid jitters, so NO motion-matching test groups it with the body. The old weak
+  `agree>=2` only ever caught the marker via occasional coincidental exact-6 matches. Motion cannot
+  discriminate here; spatial contiguity can. (Corollary discovered en route: tu93 also solves 3/3 with the
+  BODY {9} alone -- the marker is not load-bearing -- so even a strict membership that dropped the marker
+  would have kept tu93 solvable; the spatial prune keeps {9,4} anyway, so behaviour is identical to before.)
+
+### (historical, superseded by the FIXED entry above) GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: OPEN (priority: medium) — deferred from iter8 for a careful cycle
 - Found same probe (iter8): `InducedNavWorldModel.fit`'s avatar-by-co-translation step absorbed an
   INDEPENDENTLY-moving decoy object into the avatar set. A decoy that translates a fixed direction each step
   co-shifts with the real avatar's anchor on the subset of moves where directions align (~25% for a random

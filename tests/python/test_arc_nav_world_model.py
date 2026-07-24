@@ -249,6 +249,52 @@ def test_omni_los_uses_per_charger_facing_axis_not_fitted_axis():
     assert m.is_lethal(grid(True), 1) is False
 
 
+def test_fit_prunes_distant_codirectional_decoy_keeps_contiguous_marker():
+    """REQ-ARC-WMTE-5882: fit's avatar co-translation admits an INDEPENDENTLY-moving decoy that shares the
+    avatar's shift on the aligned subset of moves; the spatial-adjacency prune drops it (it sits elsewhere on
+    the grid) while KEEPING a genuine contiguous component (a centre marker inside the body). The discriminator
+    is spatial contiguity, not motion -- a decoy and a real marker can both co-shift, but only the marker
+    adjoins the body."""
+    AV_, CTR_, DECOY_, GOAL_, BG_ = 9, 4, 7, 14, 5
+    DIRS = {1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)}
+    H = W = 22
+    rng = np.random.default_rng(11)
+    top = (2, 2)
+    decoy = (15, 0)
+
+    def render(top, decoy, with_decoy):
+        g = np.full((H, W), BG_, dtype=int)
+        g[18, 18] = GOAL_
+        g[top[0]:top[0]+3, top[1]:top[1]+3] = AV_   # 3x3 ring body
+        g[top[0]+1, top[1]+1] = CTR_                 # centre marker INSIDE the body (contiguous)
+        if with_decoy:
+            g[decoy[0], decoy[1]] = DECOY_           # independent mover, elsewhere on the grid
+        return g
+
+    def build(with_decoy):
+        tr = []
+        g = render(top, decoy, with_decoy)
+        t, d = top, decoy
+        for _ in range(400):
+            a = int(rng.integers(1, 5))
+            dd = DIRS[a]
+            nt = (t[0]+dd[0], t[1]+dd[1])
+            if not (0 <= nt[0] and nt[0]+3 <= H and 0 <= nt[1] and nt[1]+3 <= W):
+                nt = t
+            nd = (d[0], (d[1]+1) % W)
+            g2 = render(nt, nd, with_decoy)
+            tr.append((g, a, g2, 0, 0))
+            g, t, d = g2, nt, nd
+        return tr
+
+    m = InducedNavWorldModel.fit(build(with_decoy=True))
+    assert AV_ in m.avatar_colors and CTR_ in m.avatar_colors  # contiguous body + marker kept
+    assert DECOY_ not in m.avatar_colors                        # distant decoy pruned
+    # control: no decoy -> the contiguous {9,4} avatar is still recovered unchanged
+    m2 = InducedNavWorldModel.fit(build(with_decoy=False))
+    assert AV_ in m2.avatar_colors and CTR_ in m2.avatar_colors
+
+
 def test_charger_facing_picks_nearest_marker_and_handles_centered():
     """REQ-ARC-WMTE-5881: _charger_facing must read THIS charger's OWN marker (nearest to its blob centre),
     not the row-major-first marker in the +-4 window -- otherwise, with two chargers close together, a

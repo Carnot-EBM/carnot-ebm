@@ -60,6 +60,31 @@ def _bbox(mask: np.ndarray):
     return int(ys.min()), int(xs.min()), int(ys.max()), int(xs.max())
 
 
+def _adjoins(body_col: int, c_col: int, grids: list, margin: int = 1) -> bool:
+    """Do c_col's cells sit within body_col's bounding box (expanded by `margin`) in the MAJORITY of frames
+    where both appear? A rigid avatar's component colours are CONTIGUOUS (e.g. tu93's colour-4 centre marker
+    sits INSIDE the colour-9 body); an independently-moving decoy that merely co-shifted with the avatar on
+    aligned moves sits ELSEWHERE on the grid. This is the spatial test that separates a real avatar component
+    from a coincidental co-mover -- used to prune the avatar-colour set (REQ-ARC-WMTE-5882)."""
+    inside = tot = 0
+    for g in grids:
+        g = np.asarray(g)
+        bb = _bbox(g == body_col)
+        cc = np.argwhere(g == c_col)
+        if bb is None or cc.size == 0:
+            continue
+        tot += 1
+        r0, c0, r1, c1 = bb
+        if np.any(
+            (cc[:, 0] >= r0 - margin)
+            & (cc[:, 0] <= r1 + margin)
+            & (cc[:, 1] >= c0 - margin)
+            & (cc[:, 1] <= c1 + margin)
+        ):
+            inside += 1
+    return tot > 0 and inside >= 0.5 * tot
+
+
 @dataclass
 class InducedNavWorldModel:
     """A nav world model whose parameters are FITTED from transitions (see module docstring)."""
@@ -132,6 +157,22 @@ class InducedNavWorldModel:
                 agree = sum(1 for ti, sh in obs if anchor_by_t.get(ti) == sh)
                 if agree >= 2:
                     avatar_colors.add(col)
+
+            # SPATIAL-ADJACENCY PRUNE (REQ-ARC-WMTE-5882): the co-shift test above admits an INDEPENDENTLY-
+            # moving decoy that happens to share the anchor's shift on the aligned subset of moves (~25% for a
+            # random walk) -> a corrupted avatar bbox that spans the real avatar AND the distant decoy. A rigid
+            # avatar is CONTIGUOUS, so drop any avatar colour whose cells do not adjoin the LARGEST avatar
+            # colour's body. tu93's centre marker (inside the body) is kept -> avatar unchanged {9,4}; a distant
+            # decoy is dropped. Left untouched when there is only one avatar colour. This is a post-process on
+            # the existing detection, so a genuine single-mover game is unaffected.
+            if len(avatar_colors) > 1:
+                body = max(
+                    avatar_colors,
+                    key=lambda c: max((int((np.asarray(g) == c).sum()) for g in grids), default=0),
+                )
+                avatar_colors = {body} | {
+                    c for c in avatar_colors if c != body and _adjoins(body, c, grids)
+                }
 
         # 2) DISPLACEMENT per action: median avatar-bbox translation over that action's move transitions.
         disp: dict = {}
