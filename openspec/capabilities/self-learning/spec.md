@@ -25180,6 +25180,143 @@ budget, or model-weight mutation
 |---|---|---|
 | REQ-LEARN-5858 | Implemented (`python/carnot/experiment_5858_reduced_oracle_continuous_self_learning.py`, `results/experiment_5858_reduced_oracle_continuous_self_learning.json`, `results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl`) | Implemented (`tests/python/test_experiment_5858_reduced_oracle_continuous_self_learning.py`) |
 
+## REQ-LEARN-5894: Bounded One-To-One Atom-Grounding Structural Learner
+
+The self-learning tier SHALL provide Exp5894, a deterministic no-LLM A/B at
+`python/carnot/experiment_5894_one_to_one_grounding_ab.py` that consumes the
+Exp5893 chronological grounding-shortcut fixture and writes
+`results/experiment_5894_one_to_one_grounding_ab.json`. Exp5894 SHALL remain
+default-off, outside production integration, and SHALL use the substrate
+`online_exact_membership_query_sidecar_no_llm`. `verifier_is_oracle` SHALL be
+true for exact labels and promotion gates, but exact labels SHALL NOT provide
+learned-score credit.
+
+Before scoring, Exp5894 SHALL replay the Exp5893 readiness gate, hash the
+Exp5893 aggregate and row files, verify every row hash, replay exact semantic
+and encoded-constraint labels, verify split-group isolation, hash lifecycle and
+learner source files, register seeds and budgets, check RAM/disk/output paths,
+and record protected-file hashes. Failed preconditions SHALL produce a terminal
+blocked artifact with `one_to_one_grounding_ready_score=0.0`.
+
+Exp5894 SHALL freeze these arms before held batches: `one_to_one_rule_constraint`,
+`soft_probability`, `fuzzy_t_norm`, `distributed_many_to_one`,
+`current_exact_template`, `shuffled_grounding`, and `no_learner`. Every arm
+SHALL see the same chronological events, exact-query count, replay count, state
+capacity, initialization hash, and grounding threshold. No arm may inspect held
+or future labels before committing a row prediction. KAN-based controls are
+excluded because Exp5749 found no KAN-specific residual.
+
+Exp5894 SHALL measure intended-semantic accuracy separately from
+encoded-constraint accuracy; formula satisfaction cannot stand in for intended
+task success. It SHALL also report shortcut false accepts by shortcut type,
+forward transfer, recurrence, retention, query efficiency, abstention,
+protected-prefix regression, per-family/per-grounding/per-hardness
+group-bootstrap intervals, label/atom/grounding permutation controls,
+frequency-rebalance controls, family-holdout controls, no-information controls,
+state-cap accounting, oracle-boundary violations, and deterministic replay.
+Pooled promotion SHALL NOT hide a nonpositive credited held cell.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_row_hashes`, `frozen_arm_definitions_and_budget_parity`,
+`one_to_one_rule_constraint_representation`,
+`chronology_and_visibility_receipts`, `semantic_vs_constraint_outcomes`,
+`shortcut_false_accept_metrics`,
+`forward_transfer_recurrence_and_retention`,
+`family_grounding_hardness_lower_bounds`,
+`query_replay_and_state_accounting`,
+`permutation_relabel_rebalance_and_null_controls`,
+`protected_prefix_and_safety`, `oracle_boundary_violation_count`,
+`one_to_one_grounding_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes positive, null, unsafe, retired, or blocked grounding evidence.
+- `preconditions_checked`: Gate, hashes, rows, solvers, code, seeds, budgets, resources, outputs, and protected files prevent invalid promotion.
+- `upstream_gate_and_row_hashes`: Exp5893 rows and gates are the immutable challenge surface.
+- `frozen_arm_definitions_and_budget_parity`: Matched arms isolate grounding semantics rather than budget or state differences.
+- `one_to_one_rule_constraint_representation`: A concept-to-atom bijection is the tested mechanism.
+- `chronology_and_visibility_receipts`: No held or future label can influence a committed prediction.
+- `semantic_vs_constraint_outcomes`: Formula satisfaction cannot stand in for intended-task success.
+- `shortcut_false_accept_metrics`: Unsafe semantic acquisition is measured directly by shortcut type.
+- `forward_transfer_recurrence_and_retention`: Held transfer cannot hide recurrence failure or prefix forgetting.
+- `family_grounding_hardness_lower_bounds`: Pooled lift cannot hide a failing cell.
+- `query_replay_and_state_accounting`: Query, replay, state, threshold, and initialization parity make arms comparable.
+- `permutation_relabel_rebalance_and_null_controls`: Permutations, rebalance, holdout, and no-information controls test whether semantics rather than labels or frequency were learned.
+- `protected_prefix_and_safety`: Existing prefixes and protected files must not regress.
+- `oracle_boundary_violation_count`: Learned arms must not read exact labels before prediction.
+- `one_to_one_grounding_ready_score`: Emit bare 1.0 only for positive preregistered lower bounds over every learned control with zero unsafe accepts.
+- `duration_s`: Measured wall time exposes deterministic sidecar work.
+- `inference_substrate`: Use `online_exact_membership_query_sidecar_no_llm`.
+- `verifier_is_oracle`: True for labels and promotion, never for learned-score credit.
+- `field_provenance`: Every field traces to prompt, spec, rows, code, exact sidecar, controls, or tests.
+- `test_commands`: Commands document focused unit/coverage, gate replay, chronology, parity, labels, shortcut metrics, grouped intervals, controls, safety, state cap, replay, schema, adversarial, spec, root-clutter, and protected-file checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming promotion.
+- `reproducibility_checksum`: A checksum detects row, gate, arm, budget, seed, metric, or code drift.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `unsafe:`, `retired:`, or `blocked:`.
+
+`one_to_one_grounding_ready_score` SHALL be the bare scalar `1.0` only when
+preconditions pass, Exp5893 rows replay exactly, all arm budgets match,
+future-label visibility and oracle-boundary violations are zero, the
+one-to-one arm has positive preregistered held lower bounds over every learned
+control on every credited family/grounding/hardness cell, shortcut false
+accepts and unsafe accepts are zero, protected-prefix regression is zero,
+state remains within cap, required controls pass, every required test exit code
+is zero, `inference_substrate` is
+`online_exact_membership_query_sidecar_no_llm`, and `verifier_is_oracle=true`.
+Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5894-PRECONDITIONS: Exp5893 Gate And Rows Replay
+
+**Given** the Exp5893 fixture artifact and rows are present
+**When** Exp5894 checks preconditions
+**Then** the Exp5893 readiness gate, row hashes, split groups, exact semantic
+and constraint oracles, source hashes, seeds, budgets, resources, output paths,
+and protected files are verified before scoring.
+
+### SCENARIO-LEARN-5894-ARM-PARITY: Arms Are Frozen And Budget Matched
+
+**Given** one-to-one, soft, fuzzy, distributed, exact-template, shuffled, and
+no-learner arms
+**When** Exp5894 evaluates chronological rows
+**Then** all arms have identical event order, exact-query count, replay count,
+state capacity, initialization hash, threshold, and no held-label visibility
+before prediction.
+
+### SCENARIO-LEARN-5894-SEMANTIC-VS-CONSTRAINT: Semantic Credit Is Separate
+
+**Given** shortcut rows where the encoded formula is satisfied but intended
+semantics fail
+**When** Exp5894 scores learned arms
+**Then** semantic accuracy, encoded-constraint accuracy, and shortcut false
+accepts are reported separately, and formula satisfaction alone cannot promote.
+
+### SCENARIO-LEARN-5894-CONTROLS-AND-LOWER-BOUNDS: Cells Cannot Hide Failure
+
+**Given** label, atom, grounding, frequency, family-holdout, and no-information
+controls
+**When** Exp5894 computes grouped intervals
+**Then** one-to-one promotion requires positive held lower bounds over every
+learned control in every credited family/grounding/hardness cell and zero
+unsafe accepts.
+
+### SCENARIO-LEARN-5894-FAIL-CLOSED: Unsafe Or Leaky Runs Do Not Promote
+
+**Given** missing gates, mismatched budgets, future-label visibility,
+oracle-boundary leakage, unsafe accepts, protected-prefix regression, state-cap
+overflow, failed tests, or nonpositive credited lower bounds
+**When** Exp5894 validates the artifact
+**Then** `one_to_one_grounding_ready_score` SHALL be `0.0`
+**And** `honest_verdict` SHALL start with `blocked:`, `unsafe:`,
+`complete_null:`, or `retired:`.
+
+## Implementation Status (Exp 5894)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5894 | Implemented (`python/carnot/experiment_5894_one_to_one_grounding_ab.py`, `results/experiment_5894_one_to_one_grounding_ab.json`) | Implemented (`tests/python/test_experiment_5894_one_to_one_grounding_ab.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
