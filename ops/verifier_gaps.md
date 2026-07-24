@@ -2861,7 +2861,21 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   (imported only by scripts/tests); route navigation games (detected via `derive_navigation_pair`) to it
   instead of the LLM induction and feed its engine+is_level_complete to the live `plan_in_model` tier --
   giving E3 a CORRECT model for nav games. This is the highest-leverage lever the induction-quality diagnosis
-  identified, now with a working end-to-end proof + a same-day planner regression removed from its path.
+  identified, now with a working end-to-end proof + a same-day planner regression removed from its path. **WIRED INTO THE SCORED CASCADE + POSITIVE A/B 2026-07-24 (REQ-ARC-WMTE-5842,
+  `results/outer_loop_arc_structured_nav_scored_ab_20260723.json`).** Added the structured nav inducer as a
+  gated (opt-in `CARNOT_ARC_STRUCTURED_NAV=1`), non-breaking pre-LLM engine attempt in
+  `E3AgentPolicy._induce_and_plan` (follows the ttt-prior-engine pattern; makes arc_nav_world_model
+  live-path-reachable -- orphan lint now passes). First A/B NULLED because a >=0.5 full-grid exact-match
+  heldout gate REJECTED the correct nav model before planning (a correct AVATAR-ONLY nav model scores heldout
+  ~0 -- it models the avatar's move, not the co-moving key / step-counter HUD / rails -- the exact
+  false-negative wall the 2026-07-20 diagnosis §3 named). FIX: gate the structured nav path on nav-fit +
+  plan-found, not exact-match; the real level counter on execution is the oracle. RE-RUN A/B on the REAL
+  scored cascade: **tu93 (clean nav) L0->L1 (+1 level; baseline LLM-induction reaches L0/0 plans, structured
+  nav 1 plan), with a CLEAN negative control (ls20 morph-win non-nav: no change).** SUBMISSION ASSESSMENT:
+  promising but NOT yet a submit-decision -- one public nav game, hidden-set composition unknown, and the gate
+  discipline needs "beats the prior submitted run"; run a broader nav+non-nav offline A/B first. Modest honest
+  gain (L1 not L3 -- the non-idempotent-reset live limit REQ-ARC-WMTE-5840 still applies), opt-in + no-harm
+  control -> low-risk to include in a future submission once the broader eval clears the gate.
 
 ### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
 - status: DOWN-WEIGHTED (2026-07-20, REQ-ARC-FCP-5757 empirical basis) -- was "open (single biggest lever)"

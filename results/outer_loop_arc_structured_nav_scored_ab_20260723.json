@@ -1,0 +1,86 @@
+{
+  "experiment": "outer_loop_arc_structured_nav_scored_ab",
+  "experiment_id": "REQ-ARC-WMTE-5842",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_structured_nav_scored_ab.v1",
+  "title": "Scored-path A/B: does CARNOT_ARC_STRUCTURED_NAV=1 improve the real E3AgentPolicy cascade on a navigation game (tu93)? Submission-gate evidence.",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5842,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP-GGUF",
+      "gpu": 1,
+      "role": "world_model_induction_proposer"
+    }
+  ],
+  "config": {
+    "budget": 220,
+    "max_inductions": 3,
+    "explore_budget": 24,
+    "wall_s": 420.0
+  },
+  "methodology_note": "Same whole-loop scored cascade (run_bounded_progress -> E3AgentPolicy) as the Kaggle submission, same proposer/seed/budget; the ONLY change is CARNOT_ARC_STRUCTURED_NAV. tu93 = clean nav (decisive); ls20 = morph-win negative control (nav inducer should not help). Public-game frames for offline dev.",
+  "per_game": [
+    {
+      "game": "tu93",
+      "structured_nav_on": {
+        "reached_level": 1,
+        "levels_gained": 1,
+        "solved": true,
+        "n_inductions": 2,
+        "n_plans_found": 1,
+        "mean_heldout_accuracy": null,
+        "hv_progress": 0.8981,
+        "total_actions": 46,
+        "wall_s": 630.9
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.7983,
+        "total_actions": 214,
+        "wall_s": 114.7
+      },
+      "reached_delta": 1
+    },
+    {
+      "game": "ls20",
+      "structured_nav_on": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.1163,
+        "total_actions": 215,
+        "wall_s": 117.8
+      },
+      "baseline_off": {
+        "reached_level": 0,
+        "levels_gained": 0,
+        "solved": false,
+        "n_inductions": 1,
+        "n_plans_found": 0,
+        "mean_heldout_accuracy": 0.0,
+        "hv_progress": 0.1163,
+        "total_actions": 215,
+        "wall_s": 225.6
+      },
+      "reached_delta": 0
+    }
+  ],
+  "tu93_reached_delta": 1,
+  "gate_evidence": "structured nav improves the scored cascade on the clean nav game",
+  "duration_s": 1091.3,
+  "honest_verdict": "complete_positive_structured_nav_improves_scored_cascade_on_nav_game_plus1_clean_control_broader_eval_needed_before_submit",
+  "reproducibility_checksum": "sha256:4627d1bdf6ffeb0f1ef79e90151ac25fa864c7c0349f6e2c6f74f4300b14e89b",
+  "headline": "POSITIVE gate evidence: on the REAL scored E3AgentPolicy cascade, CARNOT_ARC_STRUCTURED_NAV=1 takes tu93 (clean nav game) from L0 (LLM-induction baseline, 0 plans) to L1 (structured nav inducer, 1 plan) -- a real +1-level improvement -- with a CLEAN negative control (ls20, a morph-win non-nav game: no change, so the inducer does not spuriously fire/help). The prior null was a GATE bug (the >=0.5 full-grid exact-match heldout rejected the correct avatar-only nav model before planning); fixed to gate on nav-fit + plan-found.",
+  "submission_assessment": "PROMISING but NOT yet a submit-decision. (1) The improvement is real and on the SCORED cascade, but it is NARROW: +1 level on ONE PUBLIC nav game; the submission scores on HIDDEN games whose mechanics are unknown (nav-family or not). (2) The negative control shows it does NOT hurt non-nav games, and it is opt-in + non-breaking -> LOW RISK to include. (3) The gate discipline (arc3-online-gated-on-offline-beating-baselines) requires beating the best PRIOR SUBMITTED run; a single public game does not establish that on the hidden set. BEFORE submitting: run a BROADER offline A/B (a representative nav+non-nav subset, flag on vs off) to confirm net aggregate improvement (or gains-on-nav + no-harm), THEN the operator decides. tu93 reaches L1 not L3 here -- the non-idempotent reset still limits deep live solving (REQ-ARC-WMTE-5840), so this is a modest, honest gain, not a step-change."
+}

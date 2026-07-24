@@ -457,3 +457,26 @@ only by scripts/tests). Route navigation games (detected via `derive_navigation_
 LLM induction, and feed its engine+is_level_complete to the live plan_in_model tier -- giving E3 a correct
 model for nav games. That is the highest-leverage lever the 2026-07-20 diagnosis identified, now with a
 working end-to-end proof and a same-day planner regression removed from its path.
+
+## Structured nav inducer wired into the scored cascade + positive A/B (5842)
+
+Wired the structured nav inducer into `E3AgentPolicy._induce_and_plan` as a gated (opt-in
+`CARNOT_ARC_STRUCTURED_NAV=1`), non-breaking pre-LLM engine attempt (makes arc_nav_world_model
+live-path-reachable). First scored A/B nulled; diagnosed to a GATE bug -- a correct avatar-only nav model
+scores full-grid exact-match heldout ~0 (it models the avatar, not the co-moving key / HUD counter / rails),
+so the `>=0.5` trust gate rejected it before planning (the false-negative wall the 2026-07-20 diagnosis §3
+named). Fix: gate the structured nav path on nav-fit + plan-found; the real level counter on execution is the
+oracle.
+
+Re-run on the REAL scored cascade (run_bounded_progress -> E3AgentPolicy):
+
+| game | baseline (flag off) | structured_nav (flag on) |
+|------|---------------------|--------------------------|
+| tu93 (clean nav) | L0 (0 plans) | **L1 (1 plan)** |
+| ls20 (morph-win control) | L0 | L0 |
+
+So on the scored path, the structured nav inducer self-discovers a tu93 level-up where LLM induction reaches
+0, with a clean negative control. Honest scope: L1 not L3 (the non-idempotent-reset live limit from 5840
+still applies); one public nav game; hidden-set composition unknown. Promising gate evidence, but a broader
+nav+non-nav offline A/B is needed before a submit-decision -- the improvement is opt-in + non-breaking +
+no-harm on the control, so low-risk to include once the broader eval clears the gate.
