@@ -35946,3 +35946,133 @@ NOT change immutable upstream artifacts or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5879 | Implemented (`python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py`, `results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`) | Implemented (`tests/python/test_experiment_5879_hardness_headroom_taxonomy_corrigendum.py`) |
+
+### REQ-VERIFY-5892: Headroom Evidence Escrow Admission Boundary
+
+The repository SHALL provide Exp5892 at
+`python/carnot/experiment_5892_headroom_evidence_escrow.py` that writes
+`results/experiment_5892_headroom_evidence_escrow.json` as an immutable
+evidence-escrow admission artifact. Exp5892 SHALL consume but SHALL NOT
+rewrite `results/experiment_5868_hardness_controlled_constraint_fixture.json`,
+`results/experiment_5868_hardness_controlled_constraint_fixture.rows.jsonl`,
+`results/experiment_5869_hardness_surface_headroom_audit.json`, or
+`results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json`.
+Exp5892 SHALL declare `inference_substrate=aggregation_from_upstream_artifacts`
+because it aggregates checked-in evidence and reruns deterministic predicates
+without model inference.
+
+Before admission, Exp5892 SHALL hash all three upstream summaries, the Exp5868
+row file, Exp5869/Exp5879/Exp5892 source and tests, this verification spec,
+`research-program.md`, `scripts/adversarial_verify.py`, exact solver version
+receipts, the declared output path, disk/RAM probes, and protected files
+including `scripts/research_conductor.py`. The final artifact SHALL be written
+atomically after checks complete, SHALL NOT use a bootstrap `running` artifact,
+and SHALL include a terminal freshness receipt that proves the output mtime or
+content hash changed during this task.
+
+Exp5892 SHALL independently replay row count, exact labels, certificates,
+witnesses, semantic groups, proof-preserving relabel stability, certificate
+stability, frozen group-safe splits, non-oracle nuisance metrics, oracle-derived
+solver telemetry, and taxonomy boundaries. It SHALL NOT gate directly on
+Exp5879's terminal status or honest verdict; Exp5879 MAY be cited as immutable
+historical evidence, but admission SHALL be recomputed from upstream hashes,
+row records, and deterministic predicates.
+
+Exp5892 SHALL attribute every failed check to an exact command, node id, path
+owner, owner path, exit code, and a boolean receipt stating whether the failure
+can alter rows, audit computations, schemas, or gate fields. Exp5892-owned
+checks SHALL include focused unit, coverage, immutable-hash, independent-label,
+taxonomy, group-leakage, nuisance-ceiling, circularity, terminal-freshness,
+schema, adversarial-verifier availability, spec-coverage, root-clutter, and
+protected-file checks. Global-suite failures MAY be classified as unrelated
+debt only when the artifact includes exact node/path evidence and a
+non-interference receipt proving the failure cannot alter rows, audit
+computations, schemas, or gate fields.
+
+`headroom_admission_ready_score` SHALL be the bare scalar `1.0` only for a
+non-retired admission artifact whose owned checks pass, immutable upstream
+hashes are present, row/certificate replay passes, splits are leakage-safe, the
+maximum non-oracle nuisance AUROC remains below `0.85`, oracle telemetry is
+reported separately as circular, relabel/certificate stability is exact, every
+unrelated global failure has an exact non-interference receipt, protected files
+are unchanged, terminal freshness passes, `inference_substrate` is
+`aggregation_from_upstream_artifacts`, and top-level `verifier_is_oracle=false`
+for nuisance headroom. Otherwise the score SHALL be the bare scalar `0.0` and
+the artifact SHALL use an honest verdict beginning `complete_null:`,
+`retired:`, or `blocked:`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_upstream_hashes`, `independent_row_and_certificate_replay`,
+`taxonomy_and_oracle_boundary_receipt`, `leakage_safe_split_receipts`,
+`non_oracle_nuisance_metrics`, `oracle_derived_diagnostic_metrics`,
+`owned_check_receipts`, `unrelated_global_debt_receipts`,
+`gate_non_interference_receipts`, `terminal_artifact_freshness_receipt`,
+`headroom_admission_ready_score`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal admission state distinguishes clean escrow admission from blocked or null evidence.
+- `preconditions_checked`: Hash, solver, resource, verifier, output, and protected-file checks prevent stale or fabricated admission.
+- `immutable_upstream_hashes`: Admission may consume prior evidence but never rewrite it.
+- `independent_row_and_certificate_replay`: Row count, labels, witnesses, certificates, and relabels are replayed from rows rather than accepted from prose.
+- `taxonomy_and_oracle_boundary_receipt`: Nuisance controls and exact solver telemetry remain in disjoint authority classes.
+- `leakage_safe_split_receipts`: Semantic, family, relabel, and certificate groups cannot leak across train/test boundaries.
+- `non_oracle_nuisance_metrics`: Only oracle-distinct nuisance metrics determine the headroom ceiling.
+- `oracle_derived_diagnostic_metrics`: Exact solver telemetry is reported as circular diagnostics, not learned-energy credit.
+- `owned_check_receipts`: Every owned check has command, node, owner, exit, and mutability attribution.
+- `unrelated_global_debt_receipts`: Exact node/path evidence is required; a prose claim is insufficient.
+- `gate_non_interference_receipts`: Unrelated debt can be ignored only when rows, computations, schemas, and gates are unaffected.
+- `terminal_artifact_freshness_receipt`: Atomic terminal output must be newer or content-distinct from the pre-task target.
+- `headroom_admission_ready_score`: Emit bare `1.0` only for a clean non-retired admission artifact.
+- `protected_files_unchanged`: Operator-owned and immutable upstream files remain untouched.
+- `duration_s`: Measured runtime distinguishes real replay from bootstrap placeholders.
+- `inference_substrate`: Use `aggregation_from_upstream_artifacts`.
+- `verifier_is_oracle`: Use `false` for nuisance headroom; exact solver telemetry carries its own circular oracle flag.
+- `field_provenance`: Every field traces to task prompt, spec, source, tests, rows, artifacts, or solver receipts.
+- `test_commands`: Verification commands are part of the admission evidence.
+- `test_exit_codes`: Exit codes prevent failed checks from silently promoting.
+- `reproducibility_checksum`: A checksum detects upstream, taxonomy, check, or gate drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-5892-IMMUTABLE-REPLAY: Upstream Evidence Is Replayed Not Rewritten
+
+Given Exp5868 rows and Exp5868/Exp5869/Exp5879 summary artifacts exist, when
+Exp5892 builds the escrow, then it SHALL hash every immutable upstream file,
+independently replay all 84 row labels, witnesses, certificates, semantic
+groups, relabel stability, and split receipts, and prove the upstream hashes
+remain unchanged after the artifact write.
+
+### SCENARIO-VERIFY-5892-ADMISSION-BOUNDARY: Retired Corrigendum Status Is Not The Gate
+
+Given Exp5879 may be blocked or retired because of unrelated global-suite debt,
+when Exp5892 computes admission, then it SHALL cite Exp5879 only as immutable
+historical evidence, recompute the non-oracle nuisance ceiling below `0.85`,
+flag oracle telemetry separately as circular, and permit
+`headroom_admission_ready_score=1.0` only from the independent replay and owned
+check receipts.
+
+### SCENARIO-VERIFY-5892-NON-INTERFERENCE: Global Debt Needs Exact Receipts
+
+Given the full Python suite may contain failures outside Exp5892 ownership,
+when Exp5892 classifies a failure as unrelated debt, then it SHALL record the
+exact failing node id, path owner, owner path, command, exit code, and
+non-interference booleans proving rows, audit computations, schemas, and gate
+fields cannot change. Missing node/path evidence SHALL block admission.
+
+### SCENARIO-VERIFY-5892-FRESHNESS: Terminal Artifact Is Atomic And Fresh
+
+Given the output path may contain a stale or bootstrap artifact, when Exp5892
+writes `results/experiment_5892_headroom_evidence_escrow.json`, then the final
+artifact SHALL be atomically written, SHALL NOT use status `running`, SHALL
+include a terminal freshness receipt proving mtime or normalized content hash
+changed during this task, and SHALL validate its schema and reproducibility
+checksum.
+
+## Implementation Status (REQ-VERIFY-5892)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5892 | Implemented (`python/carnot/experiment_5892_headroom_evidence_escrow.py`, `results/experiment_5892_headroom_evidence_escrow.json`) | Implemented (`tests/python/test_experiment_5892_headroom_evidence_escrow.py`) |
