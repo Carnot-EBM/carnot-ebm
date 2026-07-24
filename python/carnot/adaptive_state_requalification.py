@@ -11,6 +11,7 @@ repository-wide pytest blocker is attributed separately.
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
 from typing import Any
 
 from carnot import adaptive_state as base
@@ -143,6 +144,44 @@ def exp5859_input_receipt(path: str | Path | None = None) -> JsonDict:
     }
 
 
+def pytest_environment_receipt() -> JsonDict:
+    """Record the exact pytest build and plugin set used for collection."""
+
+    command = [".venv/bin/python", "-m", "pytest", "--version", "--version"]
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=base.REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        message = str(exc)
+        return {
+            "available": False,
+            "command": command,
+            "error": message,
+            "plugin_count": 0,
+            "plugins": [],
+            "raw_output_sha256": base.sha256_text(message),
+            "version": "",
+        }
+    raw_output = ((completed.stdout or "") + (completed.stderr or "")).strip()
+    lines = [line.rstrip() for line in raw_output.splitlines()]
+    plugins = [line.strip() for line in lines if line.startswith("  ") and line.strip()]
+    return {
+        "available": completed.returncode == 0,
+        "command": command,
+        "plugin_count": len(plugins),
+        "plugins": plugins,
+        "raw_output_sha256": base.sha256_text(raw_output),
+        "returncode": completed.returncode,
+        "version": lines[0] if lines else "",
+    }
+
+
 def _protected_files_unchanged(exp5859_artifact: JsonDict | None = None) -> JsonDict:
     if exp5859_artifact is None:
         exp5859_artifact = base.read_json(base.REPO_ROOT / base.RESULT_RELATIVE_PATH)
@@ -248,9 +287,15 @@ def build_artifact(
     exp5859_artifact = base.read_json(base.REPO_ROOT / base.RESULT_RELATIVE_PATH)
     parity = parity_receipt if parity_receipt is not None else base._run_parity_receipts()
     preconditions = (
-        preconditions_checked
+        dict(preconditions_checked)
         if preconditions_checked is not None
-        else base.collect_preconditions(result_path)
+        else dict(base.collect_preconditions(result_path))
+    )
+    if "pytest_environment" not in preconditions:
+        preconditions["pytest_environment"] = pytest_environment_receipt()
+    preconditions["preconditions_ready"] = bool(
+        preconditions.get("preconditions_ready")
+        and preconditions["pytest_environment"].get("available")
     )
     protected = _protected_files_unchanged(exp5859_artifact)
     root_cause = _root_cause(
