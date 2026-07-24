@@ -215,21 +215,27 @@ def detect_mover(
     *,
     min_evidence: int = 4,
     align_min: float = 0.7,
-    max_shift: float = 4.0,
+    max_shift_frac: float = 0.25,
     max_area_fraction: float = 0.15,
 ) -> Optional[Mover]:
     """Find the PLAYER: the color whose centroid consistently translates in the direction of the directional
     action (1-4) used. For each directional transition and each entity-sized non-background color present in
     both frames, we score how well its centroid shift aligns with the action's unit vector (dot of the unit
-    shift with the unit direction), requiring a small real shift (~1 cell, not a whole-board recolor). The
-    color with the strongest, best-supported alignment is the player.
+    shift with the unit direction), requiring a real shift up to a bounded distance (a rigid slide, not a
+    whole-board recolor). The color with the strongest, best-supported alignment is the player.
 
     Robustness comes from the SIGNAL STRENGTH bar, not a compactness heuristic: a real avatar slides with the
     keys on nearly every directional action (measured align ~0.9-1.0, evidence 24-43 across sc25/ls20),
     whereas a scattered non-entity color (cn04's color-0 void) only drifts incidentally (align ~0.55, low
     evidence). Requiring `align_min`>=0.7 over `min_evidence`>=4 directional transitions keeps the avatars
     and drops the void, without a density heuristic that mis-rejected real avatars whose color is shared with
-    other cells. Global centroid keeps a morphing avatar trackable."""
+    other cells. Global centroid keeps a morphing avatar trackable.
+
+    `max_shift` is RELATIVE to the grid (`max_shift_frac * min(H, W)`, floored at 4.0): a player can jump
+    MULTIPLE cells per action on a coarse logical grid (tu93's token jumps ~6 cells/action on a 64-grid), so
+    a fixed 4.0-cell cap wrongly rejected such players and made them undetectable (the REQ-ARC-WMTE-5836
+    isolation found tu93 -- the one clean navigation game -- was skipped for exactly this reason). The
+    relative cap still rejects a near-whole-board recolor (centroid shift ~half the grid)."""
     scores: dict[int, list[float]] = {}
     for t in transitions:
         d = _DIR.get(int(t.action))
@@ -239,6 +245,7 @@ def detect_mover(
         after = _as_grid(t.after)
         if before.shape != after.shape or not _frame_changed(before, after):
             continue
+        max_shift = max(4.0, max_shift_frac * float(min(before.shape)))
         bg = _background_color(before)
         dir_vec = np.asarray(d, dtype=float)
         dir_unit = dir_vec / np.linalg.norm(dir_vec)

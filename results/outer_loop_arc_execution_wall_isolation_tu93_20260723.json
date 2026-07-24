@@ -1,0 +1,35 @@
+{
+  "experiment": "outer_loop_arc_execution_wall_isolation_tu93",
+  "experiment_id": "REQ-ARC-WMTE-5836",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_execution_wall_isolation.v1",
+  "title": "Full isolation of the ARC execution wall on the ONE clean navigation game (tu93): perception + goal are correct; the wall is obstacle-aware pathfinding within the move budget.",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5836,
+  "methodology_note": "Source extraction (authorized offline dev, REQ-ARC-WMTE-5836 workflow) established navigation_only per game. tu93 is the ONLY navigation-only game of the 4 (sc25 needs spell-casting, ls20 needs attribute-morphing, cn04 needs endpoint-pairing). On tu93 with source-confirmed colors (player=9, exit=14 at logical (46,46)), ran: (a) the E3 value-head-routed explorer A/B, (b) a direct greedy-toward-exit navigator. No LLM. Public-game source read for offline dev only, never in the hidden submission.",
+  "findings": {
+    "source_navigation_only": {
+      "sc25": "no (spell-casting transforms player)",
+      "ls20": "no (morph shape/color/rotation to match pad)",
+      "cn04": "no (endpoint pairing)",
+      "tu93": "yes (player color-9 onto exit color-14)"
+    },
+    "why_e3_ab_nulled": "The 3 games the E3 perception-target A/B ran on (sc25/ls20/cn04) are all NON-navigation games -- no player->exit heuristic can solve them. The one navigation game (tu93) was SKIPPED because the mover detector missed its player.",
+    "mover_detector_bug": "detect_mover's max_shift=4.0 rejects tu93's player, which JUMPS ~6 logical cells per action (coarse grid). Raising/relativizing max_shift would recover it. This is why tu93 got mover=None and was skipped.",
+    "tu93_navigation_result": {
+      "player_start_dist": 60,
+      "e3_explorer_min_dist": 12.1,
+      "e3_levels": 0,
+      "greedy_navigator": "60->42 then GAME OVER at move 26",
+      "greedy_levels": 0
+    },
+    "root_cause": "tu93 is a MAZE (color-2 rails, 288 cells) with a MOVE BUDGET (game-over ~26 moves). The E3 novelty-explorer nudged by the value head navigates PARTWAY (60->12) but does not close the gap around obstacles; greedy-toward-exit bounces off rails (~0.7 net progress/step despite 6-cell jumps) and times out. Neither does obstacle-aware pathfinding within budget.",
+    "carnot_already_has_the_engine": "Carnot's OfflineSolver (verifier-routed best-first search over replay-from-reset) ALREADY solves tu93 to L5 (ops/arc_solve_registry.yaml) using a hand-built GameAdapter's player->goal Manhattan verifier. The E3 LIVE explorer (force_explore) uses a WEAKER novelty-search that does not. The perception fix provides AUTONOMOUSLY (detect player 9 + exit 14 from frames) exactly what the hand-built GameAdapter provides MANUALLY."
+  },
+  "headline": "EXECUTION WALL FULLY ISOLATED. Perception is fixed and the goal is correct; the wall is a goal-directed OBSTACLE-AWARE PATHFINDER to the perception-detected target within the move budget. The E3 novelty-explorer is the weak link -- it navigates partway (tu93 60->12) but cannot close the gap around a maze within budget. Carnot's OfflineSolver verifier-routed best-first search ALREADY solves tu93 (registry L5) with a hand-built adapter's player->goal verifier -- so the concrete next capability is to feed the AUTONOMOUS perception-detected player+target as that verifier into the OfflineSolver-style search on the live path, replacing the hand-built GameAdapter.",
+  "next_capability": "A perception-grounded verifier-routed navigator: (1) fix detect_mover max_shift for multi-cell-jump players (recover tu93-class players); (2) feed the detected player->target Manhattan as the OfflineSolver verifier (the mechanism that already solves tu93/L5), NOT the E3 novelty-explorer; (3) measure discovery on the navigation games. This is the honest, scoped build the full isolation earns.",
+  "honest_verdict": "complete_execution_wall_isolated_needs_perception_grounded_verifier_routed_pathfinder_not_novelty_explorer",
+  "reproducibility_checksum": "sha256:67a984ad81234736e0df3464d5466797f1b67625b7d7364aa6496f32552980e3"
+}
