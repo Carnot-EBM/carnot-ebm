@@ -14222,3 +14222,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 09:19 UTC | Dated evidence refresh after the V523 planner mark | OK | 124 passed, 2 warnings in 14.08s |
 | 2026-07-24 09:40 UTC | Changed-taxonomy audit of nuisance controls versus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5879_hardnes |
 | 2026-07-24 09:56 UTC | Changed-taxonomy audit of nuisance controls versus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5879_hardnes |
+| 2026-07-24 10:14 UTC | Changed-taxonomy audit of nuisance controls versus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5879_hardnes |
+| 2026-07-24 10:16 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
