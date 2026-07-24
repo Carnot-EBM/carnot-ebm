@@ -2885,6 +2885,18 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   + the false-negative-gate fix). HONEST: benefit is NARROW (1/3 tested nav games cleanly helps; hidden-set
   gain depends on hidden games being clean-nav like tu93, unknown); modest (+1 level; ~0.08 generation-wall-
   bounded). Operator-only.
+- **NAV-INDUCER CONFIDENCE GATE + sk48/wa30 ARE NON-NAV 2026-07-24 (REQ-ARC-WMTE-5844).** Overnight-loop
+  iteration: a source-check (workflow) established the other two nav-FIRE games are NOT navigation -- sk48 is
+  a two-snake color-SEQUENCE-match (relational win; avatar is an orientation-locked growing snake), wa30 is
+  Sokoban crate-push (win reads CRATE positions, needs ACTION5 grab/drag, + autonomous mover-agents). The nav
+  fitter spuriously fit both (found a mover + a goal-like colour) and wa30 installed a WASTED plan (+4 actions
+  in the 5843 A/B). FIX: `InducedNavWorldModel.is_confident_nav()` (avatar must EXCLUDE padding-colour 0 +
+  translate in >=3 directions + have a goal) now gates the E3 structured-nav path. Verified: tu93 stays
+  confident + solves (levelup); sk48/wa30 gated out (no wasted plan). 5 unit tests. Conservative gate: a
+  missed real nav game costs a forgone level-up (no harm); firing on non-nav wastes actions. NET: the public
+  set has exactly ONE clean nav game (tu93) the autonomous inducer solves; other public games need bespoke
+  mechanic-class models (snake-sequence, sokoban, spell, morph, pairing, merge, gravity, two-click, CSP) --
+  each a substantial build with autonomous-mover / hidden-state complications.
 
 ### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
 - status: DOWN-WEIGHTED (2026-07-20, REQ-ARC-FCP-5757 empirical basis) -- was "open (single biggest lever)"
