@@ -3961,3 +3961,21 @@ result here actually proves out.
   correctly gated off the pure-nav path), and the single autonomous mover the model DOES handle (the charger)
   is covered by HazardAwareNavWorldModel -- so a corrupted avatar fit on a decoy-bearing game most likely
   results in a (correct) non-fire rather than a wrong plan. Still worth hardening for robustness.
+- **iter9 DEAD-END (2026-07-24, reverted, NOT committed -- do not repeat):** the obvious fix (co-shift
+  agreement RATE gate `agree >= 0.5*len(obs)` + anchor = most-distinct-shift-directions) BROKE the real
+  game: tu93 dropped 3/3 -> 0/3. Diagnosis (fit on real tu93 recon, 48 transitions): tu93's avatar has body
+  colour 9 (CLEAN: 4 distinct shift dirs {+-6 row, +-6 col}) + centre marker colour 4 (NOISY: 8 distinct
+  "dirs" from centroid JITTER -- (1,-7),(7,-1),... because the small marker's centroid wobbles within the
+  6-cell-jump avatar). So (a) the most-distinct-directions anchor mis-picked the jittery marker 4 over the
+  clean body 9; and (b) the marker 4 co-shifts with body 9 on a per-transition EXACT-vector basis in FEWER
+  than 50% of transitions (its jitter breaks exact-match), so ANY rate gate strict enough to reject the
+  decoy (rate ~0.25) ALSO rejects tu93's legitimate marker -> avatar={4}, goal mis-detected as 9, no plan.
+  The old weak `agree>=2` works precisely BECAUSE it tolerates the marker's jitter. Conclusion: a
+  per-transition exact-shift-match rate gate cannot separate a noisy-but-rigid marker from an independent
+  decoy. A correct fix needs a NOISE-TOLERANT co-membership test -- most promising: group each colour's
+  shifts BY ACTION and test whether its per-action DOMINANT (mode) shift vector matches the anchor's
+  per-action displacement. The decoy shifts the same fixed vector for ALL actions (matches the avatar on
+  only 1 of 4 actions -> reject); tu93's marker shifts per-action like the body (matches 4/4 -> keep). This
+  is a bigger redesign requiring the tu93 3/3 solve + {9,4} recovery + L3 calibration as regression gates;
+  deferred to a dedicated cycle. Until then the OPEN gap stands with the mitigation above (is_confident_nav
+  fail-safe) as the practical guard.
