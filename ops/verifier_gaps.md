@@ -2756,6 +2756,24 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   -> re-authoring (goal 0->4/8) -> discovery A/B (0/8, execution wall) -> E3 routing A/B (0/8) -> FULL
   ISOLATION (execution = perception-grounded verifier-routed pathfinding; Carnot has the engine, needs the
   autonomous verifier).
+- **CHAIN PROVEN END-TO-END 2026-07-23 (REQ-ARC-WMTE-5837,
+  `results/outer_loop_arc_perception_grounded_solve_20260723.json`).** Built `detect_static_target` +
+  `derive_navigation_pair` (player=mover, goal=small static marker) and confirmed the AUTONOMOUS perception
+  layer derives tu93's `(player=9, goal=14)` from MOTION alone -- IDENTICAL to the hand-RE'd adapter pair,
+  never hardcoded, never read from source. Fed that perception-derived verifier into Carnot's `OfflineSolver`
+  verifier-routed search (reusing the adapter's action/apply/state machinery + the REAL reproduction gate):
+  it REPRODUCES the SAME solve as the hand verifier -- **reached L3, reproduction gate PASSED
+  (`reproduced: True`), 47-move path, identical on both arms.** This is the FIRST actual DISCOVERY of the
+  whole winner-matching->execution thread: the perception fix that nulled on greedy-direct AND on the E3
+  novelty-explorer WORKS the instant it feeds the proper verifier-routed search that already solves
+  navigation games. **The complete, closed chain: perception-is-the-wall diagnosis -> oracle proof (0->7/8)
+  -> detectors (recover HUD/mover from frames) -> re-authoring (goal 0->4/8) -> discovery A/B (0/8 exposes the
+  execution wall) -> E3 routing A/B (0/8) -> full isolation (Carnot has the engine, needs the autonomous
+  verifier) -> perception-grounded solve (AUTONOMOUS perception verifier reproduces tu93 L3 == the hand
+  verifier).** Method validation (not a new solve claim; tu93 L3 already in the registry; solve_provenance=
+  development_proxy). NEXT (scoped): wire derive_navigation_pair into the LIVE E3 path as the verifier for
+  navigation games (replacing the per-game hand-built GameAdapter verifier), and generalize the
+  static-target/player derivation beyond the clean 2-color case.
 
 ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
 - status: open

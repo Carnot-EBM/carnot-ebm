@@ -1,0 +1,64 @@
+{
+  "experiment": "outer_loop_arc_perception_grounded_solve",
+  "experiment_id": "REQ-ARC-WMTE-5837",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_perception_grounded_solve.v1",
+  "title": "Perception-derived (player,goal) fed into Carnot's OfflineSolver verifier-routed search: does it reproduce the tu93 solve the hand-RE'd verifier achieves? (closes perception->search->discovery)",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5837,
+  "methodology_note": "Reuses the tu93 GameAdapter's action_labels/apply/state_key/branch_mode + the REAL reproduction gate. The ONLY change vs baseline is the verifier: adapter.hand_verifier (hardcoded PLAYER=9,GOAL=14) vs a perception-derived verifier whose (player,goal) colors come from derive_navigation_pair on a short recon (detect_mover + detect_static_target) -- NOT hardcoded, NOT read from source. Colors derived from MOTION only. Public-game frames stepped for offline dev.",
+  "result": {
+    "game": "tu93",
+    "perception_derived_pair": [
+      9,
+      14
+    ],
+    "hand_re_pair": [
+      9,
+      14
+    ],
+    "pair_matches_hand": true,
+    "n_recon_transitions": 48,
+    "hand_verifier_solve": {
+      "search_reached": 3,
+      "reproduced_levels": 3,
+      "path_len": 47,
+      "gate": {
+        "game": "tu93",
+        "reached_level": 3,
+        "claimed_level": 3,
+        "reproduced": true,
+        "mode": "offline_reproduction_gate_no_quota",
+        "checked_action6_clicks": 0,
+        "oob_action6_clicks": [],
+        "any_oob_action6_clicks": false
+      }
+    },
+    "perception_verifier_solve": {
+      "search_reached": 3,
+      "reproduced_levels": 3,
+      "path_len": 47,
+      "gate": {
+        "game": "tu93",
+        "reached_level": 3,
+        "claimed_level": 3,
+        "reproduced": true,
+        "mode": "offline_reproduction_gate_no_quota",
+        "checked_action6_clicks": 0,
+        "oob_action6_clicks": [],
+        "any_oob_action6_clicks": false
+      }
+    }
+  },
+  "offline_reproduced": true,
+  "reproduced_levels": 3,
+  "chain_proven_end_to_end": true,
+  "honest_verdict": "complete_success_perception_grounded_verifier_reproduces_tu93_L3_solve_chain_proven_end_to_end",
+  "duration_s": 183.1,
+  "reproducibility_checksum": "sha256:1660379f69630589ce56d4c877a4668e9d0d48fd1007d71bf4fb22a3223aa432",
+  "headline": "CHAIN PROVEN END-TO-END: the AUTONOMOUS perception layer derives tu93's (player=9, goal=14) from MOTION alone (detect_mover + detect_static_target -- never hardcoded, never read from source), and feeding that as the verifier into Carnot's OfflineSolver verifier-routed search REPRODUCES the SAME solve as the hand-RE'd verifier: reached L3, offline reproduction gate PASSED (reproduced=True), 47-move path, IDENTICAL on both arms. This is the FIRST actual DISCOVERY of the whole winner-matching->execution thread: the perception fix that nulled on greedy-direct AND on the E3 novelty-explorer WORKS when fed into the proper verifier-routed search that already solves navigation games. Autonomous perception -> verifier-routed search -> reproduced discovery, closed.",
+  "purpose": "method_validation_autonomous_verifier",
+  "not_a_new_solve_claim": "tu93 L3 is already in the registry (solved via the hand-RE'd adapter verifier). This artifact does NOT claim a new solve -- it validates that the PERCEPTION-DERIVED verifier reproduces the SAME solve as the hand verifier, proving the autonomous perception chain. solve_provenance=development_proxy (offline arcade). No registry change."
+}
