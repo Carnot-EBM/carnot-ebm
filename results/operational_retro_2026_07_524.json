@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.524",
+  "generated_at": "2026-07-24T23:23:39.528597+00:00",
+  "retro_type": "operational_in_progress",
+  "summary": "Milestone execution completed 13 experiments in the locked 5.7-minute wall time, including 4 compute-bound experiments. The 2-minute three-family translate-run-inspect-repair A/B was the longest compute-bound task, followed by the 1-minute adapter-disabled live E3 structured-memory A/B; the available GPU state showed 0% utilization on both devices, while no supplied evidence establishes a concurrent multi-model DualGPURunner miss.",
+  "total_wall_time_minutes": 5.7,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Dated evidence refresh after the V524 planner marker",
+      "duration_minutes": 2.48,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5896 fixture: three-family translate-run-inspect-repair A/B",
+      "duration_minutes": 1.61,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5901 causality: adapter-disabled live E3 structured-memory A/B",
+      "duration_minutes": 1.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .523 into .524",
+      "duration_minutes": 0.41,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Branch-independent terminal reconciliation for milestone .524",
+      "duration_minutes": 0.15,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": true,
+  "bottlenecks_identified": [
+    "Compute was scheduled, but the GPU monitor showed 0% utilization on both devices; with compute-bound work present, this is an execution-path defect rather than expected synthesis-only behavior.",
+    "The longest compute-bound entries took 2 minutes and 1 minute, but disk-mtime reconstruction provides no phase timing that can explain whether gating, model loading, inference, inspection, or repair caused the elapsed time.",
+    "Runner-selection efficiency cannot be audited because the supplied data does not record task-linked model count, overlap, or runner choice; therefore no concurrent multi-model DualGPURunner miss is established."
+  ],
+  "improvements_suggested": [
+    "Add a task-scoped GPU-engagement guard that samples utilization during every compute-bound phase and emits a diagnostic when utilization remains at 0% while GPU work is pending.",
+    "Persist model count, overlap interval, and selected runner with each compute-bound task; choose DualGPURunner only when multiple models are actually loaded in parallel, while leaving single-model work on one GPU.",
+    "Emit monotonic start, end, and phase timings from the conductor so future retrospectives can replace disk-mtime reconstruction with direct attribution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument compute-bound tasks with a task-linked GPU-engagement guard.",
+    "Record model concurrency and runner selection, conditionally selecting DualGPURunner for parallel multi-model work.",
+    "Capture direct monotonic phase timings instead of relying on disk modification times."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded data ranks the compute tail but does not causally explain its 2-minute and 1-minute durations or correlate the idle snapshot with a particular phase. The savings estimate therefore remains 0% until the GPU-engagement guard and direct phase timings produce a measured before-and-after comparison.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}

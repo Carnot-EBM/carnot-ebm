@@ -2934,6 +2934,7 @@ class CarnotAgentPolicy:
         tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
         tier_uniform_random: bool | None = None,
         frontier_gradient: bool | None = None,
+        frontier_discipline_seed: int = 20260724,
         candidate_router: Any | None = None,
         similarity_retrieval: bool | None = None,
     ) -> None:
@@ -2970,6 +2971,7 @@ class CarnotAgentPolicy:
                 tier_count=tier_count,
                 tier_uniform_random=tier_uniform_random,
                 frontier_gradient=frontier_gradient,
+                frontier_discipline_seed=frontier_discipline_seed,
                 candidate_router=candidate_router,
                 similarity_retrieval=similarity_retrieval,
             )
@@ -3035,6 +3037,7 @@ class E3AgentPolicy:
         tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
         tier_uniform_random: bool | None = None,
         frontier_gradient: bool | None = None,
+        frontier_discipline_seed: int = 20260724,
         candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER,
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
@@ -3164,6 +3167,7 @@ class E3AgentPolicy:
             tier_count=tier_count,
             tier_uniform_random=tier_uniform_random,
             frontier_gradient=frontier_gradient,
+            frontier_discipline_seed=frontier_discipline_seed,
             candidate_router=candidate_router,
             dense_curiosity=(
                 DenseCuriosityProgress(
