@@ -243,3 +243,38 @@ perception + the greedy-direct reflection, and add the execution/dynamics half.
 **The complete chain.** diagnosis (perception is the wall, 8/8 never hypothesized) -> oracle proof (correct
 entities flip 0->7/8) -> detectors (recover HUD/mover from frames) -> re-authoring (0->4/8 correct from
 frames alone, no HUD fixation). Each step a real measurement that earned the next.
+
+## Discovery A/B (5834): the perception fix flips the goal but not discovery -- execution is the next wall
+
+Wired `reauthor_framing` into the live greedy-direct agent and ran the full winner recipe reauthor OFF vs ON,
+same budget(120)/seed, all 8 games (`results/outer_loop_arc_reauthor_discovery_sweep_20260723.json`).
+
+**Result: 0 levels discovered, both arms, all 8 games.** The perception fix flips the goal HYPOTHESIS
+(0->4/8 offline) but does NOT convert to actual DISCOVERY.
+
+This is the honestly-predicted separation, now measured: perception/goal-induction was necessary (and is
+fixed), but it is NOT sufficient -- **execution/dynamics is the next binding constraint.** The action counts
+show why: bp35 loses at exactly 64 actions (the move-budget cap) on both arms; the greedy-direct architecture
+has no search/planning, so even with the right goal "move the player to the exit," the LLM has to blind-guess
+the action sequence over a hex grid -- which it cannot do within budget.
+
+**The earned strategic redirect.** The leaderboard-winner architecture we were asked to match (greedy-direct,
+LLM picks each action, no search) is EXECUTION-LIMITED even with a correct goal. Carnot's OWN live
+architecture -- `E3AgentPolicy`'s verifier-routed best-first search + `plan_in_model` -- is better suited for
+execution precisely because it can SEARCH toward a named target. So the next step is not to keep polishing the
+greedy-direct winner recipe; it is to feed the perception fix (retracted HUD rules + named target + player)
+into Carnot's verifier-routed search as the goal/heuristic, where the search can navigate to the target and
+the goal verifier confirms progress via the level counter. The winner-matching investigation ends by pointing
+back at Carnot's search-based strength -- with a validated perception front-end to give that search a correct
+target.
+
+### The complete measured chain (winner-matching investigation, 2026-07-23)
+
+1. Winner recipe (31B + greedy-direct + segmentation + reflection) -> **0 discovery**
+2. Diagnosis -> **perception is the wall** (8/8 never hypothesized the true goal)
+3. Oracle ablation -> fixing perception flips goals **0 -> 7/8**
+4. Detectors (HUD + mover, from frames) -> recover the confuser-HUD + navigate avatars
+5. End-to-end plain -> **0/8** (detector output alongside the wrong rules doesn't flip it)
+6. Re-authoring -> goal gate **0 -> 4/8**, zero HUD fixation; wired into the live agent
+7. Discovery A/B -> **0/8 both arms** -> perception necessary, not sufficient; **execution/dynamics is next**;
+   feed the perception fix into Carnot's verifier-routed search (not the greedy-direct winner recipe)
