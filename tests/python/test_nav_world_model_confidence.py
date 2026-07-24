@@ -46,6 +46,36 @@ def test_too_few_directions_not_confident():
     assert _model({9}, [1, 2], 14).is_confident_nav() is False
 
 
+class TestGoalPresentGuard:
+    """REQ-ARC-WMTE-5883: is_confident_nav(grid=...) must ALSO require the goal colour present in the
+    plan-start grid. When the goal is absent, is_level_complete/goal_energy read that absence as already-won,
+    so plan_in_model returns a bogus ~1-step 'win' the live agent executes for zero progress. The gate closes
+    that. grid=None preserves the original behaviour."""
+
+    import numpy as np
+
+    def _m(self):
+        return _model({9, 4}, [1, 2, 3, 4], 14)  # otherwise-confident tu93-like model, goal=14
+
+    def test_confident_when_goal_present_in_grid(self):
+        import numpy as np
+        g = np.full((6, 6), 5, dtype=int)
+        g[2, 2] = 9
+        g[4, 4] = 14  # goal present
+        assert self._m().is_confident_nav(grid=g) is True
+
+    def test_not_confident_when_goal_absent_from_grid(self):
+        import numpy as np
+        g = np.full((6, 6), 5, dtype=int)
+        g[2, 2] = 9  # goal colour 14 absent entirely
+        assert self._m().is_confident_nav(grid=g) is False
+
+    def test_grid_none_preserves_original_behaviour(self):
+        # no grid supplied -> the goal-present check is skipped (backward compatible)
+        assert self._m().is_confident_nav() is True
+        assert self._m().is_confident_nav(grid=None) is True
+
+
 class TestGoalEnergy:
     """REQ-ARC-WMTE-5845: the nav model's player->goal Manhattan energy for best-first plan_in_model
     (fewer search nodes than plain BFS -> more robust within the node budget on bigger mazes)."""

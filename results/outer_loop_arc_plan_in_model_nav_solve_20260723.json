@@ -108,6 +108,6 @@
   "headline": "REGRESSION FOUND + FIXED: plan_in_model crashed on component-grids since 2f0760307 (5-tuple _components_detailed), silently disabling E3's world-model planner. After the fix, a structured InducedNavWorldModel + plan_in_model reaches a REAL tu93 level-up in 3/3 runs (e.g. 18-action plan, hv 60.125->6.125). plan_in_model plans in imagination + executes once from reset -> sidesteps the non-idempotent-reset blocker -> live-compatible navigation solve.",
   "next_step": "InducedNavWorldModel (the structured nav inducer) is currently ORPHANED from the live E3 path (imported only by scripts/tests). The concrete unblock: route navigation games (detected via derive_navigation_pair) to InducedNavWorldModel instead of the LLM induction, and feed its engine+is_level_complete to the live plan_in_model tier -- giving E3 a CORRECT model for nav games instead of the near-universally-wrong LLM one. This is the 'mechanic-class prior' direction the 2026-07-20 diagnosis \u00a76 flagged as highest-leverage.",
   "honest_verdict": "complete_success_regression_fixed_and_structured_nav_model_planinmodel_reaches_tu93_levelup_live",
-  "duration_s": 4.7,
-  "reproducibility_checksum": "sha256:0256dcfe4fd65c029cfc0b1b579f7cc3fed81a52391314b319dc53845b9a0d5a"
+  "duration_s": 4.3,
+  "reproducibility_checksum": "sha256:9f8d316ef85cbf95a9504916c0116c4efb597dbc5477acba704ec2ebf46aa38b"
 }

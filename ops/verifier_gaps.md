@@ -4018,3 +4018,20 @@ result here actually proves out.
 - Conclusion: no gap here; this retires the "best-first could be led astray / prune a needed state" concern.
   Do NOT re-probe plan_in_model best-first correctness in a future cycle without a NEW angle (e.g. a
   non-monotone goal_energy, or a model with hidden state where the grid-ascii seen-key is incomplete).
+
+### GAP-ARC-NAV-GOAL-ABSENT-FALSE-WIN: FIXED (REQ-ARC-WMTE-5883) — status: filled (is_confident_nav goal-present-at-plan-start guard)
+- The E4 latent issue tracked across iters 6-12: `is_level_complete(grid)` returns True and `goal_energy(grid)`
+  returns 0.0 whenever the goal COLOUR is simply ABSENT from a grid (they read "goal cells gone" as
+  already-won), regardless of whether the goal was ever present. So if a nav game's plan-START grid lacks the
+  goal colour, `plan_in_model`'s child win-check fires on the first move -> a bogus ~1-step "win" that the live
+  E3 agent installs and executes for zero real progress (one wasted action). Low reachability (reach-goal nav
+  games render the goal at level start) but a real false-positive.
+- Fix: `is_confident_nav` gains an optional `grid=` param; when supplied it ALSO requires the goal colour to
+  be PRESENT in that grid. The scored `_induce_and_plan` call now passes `grid=self.root_grid`
+  (arc_competition_agent.py), so the nav path does not fire on a goal-absent start. Fully unit-testable in the
+  MODEL (the logic is in the method, not the E3 wiring): `TestGoalPresentGuard` covers goal-present -> True,
+  goal-absent -> False, grid=None -> unchanged. tu93 unaffected: its root grid contains goal colour 14, so
+  `is_confident_nav(grid=root)` stays True (verified) -> tu93 3/3 solve + L3 calibration both CLEAN unchanged.
+- Chosen over an `is_level_complete`/`plan_in_model` change because those are memoryless per-grid (cannot tell
+  "goal covered" from "goal never present") and generic; gating at the confidence layer where the plan-start
+  grid IS available is the clean, low-risk, fully-testable fix.

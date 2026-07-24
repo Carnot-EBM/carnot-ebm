@@ -20,5 +20,5 @@
     "('col', (1, 0))": 56
   },
   "methodology_note": "Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + per-move died/safe labels (the chargers are static-until-triggered, so a position key is sound). The 'omni' is_lethal rule (per-charger facing read from the centre-marker offset; directional; collision-exempt; dist 1..reach) is scored against those labels. CLEAN = FN==0 (no real death missed) AND win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant); this validates the calibration on that one level, not a general hazard solver.",
-  "duration_s": 11.6
+  "duration_s": 10.8
 }
