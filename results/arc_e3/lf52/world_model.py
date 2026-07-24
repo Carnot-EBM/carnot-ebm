@@ -1,34 +1,52 @@
-import numpy as np
-
 def engine(grid, action, data):
     """
-    Applies a single action to the grid and returns the resulting grid.
-    The game is a simple toggle mechanic:
-    - Action 1: Toggle all cells in the grid (0->1, 1->0).
-    - Action 2: Toggle all cells in the grid (0->1, 1->0).
-    - Action 3: Toggle all cells in the grid (0->1, 1->0).
-    - Action 4: Toggle all cells in the grid (0->1, 1->0).
-    - Action 5: Toggle all cells in the grid (0->1, 1->0).
-    - Action 6: Toggle the cell at the given pixel coordinates (x, y).
-    - Action 7: Toggle all cells in the grid (0->1, 1->0).
+    Simulate the effect of an action on the grid.
+    grid: 2D list of integers (0=empty, 1=wall, 2=player, 3=goal)
+    action: 0=up, 1=down, 2=left, 3=right
+    data: dict with 'x', 'y' keys for player position, or None
+    Returns: 2D list of the grid after the action
     """
-    grid = grid.copy()
-    
-    if action == 6:
-        if data is not None:
-            x = data['x']
-            y = data['y']
-            # Toggle the cell at (x, y)
-            grid[y, x] = 1 - grid[y, x]
-    else:
-        # Toggle all cells in the grid
-        grid = 1 - grid
-        
+    if data is None:
+        return grid
+
+    # Extract player position
+    x = data['x']
+    y = data['y']
+
+    # Determine the new position based on the action
+    new_x, new_y = x, y
+    if action == 0:  # Up
+        new_y -= 1
+    elif action == 1:  # Down
+        new_y += 1
+    elif action == 2:  # Left
+        new_x -= 1
+    elif action == 3:  # Right
+        new_x += 1
+
+    # Check if the new position is within the grid boundaries
+    if 0 <= new_x < len(grid) and 0 <= new_y < len(grid[0]):
+        # Check if the new position is a wall
+        if grid[new_y][new_x] == 1:
+            # If it's a wall, the player stays in the current position
+            return grid
+
+        # If it's not a wall, update the grid
+        # The player moves to the new position
+        grid[new_y][new_x] = 2
+        grid[y][x] = 0
+
     return grid
 
 def is_level_complete(grid):
     """
-    Checks if the level is complete.
-    The level is complete if all cells in the grid are 1.
+    Check if the level is complete.
+    grid: 2D list of integers (0=empty, 1=1=wall, 2=player, 3=goal)
+    Returns: True if the level is complete, False otherwise
     """
-    return np.all(grid == 1)
+    # Check if the player is on the goal
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == 2 and grid[i][j] == 3:
+                return True
+    return False
