@@ -220,3 +220,47 @@ def test_req_learn_5865_bookkeeping_edges_are_explicit(tmp_path: Path) -> None:
     assert artifact["field_provenance"]["source_hashes"]["output_path"] == str(existing_result)
     assert artifact["root_cause_classification"]["primary"] == "protected_user_work_conflict"
     assert artifact["adaptive_state_microkernel_requalified_score"] == 0.0
+
+
+def test_req_learn_5865_preconditions_record_pytest_plugins(tmp_path: Path) -> None:
+    """REQ-LEARN-5865: preconditions capture the exact pytest plugin environment."""
+
+    test_exit_codes = {FOCUSED_COMMAND: 0, FULL_PYTEST_COMMAND: 2}
+    artifact = req.build_artifact(
+        result_path=tmp_path / req.RESULT_RELATIVE_PATH.name,
+        duration_s=1.0,
+        test_commands=list(test_exit_codes),
+        test_exit_codes=test_exit_codes,
+        original_nonzero_exit_reproduction=_base_reproduction_receipt(),
+        failing_collection_and_node_receipts=_global_debt_receipt()["receipts"],
+        global_suite_debt_classification=_global_debt_receipt(),
+        applicable_e2e_receipts={"e2e_003": {"command": "binding", "exit_code": 0}},
+        before_after_test_matrix={"focused_pytest": {"before": 0, "after": 0}},
+        parity_receipt=_passing_parity_receipt(),
+        write=False,
+    )
+
+    pytest_env = artifact["preconditions_checked"]["pytest_environment"]
+
+    assert pytest_env["available"] is True
+    assert "pytest" in pytest_env["version"]
+    assert pytest_env["plugin_count"] >= 1
+    assert any("pytest-xdist" in plugin for plugin in pytest_env["plugins"])
+    assert pytest_env["raw_output_sha256"].startswith("sha256:")
+
+
+def test_req_learn_5865_pytest_environment_failure_is_fail_closed(
+    monkeypatch,
+) -> None:
+    """SCENARIO-LEARN-5865-ATTRIBUTION: missing pytest metadata blocks readiness."""
+
+    def _raise_os_error(*_args: object, **_kwargs: object) -> None:
+        raise OSError("pytest missing")
+
+    monkeypatch.setattr(req.subprocess, "run", _raise_os_error)
+
+    receipt = req.pytest_environment_receipt()
+
+    assert receipt["available"] is False
+    assert receipt["plugins"] == []
+    assert receipt["error"] == "pytest missing"
