@@ -3823,7 +3823,10 @@ class E3AgentPolicy:
                     is_nav = bool(getattr(nav, "displacement", None)) and (
                         getattr(nav, "goal_color", None) is not None
                     )
-                    is_confident = is_nav and nav.is_confident_nav()
+                    # Pass root_grid so the gate ALSO requires the goal colour present at plan-start
+                    # (REQ-ARC-WMTE-5883): otherwise a goal absent from the start grid reads as already-won
+                    # and plan_in_model returns a bogus ~1-step 'win' that wastes a real action.
+                    is_confident = is_nav and nav.is_confident_nav(grid=self.root_grid)
                     attempt["structured_nav_is_nav_game"] = bool(is_nav)
                     attempt["structured_nav_confident"] = bool(is_confident)
                     is_nav = is_confident

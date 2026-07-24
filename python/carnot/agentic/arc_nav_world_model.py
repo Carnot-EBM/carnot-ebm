@@ -385,7 +385,7 @@ class InducedNavWorldModel:
     def as_callables(self):
         return self.engine, self.is_level_complete
 
-    def is_confident_nav(self, *, min_directions: int = 3) -> bool:
+    def is_confident_nav(self, *, min_directions: int = 3, grid=None) -> bool:
         """A HIGH-CONFIDENCE navigation fit -- used to gate the live inducer so it does NOT fire on
         non-navigation games where the fit is spurious (REQ-ARC-WMTE-5844). Two tells separate the one real
         nav game (tu93: avatar={9,4}, all 4 directions, goal=14) from the source-verified NON-nav games the
@@ -402,12 +402,22 @@ class InducedNavWorldModel:
         Plus a real goal colour. This is a CONSERVATIVE gate: a missed real nav game costs at most a
         forgone level-up (no harm), whereas firing on a non-nav game installs a plan that cannot win and
         wastes real actions (the wa30 A/B cost). tu93 passes (no 0, 4 directions, goal=14); sk48/wa30 fail.
-        """
+
+        ``grid`` (optional, REQ-ARC-WMTE-5883): the grid the caller is about to PLAN from. When supplied, the
+        goal colour must actually be PRESENT in it. Without this, when the goal colour happens to be absent
+        from the plan-start grid, ``is_level_complete`` and ``goal_energy`` both read that absence as ALREADY
+        WON (goal cells gone) -- so ``plan_in_model`` returns a bogus ~1-step 'win' the live agent then
+        executes for zero progress. Requiring the goal present at plan-start closes that false-positive at the
+        confidence gate. ``grid=None`` preserves the original behaviour (no grid available to check)."""
         if self.goal_color is None:
             return False
         if 0 in set(self.avatar_colors):
             return False
-        return len({a for a in self.displacement if a in _NAV_ACTIONS}) >= int(min_directions)
+        if len({a for a in self.displacement if a in _NAV_ACTIONS}) < int(min_directions):
+            return False
+        if grid is not None and not bool(np.any(np.asarray(grid) == self.goal_color)):
+            return False  # goal absent from the plan-start grid -> would plan a bogus already-won 'win'
+        return True
 
     def goal_energy(self, grid) -> float:
         """A player->goal Manhattan energy (LOWER = closer to the win) for BEST-FIRST plan_in_model search.
