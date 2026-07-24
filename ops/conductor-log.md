@@ -14226,3 +14226,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 10:16 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
 | 2026-07-24 10:16 UTC | Gated on Exp5880 fixture: one-to-one atom groundin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5880-grounding-shortcut-fixture.groundi |
 | 2026-07-24 10:18 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
+| 2026-07-24 10:18 UTC | Gated on Exp5880 fixture: one-to-one atom groundin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5880-grounding-shortcut-fixture.groundi |
+| 2026-07-24 10:20 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
