@@ -1,0 +1,38 @@
+{
+  "experiment": "outer_loop_arc_perception_navigation_scored",
+  "experiment_id": "REQ-ARC-WMTE-5839",
+  "run_date": "2026-07-23",
+  "schema": "carnot.arc_perception_navigation_scored.v1",
+  "title": "Fully-autonomous perception navigation solver (auto branch_mode) + scored-path proof via PerceptionNavigationPolicy through run_game.",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "purpose": "method_validation_autonomous_navigation_scored_interface",
+  "not_a_new_solve_claim": "tu93 L3 is already registered; this validates the FULLY autonomous solver (auto branch_mode, no per-game input) + that the scored run_game interface carries it. No registry change.",
+  "random_seed": 5839,
+  "auto_branch_mode": "replay",
+  "solve_navigation": {
+    "is_navigation_game": true,
+    "pair": [
+      9,
+      14
+    ],
+    "branch_mode": "fresh_env",
+    "search_reached": 3,
+    "reproduced": true,
+    "reproduced_level": 3,
+    "path_len": 47
+  },
+  "scored_baseline_levels": 0,
+  "scored_baseline_reached": 0,
+  "scored_perception_levels": 3,
+  "scored_perception_reached": 3,
+  "scored_plan_len": 47,
+  "fully_autonomous_no_per_game_input": true,
+  "scored_interface_carries_solve": true,
+  "duration_s": 246.8,
+  "honest_verdict": "complete_success_fully_autonomous_navigation_solver_and_scored_interface_carries_it",
+  "reproducibility_checksum": "sha256:7d60e6ee548bd24ab47104b71bca1d0ada8f4c764dd298bfc9e06451279f9df5",
+  "plan_then_replay_caveat": "The solve runs in the policy __init__ (offline arcade verifier-routed search), then replays the discovered path via the scored run_game interface (is_done/next_move) -- the same plan-then-replay shape CarnotAgentPolicy uses, but the plan is SELF-DISCOVERED from perception, not hand-banked. 'search live on the scored env during play' (consuming budget) is the remaining architectural step; here the search runs on the offline arcade, same as the dev-twin.",
+  "headline": "SCORED-PATH INTEGRATION COMPLETE: the fully-autonomous perception navigation solver (perception derives (player=9,goal=14) from motion; branch_mode SELF-CORRECTS via the reproduction gate; generic search machinery -- ZERO per-game hand-RE) reproduces tu93 L3, AND the scored run_game interface carries it: PerceptionNavigationPolicy reached L3 (levels=3) vs the default explorer's 0. The scored agent self-discovers and reproduces a navigation solve, driven by the real scored interface."
+}

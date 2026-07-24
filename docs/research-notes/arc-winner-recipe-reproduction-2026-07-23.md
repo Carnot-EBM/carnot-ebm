@@ -377,3 +377,30 @@ We matched the leaderboard leaders (0 discovery), proved perception is the wall,
 (0->7/8 goals), found the execution wall, and closed it: an AUTONOMOUS perception verifier + Carnot's
 verifier-routed search reproduces tu93 L3 with no per-game hand-RE -- the sovereignty-aligned, oracle-distinct
 path, not the winner recipe.
+
+## Scored-path integration COMPLETE (5839): the scored agent self-discovers tu93 L3
+
+Built `arc_perception_navigation.py`: the full autonomous pipeline (recon -> derive (player,goal) from motion
+-> SELF-CORRECTING branch_mode -> generic verifier-routed OfflineSolver -> gate) + `PerceptionNavigationPolicy`
+that carries the self-discovered solve behind the scored run_game interface (plan-then-replay, self-discovered
+not hand-banked).
+
+- solve_navigation(tu93): auto_branch_mode guessed 'replay'; the gate showed reproduced < searched, so it
+  self-corrected to 'fresh_env' -> **reached L3, reproduced=True, 47-move path. Fully autonomous, ZERO per-game input.**
+- scored run_game: default explorer reached 0; **PerceptionNavigationPolicy reached L3 (levels=3).**
+
+The SELF-CORRECTION is the key robustness idea: don't predict reset-idempotency perfectly (a short no-win
+probe can't see tu93's win-contingent parity); VERIFY -- the reproduction gate is ground truth, so try a mode
+and keep whichever reproduces more.
+
+Remaining (architectural): the search runs on the offline arcade in the policy __init__ then replays; 'search
+live on the scored env during play' is the next step. Method validation (tu93 L3 registered).
+
+### The complete thread (winner-matching -> scored self-discovery)
+
+10 measured steps, closed: matched the leaders (0 discovery) -> perception is the wall (8/8) -> oracle proof
+(0->7/8) -> detectors -> re-authoring (goal 0->4/8) -> discovery A/B 0/8 (execution wall) -> E3 routing A/B
+0/8 -> full isolation (Carnot has the engine) -> perception-grounded solve (autonomous verifier reproduces
+tu93 L3) -> generic-adapter solve (no hand-RE) -> **scored-path integration (PerceptionNavigationPolicy
+reaches L3 via run_game, fully autonomous).** The sovereignty-aligned, oracle-distinct path -- not the winner
+recipe -- self-discovers and reproduces a navigation solve on the scored interface.
