@@ -3905,3 +3905,26 @@ result here actually proves out.
   still works; multi-step blocked by mid-wall AND by destination-only wall; clear multi-step still moves; tu93
   still solves 3/3 (`arc_plan_in_model_nav_solve.py`, reproducible=True, no regression). Regression tests:
   `tests/python/test_nav_world_model_confidence.py::TestEngineWallBlocking` (6 cases).
+
+### GAP-ARC-HAZARD-LOS-WRONG-AXIS-IN-OMNI: FIXED (REQ-ARC-WMTE-5880) — status: filled (HazardAwareNavWorldModel._charge_unobstructed per-charger axis)
+- Found by an outer-loop synthetic probe (iter7, 2026-07-24) of `HazardAwareNavWorldModel.is_lethal`, the
+  hazard-charge lethality check consumed by the LIVE-reachable `arc_hazard_pruner.HazardMovePruner` (wired
+  into `scripts/arc_loop_solve.py`, one of the two canonical live entrypoints).
+- The silent bug: in `lethal_mode='omni'`, each charger's charging axis is read from its OWN facing
+  (`_charger_facing` -> row or column), but the wall line-of-sight check `_charge_unobstructed` always ran
+  along the single fitted `self.hazard_axis`. So an omni charger facing the PERPENDICULAR axis to the fitted
+  one had its wall shielding checked on the WRONG axis: a wall on the charger's true charging line was
+  missed, and a genuinely-safe (wall-shielded) move was flagged lethal -> OVER-PRUNING that can remove the
+  winning path (the exact failure the method's own docstring exists to prevent, just on the other axis).
+- Concrete counterexample (verified): a vertical (down-facing) charger with a wall on its column between it
+  and the avatar returned `is_lethal=True` (should be False -- the wall blocks the charge); the same
+  geometry with no wall correctly stayed lethal.
+- Fix: `_charge_unobstructed` gains an `axis` param (defaults to `self.hazard_axis` for 'toward'-mode
+  backward compat); `is_lethal` now collects the per-charger lethal AXIS/AXES and runs the LOS check along
+  each charge's TRUE travel axis. Can only REDUCE spurious lethality (never a false-negative: a wall on the
+  charging line means the charger physically cannot reach, so 'safe' is correct).
+- Verified on the REAL game: tu93 L3 hazard calibration (`experiment_hazard_l3_calibration.py`) stays CLEAN
+  post-fix -- `FN=0 FP=0 win_path_pruned=0` -- and its facings histogram `{('row',(0,1)):128,
+  ('col',(1,0)):56}` confirms tu93 L3 has BOTH row- and col-facing chargers, so the per-axis LOS path is
+  genuinely exercised on the real game. All 28 existing nav+hazard tests pass; new regression test
+  `tests/python/test_arc_nav_world_model.py::test_omni_los_uses_per_charger_facing_axis_not_fitted_axis`.
