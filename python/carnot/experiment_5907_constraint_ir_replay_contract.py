@@ -121,7 +121,7 @@ HISTORICAL_ARTIFACT_HASHES = {
 }
 PROTECTED_FILE_HASHES = {
     "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
-    "ops/changelog.md": "sha256:f322d42482f84d49a3d853cda09fa4e13084b61d5e17a27f6ff4dcda6d27d477",
+    "ops/changelog.md": "sha256:02684d08c48b5a919092a1e51f64d1752f12525a0a0c56efa1546bdf8ea561c8",
     "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
     "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
 }
