@@ -14263,3 +14263,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 01:14 UTC | Exact terminal-boundary handoff from .524 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5905_transit |
 | 2026-07-25 02:37 UTC | Exact terminal-boundary handoff from .524 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ny errors arou |
 | 2026-07-25 04:00 UTC | Exact terminal-boundary handoff from .524 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: wait out the r |
+| 2026-07-25 04:03 UTC | Dated evidence refresh after the V525 planner mark | SKIP | Pre-tests failing, self-heal failed: 1 failed, 154 passed, 1 warning in 10.18s |
