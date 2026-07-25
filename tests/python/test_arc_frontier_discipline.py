@@ -646,7 +646,12 @@ def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_contro
     # (coordinate correction only) and F pins 3 (bounded with-replacement), which separates the
     # mechanism's two halves. Asserted as an EXACT set because a silently-dropped arm is how a
     # control goes missing.
-    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E", "F", "F1"}
+    # G / G2 added 2026-07-25 (REQ-ARC-WMTE-5960): the REPAIRED orientation-complete HUD
+    # status-bar detector arms. They also sit on B2's flags and differ from it by the detector
+    # alone, so B2 is their matched control too. G is detection-only; G2 additionally arms the
+    # runtime collapse guard, so G2 - G isolates the guard's cost. Still asserted as an EXACT
+    # set for the reason stated above -- a silently-dropped arm is how a control goes missing.
+    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E", "F", "F1", "G", "G2"}
     assert m.ARMS["F"]["kwargs"]["click_pixel_sampling"] is True
     assert m.ARMS["F"]["kwargs"]["click_pixel_redraw_budget"] == 3
     assert m.ARMS["F1"]["kwargs"]["click_pixel_redraw_budget"] == 1

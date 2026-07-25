@@ -36315,3 +36315,88 @@ rather than `complete_positive:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5910 | Planned (`python/carnot/experiment_5910_verification_guided_constraint_repair.py`, `results/experiment_5910_verification_guided_constraint_repair.json`) | Planned (`tests/python/test_experiment_5910_verification_guided_constraint_repair.py`) |
+
+### REQ-VERIFY-5921: Schema-Derived Open ConstraintIR Support Compiler
+
+Carnot SHALL provide a public, deterministic Exp5921 schema compiler at
+`python/carnot/experiment_5921_schema_derived_constraintir_support.py` and
+write `results/experiment_5921_schema_derived_constraintir_support.json`.
+The compiler SHALL derive open typed ConstraintIR grammar terminals,
+type-domain transitions, symbol definition/use scope rules, and bounded
+rejection controls mechanically from a versioned operation-signature schema.
+It SHALL NOT hand-author per-case grammars, enumerate complete answer IDs, use
+finite valid-token answer lists, or invoke LLM inference.
+
+Exp5921 SHALL independently replay the Exp5907 replay contract and Exp5908
+fixture stream before compilation, hash local schemas, rows, verifier modules,
+upstream outputs, and protected files, verify disk/RAM availability, and write
+the output atomically. The generated case manifest SHALL include train-family,
+held-operation, held-composition, held-family, and attribute-semantic
+adversaries, plus missing/spurious constraint pairs, invalid references, type
+confusions, scope leaks, empty supports, and syntactically valid but
+semantically false candidates.
+
+The compiler SHALL prove prefix monotonicity, deterministic support replay,
+bounded dead-end recovery, and no ground-truth answer leakage. Full structural
+support SHALL be compared against grammar-only, grammar-plus-type,
+unconstrained parser acceptance, and deliberately corrupted schema controls.
+It SHALL record correct-mode retention and over-pruning. Grammar/type/scope
+acceptance SHALL never be counted as exact semantic correctness; only the
+Exp5896 Python and Z3 exact parser/type/scope/execution/certificate authority
+may mark semantic success.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`source_paper_and_local_mechanism_receipt`,
+`operation_signature_schema_and_version`,
+`schema_to_grammar_type_scope_compiler_receipt`,
+`open_ir_not_finite_id_receipt`,
+`train_held_and_attribute_adversary_manifest`,
+`missing_spurious_and_scope_controls`,
+`prefix_monotonicity_and_dead_end_matrix`, `exact_python_z3_agreement`,
+`semantic_authority_boundary`, `correct_mode_retention_and_overpruning`,
+`tamper_and_corrupted_schema_controls`, `protected_files_unchanged`,
+`schema_decode_contract_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `open_ir_not_finite_id_receipt`: support may restrict well-typed prefixes but cannot enumerate complete answers or encode case labels.
+- `semantic_authority_boundary`: structural admission never licenses exact semantic success.
+- `schema_decode_contract_ready_score`: emit bare `1.0` only for deterministic derivation, held-family support, exact scope/type rejection, zero answer leakage, and no unsafe semantic acceptance.
+- `inference_substrate`: use `deterministic_schema_compilation_no_llm`.
+- `verifier_is_oracle`: true only for exact parse, type, scope, execution, and certificate checks.
+- `honest_verdict`: use `complete_ready:`, `retired:`, or `blocked:`.
+
+#### SCENARIO-VERIFY-5921-SCHEMA: Operation Signatures Derive Structural Support
+
+Given a versioned operation-signature schema for declarations, references,
+predicates, numeric/domain attributes, and composition,
+when the public Exp5921 compiler runs,
+then grammar terminals, type-domain transitions, and scope rules are derived
+from the schema hash rather than from per-case answer IDs or complete
+candidate payloads.
+
+#### SCENARIO-VERIFY-5921-PREFIX: Prefix Support Is Monotone And Bounded
+
+Given train, held-operation, held-composition, held-family, and adversarial
+ConstraintIR candidates,
+when prefixes are replayed through derived support,
+then legal-prefix support is deterministic and monotone, dead-end recovery is
+bounded by the configured rejection budget, and empty/corrupted supports fail
+closed.
+
+#### SCENARIO-VERIFY-5921-ADJUDICATION: Exact Semantics Stay With Python And Z3
+
+Given structurally valid but semantically false attribute adversaries,
+when grammar-only, grammar-plus-type, full support, unconstrained parser, and
+corrupted-schema controls are compared,
+then structural acceptance is reported separately from exact semantic success,
+Python and Z3 agree on every accepted exact case, and no semantic success is
+credited from grammar/type/scope admission alone.
+
+## Implementation Status (REQ-VERIFY-5921)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5921 | Implemented (`python/carnot/experiment_5921_schema_derived_constraintir_support.py`, `results/experiment_5921_schema_derived_constraintir_support.json`) | Implemented (`tests/python/test_experiment_5921_schema_derived_constraintir_support.py`) |
