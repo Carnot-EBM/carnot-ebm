@@ -2,7 +2,7 @@
   "experiment": 5904,
   "experiment_id": 5904,
   "title": "Coordinate-aware online click-target discrimination (stage 1, offline)",
-  "run_date": "2026-07-25T00:08:19Z",
+  "run_date": "2026-07-25T00:52:20Z",
   "mode": "smoke",
   "games_requested": [
     "vc33",
@@ -199,6 +199,9 @@
       "n_levels_up": 5,
       "n_changed_only": 15,
       "label_is_predominantly_frame_change": true,
+      "n_levels_up_without_change": 0,
+      "n_label_equals_changed": 96,
+      "label_is_measured_identical_to_frame_change": true,
       "blind_scores_are_measured_from_the_live_router": true,
       "blind": 0.3105263157894737,
       "blind_within_state": 0.5,
@@ -234,9 +237,35 @@
       "step_index_within_state": 0.5,
       "static_salience": 0.8947368421052632,
       "static_salience_within_state": 0.936046511627907,
+      "coord_minus_static_within_state": 0.043604651162790664,
+      "coord_minus_static_bootstrap": {
+        "n_bootstrap": 4000,
+        "n_replicates_used": 4000,
+        "n_replicates_dropped_degenerate": 0,
+        "delta_mean": 0.04315740306879127,
+        "delta_ci95": [
+          -0.030158730158730163,
+          0.1244583333333334
+        ],
+        "fraction_replicates_le_zero": 0.133,
+        "excludes_zero": false,
+        "resampling": "rows resampled with replacement WITHIN each scored state; arms paired"
+      },
+      "random_arm_seed_noise": {
+        "n_seeds": 200,
+        "mean": 0.5084447674418605,
+        "sd": 0.07165084811751073,
+        "min": 0.3023255813953488,
+        "max": 0.7005813953488372,
+        "metric": "within_state_auroc of the shipped RandomCandidateRouter, seed varied only"
+      },
       "n_hard": 20,
-      "coord_hard_only": null,
-      "static_salience_hard_only": null,
+      "n_hard_pos": 5,
+      "n_hard_neg": 15,
+      "hard_slice_label": "levels_up, conditioned on changed (NOT the pooled label)",
+      "coord_hard_only": 0.5066666666666667,
+      "static_salience_hard_only": 0.66,
+      "random_hard_only": 0.7066666666666667,
       "n_rows": 182
     }
   },
@@ -249,7 +278,9 @@
     "ci95": null,
     "values": [
       0.3105263157894737
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "pooled_coord_auroc": {
     "mean": 0.9868421052631579,
@@ -257,7 +288,9 @@
     "ci95": null,
     "values": [
       0.9868421052631579
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "pooled_random_auroc": {
     "mean": 0.6546052631578947,
@@ -265,7 +298,9 @@
     "ci95": null,
     "values": [
       0.6546052631578947
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "pooled_step_index_auroc": {
     "mean": 0.6894736842105263,
@@ -273,7 +308,9 @@
     "ci95": null,
     "values": [
       0.6894736842105263
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "pooled_static_salience_auroc": {
     "mean": 0.8947368421052632,
@@ -281,13 +318,19 @@
     "ci95": null,
     "values": [
       0.8947368421052632
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "pooled_coord_hard_only_auroc": {
-    "mean": null,
-    "n_games": 0,
+    "mean": 0.5066666666666667,
+    "n_games": 1,
     "ci95": null,
-    "values": []
+    "values": [
+      0.5066666666666667
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "within_state_blind_auroc": {
     "mean": 0.5,
@@ -295,7 +338,9 @@
     "ci95": null,
     "values": [
       0.5
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "within_state_coord_auroc": {
     "mean": 0.9796511627906976,
@@ -303,7 +348,9 @@
     "ci95": null,
     "values": [
       0.9796511627906976
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "within_state_random_auroc": {
     "mean": 0.6308139534883721,
@@ -311,7 +358,9 @@
     "ci95": null,
     "values": [
       0.6308139534883721
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "within_state_step_index_auroc": {
     "mean": 0.5,
@@ -319,7 +368,9 @@
     "ci95": null,
     "values": [
       0.5
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "within_state_static_salience_auroc": {
     "mean": 0.936046511627907,
@@ -327,7 +378,9 @@
     "ci95": null,
     "values": [
       0.936046511627907
-    ]
+    ],
+    "single_game_not_pooled": true,
+    "no_contributing_games": false
   },
   "primary_metric": {
     "name": "within_state_auroc",
@@ -350,21 +403,106 @@
     "metric": "within_state_auroc",
     "principle": "A coordinate-blind scorer CANNOT beat chance at ranking candidates WITHIN a state, because it emits one identical score for all of them (measured: 1 distinct score across 38-48 distinct targets at every harvested state). A within-state blind AUROC outside the band therefore means the label leaks, in which case NO arm is interpretable -- reported as invalid rather than as a pass or a fail. The check is deliberately WITHIN-state: the across-state figure legitimately deviates from 0.5 on base-rate variation alone (measured 0.31), which would make an across-state band check reject valid runs."
   },
-  "pre_registered_gate": {
+  "coordinate_blindness_repair_check": {
     "expression": "within_state_coord_auroc >= 0.60 AND (within_state_coord_auroc - within_state_blind_auroc) >= 0.10",
     "metric": "within_state_auroc",
-    "no_baseline_assumption_conjunct": true,
+    "renamed_from": "pre_registered_gate",
+    "is_not_an_informativeness_gate": true,
     "coord_auroc": 0.9796511627906976,
     "blind_auroc": 0.5,
     "delta": 0.47965116279069764,
-    "passed": true
+    "passed": true,
+    "also_passed_by_arms": [
+      "random",
+      "static_salience"
+    ],
+    "arm_means_evaluated": {
+      "coord": 0.9796511627906976,
+      "random": 0.6308139534883721,
+      "static_salience": 0.936046511627907,
+      "step_index": 0.5,
+      "blind": 0.5
+    },
+    "principle": "Within-state, the blind arm is a per-state CONSTANT, so its AUROC is exactly 0.5 by arithmetic and the second conjunct collapses into the first: the expression is 'coord >= 0.60' and nothing more. It confirms the defect (one identical score for every click) is gone. It does NOT show the new scores are BETTER than what already orders clicks live -- ``also_passed_by_arms`` names the arms in THIS run that clear the same bar, including uninformative ones. Read informativeness_gate for that."
   },
+  "informativeness_gate": {
+    "expression": "within_state_coord_auroc >= 0.60 AND lower_bound(bootstrap_ci95(within_state_coord_auroc - within_state_static_salience_auroc)) > 0 for every contributing game",
+    "metric": "within_state_auroc",
+    "added_post_hoc_after_review": true,
+    "why_added": "The originally pre-registered expression's pass region contains REGRESSIONS: static_salience (the incumbent ordering) lies inside it, so a coord value worse than the incumbent could report 'passed'. A gate that cannot distinguish improvement from regression carries almost no information.",
+    "coord_auroc": 0.9796511627906976,
+    "static_salience_auroc": 0.936046511627907,
+    "delta": 0.043604651162790664,
+    "per_game_bootstrap": {
+      "lp85": {
+        "n_bootstrap": 4000,
+        "n_replicates_used": 4000,
+        "n_replicates_dropped_degenerate": 0,
+        "delta_mean": 0.04315740306879127,
+        "delta_ci95": [
+          -0.030158730158730163,
+          0.1244583333333334
+        ],
+        "fraction_replicates_le_zero": 0.133,
+        "excludes_zero": false,
+        "resampling": "rows resampled with replacement WITHIN each scored state; arms paired"
+      }
+    },
+    "per_game_ci_excludes_zero": {
+      "lp85": false
+    },
+    "passed": false,
+    "is_gate_of_record": true,
+    "principle": "The only decision this experiment can inform is 'would this reorder clicks BETTER than what already does'. That is coord - static, and it needs an interval, not a point estimate: exp3540's paired p=0.135 'advantage' was retro-classified as a small-sample artifact at this exact shape. Passing this gate is still NOT a licence to flip the live flag -- the terminal gate is a LIVE A/B (exp4545)."
+  },
+  "gate_of_record": "informativeness_gate",
+  "informativeness_established": false,
   "honest_comparator": {
     "name": "coord_minus_static_within_state",
     "within_state_coord_auroc": 0.9796511627906976,
     "within_state_static_salience_auroc": 0.936046511627907,
     "delta": 0.043604651162790664,
-    "principle": "Beating the BLIND arm is trivial -- it is a constant within a state. The static area x colour-rarity salience sort is what actually orders clicks live once the router ties, so the delta against IT is what says whether this signal is worth anything. It is reported prominently and is NOT part of the pre-registered gate (that gate is about repairing the coordinate-blindness defect); read this number before concluding the head adds live value, and read exp4545 before concluding a positive delta here will survive live search."
+    "delta_has_uncertainty": true,
+    "per_game_bootstrap": {
+      "lp85": {
+        "n_bootstrap": 4000,
+        "n_replicates_used": 4000,
+        "n_replicates_dropped_degenerate": 0,
+        "delta_mean": 0.04315740306879127,
+        "delta_ci95": [
+          -0.030158730158730163,
+          0.1244583333333334
+        ],
+        "fraction_replicates_le_zero": 0.133,
+        "excludes_zero": false,
+        "resampling": "rows resampled with replacement WITHIN each scored state; arms paired"
+      }
+    },
+    "single_game_bootstrap": {
+      "n_bootstrap": 4000,
+      "n_replicates_used": 4000,
+      "n_replicates_dropped_degenerate": 0,
+      "delta_mean": 0.04315740306879127,
+      "delta_ci95": [
+        -0.030158730158730163,
+        0.1244583333333334
+      ],
+      "fraction_replicates_le_zero": 0.133,
+      "excludes_zero": false,
+      "resampling": "rows resampled with replacement WITHIN each scored state; arms paired"
+    },
+    "random_arm_seed_noise_per_game": {
+      "lp85": {
+        "n_seeds": 200,
+        "mean": 0.5084447674418605,
+        "sd": 0.07165084811751073,
+        "min": 0.3023255813953488,
+        "max": 0.7005813953488372,
+        "metric": "within_state_auroc of the shipped RandomCandidateRouter, seed varied only"
+      }
+    },
+    "informativeness_established": false,
+    "principle": "Beating the BLIND arm is trivial -- it is a constant within a state. The static area x colour-rarity salience sort is what actually orders clicks live once the router ties, so the delta against IT is what says whether this signal is worth anything, and it is the HEADLINE figure of this artifact -- not the large delta against the constant blind arm. Report it WITH its bootstrap interval: a delta whose CI includes 0, or that is smaller than the seed-noise spread of the uninformative random arm on the same corpus, establishes NOTHING over the incumbent ordering. Read exp4545 before concluding even a significant delta here will survive live search."
   },
   "controls": {
     "coord_beats_random": true,
@@ -375,9 +513,41 @@
     "n_rows": 182,
     "n_positive": 28,
     "n_levels_up": 7,
+    "n_levels_up_without_change": 0,
+    "n_changed": 28,
     "n_changed_only": 21,
+    "n_label_equals_changed": 182,
+    "label_is_measured_identical_to_frame_change": true,
     "level_up_positives_meet_n30_floor": false,
-    "interpretation": "The label is (frame changed OR leveled up). The frame-change component is the EASY one -- the incumbent STATIC salience sort already reaches AUROC 0.934 on it on lp85 -- while the level-up component is the hard, scarce one (only 27 positives exist across 12 audited games at true distance 1, below CLAUDE.md's N>=30 floor). A strong pooled AUROC here therefore demonstrates that coordinate-aware features carry REAL signal where the incumbent router carries literally ZERO, and NOTHING MORE. It is not a level-up-prediction result, and per exp4545 it is not a live-search result either."
+    "interpretation": "The label is WRITTEN as (frame changed OR leveled up), but MEASURED on this corpus the disjunct does no work: n_levels_up_without_change is the count of level-ups that did NOT also change the frame, and when label_is_measured_identical_to_frame_change is true the label is IDENTICALLY 'did the frame change'. So n_levels_up must NOT be read as supplying positives of its own -- every level-up positive is already a frame-change positive. Frame-change is the EASY component (the incumbent STATIC salience sort reaches 0.936 within-state on it here). A strong AUROC on this label therefore shows only that coordinate-aware features carry signal where the V3 ROUTER SPECIFICALLY carries none -- scoped to that router, NOT to this project's frame-change capability in general, which arc_frame_change_predictor already targets (see baselines_not_run_and_why). It is not a level-up-prediction result; per exp4545 it is not a live-search result; and per informativeness_gate it is not by itself evidence of any gain over the ordering already live. For the level-up question specifically read the hard slice (levels_up conditioned on changed)."
+  },
+  "baselines_not_run_and_why": {
+    "module": "python/carnot/agentic/arc_frame_change_predictor.py",
+    "scorers": [
+      "FrameChangeScorer",
+      "LiveActionEffectScorer",
+      "GroundTruthValidatedFrameChangeScorer",
+      "BehaviorActionPrior",
+      "ActionEffectExpansionPrior"
+    ],
+    "frame_change_checkpoints_found_in_models_dir": [],
+    "reason": "FrameChangeScorer requires a trained SmallFrameChangeCNN checkpoint and none exists in models/ (measured above -- the list is empty), so it cannot be run as an arm here without first training one, which is out of this experiment's scope. GroundTruthValidatedFrameChangeScorer is not a comparable offline arm at all: it returns 0.0 until it self-validates against observed transitions, and it is ALREADY DOWNSTREAM of this router in arc_graph_explore (which is exactly why the live A/B must stratify on frame_diff_ground_truth_validated). The honest consequence: this experiment does NOT establish that coordinate-aware features beat the project's existing frame-change capability -- only that they beat the V3 ROUTER, which carries no coordinate signal at all."
+  },
+  "hard_slice_summary": {
+    "label": "levels_up, conditioned on changed",
+    "why": "The pooled label is measured-identical to frame-change, so a high pooled AUROC can be carried entirely by 'does this click do anything at all'. Conditioning on changed removes that component and leaves the discrimination that matters live: among clicks that DO something, which ones make PROGRESS.",
+    "per_game": {
+      "lp85": {
+        "n_hard": 20,
+        "n_hard_pos": 5,
+        "n_hard_neg": 15,
+        "coord": 0.5066666666666667,
+        "static_salience": 0.66,
+        "random": 0.7066666666666667
+      }
+    },
+    "previously_inoperative": "This arm shipped dead: it filtered rows on `changed` while reusing the pooled label (`changed OR levels_up`), so every row in it was a positive, AUROC was undefined by construction, and the artifact emitted n_hard == n_pos with coord_hard_only: null. Its source comment also cited 'pooled 0.8747 collapses to 0.5544 hard-only, 84.6% trivial no-op negatives' -- figures that label could not produce. The label is now levels_up and those stale figures are deleted.",
+    "interpretation": "Read this BEFORE the headline AUROC. Where coord sits at ~0.5 here while the pooled figure is high, the pooled figure is carried by the trivial component and the head has NOT been shown to predict progress. Positive counts on this slice are tiny (single digits on the smoke corpus), so a number ABOVE 0.5 here is equally unpowered -- neither direction is a finding at this n, and the uninformative random arm is reported alongside precisely so its wander is visible."
   },
   "measured_incumbent_collapse": [
     {
@@ -414,12 +584,12 @@
     },
     {
       "gap": "positive supply for the level-up label",
-      "failure_mode": "Across 12 audited games only 14 states at true distance 1 exist with 27 positives total -- below CLAUDE.md's N>=30 floor for a percentage-point delta claim. Only 5 of 12 games contribute at all (6 level up on KEYBOARD actions).",
+      "failure_mode": "Across 12 audited games only 14 states at true distance 1 exist with 27 positives total -- below CLAUDE.md's N>=30 floor for a percentage-point delta claim. Only 5 of 12 games contribute at all (6 level up on KEYBOARD actions). MEASURED CONSEQUENCE on the smoke corpus: the hard slice (levels_up among changed) has 5 positives, where coord scores 0.5067 -- chance -- against static 0.6600. So the level-up discrimination this router would need is currently UNMEASURED rather than demonstrated, and the pooled headline comes from the frame-change component.",
       "missing_discriminator": "self-play state generation (harvest every visited state from a solver run) rather than banked-route states, which is also better distribution-matched to what the live agent sees.",
       "priority": "high -- blocks a powered level-up-labelled claim"
     }
   ],
   "reproducibility_checksum": "sha256:9ea68aa2a2add7fd27cdc29b16b4024010ec5b18927b372bc5b293c6fe0e5ba7",
-  "duration_s": 8.349,
-  "honest_verdict": "complete_coordinate_aware_click_features_pass_stage1_gate_live_ab_still_required"
+  "duration_s": 11.0622,
+  "honest_verdict": "complete_coordinate_blindness_repaired_but_gain_over_static_baseline_unestablished"
 }

@@ -44,6 +44,28 @@ THE LABEL, AND WHY IT IS THIS ONE
 grid or advanced ``levels_completed``. It is causally downstream of the click by
 construction, because it IS the observed post-click frame.
 
+MEASURED CAVEAT ON THAT DISJUNCTION: on the corpus harvested so far, every level-up ALSO
+changed the frame, so the label is IDENTICALLY "the frame changed" and the ``OR levels_up``
+disjunct supplies no positives of its own. The artifact reports this as a COUNT
+(``label_composition.n_levels_up_without_change`` /
+``label_is_measured_identical_to_frame_change``) rather than assuming it either way, because
+``n_levels_up`` sitting next to ``n_positive`` otherwise reads as if level-ups contributed
+distinct positives. Two consequences: (a) the headline AUROC is a frame-change result, and
+frame-change is the EASY component; (b) this repo ALREADY has modules aimed at exactly that
+target (``arc_frame_change_predictor``'s ``FrameChangeScorer`` /
+``GroundTruthValidatedFrameChangeScorer`` / ``BehaviorActionPrior`` / ...). They are NOT run
+as arms here -- ``FrameChangeScorer`` needs a trained ``SmallFrameChangeCNN`` checkpoint and
+none exists in ``models/`` (checked at runtime), and the ground-truth-validated scorer is
+already DOWNSTREAM of this router rather than a comparable offline arm. The artifact says so
+in ``baselines_not_run_and_why``. So "the incumbent carries ZERO signal" is a claim about the
+V3 ROUTER specifically, never about this project's frame-change capability in general.
+
+The level-up question is answered separately, by the HARD SLICE: among the clicks that DID
+change something, which ones level up (``levels_up`` conditioned on ``changed``)? That arm
+previously could never produce a number -- it filtered on ``changed`` while reusing the
+pooled label, so every row in it was a positive and AUROC was undefined by construction. Its
+label is now ``levels_up``, which is what makes it run.
+
 Rejected alternatives, each for a measured reason:
 
 * ``arc_human_replay_corpus.level_progress(row, step_index)`` -- a pure function of the step
@@ -83,23 +105,63 @@ because v3's features are frame-level. Pooled across states it therefore scored 
 apparent "signal" produced entirely by cross-state base-rate variation that cannot influence
 a single live ranking decision. Within-state it is exactly 0.5, as it must be.
 
-PRE-REGISTERED GATE (no exp5835 unpassable-conjunction defect)
---------------------------------------------------------------
-    within_state_coord_auroc >= 0.60  AND
-    (within_state_coord_auroc - within_state_blind_auroc) >= 0.10
+TWO CHECKS, AND ONLY THE SECOND IS THE GATE OF RECORD
+-----------------------------------------------------
+1. ``coordinate_blindness_repair_check`` (originally emitted as ``pre_registered_gate``)::
 
-Both conjuncts are properties of the TREATMENT (the second is a delta the treatment can move
-on its own, since ``blind`` is pinned at exactly 0.5 within-state by construction). The band
-check on ``blind`` is reported SEPARATELY as ``label_validity_check``, never folded into the
-gate -- exp5835 was voided partly for a gate whose conjunction asserted something about the
-baseline arm, making it unpassable for ANY treatment value.
+       within_state_coord_auroc >= 0.60  AND
+       (within_state_coord_auroc - within_state_blind_auroc) >= 0.10
 
-THE HONEST COMPARATOR IS THE STATIC SALIENCE SORT, NOT THE BLIND ROUTER
-----------------------------------------------------------------------
+   It is honest about the defect and USELESS as evidence of value, so it is no longer called a
+   gate and no longer names the verdict. Two measured reasons. (a) ``blind`` is pinned at
+   exactly 0.5 within-state by construction, so the second conjunct collapses into the first --
+   the "conjunction" is a single threshold. (b) Evaluated against this run's own arms, the
+   uninformative controls clear it too: the shipped ``RandomCandidateRouter`` at 0.6308 passes,
+   and so does ``static_salience`` at 0.9360 -- i.e. the bar is cleared both by an arm that
+   knows nothing and by the ordering that is ALREADY LIVE. The artifact now emits
+   ``also_passed_by_arms`` so that fact travels with the number.
+   (The band check on ``blind`` remains reported SEPARATELY as ``label_validity_check`` and is
+   never folded into any gate -- exp5835 was voided partly for a conjunct that asserted
+   something about the baseline arm, making it unpassable for ANY treatment value.)
+
+2. ``informativeness_gate`` -- ADDED POST-HOC AFTER REVIEW, and labelled as such in the
+   artifact rather than backdated::
+
+       within_state_coord_auroc >= 0.60  AND
+       lower_bound(bootstrap_ci95(coord - static_salience)) > 0   for every contributing game
+
+   This is the gate of record, because check (1)'s pass region CONTAINS REGRESSIONS:
+   ``static_salience`` lies inside it, so a coord of 0.70 would have reported "passed" while
+   ordering clicks WORSE than the incumbent sort it would replace. Both conjuncts here are
+   still properties the treatment can move on its own, so the exp5835 defect is not
+   reintroduced.
+
+THE HONEST COMPARATOR IS THE STATIC SALIENCE SORT, AND IT NEEDS AN INTERVAL
+--------------------------------------------------------------------------
 Beating ``blind`` is trivial -- it is a constant. The number that says what this signal is
 actually WORTH is ``coord_minus_static_within_state``: how much the learned head adds over the
 STATIC area x colour-rarity salience sort, which is what really orders clicks live once the
-router ties. That delta is reported prominently and is the one to read.
+router ties. It is the HEADLINE of this artifact.
+
+It ships with a PAIRED WITHIN-STATE BOOTSTRAP CI and ``fraction_replicates_le_zero``, plus a
+measured noise floor (the spread of the uninformative random arm's own within-state AUROC over
+``RANDOM_NOISE_SEEDS`` seeds on the same corpus). Reporting it as a bare point estimate was
+the shape of exp3540, whose paired p=0.135 "advantage" the retro classified as a small-sample
+artifact. Measured on the smoke corpus (lp85, 2 scored states, 20 positives): delta +0.0436,
+bootstrap CI95 [-0.0302, +0.1245], P(delta<=0) = 0.133, against an uninformative-arm seed-noise
+sd of 0.0717 -- the delta is inside the CI's zero and roughly HALF the noise the corpus
+produces for free. The smoke run therefore establishes NO gain over the incumbent ordering, and
+the verdict says exactly that.
+
+WHAT THE HARD SLICE SAYS (measured, and it is not flattering)
+------------------------------------------------------------
+lp85 smoke, 20 clicks that changed something, 5 of them level-ups: coord 0.5067 (chance),
+static_salience 0.6600, shipped-random 0.7067. So the 0.98 headline is carried by the trivial
+"does this click do anything at all" component; on the slice that asks "which effective click
+makes PROGRESS" the learned head is at chance and BEHIND the incumbent static sort. With 5
+positives none of these three numbers is powered -- which is the point: this is a
+feasibility measurement, and what it currently measures is that the level-up question is
+UNANSWERED, not answered favourably.
 
 Run:
     .venv/bin/python python/carnot/experiment_5904_click_target_discrimination.py --smoke
@@ -139,6 +201,11 @@ SMOKE_GAMES = ("vc33", "lp85")
 DEFAULT_MAX_STATES = 12
 SMOKE_MAX_STATES = 4
 DEFAULT_MAX_CLICKS = 48  # the live generator's own default cap
+
+# Seeds used to measure the uninformative arm's own spread on this corpus -- the noise floor
+# any claimed delta has to clear. 200 is enough for a stable sd at this corpus size and costs
+# well under a second (the random arm is a hash, not a model).
+RANDOM_NOISE_SEEDS = 200
 
 
 # --------------------------------------------------------------------------- preconditions
@@ -571,6 +638,83 @@ def stratified_auroc(
     return float(u_total / pair_total), n_states
 
 
+def paired_within_state_delta_bootstrap(
+    rows: Sequence[dict[str, Any]],
+    scores_a: Sequence[float],
+    scores_b: Sequence[float],
+    *,
+    n_boot: int = 4000,
+    seed: int = RANDOM_SEED,
+) -> dict[str, Any]:
+    """Uncertainty on ``within_state_AUROC(a) - within_state_AUROC(b)``, PAIRED and WITHIN-state.
+
+    WHY THIS EXISTS AND WHY IT IS NOT OPTIONAL. The decision-relevant number in this experiment
+    is ``coord - static_salience``: the delta against the ordering that is ALREADY LIVE. It was
+    previously reported as a bare point estimate (+0.0436) with no uncertainty at all, while
+    every ``*_auroc`` block honestly carried ``ci95: null, n_games: 1``. A point estimate on a
+    2-state / 20-positive corpus cannot distinguish a real improvement from noise, and this
+    project has already paid for that exact mistake once: exp3540's paired p=0.135 "advantage"
+    was retro-classified as a small-sample artifact.
+
+    Resampling is done WITHIN each scored state, with replacement, preserving the design (the
+    live router only ever ranks within one state). Both arms are recomputed on the SAME
+    resample, so the delta is paired and the shared corpus noise cancels. A resampled state
+    that comes out single-class contributes no discriminating pairs and is skipped by
+    ``stratified_auroc`` for both arms alike; a replicate with no usable state at all is
+    dropped and counted.
+    """
+
+    by_state: dict[Any, list[int]] = {}
+    for index, row in enumerate(rows):
+        by_state.setdefault((row["game"], row["state_index"]), []).append(index)
+    if not by_state:
+        return {"n_bootstrap": 0, "note": "no scored states"}
+
+    labels = np.asarray([float(row["label"]) for row in rows], dtype=np.float64)
+    array_a = np.asarray([float(value) for value in scores_a], dtype=np.float64)
+    array_b = np.asarray([float(value) for value in scores_b], dtype=np.float64)
+    rng = np.random.default_rng(int(seed))
+    state_indices = [np.asarray(idx, dtype=np.int64) for idx in by_state.values()]
+
+    deltas: list[float] = []
+    dropped = 0
+    for _replicate in range(int(n_boot)):
+        u_a = u_b = pair_total = 0.0
+        for idx in state_indices:
+            picked = idx[rng.integers(0, len(idx), len(idx))]
+            state_labels = labels[picked]
+            n_pos = float((state_labels >= 0.5).sum())
+            n_neg = float(len(state_labels) - n_pos)
+            if n_pos <= 0 or n_neg <= 0:
+                continue
+            value_a = auroc(array_a[picked].tolist(), state_labels.tolist())
+            value_b = auroc(array_b[picked].tolist(), state_labels.tolist())
+            if value_a is None or value_b is None:  # pragma: no cover - guarded above
+                continue
+            weight = n_pos * n_neg
+            u_a += value_a * weight
+            u_b += value_b * weight
+            pair_total += weight
+        if pair_total <= 0:
+            dropped += 1
+            continue
+        deltas.append(float(u_a / pair_total - u_b / pair_total))
+
+    if not deltas:
+        return {"n_bootstrap": int(n_boot), "note": "every replicate was degenerate"}
+    array = np.asarray(deltas, dtype=np.float64)
+    return {
+        "n_bootstrap": int(n_boot),
+        "n_replicates_used": int(array.size),
+        "n_replicates_dropped_degenerate": int(dropped),
+        "delta_mean": float(array.mean()),
+        "delta_ci95": [float(np.percentile(array, 2.5)), float(np.percentile(array, 97.5))],
+        "fraction_replicates_le_zero": float((array <= 0.0).mean()),
+        "excludes_zero": bool(float(np.percentile(array, 2.5)) > 0.0),
+        "resampling": "rows resampled with replacement WITHIN each scored state; arms paired",
+    }
+
+
 # ----------------------------------------------------------------------------------- arms
 
 
@@ -627,6 +771,19 @@ def run_arms_for_game(rows: Sequence[dict[str, Any]], *, seed: int) -> dict[str,
     )
     result["label_is_predominantly_frame_change"] = bool(
         result["n_pos"] > 0 and result["n_levels_up"] < result["n_pos"]
+    )
+    # MEASURED, not assumed: is the ``OR levels_up`` disjunct doing any work at all? If every
+    # level-up also changed the frame then the label is IDENTICALLY "the frame changed", and
+    # reporting n_levels_up alongside n_pos would misread as level-ups supplying positives of
+    # their own. Counted rather than asserted so a future corpus where it differs is visible.
+    result["n_levels_up_without_change"] = int(
+        sum(1 for row in score_rows if bool(row["levels_up"]) and not bool(row["changed"]))
+    )
+    result["n_label_equals_changed"] = int(
+        sum(1 for row in score_rows if bool(row["label"] >= 0.5) == bool(row["changed"]))
+    )
+    result["label_is_measured_identical_to_frame_change"] = bool(
+        result["n_label_equals_changed"] == len(score_rows)
     )
 
     # arm BLIND: the incumbent v3 router's OWN scores, measured during harvest -- not a
@@ -713,18 +870,84 @@ def run_arms_for_game(rows: Sequence[dict[str, Any]], *, seed: int) -> dict[str,
     result["static_salience"] = auroc(static_scores, labels)
     result["static_salience_within_state"], _ = stratified_auroc(score_rows, static_scores)
 
-    # Hard negatives only: candidates that DID change the frame. Measured on lp85, pooled
-    # AUROC 0.8747 collapses to 0.5544 hard-only because 84.6% of its negatives are trivial
-    # no-ops. Both numbers must be reported or the pooled one flatters every arm.
+    # THE DECISION-RELEVANT NUMBER, WITH UNCERTAINTY. coord - static is what says whether this
+    # head would improve the ordering that is already live; a point estimate alone cannot tell
+    # a real gain from resampling noise on a 2-state corpus (exp3540's lesson).
+    if fitted:
+        coord_within = result.get("coord_within_state")
+        static_within = result.get("static_salience_within_state")
+        result["coord_minus_static_within_state"] = (
+            None
+            if coord_within is None or static_within is None
+            else float(coord_within) - float(static_within)
+        )
+        result["coord_minus_static_bootstrap"] = paired_within_state_delta_bootstrap(
+            score_rows, coord_scores, static_scores, seed=int(seed)
+        )
+
+    # NOISE FLOOR, measured on THIS corpus: how far does a provably-uninformative but
+    # coordinate-aware arm wander when only its seed changes? If the coord-minus-static delta is
+    # smaller than this spread, the delta is inside the noise the corpus generates for free.
+    noise_values: list[float] = []
+    for offset in range(RANDOM_NOISE_SEEDS):
+        probe = RandomCandidateRouter(seed=int(seed) + 1000 + offset)
+        probe_scores = [
+            probe._score(
+                _StateFrame(row["game"], row["state_index"]), _KeyedAction(row["x"], row["y"])
+            )
+            for row in score_rows
+        ]
+        value, _n = stratified_auroc(score_rows, probe_scores)
+        if value is not None:
+            noise_values.append(float(value))
+    if noise_values:
+        noise_array = np.asarray(noise_values, dtype=np.float64)
+        result["random_arm_seed_noise"] = {
+            "n_seeds": int(noise_array.size),
+            "mean": float(noise_array.mean()),
+            "sd": float(noise_array.std(ddof=1)) if noise_array.size > 1 else None,
+            "min": float(noise_array.min()),
+            "max": float(noise_array.max()),
+            "metric": "within_state_auroc of the shipped RandomCandidateRouter, seed varied only",
+        }
+
+    # HARD SLICE: among the clicks that DID change something, which ones LEVEL UP?
+    #
+    # The label used by every arm above is ``changed OR levels_up``, so the easy component
+    # ("does this click do anything at all") can carry the whole headline. This slice removes
+    # that component: it conditions on ``changed`` and asks the question that actually matters
+    # live -- which of the clicks that DO something make PROGRESS.
+    #
+    # THE PRIOR VERSION OF THIS ARM WAS STRUCTURALLY DEAD and produced nothing. It used
+    # ``hard_labels = row["label"]`` on rows filtered by ``changed``; since
+    # ``label = 1.0 if (changed or levels_up)``, every hard row had label 1.0, ``auroc``
+    # returned None on the single class, and the artifact shipped ``n_hard == n_pos`` with
+    # ``coord_hard_only: null`` / ``pooled_coord_hard_only_auroc.n_games: 0``. The comment that
+    # stood here also asserted "pooled 0.8747 collapses to 0.5544 hard-only, 84.6% trivial
+    # no-op negatives" -- figures the shipped label could not produce; they were stale numbers
+    # from an earlier label presented as current measurements, and are deleted rather than
+    # re-cited. The label below (``levels_up`` among ``changed``) is what makes the arm run.
     hard = [row for row in score_rows if bool(row["changed"])]
-    hard_labels = [float(row["label"]) for row in hard]
+    hard_labels = [float(bool(row["levels_up"])) for row in hard]
     result["n_hard"] = len(hard)
+    result["n_hard_pos"] = int(sum(1 for value in hard_labels if value >= 0.5))
+    result["n_hard_neg"] = int(len(hard_labels) - result["n_hard_pos"])
+    result["hard_slice_label"] = "levels_up, conditioned on changed (NOT the pooled label)"
     if hard and fitted:
         result["coord_hard_only"] = auroc(
             [head.proba(row["features"]) for row in hard], hard_labels
         )
         result["static_salience_hard_only"] = auroc(
             [-float(row["salience_rank"]) for row in hard], hard_labels
+        )
+        result["random_hard_only"] = auroc(
+            [
+                random_router._score(
+                    _StateFrame(row["game"], row["state_index"]), _KeyedAction(row["x"], row["y"])
+                )
+                for row in hard
+            ],
+            hard_labels,
         )
     return result
 
@@ -753,13 +976,47 @@ def _random_router_control_distinct_scores() -> int:
     return len({router._score(frame, _A(x, x + 1)) for x in range(10)})
 
 
+def repair_check_passes(value: float | None, blind: float | None) -> bool:
+    """The ORIGINAL pre-registered expression, as a pure function of one arm's AUROC.
+
+    Module-level and applied to EVERY arm, not just the treatment, because that is how the
+    artifact's ``also_passed_by_arms`` field is computed -- the fact that the shipped
+    uninformative ``RandomCandidateRouter`` clears the same bar is measured, not asserted, and a
+    test pins it. Within-state ``blind`` is 0.5 by construction, so this reduces to
+    ``value >= 0.60``; keeping the second conjunct here keeps the function faithful to the
+    expression that was actually pre-registered.
+    """
+
+    return bool(
+        value is not None and blind is not None and value >= 0.60 and (value - blind) >= 0.10
+    )
+
+
 # ---------------------------------------------------------------------------------- main
 
 
 def _pool(per_game: dict[str, dict[str, Any]], key: str) -> dict[str, Any]:
+    """Aggregate one metric over games -- and SAY SO when there is only one game.
+
+    The ``pooled_*`` / ``within_state_*`` key names are historical, and with a single
+    contributing game they are NOT pooled: the "mean" is that one game's value and ``ci95`` is
+    null because a one-game sample has no between-game spread. Emitting
+    ``single_game_not_pooled`` makes that unmissable instead of leaving a reader to notice
+    ``n_games: 1``. This run's smoke corpus is exactly that case (vc33 contributes zero states:
+    its measured frame-change base rate is 1.000, so every state is excluded for having no
+    negative).
+    """
+
     values = [row[key] for row in per_game.values() if isinstance(row.get(key), (int, float))]
     if not values:
-        return {"mean": None, "n_games": 0, "ci95": None, "values": []}
+        return {
+            "mean": None,
+            "n_games": 0,
+            "ci95": None,
+            "values": [],
+            "single_game_not_pooled": False,
+            "no_contributing_games": True,
+        }
     array = np.asarray(values, dtype=np.float64)
     mean = float(array.mean())
     if len(values) > 1:
@@ -774,6 +1031,8 @@ def _pool(per_game: dict[str, dict[str, Any]], key: str) -> dict[str, Any]:
         "n_games": len(values),
         "ci95": ci,
         "values": [float(v) for v in values],
+        "single_game_not_pooled": len(values) == 1,
+        "no_contributing_games": False,
     }
 
 
@@ -1042,37 +1301,136 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
     }
 
-    artifact["pre_registered_gate"] = {
+    static_mean = artifact["within_state_static_salience_auroc"]["mean"]
+
+    # ------------------------------------------------------------------ the repair CHECK
+    #
+    # This was originally emitted as ``pre_registered_gate`` and its ``passed: true`` was the
+    # artifact's headline. That was misleading and the key is deliberately GONE: the expression
+    # is a single threshold in disguise (``blind`` is pinned at exactly 0.5 within-state by
+    # construction, so the second conjunct reduces to the first) and -- MEASURED below, against
+    # this run's own numbers -- the very controls introduced to isolate "coordinate-aware" from
+    # "informative" also clear it. A check that the shipped uninformative RandomCandidateRouter
+    # passes cannot be the evidence that a change is worth shipping. It is retained VERBATIM,
+    # renamed to what it actually tests: the coordinate-blindness defect is repaired.
+    def _repair_expression(value: float | None) -> bool:
+        return repair_check_passes(value, blind_mean)
+
+    arm_means = {
+        "coord": coord_mean,
+        "random": random_mean,
+        "static_salience": static_mean,
+        "step_index": step_mean,
+        "blind": blind_mean,
+    }
+    artifact["coordinate_blindness_repair_check"] = {
         "expression": (
             "within_state_coord_auroc >= 0.60 AND "
             "(within_state_coord_auroc - within_state_blind_auroc) >= 0.10"
         ),
         "metric": "within_state_auroc",
-        "no_baseline_assumption_conjunct": True,
+        "renamed_from": "pre_registered_gate",
+        "is_not_an_informativeness_gate": True,
         "coord_auroc": coord_mean,
         "blind_auroc": blind_mean,
         "delta": (None if coord_mean is None or blind_mean is None else coord_mean - blind_mean),
-        "passed": bool(
-            coord_mean is not None
-            and blind_mean is not None
-            and coord_mean >= 0.60
-            and (coord_mean - blind_mean) >= 0.10
+        "passed": _repair_expression(coord_mean),
+        "also_passed_by_arms": [
+            name
+            for name, value in arm_means.items()
+            if name != "coord" and _repair_expression(value)
+        ],
+        "arm_means_evaluated": arm_means,
+        "principle": (
+            "Within-state, the blind arm is a per-state CONSTANT, so its AUROC is exactly 0.5 "
+            "by arithmetic and the second conjunct collapses into the first: the expression is "
+            "'coord >= 0.60' and nothing more. It confirms the defect (one identical score for "
+            "every click) is gone. It does NOT show the new scores are BETTER than what already "
+            "orders clicks live -- ``also_passed_by_arms`` names the arms in THIS run that clear "
+            "the same bar, including uninformative ones. Read informativeness_gate for that."
         ),
     }
-    static_mean = artifact["within_state_static_salience_auroc"]["mean"]
+
+    # ------------------------------------------------------- the informativeness GATE
+    #
+    # ADDED POST-HOC, after review, and labelled as such rather than backdated. The reason is
+    # that the original expression's pass region CONTAINS REGRESSIONS: static_salience sits
+    # inside it, so a coord of 0.70 would have reported "passed" while ordering clicks WORSE
+    # than the incumbent static sort it would replace. This gate is the decision-relevant one:
+    # does the head beat the ordering that is already live, by more than resampling noise?
+    per_game_bootstraps = {
+        game: arms["coord_minus_static_bootstrap"]
+        for game, arms in per_game.items()
+        if isinstance(arms.get("coord_minus_static_bootstrap"), dict)
+        and arms["coord_minus_static_bootstrap"].get("delta_ci95") is not None
+    }
+    excludes_zero_per_game = {
+        game: bool(boot.get("excludes_zero")) for game, boot in per_game_bootstraps.items()
+    }
+    informativeness_passed = bool(
+        coord_mean is not None
+        and coord_mean >= 0.60
+        and excludes_zero_per_game
+        and all(excludes_zero_per_game.values())
+    )
+    artifact["informativeness_gate"] = {
+        "expression": (
+            "within_state_coord_auroc >= 0.60 AND "
+            "lower_bound(bootstrap_ci95(within_state_coord_auroc - "
+            "within_state_static_salience_auroc)) > 0 for every contributing game"
+        ),
+        "metric": "within_state_auroc",
+        "added_post_hoc_after_review": True,
+        "why_added": (
+            "The originally pre-registered expression's pass region contains REGRESSIONS: "
+            "static_salience (the incumbent ordering) lies inside it, so a coord value worse "
+            "than the incumbent could report 'passed'. A gate that cannot distinguish "
+            "improvement from regression carries almost no information."
+        ),
+        "coord_auroc": coord_mean,
+        "static_salience_auroc": static_mean,
+        "delta": (None if coord_mean is None or static_mean is None else coord_mean - static_mean),
+        "per_game_bootstrap": per_game_bootstraps,
+        "per_game_ci_excludes_zero": excludes_zero_per_game,
+        "passed": informativeness_passed,
+        "is_gate_of_record": True,
+        "principle": (
+            "The only decision this experiment can inform is 'would this reorder clicks BETTER "
+            "than what already does'. That is coord - static, and it needs an interval, not a "
+            "point estimate: exp3540's paired p=0.135 'advantage' was retro-classified as a "
+            "small-sample artifact at this exact shape. Passing this gate is still NOT a licence "
+            "to flip the live flag -- the terminal gate is a LIVE A/B (exp4545)."
+        ),
+    }
+    artifact["gate_of_record"] = "informativeness_gate"
+    artifact["informativeness_established"] = informativeness_passed
+
     artifact["honest_comparator"] = {
         "name": "coord_minus_static_within_state",
         "within_state_coord_auroc": coord_mean,
         "within_state_static_salience_auroc": static_mean,
         "delta": (None if coord_mean is None or static_mean is None else coord_mean - static_mean),
+        "delta_has_uncertainty": bool(per_game_bootstraps),
+        "per_game_bootstrap": per_game_bootstraps,
+        "single_game_bootstrap": (
+            next(iter(per_game_bootstraps.values())) if len(per_game_bootstraps) == 1 else None
+        ),
+        "random_arm_seed_noise_per_game": {
+            game: arms.get("random_arm_seed_noise")
+            for game, arms in per_game.items()
+            if arms.get("random_arm_seed_noise")
+        },
+        "informativeness_established": informativeness_passed,
         "principle": (
             "Beating the BLIND arm is trivial -- it is a constant within a state. The static "
             "area x colour-rarity salience sort is what actually orders clicks live once the "
             "router ties, so the delta against IT is what says whether this signal is worth "
-            "anything. It is reported prominently and is NOT part of the pre-registered gate "
-            "(that gate is about repairing the coordinate-blindness defect); read this number "
-            "before concluding the head adds live value, and read exp4545 before concluding a "
-            "positive delta here will survive live search."
+            "anything, and it is the HEADLINE figure of this artifact -- not the large delta "
+            "against the constant blind arm. Report it WITH its bootstrap interval: a delta "
+            "whose CI includes 0, or that is smaller than the seed-noise spread of the "
+            "uninformative random arm on the same corpus, establishes NOTHING over the "
+            "incumbent ordering. Read exp4545 before concluding even a significant delta here "
+            "will survive live search."
         ),
     }
     artifact["controls"] = {
@@ -1095,23 +1453,113 @@ def main(argv: Sequence[str] | None = None) -> int:
     # incumbent static salience sort is already strong on the frame-change component (measured
     # 0.934 on lp85). Say so in the artifact rather than letting a big number speak.
     total_levels_up = int(sum(1 for r in all_rows if bool(r["levels_up"])))
+    n_label_equals_changed = int(
+        sum(1 for r in all_rows if bool(r["label"] >= 0.5) == bool(r["changed"]))
+    )
+    label_is_frame_change = bool(all_rows) and n_label_equals_changed == len(all_rows)
     artifact["label_composition"] = {
         "n_rows": len(all_rows),
         "n_positive": artifact["n_positives_total"],
         "n_levels_up": total_levels_up,
+        "n_levels_up_without_change": int(
+            sum(1 for r in all_rows if bool(r["levels_up"]) and not bool(r["changed"]))
+        ),
+        "n_changed": int(sum(1 for r in all_rows if bool(r["changed"]))),
         "n_changed_only": int(
             sum(1 for r in all_rows if bool(r["changed"]) and not bool(r["levels_up"]))
         ),
+        "n_label_equals_changed": n_label_equals_changed,
+        "label_is_measured_identical_to_frame_change": label_is_frame_change,
         "level_up_positives_meet_n30_floor": total_levels_up >= 30,
         "interpretation": (
-            "The label is (frame changed OR leveled up). The frame-change component is the "
-            "EASY one -- the incumbent STATIC salience sort already reaches AUROC 0.934 on it "
-            "on lp85 -- while the level-up component is the hard, scarce one (only 27 "
-            "positives exist across 12 audited games at true distance 1, below CLAUDE.md's "
-            "N>=30 floor). A strong pooled AUROC here therefore demonstrates that "
-            "coordinate-aware features carry REAL signal where the incumbent router carries "
-            "literally ZERO, and NOTHING MORE. It is not a level-up-prediction result, and "
-            "per exp4545 it is not a live-search result either."
+            "The label is WRITTEN as (frame changed OR leveled up), but MEASURED on this corpus "
+            "the disjunct does no work: n_levels_up_without_change is the count of level-ups "
+            "that did NOT also change the frame, and when "
+            "label_is_measured_identical_to_frame_change is true the label is IDENTICALLY 'did "
+            "the frame change'. So n_levels_up must NOT be read as supplying positives of its "
+            "own -- every level-up positive is already a frame-change positive. Frame-change is "
+            "the EASY component (the incumbent STATIC salience sort reaches 0.936 within-state "
+            "on it here). A strong AUROC on this label therefore shows only that "
+            "coordinate-aware features carry signal where the V3 ROUTER SPECIFICALLY carries "
+            "none -- scoped to that router, NOT to this project's frame-change capability in "
+            "general, which arc_frame_change_predictor already targets (see "
+            "baselines_not_run_and_why). It is not a level-up-prediction result; per exp4545 it "
+            "is not a live-search result; and per informativeness_gate it is not by itself "
+            "evidence of any gain over the ordering already live. For the level-up question "
+            "specifically read the hard slice (levels_up conditioned on changed)."
+        ),
+    }
+
+    # BASELINES DELIBERATELY NOT RUN, named rather than silently omitted. The label above is
+    # measured-identical to frame-change, and this repo already ships modules purpose-built for
+    # frame-change prediction from (frame, candidate). Leaving them unmentioned would let the
+    # artifact read as if no prior capability existed for this exact target.
+    frame_change_checkpoints = sorted(
+        str(path.relative_to(REPO))
+        for path in (REPO / "models").glob("*")
+        if "frame" in path.name.lower() and "change" in path.name.lower()
+    )
+    artifact["baselines_not_run_and_why"] = {
+        "module": "python/carnot/agentic/arc_frame_change_predictor.py",
+        "scorers": [
+            "FrameChangeScorer",
+            "LiveActionEffectScorer",
+            "GroundTruthValidatedFrameChangeScorer",
+            "BehaviorActionPrior",
+            "ActionEffectExpansionPrior",
+        ],
+        "frame_change_checkpoints_found_in_models_dir": frame_change_checkpoints,
+        "reason": (
+            "FrameChangeScorer requires a trained SmallFrameChangeCNN checkpoint and none "
+            "exists in models/ (measured above -- the list is empty), so it cannot be run as an "
+            "arm here without first training one, which is out of this experiment's scope. "
+            "GroundTruthValidatedFrameChangeScorer is not a comparable offline arm at all: it "
+            "returns 0.0 until it self-validates against observed transitions, and it is "
+            "ALREADY DOWNSTREAM of this router in arc_graph_explore (which is exactly why the "
+            "live A/B must stratify on frame_diff_ground_truth_validated). The honest "
+            "consequence: this experiment does NOT establish that coordinate-aware features "
+            "beat the project's existing frame-change capability -- only that they beat the V3 "
+            "ROUTER, which carries no coordinate signal at all."
+        ),
+    }
+
+    # THE HARD SLICE, PROMOTED TO TOP LEVEL. It is the load-bearing result: it strips the easy
+    # "did anything happen at all" component out of the label and asks the question the live
+    # router exists to answer. It is reported whether or not it flatters the treatment.
+    artifact["hard_slice_summary"] = {
+        "label": "levels_up, conditioned on changed",
+        "why": (
+            "The pooled label is measured-identical to frame-change, so a high pooled AUROC can "
+            "be carried entirely by 'does this click do anything at all'. Conditioning on "
+            "changed removes that component and leaves the discrimination that matters live: "
+            "among clicks that DO something, which ones make PROGRESS."
+        ),
+        "per_game": {
+            game: {
+                "n_hard": arms.get("n_hard"),
+                "n_hard_pos": arms.get("n_hard_pos"),
+                "n_hard_neg": arms.get("n_hard_neg"),
+                "coord": arms.get("coord_hard_only"),
+                "static_salience": arms.get("static_salience_hard_only"),
+                "random": arms.get("random_hard_only"),
+            }
+            for game, arms in per_game.items()
+        },
+        "previously_inoperative": (
+            "This arm shipped dead: it filtered rows on `changed` while reusing the pooled "
+            "label (`changed OR levels_up`), so every row in it was a positive, AUROC was "
+            "undefined by construction, and the artifact emitted n_hard == n_pos with "
+            "coord_hard_only: null. Its source comment also cited 'pooled 0.8747 collapses to "
+            "0.5544 hard-only, 84.6% trivial no-op negatives' -- figures that label could not "
+            "produce. The label is now levels_up and those stale figures are deleted."
+        ),
+        "interpretation": (
+            "Read this BEFORE the headline AUROC. Where coord sits at ~0.5 here while the "
+            "pooled figure is high, the pooled figure is carried by the trivial component and "
+            "the head has NOT been shown to predict progress. Positive counts on this slice are "
+            "tiny (single digits on the smoke corpus), so a number ABOVE 0.5 here is equally "
+            "unpowered -- neither direction is a finding at this n, and the uninformative random "
+            "arm is reported alongside precisely so its wander is visible."
         ),
     }
 
@@ -1144,7 +1592,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "Across 12 audited games only 14 states at true distance 1 exist with 27 "
                 "positives total -- below CLAUDE.md's N>=30 floor for a percentage-point "
                 "delta claim. Only 5 of 12 games contribute at all (6 level up on KEYBOARD "
-                "actions)."
+                "actions). MEASURED CONSEQUENCE on the smoke corpus: the hard slice (levels_up "
+                "among changed) has 5 positives, where coord scores 0.5067 -- chance -- against "
+                "static 0.6600. So the level-up discrimination this router would need is "
+                "currently UNMEASURED rather than demonstrated, and the pooled headline comes "
+                "from the frame-change component."
             ),
             "missing_discriminator": (
                 "self-play state generation (harvest every visited state from a solver run) "
@@ -1171,9 +1623,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         artifact["honest_verdict"] = "complete_no_informative_states_harvested_corpus_degenerate"
     elif not label_valid:
         artifact["honest_verdict"] = "complete_label_validity_check_invalid_arms_uninterpretable"
-    elif artifact["pre_registered_gate"]["passed"]:
+    elif informativeness_passed:
         artifact["honest_verdict"] = (
-            "complete_coordinate_aware_click_features_pass_stage1_gate_live_ab_still_required"
+            "complete_coordinate_aware_click_features_beat_static_baseline_live_ab_still_required"
+        )
+    elif artifact["coordinate_blindness_repair_check"]["passed"]:
+        # The honest reading when the repair check passes but the gate of record does not: the
+        # DEFECT is repaired (measurably), and the head is NOT shown to add anything over the
+        # ordering already live. Both halves belong in the verdict; reporting only the first
+        # (as "pass stage1 gate") is what a downstream capstone would misread as a win.
+        artifact["honest_verdict"] = (
+            "complete_coordinate_blindness_repaired_but_gain_over_static_baseline_unestablished"
         )
     else:
         artifact["honest_verdict"] = "complete_coordinate_aware_click_features_below_stage1_gate"
@@ -1183,6 +1643,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     print("\n== EXP 5904 STAGE-1 SUMMARY ==")
     print(f"  rows={len(all_rows)} states={artifact['n_states_total']} games={list(per_game)}")
+    if len(per_game) <= 1:
+        print("  NOTE: one contributing game -- every 'pooled_*' value below is a SINGLE game's")
     print("  -- WITHIN-STATE AUROC (metric of record) --")
     print(f"  blind      = {blind_mean}")
     print(f"  coord      = {coord_mean}")
@@ -1193,10 +1655,28 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"  blind      = {artifact['pooled_blind_auroc']['mean']}")
     print(f"  coord      = {artifact['pooled_coord_auroc']['mean']}")
     print(f"  label_validity    = {artifact['label_validity_check']['status']}")
+    print("  -- HEADLINE: coord vs the ordering already live --")
+    print(f"  coord - static    = {artifact['honest_comparator']['delta']}")
+    for game, boot in artifact["informativeness_gate"]["per_game_bootstrap"].items():
+        print(
+            f"    [{game}] bootstrap ci95={boot.get('delta_ci95')} "
+            f"P(delta<=0)={boot.get('fraction_replicates_le_zero')} "
+            f"excludes_zero={boot.get('excludes_zero')}"
+        )
+    for game, noise in artifact["honest_comparator"]["random_arm_seed_noise_per_game"].items():
+        print(f"    [{game}] uninformative-arm seed-noise sd={noise.get('sd')}")
+    print("  -- HARD SLICE (levels_up among clicks that changed something) --")
+    for game, arms in per_game.items():
+        print(
+            f"    [{game}] n={arms.get('n_hard')} pos={arms.get('n_hard_pos')} "
+            f"coord={arms.get('coord_hard_only')} static={arms.get('static_salience_hard_only')} "
+            f"random={arms.get('random_hard_only')}"
+        )
     print(
-        f"  coord - static    = {artifact['honest_comparator']['delta']}  <- the number that matters"
+        f"  repair check      = {artifact['coordinate_blindness_repair_check']['passed']} "
+        f"(also passed by {artifact['coordinate_blindness_repair_check']['also_passed_by_arms']})"
     )
-    print(f"  gate passed       = {artifact['pre_registered_gate']['passed']}")
+    print(f"  GATE OF RECORD    = {artifact['informativeness_gate']['passed']}  (informativeness)")
     print(f"  verdict           = {artifact['honest_verdict']}")
     print(f"  wrote {out_path}")
     return 0
