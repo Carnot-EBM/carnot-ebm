@@ -46395,3 +46395,159 @@ future IDs or reopening retired scopes.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5903 | Implemented (`python/carnot/experiment_5903_v524_capstone_reconciliation.py`, `results/experiment_5903_v524_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5903_v524_capstone_reconciliation.py`) |
+
+### REQ-REPORT-5905: V525 Transition Archives Activated V524 Outcomes And Reserves Exp5904
+
+The Exp5905 workflow SHALL read `CLAUDE.md`, `CODEX.md`,
+`research-roadmap.yaml`, optional `research-roadmap-next.yaml`,
+`research-complete.yaml`, `ops/conductor-log.md`,
+`ops/exclusion_manifest.yaml`,
+`results/experiment_5903_v524_capstone_reconciliation.json`,
+`results/experiment_5895_shortcut_safe_continuous_self_learning.json`,
+`results/experiment_5897_sota_constraint_ir_repair_ab.json`,
+`results/experiment_5902_arc_structured_memory_live_ab.json`,
+`scripts/evidence_index_collision_preflight.py`,
+`scripts/in_process_doc_reconcile.py`, and this research-reporting spec. It
+SHALL write `results/experiment_5905_transition_v525.json`, SHALL NOT modify
+`research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/north-star.md`, Exp5904 source or result files, or operator-delegated
+status ledgers, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL resolve terminal `.524` evidence only by exact
+`(milestone, task_id, declared_deliverable)` tuples for activated Exp5890
+through Exp5903. It SHALL NOT select artifacts by globbed numeric prefix. It
+SHALL preserve ready/positive, null, blocked-precondition, and gate-blocked
+outcomes as disjoint terminal classes. Exp5895 SHALL preserve positive
+scientific submetrics and the operational null together: a positive semantic
+lift, retention, zero unsafe accepts, rollback/restart, or immutable-weight
+receipt SHALL NOT erase the required full-suite exit code `2`, and that test
+failure SHALL NOT erase measured science. Exp5897 and Exp5902 SHALL remain
+blocked-precondition receipts. Exp5898 and Exp5899 SHALL remain gate-blocked,
+including an absent Exp5899 declared deliverable when the conductor gate receipt
+explains the absence.
+
+The workflow SHALL run fresh adversarial-verifier receipts for every present
+declared `.524` deliverable. Missing declared deliverables SHALL be recorded as
+missing or gate-blocked receipts and SHALL NOT be replaced by same-number alias
+files. Verifier results SHALL remain artifact-quality receipts and SHALL NOT
+promote null, blocked-precondition, or gate-blocked outcomes into success.
+
+The workflow SHALL append milestone `2026.07.524` to
+`research-complete.yaml` exactly once only when its exact milestone block is
+absent. If an exact `.524` block is already present,
+`research_complete_append_count` SHALL be bare `0`. Existing duplicate history
+SHALL be measured without de-duplicating, rewriting, sorting, or amplifying it,
+and `duplicate_history_amplification_count` SHALL be bare `0`.
+
+The workflow SHALL reserve Exp5904 as external concurrent click-target work.
+Exp5904 SHALL be recorded in `exp5904_reservation_receipt` with
+`exp5904_reserved=true` and existing paths, but it SHALL NOT be included in the
+activated `.524` matrix, required by the `.525` matrix, edited, gated on, or
+classified by this milestone. The workflow SHALL scan active and optional next
+roadmaps, completion history, roadmap proposals, exclusion manifest, results,
+source, tests, and allocation receipts for Exp5905 through Exp5917. Active
+`.525` allocation references, roadmap proposal references, and Exp5905-owned
+spec/module/test/result references SHALL be recorded as allowed references, not
+collisions. Any other pre-existing bare Exp5905 through Exp5917 result, source,
+test, or ledger reference SHALL block completion. `next_range_collision_count`
+SHALL be a bare integer and SHALL equal `0` before Exp5905 authorizes the
+Exp5905-Exp5917 allocation.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`exact_terminal_classification`,
+`exp5895_science_and_operational_receipt`,
+`blocked_and_gate_blocked_receipts`, `adversarial_verifier_receipts`,
+`research_complete_append_count`,
+`duplicate_history_amplification_count`, `exp5904_reservation_receipt`,
+`next_task_range`, `next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty provenance entry and a principle. The
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal transition state over exact activated .524 identities."
+- `preconditions_checked`: principle "Parsed roadmaps, hashes, resources, atomic output, verifier availability, and declared deliverables ground the handoff."
+- `milestone_transition`: principle "Explicit .524-to-.525 boundary prevents prefix aliasing and outcome laundering."
+- `activated_task_and_deliverable_matrix`: principle "Only activated task IDs and declared paths count as evidence."
+- `exact_terminal_classification`: principle "Positive, null, blocked-precondition, and gate-blocked classes remain disjoint."
+- `exp5895_science_and_operational_receipt`: principle "A positive submetric cannot erase a nonzero required test, and a test failure cannot erase measured science."
+- `blocked_and_gate_blocked_receipts`: principle "Blocked-precondition and gate-blocked outcomes remain receipts rather than successes."
+- `adversarial_verifier_receipts`: principle "Fresh verifier receipts cover every present declared .524 artifact without replacing missing ones."
+- `research_complete_append_count`: principle "Exact zero-or-one append behavior prevents duplicate completion history."
+- `duplicate_history_amplification_count`: principle "Existing duplicate history is measured but never multiplied."
+- `exp5904_reservation_receipt`: principle "Concurrent work is recorded but never edited, required, or classified by this milestone."
+- `next_task_range`: principle "A declared finite Exp5905-Exp5917 interval makes allocation auditable."
+- `next_range_collision_count`: principle "Only bare zero authorizes Exp5905-Exp5917."
+- `docs_reconciled`: principle "Transition-owned spec reconciliation is recorded while operator-delegated ledgers remain untouched."
+- `protected_files_unchanged`: principle "Protected roadmap, conductor, north-star, Exp5904, and operator-ledger files remain byte-identical during this task."
+- `duration_s`: principle "Measured wall time exposes aggregation-only execution."
+- `inference_substrate`: principle "Use `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "Every required field traces to exact paths, hashes, receipts, commands, or classifications."
+- `test_commands`: principle "Commands document focused unit, coverage, YAML parse, exact-path/hash, duplicate-history, verifier, exclusion-manifest, range-collision, protected-file, reconciliation, spec, root-clutter, and full-suite checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects later ledger, artifact, or allocation drift."
+- `honest_verdict`: principle "Use a `complete:` or `blocked:` prefix."
+
+#### SCENARIO-REPORT-5905-EXACT-ARCHIVE: Activated V524 Outcomes Are Preserved
+
+**Given** terminal `.524` evidence declares exactly activated Exp5890 through
+Exp5903 and exact deliverable paths
+**When** the Exp5905 workflow builds the transition receipt
+**Then** it records every exact `(milestone, task_id, declared_deliverable)`
+tuple, classifies every activated task once, preserves positive, null,
+blocked-precondition, and gate-blocked outcomes, records Exp5899 as
+gate-blocked even when its declared deliverable is absent, and does not use
+numeric-prefix globbing.
+
+#### SCENARIO-REPORT-5905-EXP5895-MIXED-RECEIPT: Science And Operational Null Coexist
+
+**Given** Exp5895 reports positive prospective semantic lift, retention `1.0`,
+zero unsafe accepts, rollback/restart equivalence, immutable weights, ready
+score `0.0`, and required full-suite exit code `2`
+**When** the Exp5905 workflow records
+`exp5895_science_and_operational_receipt`
+**Then** the positive scientific fields remain present, the operational null
+and nonzero full-suite exit remain present, `promoted_as_ready=false`, and
+neither side erases the other.
+
+#### SCENARIO-REPORT-5905-RESERVATION-AND-RANGE: Exp5904 Is Reserved And Exp5905 Through Exp5917 Is Collision-Free
+
+**Given** Exp5904 click-target work has existing source or result paths
+**And** `.525` allocates Exp5905 through Exp5917
+**When** the Exp5905 workflow scans roadmaps, history, proposals, exclusions,
+results, source, tests, and allocation receipts
+**Then** `exp5904_reserved=true`, Exp5904 paths are recorded but never edited,
+Exp5904 is absent from activated and next task matrices, only allocation and
+Exp5905-owned references are allowed for Exp5905 through Exp5917, and
+`next_range_collision_count=0` is required as a bare integer.
+
+#### SCENARIO-REPORT-5905-APPEND-ONCE: V524 Completion History Is Not Amplified
+
+**Given** `research-complete.yaml` may or may not already contain exact
+milestone block `2026.07.524`
+**When** all activated `.524` identities have terminal classifications
+**Then** the workflow appends the `.524` block exactly once if absent,
+otherwise sets `research_complete_append_count=0`, includes only Exp5890
+through Exp5903, and keeps `duplicate_history_amplification_count=0`.
+
+#### SCENARIO-REPORT-5905-SCHEMA: Required Fields And Protected Files Are Stable
+
+**Given** the Exp5905 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, field provenance entry, verifier
+receipt, test command, exit code, checksum, and terminal verdict prefix is
+present; the inference substrate is `aggregation_from_upstream_artifacts`;
+protected files are unchanged; docs/status/traceability reconciliation is
+deferred to the conductor stop rule; and the full-suite exit code is recorded
+without being laundered into success.
+
+## Implementation Status (REQ-REPORT-5905)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5905 | Implemented (`python/carnot/experiment_5905_transition_v525.py`, `results/experiment_5905_transition_v525.json`) | Implemented (`tests/python/test_experiment_5905_transition_v525.py`) |

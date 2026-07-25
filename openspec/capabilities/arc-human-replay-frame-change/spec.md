@@ -10544,7 +10544,7 @@ in-episode column -- collapsing the ranking back into a tie and emitting
 IMPLAUSIBLE_PERFECT-shaped values.
 
 `python/carnot/agentic/arc_discriminative_router.py` SHALL provide `OnlineClickTargetRouter`,
-a PURELY ADDITIVE wrapper that blends `weight * (P(progress) - 0.5)` onto the incumbent v3
+a wrapper that blends `weight * (P(progress) - 0.5)` onto the incumbent v3
 score for click candidates only, DEFAULT OFF via the module-level constant
 `SUBMITTED_ONLINE_CLICK_TARGET_ROUTER_ENABLED`, with cold start (sample gate unmet) a
 bit-identical no-op and online state keyed on the frame's own `(game_id, guid)` so nothing
@@ -10555,6 +10555,21 @@ load-bearing for `models/arc_discriminative_verifier_v3.json` (79 weights + bias
 validation on load), and appending features would raise inside `proba_features` where
 `score`'s blanket `except Exception: return 0.5` would silently re-create the very
 constant-score bug being fixed.
+
+**CORRECTION 2026-07-24 (review): "purely additive" was NOT sufficient for "clicks only", and
+`rank` SHALL stable-partition.** An additive contribution of exactly 0.0 pins a non-click
+candidate's SCORE but not its RANK: because the incumbent base score is a CONSTANT across
+candidates on one frame (that is the defect), a full re-sort of the blended scores slides
+clicks past the stationary keyboard actions. Measured with a fitted head at `weight=0.25`,
+input `[A1, A6(3,3), A6(10,10), A6(20,6), A6(5,20), A6(12,20), A4]` returned
+`[A6(20,6), A6(12,20), A6(3,3), A1, A4, A6(5,20), A6(10,10)]` -- `A4` last-to-5th and `A1`
+1st-to-4th with both scores unchanged at 0.5. Since `arc_graph_explore` feeds this order into
+`lst.pop(0)`, the live A/B would have silently varied NON-CLICK selection too. `rank` SHALL
+therefore take the base router's ordering as the frame of reference, permute only the
+candidates occupying CLICK slots, and write them back into exactly those slots, so every
+non-click candidate provably keeps its base index; click ties SHALL break on base rank so a
+zero `weight` (or an unfitted head) reproduces the base ordering exactly. The word "purely
+additive" is struck above accordingly.
 
 The fit SHALL be ONLINE and WITHIN-GAME ONLY -- fitted from the agent's own in-episode
 transitions and discarded at episode end. Cross-game value transfer is retired by
@@ -10580,21 +10595,65 @@ terminal gate is a LIVE A/B on banked levels (exp4545's 0.725-AUROC discriminato
 live search, which is why the agent's `SUBMITTED_VALUE_WEIGHT` is pinned at 1e-12). It SHALL
 NOT emit `offline_reproduced` or any game-solve claim.
 
-**Implementation Status (2026-07-24): module + router + 46 tests + experiment SHIPPED, flag
-OFF, STAGE-1 SMOKE ONLY (2 games / 4 states / 182 labelled rows).** Measured smoke, WITHIN-STATE
-AUROC (the metric of record, because the live router only ever ranks within one frame): blind
-0.500 exactly, coord 0.980, static-salience 0.936, shipped-RandomCandidateRouter control 0.631,
-zero-perception step-index control 0.500. `label_validity_check: valid`; pre-registered gate
-PASSED; `adversarial_verify.py` 0 flags; `arc_orphan_solver_lint.py` clean.
+**Implementation Status (2026-07-24): module + router + 61 tests + experiment SHIPPED, flag
+OFF, STAGE-1 SMOKE ONLY (2 games requested, 1 contributing / 4 states / 182 labelled rows).**
+Measured smoke, WITHIN-STATE AUROC (the metric of record, because the live router only ever
+ranks within one frame): blind 0.500 exactly, coord 0.980, static-salience 0.936,
+shipped-RandomCandidateRouter control 0.631, zero-perception step-index control 0.500.
+`label_validity_check: valid`; ~~pre-registered gate PASSED~~ (struck 2026-07-24 -- see the
+CORRECTION below); `adversarial_verify.py` 0 flags; `arc_orphan_solver_lint.py` clean.
 
-**Read the limits with the numbers.** (1) The honest comparator is `coord - static = +0.044`,
-NOT the +0.48 delta against the constant blind arm -- beating a constant is trivial. (2) The
-smoke label is predominantly frame-change (21 of 28 positives; only 7 level-ups, far below the
-N>=30 floor), and the static sort already reaches 0.936 on that easy component. (3) Offline
-AUROC licenses NOTHING (exp4545). (4) `observe_click_outcome` has no live caller yet -- that
-site is in `arc_competition_agent.py`. (5) Even flag-on, the router fully owns click order only
-where `GroundTruthValidatedFrameChangeScorer` is unvalidated (measured: bp35/lp85/su15 yes;
-tn36/r11l no).
+**CORRECTION 2026-07-24 (review): the smoke run establishes NO gain over the incumbent
+ordering, and the artifact now says so.** Three measured facts forced this.
+(a) The originally pre-registered expression is a single threshold in disguise (within-state
+`blind` is a per-state constant, hence exactly 0.5, so the second conjunct collapses into the
+first) and it is CLEARED BY THE UNINFORMATIVE ARMS: evaluating it against this run's own
+numbers, the shipped `RandomCandidateRouter` (0.6308) passes and so does the incumbent
+`static_salience` sort (0.9360). Its pass region therefore CONTAINS REGRESSIONS -- a coord of
+0.70 would have reported "passed" while ordering clicks worse than the sort it replaces. The
+key `pre_registered_gate` is GONE from the artifact (a downstream capstone would have read
+`passed: true` as a positive result); the expression is retained verbatim, renamed
+`coordinate_blindness_repair_check`, carrying a measured `also_passed_by_arms`.
+(b) The decision-relevant number, `coord - static = +0.0436`, is NOT significant: paired
+within-state bootstrap (4000 replicates, rows resampled within each scored state) gives
+CI95 [-0.0302, +0.1245] with P(delta<=0) = 0.133, against a measured noise floor of sd 0.0717
+for the uninformative random arm's own within-state AUROC over 200 seeds on this corpus -- the
+delta is roughly HALF the free noise. This is exp3540's shape (paired p=0.135, retro verdict
+"advantage was small-sample artifact"). The new `informativeness_gate` (coord >= 0.60 AND
+bootstrap CI95 lower bound > 0 per game) is the GATE OF RECORD, is labelled
+`added_post_hoc_after_review: true` rather than backdated, and FAILS on the smoke corpus.
+(c) The hard-negatives arm was STRUCTURALLY DEAD and now runs. It filtered rows on `changed`
+while reusing the pooled label `(changed OR levels_up)`, so every hard row was a positive and
+`auroc` returned None by construction (shipped as `coord_hard_only: null`,
+`pooled_coord_hard_only_auroc.n_games: 0`); its source comment also cited "pooled 0.8747
+collapses to 0.5544 hard-only, 84.6% trivial no-op negatives", figures that label could not
+produce, now deleted. With the label corrected to `levels_up` conditioned on `changed`
+(n=20, 5 positives): coord 0.5067 -- CHANCE -- against static 0.6600 and shipped-random 0.7067.
+So the 0.98 headline is carried by the trivial "does this click do anything at all" component,
+and on the non-trivial slice the head is at chance and behind the incumbent (at an n where no
+direction is powered). Verdict token:
+`complete_coordinate_blindness_repaired_but_gain_over_static_baseline_unestablished`.
+
+**Read the limits with the numbers.** (1) The honest comparator is `coord - static = +0.044`
+WITH ITS INTERVAL (null, per the CORRECTION above), NOT the +0.48 delta against the constant
+blind arm -- beating a constant is trivial. (2) The smoke label is MEASURED IDENTICAL to
+frame-change: 182/182 rows have `label == changed` and `n_levels_up_without_change == 0`, so
+the 7 level-ups supply no positives of their own and `n_levels_up` must not be read as if they
+did; the static sort already reaches 0.936 on that easy component. (2b) This repo ALREADY ships
+frame-change predictors for that exact target (`arc_frame_change_predictor`'s
+`FrameChangeScorer`, `LiveActionEffectScorer`, `GroundTruthValidatedFrameChangeScorer`,
+`BehaviorActionPrior`, `ActionEffectExpansionPrior`); they are NOT run as arms
+(`FrameChangeScorer` needs a trained `SmallFrameChangeCNN` and `models/` contains no
+frame-change checkpoint -- checked at runtime; the ground-truth-validated scorer is already
+DOWNSTREAM of this router, not a comparable offline arm) and the artifact says so in
+`baselines_not_run_and_why`. Consequently "the incumbent carries ZERO signal" is scoped to the
+V3 ROUTER, never to this project's frame-change capability. (3) Offline AUROC licenses NOTHING
+(exp4545). (4) `observe_click_outcome` has no live caller yet -- that site is in
+`arc_competition_agent.py`. (5) Even flag-on, the router fully owns click order only where
+`GroundTruthValidatedFrameChangeScorer` is unvalidated (measured: bp35/lp85/su15 yes;
+tn36/r11l no). (6) Only 1 of the 2 requested smoke games contributes any state (vc33's
+frame-change base rate is 1.000, so every state is excluded for having no negative), so every
+`pooled_*` value is a SINGLE game's number -- now flagged `single_game_not_pooled: true`.
 
 A MEASURED CORRECTION this experiment made to its own design: the incumbent's per-state CONSTANT
 score reaches an ACROSS-state AUROC of 0.3105 from cross-state base-rate variation alone while
@@ -10627,4 +10686,20 @@ stratified by `frame_diff_ground_truth_validated`, and the one-line agent-side o
 
 #### SCENARIO-ARC-FCP-5904-BLIND-ARM-IS-A-LABEL-VALIDITY-CHECK
 - **WHEN** the stage-1 diagnostic reports the BLIND arm's AUROC
-- **THEN** a BLIND AUROC outside [0.45, 0.55] SHALL be reported as `label_validity_check: invalid` (a coordinate-blind scorer cannot beat chance on a click-dependent label, so an out-of-band value means the label leaks) and in that case NO arm SHALL be interpreted as a pass or a fail; the pre-registered treatment gate SHALL be COORD AUROC >= 0.60 AND COORD - BLIND >= 0.10, containing no conjunct that asserts an assumption about another arm's own value.
+- **THEN** a BLIND AUROC outside [0.45, 0.55] SHALL be reported as `label_validity_check: invalid` (a coordinate-blind scorer cannot beat chance on a click-dependent label, so an out-of-band value means the label leaks) and in that case NO arm SHALL be interpreted as a pass or a fail; ~~the pre-registered treatment gate SHALL be COORD AUROC >= 0.60 AND COORD - BLIND >= 0.10~~ (struck 2026-07-24: retained as the `coordinate_blindness_repair_check`, NOT as a gate -- see SCENARIO-ARC-FCP-5904-INFORMATIVENESS-GATE), containing no conjunct that asserts an assumption about another arm's own value.
+
+#### SCENARIO-ARC-FCP-5904-INFORMATIVENESS-GATE
+- **WHEN** the stage-1 diagnostic evaluates whether the coordinate-aware head is worth advancing to a live A/B
+- **THEN** the artifact SHALL NOT emit a `pre_registered_gate` key; it SHALL emit `coordinate_blindness_repair_check` (the original expression verbatim, with an `also_passed_by_arms` list computed by applying that same expression to EVERY arm, so the fact that the shipped uninformative `RandomCandidateRouter` and the incumbent `static_salience` sort also clear it travels with the number) and `informativeness_gate` (`within_state_coord_auroc >= 0.60` AND the lower bound of a paired within-state bootstrap CI95 on `coord - static_salience` strictly above 0, for every contributing game), marked `added_post_hoc_after_review: true`; `gate_of_record` SHALL name `informativeness_gate`, and the `honest_verdict` SHALL name BOTH halves when the repair check passes while the gate of record fails (defect repaired, gain over the incumbent unestablished).
+
+#### SCENARIO-ARC-FCP-5904-HEADLINE-DELTA-CARRIES-UNCERTAINTY
+- **WHEN** the artifact reports `honest_comparator` (`coord - static_salience`, the only decision-relevant figure)
+- **THEN** it SHALL carry a paired within-state bootstrap `delta_ci95` and `fraction_replicates_le_zero` (resampled WITHIN each scored state, both arms on the same resample) alongside a measured noise floor -- the spread of the shipped uninformative `RandomCandidateRouter`'s own within-state AUROC over `RANDOM_NOISE_SEEDS` seeds on the same corpus -- and a bare point estimate SHALL NOT be reported as the headline. Any `pooled_*` value derived from a single contributing game SHALL be flagged `single_game_not_pooled: true` with `ci95: null`.
+
+#### SCENARIO-ARC-FCP-5904-HARD-SLICE-IS-OPERATIVE
+- **WHEN** the stage-1 diagnostic reports the hard slice (the arm whose purpose is to strip out the trivial "did anything happen at all" component)
+- **THEN** the slice SHALL be `levels_up` conditioned on `changed` -- NOT the pooled `(changed OR levels_up)` label, which makes every row in the slice a positive and the AUROC undefined by construction -- and it SHALL report `n_hard_pos` and `n_hard_neg` both non-zero together with coord, static-salience and shipped-random values, whether or not they flatter the treatment. The artifact SHALL also report whether the pooled label is MEASURED identical to frame-change (`n_levels_up_without_change`, `label_is_measured_identical_to_frame_change`) and SHALL name the frame-change baselines it did not run, with the reason (`baselines_not_run_and_why`).
+
+#### SCENARIO-ARC-FCP-5904-ONLY-CLICK-POSITIONS-CHANGE
+- **WHEN** the flag is ON, the head is fitted, and the candidate list interleaves non-click actions among clicks
+- **THEN** every non-click candidate SHALL occupy exactly the index it held in the wrapped router's own ordering (a stable partition over the click slots), the clicks SHALL be permuted only among those slots, and a `weight` of 0.0 SHALL reproduce the base ordering exactly -- so a live A/B varies click order and nothing else.
