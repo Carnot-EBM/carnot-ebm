@@ -1,0 +1,24 @@
+{
+  "experiment": 5911,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-25",
+  "started_at": "2026-07-25T08:20:33.054249+00:00",
+  "finished_at": "2026-07-25T08:20:33.054249+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5910 repair: model, family, camouflage, and diagnostic portability",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5910-verification-guided-constraint-repair.verification_guided_repair_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5910-verification-guided-constraint-repair",
+      "artifact_field": "verification_guided_repair_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
