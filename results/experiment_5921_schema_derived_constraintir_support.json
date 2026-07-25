@@ -1,0 +1,1150 @@
+{
+  "correct_mode_retention_and_overpruning": {
+    "corrupted_schema": {
+      "accepted_semantic_false_case_ids": [],
+      "accepted_semantic_false_cases": 0,
+      "correct_mode_retention": 0.0,
+      "overpruned_correct_case_ids": [
+        "train_access_canonical",
+        "train_task_canonical",
+        "held_family_menu_canonical",
+        "held_composition_nested_and",
+        "empty_support_control"
+      ],
+      "overpruned_correct_cases": 5
+    },
+    "full_support": {
+      "accepted_semantic_false_case_ids": [
+        "held_operation_strict_greater_than",
+        "attribute_semantic_price_cap_false",
+        "missing_constraint_pair_omitted_budget",
+        "spurious_constraint_pair_extra_suspension",
+        "syntactically_valid_semantically_false"
+      ],
+      "accepted_semantic_false_cases": 5,
+      "correct_mode_retention": 1.0,
+      "overpruned_correct_case_ids": [],
+      "overpruned_correct_cases": 0
+    },
+    "grammar_only": {
+      "accepted_semantic_false_case_ids": [
+        "held_operation_strict_greater_than",
+        "attribute_semantic_price_cap_false",
+        "missing_constraint_pair_omitted_budget",
+        "spurious_constraint_pair_extra_suspension",
+        "syntactically_valid_semantically_false"
+      ],
+      "accepted_semantic_false_cases": 5,
+      "correct_mode_retention": 1.0,
+      "overpruned_correct_case_ids": [],
+      "overpruned_correct_cases": 0
+    },
+    "grammar_plus_type": {
+      "accepted_semantic_false_case_ids": [
+        "held_operation_strict_greater_than",
+        "attribute_semantic_price_cap_false",
+        "missing_constraint_pair_omitted_budget",
+        "spurious_constraint_pair_extra_suspension",
+        "syntactically_valid_semantically_false"
+      ],
+      "accepted_semantic_false_cases": 5,
+      "correct_mode_retention": 1.0,
+      "overpruned_correct_case_ids": [],
+      "overpruned_correct_cases": 0
+    },
+    "unconstrained_parser": {
+      "accepted_semantic_false_case_ids": [
+        "held_operation_strict_greater_than",
+        "attribute_semantic_price_cap_false",
+        "missing_constraint_pair_omitted_budget",
+        "spurious_constraint_pair_extra_suspension",
+        "syntactically_valid_semantically_false"
+      ],
+      "accepted_semantic_false_cases": 5,
+      "correct_mode_retention": 1.0,
+      "overpruned_correct_case_ids": [],
+      "overpruned_correct_cases": 0
+    }
+  },
+  "duration_s": 14.725901,
+  "exact_python_z3_agreement": {
+    "all_python_z3_agree": true,
+    "compared_count": 10,
+    "records": [
+      {
+        "agrees": true,
+        "case_id": "train_access_canonical",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "train_task_canonical",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "held_family_menu_canonical",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "held_composition_nested_and",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "held_operation_strict_greater_than",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "attribute_semantic_price_cap_false",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "missing_constraint_pair_omitted_budget",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "spurious_constraint_pair_extra_suspension",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "invalid_reference_missing_predicate",
+        "compared": false,
+        "parser_status": "rejected"
+      },
+      {
+        "agrees": true,
+        "case_id": "type_confusion_wrong_domain_value",
+        "compared": false,
+        "parser_status": "rejected"
+      },
+      {
+        "agrees": true,
+        "case_id": "scope_leak_rule_variable",
+        "compared": false,
+        "parser_status": "rejected"
+      },
+      {
+        "agrees": true,
+        "case_id": "empty_support_control",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      },
+      {
+        "agrees": true,
+        "case_id": "syntactically_valid_semantically_false",
+        "compared": true,
+        "parser_status": "accepted",
+        "python_status": "sat",
+        "z3_status": "sat"
+      }
+    ],
+    "verifier_is_oracle_scope": "exact parse, type, scope, execution, and certificate checks"
+  },
+  "experiment_id": "experiment_5921_schema_derived_constraintir_support",
+  "field_principles": {
+    "honest_verdict": "Use complete_ready:, retired:, or blocked:.",
+    "inference_substrate": "Use deterministic_schema_compilation_no_llm.",
+    "open_ir_not_finite_id_receipt": "Support may restrict well-typed prefixes but cannot enumerate complete answers or encode case labels.",
+    "schema_decode_contract_ready_score": "Emit bare 1.0 only for deterministic derivation, held-family support, exact scope/type rejection, zero answer leakage, and no unsafe semantic acceptance.",
+    "semantic_authority_boundary": "Structural admission never licenses exact semantic success.",
+    "verifier_is_oracle": "True only for exact parse, type, scope, execution, and certificate checks."
+  },
+  "field_provenance": {
+    "correct_mode_retention_and_overpruning": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "duration_s": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "exact_python_z3_agreement": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "field_provenance": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "honest_verdict": {
+      "principle": "Use complete_ready:, retired:, or blocked:.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "inference_substrate": {
+      "principle": "Use deterministic_schema_compilation_no_llm.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "missing_spurious_and_scope_controls": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "open_ir_not_finite_id_receipt": {
+      "principle": "Support may restrict well-typed prefixes but cannot enumerate complete answers or encode case labels.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "operation_signature_schema_and_version": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "preconditions_checked": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "prefix_monotonicity_and_dead_end_matrix": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "protected_files_unchanged": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "reproducibility_checksum": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "schema_decode_contract_ready_score": {
+      "principle": "Emit bare 1.0 only for deterministic derivation, held-family support, exact scope/type rejection, zero answer leakage, and no unsafe semantic acceptance.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "schema_to_grammar_type_scope_compiler_receipt": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "semantic_authority_boundary": {
+      "principle": "Structural admission never licenses exact semantic success.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "source_paper_and_local_mechanism_receipt": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "status": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "tamper_and_corrupted_schema_controls": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "test_commands": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "test_exit_codes": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "train_held_and_attribute_adversary_manifest": {
+      "principle": "Exp5921 deterministic artifact field.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    },
+    "verifier_is_oracle": {
+      "principle": "True only for exact parse, type, scope, execution, and certificate checks.",
+      "satisfied_by": "generated_by_exp5921_schema_derived_support_compiler"
+    }
+  },
+  "honest_verdict": "complete_ready: schema-derived ConstraintIR support is deterministic, open, and exact-boundary safe",
+  "inference_substrate": "deterministic_schema_compilation_no_llm",
+  "missing_spurious_and_scope_controls": {
+    "invalid_reference_rejected": true,
+    "missing_constraint_case_ids": [
+      "missing_constraint_pair_omitted_budget"
+    ],
+    "missing_constraint_structurally_admitted": true,
+    "scope_leak_rejected": true,
+    "spurious_constraint_case_ids": [
+      "spurious_constraint_pair_extra_suspension"
+    ],
+    "spurious_constraint_structurally_admitted": true,
+    "type_confusion_rejected": true
+  },
+  "open_ir_not_finite_id_receipt": {
+    "case_label_markers_found": [],
+    "complete_answer_enumeration_detected": false,
+    "complete_answer_payload_markers_found": [],
+    "finite_answer_id_list_present": false,
+    "leak_free": true,
+    "principle": "Support may restrict well-typed prefixes but cannot enumerate complete answers or encode case labels.",
+    "support_schema_hash": "sha256:2c1004c371781a9568242ba42da08665f01031b09127675087e2aa1f27941e9a"
+  },
+  "operation_signature_schema_and_version": {
+    "operation_count": 11,
+    "operation_names": [
+      "constraint_ir.object",
+      "domain.declare",
+      "entity.declare",
+      "predicate.declare",
+      "fact.assert",
+      "rule.define",
+      "query.define",
+      "atom.expr",
+      "not.expr",
+      "and.expr",
+      "arith.expr"
+    ],
+    "schema_hash": "sha256:1bf1681b2283a57104f082278089271cbb55765fd38bc61c2341c942c3b5fce7",
+    "schema_version": "carnot.constraint_ir.operation_signatures.v1",
+    "versioned_operation_order": [
+      "domain.declare",
+      "entity.declare",
+      "predicate.declare",
+      "fact.assert",
+      "rule.define",
+      "query.define"
+    ]
+  },
+  "preconditions_checked": {
+    "all_preconditions_ok": true,
+    "atomic_output": {
+      "method": "os.replace_same_directory",
+      "ok": true
+    },
+    "disk": {
+      "available_mb": 1166817,
+      "ok": true,
+      "required_mb": 512
+    },
+    "exp5907_artifact_valid": true,
+    "exp5907_fresh_process_replay": {
+      "checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+      "error": null,
+      "matches_producer_checksum": true,
+      "ok": true,
+      "returncode": 0,
+      "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:a0a860539125ca23be667a3ea14c4fe49e1ff2d62c34c7e5fcf73e11e6a27ca3"
+    },
+    "exp5907_fresh_twin_replay": {
+      "artifact_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+      "consumer_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+      "consumer_replay_ok": true,
+      "producer_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+      "producer_replay_ok": true,
+      "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+      "shared_helper_parity": true
+    },
+    "exp5908_replay": {
+      "consumer_stream_hash": "sha256:f7b74e9d189188a59c292c288b7a22bdcb2b226f3ff4e83ef5479b75dc55e8bd",
+      "ok": true,
+      "reproducibility_checksum": "sha256:2ecbe594fb2dbb0cb2b0640193f041737289a92724d438f9cc4c52e93bd5eac2",
+      "row_count": 20,
+      "row_file_sha256": "sha256:2009f2f0d8f33cebcab5b2eb883c7bc77d980cd1c4b8ebf0a25eb8ae556fe5fd"
+    },
+    "hashed_inputs": {
+      "all_present": true,
+      "files": [
+        {
+          "exists": true,
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "exists": true,
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "exists": true,
+          "path": "CLAUDE.md",
+          "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+        },
+        {
+          "exists": true,
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "exists": true,
+          "path": "research-references.md",
+          "sha256": "sha256:c2069a80207aef98916ee7212d8a31390001cd2581cce5249e1a4df74214eba1"
+        },
+        {
+          "exists": true,
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:3d73110a5668c992c2a05d7495584580d15f1c02802043f8deb77ed6806f0e3d"
+        },
+        {
+          "exists": true,
+          "path": "openspec/capabilities/verifiable-reasoning/spec.md",
+          "sha256": "sha256:4d9d22b922160dc929490513ec9a6d8be004d00d5138d70ab30a6a0c40bacd9e"
+        },
+        {
+          "exists": true,
+          "path": "openspec/capabilities/benchmarks/spec.md",
+          "sha256": "sha256:ba9c1c4b05a7904c16f2bca35fed47e9d26292ef6aad28872f40de0a7a385a0b"
+        },
+        {
+          "exists": true,
+          "path": "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+          "sha256": "sha256:e5f95bf908793140602626c5178283986d206d4c57df9dd13edbf25bcc877495"
+        },
+        {
+          "exists": true,
+          "path": "python/carnot/experiment_5907_constraint_ir_replay_contract.py",
+          "sha256": "sha256:a2e95ea0752b6c5a1aadd4ad7e5bdfee569a5d7a9a3acedd314073353ef84806"
+        },
+        {
+          "exists": true,
+          "path": "python/carnot/constraint_ir_replay_contract.py",
+          "sha256": "sha256:af82c719ea7b64a67d2968c7e7dafaf0dd6c69666fa210bf0e2761062a099093"
+        },
+        {
+          "exists": true,
+          "path": "python/carnot/experiment_5908_verisynth_constraint_fixture.py",
+          "sha256": "sha256:a4bc712accbba5aec8e01b47f74dba8eab216d0b06a9cc683a834bef2848e9d4"
+        },
+        {
+          "exists": true,
+          "path": "python/carnot/experiment_5909_sota_constraint_synthesis_ab.py",
+          "sha256": "sha256:667cd4dfdb47d0836782fddc9e30d639072577a42204584f4a88f3f7d1923e6a"
+        },
+        {
+          "exists": true,
+          "path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+          "sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea"
+        },
+        {
+          "exists": true,
+          "path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl",
+          "sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b"
+        },
+        {
+          "exists": true,
+          "path": "results/experiment_5907_constraint_ir_replay_contract.json",
+          "sha256": "sha256:125a30c9c164fee57dd824608405850032ecdcd99fcf86c86feb54944d84c8da"
+        },
+        {
+          "exists": true,
+          "path": "results/experiment_5908_verisynth_constraint_fixture.json",
+          "sha256": "sha256:73ac7f815b607c7bb92684ac49a40fcbeed55a96bc338a21f8d2f9e7365db0e5"
+        },
+        {
+          "exists": true,
+          "path": "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+          "sha256": "sha256:2009f2f0d8f33cebcab5b2eb883c7bc77d980cd1c4b8ebf0a25eb8ae556fe5fd"
+        },
+        {
+          "exists": true,
+          "path": "results/experiment_5909_sota_constraint_synthesis_ab.json",
+          "sha256": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3"
+        },
+        {
+          "exists": true,
+          "path": "python/carnot/experiment_5921_schema_derived_constraintir_support.py",
+          "sha256": "sha256:137342db3da050869c6e6af4cc8dbe25416b5d2d3c17b2efe5896e85f854c5b3"
+        },
+        {
+          "exists": true,
+          "path": "tests/python/test_experiment_5921_schema_derived_constraintir_support.py",
+          "sha256": "sha256:01467015b6ab9c4323542903828440e748b393ab4404dfd61ddaf27d537ad266"
+        }
+      ]
+    },
+    "inference_calls": 0,
+    "llm_inference_not_required": true,
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5921_schema_derived_constraintir_support.json",
+    "output_path_existed_before_write": false,
+    "ram": {
+      "available_mb": 58358,
+      "ok": true,
+      "required_mb": 512
+    },
+    "run_order": "Exp5907_and_Exp5908_replayed_before_schema_compilation"
+  },
+  "prefix_monotonicity_and_dead_end_matrix": {
+    "bounded_dead_ends": {
+      "all_recovery_bounded": true,
+      "empty_support_dead_end": {
+        "accepted": false,
+        "attempts_used": 1,
+        "bounded": true,
+        "rejected_before_accept": [
+          {
+            "attempt": 1,
+            "grammar_valid": false,
+            "scope_valid": false,
+            "type_valid": false
+          }
+        ]
+      },
+      "max_rejections": 5,
+      "recovered_within_budget": {
+        "accepted": true,
+        "attempts_used": 3,
+        "bounded": true,
+        "rejected_before_accept": [
+          {
+            "attempt": 1,
+            "grammar_valid": true,
+            "scope_valid": false,
+            "type_valid": true
+          },
+          {
+            "attempt": 2,
+            "grammar_valid": true,
+            "scope_valid": true,
+            "type_valid": false
+          }
+        ]
+      },
+      "rejected_after_budget": {
+        "accepted": false,
+        "attempts_used": 5,
+        "bounded": true,
+        "rejected_before_accept": [
+          {
+            "attempt": 1,
+            "grammar_valid": true,
+            "scope_valid": false,
+            "type_valid": true
+          },
+          {
+            "attempt": 2,
+            "grammar_valid": true,
+            "scope_valid": true,
+            "type_valid": false
+          },
+          {
+            "attempt": 3,
+            "grammar_valid": true,
+            "scope_valid": false,
+            "type_valid": true
+          },
+          {
+            "attempt": 4,
+            "grammar_valid": true,
+            "scope_valid": false,
+            "type_valid": true
+          },
+          {
+            "attempt": 5,
+            "grammar_valid": true,
+            "scope_valid": true,
+            "type_valid": false
+          }
+        ]
+      }
+    },
+    "prefix_monotonicity": {
+      "all_prefixes_monotone": true,
+      "case_records": [
+        {
+          "case_id": "train_access_canonical",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "train"
+        },
+        {
+          "case_id": "train_task_canonical",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "train"
+        },
+        {
+          "case_id": "held_family_menu_canonical",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "held_family"
+        },
+        {
+          "case_id": "held_composition_nested_and",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "held_composition"
+        },
+        {
+          "case_id": "held_operation_strict_greater_than",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "held_operation"
+        },
+        {
+          "case_id": "attribute_semantic_price_cap_false",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "held_family"
+        },
+        {
+          "case_id": "missing_constraint_pair_omitted_budget",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "held_family"
+        },
+        {
+          "case_id": "spurious_constraint_pair_extra_suspension",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "train"
+        },
+        {
+          "case_id": "invalid_reference_missing_predicate",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "control"
+        },
+        {
+          "case_id": "type_confusion_wrong_domain_value",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "control"
+        },
+        {
+          "case_id": "scope_leak_rule_variable",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "control"
+        },
+        {
+          "case_id": "empty_support_control",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "control"
+        },
+        {
+          "case_id": "syntactically_valid_semantically_false",
+          "legal_next_supported": true,
+          "monotone": true,
+          "operation_sequence": [
+            "domain.declare",
+            "entity.declare",
+            "predicate.declare",
+            "fact.assert",
+            "rule.define",
+            "query.define"
+          ],
+          "split_role": "dev"
+        }
+      ],
+      "checked_prefix_count": 91,
+      "held_family_prefixes_supported": true
+    }
+  },
+  "protected_files_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "path": "scripts/research_conductor.py",
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "sha256_before": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/changelog.md",
+        "sha256": "sha256:9cafd5b5501cc6a18d784185abb34c62ff3b6342a1d66f626ff4a798ec472862",
+        "sha256_before": "sha256:9cafd5b5501cc6a18d784185abb34c62ff3b6342a1d66f626ff4a798ec472862",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/status.md",
+        "sha256": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+        "sha256_before": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "_bmad/traceability.md",
+        "sha256": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "sha256_before": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "unchanged": true
+      }
+    ],
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:f529fe142bfd058594ff734e65be7c1f778ee5a110997105c133c07253849e1f",
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5921.schema_derived_constraintir_support.v1",
+  "schema_decode_contract_ready_score": 1.0,
+  "schema_to_grammar_type_scope_compiler_receipt": {
+    "bounded_rejection_controls": {
+      "dead_end_policy": "reject_prefix_and_advance_to_next_candidate",
+      "max_rejections": 5
+    },
+    "deterministic_support_replay": {
+      "deterministic_replay": true,
+      "left_hash": "sha256:0fcb3013966dc3ef4887ad955e6316791e67c1ca12ea591eb97e799dd9d9629c",
+      "right_hash": "sha256:0fcb3013966dc3ef4887ad955e6316791e67c1ca12ea591eb97e799dd9d9629c"
+    },
+    "grammar_terminals": {
+      "arith_ops": [
+        "<",
+        "<=",
+        "==",
+        ">",
+        ">="
+      ],
+      "domain_keys": [
+        "id",
+        "type",
+        "values"
+      ],
+      "domain_types": [
+        "int",
+        "symbol"
+      ],
+      "entity_keys": [
+        "domain",
+        "id"
+      ],
+      "expression_nodes": [
+        "and",
+        "arith",
+        "atom",
+        "not"
+      ],
+      "fact_keys": [
+        "args",
+        "predicate",
+        "truth"
+      ],
+      "predicate_keys": [
+        "arg_types",
+        "id"
+      ],
+      "query_keys": [
+        "vars",
+        "where"
+      ],
+      "rule_keys": [
+        "body",
+        "head",
+        "id",
+        "variables"
+      ],
+      "top_level_keys": [
+        "domains",
+        "entities",
+        "facts",
+        "predicates",
+        "query",
+        "rules",
+        "schema_version"
+      ],
+      "truth_literals": [
+        false,
+        true
+      ]
+    },
+    "mechanically_derived_from_signature_schema": true,
+    "scope_rules": {
+      "domains": {
+        "defines": "global_domain_namespace"
+      },
+      "entities": {
+        "defines": "global_entity_namespace",
+        "uses": "domains"
+      },
+      "predicates": {
+        "defines": "global_predicate_namespace",
+        "uses": "domains"
+      },
+      "query.variables": {
+        "leaks_to_rules": false,
+        "scope": "query_local"
+      },
+      "rule.variables": {
+        "leaks_to_query": false,
+        "scope": "rule_local"
+      }
+    },
+    "signature_schema_hash": "sha256:1bf1681b2283a57104f082278089271cbb55765fd38bc61c2341c942c3b5fce7",
+    "support_schema_hash": "sha256:2c1004c371781a9568242ba42da08665f01031b09127675087e2aa1f27941e9a",
+    "support_schema_version": "carnot.constraint_ir.schema_derived_support.v1",
+    "type_domain_transitions": {
+      "arith": {
+        "ops": [
+          "<",
+          "<=",
+          "==",
+          ">",
+          ">="
+        ],
+        "uses": [
+          "integer_domain"
+        ]
+      },
+      "domain": {
+        "defines": [
+          "domain.id"
+        ],
+        "valid_types": [
+          "int",
+          "symbol"
+        ]
+      },
+      "entity": {
+        "requires": [
+          "symbol_domain"
+        ],
+        "uses": [
+          "domain.id"
+        ]
+      },
+      "fact": {
+        "uses": [
+          "predicate.args"
+        ]
+      },
+      "predicate": {
+        "defines": [
+          "predicate.id"
+        ],
+        "uses": [
+          "domain.id"
+        ]
+      },
+      "query": {
+        "defines": [
+          "query.variables"
+        ],
+        "uses": [
+          "domain.id",
+          "predicate.args"
+        ]
+      },
+      "rule": {
+        "defines": [
+          "rule.variables"
+        ],
+        "uses": [
+          "domain.id",
+          "predicate.args"
+        ]
+      }
+    }
+  },
+  "semantic_authority_boundary": {
+    "grammar_type_scope_counted_as_semantic_correct": false,
+    "principle": "Structural admission never licenses exact semantic success.",
+    "semantic_success_authority": "Exp5896 Python/Z3 behavior hash and query bindings",
+    "structurally_admitted_semantically_false_case_ids": [
+      "held_operation_strict_greater_than",
+      "attribute_semantic_price_cap_false",
+      "missing_constraint_pair_omitted_budget",
+      "spurious_constraint_pair_extra_suspension",
+      "syntactically_valid_semantically_false"
+    ],
+    "structurally_admitted_semantically_false_cases": 5,
+    "unsafe_semantic_acceptance_count": 0
+  },
+  "source_paper_and_local_mechanism_receipt": {
+    "inference_claim": "no LLM inference; deterministic schema compilation only",
+    "local_mechanism": [
+      "ConstraintIR operation signatures instead of MLIR ODS",
+      "finite-domain type transitions",
+      "rule/query-local variable scope",
+      "Exp5896 Python/Z3 exact semantic adjudication"
+    ],
+    "paper_mechanism_used_as_motivation": [
+      "CFG over operation signatures",
+      "type-domain splits from schema",
+      "SSA-style definition/use scope validation",
+      "bounded rejection sampling"
+    ],
+    "source": {
+      "arxiv_id": "2607.18254v1",
+      "published_utc": "2026-05-14 02:08:13",
+      "title": "Cross-Dialect Generalization Without Retraining: Benchmarks and Evaluation of Schema-Derived Constrained Decoding for MLIR",
+      "url": "https://arxiv.org/abs/2607.18254"
+    }
+  },
+  "status": "complete_ready",
+  "tamper_and_corrupted_schema_controls": {
+    "corrupted_schema_accepted_semantic_false_cases": 0,
+    "corrupted_schema_hash": "sha256:e0c8154cf2299eb3807993c39ff2abbe18bed3b5e24584aa2ed7941e0492d33e",
+    "corrupted_schema_overpruned_correct_cases": 5,
+    "empty_support_rejects_valid_case": true,
+    "removed_operation_control": [
+      "arith.expr",
+      "not.expr"
+    ],
+    "unknown_signature_version_rejected": true
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5921_schema_derived_constraintir_support.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5921_schema_derived_constraintir_support.py -m pytest tests/python/test_experiment_5921_schema_derived_constraintir_support.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5921_schema_derived_constraintir_support.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_5921_schema_derived_constraintir_support",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5921_schema_derived_constraintir_support.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5921_schema_derived_constraintir_support.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {},
+  "train_held_and_attribute_adversary_manifest": {
+    "adversary_kind_counts": {
+      "attribute_semantic_adversary": 3,
+      "correct": 4,
+      "empty_support": 1,
+      "invalid_reference": 1,
+      "missing_constraint": 1,
+      "scope_leak": 1,
+      "spurious_constraint": 1,
+      "type_confusion": 1
+    },
+    "attribute_semantic_adversaries": 3,
+    "case_count": 13,
+    "cases": [
+      {
+        "adversary_kind": "correct",
+        "candidate_sha256": "sha256:10e212cf0e327740ee589508496ed251e058c8e98a91b80ed188b5bb779614b6",
+        "case_id": "train_access_canonical",
+        "expected_semantic_success": true,
+        "split_role": "train",
+        "target_family": "access_control",
+        "target_row_id": "exp5896-access_control-canonical"
+      },
+      {
+        "adversary_kind": "correct",
+        "candidate_sha256": "sha256:c9aa676587e87b3cd1f0af3589465cfbb1eb19b5265981ef136bd6c569023701",
+        "case_id": "train_task_canonical",
+        "expected_semantic_success": true,
+        "split_role": "train",
+        "target_family": "task_selection",
+        "target_row_id": "exp5896-task_selection-canonical"
+      },
+      {
+        "adversary_kind": "correct",
+        "candidate_sha256": "sha256:4672c71aca3f659618472f2dd00173fe5badc8726ff2bfea1a07a3a0546d312a",
+        "case_id": "held_family_menu_canonical",
+        "expected_semantic_success": true,
+        "split_role": "held_family",
+        "target_family": "menu_recommendation",
+        "target_row_id": "exp5896-menu_recommendation-canonical"
+      },
+      {
+        "adversary_kind": "correct",
+        "candidate_sha256": "sha256:8fee611f0f4a7560ec68961fdcf786beac9b79e30cffad4c6890e9bfebfad634",
+        "case_id": "held_composition_nested_and",
+        "expected_semantic_success": true,
+        "split_role": "held_composition",
+        "target_family": "access_control",
+        "target_row_id": "exp5896-access_control-canonical"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "candidate_sha256": "sha256:8200153f0eb59295cc55e37e978739b346ca78e83f90ae517f77d0b17e31f363",
+        "case_id": "held_operation_strict_greater_than",
+        "expected_semantic_success": false,
+        "split_role": "held_operation",
+        "target_family": "task_selection",
+        "target_row_id": "exp5896-task_selection-canonical"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "candidate_sha256": "sha256:13a88c5b8f22b0e4a26526c91e608e6ae643b28d59d6a9ac92fc814073d79722",
+        "case_id": "attribute_semantic_price_cap_false",
+        "expected_semantic_success": false,
+        "split_role": "held_family",
+        "target_family": "menu_recommendation",
+        "target_row_id": "exp5896-menu_recommendation-canonical"
+      },
+      {
+        "adversary_kind": "missing_constraint",
+        "candidate_sha256": "sha256:6245a6d83107e77ba63eed476ceaad69469dce539f7be5c279d0ddc815dd716d",
+        "case_id": "missing_constraint_pair_omitted_budget",
+        "expected_semantic_success": false,
+        "split_role": "held_family",
+        "target_family": "menu_recommendation",
+        "target_row_id": "exp5896-menu_recommendation-canonical"
+      },
+      {
+        "adversary_kind": "spurious_constraint",
+        "candidate_sha256": "sha256:cafab1ddc645a21337826db1935f992cdaccca31c695e88b4e62d113100db52e",
+        "case_id": "spurious_constraint_pair_extra_suspension",
+        "expected_semantic_success": false,
+        "split_role": "train",
+        "target_family": "access_control",
+        "target_row_id": "exp5896-access_control-canonical"
+      },
+      {
+        "adversary_kind": "invalid_reference",
+        "candidate_sha256": "sha256:4b6902f8348d1250c09f267859d5bbd9cca4cd01f377e13373d9cdd679803dea",
+        "case_id": "invalid_reference_missing_predicate",
+        "expected_semantic_success": false,
+        "split_role": "control",
+        "target_family": "access_control",
+        "target_row_id": "exp5896-access_control-canonical"
+      },
+      {
+        "adversary_kind": "type_confusion",
+        "candidate_sha256": "sha256:ee6f541402ac5339e9eae364b95d18f8271c32bd7c6aac7c4b3ea946a2bfb211",
+        "case_id": "type_confusion_wrong_domain_value",
+        "expected_semantic_success": false,
+        "split_role": "control",
+        "target_family": "task_selection",
+        "target_row_id": "exp5896-task_selection-canonical"
+      },
+      {
+        "adversary_kind": "scope_leak",
+        "candidate_sha256": "sha256:d8f99f8da868519277623deabe1684baa3bbe38cca0558a3af95db94eed03cde",
+        "case_id": "scope_leak_rule_variable",
+        "expected_semantic_success": false,
+        "split_role": "control",
+        "target_family": "access_control",
+        "target_row_id": "exp5896-access_control-canonical"
+      },
+      {
+        "adversary_kind": "empty_support",
+        "candidate_sha256": "sha256:10e212cf0e327740ee589508496ed251e058c8e98a91b80ed188b5bb779614b6",
+        "case_id": "empty_support_control",
+        "expected_semantic_success": true,
+        "split_role": "control",
+        "target_family": "access_control",
+        "target_row_id": "exp5896-access_control-canonical"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "candidate_sha256": "sha256:daef833ba3ddb0c72a0c31cdccd542a2325d90c5349f74bf8ca482240ee0d921",
+        "case_id": "syntactically_valid_semantically_false",
+        "expected_semantic_success": false,
+        "split_role": "dev",
+        "target_family": "task_selection",
+        "target_row_id": "exp5896-task_selection-canonical"
+      }
+    ],
+    "held_composition_cases": 1,
+    "held_family_cases": 3,
+    "held_operation_cases": 1,
+    "split_role_counts": {
+      "control": 4,
+      "dev": 1,
+      "held_composition": 1,
+      "held_family": 3,
+      "held_operation": 1,
+      "train": 3
+    },
+    "train_cases": 3
+  },
+  "verifier_is_oracle": true
+}
