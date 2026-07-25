@@ -243,6 +243,19 @@ ARMS: dict[str, dict[str, Any]] = {
         },
         "deterministic": False,
     },
+    # 2026-07-25: isolates the runtime click-vocabulary gate. B2 now inherits the gate from its
+    # default (SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED=True); this arm turns it OFF, so
+    # B2 - B2_nofix attributes any change to the gate alone rather than to drift in the barrier.
+    "B2_nofix": {
+        "label": "tier_exhaustion_uniform_draw_no_click_vocab_gate",
+        "kwargs": {
+            "tier_exhaustion": True,
+            "tier_uniform_random": True,
+            "tier_click_vocab_only": False,
+            "frontier_gradient": False,
+        },
+        "deterministic": False,
+    },
     "C": {
         "label": "frontier_distance_gradient",
         "kwargs": {"tier_exhaustion": False, "frontier_gradient": True},

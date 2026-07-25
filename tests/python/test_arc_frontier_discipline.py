@@ -317,7 +317,8 @@ def test_flags_default_off_and_pop_is_byte_identical_to_pop_zero():
 
 
 def test_wired_barrier_defers_a_high_tier_row_then_admits_it_after_advance():
-    exp = StepwiseExplorer(tier_exhaustion=True)
+    # tier_click_vocab_only=False: this test drives the barrier's state machine DIRECTLY with
+    exp = StepwiseExplorer(tier_click_vocab_only=False, tier_exhaustion=True)
     node_a = {"path": [], "untested": [_row(6, tier=3, x=1, y=1)], "value": None}
     node_b = {"path": [], "untested": [_row(6, tier=0, x=2, y=2)], "value": None}
     exp.graph = {"A": node_a, "B": node_b}
@@ -345,7 +346,8 @@ def test_wired_frontier_advances_the_barrier_instead_of_reporting_explored_out()
     This is the trap that would make the whole A/B read as a null for a mechanical reason:
     _frontier returning None because everything is merely DEFERRED, not exhausted.
     """
-    exp = StepwiseExplorer(tier_exhaustion=True)
+    # tier_click_vocab_only=False: this test drives the barrier's state machine DIRECTLY with
+    exp = StepwiseExplorer(tier_click_vocab_only=False, tier_exhaustion=True)
     exp.graph = {"A": {"path": [], "untested": [_row(6, tier=4, x=1, y=1)], "value": None}}
     exp.cur = "A"
 
@@ -384,7 +386,8 @@ def test_wired_frontier_does_not_record_deferred_nodes_as_exhausted_negatives():
 
 def test_wired_frontier_batch_only_pops_tier_admitted_rows():
     """A deferred row popped here would silently defeat the barrier (batches expand blindly)."""
-    exp = StepwiseExplorer(tier_exhaustion=True, frontier_batch_size="all")
+    # tier_click_vocab_only=False: this test drives the barrier's state machine DIRECTLY with
+    exp = StepwiseExplorer(tier_click_vocab_only=False, tier_exhaustion=True, frontier_batch_size="all")
     node = {
         "path": [],
         "untested": [
