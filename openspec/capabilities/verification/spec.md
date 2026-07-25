@@ -36197,3 +36197,121 @@ protected-file drift, when Exp5893 validates the terminal artifact, then
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5893 | Planned (`python/carnot/experiment_5893_grounding_shortcut_fixture.py`, `results/experiment_5893_grounding_shortcut_fixture.json`) | Planned (`tests/python/test_experiment_5893_grounding_shortcut_fixture.py`) |
+
+### REQ-VERIFY-5910: Verification-Guided ConstraintIR Repair Controls
+
+Carnot SHALL provide Exp5910 at
+`python/carnot/experiment_5910_verification_guided_constraint_repair.py` and
+write `results/experiment_5910_verification_guided_constraint_repair.json`
+plus a raw repair JSONL receipt. Exp5910 SHALL consume the sealed Exp5909
+ConstraintIR proposal stream, SHALL replay Exp5909's admission gate before any
+model load, and SHALL use the same three mandated GGUF families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Missing upstream stream readiness, residual
+diagnostic headroom, model cache, embedded GGUF tokenizer, public llama.cpp
+CUDA offload, dual RTX health, RAM, disk, VRAM, atomic output, real offload, or
+protected-workload checks SHALL write a `blocked_precondition:` artifact before
+repair generation begins. Exp5910 SHALL NOT use Hugging Face `AutoTokenizer`
+for GGUF models.
+
+Exp5910 SHALL freeze eligible rows from Exp5909 residual incorrect proposals
+and SHALL record the error taxonomy, prompts, decoding, seeds, diagnostic
+serialization, call/token/wall-clock budgets, and promotion thresholds before
+repair arms run. For every eligible model-row cell, Exp5910 SHALL compare five
+arms: `no_repair`, `exact_diagnostic_repair`, `matched_second_call_no_diagnostic`,
+`no_information_diagnostic`, and `shuffled_same_error_class_diagnostic`. The
+two-call arms SHALL have matched call count and output-token envelopes, so an
+extra model call alone cannot be credited as verification-guided repair.
+
+Only deployment-visible parser, type, compile, solver, and certificate
+diagnostics from the candidate being repaired MAY enter the
+`exact_diagnostic_repair` prompt. The repair prompt SHALL NOT expose hidden
+gold IR, answer labels, held identities, certificate solutions, model
+self-scores, target row exact labels, behavior hashes, or oracle solution
+payloads. Exp5910 SHALL hash the visible diagnostic trace and record zero
+access counts for every forbidden oracle source. The shuffled-diagnostic arm
+SHALL draw a diagnostic from the same error class but a different eligible row,
+preventing generic "diagnostic-shaped text" from being mistaken for exact
+localization.
+
+Exp5910 SHALL evaluate every repaired candidate with the exact Exp5896/Exp5909
+ConstraintIR parser, type checker, compiler, solver, certificate, and semantic
+equivalence authority. It SHALL report repaired exact semantic equivalence,
+regression of initially correct rows, parse/type/compile changes,
+omitted/spurious constraints, unsafe acceptance, diagnostic localization,
+tokens, latency, energy proxy, and per-model/error/family intervals. The bare
+`verification_guided_repair_ready_score` SHALL be `1.0` only when all three
+models complete, exact-diagnostic repair has positive lower bounds over both
+matched controls in every required model/family/error cell, initially correct
+rows do not regress, and unsafe acceptance does not increase. Otherwise the
+score SHALL be `0.0` and the verdict SHALL be `complete_null:`, `unsafe:`,
+`blocked_precondition:`, or `blocked:`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_stream_and_hashes`, `model_specs`, `model_file_hashes`,
+`embedded_tokenizer_loader_cuda_and_gpu_receipts`,
+`frozen_eligibility_error_taxonomy_prompts_seeds_and_budgets`,
+`arm_definitions_and_compute_parity`,
+`diagnostic_visibility_and_oracle_boundary`,
+`per_model_error_family_repair_metrics`,
+`exact_semantic_repair_and_regression_metrics`,
+`omitted_spurious_and_unsafe_constraint_metrics`,
+`matched_no_diagnostic_no_information_and_shuffled_controls`,
+`group_bootstrap_lower_bounds`, `raw_trace_and_output_receipts`,
+`gpu_utilization_vram_latency_and_energy_receipts`,
+`protected_files_unchanged`, `verification_guided_repair_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `diagnostic_visibility_and_oracle_boundary`: only deployment-visible exact diagnostics may guide repair.
+- `arm_definitions_and_compute_parity`: a second call alone cannot be credited as verification-guided repair.
+- `verification_guided_repair_ready_score`: emit bare `1.0` only for positive held lower bounds over matched controls, zero correct-row regression, zero unsafe increase, and all three models completed.
+- `inference_substrate`: use `live_llm_inference`.
+- `verifier_is_oracle`: true for exact outcome evaluation; the model remains only an IR proposer.
+- `honest_verdict`: use `complete_positive:`, `complete_null:`, `unsafe:`, `blocked_precondition:`, or `blocked:`.
+
+#### SCENARIO-VERIFY-5910-PRECONDITIONS: Exp5909 Admission Replays Before Repair
+
+Given the checked-in Exp5909 artifact and raw stream,
+when Exp5910 sees missing stream readiness, missing repair headroom, unavailable
+model/cache/tokenizer/CUDA/GPU/resource/output checks, or a protected workload,
+then it writes a `blocked_precondition:` artifact, records the failed gate, and
+does not call the repair collector.
+
+#### SCENARIO-VERIFY-5910-PROMPTS: Diagnostic Prompts Exclude Oracles
+
+Given an eligible Exp5909 residual row,
+when Exp5910 builds exact-diagnostic, no-diagnostic, no-information, and
+shuffled-diagnostic repair prompts,
+then only parser/type/compile/solver/certificate diagnostics obtainable after
+deployment are visible, every visible trace is hashed, and hidden gold IR,
+labels, certificates, held identities, solution payloads, behavior hashes, and
+model self-scores have zero prompt access count.
+
+#### SCENARIO-VERIFY-5910-CONTROLS: Repair Credit Beats Matched Controls
+
+Given three completed mandated model families and stubbed repair outputs,
+when Exp5910 evaluates no-repair plus the four two-call arms,
+then all two-call arms have matched call and token envelopes, per-model and
+per-family/error metrics are emitted, exact-diagnostic repair is promoted only
+when grouped lower bounds beat both no-diagnostic and no-information controls,
+and shuffled same-error-class diagnostics are reported separately.
+
+#### SCENARIO-VERIFY-5910-SAFETY: Unsafe Or Regressive Repair Cannot Promote
+
+Given exact-diagnostic repair increases unsafe accepted constraints, regresses
+initially correct rows, leaks forbidden oracle material, or lacks positive
+lower bounds in any required cell,
+when Exp5910 validates the terminal artifact,
+then `verification_guided_repair_ready_score` SHALL be `0.0` and
+`honest_verdict` SHALL begin with `unsafe:`, `complete_null:`, or `blocked:`
+rather than `complete_positive:`.
+
+## Implementation Status (REQ-VERIFY-5910)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5910 | Planned (`python/carnot/experiment_5910_verification_guided_constraint_repair.py`, `results/experiment_5910_verification_guided_constraint_repair.json`) | Planned (`tests/python/test_experiment_5910_verification_guided_constraint_repair.py`) |

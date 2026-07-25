@@ -1,0 +1,2011 @@
+{
+  "arm_definitions_and_compute_parity": {
+    "arms": {
+      "exact_diagnostic_repair": {
+        "calls_including_exp5909_initial": 2,
+        "control": false,
+        "diagnostic_mode": "deployment_visible_exact",
+        "second_call": true,
+        "second_call_max_tokens": 640
+      },
+      "matched_second_call_no_diagnostic": {
+        "calls_including_exp5909_initial": 2,
+        "control": true,
+        "diagnostic_mode": "withheld",
+        "second_call": true,
+        "second_call_max_tokens": 640
+      },
+      "no_information_diagnostic": {
+        "calls_including_exp5909_initial": 2,
+        "control": true,
+        "diagnostic_mode": "no_information",
+        "second_call": true,
+        "second_call_max_tokens": 640
+      },
+      "no_repair": {
+        "calls_including_exp5909_initial": 1,
+        "control": true,
+        "diagnostic_mode": "none",
+        "second_call": false,
+        "second_call_max_tokens": 0
+      },
+      "shuffled_same_error_class_diagnostic": {
+        "calls_including_exp5909_initial": 2,
+        "control": true,
+        "diagnostic_mode": "same_error_class_shuffled",
+        "second_call": true,
+        "second_call_max_tokens": 640
+      }
+    },
+    "no_repair_reuses_exp5909_initial_call": true,
+    "principle": "A second call alone cannot be credited as verification-guided repair.",
+    "two_call_arms_call_count_match": true,
+    "two_call_arms_output_token_budget_match": true
+  },
+  "diagnostic_visibility_and_oracle_boundary": {
+    "forbidden_oracle_access_counts": {
+      "answer_labels": 0,
+      "certificate_solutions": 0,
+      "gold_ir": 0,
+      "held_identities": 0,
+      "model_self_scores": 0
+    },
+    "oracle_leakage_detected": false,
+    "principle": "Only deployment-visible exact diagnostics may guide repair.",
+    "visible_to_exact_diagnostic_repair": [
+      "parser_status",
+      "parser_error",
+      "type_status",
+      "type_error",
+      "compiler_status",
+      "compiler_error",
+      "solver_status",
+      "solver_error",
+      "certificate_status",
+      "certificate_error",
+      "cross_backend_agreement"
+    ],
+    "visible_trace_hash_coverage": true,
+    "visible_trace_hashes": [
+      "sha256:7f3798caac8f5d0bd89e57275758bec2d5ffc5ffe0284ff7357c09fe19787b14",
+      "sha256:89ae2b0ffe2c94906c34c8ddf672c75a8c4f42fc0d6da887dd5ca73c67070dd0",
+      "sha256:bb05fc7d356f7dc542758506089f86e99de7562375a377960db96f4994c875c8",
+      "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d",
+      "sha256:036efd2bebcdd3752ff59f81d894f44b585aa90384dfa977bbd2a1df2b42d401",
+      "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d",
+      "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d",
+      "sha256:eab7917b8df0c0f290986ff6c99bff1189ee87deb2cf9be10c7b008324d68e5c",
+      "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d",
+      "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d"
+    ],
+    "withheld_from_all_repair_prompts": [
+      "hidden_gold_ir",
+      "answer_labels",
+      "held_identities",
+      "certificate_solutions",
+      "behavior_hashes",
+      "query_bindings",
+      "model_self_scores"
+    ]
+  },
+  "duration_s": 414.898033,
+  "embedded_tokenizer_loader_cuda_and_gpu_receipts": {
+    "all_runtime_offload_verified": true,
+    "embedded_tokenizer_receipts": [
+      {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "ok": true
+      },
+      {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "ok": true
+      },
+      {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "ok": true
+      }
+    ],
+    "environment": {
+      "atomic_output": {
+        "detail": "tempfile_replace_supported",
+        "ok": true
+      },
+      "disk": {
+        "available_mb": 1166929,
+        "ok": true,
+        "required_mb": 8192
+      },
+      "gpu_health": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 23819,
+            "memory_total_mb": 24576,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          }
+        ],
+        "ok": true,
+        "returncode": 0
+      },
+      "llama_cpp_cuda_support": {
+        "detail": "llama_supports_gpu_offload=True",
+        "ok": true
+      },
+      "llama_cpp_import": {
+        "detail": "llama_cpp 0.3.33",
+        "distribution_version": "0.3.33",
+        "ok": true,
+        "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py"
+      },
+      "protected_workload": {
+        "ok": true,
+        "protected_pids": []
+      },
+      "ram": {
+        "available_mb": 117764,
+        "ok": true,
+        "required_mb": 32768
+      }
+    },
+    "gpu_receipts": {
+      "generation_receipts": [
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 12749,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 41
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 12755,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 44
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "source_stream_sequence_index": 0
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 12749,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 41
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 12755,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 47
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "source_stream_sequence_index": 26
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 12749,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 39
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 12755,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 40
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "source_stream_sequence_index": 46
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 42
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 46
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 66
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 50
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 52
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 85
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 42
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 50
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 92
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 47
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 54
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 112
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 14099,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 36
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 13897,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 47
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "source_stream_sequence_index": 132
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 14099,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 38
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 13897,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 48
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "source_stream_sequence_index": 158
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 14099,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 39
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 13897,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 43
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "source_stream_sequence_index": 178
+        }
+      ],
+      "load_receipts": [
+        {
+          "blocker": null,
+          "elapsed_seconds": 9.484013,
+          "gpu_offload_verified": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_name": "Qwen3.6-35B-A3B",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_used": true,
+          "vram_delta_mb": 21776
+        },
+        {
+          "blocker": null,
+          "elapsed_seconds": 8.524958,
+          "gpu_offload_verified": true,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_name": "Gemma4-31B-it",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "model_used": true,
+          "vram_delta_mb": 26614
+        },
+        {
+          "blocker": null,
+          "elapsed_seconds": 7.601485,
+          "gpu_offload_verified": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_name": "Gemma4-26B-A4B-it",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_used": true,
+          "vram_delta_mb": 19264
+        }
+      ]
+    },
+    "model_resolution": {
+      "cached_sota_pair_called_with": {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ]
+      },
+      "cached_sota_pair_error": null,
+      "cached_sota_pair_returned": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "resolved_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "third_family_resolved_by_individual_cache": true
+    },
+    "runtime_loader_receipts": [
+      {
+        "blocker": null,
+        "elapsed_seconds": 9.484013,
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_used": true,
+        "vram_delta_mb": 21776
+      },
+      {
+        "blocker": null,
+        "elapsed_seconds": 8.524958,
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_name": "Gemma4-31B-it",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_used": true,
+        "vram_delta_mb": 26614
+      },
+      {
+        "blocker": null,
+        "elapsed_seconds": 7.601485,
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_name": "Gemma4-26B-A4B-it",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_used": true,
+        "vram_delta_mb": 19264
+      }
+    ]
+  },
+  "exact_semantic_repair_and_regression_metrics": {
+    "compile_delta_exact_vs_no_repair": -0.1,
+    "correct_row_regressions": 0,
+    "exact_repair_success_rate": 0.0,
+    "exact_repair_successes": 0,
+    "initial_residual_rows": 10,
+    "initially_correct_rows_evaluated": 0,
+    "parse_valid_delta_exact_vs_no_repair": -0.1,
+    "type_valid_delta_exact_vs_no_repair": -0.1
+  },
+  "experiment_id": "experiment_5910_verification_guided_constraint_repair",
+  "field_principles": {
+    "arm_definitions_and_compute_parity": "A second call alone cannot be credited as verification-guided repair.",
+    "diagnostic_visibility_and_oracle_boundary": "Only deployment-visible exact diagnostics may guide repair.",
+    "honest_verdict": "Use complete_positive:, complete_null:, unsafe:, blocked_precondition:, or blocked:.",
+    "inference_substrate": "Use live_llm_inference.",
+    "verification_guided_repair_ready_score": "Emit bare 1.0 only for positive held lower bounds over matched controls, zero correct-row regression, zero unsafe increase, and all three models completed.",
+    "verifier_is_oracle": "True for exact outcome evaluation; the model remains only an IR proposer."
+  },
+  "field_provenance": {
+    "arm_definitions_and_compute_parity": {
+      "principle": "A second call alone cannot be credited as verification-guided repair.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "diagnostic_visibility_and_oracle_boundary": {
+      "principle": "Only deployment-visible exact diagnostics may guide repair.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "duration_s": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "embedded_tokenizer_loader_cuda_and_gpu_receipts": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "exact_semantic_repair_and_regression_metrics": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "field_provenance": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "frozen_eligibility_error_taxonomy_prompts_seeds_and_budgets": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "gpu_utilization_vram_latency_and_energy_receipts": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "group_bootstrap_lower_bounds": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "honest_verdict": {
+      "principle": "Use complete_positive:, complete_null:, unsafe:, blocked_precondition:, or blocked:.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "inference_substrate": {
+      "principle": "Use live_llm_inference.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "matched_no_diagnostic_no_information_and_shuffled_controls": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "model_file_hashes": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "model_specs": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "omitted_spurious_and_unsafe_constraint_metrics": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "per_model_error_family_repair_metrics": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "preconditions_checked": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "protected_files_unchanged": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "raw_trace_and_output_receipts": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "reproducibility_checksum": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "status": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "test_commands": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "test_exit_codes": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "upstream_gate_stream_and_hashes": {
+      "principle": "Exp5910 required artifact field.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "verification_guided_repair_ready_score": {
+      "principle": "Emit bare 1.0 only for positive held lower bounds over matched controls, zero correct-row regression, zero unsafe increase, and all three models completed.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    },
+    "verifier_is_oracle": {
+      "principle": "True for exact outcome evaluation; the model remains only an IR proposer.",
+      "satisfied_by": "generated_by_exp5910_verification_guided_constraint_repair"
+    }
+  },
+  "frozen_eligibility_error_taxonomy_prompts_seeds_and_budgets": {
+    "base_random_seed": 5910,
+    "budgets": {
+      "n_batch": 512,
+      "n_ctx": 8192,
+      "n_gpu_layers": -1,
+      "second_call_max_tokens": 640,
+      "wall_clock_budget_s_per_second_call": 240
+    },
+    "decoding": {
+      "repeat_penalty": 1.05,
+      "stop": [
+        "</s>",
+        "<eos>",
+        "<|eot_id|>"
+      ],
+      "temperature": 0.0,
+      "top_p": 1.0
+    },
+    "diagnostic_serialization": "canonical_json_visible_trace_sha256",
+    "eligibility_rule": "Exp5909 primary-arm residual incorrect rows with deployment-visible diagnostics, capped per model/family/error cell",
+    "eligible_cells": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF::access_control::parser",
+      "unsloth/Qwen3.6-35B-A3B-GGUF::menu_recommendation::parser",
+      "unsloth/Qwen3.6-35B-A3B-GGUF::task_selection::parser",
+      "unsloth/gemma-4-26B-A4B-it-GGUF::access_control::parser",
+      "unsloth/gemma-4-26B-A4B-it-GGUF::menu_recommendation::parser",
+      "unsloth/gemma-4-26B-A4B-it-GGUF::task_selection::parser",
+      "unsloth/gemma-4-31B-it-GGUF::access_control::parser",
+      "unsloth/gemma-4-31B-it-GGUF::access_control::semantic",
+      "unsloth/gemma-4-31B-it-GGUF::menu_recommendation::parser",
+      "unsloth/gemma-4-31B-it-GGUF::task_selection::parser"
+    ],
+    "eligible_row_count": 10,
+    "eligible_row_hashes": [
+      {
+        "row_hash": "sha256:8568cdc1796d28a45c60980b9d906634e0c93fb80553faf7e3db13eb434e45fe",
+        "source_stream_sequence_index": 0,
+        "visible_trace_sha256": "sha256:7f3798caac8f5d0bd89e57275758bec2d5ffc5ffe0284ff7357c09fe19787b14"
+      },
+      {
+        "row_hash": "sha256:7166cf6ed1a0fb6046f5f3d76d9bc81a545e1de442527c47da2460bcde8d532c",
+        "source_stream_sequence_index": 26,
+        "visible_trace_sha256": "sha256:89ae2b0ffe2c94906c34c8ddf672c75a8c4f42fc0d6da887dd5ca73c67070dd0"
+      },
+      {
+        "row_hash": "sha256:88542121c100882ca922829e62b01bce7e066ade4748a5fe7a5c1bd44d641e94",
+        "source_stream_sequence_index": 46,
+        "visible_trace_sha256": "sha256:bb05fc7d356f7dc542758506089f86e99de7562375a377960db96f4994c875c8"
+      },
+      {
+        "row_hash": "sha256:6766686daeef9cc60b68d3381f8ecba5be1059d3dc0b2ee4735953963a02a441",
+        "source_stream_sequence_index": 66,
+        "visible_trace_sha256": "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d"
+      },
+      {
+        "row_hash": "sha256:8bb8b9d627ac5ce2d2439e42a5a0a78421212ade32d59bca2bd957b484be60e3",
+        "source_stream_sequence_index": 85,
+        "visible_trace_sha256": "sha256:036efd2bebcdd3752ff59f81d894f44b585aa90384dfa977bbd2a1df2b42d401"
+      },
+      {
+        "row_hash": "sha256:a51d67a416cd8bd1eabe6e7dffef23d32742e5d0fb661566a86aa2013d55bc15",
+        "source_stream_sequence_index": 92,
+        "visible_trace_sha256": "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d"
+      },
+      {
+        "row_hash": "sha256:76fe0f63ae10a263ef583af8935db1fd2045a6c3fadd6588aa7b850cb3b70ec7",
+        "source_stream_sequence_index": 112,
+        "visible_trace_sha256": "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d"
+      },
+      {
+        "row_hash": "sha256:06af243e79724a95deb90718a4713614d9a9774ca1f0c871cd69212d84519e64",
+        "source_stream_sequence_index": 132,
+        "visible_trace_sha256": "sha256:eab7917b8df0c0f290986ff6c99bff1189ee87deb2cf9be10c7b008324d68e5c"
+      },
+      {
+        "row_hash": "sha256:c3e5fe90554e7b107226041dcddf460c4c34a05ce69965e279850a0630ebe2da",
+        "source_stream_sequence_index": 158,
+        "visible_trace_sha256": "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d"
+      },
+      {
+        "row_hash": "sha256:9b8162894f3c90c3297ac31a1352d7936ff09b1129d386d5639222e3e0a3437a",
+        "source_stream_sequence_index": 178,
+        "visible_trace_sha256": "sha256:7b1e895e3d57551ea2a4c7aeb262f599297d4fb847636178e884759d77a7e45d"
+      }
+    ],
+    "error_taxonomy": [
+      "parser",
+      "type",
+      "compile",
+      "solver",
+      "certificate",
+      "semantic"
+    ],
+    "per_model_family_error_cap": 1,
+    "promotion_thresholds": {
+      "held_cell_lower_bound_min": 0.0,
+      "max_correct_row_regressions": 0,
+      "max_unsafe_increase": 0.0,
+      "required_completed_headline_families": 3,
+      "required_model_family_error_cells": 9
+    },
+    "prompt_sha256": {
+      "exact_diagnostic_repair": "sha256:e128ace2083d62cf994263fa3d8f7ec2708915b32480a47d5864b9c988d737f2",
+      "matched_second_call_no_diagnostic": "sha256:c8427e3f0c89dceb116fbe25ab8dec3f557fa48a81773deed63919f394b28546",
+      "no_information_diagnostic": "sha256:4723b41ff7da58efb1d4ffdc69f5b6984b21f2009ed702df55fcb7d3ec46c2f6",
+      "shuffled_same_error_class_diagnostic": "sha256:40a13dbffd514a6aef37d5a0a93eddf3c6516c83d04b73cd16093abe8e7a943f"
+    },
+    "prompt_version": "exp5910.verification_guided_constraint_repair.v1",
+    "target_oracle_payloads_in_prompts": false
+  },
+  "gpu_utilization_vram_latency_and_energy_receipts": {
+    "energy_proxy_gpu_utilization_pct_s_total": 204.328017,
+    "gpu_receipts": {
+      "generation_receipts": [
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 12749,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 41
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 12755,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 44
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "source_stream_sequence_index": 0
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 12749,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 41
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 12755,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 47
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "source_stream_sequence_index": 26
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 12749,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 39
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 12755,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 40
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "source_stream_sequence_index": 46
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 42
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 46
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 66
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 50
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 52
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 85
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 42
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 50
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 92
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 10451,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 47
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 10159,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 54
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "source_stream_sequence_index": 112
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 14099,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 36
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 13897,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 47
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "source_stream_sequence_index": 132
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 14099,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 38
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 13897,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 48
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "source_stream_sequence_index": 158
+        },
+        {
+          "gpu_health_after": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 14099,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 39
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 13897,
+                "memory_total_mb": 24576,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 43
+              }
+            ],
+            "ok": true,
+            "returncode": 0
+          },
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "source_stream_sequence_index": 178
+        }
+      ],
+      "load_receipts": [
+        {
+          "blocker": null,
+          "elapsed_seconds": 9.484013,
+          "gpu_offload_verified": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_name": "Qwen3.6-35B-A3B",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_used": true,
+          "vram_delta_mb": 21776
+        },
+        {
+          "blocker": null,
+          "elapsed_seconds": 8.524958,
+          "gpu_offload_verified": true,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_name": "Gemma4-31B-it",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "model_used": true,
+          "vram_delta_mb": 26614
+        },
+        {
+          "blocker": null,
+          "elapsed_seconds": 7.601485,
+          "gpu_offload_verified": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_name": "Gemma4-26B-A4B-it",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_used": true,
+          "vram_delta_mb": 19264
+        }
+      ]
+    },
+    "latency_s_total": 449.646527,
+    "model_attempts": [
+      {
+        "blocker": null,
+        "elapsed_seconds": 9.484013,
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_used": true,
+        "vram_delta_mb": 21776
+      },
+      {
+        "blocker": null,
+        "elapsed_seconds": 8.524958,
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_name": "Gemma4-31B-it",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_used": true,
+        "vram_delta_mb": 26614
+      },
+      {
+        "blocker": null,
+        "elapsed_seconds": 7.601485,
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_name": "Gemma4-26B-A4B-it",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_used": true,
+        "vram_delta_mb": 19264
+      }
+    ],
+    "row_count": 50
+  },
+  "group_bootstrap_lower_bounds": {
+    "by_model_error_family_cell": {
+      "exact_vs_matched_second_call_no_diagnostic": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF::access_control::parser": 0.0,
+        "unsloth/Qwen3.6-35B-A3B-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/Qwen3.6-35B-A3B-GGUF::task_selection::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::access_control::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::task_selection::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::access_control::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::access_control::semantic": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::task_selection::parser": 0.0
+      },
+      "exact_vs_no_information_diagnostic": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF::access_control::parser": 0.0,
+        "unsloth/Qwen3.6-35B-A3B-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/Qwen3.6-35B-A3B-GGUF::task_selection::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::access_control::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::task_selection::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::access_control::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::access_control::semantic": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::task_selection::parser": 0.0
+      },
+      "exact_vs_shuffled_same_error_class_diagnostic": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF::access_control::parser": 0.0,
+        "unsloth/Qwen3.6-35B-A3B-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/Qwen3.6-35B-A3B-GGUF::task_selection::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::access_control::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/gemma-4-26B-A4B-it-GGUF::task_selection::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::access_control::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::access_control::semantic": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::menu_recommendation::parser": 0.0,
+        "unsloth/gemma-4-31B-it-GGUF::task_selection::parser": 0.0
+      }
+    },
+    "exact_vs_matched_second_call_no_diagnostic": 0.0,
+    "exact_vs_no_information_diagnostic": 0.0,
+    "exact_vs_no_repair": 0.0,
+    "exact_vs_shuffled_same_error_class_diagnostic": 0.0,
+    "method": "deterministic_cell_lower_bound_by_model_family_error"
+  },
+  "honest_verdict": "complete_null: exact diagnostics did not beat matched repair controls",
+  "inference_substrate": "live_llm_inference",
+  "matched_no_diagnostic_no_information_and_shuffled_controls": {
+    "by_arm": {
+      "matched_second_call_no_diagnostic": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 37.191175,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 86.200057,
+        "n": 10,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 9,
+        "total_tokens": 11532,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "no_information_diagnostic": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 40.366092,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 91.039361,
+        "n": 10,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 9,
+        "total_tokens": 12452,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "shuffled_same_error_class_diagnostic": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 41.252437,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 91.347429,
+        "n": 10,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 9,
+        "total_tokens": 13614,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    },
+    "principle": "A second call alone cannot be credited as verification-guided repair.",
+    "shuffled_same_error_class_rate": 0.0
+  },
+  "model_file_hashes": {
+    "all_hashed": true,
+    "files": [
+      {
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "size_bytes": 22134528992
+      },
+      {
+        "exists": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "size_bytes": 18323731456
+      },
+      {
+        "exists": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "size_bytes": 16947539744
+      }
+    ]
+  },
+  "model_specs": [
+    {
+      "family": "qwen_moe",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_moe"
+    },
+    {
+      "family": "gemma_dense",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_dense"
+    },
+    {
+      "family": "gemma_moe",
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_vram_gb": 16,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "middle_moe"
+    }
+  ],
+  "omitted_spurious_and_unsafe_constraint_metrics": {
+    "by_arm": {
+      "exact_diagnostic_repair": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accept_rate": 0.0,
+        "unsafe_accepted_constraints": 0
+      },
+      "matched_second_call_no_diagnostic": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accept_rate": 0.0,
+        "unsafe_accepted_constraints": 0
+      },
+      "no_information_diagnostic": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accept_rate": 0.0,
+        "unsafe_accepted_constraints": 0
+      },
+      "no_repair": {
+        "omitted_constraints": 11,
+        "spurious_constraints": 2,
+        "unsafe_accept_rate": 0.1,
+        "unsafe_accepted_constraints": 1
+      },
+      "shuffled_same_error_class_diagnostic": {
+        "omitted_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accept_rate": 0.0,
+        "unsafe_accepted_constraints": 0
+      }
+    },
+    "overall": {
+      "omitted_constraints": 11,
+      "spurious_constraints": 2,
+      "unsafe_accepted_constraints": 1
+    }
+  },
+  "per_model_error_family_repair_metrics": {
+    "by_error_class": {
+      "parser": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 192.98667,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 427.146042,
+        "n": 45,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 45,
+        "total_tokens": 54415,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "semantic": {
+        "compile_rate": 0.2,
+        "energy_proxy_gpu_utilization_pct_s": 11.341347,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 22.500485,
+        "n": 5,
+        "parse_valid_rate": 0.2,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 0,
+        "total_tokens": 4276,
+        "type_valid_rate": 0.2,
+        "unsafe_accept_rate": 0.2
+      }
+    },
+    "by_family": {
+      "access_control": {
+        "compile_rate": 0.05,
+        "energy_proxy_gpu_utilization_pct_s": 67.859752,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 148.728344,
+        "n": 20,
+        "parse_valid_rate": 0.05,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 15,
+        "total_tokens": 21549,
+        "type_valid_rate": 0.05,
+        "unsafe_accept_rate": 0.05
+      },
+      "menu_recommendation": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 67.211995,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 149.447264,
+        "n": 15,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 15,
+        "total_tokens": 17446,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "task_selection": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 69.25627,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 151.470919,
+        "n": 15,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 15,
+        "total_tokens": 19696,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    },
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 33.975027,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 80.732831,
+        "n": 15,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 15,
+        "total_tokens": 19553,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 34.632794,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 80.440245,
+        "n": 15,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 15,
+        "total_tokens": 17924,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "compile_rate": 0.05,
+        "energy_proxy_gpu_utilization_pct_s": 135.720196,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 288.473451,
+        "n": 20,
+        "parse_valid_rate": 0.05,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 15,
+        "total_tokens": 21214,
+        "type_valid_rate": 0.05,
+        "unsafe_accept_rate": 0.05
+      }
+    },
+    "by_model_error_family": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF::parser::access_control": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 11.803769,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 27.351992,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6507,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF::parser::menu_recommendation": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 10.707649,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 26.772296,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6522,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF::parser::task_selection": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 11.463609,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 26.608543,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6524,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF::parser::access_control": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 8.558005,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 19.619435,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 4754,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF::parser::menu_recommendation": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 12.931635,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 30.724489,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6578,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF::parser::task_selection": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 13.143154,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 30.096321,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6592,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-31B-it-GGUF::parser::access_control": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 36.156631,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 79.256432,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6012,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-31B-it-GGUF::parser::menu_recommendation": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 43.572711,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 91.950479,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 4346,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-31B-it-GGUF::parser::task_selection": {
+        "compile_rate": 0.0,
+        "energy_proxy_gpu_utilization_pct_s": 44.649507,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 94.766055,
+        "n": 5,
+        "parse_valid_rate": 0.0,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 5,
+        "total_tokens": 6580,
+        "type_valid_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "unsloth/gemma-4-31B-it-GGUF::semantic::access_control": {
+        "compile_rate": 0.2,
+        "energy_proxy_gpu_utilization_pct_s": 11.341347,
+        "exact_semantic_equivalence_rate": 0.0,
+        "latency_s": 22.500485,
+        "n": 5,
+        "parse_valid_rate": 0.2,
+        "query_correct_rate": 0.0,
+        "repair_success_rate": 0.0,
+        "satisfiability_correct_rate": 0.0,
+        "semantic_n": 0,
+        "total_tokens": 4276,
+        "type_valid_rate": 0.2,
+        "unsafe_accept_rate": 0.2
+      }
+    }
+  },
+  "preconditions_checked": {
+    "block_reason": null,
+    "blocked_before_model_load": false,
+    "headline_checks": {
+      "adequate_disk": true,
+      "adequate_ram": true,
+      "adequate_vram": true,
+      "all_model_files_exist": true,
+      "all_model_hashes_recorded": true,
+      "all_three_model_specs_resolved": true,
+      "atomic_output_ready": true,
+      "embedded_gguf_tokenizers_load": true,
+      "exp5909_repair_admission_ready": true,
+      "exp5909_stream_ready": true,
+      "llama_cpp_import_ok": true,
+      "no_protected_workload": true,
+      "public_llama_cpp_cuda_offload": true,
+      "two_healthy_rtx_3090s": true
+    },
+    "run_order": "exp5909_gate_stream_and_resource_checks_before_any_repair_model_load"
+  },
+  "protected_files_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "path": "scripts/research_conductor.py",
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/changelog.md",
+        "sha256": "sha256:9c2c28c84c0ce815380596b317becf336447fc46c244dd95b1a0a595b7ebe48b",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/status.md",
+        "sha256": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "_bmad/traceability.md",
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "unchanged": true
+      }
+    ],
+    "unchanged": true
+  },
+  "random_seed": 5910,
+  "raw_trace_and_output_receipts": {
+    "event_order_is_chronological": true,
+    "expected_row_count": 50,
+    "path": "results/experiment_5910_verification_guided_constraint_repair.raw.jsonl",
+    "raw_hash_coverage": true,
+    "raw_output_hashes": [
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:a2429dd52998aead003eedb065acb89f31c86ca4496886c25a5f7e184396fee4",
+        "row_hash": "sha256:259fc5e822f57ce5a644ec964167a044c20a8570b6253c3d23dd71e8f23b6a6c",
+        "source_stream_sequence_index": 0,
+        "trace_sequence_index": 0
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:aea2913f0a926b99ca8310bb8a9a99284756eb5c80f976b483edd96ef0253b25",
+        "row_hash": "sha256:7a603d0e315df38f10c9bf723df61259431dd9bfa4f4b6b3ce88f09dcc20abad",
+        "source_stream_sequence_index": 26,
+        "trace_sequence_index": 1
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:600a698095be35d7d726c2b91bead096f85fe3c83239a0f2862a18a547b98781",
+        "row_hash": "sha256:0d1131a0b7224ad814c7d62eb00a8bda0b466cdc8f49629567f47aa2258fbaf6",
+        "source_stream_sequence_index": 46,
+        "trace_sequence_index": 2
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:bb9a344faaaab6233264787a50ca3f0c20563ec0cb76e9be2007054a31363336",
+        "row_hash": "sha256:5bfafa7e97fc586bc34d8ed54746ed8d62065923751efec8a12a3c4c4c420770",
+        "source_stream_sequence_index": 66,
+        "trace_sequence_index": 3
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:303ab6bb966fd53c4f8cf9390bdd4266e29a4dd7693d73552257c018928227d1",
+        "row_hash": "sha256:ddefe9fd8ff6be93c9509cd462f3e0ecb89d18284e5fa0b19577d6aaf4e62030",
+        "source_stream_sequence_index": 85,
+        "trace_sequence_index": 4
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:de5bd08f751b25fdcced13dcda02be93d0b7dccc42a66e273d13fdfedbd34c34",
+        "row_hash": "sha256:07de5031d44a3fa00ad2ef2f83ee5858d2d2572d836852ff4aa6bba2e3f056fa",
+        "source_stream_sequence_index": 92,
+        "trace_sequence_index": 5
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:12aecafe690b46ad98a806e014c7c60905aafefb1b03735d2a371745f6eb5964",
+        "row_hash": "sha256:517fd4a6437768f2736d371cc4e22854c05cbd178374c1fd3cc2564a328af46b",
+        "source_stream_sequence_index": 112,
+        "trace_sequence_index": 6
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:62a6a6a01abddf735f83da33e6bfbc73d3644177f41be3f435113abca88181c0",
+        "row_hash": "sha256:3bc49e119bf7100e2190fe94bc180a47559ebd105aba89a93e0df0e6e444eca7",
+        "source_stream_sequence_index": 132,
+        "trace_sequence_index": 7
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:852c47b1ee154ab501972f7742c008035e34f49a318afd9f65787e07dafff07c",
+        "row_hash": "sha256:f4f8509612a78ae3f53e4db75f8b3deca3ac3c14151021ccf954a6f3cdc0e520",
+        "source_stream_sequence_index": 158,
+        "trace_sequence_index": 8
+      },
+      {
+        "arm_id": "no_repair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:f9c71021e4d7a5f1c176c96df8d58fe5e5ce2e1ce9e97d6369c171526abfaf78",
+        "row_hash": "sha256:f750ca857570cf08005e0a18807214903c0ce56f941531d22440d6b16fdb7de4",
+        "source_stream_sequence_index": 178,
+        "trace_sequence_index": 9
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:c15d2bfb44099bc1a98d7d52a6b69786e3adefdb1278c964a2cbbaa7cb660777",
+        "row_hash": "sha256:2c31bfed6c6358d5c86d41078325bfcc322c629bc2fa40a4b536aa9b2c955154",
+        "source_stream_sequence_index": 0,
+        "trace_sequence_index": 10
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:b0b193e187189029f87666d25a7301633226d277e2c079a44b26249c4485a9cf",
+        "row_hash": "sha256:5aa363bd0e3f9c16267841b38b377a46c495b4d7597133a10bf3b2d738023901",
+        "source_stream_sequence_index": 0,
+        "trace_sequence_index": 11
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:3a21f09e4162ca0c63217a30b7ba9c8db0f8a549ab98cce349c8d311ec4e9712",
+        "row_hash": "sha256:8605c59def9a029cc6816f250fa7630c96c748dde652ef1805f0427b908436df",
+        "source_stream_sequence_index": 0,
+        "trace_sequence_index": 12
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:c43ffc35c9e0fb7fce3e2223b0812abe3c5dee26b5a5dbf1e3274596a06f0091",
+        "row_hash": "sha256:8aee1cb80daf63b2289c69d624ec4de200ae2a56d02574c9f514718bc85bbda2",
+        "source_stream_sequence_index": 0,
+        "trace_sequence_index": 13
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:657d5c894a2e0baf4dc32c285c0366d4a2218fa07e6240bcb4409aab43e61e7e",
+        "row_hash": "sha256:28835424023d9c44a4b75f831d4ed68550d1d68df3a6088f798dfc22e2bc8203",
+        "source_stream_sequence_index": 26,
+        "trace_sequence_index": 14
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:cde3260ca8524bf8ac9f74532bd9279a8722301c082c30d108276b852b5532ad",
+        "row_hash": "sha256:065af109510df2b03f54d04feb39744bc726ae03ef56d8eaa96a2b4164a84345",
+        "source_stream_sequence_index": 26,
+        "trace_sequence_index": 15
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:1fc64f1b8345ca2a08bb086f094dc662ba384e8b73688613b64bb81c4131880f",
+        "row_hash": "sha256:5e837c3db3d86bdf988e67b56a5ee61f0ab16950e6c0714a78fe362f3838cbe6",
+        "source_stream_sequence_index": 26,
+        "trace_sequence_index": 16
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:d3e5f3daf9beaf0e56bee1d3f9f172c49d6466a2e9221ec4ef1a4a0fbd965978",
+        "row_hash": "sha256:ee56a1926b8310e60a8617fb91014b3df210ca0f05cbce0ff3aa1fd66eb26e8b",
+        "source_stream_sequence_index": 26,
+        "trace_sequence_index": 17
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:2ffdeb2cf06b2236a3fa39b7e4011bf3278a77f1a82020d9f064b0735124d7f3",
+        "row_hash": "sha256:b37a3bc6008652c99ff944a5eb29e45ca13bc5d8f61f640a28dcfc76dcebb22b",
+        "source_stream_sequence_index": 46,
+        "trace_sequence_index": 18
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:1112fcf237b4d160c6b119ad3b9ec205eac3728b9a4551f6de907af6f7a03902",
+        "row_hash": "sha256:258bfe173b18e21cdfec3ee460ce40c87ae67ad60d7a966e35238a100cd4da92",
+        "source_stream_sequence_index": 46,
+        "trace_sequence_index": 19
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:6a1289a4cdd70a9913b5d059f6979f374e65af7bdbd67dfc0cf0ab04915ce659",
+        "row_hash": "sha256:3ce70d1f62b678c030310b6e898644d18b0575ded1d0791d75cb8c981d02cf05",
+        "source_stream_sequence_index": 46,
+        "trace_sequence_index": 20
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "raw_output_sha256": "sha256:4708d1dbdec3dec01331577e4d1f45fd60a8fef143e18a18add51d1bc6a27270",
+        "row_hash": "sha256:21384d75bae0fd1b002126aace6e6d949d97d3965c5f1b82847b6b5e0c2894e9",
+        "source_stream_sequence_index": 46,
+        "trace_sequence_index": 21
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:beca2fac697c166215c673f92d9f06320c09acd3a5b055b615b0ba69d8c5539d",
+        "row_hash": "sha256:5b87693ab4aac183503c55139641808b56053fa48c3533e22d466a66c36f6ccf",
+        "source_stream_sequence_index": 66,
+        "trace_sequence_index": 22
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:f969c22a9654de0f68d2ae5a6d7c27778307ebc6b3e8722438db060e2f149dc3",
+        "row_hash": "sha256:ab40f9bfdbb9d67bffc78366ea96db9c18cdb2c63bf83ced21038c7456b036a7",
+        "source_stream_sequence_index": 66,
+        "trace_sequence_index": 23
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:1180f9cdffc2f194c7b7bc2bb1e5f9bae6938002a0bd71cd49977fb836f91ec5",
+        "row_hash": "sha256:8ee793ae9f7526e9d5da5ba4e86620d2a00b21361b9e7b804336210ef6759b4e",
+        "source_stream_sequence_index": 66,
+        "trace_sequence_index": 24
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:b2bad7a799cd64cc5b29e562b929664facc2c2d3d9ffc28ab4d849a0ae280f3d",
+        "row_hash": "sha256:8194c1ea5ce536e2d9528b5d77294f6a10754fe8d977f0d09cd93f7afbba3044",
+        "source_stream_sequence_index": 66,
+        "trace_sequence_index": 25
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:cd83e6181fa3959178e32e28e0ed1f57c3f9e36822d70c99b342d201698d0fea",
+        "row_hash": "sha256:a1dc682d3c445f1166ca41cfbb93e01a2f407ac1407660e96ec0be5db190aa4e",
+        "source_stream_sequence_index": 85,
+        "trace_sequence_index": 26
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:22992a9b7bff641377f4ae4741edb95abe836f661a45c1b40f8a9410bbd6355a",
+        "row_hash": "sha256:c64a13203b612bc82fa92c145e91179dddff422c2a52a028f12f8ba2e65f5dbe",
+        "source_stream_sequence_index": 85,
+        "trace_sequence_index": 27
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:4f03065d048653697d174b96e9dfe95bc0e8bf59319ad78c42f26a71d4abe898",
+        "row_hash": "sha256:94ecc16665092e9724c949fabc2849140cc088d9d9d17c8f8b6fb469c3cda524",
+        "source_stream_sequence_index": 85,
+        "trace_sequence_index": 28
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:a073d0c06ae45fb11f0badeaf9136e3c6c7832d6731bddd71b77995c19793ef4",
+        "row_hash": "sha256:3707fd156be7d6adc8eeaf4536ae8e012e96df0ba0a27573e5eb0cb99caca8cd",
+        "source_stream_sequence_index": 85,
+        "trace_sequence_index": 29
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:62246cfed3a5c65d4c98a072b9e4a27c94f1b3ea15262e25a0570f43a0dd9a87",
+        "row_hash": "sha256:fdb1db148970a9381a80c70adeef8e2e134b35755a26326ab4c136fee24c699f",
+        "source_stream_sequence_index": 92,
+        "trace_sequence_index": 30
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:4fa08053f634b376cb41acabf8797fed8a827534a112e926c76628b6fc7e75fd",
+        "row_hash": "sha256:c92c2dfd228e5f63752ec7a40a235b3b760f458dc7024ded1efa51e5edeea02d",
+        "source_stream_sequence_index": 92,
+        "trace_sequence_index": 31
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:68e8eb032294f2161f937c213f59c6a616bd90780498b1025842d3b02c6b33a4",
+        "row_hash": "sha256:a01a74f1f63d8157b804f82fa6940887bf98702908ed6902cdad701179f94889",
+        "source_stream_sequence_index": 92,
+        "trace_sequence_index": 32
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:742fd98f2b64927f55dca3ae6ae262580fa1349ba8ddfba116ecb701f2afd5d2",
+        "row_hash": "sha256:cb73c8e5c2f8645c74608bf4554b474e4fcdb89a692dc410e35b2d2ce34a5329",
+        "source_stream_sequence_index": 92,
+        "trace_sequence_index": 33
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:c48f4137b2943d638f8bec826378493a0c50acd084ee41c336b8664f1854c9e5",
+        "row_hash": "sha256:074f970250f77bbfde84246387d751ef4774336f43d5ca6e0ee8f11a1a3eaedb",
+        "source_stream_sequence_index": 112,
+        "trace_sequence_index": 34
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:ca13dcaa9ce8a15350f55b63fc8010028b6de9d3583aea6e64f8e3bc91dfe8fd",
+        "row_hash": "sha256:6f00a8ab72cb40c3b9249dbeca69f9b4ac10286dce7e9269a8a6661d47a12c6f",
+        "source_stream_sequence_index": 112,
+        "trace_sequence_index": 35
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:21a17413f6b62973eb3a5aeff4e48754e9d282cb106eba77b4d7b27b1674a222",
+        "row_hash": "sha256:3c9ef1b3619240cdd6278e901161a48de33fd51727a8b620587176b617eb55f7",
+        "source_stream_sequence_index": 112,
+        "trace_sequence_index": 36
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "raw_output_sha256": "sha256:96f11a25bbaa13ace2c95d42b5ec991a2c31e264241818437e6517bd1447261e",
+        "row_hash": "sha256:48db75f8cc8e413c312c1f4e253966f1e2cd0d65712b4afe61a5618a491c8551",
+        "source_stream_sequence_index": 112,
+        "trace_sequence_index": 37
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:16cbc0ab8bf27775df97c5b72b2a3c40d17cbe4acb0f11a4d530b0a8b5f002cf",
+        "row_hash": "sha256:c69286adb5549ed6fafeaf591c64567989f5a7d556672bbe3c1b826d7af41eea",
+        "source_stream_sequence_index": 132,
+        "trace_sequence_index": 38
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:f1b901847390b0ed7e374e7c1e464ec17b46a427c487a5ad6cbd2906405083d5",
+        "row_hash": "sha256:0b123b89e4d2ca2825831419233576e53a8a579e4c8336d441357ce34c1ae59f",
+        "source_stream_sequence_index": 132,
+        "trace_sequence_index": 39
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:2a844ee371592de260efec69819ee5bb04d6a2dc07df03d63c675178e2310203",
+        "row_hash": "sha256:b48b692776c396c9fe735e56166997d6fe6fab76c28b719f88fec647ef63c764",
+        "source_stream_sequence_index": 132,
+        "trace_sequence_index": 40
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:eaae4c619f23a0a6f1997dc9e36f4f880c8adefe5716b159bef7967e12f2e0eb",
+        "row_hash": "sha256:a8b9cf76e423bd6f75a269c0edd6bcce45db0b4006def373860ca987700155f2",
+        "source_stream_sequence_index": 132,
+        "trace_sequence_index": 41
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:99270eb930a36c44029f1350d43aa867c7626856e1f01fe162c9fa59fefec48b",
+        "row_hash": "sha256:6f34a63e4b5354a292b1b567955d590ba262604515723c1857a4cc82f7336405",
+        "source_stream_sequence_index": 158,
+        "trace_sequence_index": 42
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:b4f58ea95de490fb03a7872c2a6bdda89efc9477373c2bf211f40ad38102cbbe",
+        "row_hash": "sha256:cf592caf9fc4236442e59cf06ef010b46be86a263f1262321503f110e845fb23",
+        "source_stream_sequence_index": 158,
+        "trace_sequence_index": 43
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:ef2d50f52e0b855b225ca915484936befb5840917d34a480e680816de127cf82",
+        "row_hash": "sha256:2874eb139588824f6090674fb346483f4f5b8cf1d04e7faa7c2fd082eee63c16",
+        "source_stream_sequence_index": 158,
+        "trace_sequence_index": 44
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:05abe6737143b2727e19440b65004ead790e52c3e9be014631a3fc593343d02d",
+        "row_hash": "sha256:ccfc74b34a5bbb3a0c850eb1dfb22fe23dd4fe8e3c9a6f31c21f47eebc4c00d1",
+        "source_stream_sequence_index": 158,
+        "trace_sequence_index": 45
+      },
+      {
+        "arm_id": "exact_diagnostic_repair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:b2565b8a2fdb11898d2a9ad23453645185b1d4700cb19bb3082ef4f6a47d1c29",
+        "row_hash": "sha256:16981d25c8f5593426c0c86e75ee5731e4717bb0a6c1fe3cd7abc338ea32b3e9",
+        "source_stream_sequence_index": 178,
+        "trace_sequence_index": 46
+      },
+      {
+        "arm_id": "matched_second_call_no_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:e89b4e871998d79867a81bb6085e9bda33630d571425a5e4b3f000375a6d76fd",
+        "row_hash": "sha256:971e32e458f911d910964ab987bd15dd8e9c6aeb8f8d5c04164ffb2fa0f37996",
+        "source_stream_sequence_index": 178,
+        "trace_sequence_index": 47
+      },
+      {
+        "arm_id": "no_information_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:e5b437f98185bfb314e4dfd74e7ff93d19d49202ce2f58dea82a686dea1855c5",
+        "row_hash": "sha256:4fd363961717ca28d4600c5b9f0e8c3f5a882737deadd1ed6947d3acfb1ad1f8",
+        "source_stream_sequence_index": 178,
+        "trace_sequence_index": 48
+      },
+      {
+        "arm_id": "shuffled_same_error_class_diagnostic",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "raw_output_sha256": "sha256:f14fb7601b5398c9a241b6c7e6d0c794d552da799ed441fb01f0d620ebfd594c",
+        "row_hash": "sha256:90c83062a7e32f2e467322a8e72a27310a054d2eb1754d9434a06a3908717f01",
+        "source_stream_sequence_index": 178,
+        "trace_sequence_index": 49
+      }
+    ],
+    "row_count": 50,
+    "row_hash_coverage": true,
+    "schema": "carnot.experiment_5910.verification_guided_constraint_repair.v1.raw_row",
+    "sha256": "sha256:a42c57c1db2d9cabdd1ff7882ee9b874d00cbcd7a4c85583ed6fdfaeeadfd323",
+    "visible_trace_hash_coverage": false
+  },
+  "reproducibility_checksum": "sha256:87524770b8124cc50e8202e1ff6e0a67471d35b4aac915a716a3b04ed9229334",
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5910.verification_guided_constraint_repair.v1",
+  "status": "complete",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5910_verification_guided_constraint_repair.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5910_verification_guided_constraint_repair.py -m pytest tests/python/test_experiment_5910_verification_guided_constraint_repair.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5910_verification_guided_constraint_repair.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_5910_verification_guided_constraint_repair",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5910_verification_guided_constraint_repair.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5910_verification_guided_constraint_repair.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {},
+  "upstream_gate_stream_and_hashes": {
+    "exp5909_artifact_path": "results/experiment_5909_sota_constraint_synthesis_ab.json",
+    "exp5909_artifact_sha256": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3",
+    "exp5909_constraint_stream_ready_score": 1.0,
+    "exp5909_raw_row_count": 198,
+    "exp5909_raw_stream_hash_matches_receipt": true,
+    "exp5909_raw_stream_path": "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+    "exp5909_raw_stream_sha256": "sha256:9b8c53a04b9b49aad8309c02e6551c615acce1299247062e2fb60e1212461248",
+    "exp5909_repair_admission_ready": true,
+    "exp5909_stream_ready": true,
+    "exp5909_validate_error": null,
+    "exp5909_verification_repair_admission_ready_score": 1.0
+  },
+  "verification_guided_repair_ready_score": 0.0,
+  "verifier_is_oracle": true
+}
