@@ -220,8 +220,30 @@ class OnlineClickTargetRouter:
        reused across candidates. ``score`` remains self-sufficient (it builds/reuses a
        content-cached context when handed none) so a caller scoring candidates one at a time
        still gets identical numbers.
-    4. **Only clicks are affected.** A keyboard candidate has no coordinates, contributes
-       exactly ``0.0``, and keeps its v3-governed placement.
+    4. **Only clicks are affected -- in SCORE *and* in POSITION, and the position half needs
+       an explicit mechanism.** A keyboard candidate has no coordinates and contributes exactly
+       ``0.0`` to its score. That alone does NOT preserve its placement, and an earlier version
+       of this docstring wrongly claimed it did. Because the incumbent base score is a CONSTANT
+       across candidates on one frame (v3 is coordinate-blind -- that is the whole defect), a
+       naive full re-sort of the blended scores reorders clicks AROUND the stationary keyboard
+       actions, moving keyboard RANK while keyboard SCORE never changes. Measured with a fitted
+       head at ``weight=0.25``: input ``[A1, A6(3,3), A6(10,10), A6(20,6), A6(5,20), A6(12,20),
+       A4]`` came back as ``[A6(20,6), A6(12,20), A6(3,3), A1, A4, A6(5,20), A6(10,10)]`` --
+       ``A4`` moved from last to 5th and ``A1`` from 1st to 4th, with ``score(A1)`` unchanged at
+       0.5 both ways. Since ``arc_graph_explore`` feeds this order into ``lst.pop(0)``, a live
+       A/B would silently have been testing a change to NON-CLICK selection too.
+       ``rank`` therefore does a STABLE PARTITION: it takes the base router's ordering, permutes
+       only the candidates that occupy CLICK slots, and writes them back into exactly those
+       slots. Every non-click candidate keeps its base index, so the A/B varies click order and
+       nothing else. (Ties among clicks break on base rank, so a zero ``weight`` -- or an
+       unfitted head -- reproduces the base ordering exactly.)
+    5. **The base router's own pruning now applies with the flag ON too.** Taking the base
+       ordering as the frame of reference means ``prune_threshold`` behaves identically whether
+       the flag is on or off; the previous full-re-sort path scored the RAW input list and so
+       silently bypassed base pruning when enabled. Inert in the live path (neither
+       ``arc_competition_agent`` nor ``scripts/arc_leaderboard_eval.py`` passes a
+       ``prune_threshold`` -- both take the ``None`` default), but it removes an on/off
+       asymmetry that would have confounded an A/B if either ever did.
 
     THE OBSERVATION HOOK IS NOT YET CALLED IN THE LIVE PATH -- an honest limitation. The call
     site that would feed real in-episode outcomes lives in ``arc_competition_agent.py``, which
@@ -283,7 +305,9 @@ class OnlineClickTargetRouter:
         injected = self._pending_injected_discriminator
         self._pending_injected_discriminator = None  # consumed: first episode only
         entry = (
-            injected if injected is not None else OnlineClickTargetDiscriminator(dim=CLICK_TARGET_FEATURE_DIM),
+            injected
+            if injected is not None
+            else OnlineClickTargetDiscriminator(dim=CLICK_TARGET_FEATURE_DIM),
             ClickEpisodeState(),
         )
         self._episodes[key] = entry
@@ -395,6 +419,16 @@ class OnlineClickTargetRouter:
                 return items
             return list(self.base.rank(frame, items, previous_frame=previous_frame))
 
+        # The base ordering is the FRAME OF REFERENCE, not merely an input: non-click
+        # candidates keep their index in it (contract #4), and click ties break on it.
+        if self.base is None:
+            base_order = items
+        else:
+            try:
+                base_order = list(self.base.rank(frame, items, previous_frame=previous_frame))
+            except Exception:
+                base_order = items
+
         frame_context: CrossGameFrameContextV3 | None = None
         if self.base is not None:
             try:
@@ -404,30 +438,38 @@ class OnlineClickTargetRouter:
         try:
             click_context = click_target_frame_context(frame)
         except Exception:
-            return (
-                items
-                if self.base is None
-                else list(self.base.rank(frame, items, previous_frame=previous_frame))
-            )
+            return base_order
 
-        scored = [
+        click_slots = [
+            index
+            for index, action in enumerate(base_order)
+            if click_coordinates(action) is not None
+        ]
+        if len(click_slots) < 2:
+            # Nothing to permute; returning the base order verbatim keeps the no-op exact.
+            return base_order
+
+        scored = sorted(
             (
-                self.score(
-                    frame,
-                    action,
-                    previous_frame=previous_frame,
-                    frame_context=frame_context,
-                    click_context=click_context,
-                ),
-                index,
-                action,
-            )
-            for index, action in enumerate(items)
-        ]
-        return [
-            action
-            for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))
-        ]
+                (
+                    self.score(
+                        frame,
+                        base_order[slot],
+                        previous_frame=previous_frame,
+                        frame_context=frame_context,
+                        click_context=click_context,
+                    ),
+                    base_rank,
+                    base_order[slot],
+                )
+                for base_rank, slot in enumerate(click_slots)
+            ),
+            key=lambda item: (-item[0], item[1]),
+        )
+        ranked = list(base_order)
+        for slot, (_score, _base_rank, action) in zip(click_slots, scored):
+            ranked[slot] = action
+        return ranked
 
     # ------------------------------------------------------------------ observation
 

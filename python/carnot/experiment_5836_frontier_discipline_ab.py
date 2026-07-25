@@ -1026,9 +1026,18 @@ def acceptance_gates(cap: dict, paired: dict, power: dict) -> dict:
         "passed": bool(best["p_value"] is not None and best["p_value"] < 0.05 and best["n"] >= 6),
         "power_ceiling": power,
     }
-    gates["acceptance_gates_all_passed"] = bool(
+    # Flat BOOLEAN mirrors. scripts/summarize_artifact.py marks a gate PASS/FAIL only when the
+    # field's value is literally True/False; a dict-valued gate renders as "?" and would not trip
+    # its ">> a FAILED gate overrides any celebratory verdict" line. The structured dicts above
+    # carry the reasoning; these three carry the verdict the reading tool can act on.
+    gates["acceptance_gate_capability_passed"] = bool(
         gates["acceptance_gate_capability"].get("passed")
-        and gates["acceptance_gate_efficiency"].get("passed")
+    )
+    gates["acceptance_gate_efficiency_passed"] = bool(
+        gates["acceptance_gate_efficiency"].get("passed")
+    )
+    gates["acceptance_gates_all_passed"] = bool(
+        gates["acceptance_gate_capability_passed"] and gates["acceptance_gate_efficiency_passed"]
     )
     return gates
 
@@ -1640,12 +1649,103 @@ def run(
     return art
 
 
+def recompute_derived(art: dict) -> dict:
+    """Re-derive every ANALYSIS section from the artifact's own measured rows. Measures nothing.
+
+    Why this exists: the measured rows (``per_cell_rows``) are expensive to produce and are the
+    only thing in the artifact that required running the agent, whereas the aggregates, paired
+    statistics, capability summary, gates and verdict are pure functions OF those rows. When the
+    analysis code changes -- e.g. because a review found the primary statistic was the wrong one
+    -- re-running hours of identical measurement to pick up the new analysis would be waste, and
+    hand-editing the artifact would be indefensible. This recomputes the derived sections with
+    the CURRENT code and leaves every measured field (rows, durations, preconditions) untouched.
+
+    It CANNOT invent a measurement: with no rows it returns the artifact unchanged. The
+    reproducibility checksum is computed over rows + config only, so a recompute does not change
+    it -- which is the point: same measurement, better analysis.
+    """
+
+    rows = art.get("per_cell_rows")
+    if not rows:
+        return art
+    cfg = art.get("config") or {}
+    games = list(cfg.get("games") or sorted({r.get("game") for r in rows if r.get("game")}))
+    arms = list(cfg.get("arms") or sorted({r.get("arm") for r in rows if r.get("arm")}))
+    conds = list(cfg.get("conditions") or sorted({r.get("condition") for r in rows}))
+    cond_specs = [c for c in CONDITIONS if c[0] in set(conds)]
+    budget = int(cfg.get("budget_actions_per_game") or DEFAULT_BUDGET)
+
+    errored = [r for r in rows if not r.get("ran")]
+    agg = aggregate(rows, games)
+    cmp_ = compare_to_baseline(agg, games, rows)
+    guard_games, guard_provenance = _guard_games_from_rows(rows)
+    paired = paired_efficiency_vs_baseline(rows)
+    power = power_ceiling(games, guard_games)
+    cap = capability_summary(agg, cmp_)
+    gates = acceptance_gates(cap, paired, power)
+    positive_control_ran = any(r.get("arm") == "E" and r.get("ran") for r in rows)
+    error_rate = (len(errored) / len(rows)) if rows else 1.0
+    scope = run_scope(games, arms, cond_specs, budget)
+
+    art.update(
+        {
+            "aggregates": agg,
+            "vs_baseline": cmp_,
+            "paired_efficiency_vs_baseline": paired,
+            "power_ceiling": power,
+            "capability_summary": cap,
+            "new_wins_vs_baseline": cap.get("new_wins_vs_baseline"),
+            "positive_control_new_wins": cap.get("positive_control_new_wins"),
+            "regression_guard_provenance": guard_provenance,
+            "run_scope": scope,
+            "n_errored_cells": len(errored),
+            "errored_cell_rate": round(error_rate, 4),
+            "ab_interpretable": bool(positive_control_ran and error_rate <= 0.05),
+            "honest_verdict": verdict_for(
+                scope, cap, positive_control_ran=positive_control_ran, error_rate=error_rate
+            ),
+            "headline": (
+                "grafted tier exhaustion + distance gradient produced "
+                f"{int(cap.get('new_wins_vs_baseline') or 0)} new win(s) vs the baseline on the "
+                "measured corpus; the just-explore reference positive control produced "
+                f"{int(cap.get('positive_control_new_wins') or 0)} new win(s) under identical "
+                "conditions"
+                if cap.get("available")
+                else "no baseline comparison available -- no capability claim"
+            ),
+            "field_provenance": {k: {"principle": v} for k, v in FIELD_PRINCIPLES.items()},
+            "derived_sections_recomputed_from_measured_rows": True,
+        }
+    )
+    art.update(gates)
+    art["reproducibility_checksum"] = _reproducibility_checksum(art)
+    return art
+
+
 def _arg(argv: Sequence[str], flag: str, default: str) -> str:
     return argv[argv.index(flag) + 1] if flag in argv else default
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    if "--recompute" in argv:
+        # Re-derive the analysis from an existing artifact's measured rows. Never measures.
+        path = Path(_arg(argv, "--recompute", str(ARTIFACT)))
+        art = recompute_derived(json.loads(path.read_text()))
+        path.write_text(json.dumps(art, indent=2, default=str))
+        print(
+            json.dumps(
+                {
+                    "recomputed": str(path),
+                    "honest_verdict": art["honest_verdict"],
+                    "new_wins_vs_baseline": art.get("new_wins_vs_baseline"),
+                    "positive_control_new_wins": art.get("positive_control_new_wins"),
+                    "acceptance_gates_all_passed": art.get("acceptance_gates_all_passed"),
+                },
+                indent=2,
+            )
+        )
+        return 0
     budget = int(_arg(argv, "--budget", str(DEFAULT_BUDGET)))
     n_seeds = int(_arg(argv, "--seeds", "3"))
     games_arg = _arg(argv, "--games", "")

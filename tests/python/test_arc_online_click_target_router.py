@@ -2,7 +2,8 @@
 
 Spec refs: REQ-ARC-FCP-5904, SCENARIO-ARC-FCP-5904-COORDINATE-BLINDNESS-IS-REPAIRED,
 SCENARIO-ARC-FCP-5904-COLD-START-IS-A-NO-OP, SCENARIO-ARC-FCP-5904-EPISODE-ISOLATION,
-SCENARIO-ARC-FCP-5904-PER-FRAME-NOT-PER-CANDIDATE.
+SCENARIO-ARC-FCP-5904-PER-FRAME-NOT-PER-CANDIDATE,
+SCENARIO-ARC-FCP-5904-ONLY-CLICK-POSITIONS-CHANGE.
 
 Two of these tests are the load-bearing ones:
 
@@ -299,6 +300,68 @@ def test_non_click_candidates_contribute_exactly_zero() -> None:
     for action in (_Action(1), _Action(4), _Action(6), _Action(0)):
         assert router.click_delta(frame, action) == 0.0
     assert router.observe_click_outcome(frame, _Action(1), frame) is False
+
+
+def test_non_click_candidates_keep_their_base_index_when_clicks_are_reordered() -> None:
+    """REQ-ARC-FCP-5904: the click-only claim is about POSITION, not just score.
+
+    A keyboard candidate's score is untouched (``click_delta`` is exactly 0.0) but that alone
+    does NOT pin its rank: because the incumbent base score is a CONSTANT across candidates,
+    a naive full re-sort of the blended scores slides clicks past the stationary keyboard
+    actions. Measured before the fix, with a fitted head at weight 0.25, ``ACTION4`` moved from
+    last place to 5th and ``ACTION1`` from 1st to 4th while both scores stayed at 0.5 -- so a
+    live A/B would have been testing a change to NON-CLICK selection too. This pins the stable
+    partition that makes contract #4 true.
+    """
+
+    frame = _Frame(_grid())
+    clicks = _click_candidates()
+    head = _fit_head_on_frame(frame, clicks)
+    router = OnlineClickTargetRouter(
+        CrossGameDiscriminativeCandidateRouter(_ConstantVerifier()),
+        enabled=True,
+        discriminator=head,
+        weight=0.25,
+    )
+
+    # Keyboard actions deliberately placed FIRST, in the MIDDLE and LAST -- the three positions
+    # a re-sort would disturb differently.
+    candidates = [_Action(1), *clicks[:6], _Action(4), *clicks[6:12], _Action(2)]
+    keyboard_slots = [i for i, a in enumerate(candidates) if a.data is None]
+    assert keyboard_slots == [0, 7, 14], "fixture must interleave non-clicks"
+
+    ranked = router.rank(frame, candidates)
+    assert len(ranked) == len(candidates)
+    for slot in keyboard_slots:
+        assert ranked[slot] is candidates[slot], (
+            f"non-click at index {slot} moved to a different rank"
+        )
+        assert router.score(frame, candidates[slot]) == pytest.approx(
+            CrossGameDiscriminativeCandidateRouter(_ConstantVerifier()).score(
+                frame, candidates[slot]
+            )
+        )
+    # ... and the clicks really did move (otherwise the assertion above is vacuous).
+    click_slots = [i for i, a in enumerate(candidates) if a.data is not None]
+    assert [id(ranked[i]) for i in click_slots] != [id(candidates[i]) for i in click_slots]
+    # Every click stays in a click slot; the multiset of candidates is unchanged.
+    assert {id(ranked[i]) for i in click_slots} == {id(candidates[i]) for i in click_slots}
+
+
+def test_click_ties_break_on_base_rank_so_a_zero_weight_is_an_exact_no_op() -> None:
+    """REQ-ARC-FCP-5904: the stable partition must not perturb order when the head is silent."""
+
+    frame = _Frame(_grid())
+    clicks = _click_candidates()
+    head = _fit_head_on_frame(frame, clicks)
+    router = OnlineClickTargetRouter(
+        CrossGameDiscriminativeCandidateRouter(_ConstantVerifier()),
+        enabled=True,
+        discriminator=head,
+        weight=0.0,
+    )
+    candidates = [_Action(1), *clicks[:8], _Action(4)]
+    assert [id(a) for a in router.rank(frame, candidates)] == [id(a) for a in candidates]
 
 
 def test_score_is_self_sufficient_without_a_supplied_context() -> None:

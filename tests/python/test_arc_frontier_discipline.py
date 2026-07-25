@@ -948,6 +948,55 @@ def test_harness_spec_deviations_declare_the_tier_advancement_substitution():
     (Path(m.REPO) / "results" / "_test_5836_deviations_only.json").unlink(missing_ok=True)
 
 
+def test_harness_recompute_derived_reanalyses_without_inventing_a_measurement():
+    """`--recompute` may only re-derive analysis from measured rows -- never fabricate one.
+
+    The measured rows are the expensive, irreplaceable part; the aggregates/paired stats/gates
+    are pure functions of them. This asserts (a) an artifact with no rows is returned untouched
+    (no synthesized numbers), (b) the derived sections and the verdict are rebuilt from the rows,
+    and (c) the reproducibility checksum -- computed over rows + config -- is UNCHANGED by a
+    recompute, since the measurement did not change.
+    """
+    m = _harness()
+    assert m.recompute_derived({"experiment": 5836}) == {"experiment": 5836}
+    assert m.recompute_derived({"per_cell_rows": []})["per_cell_rows"] == []
+
+    rows = [
+        _hrow("A", "lp85", "real", 1, 1, first=20),
+        _hrow("A", "r11l", "real", 1, 0),
+        _hrow("B", "lp85", "real", 1, 1, first=5),
+        _hrow("B", "r11l", "real", 1, 0),
+        _hrow("E", "lp85", "real", 1, 2, first=30),
+        _hrow("E", "r11l", "real", 1, 1, first=14),
+    ]
+    stale = {
+        "per_cell_rows": rows,
+        "config": {
+            "games": ["lp85", "r11l"],
+            "arms": ["A", "B", "E"],
+            "conditions": ["real"],
+            "budget_actions_per_game": 2000,
+        },
+        "honest_verdict": "complete_stale_claim",
+        "new_wins_vs_baseline": 99,
+        "duration_s": 123.4,
+    }
+    before = m._reproducibility_checksum(stale)
+    out = m.recompute_derived(dict(stale))
+
+    assert out["new_wins_vs_baseline"] == 0, "recomputed from the rows, not the stale claim"
+    assert out["positive_control_new_wins"] == 1
+    assert out["honest_verdict"].startswith("partial_"), "1 of 3 conditions -> reduced scope"
+    assert out["acceptance_gates_all_passed"] is False
+    assert out["derived_sections_recomputed_from_measured_rows"] is True
+    assert out["duration_s"] == 123.4, "measured fields must be preserved verbatim"
+    assert out["per_cell_rows"] == rows
+    assert out["reproducibility_checksum"] == before, (
+        "the checksum covers rows+config; a re-analysis of the SAME measurement must not "
+        "change it, or a legitimate recompute would look like corpus drift"
+    )
+
+
 def test_harness_preconditions_are_real_observations():
     m = _harness()
     pre = m.check_preconditions()
