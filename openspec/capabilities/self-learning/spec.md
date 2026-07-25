@@ -25488,6 +25488,130 @@ failed tests
 |---|---|---|
 | REQ-LEARN-5895 | Implemented (`python/carnot/experiment_5895_shortcut_safe_continuous_self_learning.py`, `results/experiment_5895_shortcut_safe_continuous_self_learning.json`) | Implemented (`tests/python/test_experiment_5895_shortcut_safe_continuous_self_learning.py`) |
 
+## REQ-LEARN-5912: Exp5895 Exact-Slot Continuous Self-Learning Requalification
+
+The self-learning tier SHALL provide Exp5912, a deterministic no-LLM wrapper at
+`python/carnot/experiment_5912_csl_exact_slot_requalification.py` that
+requalifies Exp5895's exact continuous-self-learning slot without changing
+Exp5895's scientific rows, arms, seeds, budgets, thresholds, validators, ready
+logic, labels, lifecycle code, or historical artifact. Exp5912 SHALL write
+`results/experiment_5912_csl_exact_slot_requalification.json` and SHALL leave
+`results/experiment_5895_shortcut_safe_continuous_self_learning.json`
+immutable and unmodified.
+
+Before readiness is credited, Exp5912 SHALL hash Exp5893 rows, Exp5894,
+Exp5895, Exp5895 source and tests, the Exp5895 ready-score function, frozen
+arms, seeds, budgets, thresholds, current suite collection receipts, output
+path, disk/RAM receipts, and protected files. Exp5912 SHALL assert that the
+historical Exp5895 artifact is read-only.
+
+Exp5912 SHALL rerun collection and the exact required current commands,
+recording node IDs, phases, exit codes, stdout/stderr hashes, and ownership
+paths. Collection or infrastructure debt SHALL be classified separately from
+any issue that can alter Exp5895 data, logic, labels, or readiness. Exp5912
+MUST NOT loosen tests, omit the global suite, rewrite test exit codes, ignore
+failures, mutate historical artifacts, or depend on retired Exp5865-Exp5867
+requalification outputs.
+
+Exp5912 SHALL rerun the frozen Exp5895 mechanism into a temporary result path,
+then compare deterministic science hashes for rows, arms, seeds, budgets,
+validators, thresholds, ready logic, lifecycle receipts, prospective lift,
+retention, safety, rollback/restart, bounded state, and no-model-weight
+mutation. Requalification repairs execution readiness only; it SHALL NOT
+change scientific inputs.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`continuous_self_learning_task`, `historical_exp5895_hash_and_immutability`,
+`original_test_failure_receipt`,
+`current_failure_node_ids_phases_and_ownership`,
+`causal_relevance_classification`, `repair_scope_and_changed_files`,
+`frozen_rows_arms_seeds_budgets_thresholds_and_ready_logic`,
+`deterministic_science_parity`,
+`prospective_lift_retention_safety_rollback_and_state_receipts`,
+`no_model_weight_mutation`, `retired_dependency_chain_used`,
+`repeated_verdict_retirement_decision`, `protected_files_unchanged`,
+`csl_exact_slot_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes requalified, null, retired, unsafe, or blocked exact-slot evidence.
+- `preconditions_checked`: Hashes, collection state, resources, output path, and protected-file receipts prevent blind requalification.
+- `continuous_self_learning_task`: Must be bare true and cannot be satisfied by a doc-only receipt.
+- `historical_exp5895_hash_and_immutability`: The historical Exp5895 artifact is consumed read-only and never rewritten.
+- `original_test_failure_receipt`: The historical global-suite exit 2 remains visible as the reason Exp5895 scored 0.0.
+- `current_failure_node_ids_phases_and_ownership`: Current command failures are tied to exact node IDs, phases, and owned paths.
+- `causal_relevance_classification`: Execution debt is separated from anything that can alter Exp5895 data, logic, labels, or readiness.
+- `repair_scope_and_changed_files`: Only causally relevant current repository-owned debt and the new wrapper may change.
+- `frozen_rows_arms_seeds_budgets_thresholds_and_ready_logic`: Requalification repairs execution readiness, not scientific inputs.
+- `deterministic_science_parity`: The temporary replay must match the historical deterministic science hash.
+- `prospective_lift_retention_safety_rollback_and_state_receipts`: Positive lift, retention 1.0, zero unsafe accepts, exact rollback/restart, and bounded state are rewrapped from the frozen replay.
+- `no_model_weight_mutation`: Model weights remain immutable and unloaded.
+- `retired_dependency_chain_used`: Exp5865-Exp5867 retired outputs are never used for promotion.
+- `repeated_verdict_retirement_decision`: The same null verdict retires this exact requalification scope.
+- `protected_files_unchanged`: Protected files and historical results stay byte-identical.
+- `csl_exact_slot_ready_score`: Emit bare 1.0 only when frozen scientific parity holds and every required current test exits zero.
+- `duration_s`: Measured wall time exposes deterministic wrapper work.
+- `inference_substrate`: Use `deterministic_exact_verifier_and_versioned_external_state_no_llm`.
+- `verifier_is_oracle`: True for labels and promotion authority.
+- `field_provenance`: Every field traces to prompt, spec, historical artifacts, frozen replay, command receipts, or tests.
+- `test_commands`: Commands document focused unit/coverage, collection attribution, deterministic replay, full Python suite, lifecycle, retention/safety/rollback, immutable-artifact, schema, applicable E2E, adversarial, spec-coverage, root-clutter, and protected-file checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects artifact, command, parity, or protected-file drift.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `retired:`, `unsafe:`, or `blocked:`.
+
+`csl_exact_slot_ready_score` SHALL be the bare scalar `1.0` only when
+`continuous_self_learning_task=true`, the historical Exp5895 artifact is
+read-only and byte-identical, frozen science parity holds, no retired
+dependency chain is used, positive prospective lift, retention 1.0, zero
+unsafe accepts, exact rollback/restart, bounded state, no model-weight
+mutation, protected-file immutability, and every required current command exit
+code are all zero. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5912-ATTRIBUTION: Current Suite Debt Is Node-Bound
+
+**Given** historical Exp5895 recorded `.venv/bin/pytest tests/python -q` exit 2
+**When** Exp5912 reruns collection and current required commands
+**Then** every current nonzero receipt records phase, exit code, stdout/stderr
+hashes, node IDs when available, and ownership paths
+**And** collection/infrastructure debt is not treated as a change to Exp5895
+scientific data, labels, lifecycle logic, or validators.
+
+### SCENARIO-LEARN-5912-FROZEN-PARITY: Science Inputs Do Not Change
+
+**Given** immutable Exp5893 rows, Exp5894, and Exp5895 artifacts
+**When** Exp5912 replays the Exp5895 mechanism into a temporary result path
+**Then** rows, arms, seeds, budgets, validators, thresholds, ready logic,
+lifecycle receipts, prospective lift, retention, safety, rollback/restart,
+bounded state, and no-model-weight mutation match the historical deterministic
+science hash.
+
+### SCENARIO-LEARN-5912-RETIREMENT: Repeated Null Retires Exact Scope
+
+**Given** Exp5895's ready score was 0.0 solely because the required global suite
+had exit 2
+**When** Exp5912 observes the same current verdict after frozen science parity
+is proven
+**Then** `csl_exact_slot_ready_score` SHALL remain `0.0`
+**And** `honest_verdict` SHALL start with `retired:`.
+
+### SCENARIO-LEARN-5912-READY: Clean Current Suite Requalifies Exact Slot
+
+**Given** frozen science parity holds and protected files are unchanged
+**When** every focused, coverage, collection, deterministic replay, global
+suite, lifecycle, retention/safety/rollback, immutable-artifact, schema,
+applicable E2E, adversarial, spec-coverage, root-clutter, and protected-file
+command exits zero
+**Then** `csl_exact_slot_ready_score` SHALL be the bare scalar `1.0`
+**And** `honest_verdict` SHALL start with `complete_positive:`.
+
+## Implementation Status (Exp 5912)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5912 | Implemented (`python/carnot/experiment_5912_csl_exact_slot_requalification.py`, `results/experiment_5912_csl_exact_slot_requalification.json`) | Implemented (`tests/python/test_experiment_5912_csl_exact_slot_requalification.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
