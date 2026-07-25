@@ -46948,3 +46948,156 @@ has provenance, and the terminal verdict starts with `complete:` or
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5918 | Implemented (`python/carnot/experiment_5918_transition_v526.py`, `results/experiment_5918_transition_v526.json`) | Implemented (`tests/python/test_experiment_5918_transition_v526.py`) |
+
+### REQ-REPORT-5919: V526 Post-Marker Source Delta Ingestion Preserves Activated Boundaries
+
+The Exp5919 workflow SHALL run a bounded source refresh after the
+`V526-PLANNER-REFRESH-20260725-END` marker and SHALL write
+`results/experiment_5919_v526_source_delta_ingestion.json`. It SHALL first
+hash the exact marker block, active roadmap task IDs and gates, optional
+`research-roadmap-next.yaml` task IDs and gates when present,
+`research-references.md`, `ops/exclusion_manifest.yaml`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, the output path
+when present, and protected files. It SHALL record UTC search start/end,
+endpoint failures, rate limits, query families, and source cutoffs. If the
+marker is absent, no primary or reliable secondary source route is reachable,
+or the active `.526` task identity cannot be read, the workflow SHALL emit a
+terminal `blocked:` artifact and SHALL leave `research-references.md`,
+`research-roadmap.yaml`, optional `research-roadmap-next.yaml`,
+`scripts/research_conductor.py`, operator-owned ops ledgers, and task/gate
+identity unchanged.
+
+The workflow SHALL search only evidence published or changed after the exact
+V526 marker receipt through arXiv, OpenReview, Hugging Face Papers, direct
+Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`, GitHub, Extropic, and Logical Intelligence. arXiv, OpenReview
+forum pages, official project pages, Extropic, and Logical Intelligence SHALL
+be labeled as primary or official sources when directly reachable; Hugging Face
+Papers, GitHub discovery metadata, Semantic Scholar routes, search pages, and
+local sweep helpers SHALL be labeled as secondary or tooling unless they point
+to a primary page. Every surfaced receipt SHALL include source family, role,
+query family, URL, accessed timestamp, access outcome, candidate IDs,
+candidate count, source cutoff, and receipt summary.
+
+Every finding SHALL be classified separately as accepted, rejected, abstained,
+false-positive, known-false-negative, duplicate, retired-scope, inaccessible,
+training-cutoff, or publication-date-confounded. Accepted findings SHALL be
+newer primary-source evidence, non-duplicate by title, identifier, mechanism,
+authors, and existing reference heading, and SHALL only sharpen controls inside
+already allocated `.526` tasks. Accepted findings SHALL NOT change task IDs,
+structured gates, MODEL_SPECS, model policy, authority boundaries, retired
+scopes, hardware requirements, headline claims, or active roadmap identity. The
+workflow SHALL reject sources that only rename prompt-only constraint repair,
+finite-ID decoding, KAN mutation, final-embedding scoring, public ARC solves,
+or unchanged board probes. Recent-source uncertainty, training-cutoff
+uncertainty, and publication-date confounds SHALL be recorded as abstention,
+training-cutoff, false-positive, known-false-negative, or
+publication-date-confounded receipts rather than silently converted into
+ordinary rejection.
+
+When no accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` unchanged and set
+`references_append_receipt.appended=false`. When accepted findings exist, it
+MAY append exactly one dated V526 delta subheading after the sealed marker,
+listing only actionable method-to-task mappings and preserving prior markers
+without rewrite. Source aggregation SHALL declare
+`inference_substrate="aggregation_from_external_primary_sources"` and SHALL NOT
+be relabeled as live LLM inference.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`search_window_and_marker_receipt`,
+`source_queries_and_endpoint_receipts`,
+`primary_secondary_and_official_source_counts`,
+`accepted_rejected_abstained_findings`,
+`false_positive_false_negative_and_cutoff_receipts`,
+`duplicate_and_retired_scope_filter`, `references_append_receipt`,
+`task_identity_and_gate_immutability`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty provenance entry and a
+principle. The `honest_verdict` SHALL start with `complete_delta:`,
+`complete_null:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal source-refresh state derived from marker, reachability, and classification checks."
+- `preconditions_checked`: principle "Marker, roadmap identities, reference ledgers, sweep code, output path, protected files, endpoint failures, rate limits, query families, and source cutoffs are hashed or recorded before source decisions."
+- `search_window_and_marker_receipt`: principle "The V526 marker hash and UTC search interval make post-marker novelty falsifiable."
+- `source_queries_and_endpoint_receipts`: principle "Every primary, secondary, official, and tooling route records query, URL, access outcome, timestamp, candidate counts, and source cutoffs."
+- `primary_secondary_and_official_source_counts`: principle "Discovery routes cannot be mistaken for primary evidence."
+- `accepted_rejected_abstained_findings`: principle "Accepted, rejected, abstained, training-cutoff, and publication-date-confounded decisions are separate source outcomes."
+- `false_positive_false_negative_and_cutoff_receipts`: principle "Source uncertainty must remain explicit and cannot be silently converted into rejection."
+- `duplicate_and_retired_scope_filter`: principle "Title, identifier, mechanism, authors, heading, and retired-scope filters prevent freshness from reopening closed work."
+- `references_append_receipt`: principle "Reference-ledger appends are exact, dated, optional, and forbidden for zero accepted findings."
+- `task_identity_and_gate_immutability`: principle "Evidence refresh may sharpen controls but cannot rewrite the activated milestone."
+- `protected_files_unchanged`: principle "Roadmaps, conductor, protected ops ledgers, and retired-scope controls remain byte-identical unless explicitly owned."
+- `duration_s`: principle "Measured wall time exposes an external-source aggregation task."
+- `inference_substrate`: principle "Use `aggregation_from_external_primary_sources`."
+- `field_provenance`: principle "Every required field traces to source receipts, local hashes, query families, source cutoffs, or classification records."
+- `test_commands`: principle "Commands document focused unit, coverage, marker/hash, deduplication, date-window, source-classification, cutoff, references-marker, protected-file, schema, adversarial-verify, spec-coverage, applicable E2E, root-clutter, and full-suite checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects later marker, source, classification, or append drift."
+- `honest_verdict`: principle "Use `complete_delta:`, `complete_null:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5919-ZERO-FINDING: Complete Zero Delta Leaves References Unchanged
+
+**Given** the V526 planner marker is present, the active `.526` roadmap is
+readable, and at least one primary or reliable secondary source route is
+reachable
+**And** every surfaced post-marker item is duplicate, rejected, abstained,
+retired-scope, inaccessible, false-positive, known-false-negative,
+training-cutoff, or publication-date-confounded
+**When** the Exp5919 workflow runs
+**Then** it writes `results/experiment_5919_v526_source_delta_ingestion.json`,
+sets `status=complete`, keeps `references_append_receipt.appended=false`,
+records zero accepted findings, separates rejected and abstained source
+decisions, preserves false-positive/false-negative/cutoff receipts, preserves
+task identities and gates, and emits a `complete_null:` verdict.
+
+#### SCENARIO-REPORT-5919-ACCEPT-BOUNDED-DELTA: Accepted Sources Stay Inside Existing V526 Tasks
+
+**Given** a post-marker source is newer primary-source evidence, is
+non-duplicate by title, identifier, mechanism, authors, and existing heading,
+and only sharpens an already allocated `.526` task
+**When** the source is accepted
+**Then** the artifact and optional reference append record source id, title,
+URL, source date, receipt id, target experiment, bounded source hook, authority
+boundary, method-to-task mapping, and provenance while preserving task IDs,
+structured gates, MODEL_SPECS, model policy, authority boundaries, retired
+scopes, hardware requirements, and headline claims.
+
+#### SCENARIO-REPORT-5919-SOURCE-UNCERTAINTY: Cutoff And Date Confounds Stay Visible
+
+**Given** a source route exposes a recent candidate whose primary publication
+date, post-training-cutoff status, or citation-verifier outcome is uncertain
+**When** the candidate is classified
+**Then** the artifact records abstained, false-positive,
+known-false-negative, training-cutoff, or publication-date-confounded receipts
+separately and does not convert that uncertainty into an ordinary rejection.
+
+#### SCENARIO-REPORT-5919-DUPLICATE-AND-RETIRED-SCOPE: Closed Work Stays Closed
+
+**Given** a source duplicates existing V526 reference headings or only renames
+prompt-only constraint repair, finite-ID decoding, KAN mutation,
+final-embedding scoring, unchanged board probes, public ARC solves, TSU
+execution, Kona execution, or a task/gate rewrite
+**When** the candidate is classified
+**Then** it is rejected as duplicate or retired-scope, the retired-scope filter
+records the matching rule, and no reference append or roadmap mutation is made.
+
+#### SCENARIO-REPORT-5919-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp5919 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, field provenance entry, source
+receipt, endpoint-failure/rate-limit receipt, finding class, protected-file
+hash, test command, exit code, checksum, and terminal verdict prefix is
+present; the inference substrate is
+`aggregation_from_external_primary_sources`; and external source aggregation is
+not labeled as live LLM inference.
+
+## Implementation Status (REQ-REPORT-5919)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5919 | Implemented (`python/carnot/experiment_5919_v526_source_delta_ingestion.py`, `results/experiment_5919_v526_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5919_v526_source_delta_ingestion.py`) |
