@@ -262,7 +262,12 @@ def test_req_arc_fcp_4513_explorer_truncates_candidates_when_gate_commits(monkey
     rows = explorer._candidates(frame, path=[])
     diagnostics = explorer.adaptive_budget_diagnostics()
 
-    assert rows == [{"action": 6, "data": {"x": 6, "y": 6}}]
+    # 2026-07-25: rows now carry an additive 'tier' annotation when the frontier tier barrier
+    # is enabled (shipped ON -- see the flag block in arc_competition_agent.py). Assert the
+    # MEANINGFUL fields rather than exact dict equality, which was brittle to any new annotation.
+    assert len(rows) == 1
+    assert rows[0]["action"] == 6
+    assert rows[0]["data"] == {"x": 6, "y": 6}
     assert diagnostics["enabled"] is True
     assert diagnostics["commit_count"] == 1
     assert diagnostics["expanded_count"] == 0

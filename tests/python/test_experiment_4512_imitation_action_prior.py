@@ -170,7 +170,11 @@ def test_req_arc_fcp_4512_rich_candidates_and_explorer_accept_action_prior(
     assert ranked[0].action_id == 6
     assert ranked[0].data == {"x": 1, "y": 1}
     assert all(candidate.action_id != 3 for candidate in ranked)
-    assert explorer_ranked[0] == {"action": 6, "data": {"x": 1, "y": 1}}
+    # 2026-07-25: rows now carry an additive 'tier' annotation when the frontier tier barrier
+    # is enabled (shipped ON -- see the flag block in arc_competition_agent.py). Assert the
+    # MEANINGFUL fields rather than exact dict equality, which was brittle to any new annotation.
+    assert explorer_ranked[0]["action"] == 6
+    assert explorer_ranked[0]["data"] == {"x": 1, "y": 1}
 
 
 def test_req_arc_fcp_4512_uses_human_replays_before_fallback(tmp_path: Path) -> None:
