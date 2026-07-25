@@ -1694,12 +1694,36 @@ def _hud_mask_gate_pass_region_witness() -> dict:
 
     seed = 1
     synthetic = [
-        {"arm": HUD_MASK_CONTROL_ARM, "game": "gA", "condition": "real", "seed": seed,
-         "ran": True, "levels": 1, "node_inflation": 1.0, "hud_mask_resolved": False},
-        {"arm": HUD_MASK_ARMS[0], "game": "gA", "condition": "real", "seed": seed,
-         "ran": True, "levels": 1, "node_inflation": 0.2, "hud_mask_resolved": True},
-        {"arm": HUD_MASK_ARMS[0], "game": "gB", "condition": "real", "seed": seed,
-         "ran": True, "levels": 1, "node_inflation": 0.1, "hud_mask_resolved": True},
+        {
+            "arm": HUD_MASK_CONTROL_ARM,
+            "game": "gA",
+            "condition": "real",
+            "seed": seed,
+            "ran": True,
+            "levels": 1,
+            "node_inflation": 1.0,
+            "hud_mask_resolved": False,
+        },
+        {
+            "arm": HUD_MASK_ARMS[0],
+            "game": "gA",
+            "condition": "real",
+            "seed": seed,
+            "ran": True,
+            "levels": 1,
+            "node_inflation": 0.2,
+            "hud_mask_resolved": True,
+        },
+        {
+            "arm": HUD_MASK_ARMS[0],
+            "game": "gB",
+            "condition": "real",
+            "seed": seed,
+            "ran": True,
+            "levels": 1,
+            "node_inflation": 0.1,
+            "hud_mask_resolved": True,
+        },
     ]
     control = _per_seed_win_sets(synthetic, HUD_MASK_CONTROL_ARM)
     treat = _per_seed_win_sets(synthetic, HUD_MASK_ARMS[0])
@@ -1755,7 +1779,10 @@ def _hud_mask_signal(
         and r.get("ran")
     ]
     if not control_rows or not treat_rows:
-        return {"measured": False, "reason": f"{game}/{condition} not measured for {arm} and control"}
+        return {
+            "measured": False,
+            "reason": f"{game}/{condition} not measured for {arm} and control",
+        }
 
     def _inflations(subset: Sequence[dict]) -> list[float]:
         return [float(r["node_inflation"]) for r in subset if r.get("node_inflation") is not None]
@@ -1791,9 +1818,8 @@ def _hud_mask_signal(
         "control_arm": HUD_MASK_CONTROL_ARM,
         "per_seed": per_seed,
         "mask_resolved_all_seeds": all(bool(s["treatment_mask_resolved"]) for s in per_seed),
-        "level_gained_all_seeds": bool(per_seed) and all(
-            s["level_gained_this_seed"] for s in per_seed
-        ),
+        "level_gained_all_seeds": bool(per_seed)
+        and all(s["level_gained_this_seed"] for s in per_seed),
         "level_gained_any_seed": any(s["level_gained_this_seed"] for s in per_seed),
         "mean_control_node_inflation": (
             round(statistics.fmean(control_inf), 4) if control_inf else None
@@ -1802,7 +1828,9 @@ def _hud_mask_signal(
             round(statistics.fmean(treat_inf), 4) if treat_inf else None
         ),
         "inflation_improved": bool(
-            control_inf and treat_inf and statistics.fmean(treat_inf) < statistics.fmean(control_inf)
+            control_inf
+            and treat_inf
+            and statistics.fmean(treat_inf) < statistics.fmean(control_inf)
         ),
         "baseline_note": (
             "the 44.9x figure in ops/known-issues.md is an ARM-A number (1392 nodes / 31 "
@@ -2297,9 +2325,7 @@ def replay_validate(
     # REQ-ARC-WMTE-5960: the HUD arms carry a claim too, so they must be reproduction-eligible.
     # Without this they would be silently omitted from `claim_carrying_arms_not_reproduced`,
     # which is the exact defect class already fixed twice above for the sampler arms.
-    claim_arms = (
-        tuple(CLICK_PIXEL_ARMS) + tuple(HUD_MASK_ARMS) + (CLICK_PIXEL_CONTROL_ARM,)
-    )
+    claim_arms = tuple(CLICK_PIXEL_ARMS) + tuple(HUD_MASK_ARMS) + (CLICK_PIXEL_CONTROL_ARM,)
     return {
         "method": "re_execution_of_the_same_cell_not_kit_reproduce",
         "replay_limit_requested": requested_limit,
