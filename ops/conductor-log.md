@@ -14279,3 +14279,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 10:24 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
 | 2026-07-25 10:26 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
 | 2026-07-25 10:28 UTC | Gated on Exp5913 mechanism: prospective SOTA trans | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5913-transactional-constraint-memory-fixt |
+| 2026-07-25 10:41 UTC | Scoped capability lease for the adapter-disabled h | OK | 88 passed, 1 warning in 21.31s |
+| 2026-07-25 10:43 UTC | Gated on Exp5913 mechanism: prospective SOTA trans | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5913-transactional-constraint-memory-fixt |
