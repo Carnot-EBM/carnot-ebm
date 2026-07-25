@@ -14276,3 +14276,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 09:48 UTC | Frozen-science requalification of Exp5895 continuo | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ;exec(eval(sys |
 | 2026-07-25 10:19 UTC | Frozen-science requalification of Exp5895 continuo | OK | 85 passed, 1 warning in 5.74s |
 | 2026-07-25 10:22 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
+| 2026-07-25 10:24 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
