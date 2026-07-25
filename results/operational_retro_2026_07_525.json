@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.525",
+  "generated_at": "2026-07-25T12:21:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 40.0,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp5908 fixture: three-family direct, decomposed, and retrieval synthes",
+      "duration_minutes": 31.8,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5909 residual headroom: exact-diagnostic constraint repair",
+      "duration_minutes": 6.91,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5915 capability: adapter-disabled held structured-memory live A/B",
+      "duration_minutes": 0.75,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .524 into .525",
+      "duration_minutes": 0.23,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Branch-independent terminal reconciliation for milestone .525",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.525 completed 12 experiments in 40.0 minutes, including 4 compute-bound experiments. The 31.8-minute three-family synthesis entry dominated the recorded tail, but the bounded timing does not separate dependency wait, setup, model loading, inference, or verification.",
+  "bottlenecks_identified": [
+    "The 31.8-minute compute-bound three-family synthesis entry had a recorded duration equal to 79.5% of total milestone wall time.",
+    "Task-level timing cannot attribute the 31.8-minute synthesis or 6.91-minute repair durations to dependency wait, fixture preparation, model loading, inference, or verification.",
+    "The supplied data does not record whether the three-family work loaded models concurrently, so runner-selection efficiency cannot be diagnosed."
+  ],
+  "improvements_suggested": [
+    "Record phase timers for dependency readiness, fixture preparation, model loading, inference, verification, and artifact writing on every compute-bound task.",
+    "Correlate GPU utilization samples and runner selection with each compute-bound task's start and end so an idle monitor snapshot cannot be mistaken for task-lifetime utilization.",
+    "Add an explicit model-concurrency declaration to scheduling and select DualGPURunner only when at least two models are intentionally loaded in parallel.",
+    "Cache validated fixture and retrieval inputs by checksum so later gated arms can reuse them when their declared inputs match."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the 31.8-minute three-family path with phase-level timers before the next run.",
+    "Emit task-linked GPU and runner-selection telemetry for every compute-bound launch.",
+    "Dispatch DualGPURunner conditionally when the scheduler declares at least two parallel model loads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data ranks the operational tail but does not explain it causally, and the idle GPU snapshot is not task-correlated. A nonzero savings forecast or a claim that a parallel-model DualGPURunner opportunity was missed would exceed the supplied evidence."
+}
