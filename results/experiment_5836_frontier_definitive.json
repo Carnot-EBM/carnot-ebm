@@ -4,7 +4,7 @@
   "title": "Frontier-discipline A/B: just-explore tier exhaustion + distance gradient",
   "requirement": "REQ-ARC-WMTE-5836",
   "reference": "arXiv:2512.24156 (just-explore, ARC-AGI-3 Preview private leaderboard 3rd)",
-  "honest_verdict": "complete_frontier_definitive_click_gated_B2_dominates_baseline_8of9_mean_10.56_vs_7.00_but_positive_control_underperforms_baseline_cross_implementation_comparison_void",
+  "honest_verdict": "complete_frontier_definitive_click_gated_B2_dominates_baseline_8of9_mean_10.56_vs_7.00_arm_E_positive_control_INVALID_unseeded_and_livelocked_reference_UNMEASURED",
   "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
   "verifier_is_oracle": true,
   "solve_provenance": "development_proxy",
@@ -35773,5 +35773,34 @@
     },
     "flag_flip_assessment": "The internal evidence alone supports flipping the tier + uniform-draw + click-gate flags: +3.56 games over baseline, 8/9 per-seed dominance, stable under colour permutation and reflection, reproduction-verified across arms via the round-robin sampler. This does NOT depend on the reference comparison. The 5 reference-only games (ar25, cn04, ls20, r11l, tn36) remain an unmined complementary direction, but that observation now also inherits the shim-fidelity caveat."
   },
-  "reproducibility_checksum": "sha256:e2206da0c33ee0551170b18edcb72cc2f282a3a77158b9d72d151e951c46427f"
+  "arm_E_positive_control_corrigendum": {
+    "date": "2026-07-25",
+    "status": "ARM E IS NOT A TRUSTWORTHY POSITIVE CONTROL. Original numbers preserved; the INTERPRETATIONS listed under 'retracted' below are withdrawn.",
+    "code_fidelity_ESTABLISHED_not_the_problem": "/home/ianblenke/arc-sota-refs/arc-agi-3-just-explore is a pristine clone of the real reference at HEAD c2d9831 with a clean working tree (verified), and the shim subclasses the real HeuristicAgent overriding only take_action/cleanup. Arm E runs the REAL reference code, and both arms score levels through the SAME function (_levels_completed). So this is not a mis-adaptation.",
+    "defect_1_arm_E_IS_UNSEEDED": {
+      "mechanism": "HeuristicAgent.__init__ does `seed = int(time.time()*1000000) + hash(self.game_id)%1000000; random.seed(seed)` (agents/heuristic_agent.py:68-69), which runs AFTER the harness's random.seed(seed) and clobbers it. Verified verbatim in the clone.",
+      "consequence": "Arm E's nine 'condition x seed' cells are nine UNSEEDED draws. Its per-cell wins are [5,5,6,6,6,7,7,8,10], sd 1.581 vs B2's 0.726. Its 4 reproduction checks were Bernoulli re-draws, not determinism tests -- which fully explains the bp35 1->0 'failure'.",
+      "scope": "Affects ONLY arm E. Arms A-D/B2/B2_nofix draw from a private random.Random(frontier_discipline_seed), never the global RNG the reference clobbers."
+    },
+    "defect_2_reference_LIVELOCKS_on_our_render": {
+      "mechanism": "The reference's state hash blanks a single 64-px status-bar row before hashing. On our render that row carries load-bearing state, so distinct states alias onto one hash, the graph records contradictory successors and trips its own 'Edge result must be untested' assert; the recovery path re-issues the same action without advancing, and the run livelocks. Measured 72-97% of choose_action calls raising.",
+      "causal_proof": "DELETING the reference's frontier search takes lf52 from 0/6 to 6/6 and su15 from 0/6 to 6/6 wins. Aggregate over 62 runs at budget 2000: search-on 6/31 wins (mean exception fraction 0.771); search-off 19/31 (0.016).",
+      "consequence": "Arm E's losses measure a CRASH, not the reference's capability. The method was never actually measured."
+    },
+    "missing_instrument": "All 225 arm-E rows carry states_expanded: None (arms A and B2 carry it on 75/75 and 225/225). With no expansion counter there was nothing in 975 cells that could reveal a 72-97%-crashed control. This is the single cheapest fix: instrument arm E's expansion count and exception rate so a livelocked control can never again read as a legitimate null.",
+    "retracted": [
+      "That arm E 'scored 6.67, BELOW our baseline 7.00' is a FINDING. Measured t(8) = -0.632 against A = 7.00 (two-sided .05 crit 2.306): statistical PARITY, over unseeded draws.",
+      "That the reference underperforms our baseline, or is 'a weak yardstick on this corpus'. NEITHER is supported -- no run to date measured the method rather than the crash. Its published result is on PRIVATE levels via ITS OWN runner at MAX_ACTIONS=1e6 (~91,700 actions/game); our 2,000 is 2.2% of that.",
+      "The 5-game 'complementary capability' list. It is an ANY-SEED UNION, contradicting this artifact's own stated per-seed basis. Measured frequencies: ar25 1/9, cn04 1/9, ls20 1/9, tn36 1/9 -- single-cell noise over unseeded draws -- and r11l 9/9. Only r11l is real, and it wins 3/3 with the reference's frontier search DELETED, so it comes from its candidate sampling (a uniform random pixel per connected component, redrawn with replacement), NOT from its frontier discipline.",
+      "caveats[0] is FACTUALLY INVERTED. It claims arms A-D do ~4.2-4.4x more env interaction, which 'HANDICAPS arm E', making an E win a 'conservative LOWER bound'. Measured A/E total env-interaction ratio at nominal budget 600: 0.615 (tu93), 0.998 (lf52), 0.037 (lp85), 0.105 (vc33) -- arm E does 1.0x to 27x MORE, because A-D early-stop at target_levels=1 while E runs to budget. The 4.2-4.4x figure belongs to a different harness this experiment does not use.",
+      "reproduction_gate '29/30' conflates kinds. It is 26 genuine determinism checks (A/B/B2/B2_nofix/C/D) plus 4 arm-E coin flips."
+    ],
+    "UNAFFECTED_and_still_claimable": "The INTERNAL comparison A vs B2 vs B2_nofix stands entirely -- same live explorer, flags differ, private seeded RNG untouched by the reference's global reseed. B2 mean 10.556 vs A 7.000, 8/9 per-seed dominance, and the gate-isolating B2-vs-B2_nofix contrast (8/9 vs 3/9; tu93 lost 0/9 vs 6/9). THE FLAG FLIP'S JUSTIFICATION IS UNCHANGED by this corrigendum, because it never rested on arm E.",
+    "what_a_real_positive_control_would_take": [
+      "1. CHEAP: instrument arm E (states_expanded, exception rate) so a crashed control is visible.",
+      "2. CHEAP: make arm E seeded -- reseed the global RNG AFTER constructing HeuristicAgent, or patch its __init__ in the shim. Without this its cells are not per-seed comparable to ours.",
+      "3. MODERATE: the aliasing is in REFERENCE code (its status-bar mask vs our render). Either render without the aliased row, or run the reference at a budget approaching its native regime. Until one of these lands, treat the reference as UNMEASURED here, not as weak."
+    ]
+  },
+  "reproducibility_checksum": "sha256:a951359c06cbd4ee66ad335d21a4cdf108521092ab339c4c7bfac1b139d8777a"
 }
