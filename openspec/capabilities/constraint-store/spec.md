@@ -234,3 +234,36 @@ non-forgetting certificates are replayed,
 Then every recorded hash reproduces exactly, protected prefixes retain exact
 membership labels, crash/corruption recovery restores the committed state hash,
 and rejected updates have zero propagation.
+
+### REQ-STORE-5924 — Transactional constraint-memory receipt store
+
+Carnot SHALL store Exp5924 transactional constraint-memory V2 evidence as a
+versioned operation ledger derived from the admitted Exp5920 event stream. The
+store-level artifact SHALL preserve the Exp5920 stream path, stream hash, row
+count, prefix-chain receipt, transaction schema version, operation ledger hash,
+per-operation previous and resulting state hashes, exact-validator receipt
+hashes, active-state hashes, quarantine hashes, supersession receipts,
+capacity receipts, rollback receipts, restart receipts, rejected-update
+non-propagation receipts, and immutable model-weight hashes.
+
+Stored transaction receipts SHALL distinguish pre-event snapshots from
+post-validation writes, proposals from committed proposals, exact validation
+from memory similarity, promoted exact facts from quarantined or rejected model
+updates, superseded active entries from evicted capacity entries, and rollback
+targets from restart checkpoints. Replaying the stored ledger SHALL reproduce
+the final state hash exactly; tampering with operation order, validator
+authority, prior-state hash, resulting-state hash, stream prefix, or rejected
+update propagation SHALL reject without partial state writes.
+
+### SCENARIO-STORE-5924 — Transaction ledger hashes replay
+
+Given Exp5924 has consumed the admitted Exp5920 stream,
+
+When its operation ledger, exact-validator receipts, quarantine records,
+supersession records, capacity records, rollback checkpoint, restart checkpoint,
+and rejected-update receipts are replayed,
+
+Then every previous-state hash, resulting-state hash, ledger hash, rollback
+hash, restart hash, active-memory hash, and quarantine hash reproduces exactly,
+protected-prefix labels are retained, rejected updates have zero propagation,
+and validator-substitution tampering fails closed.
