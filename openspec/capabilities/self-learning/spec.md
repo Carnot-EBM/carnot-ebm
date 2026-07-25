@@ -25735,6 +25735,148 @@ without requiring a zero-failure global suite or reopening the retired slot.
 |---|---|---|
 | REQ-LEARN-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`, `results/experiment_5920_prospective_event_stream_admission.json`, `results/experiment_5920_prospective_event_stream_admission.rows.jsonl`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
 
+## REQ-LEARN-5924: Versioned Transactional Constraint Memory V2
+
+The self-learning tier SHALL provide Exp5924, a deterministic no-LLM
+transactional constraint-memory fixture at
+`python/carnot/experiment_5924_transactional_constraint_memory_v2.py` that
+consumes the admitted Exp5920 event stream and writes
+`results/experiment_5924_transactional_constraint_memory_v2.json`. Exp5924
+SHALL NOT depend on the retired Exp5912 slot and SHALL NOT mutate
+`scripts/research_conductor.py`.
+
+Before any readiness claim, Exp5924 SHALL replay Exp5920's gate, exact row
+stream, stream file hash, row count, and prefix chain; hash instructions,
+research context, schemas, code, upstream artifacts, protected files, output
+paths, disk/RAM, atomic state/artifact writes, and exact-verifier
+availability; and verify that model-weight hashes remain immutable before and
+after the online state transitions.
+
+The fixture SHALL define a versioned operation ledger for `snapshot`, `lookup`,
+`propose`, `commit`, `validate`, `promote`, `quarantine`, `supersede`,
+`rollback`, and `reject`. Every ledger transition SHALL bind the operation
+version, event id, previous state hash, exact-validator receipt hash, resulting
+state hash, and row-prefix receipt. The ledger SHALL be replayable as a state
+hash chain and SHALL reject broken chains.
+
+Snapshot isolation SHALL be strict: `snapshot` and `lookup` read only the
+pre-event state, while readable memory writes occur only after `commit` and
+exact `validate`. The fixture SHALL reject same-event reads-after-write, future
+label visibility, model-authored labels, duplicate commit, stale snapshot,
+invalid transition order, validator substitution, and partial state writes
+without mutating the committed state.
+
+Only the exact verifier SHALL authorize promotion. Model outputs and memory
+similarity MAY become proposals, but they SHALL NOT promote without an exact
+receipt. Invalid model proposals, bounded poison bursts, and semantic
+near-misses SHALL quarantine or reject deterministically and SHALL have zero
+future-context, replay-context, or active-memory propagation.
+
+Exp5924 SHALL compare transactional memory against fixed/no-memory, immediate
+coupled-write, shuffled-history, and corrupted-validator controls under matched
+query and capacity budgets. Exp5924 SHALL also prove protected-prefix
+retention, deterministic quarantine recovery, supersession, bounded active and
+quarantine capacity, exact rollback, exact restart, and no model-weight
+mutation.
+
+The terminal artifact MUST include `status`, `gate_replay_receipt`,
+`preconditions_checked`, `continuous_self_learning_task`,
+`admitted_stream_path_hash_rows_and_prefix_chain`,
+`transaction_schema_and_version`, `operation_ledger_and_state_hash_chain`,
+`frozen_read_commit_validate_write_receipts`, `exact_promotion_authority`,
+`invalid_transition_and_leakage_rejection_matrix`,
+`fixed_no_memory_coupled_shuffled_and_corrupt_validator_controls`,
+`poison_burst_quarantine_recovery_and_retention`,
+`supersession_capacity_rollback_and_restart`,
+`rejected_update_non_propagation`, `no_model_weight_mutation`,
+`task_owned_test_boundary_and_global_failure_delta`,
+`hardware_mapping_contract`, `protected_files_unchanged`,
+`transactional_memory_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes ready, retired, or blocked transactional memory evidence.
+- `gate_replay_receipt`: Exp5920 gate and stream replay must pass before the fixture consumes events.
+- `preconditions_checked`: Hashes, resources, validators, outputs, and atomic writes prevent fabricated transactional state.
+- `continuous_self_learning_task`: Must be bare true only when online state transitions execute.
+- `admitted_stream_path_hash_rows_and_prefix_chain`: The Exp5920 stream path, hash, row count, and prefix chain bind the event source.
+- `transaction_schema_and_version`: One versioned transaction contract owns operation order and state hashing.
+- `operation_ledger_and_state_hash_chain`: Every operation transition is hash-bound and replayable.
+- `frozen_read_commit_validate_write_receipts`: Reads use pre-event snapshots and writes occur only after commit plus exact validation.
+- `exact_promotion_authority`: Exact verifier receipts are the only promotion authority.
+- `invalid_transition_and_leakage_rejection_matrix`: Leakage and malformed transaction attempts fail closed without mutation.
+- `fixed_no_memory_coupled_shuffled_and_corrupt_validator_controls`: Controls use matched budgets and cannot define promotion authority.
+- `poison_burst_quarantine_recovery_and_retention`: Poison and near-miss updates quarantine deterministically while protected prefixes retain exact labels.
+- `supersession_capacity_rollback_and_restart`: Supersession, bounded capacity, rollback, and restart reproduce exact state hashes.
+- `rejected_update_non_propagation`: Rejected or quarantined model updates never become active or replay context.
+- `no_model_weight_mutation`: Immutable model hashes remain unchanged.
+- `task_owned_test_boundary_and_global_failure_delta`: Focused checks must pass and global failure debt may not increase.
+- `hardware_mapping_contract`: The state machine remains finite, bounded, and hardware-mappable without claiming board execution.
+- `protected_files_unchanged`: Operator-curated and conductor files stay byte-identical.
+- `transactional_memory_fixture_ready_score`: Emit bare 1.0 only for complete isolation, exact validation, poison recovery, retention, capacity, restart, rollback, immutable weights, clean task-owned checks, and non-amplified global debt.
+- `duration_s`: Measured wall time exposes deterministic fixture work.
+- `inference_substrate`: Use `deterministic_transactional_external_memory_no_llm`.
+- `verifier_is_oracle`: True only for exact constraint execution, transaction validity, hashes, and rollback.
+- `field_provenance`: Every field traces to prompt, specs, upstream stream rows, code, tests, or command receipts.
+- `test_commands`: Commands document focused unit/coverage, replay, transaction-order, leakage, exact-promotion, poison/recovery, retention, capacity, restart/rollback, tamper, immutable-weight, task-boundary, adversarial, spec, applicable E2E, protected-file, and clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects stream, schema, ledger, state, command, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `retired:`, or `blocked:`.
+
+`transactional_memory_fixture_ready_score` SHALL be the bare scalar `1.0` only
+when Exp5920 replay passes, preconditions pass, online transaction operations
+execute, snapshot isolation holds, exact validation is the sole promotion
+authority, invalid transitions all reject without state mutation, poison and
+near-miss updates never propagate, protected-prefix retention is exact,
+capacity is bounded, supersession is deterministic, rollback and restart hashes
+match, model weights are unchanged, protected files are unchanged, every
+task-owned command exits zero, and global failure delta is at most zero.
+Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5924-TRANSACTIONS: Frozen Reads And Deferred Writes
+
+**Given** the admitted Exp5920 stream is replayable by hash and prefix
+**When** Exp5924 processes its bounded chronological transaction prefix
+**Then** every event snapshots before lookup, commits proposals before exact
+validation, and writes to active, quarantine, rejected, or superseded state only
+after validation.
+
+### SCENARIO-LEARN-5924-REJECTION: Leakage And Invalid Transitions Fail Closed
+
+**Given** a valid transaction state hash
+**When** same-event read-after-write, future labels, model-authored labels,
+duplicate commit, stale snapshot, invalid operation order, validator
+substitution, or partial state write are attempted
+**Then** every case is rejected and the state hash remains unchanged.
+
+### SCENARIO-LEARN-5924-RECOVERY: Poison, Supersession, Capacity, Rollback, Restart
+
+**Given** bounded poison bursts and semantic near-misses are injected into the
+Exp5920 transaction prefix
+**When** exact validation runs
+**Then** rejected updates never propagate, quarantine is deterministic,
+protected-prefix retention remains exact, active and quarantine capacity are
+bounded, supersession receipts are emitted, rollback restores the checkpoint
+hash, and restart reproduces the same hash.
+
+### SCENARIO-LEARN-5924-CONTROLS: Matched Controls Cannot Launder Promotions
+
+**Given** transactional memory, fixed/no-memory, immediate coupled-write,
+shuffled-history, and corrupted-validator controls use matched query and
+capacity budgets
+**When** the controls are scored
+**Then** only transactional memory records zero leakage, zero unsafe
+propagation, exact retention, and exact verifier promotion authority.
+
+## Implementation Status (Exp 5924)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5924 | Implemented (`python/carnot/experiment_5924_transactional_constraint_memory_v2.py`, `results/experiment_5924_transactional_constraint_memory_v2.json`) | Implemented (`tests/python/test_experiment_5924_transactional_constraint_memory_v2.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
