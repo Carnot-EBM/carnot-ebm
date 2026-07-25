@@ -1,0 +1,33 @@
+{
+  "experiment": 5913,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-25",
+  "started_at": "2026-07-25T10:21:51.853873+00:00",
+  "finished_at": "2026-07-25T10:21:51.853873+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5912 and Exp5909: transactional read-before-write memory fixture",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl_exact_slot_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5912-csl-exact-slot-requalification",
+      "artifact_field": "csl_exact_slot_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp5909-sota-constraint-synthesis-ab",
+      "artifact_field": "constraint_stream_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
