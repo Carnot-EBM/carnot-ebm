@@ -14292,3 +14292,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 17:27 UTC | Dated evidence refresh after the V526 planner mark | OK | 87 passed, 2 warnings in 14.37s |
 | 2026-07-25 18:49 UTC | Fresh prospective event-stream admission and task- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: e_rows))["elig |
 | 2026-07-25 19:05 UTC | Fresh prospective event-stream admission and task- | OK | 148 passed, 1 warning in 58.53s |
+| 2026-07-25 19:35 UTC | Schema-derived ConstraintIR grammar, type-domain,  | OK | 130 passed, 1 warning in 84.56s (0:01:24) |
