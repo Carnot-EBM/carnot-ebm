@@ -46703,3 +46703,123 @@ not labeled as live LLM inference.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5906 | Implemented (`python/carnot/experiment_5906_v525_source_delta_ingestion.py`, `results/experiment_5906_v525_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5906_v525_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5917: V525 Capstone Preserves Branch-Independent Terminal Evidence
+
+The Exp5917 capstone workflow SHALL reconcile milestone `2026.07.525` by
+parsing the active roadmap and optional `research-roadmap-next.yaml`, building
+the exact activated task matrix for Exp5905 through Exp5917, and selecting
+evidence only by each activated task's declared deliverable path. Exp5904 SHALL
+be recorded as reserved external work when present and SHALL be absent from the
+activated matrix. Numeric-prefix globbing, task-title inference, upstream scalar
+promotion, source-file inference, or fixture-to-live-result conversion SHALL NOT
+count as task evidence.
+
+The workflow SHALL classify every activated identity into one disjoint terminal
+class: `positive`, `null`, `unsafe`, `blocked`, `retired`, `missing`, or
+`gate-blocked`. It SHALL preserve blocked-precondition as a blocked subclass,
+preserve gate-blocks from conductor receipts even when a declared deliverable is
+absent, and report missing declared deliverables separately. One branch's
+positive readiness SHALL NOT erase or promote another branch's null, retired,
+blocked, gate-blocked, or missing result.
+
+The workflow SHALL run or ingest a fresh adversarial verifier receipt for every
+present declared `.525` deliverable and SHALL record exact command, exit code,
+artifact path, load status, flag count, max severity, warnings or flags, and
+receipt hash. The capstone SHALL preserve producer-consumer checksum versions,
+model/GPU receipts, CSL immutable-weight and poison receipts, live-runner
+capability and teardown receipts, and ARC registry immutability without updating
+`ops/arc_solve_registry.yaml` or claiming public solve credit.
+
+The workflow SHALL apply `retire_if_same_verdict` decisions only when a current
+artifact proves the same prior verdict recurred. When such a recurrence is
+present, it MAY append one exclusion-manifest entry for the exact retired scope;
+otherwise the manifest SHALL remain unchanged. The capstone SHALL NOT reopen or
+depend on retired task IDs.
+
+The workflow SHALL append milestone `.525` to `research-complete.yaml` exactly
+once when the exact milestone block is absent, with all 13 activated identities
+and honest terminal summaries. It SHALL update this OpenSpec requirement and
+MAY defer `_bmad/traceability.md`, `ops/status.md`, `ops/changelog.md`, and
+`ops/conductor-log.md` to the conductor stop-rule reconciliation step without
+rewriting history.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_and_task_range`,
+`activated_task_and_declared_deliverable_matrix`,
+`exact_terminal_classification`,
+`missing_gate_blocked_and_reserved_receipts`,
+`branch_independent_science_summary`,
+`constraint_ir_replay_and_synthesis_receipt`,
+`continuous_self_learning_slot_receipt`,
+`arc_generalization_and_live_capability_receipt`,
+`model_policy_and_gpu_receipts`, `adversarial_verifier_receipts`,
+`exclusion_and_retirement_decisions`,
+`duplicate_history_amplification_count`,
+`research_complete_append_count`, `research_complete_append_receipt`,
+`docs_reconciled`, `next_three_falsifiable_recommendations`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty provenance entry and a principle. The
+`inference_substrate` SHALL be `aggregation_from_upstream_artifacts`, and
+`honest_verdict` SHALL start with `complete:`, `complete_with_nulls:`, or
+`blocked:`.
+
+Required field principles:
+
+- `exact_terminal_classification`: principle "positive, null, unsafe, blocked, retired, missing, and gate-blocked are disjoint."
+- `branch_independent_science_summary`: principle "one branch cannot erase or promote another branch's result."
+- `continuous_self_learning_slot_receipt`: principle "report the activated Exp5914 result and continuous_self_learning_task field regardless of verdict."
+- `arc_generalization_and_live_capability_receipt`: principle "capability readiness is not live scientific success and no public solve credit is available."
+- `inference_substrate`: principle "use `aggregation_from_upstream_artifacts`."
+- `honest_verdict`: principle "use `complete:`, `complete_with_nulls:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5917-EXACT-MATRIX: V525 Activated Identities Use Declared Paths Only
+
+**Given** the active `.525` roadmap declares Exp5905 through Exp5917 and exact
+deliverable paths
+**And** Exp5904 click-target work exists outside the activated range
+**When** the Exp5917 capstone builds the matrix
+**Then** it records exactly 13 activated identities, records every declared
+deliverable path, keeps Exp5904 reserved but outside the matrix, and does not
+use numeric-prefix globbing or source-file inference.
+
+#### SCENARIO-REPORT-5917-DISJOINT-TERMINALS: Nulls Blocks Retirement And Missing Gates Stay Separate
+
+**Given** `.525` artifacts include positive-ready, null, blocked-precondition,
+gate-blocked, retired, and missing declared deliverable evidence
+**When** the Exp5917 capstone classifies terminal outcomes
+**Then** every activated task has exactly one disjoint terminal class, missing
+declared deliverables remain visible, gate-blocked conductor receipts remain
+gate-blocked, and no branch result promotes another branch.
+
+#### SCENARIO-REPORT-5917-CSL-ARC-DISCIPLINE: CSL And ARC Receipts Do Not Manufacture Science
+
+**Given** Exp5912 reports `continuous_self_learning_task`, retirement, and
+immutable-weight receipts
+**And** Exp5915 reports a live-runner capability lease while Exp5916 reports no
+public solve credit and no registry update
+**When** the Exp5917 capstone summarizes CSL and ARC branches
+**Then** it reports the activated Exp5914 result even when absent or
+gate-blocked, preserves Exp5912's CSL field regardless of verdict, treats
+capability readiness as distinct from live scientific success, and keeps the ARC
+registry immutable.
+
+#### SCENARIO-REPORT-5917-APPEND-RETIRE-AND-SCHEMA: Completion And Retirement Are Exact And Auditable
+
+**Given** a same-verdict retirement receipt recurs and the `.525` completion
+block may be absent
+**When** the Exp5917 capstone emits its artifact
+**Then** it appends at most one exact `.525` completion block, amplifies no
+duplicate history, applies only exact `retire_if_same_verdict` decisions,
+emits exactly three falsifiable recommendations with no allocated future IDs,
+records verifier/test/protected-file receipts, declares
+`aggregation_from_upstream_artifacts`, and includes every required field,
+principle, provenance entry, checksum, and terminal verdict prefix.
+
+## Implementation Status (REQ-REPORT-5917)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5917 | Implemented (`python/carnot/experiment_5917_v525_capstone_reconciliation.py`, `results/experiment_5917_v525_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5917_v525_capstone_reconciliation.py`) |

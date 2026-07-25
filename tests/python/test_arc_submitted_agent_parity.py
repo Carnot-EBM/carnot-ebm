@@ -110,15 +110,23 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     )
     # REQ-ARC-WMTE-5836: the just-explore frontier-discipline mechanisms are wired but must ship
     # OFF, so the submitted agent's search order is unchanged until the A/B greenlights a flip.
-    assert SUBMITTED_AGENT_CONFIG["frontier_tier_exhaustion"] is False
-    assert SUBMITTED_AGENT_CONFIG["frontier_tier_uniform_random"] is False
+    # FLIPPED ON 2026-07-25 (operator decision). These assertions previously pinned the flags OFF
+    # and existed to force a conscious update before any flip -- which is what happened. Evidence:
+    # results/experiment_5836_frontier_definitive.json, arm B2 mean 10.56 wins vs baseline 7.00 with
+    # strict PER-SEED dominance in 8 of 9 condition x seed cells, stable under colour permutation and
+    # reflection. The DISTANCE GRADIENT stays OFF (arm D was worse on both axes), so it is still
+    # pinned False below. See the flag block in arc_competition_agent.py for the full rationale and
+    # for the honest limit (public-game evidence; the positive control was confounded).
+    assert SUBMITTED_AGENT_CONFIG["frontier_tier_exhaustion"] is True
+    assert SUBMITTED_AGENT_CONFIG["frontier_tier_uniform_random"] is True
+    assert SUBMITTED_AGENT_CONFIG["frontier_tier_click_vocab_only"] is True
     assert SUBMITTED_AGENT_CONFIG["frontier_distance_gradient"] is False
     assert exp.tier_exhaustion_enabled == SUBMITTED_AGENT_CONFIG["frontier_tier_exhaustion"]
     assert exp.tier_uniform_random_enabled == SUBMITTED_AGENT_CONFIG["frontier_tier_uniform_random"]
     assert exp.frontier_gradient_enabled == SUBMITTED_AGENT_CONFIG["frontier_distance_gradient"]
     assert exp.tier_count == SUBMITTED_AGENT_CONFIG["frontier_tier_count"]
     fd = exp.frontier_discipline_diagnostics()
-    assert fd["tier_exhaustion_enabled"] is False
+    assert fd["tier_exhaustion_enabled"] is True  # flipped 2026-07-25, see above
     assert fd["frontier_gradient_enabled"] is False
     assert fd["active_tier"] == 0
 
