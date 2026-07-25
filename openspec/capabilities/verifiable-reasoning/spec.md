@@ -20095,3 +20095,71 @@ the cached traces
 localization metrics, a bootstrap localization delta CI95, selective-prediction
 abstention points with controls, and a terminal honest verdict that is complete
 for either an actionable bidirectional gain or a clean powered null.
+
+### REQ-VERIFY-5921: Schema-Derived ConstraintIR Structural Support
+
+The repository SHALL provide Exp5921 as a deterministic schema-derived support
+contract for open typed ConstraintIR.  The support SHALL derive grammar
+terminals, type-domain transitions, scope rules, prefix support, bounded
+dead-end handling, and semantic-authority separation from versioned operation
+signatures rather than from complete answer lists.  The support SHALL preserve
+known-valid held-family fixture paths, reject invalid references, type
+confusions, and scope leaks, and leave exact semantic equivalence to the
+existing Python/Z3 ConstraintIR evaluator.
+
+### SCENARIO-VERIFY-5921: Schema Support Is Open And Exact-Boundary Safe
+
+**Given** the versioned ConstraintIR operation-signature schema and Exp5896
+fixture rows
+**When** Exp5921 compiles and replays the structural support
+**Then** the support contains no complete answer identifiers, retains valid
+held-family paths, rejects type/scope dead ends, and reports that grammar,
+type, and scope admission are not semantic correctness.
+
+### REQ-VERIFY-5922: GGUF Embedded-Tokenizer Schema Decoder Bridge
+
+The repository SHALL provide Exp5922 as a reusable tokenizer-aware
+logits-mask/grammar bridge for the Exp5921 schema-derived ConstraintIR support.
+The bridge SHALL:
+- define `MODEL_SPECS` for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`;
+- resolve model files through `cached_sota_pair()` plus the cached third family,
+  hash each concrete `.gguf` file, and load only embedded GGUF tokenizers through
+  public `llama_cpp.Llama(vocab_only=True)`;
+- never call `AutoTokenizer.from_pretrained()` or any side tokenizer for GGUF
+  repositories;
+- map grammar terminals, JSON punctuation, whitespace, partial UTF-8, numeric
+  literals, identifiers, and EOS policy into tokenizer-token receipts for each
+  embedded tokenizer, recording unsupported terminals and multi-token
+  expansions without normalization;
+- expose a public llama.cpp-compatible logits processor that masks all tokens
+  except those preserving at least one schema-valid continuation, with EOS
+  admitted only when the character-level support is already complete;
+- fail closed on empty masks and dead ends rather than accepting a token that
+  leaves no valid structural continuation;
+- replay known-valid and adversarial prefixes token by token for all three
+  tokenizers, comparing character-level support with token-level support; and
+- write `results/experiment_5922_gguf_schema_decoder_bridge.json` without
+  claiming semantic model performance or using finite complete-answer
+  enumeration.
+
+### SCENARIO-VERIFY-5922: Token Replay Preserves Schema Reachability
+
+**Given** the Exp5921 schema support and the three mandated embedded GGUF
+tokenizers
+**When** Exp5922 replays known-valid and adversarial ConstraintIR prefixes
+through the tokenizer-aware bridge
+**Then** every admitted token preserves at least one schema-valid continuation,
+known-valid fixture paths remain reachable, unsupported and multi-token
+terminal receipts are explicit, empty masks fail closed, and EOS is admitted
+only for a complete valid structural prefix.
+
+### SCENARIO-VERIFY-5922: Public llama.cpp Boundary Is Exercised
+
+**Given** the three mandated GGUF model files, CUDA-capable public
+`llama_cpp`, and the Exp5922 logits processor
+**When** Exp5922 performs bounded one-step CUDA smoke checks
+**Then** each smoke uses the public `llama_cpp.Llama` / `logits_processor`
+surface, records real GPU-offload receipts, and reports no semantic, latency,
+or generation-quality claim.

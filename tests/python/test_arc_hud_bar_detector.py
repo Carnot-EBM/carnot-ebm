@@ -462,15 +462,21 @@ def test_collapse_guard_refuses_a_mask_that_aliases_distinct_states() -> None:
     # branches from one identical raw frame -- non-determinism, not a mask fault -- which the
     # guard correctly declines to blame on the mask (see the next test).
     first = guard.observe(
-        origin_masked="M1", origin_unmasked="U1a", successor_masked="S1",
-        successor_unmasked="SU1", **common,
+        origin_masked="M1",
+        origin_unmasked="U1a",
+        successor_masked="S1",
+        successor_unmasked="SU1",
+        **common,
     )
     assert first is False, "one observation can never prove anything"
     assert guard.refusals == 0
 
     second = guard.observe(
-        origin_masked="M1", origin_unmasked="U1b", successor_masked="S2",
-        successor_unmasked="SU2", **common,
+        origin_masked="M1",
+        origin_unmasked="U1b",
+        successor_masked="S2",
+        successor_unmasked="SU2",
+        **common,
     )
     assert second is True
     assert guard.refusals == 1
@@ -516,8 +522,11 @@ def test_collapse_guard_declines_to_act_without_a_live_control() -> None:
     guard = MaskCollapseGuard()
     for successor in ("S1", "S2"):
         guard.observe(
-            origin_masked="M1", origin_unmasked=None, action_key=(6, None),
-            successor_masked=successor, successor_unmasked=None,
+            origin_masked="M1",
+            origin_unmasked=None,
+            action_key=(6, None),
+            successor_masked=successor,
+            successor_unmasked=None,
         )
     assert guard.refusals == 0, "an uncontrolled branching is NOT a proof"
     assert guard.violations == 0
@@ -532,15 +541,21 @@ def test_collapse_guard_control_liveness_is_reported() -> None:
 
     dead = MaskCollapseGuard()
     dead.observe(
-        origin_masked="M", origin_unmasked=None, action_key=1,
-        successor_masked="S", successor_unmasked=None,
+        origin_masked="M",
+        origin_unmasked=None,
+        action_key=1,
+        successor_masked="S",
+        successor_unmasked=None,
     )
     assert dead.diagnostics()["control_live"] is False
 
     live = MaskCollapseGuard()
     live.observe(
-        origin_masked="M", origin_unmasked="U", action_key=1,
-        successor_masked="S", successor_unmasked="SU",
+        origin_masked="M",
+        origin_unmasked="U",
+        action_key=1,
+        successor_masked="S",
+        successor_unmasked="SU",
     )
     assert live.diagnostics()["control_live"] is True
     assert live.diagnostics()["controlled_keys"] == 1
@@ -584,12 +599,18 @@ def test_collapse_guard_escalates_to_global_revocation_past_the_cap() -> None:
     for index in range(3):
         node = f"M{index}"
         guard.observe(
-            origin_masked=node, origin_unmasked=f"U{index}a", action_key=(6, None),
-            successor_masked="A", successor_unmasked="UA",
+            origin_masked=node,
+            origin_unmasked=f"U{index}a",
+            action_key=(6, None),
+            successor_masked="A",
+            successor_unmasked="UA",
         )
         guard.observe(
-            origin_masked=node, origin_unmasked=f"U{index}b", action_key=(6, None),
-            successor_masked="B", successor_unmasked="UB",
+            origin_masked=node,
+            origin_unmasked=f"U{index}b",
+            action_key=(6, None),
+            successor_masked="B",
+            successor_unmasked="UB",
         )
     assert guard.refusals == 3
     assert guard.globally_revoked is True
@@ -599,14 +620,26 @@ def test_collapse_guard_escalates_to_global_revocation_past_the_cap() -> None:
 
 def test_collapse_guard_ignores_incomplete_observations() -> None:
     guard = MaskCollapseGuard()
-    assert guard.observe(
-        origin_masked=None, origin_unmasked="U", action_key=1,
-        successor_masked="S", successor_unmasked="SU",
-    ) is False
-    assert guard.observe(
-        origin_masked="M", origin_unmasked="U", action_key=1,
-        successor_masked=None, successor_unmasked="SU",
-    ) is False
+    assert (
+        guard.observe(
+            origin_masked=None,
+            origin_unmasked="U",
+            action_key=1,
+            successor_masked="S",
+            successor_unmasked="SU",
+        )
+        is False
+    )
+    assert (
+        guard.observe(
+            origin_masked="M",
+            origin_unmasked="U",
+            action_key=1,
+            successor_masked=None,
+            successor_unmasked="SU",
+        )
+        is False
+    )
     assert guard.observations == 0
 
 
@@ -617,8 +650,11 @@ def test_collapse_guard_handles_unhashable_action_payloads() -> None:
     payload = {"x": 1, "y": 2, "nested": [1, 2, {"z": 3}]}
     for index, successor in enumerate(("S1", "S2")):
         guard.observe(
-            origin_masked="M", origin_unmasked=f"U{index}", action_key=(6, payload),
-            successor_masked=successor, successor_unmasked="U" + successor,
+            origin_masked="M",
+            origin_unmasked=f"U{index}",
+            action_key=(6, payload),
+            successor_masked=successor,
+            successor_unmasked="U" + successor,
         )
     assert guard.violations == 1
 

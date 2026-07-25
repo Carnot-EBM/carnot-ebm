@@ -296,8 +296,7 @@ def is_edge_bar_like(blob: Any, *, thresholds: EdgeBarThresholds | None = None) 
     long_vertical = (float(blob_h) / float(max(1, blob_w))) >= ratio
 
     return bool(
-        ((on_top or on_bottom) and long_horizontal)
-        or ((on_left or on_right) and long_vertical)
+        ((on_top or on_bottom) and long_horizontal) or ((on_left or on_right) and long_vertical)
     )
 
 
