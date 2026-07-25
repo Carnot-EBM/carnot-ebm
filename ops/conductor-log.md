@@ -14269,3 +14269,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 05:39 UTC | Gated on Exp5907 replay: VeriSynth-style decomposi | OK | 92 passed, 1 warning in 47.06s |
 | 2026-07-25 06:39 UTC | Gated on Exp5908 fixture: three-family direct, dec | OK | 87 passed, 1 warning in 28.33s |
 | 2026-07-25 08:03 UTC | Gated on Exp5909 residual headroom: exact-diagnost | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: shed = exp5910 |
+| 2026-07-25 08:18 UTC | Gated on Exp5909 residual headroom: exact-diagnost | OK | cache hit: 86 passed, 1 warning in 30.26s |
