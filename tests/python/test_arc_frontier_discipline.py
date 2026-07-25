@@ -776,6 +776,15 @@ def test_harness_publishes_its_power_ceiling():
     assert p2["smallest_attainable_two_sided_p"] == 0.5
     assert p2["clears_0.05_only_if_unanimous"] is False
 
+    # The ceiling is computed on the CLICK stratum: the barrier/draw cannot move a nav-only game,
+    # so its paired delta is a tie the sign test drops, and counting it would overstate power.
+    mixed = m.power_ceiling(["lp85", "vc33", "tu93"], ["lp85", "vc33", "tu93"])
+    assert "tu93" in m.NAV_ONLY_GAMES
+    assert mixed["n_baseline_win_games_in_corpus"] == 3
+    assert mixed["n_baseline_win_click_games"] == 2
+    assert mixed["smallest_attainable_two_sided_p"] == 0.5
+    assert mixed["smallest_attainable_two_sided_p_pooled_all_strata"] == 0.25
+
 
 def test_harness_headline_is_the_capability_result_not_the_efficiency_delta():
     """REGRESSION (fatal): a zero-capability graft beside a winning control must be the headline.
