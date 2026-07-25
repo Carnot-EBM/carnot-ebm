@@ -10516,3 +10516,115 @@ logged as a Missing-Verifier Gap for a learned / goal-conditioned click discrimi
 #### SCENARIO-ARC-FCP-5758-RANK-SHIFT-OFFLINE-IS-A-WASH
 - **WHEN** the offline `rank_shift_offline` diagnostic recomputes each winning object-click's rank at the exact r11l/su15 gap frame under default vs the reorder
 - **THEN** the artifact SHALL report per-game the winning-click ranks and the low-rank (rank >= 12) count under each ordering, and summarise `games_low_rank_reduced` vs `games_low_rank_worsened`; a reduction of 0 SHALL be interpreted as the reorder NOT surfacing the bucket-c winners (they are buried under a field of equal-size rarer pixels), confirming the discriminating-signal-absence (Missing-Verifier) framing rather than a formula bug the reorder can close. (Observed: 0 of 2 games reduced -- a wash; the flag stays OFF and the gap is logged for a learned/goal-conditioned click discriminator.)
+
+### REQ-ARC-FCP-5904: Coordinate-Aware Online Click-Target Discrimination (the exp5758 Missing-Verifier Gap)
+
+REQ-ARC-FCP-5758 closed with a clean NULL and an explicit forward pointer: "the gap is
+logged as a Missing-Verifier Gap for a learned / goal-conditioned click discriminator."
+This REQ builds the discriminating SIGNAL that entry names, and first documents WHY no
+learned router could have closed the gap: the live candidate router is
+COORDINATE-BLIND. `arc_discriminative_router._action_id` returns the action TYPE integer
+(6 for every click), and `cross_game_features_v3` consumes it only through
+`_action_features()`, a 7-dimensional one-hot in which coordinates are structurally
+unrepresentable. Measured on the offline arcade (lp85, `max_click=48`): 37 distinct click
+targets, 37 distinct `candidate_action_key` values, ONE distinct value reaching the
+router, ONE distinct score, and `rank()` preserving the input click order exactly. The
+collapse reproduces on all 19 click-capable public games.
+
+`python/carnot/agentic/arc_click_target_features.py` SHALL provide a coordinate-aware
+click-target featurization split explicitly into a per-FRAME context
+(`click_target_frame_context`, computed once per ranking pass, content-cached) and a
+per-CANDIDATE featurizer (`click_target_features`, O(1)-ish given the context), exporting a
+fixed-order `CLICK_TARGET_FEATURE_NAMES` of length `CLICK_TARGET_FEATURE_DIM` = 21. It SHALL
+NOT call `blob_topology()` at either granularity (measured 322 ms on one bp35 frame, ~100x
+the rest of the context combined). It SHALL also provide `OnlineClickTargetDiscriminator`, a
+numpy logistic head that standardizes with a variance FLOOR (not `std + 1e-8`) plus a
+z-clip, because the unfloored form measurably saturates to exactly 1.0 on a near-constant
+in-episode column -- collapsing the ranking back into a tie and emitting
+IMPLAUSIBLE_PERFECT-shaped values.
+
+`python/carnot/agentic/arc_discriminative_router.py` SHALL provide `OnlineClickTargetRouter`,
+a PURELY ADDITIVE wrapper that blends `weight * (P(progress) - 0.5)` onto the incumbent v3
+score for click candidates only, DEFAULT OFF via the module-level constant
+`SUBMITTED_ONLINE_CLICK_TARGET_ROUTER_ENABLED`, with cold start (sample gate unmet) a
+bit-identical no-op and online state keyed on the frame's own `(game_id, guid)` so nothing
+transfers across games or episodes. It SHALL NOT change `_action_id`,
+`candidate_action_key`, `cross_game_features_v3`, or
+`CrossGameDiscriminativeCandidateRouter`'s behaviour: the shared 79-feature contract is
+load-bearing for `models/arc_discriminative_verifier_v3.json` (79 weights + bias, no shape
+validation on load), and appending features would raise inside `proba_features` where
+`score`'s blanket `except Exception: return 0.5` would silently re-create the very
+constant-score bug being fixed.
+
+The fit SHALL be ONLINE and WITHIN-GAME ONLY -- fitted from the agent's own in-episode
+transitions and discarded at episode end. Cross-game value transfer is retired by
+`ops/exclusion_manifest.yaml` id `cross_game_value_transfer_retired_exp4342_v401`
+(`operator_reopen_required: true`), and a hidden-game agent has no prior exposure to
+transfer from in any case.
+
+`python/carnot/experiment_5904_click_target_discrimination.py` SHALL run the OFFLINE
+STAGE-1 diagnostic only: harvest a labelled (frame, click, progress) corpus by ACTUALLY
+STEPPING each generated click candidate against the offline env (the label is the observed
+post-click outcome, causally downstream of the click by construction), then compare four
+arms -- BLIND (the incumbent coordinate-blind featurization; a NEGATIVE control that CANNOT
+beat chance on a click-dependent label), COORD (the 21 features, fit online within-game on a
+temporal split), RANDOM (`RandomCandidateRouter`, the already-shipped coordinate-aware but
+uninformative positive control), and STEP_INDEX (a zero-perception control, the exp5835
+lesson as a gate). The artifact SHALL carry `inference_substrate:
+offline_arcade_live_agent_runtime_self_discovery_no_llm`, `verifier_is_oracle: false`,
+`solve_provenance: development_proxy`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, `preconditions_checked`, `online_within_game_only: true`,
+`cross_game_checkpoint_loaded: false`, per-arm AUROC with n / n_pos / n_neg, per-game rows,
+`label_definition`, and an explicit statement that offline AUROC licenses NOTHING -- the
+terminal gate is a LIVE A/B on banked levels (exp4545's 0.725-AUROC discriminator REGRESSED
+live search, which is why the agent's `SUBMITTED_VALUE_WEIGHT` is pinned at 1e-12). It SHALL
+NOT emit `offline_reproduced` or any game-solve claim.
+
+**Implementation Status (2026-07-24): module + router + 46 tests + experiment SHIPPED, flag
+OFF, STAGE-1 SMOKE ONLY (2 games / 4 states / 182 labelled rows).** Measured smoke, WITHIN-STATE
+AUROC (the metric of record, because the live router only ever ranks within one frame): blind
+0.500 exactly, coord 0.980, static-salience 0.936, shipped-RandomCandidateRouter control 0.631,
+zero-perception step-index control 0.500. `label_validity_check: valid`; pre-registered gate
+PASSED; `adversarial_verify.py` 0 flags; `arc_orphan_solver_lint.py` clean.
+
+**Read the limits with the numbers.** (1) The honest comparator is `coord - static = +0.044`,
+NOT the +0.48 delta against the constant blind arm -- beating a constant is trivial. (2) The
+smoke label is predominantly frame-change (21 of 28 positives; only 7 level-ups, far below the
+N>=30 floor), and the static sort already reaches 0.936 on that easy component. (3) Offline
+AUROC licenses NOTHING (exp4545). (4) `observe_click_outcome` has no live caller yet -- that
+site is in `arc_competition_agent.py`. (5) Even flag-on, the router fully owns click order only
+where `GroundTruthValidatedFrameChangeScorer` is unvalidated (measured: bp35/lp85/su15 yes;
+tn36/r11l no).
+
+A MEASURED CORRECTION this experiment made to its own design: the incumbent's per-state CONSTANT
+score reaches an ACROSS-state AUROC of 0.3105 from cross-state base-rate variation alone while
+being provably 0.500 within-state, so an across-state band check on the blind arm would have
+rejected a valid run. Both the metric of record and the label-validity check are therefore
+within-state.
+
+NOT DONE (operator follow-ups): the full multi-game corpus run, the live A/B on banked levels
+stratified by `frame_diff_ground_truth_validated`, and the one-line agent-side observation hook.
+
+#### SCENARIO-ARC-FCP-5904-COORDINATE-BLINDNESS-IS-REPAIRED
+- **WHEN** >= 20 distinct click candidates on the same frame are scored by the router
+- **THEN** with the flag OFF the router SHALL produce exactly ONE distinct click score and SHALL return the input order unchanged (locking in live parity and catching an accidental default flip); and with the flag ON and the online head fitted, the router SHALL produce more than one distinct click score and SHALL reorder the clicks.
+
+#### SCENARIO-ARC-FCP-5904-COLD-START-IS-A-NO-OP
+- **WHEN** the flag is ON but the online head has not met its sample gate (>= 3 positives, >= 3 negatives, >= 8 total)
+- **THEN** every candidate's score SHALL equal its flag-OFF score exactly, `proba` SHALL be exactly 0.5, and the ranking SHALL be the wrapped router's own ordering.
+
+#### SCENARIO-ARC-FCP-5904-EPISODE-ISOLATION
+- **WHEN** one router instance is reused across two frames carrying different `(game_id, guid)` pairs (the `scripts/arc_leaderboard_eval.py` shape, which module-caches ONE router for a whole sweep) and outcomes are observed only on the first
+- **THEN** the second frame's discriminator SHALL be unfitted and SHALL return exactly 0.5, and the online-state store SHALL retain at most `max_episodes` keys -- so no value transfers across games or episodes.
+
+#### SCENARIO-ARC-FCP-5904-PER-FRAME-NOT-PER-CANDIDATE
+- **WHEN** a single `rank()` call scores N click candidates with the flag ON and the head fitted
+- **THEN** the number of `connected_color_blobs` invocations SHALL NOT scale with N, and `blob_topology` SHALL NOT appear in the featurization module's source at all.
+
+#### SCENARIO-ARC-FCP-5904-SATURATION-GUARD
+- **WHEN** the online head is fitted on a near-constant feature column (e.g. 19 zeros and one 1e-6) and then scores an out-of-range value for that column
+- **THEN** the returned probability SHALL be strictly between 0 and 1 (NOT exactly 1.0, the measured failure of the `std + 1e-8` form) and the clip SHALL be counted in `stats()['saturation_clips']`.
+
+#### SCENARIO-ARC-FCP-5904-BLIND-ARM-IS-A-LABEL-VALIDITY-CHECK
+- **WHEN** the stage-1 diagnostic reports the BLIND arm's AUROC
+- **THEN** a BLIND AUROC outside [0.45, 0.55] SHALL be reported as `label_validity_check: invalid` (a coordinate-blind scorer cannot beat chance on a click-dependent label, so an out-of-band value means the label leaks) and in that case NO arm SHALL be interpreted as a pass or a fail; the pre-registered treatment gate SHALL be COORD AUROC >= 0.60 AND COORD - BLIND >= 0.10, containing no conjunct that asserts an assumption about another arm's own value.

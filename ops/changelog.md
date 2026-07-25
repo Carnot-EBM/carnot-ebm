@@ -1,5 +1,79 @@
 # Carnot — Changelog
 
+## 2026-07-24 (REQ-ARC-FCP-5904 -- coordinate-aware online click-target discrimination)
+
+- User instruction: repair the verified coordinate-blindness of the live ARC candidate router
+  with an ONLINE, WITHIN-GAME (never cross-game) click discriminator, shipped DEFAULT OFF, with
+  a stage-1 offline diagnostic and tests -- without touching
+  `python/carnot/agentic/arc_competition_agent.py` (owned by a concurrent workflow).
+- THE DEFECT (measured, not inferred). `arc_discriminative_router._action_id` returns the action
+  TYPE integer, so every click is `6`; `cross_game_features_v3` consumes it through a 7-dim
+  one-hot in which coordinates are structurally unrepresentable. Measured on the offline arcade:
+  38-48 distinct click targets per state, 38-48 distinct `candidate_action_key` values, and
+  exactly ONE distinct router score at every harvested state, with `rank()` a stable no-op for
+  clicks. Reproduces on all 19 click-capable public games. This is why REQ-ARC-FCP-5758's
+  small-object-first reorder could only ever be a wash: there was no discriminating signal to
+  reorder by. That entry's own closing note ("logged as a Missing-Verifier Gap for a learned /
+  goal-conditioned click discriminator") is the forward pointer this work follows.
+- NEW `python/carnot/agentic/arc_click_target_features.py`: a 21-feature coordinate-aware click
+  featurization split into a per-FRAME context (`click_target_frame_context`, content-cached,
+  measured 0.9-4.8 ms/frame) and a per-CANDIDATE featurizer (measured 13-20 us/candidate), plus
+  `OnlineClickTargetDiscriminator`, a numpy logistic head with a variance FLOOR rather than
+  `std + 1e-8` (the unfloored form measurably saturates to exactly 1.0 on a near-constant
+  in-episode column, collapsing the ranking back into a tie). `blob_topology()` is deliberately
+  unused (measured 322 ms/frame, ~100x the rest of the context combined); a test asserts the name
+  never appears in the module body.
+- ADDITIVE `OnlineClickTargetRouter` in `arc_discriminative_router.py`, default OFF via the
+  module-level `SUBMITTED_ONLINE_CLICK_TARGET_ROUTER_ENABLED`. The router diff is
+  additive-only (the single removed line is the docstring's own spec-refs line). `_action_id`,
+  `candidate_action_key`, `cross_game_features_v3` and
+  `CrossGameDiscriminativeCandidateRouter` are untouched, because the shared 79-feature contract
+  is load-bearing: `models/arc_discriminative_verifier_v3.json` carries 79 weights + bias with no
+  shape validation on load, so appending features would raise inside `proba_features` where
+  `score`'s blanket `except Exception: return 0.5` would SILENTLY re-create the exact
+  constant-score bug being fixed.
+- Cross-game leakage closed structurally, not by convention: online state is keyed on the frame's
+  own `(game_id, guid)` and bounded to 2 episodes, and a constructor-injected discriminator is
+  CONSUMED on first use so no wiring can turn it into a cross-game head. This matters because
+  `scripts/arc_leaderboard_eval.py` caches ONE router instance for an entire multi-game sweep.
+  Cross-game value transfer is retired by `ops/exclusion_manifest.yaml` id
+  `cross_game_value_transfer_retired_exp4342_v401` (`operator_reopen_required: true`).
+- NEW `python/carnot/experiment_5904_click_target_discrimination.py` (stage 1, offline only). The
+  label is measured BY EXECUTION -- fork the offline env, step the candidate click, read whether
+  the settled grid changed or `levels_completed` advanced -- so it is causally downstream of the
+  click by construction. Explicitly NOT `arc_human_replay_corpus.level_progress`, a pure function
+  of `step_index` (the exp5835 defect), and explicitly NOT an exact-(x,y) match against a banked
+  route (measured 0/6 on lp85 and tn36, which silently yields a zero-positive corpus).
+- SMOKE RESULT (2 games, 4 states each, 182 labelled rows, real numbers). WITHIN-STATE AUROC is
+  the metric of record because the live router only ever ranks candidates within one frame:
+  blind 0.500 (exactly, as it must be), coord 0.980, static-salience 0.936, shipped
+  RandomCandidateRouter control 0.631, zero-perception step-index control 0.500.
+  `adversarial_verify.py`: 0 flags. `arc_orphan_solver_lint.py`: clean.
+- MEASURED CORRECTION found by this experiment's own first run: the incumbent's per-state CONSTANT
+  score reaches an ACROSS-state AUROC of 0.3105 purely from cross-state base-rate variation, while
+  being provably 0.500 within-state. An across-state band check on the blind arm would therefore
+  have rejected a valid run. The metric of record and the label-validity check were both moved
+  to within-state as a result.
+- HONEST LIMITS, stated rather than buried: (1) the label is predominantly frame-change (21 of 28
+  positives in the smoke; only 7 level-ups, far below the N>=30 floor), and the static salience
+  sort already reaches 0.936 on that easy component -- so the honest comparator is
+  `coord - static = +0.044`, not the +0.48 delta against the constant blind arm; (2) offline
+  AUROC licenses NOTHING (exp4545's 0.725-AUROC discriminator REGRESSED live search, hence
+  `SUBMITTED_VALUE_WEIGHT = 1e-12`), so the terminal gate is a live A/B on banked levels; (3) the
+  observation hook `observe_click_outcome` has NO live caller yet -- that call site is in
+  `arc_competition_agent.py`, out of scope this run; (4) even with the flag on, the router only
+  fully owns click order where `GroundTruthValidatedFrameChangeScorer` is unvalidated (measured:
+  bp35/lp85/su15 yes; tn36/r11l no, where `rank_arc_actions` re-sorts after it), so any live A/B
+  must stratify on `frame_diff_ground_truth_validated`.
+- Two missing-verifier gaps logged in the artifact: generation miss at true distance >= 2 (on tn36
+  states 13-14, ZERO of 48 generated candidates can reach a level-up within 2 clicks while the
+  banked route does it in 1-2 -- reported as a measured exclusion only, since the
+  generation-exploration axis is retired), and positive supply for the level-up label (27
+  positives across 12 audited games at distance 1, below the N>=30 floor; expansion route is
+  self-play state generation).
+- 46 new tests, all passing, no skips. NOT DONE this run (operator follow-ups): the full
+  multi-game corpus run, the live A/B, and the one-line agent-side observation hook.
+
 ## 2026-07-22 (Milestone 2026.07.516 research planning staged -- codex)
 
 - User instruction: plan the next research milestone after terminal `.515`, refresh 2025-2026
@@ -11796,3 +11870,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-24: Gated on Exp5901 causality: adapter-disabled live E3 structured-memory A/B (⚠️ Blocked) — honest_verdict=blocked_precondition: live_runner_permission; results/experiment_5902_arc_structured_memory_live_ab.json
 - 2026-07-24: Branch-independent terminal reconciliation for milestone .524 (⚠️ Blocked) — honest_verdict=complete_with_nulls: all 14 activated .524 identities are terminal with null, blocked-precondition, and gate-blocked receipts preserved; results/experiment_5903_v524_capstone_reconciliation.json
 - 2026-07-24: Operational retrospective for milestone 2026.07.524 — 13 experiments completed in the locked 5.7-minute wall time, including 4 compute-bound tasks. The 2-minute three-family translate-run-inspect-repair A/B and 1-minute adapter-disabled live E3 structured-memory A/B led the compute tail; the available monitor showed both GPUs idle, but the supplied evidence does not establish a concurrent multi-model DualGPURunner miss. Next-milestone tooling should add task-linked GPU-engagement, phase-timing, and runner-selection telemetry; estimated_time_savings_pct=0 because no measured counterfactual is available; results/operational_retro_2026_07_524.json
+- 2026-07-24: Planned milestone 2026.07.525 with 13 staged tasks (Exp5905-Exp5917) across canonical ConstraintIR replay, VeriSynth-style three-family constraint synthesis and repair, frozen Exp5895 requalification, transactional poison-safe continuous self-learning, and capability-gated held ARC structured memory. Added the dated V525 research refresh, reserved concurrent Exp5904 work, and left the active roadmap and conductor unchanged. YAML/schema, eight gate cross-references, model policy, prior-failure coverage, roadmap gate audit, exclusion-manifest lint, collision scan, canonical URL lint, and root-clutter checks pass.

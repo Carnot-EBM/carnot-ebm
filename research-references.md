@@ -31393,3 +31393,133 @@ the sealed V523 sweep.
   authenticated changed route.
 
 <!-- V524-PLANNER-REFRESH-20260724-END -->
+
+## V525 Planner Refresh - 20260724
+
+Incremental planning sweep after the terminal `.524` conductor run and after the
+`V524-PLANNER-REFRESH-20260724-END` boundary. The primary pass queried arXiv for
+2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising and learned sampling, hallucination detection, KANs,
+constrained generation, continual learning, and verification-aware memory. The
+secondary pass rechecked OpenReview, Hugging Face Papers, Semantic Scholar
+citation lists for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub
+Trending and repository search, Extropic's writing index, and Logical
+Intelligence's Kona/Aleph pages. This block records only sources absent from the
+sealed V524 sweep or newly relevant to the terminal `.524` evidence.
+
+### New actionable deltas
+
+- **Towards Automated Formal Verification of zkEVMs Using LLM-Guided Constraint
+  Synthesis** - arXiv:2607.19795,
+  https://arxiv.org/abs/2607.19795; submitted 2026-07-22. VeriSynth confines the
+  LLM to a formalization frontend and keeps SMT as the arbiter, combining
+  semantic decomposition, retrieval-grounded prompting, and
+  verification-guided auto-repair. It reports more than 90% bug detection and
+  ablations in which every pipeline component matters. Carnot hook: after
+  repairing Exp5896's producer-consumer checksum contract, compare direct typed
+  ConstraintIR extraction with semantic decomposition and retrieval grounding,
+  then permit one exact-diagnostic repair only when the preregistered
+  direct-to-structured headroom is positive. Exact executable equivalence,
+  omitted/spurious constraints, unsafe acceptance, and held-family intervals
+  own the result.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792; submitted 2026-07-22.
+  On matched procedural associative-recall runs, allowing each pondering
+  iteration to rewrite the fast memory that it simultaneously reads produced a
+  statistically supported learning-speed penalty relative to a read-only
+  pondering arm; the longer run reached a ceiling in both arms. Carnot hook:
+  make verified external-memory learning transactional. Each event reads a
+  frozen pre-event snapshot, commits its proposal before label reveal, and only
+  then may exact validation promote a versioned update. Compare this
+  read-then-validate-then-write policy with same-event coupled writes, fixed
+  validated memory, no memory, and shuffled retrieval on a chronological SOTA
+  ConstraintIR stream. Immutable GGUF weights, rollback, bounded state, and
+  rejected-update non-propagation remain hard requirements.
+- **Theory of Continual Learning Against Data Poisoning Attacks** - ICML 2026
+  OpenReview: https://openreview.net/forum?id=EvIDneKgn1. The analysis shows
+  that continual learners cannot defend against sufficiently frequent
+  unbounded poisoning and proposes task-to-task verification for the
+  infrequent-attack regime. Carnot hook: the next external-memory learner must
+  include preregistered bounded poison bursts, consecutive-update consistency
+  checks, quarantine, rollback, and exact protected-prefix retention. This is a
+  safety control on the transactional learner, not evidence for weight updates
+  or a new learned authority.
+
+### Guarded findings
+
+- **HALLMARK: Diagnosing Three Failure Modes in LLM Citation Verifiers** -
+  arXiv:2607.18360, https://arxiv.org/abs/2607.18360. The 2,526-entry benchmark
+  spans 14 hallucination types and reports that deployment false-positive rate,
+  not recall alone, determines whether flags remain useful at realistic base
+  rates; post-training-cutoff papers are a specific confound. Carnot impact:
+  source-delta ingestion must report false-positive and false-negative outcomes
+  separately, retain dated cutoff/provenance receipts, and abstain rather than
+  silently reject a recent source. This strengthens the source task but does
+  not justify a separate verifier lane.
+- **Dynamical Criticality of a Machine-learning-assisted Monte Carlo algorithm
+  for a Mean-Field Spin Glass model** - arXiv:2607.20243,
+  https://arxiv.org/abs/2607.20243. The learned proposal reduces relaxation
+  time, but the training-set size needed for optimal behavior grows faster than
+  the relaxation time, undermining total large-scale cost. Carnot impact:
+  learned-sampler or hardware claims must include proposal-training and
+  amortization cost, not only post-training autocorrelation or step latency.
+  No sampler rerun is promoted because `.524` exposes higher-priority live
+  verification blockers and no changed authenticated hardware route.
+- **CLASP / ECRAM edge continual-learning accelerator** - arXiv:2607.19661,
+  https://arxiv.org/abs/2607.19661. The work reports an end-to-end
+  instruction-visible compute-in-memory route for online learning, with large
+  MNIST speed and energy improvements. It is useful evidence that a bounded
+  operation ABI matters, but Carnot has no ECRAM device or authenticated
+  compiler route. The next milestone should keep insert, lookup, quarantine,
+  promote, supersede, and rollback as fixed-width backend-neutral operations
+  without claiming board execution or speedup.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the public citation endpoint returned 30 EBT citing
+  records and eight ARM-EBM citing records on 2026-07-24. The new EBT trail
+  includes Memoir, while Solver-Hard remains the directly relevant
+  hardness-controlled diagnostic already indexed in V522. The ARM-EBM trail
+  remains dominated by already-indexed Distributional EBM, LoopUS, safe
+  distillation, ontology, graph-energy, false-first-step planning, and Gibbs
+  alignment. Follow-up metadata calls returned `HTTP 429`, so counts are dated
+  receipts rather than stable bibliometric claims.
+- **OpenReview / Hugging Face Papers:** OpenReview added the poisoning-theory
+  item above and repeated Energy-Based Constraint Networks, frozen-LLM energy
+  world models, and KAN variants. Hugging Face surfaced delayed-verification and
+  experience-driven verification suppression, but the latter is already
+  indexed and neither replaces exact validators. No new KAN result repairs the
+  retired adaptive-kernel chain.
+- **GitHub:** monthly Trending and targeted EBM, constraint, and KAN searches
+  exposed no maintained dependency that displaces Carnot's exact backends,
+  versioned state, or local GGUF stack. Memoir's public repository supports
+  reproducibility context, but Carnot should implement only the minimal
+  transactional boundary needed by its existing external-state lifecycle.
+- **Extropic:** the official writing index still ends with the October 2025
+  X0/XTR-0/TSU release material. There is no authenticated local TSU route, so
+  no TSU execution, convergence, power, energy, or speedup experiment is
+  eligible.
+- **Logical Intelligence:** Kona 1.0 is still described as a globally scored,
+  continuous-latent constraint layer beneath LLM interfaces, and the June 2026
+  formal-verification post keeps Spec, Code, and machine-checked Proof
+  separate. Public weights, an authenticated endpoint, and a reproducible local
+  comparator remain unavailable; Kona stays architecture context.
+
+### V525 planning impact
+
+- Repair and independently replay the ConstraintIR checksum boundary before any
+  model loads, then test VeriSynth-style semantic decomposition, retrieval
+  grounding, and exact-diagnostic repair on all three mandated local GGUF
+  families.
+- Requalify Exp5895's scientifically positive but suite-blocked exact slot
+  without rewriting its artifact, then test a genuinely changed transactional
+  read-before-write learner on chronological SOTA ConstraintIR events with
+  poison bursts and exact promotion.
+- Acquire a machine-checkable live-runner permission receipt before retrying the
+  adapter-disabled held ARC structured-memory A/B. Do not target or re-credit
+  any cleared public level.
+- Keep attached boards and external probabilistic accelerators as bounded-ABI
+  mapping context only. Count training amortization for any future learned
+  sampler and make no unchanged board probe or speedup claim.
+
+<!-- V525-PLANNER-REFRESH-20260724-END -->
