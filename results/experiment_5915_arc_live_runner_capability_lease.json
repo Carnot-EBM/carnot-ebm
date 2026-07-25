@@ -1,0 +1,571 @@
+{
+  "adapter_disabled_e3_receipt": {
+    "adapter_disabled_required": true,
+    "e3_policy_importable": true,
+    "import_probe_returncode": 0,
+    "import_probe_stderr": "",
+    "model_loader_invoked": false,
+    "ok": true,
+    "policy": "E3AgentPolicy",
+    "reason": null,
+    "submitted_structured_evidence_memory_default": false
+  },
+  "authority_source_and_environment_binding": {
+    "authority_source": {
+      "authority_id": "conductor-exp5916-capability-fixture",
+      "binding_kind": "hmac_bound_capability_lease",
+      "issuer": "conductor",
+      "local_flag_self_authorization_allowed": false
+    },
+    "binding_environment_id": "synthetic_non_scored_arc_harness",
+    "binding_runner_id": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+    "binding_task_id": "Exp5916",
+    "externally_bound_scoped_permission": true,
+    "lease_validation_before_execution": true,
+    "lease_validation_reason": "allowed",
+    "local_flag_denial_reason": "missing_lease",
+    "local_flag_self_authorization_accepted": false,
+    "principle": "the experiment cannot grant itself permission with an unbound local flag."
+  },
+  "bounded_non_scored_dry_run": {
+    "allowed_path_execution": true,
+    "cell_final_state_lengths_before_teardown": [
+      1,
+      1
+    ],
+    "cell_initial_state_lengths": [
+      0,
+      0
+    ],
+    "cell_receipts": [
+      {
+        "allowed": true,
+        "cell": 1,
+        "denied_before_execution": false,
+        "episode_class": "bounded_non_scored_synthetic",
+        "executed": true,
+        "final_state_length_before_teardown": 1,
+        "initial_state_length": 0,
+        "model_load_count": 0,
+        "reason": "allowed",
+        "scored_public_execution_count": 0,
+        "source_bfs_adapter_prior_game_and_hidden_state_access_count": 0,
+        "state_length_after": 0,
+        "state_length_after_teardown": 0,
+        "teardown_called": true
+      },
+      {
+        "allowed": true,
+        "cell": 2,
+        "denied_before_execution": false,
+        "episode_class": "bounded_non_scored_synthetic",
+        "executed": true,
+        "final_state_length_before_teardown": 1,
+        "initial_state_length": 0,
+        "model_load_count": 0,
+        "reason": "allowed",
+        "scored_public_execution_count": 0,
+        "source_bfs_adapter_prior_game_and_hidden_state_access_count": 0,
+        "state_length_after": 0,
+        "state_length_after_teardown": 0,
+        "teardown_called": true
+      }
+    ],
+    "cell_state_lengths_after_teardown": [
+      0,
+      0
+    ],
+    "e3_policy_importable": true,
+    "episode_class": "bounded_non_scored_synthetic",
+    "executions": 2,
+    "model_load_count": 0,
+    "ok": true,
+    "persistent_cross_cell_state_detected": false,
+    "scored_public_execution_count": 0,
+    "source_bfs_adapter_prior_game_and_hidden_state_access_count": 0,
+    "teardown_called_count": 2
+  },
+  "capability_lease_schema": {
+    "lease_hash_method": "sha256_over_signed_canonical_lease",
+    "local_boolean_self_authorization_allowed": false,
+    "required_fields": [
+      "schema",
+      "authority_source",
+      "grantee_task_id",
+      "runner_identity",
+      "environment_identity",
+      "allowed_command_pattern",
+      "allowed_episode_class",
+      "issued_at",
+      "expires_at",
+      "nonce",
+      "signature",
+      "lease_hash",
+      "adapter_disabled_required",
+      "resource_bounds",
+      "revocation_state"
+    ],
+    "schema": "carnot.arc.live_runner_capability_lease.v1",
+    "signature_method": "hmac_sha256_over_canonical_lease_core"
+  },
+  "command_episode_and_resource_scope": {
+    "adapter_disabled_required": true,
+    "allowed_command_pattern": {
+      "exact_argv": [
+        ".venv/bin/python",
+        "-m",
+        "carnot.agentic.arc_live_runner_capability_lease",
+        "--dry-run"
+      ],
+      "widening_allowed": false
+    },
+    "allowed_episode_class": "bounded_non_scored_synthetic",
+    "model_loader_allowed": false,
+    "public_scored_execution_allowed": false,
+    "resource_bounds": {
+      "max_actions": 2,
+      "max_cells": 2,
+      "max_model_loads": 0,
+      "max_scored_public_executions": 0,
+      "max_source_bfs_adapter_prior_game_hidden_access": 0,
+      "max_wall_clock_s": 1.0
+    }
+  },
+  "denial_path_matrix": {
+    "all_denied_before_execution": true,
+    "denial_case_count": 8,
+    "live_execution_count": 0,
+    "rows": [
+      {
+        "allowed": false,
+        "case": "missing",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "missing_lease",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "expired",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "expired",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "wrong_task",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "wrong_task",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "wrong_environment",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "wrong_environment",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "widened_command",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "command_not_allowed",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "revoked",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "revoked",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "adapter_enabled",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "adapter_enabled",
+        "state_length_after": 0
+      },
+      {
+        "allowed": false,
+        "case": "replayed_nonce",
+        "denied_before_execution": true,
+        "executed": false,
+        "reason": "nonce_replay",
+        "state_length_after": 0
+      }
+    ]
+  },
+  "duration_s": 4.146,
+  "experiment": "experiment_5915_arc_live_runner_capability_lease",
+  "field_provenance": {
+    "adapter_disabled_e3_receipt": {
+      "principle": "Exp5915 required artifact field `adapter_disabled_e3_receipt` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "authority_source_and_environment_binding": {
+      "principle": "the experiment cannot grant itself permission with an unbound local flag.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    },
+    "bounded_non_scored_dry_run": {
+      "principle": "Exp5915 required artifact field `bounded_non_scored_dry_run` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "capability_lease_schema": {
+      "principle": "Exp5915 required artifact field `capability_lease_schema` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "command_episode_and_resource_scope": {
+      "principle": "Exp5915 required artifact field `command_episode_and_resource_scope` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "denial_path_matrix": {
+      "principle": "Exp5915 required artifact field `denial_path_matrix` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "duration_s": {
+      "principle": "Exp5915 required artifact field `duration_s` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "field_provenance": {
+      "principle": "Exp5915 required artifact field `field_provenance` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "honest_verdict": {
+      "principle": "use complete_ready:, retired:, or blocked_precondition:.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    },
+    "inference_substrate": {
+      "principle": "use live_runner_capability_preflight_no_llm_no_scored_game.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    },
+    "issue_expiry_nonce_and_revocation_receipts": {
+      "principle": "Exp5915 required artifact field `issue_expiry_nonce_and_revocation_receipts` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "live_runner_capability_ready_score": {
+      "principle": "emit bare 1.0 only for externally bound scoped permission, clean dry run/isolation/teardown, and complete denial-path enforcement.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    },
+    "model_load_count": {
+      "principle": "Exp5915 required artifact field `model_load_count` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "preconditions_checked": {
+      "principle": "Exp5915 required artifact field `preconditions_checked` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "protected_files_unchanged": {
+      "principle": "Exp5915 required artifact field `protected_files_unchanged` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "public_level_target_selected": {
+      "principle": "Exp5915 required artifact field `public_level_target_selected` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "registry_precheck": {
+      "principle": "Exp5915 required artifact field `registry_precheck` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "registry_unchanged": {
+      "principle": "Exp5915 required artifact field `registry_unchanged` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "reproducibility_checksum": {
+      "principle": "Exp5915 required artifact field `reproducibility_checksum` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "scored_public_execution_count": {
+      "principle": "must be bare zero in this preflight.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    },
+    "source_bfs_adapter_prior_game_and_hidden_state_access_count": {
+      "principle": "must be bare zero.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    },
+    "state_isolation_and_teardown_receipts": {
+      "principle": "Exp5915 required artifact field `state_isolation_and_teardown_receipts` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "status": {
+      "principle": "Exp5915 required artifact field `status` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "test_commands": {
+      "principle": "Exp5915 required artifact field `test_commands` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "test_exit_codes": {
+      "principle": "Exp5915 required artifact field `test_exit_codes` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "upstream_memory_hash_receipts": {
+      "principle": "Exp5915 required artifact field `upstream_memory_hash_receipts` is emitted by the lease builder.",
+      "satisfied_by": "Exp5915 capability lease preflight"
+    },
+    "verifier_is_oracle": {
+      "principle": "false; this task checks runner authority and isolation only.",
+      "satisfied_by": "REQ-ARC-LRCL-5915 principle-annotated artifact contract"
+    }
+  },
+  "honest_verdict": "complete_ready: exp5916_live_runner_capability_lease_bound",
+  "inference_substrate": "live_runner_capability_preflight_no_llm_no_scored_game",
+  "issue_expiry_nonce_and_revocation_receipts": {
+    "expires_at": "2026-07-25T12:05:00Z",
+    "issued_at": "2026-07-25T12:00:00Z",
+    "lease_hash": "sha256:20b00c87394c07f155cd818685af63641c51c9499c52b8d7c78215d24fe7d4b0",
+    "nonce": "issue-expiry-revocation-nonce",
+    "nonce_hash": "sha256:12fa6a1537b989bd676769287a6c986e2bad9ffcbb9ab7ddd4395875f8e46fb4",
+    "revocation_state": {
+      "revocation_epoch": 0,
+      "revoked": false
+    },
+    "signature": "sha256:b0fc1295bdc8b3f6ec58ea37e13f6ee4fa024fe5485867077ea7a324b76cd81a"
+  },
+  "live_runner_capability_ready_score": 1.0,
+  "model_load_count": 0,
+  "preconditions_checked": {
+    "checked_before_live_execution": true,
+    "no_model_loader": true,
+    "no_public_level_target": true,
+    "output_path": {
+      "output_hash_before": null,
+      "parent_exists": true,
+      "parent_writable": true,
+      "path": "results/experiment_5915_arc_live_runner_capability_lease.json"
+    },
+    "protected_files_before": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:4850735e876e20e24f522df90cea815dc8b1aab7a721d960f9446e89b4407747",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "registry_precheck": {
+      "all_public_games_cleared": true,
+      "checked_before_live_execution": true,
+      "full_game_clear_count": 25,
+      "ok": true,
+      "public_games_count": 25,
+      "public_level_target_selected": false,
+      "reason": null,
+      "registry_hash_after": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+      "registry_hash_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+      "registry_present": true,
+      "registry_update_allowed": false,
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    "resource_receipts": {
+      "disk_free_bytes": 1223033147392,
+      "disk_total_bytes": 3953289023488,
+      "ok": true,
+      "ram_available_kb": 120339720,
+      "ram_check_source": "/proc/meminfo:MemAvailable",
+      "resource_bounds": {
+        "max_actions": 2,
+        "max_cells": 2,
+        "max_model_loads": 0,
+        "max_scored_public_executions": 0,
+        "max_source_bfs_adapter_prior_game_hidden_access": 0,
+        "max_wall_clock_s": 1.0
+      }
+    },
+    "upstream_memory_hash_receipts": {
+      "authority_binding_hash": "sha256:0877186f36b450e0e200e94ae5d26e8e9cfe9616612a7927fb82d115fba6ca68",
+      "environment_binding": {
+        "allowed_episode_class": "bounded_non_scored_synthetic",
+        "environment_class": "synthetic_non_scored",
+        "environment_id": "synthetic_non_scored_arc_harness",
+        "public_level_target_selected": false,
+        "registry_update_allowed": false,
+        "teardown_required": true
+      },
+      "environment_binding_hash": "sha256:c71246785ab61aaff8345aa8b41f3893342a8832fc651a26258a9dca97169b7d",
+      "file_hashes": {
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:a87acb3ffb746059bb185f2106adeaa72fb80f7e20b35aa924f8f44b7a5bb3a8",
+        "python/carnot/agentic/arc_typed_memory_provenance_guard.py": "sha256:e35f2b19d274ecce09237b284c1a5e691615491365f33d601760b86f43e33928",
+        "results/experiment_5901_arc_structured_memory_causal_audit.json": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7",
+        "results/experiment_5902_arc_structured_memory_live_ab.json": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595"
+      },
+      "no_model_loader_asserted": true,
+      "no_public_level_target_asserted": true,
+      "ok": true,
+      "output_path": {
+        "output_hash_before": null,
+        "parent_exists": true,
+        "parent_writable": true,
+        "path": "results/experiment_5915_arc_live_runner_capability_lease.json"
+      },
+      "protected_file_hashes_before": {
+        "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "ops/changelog.md": "sha256:4850735e876e20e24f522df90cea815dc8b1aab7a721d960f9446e89b4407747",
+        "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "resource_receipts": {
+        "disk_free_bytes": 1223033147392,
+        "disk_total_bytes": 3953289023488,
+        "ok": true,
+        "ram_available_kb": 120652188,
+        "ram_check_source": "/proc/meminfo:MemAvailable",
+        "resource_bounds": {
+          "max_actions": 2,
+          "max_cells": 2,
+          "max_model_loads": 0,
+          "max_scored_public_executions": 0,
+          "max_source_bfs_adapter_prior_game_hidden_access": 0,
+          "max_wall_clock_s": 1.0
+        }
+      },
+      "runner_configuration": {
+        "adapter_disabled_required": true,
+        "entrypoint": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+        "model_loader_allowed": false,
+        "runner_configuration_version": "exp5915.preflight.v1",
+        "runner_id": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+        "scored_public_game_allowed": false,
+        "source_bfs_adapter_prior_game_hidden_state_allowed": false
+      },
+      "runner_configuration_hash": "sha256:2f1db53fb61bf288cc0dd6fbfb555e1e259ec71b8cbfe3c31e57f45feab08771"
+    }
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "hashes_after": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:4850735e876e20e24f522df90cea815dc8b1aab7a721d960f9446e89b4407747",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "hashes_before": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:4850735e876e20e24f522df90cea815dc8b1aab7a721d960f9446e89b4407747",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "protected_paths": [
+      "_bmad/traceability.md",
+      "ops/changelog.md",
+      "ops/status.md",
+      "scripts/research_conductor.py"
+    ]
+  },
+  "public_level_target_selected": false,
+  "registry_precheck": {
+    "all_public_games_cleared": true,
+    "checked_before_live_execution": true,
+    "full_game_clear_count": 25,
+    "ok": true,
+    "public_games_count": 25,
+    "public_level_target_selected": false,
+    "reason": null,
+    "registry_hash_after": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "registry_hash_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "registry_present": true,
+    "registry_update_allowed": false,
+    "source": "ops/arc_solve_registry.yaml"
+  },
+  "registry_unchanged": true,
+  "reproducibility_checksum": "sha256:8eb204f264b3d1999befa7f3867258eb98e9c335d182a75dd5ffbe4d760be630",
+  "result_path": "results/experiment_5915_arc_live_runner_capability_lease.json",
+  "schema": "carnot.exp5915.arc_live_runner_capability_lease.v1",
+  "scored_public_execution_count": 0,
+  "source_bfs_adapter_prior_game_and_hidden_state_access_count": 0,
+  "state_isolation_and_teardown_receipts": {
+    "cell_final_state_lengths_before_teardown": [
+      1,
+      1
+    ],
+    "cell_initial_state_lengths": [
+      0,
+      0
+    ],
+    "cell_state_lengths_after_teardown": [
+      0,
+      0
+    ],
+    "ok": true,
+    "persistent_cross_cell_state_detected": false,
+    "teardown_called_count": 2
+  },
+  "status": "complete_ready",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5915_arc_live_runner_capability_lease.py -q -n0 -o addopts=''",
+    ".venv/bin/python -m coverage erase && .venv/bin/python -m coverage run --include='*/python/carnot/agentic/arc_live_runner_capability_lease.py' -m pytest tests/python/test_experiment_5915_arc_live_runner_capability_lease.py -q -n0 -o addopts='' && .venv/bin/python -m coverage report --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5915_arc_live_runner_capability_lease.json --json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5915_arc_live_runner_capability_lease.py",
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --quiet -- ops/arc_solve_registry.yaml",
+    "git diff --quiet -- _bmad/traceability.md ops/changelog.md ops/status.md scripts/research_conductor.py"
+  ],
+  "test_exit_codes": {
+    "pre_implementation_focused_test_expected_failure": 2
+  },
+  "upstream_memory_hash_receipts": {
+    "authority_binding_hash": "sha256:0877186f36b450e0e200e94ae5d26e8e9cfe9616612a7927fb82d115fba6ca68",
+    "environment_binding": {
+      "allowed_episode_class": "bounded_non_scored_synthetic",
+      "environment_class": "synthetic_non_scored",
+      "environment_id": "synthetic_non_scored_arc_harness",
+      "public_level_target_selected": false,
+      "registry_update_allowed": false,
+      "teardown_required": true
+    },
+    "environment_binding_hash": "sha256:c71246785ab61aaff8345aa8b41f3893342a8832fc651a26258a9dca97169b7d",
+    "file_hashes": {
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:a87acb3ffb746059bb185f2106adeaa72fb80f7e20b35aa924f8f44b7a5bb3a8",
+      "python/carnot/agentic/arc_typed_memory_provenance_guard.py": "sha256:e35f2b19d274ecce09237b284c1a5e691615491365f33d601760b86f43e33928",
+      "results/experiment_5901_arc_structured_memory_causal_audit.json": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7",
+      "results/experiment_5902_arc_structured_memory_live_ab.json": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595"
+    },
+    "no_model_loader_asserted": true,
+    "no_public_level_target_asserted": true,
+    "ok": true,
+    "output_path": {
+      "output_hash_before": null,
+      "parent_exists": true,
+      "parent_writable": true,
+      "path": "results/experiment_5915_arc_live_runner_capability_lease.json"
+    },
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:4850735e876e20e24f522df90cea815dc8b1aab7a721d960f9446e89b4407747",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "resource_receipts": {
+      "disk_free_bytes": 1223033147392,
+      "disk_total_bytes": 3953289023488,
+      "ok": true,
+      "ram_available_kb": 120652188,
+      "ram_check_source": "/proc/meminfo:MemAvailable",
+      "resource_bounds": {
+        "max_actions": 2,
+        "max_cells": 2,
+        "max_model_loads": 0,
+        "max_scored_public_executions": 0,
+        "max_source_bfs_adapter_prior_game_hidden_access": 0,
+        "max_wall_clock_s": 1.0
+      }
+    },
+    "runner_configuration": {
+      "adapter_disabled_required": true,
+      "entrypoint": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+      "model_loader_allowed": false,
+      "runner_configuration_version": "exp5915.preflight.v1",
+      "runner_id": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+      "scored_public_game_allowed": false,
+      "source_bfs_adapter_prior_game_hidden_state_allowed": false
+    },
+    "runner_configuration_hash": "sha256:2f1db53fb61bf288cc0dd6fbfb555e1e259ec71b8cbfe3c31e57f45feab08771"
+  },
+  "verifier_is_oracle": false
+}
