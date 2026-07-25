@@ -1,5 +1,108 @@
 # Carnot — Changelog
 
+## 2026-07-25 (REQ-ARC-WMTE-5950 -- adversarial-review repairs to the click-pixel sampler AND to the measurement that judged it)
+
+- User instruction: apply an 8-finding adversarial review of the REQ-ARC-WMTE-5950 click-pixel
+  sampler; fix real defects, and say so with evidence where a finding is wrong. All 8 findings
+  reproduced against the code and the artifact; none was wrong.
+- **A REACHABILITY REGRESSION IN THE MECHANISM ITSELF (the one finding that was a live-code bug,
+  not a measurement bug).** `ComponentPartition.index_by_centroid` kept only the FIRST claimant of
+  a colliding truncated centroid (`by_centroid.setdefault`), and `index_for_point` consulted that
+  map BEFORE cell containment. So when two objects shared a truncated centroid, BOTH of the
+  generated points resolved to the same object and the other object received ZERO click
+  candidates -- strictly WORSE than flag-off, which at least reached whichever object occupied
+  that cell. This directly contradicted the module docstring's own justification ("a per-object
+  pixel sample can never collide -- the drop goes to zero by construction"): the drop was not
+  eliminated, it was converted from a harmless duplicate-row dedup into a loss of object
+  reachability. Measured across all 25 offline games: **54 of 867 objects (6.2%) lost all
+  reachability** (r11l 3 of 37, dc22 4 of 35), concentrated in the small-object class
+  REQ-ARC-FCP-5758 identifies as carrying the winning clicks. FIX: every claimant is now recorded
+  (`centroid_claimants`), and `sample_component_click_points` resolves OCCURRENCE-AWARE -- the Nth
+  occurrence of a contested key in one call goes to the Nth claimant -- so each colliding object
+  gets exactly one slot. Re-measured on all 25 reset frames: **0 of 867 unreachable.** The
+  slot-to-object assignment may permute within a contested set, which costs nothing because every
+  slot in that set carries the identical input coordinate.
+- **THE MECHANISM HAD NO ACTIVITY WITNESS, so a DEAD sampler was indistinguishable from a live
+  one.** `rich_action_candidates` discarded the sampler's `SamplingDiagnostics` as `_diag`, and
+  `click_pixel_rows_sampled` counts click rows PRESENT (not coordinates REPLACED). Verified by
+  patching `component_partition` to raise on every call: the arm still reported
+  `click_pixel_rows_sampled=1, click_pixel_errors=0` while emitting the unmodified centroid. So
+  the report's "F replaced 26,309 click coordinates" was not what that counter measured, and arm
+  F1 (redraw_budget=1, zero redraws BY DESIGN) had NO field anywhere evidencing the mechanism
+  fired at all. FIX: `click_pixel_diagnostics_out` out-parameter threads the diagnostics back; the
+  explorer accumulates `click_pixel_coordinates_changed` / `click_pixel_generation_errors` /
+  `points_in` / `points_out` / `unresolved` / `contested_centroid_points`; the row's `errors` now
+  includes generation-path errors; and `click_pixel_rows_sampled_is_not_an_activity_counter: true`
+  is emitted so the misleading field cannot be re-cited. Re-measured: **F 20,007 and F1 11,856
+  coordinates actually replaced, 0 generation errors** -- and F1's exact reproduction of B2 on
+  lp85 (649/649 and 67/67 actions, both seeds) is now EVIDENCED as "fired but inert" rather than
+  being indistinguishable from a silent no-op. A regression test patches
+  `component_partition` to raise and asserts `coordinates_changed == 0` with `errors > 0`.
+- **THE GATE HAD ZERO REACHABLE NEW-WIN GAMES, so "capability NULL" was an uninformative test.**
+  Measured from the run's own rows: control B2 wins 2 of 3 games on BOTH seeds, so the entire
+  attainable win axis was ONE game (r11l) -- independently diagnosed the same session as
+  state-identity aliasing, which this mechanism explicitly disclaims fixing. `pass_region_witness`
+  could not catch this: it is SYNTHETIC, proving only that the predicate is satisfiable in the
+  abstract, not that it was reachable on the corpus measured. FIX: the gate computes
+  `control_unwon_games` / `max_attainable_new_wins` / `n_games_at_ceiling` per seed and reports
+  `reachable_new_win_games`, `headroom_present`, `headroom_narrow` and a `verdict` of
+  `uninformative_no_headroom` (empty axis) or `failed_but_headroom_was_1_game_only`. "capability
+  NULL" is RETRACTED from `_bmad/traceability.md`, `ops/status.md` and `ops/test-results.md` and
+  replaced with UNTESTED; the 25-game corpus (~18 games of real headroom) is what would test it.
+- **THE REPRODUCTION GATE STILL DROPPED A CLAIM-CARRYING ARM.** The round-robin fix was correct,
+  but `--replay-limit 4` truncated it while FIVE arms had wins, so arm F1 -- one of the two arms
+  carrying the claim, and the CLEAN single-variable arm -- was never checked, while the report
+  presented the gate as fixed. FIX: the effective limit is floored at the number of arms with
+  wins, and `arms_not_reproduced` / `claim_carrying_arms_not_reproduced` / `n_arms_with_wins` /
+  `replay_limit_requested` / `replay_limit_effective` are emitted (plus `replay_limit` in
+  `config`, which was absent entirely, making the sample size unauditable). Re-measured: **5/5,
+  A/B2/E/F/F1.**
+- **ARM E WAS INSTRUMENTED BUT THE INSTRUMENTATION GATED NOTHING.** `errored_cell_rate` is
+  computed from `not row["ran"]`, so a cell that ran with 96% of its decisions raising counted as
+  clean: `errored_cell_rate: 0.0`, `positive_control_ran: true`, `positive_control_reason: "ok"`,
+  and the headline credited the reference with a new win "under identical conditions". Read from
+  the reference's source, that count is NOT benign control flow and NOT "livelock through our
+  shim" (both prior descriptions were wrong in different directions): `heuristic_agent.py:343`
+  raises `ValueError("No available actions found")` and `main()` (465-469) catches ANY exception,
+  sets `failed=True` / `level_up=True` and replays `last_action_object` -- a self-flagged
+  repeat-last-action loop. 5 of 6 cells spent 79-96% of budget there. FIX: `positive_control_health`
+  gates on the per-cell fallback fraction (`reference_choose_action_raised`,
+  `degenerate_fallback_fraction`, `reference_degenerate`); `positive_control_ran` is now False with
+  reason `reference_degenerate_in_5_of_6_cells_worst_fallback_fraction_0.96`; `verdict_for` gained
+  an `uninterpretable_arm_error_rate_*` branch; the headline states the degeneracy instead of
+  asserting identical conditions; and `capability_summary.diagnostic_target` now says the r11l
+  discrepancy is NOT YET ATTRIBUTABLE TO THE REFERENCE -- fix the shim's swallowed
+  `choose_action` exceptions before borrowing any further reference mechanism. Arm E's r11l WIN
+  still stands (frame-score truth, landed at action 20/32 before degeneration); its LOSSES do not.
+  The `methodology_note`'s claim that "errored_cell_rate == 0.0 means every cell produced a real
+  measurement" is retracted in-place.
+- **THE ARTIFACT WAS NOT exp5950 -- ONLY ITS FILENAME WAS.** It declared `experiment: 5836`,
+  `experiment_id: 5836`, `requirement: REQ-ARC-WMTE-5836` and the frontier-discipline title; the
+  string "5950" appeared NOWHERE inside it, so `adversarial_verify.py` printed `[INFO] exp5836`
+  and any reconciler keyed on experiment_id would have folded a sampler run into the
+  already-published exp5836 record (4 existing artifacts carry that id) while
+  REQ-ARC-WMTE-5950 had no artifact claiming it. FIX: identity is DERIVED from which arms ran
+  (F/F1 present -> 5950 / REQ-ARC-WMTE-5950 + a sampler title), with `requirements_exercised` and
+  `identity_derivation` emitted. The verdict was also rewritten to describe THIS run and keep a
+  terminal prefix (`complete_...uninterpretable_arm_error_rate_positive_control_degenerate_5_of_6_cells_worst_0.96`);
+  the previous `partial_...` verdict mentioned neither the sampler nor F nor F1 and led with a
+  `_PARTIAL_TOKENS` hit.
+- Headline construction was extracted into `build_headline()` because the `run()` and
+  `--summarize` paths had diverged into two hand-maintained f-string ladders that BOTH led with
+  the frontier-discipline graft even on a run whose entire purpose was the sampler.
+- One brittle exact-set assertion on `SamplingDiagnostics.as_dict()` was relaxed to a superset
+  check: an equality assertion there is pressure AGAINST instrumenting the mechanism, which is
+  the opposite of what that test exists to protect.
+- Verification: `tests/python/test_arc_component_sampling.py` 38 passed (was 31; +7 covering the
+  contested-centroid regression, the real 25-game reachability measurement, and dead-sampler
+  detectability); `tests/python/test_experiment_5836_click_pixel_sampling_arm.py` 36 passed (was
+  19; +17 covering the reproduction-gate floor, gate headroom, arm-E degeneracy and the headline).
+  `ruff check` / `ruff format` / `mypy` clean on all four changed modules.
+  `scripts/arc_orphan_solver_lint.py` OK (63 modules in the live closure).
+  `scripts/adversarial_verify.py` on the re-run artifact: 1 INFO flag only
+  (`errored_cell_rate=0.0`, now explained as a run-only counter), correctly identified as exp5950.
+  The sampler remains DEFAULT-OFF; no flag was flipped.
+
 ## 2026-07-24 (REQ-ARC-FCP-5904 -- coordinate-aware online click-target discrimination)
 
 - User instruction: repair the verified coordinate-blindness of the live ARC candidate router
@@ -11882,3 +11985,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-25: Gated on Exp5915 capability: adapter-disabled held structured-memory live A/B (⚠️ Blocked) — honest_verdict=blocked_precondition: live_runner_execution_binding; results/experiment_5916_arc_structured_memory_live_held_ab.json
 - 2026-07-25: Branch-independent terminal reconciliation for milestone .525 (⚠️ Blocked) — honest_verdict=complete_with_nulls: .525 reconciled by exact declared deliverables with positive, null, blocked, retired, gate-blocked, and missing receipts preserved independently; results/experiment_5917_v525_capstone_reconciliation.json
 - 2026-07-25: Operational retrospective for milestone 2026.07.525 — 12 experiments completed in 40.0 minutes, including 4 compute-bound tasks. The 31.8-minute three-family synthesis entry dominated the recorded tail; the locked compute-idle field is false, and no supplied record shows overlapping model loads that should have selected DualGPURunner. Instrument named execution spans, bind device samples to task lifetimes, and expose concurrent model count to scheduling; estimated_time_savings_pct=0 because no measured alternate execution is available; results/operational_retro_2026_07_525.json
+- 2026-07-25 (outer-loop, REQ-ARC-WMTE-5950): Per-object CLICK-PIXEL SAMPLING grafted from the just-explore generation rule, DEFAULT-OFF, plus a mandatory tier-map co-change and two arm-E positive-control repairs. `python/carnot/agentic/arc_component_sampling.py` (new, pure: grid in / coordinates out) replaces an object's single truncated CENTROID click coordinate with a uniform random pixel OF that object, verified component-for-component identical to `object_centric_digest`'s partition so a coordinate experiment cannot silently become a set-membership experiment. Wired at `arc_graph_explore.rich_action_candidates` behind `SUBMITTED_CLICK_PIXEL_SAMPLING_ENABLED=False` / `CARNOT_ARC_CLICK_PIXEL_SAMPLING` / constructor kwarg. Because `StepwiseExplorer.node["untested"]` is created once and only ever drained, the reference's redraw-on-revisit was structurally inexpressible; added a BOUNDED with-replacement re-append in `_pop_untested` (<= `click_pixel_redraw_budget` draws per (node, object), every decline counted). MANDATORY CO-CHANGE: `arc_frontier_discipline.click_tier_map(include_cells=True)` — a sampled non-centroid pixel misses the centroid-keyed map ~100% of the time, which would have silently turned the just-flipped tier barrier into a no-op on exactly the click games it was flipped on for. HONEST SCOPE: this is NOT the r11l fix (r11l's measured defect is state-identity aliasing — step counter in frame column 0, auto_hud_mask None, 44.9x node inflation, one inert click re-popped 1371/1956 actions; a winning 3-click r11l sequence already exists inside today's candidate set), so the gate is a full-corpus regression result, never r11l. SMOKE (3 games x budget 2000, arms A/B2/F/F1/E, 2 seeds, 27 cells, 0 errored): the pre-registered gate FAILS — F and F1 produce ZERO new wins and ZERO regressions vs their matched control B2 on both seeds; mechanism verifiably active (F sampled 26,309 click rows / 1,567 redraws on r11l; F1 0 redraws by design) and correctly INERT on nav-only tu93 (0 sampled rows, identical 361 actions across all four explorer arms). Default stays OFF pending the operator's full sweep. ARM-E REPAIRS: the reference's `__init__` reseeds the global RNG from the wall clock, clobbering the harness seed — re-seeded AFTER construction via `construct_reference_agent_seeded`, MEASURED deterministic (same r11l/seed cell reproduces levels=1, actions=401, actions_to_first_levelup=32, states_expanded=116, errors=36 across two independent runs); and arm E now emits `states_expanded` + an error count instead of hardcoded None, which makes its livelock visible for the first time (1,576-1,927 swallowed errors of 2,001 actions per cell). results/experiment_5950_click_pixel_sampling_smoke.json (adversarial_verify: 1 INFO flag only, `errored_cell_rate=0.0`, legitimately zero; reproduction gate 4/4 round-robin by arm)

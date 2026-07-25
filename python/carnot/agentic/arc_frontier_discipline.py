@@ -152,8 +152,28 @@ DEFAULT_TIER = 0
 STATUS_BAR_TIER = TIER_COUNT - 1
 
 
-def click_tier_map(grid: Any) -> dict[tuple[int, int], int]:
+def click_tier_map(grid: Any, *, include_cells: bool = False) -> dict[tuple[int, int], int]:
     """Map each detected object's click point ``(x, y)`` to its just-explore priority tier.
+
+    ``include_cells`` (REQ-ARC-WMTE-5950, default False -> byte-identical to the proven
+    map) additionally keys EVERY cell of every object, not just its truncated centroid.
+
+    WHY THIS IS A CORRECTNESS CO-CHANGE, NOT AN OPTIMIZATION. This map is centroid-keyed,
+    and ``row_tier`` falls back to ``DEFAULT_TIER`` = 0 = ALWAYS ELIGIBLE on a miss. So the
+    moment click coordinates stop being centroids -- which is exactly what
+    REQ-ARC-WMTE-5950's per-object pixel sampling does -- every click row misses the map
+    and the tier barrier silently becomes a no-op. That was measured directly before this
+    parameter existed: a sampled non-centroid pixel missed the centroid-keyed map for
+    11/11 (r11l), 37/37 (lp85), 63/63 (bp35) and 113/113 (sc25) probed multi-pixel objects,
+    i.e. 100%. Shipping the sampler without this would have quietly disabled the barrier on
+    precisely the CLICK games the barrier was measured to help.
+
+    Per-cell keys cannot collide between distinct objects (objects are disjoint pixel
+    sets) and are bounded by the frame's cell count, so the map stays small. Where a key
+    IS contested -- one object's centroid landing on another object's cell -- the MOST
+    ELIGIBLE (numerically lowest) tier wins, the same fail-open rule the centroid-only map
+    already used for centroid collisions: an over-eager click costs ordering, whereas a
+    wrongly-deferred one can cost reachability.
 
     WHY reuse ``arc_graph_explore``'s predicate instead of writing a fresh one: that module
     already ports the reference's ``frame_segments_to_action_groups`` verbatim (same
@@ -179,6 +199,32 @@ def click_tier_map(grid: Any) -> dict[tuple[int, int], int]:
     from carnot.agentic.arc_solver_kit import object_centric_digest
 
     out: dict[tuple[int, int], int] = {}
+    cells_by_signature: dict[str, tuple[tuple[int, int], ...]] = {}
+    if include_cells:
+        # Reuse the sampler's partition, which is verified component-for-component
+        # identical to object_centric_digest's (tests/python/test_arc_component_sampling.py).
+        # Matching on the digest's own signature string (colour + area + bbox) keeps the two
+        # views aligned without depending on iteration order -- the digest SORTS its
+        # components, so a positional zip would silently mis-pair them.
+        try:
+            from carnot.agentic.arc_component_sampling import component_partition
+
+            part = component_partition(grid)
+            for idx, cells in enumerate(part.cells):
+                color = int(part.colors[idx])
+                ys = [y for _x, y in cells]
+                xs = [x for x, _y in cells]
+                sig = f"c{color}:a{len(cells)}:bbox{min(ys)},{min(xs)},{max(ys)},{max(xs)}"
+                cells_by_signature.setdefault(sig, cells)
+        except Exception:
+            # Fails to the centroid-only map = today's behaviour. Never raises into the
+            # live agent's candidate path.
+            cells_by_signature = {}
+
+    def _keep(key: tuple[int, int], tier_value: int) -> None:
+        prev = out.get(key)
+        out[key] = tier_value if prev is None else min(prev, tier_value)
+
     for comp in object_centric_digest(grid)["components"]:
         bbox = comp["bbox"]  # [min_row, min_col, max_row, max_col]
         height = int(bbox[2]) - int(bbox[0]) + 1
@@ -199,18 +245,19 @@ def click_tier_map(grid: Any) -> dict[tuple[int, int], int]:
             tier = 2
         else:
             tier = 3
+        if cells_by_signature:
+            for cell in cells_by_signature.get(str(comp.get("signature", "")), ()):
+                _keep(cell, tier)
         cx, cy = comp["centroid"]
-        key = (int(cx), int(cy))
         # Two components can share a truncated centroid. Keep the MOST eligible tier for
         # that point: the click is a single action and it will in fact hit whichever object
         # occupies that cell, so deferring it on account of a colliding duller object would
         # be strictly wrong.
-        prev = out.get(key)
-        out[key] = tier if prev is None else min(prev, tier)
+        _keep((int(cx), int(cy)), tier)
     return out
 
 
-def tier_map_for_frame(frame: Any) -> dict[tuple[int, int], int]:
+def tier_map_for_frame(frame: Any, *, include_cells: bool = False) -> dict[tuple[int, int], int]:
     """``click_tier_map`` for a live frame; ``{}`` when the frame has no usable grid.
 
     Returning an empty map (rather than raising) is deliberate: an empty map means every
@@ -229,7 +276,7 @@ def tier_map_for_frame(frame: Any) -> dict[tuple[int, int], int]:
     if grid is None:
         return {}
     try:
-        return click_tier_map(grid)
+        return click_tier_map(grid, include_cells=include_cells)
     except Exception:
         return {}
 
@@ -268,8 +315,13 @@ def annotate_tiers(
     frame: Any,
     *,
     tier_by_xy: Mapping[tuple[int, int], int] | None = None,
+    include_cells: bool = False,
 ) -> list[dict[str, Any]]:
     """Stamp ``row["tier"]`` on each candidate row. NEVER reorders.
+
+    ``include_cells`` is forwarded to ``tier_map_for_frame``; pass it True whenever the
+    click coordinates being stamped may be per-object SAMPLED pixels rather than centroids
+    (REQ-ARC-WMTE-5950), or every row silently reads back as tier 0.
 
     Not reordering is the whole point of separating this from the already-nulled sort: the
     existing ranker pipeline (frame-change scorer, goal guidance, epistemic ledger, ...)
@@ -277,7 +329,9 @@ def annotate_tiers(
     yet. Rows are copied so an unstamped caller's list is never mutated underneath it.
     """
 
-    mapping = tier_map_for_frame(frame) if tier_by_xy is None else tier_by_xy
+    mapping = (
+        tier_map_for_frame(frame, include_cells=include_cells) if tier_by_xy is None else tier_by_xy
+    )
     out: list[dict[str, Any]] = []
     for row in rows:
         new_row = dict(row)

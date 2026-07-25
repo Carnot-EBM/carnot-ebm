@@ -17496,3 +17496,198 @@ the same budgets
 preserve the live effect, safety and budget regressions are reported, and
 `structured_memory_live_ready_score` remains `0.0` unless both preregistered
 structured lower bounds are positive with clean safety and budget receipts.
+
+### REQ-ARC-WMTE-5950: Per-Object Click-Pixel Sampling (just-explore Generation Rule)
+
+**Origin:** 2026-07-25. The just-explore reference (arXiv:2512.24156) wins game r11l in
+9 of 9 measured cells where our baseline explorer wins 0, AND it still wins r11l 3/3 with
+its entire frontier search deleted -- which locates its advantage in CANDIDATE GENERATION
+rather than search ordering. Its generation rule is one line: a UNIFORM RANDOM PIXEL of
+the chosen object, redrawn on every revisit. Ours emits one truncated CENTROID per object,
+permanently.
+
+Three defects in our rule were measured directly on real offline frames, independent of
+any search policy:
+
+1. The truncated centroid is NOT a member of its own object on 204 of 204 measured r11l
+   states (mean 5.94 such objects per state) -- a hollow, ring, or diagonal object's
+   centroid is background or another object.
+2. Truncated centroids COLLIDE and the live builder de-duplicates by `(x, y)`, silently
+   dropping candidates (r11l 37 objects -> 34 click rows; sc25 22 -> 20).
+3. On games where the click coordinate PARAMETERISES the move (r11l's handle drag, per
+   `ops/arc_solve_registry.yaml`), one fixed point per object collapses a pixel-continuous
+   action space to a few dozen frozen coordinates.
+
+**HONEST SCOPE -- this is NOT the r11l fix.** A parallel investigation found r11l's actual
+defect is state-identity aliasing (a monotone step counter in frame column 0, `auto_hud_mask`
+resolving to None, 44.9x node inflation, one wall-blocked inert click re-popped 1371 of 1956
+actions); a winning 3-click r11l sequence already exists inside today's candidate set at
+ranks 22/34, 6/26, 25/26. Masking column 0 out of node identity alone flips r11l 0 -> 1 level
+on 3/3 seeds. Therefore this requirement's acceptance gate SHALL be a full-corpus regression
+result and SHALL NOT be justified by r11l.
+
+The system SHALL provide a PURE per-object sampler
+(`carnot.agentic.arc_component_sampling`) whose partition is verified component-for-component
+identical to `arc_solver_kit.object_centric_digest`'s (so a coordinate experiment cannot
+silently become a set-membership experiment), wired into the live click-generation path
+(`arc_graph_explore.rich_action_candidates`) behind a DEFAULT-OFF flag with a constructor
+kwarg and env override, resolution order explicit-kwarg > env > `SUBMITTED_*` default.
+
+Because `StepwiseExplorer`'s `node["untested"]` is created once and only ever drained, the
+reference's redraw-on-revisit is structurally inexpressible; the system SHALL provide a
+BOUNDED with-replacement re-append (at most `click_pixel_redraw_budget` draws per
+`(node, object)`), also behind the same flag, and SHALL count every decline reason.
+
+`arc_frontier_discipline.click_tier_map` SHALL support per-CELL keying, and the live path
+SHALL enable it whenever the sampler is enabled. This is a CORRECTNESS co-change: a sampled
+non-centroid pixel misses the centroid-keyed map ~100% of the time (measured 11/11 r11l,
+37/37 lp85, 63/63 bp35, 113/113 sc25), every row then reads back as `DEFAULT_TIER` = always
+eligible, and the just-flipped tier barrier silently becomes a no-op on click games.
+
+Required field provenance principles SHALL include:
+
+- `click_pixel_sampling_enabled`: principle "the mechanism must declare whether it was on; a default-off flag reported as on (or vice versa) invalidates every downstream comparison."
+- `click_pixel_rows_sampled`: principle "a mechanism that reports zero touched rows did nothing, and its arm is a control, not a treatment."
+- `click_pixel_redraws` / `click_pixel_redraws_declined_*`: principle "every decline path is counted so a silently-inert mechanism cannot read as a legitimate null."
+- `errors`: principle "emitted on EVERY row of EVERY arm; an arm with no error count is an uninstrumented arm (a 72-97% crashed control previously read as a null across 975 cells)."
+- `states_expanded`: principle "search effort must be comparable across arms, including the reference positive control."
+
+### SCENARIO-ARC-WMTE-5950-DEFAULT-OFF-PARITY
+
+**Given** the sampler flag is at its `SUBMITTED_*` default
+**When** `rich_action_candidates` runs on any frame
+**Then** the emitted action rows are byte-identical to the pre-graft behaviour, the
+truncated-centroid coordinates are unchanged, `_pop_untested` appends nothing, and the
+tier map is byte-identical to its centroid-only form.
+
+### SCENARIO-ARC-WMTE-5950-SAMPLED-PIXEL-IS-A-MEMBER
+
+**Given** an object whose truncated centroid is not one of its own cells
+**When** the flag is on and that object's click candidate is generated
+**Then** the emitted coordinate is a genuine member cell of that object, resolved by
+PROVENANCE (the centroid that produced it) rather than by containment, and the diagnostics
+count the centroid-outside-object case.
+
+### SCENARIO-ARC-WMTE-5950-TIER-INVARIANCE
+
+**Given** the tier barrier is active and the sampler is on
+**When** a click row's coordinate is replaced or redrawn within its object
+**Then** the row's priority tier is unchanged (same object -> same colour and bbox -> same
+predicate), and the per-cell tier map resolves the sampled pixel to that tier instead of
+falling back to `DEFAULT_TIER`.
+
+### SCENARIO-ARC-WMTE-5950-BOUNDED-REDRAW
+
+**Given** `click_pixel_redraw_budget = N` and a node with one click row for an object
+**When** that row is popped N or more times
+**Then** at most `N - 1` fresh rows are appended for that `(node, object)` pair, the budget
+decline is counted, and a node cannot livelock; with `N = 1` no row is ever appended.
+
+### SCENARIO-ARC-WMTE-5950-PREREGISTERED-GATE
+
+**Given** the A/B harness measured the sampler arms and their matched control (the arm
+pinning the CURRENT live configuration, not the pre-flip baseline)
+**When** the acceptance gate is evaluated
+**Then** it compares win sets PER SEED (never an any-seed union), no conjunct encodes an
+assumed value for another arm, and the artifact reports a computed WITNESS demonstrating the
+gate's pass region is non-empty.
+
+### AMENDMENT 2026-07-25 (second adversarial-review pass; ADDITIVE -- nothing above is deleted)
+
+Four requirements below were found to be satisfied only in APPEARANCE by the first
+implementation. Each is now a hard requirement with a named scenario.
+
+**A. Defect 2 above ("truncated centroids COLLIDE") was made WORSE, not fixed.** The first
+implementation recorded only the FIRST claimant of a colliding truncated centroid and resolved
+provenance before containment, so BOTH generated points went to the same object and the other
+object received ZERO click candidates -- a loss of object REACHABILITY, strictly worse than
+flag-off, which at least reached whichever object occupied the shared cell. Measured across all
+25 offline games: 54 of 867 objects (6.23%) lost all reachability, concentrated in the
+small-object class REQ-ARC-FCP-5758 identifies as carrying winning clicks. The sampler SHALL
+record EVERY claimant of a contested truncated centroid and SHALL resolve occurrence-aware
+within one call (Nth occurrence of a contested key -> Nth claimant), so no object measured on a
+frame can be starved of candidates. Re-measured post-fix: 0 of 867.
+
+**B. `click_pixel_rows_sampled` does NOT satisfy its own stated principle.** The principle
+recorded above ("a mechanism that reports zero touched rows did nothing, and its arm is a
+control, not a treatment") requires a count of coordinates REPLACED. The field counts click rows
+PRESENT, so it is identical for a working sampler and a dead one -- verified by patching the
+partition builder to raise on every call: the arm still reported `rows_sampled=1, errors=0` while
+emitting the unmodified centroid, because the generation path's diagnostics were discarded. The
+system SHALL emit `click_pixel_coordinates_changed` (coordinates actually replaced) and
+`click_pixel_generation_errors`, and a treatment arm reporting zero changed coordinates SHALL be
+reported as a CONTROL regardless of its label. `errors` on an explorer row SHALL include
+generation-path errors, not only redraw-path errors.
+
+**C. The gate's pass region SHALL be shown reachable ON THE CORPUS MEASURED, not only in the
+abstract.** SCENARIO-ARC-WMTE-5950-PREREGISTERED-GATE's computed witness is SYNTHETIC: it proves
+the predicate is satisfiable in principle and CANNOT detect that no treatment value could have
+passed given the rows actually measured. The first smoke hit exactly that -- the matched control
+already won every game it measured except one, and that one game has an independently-diagnosed
+blocker this requirement explicitly disclaims fixing (see HONEST SCOPE above). The gate SHALL
+compute per seed the set of games where a new win is attainable (measured by both arms and NOT
+already won by the control) and SHALL report `reachable_new_win_games`, `headroom_present` and
+`headroom_narrow`. With an EMPTY attainable set the result SHALL be reported as
+`uninformative_no_headroom` and described as UNTESTED, never as a capability null (CLAUDE.md
+FALSE_NEGATIVE_RISK).
+
+**D. A positive control that RETURNED is not necessarily a positive control that MEASURED THE
+REFERENCE.** `errored_cell_rate` counts only cells that failed to RUN, so a cell that ran with
+96% of its decisions raising internally contributed zero to it: the first smoke reported
+`errored_cell_rate: 0.0`, `positive_control_ran: true`, `positive_control_reason: "ok"` while 5
+of 6 reference cells spent 79-96% of their budget in the reference's own `failed=True`
+repeat-last-action fallback. The harness SHALL compute a per-cell degenerate-fallback fraction,
+SHALL set `positive_control_ran` false above a threshold, and SHALL NOT direct forward diagnostic
+work at "what the reference does differently" while the control is degenerate. A degenerate
+cell's WIN remains valid (frame-score truth); its LOSSES SHALL be treated as harness artifacts.
+
+**E. The reproduction sample SHALL cover every arm that won anything.** Round-robin selection is
+necessary but not sufficient: a `--replay-limit` below the number of winning arms truncates the
+round-robin and silently drops whichever arm sorts last, which dropped a claim-carrying arm while
+the gate still reported n/n reproduced. The effective limit SHALL be floored at the number of
+arms with wins, and `arms_not_reproduced` / `claim_carrying_arms_not_reproduced` SHALL be emitted.
+
+**F. Artifact identity SHALL name THIS requirement.** The first artifact declared
+`experiment_id: 5836` / `requirement: REQ-ARC-WMTE-5836` and contained the string "5950" nowhere,
+which would fold a sampler measurement into an already-published record. Identity SHALL be
+derived from which arms ran.
+
+### SCENARIO-ARC-WMTE-5950-CONTESTED-CENTROID-REACHABILITY
+
+**Given** two objects whose truncated centroids collide (e.g. a 1-pixel object sitting exactly on
+a ring's centroid), so the generator emits the same coordinate once per object
+**When** the flag is on and the click candidates are generated
+**Then** BOTH objects receive at least one candidate on every seed -- neither is starved -- and
+the diagnostics count the contested points.
+
+### SCENARIO-ARC-WMTE-5950-DEAD-SAMPLER-IS-DETECTABLE
+
+**Given** the sampler's partition builder raises on every call (a totally dead mechanism)
+**When** the flag is on and candidates are generated
+**Then** the coordinates fail OPEN to today's centroids, `click_pixel_coordinates_changed` is 0,
+and `click_pixel_generation_errors` is greater than 0 -- so the dead mechanism is mechanically
+distinguishable from a working one in the emitted artifact.
+
+### SCENARIO-ARC-WMTE-5950-GATE-HEADROOM-DISCLOSURE
+
+**Given** the matched control already wins every game it measured on every shared seed
+**When** the acceptance gate is evaluated
+**Then** `headroom_present` is false, `reachable_new_win_games` is empty, the gate verdict is
+`uninformative_no_headroom`, and the artifact's verdict and headline describe the mechanism as
+UNTESTED for capability rather than as a measured null.
+
+### SCENARIO-ARC-WMTE-5950-DEGENERATE-POSITIVE-CONTROL
+
+**Given** a majority of the reference positive control's cells exceed the degenerate-fallback
+threshold
+**When** the artifact is assembled
+**Then** `positive_control_ran` is false with a reason naming the degeneracy, `ab_interpretable`
+is false, the honest verdict carries an `uninterpretable_arm_error_rate_*` marker with a terminal
+prefix, and the diagnostic target states the discrepancy is not yet attributable to the reference.
+
+### SCENARIO-ARC-WMTE-5950-REPRODUCTION-COVERS-EVERY-WINNING-ARM
+
+**Given** more arms won at least one cell than the requested replay limit allows
+**When** the reproduction gate selects its sample
+**Then** every arm with a win appears in the checks, `arms_not_reproduced` is empty, and the
+requested and effective limits are both recorded.

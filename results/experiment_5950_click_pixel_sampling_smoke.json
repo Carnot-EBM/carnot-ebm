@@ -1,0 +1,2453 @@
+{
+  "experiment": 5950,
+  "experiment_id": 5950,
+  "title": "Click-pixel sampling A/B (REQ-ARC-WMTE-5950): per-object uniform pixel vs truncated centroid, against the live configuration",
+  "requirement": "REQ-ARC-WMTE-5950",
+  "requirements_exercised": [
+    "REQ-ARC-WMTE-5950",
+    "REQ-ARC-WMTE-5836"
+  ],
+  "identity_derivation": "experiment_id/requirement are derived from which arms ran: arms F/F1 present -> REQ-ARC-WMTE-5950 (the click-pixel sampler); otherwise REQ-ARC-WMTE-5836 (the frontier-discipline graft). Hardcoding 5836 previously made a 5950 run write an artifact that folded into the already-published 5836 record",
+  "reference": "arXiv:2512.24156 (just-explore, ARC-AGI-3 Preview private leaderboard 3rd)",
+  "honest_verdict": "complete_frontier_discipline_ab_measured_but_uninterpretable_arm_error_rate_positive_control_degenerate_5_of_6_cells_worst_0.96",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "verifier_is_oracle": true,
+  "solve_provenance": "development_proxy",
+  "random_seed": 20260724,
+  "duration_s": 241.889,
+  "preconditions_checked": [
+    {
+      "resource": "offline_arcade_environment_files",
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/environment_files"
+    },
+    {
+      "resource": "arc_leaderboard_eval_harness",
+      "available": true,
+      "detail": ""
+    },
+    {
+      "resource": "frontier_discipline_module",
+      "available": true,
+      "detail": ""
+    },
+    {
+      "resource": "live_explorer_flags_wired",
+      "available": true,
+      "detail": ""
+    },
+    {
+      "resource": "just_explore_reference_clone",
+      "available": true,
+      "detail": "/home/ianblenke/arc-sota-refs/arc-agi-3-just-explore"
+    },
+    {
+      "resource": "variant_generator",
+      "available": true,
+      "detail": ""
+    },
+    {
+      "resource": "llm_proposer_deliberately_absent",
+      "available": true,
+      "detail": "arms A-D use CarnotAgentPolicy(force_explore=True); arm E uses no model"
+    }
+  ],
+  "config": {
+    "games": [
+      "r11l",
+      "lp85",
+      "tu93"
+    ],
+    "arms": [
+      "A",
+      "B2",
+      "F",
+      "F1",
+      "E"
+    ],
+    "conditions": [
+      "real"
+    ],
+    "budget_actions_per_game": 2000,
+    "n_seeds_stochastic_arms": 2,
+    "replay_limit": 4,
+    "llm_disabled": true,
+    "policy_kind": "explorer_force_explore_no_proposer"
+  },
+  "arms": {
+    "A": {
+      "label": "baseline_live_explorer",
+      "kwargs": {
+        "tier_exhaustion": false,
+        "frontier_gradient": false
+      },
+      "deterministic": true
+    },
+    "B": {
+      "label": "tier_exhaustion_greedy_draw",
+      "kwargs": {
+        "tier_exhaustion": true,
+        "tier_uniform_random": false,
+        "frontier_gradient": false
+      },
+      "deterministic": true
+    },
+    "B2": {
+      "label": "tier_exhaustion_uniform_draw",
+      "kwargs": {
+        "tier_exhaustion": true,
+        "tier_uniform_random": true,
+        "frontier_gradient": false
+      },
+      "deterministic": false
+    },
+    "B2_nofix": {
+      "label": "tier_exhaustion_uniform_draw_no_click_vocab_gate",
+      "kwargs": {
+        "tier_exhaustion": true,
+        "tier_uniform_random": true,
+        "tier_click_vocab_only": false,
+        "frontier_gradient": false
+      },
+      "deterministic": false
+    },
+    "F": {
+      "label": "click_pixel_sampling_with_bounded_redraw_on_live_config",
+      "kwargs": {
+        "tier_exhaustion": true,
+        "tier_uniform_random": true,
+        "frontier_gradient": false,
+        "click_pixel_sampling": true,
+        "click_pixel_redraw_budget": 3
+      },
+      "deterministic": false
+    },
+    "F1": {
+      "label": "click_pixel_sampling_one_shot_on_live_config",
+      "kwargs": {
+        "tier_exhaustion": true,
+        "tier_uniform_random": true,
+        "frontier_gradient": false,
+        "click_pixel_sampling": true,
+        "click_pixel_redraw_budget": 1
+      },
+      "deterministic": false
+    },
+    "C": {
+      "label": "frontier_distance_gradient",
+      "kwargs": {
+        "tier_exhaustion": false,
+        "frontier_gradient": true
+      },
+      "deterministic": true
+    },
+    "D": {
+      "label": "tier_exhaustion_plus_gradient",
+      "kwargs": {
+        "tier_exhaustion": true,
+        "tier_uniform_random": false,
+        "frontier_gradient": true
+      },
+      "deterministic": true
+    },
+    "E": {
+      "label": "just_explore_reference_positive_control",
+      "kwargs": {},
+      "deterministic": false
+    }
+  },
+  "positive_control_ran": false,
+  "positive_control_cell_returned": true,
+  "positive_control_reason": "reference_degenerate_in_5_of_6_cells_worst_fallback_fraction_0.96",
+  "positive_control_health": {
+    "measured": true,
+    "n_cells": 6,
+    "n_degenerate_cells": 5,
+    "degenerate_fraction": 0.8333,
+    "worst_cell_fallback_fraction": 0.963,
+    "degenerate_cells": [
+      {
+        "game": "r11l",
+        "seed": 20260724,
+        "degenerate_fallback_fraction": 0.8046,
+        "choose_action_raised": 1610,
+        "levels": 1
+      },
+      {
+        "game": "tu93",
+        "seed": 20260724,
+        "degenerate_fallback_fraction": 0.8501,
+        "choose_action_raised": 1701,
+        "levels": 0
+      },
+      {
+        "game": "r11l",
+        "seed": 20260725,
+        "degenerate_fallback_fraction": 0.963,
+        "choose_action_raised": 1927,
+        "levels": 1
+      },
+      {
+        "game": "lp85",
+        "seed": 20260725,
+        "degenerate_fallback_fraction": 0.8876,
+        "choose_action_raised": 1776,
+        "levels": 0
+      },
+      {
+        "game": "tu93",
+        "seed": 20260725,
+        "degenerate_fallback_fraction": 0.7876,
+        "choose_action_raised": 1576,
+        "levels": 0
+      }
+    ],
+    "threshold": 0.05,
+    "mechanism": "the reference's own choose_action raises ValueError('No available actions found'); its main() catches any exception, sets failed=True/level_up=True and replays last_action_object, so the remaining budget is a repeat-last-action loop",
+    "healthy": false,
+    "reason": "reference_degenerate_in_5_of_6_cells_worst_fallback_fraction_0.96"
+  },
+  "ab_interpretable": false,
+  "run_scope": {
+    "full_declared_spec": false,
+    "n_games": 3,
+    "n_games_declared": 25,
+    "n_arms": 5,
+    "n_arms_declared": 9,
+    "n_conditions": 1,
+    "budget": 2000,
+    "budget_declared": 2000
+  },
+  "headline": "REQ-ARC-WMTE-5950 click-pixel sampling: mechanism ACTIVE (31863 click coordinates replaced across arms ['F', 'F1']); gate FAILED with a win axis of 1 attainable game(s) ['r11l'] -- a ONE-game win axis, so this is a statement about that game rather than a corpus-level null; grafted tier exhaustion + distance gradient produced 0 new win(s) vs the baseline on the measured corpus; the just-explore reference positive control produced 1 new win(s), but was DEGENERATE on 5 of 6 cells (worst 96% of actions in its own failed=True repeat-last-action fallback), so its LOSSES are shim artifacts and 'under identical conditions' does NOT hold",
+  "new_wins_vs_baseline": 0,
+  "positive_control_new_wins": 1,
+  "capability_summary": {
+    "available": true,
+    "baseline_wins": [
+      "lp85",
+      "tu93"
+    ],
+    "new_wins_vs_baseline": 0,
+    "new_win_games_vs_baseline": [],
+    "lost_wins_vs_baseline": [],
+    "positive_control_new_wins": 1,
+    "positive_control_new_win_games": [
+      "r11l"
+    ],
+    "games_won_only_by_positive_control": [
+      "r11l"
+    ],
+    "per_grafted_arm": {
+      "B2": {
+        "new_wins": [],
+        "lost_wins": [],
+        "n_win_delta": 0
+      }
+    },
+    "positive_control_healthy": false,
+    "diagnostic_target": "NOT YET ATTRIBUTABLE TO THE REFERENCE. The positive control is degenerate on most cells (its own choose_action raises, main() sets failed=True and replays last_action_object), so its losses are shim artifacts and its tier/draw behaviour was largely not exercised. FIX THE SHIM's swallowed choose_action exceptions before borrowing any further reference mechanism or treating this discrepancy as a Carnot capability gap"
+  },
+  "acceptance_gate_capability": {
+    "condition": "new_wins_vs_baseline >= 1 AND no lost baseline win",
+    "principle": "a search-discipline graft earns a flag flip by SOLVING something the baseline cannot, not by being marginally cheaper on games already solved",
+    "new_wins": 0,
+    "lost_wins": [],
+    "passed": false
+  },
+  "acceptance_gate_efficiency": {
+    "condition": "paired sign-test p < 0.05 on actions-to-first-win, n_paired_games >= 6",
+    "principle": "pairs the arms on the SAME game so the test sees the intervention rather than between-game difficulty; the n floor keeps a 'significant' result from being an artifact of a sample too small for the test to attain 0.05",
+    "best_arm": "B2",
+    "best_p_value": 1.0,
+    "n_paired_games": 2,
+    "min_n_required": 6,
+    "passed": false,
+    "power_ceiling": {
+      "n_baseline_win_games_in_corpus": 2,
+      "baseline_win_games_in_corpus": [
+        "lp85",
+        "tu93"
+      ],
+      "n_baseline_win_click_games": 1,
+      "baseline_win_click_games": [
+        "lp85"
+      ],
+      "max_paired_deltas": 2,
+      "max_effective_paired_deltas_click_stratum": 1,
+      "smallest_attainable_two_sided_p": 1.0,
+      "smallest_attainable_two_sided_p_pooled_all_strata": 0.5,
+      "clears_0.05_only_if_unanimous": false,
+      "interpretation": "a flat sign test at this n is UNDERPOWERED, not evidence of no effect; widening the corpus (more budget so more games enter the baseline-win set, or deeper per-game levels) is the only way to raise this ceiling"
+    }
+  },
+  "acceptance_gate_capability_passed": false,
+  "acceptance_gate_efficiency_passed": false,
+  "acceptance_gates_all_passed": false,
+  "acceptance_gate_click_pixel_sampling": {
+    "condition": "on the REAL condition and on shared seeds: (sampler arm wins >=1 game its matched control B2 does not win on that seed) AND (sampler arm loses no game B2 wins on that seed)",
+    "principle": "a generation-rule change earns a flag flip by making a game REACHABLE that the shipped configuration cannot reach, without giving one back; measured per seed against the arm that differs by exactly one flag",
+    "matched_control_arm": "B2",
+    "why_not_arm_A": "arm A passes tier_exhaustion=False / frontier_gradient=False as explicit constructor kwargs and _fd_gate ranks an explicit kwarg above the SUBMITTED_* default, so arm A is the PRE-flip agent -- not the live one",
+    "pass_region_nonempty": true,
+    "pass_region_witness": {
+      "construction": "control wins {gA}; treatment wins {gA, gB} on the same seed",
+      "gained": true,
+      "regressed": false,
+      "passes": true
+    },
+    "per_arm": {
+      "F": {
+        "measured": true,
+        "shared_seeds": [
+          20260724,
+          20260725
+        ],
+        "per_seed": [
+          {
+            "seed": 20260724,
+            "new_wins": [],
+            "lost_wins": [],
+            "n_treatment_wins": 2,
+            "n_control_wins": 2,
+            "control_unwon_games": [
+              "r11l"
+            ],
+            "max_attainable_new_wins": 1,
+            "n_games_at_ceiling": 2
+          },
+          {
+            "seed": 20260725,
+            "new_wins": [],
+            "lost_wins": [],
+            "n_treatment_wins": 2,
+            "n_control_wins": 2,
+            "control_unwon_games": [
+              "r11l"
+            ],
+            "max_attainable_new_wins": 1,
+            "n_games_at_ceiling": 2
+          }
+        ],
+        "any_seed_gained": false,
+        "any_seed_regressed": false,
+        "reachable_new_win_games": [
+          "r11l"
+        ],
+        "headroom_present": true,
+        "informative": true,
+        "passed": false,
+        "mechanism_active": {
+          "instrumented": true,
+          "coordinates_changed": 20007,
+          "generation_errors": 0,
+          "active": true
+        }
+      },
+      "F1": {
+        "measured": true,
+        "shared_seeds": [
+          20260724,
+          20260725
+        ],
+        "per_seed": [
+          {
+            "seed": 20260724,
+            "new_wins": [],
+            "lost_wins": [],
+            "n_treatment_wins": 2,
+            "n_control_wins": 2,
+            "control_unwon_games": [
+              "r11l"
+            ],
+            "max_attainable_new_wins": 1,
+            "n_games_at_ceiling": 2
+          },
+          {
+            "seed": 20260725,
+            "new_wins": [],
+            "lost_wins": [],
+            "n_treatment_wins": 2,
+            "n_control_wins": 2,
+            "control_unwon_games": [
+              "r11l"
+            ],
+            "max_attainable_new_wins": 1,
+            "n_games_at_ceiling": 2
+          }
+        ],
+        "any_seed_gained": false,
+        "any_seed_regressed": false,
+        "reachable_new_win_games": [
+          "r11l"
+        ],
+        "headroom_present": true,
+        "informative": true,
+        "passed": false,
+        "mechanism_active": {
+          "instrumented": true,
+          "coordinates_changed": 11856,
+          "generation_errors": 0,
+          "active": true
+        }
+      }
+    },
+    "reachable_new_win_games": [
+      "r11l"
+    ],
+    "headroom_present": true,
+    "passed": false,
+    "informative": true,
+    "n_reachable_new_win_games": 1,
+    "headroom_narrow": true,
+    "headroom_narrow_note": "the win axis had exactly ONE candidate game (r11l); every other game measured is already won by the matched control. A failed gate here is a statement about that single game, not a corpus-level null -- and it is uninformative about the mechanism if that game has a separately-diagnosed blocker this mechanism does not address. Run the full 25-game corpus (baseline wins ~7/25, so ~18 games of real headroom) before recording any capability null",
+    "verdict": "failed_with_headroom_present"
+  },
+  "acceptance_gate_click_pixel_sampling_passed": false,
+  "paired_efficiency_vs_baseline": {
+    "definition": "delta = actions_to_first_levelup(A) - actions_to_first_levelup(arm); positive = arm is MORE efficient than the baseline",
+    "pairing": "same game, same condition, same seed set; arms differ only in policy",
+    "primary": true,
+    "note": "arms A-D are bit-deterministic (1 run); B2/E average their seeds within a game before pairing, so one pair per (game, condition) either way",
+    "B2": {
+      "real": {
+        "n_paired_games": 2,
+        "pairs": [
+          {
+            "game": "lp85",
+            "baseline": 20.0,
+            "arm": 358.0,
+            "delta": -338.0
+          },
+          {
+            "game": "tu93",
+            "baseline": 361.0,
+            "arm": 361.0,
+            "delta": 0.0
+          }
+        ],
+        "sign_test": {
+          "n_pairs_nonzero": 1,
+          "n_favouring_arm": 0,
+          "p_value": 1.0,
+          "test": "exact_two_sided_sign_test_q0.5",
+          "smallest_attainable_p_at_this_n": 1.0
+        },
+        "median_paired_delta": {
+          "n": 2,
+          "median": -169.0,
+          "ci95": null,
+          "ci95_absent_reason": "n_lt_3_bootstrap_uninformative"
+        },
+        "mean_paired_delta_descriptive_only": -169.0
+      }
+    },
+    "F": {
+      "real": {
+        "n_paired_games": 2,
+        "pairs": [
+          {
+            "game": "lp85",
+            "baseline": 20.0,
+            "arm": 890.0,
+            "delta": -870.0
+          },
+          {
+            "game": "tu93",
+            "baseline": 361.0,
+            "arm": 361.0,
+            "delta": 0.0
+          }
+        ],
+        "sign_test": {
+          "n_pairs_nonzero": 1,
+          "n_favouring_arm": 0,
+          "p_value": 1.0,
+          "test": "exact_two_sided_sign_test_q0.5",
+          "smallest_attainable_p_at_this_n": 1.0
+        },
+        "median_paired_delta": {
+          "n": 2,
+          "median": -435.0,
+          "ci95": null,
+          "ci95_absent_reason": "n_lt_3_bootstrap_uninformative"
+        },
+        "mean_paired_delta_descriptive_only": -435.0
+      }
+    },
+    "F1": {
+      "real": {
+        "n_paired_games": 2,
+        "pairs": [
+          {
+            "game": "lp85",
+            "baseline": 20.0,
+            "arm": 358.0,
+            "delta": -338.0
+          },
+          {
+            "game": "tu93",
+            "baseline": 361.0,
+            "arm": 361.0,
+            "delta": 0.0
+          }
+        ],
+        "sign_test": {
+          "n_pairs_nonzero": 1,
+          "n_favouring_arm": 0,
+          "p_value": 1.0,
+          "test": "exact_two_sided_sign_test_q0.5",
+          "smallest_attainable_p_at_this_n": 1.0
+        },
+        "median_paired_delta": {
+          "n": 2,
+          "median": -169.0,
+          "ci95": null,
+          "ci95_absent_reason": "n_lt_3_bootstrap_uninformative"
+        },
+        "mean_paired_delta_descriptive_only": -169.0
+      }
+    },
+    "E": {
+      "real": {
+        "n_paired_games": 1,
+        "pairs": [
+          {
+            "game": "lp85",
+            "baseline": 20.0,
+            "arm": 133.0,
+            "delta": -113.0
+          }
+        ],
+        "sign_test": {
+          "n_pairs_nonzero": 1,
+          "n_favouring_arm": 0,
+          "p_value": 1.0,
+          "test": "exact_two_sided_sign_test_q0.5",
+          "smallest_attainable_p_at_this_n": 1.0
+        },
+        "median_paired_delta": {
+          "n": 1,
+          "median": -113.0,
+          "ci95": null,
+          "ci95_absent_reason": "n_lt_3_bootstrap_uninformative"
+        },
+        "mean_paired_delta_descriptive_only": -113.0
+      }
+    }
+  },
+  "power_ceiling": {
+    "n_baseline_win_games_in_corpus": 2,
+    "baseline_win_games_in_corpus": [
+      "lp85",
+      "tu93"
+    ],
+    "n_baseline_win_click_games": 1,
+    "baseline_win_click_games": [
+      "lp85"
+    ],
+    "max_paired_deltas": 2,
+    "max_effective_paired_deltas_click_stratum": 1,
+    "smallest_attainable_two_sided_p": 1.0,
+    "smallest_attainable_two_sided_p_pooled_all_strata": 0.5,
+    "clears_0.05_only_if_unanimous": false,
+    "interpretation": "a flat sign test at this n is UNDERPOWERED, not evidence of no effect; widening the corpus (more budget so more games enter the baseline-win set, or deeper per-game levels) is the only way to raise this ceiling"
+  },
+  "regression_guard_provenance": "derived_from_arm_A_real_condition_rows_in_this_run",
+  "per_cell_rows": [
+    {
+      "arm": "A",
+      "game": "r11l",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1956,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 1392,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 8.764,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": false,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1945,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "A",
+      "game": "lp85",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 20,
+      "actions_to_first_levelup": 20,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 5,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 2.0069,
+      "duration_s": 0.118,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": false,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 4,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "A",
+      "game": "tu93",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.604,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": false,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "B2",
+      "game": "r11l",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1954,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 694,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 5.61,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 1,
+        "tier_advances": 1,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1874,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "B2",
+      "game": "lp85",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 649,
+      "actions_to_first_levelup": 649,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 56,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0019,
+      "duration_s": 1.943,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 78,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "B2",
+      "game": "tu93",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.618,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "B2",
+      "game": "r11l",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1953,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 737,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 5.985,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 1,
+        "tier_advances": 1,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1870,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "B2",
+      "game": "lp85",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 67,
+      "actions_to_first_levelup": 67,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 11,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.1788,
+      "duration_s": 0.231,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 10,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "B2",
+      "game": "tu93",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.689,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": false,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F",
+      "game": "r11l",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1951,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 1224,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 8798,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 17.025,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1819,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 27949,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 8798,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 27949,
+        "click_pixel_points_out": 27949,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 2484,
+        "click_pixel_redraws": 1553,
+        "click_pixel_redraws_declined_budget": 238,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F",
+      "game": "lp85",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 154,
+      "actions_to_first_levelup": 154,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 18,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 613,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0338,
+      "duration_s": 0.756,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 18,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 683,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 613,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 683,
+        "click_pixel_points_out": 683,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 142,
+        "click_pixel_redraws_declined_budget": 11,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F",
+      "game": "tu93",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.388,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F",
+      "game": "r11l",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1949,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 1275,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 8918,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 17.381,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1811,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 29204,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 8918,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 29204,
+        "click_pixel_points_out": 29204,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 2588,
+        "click_pixel_redraws": 1608,
+        "click_pixel_redraws_declined_budget": 166,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F",
+      "game": "lp85",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 1626,
+      "actions_to_first_levelup": 1626,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 50,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 1678,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0003,
+      "duration_s": 3.331,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 173,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 1899,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 1678,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 1899,
+        "click_pixel_points_out": 1899,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 1204,
+        "click_pixel_redraws_declined_budget": 366,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F",
+      "game": "tu93",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.344,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 3,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F1",
+      "game": "r11l",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1910,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 650,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 4527,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 7.246,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1044,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 1,
+        "click_pixel_rows_sampled": 14972,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 4527,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 14972,
+        "click_pixel_points_out": 14972,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 1330,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F1",
+      "game": "lp85",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 649,
+      "actions_to_first_levelup": 649,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 56,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 1893,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0019,
+      "duration_s": 1.318,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 78,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 1,
+        "click_pixel_rows_sampled": 2127,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 1893,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 2127,
+        "click_pixel_points_out": 2127,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F1",
+      "game": "tu93",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.379,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 1,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F1",
+      "game": "r11l",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 1914,
+      "actions_to_first_levelup": null,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 722,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 5069,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0,
+      "duration_s": 11.688,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 1121,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 1,
+        "click_pixel_rows_sampled": 16476,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 5069,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 16476,
+        "click_pixel_points_out": 16476,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 1468,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F1",
+      "game": "lp85",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 67,
+      "actions_to_first_levelup": 67,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 11,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 367,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.1788,
+      "duration_s": 0.364,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": true,
+        "tier_active_effective": true,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 10,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 1,
+        "click_pixel_rows_sampled": 417,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 367,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 417,
+        "click_pixel_points_out": 417,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "F1",
+      "game": "tu93",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 361,
+      "actions_to_first_levelup": 361,
+      "action_count_convention": "resets_excluded_run_game_native",
+      "levels_capped_by_early_stop": true,
+      "target_levels": 1,
+      "states_expanded": 60,
+      "errors": 0,
+      "click_pixel_coordinates_changed": 0,
+      "click_pixel_generation_errors": 0,
+      "efficiency": 0.0062,
+      "duration_s": 0.706,
+      "frontier_discipline": {
+        "tier_exhaustion_enabled": true,
+        "tier_uniform_random_enabled": true,
+        "tier_click_vocab_only": true,
+        "tier_click_vocab_seen": false,
+        "tier_active_effective": false,
+        "frontier_gradient_enabled": false,
+        "tier_count": 5,
+        "active_tier": 0,
+        "tier_advances": 0,
+        "tier_deferral_fallbacks": 0,
+        "tier_draw_top_k": null,
+        "gradient_targets_chosen": 0,
+        "gradient_misses": 0,
+        "gradient_pick_other_node": 0,
+        "gradient_pick_current_node": 0,
+        "gradient_cur_at_depth_cap_excluded": 0,
+        "max_depth": 45,
+        "reverse_edges": 115,
+        "click_pixel_sampling_enabled": true,
+        "click_pixel_samples_per_component": 1,
+        "click_pixel_redraw_budget": 1,
+        "click_pixel_rows_sampled": 0,
+        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
+        "click_pixel_coordinates_changed": 0,
+        "click_pixel_generation_errors": 0,
+        "click_pixel_points_in": 0,
+        "click_pixel_points_out": 0,
+        "click_pixel_unresolved": 0,
+        "click_pixel_contested_centroid_points": 0,
+        "click_pixel_redraws": 0,
+        "click_pixel_redraws_declined_budget": 0,
+        "click_pixel_redraws_declined_unresolved": 0,
+        "click_pixel_redraws_declined_no_frame": 0,
+        "click_pixel_errors": 0
+      },
+      "condition": "real"
+    },
+    {
+      "arm": "E",
+      "game": "r11l",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 2001,
+      "actions_to_first_levelup": 32,
+      "actions_to_first_levelup_incl_reset": 33,
+      "resets_taken": 37,
+      "action_count_convention": "resets_excluded_matching_run_game",
+      "actions_total_is_budget_bound": true,
+      "levels_capped_by_early_stop": false,
+      "states_expanded": 116,
+      "errors": 1610,
+      "error_breakdown": {
+        "take_action_swallowed": 0,
+        "choose_action_raised": 1610
+      },
+      "reference_choose_action_raised": 1610,
+      "degenerate_fallback_fraction": 0.8046,
+      "reference_degenerate": true,
+      "efficiency": null,
+      "duration_s": 18.703,
+      "frontier_discipline": null,
+      "condition": "real"
+    },
+    {
+      "arm": "E",
+      "game": "lp85",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 2001,
+      "actions_to_first_levelup": 133,
+      "actions_to_first_levelup_incl_reset": 135,
+      "resets_taken": 8,
+      "action_count_convention": "resets_excluded_matching_run_game",
+      "actions_total_is_budget_bound": true,
+      "levels_capped_by_early_stop": false,
+      "states_expanded": 330,
+      "errors": 0,
+      "error_breakdown": {
+        "take_action_swallowed": 0,
+        "choose_action_raised": 0
+      },
+      "reference_choose_action_raised": 0,
+      "degenerate_fallback_fraction": 0.0,
+      "reference_degenerate": false,
+      "efficiency": null,
+      "duration_s": 22.471,
+      "frontier_discipline": null,
+      "condition": "real"
+    },
+    {
+      "arm": "E",
+      "game": "tu93",
+      "seed": 20260724,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 2001,
+      "actions_to_first_levelup": null,
+      "actions_to_first_levelup_incl_reset": null,
+      "resets_taken": 40,
+      "action_count_convention": "resets_excluded_matching_run_game",
+      "actions_total_is_budget_bound": true,
+      "levels_capped_by_early_stop": false,
+      "states_expanded": 49,
+      "errors": 1701,
+      "error_breakdown": {
+        "take_action_swallowed": 0,
+        "choose_action_raised": 1701
+      },
+      "reference_choose_action_raised": 1701,
+      "degenerate_fallback_fraction": 0.8501,
+      "reference_degenerate": true,
+      "efficiency": null,
+      "duration_s": 20.912,
+      "frontier_discipline": null,
+      "condition": "real"
+    },
+    {
+      "arm": "E",
+      "game": "r11l",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 1,
+      "reached": 1,
+      "actions": 2001,
+      "actions_to_first_levelup": 20,
+      "actions_to_first_levelup_incl_reset": 21,
+      "resets_taken": 35,
+      "action_count_convention": "resets_excluded_matching_run_game",
+      "actions_total_is_budget_bound": true,
+      "levels_capped_by_early_stop": false,
+      "states_expanded": 7,
+      "errors": 1927,
+      "error_breakdown": {
+        "take_action_swallowed": 0,
+        "choose_action_raised": 1927
+      },
+      "reference_choose_action_raised": 1927,
+      "degenerate_fallback_fraction": 0.963,
+      "reference_degenerate": true,
+      "efficiency": null,
+      "duration_s": 22.052,
+      "frontier_discipline": null,
+      "condition": "real"
+    },
+    {
+      "arm": "E",
+      "game": "lp85",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 2001,
+      "actions_to_first_levelup": null,
+      "actions_to_first_levelup_incl_reset": null,
+      "resets_taken": 138,
+      "action_count_convention": "resets_excluded_matching_run_game",
+      "actions_total_is_budget_bound": true,
+      "levels_capped_by_early_stop": false,
+      "states_expanded": 17,
+      "errors": 1776,
+      "error_breakdown": {
+        "take_action_swallowed": 0,
+        "choose_action_raised": 1776
+      },
+      "reference_choose_action_raised": 1776,
+      "degenerate_fallback_fraction": 0.8876,
+      "reference_degenerate": true,
+      "efficiency": null,
+      "duration_s": 18.324,
+      "frontier_discipline": null,
+      "condition": "real"
+    },
+    {
+      "arm": "E",
+      "game": "tu93",
+      "seed": 20260725,
+      "ran": true,
+      "levels": 0,
+      "reached": 0,
+      "actions": 2001,
+      "actions_to_first_levelup": null,
+      "actions_to_first_levelup_incl_reset": null,
+      "resets_taken": 40,
+      "action_count_convention": "resets_excluded_matching_run_game",
+      "actions_total_is_budget_bound": true,
+      "levels_capped_by_early_stop": false,
+      "states_expanded": 57,
+      "errors": 1576,
+      "error_breakdown": {
+        "take_action_swallowed": 0,
+        "choose_action_raised": 1576
+      },
+      "reference_choose_action_raised": 1576,
+      "degenerate_fallback_fraction": 0.7876,
+      "reference_degenerate": true,
+      "efficiency": null,
+      "duration_s": 23.354,
+      "frontier_discipline": null,
+      "condition": "real"
+    }
+  ],
+  "aggregates": {
+    "A|real": {
+      "arm": "A",
+      "arm_label": "baseline_live_explorer",
+      "condition": "real",
+      "deterministic_arm": true,
+      "n_runs_per_game": 1,
+      "games_measured": 3,
+      "games_won_any_seed": [
+        "lp85",
+        "tu93"
+      ],
+      "n_games_won_any_seed": 2,
+      "first_win_rate_over_seeds": {
+        "n": 1,
+        "mean": 0.6666666666666666,
+        "ci95": null,
+        "ci95_absent_reason": "n_lt_2"
+      },
+      "first_win_rate_ci_unavailable_by_construction": true,
+      "click_stratum_wins": [
+        "lp85"
+      ],
+      "nav_stratum_wins": [
+        "tu93"
+      ],
+      "levels_banked_total": 2,
+      "levels_capped_by_early_stop": true,
+      "levels_banked_total_cross_arm_comparable": false,
+      "mean_actions_to_first_win": {
+        "n": 2,
+        "mean": 190.5,
+        "sd": 241.1234,
+        "ci95": [
+          0.0,
+          2356.873
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      },
+      "mean_actions_to_first_win_is_inferential": false,
+      "mean_states_expanded": {
+        "n": 3,
+        "mean": 485.6667,
+        "sd": 785.3893,
+        "ci95": [
+          0.0,
+          2436.8393
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      }
+    },
+    "B2|real": {
+      "arm": "B2",
+      "arm_label": "tier_exhaustion_uniform_draw",
+      "condition": "real",
+      "deterministic_arm": false,
+      "n_runs_per_game": 2,
+      "games_measured": 3,
+      "games_won_any_seed": [
+        "lp85",
+        "tu93"
+      ],
+      "n_games_won_any_seed": 2,
+      "first_win_rate_over_seeds": {
+        "n": 2,
+        "mean": 0.6667,
+        "sd": 0.0,
+        "ci95": null,
+        "ci95_absent_reason": "zero_variance_interval_would_be_fake_certainty"
+      },
+      "first_win_rate_ci_unavailable_by_construction": false,
+      "click_stratum_wins": [
+        "lp85"
+      ],
+      "nav_stratum_wins": [
+        "tu93"
+      ],
+      "levels_banked_total": 2,
+      "levels_capped_by_early_stop": true,
+      "levels_banked_total_cross_arm_comparable": false,
+      "mean_actions_to_first_win": {
+        "n": 4,
+        "mean": 359.5,
+        "sd": 237.6068,
+        "ci95": [
+          0.0,
+          737.5324
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      },
+      "mean_actions_to_first_win_is_inferential": false,
+      "mean_states_expanded": {
+        "n": 6,
+        "mean": 269.6667,
+        "sd": 346.1044,
+        "ci95": [
+          0.0,
+          632.9401
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      }
+    },
+    "F|real": {
+      "arm": "F",
+      "arm_label": "click_pixel_sampling_with_bounded_redraw_on_live_config",
+      "condition": "real",
+      "deterministic_arm": false,
+      "n_runs_per_game": 2,
+      "games_measured": 3,
+      "games_won_any_seed": [
+        "lp85",
+        "tu93"
+      ],
+      "n_games_won_any_seed": 2,
+      "first_win_rate_over_seeds": {
+        "n": 2,
+        "mean": 0.6667,
+        "sd": 0.0,
+        "ci95": null,
+        "ci95_absent_reason": "zero_variance_interval_would_be_fake_certainty"
+      },
+      "first_win_rate_ci_unavailable_by_construction": false,
+      "click_stratum_wins": [
+        "lp85"
+      ],
+      "nav_stratum_wins": [
+        "tu93"
+      ],
+      "levels_banked_total": 2,
+      "levels_capped_by_early_stop": true,
+      "levels_banked_total_cross_arm_comparable": false,
+      "mean_actions_to_first_win": {
+        "n": 4,
+        "mean": 625.5,
+        "sd": 674.1001,
+        "ci95": [
+          0.0,
+          1697.9933
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      },
+      "mean_actions_to_first_win_is_inferential": false,
+      "mean_states_expanded": {
+        "n": 6,
+        "mean": 447.8333,
+        "sd": 621.3689,
+        "ci95": [
+          0.0,
+          1100.0261
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      }
+    },
+    "F1|real": {
+      "arm": "F1",
+      "arm_label": "click_pixel_sampling_one_shot_on_live_config",
+      "condition": "real",
+      "deterministic_arm": false,
+      "n_runs_per_game": 2,
+      "games_measured": 3,
+      "games_won_any_seed": [
+        "lp85",
+        "tu93"
+      ],
+      "n_games_won_any_seed": 2,
+      "first_win_rate_over_seeds": {
+        "n": 2,
+        "mean": 0.6667,
+        "sd": 0.0,
+        "ci95": null,
+        "ci95_absent_reason": "zero_variance_interval_would_be_fake_certainty"
+      },
+      "first_win_rate_ci_unavailable_by_construction": false,
+      "click_stratum_wins": [
+        "lp85"
+      ],
+      "nav_stratum_wins": [
+        "tu93"
+      ],
+      "levels_banked_total": 2,
+      "levels_capped_by_early_stop": true,
+      "levels_banked_total_cross_arm_comparable": false,
+      "mean_actions_to_first_win": {
+        "n": 4,
+        "mean": 359.5,
+        "sd": 237.6068,
+        "ci95": [
+          0.0,
+          737.5324
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      },
+      "mean_actions_to_first_win_is_inferential": false,
+      "mean_states_expanded": {
+        "n": 6,
+        "mean": 259.8333,
+        "sd": 331.4094,
+        "ci95": [
+          0.0,
+          607.6827
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      }
+    },
+    "E|real": {
+      "arm": "E",
+      "arm_label": "just_explore_reference_positive_control",
+      "condition": "real",
+      "deterministic_arm": false,
+      "n_runs_per_game": 2,
+      "games_measured": 3,
+      "games_won_any_seed": [
+        "lp85",
+        "r11l"
+      ],
+      "n_games_won_any_seed": 2,
+      "first_win_rate_over_seeds": {
+        "n": 2,
+        "mean": 0.5,
+        "sd": 0.2357,
+        "ci95": [
+          -1.6177,
+          2.6177
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": false
+      },
+      "first_win_rate_ci_unavailable_by_construction": false,
+      "click_stratum_wins": [
+        "lp85",
+        "r11l"
+      ],
+      "nav_stratum_wins": [],
+      "levels_banked_total": 2,
+      "levels_capped_by_early_stop": false,
+      "levels_banked_total_cross_arm_comparable": false,
+      "mean_actions_to_first_win": {
+        "n": 3,
+        "mean": 61.6667,
+        "sd": 62.0672,
+        "ci95": [
+          0.0,
+          215.8625
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      },
+      "mean_actions_to_first_win_is_inferential": false,
+      "mean_states_expanded": {
+        "n": 6,
+        "mean": 96.0,
+        "sd": 120.8702,
+        "ci95": [
+          0.0,
+          222.8661
+        ],
+        "ci95_method": "t_distribution_small_sample",
+        "ci95_clamped_at_min": true
+      }
+    }
+  },
+  "vs_baseline": {
+    "available": true,
+    "baseline_wins": [
+      "lp85",
+      "tu93"
+    ],
+    "regression_guard_games": [
+      "lp85",
+      "tu93"
+    ],
+    "regression_guard_provenance": "derived_from_arm_A_real_condition_rows_in_this_run",
+    "B2": {
+      "new_wins": [],
+      "lost_wins": [],
+      "regressed_baseline_win": false,
+      "n_win_delta": 0
+    },
+    "F": {
+      "new_wins": [],
+      "lost_wins": [],
+      "regressed_baseline_win": false,
+      "n_win_delta": 0
+    },
+    "F1": {
+      "new_wins": [],
+      "lost_wins": [],
+      "regressed_baseline_win": false,
+      "n_win_delta": 0
+    },
+    "E": {
+      "new_wins": [
+        "r11l"
+      ],
+      "lost_wins": [
+        "tu93"
+      ],
+      "regressed_baseline_win": true,
+      "n_win_delta": 0
+    },
+    "recolor_control": {},
+    "recolor_control_violations": []
+  },
+  "reproduction_gate": {
+    "method": "re_execution_of_the_same_cell_not_kit_reproduce",
+    "replay_limit_requested": 4,
+    "replay_limit_effective": 5,
+    "n_arms_with_wins": 5,
+    "arms_with_wins": [
+      "A",
+      "B2",
+      "E",
+      "F",
+      "F1"
+    ],
+    "arms_reproduced": [
+      "A",
+      "B2",
+      "E",
+      "F",
+      "F1"
+    ],
+    "arms_not_reproduced": [],
+    "claim_carrying_arms": [
+      "F",
+      "F1",
+      "B2"
+    ],
+    "claim_carrying_arms_not_reproduced": [],
+    "all_arms_with_wins_reproduced": true,
+    "why_not_kit_reproduce": "kit.reproduce consumes banked string action LABELS; the live explorer emits (action_id, data) tuples, so it is not applicable to this trajectory shape",
+    "level_source": "env.levels_completed (frame truth, not a self-report)",
+    "n_checked": 5,
+    "n_reproduced": 5,
+    "all_reproduced": true,
+    "checks": [
+      {
+        "arm": "A",
+        "game": "lp85",
+        "condition": "real",
+        "seed": 20260724,
+        "levels_first": 1,
+        "levels_replay": 1,
+        "reproduced": true
+      },
+      {
+        "arm": "B2",
+        "game": "lp85",
+        "condition": "real",
+        "seed": 20260724,
+        "levels_first": 1,
+        "levels_replay": 1,
+        "reproduced": true
+      },
+      {
+        "arm": "E",
+        "game": "r11l",
+        "condition": "real",
+        "seed": 20260724,
+        "levels_first": 1,
+        "levels_replay": 1,
+        "reproduced": true
+      },
+      {
+        "arm": "F",
+        "game": "lp85",
+        "condition": "real",
+        "seed": 20260724,
+        "levels_first": 1,
+        "levels_replay": 1,
+        "reproduced": true
+      },
+      {
+        "arm": "F1",
+        "game": "lp85",
+        "condition": "real",
+        "seed": 20260724,
+        "levels_first": 1,
+        "levels_replay": 1,
+        "reproduced": true
+      }
+    ]
+  },
+  "n_errored_cells": 0,
+  "errored_cell_rate": 0.0,
+  "methodology_note": "errored_cell_rate counts ONLY cells that failed to RUN. It is NOT a measure of within-cell health: a cell that ran to completion with most of its decisions raising internally still contributes 0 here. Read positive_control_health (arm E's own degenerate-fallback fraction) and each row's click_pixel_coordinates_changed alongside it -- the earlier claim that 'errored_cell_rate == 0.0 means every cell produced a real measurement' was misleading, and is retracted. errored_cell_rate is a harness-health counter, not a capability metric, so zero is the expected healthy value rather than an implausibly-perfect result. Level counts come from the environment's own levels_completed (execution-grounded), which is why verifier_is_oracle is declared True: this is a SEARCH-EFFICIENCY measurement, not an oracle-distinct verifier claim.",
+  "errored_cells": [],
+  "action_vocabulary_strata": {
+    "click_games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "ka59",
+      "lf52",
+      "lp85",
+      "m0r0",
+      "r11l",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "vc33"
+    ],
+    "nav_only_games": [
+      "g50t",
+      "ls20",
+      "re86",
+      "tr87",
+      "tu93",
+      "wa30"
+    ]
+  },
+  "spec_deviations": [
+    {
+      "spec": "budget 200",
+      "actual": "budget 2000 (default 2000)",
+      "why": "budget 200 measured 0/25 first-wins -> no arm distinguishable; measured first-win costs span 20 (lp85) to 1747 (cd82) actions"
+    },
+    {
+      "spec": ">=3 seeds on every arm",
+      "actual": "1 run for the bit-deterministic arms (A/B/C/D); >=3 seeds only for the stochastic arms (B2 uniform draw, E reference)",
+      "why": "the explorer is bit-deterministic (verified across 3 seeds x 3 games), so seeding it produces identical rows and a fake-tight CI"
+    },
+    {
+      "spec": "colour-permuted variants measure generalization",
+      "actual": "recolour kept as a ZERO-DELTA NEGATIVE CONTROL; reflection used as the generalization axis, reported separately",
+      "why": "recolour is behaviourally inert for the BASELINE candidate order (28/28 byte-identical runs) because that salience key is geometric plus a permutation-invariant colour-COUNT rarity term. NOTE the exception this experiment's own smoke run found: recolour is NOT inert for the TIER arms, because just-explore's tier predicate keys on ABSOLUTE colour values (salient = colour in {6..15}); measured arm-B mean actions-to-first-win 13.5 (real) -> 168.5 (recoloured). That is a real LIMITATION of the grafted mechanism (it assumes a fixed colour->salience convention a hidden game need not share), reported in vs_baseline.recolor_control, not a harness bug"
+    },
+    {
+      "spec": "solves validated with kit.reproduce",
+      "actual": "re-execution of the same cell; level-ups read from env.levels_completed",
+      "why": "kit.reproduce consumes banked string action LABELS, which the live explorer never emits -- claiming it ran would be false"
+    },
+    {
+      "spec": "reference tier-advancement trigger (graph_explorer._maybe_advance_group: advance while the CURRENT node's distance to any frontier node == INFINITY)",
+      "actual": "GLOBAL SET-EXHAUSTION (advance only when NO node anywhere still has work at the active tier) -- TierExhaustionPolicy.next_active_tier",
+      "why": "the reference's literal trigger can never fire in Carnot: Carnot can RESET and replay any node's recorded path from the root, so no node is ever unreachable and no distance is ever INFINITY. Global set-exhaustion is the faithful analogue of 'no open node is reachable' in a graph where everything is reachable",
+      "consequence_for_interpretation": "the graft is a STRICTER variant than the reference runs: the reference advances while lower-tier work still exists elsewhere-but-unreachable-forward, this graft does not. A NULL ON ARMS B/B2/D THEREFORE DOES NOT FALSIFY THE REFERENCE MECHANISM -- it falsifies this stricter substitution. Testing the literal trigger needs a further arm gated on `nearest_open_node(...) is None` (the module already computes it)"
+    },
+    {
+      "spec": "reference within-tier draw (random.choice over ALL untested edges in groups 0..active_group -- no top-k)",
+      "actual": "faithful: top_k defaults to None (unrestricted uniform draw)",
+      "why": "this was a REAL DEVIATION until 2026-07-24: the wiring passed the unrelated hybrid-diversity knob CARNOT_ARC_EXPLORE_DIV_TOPK (default 8), which silently made arm B2 a top-8 draw AND coupled the arm to a foreign env var. Fixed; the draw now has its own knob (CARNOT_ARC_FRONTIER_TIER_DRAW_TOPK), unset by default. If that env var IS set, this run is a top-k deviation -- see per_cell_rows[*].frontier_discipline.tier_draw_top_k, which records the value actually used"
+    },
+    {
+      "spec": "arm E action count as reported by the reference (agent.action_counter)",
+      "actual": "reset-EXCLUDED count, matching arc_leaderboard_eval.run_game's convention for arms A-D; the raw counter is kept as actions_to_first_levelup_incl_reset",
+      "why": "the reference increments action_counter once per main-loop iteration INCLUDING RESET, while run_game increments `actions` only in its non-RESET branch. Reporting the raw counter charged the positive control for resets that arms A-D got free, biasing the efficiency axis against the control"
+    },
+    {
+      "spec": "acceptance gate: first-win rate >= 0.12",
+      "actual": "replaced by two COMPARATIVE gates (see acceptance_gate_capability / acceptance_gate_efficiency)",
+      "why": "0.12 x 25 games = 3 wins, but the BASELINE arm already wins ~7 of 25 (rate 0.28) -- a gate the negative control passes cannot separate the intervention from doing nothing, so it was non-discriminative in principle"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Self-declared terminal state, terminal-prefixed so the conductor's reconciler cannot misclassify it from a nuance word in the descriptive tail."
+    },
+    "inference_substrate": {
+      "principle": "Declares WHAT compute actually ran, so the fabrication linter applies the right duration floor instead of assuming a 60s live-LLM floor. Here: the live agent takes real actions against the offline arcade with NO LLM loaded on any arm."
+    },
+    "duration_s": {
+      "principle": "Real compute takes wall-clock time; a missing or implausibly short duration is the load-bearing fabrication signal."
+    },
+    "random_seed": {
+      "principle": "Determinism is the precondition for reproducibility; without a seed no third party can re-run this and confirm or refute it."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash of the measured rows + config; catches silent corpus/arm/budget drift between this artifact and any replication attempt."
+    },
+    "preconditions_checked": {
+      "principle": "Records WHICH resources were verified before measuring, pre-empting the failure mode where the agent silently lacked a resource and synthesized a passing artifact."
+    },
+    "verifier_is_oracle": {
+      "principle": "True iff the thing judging success IS the executable oracle that defines correctness. Here TRUE and disclosed: level-ups are read from the environment's own levels_completed. That makes this an execution-grounded SEARCH-EFFICIENCY measurement, NOT an oracle-distinct verifier-moat claim, and it is therefore not headline-eligible as a moat result."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy: the offline dev twin, not the live agent self-discovering a hidden game. Banks no new levels -- all 25 public games are already registry-cleared."
+    },
+    "positive_control_ran": {
+      "principle": "Without the reference solver as a positive control, a flat A/B cannot be distinguished from a broken harness, so the A/B is declared uninterpretable when this is false."
+    },
+    "arms": {
+      "principle": "Names every measured arm including the uniform-within-tier arm; omitting that arm would leave a null on the barrier confounded with the greedy-draw hypothesis."
+    },
+    "spec_deviations": {
+      "principle": "Records where measured reality forced a departure from the original parameters (budget 200 degenerate, seeds non-replicating, recolour inert), so the record is auditable instead of silently corrected."
+    },
+    "states_expanded": {
+      "principle": "Search effort. A discipline that reaches the same level with fewer expanded states is a real efficiency win even when the binary win count is flat."
+    },
+    "new_wins_vs_baseline": {
+      "principle": "THE decision-relevant number: games the grafted arms win that the baseline does not. Published at top level so no downstream aggregation can carry this experiment's efficiency delta forward without the capability result attached to it."
+    },
+    "positive_control_new_wins": {
+      "principle": "The same number for the just-explore reference. Its whole job is to make the graft's capability number interpretable: graft=0 with control=0 means the corpus had no headroom, whereas graft=0 with control>0 means the graft failed to reproduce a transfer the reference demonstrably achieves under identical conditions."
+    },
+    "paired_efficiency_vs_baseline": {
+      "principle": "The inferential efficiency statistic. Arms run on the SAME games with the SAME seeds, so pairing is free; pooling across games instead lets between-game difficulty variance hide an effect the per-game deltas show unanimously."
+    },
+    "power_ceiling": {
+      "principle": "The smallest p-value this corpus can attain at all. Stated up front so an underpowered null is never read as evidence of absence."
+    },
+    "acceptance_gate_capability": {
+      "principle": "A gate must be able to FAIL for the intervention and PASS for a real improvement. An absolute win-rate threshold the baseline already clears cannot; a new-wins-vs-baseline gate can."
+    },
+    "run_scope": {
+      "principle": "Records whether this run covered the full declared spec (all games/arms/conditions at the declared budget) or was a reduced smoke, so a number quoted from a smoke can never be mistaken for the full result."
+    },
+    "levels_capped_by_early_stop": {
+      "principle": "Arms A-D stop at the first level-up (target_levels=1) while arm E runs to budget, so banked-level counts are not arm-comparable; the flag travels with the number."
+    },
+    "click_pixel_coordinates_changed": {
+      "principle": "The mechanism's ACTIVITY WITNESS: how many click coordinates the sampler actually replaced. A treatment arm reporting zero here is a control regardless of its label, so its null cannot be read as 'the mechanism had no effect'. click_pixel_rows_sampled is NOT this quantity -- it counts rows present and is identical for a dead sampler."
+    },
+    "positive_control_health": {
+      "principle": "Whether arm E was a measurement OF THE REFERENCE at all. A cell that returns while most of its decisions end in the reference's own choose_action raising is spending its budget in a self-flagged repeat-last-action fallback, so its losses are shim artifacts. Without this, a 96%-degenerate control read as a clean null and set the forward diagnostic."
+    },
+    "reachable_new_win_games": {
+      "principle": "The games where a NEW win was even attainable (measured by both arms on a shared seed and NOT already won by the control). Empty means the gate's pass region was empty ON THIS CORPUS, so a failed gate is an uninformative test, not evidence of no effect (CLAUDE.md FALSE_NEGATIVE_RISK)."
+    },
+    "arms_not_reproduced": {
+      "principle": "Arms that won something but were never re-executed by the reproduction gate. Named explicitly because a --replay-limit below the number of winning arms silently truncated a claim-carrying arm out of the sample while the gate still reported n/n reproduced."
+    }
+  },
+  "caveats": [
+    "Arm E is NOT equal-env-step with arms A-D: Carnot's RESET-replay navigation does uncounted env.step+reset per expansion (measured ~4.2-4.4x more real env interaction at nominal-equal budget), which HANDICAPS arm E. A just-explore win here is therefore a conservative LOWER bound.",
+    "Reflection mirrors the observation but not directional move actions, so a nav game becomes a self-consistent MIRROR world -- a legitimate re-induction test but a DIFFERENT difficulty. Never averaged into the real-game headline.",
+    "This experiment banks NO new levels and makes no solve claim: all 25 public games are already recorded fully cleared in ops/arc_solve_registry.yaml.",
+    "The 5-tier predicate is shared with the already-nulled CARNOT_ARC_TIER_SCHEDULE sort by design, so a difference measured here is a difference in the DISCIPLINE (global exhaustion) and not in the tier predicate.",
+    "levels_banked_total is PER-ARM ONLY. Arms A-D run target_levels=1 so is_done stops them at the first level-up (levels capped at 1 per game by construction); arm E runs to budget. Comparing that column across arms attributes the stopping rule to capability. Every explorer row carries levels_capped_by_early_stop=true.",
+    "mean_actions_to_first_win pools across GAMES and is descriptive only: between-game difficulty (20 to 1747 baseline actions) dominates its interval. The inferential statistic is paired_efficiency_vs_baseline (per-game paired deltas + exact sign test + bootstrap median CI).",
+    "POWER: the paired test has at most one delta per baseline-win game, so the smallest attainable two-sided p is 2*0.5^k for k such games -- 0.031 at k=6, i.e. it clears 0.05 only if EVERY pair favours the arm. See power_ceiling; a flat sign test at this n is underpowered, not evidence of absence.",
+    "MECHANISM (b) SCOPE: the distance gradient no longer returns a depth-capped current node (fixed 2026-07-24). Before that fix it did so on 100% of its picks on deep-graph games, which meant arms C/D were partly measuring the REMOVAL of the max_depth=45 backtrack cap rather than the gradient. Any C/D number from before that fix is confounded and must not be compared with these."
+  ],
+  "reproducibility_checksum": "274f64a5b4fd463b8113a4595058baa084fa0a675071b06fdb88079e6cf40e20"
+}

@@ -169,3 +169,106 @@ Instance 1: Haiku proposed an assignment violating 2 clauses (energy=2.0). Gradi
 - E2E-001 (Rust training pipeline) not yet automated as integration test
 - Docker API bridge was tested manually, not in CI
 - Autoresearch E2E was run interactively, not as a repeatable test
+
+## E2E-ARC-5950: Per-object click-pixel sampling against the real offline arcade (2026-07-25, PASS — mechanism verified; capability UNTESTED at smoke scale, NOT a null)
+
+> **CORRECTION 2026-07-25 (second adversarial-review pass; the original section is preserved
+> unedited below per the never-prune rule, but four of its statements are RETRACTED — read this
+> banner first).**
+>
+> 1. **"capability NULL" is RETRACTED. The correct word is UNTESTED.** Measured from the run's own
+>    rows: the matched control B2 wins 2 of the 3 games (lp85, tu93) on BOTH seeds, so the gate's
+>    entire attainable win axis was ONE game — r11l — which this same session independently
+>    diagnosed as blocked by state-identity aliasing, a defect this mechanism explicitly disclaims
+>    fixing. A "0 new wins" result over a one-game axis is an uninformative test, not evidence of
+>    no effect (CLAUDE.md FALSE_NEGATIVE_RISK). The gate now computes and emits this headroom
+>    (`reachable_new_win_games`, `headroom_present`, `headroom_narrow`, `n_games_at_ceiling`) so the
+>    disclosure travels with the number instead of having to be reconstructed by a reader.
+>    **The full 25-game sweep (baseline wins ~7/25, so ~18 games of real headroom) is what would
+>    actually test this mechanism.**
+> 2. **"mechanism verifiably active (26,309 replaced click coordinates)" was NOT what that counter
+>    measured.** `click_pixel_rows_sampled` counts click rows PRESENT, not coordinates REPLACED, and
+>    the generation path's real diagnostics were being discarded — so a totally dead sampler
+>    (verified by patching `component_partition` to raise) reported the identical
+>    `rows_sampled=1, errors=0` while emitting the unmodified centroid. The re-run emits a genuine
+>    activity witness: **F 20,007 and F1 11,856 coordinates actually replaced, 0 generation errors.**
+>    F1's exact reproduction of B2 on lp85 (649/649 and 67/67 actions, both seeds) is now
+>    *evidenced* rather than assumed to be a no-op: the mechanism demonstrably fired (1,893 and 367
+>    replacements) and the trajectory outcome was still identical.
+> 3. **"Reproduction gate 4/4, round-robin by arm (A, B2, E, F)" omitted that arm F1 — one of the
+>    two arms carrying the claim, and the clean single-variable arm — was never checked.** The
+>    round-robin was correct; `--replay-limit 4` truncated it while FIVE arms had wins. The
+>    effective limit is now floored at the number of winning arms: **5/5 reproduced, all of
+>    A/B2/E/F/F1**, with `arms_not_reproduced` and `claim_carrying_arms_not_reproduced` emitted
+>    explicitly so a future truncation cannot present as a clean pass.
+> 4. **The arm-E section's "the reference's livelock through our shim" is RETRACTED as a
+>    diagnosis, and `errored_cell_rate: 0.0` was misleading.** 100% of the count is the reference's
+>    OWN `choose_action` raising `ValueError("No available actions found")`
+>    (`heuristic_agent.py:343`); its `main()` (465-469) catches ANY exception, sets `failed=True` /
+>    `level_up=True`, and replays `last_action_object`. So 5 of 6 arm-E cells spent 79-96% of their
+>    budget in a self-flagged repeat-last-action loop. `errored_cell_rate` counts only cells that
+>    failed to RUN and is structurally blind to this. The harness now gates on it:
+>    `positive_control_ran: false`,
+>    `positive_control_reason: reference_degenerate_in_5_of_6_cells_worst_fallback_fraction_0.96`,
+>    `ab_interpretable: false`, and `capability_summary.diagnostic_target` now says the r11l
+>    discrepancy is **NOT YET ATTRIBUTABLE TO THE REFERENCE** — fix the shim's swallowed
+>    `choose_action` exceptions before borrowing any further reference mechanism. Arm E's r11l WIN
+>    still stands (frame-score truth, landed at action 20/32 before degeneration); its LOSSES do not.
+>
+> Also fixed in the same pass, and the reason the numbers below changed at all: the sampler
+> contained a **reachability regression**. `index_by_centroid` kept only the FIRST claimant of a
+> colliding truncated centroid and resolution consulted it before containment, so when two objects
+> shared a truncated centroid BOTH generated points resolved to the same object and the other
+> object received ZERO click candidates — strictly worse than flag-off, which at least reached
+> whichever object occupied that cell. Measured across all 25 offline games: **54 of 867 objects
+> (6.2%) lost all reachability** (r11l 3 of 37, dc22 4 of 35), concentrated in the small-object
+> class REQ-ARC-FCP-5758 identifies as carrying the winning clicks. Resolution is now
+> occurrence-aware (Nth occurrence of a contested key -> Nth claimant); re-measured on all 25 game
+> reset frames: **0 of 867 unreachable.**
+>
+> Re-run artifact (same command, `duration_s` 241.9): `experiment_id: 5950`,
+> `requirement: REQ-ARC-WMTE-5950` — the original artifact declared `experiment_id: 5836` /
+> `REQ-ARC-WMTE-5836` and contained the string "5950" nowhere, which would have folded a sampler
+> measurement into the already-published exp5836 record.
+
+
+Full-stack run, not a mocked unit path: `CarnotAgentPolicy(force_explore=True)` -> `StepwiseExplorer`
+-> `rich_action_candidates` -> the real `arc_solver_kit.offline_arcade()` environment, via
+`python -m carnot.experiment_5836_frontier_discipline_ab --games r11l,lp85,tu93 --arms A,B2,F,F1,E
+--conditions real --budget 2000 --seeds 2 --replay-limit 4`.
+
+Scale (SMOKE, deliberately not the full spec): 3 of 25 games, 27 cells, 0 errored, 165s wall.
+Artifact: `results/experiment_5950_click_pixel_sampling_smoke.json`.
+
+| arm | config | r11l | lp85 | tu93 | sampled click rows | redraws |
+|---|---|---|---|---|---|---|
+| A | PRE-flip baseline | 0 lvl / 1956 act | 1 lvl / 20 act | 1 lvl / 361 act | 0 | 0 |
+| B2 | CURRENT live config (matched control) | 0 / 1954, 1953 | 1 / 649, 67 | 1 / 361, 361 | 0 | 0 |
+| F | B2 + sampler, redraw budget 3 | 0 / 1952, 1942 | 1 / 154, 1626 | 1 / 361, 361 | 26309 / 683 / 0 | 1567 / 142 / 0 |
+| F1 | B2 + sampler, redraw budget 1 | 0 / 1908, 1903 | 1 / 649, 67 | 1 / 361, 361 | 16256 / 2127 / 0 | 0 |
+| E | just-explore reference control | 1 lvl (a2w 32, 20) | 1 lvl (a2w 133) | 0 lvl | n/a | n/a |
+
+What this DOES establish:
+- The mechanism runs end-to-end on real frames and is verifiably active (26,309 replaced click
+  coordinates and 1,567 bounded redraws on r11l alone), with zero internal errors.
+- The redraw budget behaves as specified: F1 (budget 1) issues exactly 0 redraws.
+- The sampler is correctly INERT on a nav-only game: tu93 has no click vocabulary, so 0 rows are
+  sampled and all four explorer arms produce an identical 361 actions -- i.e. the graft has no
+  side effect off the click path.
+- The tier barrier stays effective under sampling (`tier_active_effective: true` on the click
+  games), which is what the per-cell `click_tier_map` co-change exists to guarantee.
+- The pre-registered gate `acceptance_gate_click_pixel_sampling` FAILS honestly: F and F1 produce
+  0 new wins and 0 regressions vs B2 on both seeds. At this scale the sampler is a capability NULL.
+- Reproduction gate 4/4, sampled ROUND-ROBIN BY ARM (A, B2, E, F all checked).
+- `scripts/adversarial_verify.py`: 1 INFO flag only (`errored_cell_rate=0.0`, legitimately zero --
+  all 27 cells ran).
+
+What this does NOT establish: nothing about the full 25-game corpus, and nothing about hidden-game
+transfer. Provenance is `development_proxy`. The flag stays DEFAULT-OFF until the full sweep runs.
+
+Arm-E control repair, measured: the same (arm E, r11l, seed 20260724) cell now reproduces exactly
+across two independent processes -- levels=1, actions=401, actions_to_first_levelup=32,
+states_expanded=116, errors=36 -- where before the fix the reference reseeded the global RNG from
+the wall clock and every arm-E cell was an unrepeatable draw. The new error counter also makes the
+reference's livelock through our shim visible for the first time: 1,576-1,927 swallowed errors per
+2,001-action cell.

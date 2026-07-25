@@ -14286,3 +14286,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 12:14 UTC | Branch-independent terminal reconciliation for mil | OK | 171 passed, 1 warning in 24.59s |
 | 2026-07-25 13:23 UTC | Plan milestone 2026.07.526 | OK | 14 tasks proposed |
 | 2026-07-25 13:25 UTC | Milestone 2026.07.526 activated | OK | 14 tasks queued |
+| 2026-07-25 14:49 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: duplicate_hist |
+| 2026-07-25 16:12 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ent_5918_trans |
