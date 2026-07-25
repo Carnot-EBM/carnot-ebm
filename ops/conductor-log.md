@@ -14281,3 +14281,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 10:28 UTC | Gated on Exp5913 mechanism: prospective SOTA trans | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5913-transactional-constraint-memory-fixt |
 | 2026-07-25 10:41 UTC | Scoped capability lease for the adapter-disabled h | OK | 88 passed, 1 warning in 21.31s |
 | 2026-07-25 10:43 UTC | Gated on Exp5913 mechanism: prospective SOTA trans | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5913-transactional-constraint-memory-fixt |
+| 2026-07-25 10:58 UTC | Gated on Exp5915 capability: adapter-disabled held | OK | 91 passed, 1 warning in 5.38s |
+| 2026-07-25 11:00 UTC | Gated on Exp5913 mechanism: prospective SOTA trans | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5913-transactional-constraint-memory-fixt |
