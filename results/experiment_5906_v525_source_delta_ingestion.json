@@ -1,0 +1,1093 @@
+{
+  "accepted_rejected_abstained_findings": {
+    "abstained": [
+      {
+        "access_outcome": "reachable_http_200_dynamic_search_page_no_new_primary_delta",
+        "classification": "abstained",
+        "decision_bucket": "abstained",
+        "identifier": "openreview_dynamic_uncertain_date",
+        "publication_date": "2026-07-25",
+        "query": "openreview_secondary",
+        "query_family": "openreview_secondary",
+        "reason": "Dynamic search pages can crawl recently without proving primary forum publication after the marker; uncertainty is abstained, not rejected.",
+        "receipt_id": "openreview_v525_search_page",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "openreview_dynamic_recent_candidate_uncertain",
+        "title": "OpenReview dynamic search candidate with uncertain primary date",
+        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning"
+      }
+    ],
+    "accepted": [],
+    "all_candidates": [
+      {
+        "access_outcome": "reachable_http_200_no_actionable_dependency_delta",
+        "classification": "rejected",
+        "decision_bucket": "rejected",
+        "identifier": "github_metadata_no_method_delta",
+        "publication_date": "2026-07-25",
+        "query": "github_secondary",
+        "query_family": "github_secondary",
+        "reason": "Repository update metadata is secondary and does not sharpen an allocated .525 control.",
+        "receipt_id": "github_v525_repository_discovery",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "github_updated_metadata_no_method_delta",
+        "title": "Repository metadata update without a new method",
+        "url": "https://api.github.com/search/repositories"
+      },
+      {
+        "access_outcome": "reachable_http_200_dynamic_search_page_no_new_primary_delta",
+        "classification": "abstained",
+        "decision_bucket": "abstained",
+        "identifier": "openreview_dynamic_uncertain_date",
+        "publication_date": "2026-07-25",
+        "query": "openreview_secondary",
+        "query_family": "openreview_secondary",
+        "reason": "Dynamic search pages can crawl recently without proving primary forum publication after the marker; uncertainty is abstained, not rejected.",
+        "receipt_id": "openreview_v525_search_page",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "openreview_dynamic_recent_candidate_uncertain",
+        "title": "OpenReview dynamic search candidate with uncertain primary date",
+        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning"
+      },
+      {
+        "access_outcome": "reachable_http_200_daily_feed_secondary_no_new_primary_delta",
+        "classification": "false_positive",
+        "decision_bucket": "false_positive",
+        "identifier": "hf_daily_secondary_date_only",
+        "publication_date": "2026-07-25",
+        "query": "huggingface_papers_secondary",
+        "query_family": "huggingface_papers_secondary",
+        "reason": "A secondary daily-feed date can look post-marker while the linked primary source is pre-marker or duplicate.",
+        "receipt_id": "huggingface_papers_v525_2026_07_25",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "hf_daily_feed_secondary_date_false_positive",
+        "title": "Hugging Face daily feed date without newer primary evidence",
+        "url": "https://huggingface.co/papers?date=2026-07-25"
+      },
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "classification": "known_false_negative",
+        "decision_bucket": "known_false_negative",
+        "identifier": "s2_keyword_rate_limit_possible_miss",
+        "publication_date": "2026-07-25",
+        "query": "local_tooling",
+        "query_family": "local_tooling",
+        "reason": "The keyword helper did not return records for three focused queries; a non-arXiv or relevance-ranked miss is recorded explicitly.",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "semantic_scholar_keyword_helper_rate_limit_possible_miss",
+        "title": "Semantic Scholar keyword helper rate-limit possible miss",
+        "url": "scripts/sweep_semscholar.py"
+      },
+      {
+        "access_outcome": "cutoff_confound_preserved",
+        "classification": "cutoff_confound",
+        "decision_bucket": "cutoff_confound",
+        "identifier": "2607.18360_cutoff_confound",
+        "publication_date": "2026-07-22",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "HALLMARK motivates preserving recent-source and training-cutoff confounds separately from acceptance or rejection.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "hallmark_post_training_cutoff_source_confound",
+        "title": "Post-training-cutoff source judgement confound",
+        "url": "https://arxiv.org/abs/2607.18360"
+      },
+      {
+        "access_outcome": "duplicate_existing_v525_reference_heading",
+        "classification": "duplicate",
+        "decision_bucket": "duplicate",
+        "identifier": "2607.19795",
+        "publication_date": "2026-07-22",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "Already accepted in the sealed V525 planner block for Exp5908-Exp5911.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "v525_planner_verisynth_2607_19795",
+        "title": "Towards Automated Formal Verification of zkEVMs Using LLM-Guided Constraint Synthesis",
+        "url": "https://arxiv.org/abs/2607.19795"
+      },
+      {
+        "access_outcome": "duplicate_existing_v525_reference_heading",
+        "classification": "duplicate",
+        "decision_bucket": "duplicate",
+        "identifier": "2607.20792",
+        "publication_date": "2026-07-22",
+        "query": "semantic_scholar_citation_trail",
+        "query_family": "semantic_scholar_citation_trail",
+        "reason": "Already accepted in the sealed V525 planner block for Exp5913-Exp5914.",
+        "receipt_id": "semantic_scholar_v525_ebt_citations",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "v525_planner_memoir_2607_20792",
+        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
+        "url": "https://arxiv.org/abs/2607.20792"
+      },
+      {
+        "access_outcome": "retired_scope_excluded_by_manifest",
+        "classification": "retired_scope",
+        "decision_bucket": "retired_scope",
+        "identifier": "kan_mutation_reopen",
+        "publication_date": "2026-07-25",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "KAN mutation remains closed and cannot be reopened by source freshness.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "kan_mutation_reopen_post_v525",
+        "title": "KAN mutation route reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "retired_scope_excluded_by_manifest",
+        "classification": "retired_scope",
+        "decision_bucket": "retired_scope",
+        "identifier": "final_embedding_public_arc_reopen",
+        "publication_date": "2026-07-25",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "Final-embedding scoring and public ARC solve credit remain closed for this source refresh.",
+        "receipt_id": "arxiv_v525_topic_query_memory_hardware",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "final_embedding_public_arc_reopen_post_v525",
+        "title": "Final-embedding scoring or public ARC solve reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "classification": "inaccessible",
+        "decision_bucket": "inaccessible",
+        "identifier": "openreview_api_notes",
+        "publication_date": "unknown",
+        "query": "openreview_api",
+        "query_family": "openreview_api",
+        "reason": "OpenReview API route required challenge verification; no result is fabricated.",
+        "receipt_id": "openreview_v525_api_notes",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "openreview_api_notes_post_v525",
+        "title": "OpenReview notes API energy/constraint search",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      }
+    ],
+    "cutoff_confound": [
+      {
+        "access_outcome": "cutoff_confound_preserved",
+        "classification": "cutoff_confound",
+        "decision_bucket": "cutoff_confound",
+        "identifier": "2607.18360_cutoff_confound",
+        "publication_date": "2026-07-22",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "HALLMARK motivates preserving recent-source and training-cutoff confounds separately from acceptance or rejection.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "hallmark_post_training_cutoff_source_confound",
+        "title": "Post-training-cutoff source judgement confound",
+        "url": "https://arxiv.org/abs/2607.18360"
+      }
+    ],
+    "duplicate": [
+      {
+        "access_outcome": "duplicate_existing_v525_reference_heading",
+        "classification": "duplicate",
+        "decision_bucket": "duplicate",
+        "identifier": "2607.19795",
+        "publication_date": "2026-07-22",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "Already accepted in the sealed V525 planner block for Exp5908-Exp5911.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "v525_planner_verisynth_2607_19795",
+        "title": "Towards Automated Formal Verification of zkEVMs Using LLM-Guided Constraint Synthesis",
+        "url": "https://arxiv.org/abs/2607.19795"
+      },
+      {
+        "access_outcome": "duplicate_existing_v525_reference_heading",
+        "classification": "duplicate",
+        "decision_bucket": "duplicate",
+        "identifier": "2607.20792",
+        "publication_date": "2026-07-22",
+        "query": "semantic_scholar_citation_trail",
+        "query_family": "semantic_scholar_citation_trail",
+        "reason": "Already accepted in the sealed V525 planner block for Exp5913-Exp5914.",
+        "receipt_id": "semantic_scholar_v525_ebt_citations",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "v525_planner_memoir_2607_20792",
+        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
+        "url": "https://arxiv.org/abs/2607.20792"
+      }
+    ],
+    "false_positive": [
+      {
+        "access_outcome": "reachable_http_200_daily_feed_secondary_no_new_primary_delta",
+        "classification": "false_positive",
+        "decision_bucket": "false_positive",
+        "identifier": "hf_daily_secondary_date_only",
+        "publication_date": "2026-07-25",
+        "query": "huggingface_papers_secondary",
+        "query_family": "huggingface_papers_secondary",
+        "reason": "A secondary daily-feed date can look post-marker while the linked primary source is pre-marker or duplicate.",
+        "receipt_id": "huggingface_papers_v525_2026_07_25",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "hf_daily_feed_secondary_date_false_positive",
+        "title": "Hugging Face daily feed date without newer primary evidence",
+        "url": "https://huggingface.co/papers?date=2026-07-25"
+      }
+    ],
+    "inaccessible": [
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "classification": "inaccessible",
+        "decision_bucket": "inaccessible",
+        "identifier": "openreview_api_notes",
+        "publication_date": "unknown",
+        "query": "openreview_api",
+        "query_family": "openreview_api",
+        "reason": "OpenReview API route required challenge verification; no result is fabricated.",
+        "receipt_id": "openreview_v525_api_notes",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "openreview_api_notes_post_v525",
+        "title": "OpenReview notes API energy/constraint search",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      }
+    ],
+    "known_false_negative": [
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "classification": "known_false_negative",
+        "decision_bucket": "known_false_negative",
+        "identifier": "s2_keyword_rate_limit_possible_miss",
+        "publication_date": "2026-07-25",
+        "query": "local_tooling",
+        "query_family": "local_tooling",
+        "reason": "The keyword helper did not return records for three focused queries; a non-arXiv or relevance-ranked miss is recorded explicitly.",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "semantic_scholar_keyword_helper_rate_limit_possible_miss",
+        "title": "Semantic Scholar keyword helper rate-limit possible miss",
+        "url": "scripts/sweep_semscholar.py"
+      }
+    ],
+    "rejected": [
+      {
+        "access_outcome": "reachable_http_200_no_actionable_dependency_delta",
+        "classification": "rejected",
+        "decision_bucket": "rejected",
+        "identifier": "github_metadata_no_method_delta",
+        "publication_date": "2026-07-25",
+        "query": "github_secondary",
+        "query_family": "github_secondary",
+        "reason": "Repository update metadata is secondary and does not sharpen an allocated .525 control.",
+        "receipt_id": "github_v525_repository_discovery",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "github_updated_metadata_no_method_delta",
+        "title": "Repository metadata update without a new method",
+        "url": "https://api.github.com/search/repositories"
+      }
+    ],
+    "retired_scope": [
+      {
+        "access_outcome": "retired_scope_excluded_by_manifest",
+        "classification": "retired_scope",
+        "decision_bucket": "retired_scope",
+        "identifier": "kan_mutation_reopen",
+        "publication_date": "2026-07-25",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "KAN mutation remains closed and cannot be reopened by source freshness.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "kan_mutation_reopen_post_v525",
+        "title": "KAN mutation route reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "retired_scope_excluded_by_manifest",
+        "classification": "retired_scope",
+        "decision_bucket": "retired_scope",
+        "identifier": "final_embedding_public_arc_reopen",
+        "publication_date": "2026-07-25",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "Final-embedding scoring and public ARC solve credit remain closed for this source refresh.",
+        "receipt_id": "arxiv_v525_topic_query_memory_hardware",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "final_embedding_public_arc_reopen_post_v525",
+        "title": "Final-embedding scoring or public ARC solve reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      }
+    ]
+  },
+  "duplicate_and_retired_scope_filter": {
+    "accepted_reopens_retired_scope_count": 0,
+    "duplicate_dimensions": [
+      "title",
+      "identifier",
+      "mechanism",
+      "existing_reference_heading"
+    ],
+    "duplicate_source_decisions": [
+      {
+        "access_outcome": "duplicate_existing_v525_reference_heading",
+        "classification": "duplicate",
+        "decision_bucket": "duplicate",
+        "identifier": "2607.19795",
+        "publication_date": "2026-07-22",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "Already accepted in the sealed V525 planner block for Exp5908-Exp5911.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "v525_planner_verisynth_2607_19795",
+        "title": "Towards Automated Formal Verification of zkEVMs Using LLM-Guided Constraint Synthesis",
+        "url": "https://arxiv.org/abs/2607.19795"
+      },
+      {
+        "access_outcome": "duplicate_existing_v525_reference_heading",
+        "classification": "duplicate",
+        "decision_bucket": "duplicate",
+        "identifier": "2607.20792",
+        "publication_date": "2026-07-22",
+        "query": "semantic_scholar_citation_trail",
+        "query_family": "semantic_scholar_citation_trail",
+        "reason": "Already accepted in the sealed V525 planner block for Exp5913-Exp5914.",
+        "receipt_id": "semantic_scholar_v525_ebt_citations",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "v525_planner_memoir_2607_20792",
+        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
+        "url": "https://arxiv.org/abs/2607.20792"
+      }
+    ],
+    "retired_scope_rules": [
+      "KAN mutation",
+      "final-embedding scoring",
+      "generated-answer repair",
+      "unchanged board probes",
+      "public ARC solves",
+      "TSU execution",
+      "Kona execution"
+    ],
+    "retired_scope_source_decisions": [
+      {
+        "access_outcome": "retired_scope_excluded_by_manifest",
+        "classification": "retired_scope",
+        "decision_bucket": "retired_scope",
+        "identifier": "kan_mutation_reopen",
+        "publication_date": "2026-07-25",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "KAN mutation remains closed and cannot be reopened by source freshness.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "kan_mutation_reopen_post_v525",
+        "title": "KAN mutation route reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "access_outcome": "retired_scope_excluded_by_manifest",
+        "classification": "retired_scope",
+        "decision_bucket": "retired_scope",
+        "identifier": "final_embedding_public_arc_reopen",
+        "publication_date": "2026-07-25",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "Final-embedding scoring and public ARC solve credit remain closed for this source refresh.",
+        "receipt_id": "arxiv_v525_topic_query_memory_hardware",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "final_embedding_public_arc_reopen_post_v525",
+        "title": "Final-embedding scoring or public ARC solve reopen request",
+        "url": "ops/exclusion_manifest.yaml"
+      }
+    ]
+  },
+  "duration_s": 0.0,
+  "experiment": "experiment_5906_v525_source_delta_ingestion",
+  "experiment_id": "exp5906-v525-source-delta-ingestion",
+  "false_positive_false_negative_and_cutoff_receipts": {
+    "cutoff_confounds": [
+      {
+        "access_outcome": "cutoff_confound_preserved",
+        "classification": "cutoff_confound",
+        "decision_bucket": "cutoff_confound",
+        "identifier": "2607.18360_cutoff_confound",
+        "publication_date": "2026-07-22",
+        "query": "arxiv_primary",
+        "query_family": "arxiv_primary",
+        "reason": "HALLMARK motivates preserving recent-source and training-cutoff confounds separately from acceptance or rejection.",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "hallmark_post_training_cutoff_source_confound",
+        "title": "Post-training-cutoff source judgement confound",
+        "url": "https://arxiv.org/abs/2607.18360"
+      }
+    ],
+    "false_positive_source_decisions": [
+      {
+        "access_outcome": "reachable_http_200_daily_feed_secondary_no_new_primary_delta",
+        "classification": "false_positive",
+        "decision_bucket": "false_positive",
+        "identifier": "hf_daily_secondary_date_only",
+        "publication_date": "2026-07-25",
+        "query": "huggingface_papers_secondary",
+        "query_family": "huggingface_papers_secondary",
+        "reason": "A secondary daily-feed date can look post-marker while the linked primary source is pre-marker or duplicate.",
+        "receipt_id": "huggingface_papers_v525_2026_07_25",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "hf_daily_feed_secondary_date_false_positive",
+        "title": "Hugging Face daily feed date without newer primary evidence",
+        "url": "https://huggingface.co/papers?date=2026-07-25"
+      }
+    ],
+    "known_false_negative_source_decisions": [
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "classification": "known_false_negative",
+        "decision_bucket": "known_false_negative",
+        "identifier": "s2_keyword_rate_limit_possible_miss",
+        "publication_date": "2026-07-25",
+        "query": "local_tooling",
+        "query_family": "local_tooling",
+        "reason": "The keyword helper did not return records for three focused queries; a non-arXiv or relevance-ranked miss is recorded explicitly.",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "search_timestamp": "2026-07-25T04:12:53Z",
+        "source_date": "2026-07-25",
+        "source_id": "semantic_scholar_keyword_helper_rate_limit_possible_miss",
+        "title": "Semantic Scholar keyword helper rate-limit possible miss",
+        "url": "scripts/sweep_semscholar.py"
+      }
+    ],
+    "ordinary_rejections_do_not_include_uncertainty": true,
+    "principle": "Recent-source uncertainty must be explicit and cannot be silently converted into rejection."
+  },
+  "field_provenance": {
+    "accepted_findings": [],
+    "accepted_rejected_abstained_findings": {
+      "principle": "Accepted, rejected, and abstained decisions are separate HALLMARK-style source outcomes.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "duplicate_and_retired_scope_filter": {
+      "principle": "Title, identifier, mechanism, heading, and retired-scope filters prevent freshness from reopening closed work.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes an external-source aggregation task.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "experiment": {
+      "principle": "Stable local slug ties the artifact to the implementation module.",
+      "source": "local artifact metadata"
+    },
+    "experiment_id": {
+      "principle": "Conductor task identity prevents numeric-prefix aliasing.",
+      "source": "local artifact metadata"
+    },
+    "false_positive_false_negative_and_cutoff_receipts": {
+      "principle": "Recent-source uncertainty must be explicit and cannot be silently converted into rejection.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "field_provenance": {
+      "principle": "Every required field traces to source receipts, local hashes, query families, or classification records.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_delta:`, `complete_null:`, or `blocked:`.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "inference_substrate": {
+      "principle": "Use `aggregation_from_external_primary_sources`.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "milestone": {
+      "principle": "Binds receipts to .525 rather than a prior milestone.",
+      "source": "local artifact metadata"
+    },
+    "preconditions_checked": {
+      "principle": "Marker, roadmap identities, reference ledgers, sweep code, output path, protected files, endpoint failures, rate limits, and query families are hashed or recorded before source decisions.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "primary_secondary_and_official_source_counts": {
+      "principle": "Discovery routes cannot be mistaken for primary evidence.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "protected_files_unchanged": {
+      "principle": "Roadmaps, conductor, protected ops ledgers, and retired-scope controls remain byte-identical unless explicitly owned.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "random_seed": {
+      "principle": "Deterministic metadata for a no-randomness ledger task.",
+      "source": "local artifact metadata"
+    },
+    "references_append_receipt": {
+      "principle": "Reference-ledger appends are exact, dated, optional, and forbidden for zero accepted findings.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects later marker, source, classification, or append drift.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "result_path": {
+      "principle": "Declares the exact JSON deliverable path.",
+      "source": "local artifact metadata"
+    },
+    "run_date": {
+      "principle": "Operator-requested execution date for the source refresh.",
+      "source": "local artifact metadata"
+    },
+    "schema": {
+      "principle": "Versioned schema id keeps downstream validators from guessing field meaning.",
+      "source": "local artifact metadata"
+    },
+    "search_finished_at": {
+      "principle": "Records when source classification finished.",
+      "source": "local artifact metadata"
+    },
+    "search_started_at": {
+      "principle": "Records when source querying started.",
+      "source": "local artifact metadata"
+    },
+    "search_window_and_marker_receipt": {
+      "principle": "The V525 marker hash and UTC search interval make post-marker novelty falsifiable.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "source_queries_and_endpoint_receipts": {
+      "principle": "Every primary, secondary, official, and tooling route records query, URL, access outcome, timestamp, and candidate counts.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors make the artifact contract auditable.",
+      "source": "local artifact metadata"
+    },
+    "status": {
+      "principle": "Terminal source-refresh state derived from marker, reachability, and classification checks.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "task_identity_and_gate_immutability": {
+      "principle": "Source refresh sharpens controls but cannot rewrite the activated milestone.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit, coverage, marker/hash, deduplication, date-window, source-classification, false-positive/cutoff, references-marker, protected-file, schema, adversarial-verify, spec-coverage, root-clutter, and full-suite checks.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks becoming success.",
+      "source": "Exp5906 source receipts, local hashes, query families, or classification records"
+    }
+  },
+  "honest_verdict": "complete_null: no accepted post-V525 source deltas; references unchanged",
+  "inference_substrate": "aggregation_from_external_primary_sources",
+  "milestone": "2026.07.525",
+  "preconditions_checked": {
+    "active_roadmap_gates_hash": "sha256:89e8d32c96f2022b65fdb7f85cc26df739e6cb501ed01319f8a3e40855888219",
+    "active_roadmap_hash": "sha256:bede79923792fdce093303c18cfbbeca80f105cd8cf5da6da0e20c2da63e3d54",
+    "active_roadmap_milestone": "2026.07.525",
+    "active_roadmap_model_policy_hash": "sha256:14dfe92c77c448842a5bda9d0c40ee57e52a3fa8c562ad68460344bccf8e3eb8",
+    "active_roadmap_task_ids": [
+      "exp5905-transition-v525",
+      "exp5906-v525-source-delta-ingestion",
+      "exp5907-constraint-ir-replay-contract",
+      "exp5908-verisynth-constraint-fixture",
+      "exp5909-sota-constraint-synthesis-ab",
+      "exp5910-verification-guided-constraint-repair",
+      "exp5911-constraint-repair-portability-audit",
+      "exp5912-csl-exact-slot-requalification",
+      "exp5913-transactional-constraint-memory-fixture",
+      "exp5914-sota-transactional-continuous-self-learning",
+      "exp5915-arc-live-runner-capability-lease",
+      "exp5916-arc-structured-memory-live-held-ab",
+      "exp5917-v525-capstone-reconciliation"
+    ],
+    "active_roadmap_task_ids_hash": "sha256:30d741625ea0c0111d0335aa3b9cb570c7a2f9a50d49b5c9a5ab0439295e64b0",
+    "api_routes_checked": true,
+    "checked_at": "2026-07-25T04:17:41Z",
+    "disk_free_bytes": 1223632510976,
+    "endpoint_failures": [
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "receipt_id": "openreview_v525_api_notes",
+        "source_family": "OpenReview",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      },
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "source_family": "local sweep helper",
+        "url": "scripts/sweep_semscholar.py"
+      }
+    ],
+    "exclusion_manifest_hash": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+    "failed_preconditions": [],
+    "network_available": true,
+    "output_path_available": true,
+    "output_path_hash": null,
+    "planner_marker_found": true,
+    "protected_file_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:193437428f5d5b6ed128e9ef34112c2d9c19cdbce66e8ae28856f70377d81256",
+      "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+      "ops/known-issues.md": "sha256:498ac870c326f017b415adfdcd4c2f7b01728f3b2dd421fbdab5789a3ddf1ad8",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "research-roadmap-next.yaml": null,
+      "research-roadmap.yaml": "sha256:bede79923792fdce093303c18cfbbeca80f105cd8cf5da6da0e20c2da63e3d54",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "scripts/sweep_clusters.py": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
+      "scripts/sweep_semscholar.py": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+    },
+    "ram_available_bytes": 48430321664,
+    "rate_limits": [
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "source_family": "local sweep helper"
+      }
+    ],
+    "references_hash": "sha256:e7eeefb85654de6cf4b86e648c8ad34b533938e68818e7ca42966238f3e1775e",
+    "research_roadmap_next_hash": null,
+    "research_roadmap_next_milestone": "",
+    "research_roadmap_next_read": false,
+    "research_roadmap_next_task_ids_hash": null,
+    "source_query_families": [
+      "arxiv_primary",
+      "github_secondary",
+      "huggingface_papers_secondary",
+      "local_tooling",
+      "official_project_page",
+      "openreview_api",
+      "openreview_secondary",
+      "semantic_scholar_citation_trail"
+    ],
+    "sweep_clusters_hash": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
+    "sweep_semscholar_hash": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351",
+    "v525_marker_hash": "sha256:7bc7ecdc2bf24f5799ea5a1cf9044eaeabf77a2a73afab48509b8ccc5f8fb88c",
+    "vnext_hash": "sha256:59c2306bf1d7acdd96bd6e73253e2646da81817b66fef3bd7cfa7dda2c4c5692"
+  },
+  "primary_secondary_and_official_source_counts": {
+    "candidate_count_total": 72,
+    "official": 2,
+    "primary": 2,
+    "secondary": 7,
+    "source_families_checked": [
+      "Extropic",
+      "GitHub discovery",
+      "Hugging Face Papers",
+      "Logical Intelligence",
+      "OpenReview",
+      "Semantic Scholar",
+      "arXiv",
+      "local sweep helper"
+    ],
+    "source_route_count": 13,
+    "tooling": 2
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:193437428f5d5b6ed128e9ef34112c2d9c19cdbce66e8ae28856f70377d81256",
+      "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+      "ops/known-issues.md": "sha256:498ac870c326f017b415adfdcd4c2f7b01728f3b2dd421fbdab5789a3ddf1ad8",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "research-roadmap-next.yaml": null,
+      "research-roadmap.yaml": "sha256:bede79923792fdce093303c18cfbbeca80f105cd8cf5da6da0e20c2da63e3d54",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "scripts/sweep_clusters.py": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
+      "scripts/sweep_semscholar.py": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:193437428f5d5b6ed128e9ef34112c2d9c19cdbce66e8ae28856f70377d81256",
+      "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
+      "ops/known-issues.md": "sha256:498ac870c326f017b415adfdcd4c2f7b01728f3b2dd421fbdab5789a3ddf1ad8",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "research-roadmap-next.yaml": null,
+      "research-roadmap.yaml": "sha256:bede79923792fdce093303c18cfbbeca80f105cd8cf5da6da0e20c2da63e3d54",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+      "scripts/sweep_clusters.py": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
+      "scripts/sweep_semscholar.py": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+    },
+    "changed_paths": []
+  },
+  "random_seed": 5906,
+  "references_append_receipt": {
+    "accepted_count": 0,
+    "accepted_source_ids": [],
+    "appended": false,
+    "end_marker": "<!-- V525-EXECUTION-SOURCE-DELTA-20260725-END -->",
+    "heading": "## V525 Execution Source Delta - 20260725",
+    "prior_marker_rewrite_count": 0,
+    "prior_v525_marker_preserved": true,
+    "references_after_hash": "sha256:e7eeefb85654de6cf4b86e648c8ad34b533938e68818e7ca42966238f3e1775e",
+    "references_before_hash": "sha256:e7eeefb85654de6cf4b86e648c8ad34b533938e68818e7ca42966238f3e1775e"
+  },
+  "reproducibility_checksum": "sha256:06d76cb7e172c80bec84104d00d7191d7b1bd7edae11d602f098ce8fbd289cb6",
+  "result_path": "results/experiment_5906_v525_source_delta_ingestion.json",
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5906.v525_source_delta_ingestion.v1",
+  "search_finished_at": "2026-07-25T04:18:21Z",
+  "search_started_at": "2026-07-25T04:17:41Z",
+  "search_window_and_marker_receipt": {
+    "boundary_hash": "sha256:7bc7ecdc2bf24f5799ea5a1cf9044eaeabf77a2a73afab48509b8ccc5f8fb88c",
+    "boundary_heading": "## V525 Planner Refresh - 20260724",
+    "boundary_line": 31525,
+    "boundary_marker": "V525-PLANNER-REFRESH-20260724-END",
+    "novelty_rule": "accept only newer primary-source evidence after the V525 marker that sharpens already allocated .525 tasks",
+    "search_window_end_utc": "2026-07-25T04:18:21Z",
+    "search_window_start_utc": "2026-07-25T04:17:41Z"
+  },
+  "source_queries_and_endpoint_receipts": {
+    "endpoint_failures": [
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "receipt_id": "openreview_v525_api_notes",
+        "source_family": "OpenReview",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      },
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "source_family": "local sweep helper",
+        "url": "scripts/sweep_semscholar.py"
+      }
+    ],
+    "query_families": [
+      "arxiv_primary",
+      "github_secondary",
+      "huggingface_papers_secondary",
+      "local_tooling",
+      "official_project_page",
+      "openreview_api",
+      "openreview_secondary",
+      "semantic_scholar_citation_trail"
+    ],
+    "rate_limits": [
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "source_family": "local sweep helper"
+      }
+    ],
+    "source_receipts": [
+      {
+        "access_outcome": "reachable_http_200_totalResults_0",
+        "accessed_at": "2026-07-25T04:17:41Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "submittedDate:[202607250000 TO 202607252359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN OR all:\"constrained decoding\")",
+        "query_family": "arxiv_primary",
+        "receipt_id": "arxiv_v525_topic_query_constraint",
+        "receipt_summary": "arXiv primary API route checked post-marker constraint, EBM, hallucination, KAN, and constrained-decoding terms; no candidate was accepted from this bounded query.",
+        "source_family": "arXiv",
+        "source_role": "primary",
+        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607250000%20TO%20202607252359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN%20OR%20all:%22constrained%20decoding%22)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+      },
+      {
+        "access_outcome": "reachable_http_200_totalResults_0",
+        "accessed_at": "2026-07-25T04:17:41Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "submittedDate:[202607250000 TO 202607252359] AND (all:\"continual learning\" OR all:\"agent memory\" OR all:Ising OR all:\"p-bit\" OR all:\"probabilistic hardware\" OR all:\"learned sampler\")",
+        "query_family": "arxiv_primary",
+        "receipt_id": "arxiv_v525_topic_query_memory_hardware",
+        "receipt_summary": "The memory and hardware arXiv primary route found no accepted post-marker method that changed existing .525 controls.",
+        "source_family": "arXiv",
+        "source_role": "primary",
+        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607250000%20TO%20202607252359%5D%20AND%20(all:%22continual%20learning%22%20OR%20all:%22agent%20memory%22%20OR%20all:Ising%20OR%20all:%22p-bit%22%20OR%20all:%22probabilistic%20hardware%22%20OR%20all:%22learned%20sampler%22)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+      },
+      {
+        "access_outcome": "reachable_http_200_dynamic_search_page_no_new_primary_delta",
+        "accessed_at": "2026-07-25T04:17:41Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "energy-based constraint reasoning continual learning after V525",
+        "query_family": "openreview_secondary",
+        "receipt_id": "openreview_v525_search_page",
+        "receipt_summary": "OpenReview search was reachable as a dynamic discovery page; secondary search listings were not promoted without newer primary forum-page evidence.",
+        "source_family": "OpenReview",
+        "source_role": "secondary",
+        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning%20continual%20learning"
+      },
+      {
+        "access_outcome": "inaccessible_http_403_challenge_required",
+        "accessed_at": "2026-07-25T04:17:41Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "api.openreview.net notes energy-based constraint",
+        "query_family": "openreview_api",
+        "receipt_id": "openreview_v525_api_notes",
+        "receipt_summary": "The direct OpenReview notes API required challenge verification, so this route is recorded as an endpoint failure rather than a fabricated negative result.",
+        "source_family": "OpenReview",
+        "source_role": "secondary",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
+      },
+      {
+        "access_outcome": "reachable_http_200_daily_feed_secondary_no_new_primary_delta",
+        "accessed_at": "2026-07-25T04:17:45Z",
+        "candidate_count": 22,
+        "candidate_ids": [
+          "2607.21461",
+          "2607.20061",
+          "2605.09635",
+          "2607.21556",
+          "2607.21072",
+          "2607.20709",
+          "2607.20911",
+          "2607.12746",
+          "2607.21553",
+          "2607.20734",
+          "2607.21576",
+          "2607.21594",
+          "2607.21051",
+          "2607.20785",
+          "2607.04763",
+          "2607.10848",
+          "2607.21485",
+          "2607.21017",
+          "2607.21557",
+          "2607.19238",
+          "2607.21580",
+          "2607.16859"
+        ],
+        "query": "daily_papers date:2026-07-25",
+        "query_family": "huggingface_papers_secondary",
+        "receipt_id": "huggingface_papers_v525_2026_07_25",
+        "receipt_summary": "Hugging Face Papers listed daily paper ids, including V524/V525 duplicates such as AREX; this secondary feed did not provide a newer primary-source Carnot hook.",
+        "source_family": "Hugging Face Papers",
+        "source_role": "secondary",
+        "url": "https://huggingface.co/papers?date=2026-07-25"
+      },
+      {
+        "access_outcome": "reachable_http_200_20_records_newest_duplicate_2607_20792",
+        "accessed_at": "2026-07-25T04:17:47Z",
+        "candidate_count": 20,
+        "candidate_ids": [
+          "2607.20792",
+          "2607.17047",
+          "2607.11555",
+          "2606.22726",
+          "2606.18206",
+          "2606.15956",
+          "2605.11011",
+          "2605.07588",
+          "ispass_2026_system2_ai_workloads",
+          "2604.11403",
+          "2604.10272",
+          "2604.03878",
+          "2604.01577",
+          "2603.18534",
+          "2603.19117",
+          "protein_diffusion_models_statistical_potentials",
+          "2602.03640",
+          "2602.01651",
+          "2601.03905",
+          "2512.17846"
+        ],
+        "query": "arXiv:2507.02092 citations",
+        "query_family": "semantic_scholar_citation_trail",
+        "receipt_id": "semantic_scholar_v525_ebt_citations",
+        "receipt_summary": "Semantic Scholar EBT citation trail returned 20 records. The newest citation was Memoir 2607.20792 from 2026-07-22, already accepted in the sealed V525 planner block.",
+        "source_family": "Semantic Scholar",
+        "source_role": "secondary",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
+      },
+      {
+        "access_outcome": "reachable_http_200_8_records_no_post_marker_actionable_citation",
+        "accessed_at": "2026-07-25T04:17:47Z",
+        "candidate_count": 8,
+        "candidate_ids": [
+          "2607.02154",
+          "2606.03089",
+          "2605.18871",
+          "2605.11011",
+          "2604.00555",
+          "2603.23398",
+          "2602.02991",
+          "acl_2026_energy_gibbs_alignment_no_arxiv_id"
+        ],
+        "query": "arXiv:2512.15605 citations",
+        "query_family": "semantic_scholar_citation_trail",
+        "receipt_id": "semantic_scholar_v525_arm_ebm_citations",
+        "receipt_summary": "Semantic Scholar ARM-EBM citation trail returned eight records; the newest dated citation was 2026-07-02 and one record had null publicationDate, so no post-marker actionable source is promoted.",
+        "source_family": "Semantic Scholar",
+        "source_role": "secondary",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
+      },
+      {
+        "access_outcome": "reachable_http_200_total_count_0_no_repository_delta",
+        "accessed_at": "2026-07-25T04:17:47Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "\"energy-based\" constraint reasoning pushed:>2026-07-24",
+        "query_family": "github_secondary",
+        "receipt_id": "github_v525_repository_discovery",
+        "receipt_summary": "GitHub search was dependency metadata only; no maintained post-marker repository displaced Carnot's exact local backends.",
+        "source_family": "GitHub discovery",
+        "source_role": "secondary",
+        "url": "https://api.github.com/search/repositories?q=%22energy-based%22+constraint+reasoning+pushed:%3E2026-07-24&per_page=5"
+      },
+      {
+        "access_outcome": "reachable_http_200_total_count_17_unrelated_pr_metadata",
+        "accessed_at": "2026-07-25T04:17:47Z",
+        "candidate_count": 17,
+        "candidate_ids": [
+          "Mininglamp-OSS/octo-server#648"
+        ],
+        "query": "transactional memory poison updated:>2026-07-24",
+        "query_family": "github_secondary",
+        "receipt_id": "github_v525_issue_discovery",
+        "receipt_summary": "GitHub issue discovery surfaced unrelated transactional message metadata rather than a Carnot-relevant memory-poisoning method.",
+        "source_family": "GitHub discovery",
+        "source_role": "secondary",
+        "url": "https://api.github.com/search/issues?q=transactional+memory+poison+updated:%3E2026-07-24&per_page=5"
+      },
+      {
+        "access_outcome": "reachable_http_200_no_authenticated_local_route",
+        "accessed_at": "2026-07-25T04:18:03Z",
+        "candidate_count": 3,
+        "candidate_ids": [
+          "z1_public_context",
+          "xtr0_public_context",
+          "tsu_public_context"
+        ],
+        "query": "Extropic writing hardware Z1 XTR-0 TSU",
+        "query_family": "official_project_page",
+        "receipt_id": "extropic_v525_official_pages",
+        "receipt_summary": "Extropic official public pages remain hardware context without an authenticated Carnot-local TSU, SDK, speed, power, or correctness route.",
+        "source_family": "Extropic",
+        "source_role": "official",
+        "url": "https://www.extropic.ai/writing ; https://www.extropic.ai/hardware"
+      },
+      {
+        "access_outcome": "reachable_http_200_no_local_weights_or_comparator",
+        "accessed_at": "2026-07-25T04:18:03Z",
+        "candidate_count": 2,
+        "candidate_ids": [
+          "kona_1_0",
+          "aleph"
+        ],
+        "query": "Kona Aleph public pages",
+        "query_family": "official_project_page",
+        "receipt_id": "logical_intelligence_v525_official_pages",
+        "receipt_summary": "Logical Intelligence official pages provide architecture context but no public weights, authenticated endpoint, or reproducible local comparator for Carnot.",
+        "source_family": "Logical Intelligence",
+        "source_role": "official",
+        "url": "https://logicalintelligence.com/ ; https://logicalintelligence.com/kona-ebms-energy-based-models"
+      },
+      {
+        "access_outcome": "reachable_local_tool_exit_0_arxiv_urls_only",
+        "accessed_at": "2026-07-25T04:18:03Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "scripts/sweep_clusters.py all --max-results 3",
+        "query_family": "local_tooling",
+        "receipt_id": "local_sweep_clusters_v525",
+        "receipt_summary": "The local cluster helper emitted arXiv API URLs only and did not mutate repository files.",
+        "source_family": "local sweep helper",
+        "source_role": "tooling",
+        "url": "scripts/sweep_clusters.py"
+      },
+      {
+        "access_outcome": "inaccessible_remote_http_429_rate_limited_on_3_keyword_queries",
+        "accessed_at": "2026-07-25T04:18:21Z",
+        "candidate_count": 0,
+        "candidate_ids": [],
+        "query": "transactional memory poison; constraint synthesis repair --limit 5",
+        "query_family": "local_tooling",
+        "receipt_id": "local_sweep_semscholar_v525",
+        "receipt_summary": "The local Semantic Scholar keyword helper hit HTTP 429; direct primary and official routes remain the evidence basis.",
+        "source_family": "local sweep helper",
+        "source_role": "tooling",
+        "url": "scripts/sweep_semscholar.py"
+      }
+    ]
+  },
+  "spec_refs": [
+    "REQ-REPORT-5906",
+    "SCENARIO-REPORT-5906-ZERO-FINDING",
+    "SCENARIO-REPORT-5906-ACCEPT-BOUNDED-DELTA",
+    "SCENARIO-REPORT-5906-HALLMARK-UNCERTAINTY",
+    "SCENARIO-REPORT-5906-DUPLICATE-AND-RETIRED-SCOPE",
+    "SCENARIO-REPORT-5906-SCHEMA"
+  ],
+  "status": "complete",
+  "task_identity_and_gate_immutability": {
+    "active_roadmap_gates_hash": "sha256:89e8d32c96f2022b65fdb7f85cc26df739e6cb501ed01319f8a3e40855888219",
+    "active_roadmap_model_policy_hash": "sha256:14dfe92c77c448842a5bda9d0c40ee57e52a3fa8c562ad68460344bccf8e3eb8",
+    "active_roadmap_task_ids_hash": "sha256:30d741625ea0c0111d0335aa3b9cb570c7a2f9a50d49b5c9a5ab0439295e64b0",
+    "allowed_target_experiments": [
+      "exp5907-constraint-ir-replay-contract",
+      "exp5908-verisynth-constraint-fixture",
+      "exp5909-sota-constraint-synthesis-ab",
+      "exp5910-verification-guided-constraint-repair",
+      "exp5911-constraint-repair-portability-audit",
+      "exp5912-csl-exact-slot-requalification",
+      "exp5913-transactional-constraint-memory-fixture",
+      "exp5914-sota-transactional-continuous-self-learning",
+      "exp5915-arc-live-runner-capability-lease",
+      "exp5916-arc-structured-memory-live-held-ab"
+    ],
+    "authority_boundaries_unchanged": true,
+    "gates_unchanged": true,
+    "hardware_requirements_changed": false,
+    "headline_claims_changed": false,
+    "model_policy_unchanged": true,
+    "retired_scopes_reopened": false,
+    "task_ids_unchanged": true
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5906_v525_source_delta_ingestion.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5906_v525_source_delta_ingestion.py -m pytest tests/python/test_experiment_5906_v525_source_delta_ingestion.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5906_v525_source_delta_ingestion.py --fail-under=100",
+    ".venv/bin/ruff check python/carnot/experiment_5906_v525_source_delta_ingestion.py tests/python/test_experiment_5906_v525_source_delta_ingestion.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5906_v525_source_delta_ingestion.json",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5906_v525_source_delta_ingestion.py --fail-under=100": null,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5906_v525_source_delta_ingestion.py -m pytest tests/python/test_experiment_5906_v525_source_delta_ingestion.py -q --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/pytest tests/python/test_experiment_5906_v525_source_delta_ingestion.py -q --no-cov -n 0": null,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5906_v525_source_delta_ingestion.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py": null,
+    ".venv/bin/python scripts/root_clutter_sweep.py": null,
+    ".venv/bin/ruff check python/carnot/experiment_5906_v525_source_delta_ingestion.py tests/python/test_experiment_5906_v525_source_delta_ingestion.py": null
+  }
+}

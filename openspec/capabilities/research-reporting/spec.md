@@ -46551,3 +46551,155 @@ without being laundered into success.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5905 | Implemented (`python/carnot/experiment_5905_transition_v525.py`, `results/experiment_5905_transition_v525.json`) | Implemented (`tests/python/test_experiment_5905_transition_v525.py`) |
+
+### REQ-REPORT-5906: V525 Post-Marker Source Delta Ingestion Separates Source Uncertainty Classes
+
+The Exp5906 workflow SHALL run a bounded source refresh after the
+`V525-PLANNER-REFRESH-20260724-END` marker and SHALL write
+`results/experiment_5906_v525_source_delta_ingestion.json`. It SHALL first
+hash the marker block, active roadmap task IDs and gates, optional
+`research-roadmap-next.yaml` task IDs and gates when present,
+`research-references.md`, `ops/exclusion_manifest.yaml`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, the output path
+when present, and protected files. It SHALL record UTC search start/end,
+endpoint failures, rate limits, and query families. If the marker is absent,
+no primary or reliable secondary source route is reachable, or the active
+`.525` task identity cannot be read, the workflow SHALL emit a terminal
+`blocked:` artifact and SHALL leave `research-references.md`,
+`research-roadmap.yaml`, optional `research-roadmap-next.yaml`,
+`scripts/research_conductor.py`, operator-owned ops ledgers, and task/gate
+identity unchanged.
+
+The workflow SHALL search only evidence published or changed after the V525
+marker boundary through arXiv, OpenReview, Hugging Face Papers, direct Semantic
+Scholar citation routes for EBT `2507.02092` and ARM-EBM `2512.15605`, GitHub,
+Extropic, and Logical Intelligence. arXiv, OpenReview forum pages, official
+project pages, Extropic, and Logical Intelligence SHALL be labeled as primary
+or official sources when directly reachable; Hugging Face Papers, GitHub
+discovery metadata, Semantic Scholar routes, search pages, and local sweep
+helpers SHALL be labeled as secondary or tooling unless they point to a primary
+page. Every surfaced receipt SHALL include source family, role, query family,
+URL, accessed timestamp, access outcome, candidate IDs, candidate count, and
+receipt summary.
+
+Every finding SHALL be classified separately as accepted, rejected, abstained,
+false-positive, known-false-negative, duplicate, retired-scope, inaccessible,
+or cutoff-confound. Accepted findings SHALL be newer primary-source evidence,
+non-duplicate by title, identifier, mechanism, and existing reference heading,
+and SHALL only sharpen controls inside already allocated `.525` tasks. Accepted
+findings SHALL NOT change task IDs, gates, model policy, authority boundaries,
+retired scopes, hardware requirements, headline claims, or active roadmap
+identity. The workflow SHALL reject sources that only rename retired KAN
+mutation, final-embedding scoring, generated-answer repair, unchanged board
+probes, or public ARC solves. Following HALLMARK, recent-source uncertainty and
+post-training-cutoff/publication-date confounds SHALL be recorded as abstention
+or cutoff-confound receipts rather than silently converted into rejection.
+Known source false positives and known false negatives SHALL remain visible
+even when zero accepted findings is complete.
+
+When no accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` unchanged and set
+`references_append_receipt.appended=false`. When accepted findings exist, it
+MAY append exactly one dated V525 delta subheading after the sealed marker,
+listing only actionable method-to-task mappings and preserving prior markers
+without rewrite. The workflow SHALL declare
+`inference_substrate="aggregation_from_external_primary_sources"` and SHALL NOT
+relabel external research aggregation as live LLM inference.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`search_window_and_marker_receipt`,
+`source_queries_and_endpoint_receipts`,
+`primary_secondary_and_official_source_counts`,
+`accepted_rejected_abstained_findings`,
+`false_positive_false_negative_and_cutoff_receipts`,
+`duplicate_and_retired_scope_filter`, `references_append_receipt`,
+`task_identity_and_gate_immutability`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty provenance entry and a
+principle. The `honest_verdict` SHALL start with `complete_delta:`,
+`complete_null:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal source-refresh state derived from marker, reachability, and classification checks."
+- `preconditions_checked`: principle "Marker, roadmap identities, reference ledgers, sweep code, output path, protected files, endpoint failures, rate limits, and query families are hashed or recorded before source decisions."
+- `search_window_and_marker_receipt`: principle "The V525 marker hash and UTC search interval make post-marker novelty falsifiable."
+- `source_queries_and_endpoint_receipts`: principle "Every primary, secondary, official, and tooling route records query, URL, access outcome, timestamp, and candidate counts."
+- `primary_secondary_and_official_source_counts`: principle "Discovery routes cannot be mistaken for primary evidence."
+- `accepted_rejected_abstained_findings`: principle "Accepted, rejected, and abstained decisions are separate HALLMARK-style source outcomes."
+- `false_positive_false_negative_and_cutoff_receipts`: principle "Recent-source uncertainty must be explicit and cannot be silently converted into rejection."
+- `duplicate_and_retired_scope_filter`: principle "Title, identifier, mechanism, heading, and retired-scope filters prevent freshness from reopening closed work."
+- `references_append_receipt`: principle "Reference-ledger appends are exact, dated, optional, and forbidden for zero accepted findings."
+- `task_identity_and_gate_immutability`: principle "Source refresh sharpens controls but cannot rewrite the activated milestone."
+- `protected_files_unchanged`: principle "Roadmaps, conductor, protected ops ledgers, and retired-scope controls remain byte-identical unless explicitly owned."
+- `duration_s`: principle "Measured wall time exposes an external-source aggregation task."
+- `inference_substrate`: principle "Use `aggregation_from_external_primary_sources`."
+- `field_provenance`: principle "Every required field traces to source receipts, local hashes, query families, or classification records."
+- `test_commands`: principle "Commands document focused unit, coverage, marker/hash, deduplication, date-window, source-classification, false-positive/cutoff, references-marker, protected-file, schema, adversarial-verify, spec-coverage, root-clutter, and full-suite checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
+- `reproducibility_checksum`: principle "A checksum detects later marker, source, classification, or append drift."
+- `honest_verdict`: principle "Use `complete_delta:`, `complete_null:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5906-ZERO-FINDING: Complete Zero Delta Leaves References Unchanged
+
+**Given** the V525 planner marker is present, the active `.525` roadmap is
+readable, and at least one primary or reliable secondary source route is
+reachable
+**And** every surfaced post-marker item is duplicate, rejected, abstained,
+retired-scope, inaccessible, false-positive, known-false-negative, or a cutoff
+confound
+**When** the Exp5906 workflow runs
+**Then** it writes `results/experiment_5906_v525_source_delta_ingestion.json`,
+sets `status=complete`, keeps `references_append_receipt.appended=false`,
+records zero accepted findings, separates rejected and abstained source
+decisions, preserves false-positive/false-negative/cutoff receipts, preserves
+task identities and gates, and emits a `complete_null:` verdict.
+
+#### SCENARIO-REPORT-5906-ACCEPT-BOUNDED-DELTA: Accepted Sources Stay Inside Existing V525 Tasks
+
+**Given** a post-marker source is newer primary-source evidence, is
+non-duplicate by title, identifier, mechanism, and existing heading, and only
+sharpens an already allocated `.525` task
+**When** the source is accepted
+**Then** the artifact and optional reference append record source id, title,
+URL, source date, receipt id, target experiment, bounded source hook, authority
+boundary, method-to-task mapping, and provenance while preserving task IDs,
+gates, model policy, authority boundaries, retired scopes, hardware
+requirements, and headline claims.
+
+#### SCENARIO-REPORT-5906-HALLMARK-UNCERTAINTY: Recent-Source Uncertainty Is Not Silent Rejection
+
+**Given** a source route exposes a recent candidate whose primary publication
+date, post-training-cutoff status, or citation-verifier outcome is uncertain
+**When** the candidate is classified
+**Then** the artifact records abstained, false-positive,
+known-false-negative, or cutoff-confound receipts separately and does not
+convert that uncertainty into an ordinary rejection.
+
+#### SCENARIO-REPORT-5906-DUPLICATE-AND-RETIRED-SCOPE: Closed Work Stays Closed
+
+**Given** a source duplicates existing V525 reference headings or only renames
+retired KAN mutation, final-embedding scoring, generated-answer repair,
+unchanged board probes, public ARC solves, TSU execution, Kona execution, or a
+task/gate rewrite
+**When** the candidate is classified
+**Then** it is rejected as duplicate or retired-scope, the retired-scope filter
+records the matching rule, and no reference append or roadmap mutation is made.
+
+#### SCENARIO-REPORT-5906-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp5906 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, field provenance entry, source
+receipt, endpoint-failure/rate-limit receipt, finding class, protected-file
+hash, test command, exit code, checksum, and terminal verdict prefix is
+present; the inference substrate is
+`aggregation_from_external_primary_sources`; and external source aggregation is
+not labeled as live LLM inference.
+
+## Implementation Status (REQ-REPORT-5906)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5906 | Implemented (`python/carnot/experiment_5906_v525_source_delta_ingestion.py`, `results/experiment_5906_v525_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5906_v525_source_delta_ingestion.py`) |
