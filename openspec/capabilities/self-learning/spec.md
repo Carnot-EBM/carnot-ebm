@@ -25612,6 +25612,129 @@ command exits zero
 |---|---|---|
 | REQ-LEARN-5912 | Implemented (`python/carnot/experiment_5912_csl_exact_slot_requalification.py`, `results/experiment_5912_csl_exact_slot_requalification.json`) | Implemented (`tests/python/test_experiment_5912_csl_exact_slot_requalification.py`) |
 
+## REQ-LEARN-5920: Prospective Event Stream Admission Boundary
+
+The self-learning tier SHALL provide Exp5920, a deterministic no-LLM consumer
+boundary at `python/carnot/experiment_5920_prospective_event_stream_admission.py`
+that consumes immutable Exp5908 prompt-plan rows and immutable Exp5909 sealed
+model proposal rows, then writes
+`results/experiment_5920_prospective_event_stream_admission.json` and
+`results/experiment_5920_prospective_event_stream_admission.rows.jsonl`.
+Exp5920 SHALL NOT mutate Exp5908, Exp5909, Exp5912, or any of their row files;
+it SHALL NOT use an Exp5912 ready scalar, rerun the retired Exp5912 exact slot,
+or reopen the retired Exp5895/Exp5912 scope.
+
+Before stream admission is credited, Exp5920 SHALL hash repository
+instructions, source schemas, the Exp5908 artifact and row file, the Exp5909
+artifact and artifact-bound raw stream, the Exp5912 retired artifact,
+exclusions, known-issue baseline, output paths, protected files, disk/RAM, and
+atomic JSON/JSONL write support. If the prompt-named Exp5909 `.events.jsonl`
+path is absent but the Exp5909 artifact binds `.raw.jsonl`, Exp5920 SHALL
+record the absent alias and use only the artifact-bound raw stream.
+
+Every Exp5920 row SHALL use a versioned schema binding a monotonically ordered
+event id, causal sequence index, case id, origin family, prompt visibility,
+proposal hash and text, exact diagnostic and label projection, commit
+eligibility, split, model identity and model hash, source artifact hash, source
+row hash, Exp5909 raw row hash, prior-prefix checksum, row hash, and resulting
+prefix checksum. Replay SHALL reject duplicate event ids, reordered rows,
+future-label prompt visibility, split drift relative to Exp5908/Exp5909,
+post-hoc relabeling, source hash drift, model hash drift, and broken prefix
+chains. Rejection SHALL leave zero partial promotions.
+
+Exp5920 SHALL define the operational gate as clean task-owned unit/spec/applicable
+E2E commands plus `global_suite_failure_delta<=0` against an exact pre-task
+node-id baseline. The global suite need not be zero when unrelated debt is
+preserved exactly, but Exp5920 SHALL NOT suppress failures, deselect unrelated
+failures, inflate readiness from a retired slot, or increase the global failure
+set.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`retired_scope_not_reopened`, `immutable_upstream_hashes`,
+`prospective_event_schema_and_version`,
+`fresh_stream_path_hash_row_count_and_prefix_chain`,
+`chronology_split_and_visibility_receipts`, `exact_label_authority`,
+`replay_and_tamper_matrix`, `task_owned_test_boundary`,
+`global_suite_baseline_and_failure_delta`, `protected_files_unchanged`,
+`prospective_stream_admission_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes admitted, retired, or blocked prospective stream evidence.
+- `preconditions_checked`: Hashes, resources, source schemas, output paths, and atomic writes prevent fabricated stream admission.
+- `retired_scope_not_reopened`: True only when no Exp5912 ready scalar, artifact mutation, or exact frozen rerun is used.
+- `immutable_upstream_hashes`: Exp5908, Exp5909, Exp5912, schemas, exclusions, and baselines are consumed read-only.
+- `prospective_event_schema_and_version`: One versioned row contract owns chronology, visibility, identity, source hashes, and replay.
+- `fresh_stream_path_hash_row_count_and_prefix_chain`: The Exp5920-owned JSONL path, row count, file hash, and prefix chain bind every row.
+- `chronology_split_and_visibility_receipts`: Monotone ids, stable split, and no future-label prompt visibility are mandatory.
+- `exact_label_authority`: Exact verifier labels and diagnostics are adjudication authority after proposal only.
+- `replay_and_tamper_matrix`: Fresh-process replay and chronology, visibility, label, hash, and split tampering must reject completely.
+- `task_owned_test_boundary`: Unit, coverage, spec, replay, adversarial, E2E, protected-file, and clutter checks define the task-owned clean gate.
+- `global_suite_baseline_and_failure_delta`: Known unrelated debt is preserved by exact node id and may not increase.
+- `protected_files_unchanged`: Protected files and upstream artifacts stay byte-identical.
+- `prospective_stream_admission_ready_score`: Emit bare 1.0 only for clean task-owned commands, global failure delta at most zero, fresh-process replay, and complete tamper rejection.
+- `duration_s`: Measured wall time exposes deterministic replay work.
+- `inference_substrate`: Use `deterministic_artifact_replay_no_llm`.
+- `verifier_is_oracle`: True only for schema, checksum, chronology, visibility, and exact-label adjudication.
+- `field_provenance`: Every field traces to task prompt, specs, upstream artifacts, rows, tests, or command receipts.
+- `test_commands`: Commands document focused unit/coverage, clean-boundary, replay, tamper, hash, adversarial, spec, applicable E2E, protected-file, global-delta, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed task-owned checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects event, source, prefix, test, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `retired:`, or `blocked:`.
+
+`prospective_stream_admission_ready_score` SHALL be the bare scalar `1.0` only
+when preconditions pass, Exp5908 and Exp5909 replay from immutable hashes,
+Exp5912 remains retired and not reopened, the fresh Exp5920 row stream validates
+chronology, split, visibility, row identity, source hashes, exact labels, model
+hashes, and prefix chain, a fresh-process replay accepts the stream, every
+tamper case rejects with zero partial promotions, protected files are unchanged,
+every task-owned command exits zero, and global-suite failure delta is at most
+zero by exact node id. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5920-SCHEMA: Rows Bind Identity, Visibility, And Prefixes
+
+**Given** immutable Exp5908 prompt-plan rows and immutable Exp5909 sealed raw
+rows
+**When** Exp5920 materializes its owned prospective stream
+**Then** every row has the Exp5920 schema version, monotone event id, causal
+index, case id, origin family, prompt visibility, exact label projection,
+commit eligibility, split, model identity/hash, source hashes, prior-prefix
+checksum, row hash, and resulting prefix checksum
+**And** the stream file hash and row count match the terminal artifact.
+
+### SCENARIO-LEARN-5920-REPLAY: Fresh Process Accepts Only The Sealed Stream
+
+**Given** the Exp5920 row stream was written from immutable upstream bytes
+**When** replay runs in a fresh Python process
+**Then** the same final prefix checksum, row count, stream hash, and admission
+receipt are produced without using an in-process cache.
+
+### SCENARIO-LEARN-5920-TAMPER: Mutations Reject Without Partial Promotion
+
+**Given** one Exp5920 stream is independently valid
+**When** event chronology, future-label visibility, exact labels, source hashes,
+or split are tampered one at a time
+**Then** each tamper case is rejected with a typed error and
+`partial_promotions` equals zero.
+
+### SCENARIO-LEARN-5920-BOUNDARY: Global Debt Is Preserved But Not Amplified
+
+**Given** Exp5912 recorded 116 unrelated global-suite node failures for
+`.venv/bin/pytest tests/python -q`
+**When** Exp5920 evaluates readiness
+**Then** task-owned commands must be clean
+**And** the global-suite failure delta by exact node id must be at most zero
+without requiring a zero-failure global suite or reopening the retired slot.
+
+## Implementation Status (Exp 5920)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`, `results/experiment_5920_prospective_event_stream_admission.json`, `results/experiment_5920_prospective_event_stream_admission.rows.jsonl`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded

@@ -34,6 +34,17 @@ import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
 from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior, connected_color_blobs
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
+from carnot.agentic.arc_hud_bar_detector import (
+    HUD_MASK_GUARD_MAX_SPLIT_NODES,
+    MaskCollapseGuard,
+    mask_summary,
+)
+from carnot.agentic.arc_hud_bar_detector import (
+    # Aliased on import: `StepwiseExplorer.__init__` takes a BOOL kwarg spelled
+    # `edge_bar_hud_mask`, and an unaliased import of the same name would be shadowed inside
+    # that method -- confusing to read even though module-scope callers are unaffected.
+    edge_bar_hud_mask as compute_edge_bar_hud_mask,
+)
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
 from carnot.agentic.arc_go_explore import coerce_go_explore_archive
@@ -240,6 +251,48 @@ SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_MODE = "agent_owned_event_tape_plus_identic
 # REQ-ARC-WMTE-5583's RESOLUTION note for the full record.
 SUBMITTED_AUTO_HUD_MASK_ENABLED = True
 SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
+# REQ-ARC-WMTE-5960: the REPAIRED status-bar classifier plus a runtime collapse guard on its
+# application. Read python/carnot/agentic/arc_hud_bar_detector.py's module docstring for the
+# full WHY; in short:
+#
+# THE DEFECT. The classifier above (`_compute_hud_mask_from_frame` ->
+# `ColorBlobSaliencePrior.is_status_bar_like`) is ORIENTATION-BLIND, not merely mis-tuned: its
+# geometric branch requires `width >= 0.75*frame_width AND height <= 2`, a horizontal-bar
+# template no vertical bar can satisfy at any frame size, and its edge test reads bbox[0]/bbox[2]
+# (both Y coordinates), so the LEFT/RIGHT columns are never tested at all. r11l renders a
+# MONOTONE step counter into frame COLUMN 0 -- one 4-connected blob, colour 0, 64 px, bbox
+# (0,0,63,0) -- so the mask resolves to None there, nothing leaves node identity, and the search
+# has no memory: 1956 actions -> 1392 graph nodes over 31 true game states (44.9x inflation on
+# ARM A; ~22-23x on the current live config, arm B2 -- cite the per-arm baseline), with a single
+# WALL-blocked, game-state-INERT click re-popped 1371 of those 1956 actions because it changes
+# exactly one cell, in column 0. Masking column 0 and changing NOTHING else makes r11l WIN on
+# 3/3 seeds. That column-0 mask was ORACLE-DERIVED from the public game source and is a
+# DIAGNOSTIC ONLY; the detector here derives the identical 64-cell mask from FRAME STATISTICS
+# alone (all four edges with a symmetric 2-cell tolerance + a scale-free orientation-aware
+# elongation ratio + a 5%-of-frame area ceiling). Verified on all 25 public games: a strict
+# SUPERSET of today's mask (drops nothing, 25/25) and a strict SUBSET of the reference
+# solver's mask (0 extra px, 25/25).
+#
+# WHY DEFAULT OFF. Over-masking destroys CORRECTNESS while under-masking only costs efficiency,
+# and that asymmetry is not hypothetical: injecting the reference's mask into our own
+# conservative application produced PROVEN aliasing violations on tu93 (2 of 58 observable keys,
+# unmasked control 0 of 14) and lf52 -- every one of them a monotone counter GATING the
+# game-over transition, i.e. a decision-relevant state variable hiding inside a textbook HUD.
+# So the flip needs its own matched-budget per-seed full-corpus A/B (arm G vs arm B2 in
+# experiment_5836), and the submitted agent stays byte-identical until then.
+SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = False
+SUBMITTED_EDGE_BAR_HUD_MASK_MODE = "orientation_complete_edge_bar_geometry_single_frame"
+# The runtime HARD REFUSAL that makes the above safe to consider at all. A
+# `(masked_node, concrete_action)` key observed to produce TWO DIFFERENT masked successors
+# proves one masked hash covers two behaviourally distinct true states -- a causal proof from
+# the agent's OWN transitions, no oracle. Each proof un-masks that node (local split); past
+# HUD_MASK_GUARD_MAX_SPLIT_NODES the mask is revoked outright and identity falls back to
+# unmasked. Carries a MANDATORY unmasked control so environment non-determinism is not
+# misattributed to the mask (measured: sc25's masked violations are matched 1:1 by
+# unmasked-control violations, so none of them is the mask's fault). Default OFF so it is
+# flipped together with the detector it guards, never silently ahead of it.
+SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = False
+SUBMITTED_HUD_MASK_COLLAPSE_GUARD_MODE = "per_node_successor_branching_proof_with_unmasked_control"
 # REQ-ARC-WMTE-5717: inject a small game-AGNOSTIC exploration-playbook few-shot (the recurring
 # "orient, hypothesize, test, revise" method distilled from the solve corpus,
 # docs/research-notes/arc-exploration-playbook-20260717.md) into the STALL/first-contact
@@ -471,8 +524,17 @@ def _frame_only_mechanic_hint(frame: Any) -> Optional[str]:
     return None
 
 
-def _compute_hud_mask_from_frame(frame: Any) -> Any | None:
+def _compute_hud_mask_from_frame(frame: Any, *, edge_bar_detector: bool = False) -> Any | None:
     """Rule-based, zero-action-cost status-bar mask for `StepwiseExplorer.hud_mask`.
+
+    REQ-ARC-WMTE-5960: when `edge_bar_detector` is True the mask comes from the REPAIRED,
+    orientation-complete detector in `carnot.agentic.arc_hud_bar_detector` instead. That
+    detector ORs in this function's existing `is_status_bar_like` predicate, so its output is
+    a SUPERSET of this one BY CONSTRUCTION -- an A/B difference can therefore only come from
+    newly-detected cells, never from cells that silently stopped being masked. The default
+    (False) leaves this function byte-identical to its pre-5960 behaviour. See
+    SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED above for the measured defect and why the repair
+    ships default-off.
 
     E1 (arXiv:2512.24156): segment the frame into single-color connected components and
     mark any status-bar-LIKE blob's cells (frame-edge-touching, spans most of the frame's
@@ -495,6 +557,8 @@ def _compute_hud_mask_from_frame(frame: Any) -> Any | None:
         grid = grid_of(frame)
         if getattr(grid, "shape", None) is None or grid.ndim != 2:
             return None
+        if edge_bar_detector:
+            return compute_edge_bar_hud_mask(grid, include_status_bar_like=True)
         prior = ColorBlobSaliencePrior()
         mask = np.zeros(grid.shape, dtype=bool)
         for blob in connected_color_blobs(grid):
@@ -800,6 +864,9 @@ class StepwiseExplorer:
         max_depth: int = 45,
         hud_mask=None,
         auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
+        edge_bar_hud_mask: bool | None = None,
+        hud_mask_collapse_guard: bool | None = None,
+        hud_mask_guard_max_split_nodes: int = HUD_MASK_GUARD_MAX_SPLIT_NODES,
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
@@ -969,6 +1036,35 @@ class StepwiseExplorer:
             "CARNOT_ARC_FRONTIER_GRADIENT",
             SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED,
         )
+        # REQ-ARC-WMTE-5960: the repaired HUD detector and its runtime collapse guard, resolved
+        # through the SAME explicit-kwarg > env > SUBMITTED_* ladder as everything above so the
+        # A/B harness can flip one arm without mutating module globals across arms in-process.
+        self.edge_bar_hud_mask_enabled = _fd_gate(
+            edge_bar_hud_mask,
+            "CARNOT_ARC_EDGE_BAR_HUD_MASK",
+            SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED,
+        )
+        self.hud_mask_collapse_guard_enabled = _fd_gate(
+            hud_mask_collapse_guard,
+            "CARNOT_ARC_HUD_MASK_COLLAPSE_GUARD",
+            SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED,
+        )
+        self._hud_collapse_guard = (
+            MaskCollapseGuard(max_split_nodes=int(hud_mask_guard_max_split_nodes))
+            if self.hud_mask_collapse_guard_enabled
+            else None
+        )
+        # Recorded for the artifact row: WHICH detector produced the mask that is actually in
+        # force, so a reader never has to infer the treatment from a cell count.
+        self._hud_mask_source = "explicit_kwarg" if hud_mask is not None else "unresolved"
+        # Distinct UNMASKED frame hashes observed. The denominator of the dedup metric: with a
+        # working mask, many distinct raw frames share one graph node; with none, the two counts
+        # are equal (measured on all 8 mask-None public games) and the search has no memory.
+        self._unique_frame_hashes: set[str] = set()
+        # Unmasked hash of the most recently observed frame -- the collapse guard's control
+        # antecedent. Tracked here rather than read off the graph node because node frames are
+        # only retained when certain optional components are enabled (see _ingest).
+        self._last_unmasked_hash: Optional[str] = None
         self.tier_count = max(1, int(tier_count))
         self.tier_policy = TierExhaustionPolicy(tier_count=self.tier_count)
         self._active_tier = 0
@@ -1606,9 +1702,72 @@ class StepwiseExplorer:
 
         g = grid_of(frame)
         if self.hud_mask is not None and getattr(self.hud_mask, "shape", None) == g.shape:
-            g = g.copy()
-            g[self.hud_mask] = 0  # collapse counter/timer cells so equal game states dedup
+            masked = g.copy()
+            masked[self.hud_mask] = 0  # collapse counter/timer cells so equal game states dedup
+            masked_hash = frame_hash(masked)
+            guard = self._hud_collapse_guard
+            if guard is not None and guard.is_split(masked_hash):
+                # REQ-ARC-WMTE-5960 HARD REFUSAL. This masked hash was PROVEN to alias two
+                # behaviourally distinct true states (same (node, concrete action) -> two
+                # different masked successors, with the unmasked control showing only one). So
+                # for this node -- or, past the guard's split cap, for every node -- identity
+                # reverts to the unmasked frame. Appending the unmasked hash rather than
+                # returning it bare keeps the compound key visibly derived from the masked one,
+                # which makes a split node greppable in a dumped graph.
+                return masked_hash + "|u:" + frame_hash(g)
+            return masked_hash
         return frame_hash(g)
+
+    def _unmasked_hash(self, frame_or_grid) -> Optional[str]:
+        """Hash IGNORING `hud_mask` -- the collapse guard's mandatory control channel.
+
+        Without this the guard could not distinguish "the mask collapsed two distinct states"
+        from "this environment is simply non-deterministic at this node", and would fire
+        spuriously (measured on sc25, where masked and unmasked violation counts match 1:1).
+        """
+
+        if frame_or_grid is None:
+            return None
+        try:
+            from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
+
+            return frame_hash(grid_of(frame_or_grid))
+        except Exception:
+            return None
+
+    def hud_mask_diagnostics(self) -> dict:
+        """Per-run HUD/identity evidence for an artifact row. Always safe to call."""
+
+        summary = mask_summary(self.hud_mask)
+        out = {
+            "auto_hud_mask_enabled": bool(self.auto_hud_mask),
+            "edge_bar_hud_mask_enabled": bool(self.edge_bar_hud_mask_enabled),
+            "hud_mask_collapse_guard_enabled": bool(self.hud_mask_collapse_guard_enabled),
+            "hud_mask_source": str(self._hud_mask_source),
+            "hud_mask_resolved": bool(summary["resolved"]),
+            "hud_mask_cell_count": int(summary["cell_count"]),
+            "hud_mask_rows": summary["rows"],
+            "hud_mask_cols": summary["cols"],
+            "graph_nodes": int(len(self.graph)),
+            "unique_frames": int(len(self._unique_frame_hashes)),
+            # graph_nodes / unique UNMASKED frames. 1.0 means every distinct raw frame became
+            # its own node (no dedup at all -- the r11l pathology); below 1.0 means the mask is
+            # collapsing frames together. This is the LEGAL, oracle-free stand-in for true node
+            # inflation, which would need a per-game count of real game states (available only
+            # from the public game's source, and therefore diagnostic-only).
+            "node_inflation_vs_unique_frames": (
+                round(len(self.graph) / max(1, len(self._unique_frame_hashes)), 4)
+                if self._unique_frame_hashes
+                else None
+            ),
+        }
+        if self._hud_collapse_guard is not None:
+            out["collapse_guard"] = self._hud_collapse_guard.diagnostics()
+            out["collapse_guard_refusals"] = int(self._hud_collapse_guard.refusals)
+        else:
+            out["collapse_guard"] = None
+            out["collapse_guard_refusals"] = 0
+        return out
 
     def _grid_for_hash(self, node_hash: Optional[str]):
         if node_hash is None:
@@ -1968,7 +2127,29 @@ class StepwiseExplorer:
             # hashed under the old one would corrupt node identity, per _hash's masking).
             self._hud_mask_attempted = True
             if self.auto_hud_mask and self.hud_mask is None:
-                self.hud_mask = _compute_hud_mask_from_frame(latest)
+                self.hud_mask = _compute_hud_mask_from_frame(
+                    latest, edge_bar_detector=self.edge_bar_hud_mask_enabled
+                )
+                self._hud_mask_source = (
+                    (
+                        "edge_bar_detector_req5960"
+                        if self.edge_bar_hud_mask_enabled
+                        else "status_bar_classifier_req5583"
+                    )
+                    if self.hud_mask is not None
+                    else "unresolved_no_bar_detected"
+                )
+        unmasked_now = self._unmasked_hash(latest)
+        # The UNMASKED hash of the frame the agent was standing on when it issued the action
+        # that produced `latest` -- i.e. the raw antecedent. Read from the previous _ingest, NOT
+        # from the graph node's stored frame: the bare explorer only RETAINS node frames when
+        # one of several optional components is enabled, so `awaiting["previous_frame"]` is None
+        # on every transition of a bare run (measured: 1952 of 1952 on tu93). Sourcing the
+        # control from there is what left the collapse guard's control channel dead.
+        unmasked_before = self._last_unmasked_hash
+        if unmasked_now:
+            self._unique_frame_hashes.add(unmasked_now)
+            self._last_unmasked_hash = unmasked_now
         h = self._hash(latest)
         lvl = _level_of(latest)
         over = self._game_over(latest)
@@ -1982,6 +2163,31 @@ class StepwiseExplorer:
         if self.awaiting is not None:
             o = self.awaiting
             self.awaiting = None
+            # REQ-ARC-WMTE-5960 COLLAPSE GUARD. One realized (origin, concrete action) ->
+            # successor triple, fed to the guard with its mandatory unmasked control. If this
+            # key has now been seen producing two DIFFERENT masked successors while the
+            # unmasked control shows only one, the mask is PROVEN to be collapsing distinct
+            # states at `origin`, and `_hash` starts keying that node by masked+unmasked from
+            # here on (or, past the split cap, keys every node that way). Every proof is
+            # counted in `hud_mask_diagnostics()["collapse_guard"]`, so the guard's activity is
+            # never invisible. Wrapped defensively for the same reason every sibling observe
+            # hook in this block is: a guard that crashes must not take the search down.
+            guard = self._hud_collapse_guard
+            if guard is not None and self.hud_mask is not None:
+                try:
+                    guard.observe(
+                        origin_masked=o.get("origin"),
+                        origin_unmasked=unmasked_before,
+                        # CONCRETE action, not the action NAME. Keying on the name alone lumps
+                        # every distinct click together and manufactures spurious violations
+                        # (measured: 13 false ones on r11l). The guard coerces the payload
+                        # (which may be a dict of click coordinates) to a stable key itself.
+                        action_key=(int(o["action"]), o.get("data")),
+                        successor_masked=h,
+                        successor_unmasked=unmasked_now,
+                    )
+                except Exception:
+                    pass
             if self.dense_curiosity is not None and o.get("grid") is not None:
                 try:
                     from carnot.agentic.arc_agi3_world_model import grid_of
@@ -3329,6 +3535,8 @@ class CarnotAgentPolicy:
         force_explore: bool = False,
         hud_mask=None,
         auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
+        edge_bar_hud_mask: bool | None = None,
+        hud_mask_collapse_guard: bool | None = None,
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
@@ -3371,6 +3579,8 @@ class CarnotAgentPolicy:
             else StepwiseExplorer(
                 hud_mask=hud_mask,
                 auto_hud_mask=auto_hud_mask,
+                edge_bar_hud_mask=edge_bar_hud_mask,
+                hud_mask_collapse_guard=hud_mask_collapse_guard,
                 value_head=value_head,
                 value_weight=value_weight,
                 search_mode=search_mode,
@@ -3441,6 +3651,8 @@ class E3AgentPolicy:
         explore_budget: Optional[int] = None,
         target_levels: int = SUBMITTED_TARGET_LEVELS,
         auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
+        edge_bar_hud_mask: bool | None = None,
+        hud_mask_collapse_guard: bool | None = None,
         value_head: Any = _DEFAULT_VALUE_HEAD,
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
         search_mode: str = SUBMITTED_SEARCH_MODE,
@@ -3577,6 +3789,8 @@ class E3AgentPolicy:
         self.explorer = StepwiseExplorer(
             target_levels=target_levels,
             auto_hud_mask=auto_hud_mask,
+            edge_bar_hud_mask=edge_bar_hud_mask,
+            hud_mask_collapse_guard=hud_mask_collapse_guard,
             value_head=value_head,
             value_weight=value_weight,
             search_mode=search_mode,
@@ -5309,6 +5523,10 @@ SUBMITTED_AGENT_CONFIG = {
     "structured_evidence_memory_mode": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_MODE,
     "auto_hud_mask_enabled": SUBMITTED_AUTO_HUD_MASK_ENABLED,
     "auto_hud_mask_mode": SUBMITTED_AUTO_HUD_MASK_MODE,
+    "edge_bar_hud_mask_enabled": SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED,
+    "edge_bar_hud_mask_mode": SUBMITTED_EDGE_BAR_HUD_MASK_MODE,
+    "hud_mask_collapse_guard_enabled": SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED,
+    "hud_mask_collapse_guard_mode": SUBMITTED_HUD_MASK_COLLAPSE_GUARD_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

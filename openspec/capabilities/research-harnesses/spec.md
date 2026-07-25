@@ -234,6 +234,23 @@ and preserve partial, blocked, honest-null, no-speedup, tautology-risk,
 measurement-unavailable, and unsupported-claim evidence without upgrading it
 from roadmap intent.
 
+### REQ-HARNESS-5920: Task-Owned Clean Boundary With Global Failure Delta
+
+The research harness shall permit a task to qualify a fresh deterministic
+consumer boundary without requiring the unrelated global suite to be clean when
+a prior exact node-id baseline is recorded. For Exp5920, the task-owned clean
+boundary SHALL include focused unit tests, coverage for new code, schema
+validation, stream replay, fresh-process replay, tamper matrix, immutable hash
+checks, adversarial verification, spec coverage, applicable E2E checks,
+protected-file checks, root-clutter checks, and the required global command
+`.venv/bin/pytest tests/python -q`.
+
+The global command SHALL be recorded separately as a node-id delta check:
+readiness may use `global_suite_failure_delta<=0` only when every nonzero node
+is present in the pre-task baseline and no new node id appears. This rule SHALL
+NOT suppress, deselect, relabel, or rewrite unrelated failures, and it SHALL
+NOT reopen a retired experiment scope.
+
 ### REQ-HARNESS-SAMPLER-NO-SPECANN: Phase 3 SpecAnn Ban
 
 Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
@@ -350,6 +367,15 @@ implementation-failure pattern status
 **And** `unsupported_claims_detected` lists rejected unsupported claims instead
 of promoting them into PRD progress.
 
+### SCENARIO-HARNESS-5920: Clean Task Boundary Allows Preserved Global Debt
+
+**Given** a task-owned focused boundary exits zero
+**And** a pre-task global-suite baseline records exact unrelated node ids
+**When** the same global command exits nonzero after the task
+**Then** the task can still report a ready boundary only if the failure delta is
+at most zero by exact node id
+**And** every unrelated failure remains visible in the artifact.
+
 ### SCENARIO-HARNESS-SAMPLER-1: Direct HUBO Evaluation At Production Scale
 
 **Given** a Phase 3 substrate sampler evaluates an unreduced HUBO energy
@@ -385,4 +411,5 @@ applies.
 | REQ-HARNESS-013 | Implemented (`scripts/conductor_supervisor.py`) | Implemented (`results/experiment_1027_conductor_supervisor.json`) |
 | REQ-HARNESS-014 | Implemented (`scripts/audit_orphan_test_imports.py`) | Implemented (`tests/python/test_audit_orphan_test_imports.py`) |
 | REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`; planned `python/carnot/reporting/prd_gap_agent_failure_table_v495_5452.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`); planned (`results/experiment_5452_prd_gap_agent_failure_table_v495.json`) |
+| REQ-HARNESS-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
 | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
