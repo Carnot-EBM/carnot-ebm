@@ -2094,6 +2094,113 @@ SCENARIO-BENCH-5908-STREAM
 |---|---|---|
 | REQ-BENCH-5908 | Planned (`python/carnot/experiment_5908_verisynth_constraint_fixture.py`, `results/experiment_5908_verisynth_constraint_fixture.json`) | Planned (`tests/python/test_experiment_5908_verisynth_constraint_fixture.py`) |
 
+### REQ-BENCH-5909: SOTA ConstraintIR Synthesis A/B Stream
+
+Carnot MUST provide a live local-GGUF Exp5909 synthesis experiment at
+`python/carnot/experiment_5909_sota_constraint_synthesis_ab.py` and write
+`results/experiment_5909_sota_constraint_synthesis_ab.json` plus a sealed raw
+proposal JSONL stream. Exp5909 SHALL replay the Exp5908 consumer gate before
+any model load, SHALL use the three mandated GGUF families
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL resolve the first two headline
+families through `cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 2))`
+plus the cached third family. Missing cache, tokenizer, CUDA offload, dual RTX
+3090, RAM, disk, atomic-output, or protected-workload preconditions SHALL write
+an honest `blocked_precondition:` artifact before model generation begins.
+
+The experiment SHALL run direct ConstraintIR synthesis, semantic-decomposition
+synthesis, and decomposition plus exact-example retrieval on every Exp5908 row
+for every completed model. It SHALL also run wrong-family retrieval and shuffled
+decomposition on a preregistered confirmatory subset. All arms SHALL use matched
+decoding, output-token, seed, call-count, and wall-clock budget rules so
+decomposition and retrieval cannot win by unbounded context or extra calls.
+Prompts SHALL NOT expose target hidden gold IR, target exact labels, held
+identities, certificates, or diagnostic repair traces; retrieved examples may
+include only deployment-visible exact examples selected by Exp5908's leakage
+contract.
+
+The exact Exp5896 parser, type checker, Python backend, Z3 backend, and
+semantic replay labels SHALL own outcomes after each proposal is sealed.
+Exp5909 SHALL report parse, type, compile, satisfiability, exact semantic
+equivalence, query correctness, omitted/spurious constraints, unsafe accepted
+constraints, token, latency, VRAM, GPU-utilization, and energy-proxy metrics by
+model, family, template, arm, and group. It SHALL seal the chronological raw
+proposal stream with raw output hashes, prompt hashes, exact labels,
+deployment-visible diagnostics, group IDs, model file hashes, and row hashes for
+downstream transactional learning.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_fixture_hashes`, `model_specs`, `model_file_hashes`,
+`embedded_tokenizer_and_loader_cuda_receipts`,
+`frozen_prompts_decoding_seeds_and_budgets`,
+`arm_definitions_and_compute_parity`, `retrieval_and_oracle_visibility`,
+`per_model_family_template_metrics`,
+`parse_type_compile_and_semantic_metrics`,
+`omitted_spurious_and_unsafe_constraint_metrics`,
+`group_bootstrap_lower_bounds`, `wrong_retrieval_and_shuffled_controls`,
+`chronological_raw_stream_receipt`, `residual_error_and_diagnostic_headroom`,
+`gpu_utilization_vram_latency_and_energy_receipts`,
+`protected_files_unchanged`, `constraint_stream_ready_score`,
+`verification_repair_admission_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles:
+
+- `arm_definitions_and_compute_parity`: decomposition and retrieval cannot win by unbounded context or calls.
+- `chronological_raw_stream_receipt`: downstream learning sees only sealed model outputs and deployment-visible evidence in event order.
+- `constraint_stream_ready_score`: emit bare 1.0 only for all three real models, exact labels, raw hashes, and zero authority violation.
+- `verification_repair_admission_ready_score`: emit bare 1.0 only for sufficient exact residual headroom with usable non-oracle diagnostics.
+- `inference_substrate`: use `live_llm_inference`.
+- `verifier_is_oracle`: true for exact evaluation and never for model proposal credit.
+- `honest_verdict`: use `complete_positive:`, `complete_null:`, `unsafe:`, `blocked_precondition:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5909-PRECONDITIONS: Gate Blocks Before Model Load
+
+**Given** the checked-in Exp5908 fixture stream and mandated local GGUF ids
+**When** any upstream replay, cache, embedded tokenizer, CUDA, dual-GPU, RAM,
+disk, atomic-output, or protected-workload precondition fails
+**Then** Exp5909 writes a `blocked_precondition:` artifact, records all
+precondition receipts, and does not call the live model collector.
+
+#### SCENARIO-BENCH-5909-PROMPTS: Prompt Arms Stay Leakage Safe
+
+**Given** an Exp5908 plan row and its Exp5896 source row
+**When** Exp5909 builds direct, decomposition, retrieval, wrong-retrieval, and
+shuffled-control prompts
+**Then** no prompt contains target hidden ConstraintIR JSON, target exact
+labels, certificates, behavior hashes, held identities, or diagnostic repair
+traces, and retrieval examples exclude target-group and held-split examples.
+
+#### SCENARIO-BENCH-5909-STREAM: Raw Proposals Are Chronological And Exact Scored
+
+**Given** three completed mandated model families and stubbed raw proposals
+**When** Exp5909 scores the direct, decomposition, retrieval, and preregistered
+control arms
+**Then** the raw JSONL stream is chronological, every event has raw and prompt
+hashes, every event receives exact parser/type/compile/semantic labels, and the
+artifact exposes complete metric groups without accepting model outputs as an
+oracle.
+
+#### SCENARIO-BENCH-5909-HEADROOM: Repair Admission Requires Residual Diagnostics
+
+**Given** a complete Exp5909 stream
+**When** residual incorrect rows remain in every required fixture group
+**Then** `verification_repair_admission_ready_score` is 1.0 only if those rows
+carry deployment-visible diagnostics and no hidden oracle payload; otherwise it
+is 0.0 even if `constraint_stream_ready_score` is 1.0.
+
+**Spec traces:** REQ-BENCH-5909, SCENARIO-BENCH-5909-PRECONDITIONS,
+SCENARIO-BENCH-5909-PROMPTS, SCENARIO-BENCH-5909-STREAM,
+SCENARIO-BENCH-5909-HEADROOM
+
+## Implementation Status (REQ-BENCH-5909)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5909 | Planned (`python/carnot/experiment_5909_sota_constraint_synthesis_ab.py`, `results/experiment_5909_sota_constraint_synthesis_ab.json`) | Planned (`tests/python/test_experiment_5909_sota_constraint_synthesis_ab.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
