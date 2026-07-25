@@ -437,6 +437,10 @@ def run_cell(
             "actions": int(out["actions"]),
             "actions_to_first_levelup": out.get("actions_to_first_levelup"),
             "actions_to_first_levelup_incl_reset": out.get("actions_to_first_levelup_incl_reset"),
+            # WHOLE-RUN total resets (the reference keeps resetting after the first level-up
+            # because it does not early-stop). The resets charged BEFORE the first level-up --
+            # the quantity that makes the two conventions differ -- is
+            # actions_to_first_levelup_incl_reset - actions_to_first_levelup, NOT this field.
             "resets_taken": out.get("resets_taken"),
             "action_count_convention": "resets_excluded_matching_run_game",
             # NOT comparable to arms A-D's `actions`: the reference does not early-stop on a
@@ -748,12 +752,27 @@ def power_ceiling(games: Sequence[str], baseline_win_games: Sequence[str]) -> di
     absence when it is really absence of power.
     """
 
-    k = len([g for g in baseline_win_games if g in set(games)])
+    in_corpus = [g for g in baseline_win_games if g in set(games)]
+    k = len(in_corpus)
+    # The barrier and the within-tier draw act on CLICK candidates only, so on a nav-only game
+    # they are structurally inert and their paired delta is a tie -- which the sign test drops.
+    # The EFFECTIVE n for the efficiency test is therefore the CLICK stratum, and that is the
+    # number the power ceiling has to be computed from; using the pooled count would overstate
+    # attainable power by counting games the mechanism cannot move.
+    click = [g for g in in_corpus if g in set(CLICK_GAMES)]
+    kc = len(click)
     return {
         "n_baseline_win_games_in_corpus": k,
+        "baseline_win_games_in_corpus": sorted(in_corpus),
+        "n_baseline_win_click_games": kc,
+        "baseline_win_click_games": sorted(click),
         "max_paired_deltas": k,
-        "smallest_attainable_two_sided_p": (round(min(1.0, 2.0 * 0.5**k), 5) if k else None),
-        "clears_0.05_only_if_unanimous": bool(k and 2.0 * 0.5**k <= 0.05),
+        "max_effective_paired_deltas_click_stratum": kc,
+        "smallest_attainable_two_sided_p": (round(min(1.0, 2.0 * 0.5**kc), 5) if kc else None),
+        "smallest_attainable_two_sided_p_pooled_all_strata": (
+            round(min(1.0, 2.0 * 0.5**k), 5) if k else None
+        ),
+        "clears_0.05_only_if_unanimous": bool(kc and 2.0 * 0.5**kc <= 0.05),
         "interpretation": "a flat sign test at this n is UNDERPOWERED, not evidence of no "
         "effect; widening the corpus (more budget so more games enter the baseline-win set, or "
         "deeper per-game levels) is the only way to raise this ceiling",
@@ -1066,7 +1085,23 @@ def replay_validate(
     env's own ``levels_completed``, i.e. frame truth, not a self-report.
     """
 
-    wins = [r for r in rows if r.get("ran") and r.get("levels", 0) > 0][: max(0, int(limit))]
+    # SELECTION BUG FIX (2026-07-25, found by the operator on the first full run): this previously
+    # took the FIRST `limit` winning rows in row order. Arm A (baseline) is measured first, so all
+    # 6 slots were consumed by baseline wins and the NEW wins -- the entire headline claim -- were
+    # never eligible for reproduction. That silently violated this project's own rule that only
+    # reproduced levels count. Now the sample is ROUND-ROBIN BY ARM, so every arm that won anything
+    # is represented and the grafted/control arms carrying the claim are always checked.
+    all_wins = [r for r in rows if r.get("ran") and r.get("levels", 0) > 0]
+    by_arm: dict[str, list[dict]] = {}
+    for row in all_wins:
+        by_arm.setdefault(str(row.get("arm")), []).append(row)
+    wins: list[dict] = []
+    while len(wins) < max(0, int(limit)) and any(by_arm.values()):
+        for arm_key in sorted(by_arm):
+            if len(wins) >= max(0, int(limit)):
+                break
+            if by_arm[arm_key]:
+                wins.append(by_arm[arm_key].pop(0))
     checks = []
     for r in wins:
         cond = next((c for c in CONDITIONS if c[0] == r["condition"]), None)
