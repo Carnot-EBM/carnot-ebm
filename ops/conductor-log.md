@@ -14296,3 +14296,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 20:09 UTC | Gated on Exp5921 ready: embedded-GGUF schema decod | OK | 149 passed, 1 warning in 20.70s |
 | 2026-07-25 20:39 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
 | 2026-07-25 21:31 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
+| 2026-07-25 22:29 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
