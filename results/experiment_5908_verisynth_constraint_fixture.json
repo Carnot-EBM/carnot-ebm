@@ -1,0 +1,900 @@
+{
+  "consumer_stream_contract": {
+    "arm_ids": [
+      "direct",
+      "semantic_decomposition",
+      "decomposition_plus_exact_example_retrieval",
+      "wrong_family_retrieval",
+      "shuffled_decomposition",
+      "omitted_component_decomposition",
+      "no_information_retrieval"
+    ],
+    "artifact_schema_version": "carnot.experiment_5908.verisynth_constraint_fixture.v1",
+    "consumer": "experiment_5909",
+    "consumer_stream_hash": "sha256:f7b74e9d189188a59c292c288b7a22bdcb2b226f3ff4e83ef5479b75dc55e8bd",
+    "row_count": 20,
+    "row_file_path": "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+    "row_hash_unique": true,
+    "row_hashes": [
+      "sha256:20a874bf79ff82a0a168e1cd7772fa239ceaa52ff9f0705c240d686535e3fc6e",
+      "sha256:4f738a777ceadcedc26473498dd8ba00ca0fc2e360094ea3e50ec4396730bf69",
+      "sha256:38e2d2ca3afcb2e7285ee4aeecc4cdacd9849bef9d6d8197e0f9c5f7a3968985",
+      "sha256:30601d3db078f989306bc6dfa102d5f1396f05cc6a3f8f7e3cbde6c91a1d1c0a",
+      "sha256:fc6958fefdc148735cf551cc2da742b00908ddef91d6f0e94b5099e70e80e7c8",
+      "sha256:74aaf57e0ebe640af912e2437524825da28b8c269e367d48cb1476dc699b657e",
+      "sha256:e3443f920e7bd2973138d649586de16b4ed709bf9718c424fc7f2e75ef4ca20e",
+      "sha256:f34c98566235594dc976ab35f6bbebb80bae0afb3d8642e1ffca8d38ba6c1e66",
+      "sha256:19056e1ebc6819a947ba3480cab9351d3d728aba1fc0311d53ce3c64a5e4fa93",
+      "sha256:eeca66c126145a49761da9bfb8e2a3ba3e2a5c3d5d7286f5058a0f1b14e9d852",
+      "sha256:bc4cd3d2f1e1050064b1b4292659b2b37803f99249d5126c78bb44426d3796cb",
+      "sha256:13be2bac728bae97391bf99f44827d4a59af942a1a0349564a0c4bdc432d36bb",
+      "sha256:ac0f0df61b4a2f6455e11d569a5f8b04a2474e83f90ec4432adda8aa8a825ef5",
+      "sha256:5e9fecb8c03892f3aab6ab66bdca4d14531c503dddd5beeec8508790fbb0cab8",
+      "sha256:2b5ad7626d743c72566afbe9207baec128175b309d3eac805b71a77fa0a76d48",
+      "sha256:56bb92162f50062d725553f6ed1cf902c1d226d48b6fe0cc9675cd0bb8c991ec",
+      "sha256:e324028edd49e6de42e4b02ff5fe340035c59ebf7d1541ffbcd7a26e0d3ad59f",
+      "sha256:5ac33f57d2aa585c5fbe3017944937a4c35bf1650495ded1b7fe7b2dbcb4f07a",
+      "sha256:31fefbc01bd74ef482b8d92b171df265850c1c87e156b0484b469514f74ece47",
+      "sha256:1af5023f7c6f726c4670eff3d8c92995d2f3c8bc02d10eaf8acbd08350c58fb5"
+    ],
+    "row_schema_version": "carnot.experiment_5908.verisynth_constraint_fixture.v1.row"
+  },
+  "decomposition_schema_and_supported_units": {
+    "all_units_supported_by_exp5896": true,
+    "schema_version": "carnot.verisynth.semantic_decomposition_plan.v1",
+    "unit_to_typed_ir": {
+      "arithmetic_constraints": [
+        "rules.body.arith"
+      ],
+      "entities_domains": [
+        "domains",
+        "entities"
+      ],
+      "explicit_negation": [
+        "facts",
+        "rules.body.not"
+      ],
+      "invariants": [
+        "schema_version",
+        "predicates"
+      ],
+      "query_goals": [
+        "query"
+      ],
+      "state_facts": [
+        "facts"
+      ],
+      "transition_implication_relations": [
+        "rules"
+      ]
+    },
+    "unit_types": [
+      "entities_domains",
+      "state_facts",
+      "transition_implication_relations",
+      "invariants",
+      "explicit_negation",
+      "arithmetic_constraints",
+      "query_goals"
+    ]
+  },
+  "duration_s": 1.532711,
+  "exact_exemplar_and_component_replay": {
+    "all_exact_replay_ok": true,
+    "component_replay_count": 131,
+    "component_replay_failures": [],
+    "exemplar_replay_failures": [],
+    "unique_retrieved_exemplar_count": 4
+  },
+  "experiment_id": "experiment_5908_verisynth_constraint_fixture",
+  "family_template_and_group_holdouts": {
+    "families": [
+      "access_control",
+      "menu_recommendation",
+      "task_selection"
+    ],
+    "group_cross_split_count": 0,
+    "group_variants": {
+      "exp5896-access_control": [
+        "canonical",
+        "invalid_ir",
+        "omitted_constraint",
+        "order_permutation",
+        "paraphrase",
+        "semantic_nonequivalence",
+        "symbol_renaming",
+        "unsat_ir"
+      ],
+      "exp5896-menu_recommendation": [
+        "canonical",
+        "held_template",
+        "omitted_constraint",
+        "paraphrase",
+        "semantic_nonequivalence",
+        "symbol_renaming"
+      ],
+      "exp5896-task_selection": [
+        "canonical",
+        "omitted_constraint",
+        "order_permutation",
+        "paraphrase",
+        "semantic_nonequivalence",
+        "type_error"
+      ]
+    },
+    "groups": {
+      "exp5896-access_control": [
+        "train"
+      ],
+      "exp5896-menu_recommendation": [
+        "heldout"
+      ],
+      "exp5896-task_selection": [
+        "dev"
+      ]
+    },
+    "held_template_rows": [
+      "exp5896-menu_recommendation-held_template"
+    ],
+    "heldout_groups": [
+      "exp5896-menu_recommendation"
+    ],
+    "templates": [
+      "access_control.template.v1",
+      "menu_recommendation.template.v1",
+      "task_selection.template.v1"
+    ]
+  },
+  "field_principles": {
+    "honest_verdict": "Use `ready:`, `complete_null:`, or `blocked:`.",
+    "inference_substrate": "Use `deterministic_exact_solver_labeled_dataset_no_llm`.",
+    "prompt_plan_arm_definitions": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+    "retrieval_index_and_visibility_contract": "Held semantic variants cannot enter the retrieval surface.",
+    "verifier_is_oracle": "True for fixture structure and replay labels.",
+    "verisynth_constraint_fixture_ready_score": "Emit bare 1.0 only for exact replay, group isolation, nontrivial controls, and deterministic consumer hashes."
+  },
+  "field_provenance": {
+    "consumer_stream_contract": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "decomposition_schema_and_supported_units": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "duration_s": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "exact_exemplar_and_component_replay": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "family_template_and_group_holdouts": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "field_provenance": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "honest_verdict": {
+      "principle": "Use `ready:`, `complete_null:`, or `blocked:`.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "inference_substrate": {
+      "principle": "Use `deterministic_exact_solver_labeled_dataset_no_llm`.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "preconditions_checked": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "prompt_plan_arm_definitions": {
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "protected_files_unchanged": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "reproducibility_checksum": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "retrieval_index_and_visibility_contract": {
+      "principle": "Held semantic variants cannot enter the retrieval surface.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "row_file_receipt": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "status": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "test_commands": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "test_exit_codes": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "token_envelope_and_exemplar_count_parity": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "upstream_gate_and_hashes": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "verifier_is_oracle": {
+      "principle": "True for fixture structure and replay labels.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "verisynth_constraint_fixture_ready_score": {
+      "principle": "Emit bare 1.0 only for exact replay, group isolation, nontrivial controls, and deterministic consumer hashes.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    },
+    "wrong_family_shuffled_omitted_and_no_information_controls": {
+      "principle": "Deterministic Exp5908 fixture field.",
+      "satisfied_by": "generated_by_exp5908_verisynth_constraint_fixture"
+    }
+  },
+  "honest_verdict": "ready: deterministic ConstraintIR decomposition and retrieval plans replay exactly",
+  "inference_substrate": "deterministic_exact_solver_labeled_dataset_no_llm",
+  "preconditions_checked": {
+    "disk": {
+      "available_mb": 1167530,
+      "ok": true,
+      "required_mb": 512
+    },
+    "exact_backends": {
+      "prolog": {
+        "command": null,
+        "status": "skipped_optional_backend_not_installed"
+      },
+      "python_finite_domain": {
+        "rows": 20,
+        "status": "applied",
+        "version": "3.12.13"
+      },
+      "z3": {
+        "rows": 18,
+        "status": "applied",
+        "version": "4.16.0"
+      }
+    },
+    "exp5896_artifact_hash": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+    "exp5896_row_file_hash": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "exp5907_gate_replayed_before_plan_construction": true,
+    "inference_calls": 0,
+    "llm_paths_inventory": [
+      {
+        "path": "python/carnot/pipeline/nl2z3_extractor.py",
+        "role": "LLM-to-Z3 extractor inventoried but not invoked"
+      },
+      {
+        "path": "python/carnot/pipeline/llm_z3_formalizer.py",
+        "role": "LLM-guided formalizer inventoried but not invoked"
+      },
+      {
+        "path": "python/carnot/verify/z3_math.py",
+        "role": "Z3 wrapper inventoried"
+      }
+    ],
+    "output_paths": [
+      "results/experiment_5908_verisynth_constraint_fixture.json",
+      "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl"
+    ],
+    "planned_row_file_hash": "sha256:2009f2f0d8f33cebcab5b2eb883c7bc77d980cd1c4b8ebf0a25eb8ae556fe5fd",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "protected_files_checked": true,
+    "ram": {
+      "available_mb": 116914,
+      "ok": true,
+      "required_mb": 512
+    },
+    "repair_calls": 0,
+    "run_date": "20260725",
+    "schemas": {
+      "constraint_ir": "carnot.constraint_ir.v1",
+      "exp5908_artifact": "carnot.experiment_5908.verisynth_constraint_fixture.v1",
+      "exp5908_row": "carnot.experiment_5908.verisynth_constraint_fixture.v1.row"
+    }
+  },
+  "prompt_plan_arm_definitions": {
+    "decomposition_plus_exact_example_retrieval": {
+      "exemplar_count": 2,
+      "isolated_treatment": "decomposition_plus_exact_example_retrieval",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    },
+    "direct": {
+      "exemplar_count": 0,
+      "isolated_treatment": "direct",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    },
+    "no_information_retrieval": {
+      "exemplar_count": 2,
+      "isolated_treatment": "no_information_retrieval",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    },
+    "omitted_component_decomposition": {
+      "exemplar_count": 0,
+      "isolated_treatment": "omitted_component_decomposition",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    },
+    "semantic_decomposition": {
+      "exemplar_count": 0,
+      "isolated_treatment": "semantic_decomposition",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    },
+    "shuffled_decomposition": {
+      "exemplar_count": 0,
+      "isolated_treatment": "shuffled_decomposition",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    },
+    "wrong_family_retrieval": {
+      "exemplar_count": 2,
+      "isolated_treatment": "wrong_family_retrieval",
+      "principle": "Decomposition and retrieval must be isolated treatments rather than extra unbounded context.",
+      "token_envelope": {
+        "max_tokens": 640,
+        "tokenizer": "deterministic_budget_envelope_no_model_tokenizer"
+      }
+    }
+  },
+  "protected_files_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "path": "scripts/research_conductor.py",
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      {
+        "exists": true,
+        "path": "ops/changelog.md",
+        "sha256": "sha256:02684d08c48b5a919092a1e51f64d1752f12525a0a0c56efa1546bdf8ea561c8"
+      },
+      {
+        "exists": true,
+        "path": "ops/status.md",
+        "sha256": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1"
+      },
+      {
+        "exists": true,
+        "path": "_bmad/traceability.md",
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2"
+      }
+    ],
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:2ecbe594fb2dbb0cb2b0640193f041737289a92724d438f9cc4c52e93bd5eac2",
+  "retrieval_index_and_visibility_contract": {
+    "excluded_splits": [
+      "heldout"
+    ],
+    "held_semantic_variants_enter_surface": false,
+    "index_entries": [
+      {
+        "behavior_hash": "sha256:283fd819d892ff8eae98982623464fe470144bd61c4bb77d1664981153a962be",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "access_control",
+        "group_id": "exp5896-access_control",
+        "row_hash": "sha256:47c6b9bc49824eda60be6c9f9f0a1e53b53dc89e1cdaea6d7d89e836857c0452",
+        "row_id": "exp5896-access_control-canonical",
+        "split": "train",
+        "structural_signature": {
+          "arithmetic_ops": [],
+          "domain_types": [
+            "symbol",
+            "symbol"
+          ],
+          "domain_value_counts": [
+            3,
+            2
+          ],
+          "fact_truth_counts": {
+            "True": 6
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            1,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "person"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:6f2bc951bb2c045ccea1341e3040dc203000c19f67a815ad2bf5dc6fd7641d23",
+        "template_id": "access_control.template.v1",
+        "variant_kind": "canonical"
+      },
+      {
+        "behavior_hash": "sha256:283fd819d892ff8eae98982623464fe470144bd61c4bb77d1664981153a962be",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "access_control",
+        "group_id": "exp5896-access_control",
+        "row_hash": "sha256:909a6e391e0d3925e4cfe1d6134a7e7d64f8461bcbe99e46d635fb1b3c527964",
+        "row_id": "exp5896-access_control-paraphrase",
+        "split": "train",
+        "structural_signature": {
+          "arithmetic_ops": [],
+          "domain_types": [
+            "symbol",
+            "symbol"
+          ],
+          "domain_value_counts": [
+            3,
+            2
+          ],
+          "fact_truth_counts": {
+            "True": 6
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            1,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "person"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:6f2bc951bb2c045ccea1341e3040dc203000c19f67a815ad2bf5dc6fd7641d23",
+        "template_id": "access_control.template.v1",
+        "variant_kind": "paraphrase"
+      },
+      {
+        "behavior_hash": "sha256:283fd819d892ff8eae98982623464fe470144bd61c4bb77d1664981153a962be",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "access_control",
+        "group_id": "exp5896-access_control",
+        "row_hash": "sha256:1cff5c5557dd291b06fc8d4491bd007ab010f6f0f61dd8b5ec9925013443923e",
+        "row_id": "exp5896-access_control-symbol_renaming",
+        "split": "train",
+        "structural_signature": {
+          "arithmetic_ops": [],
+          "domain_types": [
+            "symbol",
+            "symbol"
+          ],
+          "domain_value_counts": [
+            3,
+            2
+          ],
+          "fact_truth_counts": {
+            "True": 6
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            1,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "person"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:6f2bc951bb2c045ccea1341e3040dc203000c19f67a815ad2bf5dc6fd7641d23",
+        "template_id": "access_control.template.v1",
+        "variant_kind": "symbol_renaming"
+      },
+      {
+        "behavior_hash": "sha256:283fd819d892ff8eae98982623464fe470144bd61c4bb77d1664981153a962be",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "access_control",
+        "group_id": "exp5896-access_control",
+        "row_hash": "sha256:ea68064e905163b14dd473c31383b73c5841567d18795791daf24c1546cb87ec",
+        "row_id": "exp5896-access_control-order_permutation",
+        "split": "train",
+        "structural_signature": {
+          "arithmetic_ops": [],
+          "domain_types": [
+            "symbol",
+            "symbol"
+          ],
+          "domain_value_counts": [
+            3,
+            2
+          ],
+          "fact_truth_counts": {
+            "True": 6
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            1,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "person"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:6f2bc951bb2c045ccea1341e3040dc203000c19f67a815ad2bf5dc6fd7641d23",
+        "template_id": "access_control.template.v1",
+        "variant_kind": "order_permutation"
+      },
+      {
+        "behavior_hash": "sha256:6daf32e9249465f2b2dcf8073490971ac0760866cf6c173b451f2aee19179860",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "task_selection",
+        "group_id": "exp5896-task_selection",
+        "row_hash": "sha256:90d564e6da5197438333c9e08a840e9f899249a490f1bea74cfb09fc7ed9eb27",
+        "row_id": "exp5896-task_selection-canonical",
+        "split": "dev",
+        "structural_signature": {
+          "arithmetic_ops": [
+            "<=",
+            ">="
+          ],
+          "domain_types": [
+            "symbol",
+            "int",
+            "int"
+          ],
+          "domain_value_counts": [
+            3,
+            3,
+            3
+          ],
+          "fact_truth_counts": {
+            "True": 7
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            2,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "task"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "arithmetic_constraints",
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:968333c3bd79449377454c23ca8223ebc48780efb785767e1fca982c37215a52",
+        "template_id": "task_selection.template.v1",
+        "variant_kind": "canonical"
+      },
+      {
+        "behavior_hash": "sha256:6daf32e9249465f2b2dcf8073490971ac0760866cf6c173b451f2aee19179860",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "task_selection",
+        "group_id": "exp5896-task_selection",
+        "row_hash": "sha256:1a9449b443195989e21e45d7580baa08acfa2cecbc0de26887a1c5246b978d8a",
+        "row_id": "exp5896-task_selection-paraphrase",
+        "split": "dev",
+        "structural_signature": {
+          "arithmetic_ops": [
+            "<=",
+            ">="
+          ],
+          "domain_types": [
+            "symbol",
+            "int",
+            "int"
+          ],
+          "domain_value_counts": [
+            3,
+            3,
+            3
+          ],
+          "fact_truth_counts": {
+            "True": 7
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            2,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "task"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "arithmetic_constraints",
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:968333c3bd79449377454c23ca8223ebc48780efb785767e1fca982c37215a52",
+        "template_id": "task_selection.template.v1",
+        "variant_kind": "paraphrase"
+      },
+      {
+        "behavior_hash": "sha256:6daf32e9249465f2b2dcf8073490971ac0760866cf6c173b451f2aee19179860",
+        "expected_equivalent_to_canonical": true,
+        "expected_status": "valid",
+        "family": "task_selection",
+        "group_id": "exp5896-task_selection",
+        "row_hash": "sha256:9ad648dc628c98f8c28cf982415d11ca6179299de74417eec6c0747331cd9878",
+        "row_id": "exp5896-task_selection-order_permutation",
+        "split": "dev",
+        "structural_signature": {
+          "arithmetic_ops": [
+            "<=",
+            ">="
+          ],
+          "domain_types": [
+            "symbol",
+            "int",
+            "int"
+          ],
+          "domain_value_counts": [
+            3,
+            3,
+            3
+          ],
+          "fact_truth_counts": {
+            "True": 7
+          },
+          "has_explicit_negation": true,
+          "predicate_arities": [
+            2,
+            2,
+            1,
+            1
+          ],
+          "query_var_domains": [
+            "task"
+          ],
+          "rule_count": 1,
+          "schema_version": "carnot.constraint_ir.v1",
+          "unit_types": [
+            "arithmetic_constraints",
+            "entities_domains",
+            "explicit_negation",
+            "invariants",
+            "query_goals",
+            "state_facts",
+            "transition_implication_relations"
+          ]
+        },
+        "structural_signature_hash": "sha256:968333c3bd79449377454c23ca8223ebc48780efb785767e1fca982c37215a52",
+        "template_id": "task_selection.template.v1",
+        "variant_kind": "order_permutation"
+      }
+    ],
+    "index_entry_count": 7,
+    "indexed_fields": [
+      "row_id",
+      "row_hash",
+      "family",
+      "group_id",
+      "split",
+      "template_id",
+      "variant_kind",
+      "expected_status",
+      "expected_equivalent_to_canonical",
+      "behavior_hash",
+      "structural_signature_hash"
+    ],
+    "principle": "Held semantic variants cannot enter the retrieval surface.",
+    "same_group_exclusion": true,
+    "train_visible_definition": "Exp5896 train/dev calibration rows are visible; heldout groups are excluded.",
+    "visible_splits": [
+      "train",
+      "dev"
+    ]
+  },
+  "row_file_receipt": {
+    "path": "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+    "row_count": 20,
+    "sha256": "sha256:2009f2f0d8f33cebcab5b2eb883c7bc77d980cd1c4b8ebf0a25eb8ae556fe5fd"
+  },
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5908.verisynth_constraint_fixture.v1",
+  "status": "ready",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5908_verisynth_constraint_fixture.py -m pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5908_verisynth_constraint_fixture.py --fail-under=100",
+    ".venv/bin/pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py tests/python/test_experiment_5908_verisynth_constraint_fixture.py -q --no-cov -n 0",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_5908_verisynth_constraint_fixture",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5908_verisynth_constraint_fixture.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5908_verisynth_constraint_fixture.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5908_verisynth_constraint_fixture.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5908_verisynth_constraint_fixture.py -m pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py tests/python/test_experiment_5908_verisynth_constraint_fixture.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py -q --no-cov -n 0": 0,
+    ".venv/bin/python - << replay exp5908.replay_artifact": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5908_verisynth_constraint_fixture.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5908_verisynth_constraint_fixture.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5907_constraint_ir_replay_contract.py python/carnot/experiment_5908_verisynth_constraint_fixture.py tests/python/test_experiment_5908_verisynth_constraint_fixture.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_5907_constraint_ir_replay_contract.py python/carnot/experiment_5908_verisynth_constraint_fixture.py tests/python/test_experiment_5908_verisynth_constraint_fixture.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "token_envelope_and_exemplar_count_parity": {
+    "all_token_envelopes_match": true,
+    "retrieval_exemplar_counts": {
+      "decomposition_plus_exact_example_retrieval": 2,
+      "no_information_retrieval": 2,
+      "wrong_family_retrieval": 2
+    },
+    "retrieval_exemplar_counts_match": true,
+    "token_envelope_max_tokens": 640
+  },
+  "upstream_gate_and_hashes": {
+    "exact_backends": {
+      "prolog": {
+        "command": null,
+        "status": "skipped_optional_backend_not_installed"
+      },
+      "python_finite_domain": {
+        "rows": 20,
+        "status": "applied",
+        "version": "3.12.13"
+      },
+      "z3": {
+        "rows": 18,
+        "status": "applied",
+        "version": "4.16.0"
+      }
+    },
+    "exp5896_artifact_path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+    "exp5896_artifact_sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+    "exp5896_replay_ok": true,
+    "exp5896_row_count": 20,
+    "exp5896_row_file_path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl",
+    "exp5896_row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "exp5907_artifact_path": "results/experiment_5907_constraint_ir_replay_contract.json",
+    "exp5907_artifact_sha256": "sha256:125a30c9c164fee57dd824608405850032ecdcd99fcf86c86feb54944d84c8da",
+    "exp5907_legacy_adjudication": {
+      "historical_checksum_mismatch_preserved": true,
+      "legacy_mode_without_projection_field": true,
+      "new_contract_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+      "new_contract_replay_ready": true,
+      "row_count": 20,
+      "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+      "stored_checksum_matched_new_projection": false,
+      "stored_historical_checksum": "sha256:77af54331134cf956de22d3fdb2c5d3b356a9ad22f447c09ec66403b0772f070"
+    },
+    "exp5907_ready_score": 1.0,
+    "exp5907_replay_ok": true,
+    "exp5907_status": "complete_ready",
+    "schemas": {
+      "constraint_ir": "carnot.constraint_ir.v1",
+      "exp5896_artifact": "carnot.experiment_5896.typed_constraint_ir_fixture.v1",
+      "exp5896_row": "carnot.experiment_5896.typed_constraint_ir_fixture.v1.row"
+    },
+    "split_groups": {
+      "exp5896-access_control": [
+        "train"
+      ],
+      "exp5896-menu_recommendation": [
+        "heldout"
+      ],
+      "exp5896-task_selection": [
+        "dev"
+      ]
+    }
+  },
+  "verifier_is_oracle": true,
+  "verisynth_constraint_fixture_ready_score": 1.0,
+  "wrong_family_shuffled_omitted_and_no_information_controls": {
+    "all_nontrivial": true,
+    "no_information_retrieval": {
+      "matched_exemplar_count": true,
+      "nontrivial": true
+    },
+    "omitted_component_decomposition": {
+      "nontrivial": true,
+      "omitted_unit_type": "query_goals"
+    },
+    "shuffled_decomposition": {
+      "deterministic_order": "reverse",
+      "nontrivial": true
+    },
+    "wrong_family_retrieval": {
+      "matched_exemplar_count": true,
+      "nontrivial": true
+    }
+  }
+}

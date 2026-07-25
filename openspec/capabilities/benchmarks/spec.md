@@ -2002,6 +2002,98 @@ SCENARIO-BENCH-5907-LEGACY
 |---|---|---|
 | REQ-BENCH-5907 | Planned (`python/carnot/constraint_ir_replay_contract.py`, `python/carnot/experiment_5907_constraint_ir_replay_contract.py`, `results/experiment_5907_constraint_ir_replay_contract.json`) | Planned (`tests/python/test_experiment_5907_constraint_ir_replay_contract.py`) |
 
+### REQ-BENCH-5908: VeriSynth Constraint Fixture Plan Replay
+
+Carnot MUST provide a deterministic Exp5908 fixture planner at
+`python/carnot/experiment_5908_verisynth_constraint_fixture.py` and write
+`results/experiment_5908_verisynth_constraint_fixture.json` plus
+`results/experiment_5908_verisynth_constraint_fixture.rows.jsonl`. Exp5908
+SHALL invoke no LLM, SHALL perform no generated-answer repair, SHALL replay
+Exp5907's ConstraintIR gate before constructing plans, and SHALL consume only
+the checked-in Exp5896 typed ConstraintIR fixture rows.
+
+The decomposition schema SHALL define engine-neutral units for finite
+entities/domains, state facts, transition or implication relations,
+invariants, explicit negation, arithmetic constraints, and query goals. Every
+emitted unit SHALL map to supported Exp5896 typed IR nodes and SHALL replay
+through the exact Exp5896 parser and Python/Z3 certificates.
+
+The retrieval index SHALL use only train-visible typed structure and exact
+metadata available at deployment. Paraphrases, symbol renamings,
+order-permutations, held templates, omitted-constraint rows, and semantic
+variants of the same template SHALL share one group identity so no held
+semantic variant can enter the retrieval surface for held rows. Exp5908 SHALL
+freeze prompt-plan arms for direct, semantic decomposition, decomposition plus
+exact-example retrieval, wrong-family retrieval, shuffled decomposition,
+omitted-component decomposition, and no-information retrieval. Treatment arms
+SHALL match token envelopes and exemplar counts where applicable so
+decomposition and retrieval are isolated mechanisms, not extra unbounded
+context.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_hashes`, `decomposition_schema_and_supported_units`,
+`prompt_plan_arm_definitions`, `retrieval_index_and_visibility_contract`,
+`family_template_and_group_holdouts`,
+`wrong_family_shuffled_omitted_and_no_information_controls`,
+`token_envelope_and_exemplar_count_parity`,
+`exact_exemplar_and_component_replay`, `row_file_receipt`,
+`consumer_stream_contract`, `protected_files_unchanged`,
+`verisynth_constraint_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles:
+
+- `retrieval_index_and_visibility_contract`: held semantic variants cannot enter the retrieval surface.
+- `prompt_plan_arm_definitions`: decomposition and retrieval must be isolated treatments rather than extra unbounded context.
+- `verisynth_constraint_fixture_ready_score`: emit bare 1.0 only for exact replay, group isolation, nontrivial controls, and deterministic consumer hashes.
+- `inference_substrate`: use `deterministic_exact_solver_labeled_dataset_no_llm`.
+- `verifier_is_oracle`: true for fixture structure and replay labels.
+- `honest_verdict`: use `ready:`, `complete_null:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5908-DECOMPOSITION: Supported Units Replay Exactly
+
+**Given** an Exp5896 typed ConstraintIR row
+**When** Exp5908 builds the semantic-decomposition plan
+**Then** every component has a deterministic component hash, maps to a
+supported typed IR unit, and replays through the exact parser/backend receipts.
+
+#### SCENARIO-BENCH-5908-RETRIEVAL: Held Variants Stay Invisible
+
+**Given** train/dev/held-out Exp5896 split groups
+**When** Exp5908 builds exact-example retrieval
+**Then** only train-visible typed structure and deployment metadata are indexed,
+and no exemplar from the target group or a held split can be retrieved for a
+held row.
+
+#### SCENARIO-BENCH-5908-CONTROLS: Arms Are Matched Negative Controls
+
+**Given** the frozen direct, decomposition, retrieval, wrong-family, shuffled,
+omitted-component, and no-information arms
+**When** Exp5908 emits row-level prompt plans
+**Then** each row has deterministic arm hashes, exemplar-count parity for
+retrieval arms, token-envelope parity for comparable arms, and nontrivial
+wrong-family, shuffled, omitted, and no-information controls.
+
+#### SCENARIO-BENCH-5908-STREAM: Consumer Rows Are Hash Stable
+
+**Given** the terminal Exp5908 artifact and row JSONL
+**When** a future Exp5909 consumer reads the stream contract
+**Then** row-level hashes, artifact and row-file receipts, arm definitions,
+visibility groups, and replay receipts are deterministic and sufficient to
+replay without hidden in-process state.
+
+**Spec traces:** REQ-BENCH-5908, SCENARIO-BENCH-5908-DECOMPOSITION,
+SCENARIO-BENCH-5908-RETRIEVAL, SCENARIO-BENCH-5908-CONTROLS,
+SCENARIO-BENCH-5908-STREAM
+
+## Implementation Status (REQ-BENCH-5908)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5908 | Planned (`python/carnot/experiment_5908_verisynth_constraint_fixture.py`, `results/experiment_5908_verisynth_constraint_fixture.json`) | Planned (`tests/python/test_experiment_5908_verisynth_constraint_fixture.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
