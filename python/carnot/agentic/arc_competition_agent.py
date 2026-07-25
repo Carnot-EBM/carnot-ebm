@@ -45,6 +45,10 @@ from carnot.agentic.arc_program_synthesis_filter import (
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
+from carnot.agentic.arc_component_sampling import (
+    component_partition as click_component_partition,
+    redraw_component_pixel as redraw_click_component_pixel,
+)
 from carnot.agentic.arc_frontier_discipline import (
     TIER_COUNT as FRONTIER_TIER_COUNT,
     TierExhaustionPolicy,
@@ -312,6 +316,33 @@ SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED = True
 SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED = True
 SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED = False
 SUBMITTED_FRONTIER_DISTANCE_GRADIENT_MODE = "multi_source_reverse_bfs_over_known_working_edges"
+
+# REQ-ARC-WMTE-5950: the just-explore CLICK-TARGET GENERATION rule -- a uniform random
+# pixel OF the chosen object instead of that object's truncated centroid, redrawn on
+# revisit. DEFAULT OFF: the submitted agent is byte-identical until a matched-budget
+# offline A/B greenlights a flip (arm F vs arm B2 in experiment_5836, where B2 is the
+# CURRENT live configuration -- NOT arm A, which pins the pre-flip flags explicitly).
+#
+# WHY IT IS A CANDIDATE AT ALL (see arc_component_sampling.py for the full write-up):
+# the truncated centroid is not a member of its own object on 100% of 204 measured real
+# r11l states (mean 5.94 such objects per state), truncated centroids collide and get
+# de-duplicated away (r11l 37 objects -> 34 click rows), and on games where the click
+# coordinate PARAMETERISES the move (r11l's handle drag) one fixed point per object
+# collapses a pixel-continuous action space to a few dozen frozen coordinates.
+#
+# WHAT IT IS NOT: it is NOT the r11l fix. r11l's measured defect is state-identity
+# aliasing (its step counter renders into frame column 0, auto_hud_mask resolves to None
+# there, 44.9x node inflation, one inert click re-popped 1371/1956 actions). A winning
+# 3-click r11l sequence already exists inside today's candidate set. Any artifact must
+# therefore gate this mechanism on a FULL-CORPUS regression result, never on r11l.
+SUBMITTED_CLICK_PIXEL_SAMPLING_ENABLED = False
+SUBMITTED_CLICK_PIXEL_SAMPLES_PER_COMPONENT = 1
+# Bounded WITH-REPLACEMENT budget. The reference redraws indefinitely (it retires an
+# object only when a click on it produced NO state change), which our drain-only
+# ``node["untested"]`` list cannot express at all. This budget is the minimal change that
+# permits revisiting: at most N total draws per (node, object). N=1 => no redraw at all,
+# i.e. pure one-shot-per-object with a corrected coordinate.
+SUBMITTED_CLICK_PIXEL_REDRAW_BUDGET = 3
 
 
 def _playbook_exemplars_gate_on() -> bool:
@@ -797,6 +828,10 @@ class StepwiseExplorer:
         tier_click_vocab_only: bool | None = None,
         frontier_gradient: bool | None = None,
         frontier_discipline_seed: int = 20260724,
+        click_pixel_sampling: bool | None = None,
+        click_pixel_samples_per_component: int = SUBMITTED_CLICK_PIXEL_SAMPLES_PER_COMPONENT,
+        click_pixel_redraw_budget: int = SUBMITTED_CLICK_PIXEL_REDRAW_BUDGET,
+        click_pixel_sampling_seed: int | None = None,
         candidate_router: Any | None = None,
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
@@ -967,6 +1002,52 @@ class StepwiseExplorer:
             )
         except ValueError:
             self._fd_draw_topk = None
+        # REQ-ARC-WMTE-5950 -- per-object click-pixel sampling. Same explicit-kwarg > env >
+        # SUBMITTED_* resolution as the frontier-discipline flags above.
+        self.click_pixel_sampling_enabled = _fd_gate(
+            click_pixel_sampling,
+            "CARNOT_ARC_CLICK_PIXEL_SAMPLING",
+            SUBMITTED_CLICK_PIXEL_SAMPLING_ENABLED,
+        )
+        self.click_pixel_samples_per_component = max(1, int(click_pixel_samples_per_component))
+        self.click_pixel_redraw_budget = max(1, int(click_pixel_redraw_budget))
+        # A SEPARATE RNG stream from self._fd_rng, deliberately. Sharing one would couple the
+        # coordinate arm to the within-tier-draw arm: flipping the sampler would shift every
+        # subsequent tier draw, so an A/B could not attribute a delta to either mechanism. The
+        # stream is still SEEDED (unlike the reference, which reseeds from wall-clock and is
+        # reproducible by nobody) so an arm remains re-runnable.
+        self._cps_rng = __import__("random").Random(
+            int(
+                click_pixel_sampling_seed
+                if click_pixel_sampling_seed is not None
+                else frontier_discipline_seed
+            )
+            ^ 0x5A17
+        )
+        # NOT AN ACTIVITY COUNTER -- read the name literally. This counts click rows PRESENT
+        # in the returned candidate list on calls made while the flag was on. It is identical
+        # for a working sampler and for a totally dead one, which is exactly how a dead
+        # mechanism previously reported itself as active-and-error-free. The activity
+        # counter is `_cps_coords_changed` below.
+        self._cps_rows_sampled = 0  # click rows PRESENT (not replaced) -- see comment above
+        self._cps_redraws = 0  # bounded WITH-REPLACEMENT re-appends actually issued
+        self._cps_redraws_declined_budget = 0  # pops that hit the per-(node, object) budget
+        self._cps_redraws_declined_unresolved = 0  # coordinate not attributable to an object
+        self._cps_redraws_declined_no_frame = 0  # node kept no frame -> cannot resolve
+        self._cps_errors = 0  # exceptions swallowed inside the REDRAW half of the mechanism
+        # THE ACTIVITY WITNESS (2026-07-25). Accumulated from the GENERATION path's own
+        # SamplingDiagnostics, which used to be discarded. `coords_changed == 0` while the
+        # flag is on means the mechanism replaced nothing -- it is a control, not a treatment
+        # -- and `gen_errors > 0` says why. Without these two numbers there is NO field
+        # anywhere evidencing that the generation rule fired at all, which made a one-shot
+        # arm (redraw_budget=1, hence zero redraws by design) unfalsifiably indistinguishable
+        # from a silent no-op.
+        self._cps_coords_changed = 0
+        self._cps_gen_errors = 0
+        self._cps_points_in = 0
+        self._cps_points_out = 0
+        self._cps_unresolved = 0
+        self._cps_contested_centroid_points = 0
         self.candidate_router = candidate_router
         self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
         self.structured_evidence_memory = coerce_structured_evidence_memory(
@@ -1554,6 +1635,7 @@ class StepwiseExplorer:
         action_prior = self.action_prior
         if action_prior is not None and hasattr(action_prior, "for_path"):
             action_prior = action_prior.for_path(path or [])
+        cps_diag: dict = {}
         candidates = rich_action_candidates(
             frame,
             frame_change_scorer=self.frame_change_scorer,
@@ -1562,7 +1644,25 @@ class StepwiseExplorer:
             action_prior_prune_quantile=self.action_prior_prune_quantile,
             candidate_router=self.candidate_router,
             previous_frame=previous_frame,
+            click_pixel_sampling=self.click_pixel_sampling_enabled,
+            click_pixel_samples_per_component=self.click_pixel_samples_per_component,
+            click_pixel_rng=self._cps_rng,
+            click_pixel_diagnostics_out=cps_diag,
         )
+        if self.click_pixel_sampling_enabled:
+            self._cps_rows_sampled += sum(1 for c in candidates if int(c.action_id) == 6)
+            # Accumulate the GENERATION path's real activity. An empty dict here means
+            # rich_action_candidates never reached the sampler at all (no click action in the
+            # frame's vocabulary), which is a legitimate zero -- distinct from a sampler that
+            # ran and changed nothing, which reports points_in > 0 with coords_changed == 0.
+            self._cps_coords_changed += int(cps_diag.get("coordinates_changed") or 0)
+            self._cps_gen_errors += int(cps_diag.get("errors") or 0)
+            self._cps_points_in += int(cps_diag.get("points_in") or 0)
+            self._cps_points_out += int(cps_diag.get("points_out") or 0)
+            self._cps_unresolved += int(cps_diag.get("unresolved") or 0)
+            self._cps_contested_centroid_points += int(
+                cps_diag.get("contested_centroid_points") or 0
+            )
         self._record_action_salience_diagnostics(frame, candidates, action_prior)
         if self.adaptive_budget_threshold is not None and candidates:
             from carnot.agentic.arc_adaptive_budget import apply_adaptive_budget
@@ -1690,7 +1790,14 @@ class StepwiseExplorer:
         # (fails OPEN, never stalls the search).
         if self._tier_active(frame) and rows:
             try:
-                rows = annotate_frontier_tiers(rows, frame)
+                # include_cells is MANDATORY when the coordinates may be sampled member
+                # pixels rather than centroids (REQ-ARC-WMTE-5950): the centroid-keyed map
+                # misses a sampled pixel ~100% of the time, every row then reads back as
+                # tier 0 = always eligible, and the barrier silently becomes a no-op on
+                # exactly the click games it was measured to help.
+                rows = annotate_frontier_tiers(
+                    rows, frame, include_cells=self.click_pixel_sampling_enabled
+                )
             except Exception:
                 pass
         return rows
@@ -2095,6 +2202,7 @@ class StepwiseExplorer:
                                 or self.object_centric_proposal_policy is not None
                                 or self.go_explore_archive is not None
                                 or self.similarity_retrieval_enabled
+                                or self.click_pixel_sampling_enabled
                                 else frame_for_value
                             ),
                             "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
@@ -2128,6 +2236,7 @@ class StepwiseExplorer:
                         or self.object_centric_proposal_policy is not None
                         or self.go_explore_archive is not None
                         or self.similarity_retrieval_enabled
+                        or self.click_pixel_sampling_enabled
                         else frame_for_value
                     ),
                     "previous_frame": None,
@@ -2558,6 +2667,100 @@ class StepwiseExplorer:
         the GLOBAL active tier admits (and, on the uniform-random arm, drawn uniformly among them
         rather than greedily). This IS the live click decision the whole graft targets -- the
         coordinate-blind learned router leaves this line deciding the order by itself."""
+        row = self._pop_untested_inner(node)
+        if self.click_pixel_sampling_enabled:
+            self._cps_maybe_redraw(node, row)
+        return row
+
+    def _cps_maybe_redraw(self, node: dict, row: Any) -> None:
+        """REQ-ARC-WMTE-5950 -- the bounded WITH-REPLACEMENT half of the sampling rule.
+
+        WHY A NEW ROW IS NEEDED AT ALL. ``node["untested"]`` is built exactly once per
+        frame-hash and every other reference to it DELETES from it -- there is no refill or
+        re-sample path anywhere in this class. So without this method a click object is
+        tried at exactly one pixel, exactly once, forever, and the reference's
+        redraw-on-revisit behaviour is not merely absent but structurally inexpressible.
+        This is the MINIMAL change that permits revisiting: on popping a click row, resolve
+        which object that coordinate belongs to and, while the per-(node, object) draw
+        budget allows, append ONE more row for the same object at a fresh uniform pixel.
+
+        HOW IT DIFFERS FROM THE REFERENCE, honestly. The reference retires an object only
+        when a click on it produced NO state change, and otherwise redraws indefinitely.
+        Attributing "did this change the frame" here would require hooking outcome
+        attribution (which happens a step later, at a different frame), so this uses a
+        fixed budget instead: at most ``click_pixel_redraw_budget`` draws per (node,
+        object). Bounded by construction, so it cannot livelock a node -- which an
+        outcome-keyed version could, since a working object stays selectable forever.
+
+        Every decline path is COUNTED (budget / unresolved / no-frame / error). An
+        uninstrumented mechanism is how this project previously read a 72-97% crashed arm
+        as a legitimate null across 975 cells.
+        """
+
+        if self.click_pixel_redraw_budget <= 1 or not isinstance(row, Mapping):
+            return
+        try:
+            if int(row.get("action")) != 6:
+                return
+            data = row.get("data")
+            if not isinstance(data, Mapping):
+                return
+            x, y = int(data["x"]), int(data["y"])
+        except Exception:
+            self._cps_errors += 1
+            return
+        frame = node.get("frame")
+        if frame is None:
+            self._cps_redraws_declined_no_frame += 1
+            return
+        try:
+            # component_partition accepts a live frame directly (it unwraps `.frame` and
+            # takes the LAST sub-grid), so no grid coercion is needed here.
+            #
+            # KNOWN IMPRECISION, bounded and fail-safe: resolution checks the CENTROID key
+            # before cell containment (so a generated centroid traces to the object that
+            # produced it, which is the common case). If a sampled member pixel of object A
+            # happens to also BE object B's truncated centroid, this attributes the redraw to
+            # B -- the budget is charged to B and the next pixel is drawn from B. The result
+            # is still a valid click on a real object and is still bounded by the budget, so
+            # it costs a little ordering precision, never correctness or termination.
+            partition = click_component_partition(frame)
+            index, point = redraw_click_component_pixel(
+                frame, x, y, rng=self._cps_rng, partition=partition
+            )
+        except Exception:
+            self._cps_errors += 1
+            return
+        if index is None or point is None:
+            self._cps_redraws_declined_unresolved += 1
+            return
+        ledger = node.setdefault("_cps_draws", {})
+        drawn = int(ledger.get(index, 1))  # the row just popped IS draw #1
+        if drawn >= self.click_pixel_redraw_budget:
+            self._cps_redraws_declined_budget += 1
+            return
+        ledger[index] = drawn + 1
+        # The tier is carried over unchanged rather than re-derived. It is invariant BY
+        # CONSTRUCTION -- the new pixel belongs to the same object, so same colour and same
+        # bounding box, so the same 5-tier predicate result -- and copying it keeps the
+        # redraw from needing a tier map here. Asserted in the test suite.
+        fresh: dict[str, Any] = {
+            "action": 6,
+            "data": {"x": int(point[0]), "y": int(point[1])},
+        }
+        if "tier" in row:
+            fresh["tier"] = row["tier"]
+        node["untested"].append(fresh)
+        self._cps_redraws += 1
+
+    def _pop_untested_inner(self, node):
+        """The pop itself. Split out from ``_pop_untested`` so REQ-ARC-WMTE-5950's redraw hook
+        wraps EVERY return path (tier-admitted draw, tier fail-open, stall-diversity draw, plain
+        pop(0)) instead of having to be repeated at four ``return`` statements. Note the redraw
+        deliberately does NOT wrap ``_pop_frontier_batch``: a batch is expanded wholesale
+        downstream, so re-appending mid-batch would change batch semantics as well as the
+        coordinate, and this experiment varies one thing at a time."""
+
         lst = node["untested"]
         if self._tier_active():
             rng = self._fd_rng if self.tier_uniform_random_enabled else None
@@ -2771,6 +2974,34 @@ class StepwiseExplorer:
             "gradient_cur_at_depth_cap_excluded": int(self._gradient_cur_at_cap_excluded),
             "max_depth": int(self.max_depth),
             "reverse_edges": int(sum(len(v) for v in self.radj.values())),
+            # REQ-ARC-WMTE-5950 -- per-object click-pixel sampling. Every counter is emitted
+            # unconditionally (0 when the flag is off) so an arm can never be silently
+            # uninstrumented: a reader can always tell whether the mechanism did anything.
+            "click_pixel_sampling_enabled": bool(self.click_pixel_sampling_enabled),
+            "click_pixel_samples_per_component": int(self.click_pixel_samples_per_component),
+            "click_pixel_redraw_budget": int(self.click_pixel_redraw_budget),
+            # NOT an activity counter: click rows PRESENT while the flag was on, which is the
+            # same number for a working sampler and a dead one. Kept (renaming a shipped field
+            # would break readers) but no longer the field anything reads for "did it fire".
+            "click_pixel_rows_sampled": int(self._cps_rows_sampled),
+            "click_pixel_rows_sampled_is_not_an_activity_counter": True,
+            # THE ACTIVITY WITNESS. coordinates_changed > 0 is the only field that proves the
+            # generation rule actually replaced a coordinate. A one-shot arm
+            # (redraw_budget=1) issues zero redraws by design, so without this field it has
+            # no evidence at all that the mechanism fired.
+            "click_pixel_coordinates_changed": int(self._cps_coords_changed),
+            "click_pixel_generation_errors": int(self._cps_gen_errors),
+            "click_pixel_points_in": int(self._cps_points_in),
+            "click_pixel_points_out": int(self._cps_points_out),
+            "click_pixel_unresolved": int(self._cps_unresolved),
+            "click_pixel_contested_centroid_points": int(self._cps_contested_centroid_points),
+            "click_pixel_redraws": int(self._cps_redraws),
+            "click_pixel_redraws_declined_budget": int(self._cps_redraws_declined_budget),
+            "click_pixel_redraws_declined_unresolved": int(self._cps_redraws_declined_unresolved),
+            "click_pixel_redraws_declined_no_frame": int(self._cps_redraws_declined_no_frame),
+            # REDRAW-half errors only. Generation-path errors are
+            # `click_pixel_generation_errors` above; summing the two is the mechanism's total.
+            "click_pixel_errors": int(self._cps_errors),
         }
 
     def _qd_sequence_for_node(self, node: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -3118,6 +3349,10 @@ class CarnotAgentPolicy:
         tier_click_vocab_only: bool | None = None,
         frontier_gradient: bool | None = None,
         frontier_discipline_seed: int = 20260724,
+        click_pixel_sampling: bool | None = None,
+        click_pixel_samples_per_component: int = SUBMITTED_CLICK_PIXEL_SAMPLES_PER_COMPONENT,
+        click_pixel_redraw_budget: int = SUBMITTED_CLICK_PIXEL_REDRAW_BUDGET,
+        click_pixel_sampling_seed: int | None = None,
         candidate_router: Any | None = None,
         similarity_retrieval: bool | None = None,
     ) -> None:
@@ -3156,6 +3391,10 @@ class CarnotAgentPolicy:
                 tier_click_vocab_only=tier_click_vocab_only,
                 frontier_gradient=frontier_gradient,
                 frontier_discipline_seed=frontier_discipline_seed,
+                click_pixel_sampling=click_pixel_sampling,
+                click_pixel_samples_per_component=click_pixel_samples_per_component,
+                click_pixel_redraw_budget=click_pixel_redraw_budget,
+                click_pixel_sampling_seed=click_pixel_sampling_seed,
                 candidate_router=candidate_router,
                 similarity_retrieval=similarity_retrieval,
             )
@@ -3223,6 +3462,10 @@ class E3AgentPolicy:
         tier_click_vocab_only: bool | None = None,
         frontier_gradient: bool | None = None,
         frontier_discipline_seed: int = 20260724,
+        click_pixel_sampling: bool | None = None,
+        click_pixel_samples_per_component: int = SUBMITTED_CLICK_PIXEL_SAMPLES_PER_COMPONENT,
+        click_pixel_redraw_budget: int = SUBMITTED_CLICK_PIXEL_REDRAW_BUDGET,
+        click_pixel_sampling_seed: int | None = None,
         candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER,
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
@@ -3354,6 +3597,10 @@ class E3AgentPolicy:
             tier_click_vocab_only=tier_click_vocab_only,
             frontier_gradient=frontier_gradient,
             frontier_discipline_seed=frontier_discipline_seed,
+            click_pixel_sampling=click_pixel_sampling,
+            click_pixel_samples_per_component=click_pixel_samples_per_component,
+            click_pixel_redraw_budget=click_pixel_redraw_budget,
+            click_pixel_sampling_seed=click_pixel_sampling_seed,
             candidate_router=candidate_router,
             dense_curiosity=(
                 DenseCuriosityProgress(
@@ -3862,7 +4109,14 @@ class E3AgentPolicy:
         )
 
     def _call_plan_in_model(
-        self, plan_in_model, engine, is_done, start_grid, *, diagnostics=None, goal_energy_override=None
+        self,
+        plan_in_model,
+        engine,
+        is_done,
+        start_grid,
+        *,
+        diagnostics=None,
+        goal_energy_override=None,
     ):
         import os
 
@@ -3872,7 +4126,9 @@ class E3AgentPolicy:
         # nodes -> finds the plan within budget on bigger mazes). None (all other paths) preserves the
         # existing auto-derivation exactly.
         goal_energy = (
-            goal_energy_override if goal_energy_override is not None else self._goal_energy_for_plan(is_done)
+            goal_energy_override
+            if goal_energy_override is not None
+            else self._goal_energy_for_plan(is_done)
         )
         kwargs: dict = {}
         if goal_energy is not None and self._planner_accepts_goal_energy(plan_in_model):
@@ -4986,8 +5242,16 @@ SUBMITTED_AGENT_CONFIG = {
     "frontier_batch_size": SUBMITTED_FRONTIER_BATCH_SIZE,
     "navigation_cost_tiebreak": SUBMITTED_NAVIGATION_COST_TIEBREAK,
     # REQ-ARC-WMTE-5836: the two just-explore frontier-discipline mechanisms + the
-    # within-tier draw knob. All THREE default OFF -> the submitted agent is unchanged
-    # until the matched-budget offline A/B greenlights a flip.
+    # within-tier draw knob.
+    #
+    # STATUS CORRECTION (2026-07-25): this comment used to read "All THREE default OFF ->
+    # the submitted agent is unchanged until the matched-budget offline A/B greenlights a
+    # flip". That is no longer true -- the A/B ran (results/experiment_5836_frontier_
+    # discipline_generalization.json) and tier_exhaustion + tier_uniform_random +
+    # tier_click_vocab_only were flipped ON, so the submitted agent HAS changed. Only
+    # frontier_distance_gradient is still off. Left as a note rather than deleted because a
+    # stale "nothing has changed" claim in the config's own documentation is exactly the
+    # kind of drift that makes a later reader mis-attribute a measurement.
     "frontier_tier_exhaustion": SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED,
     "frontier_tier_exhaustion_mode": SUBMITTED_FRONTIER_TIER_EXHAUSTION_MODE,
     "frontier_tier_count": SUBMITTED_FRONTIER_TIER_COUNT,
@@ -4995,6 +5259,12 @@ SUBMITTED_AGENT_CONFIG = {
     "frontier_tier_click_vocab_only": SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED,
     "frontier_distance_gradient": SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED,
     "frontier_distance_gradient_mode": SUBMITTED_FRONTIER_DISTANCE_GRADIENT_MODE,
+    # REQ-ARC-WMTE-5950: per-object click-pixel sampling. DEFAULT OFF -> the submitted
+    # agent's click coordinates are byte-identical to today's until arm F beats arm B2
+    # (the CURRENT live configuration) in a matched-budget offline A/B.
+    "click_pixel_sampling": SUBMITTED_CLICK_PIXEL_SAMPLING_ENABLED,
+    "click_pixel_samples_per_component": SUBMITTED_CLICK_PIXEL_SAMPLES_PER_COMPONENT,
+    "click_pixel_redraw_budget": SUBMITTED_CLICK_PIXEL_REDRAW_BUDGET,
     "frame_change_predictor_enabled": SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED,
     "frame_change_ranking_mode": SUBMITTED_FRAME_CHANGE_RANKING_MODE,
     "frame_change_prune_threshold": None,

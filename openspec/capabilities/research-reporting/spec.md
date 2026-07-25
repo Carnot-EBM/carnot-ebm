@@ -46823,3 +46823,128 @@ principle, provenance entry, checksum, and terminal verdict prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5917 | Implemented (`python/carnot/experiment_5917_v525_capstone_reconciliation.py`, `results/experiment_5917_v525_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5917_v525_capstone_reconciliation.py`) |
+
+### REQ-REPORT-5918: V526 Transition Archives Exact V525 Terminal Identities
+
+The Exp5918 transition workflow SHALL archive milestone `2026.07.525` into
+`2026.07.526` by selecting only the 13 activated `.525` identities Exp5905
+through Exp5917 and their exact declared deliverable paths. Evidence SHALL be
+resolved by `(milestone, task_id, declared_deliverable)` and SHALL NOT use
+numeric-prefix globbing, task-title inference, source-file inference, or
+concurrent Exp5904 evidence as milestone evidence.
+
+The workflow SHALL preserve disjoint terminal classes without laundering:
+positive, null, blocked, blocked-precondition, retired, gate-blocked, and
+missing declared deliverable outcomes SHALL remain independently visible.
+Exp5909 and Exp5910 SHALL remain scientific nulls, Exp5912 SHALL remain
+retired, Exp5913 and Exp5914 SHALL remain gate-blocked, Exp5916 SHALL remain a
+blocked-precondition, and Exp5917 SHALL preserve its own capstone
+classification independently.
+
+The workflow SHALL parse `research-roadmap.yaml`, optionally parse
+`research-roadmap-next.yaml` when present, hash `research-complete.yaml`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, protected files, and
+every present declared `.525` deliverable, verify disk and memory availability,
+verify atomic output capability, and verify `scripts/adversarial_verify.py`
+availability before trusting the transition. It SHALL run or ingest fresh
+adversarial verifier receipts for every present declared `.525` artifact and
+SHALL record missing declared artifacts separately instead of substituting
+same-number candidates.
+
+The workflow SHALL append the exact `.525` milestone block to
+`research-complete.yaml` at most once and only when an exact `.525` block is
+absent. Existing duplicate history SHALL be measured but SHALL NOT be
+amplified. Exp5904 SHALL be recorded in
+`exp5904_separate_evidence_receipt` by exact path and hash when present, but
+SHALL NOT be edited, reclassified, appended, or counted as a `.525` task.
+
+The workflow SHALL scan active and next roadmaps, completion history, proposal
+documents, exclusions, results, source, tests, operations allocation receipts,
+and the transition-owned spec/test/module/result paths for bare Exp5918 through
+Exp5931 path or text collisions. Active `.526` roadmap allocation references
+and Exp5918-owned implementation/spec/test/result references are allowed;
+unowned references SHALL block the transition. `next_range_collision_count`
+SHALL be a bare integer and SHALL equal `0` before the transition is complete.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`exact_terminal_classification`,
+`blocked_retired_gate_blocked_and_missing_receipts`,
+`adversarial_verifier_receipts`, `research_complete_append_count`,
+`duplicate_history_amplification_count`, `exp5904_separate_evidence_receipt`,
+`next_task_range`, `next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. `inference_substrate` SHALL
+be `aggregation_from_upstream_artifacts`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal transition state over exact activated .525 identities."
+- `preconditions_checked`: principle "Roadmaps, history, logs, exclusions, resources, verifier availability, atomic output, protected files, and declared deliverables are checked before completion."
+- `milestone_transition`: principle "Explicit .525-to-.526 boundary prevents cross-milestone evidence laundering."
+- `activated_task_and_deliverable_matrix`: principle "only activated task IDs and exact declared paths count as milestone evidence."
+- `exact_terminal_classification`: principle "Positive, null, blocked, blocked-precondition, retired, gate-blocked, and missing classes remain disjoint."
+- `blocked_retired_gate_blocked_and_missing_receipts`: principle "Non-positive terminal classes remain receipts and are never converted into successes."
+- `adversarial_verifier_receipts`: principle "Fresh verifier receipts cover every present declared .525 artifact without replacing missing ones."
+- `research_complete_append_count`: principle "Exact zero-or-one append behavior prevents duplicate .525 history."
+- `duplicate_history_amplification_count`: principle "Existing duplicate history is measured but never multiplied."
+- `exp5904_separate_evidence_receipt`: principle "concurrent coordinate evidence is hashed and named but never edited, reclassified, or appended as a `.525` task."
+- `next_task_range`: principle "The finite Exp5918-Exp5931 range makes the next allocation auditable."
+- `next_range_collision_count`: principle "only bare zero authorizes Exp5918-Exp5931."
+- `docs_reconciled`: principle "Transition-owned spec reconciliation is recorded while conductor-owned ledgers are deferred by the stop rule."
+- `protected_files_unchanged`: principle "Protected roadmap, conductor, north-star, ops-ledger, and Exp5904 files remain byte-identical."
+- `duration_s`: principle "Measured wall time exposes aggregation-only execution."
+- `inference_substrate`: principle "use `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "Every required field traces to exact paths, hashes, receipts, commands, or classifications."
+- `test_commands`: principle "Commands document focused unit, coverage, YAML parse, exact-path/hash, duplicate-history, verifier, exclusion-manifest, range-collision, protected-file, spec, E2E applicability, root-clutter, and full-suite checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks from being reported as success."
+- `reproducibility_checksum`: principle "A checksum detects later ledger, artifact, or allocation drift."
+- `honest_verdict`: principle "use a `complete:` or `blocked:` prefix."
+
+#### SCENARIO-REPORT-5918-EXACT-MATRIX: V525 Archive Uses Declared Deliverables Only
+
+**Given** Exp5917 records the exact `.525` activated matrix for Exp5905 through
+Exp5917
+**When** the Exp5918 transition builds its archive matrix
+**Then** it records exactly 13 activated identities, reads only each declared
+deliverable path, excludes Exp5904 from milestone evidence, and records missing
+declared deliverables without selecting numeric-prefix aliases.
+
+#### SCENARIO-REPORT-5918-TERMINAL-CLASSES: Terminal Outcomes Remain Disjoint
+
+**Given** `.525` includes positive, null, blocked, blocked-precondition,
+retired, gate-blocked, and missing-declared-deliverable outcomes
+**When** the Exp5918 transition classifies the archive
+**Then** Exp5909 and Exp5910 remain nulls, Exp5912 remains retired, Exp5913 and
+Exp5914 remain gate-blocked, Exp5916 remains blocked-precondition, Exp5917
+remains independently classified, and no outcome is promoted to a stronger
+class.
+
+#### SCENARIO-REPORT-5918-APPEND-ONCE-AND-EXP5904: Completion History And Concurrent Evidence Are Sealed
+
+**Given** `.525` completion history may already contain exact milestone blocks
+and Exp5904 concurrent coordinate evidence may exist
+**When** the Exp5918 transition runs
+**Then** it appends `.525` exactly once only when absent, reports zero duplicate
+history amplification, hashes Exp5904's exact path separately, and never edits
+or counts Exp5904 as a `.525` task.
+
+#### SCENARIO-REPORT-5918-RANGE-COLLISION-SCHEMA: Exp5918 Through Exp5931 Requires Bare Zero
+
+**Given** `.526` allocates Exp5918 through Exp5931
+**When** the Exp5918 transition scans roadmaps, history, proposals, exclusions,
+results, source, tests, and allocation receipts
+**Then** allowed allocation and Exp5918-owned references are separated from
+unowned collisions, `next_range_collision_count` is the bare integer `0`, the
+artifact declares `aggregation_from_upstream_artifacts`, every required field
+has provenance, and the terminal verdict starts with `complete:` or
+`blocked:`.
+
+## Implementation Status (REQ-REPORT-5918)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5918 | Implemented (`python/carnot/experiment_5918_transition_v526.py`, `results/experiment_5918_transition_v526.json`) | Implemented (`tests/python/test_experiment_5918_transition_v526.py`) |

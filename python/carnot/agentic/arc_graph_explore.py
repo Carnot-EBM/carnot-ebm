@@ -78,6 +78,11 @@ def _components_detailed(grid, *, emit_grid_fallback: bool = False) -> list:
 # flat area*rarity sort misses on 5 games (bp35/ft09/m0r0/r11l/vc33). It front-loads BUTTON-LIKE objects
 # (salient colour AND medium bounding-box) and defers very-large / dull / status-bar segments, where our
 # flat sort up-ranks the largest area first. Constants are just-explore's verbatim.
+# REQ-ARC-WMTE-5950: the fallback stream for click-pixel sampling when a caller enables the
+# feature without supplying its own RNG (seeded, so a run is still reproducible; see the call
+# site in rich_action_candidates for why it must be one shared instance and not a fresh one).
+_CLICK_PIXEL_FALLBACK_RNG = random.Random(20260725)
+
 _TIER_SALIENT_COLORS = frozenset(range(6, 16))  # {6..15} (non-salient = {0..5})
 _TIER_STATUS_BAR_COLOR = 16
 _TIER_MIN_WIDTH = 2
@@ -190,6 +195,10 @@ def rich_action_candidates(
     structural_energy_scorer: Any | None = None,
     candidate_router: Any | None = None,
     previous_frame: Any | None = None,
+    click_pixel_sampling: bool = False,
+    click_pixel_samples_per_component: int = 1,
+    click_pixel_rng: Any | None = None,
+    click_pixel_diagnostics_out: dict | None = None,
 ) -> list:
     """Every detected object is a click candidate (no 12-click cap — the winning
     clicks for e.g. r11l are objects #15/#27 that the cap dropped). Keyboard actions
@@ -216,7 +225,29 @@ def rich_action_candidates(
 
     REQ-CAPSTONE-4556: when ``candidate_router`` is supplied, apply its learned
     cross-game ordering as the final candidate-router pass. A scoring failure
-    keeps the bare order so the live solver has a no-regression fallback."""
+    keeps the bare order so the live solver has a no-regression fallback.
+
+    REQ-ARC-WMTE-5950 (``click_pixel_sampling``, default OFF -> byte-identical to the
+    proven behaviour): replace each object's single truncated CENTROID click coordinate
+    with a uniform random pixel OF THAT OBJECT (the just-explore generation rule; see
+    ``carnot.agentic.arc_component_sampling`` for the full rationale and the measured
+    defects it addresses -- most importantly that the truncated centroid is not a member
+    of its own object on 100% of 204 measured real r11l states). Applied LAST among the
+    point producers, so it composes with whichever ordering lever is active and varies
+    ONLY the coordinate. ``click_pixel_samples_per_component`` > 1 emits several pixels
+    per object; the object list is bounded by ``max_click`` BEFORE expansion so that
+    raising k cannot silently shrink the number of reachable objects (which would turn a
+    coordinate experiment into a budget experiment).
+
+    ``click_pixel_diagnostics_out``: an OUT-parameter dict the sampler's per-call
+    ``SamplingDiagnostics`` is written into (``coordinates_changed``, ``unresolved``,
+    ``errors``, ...). It is an out-parameter rather than a second return value because this
+    function's list return type is consumed in dozens of places, and the alternative --
+    discarding the diagnostics, as the first implementation did -- made a TOTALLY DEAD
+    sampler indistinguishable from a working one in the emitted artifact (verified by
+    patching ``component_partition`` to raise: the arm still reported rows_sampled=1,
+    errors=0 while emitting the unmodified centroid). ``coordinates_changed == 0`` with
+    ``errors > 0`` is now the mechanical signature of a dead sampler."""
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
@@ -318,6 +349,37 @@ def rich_action_candidates(
         if not pts:
             h, w = grid.shape
             pts = [(w // 2, h // 2)]
+        if click_pixel_sampling:
+            # REQ-ARC-WMTE-5950. Bound the OBJECT list first, then expand each surviving
+            # object into k sampled pixels, then tell the loop below not to re-cut. Doing
+            # it in this order is the whole point: expanding first and capping after would
+            # divide the reachable object count by k, so a k>1 arm would be measuring a
+            # smaller candidate budget rather than a different coordinate rule.
+            from carnot.agentic.arc_component_sampling import sample_component_click_points
+
+            bounded = pts if pts_already_bounded else pts[:max_click]
+            # The fallback RNG is a MODULE-LEVEL instance, not a fresh Random(0) per call.
+            # A fresh instance would restart the same stream on every invocation, so a caller
+            # that enables the flag via the env override (and therefore passes no rng) would
+            # get the SAME "random" pixel for a given object on every frame -- silently
+            # turning a with-replacement sampler back into a fixed-point one. The live path
+            # always passes the explorer's own seeded stream; this only guards direct callers.
+            sampled, cps_diag = sample_component_click_points(
+                grid,
+                bounded,
+                rng=click_pixel_rng if click_pixel_rng is not None else _CLICK_PIXEL_FALLBACK_RNG,
+                samples_per_component=max(1, int(click_pixel_samples_per_component)),
+            )
+            # The diagnostics are the mechanism's ONLY activity witness -- discarding them
+            # (as the first implementation did with `_diag`) is what let a dead sampler read
+            # as an active one. Written to the caller's dict when one was supplied.
+            if click_pixel_diagnostics_out is not None:
+                try:
+                    click_pixel_diagnostics_out.update(cps_diag.as_dict())
+                except Exception:
+                    pass
+            pts = sampled
+            pts_already_bounded = True
         seen: set = set()
         for x, y in pts if pts_already_bounded else pts[:max_click]:
             p = (max(0, int(x)), max(0, int(y)))

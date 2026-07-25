@@ -4,6 +4,63 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-25 (outer-loop, STILL OPEN): r11l fails on STATE-IDENTITY ALIASING, not on candidate generation — `auto_hud_mask` returns None on 8 of 25 public games
+
+**Status: OPEN. Deliberately NOT fixed in the REQ-ARC-WMTE-5950 session** (that session shipped the
+per-object click-pixel sampler, which is a general lever and explicitly NOT the r11l fix). Recorded
+here so the diagnosis is not lost and so nobody re-credits r11l to the wrong mechanism.
+
+**The diagnosis (measured, offline dev twin, public game — `development_proxy`):**
+
+1. r11l renders a MONOTONE step counter into frame column 0, so EVERY action mutates the frame.
+2. `SUBMITTED_AUTO_HUD_MASK_ENABLED` is True and the mask is attempted, but `explorer.hud_mask`
+   resolves to **None** on r11l — nothing is masked out of node identity.
+3. Consequence: 1956 actions produced 1392 graph nodes over only **31 true game states**
+   (handle positions + selection) = **44.9x node inflation**. Dedup never fires, so the search has
+   no memory.
+4. The livelock this creates: salience rank 0 is click (23,2), a WALL cell whose drag destination is
+   wall-blocked, i.e. game-state-INERT — it changes exactly one frame cell, in column 0. Because each
+   such action mints a brand-new node, rank 0 is re-popped forever: **1371 of 1956 actions (70%)**
+   are that single inert click. `SUBMITTED_INERT_CLICK_PRUNER_ENABLED` is False, so nothing catches it.
+5. **Causal proof:** masking column 0 out of node identity and changing NOTHING else (no candidate
+   change, no sampling change) makes r11l **WIN on 3 of 3 seeds** — arm A 0 -> 1 level in 1013
+   actions, arm B2 0 -> 1 level in 222-232 actions, inflation 44.9x -> 1.0x. The column-0 mask used
+   for this proof is ORACLE-DERIVED from the public game source (dev-legal) and is a DIAGNOSTIC only
+   — it must never ship as a per-game constant.
+6. The reference's own `FrameProcessor.identify_status_bars`, run on the IDENTICAL r11l reset frame,
+   returns a 64-cell mask in column 0 — byte-for-byte the hand-built diagnostic mask. Ours returns
+   None on the same frame. So the missing mechanism is findable hidden-game-legally, from frame
+   statistics alone: no per-game knowledge, no source reading.
+7. It is also NOT a generation miss: a winning 3-click r11l L1 sequence exists entirely inside our
+   current candidate set (present at ranks 22/34, 6/26, 25/26 at the exact states it must be issued
+   from), and 160 of 1156 ordered candidate PAIRS at the reset state are winning pairs.
+
+**Blast radius (signal, not 8 confirmed bugs):** `auto_hud_mask` resolves None on 8 of 25 public games
+(cn04, lp85, ls20, r11l, sb26, sc25, sk48, tn36) and on every one of those the explorer's node count
+equals its unique-frame count (zero dedup), while mask-resolved games dedup heavily (lf52 245 unique
+frames -> 7 nodes). Only **r11l is CONFIRMED** (a HUD provably exists and masking it flips the
+outcome). On ls20/sb26/sk48 the reference's classifier also finds 0 px, so "no bar" may be correct
+there. sp80 and tu93 are UNMEASURED in that scan due to a defect in the probe, not in the agent.
+
+**Recommended next steps, in order (each A/B'd SEPARATELY so attribution stays clean):**
+1. Repair / port the status-bar CLASSIFIER (detection only, not the reference's blanket masking —
+   its version OVER-masks elsewhere, up to 88x hash COLLAPSE on lf52/tu93/su15, which is the cause
+   of its own livelock). Ship DEFAULT-OFF behind a `SUBMITTED_*` flag. Gate on a per-seed
+   full-corpus regression, with r11l 0 -> 1 and inflation 44.9x -> 1.0x as the pre-registered signal.
+2. Turn on inert-click detection (`SUBMITTED_INERT_CLICK_PRUNER_ENABLED` is currently False) as an
+   INDEPENDENT guard: with correct node identity the inert click is learned once, and without it the
+   pruner is what would have stopped 70% of the budget going to one wall-blocked click.
+3. Lower priority: the salience order ranks a WALL blob at position 0 while the winning goal-outline
+   clicks sit at 22/34 and 25/26. Worth revisiting, but demonstrably NOT what blocks r11l — with a
+   correct node identity the SAME order wins.
+
+**Baseline discipline for any of these A/Bs:** the control is experiment_5836's arm **B2**, not arm A.
+Arm A pins `tier_exhaustion=False` / `frontier_gradient=False` as explicit constructor kwargs and
+`_fd_gate` ranks an explicit kwarg above the `SUBMITTED_*` default, so after the 2026-07-25 flip arm A
+is the PRE-flip agent. (Verified: a fresh arm-A run reproduces the pre-flip row exactly — 1956
+actions / 1392 states / 0 levels.)
+
+
 ### 2026-07-22 (outer-loop, operator-directed architectural pivot): verifier-filtered reactive loop tested — honest negative, real diagnosis of why (myopic, not induction-quality)
 
 **Operator directive:** "Stop inducing an explicit symbolic world model up front and instead adopt

@@ -126,6 +126,10 @@ for _p in (REPO / "python", REPO / "scripts"):
         sys.path.insert(0, str(_p))
 
 EXPERIMENT_ID = 5836
+# The SECOND requirement this module hosts. A run that includes the sampler arms (F/F1) is a
+# REQ-ARC-WMTE-5950 measurement and must declare that identity, not 5836's -- see the identity
+# derivation in `run()`.
+CLICK_PIXEL_EXPERIMENT_ID = 5950
 ARTIFACT = REPO / "results" / "experiment_5836_frontier_discipline_ab.json"
 RANDOM_SEED = 20260724
 DEFAULT_BUDGET = 2000
@@ -256,6 +260,48 @@ ARMS: dict[str, dict[str, Any]] = {
         },
         "deterministic": False,
     },
+    # REQ-ARC-WMTE-5950 (2026-07-25): per-object CLICK-PIXEL SAMPLING, the just-explore
+    # GENERATION rule -- a uniform random pixel OF the chosen object instead of that
+    # object's truncated centroid.
+    #
+    # THE CONTROL FOR THESE TWO ARMS IS B2, NOT A. Arm A pins tier_exhaustion=False and
+    # frontier_gradient=False as explicit constructor kwargs, and _fd_gate gives an explicit
+    # kwarg precedence over both the env override and the SUBMITTED_* default -- so after the
+    # 2026-07-25 flip of tier_exhaustion / tier_uniform_random / tier_click_vocab_only, arm A
+    # is the PRE-FLIP agent, not the live one. B2 pins exactly the flipped configuration, so
+    # F - B2 isolates the sampler against what actually ships today. (A is still worth
+    # running: it is what the historical rows in this artifact's own record were measured on.)
+    #
+    # F vs F1 separates the mechanism's two halves, which is the whole reason there are two:
+    #   F1 -- CORRECT the coordinate only (redraw budget 1 = one shot per object, exactly as
+    #         today, but on a real member pixel instead of a possibly-off-object centroid).
+    #   F  -- also permit bounded WITH-REPLACEMENT revisiting (budget 3).
+    # The offline isolation that motivated this predicted the difference matters: a fixed
+    # member pixel improved the median but produced the WORST tail of any arm, while uniform
+    # redraws compressed the tail. If F beats F1 here, that reproduces; if not, the cheaper
+    # F1 is the flip candidate.
+    "F": {
+        "label": "click_pixel_sampling_with_bounded_redraw_on_live_config",
+        "kwargs": {
+            "tier_exhaustion": True,
+            "tier_uniform_random": True,
+            "frontier_gradient": False,
+            "click_pixel_sampling": True,
+            "click_pixel_redraw_budget": 3,
+        },
+        "deterministic": False,
+    },
+    "F1": {
+        "label": "click_pixel_sampling_one_shot_on_live_config",
+        "kwargs": {
+            "tier_exhaustion": True,
+            "tier_uniform_random": True,
+            "frontier_gradient": False,
+            "click_pixel_sampling": True,
+            "click_pixel_redraw_budget": 1,
+        },
+        "deterministic": False,
+    },
     "C": {
         "label": "frontier_distance_gradient",
         "kwargs": {"tier_exhaustion": False, "frontier_gradient": True},
@@ -281,6 +327,37 @@ ARMS: dict[str, dict[str, Any]] = {
 # ---------------------------------------------------------------------------
 # Arm E -- the just-explore reference, loaded through the existing shim
 # ---------------------------------------------------------------------------
+
+
+def _seed_global_rngs(seed: int) -> None:
+    """Seed the two global RNGs the arms actually draw from."""
+
+    random.seed(int(seed))
+    try:
+        import numpy as np
+
+        np.random.seed(int(seed) % (2**32))
+    except Exception:  # pragma: no cover -- numpy is a hard dependency of the harness
+        pass
+
+
+def construct_reference_agent_seeded(factory: Callable[[], Any], seed: int) -> Any:
+    """Build the reference agent, then RESTORE the seed its ``__init__`` clobbers.
+
+    ``HeuristicAgent.__init__`` ends with ``random.seed(int(time.time() * 1000000) +
+    hash(self.game_id) % 1000000)`` (heuristic_agent.py:66-69). Because construction happens
+    AFTER the harness seeds the RNG, that line silently overwrote the harness seed and made
+    every arm-E cell an unrepeatable draw -- which is why the "reference wins r11l 9/9" row
+    could not be reproduced and had to be retracted.
+
+    Extracted as a named function so the ORDER (construct, THEN re-seed) is directly
+    testable without needing the vendored reference clone present: a test can pass a factory
+    that clobbers the seed the same way and assert the seed is restored afterwards.
+    """
+
+    agent = factory()
+    _seed_global_rngs(seed)
+    return agent
 
 
 def load_just_explore_runner() -> tuple[Optional[Callable[..., dict]], str]:
@@ -342,7 +419,25 @@ def load_just_explore_runner() -> tuple[Optional[Callable[..., dict]], str]:
             from carnot.agentic.arc_variant_generator import VariantEnv
 
             env = VariantEnv(env, game, variant, reflect=reflect)
-        agent = shim.OfflineHeuristicAgent(env, gid, budget)
+        agent = construct_reference_agent_seeded(
+            lambda: shim.OfflineHeuristicAgent(env, gid, budget), seed
+        )
+        # ARM-E SEEDING FIX (2026-07-25, REQ-ARC-WMTE-5950 co-change).
+        #
+        # THE DEFECT: HeuristicAgent.__init__ does `seed = int(time.time() * 1000000) +
+        # hash(self.game_id) % 1000000; random.seed(seed)` (heuristic_agent.py:66-69). It runs
+        # AFTER the harness seeded the global RNG above, so it CLOBBERS that seed with the wall
+        # clock. Every arm-E cell was therefore an independent unseeded draw: its "9 of 9 r11l
+        # wins" were nine unrepeatable coin flips, and re-running a cell could not reproduce
+        # it. A positive control that cannot be reproduced cannot support a claim about the
+        # reference, which is exactly what the 2026-07-24 corrigendum had to retract.
+        #
+        # THE FIX: re-seed AFTER construction, so the harness's seed is the one in force for
+        # every draw the agent actually makes (all of its randomness is drawn during main(),
+        # not in __init__ -- __init__ only seeds). Deliberately NOT done by patching the
+        # reference's own file: it is a read-only vendored clone under its own licence, and
+        # editing it would make our measurements non-reproducible against a fresh clone.
+        # (The re-seed itself lives in construct_reference_agent_seeded, above.)
         # Instrument the FIRST level-up's action count. Without this, arm E reports only its
         # budget-bound total (the reference does NOT early-stop on a level-up, so its `actions`
         # is always ~= budget and is therefore NOT comparable to arms A-D, which stop at the
@@ -362,13 +457,41 @@ def load_just_explore_runner() -> tuple[Optional[Callable[..., dict]], str]:
         # hook fires inside take_action, before main() increments the counter for this action.
         first_levelup: dict[str, Optional[int]] = {"actions": None, "actions_incl_reset": None}
         resets = {"n": 0}
+        # ARM-E INSTRUMENTATION (2026-07-25). Arm E previously reported states_expanded=None on
+        # every row, which is how a control that livelocked on 72-97% of its decisions read as a
+        # legitimate null across 975 cells. Two counters close that:
+        #   errors        -- the shim's take_action swallows exceptions and returns a GAME_OVER
+        #                    frame; that swallow IS the livelock/crash signal, so count it.
+        #   choose_errors -- exceptions raised by the reference's own choose_action (its
+        #                    "no available actions" ValueError, which it uses as control flow).
+        # states_expanded comes from the reference's own per-frame bookkeeping table, which is
+        # its node set -- the closest analogue to our explorer's graph size.
+        errors = {"take_action": 0, "choose_action": 0}
         _inner_take_action = agent.take_action
+        _inner_choose_action = agent.choose_action
+
+        def _counting_choose_action(*args, **kwargs):
+            try:
+                return _inner_choose_action(*args, **kwargs)
+            except Exception:
+                errors["choose_action"] += 1
+                raise
+
+        agent.choose_action = _counting_choose_action  # type: ignore[method-assign]
 
         def _counting_take_action(action):
             is_reset = str(getattr(action, "name", "")) == "RESET"
             if is_reset:
                 resets["n"] += 1
             fd_ = _inner_take_action(action)
+            try:
+                # The shim returns an empty-frame GAME_OVER FrameData when the env step raised.
+                if not getattr(fd_, "frame", None) and str(getattr(fd_, "state", "")).endswith(
+                    "GAME_OVER"
+                ):
+                    errors["take_action"] += 1
+            except Exception:
+                pass
             try:
                 if first_levelup["actions"] is None and int(getattr(fd_, "score", 0) or 0) > 0:
                     raw = int(getattr(agent, "action_counter", 0) or 0) + 1
@@ -395,6 +518,13 @@ def load_just_explore_runner() -> tuple[Optional[Callable[..., dict]], str]:
             "actions_to_first_levelup": first_levelup["actions"],
             "actions_to_first_levelup_incl_reset": first_levelup["actions_incl_reset"],
             "resets_taken": int(resets["n"]),
+            # Distinct frame hashes the reference built bookkeeping for = its node set.
+            "states_expanded": int(len(getattr(agent, "hashed_frame2action_results", {}) or {})),
+            "errors": int(errors["take_action"] + errors["choose_action"]),
+            "error_breakdown": {
+                "take_action_swallowed": int(errors["take_action"]),
+                "choose_action_raised": int(errors["choose_action"]),
+            },
             "duration_s": round(time.time() - t0, 3),
         }
 
@@ -464,7 +594,29 @@ def run_cell(
             # (target_levels=1 stops them at the first level-up). See
             # `levels_capped_by_early_stop` on the explorer arms.
             "levels_capped_by_early_stop": False,
-            "states_expanded": None,
+            # 2026-07-25: was hardcoded None. An arm with no expansion count and no error count
+            # is an UNINSTRUMENTED arm, and this one was silently livelocking.
+            "states_expanded": out.get("states_expanded"),
+            "errors": int(out.get("errors") or 0),
+            "error_breakdown": out.get("error_breakdown"),
+            # NAMED for what it actually is (2026-07-25). 100% of the observed count is the
+            # reference's OWN choose_action raising ValueError("No available actions found")
+            # (heuristic_agent.py:343); its main() catches ANY exception, sets failed=True and
+            # level_up=True, and REPLAYS self.last_action_object. So a high rate here does not
+            # mean "the reference is using exceptions as benign control flow" and does not mean
+            # "the reference livelocks through our shim" -- it means the reference spends that
+            # fraction of its budget in a self-flagged degenerate repeat-last-action loop. Any
+            # cell above the threshold is NOT a measurement of reference behaviour.
+            "reference_choose_action_raised": int(
+                (out.get("error_breakdown") or {}).get("choose_action_raised") or 0
+            ),
+            "degenerate_fallback_fraction": round(
+                int(out.get("errors") or 0) / max(1, int(out["actions"])), 4
+            ),
+            "reference_degenerate": bool(
+                int(out.get("errors") or 0) / max(1, int(out["actions"]))
+                > REFERENCE_DEGENERACY_THRESHOLD
+            ),
             "efficiency": None,
             "duration_s": out["duration_s"],
             "frontier_discipline": None,
@@ -477,7 +629,23 @@ def run_cell(
     # smoke run: B2's two seeds were initially identical.) Harmless for the deterministic arms,
     # which never draw from this RNG.
     policy = _explorer_policy(game, frontier_discipline_seed=seed, **ARMS[arm]["kwargs"])
-    r = lb.run_game(game, policy, budget=budget, variant=variant, reflect=reflect)
+    # 2026-07-25: an exception out of run_game used to propagate to the caller's blanket
+    # handler, which recorded {"ran": False} WITHOUT an error count on the arm's own row -- so
+    # a partially-crashed arm could still average out to a plausible-looking null. The
+    # exception is now attributed to the arm that raised it, on that arm's row.
+    try:
+        r = lb.run_game(game, policy, budget=budget, variant=variant, reflect=reflect)
+    except Exception as exc:
+        explorer = getattr(policy, "explorer", None)
+        return {
+            "arm": arm,
+            "game": game,
+            "seed": seed,
+            "ran": False,
+            "reason": f"{type(exc).__name__}:{exc}",
+            "errors": 1,
+            "states_expanded": (len(explorer.graph) if explorer is not None else None),
+        }
     explorer = getattr(policy, "explorer", None)
     fd_diag = None
     if explorer is not None and hasattr(explorer, "frontier_discipline_diagnostics"):
@@ -502,6 +670,22 @@ def run_cell(
         # a discipline that reaches the same level with fewer expanded states is a real win
         # even when the binary win count is flat.
         "states_expanded": (len(explorer.graph) if explorer is not None else None),
+        # Emitted on EVERY row of EVERY arm so a crashed arm cannot read as a clean null.
+        # HONEST SCOPE of what this counts for an explorer arm: exceptions the SAMPLER
+        # swallowed internally -- BOTH halves, the redraw path (`click_pixel_errors`) and the
+        # generation path (`click_pixel_generation_errors`; omitting the latter is how a
+        # totally dead generation-path sampler reported errors=0) -- plus (on the not-ran row
+        # above) a run_game crash. It does NOT instrument every exception the explorer
+        # swallows elsewhere in its own pipeline -- those would need their own counters, which
+        # do not exist yet. So errors == 0 means "no crash and no sampler error", not
+        # "provably nothing was swallowed anywhere".
+        "errors": int((fd_diag or {}).get("click_pixel_errors") or 0)
+        + int((fd_diag or {}).get("click_pixel_generation_errors") or 0),
+        # THE MECHANISM'S ACTIVITY WITNESS, lifted onto the row so no reader has to dig into
+        # frontier_discipline to answer "did the sampler actually replace anything". A sampler
+        # arm reporting 0 here is a CONTROL, not a treatment, whatever its label says.
+        "click_pixel_coordinates_changed": (fd_diag or {}).get("click_pixel_coordinates_changed"),
+        "click_pixel_generation_errors": (fd_diag or {}).get("click_pixel_generation_errors"),
         "efficiency": r["efficiency"],
         "duration_s": round(time.time() - t0, 3),
         "frontier_discipline": fd_diag,
@@ -939,10 +1123,105 @@ def compare_to_baseline(agg: dict, games: Sequence[str], rows: Sequence[dict] = 
     return out
 
 
+# DELIBERATELY UNCHANGED when the REQ-ARC-WMTE-5950 sampler arms (F, F1) were added. This
+# tuple feeds capability_summary + acceptance_gate_capability, whose numbers are already on
+# the record for the frontier-discipline graft; folding new arms into it would silently
+# redefine an existing published quantity (a milestone-over-milestone comparison would then
+# be comparing two different definitions). The sampler arms get their OWN gate below.
 GRAFTED_ARMS = ("B", "B2", "C", "D")
 
+# Above this fraction of a cell's actions ending in the reference's own choose_action raising,
+# the cell is NOT a measurement of reference behaviour: the reference's main() catches the
+# exception, sets failed=True / level_up=True, and replays last_action_object, so the remaining
+# budget is a degenerate repeat-last-action loop rather than its tier assignment and
+# within-tier draw. 5% is deliberately strict -- the observed cells are 78-96%, and a healthy
+# cell measured exactly 0. Origin: the smoke reported errored_cell_rate 0.0 and
+# positive_control_ran true while 4 of 6 arm-E cells were 78-96% degenerate.
+REFERENCE_DEGENERACY_THRESHOLD = 0.05
 
-def capability_summary(agg: dict, cmp_: dict) -> dict:
+# REQ-ARC-WMTE-5950: the sampler arms and the arm that is their MATCHED control (identical
+# flags except the sampler itself). Named here so the gate cannot silently drift onto arm A,
+# which is the PRE-flip baseline rather than the live configuration.
+CLICK_PIXEL_ARMS = ("F", "F1")
+CLICK_PIXEL_CONTROL_ARM = "B2"
+
+
+def positive_control_health(rows: Sequence[dict]) -> dict:
+    """Is arm E's measurement actually a measurement OF THE REFERENCE?
+
+    Origin (2026-07-25 adversarial review, second pass): arm E was instrumented in the first
+    pass -- but the instrumentation GATED NOTHING. ``errored_cell_rate`` is computed from
+    ``not row["ran"]`` only, so a cell that ran to completion with 96% of its decisions ending
+    in the reference's own ``choose_action`` raising still counted as a clean cell:
+    ``errored_cell_rate: 0.0``, ``positive_control_ran: true``, ``positive_control_reason:
+    "ok"``, and the headline credited the reference with a new win "under identical
+    conditions". Read from the reference's source, that error count is not benign control
+    flow: ``heuristic_agent.py:343`` raises ``ValueError("No available actions found")`` and
+    ``main()`` (465-469) catches ANY exception, sets ``failed=True`` / ``level_up=True``, and
+    reuses ``last_action_object``. So a degenerate cell spends most of its budget replaying one
+    action, self-flagged as failed. Its LOSSES are artifacts of that state, not evidence about
+    the reference -- which matters because ``capability_summary.diagnostic_target`` was
+    directing all forward work at "instrument what the reference does differently".
+
+    What survives: a cell's WIN is still real when it lands before degeneration (the win is
+    read from the env's own frame score), so a degenerate cell's win is kept and only its
+    losses are marked uninterpretable.
+    """
+
+    cells = [r for r in rows if r.get("arm") == "E" and r.get("ran")]
+    if not cells:
+        return {
+            "measured": False,
+            "n_cells": 0,
+            "n_degenerate_cells": 0,
+            "degenerate_fraction": 0.0,
+            "healthy": False,
+            "reason": "no arm-E cell produced a measurement",
+        }
+    degenerate = []
+    for row in cells:
+        frac = row.get("degenerate_fallback_fraction")
+        if frac is None:
+            frac = int(row.get("errors") or 0) / max(1, int(row.get("actions") or 1))
+        if float(frac) > REFERENCE_DEGENERACY_THRESHOLD:
+            degenerate.append(
+                {
+                    "game": row.get("game"),
+                    "seed": row.get("seed"),
+                    "degenerate_fallback_fraction": round(float(frac), 4),
+                    "choose_action_raised": row.get("reference_choose_action_raised"),
+                    "levels": row.get("levels"),
+                }
+            )
+    share = len(degenerate) / len(cells)
+    worst = max((d["degenerate_fallback_fraction"] for d in degenerate), default=0.0)
+    return {
+        "measured": True,
+        "n_cells": len(cells),
+        "n_degenerate_cells": len(degenerate),
+        "degenerate_fraction": round(share, 4),
+        "worst_cell_fallback_fraction": worst,
+        "degenerate_cells": degenerate,
+        "threshold": REFERENCE_DEGENERACY_THRESHOLD,
+        "mechanism": (
+            "the reference's own choose_action raises ValueError('No available actions found'); "
+            "its main() catches any exception, sets failed=True/level_up=True and replays "
+            "last_action_object, so the remaining budget is a repeat-last-action loop"
+        ),
+        # A majority-degenerate positive control is not a usable positive control. Its wins
+        # still stand (frame-score truth, landed before degeneration) but its losses are not
+        # reference behaviour, so it cannot underwrite a "the reference does X, we do not" claim.
+        "healthy": bool(share <= 0.5),
+        "reason": (
+            "ok"
+            if share <= 0.5
+            else f"reference_degenerate_in_{len(degenerate)}_of_{len(cells)}_cells_"
+            f"worst_fallback_fraction_{worst:.2f}"
+        ),
+    }
+
+
+def capability_summary(agg: dict, cmp_: dict, *, control_healthy: bool = True) -> dict:
     """THE DECISION-RELEVANT RESULT: did the graft transfer any CAPABILITY, vs the control?
 
     Filed as a top-level field on adversarial-review instruction (2026-07-24) because the first
@@ -987,18 +1266,322 @@ def capability_summary(agg: dict, cmp_: dict) -> dict:
         "positive_control_new_win_games": sorted(e_new),
         "games_won_only_by_positive_control": only_control,
         "per_grafted_arm": per_arm,
+        # GATED on the positive control being non-degenerate (2026-07-25). Directing forward
+        # work at "what the reference does differently" is only sound if arm E was actually
+        # exercising the reference. When 4 of 6 cells spend 78-96% of their budget in the
+        # reference's own failed=True repeat-last-action fallback, the discrepancy is not yet
+        # attributable to the reference at all -- the shim's swallowed exceptions have to be
+        # fixed before any "the reference does X" datum measured through it can be trusted.
+        "positive_control_healthy": bool(control_healthy),
         "diagnostic_target": (
-            "the games in games_won_only_by_positive_control are now the ONLY evidence-bearing "
-            "discrepancy: instrument what the reference does differently there (its tier "
-            "assignment and its within-tier draw sequence) rather than reporting the efficiency "
-            "delta as the outcome"
+            (
+                "the games in games_won_only_by_positive_control are now the ONLY "
+                "evidence-bearing discrepancy: instrument what the reference does differently "
+                "there (its tier assignment and its within-tier draw sequence) rather than "
+                "reporting the efficiency delta as the outcome"
+                if control_healthy
+                else "NOT YET ATTRIBUTABLE TO THE REFERENCE. The positive control is degenerate "
+                "on most cells (its own choose_action raises, main() sets failed=True and "
+                "replays last_action_object), so its losses are shim artifacts and its "
+                "tier/draw behaviour was largely not exercised. FIX THE SHIM's swallowed "
+                "choose_action exceptions before borrowing any further reference mechanism or "
+                "treating this discrepancy as a Carnot capability gap"
+            )
             if only_control
             else "no game is won by the control alone -- no capability discrepancy to diagnose"
         ),
     }
 
 
-def acceptance_gates(cap: dict, paired: dict, power: dict) -> dict:
+def _per_seed_win_sets(
+    rows: Sequence[dict], arm: str, condition: str = "real"
+) -> dict[int, set[str]]:
+    """``{seed: {games won}}`` for one arm. PER SEED, never an any-seed union.
+
+    An any-seed union cannot register a regression: if a treatment loses a game on 2 of 3
+    seeds and keeps it on 1, the union still says "won". This project has already made that
+    mistake once, so the union is not offered as an option here.
+    """
+
+    out: dict[int, set[str]] = {}
+    for row in rows:
+        if row.get("arm") != arm or row.get("condition") != condition or not row.get("ran"):
+            continue
+        seed = int(row.get("seed"))
+        out.setdefault(seed, set())
+        if int(row.get("levels") or 0) > 0:
+            out[seed].add(str(row.get("game")))
+    return out
+
+
+def _per_seed_measured_games(
+    rows: Sequence[dict], arm: str, condition: str = "real"
+) -> dict[int, set[str]]:
+    """``{seed: {games that produced a real measurement}}`` for one arm.
+
+    The DENOMINATOR the headroom calculation needs. ``_per_seed_win_sets`` only reports what
+    was WON, which cannot distinguish "the control lost this game (a gain is possible)" from
+    "this game was never run for the control (nothing is knowable)".
+    """
+
+    out: dict[int, set[str]] = {}
+    for row in rows:
+        if row.get("arm") != arm or row.get("condition") != condition or not row.get("ran"):
+            continue
+        out.setdefault(int(row.get("seed")), set()).add(str(row.get("game")))
+    return out
+
+
+def click_pixel_sampling_gate(rows: Sequence[dict], *, condition: str = "real") -> dict:
+    """REQ-ARC-WMTE-5950's PRE-REGISTERED gate, stated before any sweep was run.
+
+    THE CONDITION (fixed in advance, one line, no hidden conjuncts):
+
+        On the REAL condition, on at least one shared seed, a sampler arm wins a game its
+        MATCHED CONTROL (arm B2 = the current live configuration) does not win on that same
+        seed, AND on no shared seed does that sampler arm lose a game the control wins.
+
+    WHY IT IS SHAPED THIS WAY -- each clause answers a specific past measurement failure:
+
+    * MATCHED CONTROL IS B2, NOT ARM A. Arm A pins the pre-flip flags explicitly, so
+      comparing against it would credit the sampler with the already-flipped tier barrier's
+      effect. B2 differs from F by exactly one flag.
+    * PER SEED, PER GAME. Not a pooled rate and not an any-seed union, so a regression on
+      one seed cannot be hidden by a win on another.
+    * NO CONJUNCT ENCODES AN ASSUMED VALUE. Both clauses are differences MEASURED IN THIS
+      SAME RUN. The gate that had to be voided (exp5835) failed because a conjunct asserted
+      something about the baseline arm's value, which made the region unpassable for every
+      possible treatment value. To make that failure mode impossible to repeat silently, this
+      function COMPUTES a witness -- a concrete synthetic assignment of win sets that
+      satisfies the condition -- and reports it. A gate whose pass region is empty cannot
+      produce a witness, so ``pass_region_nonempty`` is a checked property, not a claim.
+    * HEADROOM IS MEASURED, NOT ASSUMED (added 2026-07-25 after adversarial review). The
+      witness above is SYNTHETIC: it proves the predicate is satisfiable in the abstract, and
+      it CANNOT detect that the pass region was empty ON THE CORPUS ACTUALLY MEASURED. The
+      first smoke run hit exactly that: the control already won 2 of the 3 games on both
+      seeds, so the only game where any treatment value could have gained was r11l -- which
+      the same session had independently diagnosed as blocked by state-identity aliasing, a
+      defect this mechanism explicitly disclaims fixing. A "0 new wins" result there is an
+      UNINFORMATIVE TEST, not evidence of no effect, and reporting it as a capability NULL is
+      the FALSE_NEGATIVE_RISK pattern CLAUDE.md forbids propagating without a
+      headroom-present positive control. So the gate now computes, per seed,
+      ``control_unwon_games`` (the games where a gain is even possible) and reports
+      ``headroom_present`` / ``informative``. With zero headroom the verdict is
+      ``uninformative_no_headroom``, never a confident-looking ``passed: False``.
+    * ITS OWN GATE, NOT THE FRONTIER-DISCIPLINE ONE. Folding these arms into
+      ``acceptance_gate_capability`` would redefine a number already on the record.
+
+    A missing arm is reported as ``passed: False`` with a reason, never as a silent pass.
+    """
+
+    witness = _click_pixel_gate_pass_region_witness()
+    out: dict[str, Any] = {
+        "condition": (
+            "on the REAL condition and on shared seeds: (sampler arm wins >=1 game its "
+            "matched control B2 does not win on that seed) AND (sampler arm loses no game "
+            "B2 wins on that seed)"
+        ),
+        "principle": (
+            "a generation-rule change earns a flag flip by making a game REACHABLE that the "
+            "shipped configuration cannot reach, without giving one back; measured per seed "
+            "against the arm that differs by exactly one flag"
+        ),
+        "matched_control_arm": CLICK_PIXEL_CONTROL_ARM,
+        "why_not_arm_A": (
+            "arm A passes tier_exhaustion=False / frontier_gradient=False as explicit "
+            "constructor kwargs and _fd_gate ranks an explicit kwarg above the SUBMITTED_* "
+            "default, so arm A is the PRE-flip agent -- not the live one"
+        ),
+        "pass_region_nonempty": bool(witness.get("passes")),
+        "pass_region_witness": witness,
+        "per_arm": {},
+    }
+    control = _per_seed_win_sets(rows, CLICK_PIXEL_CONTROL_ARM, condition)
+    if not control:
+        out["passed"] = False
+        out["informative"] = False
+        out["reason"] = f"matched control arm {CLICK_PIXEL_CONTROL_ARM} not measured in this run"
+        return out
+    control_ran = _per_seed_measured_games(rows, CLICK_PIXEL_CONTROL_ARM, condition)
+    any_pass = False
+    reachable_all: set[str] = set()
+    for arm in CLICK_PIXEL_ARMS:
+        treat = _per_seed_win_sets(rows, arm, condition)
+        treat_ran = _per_seed_measured_games(rows, arm, condition)
+        shared = sorted(set(treat) & set(control))
+        if not shared:
+            out["per_arm"][arm] = {
+                "measured": False,
+                "reason": "no seed shared with the matched control",
+                "passed": False,
+                "headroom_present": False,
+                "informative": False,
+            }
+            continue
+        per_seed = []
+        reachable_arm: set[str] = set()
+        for seed in shared:
+            new = sorted(treat[seed] - control[seed])
+            lost = sorted(control[seed] - treat[seed])
+            # THE HEADROOM. A new win is only POSSIBLE on a game that both arms measured on
+            # this seed and that the control did NOT win. If this set is empty the gate is a
+            # test of nothing: every game is already at ceiling for the control.
+            unwon = sorted(
+                (control_ran.get(seed, set()) & treat_ran.get(seed, set())) - control[seed]
+            )
+            reachable_arm |= set(unwon)
+            per_seed.append(
+                {
+                    "seed": seed,
+                    "new_wins": new,
+                    "lost_wins": lost,
+                    "n_treatment_wins": len(treat[seed]),
+                    "n_control_wins": len(control[seed]),
+                    "control_unwon_games": unwon,
+                    "max_attainable_new_wins": len(unwon),
+                    "n_games_at_ceiling": len(control[seed]),
+                }
+            )
+        gained = any(s["new_wins"] for s in per_seed)
+        regressed = any(s["lost_wins"] for s in per_seed)
+        passed = bool(gained and not regressed)
+        any_pass = any_pass or passed
+        reachable_all |= reachable_arm
+        out["per_arm"][arm] = {
+            "measured": True,
+            "shared_seeds": shared,
+            "per_seed": per_seed,
+            "any_seed_gained": gained,
+            "any_seed_regressed": regressed,
+            "reachable_new_win_games": sorted(reachable_arm),
+            "headroom_present": bool(reachable_arm),
+            # A failed gate over ZERO reachable games says nothing about the mechanism. This
+            # flag is what stops such a run being written up as a capability NULL.
+            "informative": bool(reachable_arm) or passed,
+            "passed": passed,
+            # An arm whose activity witness is zero replaced no coordinate and is therefore a
+            # control regardless of its label. Reported per arm so a silent no-op cannot be
+            # read as a measured treatment.
+            "mechanism_active": _arm_mechanism_active(rows, arm, condition),
+        }
+    out["reachable_new_win_games"] = sorted(reachable_all)
+    out["headroom_present"] = bool(reachable_all)
+    out["passed"] = bool(any_pass)
+    out["informative"] = bool(reachable_all) or any_pass
+    # NARROW HEADROOM is not the same as headroom. A pass region of ONE game means the gate's
+    # entire win axis is a single cell, so its null is a statement about that one game rather
+    # than about the mechanism -- and if that game has an independently-diagnosed blocker the
+    # mechanism explicitly disclaims fixing (r11l's state-identity aliasing is exactly this
+    # case), the null carries almost no information. Disclosed rather than left for a reader to
+    # reconstruct from the per-seed sets, because the first write-up of this experiment did not
+    # reconstruct it and called the result a capability NULL.
+    out["n_reachable_new_win_games"] = len(reachable_all)
+    out["headroom_narrow"] = bool(0 < len(reachable_all) <= 1)
+    if out["headroom_narrow"]:
+        out["headroom_narrow_note"] = (
+            "the win axis had exactly ONE candidate game "
+            f"({', '.join(sorted(reachable_all))}); every other game measured is already won by "
+            "the matched control. A failed gate here is a statement about that single game, not "
+            "a corpus-level null -- and it is uninformative about the mechanism if that game has "
+            "a separately-diagnosed blocker this mechanism does not address. Run the full 25-game "
+            "corpus (baseline wins ~7/25, so ~18 games of real headroom) before recording any "
+            "capability null"
+        )
+    if not out["informative"]:
+        out["verdict"] = "uninformative_no_headroom"
+        out["reason"] = (
+            "the matched control already wins every game measured on every shared seed, so the "
+            "set of games where ANY treatment value could have gained a win is EMPTY. This run "
+            "is therefore not a test of the sampler: report it as UNTESTED for capability, not "
+            "as a capability NULL (CLAUDE.md FALSE_NEGATIVE_RISK)"
+        )
+    else:
+        out["verdict"] = "passed" if out["passed"] else "failed_with_headroom_present"
+    return out
+
+
+def _arm_mechanism_active(rows: Sequence[dict], arm: str, condition: str = "real") -> dict:
+    """Did the sampler on ``arm`` actually replace any coordinate? The activity witness.
+
+    A treatment arm whose mechanism never fired is a duplicate of its control, and reading
+    its result as "the mechanism had no effect" is a category error. ``instrumented: False``
+    means the rows carry no witness at all -- the state this project previously shipped, in
+    which a dead sampler was indistinguishable from a working one.
+    """
+
+    changed = 0
+    gen_errors = 0
+    instrumented = False
+    for row in rows:
+        if row.get("arm") != arm or row.get("condition") != condition or not row.get("ran"):
+            continue
+        value = row.get("click_pixel_coordinates_changed")
+        if value is None:
+            continue
+        instrumented = True
+        changed += int(value)
+        gen_errors += int(row.get("click_pixel_generation_errors") or 0)
+    return {
+        "instrumented": instrumented,
+        "coordinates_changed": changed,
+        "generation_errors": gen_errors,
+        "active": bool(instrumented and changed > 0),
+    }
+
+
+def _click_pixel_gate_pass_region_witness() -> dict:
+    """Prove the gate above CAN pass, by evaluating it on a synthetic run that should.
+
+    This is a guard against the exp5835 defect class (a gate whose conjunction is
+    unsatisfiable for every possible treatment value). It builds two synthetic rows -- a
+    control that wins one game and a treatment that wins that game plus one more, on the
+    same seed -- and applies the SAME predicate the real gate applies. If the predicate is
+    ever tightened into an unsatisfiable shape, this witness turns False and the artifact
+    says so instead of reporting a confident-looking null.
+    """
+
+    seed = 1
+    synthetic = [
+        {
+            "arm": CLICK_PIXEL_CONTROL_ARM,
+            "game": "gA",
+            "condition": "real",
+            "seed": seed,
+            "ran": True,
+            "levels": 1,
+        },
+        {
+            "arm": CLICK_PIXEL_ARMS[0],
+            "game": "gA",
+            "condition": "real",
+            "seed": seed,
+            "ran": True,
+            "levels": 1,
+        },
+        {
+            "arm": CLICK_PIXEL_ARMS[0],
+            "game": "gB",
+            "condition": "real",
+            "seed": seed,
+            "ran": True,
+            "levels": 1,
+        },
+    ]
+    control = _per_seed_win_sets(synthetic, CLICK_PIXEL_CONTROL_ARM)
+    treat = _per_seed_win_sets(synthetic, CLICK_PIXEL_ARMS[0])
+    gained = bool(treat.get(seed, set()) - control.get(seed, set()))
+    regressed = bool(control.get(seed, set()) - treat.get(seed, set()))
+    return {
+        "construction": "control wins {gA}; treatment wins {gA, gB} on the same seed",
+        "gained": gained,
+        "regressed": regressed,
+        "passes": bool(gained and not regressed),
+    }
+
+
+def acceptance_gates(
+    cap: dict, paired: dict, power: dict, rows: Sequence[dict] | None = None
+) -> dict:
     """Explicit, COMPARATIVE, falsifiable gates -- self-reported pass/fail.
 
     WHY NOT an absolute first-win-rate threshold (the original spec's 0.12). A gate the NEGATIVE
@@ -1071,6 +1654,13 @@ def acceptance_gates(cap: dict, paired: dict, power: dict) -> dict:
     gates["acceptance_gates_all_passed"] = bool(
         gates["acceptance_gate_capability_passed"] and gates["acceptance_gate_efficiency_passed"]
     )
+    # REQ-ARC-WMTE-5950's own gate, kept OUT of acceptance_gates_all_passed on purpose: that
+    # field is already on the record as the frontier-discipline verdict, and folding a second
+    # mechanism into it would redefine it. The flat mirror is what summarize_artifact reads.
+    if rows is not None:
+        cps_gate = click_pixel_sampling_gate(rows)
+        gates["acceptance_gate_click_pixel_sampling"] = cps_gate
+        gates["acceptance_gate_click_pixel_sampling_passed"] = bool(cps_gate.get("passed"))
     return gates
 
 
@@ -1104,14 +1694,24 @@ def replay_validate(
     # never eligible for reproduction. That silently violated this project's own rule that only
     # reproduced levels count. Now the sample is ROUND-ROBIN BY ARM, so every arm that won anything
     # is represented and the grafted/control arms carrying the claim are always checked.
+    # LIMIT-TRUNCATION FIX (2026-07-25, second pass of the same defect class): round-robin
+    # alone was not enough. The smoke ran with limit=4 while FIVE arms had wins, and the
+    # round-robin walks sorted(by_arm) and simply STOPS at the limit -- so arm F1, one of the
+    # two arms carrying the sampler claim and the CLEAN single-variable arm, was never
+    # reproduction-checked, while the artifact presented the gate as fixed. The effective
+    # limit is therefore floored at the number of arms with wins, which guarantees every such
+    # arm gets at least one slot no matter how the caller sets --replay-limit.
     all_wins = [r for r in rows if r.get("ran") and r.get("levels", 0) > 0]
     by_arm: dict[str, list[dict]] = {}
     for row in all_wins:
         by_arm.setdefault(str(row.get("arm")), []).append(row)
+    arms_with_wins = sorted(by_arm)
+    requested_limit = max(0, int(limit))
+    effective_limit = max(requested_limit, len(arms_with_wins)) if arms_with_wins else 0
     wins: list[dict] = []
-    while len(wins) < max(0, int(limit)) and any(by_arm.values()):
+    while len(wins) < effective_limit and any(by_arm.values()):
         for arm_key in sorted(by_arm):
-            if len(wins) >= max(0, int(limit)):
+            if len(wins) >= effective_limit:
                 break
             if by_arm[arm_key]:
                 wins.append(by_arm[arm_key].pop(0))
@@ -1141,8 +1741,24 @@ def replay_validate(
             }
         )
     n_ok = sum(1 for c in checks if c["reproduced"])
+    checked_arms = {str(c["arm"]) for c in checks}
+    # EXPLICIT, not implied by n_checked: which arms that won something were NOT reproduced.
+    # The claim-carrying arms are named so a silent drop is impossible to present as a pass.
+    not_reproduced = sorted(a for a in arms_with_wins if a not in checked_arms)
+    claim_arms = tuple(CLICK_PIXEL_ARMS) + (CLICK_PIXEL_CONTROL_ARM,)
     return {
         "method": "re_execution_of_the_same_cell_not_kit_reproduce",
+        "replay_limit_requested": requested_limit,
+        "replay_limit_effective": effective_limit,
+        "n_arms_with_wins": len(arms_with_wins),
+        "arms_with_wins": arms_with_wins,
+        "arms_reproduced": sorted(checked_arms),
+        "arms_not_reproduced": not_reproduced,
+        "claim_carrying_arms": list(claim_arms),
+        "claim_carrying_arms_not_reproduced": sorted(
+            a for a in not_reproduced if a in set(claim_arms)
+        ),
+        "all_arms_with_wins_reproduced": not not_reproduced,
         "why_not_kit_reproduce": (
             "kit.reproduce consumes banked string action LABELS; the live explorer emits "
             "(action_id, data) tuples, so it is not applicable to this trajectory shape"
@@ -1267,13 +1883,32 @@ def run_scope(
     }
 
 
-def verdict_for(scope: dict, cap: dict, *, positive_control_ran: bool, error_rate: float) -> str:
+def verdict_for(
+    scope: dict,
+    cap: dict,
+    *,
+    positive_control_ran: bool,
+    error_rate: float,
+    control_health: Optional[dict] = None,
+    cps_gate: Optional[dict] = None,
+) -> str:
     """The honest_verdict string. States SCOPE and the CAPABILITY result, not the efficiency delta.
 
     Terminal-prefixed per CLAUDE.md's Verdict Terminal-Prefix Discipline. A reduced-scope run gets
     a ``partial_`` prefix on purpose: it IS a partial execution of the declared experiment, and
     the reconciler classifying it as such is the correct outcome -- better than a ``complete_``
     verdict whose descriptive tail nobody reads.
+
+    Two branches added 2026-07-25, both because the previous verdict was silently confident
+    about things the run had not established:
+
+    * ``uninterpretable_arm_error_rate_*`` -- a NON-run-blocking error rate. ``error_rate``
+      above counts only cells that failed to RUN; a cell that ran with 96% of its decisions
+      raising is invisible to it. That is how a majority-degenerate positive control produced a
+      verdict crediting it with a new win "under identical conditions".
+    * ``sampler_untested_no_headroom`` -- the sampler gate had ZERO games where a new win was
+      even attainable, so its ``passed: False`` is an uninformative test, not a null. Naming it
+      in the verdict is what keeps the artifact's FIRST line from implying a measured null.
     """
 
     cap_tail = ""
@@ -1289,12 +1924,116 @@ def verdict_for(scope: dict, cap: dict, *, positive_control_ran: bool, error_rat
             "complete_frontier_discipline_ab_measured_but_uninterpretable_"
             f"errored_cell_rate_{error_rate:.2f}"
         )
+    if control_health is not None and not control_health.get("healthy", True):
+        return (
+            "complete_frontier_discipline_ab_measured_but_uninterpretable_arm_error_rate_"
+            f"positive_control_degenerate_{control_health.get('n_degenerate_cells')}"
+            f"_of_{control_health.get('n_cells')}_cells_worst_"
+            f"{float(control_health.get('worst_cell_fallback_fraction') or 0.0):.2f}"
+        )
+    cps_tail = ""
+    if cps_gate is not None and "informative" in cps_gate:
+        cps_tail = (
+            "_sampler_untested_no_headroom"
+            if not cps_gate.get("informative")
+            else (
+                "_sampler_gate_passed"
+                if cps_gate.get("passed")
+                else (
+                    "_sampler_gate_failed_but_headroom_was_"
+                    f"{int(cps_gate.get('n_reachable_new_win_games') or 0)}_game_only"
+                    if cps_gate.get("headroom_narrow")
+                    else "_sampler_gate_failed_with_headroom"
+                )
+            )
+        )
     if scope.get("full_declared_spec"):
-        return "complete_frontier_discipline_ab_measured" + cap_tail
+        return "complete_frontier_discipline_ab_measured" + cap_tail + cps_tail
     return (
         f"partial_frontier_discipline_ab_smoke_scale_{int(scope.get('n_games') or 0)}games_"
-        f"budget{int(scope.get('budget') or 0)}_not_full_spec" + cap_tail
+        f"budget{int(scope.get('budget') or 0)}_not_full_spec" + cap_tail + cps_tail
     )
+
+
+def build_headline(
+    cap: dict,
+    *,
+    control_health: dict,
+    cps_gate: Optional[dict] = None,
+    sampler_run: bool = False,
+) -> str:
+    """The artifact's one-line summary. Shared by ``run()`` and the ``--summarize`` path.
+
+    Extracted 2026-07-25 because the two paths had DIVERGED into two hand-maintained f-string
+    ladders, and both led with the frontier-discipline graft even on a run whose whole purpose
+    was the click-pixel sampler -- so the sampler's own result did not appear in the field a
+    reader sees first. Two disclosures the previous headline omitted entirely and which changed
+    what the run means:
+
+    * the positive control's DEGENERACY, so "under identical conditions" is not asserted for a
+      control that spent most of its budget in its own failed=True fallback; and
+    * the sampler gate's HEADROOM, so a failed gate over a one-game (or empty) win axis is not
+      read as a corpus-level capability null.
+    """
+
+    parts: list[str] = []
+    if sampler_run and isinstance(cps_gate, dict):
+        active = [
+            arm
+            for arm, info in (cps_gate.get("per_arm") or {}).items()
+            if (info.get("mechanism_active") or {}).get("active")
+        ]
+        changed = sum(
+            int((info.get("mechanism_active") or {}).get("coordinates_changed") or 0)
+            for info in (cps_gate.get("per_arm") or {}).values()
+        )
+        if not cps_gate.get("informative"):
+            parts.append(
+                "REQ-ARC-WMTE-5950 click-pixel sampling: mechanism ACTIVE "
+                f"({changed} click coordinates replaced across arms {sorted(active)}) but the "
+                "gate is UNINFORMATIVE on this corpus -- 0 games where a new win was attainable "
+                "(the matched control already wins everything it measured), so the sampler is "
+                "UNTESTED for capability here, NOT a measured null"
+            )
+        else:
+            reach = cps_gate.get("reachable_new_win_games") or []
+            parts.append(
+                "REQ-ARC-WMTE-5950 click-pixel sampling: mechanism ACTIVE "
+                f"({changed} click coordinates replaced across arms {sorted(active)}); gate "
+                f"{'PASSED' if cps_gate.get('passed') else 'FAILED'} with a win axis of "
+                f"{len(reach)} attainable game(s) {sorted(reach)}"
+                + (
+                    " -- a ONE-game win axis, so this is a statement about that game rather "
+                    "than a corpus-level null"
+                    if cps_gate.get("headroom_narrow")
+                    else ""
+                )
+            )
+    if not cap.get("available"):
+        parts.append("no baseline comparison available -- no capability claim")
+        return "; ".join(parts)
+    graft = (
+        "grafted tier exhaustion + distance gradient produced "
+        f"{int(cap.get('new_wins_vs_baseline') or 0)} new win(s) vs the baseline on the measured "
+        "corpus"
+    )
+    control = (
+        "the just-explore reference positive control produced "
+        f"{int(cap.get('positive_control_new_wins') or 0)} new win(s)"
+    )
+    if control_health.get("healthy"):
+        control += " under identical conditions"
+    else:
+        control += (
+            ", but was DEGENERATE on "
+            f"{int(control_health.get('n_degenerate_cells') or 0)} of "
+            f"{int(control_health.get('n_cells') or 0)} cells (worst "
+            f"{float(control_health.get('worst_cell_fallback_fraction') or 0.0):.0%} of actions in "
+            "its own failed=True repeat-last-action fallback), so its LOSSES are shim artifacts "
+            "and 'under identical conditions' does NOT hold"
+        )
+    parts.extend([graft, control])
+    return "; ".join(parts)
 
 
 def _reproducibility_checksum(payload: dict) -> str:
@@ -1401,6 +2140,29 @@ FIELD_PRINCIPLES: dict[str, str] = {
         "Arms A-D stop at the first level-up (target_levels=1) while arm E runs to budget, so "
         "banked-level counts are not arm-comparable; the flag travels with the number."
     ),
+    "click_pixel_coordinates_changed": (
+        "The mechanism's ACTIVITY WITNESS: how many click coordinates the sampler actually "
+        "replaced. A treatment arm reporting zero here is a control regardless of its label, so "
+        "its null cannot be read as 'the mechanism had no effect'. click_pixel_rows_sampled is "
+        "NOT this quantity -- it counts rows present and is identical for a dead sampler."
+    ),
+    "positive_control_health": (
+        "Whether arm E was a measurement OF THE REFERENCE at all. A cell that returns while most "
+        "of its decisions end in the reference's own choose_action raising is spending its budget "
+        "in a self-flagged repeat-last-action fallback, so its losses are shim artifacts. Without "
+        "this, a 96%-degenerate control read as a clean null and set the forward diagnostic."
+    ),
+    "reachable_new_win_games": (
+        "The games where a NEW win was even attainable (measured by both arms on a shared seed "
+        "and NOT already won by the control). Empty means the gate's pass region was empty ON "
+        "THIS CORPUS, so a failed gate is an uninformative test, not evidence of no effect "
+        "(CLAUDE.md FALSE_NEGATIVE_RISK)."
+    ),
+    "arms_not_reproduced": (
+        "Arms that won something but were never re-executed by the reproduction gate. Named "
+        "explicitly because a --replay-limit below the number of winning arms silently truncated "
+        "a claim-carrying arm out of the sample while the gate still reported n/n reproduced."
+    ),
 }
 
 
@@ -1487,8 +2249,9 @@ def run(
     guard_games, guard_provenance = _guard_games_from_rows(rows)
     paired = paired_efficiency_vs_baseline(rows)
     power = power_ceiling(games, guard_games)
-    cap = capability_summary(agg, cmp_)
-    gates = acceptance_gates(cap, paired, power)
+    control_health = positive_control_health(rows)
+    cap = capability_summary(agg, cmp_, control_healthy=bool(control_health.get("healthy")))
+    gates = acceptance_gates(cap, paired, power, rows)
     repro = replay_validate(rows, budget=budget, je_runner=je_runner, limit=replay_limit)
 
     positive_control_ran = any(r.get("arm") == "E" and r.get("ran") for r in rows)
@@ -1497,11 +2260,21 @@ def run(
     # not a result -- an earlier smoke of this very file silently produced "complete" with 36 of
     # 72 cells errored on a signature mismatch, which is exactly the failure this gate closes.
     error_rate = (len(errored) / len(rows)) if rows else 1.0
-    interpretable = bool(positive_control_ran and error_rate <= 0.05)
+    # positive_control_ran is now gated on the control being a MEASUREMENT OF THE REFERENCE, not
+    # merely on the cell returning. A majority-degenerate arm E cannot underwrite the "the
+    # reference does X under identical conditions" claim the headline was making.
+    positive_control_usable = bool(positive_control_ran and control_health.get("healthy"))
+    interpretable = bool(positive_control_usable and error_rate <= 0.05)
 
     scope = run_scope(games, arms, cond_specs, budget)
+    cps_gate_for_verdict = gates.get("acceptance_gate_click_pixel_sampling")
     verdict = verdict_for(
-        scope, cap, positive_control_ran=positive_control_ran, error_rate=error_rate
+        scope,
+        cap,
+        positive_control_ran=positive_control_ran,
+        error_rate=error_rate,
+        control_health=control_health,
+        cps_gate=cps_gate_for_verdict,
     )
 
     config = {
@@ -1510,14 +2283,42 @@ def run(
         "conditions": [c[0] for c in cond_specs],
         "budget_actions_per_game": int(budget),
         "n_seeds_stochastic_arms": int(n_seeds),
+        # Was ABSENT, so "reproduction gate 4/4" was unauditable from the artifact -- the reader
+        # could not tell that the sample size had truncated a claim-carrying arm out of it.
+        "replay_limit": int(replay_limit),
         "llm_disabled": True,
         "policy_kind": "explorer_force_explore_no_proposer",
     }
+    # ARTIFACT IDENTITY (2026-07-25). This module hosts TWO requirements: the frontier-discipline
+    # graft (REQ-ARC-WMTE-5836, arms A-E) and the click-pixel sampler (REQ-ARC-WMTE-5950, arms
+    # F/F1). The identity fields were hardcoded to 5836, so a 5950 run wrote an artifact
+    # declaring experiment_id 5836 -- which folds it into an already-published record (four
+    # existing artifacts carry experiment=5836) and leaves REQ-ARC-WMTE-5950 with no artifact
+    # claiming it. Identity is therefore derived from WHICH ARMS RAN, not hardcoded.
+    sampler_arms_present = [a for a in arms if a in set(CLICK_PIXEL_ARMS)]
+    graft_arms_present = [a for a in arms if a in set(GRAFTED_ARMS) - set(CLICK_PIXEL_ARMS)]
+    sampler_run = bool(sampler_arms_present)
+    exp_id = CLICK_PIXEL_EXPERIMENT_ID if sampler_run else EXPERIMENT_ID
+    requirement = "REQ-ARC-WMTE-5950" if sampler_run else "REQ-ARC-WMTE-5836"
+    title = (
+        "Click-pixel sampling A/B (REQ-ARC-WMTE-5950): per-object uniform pixel vs truncated "
+        "centroid, against the live configuration"
+        if sampler_run
+        else "Frontier-discipline A/B: just-explore tier exhaustion + distance gradient"
+    )
     art: dict[str, Any] = {
-        "experiment": EXPERIMENT_ID,
-        "experiment_id": EXPERIMENT_ID,
-        "title": "Frontier-discipline A/B: just-explore tier exhaustion + distance gradient",
-        "requirement": "REQ-ARC-WMTE-5836",
+        "experiment": exp_id,
+        "experiment_id": exp_id,
+        "title": title,
+        "requirement": requirement,
+        "requirements_exercised": (["REQ-ARC-WMTE-5950"] if sampler_run else [])
+        + (["REQ-ARC-WMTE-5836"] if graft_arms_present or not sampler_run else []),
+        "identity_derivation": (
+            "experiment_id/requirement are derived from which arms ran: arms F/F1 present -> "
+            "REQ-ARC-WMTE-5950 (the click-pixel sampler); otherwise REQ-ARC-WMTE-5836 (the "
+            "frontier-discipline graft). Hardcoding 5836 previously made a 5950 run write an "
+            "artifact that folded into the already-published 5836 record"
+        ),
         "reference": "arXiv:2512.24156 (just-explore, ARC-AGI-3 Preview private leaderboard 3rd)",
         "honest_verdict": verdict,
         "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
@@ -1531,19 +2332,24 @@ def run(
             k: {"label": v["label"], "kwargs": v["kwargs"], "deterministic": v["deterministic"]}
             for k, v in ARMS.items()
         },
-        "positive_control_ran": positive_control_ran,
-        "positive_control_reason": je_reason,
+        # GATED on the control being a measurement OF THE REFERENCE (see
+        # positive_control_health): a cell that returned while 78-96% of its decisions ended in
+        # the reference's own choose_action raising is not a usable positive control.
+        "positive_control_ran": positive_control_usable,
+        "positive_control_cell_returned": positive_control_ran,
+        "positive_control_reason": (
+            je_reason if positive_control_usable else str(control_health.get("reason"))
+        ),
+        "positive_control_health": control_health,
         "ab_interpretable": interpretable,
         "run_scope": scope,
-        # ---- HEADLINE: the capability result first, the efficiency delta strictly after it ----
-        "headline": (
-            "grafted tier exhaustion + distance gradient produced "
-            f"{int(cap.get('new_wins_vs_baseline') or 0)} new win(s) vs the baseline on the "
-            "measured corpus; the just-explore reference positive control produced "
-            f"{int(cap.get('positive_control_new_wins') or 0)} new win(s) under identical "
-            "conditions"
-            if cap.get("available")
-            else "no baseline comparison available -- no capability claim"
+        # ---- HEADLINE: the sampler's own result FIRST on a sampler run, then the capability
+        # result, then the control's health caveat. See build_headline for why. ----
+        "headline": build_headline(
+            cap,
+            control_health=control_health,
+            cps_gate=cps_gate_for_verdict,
+            sampler_run=sampler_run,
         ),
         "new_wins_vs_baseline": cap.get("new_wins_vs_baseline"),
         "positive_control_new_wins": cap.get("positive_control_new_wins"),
@@ -1564,8 +2370,13 @@ def run(
         # measurement. It is legitimately zero on a healthy run and is NOT a performance claim.
         # A non-zero value is the interesting case (>0.05 flips ab_interpretable to false).
         "methodology_note": (
-            "errored_cell_rate == 0.0 means every cell produced a real measurement; it is a "
-            "harness-health counter, not a capability metric, so zero is the expected healthy "
+            "errored_cell_rate counts ONLY cells that failed to RUN. It is NOT a measure of "
+            "within-cell health: a cell that ran to completion with most of its decisions "
+            "raising internally still contributes 0 here. Read positive_control_health (arm E's "
+            "own degenerate-fallback fraction) and each row's click_pixel_coordinates_changed "
+            "alongside it -- the earlier claim that 'errored_cell_rate == 0.0 means every cell "
+            "produced a real measurement' was misleading, and is retracted. errored_cell_rate is "
+            "a harness-health counter, not a capability metric, so zero is the expected healthy "
             "value rather than an implausibly-perfect result. Level counts come from the "
             "environment's own levels_completed (execution-grounded), which is why "
             "verifier_is_oracle is declared True: this is a SEARCH-EFFICIENCY measurement, not "
@@ -1729,11 +2540,14 @@ def recompute_derived(art: dict) -> dict:
     guard_games, guard_provenance = _guard_games_from_rows(rows)
     paired = paired_efficiency_vs_baseline(rows)
     power = power_ceiling(games, guard_games)
-    cap = capability_summary(agg, cmp_)
-    gates = acceptance_gates(cap, paired, power)
+    control_health = positive_control_health(rows)
+    cap = capability_summary(agg, cmp_, control_healthy=bool(control_health.get("healthy")))
+    gates = acceptance_gates(cap, paired, power, rows)
     positive_control_ran = any(r.get("arm") == "E" and r.get("ran") for r in rows)
+    positive_control_usable = bool(positive_control_ran and control_health.get("healthy"))
     error_rate = (len(errored) / len(rows)) if rows else 1.0
     scope = run_scope(games, arms, cond_specs, budget)
+    cps_gate_for_verdict = gates.get("acceptance_gate_click_pixel_sampling")
 
     art.update(
         {
@@ -1744,22 +2558,27 @@ def recompute_derived(art: dict) -> dict:
             "capability_summary": cap,
             "new_wins_vs_baseline": cap.get("new_wins_vs_baseline"),
             "positive_control_new_wins": cap.get("positive_control_new_wins"),
+            "positive_control_ran": positive_control_usable,
+            "positive_control_cell_returned": positive_control_ran,
+            "positive_control_health": control_health,
             "regression_guard_provenance": guard_provenance,
             "run_scope": scope,
             "n_errored_cells": len(errored),
             "errored_cell_rate": round(error_rate, 4),
-            "ab_interpretable": bool(positive_control_ran and error_rate <= 0.05),
+            "ab_interpretable": bool(positive_control_usable and error_rate <= 0.05),
             "honest_verdict": verdict_for(
-                scope, cap, positive_control_ran=positive_control_ran, error_rate=error_rate
+                scope,
+                cap,
+                positive_control_ran=positive_control_ran,
+                error_rate=error_rate,
+                control_health=control_health,
+                cps_gate=cps_gate_for_verdict,
             ),
-            "headline": (
-                "grafted tier exhaustion + distance gradient produced "
-                f"{int(cap.get('new_wins_vs_baseline') or 0)} new win(s) vs the baseline on the "
-                "measured corpus; the just-explore reference positive control produced "
-                f"{int(cap.get('positive_control_new_wins') or 0)} new win(s) under identical "
-                "conditions"
-                if cap.get("available")
-                else "no baseline comparison available -- no capability claim"
+            "headline": build_headline(
+                cap,
+                control_health=control_health,
+                cps_gate=cps_gate_for_verdict,
+                sampler_run=bool(set(arms) & set(CLICK_PIXEL_ARMS)),
             ),
             "field_provenance": {k: {"principle": v} for k, v in FIELD_PRINCIPLES.items()},
             "derived_sections_recomputed_from_measured_rows": True,
@@ -1830,6 +2649,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 "acceptance_gate_efficiency_passed": (
                     art.get("acceptance_gate_efficiency") or {}
                 ).get("passed"),
+                "acceptance_gate_click_pixel_sampling_passed": art.get(
+                    "acceptance_gate_click_pixel_sampling_passed"
+                ),
+                "click_pixel_sampling_gate": art.get("acceptance_gate_click_pixel_sampling"),
                 "run_scope": art.get("run_scope"),
                 "ab_interpretable": art.get("ab_interpretable"),
                 "positive_control_ran": art.get("positive_control_ran"),

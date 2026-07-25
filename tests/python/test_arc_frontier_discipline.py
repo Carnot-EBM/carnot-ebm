@@ -640,7 +640,17 @@ def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_contro
     # B2_nofix added 2026-07-25: B2 now inherits the click-vocabulary gate from its shipped default,
     # so an arm with the gate explicitly OFF is required to attribute the delta to the GATE rather
     # than to drift in the barrier. It is as mandatory as B2 and E for the same reason.
-    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E"}
+    # F / F1 added 2026-07-25 (REQ-ARC-WMTE-5950): the per-object click-pixel SAMPLING arms.
+    # They sit on top of B2's flags (the CURRENT live configuration) and differ from it by the
+    # sampler alone, so B2 -- not A -- is their matched control. F1 pins redraw budget 1
+    # (coordinate correction only) and F pins 3 (bounded with-replacement), which separates the
+    # mechanism's two halves. Asserted as an EXACT set because a silently-dropped arm is how a
+    # control goes missing.
+    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E", "F", "F1"}
+    assert m.ARMS["F"]["kwargs"]["click_pixel_sampling"] is True
+    assert m.ARMS["F"]["kwargs"]["click_pixel_redraw_budget"] == 3
+    assert m.ARMS["F1"]["kwargs"]["click_pixel_redraw_budget"] == 1
+    assert m.CLICK_PIXEL_CONTROL_ARM == "B2"
     assert m.ARMS["B2_nofix"]["kwargs"]["tier_click_vocab_only"] is False
     assert m.ARMS["B2_nofix"]["kwargs"]["tier_uniform_random"] is True
     assert m.ARMS["B"]["kwargs"]["tier_uniform_random"] is False
