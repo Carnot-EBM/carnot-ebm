@@ -4,7 +4,90 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
-### 2026-07-25 (outer-loop, STILL OPEN): r11l fails on STATE-IDENTITY ALIASING, not on candidate generation — `auto_hud_mask` returns None on 8 of 25 public games
+### 2026-07-25 (outer-loop, RESOLVED-PENDING-OPERATOR-FLIP): the HUD detector repair (REQ-ARC-WMTE-5960) — r11l gained on 3/3 seeds with ZERO corpus regressions, but only after four measured defects were fixed
+
+**Status:** the mechanism is built, default-OFF, and its flip candidate PASSES a full 25-game
+per-seed gate. The flag flip itself is an operator decision and has NOT been made. This entry
+supersedes nothing — the diagnosis entry below it stays as the record of WHY.
+
+**What ships (all default-off, flags mechanically coupled):** an orientation-complete edge-bar
+detector (`python/carnot/agentic/arc_hud_bar_detector.py`, Stage 1), behavioural confirmation
+BEFORE the mask is ever applied (Stage 2, `DeferredMaskActivation`), and a runtime collapse guard
+(Stage 3, `MaskCollapseGuard`). `SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED=True` now REQUIRES both
+safety flags — asserted at import, because the previously-reported "passing" configuration had
+both of them off.
+
+**FINAL MEASURED RESULT (`results/experiment_5960_hud_mask_repair_full_corpus.json`, all 25
+public games x 3 seeds x budget 2000, matched control = arm B2 = the current live config):**
+
+| arm | stages | new wins (per seed) | lost wins | gate |
+|---|---|---|---|---|
+| G  | detector only | r11l+tn36 / r11l+tn36+ar25 / r11l+tn36 | **lp85 on seed 3** | FAIL (also: safety axis unmeasured, not a flip candidate) |
+| G2 | detector + guard | r11l+tn36 x3 | **lp85 on seed 3** | FAIL (no Stage 2, not a flip candidate) |
+| G3 | detector + Stage 2 + guard | **r11l x3** | **none, any seed** | **PASS** |
+
+G3's mask changes on only r11l and tn36; Stage 2 REFUSES ar25/cn04/lp85/sc25 and the run falls
+back to the shipped mask there. Guard on G3: 4 refusals, all proven, all in repair-added cells;
+179 proven branchings inside the ALREADY-SHIPPED mask were deliberately NOT acted on (see below).
+
+**FOUR DEFECTS FOUND BY MEASUREMENT, not by reading (each one had already produced a wrong
+conclusion or would have shipped a regression):**
+
+1. **Stage 1 alone over-masks a decision-relevant state variable (the cardinal sin, on ar25).**
+   `is_edge_bar_like` fires on ar25's colour-11 column-63 blob, which is a FILL-LEVEL GAUGE, not
+   a clock. Masked: 1554 distinct raw frames -> 233 graph nodes, and the guard proves aliasing
+   there. Geometry is a shape prior and provably cannot tell a gauge from a counter. **Fix:**
+   Stage 2 gates activation on behavioural evidence from the agent's own transitions; measured to
+   refuse ar25/cn04/lp85/sc25 and admit r11l/tn36.
+2. **Global revocation corrupted the graph.** Past a small split cap the guard flipped the HASH
+   CONVENTION for every subsequent frame while pre-revocation nodes kept the old keys — 97.7% of
+   the graph on the far side of the switch on tu93, 58 of 658 raw frames holding both key forms,
+   and 1 level/361 actions -> 0 levels/1953 actions on 3/3 seeds. **Fix:** local, unbounded,
+   per-node splits only; the legacy mode survives as an opt-in test fixture.
+3. **Acting on UNPROVEN branchings made the guard the run's largest source of lost wins.** The
+   control can only exonerate when the unmasked antecedent REPEATS, which never happens on a
+   monotone-counter region — so most branchings there can never be proven. Acting on them anyway:
+   tu93 1 level -> 0 (28 refusals, 20 unproven), dc22 1 -> 0 (35, 32 unproven), su15 1 -> 0
+   (12, 10 unproven). **Fix:** act on PROVEN collapses only; count and attribute the rest.
+4. **Even proven collapses in the ALREADY-SHIPPED mask must not be acted on here.** Restricting
+   to proven was not enough: the shipped mask aliases heavily on its own (441 proven collapses
+   corpus-wide), and un-masking those nodes cost dc22/su15/tu93/lf52 — wins the live config holds
+   BECAUSE the shipped mask collapses those states. **Fix:** the guard retracts only cells THIS
+   REPAIR ADDED. The shipped-region branchings are counted and reported, never silently fixed by
+   regressing the baseline.
+
+**OPEN, and deliberately NOT fixed here — a property of the LIVE configuration:** the shipped
+`SUBMITTED_AUTO_HUD_MASK_ENABLED=True` mask shows 179-441 proven collapse branchings across the
+corpus, and several current wins appear to DEPEND on that collapse. **This is a hypothesis with a
+named confound, not a proven property of the flag:** on a key whose unmasked antecedent never
+repeats, "the masked content is causal" and "there is hidden state never rendered into the frame"
+are equally consistent with the evidence. Do NOT cite it as proven. Investigating it is separate
+work with its own baseline, because fixing it means regressing wins the project currently banks.
+
+**HONEST COSTS of the passing configuration (G3):** (a) Stage 2 defers activation ~16 transitions,
+so r11l takes ~700 actions vs ~230 for the unguarded arm G — a real efficiency cost on the axis
+RHAE squares; (b) G3 does NOT gain tn36, which arm G gains on 3/3 seeds, so the deferral costs a
+win the bare detector reaches; (c) the guard is now structurally weak on monotone-counter regions
+(that is why Stage 2 is mandatory rather than optional).
+
+**Also fixed, in the measurement machinery itself** (each had already produced a wrong published
+conclusion): the gate passed on `any_pass` across arms — certifying arm G, whose entire safety
+block was null; its gain axis was an ANY-SEED disjunction while its own docstring claimed per-seed;
+nothing required the repair-affected games to be measured, so a 3-game smoke that exercised the
+new cells on ONE of six games reported PASS; the affected-game set was computed from the run's
+scope rather than from the detector, so narrowing the run narrowed the requirement; aliasing
+attribution iterated only games where a win was LOST, making it structurally blind to ar25; masks
+were compared by CELL COUNT rather than cell set; and the artifact declared `experiment_id: 5836`
+with a frontier-discipline title, leaving the result undiscoverable by requirement or id.
+
+**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5960 (+ 12
+scenarios). **Tests:** `tests/python/test_arc_hud_bar_detector.py` (62),
+`tests/python/test_experiment_5960_hud_mask_gate.py` (23). **Artifacts:**
+`results/experiment_5960_hud_mask_repair_full_corpus.json` (the 25-game gate),
+`results/experiment_5960_hud_mask_repair_smoke.json` (3-game, correctly reports the gate as
+UNDECIDED with 5 of 6 affected games unmeasured).
+
+### 2026-07-25 (outer-loop, DIAGNOSIS — mechanism now built per the entry above): r11l fails on STATE-IDENTITY ALIASING, not on candidate generation — `auto_hud_mask` returns None on 8 of 25 public games
 
 **Status: OPEN. Deliberately NOT fixed in the REQ-ARC-WMTE-5950 session** (that session shipped the
 per-object click-pixel sampler, which is a general lever and explicitly NOT the r11l fix). Recorded

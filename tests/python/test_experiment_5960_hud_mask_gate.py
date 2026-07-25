@@ -534,3 +534,40 @@ def test_artifact_identity_constants_name_this_requirement():
 
     assert ab.HUD_MASK_EXPERIMENT_ID == 5960
     assert len({ab.EXPERIMENT_ID, ab.CLICK_PIXEL_EXPERIMENT_ID, ab.HUD_MASK_EXPERIMENT_ID}) == 3
+
+
+def test_the_affected_game_set_is_a_property_of_the_detector_not_of_the_run_scope():
+    """REGRESSION: narrowing the run must not narrow the requirement.
+
+    `run()` computes the mask-delta table over ALL_GAMES, never over the games the caller chose.
+    Computed over the run's scope instead, a 3-game smoke saw "1 affected game (r11l), measured"
+    and the coverage conjunct passed trivially -- which is the SAME defect the conjunct was added
+    to prevent, just moved one level up. Verified directly: the corrected 3-game smoke reports
+    all six affected games and blocks on the five it did not measure.
+    """
+
+    import inspect
+
+    source = inspect.getsource(ab.run)
+    assert "hud_mask_delta_table(ALL_GAMES)" in source
+    assert "hud_mask_delta_table(games)" not in source
+
+
+def test_a_narrow_run_cannot_pass_the_coverage_conjunct():
+    """The behavioural half of the same guard, on rows rather than on source."""
+
+    rows = []
+    for seed in (1, 2, 3):
+        rows.append(_row("B2", "r11l", seed, 0, digest=None))
+        rows.append(_row("G3", "r11l", seed, 1, digest="d_new"))
+    # The detector's affected set is the full six, regardless of what this run measured.
+    delta = _delta(
+        changed=("ar25", "cn04", "lp85", "r11l", "sc25", "tn36"),
+        inert=("lf52", "tu93"),
+    )
+    gate = ab.hud_mask_gate(rows, mask_delta=delta)
+    arm = gate["per_arm"]["G3"]
+    assert arm["all_seeds_gained"] is True
+    assert arm["unmeasured_repair_affected_games"] == ["ar25", "cn04", "lp85", "sc25", "tn36"]
+    assert arm["passed"] is False
+    assert gate["passed"] is False

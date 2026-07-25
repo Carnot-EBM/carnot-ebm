@@ -2580,6 +2580,7 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
     cells_with_live_control = 0
     cells_with_power = 0
     cells_seen = 0
+    cells_without_a_mask = 0
     revoked_cells: list[str] = []
     split_budget_exceeded_cells: list[str] = []
     stages_disabled: set[str] = set()
@@ -2597,6 +2598,14 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
         if not guard:
             continue
         armed = True
+        if not row.get("hud_mask_resolved"):
+            # NO MASK WAS APPLIED on this cell, so there is nothing for the guard to observe and
+            # no control to be live. Counting it in the liveness denominator made
+            # `control_live_on_all_cells` False for every arm on a corpus containing a game with
+            # no status bar at all (ls20 / sb26 / sk48), which then read as "the safety axis is
+            # unmeasured" on an arm whose safety axis was fine.
+            cells_without_a_mask += 1
+            continue
         cells_seen += 1
         refusals += int(guard.get("collapse_refusals") or 0)
         provable_keys += int(guard.get("keys_with_multiple_successors") or 0)
@@ -2626,6 +2635,13 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
         for row in rows
         if row.get("arm") == arm and row.get("condition") == condition and row.get("ran")
     )
+    shipped_region_not_acted_on = sum(
+        int(((row.get("hud_mask") or {}).get("collapse_guard") or {}).get(
+            "branchings_in_shipped_region_not_acted_on"
+        ) or 0)
+        for row in rows
+        if row.get("arm") == arm and row.get("condition") == condition and row.get("ran")
+    )
     return {
         "guard_armed": armed,
         # STAGE 2's ARMED-NESS is a gate conjunct in its own right: Stage 3 retracts a bad mask
@@ -2645,7 +2661,18 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
         # visible instead of silent.
         "cells_with_live_control": cells_with_live_control if armed else None,
         "cells_instrumented": cells_seen if armed else None,
-        "control_live_on_all_cells": bool(armed and cells_with_live_control == cells_seen),
+        # Cells where NO mask was applied at all (no status bar, or Stage 2 refused and the
+        # shipped classifier found nothing). Excluded from the liveness denominator: a guard with
+        # nothing to guard cannot have a live control, and counting it made a healthy safety axis
+        # read as unmeasured.
+        "cells_without_a_mask": cells_without_a_mask,
+        "control_live_on_all_cells": bool(
+            armed and cells_seen and cells_with_live_control == cells_seen
+        ),
+        # Proven collapses inside the ALREADY-SHIPPED mask that this experiment deliberately did
+        # NOT act on -- a property of the live configuration, not of the repair. Reported so it
+        # is operator-visible rather than silently fixed by regressing the baseline.
+        "shipped_region_branchings_not_acted_on": shipped_region_not_acted_on,
         # CONTROL POWER, distinct from liveness. See the docstring.
         "keys_with_repeated_unmasked_antecedent": power_keys if armed else None,
         "cells_where_control_had_power": cells_with_power if armed else None,
@@ -3405,7 +3432,11 @@ def run(
     # WHICH GAMES THE REPAIRED DETECTOR ACTUALLY CHANGES, computed from reset frames at zero
     # action cost. The HUD gate needs it to refuse a pass when a repair-affected game was never
     # measured -- the defect that let a 3-game smoke certify a 6-game intervention.
-    mask_delta = hud_mask_delta_table(games) if set(arms) & set(HUD_MASK_ARMS) else None
+    # OVER ALL_GAMES, NEVER over `games`. The affected-game set is a property of the DETECTOR,
+    # not of the run's scope -- computing it from `games` would let narrowing the run narrow the
+    # requirement, which is exactly the defect the coverage conjunct exists to prevent (a 3-game
+    # smoke would see "1 affected game, measured" and pass). Cost is one env reset per game.
+    mask_delta = hud_mask_delta_table(ALL_GAMES) if set(arms) & set(HUD_MASK_ARMS) else None
     gates = acceptance_gates(cap, paired, power, rows, mask_delta=mask_delta)
     repro = replay_validate(rows, budget=budget, je_runner=je_runner, limit=replay_limit)
 
@@ -3730,7 +3761,11 @@ def recompute_derived(art: dict) -> dict:
     power = power_ceiling(games, guard_games)
     control_health = positive_control_health(rows)
     cap = capability_summary(agg, cmp_, control_healthy=bool(control_health.get("healthy")))
-    mask_delta = hud_mask_delta_table(games) if set(arms) & set(HUD_MASK_ARMS) else None
+    # OVER ALL_GAMES, NEVER over `games`. The affected-game set is a property of the DETECTOR,
+    # not of the run's scope -- computing it from `games` would let narrowing the run narrow the
+    # requirement, which is exactly the defect the coverage conjunct exists to prevent (a 3-game
+    # smoke would see "1 affected game, measured" and pass). Cost is one env reset per game.
+    mask_delta = hud_mask_delta_table(ALL_GAMES) if set(arms) & set(HUD_MASK_ARMS) else None
     gates = acceptance_gates(cap, paired, power, rows, mask_delta=mask_delta)
     positive_control_ran = any(r.get("arm") == "E" and r.get("ran") for r in rows)
     positive_control_usable = bool(positive_control_ran and control_health.get("healthy"))

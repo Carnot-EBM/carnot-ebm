@@ -481,18 +481,53 @@ def test_region_evidence_abstains_when_no_action_class_repeats() -> None:
 # ---------------------------------------------------------------------------
 
 
+def _prove_a_collapse(guard: MaskCollapseGuard, node: str, action_key=(6, None)) -> bool:
+    """Drive `guard` through the ONE observation sequence that yields a PROVEN collapse.
+
+    Proving a collapse needs the unmasked control to have POWER on the DECIDING observation,
+    i.e. that raw antecedent must already have been seen behaving deterministically. So:
+    raw state `Ub` -> `S2`; a DIFFERENT raw state `Ua` sharing the same masked hash -> `S1`
+    (branching, but `Ua` is new, so unproven); then `Ub` -> `S2` again, which repeats
+    deterministically and turns the branching into a proof.
+    """
+
+    guard.observe(
+        origin_masked=node,
+        origin_unmasked=f"{node}_Ub",
+        action_key=action_key,
+        successor_masked=f"{node}_S2",
+        successor_unmasked=f"{node}_SUb",
+    )
+    guard.observe(
+        origin_masked=node,
+        origin_unmasked=f"{node}_Ua",
+        action_key=action_key,
+        successor_masked=f"{node}_S1",
+        successor_unmasked=f"{node}_SUa",
+    )
+    return guard.observe(
+        origin_masked=node,
+        origin_unmasked=f"{node}_Ub",
+        action_key=action_key,
+        successor_masked=f"{node}_S2",
+        successor_unmasked=f"{node}_SUb",
+    )
+
+
 def test_collapse_guard_refuses_a_mask_that_aliases_distinct_states() -> None:
     """SCENARIO-ARC-WMTE-5960-COLLAPSE-GUARD-HARD-REFUSAL.
 
     Same masked node + same concrete action -> two DIFFERENT masked successors, while the
-    unmasked control does not veto. The guard ACTS on this (un-masks the node), but note the
-    classification asserted at the end: the control here had no POWER (neither unmasked
-    antecedent repeated, so its exoneration branch could not have fired), so this is an
-    ``unproven_masked_branching``, not a proof. See
-    ``test_collapse_guard_separates_a_proven_collapse_from_an_unproven_branching``.
+    unmasked control does not veto. The guard un-masks that node.
+
+    NOTE THE OPT-IN. By default the guard acts only on PROVEN collapses -- the corpus measured
+    that acting on unproven branchings costs whole wins (tu93/dc22/su15 each 1 level -> 0). This
+    test pins `act_on_unproven_branchings=True` because it is about the REFUSAL MECHANICS, not
+    the default policy; `test_collapse_guard_ignores_an_unproven_branching_by_default` covers
+    the default, and `_prove_a_collapse` covers the proven path.
     """
 
-    guard = MaskCollapseGuard()
+    guard = MaskCollapseGuard(act_on_unproven_branchings=True)
     common = dict(action_key=(6, {"x": 3, "y": 4}))
 
     # THE SHAPE OF A REAL COLLAPSE, and it matters: the two observations share a MASKED origin
@@ -526,14 +561,57 @@ def test_collapse_guard_refuses_a_mask_that_aliases_distinct_states() -> None:
     assert guard.observable_key_count() == 1
     assert guard.globally_revoked is False
     # THE HONEST CLASSIFICATION. Neither unmasked antecedent repeated, so the control could not
-    # have exonerated: the guard acted (conservatively, which is correct under the asymmetry) but
-    # must NOT call this a proof.
+    # have exonerated: the guard acted (because this instance opted in) but must NOT call it a
+    # proof.
     diagnostics = guard.diagnostics()
     assert diagnostics["unproven_masked_branchings"] == 1
     assert diagnostics["proven_collapses"] == 0
     assert diagnostics["keys_with_repeated_unmasked_antecedent"] == 0
     assert diagnostics["control_had_power_on_any_key"] is False
     assert diagnostics["refusals_are_all_proven"] is False
+    assert diagnostics["acted_on_unproven_branchings"] is True
+
+
+def test_collapse_guard_ignores_an_unproven_branching_by_default() -> None:
+    """REGRESSION for the measured harm of acting on branchings the control could not judge.
+
+    Full 25-game corpus, 3 seeds, budget 2000: with unproven branchings acted on, the guard --
+    the SAFETY mechanism -- became the run's largest source of lost wins, on games whose mask no
+    repair touched. tu93 60 nodes / 1 level / 361 actions -> 578 nodes / 0 levels / 1957 actions
+    (28 refusals, 20 of them unproven); dc22 1 level -> 0 (35 refusals, 32 unproven); su15
+    1 level -> 0 (12 refusals, 10 unproven). On a monotone-counter region the unmasked antecedent
+    never repeats by construction, so most branchings there can never be proven -- and treating
+    each as a reason to un-mask reverses the dedup the mask exists to provide.
+    """
+
+    guard = MaskCollapseGuard()
+    common = dict(action_key=(6, None))
+    guard.observe(
+        origin_masked="M1",
+        origin_unmasked="U1a",
+        successor_masked="S1",
+        successor_unmasked="SU1",
+        **common,
+    )
+    acted = guard.observe(
+        origin_masked="M1",
+        origin_unmasked="U1b",
+        successor_masked="S2",
+        successor_unmasked="SU2",
+        **common,
+    )
+    assert acted is False
+    assert guard.refusals == 0
+    assert guard.is_split("M1") is False, "identity must be unchanged on an unproven branching"
+    diagnostics = guard.diagnostics()
+    # The branching is still COUNTED and ATTRIBUTED -- it is evidence, just not a proof.
+    assert diagnostics["unproven_masked_branchings"] == 1
+    assert diagnostics["proven_collapses"] == 0
+    assert diagnostics["acted_on_unproven_branchings"] is False
+    # And a PROVEN collapse on another node still fires under the same default.
+    assert _prove_a_collapse(guard, "M2") is True
+    assert guard.is_split("M2") is True
+    assert guard.diagnostics()["proven_collapses"] == 1
 
 
 def test_collapse_guard_separates_a_proven_collapse_from_an_unproven_branching() -> None:
@@ -541,125 +619,55 @@ def test_collapse_guard_separates_a_proven_collapse_from_an_unproven_branching()
 
     ``control_live`` only says an unmasked antecedent was SUPPLIED. The exoneration branch
     additionally needs that unmasked antecedent to REPEAT -- and if the masked region is a
-    monotone counter it never does, so ``non_deterministic_keys_excluded_by_control: 0`` on such a
-    key is a CONSTRUCTIONAL zero rather than evidence of determinism. This test builds the one
-    shape where the control genuinely HAS power: raw state ``Ub`` is observed twice with the same
-    successor (determinism confirmed AT that key), while a different raw state ``Ua`` sharing the
-    same masked hash produced a different masked successor.
+    monotone counter it never does, so ``non_deterministic_keys_excluded_by_control: 0`` on such
+    a key is a CONSTRUCTIONAL zero rather than evidence of determinism.
+
+    The distinction is not cosmetic: it decides whether the guard acts. Under the proven-only
+    default the deciding observation must land on a raw antecedent already shown to behave
+    deterministically -- which is exactly what `_prove_a_collapse` constructs.
     """
 
-    guard = MaskCollapseGuard()
     common = dict(action_key=(6, None))
-    # Ub, first time. No branching yet.
-    guard.observe(
+
+    # UNPROVEN: two different raw antecedents, neither ever repeating. The control is LIVE but
+    # could not have fired, so the branching is counted and not acted on.
+    unproven = MaskCollapseGuard()
+    unproven.observe(
         origin_masked="M1",
         origin_unmasked="Ub",
         successor_masked="S2",
         successor_unmasked="SUb",
         **common,
     )
-    # Ua shares M1's masked hash and goes somewhere else. Branching, but Ua is new -> unproven.
-    guard.observe(
+    unproven.observe(
         origin_masked="M1",
         origin_unmasked="Ua",
         successor_masked="S1",
         successor_unmasked="SUa",
         **common,
     )
-    assert guard.diagnostics()["unproven_masked_branchings"] == 1
-    assert guard.diagnostics()["proven_collapses"] == 0
+    diagnostics = unproven.diagnostics()
+    assert diagnostics["control_live"] is True, "an antecedent WAS supplied"
+    assert diagnostics["control_had_power_on_any_key"] is False, "...but it could not have fired"
+    assert diagnostics["unproven_masked_branchings"] == 1
+    assert diagnostics["proven_collapses"] == 0
+    assert diagnostics["non_deterministic_keys_excluded_by_control"] == 0, (
+        "a CONSTRUCTIONAL zero -- the exoneration branch was unreachable, not passed"
+    )
+    assert unproven.is_split("M1") is False
 
-    # A SECOND node, same story, but this time the repeat comes BEFORE the branching so the
-    # control has power on the deciding observation.
-    guard.observe(
-        origin_masked="M2",
-        origin_unmasked="Vb",
-        successor_masked="T2",
-        successor_unmasked="TVb",
-        **common,
+    # PROVEN: the deciding observation lands on a raw antecedent that repeated deterministically,
+    # so environment non-determinism is genuinely ruled out at that key.
+    proven = MaskCollapseGuard()
+    assert _prove_a_collapse(proven, "P") is True
+    diagnostics = proven.diagnostics()
+    assert diagnostics["proven_collapses"] == 1
+    assert diagnostics["unproven_masked_branchings"] == 1, (
+        "the middle observation was itself an unproven branching, and is still counted"
     )
-    guard.observe(
-        origin_masked="M2",
-        origin_unmasked="Va",
-        successor_masked="T1",
-        successor_unmasked="TVa",
-        **common,
-    )
-    # Vb repeats DETERMINISTICALLY (same successor), which is what gives the control power.
-    proved = guard.observe(
-        origin_masked="M2",
-        origin_unmasked="Vb",
-        successor_masked="T2",
-        successor_unmasked="TVb",
-        **common,
-    )
-    diagnostics = guard.diagnostics()
-    # M2 was already split by the earlier unproven branching, so this call does not re-split --
-    # but the POWER accounting is what this test is about.
-    assert proved is False
     assert diagnostics["keys_with_repeated_unmasked_antecedent"] == 1
     assert diagnostics["control_had_power_on_any_key"] is True
-
-    # And the fully-clean shape: a fresh guard where the repeat precedes the branching.
-    clean = MaskCollapseGuard()
-    clean.observe(
-        origin_masked="N",
-        origin_unmasked="Wb",
-        successor_masked="X2",
-        successor_unmasked="XWb",
-        **common,
-    )
-    clean.observe(
-        origin_masked="N",
-        origin_unmasked="Wb",
-        successor_masked="X2",
-        successor_unmasked="XWb",
-        **common,
-    )
-    hit = clean.observe(
-        origin_masked="N",
-        origin_unmasked="Wa",
-        successor_masked="X1",
-        successor_unmasked="XWa",
-        **common,
-    )
-    assert hit is True
-    # Wa is new on the deciding observation, so even here the guard reports it honestly as
-    # unproven rather than inflating it into a proof.
-    assert clean.diagnostics()["unproven_masked_branchings"] == 1
-    assert clean.diagnostics()["keys_with_repeated_unmasked_antecedent"] == 1
-
-    # Now the deciding observation IS on the repeated key.
-    proven = MaskCollapseGuard()
-    proven.observe(
-        origin_masked="P",
-        origin_unmasked="Za",
-        successor_masked="Y1",
-        successor_unmasked="YZa",
-        **common,
-    )
-    proven.observe(
-        origin_masked="P",
-        origin_unmasked="Zb",
-        successor_masked="Y2",
-        successor_unmasked="YZb",
-        **common,
-    )
-    proven.split_hashes.clear()  # ignore the first (unproven) split so the next call decides
-    proven.violations = 0
-    proven.refusals = 0
-    proven.unproven_masked_branchings = 0
-    fired = proven.observe(
-        origin_masked="P",
-        origin_unmasked="Zb",
-        successor_masked="Y2",
-        successor_unmasked="YZb",
-        **common,
-    )
-    assert fired is True
-    assert proven.diagnostics()["proven_collapses"] == 1
-    assert proven.diagnostics()["unproven_masked_branchings"] == 0
-    assert proven.diagnostics()["refusals_are_all_proven"] is True
+    assert proven.is_split("P") is True
 
 
 def test_collapse_guard_does_not_fire_on_environment_nondeterminism() -> None:
@@ -773,22 +781,15 @@ def test_explorer_supplies_a_live_control_to_the_guard() -> None:
 
 
 def _split_n_nodes(guard: MaskCollapseGuard, count: int) -> None:
+    """Split `count` nodes via PROVEN collapses, so these tests are about revocation only.
+
+    Uses the proven path deliberately: the default guard ignores unproven branchings (see
+    `test_collapse_guard_ignores_an_unproven_branching_by_default`), so an unproven driver here
+    would make the revocation tests silently vacuous.
+    """
+
     for index in range(count):
-        node = f"M{index}"
-        guard.observe(
-            origin_masked=node,
-            origin_unmasked=f"U{index}a",
-            action_key=(6, None),
-            successor_masked="A",
-            successor_unmasked="UA",
-        )
-        guard.observe(
-            origin_masked=node,
-            origin_unmasked=f"U{index}b",
-            action_key=(6, None),
-            successor_masked="B",
-            successor_unmasked="UB",
-        )
+        assert _prove_a_collapse(guard, f"M{index}") is True
 
 
 def test_collapse_guard_never_globally_revokes_by_default() -> None:
@@ -876,7 +877,10 @@ def test_collapse_guard_ignores_incomplete_observations() -> None:
 def test_collapse_guard_handles_unhashable_action_payloads() -> None:
     """Click payloads arrive as dicts; a guard that raises on one would take the search down."""
 
-    guard = MaskCollapseGuard()
+    # Opted in because this test is about the ACTION-KEY coercion, not the refusal policy: with
+    # the proven-only default a two-observation driver would never act and the assertion below
+    # would be vacuous rather than exercising `_hashable`.
+    guard = MaskCollapseGuard(act_on_unproven_branchings=True)
     payload = {"x": 1, "y": 2, "nested": [1, 2, {"z": 3}]}
     for index, successor in enumerate(("S1", "S2")):
         guard.observe(
@@ -918,7 +922,10 @@ def test_collapse_guard_hashes_sets_and_repr_only_payloads() -> None:
         def __repr__(self) -> str:
             return "repr-only-action"
 
-    guard = MaskCollapseGuard()
+    # Opted in for the same reason as the sibling payload test: this is about `_hashable`
+    # coercion of the ACTION KEY, not about the refusal policy. With the proven-only default a
+    # two-observation driver would never act and the assertion below would be vacuous.
+    guard = MaskCollapseGuard(act_on_unproven_branchings=True)
     payload = {"choices": {3, 1, 2}, "object": ReprOnly()}
     for successor, unmasked in (("S1", "U1"), ("S2", "U2")):
         guard.observe(
@@ -1470,3 +1477,110 @@ def test_guard_counts_missing_attribution_rather_than_reporting_a_clean_zero() -
     assert attribution["regions_supplied"] is False
     assert attribution["attribution_unavailable"] == 1
     assert attribution["branchings_differing_in_repair_added_region"] == 0
+
+
+def _proven_pair_with_grids(guard, node, first, second, action_key=(6, None)):
+    """Drive a PROVEN collapse whose two antecedent GRIDS are supplied, so it is attributable."""
+
+    guard.observe(
+        origin_masked=node,
+        origin_unmasked=f"{node}_Ub",
+        action_key=action_key,
+        successor_masked=f"{node}_S2",
+        successor_unmasked=f"{node}_SUb",
+        origin_grid=first,
+    )
+    guard.observe(
+        origin_masked=node,
+        origin_unmasked=f"{node}_Ua",
+        action_key=action_key,
+        successor_masked=f"{node}_S1",
+        successor_unmasked=f"{node}_SUa",
+        origin_grid=second,
+    )
+    return guard.observe(
+        origin_masked=node,
+        origin_unmasked=f"{node}_Ub",
+        action_key=action_key,
+        successor_masked=f"{node}_S2",
+        successor_unmasked=f"{node}_SUb",
+        origin_grid=second,
+    )
+
+
+def test_guard_does_not_retract_a_cell_the_live_configuration_already_masks() -> None:
+    """REGRESSION for the measured over-reach of the guard onto the SHIPPED mask (2026-07-25).
+
+    Restricting the guard to PROVEN collapses was not enough. On the full corpus the ALREADY-
+    SHIPPED mask aliases heavily on its own -- 441 proven collapses with the guard armed -- and
+    splitting those nodes cost the run dc22, su15, tu93 and lf52: wins the LIVE configuration
+    holds BECAUSE the shipped mask collapses those states. Acting on them would mean this
+    experiment regresses the baseline to fix a defect it did not introduce.
+
+    So: a proven branching whose differing antecedent cells lie in the SHIPPED region is
+    COUNTED and ATTRIBUTED but NOT acted on; one in the REPAIR-ADDED region is acted on.
+    """
+
+    shipped = np.zeros((8, 8), dtype=bool)
+    shipped[0, :] = True
+    applied = shipped.copy()
+    applied[:, 7] = True  # the repair-added column
+
+    # (1) The differing cells are in the ALREADY-SHIPPED row.
+    base = np.zeros((8, 8), dtype=int)
+    moved_shipped = base.copy()
+    moved_shipped[0, 2:5] = 6
+    shipped_guard = MaskCollapseGuard(applied_mask=applied, shipped_mask=shipped)
+    acted = _proven_pair_with_grids(shipped_guard, "M", base, moved_shipped)
+    assert acted is False, "the baseline's own mask is out of scope for this repair"
+    assert shipped_guard.is_split("M") is False
+    diagnostics = shipped_guard.diagnostics()
+    assert diagnostics["proven_collapses"] >= 1, "still PROVEN -- just not acted on"
+    assert diagnostics["branchings_in_shipped_region_not_acted_on"] >= 1
+    assert diagnostics["attribution"]["branchings_differing_in_already_shipped_region"] >= 1
+    assert diagnostics["restricted_action_to_repair_added_region"] is True
+
+    # (2) The differing cells are in the REPAIR-ADDED column -- this IS in scope.
+    moved_added = base.copy()
+    moved_added[3:6, 7] = 9
+    added_guard = MaskCollapseGuard(applied_mask=applied, shipped_mask=shipped)
+    assert _proven_pair_with_grids(added_guard, "N", base, moved_added) is True
+    assert added_guard.is_split("N") is True
+    assert added_guard.diagnostics()["branchings_in_shipped_region_not_acted_on"] == 0
+
+
+def test_guard_acts_on_an_unattributable_branching_when_nothing_was_shipped() -> None:
+    """With no shipped mask every masked cell is repair-added, so the restriction cannot bite.
+
+    This is the r11l/tn36 shape -- the shipped classifier resolves nothing there -- and it is the
+    case where the guard has to remain effective, or the repair would ship unguarded on exactly
+    the games it changes.
+    """
+
+    applied = np.zeros((8, 8), dtype=bool)
+    applied[:, 0] = True
+    guard = MaskCollapseGuard(applied_mask=applied, shipped_mask=None)
+    # No `origin_grid` supplied at all -> unattributable, but nothing was shipped.
+    assert _prove_a_collapse(guard, "M") is True
+    assert guard.is_split("M") is True
+    assert guard.diagnostics()["branchings_in_shipped_region_not_acted_on"] == 0
+
+
+def test_guard_restriction_can_be_disabled_for_measurement() -> None:
+    """The aggressive variant stays reachable so the measurement above is reproducible."""
+
+    shipped = np.zeros((8, 8), dtype=bool)
+    shipped[0, :] = True
+    applied = shipped.copy()
+    applied[:, 7] = True
+    base = np.zeros((8, 8), dtype=int)
+    moved = base.copy()
+    moved[0, 2:5] = 6
+    guard = MaskCollapseGuard(
+        applied_mask=applied,
+        shipped_mask=shipped,
+        restrict_action_to_repair_added_region=False,
+    )
+    assert _proven_pair_with_grids(guard, "M", base, moved) is True
+    assert guard.is_split("M") is True
+    assert guard.diagnostics()["restricted_action_to_repair_added_region"] is False
