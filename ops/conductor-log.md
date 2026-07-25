@@ -14288,3 +14288,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 13:25 UTC | Milestone 2026.07.526 activated | OK | 14 tasks queued |
 | 2026-07-25 14:49 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: duplicate_hist |
 | 2026-07-25 16:12 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ent_5918_trans |
+| 2026-07-25 16:51 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5918_transit |
