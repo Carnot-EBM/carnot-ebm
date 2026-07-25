@@ -264,13 +264,31 @@ SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED = False
 #     fully-greedy opposite, and three prior experiments found that replacing the reference's
 #     uniform draw with ANY Carnot-scored order LOST solves. So the greedy draw is itself a
 #     suspect and the A/B must be able to vary it independently of the barrier.
-# ALL THREE DEFAULT OFF, so the submitted agent's behaviour is byte-identical until the
-# matched-budget offline A/B (experiment_5836_frontier_discipline_ab) greenlights a flip --
-# same discipline as every other freshly-wired-but-unvalidated lever in this file.
-SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED = False
+# FLIPPED ON 2026-07-25 by operator decision, after the A/B that these flags were gated on.
+# EVIDENCE (results/experiment_5836_frontier_definitive.json, full declared spec: 7 arms x 25 games
+# x 3 conditions = 975 cells, 0 errored, reproduction 29/30):
+#   arm B2 = TIER_EXHAUSTION + TIER_UNIFORM_RANDOM + TIER_CLICK_VOCAB_ONLY
+#     mean wins/cell  10.56  vs baseline 7.00   (+3.56 games)
+#     strict PER-SEED dominance over baseline in 8 of 9 (condition x seed) cells
+#     holds across real / recoloured / reflected: 10.00 / 10.67 / 11.00
+#     its ONE loss is cd82, diagnosed as a budget-WALL artifact (solves at budget 4000; it used
+#     1977 of 2000 actions), not lost capability -- see cd82_residual_diagnosis in
+#     results/experiment_5836_frontier_click_vocab_gate.json
+#   the click gate's contribution is isolated by B2 vs B2_nofix: dominance 8/9 vs 3/9, and tu93
+#     lost in 0/9 vs 6/9 cells
+#   the DISTANCE GRADIENT stays OFF: arm D (tier+gradient) scored 9.67 with dominance 2/3, worse
+#     than B2 on both axes. Only the two mechanisms below earned the flip.
+# HONEST LIMIT ON THIS DECISION: the evidence is PUBLIC-game, via the offline dev twin. The
+# positive control (arm E, the just-explore reference through our shim) scored 6.67 -- BELOW our own
+# baseline -- so by the A/B's own pre-registered rule the harness is the confound for any
+# CROSS-IMPLEMENTATION claim, and none is made here. What justifies the flip is the INTERNAL
+# comparison A vs B2 vs B2_nofix: the same live explorer differing only by flag, where a per-seed
+# delta cannot be a cross-implementation artifact. This is a capability argument, NOT demonstrated
+# hidden-game transfer.
+SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED = True
 SUBMITTED_FRONTIER_TIER_EXHAUSTION_MODE = "just_explore_global_priority_group_exhaustion"
 SUBMITTED_FRONTIER_TIER_COUNT = FRONTIER_TIER_COUNT
-SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED = False
+SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED = True
 # REQ-ARC-WMTE-5836 follow-up (2026-07-25): CONFINE the tier barrier to games whose action
 # vocabulary actually contains CLICK, discovered at RUNTIME from frame.available_actions.
 #

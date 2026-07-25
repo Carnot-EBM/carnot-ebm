@@ -893,3 +893,22 @@ retired_extras:
   - final-token/final-layer embedding verifier
   - exact constraint acquisition
   - non-generation ARC world-feedback surfaces
+- id: exp5895_csl_exact_slot_requalification_retired_v525
+  scope_key: exp5895_csl_exact_slot_repeated_global_suite_exit_2
+  experiment_scope: Frozen Exp5895 shortcut-safe continuous self-learning exact-slot requalification with repeated global suite exit-code-2 verdict
+  reason: >-
+    retire_if_same_verdict: Exp5912 reproduced the frozen Exp5895 science hash
+    and the same required global-suite exit-code-2 terminal condition, so only
+    this exact requalification scope is retired. Transactional CSL or materially
+    different mechanisms remain separate unless they depend on this retired slot.
+  experiment_ids:
+  - exp5895
+  - exp5912
+  retired_milestone: 2026.07.525
+  retired_by_artifact: results/experiment_5912_csl_exact_slot_requalification.json
+  recorded_by_artifact: results/experiment_5917_v525_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - exp5895 CSL exact-slot requalification with repeated global suite exit 2
+  - frozen Exp5895 shortcut-safe CSL replay promoted as ready after same verdict

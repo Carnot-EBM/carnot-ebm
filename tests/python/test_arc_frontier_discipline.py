@@ -296,14 +296,28 @@ def test_reverse_adjacency_matches_an_explorers_incremental_index():
 def test_flags_default_off_and_pop_is_byte_identical_to_pop_zero():
     """SCENARIO-ARC-WMTE-5836-F: OFF must be the historical behaviour exactly.
 
-    The submitted agent's search order must be unchanged until the A/B greenlights a flip, so
-    with the flags off _pop_untested is still an unconditional pop(0) even over rows whose
-    stamped tiers would otherwise defer them.
+    With the flags OFF, _pop_untested must still be an unconditional pop(0) even over rows whose
+    stamped tiers would otherwise defer them. That escape hatch is what makes the A/B's B2_nofix arm
+    a valid attribution control, so it stays load-bearing.
+
+    UPDATED 2026-07-25: TIER_EXHAUSTION and TIER_UNIFORM_RANDOM were flipped ON as the shipped
+    default (see the flag block in arc_competition_agent.py). The off-behaviour must therefore be
+    requested EXPLICITLY here rather than inherited from the module defaults. The shipped-default
+    values are asserted separately, just below.
     """
-    exp = StepwiseExplorer()
+    exp = StepwiseExplorer(
+        tier_exhaustion=False, tier_uniform_random=False, frontier_gradient=False
+    )
     assert exp.tier_exhaustion_enabled is False
     assert exp.tier_uniform_random_enabled is False
     assert exp.frontier_gradient_enabled is False
+
+    # and the SHIPPED default is now ON for the two flipped mechanisms, gradient still off
+    shipped = StepwiseExplorer()
+    assert shipped.tier_exhaustion_enabled is True
+    assert shipped.tier_uniform_random_enabled is True
+    assert shipped.tier_click_vocab_only is True
+    assert shipped.frontier_gradient_enabled is False
 
     node = {
         "path": [],
@@ -566,8 +580,12 @@ def test_env_flags_toggle_the_mechanisms_without_mutating_module_globals(monkeyp
     exp = StepwiseExplorer()
     assert exp.tier_exhaustion_enabled is True
     assert exp.frontier_gradient_enabled is True
-    assert agent_mod.SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED is False
-    assert agent_mod.SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED is False
+    # TIER_EXHAUSTION was flipped ON 2026-07-25 (see the flag block in arc_competition_agent.py).
+    # The point this test actually protects is unchanged: setting an env var must not MUTATE the
+    # module global. So assert the global still equals its declared shipped value, whatever that is,
+    # rather than hardcoding False.
+    assert agent_mod.SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED is True
+    assert agent_mod.SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED is False  # gradient stays OFF
     # an explicit kwarg still wins over the env var
     assert StepwiseExplorer(tier_exhaustion=False).tier_exhaustion_enabled is False
 
@@ -619,7 +637,12 @@ def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_contro
     result cannot be told apart from a broken harness.
     """
     m = _harness()
-    assert set(m.ARMS) == {"A", "B", "B2", "C", "D", "E"}
+    # B2_nofix added 2026-07-25: B2 now inherits the click-vocabulary gate from its shipped default,
+    # so an arm with the gate explicitly OFF is required to attribute the delta to the GATE rather
+    # than to drift in the barrier. It is as mandatory as B2 and E for the same reason.
+    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E"}
+    assert m.ARMS["B2_nofix"]["kwargs"]["tier_click_vocab_only"] is False
+    assert m.ARMS["B2_nofix"]["kwargs"]["tier_uniform_random"] is True
     assert m.ARMS["B"]["kwargs"]["tier_uniform_random"] is False
     assert m.ARMS["B2"]["kwargs"]["tier_uniform_random"] is True
     assert m.ARMS["B2"]["deterministic"] is False
