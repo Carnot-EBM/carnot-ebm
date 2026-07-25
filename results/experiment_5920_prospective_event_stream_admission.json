@@ -1,0 +1,900 @@
+{
+  "chronology_split_and_visibility_receipts": {
+    "event_ids_unique": true,
+    "event_order_is_chronological": true,
+    "first_event_id": "exp5920-event-000000",
+    "future_label_visibility_count": 0,
+    "last_event_id": "exp5920-event-000197",
+    "principle": "Monotone ids, stable split, and no future-label prompt visibility are mandatory.",
+    "split_counts": {
+      "dev": 60,
+      "heldout": 60,
+      "train": 78
+    }
+  },
+  "duration_s": 7.49573,
+  "exact_label_authority": {
+    "all_labels_recomputed_and_match": true,
+    "authority": "exp5909.evaluate_candidate",
+    "label_projection_fields": [
+      "parse_valid",
+      "type_valid",
+      "compiled",
+      "satisfiability_correct",
+      "exact_semantic_equivalence",
+      "query_correct",
+      "unsafe_accepted_constraints"
+    ],
+    "principle": "Exact verifier labels and diagnostics are adjudication authority after proposal only.",
+    "row_count": 198,
+    "verifier_is_oracle_scope": "schema, checksum, chronology, visibility, and exact-label adjudication",
+    "visible_after_proposal_only": true
+  },
+  "experiment_id": "experiment_5920_prospective_event_stream_admission",
+  "field_principles": {
+    "chronology_split_and_visibility_receipts": "Monotone ids, stable split, and no future-label prompt visibility are mandatory.",
+    "duration_s": "Measured wall time exposes deterministic replay work.",
+    "exact_label_authority": "Exact verifier labels and diagnostics are adjudication authority after proposal only.",
+    "field_provenance": "Every field traces to task prompt, specs, upstream artifacts, rows, tests, or command receipts.",
+    "fresh_stream_path_hash_row_count_and_prefix_chain": "The Exp5920-owned JSONL path, row count, file hash, and prefix chain bind every row.",
+    "global_suite_baseline_and_failure_delta": "Known unrelated debt is preserved by exact node id and may not increase.",
+    "honest_verdict": "Use `complete_ready:`, `retired:`, or `blocked:`.",
+    "immutable_upstream_hashes": "Exp5908, Exp5909, Exp5912, schemas, exclusions, and baselines are consumed read-only.",
+    "inference_substrate": "Use `deterministic_artifact_replay_no_llm`.",
+    "preconditions_checked": "Hashes, resources, source schemas, output paths, and atomic writes prevent fabricated stream admission.",
+    "prospective_event_schema_and_version": "One versioned row contract owns chronology, visibility, identity, source hashes, and replay.",
+    "prospective_stream_admission_ready_score": "Emit bare 1.0 only for clean task-owned commands, global failure delta at most zero, fresh-process replay, and complete tamper rejection.",
+    "protected_files_unchanged": "Protected files and upstream artifacts stay byte-identical.",
+    "replay_and_tamper_matrix": "Fresh-process replay and chronology, visibility, label, hash, and split tampering must reject completely.",
+    "reproducibility_checksum": "A checksum detects event, source, prefix, test, or protected-file drift.",
+    "retired_scope_not_reopened": "True only when no Exp5912 ready scalar, artifact mutation, or exact frozen rerun is used.",
+    "status": "A terminal state distinguishes admitted, retired, or blocked prospective stream evidence.",
+    "task_owned_test_boundary": "Unit, coverage, spec, replay, adversarial, E2E, protected-file, and clutter checks define the task-owned clean gate.",
+    "test_commands": "Commands document focused unit/coverage, clean-boundary, replay, tamper, hash, adversarial, spec, applicable E2E, protected-file, global-delta, and root-clutter checks.",
+    "test_exit_codes": "Exit codes prevent failed task-owned checks from becoming readiness.",
+    "verifier_is_oracle": "True only for schema, checksum, chronology, visibility, and exact-label adjudication."
+  },
+  "field_provenance": {
+    "chronology_split_and_visibility_receipts": {
+      "principle": "Monotone ids, stable split, and no future-label prompt visibility are mandatory.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes deterministic replay work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "exact_label_authority": {
+      "principle": "Exact verifier labels and diagnostics are adjudication authority after proposal only.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to task prompt, specs, upstream artifacts, rows, tests, or command receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "fresh_stream_path_hash_row_count_and_prefix_chain": {
+      "principle": "The Exp5920-owned JSONL path, row count, file hash, and prefix chain bind every row.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "global_suite_baseline_and_failure_delta": {
+      "principle": "Known unrelated debt is preserved by exact node id and may not increase.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "immutable_upstream_hashes": {
+      "principle": "Exp5908, Exp5909, Exp5912, schemas, exclusions, and baselines are consumed read-only.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `deterministic_artifact_replay_no_llm`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes, resources, source schemas, output paths, and atomic writes prevent fabricated stream admission.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "prospective_event_schema_and_version": {
+      "principle": "One versioned row contract owns chronology, visibility, identity, source hashes, and replay.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "prospective_stream_admission_ready_score": {
+      "principle": "Emit bare 1.0 only for clean task-owned commands, global failure delta at most zero, fresh-process replay, and complete tamper rejection.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected files and upstream artifacts stay byte-identical.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "replay_and_tamper_matrix": {
+      "principle": "Fresh-process replay and chronology, visibility, label, hash, and split tampering must reject completely.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects event, source, prefix, test, or protected-file drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "retired_scope_not_reopened": {
+      "principle": "True only when no Exp5912 ready scalar, artifact mutation, or exact frozen rerun is used.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes admitted, retired, or blocked prospective stream evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "task_owned_test_boundary": {
+      "principle": "Unit, coverage, spec, replay, adversarial, E2E, protected-file, and clutter checks define the task-owned clean gate.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/coverage, clean-boundary, replay, tamper, hash, adversarial, spec, applicable E2E, protected-file, global-delta, and root-clutter checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed task-owned checks from becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True only for schema, checksum, chronology, visibility, and exact-label adjudication.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "results/experiment_5908_verisynth_constraint_fixture.json",
+        "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl",
+        "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+        "results/experiment_5912_csl_exact_slot_requalification.json",
+        "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "tests/python/test_experiment_5920_prospective_event_stream_admission.py"
+      ]
+    }
+  },
+  "fresh_stream_path_hash_row_count_and_prefix_chain": {
+    "final_prefix_checksum": "sha256:1b816bd76c2ba07704c45882dbbdb10ca05e593b22d359e443d1f7ffb3218852",
+    "first_event_id": "exp5920-event-000000",
+    "genesis_prefix_checksum": "sha256:0f7ec1d4ed340237efa9c898e6030fb2b245ef8274a8ee3ff7ad86e5cf0da9cb",
+    "last_event_id": "exp5920-event-000197",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5920_prospective_event_stream_admission.rows.jsonl",
+    "prefix_chain_valid": true,
+    "principle": "The Exp5920-owned JSONL path, row count, file hash, and prefix chain bind every row.",
+    "row_count": 198,
+    "schema": "carnot.experiment_5920.prospective_event_stream_admission.v1.row",
+    "sha256": "sha256:747721852349534113403394e577d4b2bee339411d1ab5f15ddfada0c0a59b10"
+  },
+  "global_suite_baseline_and_failure_delta": {
+    "after_node_count": 116,
+    "after_node_ids": [
+      "TestIRONRunnerCPUFallback.test_run_returns_outputs_on_cpu_fallback",
+      "TestIRONRunnerCPUFallback.test_run_npu_device_absent_reason",
+      "TestIRONRunnerCPUFallback.test_benchmark_returns_float",
+      "TestIRONRunnerCPUFallback.test_benchmark_uses_n_runs_samples",
+      "TestIRONRunnerCPUFallback.test_run_npu_error_falls_back_to_cpu",
+      "TestIRONRunnerCPUFallback.test_compile_onnx_raises_when_iron_absent",
+      "TestIRONRunnerCPUFallback.test_session_is_cached",
+      "TestIRONRunnerNPUPath.test_run_uses_npu_when_available",
+      "ERROR at teardown of TestVerifyRepairPipelineVergeIntegration.test_verify_repair_verge_uses_default_extractor_when_none",
+      "ERROR at teardown of TestRunExperiment.test_synthetic_fallback_when_pairs_insufficient",
+      "test_req_arc_wmte_5901_repository_artifact_is_current",
+      "test_req_spoe_3810_http_uses_configured_threshold_path_not_default",
+      "test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain",
+      "test_experiment_2117",
+      "test_installed_thrml_runs_energy_and_stochastic_parity",
+      "test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_control",
+      "TestDepthForcingFunctionRelax.test_relax_false_when_p01_clean_but_g2_not_inflight",
+      "test_retro_generation",
+      "TestExportPathBranching.test_onnx_export_creates_file",
+      "TestCudaEpDetection.test_onnxruntime_importable",
+      "TestCudaEpDetection.test_get_available_providers_returns_list",
+      "TestCudaEpDetection.test_cpu_ep_always_present",
+      "TestCudaEpDetection.test_gpu_ep_present_when_gpu_available",
+      "TestCudaEpDetection.test_cuda_ep_detection_mock",
+      "TestOnnxModelLoad.test_export_and_load_cpu",
+      "TestOnnxModelLoad.test_onnx_cpu_matches_numpy",
+      "test_experiment_2721",
+      "test_scenario_code_3016_clean_headline_run_writes_required_evidence",
+      "TestSuccessfulCredentialPath304.test_not_blocked_when_credentials_ok",
+      "TestSuccessfulCredentialPath304.test_has_experiment_304",
+      "TestSuccessfulCredentialPath304.test_has_run_date_20260414",
+      "TestSuccessfulCredentialPath304.test_fcv_upload_status_dry_run_or_uploaded",
+      "TestSuccessfulCredentialPath304.test_fcv_hf_url_present",
+      "TestSuccessfulCredentialPath304.test_repo_urls_in_result",
+      "TestSuccessfulCredentialPath304.test_credentials_available_true",
+      "TestSuccessfulCredentialPath304.test_result_written_to_disk",
+      "test_scenario_capstone_4346_current_artifacts_report_v401_scorecard",
+      "test_req_phase4_082_target_underlay_is_bounded_to_confirmed_target_rectangle",
+      "test_scenario_capstone_4357_current_artifacts_report_v402_scorecard",
+      "test_scenario_capstone_4368_current_artifacts_report_v403_scorecard",
+      "test_scenario_capstone_4379_current_artifacts_report_v404_scorecard",
+      "test_scenario_capstone_4390_current_artifacts_report_v405_scorecard",
+      "test_scenario_capstone_4401_current_artifacts_report_v406_scorecard",
+      "test_req_phase4_4405_mechanic_checks_execute_named_transitions",
+      "test_req_phase4_4406_ar25_action7_restores_prior_grid",
+      "test_req_phase4_4406_ka59_hud_ticks_only_for_relevant_object",
+      "test_req_phase4_4406_ft09_residual_click_toggles_component_only",
+      "test_req_phase4_4406_register_checks_execute_named_transitions",
+      "test_scenario_capstone_4412_current_artifacts_report_headline_decision",
+      "test_req_phase4_4415_adaptive_checks_are_trace_derived",
+      "test_scenario_capstone_4423_current_artifacts_report_headline_decision",
+      "test_req_phase4_4424_sc25_l2_hud_cleanup_mechanic_unit_passes",
+      "test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready",
+      "test_scenario_spoe_3810_runner_http_e2e_uses_real_endpoint",
+      "test_scenario_5591_2_default_off_parity",
+      "TestONNXExport.test_onnx_file_created",
+      "TestONNXExport.test_onnx_path_returned_in_metrics",
+      "TestRunExperimentSuccess.test_success_status",
+      "TestRunExperimentSuccess.test_experiment_id_is_307",
+      "TestRunExperimentSuccess.test_training_source_is_real_logits",
+      "TestRunExperimentSuccess.test_n_pairs_in_result",
+      "TestRunExperimentSuccess.test_split_field_in_result",
+      "TestRunExperimentSuccess.test_val_tp_in_result",
+      "TestRunExperimentSuccess.test_val_fp_in_result",
+      "TestRunExperimentSuccess.test_skip_rate_in_result",
+      "TestRunExperimentSuccess.test_onnx_path_in_result",
+      "TestRunExperimentSuccess.test_onnx_file_created",
+      "TestRunExperimentSuccess.test_result_is_json_serializable",
+      "TestRunExperimentSuccess.test_results_json_file_written",
+      "TestRunExperimentSuccess.test_all_required_artifact_keys_present",
+      "test_scenario_024_001_clean_cuda_stack_allows_receipt_rerun",
+      "test_compute_metrics",
+      "test_experiment_3343_writes_expected_artifact",
+      "test_experiment_3343_fails_if_3342_not_ready",
+      "test_logic_vault_admit_consistent",
+      "test_logic_vault_reject_contradictory",
+      "test_req_arc_wmte_4801_builds_bounded_diverse_artifact_with_positive_control",
+      "test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan",
+      "test_req_arc_wmte_4865_run_checked_in_blocked_a1_artifact",
+      "TestDepthForcingFunctionRelax.test_relax_false_when_p01_clean_but_g2_not_in_flight",
+      "test_experiment_3582",
+      "test_experiment_3583_archive_v329_activate_v330",
+      "test_deliverable_file_validates_for_req_report_5070",
+      "test_deliverable_file_validates_for_req_verify_5100",
+      "tests/python/test_experiment_3729_stability_kill_gate_verdict.py::test_scenario_spoe_3811_real_surfaces_agree_on_confident_and_abstain",
+      "tests/python/test_experiment_3729_stability_kill_gate_verdict.py::test_openspec_has_3729_requirement",
+      "tests/python/test_experiment_3730_kv260_opportunistic_continuity_audit.py::test_req_hw_3730_spec_anchor_declares_opportunistic_audit_contract",
+      "tests/python/test_experiment_3731_capstone_v341.py::test_openspec_has_3731_requirement",
+      "tests/python/test_experiment_3732_archive_v341_activate_v342.py::test_req_report_3732_spec_anchor_exists",
+      "tests/python/test_experiment_3732_archive_v341_activate_v342.py::test_scenario_report_3732_script_wrapper_exists",
+      "tests/python/test_experiment_3733_corrigendum_exp3729_false_negative.py::test_req_ebt_3733_spec_anchor_exists",
+      "tests/python/test_experiment_3983_hardware_continuity.py::test_req_hw_3983_spec_entry_declares_arc_continuity_contract",
+      "tests/python/test_experiment_3984_retro_commit_detector_fix.py::test_req_report_3984_spec_anchor_exists",
+      "tests/python/test_experiment_3985_capstone_v368.py::test_req_capstone_3985_spec_anchor_exists",
+      "tests/python/test_experiment_3985_capstone_v368.py::test_scenario_capstone_3985_script_wrapper_exists",
+      "tests/python/test_experiment_3986_archive_v368_activate_v369.py::test_req_report_3986_spec_anchor_exists",
+      "tests/python/test_experiment_3986_archive_v368_activate_v369.py::test_scenario_report_3986_script_wrapper_exists",
+      "tests/python/test_experiment_3995_hardware_continuity.py::test_req_hw_3995_spec_entry_declares_arc_continuity_contract",
+      "tests/python/test_experiment_3996_capstone_v369.py::test_req_capstone_3996_spec_anchor_exists",
+      "tests/python/test_experiment_3996_capstone_v369.py::test_scenario_capstone_3996_script_wrapper_exists",
+      "tests/python/test_experiment_3998_gap4_deselection_coverage.py::test_req_verify_3998_spec_anchor_exists",
+      "tests/python/test_experiment_3998_gap4_deselection_coverage.py::test_req_verify_3998_identifies_raw_11_task_complement",
+      "tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py::test_req_verify_3999_spec_anchor_exists",
+      "tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py::test_req_verify_3999_real_pool_selects_new_clean_nonprior_tasks",
+      "tests/python/test_experiment_4000_gap4_feedback_vs_redraw.py::test_req_verify_4000_spec_anchor_exists",
+      "tests/python/test_experiment_4000_gap4_feedback_vs_redraw.py::test_req_verify_4000_selects_real_chain_feasible_tasks",
+      "tests/python/test_experiment_4006_hardware_continuity.py::test_req_hw_4006_spec_entry_declares_arc_continuity_contract",
+      "tests/python/test_experiment_4007_capstone_v370.py::test_req_capstone_4007_spec_anchor_exists",
+      "tests/python/test_experiment_4007_capstone_v370.py::test_scenario_capstone_4007_script_wrapper_exists",
+      "tests/python/test_experiment_4008_archive_v370_activate_v371.py::test_req_report_4008_spec_anchor_exists",
+      "tests/python/test_experiment_4008_archive_v370_activate_v371.py::test_scenario_report_4008_script_wrapper_exists",
+      "tests/python/test_experiment_4009_gap4_precision_confirmation_v3.py::test_req_verify_4009_spec_anchor_exists",
+      "tests/python/test_experiment_4009_gap4_precision_confirmation_v3.py::test_req_verify_4009_real_pool_selects_new_clean_nonprior_tasks",
+      "tests/python/test_experiment_4010_gap5_cross_example_selector.py::test_req_verify_4010_spec_anchor_exists",
+      "tests/python/test_experiment_4011_gap4_feedback_vs_redraw_v2.py::test_req_verify_4011_spec_anchor_exists",
+      "tests/python/test_experiment_685_dualgpu_eorm_jepa.py::test_train_eorm_returns_required_keys"
+    ],
+    "baseline_node_count": 116,
+    "baseline_node_ids": [
+      "TestIRONRunnerCPUFallback.test_run_returns_outputs_on_cpu_fallback",
+      "TestIRONRunnerCPUFallback.test_run_npu_device_absent_reason",
+      "TestIRONRunnerCPUFallback.test_benchmark_returns_float",
+      "TestIRONRunnerCPUFallback.test_benchmark_uses_n_runs_samples",
+      "TestIRONRunnerCPUFallback.test_run_npu_error_falls_back_to_cpu",
+      "TestIRONRunnerCPUFallback.test_compile_onnx_raises_when_iron_absent",
+      "TestIRONRunnerCPUFallback.test_session_is_cached",
+      "TestIRONRunnerNPUPath.test_run_uses_npu_when_available",
+      "ERROR at teardown of TestVerifyRepairPipelineVergeIntegration.test_verify_repair_verge_uses_default_extractor_when_none",
+      "ERROR at teardown of TestRunExperiment.test_synthetic_fallback_when_pairs_insufficient",
+      "test_req_arc_wmte_5901_repository_artifact_is_current",
+      "test_req_spoe_3810_http_uses_configured_threshold_path_not_default",
+      "test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain",
+      "test_experiment_2117",
+      "test_installed_thrml_runs_energy_and_stochastic_parity",
+      "test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_control",
+      "TestDepthForcingFunctionRelax.test_relax_false_when_p01_clean_but_g2_not_inflight",
+      "test_retro_generation",
+      "TestExportPathBranching.test_onnx_export_creates_file",
+      "TestCudaEpDetection.test_onnxruntime_importable",
+      "TestCudaEpDetection.test_get_available_providers_returns_list",
+      "TestCudaEpDetection.test_cpu_ep_always_present",
+      "TestCudaEpDetection.test_gpu_ep_present_when_gpu_available",
+      "TestCudaEpDetection.test_cuda_ep_detection_mock",
+      "TestOnnxModelLoad.test_export_and_load_cpu",
+      "TestOnnxModelLoad.test_onnx_cpu_matches_numpy",
+      "test_experiment_2721",
+      "test_scenario_code_3016_clean_headline_run_writes_required_evidence",
+      "TestSuccessfulCredentialPath304.test_not_blocked_when_credentials_ok",
+      "TestSuccessfulCredentialPath304.test_has_experiment_304",
+      "TestSuccessfulCredentialPath304.test_has_run_date_20260414",
+      "TestSuccessfulCredentialPath304.test_fcv_upload_status_dry_run_or_uploaded",
+      "TestSuccessfulCredentialPath304.test_fcv_hf_url_present",
+      "TestSuccessfulCredentialPath304.test_repo_urls_in_result",
+      "TestSuccessfulCredentialPath304.test_credentials_available_true",
+      "TestSuccessfulCredentialPath304.test_result_written_to_disk",
+      "test_scenario_capstone_4346_current_artifacts_report_v401_scorecard",
+      "test_req_phase4_082_target_underlay_is_bounded_to_confirmed_target_rectangle",
+      "test_scenario_capstone_4357_current_artifacts_report_v402_scorecard",
+      "test_scenario_capstone_4368_current_artifacts_report_v403_scorecard",
+      "test_scenario_capstone_4379_current_artifacts_report_v404_scorecard",
+      "test_scenario_capstone_4390_current_artifacts_report_v405_scorecard",
+      "test_scenario_capstone_4401_current_artifacts_report_v406_scorecard",
+      "test_req_phase4_4405_mechanic_checks_execute_named_transitions",
+      "test_req_phase4_4406_ar25_action7_restores_prior_grid",
+      "test_req_phase4_4406_ka59_hud_ticks_only_for_relevant_object",
+      "test_req_phase4_4406_ft09_residual_click_toggles_component_only",
+      "test_req_phase4_4406_register_checks_execute_named_transitions",
+      "test_scenario_capstone_4412_current_artifacts_report_headline_decision",
+      "test_req_phase4_4415_adaptive_checks_are_trace_derived",
+      "test_scenario_capstone_4423_current_artifacts_report_headline_decision",
+      "test_req_phase4_4424_sc25_l2_hud_cleanup_mechanic_unit_passes",
+      "test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready",
+      "test_scenario_spoe_3810_runner_http_e2e_uses_real_endpoint",
+      "test_scenario_5591_2_default_off_parity",
+      "TestONNXExport.test_onnx_file_created",
+      "TestONNXExport.test_onnx_path_returned_in_metrics",
+      "TestRunExperimentSuccess.test_success_status",
+      "TestRunExperimentSuccess.test_experiment_id_is_307",
+      "TestRunExperimentSuccess.test_training_source_is_real_logits",
+      "TestRunExperimentSuccess.test_n_pairs_in_result",
+      "TestRunExperimentSuccess.test_split_field_in_result",
+      "TestRunExperimentSuccess.test_val_tp_in_result",
+      "TestRunExperimentSuccess.test_val_fp_in_result",
+      "TestRunExperimentSuccess.test_skip_rate_in_result",
+      "TestRunExperimentSuccess.test_onnx_path_in_result",
+      "TestRunExperimentSuccess.test_onnx_file_created",
+      "TestRunExperimentSuccess.test_result_is_json_serializable",
+      "TestRunExperimentSuccess.test_results_json_file_written",
+      "TestRunExperimentSuccess.test_all_required_artifact_keys_present",
+      "test_scenario_024_001_clean_cuda_stack_allows_receipt_rerun",
+      "test_compute_metrics",
+      "test_experiment_3343_writes_expected_artifact",
+      "test_experiment_3343_fails_if_3342_not_ready",
+      "test_logic_vault_admit_consistent",
+      "test_logic_vault_reject_contradictory",
+      "test_req_arc_wmte_4801_builds_bounded_diverse_artifact_with_positive_control",
+      "test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan",
+      "test_req_arc_wmte_4865_run_checked_in_blocked_a1_artifact",
+      "TestDepthForcingFunctionRelax.test_relax_false_when_p01_clean_but_g2_not_in_flight",
+      "test_experiment_3582",
+      "test_experiment_3583_archive_v329_activate_v330",
+      "test_deliverable_file_validates_for_req_report_5070",
+      "test_deliverable_file_validates_for_req_verify_5100",
+      "tests/python/test_experiment_3729_stability_kill_gate_verdict.py::test_scenario_spoe_3811_real_surfaces_agree_on_confident_and_abstain",
+      "tests/python/test_experiment_3729_stability_kill_gate_verdict.py::test_openspec_has_3729_requirement",
+      "tests/python/test_experiment_3730_kv260_opportunistic_continuity_audit.py::test_req_hw_3730_spec_anchor_declares_opportunistic_audit_contract",
+      "tests/python/test_experiment_3731_capstone_v341.py::test_openspec_has_3731_requirement",
+      "tests/python/test_experiment_3732_archive_v341_activate_v342.py::test_req_report_3732_spec_anchor_exists",
+      "tests/python/test_experiment_3732_archive_v341_activate_v342.py::test_scenario_report_3732_script_wrapper_exists",
+      "tests/python/test_experiment_3733_corrigendum_exp3729_false_negative.py::test_req_ebt_3733_spec_anchor_exists",
+      "tests/python/test_experiment_3983_hardware_continuity.py::test_req_hw_3983_spec_entry_declares_arc_continuity_contract",
+      "tests/python/test_experiment_3984_retro_commit_detector_fix.py::test_req_report_3984_spec_anchor_exists",
+      "tests/python/test_experiment_3985_capstone_v368.py::test_req_capstone_3985_spec_anchor_exists",
+      "tests/python/test_experiment_3985_capstone_v368.py::test_scenario_capstone_3985_script_wrapper_exists",
+      "tests/python/test_experiment_3986_archive_v368_activate_v369.py::test_req_report_3986_spec_anchor_exists",
+      "tests/python/test_experiment_3986_archive_v368_activate_v369.py::test_scenario_report_3986_script_wrapper_exists",
+      "tests/python/test_experiment_3995_hardware_continuity.py::test_req_hw_3995_spec_entry_declares_arc_continuity_contract",
+      "tests/python/test_experiment_3996_capstone_v369.py::test_req_capstone_3996_spec_anchor_exists",
+      "tests/python/test_experiment_3996_capstone_v369.py::test_scenario_capstone_3996_script_wrapper_exists",
+      "tests/python/test_experiment_3998_gap4_deselection_coverage.py::test_req_verify_3998_spec_anchor_exists",
+      "tests/python/test_experiment_3998_gap4_deselection_coverage.py::test_req_verify_3998_identifies_raw_11_task_complement",
+      "tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py::test_req_verify_3999_spec_anchor_exists",
+      "tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py::test_req_verify_3999_real_pool_selects_new_clean_nonprior_tasks",
+      "tests/python/test_experiment_4000_gap4_feedback_vs_redraw.py::test_req_verify_4000_spec_anchor_exists",
+      "tests/python/test_experiment_4000_gap4_feedback_vs_redraw.py::test_req_verify_4000_selects_real_chain_feasible_tasks",
+      "tests/python/test_experiment_4006_hardware_continuity.py::test_req_hw_4006_spec_entry_declares_arc_continuity_contract",
+      "tests/python/test_experiment_4007_capstone_v370.py::test_req_capstone_4007_spec_anchor_exists",
+      "tests/python/test_experiment_4007_capstone_v370.py::test_scenario_capstone_4007_script_wrapper_exists",
+      "tests/python/test_experiment_4008_archive_v370_activate_v371.py::test_req_report_4008_spec_anchor_exists",
+      "tests/python/test_experiment_4008_archive_v370_activate_v371.py::test_scenario_report_4008_script_wrapper_exists",
+      "tests/python/test_experiment_4009_gap4_precision_confirmation_v3.py::test_req_verify_4009_spec_anchor_exists",
+      "tests/python/test_experiment_4009_gap4_precision_confirmation_v3.py::test_req_verify_4009_real_pool_selects_new_clean_nonprior_tasks",
+      "tests/python/test_experiment_4010_gap5_cross_example_selector.py::test_req_verify_4010_spec_anchor_exists",
+      "tests/python/test_experiment_4011_gap4_feedback_vs_redraw_v2.py::test_req_verify_4011_spec_anchor_exists",
+      "tests/python/test_experiment_685_dualgpu_eorm_jepa.py::test_train_eorm_returns_required_keys"
+    ],
+    "command": ".venv/bin/pytest tests/python -q",
+    "failure_delta": 0,
+    "global_suite_failure_delta": 0,
+    "global_suite_zero_required": false,
+    "new_node_ids": [],
+    "principle": "Known unrelated debt is preserved by exact node id and may not increase.",
+    "ready_allowed": true,
+    "resolved_node_ids": [],
+    "source": "results/experiment_5912_csl_exact_slot_requalification.json",
+    "unrelated_debt_preserved_by_exact_node_id": true
+  },
+  "honest_verdict": "complete_ready: prospective_event_stream_admission_boundary_ready",
+  "immutable_upstream_hashes": {
+    "after_hashes": {
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:bb0a0af893ef37303ff197422c57a29c3c928692dc9b85b355be7b4d83235179",
+      "ops/known-issues.md": "sha256:9f4f7b9f568f4c010a89db7ff32d8b5c31ddd3fbc32ce565759c737b64e3e421",
+      "research-complete.yaml": "sha256:907310bd54262c5bfcd8835746cfe6bb3ca182c0bbc8bc16f26a7d3ef737ca50",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_5908_verisynth_constraint_fixture.json": "sha256:73ac7f815b607c7bb92684ac49a40fcbeed55a96bc338a21f8d2f9e7365db0e5",
+      "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl": "sha256:2009f2f0d8f33cebcab5b2eb883c7bc77d980cd1c4b8ebf0a25eb8ae556fe5fd",
+      "results/experiment_5909_sota_constraint_synthesis_ab.json": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3",
+      "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl": "sha256:9b8c53a04b9b49aad8309c02e6551c615acce1299247062e2fb60e1212461248",
+      "results/experiment_5912_csl_exact_slot_requalification.json": "sha256:45470785b0345a5c69853ebe9732e1182d98b553fe8e2f451aac3bb76fbbf40c"
+    },
+    "before_hashes": {
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:bb0a0af893ef37303ff197422c57a29c3c928692dc9b85b355be7b4d83235179",
+      "ops/known-issues.md": "sha256:9f4f7b9f568f4c010a89db7ff32d8b5c31ddd3fbc32ce565759c737b64e3e421",
+      "research-complete.yaml": "sha256:907310bd54262c5bfcd8835746cfe6bb3ca182c0bbc8bc16f26a7d3ef737ca50",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_5908_verisynth_constraint_fixture.json": "sha256:73ac7f815b607c7bb92684ac49a40fcbeed55a96bc338a21f8d2f9e7365db0e5",
+      "results/experiment_5908_verisynth_constraint_fixture.rows.jsonl": "sha256:2009f2f0d8f33cebcab5b2eb883c7bc77d980cd1c4b8ebf0a25eb8ae556fe5fd",
+      "results/experiment_5909_sota_constraint_synthesis_ab.json": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3",
+      "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl": "sha256:9b8c53a04b9b49aad8309c02e6551c615acce1299247062e2fb60e1212461248",
+      "results/experiment_5912_csl_exact_slot_requalification.json": "sha256:45470785b0345a5c69853ebe9732e1182d98b553fe8e2f451aac3bb76fbbf40c"
+    },
+    "changed_files": [],
+    "unchanged": true
+  },
+  "inference_substrate": "deterministic_artifact_replay_no_llm",
+  "preconditions_checked": {
+    "atomic_writes": {
+      "detail": "tempfile_replace_supported",
+      "ok": true
+    },
+    "checks": {
+      "atomic_json_jsonl_writes": true,
+      "disk": true,
+      "exact_verifier_available": true,
+      "exp5908_replay_ok": true,
+      "exp5909_raw_stream_bound": true,
+      "exp5912_retired": true,
+      "output_paths_writable": true,
+      "prompt_named_exp5909_events_alias_absent": true,
+      "ram": true
+    },
+    "disk": {
+      "available_mb": 1169388,
+      "ok": true,
+      "required_mb": 512
+    },
+    "exact_verifier_availability": {
+      "authority": "exp5909.evaluate_candidate",
+      "callable": true
+    },
+    "exclusion_manifest_hash": "sha256:bb0a0af893ef37303ff197422c57a29c3c928692dc9b85b355be7b4d83235179",
+    "known_issue_baseline_hash": "sha256:9f4f7b9f568f4c010a89db7ff32d8b5c31ddd3fbc32ce565759c737b64e3e421",
+    "output_paths": {
+      "result_parent_writable": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5920_prospective_event_stream_admission.json",
+      "row_parent_writable": true,
+      "row_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5920_prospective_event_stream_admission.rows.jsonl"
+    },
+    "preconditions_ready": true,
+    "ram": {
+      "available_mb": 75516,
+      "ok": true,
+      "required_mb": 512
+    },
+    "requested_exp5909_events_alias": {
+      "artifact_bound_raw_stream_used": "results/experiment_5909_sota_constraint_synthesis_ab.raw.jsonl",
+      "exists": false,
+      "path": "results/experiment_5909_sota_constraint_synthesis_ab.events.jsonl"
+    },
+    "run_date": "20260725",
+    "source_schema_hashes": [
+      {
+        "exists": true,
+        "path": "openspec/capabilities/self-learning/spec.md",
+        "sha256": "sha256:6b6e87d1eef16f5c606cf2d85bb2a7f749cf007e2839a329504e68c8146ef781"
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/research-harnesses/spec.md",
+        "sha256": "sha256:f3a96b7f30e05aa638b23b63d2f931e2cacf9864512d78e45f8ca401a54a2804"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_5908_verisynth_constraint_fixture.py",
+        "sha256": "sha256:a4bc712accbba5aec8e01b47f74dba8eab216d0b06a9cc683a834bef2848e9d4"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_5909_sota_constraint_synthesis_ab.py",
+        "sha256": "sha256:667cd4dfdb47d0836782fddc9e30d639072577a42204584f4a88f3f7d1923e6a"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_5920_prospective_event_stream_admission.py",
+        "sha256": "sha256:74636e68db6caa1a8e5380f84e7d186c6e204c75bf9a88ffe89a7db4400f56e6"
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+        "sha256": "sha256:6bf1ec8e6893fb3b47ea89001eccc832043d523afa535b268736dbfa3b24bea9"
+      }
+    ]
+  },
+  "prospective_event_schema_and_version": {
+    "artifact_schema": "carnot.experiment_5920.prospective_event_stream_admission.v1",
+    "event_id_format": "exp5920-event-%06d",
+    "principle": "One versioned row contract owns chronology, visibility, identity, source hashes, and replay.",
+    "required_row_fields": [
+      "schema",
+      "event_id",
+      "causal_sequence_index",
+      "case_id",
+      "origin_family",
+      "prompt_visibility",
+      "proposal",
+      "exact_diagnostic_and_label",
+      "exact_label_projection",
+      "commit_eligibility",
+      "split",
+      "model_identity",
+      "source_artifact_hashes",
+      "source_row",
+      "prior_prefix_checksum",
+      "row_hash",
+      "prefix_checksum"
+    ],
+    "row_schema": "carnot.experiment_5920.prospective_event_stream_admission.v1.row"
+  },
+  "prospective_stream_admission_ready_score": 1.0,
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:96f78c2dfbcd63c72fc4d3c2ad27f8779154c62247a59bd81a28a117e5a5a0dd",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:96f78c2dfbcd63c72fc4d3c2ad27f8779154c62247a59bd81a28a117e5a5a0dd",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "changed_files": [],
+    "unchanged": true
+  },
+  "random_seed": 5920,
+  "replay_and_tamper_matrix": {
+    "fresh_process_replay": {
+      "error": null,
+      "final_prefix_checksum": "sha256:1b816bd76c2ba07704c45882dbbdb10ca05e593b22d359e443d1f7ffb3218852",
+      "ok": true,
+      "returncode": 0,
+      "row_count": 198,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:601af70d27e195030e34ddafda331d871b45a34c932a26ce194de898072884b0",
+      "stream_sha256": "sha256:747721852349534113403394e577d4b2bee339411d1ab5f15ddfada0c0a59b10"
+    },
+    "principle": "Fresh-process replay and chronology, visibility, label, hash, and split tampering must reject completely.",
+    "tamper_matrix": {
+      "all_rejected": true,
+      "cases": [
+        {
+          "component": "chronology_reordered_row",
+          "error": "chronology reordered row",
+          "error_type": "ProspectiveEventStreamError",
+          "partial_promotions": 0,
+          "rejected": true
+        },
+        {
+          "component": "duplicate_event_id",
+          "error": "duplicate event id",
+          "error_type": "ProspectiveEventStreamError",
+          "partial_promotions": 0,
+          "rejected": true
+        },
+        {
+          "component": "future_label_visibility",
+          "error": "future label visibility",
+          "error_type": "ProspectiveEventStreamError",
+          "partial_promotions": 0,
+          "rejected": true
+        },
+        {
+          "component": "exact_label_posthoc_relabel",
+          "error": "post-hoc exact label",
+          "error_type": "ProspectiveEventStreamError",
+          "partial_promotions": 0,
+          "rejected": true
+        },
+        {
+          "component": "source_hash_drift",
+          "error": "source hash drift",
+          "error_type": "ProspectiveEventStreamError",
+          "partial_promotions": 0,
+          "rejected": true
+        },
+        {
+          "component": "split_drift",
+          "error": "split drift",
+          "error_type": "ProspectiveEventStreamError",
+          "partial_promotions": 0,
+          "rejected": true
+        }
+      ],
+      "partial_promotions": 0
+    }
+  },
+  "reproducibility_checksum": "sha256:a408eaa346ac44053cfe0eacc5428323cebb60c55af2bef4a9e87163257cd086",
+  "retired_scope_not_reopened": true,
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5920.prospective_event_stream_admission.v1",
+  "status": "complete_ready",
+  "task_owned_test_boundary": {
+    "all_task_owned_commands_clean": true,
+    "global_command": ".venv/bin/pytest tests/python -q",
+    "global_suite_zero_required": false,
+    "missing_task_owned_commands": [],
+    "nonzero_task_owned_commands": [],
+    "principle": "Unit, coverage, spec, replay, adversarial, E2E, protected-file, and clutter checks define the task-owned clean gate.",
+    "task_owned_commands": [
+      ".venv/bin/pytest tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5920_prospective_event_stream_admission.py -m pytest tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5920_prospective_event_stream_admission.py --fail-under=100",
+      ".venv/bin/pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py tests/python/test_experiment_5909_sota_constraint_synthesis_ab.py tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0",
+      ".venv/bin/ruff check python/carnot/experiment_5920_prospective_event_stream_admission.py tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+      ".venv/bin/ruff format --check python/carnot/experiment_5920_prospective_event_stream_admission.py tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+      ".venv/bin/python -m carnot.experiment_5920_prospective_event_stream_admission --validate",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_5920_prospective_event_stream_admission.json",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+    ]
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5920_prospective_event_stream_admission.py -m pytest tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5920_prospective_event_stream_admission.py --fail-under=100",
+    ".venv/bin/pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py tests/python/test_experiment_5909_sota_constraint_synthesis_ab.py tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0",
+    ".venv/bin/ruff check python/carnot/experiment_5920_prospective_event_stream_admission.py tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5920_prospective_event_stream_admission.py tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+    ".venv/bin/python -m carnot.experiment_5920_prospective_event_stream_admission --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5920_prospective_event_stream_admission.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5920_prospective_event_stream_admission.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5920_prospective_event_stream_admission.py -m pytest tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5920_prospective_event_stream_admission.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5908_verisynth_constraint_fixture.py tests/python/test_experiment_5909_sota_constraint_synthesis_ab.py tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5920_prospective_event_stream_admission.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_5920_prospective_event_stream_admission --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5920_prospective_event_stream_admission.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5920_prospective_event_stream_admission.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5920_prospective_event_stream_admission.py tests/python/test_experiment_5920_prospective_event_stream_admission.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_5920_prospective_event_stream_admission.py tests/python/test_experiment_5920_prospective_event_stream_admission.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "verifier_is_oracle": true
+}
