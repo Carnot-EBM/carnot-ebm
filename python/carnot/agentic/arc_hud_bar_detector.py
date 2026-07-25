@@ -887,12 +887,40 @@ class MaskCollapseGuard:
         into the frame" is an equally consistent explanation, so it is NOT a proof.
       * ``non_deterministic_keys`` -- the control had power and branched: excluded, no action.
 
-    WHY AN UNPROVEN BRANCHING IS STILL ACTED ON. Splitting costs search efficiency; not
-    splitting risks correctness. Under the module's stated asymmetry and REQ-ARC-WMTE-5960, the
-    conservative response is to un-mask the node in BOTH the proven and the unproven case, and to
-    be honest in the reporting about which one happened. Set
-    ``act_on_unproven_branchings=False`` only for post-hoc measurement of the proven-only
-    variant; it is not the default safety behaviour.
+    WHY AN UNPROVEN BRANCHING IS COUNTED BUT NOT ACTED ON.
+
+    THE INTUITION, WHICH IS WRONG: "splitting costs only search efficiency while not splitting
+    risks correctness, so under this module's stated asymmetry the conservative move is to
+    un-mask the node in BOTH the proven and the unproven case." That was the first version's
+    reasoning and it is preserved here because it is the natural reading of the asymmetry -- it
+    is simply not what the corpus does.
+
+    THE MEASUREMENT THAT REFUTED IT (full 25-game corpus, 3 seeds, budget 2000, 2026-07-25).
+    Acting on unproven branchings shattered the graph on games where the mask is the
+    ALREADY-SHIPPED one, unchanged by any repair:
+
+        tu93   60 nodes / 1 level / 361 actions  ->  578 nodes / 0 levels / 1957 actions
+               (28 refusals: 8 proven, 20 UNPROVEN)
+        dc22  120 nodes / 1 level / 1769 actions ->  311 nodes / 0 levels / 1943 actions
+               (35 refusals: 3 proven, 32 UNPROVEN)
+        su15   21 nodes / 1 level / 534 actions  ->  270 nodes / 0 levels / 1947 actions
+               (12 refusals: 2 proven, 10 UNPROVEN)
+
+    The guard, armed as the SAFETY mechanism, was itself the single largest source of lost wins
+    in that run. The unproven majority is not incidental: on a monotone-counter region the
+    unmasked antecedent never repeats BY CONSTRUCTION, so most branchings there can NEVER be
+    proven, and treating each one as a reason to un-mask reverses the dedup the mask exists to
+    provide. Splitting therefore does NOT cost "only efficiency" -- past a handful of splits it
+    costs the win outright.
+
+    Default is PROVEN-ONLY, with unproven branchings counted, attributed, and reported. Set
+    ``act_on_unproven_branchings=True`` to restore the aggressive behaviour (kept so the
+    measurement above stays reproducible).
+
+    THE HONEST COST OF THAT CHOICE: the guard is now weak on exactly the region class where the
+    control has no power. That gap is why ``DeferredMaskActivation`` (Stage 2) is MANDATORY --
+    it refuses a bad mask BEFORE it is ever applied, using a statistic that does not depend on
+    the control repeating. Stage 3 alone was never sufficient, and this measurement is why.
 
     THE RESPONSE: LOCAL SPLIT, unbounded. The offending masked hash joins ``split_hashes``; the
     caller then hashes frames at that node by masked+unmasked, i.e. un-masks exactly the node
@@ -913,10 +941,20 @@ class MaskCollapseGuard:
 
     max_split_nodes: Optional[int] = HUD_MASK_GUARD_MAX_SPLIT_NODES
     revocation_mode: str = HUD_MASK_GUARD_REVOCATION_LOCAL
-    # Act on branchings the unmasked control could not have exonerated. Default True matches
-    # REQ-ARC-WMTE-5960's hard-refusal semantics while diagnostics still avoid calling these
-    # proofs.
-    act_on_unproven_branchings: bool = True
+    # Act on branchings the unmasked control could not have exonerated? Default False -- see the
+    # class docstring for the measured harm (tu93 1 level -> 0, dc22 1 -> 0, su15 1 -> 0, all on
+    # games whose mask no repair touched, with 20/32/10 of those refusals unproven).
+    act_on_unproven_branchings: bool = False
+    # Retract only cells THIS REPAIR ADDED, never cells the live configuration already masks?
+    # Default True. WHY (measured, full corpus, 2026-07-25): restricting the guard to PROVEN
+    # collapses was not enough. The ALREADY-SHIPPED mask aliases heavily on its own -- 441 proven
+    # collapses across the corpus with the guard armed -- and splitting those nodes cost the run
+    # dc22, su15, tu93 and lf52, i.e. wins the LIVE configuration currently holds BECAUSE the
+    # shipped mask collapses those states. Acting on them means this experiment regresses the
+    # baseline to fix a defect it did not introduce, which is out of scope and strictly worse
+    # than shipping nothing. Those branchings are still COUNTED and ATTRIBUTED (they are a real,
+    # operator-visible finding about `SUBMITTED_AUTO_HUD_MASK_ENABLED`), just not acted on here.
+    restrict_action_to_repair_added_region: bool = True
     split_reporting_threshold: int = HUD_MASK_GUARD_SPLIT_REPORTING_THRESHOLD
     # REGION ATTRIBUTION (optional). When the caller supplies the mask the SHIPPED classifier
     # would have produced and the mask actually applied, every acted-on branching is attributed
@@ -945,6 +983,7 @@ class MaskCollapseGuard:
     attribution_shipped_region: int = 0
     attribution_outside_mask: int = 0
     attribution_unavailable: int = 0
+    branchings_in_shipped_region_not_acted_on: int = 0
 
     # Bound on how many antecedent grids are retained for region attribution. One 64x64 uint8
     # grid is 4 KiB, so 512 keys is ~2 MiB -- enough to cover every observable key in every
@@ -1033,13 +1072,19 @@ class MaskCollapseGuard:
             self.proven_collapses += 1
         else:
             # The control was live but could not have fired (the unmasked antecedent never
-            # repeated), so this branching is NOT a proof. The default still acts on it
-            # conservatively; diagnostics preserve that distinction.
+            # repeated), so this branching is NOT a proof -- counted and attributed, but by
+            # default not acted on (see `act_on_unproven_branchings`).
             self.unproven_masked_branchings += 1
             if not self.act_on_unproven_branchings:
                 self._attribute(masked_key, origin_grid)
                 return False
-        self._attribute(masked_key, origin_grid)
+        region = self._attribute(masked_key, origin_grid)
+        if self.restrict_action_to_repair_added_region and region in {"shipped", "outside"}:
+            # The differing cells lie in the mask the LIVE configuration already applies, not in
+            # anything this repair added. Un-masking here would regress the baseline to fix a
+            # pre-existing defect -- out of scope, and measured to cost dc22/su15/tu93/lf52.
+            self.branchings_in_shipped_region_not_acted_on += 1
+            return False
         self.violations += 1
         self.split_hashes.add(str(origin_masked))
         self.refusals += 1
@@ -1051,26 +1096,33 @@ class MaskCollapseGuard:
             self.globally_revoked = True
         return True
 
-    def _attribute(self, masked_key: tuple, origin_grid: Any) -> None:
+    def _attribute(self, masked_key: tuple, origin_grid: Any) -> Optional[str]:
         """Which REGION do the two antecedents differ in -- repair-added, or already-shipped?
 
         Computed from the guard's own retained antecedent grid for this key, so it needs no win
         to have been lost and covers every game in a run (the defect in the harness's
         win/loss-keyed attribution window).
+
+        Returns ``"added"`` / ``"shipped"`` / ``"outside"``, or ``None`` when it cannot tell.
+        The caller uses that to decide whether acting would retract a cell the LIVE
+        configuration already masks. A ``None`` return is treated as UNATTRIBUTABLE, and the
+        caller's default is to leave the baseline alone rather than act on evidence it could not
+        place -- except where there is no shipped mask at all, in which case every masked cell is
+        repair-added by construction.
         """
 
         if self.applied_mask is None:
             self.attribution_unavailable += 1
-            return
+            return None
         previous = self._masked_key_grids.get(masked_key)
         current = _as_grid(origin_grid)
         if previous is None or current is None or previous.shape != current.shape:
             self.attribution_unavailable += 1
-            return
+            return None if self.shipped_mask is not None else "added"
         applied = np.asarray(self.applied_mask, dtype=bool)
         if applied.shape != previous.shape:
             self.attribution_unavailable += 1
-            return
+            return None if self.shipped_mask is not None else "added"
         differing = previous != current
         shipped = (
             np.asarray(self.shipped_mask, dtype=bool)
@@ -1081,13 +1133,16 @@ class MaskCollapseGuard:
         added = applied & ~shipped
         if bool((differing & added).any()):
             self.attribution_added_region += 1
-        elif bool((differing & shipped).any()):
+            return "added"
+        if bool((differing & shipped).any()):
             self.attribution_shipped_region += 1
-        else:
+            return "shipped"
+        if True:
             # Differing cells lie entirely OUTSIDE the mask. That cannot be the mask's fault --
             # two frames differing outside the mask would not share a masked hash -- so it is
             # recorded rather than attributed.
             self.attribution_outside_mask += 1
+            return "outside"
 
     def observable_key_count(self) -> int:
         """Keys observed with >=2 DISTINCT masked successors -- where a collapse was provable.
@@ -1134,6 +1189,15 @@ class MaskCollapseGuard:
             "proven_collapses": int(self.proven_collapses),
             "unproven_masked_branchings": int(self.unproven_masked_branchings),
             "acted_on_unproven_branchings": bool(self.act_on_unproven_branchings),
+            "restricted_action_to_repair_added_region": bool(
+                self.restrict_action_to_repair_added_region
+            ),
+            # Proven collapses in the ALREADY-SHIPPED mask that this run deliberately did NOT act
+            # on. A real, operator-visible property of the live configuration -- surfaced here
+            # rather than silently fixed by regressing the baseline.
+            "branchings_in_shipped_region_not_acted_on": int(
+                self.branchings_in_shipped_region_not_acted_on
+            ),
             "keys_with_repeated_unmasked_antecedent": int(
                 self.keys_with_repeated_unmasked_antecedent
             ),
