@@ -1,0 +1,486 @@
+{
+  "canonical_projection_schema_and_version": {
+    "checksum_field": "reproducibility_checksum",
+    "normalization_version": "json_sort_keys_ascii_finite_numbers_v1",
+    "principle": "One explicit public projection owns every producer-consumer checksum.",
+    "projection_schema_version": "carnot.constraint_ir.replay_contract_projection.v1"
+  },
+  "constraint_ir_replay_contract_ready_score": 1.0,
+  "duration_s": 3.600029,
+  "excluded_and_bound_fields": {
+    "bound_field_names": [
+      "artifact_schema",
+      "constraint_ir_schema_version",
+      "artifact_schema_version",
+      "row_schema_version",
+      "row_file_sha256"
+    ],
+    "bound_row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "bound_schema_versions": {
+      "artifact_schema": "carnot.experiment_5896.typed_constraint_ir_fixture.v1",
+      "constraint_ir_schema_version": "carnot.constraint_ir.v1",
+      "row_schema_version": "carnot.experiment_5896.typed_constraint_ir_fixture.v1.row"
+    },
+    "excluded_nested_paths": [
+      "preconditions_checked.disk.available_mb",
+      "preconditions_checked.ram.available_mb"
+    ],
+    "excluded_top_level_fields": [
+      "duration_s",
+      "protected_files_unchanged",
+      "reproducibility_checksum",
+      "test_exit_codes"
+    ]
+  },
+  "experiment_id": "experiment_5907_constraint_ir_replay_contract",
+  "field_principles": {
+    "canonical_projection_schema_and_version": "One explicit public projection owns every producer-consumer checksum.",
+    "constraint_ir_replay_contract_ready_score": "Emit bare 1.0 only for shared-helper parity, fresh-process exact replay, row binding, and complete tamper rejection.",
+    "historical_artifacts_unchanged": "A repaired contract cannot rewrite prior evidence.",
+    "honest_verdict": "Use complete_ready:, retired:, or blocked:.",
+    "inference_substrate": "Use deterministic_artifact_replay_no_llm.",
+    "verifier_is_oracle": "True only for checksum/schema/tamper adjudication."
+  },
+  "field_provenance": {
+    "canonical_projection_schema_and_version": {
+      "principle": "One explicit public projection owns every producer-consumer checksum.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "constraint_ir_replay_contract_ready_score": {
+      "principle": "Emit bare 1.0 only for shared-helper parity, fresh-process exact replay, row binding, and complete tamper rejection.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "duration_s": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "excluded_and_bound_fields": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "field_provenance": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "fresh_process_replay_receipt": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "fresh_twin_producer_consumer_replay": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "historical_artifacts_unchanged": {
+      "principle": "A repaired contract cannot rewrite prior evidence.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "honest_verdict": {
+      "principle": "Use complete_ready:, retired:, or blocked:.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "immutable_artifact_hashes": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "inference_substrate": {
+      "principle": "Use deterministic_artifact_replay_no_llm.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "legacy_exp5896_adjudication": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "mismatch_reproduction_and_root_cause": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "preconditions_checked": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "protected_files_unchanged": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "reproducibility_checksum": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "shared_helper_receipt": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "status": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "tamper_detection_matrix": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "test_commands": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "test_exit_codes": {
+      "principle": "Replay-contract audit field.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    },
+    "verifier_is_oracle": {
+      "principle": "True only for checksum/schema/tamper adjudication.",
+      "satisfied_by": "generated_by_exp5907_constraint_ir_replay_contract"
+    }
+  },
+  "fresh_process_replay_receipt": {
+    "checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+    "error": null,
+    "matches_producer_checksum": true,
+    "ok": true,
+    "returncode": 0,
+    "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "sha256:a0a860539125ca23be667a3ea14c4fe49e1ff2d62c34c7e5fcf73e11e6a27ca3"
+  },
+  "fresh_twin_producer_consumer_replay": {
+    "artifact_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+    "consumer_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+    "consumer_replay_ok": true,
+    "producer_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+    "producer_replay_ok": true,
+    "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "shared_helper_parity": true
+  },
+  "historical_artifacts_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "expected_sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+        "matches_expected": true,
+        "path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+        "sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+        "matches_expected": true,
+        "path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl",
+        "sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d",
+        "matches_expected": true,
+        "path": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+        "sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d"
+      }
+    ],
+    "unchanged": true
+  },
+  "honest_verdict": "complete_ready: ConstraintIR replay contract is shared, row-bound, and tamper-rejecting",
+  "immutable_artifact_hashes": {
+    "all_match_expected": true,
+    "all_present": true,
+    "files": [
+      {
+        "exists": true,
+        "expected_sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+        "matches_expected": true,
+        "path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+        "sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+        "matches_expected": true,
+        "path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl",
+        "sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d",
+        "matches_expected": true,
+        "path": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+        "sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d"
+      }
+    ]
+  },
+  "inference_substrate": "deterministic_artifact_replay_no_llm",
+  "legacy_exp5896_adjudication": {
+    "historical_checksum_mismatch_preserved": true,
+    "legacy_mode_without_projection_field": true,
+    "new_contract_checksum": "sha256:1ec8b57d1631af7ddfa53a0b6e9b53acfed09ad8a85b9969b350bcce2b794cd9",
+    "new_contract_replay_ready": true,
+    "row_count": 20,
+    "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+    "stored_checksum_matched_new_projection": false,
+    "stored_historical_checksum": "sha256:77af54331134cf956de22d3fdb2c5d3b356a9ad22f447c09ec66403b0772f070"
+  },
+  "mismatch_reproduction_and_root_cause": {
+    "artifact_projection_byte_length": 11391,
+    "artifact_projection_checksum": "sha256:77af54331134cf956de22d3fdb2c5d3b356a9ad22f447c09ec66403b0772f070",
+    "artifact_projection_utf8": "{\"backend_compiler_receipts\":{\"prolog\":{\"command\":null,\"status\":\"skipped_optional_backend_not_installed\"},\"python_finite_domain\":{\"rows\":20,\"status\":\"applied\",\"version\":\"3.12.13\"},\"z3\":{\"rows\":18,\"status\":\"applied\",\"version\":\"4.16.0\"}},\"constraint_ir_schema_and_version\":{\"artifact_schema_version\":\"carnot.experiment_5896.typed_constraint_ir_fixture.v1\",\"canonical_nodes\":[\"entities\",\"finite_domains\",\"facts\",\"horn_implications\",\"predicates\",\"arithmetic_relations\",\"explicit_negation\",\"conjunction\",\"query_goals\"],\"principle\":\"An engine-neutral contract prevents backend-specific prompt tuning from defining success.\",\"row_schema_version\":\"carnot.experiment_5896.typed_constraint_ir_fixture.v1.row\",\"schema_version\":\"carnot.constraint_ir.v1\",\"top_level_keys\":[\"domains\",\"entities\",\"facts\",\"predicates\",\"query\",\"rules\",\"schema_version\"]},\"cross_backend_agreement\":{\"compared_rows\":18,\"disagreement_count\":0,\"disagreements\":[],\"required_when_two_backends_apply\":true},\"deterministic_replay_receipt\":{\"row_hash_unique\":true,\"row_hashes\":[\"sha256:47c6b9bc49824eda60be6c9f9f0a1e53b53dc89e1cdaea6d7d89e836857c0452\",\"sha256:909a6e391e0d3925e4cfe1d6134a7e7d64f8461bcbe99e46d635fb1b3c527964\",\"sha256:1cff5c5557dd291b06fc8d4491bd007ab010f6f0f61dd8b5ec9925013443923e\",\"sha256:ea68064e905163b14dd473c31383b73c5841567d18795791daf24c1546cb87ec\",\"sha256:28bfd76969ce70b64578e97bd2197351ec933950179257a72c0f2333d0563c13\",\"sha256:b026d934afd8023b8861cfaa6380e537f49c208dcd05662926e60558fe8691ef\",\"sha256:564ac3d2ac2e639c61a797fdcc04b1de19cd8288399125730fa872ca5878b419\",\"sha256:8ce042fed560400f6331081c9b1d22d9f6664f8c9ea1229f1753106c3004b53a\",\"sha256:90d564e6da5197438333c9e08a840e9f899249a490f1bea74cfb09fc7ed9eb27\",\"sha256:1a9449b443195989e21e45d7580baa08acfa2cecbc0de26887a1c5246b978d8a\",\"sha256:9ad648dc628c98f8c28cf982415d11ca6179299de74417eec6c0747331cd9878\",\"sha256:75826341fce3629f68f7b0004e6c77d4fced412ecdcd170e162b35f9b30d0171\",\"sha256:0bf64ac22a8843b23e9287f41a0290dd2ec069cf5b25d038db5e76b75508f91b\",\"sha256:72873dc19cc60216faed576210c67addbb32dd2b5c20df8cc05c551cd43b5498\",\"sha256:78cb578f84f6cb96899c49f88d6137db3efb1087bdb5d5d06173074179c1baa3\",\"sha256:0d5b47820bb80cb51730b57f726c48f51a2e8b688df02bc0c0ef7b9b2a486332\",\"sha256:cd91b0c24221b4d476646260ea29709dcc5a4345344de57cd0dcb20127e14fd4\",\"sha256:06af0903bf582bd5e9fc4efc74177562010994b97f3610c19ecc7144b3af422f\",\"sha256:39f2bf5955876c8759f71625c10b004a0215257b1c84c28fc88d14c9ec9b7e35\",\"sha256:5c9dc5a7387600a2669b050e95f5d0f9b6d84de487a5bd57115789a7a6b24059\"]},\"duration_s\":0.0,\"exact_semantic_equivalence_contract\":{\"behavior_hash_field\":\"certificates.python.behavior_hash\",\"definition\":\"Compare finite-domain true atoms and query bindings after certificate replay; string equality is ignored.\",\"equivalent_rows\":11,\"nonequivalent_controls\":6,\"principle\":\"Executable behavior and certificates own equivalence.\"},\"experiment_id\":\"experiment_5896_typed_constraint_ir_fixture\",\"family_template_and_holdout_design\":{\"families\":[\"access_control\",\"menu_recommendation\",\"task_selection\"],\"family_count\":3,\"held_template_rows\":[\"exp5896-menu_recommendation-held_template\"],\"heldout_headroom\":{\"control_rows\":2,\"valid_rows\":6},\"splits\":{\"dev\":6,\"heldout\":6,\"train\":8},\"template_variants\":{\"canonical\":3,\"held_template\":1,\"invalid_ir\":1,\"omitted_constraint\":3,\"order_permutation\":2,\"paraphrase\":3,\"semantic_nonequivalence\":3,\"symbol_renaming\":2,\"type_error\":1,\"unsat_ir\":1}},\"field_principles\":{\"constraint_ir_schema_and_version\":\"An engine-neutral contract prevents backend-specific prompt tuning from defining success.\",\"exact_semantic_equivalence_contract\":\"Executable behavior and certificates own equivalence.\",\"honest_verdict\":\"Use `ready:`, `complete_null:`, or `blocked:`.\",\"inference_substrate\":\"Use `deterministic_exact_solver_labeled_dataset_no_llm`.\",\"split_and_group_leakage_receipts\":\"Paraphrases and renamings of one problem never cross held boundaries.\",\"typed_constraint_ir_fixture_ready_score\":\"Emit bare 1.0 only for deterministic exact replay, backend agreement, and nontrivial held headroom.\",\"verifier_is_oracle\":\"True for fixture labels/certificates and never a learned-verifier claim.\"},\"field_provenance\":{\"backend_compiler_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"constraint_ir_schema_and_version\":\"generated_by_exp5896_exact_fixture_builder\",\"cross_backend_agreement\":\"generated_by_exp5896_exact_fixture_builder\",\"deterministic_replay_receipt\":\"generated_by_exp5896_exact_fixture_builder\",\"duration_s\":\"generated_by_exp5896_exact_fixture_builder\",\"exact_semantic_equivalence_contract\":\"generated_by_exp5896_exact_fixture_builder\",\"family_template_and_holdout_design\":\"generated_by_exp5896_exact_fixture_builder\",\"field_provenance\":\"generated_by_exp5896_exact_fixture_builder\",\"honest_verdict\":\"generated_by_exp5896_exact_fixture_builder\",\"inference_substrate\":\"generated_by_exp5896_exact_fixture_builder\",\"invalid_unsat_and_nonequivalence_controls\":\"generated_by_exp5896_exact_fixture_builder\",\"label_certificate_and_balance_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"parser_and_typecheck_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"preconditions_checked\":\"generated_by_exp5896_exact_fixture_builder\",\"protected_files_unchanged\":\"generated_by_exp5896_exact_fixture_builder\",\"reproducibility_checksum\":\"generated_by_exp5896_exact_fixture_builder\",\"row_file_receipt\":\"generated_by_exp5896_exact_fixture_builder\",\"split_and_group_leakage_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"status\":\"generated_by_exp5896_exact_fixture_builder\",\"supported_and_rejected_fragments\":\"generated_by_exp5896_exact_fixture_builder\",\"test_commands\":\"generated_by_exp5896_exact_fixture_builder\",\"test_exit_codes\":\"generated_by_exp5896_exact_fixture_builder\",\"typed_constraint_ir_fixture_ready_score\":\"generated_by_exp5896_exact_fixture_builder\",\"verifier_is_oracle\":\"generated_by_exp5896_exact_fixture_builder\"},\"honest_verdict\":\"ready: deterministic typed ConstraintIR fixture replays with Python/Z3 agreement\",\"inference_substrate\":\"deterministic_exact_solver_labeled_dataset_no_llm\",\"invalid_unsat_and_nonequivalence_controls\":{\"invalid_ir\":1,\"omitted_constraint\":3,\"semantic_nonequivalence\":3,\"type_error\":1,\"unsat_ir\":1},\"label_certificate_and_balance_receipts\":{\"certificate_replay_failures\":[],\"row_count\":20,\"status_counts\":{\"invalid\":1,\"type_error\":1,\"unsat\":1,\"valid\":17},\"variant_counts\":{\"canonical\":3,\"held_template\":1,\"invalid_ir\":1,\"omitted_constraint\":3,\"order_permutation\":2,\"paraphrase\":3,\"semantic_nonequivalence\":3,\"symbol_renaming\":2,\"type_error\":1,\"unsat_ir\":1}},\"parser_and_typecheck_receipts\":{\"accepted_rows\":18,\"failure_rows\":[{\"receipt\":{\"error\":\"unknown top-level fields: ['backend_hint']\",\"kind\":\"invalid\",\"status\":\"rejected\"},\"row_id\":\"exp5896-access_control-invalid_ir\"},{\"receipt\":{\"error\":\"value 'red' not in domain task\",\"kind\":\"type_error\",\"status\":\"rejected\"},\"row_id\":\"exp5896-task_selection-type_error\"}],\"rejected_rows\":2,\"status_counts\":{\"invalid\":1,\"type_error\":1,\"unsat\":1,\"valid\":17}},\"preconditions_checked\":{\"dataset_licenses\":{\"external_references\":\"motivation_only_no_third_party_dataset_rows\",\"rows\":\"synthetic_forward_authored_carnot_internal\"},\"disk\":{\"available_mb\":0,\"ok\":true,\"required_mb\":512},\"exact_execution_path_verified\":true,\"existing_extractors_and_backends_inventory\":[{\"path\":\"scripts/experiment_211_constraint_ir_benchmark.py\",\"role\":\"prior deterministic surface/schema constraint benchmark\"},{\"path\":\"python/carnot/pipeline/nl2z3_extractor.py\",\"role\":\"LLM-to-Z3 subprocess extractor; not invoked by Exp5896\"},{\"path\":\"python/carnot/pipeline/llm_z3_formalizer.py\",\"role\":\"restricted exec Z3 formalizer; not invoked by Exp5896\"},{\"path\":\"python/carnot/pipeline/logic_extractor.py\",\"role\":\"unstructured continuous constraint extractor; not invoked by Exp5896\"},{\"path\":\"python/carnot/verify/z3_math.py\",\"role\":\"Z3 math compatibility backend\"}],\"output_paths\":[\"results/experiment_5896_typed_constraint_ir_fixture.json\",\"results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl\"],\"protected_files\":[\"scripts/research_conductor.py\",\"ops/changelog.md\",\"ops/status.md\",\"_bmad/traceability.md\"],\"ram\":{\"available_mb\":0,\"ok\":true,\"required_mb\":512},\"solver_versions\":{\"python\":\"3.12.13\",\"swipl\":null,\"z3\":\"4.16.0\"},\"supported_logic_fragments\":[\"finite symbol and integer domains\",\"closed-world boolean predicates over finite domains\",\"positive and explicit-negative facts\",\"non-recursive Horn implications with conjunctive bodies\",\"negated atom body terms\",\"integer comparisons over grounded finite-domain variables\",\"finite-domain query goals with answer-set certificates\"]},\"protected_files_unchanged\":{\"files\":[{\"exists\":true,\"path\":\"scripts/research_conductor.py\",\"sha256\":\"sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771\"},{\"exists\":true,\"path\":\"ops/changelog.md\",\"sha256\":\"sha256:62df1afa7db4dd0d1ab1d02d615bb7b0f6b936fc9f973344c17fc2a34345d0c3\"},{\"exists\":true,\"path\":\"ops/status.md\",\"sha256\":\"sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2\"},{\"exists\":true,\"path\":\"_bmad/traceability.md\",\"sha256\":\"sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2\"}],\"unchanged\":true},\"reproducibility_checksum\":\"\",\"row_file_receipt\":{\"path\":\"results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl\",\"row_count\":20,\"sha256\":null},\"run_date\":\"20260724\",\"schema\":\"carnot.experiment_5896.typed_constraint_ir_fixture.v1\",\"split_and_group_leakage_receipts\":{\"crossing_groups\":{},\"group_cross_split_count\":0,\"groups\":{\"exp5896-access_control\":[\"train\"],\"exp5896-menu_recommendation\":[\"heldout\"],\"exp5896-task_selection\":[\"dev\"]},\"heldout_control_rows\":2,\"heldout_valid_rows\":6,\"principle\":\"Paraphrases and renamings of one problem never cross held boundaries.\",\"splits\":{\"dev\":6,\"heldout\":6,\"train\":8}},\"status\":\"ready\",\"supported_and_rejected_fragments\":{\"rejected\":[\"unknown schema versions or fields\",\"ambiguous extra node fields\",\"disjunction and existential goals outside finite query enumeration\",\"recursive or multi-stage Horn dependencies\",\"wrong-domain constants\",\"arithmetic over non-integer variables\"],\"supported\":[\"finite symbol and integer domains\",\"closed-world boolean predicates over finite domains\",\"positive and explicit-negative facts\",\"non-recursive Horn implications with conjunctive bodies\",\"negated atom body terms\",\"integer comparisons over grounded finite-domain variables\",\"finite-domain query goals with answer-set certificates\"]},\"test_commands\":[\".venv/bin/pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py -q --no-cov -n 0\",\".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5896_typed_constraint_ir_fixture.py -m pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5896_typed_constraint_ir_fixture.py --fail-under=100\",\".venv/bin/pytest tests/python -q\",\".venv/bin/python scripts/check_spec_coverage.py\",\".venv/bin/python scripts/adversarial_verify.py results/experiment_5896_typed_constraint_ir_fixture.json\",\".venv/bin/python scripts/root_clutter_sweep.py\",\"git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md\"],\"test_exit_codes\":{},\"typed_constraint_ir_fixture_ready_score\":1.0,\"verifier_is_oracle\":true}",
+    "old_replay_error": "ConstraintIRReplayError: artifact reproducibility checksum mismatch",
+    "rebuilt_projection_byte_length": 11391,
+    "rebuilt_projection_checksum": "sha256:91ffba5294fad9d6da0d5f1dae9585119a3b76517c093b25aa8860c01bb4aa33",
+    "rebuilt_projection_utf8": "{\"backend_compiler_receipts\":{\"prolog\":{\"command\":null,\"status\":\"skipped_optional_backend_not_installed\"},\"python_finite_domain\":{\"rows\":20,\"status\":\"applied\",\"version\":\"3.12.13\"},\"z3\":{\"rows\":18,\"status\":\"applied\",\"version\":\"4.16.0\"}},\"constraint_ir_schema_and_version\":{\"artifact_schema_version\":\"carnot.experiment_5896.typed_constraint_ir_fixture.v1\",\"canonical_nodes\":[\"entities\",\"finite_domains\",\"facts\",\"horn_implications\",\"predicates\",\"arithmetic_relations\",\"explicit_negation\",\"conjunction\",\"query_goals\"],\"principle\":\"An engine-neutral contract prevents backend-specific prompt tuning from defining success.\",\"row_schema_version\":\"carnot.experiment_5896.typed_constraint_ir_fixture.v1.row\",\"schema_version\":\"carnot.constraint_ir.v1\",\"top_level_keys\":[\"domains\",\"entities\",\"facts\",\"predicates\",\"query\",\"rules\",\"schema_version\"]},\"cross_backend_agreement\":{\"compared_rows\":18,\"disagreement_count\":0,\"disagreements\":[],\"required_when_two_backends_apply\":true},\"deterministic_replay_receipt\":{\"row_hash_unique\":true,\"row_hashes\":[\"sha256:47c6b9bc49824eda60be6c9f9f0a1e53b53dc89e1cdaea6d7d89e836857c0452\",\"sha256:909a6e391e0d3925e4cfe1d6134a7e7d64f8461bcbe99e46d635fb1b3c527964\",\"sha256:1cff5c5557dd291b06fc8d4491bd007ab010f6f0f61dd8b5ec9925013443923e\",\"sha256:ea68064e905163b14dd473c31383b73c5841567d18795791daf24c1546cb87ec\",\"sha256:28bfd76969ce70b64578e97bd2197351ec933950179257a72c0f2333d0563c13\",\"sha256:b026d934afd8023b8861cfaa6380e537f49c208dcd05662926e60558fe8691ef\",\"sha256:564ac3d2ac2e639c61a797fdcc04b1de19cd8288399125730fa872ca5878b419\",\"sha256:8ce042fed560400f6331081c9b1d22d9f6664f8c9ea1229f1753106c3004b53a\",\"sha256:90d564e6da5197438333c9e08a840e9f899249a490f1bea74cfb09fc7ed9eb27\",\"sha256:1a9449b443195989e21e45d7580baa08acfa2cecbc0de26887a1c5246b978d8a\",\"sha256:9ad648dc628c98f8c28cf982415d11ca6179299de74417eec6c0747331cd9878\",\"sha256:75826341fce3629f68f7b0004e6c77d4fced412ecdcd170e162b35f9b30d0171\",\"sha256:0bf64ac22a8843b23e9287f41a0290dd2ec069cf5b25d038db5e76b75508f91b\",\"sha256:72873dc19cc60216faed576210c67addbb32dd2b5c20df8cc05c551cd43b5498\",\"sha256:78cb578f84f6cb96899c49f88d6137db3efb1087bdb5d5d06173074179c1baa3\",\"sha256:0d5b47820bb80cb51730b57f726c48f51a2e8b688df02bc0c0ef7b9b2a486332\",\"sha256:cd91b0c24221b4d476646260ea29709dcc5a4345344de57cd0dcb20127e14fd4\",\"sha256:06af0903bf582bd5e9fc4efc74177562010994b97f3610c19ecc7144b3af422f\",\"sha256:39f2bf5955876c8759f71625c10b004a0215257b1c84c28fc88d14c9ec9b7e35\",\"sha256:5c9dc5a7387600a2669b050e95f5d0f9b6d84de487a5bd57115789a7a6b24059\"]},\"duration_s\":0.0,\"exact_semantic_equivalence_contract\":{\"behavior_hash_field\":\"certificates.python.behavior_hash\",\"definition\":\"Compare finite-domain true atoms and query bindings after certificate replay; string equality is ignored.\",\"equivalent_rows\":11,\"nonequivalent_controls\":6,\"principle\":\"Executable behavior and certificates own equivalence.\"},\"experiment_id\":\"experiment_5896_typed_constraint_ir_fixture\",\"family_template_and_holdout_design\":{\"families\":[\"access_control\",\"menu_recommendation\",\"task_selection\"],\"family_count\":3,\"held_template_rows\":[\"exp5896-menu_recommendation-held_template\"],\"heldout_headroom\":{\"control_rows\":2,\"valid_rows\":6},\"splits\":{\"dev\":6,\"heldout\":6,\"train\":8},\"template_variants\":{\"canonical\":3,\"held_template\":1,\"invalid_ir\":1,\"omitted_constraint\":3,\"order_permutation\":2,\"paraphrase\":3,\"semantic_nonequivalence\":3,\"symbol_renaming\":2,\"type_error\":1,\"unsat_ir\":1}},\"field_principles\":{\"constraint_ir_schema_and_version\":\"An engine-neutral contract prevents backend-specific prompt tuning from defining success.\",\"exact_semantic_equivalence_contract\":\"Executable behavior and certificates own equivalence.\",\"honest_verdict\":\"Use `ready:`, `complete_null:`, or `blocked:`.\",\"inference_substrate\":\"Use `deterministic_exact_solver_labeled_dataset_no_llm`.\",\"split_and_group_leakage_receipts\":\"Paraphrases and renamings of one problem never cross held boundaries.\",\"typed_constraint_ir_fixture_ready_score\":\"Emit bare 1.0 only for deterministic exact replay, backend agreement, and nontrivial held headroom.\",\"verifier_is_oracle\":\"True for fixture labels/certificates and never a learned-verifier claim.\"},\"field_provenance\":{\"backend_compiler_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"constraint_ir_schema_and_version\":\"generated_by_exp5896_exact_fixture_builder\",\"cross_backend_agreement\":\"generated_by_exp5896_exact_fixture_builder\",\"deterministic_replay_receipt\":\"generated_by_exp5896_exact_fixture_builder\",\"duration_s\":\"generated_by_exp5896_exact_fixture_builder\",\"exact_semantic_equivalence_contract\":\"generated_by_exp5896_exact_fixture_builder\",\"family_template_and_holdout_design\":\"generated_by_exp5896_exact_fixture_builder\",\"field_provenance\":\"generated_by_exp5896_exact_fixture_builder\",\"honest_verdict\":\"generated_by_exp5896_exact_fixture_builder\",\"inference_substrate\":\"generated_by_exp5896_exact_fixture_builder\",\"invalid_unsat_and_nonequivalence_controls\":\"generated_by_exp5896_exact_fixture_builder\",\"label_certificate_and_balance_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"parser_and_typecheck_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"preconditions_checked\":\"generated_by_exp5896_exact_fixture_builder\",\"protected_files_unchanged\":\"generated_by_exp5896_exact_fixture_builder\",\"reproducibility_checksum\":\"generated_by_exp5896_exact_fixture_builder\",\"row_file_receipt\":\"generated_by_exp5896_exact_fixture_builder\",\"split_and_group_leakage_receipts\":\"generated_by_exp5896_exact_fixture_builder\",\"status\":\"generated_by_exp5896_exact_fixture_builder\",\"supported_and_rejected_fragments\":\"generated_by_exp5896_exact_fixture_builder\",\"test_commands\":\"generated_by_exp5896_exact_fixture_builder\",\"test_exit_codes\":\"generated_by_exp5896_exact_fixture_builder\",\"typed_constraint_ir_fixture_ready_score\":\"generated_by_exp5896_exact_fixture_builder\",\"verifier_is_oracle\":\"generated_by_exp5896_exact_fixture_builder\"},\"honest_verdict\":\"ready: deterministic typed ConstraintIR fixture replays with Python/Z3 agreement\",\"inference_substrate\":\"deterministic_exact_solver_labeled_dataset_no_llm\",\"invalid_unsat_and_nonequivalence_controls\":{\"invalid_ir\":1,\"omitted_constraint\":3,\"semantic_nonequivalence\":3,\"type_error\":1,\"unsat_ir\":1},\"label_certificate_and_balance_receipts\":{\"certificate_replay_failures\":[],\"row_count\":20,\"status_counts\":{\"invalid\":1,\"type_error\":1,\"unsat\":1,\"valid\":17},\"variant_counts\":{\"canonical\":3,\"held_template\":1,\"invalid_ir\":1,\"omitted_constraint\":3,\"order_permutation\":2,\"paraphrase\":3,\"semantic_nonequivalence\":3,\"symbol_renaming\":2,\"type_error\":1,\"unsat_ir\":1}},\"parser_and_typecheck_receipts\":{\"accepted_rows\":18,\"failure_rows\":[{\"receipt\":{\"error\":\"unknown top-level fields: ['backend_hint']\",\"kind\":\"invalid\",\"status\":\"rejected\"},\"row_id\":\"exp5896-access_control-invalid_ir\"},{\"receipt\":{\"error\":\"value 'red' not in domain task\",\"kind\":\"type_error\",\"status\":\"rejected\"},\"row_id\":\"exp5896-task_selection-type_error\"}],\"rejected_rows\":2,\"status_counts\":{\"invalid\":1,\"type_error\":1,\"unsat\":1,\"valid\":17}},\"preconditions_checked\":{\"dataset_licenses\":{\"external_references\":\"motivation_only_no_third_party_dataset_rows\",\"rows\":\"synthetic_forward_authored_carnot_internal\"},\"disk\":{\"available_mb\":0,\"ok\":true,\"required_mb\":512},\"exact_execution_path_verified\":true,\"existing_extractors_and_backends_inventory\":[{\"path\":\"scripts/experiment_211_constraint_ir_benchmark.py\",\"role\":\"prior deterministic surface/schema constraint benchmark\"},{\"path\":\"python/carnot/pipeline/nl2z3_extractor.py\",\"role\":\"LLM-to-Z3 subprocess extractor; not invoked by Exp5896\"},{\"path\":\"python/carnot/pipeline/llm_z3_formalizer.py\",\"role\":\"restricted exec Z3 formalizer; not invoked by Exp5896\"},{\"path\":\"python/carnot/pipeline/logic_extractor.py\",\"role\":\"unstructured continuous constraint extractor; not invoked by Exp5896\"},{\"path\":\"python/carnot/verify/z3_math.py\",\"role\":\"Z3 math compatibility backend\"}],\"output_paths\":[\"results/experiment_5896_typed_constraint_ir_fixture.json\",\"results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl\"],\"protected_files\":[\"scripts/research_conductor.py\",\"ops/changelog.md\",\"ops/status.md\",\"_bmad/traceability.md\"],\"ram\":{\"available_mb\":0,\"ok\":true,\"required_mb\":512},\"solver_versions\":{\"python\":\"3.12.13\",\"swipl\":null,\"z3\":\"4.16.0\"},\"supported_logic_fragments\":[\"finite symbol and integer domains\",\"closed-world boolean predicates over finite domains\",\"positive and explicit-negative facts\",\"non-recursive Horn implications with conjunctive bodies\",\"negated atom body terms\",\"integer comparisons over grounded finite-domain variables\",\"finite-domain query goals with answer-set certificates\"]},\"protected_files_unchanged\":{\"files\":[{\"exists\":true,\"path\":\"scripts/research_conductor.py\",\"sha256\":\"sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771\"},{\"exists\":true,\"path\":\"ops/changelog.md\",\"sha256\":\"sha256:f322d42482f84d49a3d853cda09fa4e13084b61d5e17a27f6ff4dcda6d27d477\"},{\"exists\":true,\"path\":\"ops/status.md\",\"sha256\":\"sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1\"},{\"exists\":true,\"path\":\"_bmad/traceability.md\",\"sha256\":\"sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2\"}],\"unchanged\":true},\"reproducibility_checksum\":\"\",\"row_file_receipt\":{\"path\":\"results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl\",\"row_count\":20,\"sha256\":null},\"run_date\":\"20260724\",\"schema\":\"carnot.experiment_5896.typed_constraint_ir_fixture.v1\",\"split_and_group_leakage_receipts\":{\"crossing_groups\":{},\"group_cross_split_count\":0,\"groups\":{\"exp5896-access_control\":[\"train\"],\"exp5896-menu_recommendation\":[\"heldout\"],\"exp5896-task_selection\":[\"dev\"]},\"heldout_control_rows\":2,\"heldout_valid_rows\":6,\"principle\":\"Paraphrases and renamings of one problem never cross held boundaries.\",\"splits\":{\"dev\":6,\"heldout\":6,\"train\":8}},\"status\":\"ready\",\"supported_and_rejected_fragments\":{\"rejected\":[\"unknown schema versions or fields\",\"ambiguous extra node fields\",\"disjunction and existential goals outside finite query enumeration\",\"recursive or multi-stage Horn dependencies\",\"wrong-domain constants\",\"arithmetic over non-integer variables\"],\"supported\":[\"finite symbol and integer domains\",\"closed-world boolean predicates over finite domains\",\"positive and explicit-negative facts\",\"non-recursive Horn implications with conjunctive bodies\",\"negated atom body terms\",\"integer comparisons over grounded finite-domain variables\",\"finite-domain query goals with answer-set certificates\"]},\"test_commands\":[\".venv/bin/pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py -q --no-cov -n 0\",\".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5896_typed_constraint_ir_fixture.py -m pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5896_typed_constraint_ir_fixture.py --fail-under=100\",\".venv/bin/pytest tests/python -q\",\".venv/bin/python scripts/check_spec_coverage.py\",\".venv/bin/python scripts/adversarial_verify.py results/experiment_5896_typed_constraint_ir_fixture.json\",\".venv/bin/python scripts/root_clutter_sweep.py\",\"git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md\"],\"test_exit_codes\":{},\"typed_constraint_ir_fixture_ready_score\":1.0,\"verifier_is_oracle\":true}",
+    "root_cause": {
+      "differing_paths": [
+        "$.protected_files_unchanged.files[1].sha256",
+        "$.protected_files_unchanged.files[2].sha256"
+      ],
+      "summary": "old projection included protected ops/status hashes that changed after Exp5896"
+    },
+    "stored_checksum": "sha256:77af54331134cf956de22d3fdb2c5d3b356a9ad22f447c09ec66403b0772f070"
+  },
+  "preconditions_checked": {
+    "current_input_hashes": {
+      "all_match_expected": false,
+      "all_present": true,
+      "files": [
+        {
+          "exists": true,
+          "expected_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+          "matches_expected": true,
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+          "matches_expected": true,
+          "path": "CLAUDE.md",
+          "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+          "matches_expected": true,
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+          "matches_expected": true,
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+          "matches_expected": true,
+          "path": "results/experiment_5896_typed_constraint_ir_fixture.json",
+          "sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+          "matches_expected": true,
+          "path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl",
+          "sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d",
+          "matches_expected": true,
+          "path": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+          "sha256": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:6b69b6f65b10228ecc5934a4681f118b080e438e1bf3486ea93dbe741dec6c62",
+          "matches_expected": false,
+          "path": "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+          "sha256": "sha256:e5f95bf908793140602626c5178283986d206d4c57df9dd13edbf25bcc877495"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:ff4a9c335cfef7847a48492dbdc3eeb33a55791c4b16a90590d84a86fd2b5d20",
+          "matches_expected": false,
+          "path": "python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py",
+          "sha256": "sha256:21d7415d0e3856e4aced8a53ccdcea6a7609825b0f02e095c41c36ebc7b58438"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:61aeb6065275fe13aa817e4b655ea2ddea11ac30b57663a921de4168f3b45e2b",
+          "matches_expected": true,
+          "path": "tests/python/test_experiment_5896_typed_constraint_ir_fixture.py",
+          "sha256": "sha256:61aeb6065275fe13aa817e4b655ea2ddea11ac30b57663a921de4168f3b45e2b"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:0b22193ee3d18d6ccf8f47379673695b09090614aed314166b964058f20c7d60",
+          "matches_expected": true,
+          "path": "tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py",
+          "sha256": "sha256:0b22193ee3d18d6ccf8f47379673695b09090614aed314166b964058f20c7d60"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de",
+          "matches_expected": true,
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:43ff0d276570a42db2bffeb7d0797ce3299cc3aa9841092c850dba3122751a76",
+          "matches_expected": false,
+          "path": "openspec/capabilities/benchmarks/spec.md",
+          "sha256": "sha256:06c76af7738aaf50cca25e7d6c7e5c07e1ac4a57992e1e8b74381264438aef6c"
+        },
+        {
+          "exists": true,
+          "expected_sha256": "sha256:88d758aae7663c9af71fafdc22dfa70bb1d15cee59b426bb78b564f955cb561b",
+          "matches_expected": true,
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:88d758aae7663c9af71fafdc22dfa70bb1d15cee59b426bb78b564f955cb561b"
+        }
+      ]
+    },
+    "disk": {
+      "available_mb": 1168416,
+      "ok": true,
+      "required_mb": 512
+    },
+    "no_model_load_required": true,
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5907_constraint_ir_replay_contract.json",
+    "output_path_existed_before_write": false,
+    "pre_edit_input_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/benchmarks/spec.md": "sha256:43ff0d276570a42db2bffeb7d0797ce3299cc3aa9841092c850dba3122751a76",
+      "openspec/capabilities/verification/spec.md": "sha256:88d758aae7663c9af71fafdc22dfa70bb1d15cee59b426bb78b564f955cb561b",
+      "python/carnot/experiment_5896_typed_constraint_ir_fixture.py": "sha256:6b69b6f65b10228ecc5934a4681f118b080e438e1bf3486ea93dbe741dec6c62",
+      "python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py": "sha256:ff4a9c335cfef7847a48492dbdc3eeb33a55791c4b16a90590d84a86fd2b5d20",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_5896_typed_constraint_ir_fixture.json": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
+      "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
+      "results/experiment_5897_sota_constraint_ir_repair_ab.json": "sha256:3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d",
+      "scripts/adversarial_verify.py": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de",
+      "tests/python/test_experiment_5896_typed_constraint_ir_fixture.py": "sha256:61aeb6065275fe13aa817e4b655ea2ddea11ac30b57663a921de4168f3b45e2b",
+      "tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py": "sha256:0b22193ee3d18d6ccf8f47379673695b09090614aed314166b964058f20c7d60"
+    },
+    "protected_file_hashes_before_edit": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:f322d42482f84d49a3d853cda09fa4e13084b61d5e17a27f6ff4dcda6d27d477",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "ram": {
+      "available_mb": 116510,
+      "ok": true,
+      "required_mb": 512
+    },
+    "run_date": "20260725"
+  },
+  "protected_files_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "expected_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "matches_expected": true,
+        "path": "scripts/research_conductor.py",
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:f322d42482f84d49a3d853cda09fa4e13084b61d5e17a27f6ff4dcda6d27d477",
+        "matches_expected": true,
+        "path": "ops/changelog.md",
+        "sha256": "sha256:f322d42482f84d49a3d853cda09fa4e13084b61d5e17a27f6ff4dcda6d27d477"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+        "matches_expected": true,
+        "path": "ops/status.md",
+        "sha256": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1"
+      },
+      {
+        "exists": true,
+        "expected_sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+        "matches_expected": true,
+        "path": "_bmad/traceability.md",
+        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2"
+      }
+    ],
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:d324439c2b780bf0ef83b29771cb836fb0f277e57eb2b35ce21810e5779a849b",
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5907.constraint_ir_replay_contract.v1",
+  "shared_helper_receipt": {
+    "consumer_entrypoint": "python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py:_upstream_gate_receipt",
+    "helper_path": "python/carnot/constraint_ir_replay_contract.py",
+    "producer_consumer_parity": true,
+    "producer_entrypoint": "python/carnot/experiment_5896_typed_constraint_ir_fixture.py:_artifact_checksum",
+    "projection_schema_version": "carnot.constraint_ir.replay_contract_projection.v1"
+  },
+  "status": "complete_ready",
+  "tamper_detection_matrix": {
+    "all_rejected": true,
+    "cases": [
+      {
+        "component": "row_file_bytes",
+        "error": "row file hash does not match artifact receipt",
+        "error_type": "ConstraintIRReplayError",
+        "rejected": true
+      },
+      {
+        "component": "row_file_sha256_receipt",
+        "error": "row file hash does not match artifact receipt",
+        "error_type": "ConstraintIRReplayError",
+        "rejected": true
+      },
+      {
+        "component": "constraint_ir_schema_version",
+        "error": "artifact reproducibility checksum mismatch",
+        "error_type": "ConstraintIRReplayError",
+        "rejected": true
+      },
+      {
+        "component": "projection_schema_version",
+        "error": "unknown projection version: carnot.constraint_ir.replay_contract_projection.v0",
+        "error_type": "ConstraintIRReplayError",
+        "rejected": true
+      },
+      {
+        "component": "reproducibility_checksum",
+        "error": "artifact reproducibility checksum mismatch",
+        "error_type": "ConstraintIRReplayError",
+        "rejected": true
+      }
+    ],
+    "checksum_checked": true,
+    "projection_version_checked": true,
+    "row_binding_checked": true,
+    "schema_binding_checked": true
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5907_constraint_ir_replay_contract.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/constraint_ir_replay_contract.py,python/carnot/experiment_5907_constraint_ir_replay_contract.py -m pytest tests/python/test_experiment_5907_constraint_ir_replay_contract.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/constraint_ir_replay_contract.py,python/carnot/experiment_5907_constraint_ir_replay_contract.py --fail-under=100",
+    ".venv/bin/pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py -q --no-cov -n 0",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_5907_constraint_ir_replay_contract",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5907_constraint_ir_replay_contract.json",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/constraint_ir_replay_contract.py,python/carnot/experiment_5907_constraint_ir_replay_contract.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/constraint_ir_replay_contract.py,python/carnot/experiment_5907_constraint_ir_replay_contract.py -m pytest tests/python/test_experiment_5907_constraint_ir_replay_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5896_typed_constraint_ir_fixture.py tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5907_constraint_ir_replay_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5907_constraint_ir_replay_contract.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/constraint_ir_replay_contract.py python/carnot/experiment_5907_constraint_ir_replay_contract.py python/carnot/experiment_5896_typed_constraint_ir_fixture.py python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py": 0,
+    ".venv/bin/ruff format --check python/carnot/constraint_ir_replay_contract.py python/carnot/experiment_5907_constraint_ir_replay_contract.py python/carnot/experiment_5896_typed_constraint_ir_fixture.py python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py tests/python/test_experiment_5907_constraint_ir_replay_contract.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "verifier_is_oracle": true
+}
