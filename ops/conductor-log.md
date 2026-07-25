@@ -14260,3 +14260,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-24 23:16 UTC | Branch-independent terminal reconciliation for mil | OK | 169 passed, 1 warning in 24.23s |
 | 2026-07-25 00:15 UTC | Plan milestone 2026.07.525 | OK | 13 tasks proposed |
 | 2026-07-25 00:18 UTC | Milestone 2026.07.525 activated | OK | 13 tasks queued |
+| 2026-07-25 01:14 UTC | Exact terminal-boundary handoff from .524 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5905_transit |
