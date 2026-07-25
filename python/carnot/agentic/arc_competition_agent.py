@@ -271,6 +271,27 @@ SUBMITTED_FRONTIER_TIER_EXHAUSTION_ENABLED = False
 SUBMITTED_FRONTIER_TIER_EXHAUSTION_MODE = "just_explore_global_priority_group_exhaustion"
 SUBMITTED_FRONTIER_TIER_COUNT = FRONTIER_TIER_COUNT
 SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED = False
+# REQ-ARC-WMTE-5836 follow-up (2026-07-25): CONFINE the tier barrier to games whose action
+# vocabulary actually contains CLICK, discovered at RUNTIME from frame.available_actions.
+#
+# WHY. The full-spec A/B (results/experiment_5836_frontier_discipline_generalization.json) found a
+# real, recolour- and reflection-robust capability gain (+2..+4 games in every condition) but NO arm
+# was regression-free per seed. Arm B2's ONLY loss was tu93 -- the single nav-only game among the
+# baseline's wins -- and it lost it on 2 of 3 seeds in EVERY condition, while all five of its GAINS
+# were click games. That asymmetry is not a coincidence: the 5-tier predicate ranks CLICK-TARGET
+# salience (button-like vs status-bar vs large-flat blobs). On a nav-only game there are no click
+# targets to rank, so the barrier cannot express anything useful there -- it can only perturb the
+# move ordering of a search that was already succeeding. Gating on click availability is therefore
+# the mechanism's correct DOMAIN OF DEFINITION, not a post-hoc carve-out to rescue a number.
+#
+# HIDDEN-GAME LEGAL. The signal is frame.available_actions, which the env reports at runtime on any
+# game including one never seen before -- parsed with the existing _available_action_ids() helper
+# (handles enums, "ACTION6" strings and bare ints). It is NOT the harness's hardcoded CLICK_GAMES
+# list, which would be per-game knowledge and illegal for a hidden game.
+#
+# Defaults TRUE because it only takes effect where the barrier is already enabled, and where it
+# takes effect the barrier was measurably harmful. Set False to reproduce the pre-fix behaviour.
+SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED = True
 SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED = False
 SUBMITTED_FRONTIER_DISTANCE_GRADIENT_MODE = "multi_source_reverse_bfs_over_known_working_edges"
 
@@ -755,6 +776,7 @@ class StepwiseExplorer:
         tier_exhaustion: bool | None = None,
         tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
         tier_uniform_random: bool | None = None,
+        tier_click_vocab_only: bool | None = None,
         frontier_gradient: bool | None = None,
         frontier_discipline_seed: int = 20260724,
         candidate_router: Any | None = None,
@@ -881,6 +903,14 @@ class StepwiseExplorer:
             "CARNOT_ARC_FRONTIER_TIER_UNIFORM_RANDOM",
             SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED,
         )
+        self.tier_click_vocab_only = _fd_gate(
+            tier_click_vocab_only,
+            "CARNOT_ARC_FRONTIER_TIER_CLICK_VOCAB_ONLY",
+            SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED,
+        )
+        # Runtime-discovered: has THIS game ever offered a click action? Never per-game knowledge.
+        self._fd_click_vocab_seen = False
+
         self.frontier_gradient_enabled = _fd_gate(
             frontier_gradient,
             "CARNOT_ARC_FRONTIER_GRADIENT",
@@ -1640,7 +1670,7 @@ class StepwiseExplorer:
         # additive to (not a replacement for) the proven candidate ordering. A stamping failure
         # leaves rows un-stamped, which reads back as tier 0 = always eligible = today's behaviour
         # (fails OPEN, never stalls the search).
-        if self.tier_exhaustion_enabled and rows:
+        if self._tier_active(frame) and rows:
             try:
                 rows = annotate_frontier_tiers(rows, frame)
             except Exception:
@@ -1974,7 +2004,7 @@ class StepwiseExplorer:
                 # NEW board, and an active tier of 3 carried over from the previous level would
                 # start the fresh board by clicking dull/large segments while its button-like
                 # tier-0 objects sat untried -- inverting the mechanism's entire point.
-                if self.tier_exhaustion_enabled and self._active_tier != 0:
+                if self._tier_active() and self._active_tier != 0:
                     self._active_tier = 0
                 fcs = getattr(self, "frame_change_scorer", None)
                 if fcs is not None and hasattr(fcs, "reset"):
@@ -2482,7 +2512,7 @@ class StepwiseExplorer:
         limit = (
             len(node["untested"]) if self.frontier_batch_size is None else self.frontier_batch_size
         )
-        if self.tier_exhaustion_enabled:
+        if self._tier_active():
             # REQ-ARC-WMTE-5836: batch only TIER-ADMITTED rows. Popping a deferred row here would
             # silently defeat the barrier (the batch is expanded unconditionally downstream), and
             # popping nothing at all would leave next_move with an empty pending queue -> the
@@ -2511,7 +2541,7 @@ class StepwiseExplorer:
         rather than greedily). This IS the live click decision the whole graft targets -- the
         coordinate-blind learned router leaves this line deciding the order by itself."""
         lst = node["untested"]
-        if self.tier_exhaustion_enabled:
+        if self._tier_active():
             rng = self._fd_rng if self.tier_uniform_random_enabled else None
             # top_k=None => UNRESTRICTED uniform draw over every tier-admitted row, which is what
             # the reference actually does (graph_explorer.choose_edge: `random.choice(untested_
@@ -2540,6 +2570,38 @@ class StepwiseExplorer:
             return lst.pop(self._div_rng.randrange(min(len(lst), self._div_topk)))
         return lst.pop(0)
 
+    def _tier_active(self, frame: Any = None) -> bool:
+        """Is the tier barrier active RIGHT NOW? (see SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED)
+
+        The barrier ranks CLICK-TARGET salience, so it is only defined on games that offer clicks.
+        On a nav-only game it has no targets to rank and can only perturb a move ordering that was
+        already working -- measured: arm B2 lost tu93 (the one nav-only baseline win) on 2 of 3 seeds
+        in every condition of the full-spec A/B, while all of its gains were click games.
+
+        Click availability is read from the frame the env hands us, via the same
+        ``_available_action_ids`` helper the live adapter uses (enums / "ACTION6" / bare ints), and is
+        LATCHED once seen -- a game that offers clicks on some frames but not others is still a click
+        game. This is runtime discovery, legal on a game never seen before; it is NOT the harness's
+        hardcoded CLICK_GAMES list.
+
+        Fails OPEN toward today's behaviour: when the barrier is off, or when it is on and no click
+        has been observed yet, this returns the value that leaves the search unmodified.
+        """
+        if not self.tier_exhaustion_enabled:
+            return False
+        if not self.tier_click_vocab_only:
+            return True
+        if frame is not None and not self._fd_click_vocab_seen:
+            try:
+                from carnot.agentic.arc_agi3_live_adapter import _available_action_ids
+
+                if 6 in _available_action_ids(frame):
+                    self._fd_click_vocab_seen = True
+            except Exception:
+                # Unparseable frame: do not latch, do not crash. Next frame gets another chance.
+                pass
+        return self._fd_click_vocab_seen
+
     def _node_has_open_tier(self, node: Mapping[str, Any] | None) -> bool:
         """Does this node still have untested work the GLOBAL barrier admits?
 
@@ -2549,7 +2611,7 @@ class StepwiseExplorer:
         if not node:
             return False
         rows = node.get("untested") or []
-        if not self.tier_exhaustion_enabled:
+        if not self._tier_active():
             return bool(rows)
         return self.tier_policy.node_has_open_tier(rows, self._active_tier)
 
@@ -2578,7 +2640,7 @@ class StepwiseExplorer:
         reference's unreachability trigger, and why it may skip several tiers at once). This
         wrapper only owns the mutable state and the telemetry."""
 
-        if not self.tier_exhaustion_enabled:
+        if not self._tier_active():
             return
         new_tier = self.tier_policy.next_active_tier(
             (node.get("untested") or [] for node in self.graph.values()),
@@ -2668,6 +2730,9 @@ class StepwiseExplorer:
         return {
             "tier_exhaustion_enabled": bool(self.tier_exhaustion_enabled),
             "tier_uniform_random_enabled": bool(self.tier_uniform_random_enabled),
+            "tier_click_vocab_only": bool(self.tier_click_vocab_only),
+            "tier_click_vocab_seen": bool(self._fd_click_vocab_seen),
+            "tier_active_effective": bool(self._tier_active()),
             "frontier_gradient_enabled": bool(self.frontier_gradient_enabled),
             "tier_count": int(self.tier_count),
             "active_tier": int(self._active_tier),
@@ -2812,7 +2877,7 @@ class StepwiseExplorer:
         # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
         #    depth_first_ride it fires when the current node is exhausted / dead-end / depth-capped.
         th = self._frontier()
-        if th is None and self.tier_exhaustion_enabled:
+        if th is None and self._tier_active():
             # REQ-ARC-WMTE-5836: with the barrier on, "no eligible frontier" would be catastrophic
             # if it were ever reported while lower-priority work remained -- the run would end
             # early and the A/B would read as a null for a purely mechanical reason rather than a
@@ -3032,6 +3097,7 @@ class CarnotAgentPolicy:
         tier_exhaustion: bool | None = None,
         tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
         tier_uniform_random: bool | None = None,
+        tier_click_vocab_only: bool | None = None,
         frontier_gradient: bool | None = None,
         frontier_discipline_seed: int = 20260724,
         candidate_router: Any | None = None,
@@ -3069,6 +3135,7 @@ class CarnotAgentPolicy:
                 tier_exhaustion=tier_exhaustion,
                 tier_count=tier_count,
                 tier_uniform_random=tier_uniform_random,
+                tier_click_vocab_only=tier_click_vocab_only,
                 frontier_gradient=frontier_gradient,
                 frontier_discipline_seed=frontier_discipline_seed,
                 candidate_router=candidate_router,
@@ -3135,6 +3202,7 @@ class E3AgentPolicy:
         tier_exhaustion: bool | None = None,
         tier_count: int = SUBMITTED_FRONTIER_TIER_COUNT,
         tier_uniform_random: bool | None = None,
+        tier_click_vocab_only: bool | None = None,
         frontier_gradient: bool | None = None,
         frontier_discipline_seed: int = 20260724,
         candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER,
@@ -3265,6 +3333,7 @@ class E3AgentPolicy:
             tier_exhaustion=tier_exhaustion,
             tier_count=tier_count,
             tier_uniform_random=tier_uniform_random,
+            tier_click_vocab_only=tier_click_vocab_only,
             frontier_gradient=frontier_gradient,
             frontier_discipline_seed=frontier_discipline_seed,
             candidate_router=candidate_router,
@@ -4905,6 +4974,7 @@ SUBMITTED_AGENT_CONFIG = {
     "frontier_tier_exhaustion_mode": SUBMITTED_FRONTIER_TIER_EXHAUSTION_MODE,
     "frontier_tier_count": SUBMITTED_FRONTIER_TIER_COUNT,
     "frontier_tier_uniform_random": SUBMITTED_FRONTIER_TIER_UNIFORM_RANDOM_ENABLED,
+    "frontier_tier_click_vocab_only": SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED,
     "frontier_distance_gradient": SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED,
     "frontier_distance_gradient_mode": SUBMITTED_FRONTIER_DISTANCE_GRADIENT_MODE,
     "frame_change_predictor_enabled": SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED,
