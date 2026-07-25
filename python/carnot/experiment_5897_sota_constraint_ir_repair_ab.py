@@ -1039,12 +1039,15 @@ def _upstream_gate_receipt(root: Path) -> JsonDict:
         replay = exp5896.replay_artifact(root=root)
         replay_ok = bool(replay.get("ok"))
         replay_error = None
+        canonical_projection = replay.get("canonical_projection")
     except Exception as exc:  # noqa: BLE001
         replay_ok = False
         replay_error = f"{type(exc).__name__}: {exc}"
+        canonical_projection = None
     return {
         "replay_ok": replay_ok,
         "replay_error": replay_error,
+        "canonical_projection": canonical_projection,
         "artifact_path": str(exp5896.RESULT_RELATIVE_PATH),
         "row_path": str(exp5896.ROW_FILE_RELATIVE_PATH),
         "artifact_sha256": sha256_file(result_path) if result_path.exists() else None,

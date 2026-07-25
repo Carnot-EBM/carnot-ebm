@@ -1916,6 +1916,92 @@ SCENARIO-BENCH-5897-TRACE-BOUNDARY, SCENARIO-BENCH-5897-EXACT-METRICS
 |---|---|---|
 | REQ-BENCH-5897 | Planned (`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py`, `results/experiment_5897_sota_constraint_ir_repair_ab.json`) | Planned (`tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py`) |
 
+### REQ-BENCH-5907: ConstraintIR Replay Contract Canonical Projection
+
+Carnot MUST provide a shared, public, versioned canonical projection for the
+Exp5896 ConstraintIR fixture artifact so the fixture producer and Exp5897
+consumer compute the same replay checksum. The projection SHALL be owned by one
+helper module rather than duplicated producer/consumer code. The helper SHALL
+reject unknown projection versions, SHALL normalize JSON mappings, lists, and
+numbers deterministically, SHALL exclude self-referential or post-hoc fields
+such as wall-clock duration, test exit-code refreshes, reproducibility checksum
+storage, protected-file receipts, and volatile RAM/disk availability, and SHALL
+bind the actual row-file SHA-256 plus ConstraintIR artifact and row schema
+versions.
+
+The repaired contract SHALL NOT mutate historical Exp5896 or Exp5897 result
+artifacts, SHALL NOT special-case the historical checksum value, SHALL NOT
+weaken comparison by accepting either old or new projections, and SHALL NOT
+claim model-science progress. Legacy Exp5896 evidence MAY be adjudicated under
+the new projection only as immutable historical content: the old checksum
+mismatch SHALL remain recorded as
+`historical_checksum_mismatch_preserved`, while successful row binding,
+certificate replay, schema binding, and shared-helper parity SHALL be recorded
+separately as `new_contract_replay_ready`.
+
+The terminal artifact MUST be
+`results/experiment_5907_constraint_ir_replay_contract.json` and MUST include
+`status`, `preconditions_checked`, `immutable_artifact_hashes`,
+`mismatch_reproduction_and_root_cause`,
+`canonical_projection_schema_and_version`, `excluded_and_bound_fields`,
+`shared_helper_receipt`, `fresh_twin_producer_consumer_replay`,
+`fresh_process_replay_receipt`, `tamper_detection_matrix`,
+`legacy_exp5896_adjudication`, `historical_artifacts_unchanged`,
+`protected_files_unchanged`, `constraint_ir_replay_contract_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+
+- `canonical_projection_schema_and_version`: one explicit public projection owns every producer-consumer checksum.
+- `historical_artifacts_unchanged`: a repaired contract cannot rewrite prior evidence.
+- `constraint_ir_replay_contract_ready_score`: emit bare 1.0 only for shared-helper parity, fresh-process exact replay, row binding, and complete tamper rejection.
+- `inference_substrate`: use `deterministic_artifact_replay_no_llm`.
+- `verifier_is_oracle`: true only for checksum/schema/tamper adjudication.
+- `honest_verdict`: use `complete_ready:`, `retired:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5907-CANONICAL: Producer And Consumer Share Projection
+
+**Given** a freshly generated Exp5896 twin fixture
+**When** the producer writes its checksum and Exp5897 replays the fixture gate
+**Then** both entrypoints report the same
+`carnot.constraint_ir.replay_contract_projection.v1` checksum from the shared
+helper and any explicit unknown projection version is rejected.
+
+#### SCENARIO-BENCH-5907-FRESH-PROCESS: Replay Is Independent
+
+**Given** the freshly generated twin fixture rows and artifact on disk
+**When** replay is invoked in a fresh Python process
+**Then** row-file SHA-256, schema versions, certificates, and the public
+projection checksum replay exactly without relying on in-process state.
+
+#### SCENARIO-BENCH-5907-TAMPER: Bound Components Fail Closed
+
+**Given** a producer-written twin fixture artifact
+**When** the row bytes, row-file hash receipt, schema binding, projection
+version, or reproducibility checksum is tampered with
+**Then** replay fails closed for every tamper case.
+
+#### SCENARIO-BENCH-5907-LEGACY: Historical Mismatch Is Preserved
+
+**Given** the checked-in Exp5896 and Exp5897 artifacts
+**When** Exp5907 reproduces the old byte projections and adjudicates Exp5896
+under the new projection
+**Then** the artifact records the old protected-file-hash root cause,
+preserves the historical checksum mismatch, reports the new contract replay
+receipt separately, and verifies the historical artifacts were not rewritten.
+
+**Spec traces:** REQ-BENCH-5907, SCENARIO-BENCH-5907-CANONICAL,
+SCENARIO-BENCH-5907-FRESH-PROCESS, SCENARIO-BENCH-5907-TAMPER,
+SCENARIO-BENCH-5907-LEGACY
+
+## Implementation Status (REQ-BENCH-5907)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5907 | Planned (`python/carnot/constraint_ir_replay_contract.py`, `python/carnot/experiment_5907_constraint_ir_replay_contract.py`, `results/experiment_5907_constraint_ir_replay_contract.json`) | Planned (`tests/python/test_experiment_5907_constraint_ir_replay_contract.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.

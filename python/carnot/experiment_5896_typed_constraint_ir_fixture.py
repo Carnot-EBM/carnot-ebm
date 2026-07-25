@@ -27,6 +27,8 @@ import sys
 import time
 from typing import Any
 
+from carnot import constraint_ir_replay_contract
+
 
 JsonDict = dict[str, Any]
 
@@ -260,7 +262,9 @@ def parse_constraint_ir(payload: Mapping[str, Any]) -> ConstraintIR:
     domain_map = {domain.name: domain for domain in domains}
     entities = _parse_entities(data["entities"], domain_map)
     predicates = _parse_predicates(data["predicates"], domain_map)
-    facts = tuple(_parse_fact(item, predicates, domain_map) for item in _require_list(data["facts"], "facts"))
+    facts = tuple(
+        _parse_fact(item, predicates, domain_map) for item in _require_list(data["facts"], "facts")
+    )
     rules = tuple(
         _parse_rule(item, predicates, domain_map) for item in _require_list(data["rules"], "rules")
     )
@@ -326,7 +330,9 @@ def _parse_entities(raw_entities: Any, domains: Mapping[str, Domain]) -> Mapping
     return entities
 
 
-def _parse_predicates(raw_predicates: Any, domains: Mapping[str, Domain]) -> Mapping[str, Predicate]:
+def _parse_predicates(
+    raw_predicates: Any, domains: Mapping[str, Domain]
+) -> Mapping[str, Predicate]:
     predicates: dict[str, Predicate] = {}
     for item in _require_list(raw_predicates, "predicates"):
         raw = _require_mapping(item, "predicate")
@@ -414,7 +420,9 @@ def _parse_expr(
         raise ConstraintIRValidationError(f"unsupported expression node: {node}")
     if node == "atom":
         _unknown_keys(raw, ATOM_KEYS, "atom expression")
-        return Expr(node="atom", data={"atom": _parse_atom_like(raw, predicates, domains, variables)})
+        return Expr(
+            node="atom", data={"atom": _parse_atom_like(raw, predicates, domains, variables)}
+        )
     if node == "not":
         _unknown_keys(raw, NOT_KEYS, "not expression")
         return Expr(
@@ -423,7 +431,10 @@ def _parse_expr(
         )
     if node == "and":
         _unknown_keys(raw, AND_KEYS, "and expression")
-        terms = [_parse_expr(term, predicates, domains, variables) for term in _require_list(raw.get("terms"), "and terms")]
+        terms = [
+            _parse_expr(term, predicates, domains, variables)
+            for term in _require_list(raw.get("terms"), "and terms")
+        ]
         if not terms:
             raise ConstraintIRValidationError("and expression requires at least one term")
         return Expr(node="and", data={"terms": tuple(terms)})
@@ -504,7 +515,9 @@ def _reject_rule_dependencies(rules: Sequence[Rule]) -> None:
     head_predicates = {rule.head.predicate for rule in rules}
     for rule in rules:
         if _predicates_in_expr(rule.body) & head_predicates:
-            raise ConstraintIRValidationError("unsupported recursive or multi-stage Horn dependency")
+            raise ConstraintIRValidationError(
+                "unsupported recursive or multi-stage Horn dependency"
+            )
 
 
 def _predicates_in_expr(expr: Expr) -> set[str]:
@@ -524,7 +537,9 @@ def _domain_map(ir: ConstraintIR) -> Mapping[str, Domain]:
     return {domain.name: domain for domain in ir.domains}
 
 
-def _atom_key(atom: Atom, assignment: Mapping[str, str | int] | None = None) -> tuple[str, tuple[str | int, ...]]:
+def _atom_key(
+    atom: Atom, assignment: Mapping[str, str | int] | None = None
+) -> tuple[str, tuple[str | int, ...]]:
     values: list[str | int] = []
     for arg in atom.args:
         if isinstance(arg, str) and _var_name(arg):
@@ -544,7 +559,9 @@ def _all_atom_keys(ir: ConstraintIR) -> list[tuple[str, tuple[str | int, ...]]]:
     return keys
 
 
-def _assignments(variables: Mapping[str, str], domains: Mapping[str, Domain]) -> list[dict[str, str | int]]:
+def _assignments(
+    variables: Mapping[str, str], domains: Mapping[str, Domain]
+) -> list[dict[str, str | int]]:
     names = list(variables)
     value_lists = [domains[variables[name]].values for name in names]
     return [dict(zip(names, values, strict=True)) for values in product(*value_lists)]
@@ -690,7 +707,9 @@ def evaluate_with_z3(ir: ConstraintIR) -> JsonDict:
         atom_reasons = list(reasons.get(key, ()))
         if key in positive_facts:
             atom_reasons.append(z3.BoolVal(True))
-        solver.add(bools[key] == z3.Or(atom_reasons) if atom_reasons else bools[key] == z3.BoolVal(False))
+        solver.add(
+            bools[key] == z3.Or(atom_reasons) if atom_reasons else bools[key] == z3.BoolVal(False)
+        )
 
     verdict = str(solver.check())
     if verdict == "unsat":
@@ -818,7 +837,9 @@ def certify_ir(payload: Mapping[str, Any]) -> JsonDict:
     try:
         ir = parse_constraint_ir(payload)
     except ConstraintIRValidationError as exc:
-        kind = "type_error" if "not in domain" in str(exc) or "wrong domain" in str(exc) else "invalid"
+        kind = (
+            "type_error" if "not in domain" in str(exc) or "wrong domain" in str(exc) else "invalid"
+        )
         return {
             "parser": {"status": "rejected", "kind": kind, "error": str(exc)},
             "python": {"status": "not_applicable"},
@@ -1042,26 +1063,146 @@ def _row_specs() -> list[JsonDict]:
     task = make_task_selection_ir()
     menu = make_menu_ir()
     return [
-        _spec("access_control", "train", "canonical", access, "Staff may access approved departments unless suspended."),
-        _spec("access_control", "train", "paraphrase", access, "A worker is eligible when their unit is approved and they are not suspended."),
-        _spec("access_control", "train", "symbol_renaming", _rename_access_ir(), "Renamed access symbols preserve the same eligibility pattern."),
-        _spec("access_control", "train", "order_permutation", _permute_facts(access), "The same access facts are stated in a different order."),
-        _spec("access_control", "train", "invalid_ir", _invalid_ir(access), "Invalid control with an unknown backend hint."),
-        _spec("access_control", "train", "unsat_ir", _unsat_access_ir(), "Contradictory access fact control."),
-        _spec("access_control", "train", "omitted_constraint", _access_omitted_ir(), "Suspension was omitted, so the rule over-accepts."),
-        _spec("access_control", "train", "semantic_nonequivalence", _access_nonequivalent_ir(), "Approval changed, so eligible staff differ."),
-        _spec("task_selection", "dev", "canonical", task, "Choose tasks with low effort, sufficient priority, and no blocker."),
-        _spec("task_selection", "dev", "paraphrase", task, "A task is selectable only when it is short, important enough, and unblocked."),
-        _spec("task_selection", "dev", "order_permutation", _permute_facts(task), "Task facts appear in a shuffled order."),
-        _spec("task_selection", "dev", "type_error", _task_type_error_ir(), "Type control: a color is used where a task is required."),
-        _spec("task_selection", "dev", "omitted_constraint", _task_omitted_ir(), "Effort threshold was omitted, so long tasks can pass."),
-        _spec("task_selection", "dev", "semantic_nonequivalence", _task_nonequivalent_ir(), "A task effort fact changed, changing the answer set."),
-        _spec("menu_recommendation", "heldout", "canonical", menu, "Recommend vegetarian dishes at or below budget with no allergen."),
-        _spec("menu_recommendation", "heldout", "held_template", menu, "Held template: pick safe vegetarian menu items within the price cap."),
-        _spec("menu_recommendation", "heldout", "paraphrase", menu, "A dish qualifies if it is vegetarian, affordable, and allergen-free."),
-        _spec("menu_recommendation", "heldout", "symbol_renaming", _rename_menu_ir(), "Renamed menu symbols preserve the recommendation behavior."),
-        _spec("menu_recommendation", "heldout", "omitted_constraint", _menu_omitted_ir(), "The budget constraint was omitted, so expensive dishes pass."),
-        _spec("menu_recommendation", "heldout", "semantic_nonequivalence", _menu_nonequivalent_ir(), "A price fact changed, changing recommendations."),
+        _spec(
+            "access_control",
+            "train",
+            "canonical",
+            access,
+            "Staff may access approved departments unless suspended.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "paraphrase",
+            access,
+            "A worker is eligible when their unit is approved and they are not suspended.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "symbol_renaming",
+            _rename_access_ir(),
+            "Renamed access symbols preserve the same eligibility pattern.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "order_permutation",
+            _permute_facts(access),
+            "The same access facts are stated in a different order.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "invalid_ir",
+            _invalid_ir(access),
+            "Invalid control with an unknown backend hint.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "unsat_ir",
+            _unsat_access_ir(),
+            "Contradictory access fact control.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "omitted_constraint",
+            _access_omitted_ir(),
+            "Suspension was omitted, so the rule over-accepts.",
+        ),
+        _spec(
+            "access_control",
+            "train",
+            "semantic_nonequivalence",
+            _access_nonequivalent_ir(),
+            "Approval changed, so eligible staff differ.",
+        ),
+        _spec(
+            "task_selection",
+            "dev",
+            "canonical",
+            task,
+            "Choose tasks with low effort, sufficient priority, and no blocker.",
+        ),
+        _spec(
+            "task_selection",
+            "dev",
+            "paraphrase",
+            task,
+            "A task is selectable only when it is short, important enough, and unblocked.",
+        ),
+        _spec(
+            "task_selection",
+            "dev",
+            "order_permutation",
+            _permute_facts(task),
+            "Task facts appear in a shuffled order.",
+        ),
+        _spec(
+            "task_selection",
+            "dev",
+            "type_error",
+            _task_type_error_ir(),
+            "Type control: a color is used where a task is required.",
+        ),
+        _spec(
+            "task_selection",
+            "dev",
+            "omitted_constraint",
+            _task_omitted_ir(),
+            "Effort threshold was omitted, so long tasks can pass.",
+        ),
+        _spec(
+            "task_selection",
+            "dev",
+            "semantic_nonequivalence",
+            _task_nonequivalent_ir(),
+            "A task effort fact changed, changing the answer set.",
+        ),
+        _spec(
+            "menu_recommendation",
+            "heldout",
+            "canonical",
+            menu,
+            "Recommend vegetarian dishes at or below budget with no allergen.",
+        ),
+        _spec(
+            "menu_recommendation",
+            "heldout",
+            "held_template",
+            menu,
+            "Held template: pick safe vegetarian menu items within the price cap.",
+        ),
+        _spec(
+            "menu_recommendation",
+            "heldout",
+            "paraphrase",
+            menu,
+            "A dish qualifies if it is vegetarian, affordable, and allergen-free.",
+        ),
+        _spec(
+            "menu_recommendation",
+            "heldout",
+            "symbol_renaming",
+            _rename_menu_ir(),
+            "Renamed menu symbols preserve the recommendation behavior.",
+        ),
+        _spec(
+            "menu_recommendation",
+            "heldout",
+            "omitted_constraint",
+            _menu_omitted_ir(),
+            "The budget constraint was omitted, so expensive dishes pass.",
+        ),
+        _spec(
+            "menu_recommendation",
+            "heldout",
+            "semantic_nonequivalence",
+            _menu_nonequivalent_ir(),
+            "A price fact changed, changing recommendations.",
+        ),
     ]
 
 
@@ -1280,8 +1421,12 @@ def build_artifact(
         "constraint_ir_schema_and_version": _schema_receipt(),
         "supported_and_rejected_fragments": _fragment_receipt(),
         "parser_and_typecheck_receipts": {
-            "accepted_rows": sum(1 for row in row_list if row["certificates"]["parser"]["status"] == "accepted"),
-            "rejected_rows": sum(1 for row in row_list if row["certificates"]["parser"]["status"] == "rejected"),
+            "accepted_rows": sum(
+                1 for row in row_list if row["certificates"]["parser"]["status"] == "accepted"
+            ),
+            "rejected_rows": sum(
+                1 for row in row_list if row["certificates"]["parser"]["status"] == "rejected"
+            ),
             "status_counts": status_counts,
             "failure_rows": [
                 {"row_id": row["row_id"], "receipt": row["certificates"]["parser"]}
@@ -1299,7 +1444,9 @@ def build_artifact(
             "held_template_rows": [row["row_id"] for row in row_list if row["is_held_template"]],
             "heldout_headroom": {
                 "valid_rows": sum(1 for row in heldout_rows if row["expected_status"] == "valid"),
-                "control_rows": sum(1 for row in heldout_rows if row["variant_kind"] in CONTROL_VARIANTS),
+                "control_rows": sum(
+                    1 for row in heldout_rows if row["variant_kind"] in CONTROL_VARIANTS
+                ),
             },
         },
         "exact_semantic_equivalence_contract": {
@@ -1451,7 +1598,9 @@ def _leakage_receipt(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
         "crossing_groups": crossing,
         "splits": split_counts,
         "heldout_valid_rows": sum(1 for row in heldout_rows if row["expected_status"] == "valid"),
-        "heldout_control_rows": sum(1 for row in heldout_rows if row["variant_kind"] in CONTROL_VARIANTS),
+        "heldout_control_rows": sum(
+            1 for row in heldout_rows if row["variant_kind"] in CONTROL_VARIANTS
+        ),
         "principle": FIELD_PRINCIPLES["split_and_group_leakage_receipts"],
     }
 
@@ -1530,15 +1679,25 @@ def _memory_probe() -> JsonDict:
                 available_mb = int(line.split()[1]) // 1024
                 break
     if available_mb == 0:  # pragma: no cover - fallback for hosts without /proc/meminfo.
-        available_mb = int(os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE") / (1024 * 1024))
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+        available_mb = int(
+            os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE") / (1024 * 1024)
+        )
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _disk_probe(root: Path) -> JsonDict:
     required_mb = 512
     usage = shutil.disk_usage(root)
     available_mb = int(usage.free / (1024 * 1024))
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _protected_file_receipt(root: Path) -> JsonDict:
@@ -1557,20 +1716,18 @@ def _protected_file_receipt(root: Path) -> JsonDict:
 
 def _field_provenance() -> JsonDict:
     return {
-        field: "generated_by_exp5896_exact_fixture_builder"
-        for field in REQUIRED_ARTIFACT_FIELDS
+        field: "generated_by_exp5896_exact_fixture_builder" for field in REQUIRED_ARTIFACT_FIELDS
     }
 
 
-def _artifact_checksum(artifact: Mapping[str, Any]) -> str:
-    stable = _copy_json(artifact)
-    stable["duration_s"] = 0.0
-    stable["test_exit_codes"] = {}
-    stable["reproducibility_checksum"] = ""
-    stable["row_file_receipt"]["sha256"] = None
-    stable["preconditions_checked"]["disk"]["available_mb"] = 0
-    stable["preconditions_checked"]["ram"]["available_mb"] = 0
-    return sha256_json(stable)
+def _artifact_checksum(
+    artifact: Mapping[str, Any],
+    *,
+    row_file_sha256: str | None = None,
+) -> str:
+    return constraint_ir_replay_contract.projection_receipt(
+        artifact, row_file_sha256=row_file_sha256
+    )["checksum"]
 
 
 def write_fixture(
@@ -1593,7 +1750,12 @@ def write_fixture(
     elapsed = duration_s if duration_s is not None else round(time.monotonic() - start, 6)
     artifact = build_artifact(rows, root=root, duration_s=elapsed, test_exit_codes=test_exit_codes)
     artifact["row_file_receipt"]["sha256"] = sha256_file(row_path)
-    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
+    artifact = constraint_ir_replay_contract.attach_projection_receipt(
+        artifact, row_file_sha256=artifact["row_file_receipt"]["sha256"]
+    )
+    artifact["reproducibility_checksum"] = _artifact_checksum(
+        artifact, row_file_sha256=artifact["row_file_receipt"]["sha256"]
+    )
     result_path.parent.mkdir(parents=True, exist_ok=True)
     result_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return artifact
@@ -1605,7 +1767,8 @@ def replay_artifact(*, root: Path = REPO_ROOT) -> JsonDict:
     result_path = root / RESULT_RELATIVE_PATH
     row_path = root / ROW_FILE_RELATIVE_PATH
     artifact = json.loads(result_path.read_text(encoding="utf-8"))
-    if sha256_file(row_path) != artifact["row_file_receipt"]["sha256"]:
+    row_file_sha256 = sha256_file(row_path)
+    if row_file_sha256 != artifact["row_file_receipt"]["sha256"]:
         raise ConstraintIRReplayError("row file hash does not match artifact receipt")
     rows = [json.loads(line) for line in row_path.read_text(encoding="utf-8").splitlines() if line]
     expected_rows = build_fixture_rows()
@@ -1615,9 +1778,29 @@ def replay_artifact(*, root: Path = REPO_ROOT) -> JsonDict:
     if failures:
         raise ConstraintIRReplayError(f"certificate replay failures: {failures}")
     rebuilt = build_artifact(rows, root=root, duration_s=0.0, test_exit_codes={})
-    if rebuilt["reproducibility_checksum"] != artifact["reproducibility_checksum"]:
-        raise ConstraintIRReplayError("artifact reproducibility checksum mismatch")
-    return {"ok": True, "row_count": len(rows), "reproducibility_checksum": artifact["reproducibility_checksum"]}
+    rebuilt["row_file_receipt"]["sha256"] = row_file_sha256
+    rebuilt = constraint_ir_replay_contract.attach_projection_receipt(
+        rebuilt, row_file_sha256=row_file_sha256
+    )
+    try:
+        artifact_projection = constraint_ir_replay_contract.verify_reproducibility_checksum(
+            artifact,
+            row_file_sha256=row_file_sha256,
+            allow_legacy_without_projection=True,
+        )
+        rebuilt_projection = constraint_ir_replay_contract.projection_receipt(
+            rebuilt, row_file_sha256=row_file_sha256
+        )
+    except constraint_ir_replay_contract.ConstraintIRReplayContractError as exc:
+        raise ConstraintIRReplayError(str(exc)) from exc
+    if rebuilt_projection["checksum"] != artifact_projection["checksum"]:
+        raise ConstraintIRReplayError("artifact canonical projection mismatch")
+    return {
+        "ok": True,
+        "row_count": len(rows),
+        "reproducibility_checksum": artifact["reproducibility_checksum"],
+        "canonical_projection": artifact_projection,
+    }
 
 
 def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
