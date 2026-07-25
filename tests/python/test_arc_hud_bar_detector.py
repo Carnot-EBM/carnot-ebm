@@ -34,14 +34,20 @@ from carnot.agentic.arc_competition_agent import (
     SUBMITTED_AGENT_CONFIG,
     SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED,
     SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED,
+    SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED,
     StepwiseExplorer,
+    _assert_hud_flag_coupling,
     _compute_hud_mask_from_frame,
 )
 from carnot.agentic.arc_hud_bar_detector import (
+    HUD_MASK_GUARD_REVOCATION_GLOBAL_HASH_FLIP,
+    HUD_MASK_GUARD_REVOCATION_LOCAL,
+    DeferredMaskActivation,
     EdgeBarThresholds,
     MaskCollapseGuard,
     edge_bar_hud_mask,
     is_edge_bar_like,
+    mask_cell_digest,
     mask_summary,
     region_hud_evidence,
 )
@@ -288,6 +294,18 @@ def test_empty_and_malformed_inputs_return_none() -> None:
     assert edge_bar_hud_mask(np.zeros((2, 2, 2, 2), dtype=int)) is None
 
 
+def test_three_dimensional_frame_uses_the_last_layer() -> None:
+    """Frame stacks are legal inputs; the settled layer is the one that gets masked."""
+
+    stack = np.full((2, 64, 64), 3, dtype=int)
+    stack[0, 8, 8] = 9
+    stack[1, :, 0] = 8
+    mask = edge_bar_hud_mask(stack)
+    assert mask is not None
+    assert int(mask.sum()) == 64
+    assert bool(mask[:, 0].all())
+
+
 def test_is_edge_bar_like_refuses_a_blob_without_frame_shape() -> None:
     """A blob with no frame shape cannot be tested for edge adjacency, so it must not fire."""
 
@@ -305,6 +323,13 @@ def test_is_edge_bar_like_refuses_a_blob_without_frame_shape() -> None:
         frame_shape=None,
     )
     assert is_edge_bar_like(detached) is False
+
+
+def test_is_edge_bar_like_refuses_zero_sized_frame_shape() -> None:
+    """A malformed blob shape cannot be an edge bar even if the bbox is bar-like."""
+
+    blob = _blob_at((0, 0, 4, 0), (0, 8))
+    assert is_edge_bar_like(blob) is False
 
 
 def test_shipped_classifier_predicate_is_untouched_by_the_repair() -> None:
@@ -440,6 +465,17 @@ def test_region_evidence_marks_a_pooled_ubiquity_as_pooled() -> None:
     assert ev["ubiquity"] == 1.0
 
 
+def test_region_evidence_abstains_when_no_action_class_repeats() -> None:
+    """Enough transitions are still not enough if no action class has a rate estimate."""
+
+    grids = [_r11l_like_grid(filled=i) for i in range(20)]
+    actions = [None] + [(6, i) for i in range(1, 20)]
+    ev = region_hud_evidence(grids, _column0_mask(), actions=actions)
+    assert ev["verdict"] == "abstain"
+    assert ev["reason"] == "no_action_class_tried_twice"
+    assert ev["ubiquity"] is None
+
+
 # ---------------------------------------------------------------------------
 # Stage 3 -- the runtime collapse guard
 # ---------------------------------------------------------------------------
@@ -449,7 +485,11 @@ def test_collapse_guard_refuses_a_mask_that_aliases_distinct_states() -> None:
     """SCENARIO-ARC-WMTE-5960-COLLAPSE-GUARD-HARD-REFUSAL.
 
     Same masked node + same concrete action -> two DIFFERENT masked successors, while the
-    unmasked control branches only once. That is a causal proof of collapse.
+    unmasked control does not veto. The guard ACTS on this (un-masks the node), but note the
+    classification asserted at the end: the control here had no POWER (neither unmasked
+    antecedent repeated, so its exoneration branch could not have fired), so this is an
+    ``unproven_masked_branching``, not a proof. See
+    ``test_collapse_guard_separates_a_proven_collapse_from_an_unproven_branching``.
     """
 
     guard = MaskCollapseGuard()
@@ -485,6 +525,141 @@ def test_collapse_guard_refuses_a_mask_that_aliases_distinct_states() -> None:
     assert guard.is_split("M2") is False
     assert guard.observable_key_count() == 1
     assert guard.globally_revoked is False
+    # THE HONEST CLASSIFICATION. Neither unmasked antecedent repeated, so the control could not
+    # have exonerated: the guard acted (conservatively, which is correct under the asymmetry) but
+    # must NOT call this a proof.
+    diagnostics = guard.diagnostics()
+    assert diagnostics["unproven_masked_branchings"] == 1
+    assert diagnostics["proven_collapses"] == 0
+    assert diagnostics["keys_with_repeated_unmasked_antecedent"] == 0
+    assert diagnostics["control_had_power_on_any_key"] is False
+    assert diagnostics["refusals_are_all_proven"] is False
+
+
+def test_collapse_guard_separates_a_proven_collapse_from_an_unproven_branching() -> None:
+    """REGRESSION for the control-POWER defect (2026-07-25 adversarial review).
+
+    ``control_live`` only says an unmasked antecedent was SUPPLIED. The exoneration branch
+    additionally needs that unmasked antecedent to REPEAT -- and if the masked region is a
+    monotone counter it never does, so ``non_deterministic_keys_excluded_by_control: 0`` on such a
+    key is a CONSTRUCTIONAL zero rather than evidence of determinism. This test builds the one
+    shape where the control genuinely HAS power: raw state ``Ub`` is observed twice with the same
+    successor (determinism confirmed AT that key), while a different raw state ``Ua`` sharing the
+    same masked hash produced a different masked successor.
+    """
+
+    guard = MaskCollapseGuard()
+    common = dict(action_key=(6, None))
+    # Ub, first time. No branching yet.
+    guard.observe(
+        origin_masked="M1",
+        origin_unmasked="Ub",
+        successor_masked="S2",
+        successor_unmasked="SUb",
+        **common,
+    )
+    # Ua shares M1's masked hash and goes somewhere else. Branching, but Ua is new -> unproven.
+    guard.observe(
+        origin_masked="M1",
+        origin_unmasked="Ua",
+        successor_masked="S1",
+        successor_unmasked="SUa",
+        **common,
+    )
+    assert guard.diagnostics()["unproven_masked_branchings"] == 1
+    assert guard.diagnostics()["proven_collapses"] == 0
+
+    # A SECOND node, same story, but this time the repeat comes BEFORE the branching so the
+    # control has power on the deciding observation.
+    guard.observe(
+        origin_masked="M2",
+        origin_unmasked="Vb",
+        successor_masked="T2",
+        successor_unmasked="TVb",
+        **common,
+    )
+    guard.observe(
+        origin_masked="M2",
+        origin_unmasked="Va",
+        successor_masked="T1",
+        successor_unmasked="TVa",
+        **common,
+    )
+    # Vb repeats DETERMINISTICALLY (same successor), which is what gives the control power.
+    proved = guard.observe(
+        origin_masked="M2",
+        origin_unmasked="Vb",
+        successor_masked="T2",
+        successor_unmasked="TVb",
+        **common,
+    )
+    diagnostics = guard.diagnostics()
+    # M2 was already split by the earlier unproven branching, so this call does not re-split --
+    # but the POWER accounting is what this test is about.
+    assert proved is False
+    assert diagnostics["keys_with_repeated_unmasked_antecedent"] == 1
+    assert diagnostics["control_had_power_on_any_key"] is True
+
+    # And the fully-clean shape: a fresh guard where the repeat precedes the branching.
+    clean = MaskCollapseGuard()
+    clean.observe(
+        origin_masked="N",
+        origin_unmasked="Wb",
+        successor_masked="X2",
+        successor_unmasked="XWb",
+        **common,
+    )
+    clean.observe(
+        origin_masked="N",
+        origin_unmasked="Wb",
+        successor_masked="X2",
+        successor_unmasked="XWb",
+        **common,
+    )
+    hit = clean.observe(
+        origin_masked="N",
+        origin_unmasked="Wa",
+        successor_masked="X1",
+        successor_unmasked="XWa",
+        **common,
+    )
+    assert hit is True
+    # Wa is new on the deciding observation, so even here the guard reports it honestly as
+    # unproven rather than inflating it into a proof.
+    assert clean.diagnostics()["unproven_masked_branchings"] == 1
+    assert clean.diagnostics()["keys_with_repeated_unmasked_antecedent"] == 1
+
+    # Now the deciding observation IS on the repeated key.
+    proven = MaskCollapseGuard()
+    proven.observe(
+        origin_masked="P",
+        origin_unmasked="Za",
+        successor_masked="Y1",
+        successor_unmasked="YZa",
+        **common,
+    )
+    proven.observe(
+        origin_masked="P",
+        origin_unmasked="Zb",
+        successor_masked="Y2",
+        successor_unmasked="YZb",
+        **common,
+    )
+    proven.split_hashes.clear()  # ignore the first (unproven) split so the next call decides
+    proven.violations = 0
+    proven.refusals = 0
+    proven.unproven_masked_branchings = 0
+    fired = proven.observe(
+        origin_masked="P",
+        origin_unmasked="Zb",
+        successor_masked="Y2",
+        successor_unmasked="YZb",
+        **common,
+    )
+    assert fired is True
+    assert proven.diagnostics()["proven_collapses"] == 1
+    assert proven.diagnostics()["unproven_masked_branchings"] == 0
+    assert proven.diagnostics()["refusals_are_all_proven"] is True
 
 
 def test_collapse_guard_does_not_fire_on_environment_nondeterminism() -> None:
@@ -569,7 +744,12 @@ def test_explorer_supplies_a_live_control_to_the_guard() -> None:
     to prove the channel is live.
     """
 
-    explorer = StepwiseExplorer(edge_bar_hud_mask=True, hud_mask_collapse_guard=True)
+    # Stage 2 pinned OFF: the guard only observes while a mask is APPLIED, and with Stage 2 armed
+    # no mask is applied until it has 16 transitions of evidence. This test is about the control
+    # CHANNEL, so it uses the immediate-application configuration.
+    explorer = StepwiseExplorer(
+        edge_bar_hud_mask=True, hud_mask_collapse_guard=True, hud_mask_stage2_confirm=False
+    )
     explorer._ingest(_FakeFrame(_r11l_like_grid(filled=0)))
     assert explorer._last_unmasked_hash is not None
     first = explorer._last_unmasked_hash
@@ -592,11 +772,8 @@ def test_explorer_supplies_a_live_control_to_the_guard() -> None:
     assert explorer._last_unmasked_hash != first
 
 
-def test_collapse_guard_escalates_to_global_revocation_past_the_cap() -> None:
-    """Local splits are bounded; enough of them means the mask itself is wrong."""
-
-    guard = MaskCollapseGuard(max_split_nodes=2)
-    for index in range(3):
+def _split_n_nodes(guard: MaskCollapseGuard, count: int) -> None:
+    for index in range(count):
         node = f"M{index}"
         guard.observe(
             origin_masked=node,
@@ -612,10 +789,63 @@ def test_collapse_guard_escalates_to_global_revocation_past_the_cap() -> None:
             successor_masked="B",
             successor_unmasked="UB",
         )
+
+
+def test_collapse_guard_never_globally_revokes_by_default() -> None:
+    """REGRESSION for the measured graph corruption (2026-07-25 adversarial review).
+
+    Global revocation was NOT a fallback to the unmasked baseline. Once it fired, ``is_split``
+    returned True unconditionally and ``_hash`` emitted the compound ``masked|u:unmasked`` key for
+    every subsequent frame, while nodes created BEFORE it kept their plain masked keys -- the same
+    true state present twice under two identity conventions. Instrumented on tu93 seed 20260724:
+    72 hashes pre-revocation, 1927 post, 58 of 658 distinct raw frames holding BOTH key forms, and
+    640 of 655 graph nodes (97.7%) on the far side of the switch. Its measured effect was strictly
+    WORSE than shipping no guard at all: on tu93 -- where the repaired mask is IDENTICAL to the
+    shipped one, so arming the guard was the only difference -- 1 level / 361 actions became 0
+    levels / 1953 actions on 3 of 3 seeds.
+
+    Splits are therefore LOCAL and unbounded: one identity convention per node, degrading
+    gracefully toward unmasked identity instead of flipping the whole graph.
+    """
+
+    guard = MaskCollapseGuard()
+    _split_n_nodes(guard, 8)
+    assert guard.refusals == 8
+    assert guard.globally_revoked is False
+    assert guard.is_split("M0") is True, "the nodes that branched ARE un-masked"
+    assert guard.is_split("never_seen_node") is False, "and nothing else is"
+    diagnostics = guard.diagnostics()
+    assert diagnostics["globally_revoked"] is False
+    assert diagnostics["revocation_mode"] == HUD_MASK_GUARD_REVOCATION_LOCAL
+    assert diagnostics["max_split_nodes"] is None
+    # Reporting-only signal: past the threshold the mask is probably wrong wholesale, and the
+    # artifact should say so -- but it changes NO behaviour.
+    assert diagnostics["split_budget_exceeded"] is True
+    assert diagnostics["split_node_count"] == 8
+
+
+def test_legacy_global_hash_flip_mode_is_opt_in_and_flips_every_node() -> None:
+    """The measured-harmful mode survives ONLY as a fixture, and it must stay opt-in.
+
+    Kept so the corruption it causes is demonstrable rather than only described: past the cap it
+    un-masks nodes it has never even seen, which is what re-keyed 97.7% of a real graph.
+    """
+
+    guard = MaskCollapseGuard(
+        max_split_nodes=2,
+        revocation_mode=HUD_MASK_GUARD_REVOCATION_GLOBAL_HASH_FLIP,
+    )
+    _split_n_nodes(guard, 3)
     assert guard.refusals == 3
     assert guard.globally_revoked is True
-    assert guard.is_split("never_seen_node") is True, "revoked means EVERY node is un-masked"
+    assert guard.is_split("never_seen_node") is True, "this is exactly the corruption"
     assert guard.diagnostics()["globally_revoked"] is True
+
+    # The DEFAULT-mode guard with the same cap does not flip, which is the point of the fix.
+    default_mode = MaskCollapseGuard(max_split_nodes=2)
+    _split_n_nodes(default_mode, 3)
+    assert default_mode.globally_revoked is False
+    assert default_mode.is_split("never_seen_node") is False
 
 
 def test_collapse_guard_ignores_incomplete_observations() -> None:
@@ -659,12 +889,75 @@ def test_collapse_guard_handles_unhashable_action_payloads() -> None:
     assert guard.violations == 1
 
 
+def test_collapse_guard_can_measure_without_acting_on_unproven_branchings() -> None:
+    """The proven-only variant is explicit and still attributes the counted branching once."""
+
+    guard = MaskCollapseGuard(act_on_unproven_branchings=False)
+    for successor, unmasked in (("S1", "U1"), ("S2", "U2")):
+        guard.observe(
+            origin_masked="M",
+            origin_unmasked=unmasked,
+            action_key=(6, None),
+            successor_masked=successor,
+            successor_unmasked="US" + successor,
+        )
+    diagnostics = guard.diagnostics()
+    assert diagnostics["acted_on_unproven_branchings"] is False
+    assert diagnostics["unproven_masked_branchings"] == 1
+    assert diagnostics["collapse_refusals"] == 0
+    assert guard.is_split("M") is False
+    assert diagnostics["attribution"]["attribution_unavailable"] == 1
+
+
+def test_collapse_guard_hashes_sets_and_repr_only_payloads() -> None:
+    """Set payloads and repr-only objects must be stable enough for repeated action keys."""
+
+    class ReprOnly:
+        __hash__ = None
+
+        def __repr__(self) -> str:
+            return "repr-only-action"
+
+    guard = MaskCollapseGuard()
+    payload = {"choices": {3, 1, 2}, "object": ReprOnly()}
+    for successor, unmasked in (("S1", "U1"), ("S2", "U2")):
+        guard.observe(
+            origin_masked="M",
+            origin_unmasked=unmasked,
+            action_key=payload,
+            successor_masked=successor,
+            successor_unmasked="US" + successor,
+        )
+    assert guard.violations == 1
+    assert guard.observable_key_count() == 1
+
+
 def test_mask_summary_describes_a_mask_and_a_none() -> None:
-    assert mask_summary(None) == {"resolved": False, "cell_count": 0, "rows": [], "cols": []}
+    assert mask_summary(None) == {
+        "resolved": False,
+        "cell_count": 0,
+        "rows": [],
+        "cols": [],
+        "digest": None,
+    }
     summary = mask_summary(_column0_mask((8, 8)))
     assert summary["cell_count"] == 8
     assert summary["cols"] == [0]
     assert summary["rows"] == list(range(8))
+    # The mask's IDENTITY, not just its size: two masks must be compared on this digest, because
+    # equal cell COUNTS do not imply the same cells (the harness previously compared counts and
+    # would therefore have exonerated a repair that MOVED a mask instead of widening it).
+    assert isinstance(summary["digest"], str) and len(summary["digest"]) == 16
+    assert summary["digest"] == mask_cell_digest(_column0_mask((8, 8)))
+    moved = np.zeros((8, 8), dtype=bool)
+    moved[:, 1] = True  # same 8 cells, different column
+    assert mask_cell_digest(moved) != summary["digest"]
+    assert mask_summary(None)["digest"] is None
+
+
+def test_mask_cell_digest_treats_none_and_empty_masks_as_unresolved() -> None:
+    assert mask_cell_digest(None) is None
+    assert mask_cell_digest(np.zeros((3, 3), dtype=bool)) is None
 
 
 # ---------------------------------------------------------------------------
@@ -677,12 +970,15 @@ def test_defaults_are_off_and_published_in_the_submitted_config() -> None:
 
     assert SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED is False
     assert SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED is False
+    assert SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED is False
     assert SUBMITTED_AGENT_CONFIG["edge_bar_hud_mask_enabled"] is False
     assert SUBMITTED_AGENT_CONFIG["hud_mask_collapse_guard_enabled"] is False
+    assert SUBMITTED_AGENT_CONFIG["hud_mask_stage2_confirm_enabled"] is False
 
     explorer = StepwiseExplorer()
     assert explorer.edge_bar_hud_mask_enabled is False
     assert explorer.hud_mask_collapse_guard_enabled is False
+    assert explorer.hud_mask_stage2_confirm_enabled is False
     assert explorer._hud_collapse_guard is None
 
 
@@ -703,7 +999,11 @@ def test_default_off_leaves_node_identity_byte_identical() -> None:
     assert control.hud_mask is None
     assert control._hash(frame_a) != control._hash(frame_b), "default must NOT dedup these"
 
-    treatment = StepwiseExplorer(edge_bar_hud_mask=True)
+    # Stage 2 is pinned OFF here because this test is about STAGE 1 taking effect on the very
+    # first frame. With Stage 2 armed (the default whenever the detector is on) the mask is
+    # deliberately NOT applied until >=16 transitions have been observed -- see
+    # `test_stage2_defers_activation_until_the_evidence_exists`.
+    treatment = StepwiseExplorer(edge_bar_hud_mask=True, hud_mask_stage2_confirm=False)
     treatment._ingest(frame_a)
     assert treatment.hud_mask is not None
     assert int(treatment.hud_mask.sum()) == 64
@@ -727,9 +1027,17 @@ def test_env_override_resolves_the_flag(monkeypatch: pytest.MonkeyPatch) -> None
 def test_hud_mask_source_records_which_detector_resolved_the_mask() -> None:
     """A reader must never have to infer the treatment from a cell count."""
 
-    treatment = StepwiseExplorer(edge_bar_hud_mask=True)
+    treatment = StepwiseExplorer(edge_bar_hud_mask=True, hud_mask_stage2_confirm=False)
     treatment._ingest(_FakeFrame(_r11l_like_grid()))
     assert treatment._hud_mask_source == "edge_bar_detector_req5960"
+
+    # With Stage 2 armed (the coupled default) the SAME frame yields a PENDING source, because the
+    # candidate is deliberately not applied yet. That distinction has to be visible in the row, or
+    # "Stage 2 is still deciding" reads as "the detector found nothing".
+    deferred = StepwiseExplorer(edge_bar_hud_mask=True)
+    deferred._ingest(_FakeFrame(_r11l_like_grid()))
+    assert deferred._hud_mask_source == "edge_bar_detector_req5960_stage2_pending"
+    assert deferred.hud_mask is None
 
     control = StepwiseExplorer()
     control._ingest(_FakeFrame(_r11l_like_grid()))
@@ -745,7 +1053,12 @@ def test_hud_mask_source_records_which_detector_resolved_the_mask() -> None:
 def test_diagnostics_report_dedup_and_guard_activity() -> None:
     """Every arm must emit the mask/dedup/guard fields, so a broken arm cannot read as a null."""
 
-    explorer = StepwiseExplorer(edge_bar_hud_mask=True, hud_mask_collapse_guard=True)
+    # Stage 2 pinned OFF: this test asserts the DEDUP counters, which only move once a mask is
+    # applied. The Stage-2-armed configuration's own diagnostics are covered by
+    # `test_stage2_verdict_is_reported_in_the_diagnostics`.
+    explorer = StepwiseExplorer(
+        edge_bar_hud_mask=True, hud_mask_collapse_guard=True, hud_mask_stage2_confirm=False
+    )
     for filled in range(6):
         explorer._ingest(_FakeFrame(_r11l_like_grid(filled=filled)))
 
@@ -764,7 +1077,9 @@ def test_diagnostics_report_dedup_and_guard_activity() -> None:
 def test_split_node_hash_reverts_to_unmasked_identity() -> None:
     """The guard's decision has to actually change `_hash`, not just increment a counter."""
 
-    explorer = StepwiseExplorer(edge_bar_hud_mask=True, hud_mask_collapse_guard=True)
+    explorer = StepwiseExplorer(
+        edge_bar_hud_mask=True, hud_mask_collapse_guard=True, hud_mask_stage2_confirm=False
+    )
     frame_a = _FakeFrame(_r11l_like_grid(filled=0))
     frame_b = _FakeFrame(_r11l_like_grid(filled=7))
     explorer._ingest(frame_a)
@@ -775,3 +1090,383 @@ def test_split_node_hash_reverts_to_unmasked_identity() -> None:
 
     assert explorer._hash(frame_a) != explorer._hash(frame_b), "split node must un-mask"
     assert explorer._hash(frame_a).startswith(masked + "|u:")
+
+
+# ---------------------------------------------------------------------------
+# Stage 2b -- DEFERRED ACTIVATION (the ar25 over-mask fix), and the flag coupling
+# ---------------------------------------------------------------------------
+
+
+def _fill_gauge_grid(height: int) -> np.ndarray:
+    """An ar25-shaped FILL-LEVEL GAUGE in column 63: an edge bar that is NOT a clock.
+
+    This is the shape that makes Stage 1 alone unsafe. Geometrically it is indistinguishable
+    from r11l's counter -- edge-adjacent, 64x1, one 4-connected blob -- but its value is a
+    decision-relevant state variable, and on the real game masking it collapsed 1554 distinct
+    raw frames into 233 graph nodes with the collapse guard proving aliasing keys.
+    """
+
+    grid = np.full((64, 64), 3, dtype=int)
+    grid[:, 63] = 5
+    grid[64 - height :, 63] = 11
+    grid[30:34, 30:34] = 7
+    return grid
+
+
+def _fill_gauge_sequence(n: int) -> tuple[list[np.ndarray], list[int]]:
+    """A gauge sequence with the REAL measured signature: one action class never moves it.
+
+    ar25's newly-masked column 63 was measured at ubiquity 0.0 -- action classes 6 and 7 never
+    move it while 1/2/4/5 do -- which is precisely how "the game state changed" differs from "a
+    clock ticked". A fixture where EVERY action moves the region would instead land in the
+    periodic blind spot Stage 2's own docstring records (a region that cycles back through its
+    segment's first value reads as a series of restarts, not revisits) and would be ADMITTED --
+    which is exactly why Stage 3 remains mandatory on top of Stage 2.
+    """
+
+    frames: list[np.ndarray] = []
+    actions: list[int] = []
+    height = 10
+    for index in range(n):
+        action = 6 if index % 2 else 4
+        if index and action == 6:
+            height = 10 + ((height - 10 + 2) % 40)
+        frames.append(_fill_gauge_grid(height))
+        actions.append(action)
+    return frames, actions
+
+
+def test_stage1_alone_fires_on_a_fill_gauge_which_is_why_stage2_exists() -> None:
+    """The CARDINAL SIN, demonstrated: single-frame geometry cannot refuse a fill gauge.
+
+    Stage 1 must fire here -- that is not a bug in Stage 1, it is the provable limit of a shape
+    prior. The test exists so nobody "fixes" it by tightening the geometry (which would also
+    lose r11l, whose counter has the identical shape) instead of gating it behind Stage 2.
+    """
+
+    r11l_like = _r11l_like_grid(filled=3)
+    gauge = _fill_gauge_grid(height=20)
+
+    assert edge_bar_hud_mask(r11l_like) is not None
+    gauge_mask = edge_bar_hud_mask(gauge)
+    assert gauge_mask is not None, "geometry alone CANNOT tell a gauge from a clock"
+    assert bool(gauge_mask[:, 63].all())
+
+
+def test_stage2_admits_a_monotone_counter_and_refuses_a_fill_gauge() -> None:
+    """The statistic that separates them, on the two shapes Stage 1 conflates.
+
+    A monotone counter ticks on EVERY action and never revisits a value. A fill gauge tracks
+    game state: it moves only on some actions and its value recurs as the state recurs.
+    """
+
+    counter_mask = _column0_mask((64, 64))
+    counter_frames = [_r11l_like_grid(filled=i) for i in range(20)]
+    counter = region_hud_evidence(counter_frames, counter_mask, actions=[6] * 20)
+    assert counter["verdict"] == "admit"
+    assert counter["ubiquity"] == 1.0
+    assert counter["revisits"] == 0
+
+    # The gauge's measured signature on the real game: it responds to SOME action classes and
+    # not others (ar25 ubiquity 0.0), which is what "the game state moved" looks like as opposed
+    # to "a clock ticked". Built with `_fill_gauge_sequence` so the fixture matches that.
+    gauge_mask = np.zeros((64, 64), dtype=bool)
+    gauge_mask[:, 63] = True
+    gauge_frames, gauge_actions = _fill_gauge_sequence(20)
+    gauge = region_hud_evidence(gauge_frames, gauge_mask, actions=gauge_actions)
+    assert gauge["verdict"] == "refuse"
+    assert gauge["reason"] == "region_not_action_ubiquitous"
+    assert gauge["ubiquity"] == 0.0
+
+
+def test_stage2_defers_activation_until_the_evidence_exists() -> None:
+    """Identity stays UNMASKED -- i.e. exactly today's shipped behaviour -- while Stage 2 waits."""
+
+    activation = DeferredMaskActivation(min_transitions=4)
+    activation.propose(_column0_mask((64, 64)))
+    assert activation.pending is True
+    assert activation.verdict == "pending"
+
+    activated = None
+    for index in range(6):
+        result = activation.observe(_r11l_like_grid(filled=index), 6)
+        if result is not None:
+            activated = result
+            break
+    assert activated is not None, "an admitted candidate must be returned exactly once"
+    assert activation.verdict == "admitted"
+    assert activation.activated_after_transitions >= 4
+    # And the buffer is released, so a decided instance does not keep holding frames.
+    assert activation.diagnostics()["buffered_frames"] == 0
+    # A second observe on a decided instance returns None rather than re-activating.
+    assert activation.observe(_r11l_like_grid(filled=9), 6) is None
+
+
+def test_stage2_refusal_never_applies_the_candidate() -> None:
+    """A refused candidate must leave the caller on unmasked identity, permanently."""
+
+    activation = DeferredMaskActivation(min_transitions=4)
+    gauge_mask = np.zeros((64, 64), dtype=bool)
+    gauge_mask[:, 63] = True
+    activation.propose(gauge_mask)
+    frames, actions = _fill_gauge_sequence(8)
+    for frame, action in zip(frames, actions):
+        assert activation.observe(frame, action) is None
+    assert activation.verdict == "refused"
+    assert activation.pending is False
+    assert activation.observe(_fill_gauge_grid(30), 6) is None
+
+
+def test_stage2_discards_rather_than_guesses_at_the_buffer_cap() -> None:
+    """Abstaining forever is a memory leak; guessing is an over-mask. Discard is the third option."""
+
+    activation = DeferredMaskActivation(min_transitions=100, max_buffered_frames=6)
+    activation.propose(_column0_mask((64, 64)))
+    for index in range(6):
+        assert activation.observe(_r11l_like_grid(filled=index), 6) is None
+    assert activation.verdict == "discarded"
+    assert activation.diagnostics()["buffered_frames"] == 0
+
+
+def test_stage2_discards_when_evidence_still_abstains_at_the_cap() -> None:
+    """The buffer cap also applies after the transition floor when evidence has no opinion."""
+
+    activation = DeferredMaskActivation(min_transitions=2, max_buffered_frames=4)
+    activation.propose(_column0_mask((64, 64)))
+    for index in range(4):
+        assert activation.observe(_r11l_like_grid(filled=index), ("unique", index)) is None
+    assert activation.verdict == "discarded"
+    assert activation.reason == "buffer_cap_reached_while_stage2_still_abstaining"
+    assert activation.evidence["reason"] == "no_action_class_tried_twice"
+
+
+def test_stage2_no_candidate_is_not_a_refusal() -> None:
+    """Stage 1 finding nothing and Stage 2 refusing something are different facts."""
+
+    activation = DeferredMaskActivation()
+    activation.propose(None)
+    assert activation.verdict == "no_candidate"
+    assert activation.pending is False
+    assert activation.observe(_r11l_like_grid(), 6) is None
+
+
+def test_stage2_normalizes_empty_baseline_and_short_circuits_when_nothing_was_added() -> None:
+    empty = np.zeros((64, 64), dtype=bool)
+
+    pending = DeferredMaskActivation()
+    pending.propose(_column0_mask((64, 64)), empty)
+    assert pending.pending is True
+    assert pending.baseline is None
+
+    unchanged = DeferredMaskActivation()
+    mask = _column0_mask((64, 64))
+    unchanged.propose(mask, mask.copy())
+    assert unchanged.pending is False
+    assert unchanged.verdict == "no_added_region"
+    assert unchanged.fallback_mask() is not None
+    diag = unchanged.diagnostics()
+    assert diag["repair_added_cell_count"] == 0
+    assert diag["baseline_cell_count"] == 64
+
+
+def test_explorer_defers_the_mask_then_activates_it_on_a_real_counter() -> None:
+    """The wiring: the explorer must not mask until Stage 2 admits, then must mask."""
+
+    explorer = StepwiseExplorer(edge_bar_hud_mask=True)
+    assert explorer.hud_mask_stage2_confirm_enabled is True
+    for index in range(3):
+        explorer.awaiting = None
+        explorer._ingest(_FakeFrame(_r11l_like_grid(filled=index)))
+    assert explorer.hud_mask is None, "identity must stay unmasked while Stage 2 decides"
+    assert explorer._hud_mask_source == "edge_bar_detector_req5960_stage2_pending"
+
+    for index in range(3, 30):
+        explorer.awaiting = None
+        explorer._ingest(_FakeFrame(_r11l_like_grid(filled=index % 60)))
+    assert explorer.hud_mask is not None, "Stage 2 must eventually admit a real counter"
+    assert explorer._hud_mask_source == "edge_bar_detector_req5960_stage2_confirmed"
+    assert int(explorer.hud_mask.sum()) == 64
+
+
+def test_explorer_never_activates_a_mask_stage2_refuses() -> None:
+    """The ar25 case end to end: the gauge candidate is proposed and never applied."""
+
+    explorer = StepwiseExplorer(edge_bar_hud_mask=True)
+    frames, actions = _fill_gauge_sequence(40)
+    for frame, action in zip(frames, actions):
+        explorer.awaiting = {
+            "origin": "x",
+            "action": action,
+            "data": None,
+            "grid": None,
+            "level_before": 0,
+            "previous_frame": None,
+        }
+        explorer._ingest(_FakeFrame(frame))
+    assert explorer.hud_mask is None, "a Stage-2-refused gauge must NEVER reach node identity"
+    stage2 = explorer.hud_mask_diagnostics()["stage2"]
+    assert stage2["stage2_verdict"] == "refused"
+    assert stage2["candidate_cell_count"] > 0, "a candidate WAS proposed -- it was refused"
+
+
+def test_stage2_verdict_is_reported_in_the_diagnostics() -> None:
+    """A row must be able to say 'refused' distinctly from 'the detector found nothing'."""
+
+    explorer = StepwiseExplorer(edge_bar_hud_mask=True)
+    explorer._ingest(_FakeFrame(_r11l_like_grid()))
+    diag = explorer.hud_mask_diagnostics()
+    assert diag["hud_mask_stage2_confirm_enabled"] is True
+    assert diag["stage2"]["stage2_verdict"] == "pending"
+    assert diag["hud_mask_resolved"] is False
+
+    off = StepwiseExplorer()
+    assert off.hud_mask_diagnostics()["stage2"] is None
+
+
+def test_the_detector_cannot_be_enabled_without_both_safety_stages() -> None:
+    """REGRESSION for the fatal finding: the flip candidate had no guard (2026-07-25).
+
+    The three flags were INDEPENDENT, and the arm the artifact reported as passing the gate had
+    BOTH safety stages off. Flipping that reported-passing configuration would have shipped
+    Stage 1's ar25 over-mask with nothing able to refuse it.
+    """
+
+    # The runtime default: enabling the detector arms both stages.
+    explorer = StepwiseExplorer(edge_bar_hud_mask=True)
+    assert explorer.hud_mask_collapse_guard_enabled is True
+    assert explorer.hud_mask_stage2_confirm_enabled is True
+    assert explorer.hud_mask_safety_stages_explicitly_disabled == []
+
+    # An EXPERIMENT can still isolate a stage, but it is recorded as such so the gate can refuse
+    # to treat that arm as flip-eligible.
+    isolation = StepwiseExplorer(
+        edge_bar_hud_mask=True, hud_mask_collapse_guard=False, hud_mask_stage2_confirm=False
+    )
+    assert isolation.hud_mask_collapse_guard_enabled is False
+    assert isolation.hud_mask_safety_stages_explicitly_disabled == [
+        "collapse_guard",
+        "stage2_confirm",
+    ]
+
+    # And the SUBMITTED-flag combination that would ship the detector bare is refused at import.
+    assert _assert_hud_flag_coupling() is None  # the current (all-off) configuration is legal
+    import carnot.agentic.arc_competition_agent as agent_module
+
+    original = agent_module.SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED
+    try:
+        agent_module.SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = True
+        with pytest.raises(AssertionError, match="requires BOTH"):
+            agent_module._assert_hud_flag_coupling()
+    finally:
+        agent_module.SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = original
+
+
+def test_guard_attributes_a_branching_to_the_repair_added_region() -> None:
+    """WHOSE mask is aliasing -- answered from the guard's own antecedents, not from lost wins.
+
+    The harness's previous attribution iterated only games where a guard-armed arm LOST a win, so
+    ar25's proven collapses (an unrun game, and one where no control-held win was lost) sat
+    entirely outside its window while its empty output read as "the repair is clean".
+    """
+
+    shipped = np.zeros((8, 8), dtype=bool)
+    shipped[0, :] = True  # the already-shipped horizontal bar
+    applied = shipped.copy()
+    applied[:, 7] = True  # the repair-added vertical bar
+
+    guard = MaskCollapseGuard(applied_mask=applied, shipped_mask=shipped)
+    first = np.zeros((8, 8), dtype=int)
+    first[:, 7] = 4
+    second = first.copy()
+    second[3:, 7] = 9  # the two antecedents differ ONLY inside the repair-added column
+
+    common = dict(action_key=(6, None))
+    guard.observe(
+        origin_masked="M",
+        origin_unmasked="U1",
+        successor_masked="S1",
+        successor_unmasked="SU1",
+        origin_grid=first,
+        **common,
+    )
+    guard.observe(
+        origin_masked="M",
+        origin_unmasked="U2",
+        successor_masked="S2",
+        successor_unmasked="SU2",
+        origin_grid=second,
+        **common,
+    )
+    attribution = guard.diagnostics()["attribution"]
+    assert attribution["branchings_differing_in_repair_added_region"] == 1
+    assert attribution["branchings_differing_in_already_shipped_region"] == 0
+    assert attribution["attribution_unavailable"] == 0
+    assert attribution["regions_supplied"] is True
+
+
+def test_guard_attributes_shipped_outside_missing_and_shape_mismatch_cases() -> None:
+    """Every attribution bucket must be reachable and distinguishable in diagnostics."""
+
+    def branch(guard: MaskCollapseGuard, first=None, second=None) -> dict:
+        common = dict(action_key=(6, None))
+        guard.observe(
+            origin_masked="M",
+            origin_unmasked="U1",
+            successor_masked="S1",
+            successor_unmasked="SU1",
+            origin_grid=first,
+            **common,
+        )
+        guard.observe(
+            origin_masked="M",
+            origin_unmasked="U2",
+            successor_masked="S2",
+            successor_unmasked="SU2",
+            origin_grid=second,
+            **common,
+        )
+        return guard.diagnostics()["attribution"]
+
+    shipped = np.zeros((8, 8), dtype=bool)
+    shipped[0, :] = True
+    first = np.zeros((8, 8), dtype=int)
+
+    shipped_changed = first.copy()
+    shipped_changed[0, 3] = 9
+    shipped_attr = branch(
+        MaskCollapseGuard(applied_mask=shipped, shipped_mask=shipped), first, shipped_changed
+    )
+    assert shipped_attr["branchings_differing_in_already_shipped_region"] == 1
+
+    applied = np.zeros((8, 8), dtype=bool)
+    applied[:, 7] = True
+    outside_changed = first.copy()
+    outside_changed[4, 4] = 9
+    outside_attr = branch(MaskCollapseGuard(applied_mask=applied), first, outside_changed)
+    assert outside_attr["branchings_differing_outside_the_mask"] == 1
+
+    missing_attr = branch(MaskCollapseGuard(applied_mask=applied), None, None)
+    assert missing_attr["attribution_unavailable"] == 1
+
+    wrong_shape = np.zeros((4, 4), dtype=bool)
+    shape_attr = branch(MaskCollapseGuard(applied_mask=wrong_shape), first, outside_changed)
+    assert shape_attr["attribution_unavailable"] == 1
+
+
+def test_guard_counts_missing_attribution_rather_than_reporting_a_clean_zero() -> None:
+    """An absent region/grid must never read as 'no added-region aliasing'."""
+
+    guard = MaskCollapseGuard()  # no regions supplied
+    common = dict(action_key=(6, None))
+    for successor, unmasked in (("S1", "U1"), ("S2", "U2")):
+        guard.observe(
+            origin_masked="M",
+            origin_unmasked=unmasked,
+            successor_masked=successor,
+            successor_unmasked="X" + successor,
+            **common,
+        )
+    attribution = guard.diagnostics()["attribution"]
+    assert attribution["regions_supplied"] is False
+    assert attribution["attribution_unavailable"] == 1
+    assert attribution["branchings_differing_in_repair_added_region"] == 0

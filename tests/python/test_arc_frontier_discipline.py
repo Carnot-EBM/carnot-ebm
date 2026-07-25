@@ -401,7 +401,9 @@ def test_wired_frontier_does_not_record_deferred_nodes_as_exhausted_negatives():
 def test_wired_frontier_batch_only_pops_tier_admitted_rows():
     """A deferred row popped here would silently defeat the barrier (batches expand blindly)."""
     # tier_click_vocab_only=False: this test drives the barrier's state machine DIRECTLY with
-    exp = StepwiseExplorer(tier_click_vocab_only=False, tier_exhaustion=True, frontier_batch_size="all")
+    exp = StepwiseExplorer(
+        tier_click_vocab_only=False, tier_exhaustion=True, frontier_batch_size="all"
+    )
     node = {
         "path": [],
         "untested": [
@@ -646,12 +648,19 @@ def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_contro
     # (coordinate correction only) and F pins 3 (bounded with-replacement), which separates the
     # mechanism's two halves. Asserted as an EXACT set because a silently-dropped arm is how a
     # control goes missing.
-    # G / G2 added 2026-07-25 (REQ-ARC-WMTE-5960): the REPAIRED orientation-complete HUD
+    # G / G2 / G3 added 2026-07-25 (REQ-ARC-WMTE-5960): the REPAIRED orientation-complete HUD
     # status-bar detector arms. They also sit on B2's flags and differ from it by the detector
     # alone, so B2 is their matched control too. G is detection-only; G2 additionally arms the
-    # runtime collapse guard, so G2 - G isolates the guard's cost. Still asserted as an EXACT
-    # set for the reason stated above -- a silently-dropped arm is how a control goes missing.
-    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E", "F", "F1", "G", "G2"}
+    # runtime collapse guard, so G2 - G isolates the guard's cost; G3 additionally arms Stage 2's
+    # pre-activation behavioural confirmation and is the ONLY flip candidate (G ships the Stage-1
+    # geometry bare, which was measured over-masking a decision-relevant fill gauge on ar25, and
+    # G2 applies a bad mask first and retracts it only after nodes exist under it). Still asserted
+    # as an EXACT set for the reason stated above -- a silently-dropped arm is how a control goes
+    # missing.
+    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E", "F", "F1", "G", "G2", "G3"}
+    assert m.HUD_MASK_FLIP_CANDIDATE_ARMS == ("G3",)
+    assert m.ARMS["G"]["kwargs"]["hud_mask_stage2_confirm"] is False
+    assert m.ARMS["G3"]["kwargs"]["hud_mask_stage2_confirm"] is True
     assert m.ARMS["F"]["kwargs"]["click_pixel_sampling"] is True
     assert m.ARMS["F"]["kwargs"]["click_pixel_redraw_budget"] == 3
     assert m.ARMS["F1"]["kwargs"]["click_pixel_redraw_budget"] == 1
