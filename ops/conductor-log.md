@@ -14297,3 +14297,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 20:39 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
 | 2026-07-25 21:31 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
 | 2026-07-25 22:29 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
+| 2026-07-25 22:53 UTC | Gated on Exp5920 ready: transactional constraint-m | OK | 88 passed, 1 warning in 8.10s |
+| 2026-07-25 22:55 UTC | Gated on Exp5923 stream and Exp5924 fixture: prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5923-sota-schema-supported-constraintir-a |
