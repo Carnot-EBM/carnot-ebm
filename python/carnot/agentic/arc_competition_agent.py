@@ -36,6 +36,7 @@ from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior, conne
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_hud_bar_detector import (
     HUD_MASK_GUARD_MAX_SPLIT_NODES,
+    DeferredMaskActivation,
     MaskCollapseGuard,
     mask_summary,
 )
@@ -293,6 +294,50 @@ SUBMITTED_EDGE_BAR_HUD_MASK_MODE = "orientation_complete_edge_bar_geometry_singl
 # flipped together with the detector it guards, never silently ahead of it.
 SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = False
 SUBMITTED_HUD_MASK_COLLAPSE_GUARD_MODE = "per_node_successor_branching_proof_with_unmasked_control"
+# STAGE-2 BEHAVIOURAL CONFIRMATION BEFORE THE MASK IS EVER APPLIED (added 2026-07-25 after the
+# adversarial review found the cardinal sin present on ar25). Stage 1 is single-frame GEOMETRY,
+# and geometry cannot distinguish a clock from a state variable that happens to be drawn as an
+# edge strip. On ar25 the repaired detector newly masks all 64 cells of COLUMN 63, which is a
+# FILL-LEVEL GAUGE: with it masked, 1554 distinct raw frames collapsed to 233 graph nodes and
+# the collapse guard proved 4 aliasing keys on the first seed measured. `region_hud_evidence`
+# separates that corpus correctly (refuses ar25/sc25/lp85/cn04, admits r11l/tn36) but needs >=16
+# transitions, so it cannot run at the single-frame first-contact point. This flag defers mask
+# ACTIVATION until that evidence exists: identity is UNMASKED (exactly today's behaviour) until
+# Stage 2 admits, and a refused candidate is discarded permanently. See
+# `carnot.agentic.arc_hud_bar_detector.DeferredMaskActivation`.
+SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED = False
+SUBMITTED_HUD_MASK_STAGE2_CONFIRM_MODE = "region_behavioural_evidence_before_activation"
+
+
+def _assert_hud_flag_coupling() -> None:
+    """Refuse, at import, a configuration that ships the detector without its safety stages.
+
+    WHY THIS IS AN ASSERTION AND NOT A COMMENT (2026-07-25). The three flags above were
+    INDEPENDENT, and the arm reported as passing the acceptance gate (arm G) had both safety
+    stages OFF. Flipping the reported-passing configuration would therefore have shipped
+    Stage 1's ar25 over-mask -- 17 of 17 observable keys proven to collapse in an independent
+    post-hoc analysis -- with nothing able to refuse it. Under this module's own stated
+    asymmetry (over-masking destroys correctness, under-masking only costs efficiency) the
+    detector must not be flippable on its own, so the coupling is mechanical.
+
+    The per-arm A/B still isolates the stages, because `StepwiseExplorer.__init__` takes explicit
+    kwargs that outrank these defaults -- an EXPERIMENT can measure detection alone (arm G), but
+    a SHIPPED configuration cannot be it.
+    """
+
+    if SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED and not (
+        SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED and SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED
+    ):
+        raise AssertionError(
+            "SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED=True requires BOTH "
+            "SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED=True and "
+            "SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED=True: the Stage-1 geometry detector "
+            "over-masks a decision-relevant fill gauge on ar25, and Stage 2 (pre-activation "
+            "refusal) plus Stage 3 (runtime collapse refusal) are what make it safe to apply"
+        )
+
+
+_assert_hud_flag_coupling()
 # REQ-ARC-WMTE-5717: inject a small game-AGNOSTIC exploration-playbook few-shot (the recurring
 # "orient, hypothesize, test, revise" method distilled from the solve corpus,
 # docs/research-notes/arc-exploration-playbook-20260717.md) into the STALL/first-contact
@@ -866,7 +911,8 @@ class StepwiseExplorer:
         auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
         edge_bar_hud_mask: bool | None = None,
         hud_mask_collapse_guard: bool | None = None,
-        hud_mask_guard_max_split_nodes: int = HUD_MASK_GUARD_MAX_SPLIT_NODES,
+        hud_mask_stage2_confirm: bool | None = None,
+        hud_mask_guard_max_split_nodes: int | None = HUD_MASK_GUARD_MAX_SPLIT_NODES,
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
@@ -1044,19 +1090,63 @@ class StepwiseExplorer:
             "CARNOT_ARC_EDGE_BAR_HUD_MASK",
             SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED,
         )
+        # SAFETY-STAGE COUPLING (2026-07-25). Whenever the repaired detector is on, BOTH safety
+        # stages default ON -- so a configuration cannot get the wider mask without the two
+        # mechanisms that can refuse it. Only an EXPLICIT kwarg can turn a stage off, which is
+        # what lets the A/B isolate the stages (arm G = detection only) while making it
+        # impossible for a flag flip alone to ship the detector bare. `_fd_gate` already ranks
+        # explicit-kwarg > env > default, so passing the detector's state as the DEFAULT here is
+        # exactly the right precedence.
         self.hud_mask_collapse_guard_enabled = _fd_gate(
             hud_mask_collapse_guard,
             "CARNOT_ARC_HUD_MASK_COLLAPSE_GUARD",
-            SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED,
+            SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED or self.edge_bar_hud_mask_enabled,
+        )
+        self.hud_mask_stage2_confirm_enabled = _fd_gate(
+            hud_mask_stage2_confirm,
+            "CARNOT_ARC_HUD_MASK_STAGE2_CONFIRM",
+            SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED or self.edge_bar_hud_mask_enabled,
+        )
+        # Recorded so the A/B gate can tell "the safety stage was never armed" from "it was armed
+        # and found nothing" -- the distinction the previous gate erased when it certified an arm
+        # whose entire safety axis was null.
+        self.hud_mask_safety_stages_explicitly_disabled = sorted(
+            name
+            for name, value in (
+                ("collapse_guard", hud_mask_collapse_guard),
+                ("stage2_confirm", hud_mask_stage2_confirm),
+            )
+            if value is False
         )
         self._hud_collapse_guard = (
-            MaskCollapseGuard(max_split_nodes=int(hud_mask_guard_max_split_nodes))
+            MaskCollapseGuard(
+                max_split_nodes=(
+                    None
+                    if hud_mask_guard_max_split_nodes is None
+                    else int(hud_mask_guard_max_split_nodes)
+                )
+            )
             if self.hud_mask_collapse_guard_enabled
+            else None
+        )
+        # Stage 2's deferred-activation state machine. Constructed only when the repaired
+        # detector is on AND Stage 2 is armed; otherwise None, and the mask path behaves exactly
+        # as it did before this requirement existed.
+        self._hud_deferred_activation = (
+            DeferredMaskActivation()
+            if (self.edge_bar_hud_mask_enabled and self.hud_mask_stage2_confirm_enabled)
             else None
         )
         # Recorded for the artifact row: WHICH detector produced the mask that is actually in
         # force, so a reader never has to infer the treatment from a cell count.
         self._hud_mask_source = "explicit_kwarg" if hud_mask is not None else "unresolved"
+        # The mask the SHIPPED (pre-repair) classifier would have produced on the same first
+        # frame. Used ONLY to attribute an aliasing branching to the repair-added cells vs the
+        # already-shipped ones; never applied to identity.
+        self._hud_shipped_mask = None
+        # Raw grid of the most recently observed frame -- the antecedent the collapse guard needs
+        # for region attribution. One 64x64 array, replaced each ingest.
+        self._last_grid = None
         # Distinct UNMASKED frame hashes observed. The denominator of the dedup metric: with a
         # working mask, many distinct raw frames share one graph node; with none, the two counts
         # are equal (measured on all 8 mask-None public games) and the search has no memory.
@@ -1707,16 +1797,38 @@ class StepwiseExplorer:
             masked_hash = frame_hash(masked)
             guard = self._hud_collapse_guard
             if guard is not None and guard.is_split(masked_hash):
-                # REQ-ARC-WMTE-5960 HARD REFUSAL. This masked hash was PROVEN to alias two
+                # REQ-ARC-WMTE-5960 HARD REFUSAL. This masked hash was observed to alias two
                 # behaviourally distinct true states (same (node, concrete action) -> two
-                # different masked successors, with the unmasked control showing only one). So
-                # for this node -- or, past the guard's split cap, for every node -- identity
-                # reverts to the unmasked frame. Appending the unmasked hash rather than
-                # returning it bare keeps the compound key visibly derived from the masked one,
-                # which makes a split node greppable in a dumped graph.
+                # different masked successors, with the unmasked control showing only one), so
+                # identity reverts to the unmasked frame FOR THIS NODE ONLY. Appending the
+                # unmasked hash rather than returning it bare keeps the compound key visibly
+                # derived from the masked one, which makes a split node greppable in a dumped
+                # graph.
+                #
+                # LOCAL, NEVER GLOBAL (corrected 2026-07-25). The guard used to flip to this
+                # compound key for EVERY frame once it had split more nodes than a small cap,
+                # which left every pre-flip node under the plain masked key and made the same
+                # true state reachable under two conventions -- measured at 97.7% of the graph
+                # on tu93, turning a 1-level/361-action win into 0 levels/1953 actions on 3 of 3
+                # seeds. Splits are now unbounded and strictly per-node.
                 return masked_hash + "|u:" + frame_hash(g)
             return masked_hash
         return frame_hash(g)
+
+    def _arm_guard_regions(self) -> None:
+        """Tell the collapse guard which cells are REPAIR-ADDED and which are already shipped.
+
+        Called the moment a mask becomes active (immediately for Stage-1-only configurations,
+        at Stage-2 admission otherwise). Without this the guard can count branchings but cannot
+        say WHOSE mask caused them, which is the question that decides whether a regression is a
+        pre-existing property of the live flag or something this repair introduced.
+        """
+
+        guard = self._hud_collapse_guard
+        if guard is None or self.hud_mask is None:
+            return
+        guard.applied_mask = self.hud_mask
+        guard.shipped_mask = self._hud_shipped_mask
 
     def _unmasked_hash(self, frame_or_grid) -> Optional[str]:
         """Hash IGNORING `hud_mask` -- the collapse guard's mandatory control channel.
@@ -1743,11 +1855,24 @@ class StepwiseExplorer:
             "auto_hud_mask_enabled": bool(self.auto_hud_mask),
             "edge_bar_hud_mask_enabled": bool(self.edge_bar_hud_mask_enabled),
             "hud_mask_collapse_guard_enabled": bool(self.hud_mask_collapse_guard_enabled),
+            "hud_mask_stage2_confirm_enabled": bool(self.hud_mask_stage2_confirm_enabled),
+            # Which safety stages were turned off by an EXPLICIT kwarg. An arm in this list is a
+            # MECHANISM-ISOLATION arm, never a flip candidate: the gate reads this so it can no
+            # longer certify a configuration whose safety axis was structurally unmeasured.
+            "hud_mask_safety_stages_explicitly_disabled": list(
+                self.hud_mask_safety_stages_explicitly_disabled
+            ),
             "hud_mask_source": str(self._hud_mask_source),
             "hud_mask_resolved": bool(summary["resolved"]),
             "hud_mask_cell_count": int(summary["cell_count"]),
             "hud_mask_rows": summary["rows"],
             "hud_mask_cols": summary["cols"],
+            # Content digest of the mask's CELL SET. Two masks must be compared on this, not on
+            # cell_count: equal counts do not imply the same cells, so a repair that MOVED the
+            # mask would have read as inert under a count comparison.
+            "hud_mask_digest": summary["digest"],
+            "hud_shipped_mask_cell_count": int(mask_summary(self._hud_shipped_mask)["cell_count"]),
+            "hud_shipped_mask_digest": mask_summary(self._hud_shipped_mask)["digest"],
             "graph_nodes": int(len(self.graph)),
             "unique_frames": int(len(self._unique_frame_hashes)),
             # graph_nodes / unique UNMASKED frames. 1.0 means every distinct raw frame became
@@ -1767,6 +1892,10 @@ class StepwiseExplorer:
         else:
             out["collapse_guard"] = None
             out["collapse_guard_refusals"] = 0
+        if self._hud_deferred_activation is not None:
+            out["stage2"] = self._hud_deferred_activation.diagnostics()
+        else:
+            out["stage2"] = None
         return out
 
     def _grid_for_hash(self, node_hash: Optional[str]):
@@ -2127,18 +2256,66 @@ class StepwiseExplorer:
             # hashed under the old one would corrupt node identity, per _hash's masking).
             self._hud_mask_attempted = True
             if self.auto_hud_mask and self.hud_mask is None:
-                self.hud_mask = _compute_hud_mask_from_frame(
+                candidate = _compute_hud_mask_from_frame(
                     latest, edge_bar_detector=self.edge_bar_hud_mask_enabled
                 )
-                self._hud_mask_source = (
-                    (
-                        "edge_bar_detector_req5960"
-                        if self.edge_bar_hud_mask_enabled
-                        else "status_bar_classifier_req5583"
-                    )
-                    if self.hud_mask is not None
-                    else "unresolved_no_bar_detected"
+                # The mask the SHIPPED classifier would have produced on this same frame. Kept
+                # purely so the collapse guard can attribute an aliasing branching to the
+                # REPAIR-ADDED cells or to the already-shipped ones -- attribution the harness
+                # previously inferred from win/loss bookkeeping, which structurally could not see
+                # a game where no win was lost (the ar25 blind spot).
+                self._hud_shipped_mask = (
+                    _compute_hud_mask_from_frame(latest, edge_bar_detector=False)
+                    if self.edge_bar_hud_mask_enabled
+                    else candidate
                 )
+                if self._hud_deferred_activation is not None:
+                    # STAGE 2 GATE: propose, do NOT apply. Identity stays unmasked (today's
+                    # behaviour) until enough transitions exist to judge the candidate.
+                    self._hud_deferred_activation.propose(candidate)
+                    self._hud_mask_source = (
+                        "edge_bar_detector_req5960_stage2_pending"
+                        if candidate is not None
+                        else "unresolved_no_bar_detected"
+                    )
+                else:
+                    self.hud_mask = candidate
+                    self._hud_mask_source = (
+                        (
+                            "edge_bar_detector_req5960"
+                            if self.edge_bar_hud_mask_enabled
+                            else "status_bar_classifier_req5583"
+                        )
+                        if self.hud_mask is not None
+                        else "unresolved_no_bar_detected"
+                    )
+                    self._arm_guard_regions()
+        # STAGE 2 EVIDENCE ACCUMULATION. Runs on every observed frame while a candidate is
+        # pending. `self.awaiting` still holds the action that produced `latest` at this point in
+        # _ingest (it is consumed further down), so the per-action-class ubiquity statistic gets a
+        # real label rather than a pooled one. A None return means "keep the current identity
+        # convention", so a Stage-2 refusal leaves the run byte-identical to today's unmasked
+        # behaviour rather than silently masking.
+        if self._hud_deferred_activation is not None and self._hud_deferred_activation.pending:
+            # ACTION CLASS, not the concrete click. Stage 2's ubiquity statistic is "the region
+            # ticks whatever ACTION CLASS you take" (the su15 case it was calibrated on: action
+            # a7 never moves row 63 while a6 moves it 75-89% of the time). Keying on concrete
+            # click coordinates instead would leave almost no class tried twice, so the statistic
+            # would abstain forever and Stage 2 would never decide anything.
+            label = None
+            if isinstance(self.awaiting, dict) and self.awaiting.get("action") is not None:
+                try:
+                    label = int(self.awaiting["action"])
+                except Exception:
+                    label = None
+            try:
+                activated = self._hud_deferred_activation.observe(latest, label)
+            except Exception:
+                activated = None
+            if activated is not None:
+                self.hud_mask = activated
+                self._hud_mask_source = "edge_bar_detector_req5960_stage2_confirmed"
+                self._arm_guard_regions()
         unmasked_now = self._unmasked_hash(latest)
         # The UNMASKED hash of the frame the agent was standing on when it issued the action
         # that produced `latest` -- i.e. the raw antecedent. Read from the previous _ingest, NOT
@@ -2147,9 +2324,18 @@ class StepwiseExplorer:
         # on every transition of a bare run (measured: 1952 of 1952 on tu93). Sourcing the
         # control from there is what left the collapse guard's control channel dead.
         unmasked_before = self._last_unmasked_hash
+        # The raw GRID of that same antecedent, for the guard's region attribution. Sourced the
+        # same way and for the same reason as the hash above.
+        grid_before = self._last_grid
         if unmasked_now:
             self._unique_frame_hashes.add(unmasked_now)
             self._last_unmasked_hash = unmasked_now
+        try:
+            from carnot.agentic.arc_agi3_world_model import grid_of as _grid_of_for_guard
+
+            self._last_grid = _grid_of_for_guard(latest)
+        except Exception:
+            self._last_grid = None
         h = self._hash(latest)
         lvl = _level_of(latest)
         over = self._game_over(latest)
@@ -2185,6 +2371,9 @@ class StepwiseExplorer:
                         action_key=(int(o["action"]), o.get("data")),
                         successor_masked=h,
                         successor_unmasked=unmasked_now,
+                        # Region attribution only -- never changes a decision. Omitting it costs
+                        # a counted `attribution_unavailable`.
+                        origin_grid=grid_before,
                     )
                 except Exception:
                     pass
@@ -3537,6 +3726,7 @@ class CarnotAgentPolicy:
         auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
         edge_bar_hud_mask: bool | None = None,
         hud_mask_collapse_guard: bool | None = None,
+        hud_mask_stage2_confirm: bool | None = None,
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
@@ -3581,6 +3771,7 @@ class CarnotAgentPolicy:
                 auto_hud_mask=auto_hud_mask,
                 edge_bar_hud_mask=edge_bar_hud_mask,
                 hud_mask_collapse_guard=hud_mask_collapse_guard,
+                hud_mask_stage2_confirm=hud_mask_stage2_confirm,
                 value_head=value_head,
                 value_weight=value_weight,
                 search_mode=search_mode,
@@ -3653,6 +3844,7 @@ class E3AgentPolicy:
         auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
         edge_bar_hud_mask: bool | None = None,
         hud_mask_collapse_guard: bool | None = None,
+        hud_mask_stage2_confirm: bool | None = None,
         value_head: Any = _DEFAULT_VALUE_HEAD,
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
         search_mode: str = SUBMITTED_SEARCH_MODE,
@@ -3791,6 +3983,7 @@ class E3AgentPolicy:
             auto_hud_mask=auto_hud_mask,
             edge_bar_hud_mask=edge_bar_hud_mask,
             hud_mask_collapse_guard=hud_mask_collapse_guard,
+            hud_mask_stage2_confirm=hud_mask_stage2_confirm,
             value_head=value_head,
             value_weight=value_weight,
             search_mode=search_mode,
@@ -5527,6 +5720,8 @@ SUBMITTED_AGENT_CONFIG = {
     "edge_bar_hud_mask_mode": SUBMITTED_EDGE_BAR_HUD_MASK_MODE,
     "hud_mask_collapse_guard_enabled": SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED,
     "hud_mask_collapse_guard_mode": SUBMITTED_HUD_MASK_COLLAPSE_GUARD_MODE,
+    "hud_mask_stage2_confirm_enabled": SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED,
+    "hud_mask_stage2_confirm_mode": SUBMITTED_HUD_MASK_STAGE2_CONFIRM_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

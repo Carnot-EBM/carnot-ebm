@@ -1,0 +1,1130 @@
+{
+  "chronological_event_stream_path_hash_rows_and_prefix_chain": {
+    "exists": true,
+    "expected_rows": 48,
+    "final_prefix_checksum": "sha256:ca4b6c4f342f3b53a23c85de3ff9ab2776f9f632d9a10369432b097cc4216cee",
+    "no_hidden_reference_answer": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5923_sota_schema_supported_constraintir_ab.events.jsonl",
+    "prefix_chain_ok": true,
+    "rows": 48,
+    "sha256": "sha256:a8b95590bc3a19ae5733e4ff726852a2fade393f6fb7d364f2d9872deedcdd89"
+  },
+  "chronological_event_stream_ready_score": 1.0,
+  "correct_mode_diversity_and_overpruning": {
+    "best_control_unique_correct_modes": 0,
+    "best_schema_unique_correct_modes": 0,
+    "material_correct_mode_collapse": false,
+    "overpruned_model_case_pairs": [],
+    "overpruning_count": 0,
+    "successes_by_arm": {
+      "direct": 0,
+      "prompt_structured": 0,
+      "reason_then_schema_first_ir_token": 0,
+      "schema_first_ir_token": 0
+    },
+    "unique_correct_mode_identities_by_arm": {
+      "direct": 0,
+      "prompt_structured": 0,
+      "reason_then_schema_first_ir_token": 0,
+      "schema_first_ir_token": 0
+    }
+  },
+  "duration_s": 196.213766,
+  "embedded_tokenizer_loader_cuda_gpu_and_vram_receipts": {
+    "embedded_tokenizer_receipts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "embedded_tokenizer_only": true,
+        "eos_token_id": 248046,
+        "load_duration_s": 1.176672,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "n_vocab": 248320,
+        "ok": true,
+        "source": "embedded_gguf_llama_cpp_vocab_only",
+        "tokenizer_probe_token_ids": [
+          4754,
+          57605,
+          763,
+          64040
+        ],
+        "used_hf_autotokenizer": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "embedded_tokenizer_only": true,
+        "eos_token_id": 106,
+        "load_duration_s": 0.87729,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "n_vocab": 262144,
+        "ok": true,
+        "source": "embedded_gguf_llama_cpp_vocab_only",
+        "tokenizer_probe_token_ids": [
+          14937,
+          133624,
+          1083,
+          158216
+        ],
+        "used_hf_autotokenizer": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "embedded_tokenizer_only": true,
+        "eos_token_id": 106,
+        "load_duration_s": 1.002411,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "n_vocab": 262144,
+        "ok": true,
+        "source": "embedded_gguf_llama_cpp_vocab_only",
+        "tokenizer_probe_token_ids": [
+          14937,
+          133624,
+          1083,
+          158216
+        ],
+        "used_hf_autotokenizer": false
+      }
+    },
+    "environment": {
+      "atomic_checkpoint_resume": {
+        "detail": "atomic_jsonl_checkpoint_resume",
+        "ok": true
+      },
+      "atomic_output": {
+        "detail": "os.replace_same_directory",
+        "ok": true
+      },
+      "disk": {
+        "available_mb": 1167477,
+        "ok": true,
+        "required_mb": 8192
+      },
+      "gpu_health": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_free_mb": 23859,
+            "memory_total_mb": 24576,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 23557,
+            "memory_total_mb": 24576,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          }
+        ],
+        "ok": true
+      },
+      "llama_cpp_import": {
+        "ok": true
+      },
+      "protected_workload": {
+        "ok": true,
+        "protected_pids": []
+      },
+      "public_llama_cpp_cuda": {
+        "gpu_offload_supported": true,
+        "logits_processor_parameter": true,
+        "ok": true
+      },
+      "ram": {
+        "available_mb": 96419,
+        "ok": true,
+        "required_mb": 32768
+      }
+    },
+    "model_attempts": [
+      {
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "load_duration_s": 10.345198,
+        "model_used": true,
+        "vram_delta_mb": 21294.0
+      },
+      {
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "load_duration_s": 9.128467,
+        "model_used": true,
+        "vram_delta_mb": 25718.0
+      },
+      {
+        "gpu_offload_verified": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "load_duration_s": 8.534071,
+        "model_used": true,
+        "vram_delta_mb": 18628.0
+      }
+    ],
+    "model_resolution": {
+      "cached_sota_pair_plus_cached_third_family": true,
+      "resolved_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    }
+  },
+  "exact_semantic_primary_comparison_and_intervals": {
+    "best_control_arm": "direct",
+    "best_schema_supported_arm": "schema_first_ir_token",
+    "by_arm_held": {
+      "direct": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 9,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 9,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "prompt_structured": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 9,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 9,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "reason_then_schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 9,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 9,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 9,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 9,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    },
+    "held_exact_semantic_delta_vs_best_control": 0.0,
+    "paired_bootstrap_ci95": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "mean": 0.0,
+      "n_pairs": 9
+    },
+    "principle": "syntax, type, and scope improvements cannot substitute for an exact semantic win over the best matched control."
+  },
+  "experiment_id": "experiment_5923_sota_schema_supported_constraintir_ab",
+  "field_provenance": {
+    "chronological_event_stream_path_hash_rows_and_prefix_chain": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "chronological_event_stream_ready_score": {
+      "principle": "bare 1.0 means complete real-model chronology and tamper-safe replay, not positive model science.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "correct_mode_diversity_and_overpruning": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "duration_s": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "embedded_tokenizer_loader_cuda_gpu_and_vram_receipts": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "exact_semantic_primary_comparison_and_intervals": {
+      "principle": "syntax, type, and scope improvements cannot substitute for an exact semantic win over the best matched control.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "field_provenance": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "gate_replay_receipt": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "held_family_and_attribute_semantic_results": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "honest_verdict": {
+      "principle": "use complete_positive:, complete_null:, retired:, or blocked:.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "inference_substrate": {
+      "principle": "use local_mandated_gguf_public_llama_cpp_cuda_schema_supported_decoding.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "missing_spurious_and_unsafe_acceptance": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "model_file_hashes": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "model_specs": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "no_repair_call_and_no_answer_enumeration_receipt": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "per_model_arm_structural_and_exact_metrics": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "preconditions_checked": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "protected_files_unchanged": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "reproducibility_checksum": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "retirement_decision": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "schema_decode_live_ready_score": {
+      "principle": "bare 1.0 only for positive held exact-semantic improvement, zero unsafe accepts, and no material correct-mode collapse.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "sealed_cases_families_adversaries_prompts_seeds_arms_budgets": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "status": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "test_commands": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "test_exit_codes": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "token_latency_gpu_and_memory_accounting": {
+      "principle": "Exp5923 required artifact field.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    },
+    "verifier_is_oracle": {
+      "principle": "true only for exact parse, type, scope, execution, equivalence, and certificate adjudication.",
+      "satisfied_by": "generated_by_exp5923_paired_schema_supported_constraintir_ab"
+    }
+  },
+  "gate_replay_receipt": {
+    "artifact_checksum": "sha256:29192ae536a6974e05c521143c12530b9de343daf5c5417d5efecd9af2a162ba",
+    "exp5922_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5922_gguf_schema_decoder_bridge.json",
+    "exp5922_artifact_present": true,
+    "exp5922_ready_score": 1.0,
+    "gguf_schema_decoder_bridge_ready": true,
+    "ok": true,
+    "one_step_cuda_smoke_ok": true
+  },
+  "held_family_and_attribute_semantic_results": {
+    "attribute_semantic_adversaries": {
+      "direct": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 3,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 3,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "prompt_structured": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 3,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 3,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "reason_then_schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 3,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 3,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 3,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 3,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    },
+    "held_family": {
+      "direct": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 6,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 6,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "prompt_structured": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 6,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 6,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "reason_then_schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 6,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 6,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 6,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 6,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    }
+  },
+  "honest_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+  "inference_substrate": "local_mandated_gguf_public_llama_cpp_cuda_schema_supported_decoding",
+  "missing_spurious_and_unsafe_acceptance": {
+    "by_arm": {
+      "direct": {
+        "missing_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepts": 0
+      },
+      "prompt_structured": {
+        "missing_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepts": 0
+      },
+      "reason_then_schema_first_ir_token": {
+        "missing_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepts": 0
+      },
+      "schema_first_ir_token": {
+        "missing_constraints": 0,
+        "spurious_constraints": 0,
+        "unsafe_accepts": 0
+      }
+    },
+    "missing_constraints_total": 0,
+    "spurious_constraints_total": 0,
+    "unsafe_accepts_total": 0
+  },
+  "model_file_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    }
+  },
+  "model_specs": [
+    {
+      "family": "qwen_moe",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "required": true,
+      "resolved_via": "cached_sota_pair"
+    },
+    {
+      "family": "gemma_dense",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "required": true,
+      "resolved_via": "resolve_cached_gguf_cached_third_family"
+    },
+    {
+      "family": "gemma_moe",
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "required": true,
+      "resolved_via": "cached_sota_pair"
+    }
+  ],
+  "no_repair_call_and_no_answer_enumeration_receipt": {
+    "complete_answer_enumeration_used": false,
+    "exact_diagnostic_repair_call_used": false,
+    "ok": true
+  },
+  "per_model_arm_structural_and_exact_metrics": {
+    "by_arm": {
+      "direct": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 12,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 12,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "prompt_structured": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 12,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 12,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "reason_then_schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 12,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 12,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      },
+      "schema_first_ir_token": {
+        "compile_rate": 0.0,
+        "exact_semantic_success_rate": 0.0,
+        "n": 12,
+        "parse_rate": 0.0,
+        "scope_rate": 0.0,
+        "semantic_n": 12,
+        "type_rate": 0.0,
+        "unsafe_accept_rate": 0.0
+      }
+    },
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "direct": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "prompt_structured": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "reason_then_schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "direct": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "prompt_structured": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "reason_then_schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "direct": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "prompt_structured": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "reason_then_schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 4,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 4,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        }
+      }
+    }
+  },
+  "preconditions_checked": {
+    "block_reason": null,
+    "blocked_before_model_load": false,
+    "headline_checks": {
+      "adequate_disk": true,
+      "adequate_ram": true,
+      "adequate_vram": true,
+      "atomic_checkpoint_resume_ready": true,
+      "atomic_output_ready": true,
+      "embedded_gguf_tokenizers_load": true,
+      "exp5922_gate_replayed_before_model_load": true,
+      "model_files_hashed": true,
+      "model_specs_defined": true,
+      "no_hf_autotokenizer_for_gguf": true,
+      "no_protected_workload": true,
+      "public_llama_cpp_cuda_available": true,
+      "real_nonzero_gpu_offload_supported": true,
+      "resolved_all_three_model_files": true,
+      "two_healthy_rtx_3090s": true
+    },
+    "run_order": "exp5922_gate_and_resource_checks_before_any_model_load"
+  },
+  "protected_files_unchanged": {
+    "files": [
+      {
+        "exists": true,
+        "path": "scripts/research_conductor.py",
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "sha256_before": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/changelog.md",
+        "sha256": "sha256:b579d15e3f6a1c8538319894a2f48275f099e61f1f61e8c6db7c101b3190fc78",
+        "sha256_before": "sha256:b579d15e3f6a1c8538319894a2f48275f099e61f1f61e8c6db7c101b3190fc78",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "ops/status.md",
+        "sha256": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+        "sha256_before": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+        "unchanged": true
+      },
+      {
+        "exists": true,
+        "path": "_bmad/traceability.md",
+        "sha256": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "sha256_before": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "unchanged": true
+      }
+    ],
+    "unchanged": true
+  },
+  "random_seed": 5923,
+  "reproducibility_checksum": "sha256:d17eccb5d2e7fd299ad90c0f5f994638f835db364e9bba1e8cd00b5406cb9efb",
+  "retirement_decision": {
+    "next_action": "retire_mechanism_no_reprompt",
+    "principle": "retire rather than scheduling another reprompt when schema support fails exact semantics or safety/diversity.",
+    "reasons": [
+      "all_three_models_zero_exact_success_in_schema_supported_arms"
+    ],
+    "retire": true
+  },
+  "run_date": "20260725",
+  "schema": "carnot.experiment_5923.sota_schema_supported_constraintir_ab.v1",
+  "schema_decode_live_ready_score": 0.0,
+  "sealed_cases_families_adversaries_prompts_seeds_arms_budgets": {
+    "arm_order": [
+      "direct",
+      "prompt_structured",
+      "schema_first_ir_token",
+      "reason_then_schema_first_ir_token"
+    ],
+    "arms": {
+      "direct": {
+        "calls": 1,
+        "control": true,
+        "principle": "Unstructured baseline gets the same total proposal budget.",
+        "reasoning_outside_ir": false,
+        "schema_supported": false
+      },
+      "prompt_structured": {
+        "calls": 1,
+        "control": true,
+        "principle": "Prompt-only structure controls for instructions without token masks.",
+        "reasoning_outside_ir": false,
+        "schema_supported": false
+      },
+      "reason_then_schema_first_ir_token": {
+        "calls": 1,
+        "control": false,
+        "principle": "Free reasoning is outside the IR; the IR itself is schema-masked.",
+        "reasoning_outside_ir": true,
+        "schema_supported": true
+      },
+      "schema_first_ir_token": {
+        "calls": 1,
+        "control": false,
+        "principle": "The logits mask starts at the first generated ConstraintIR byte.",
+        "reasoning_outside_ir": false,
+        "schema_supported": true
+      }
+    },
+    "bootstrap_intervals": {
+      "method": "deterministic_paired_bootstrap_ci95",
+      "resamples": 200,
+      "seed": 5923
+    },
+    "case_count": 4,
+    "cases": [
+      {
+        "adversary_kind": "correct",
+        "case_id": "train_task_canonical",
+        "case_index": 0,
+        "expected_semantic_success": true,
+        "split": "train",
+        "target_family": "task_selection",
+        "target_row_hash": "sha256:90d564e6da5197438333c9e08a840e9f899249a490f1bea74cfb09fc7ed9eb27",
+        "target_row_id": "exp5896-task_selection-canonical",
+        "visible_problem_sha256": "sha256:4e8da14a8f1ffac5408a11c30e132d808d9d2ae58fa40d6bf1c2bbe107cefa58"
+      },
+      {
+        "adversary_kind": "correct",
+        "case_id": "held_family_menu_canonical",
+        "case_index": 1,
+        "expected_semantic_success": true,
+        "split": "held_family",
+        "target_family": "menu_recommendation",
+        "target_row_hash": "sha256:78cb578f84f6cb96899c49f88d6137db3efb1087bdb5d5d06173074179c1baa3",
+        "target_row_id": "exp5896-menu_recommendation-canonical",
+        "visible_problem_sha256": "sha256:9138f52af8c83b71e4b89e14ecd176fb960bea6be61b2b9e47bfbd7c773b4178"
+      },
+      {
+        "adversary_kind": "correct",
+        "case_id": "held_composition_nested_and",
+        "case_index": 2,
+        "expected_semantic_success": true,
+        "split": "held_composition",
+        "target_family": "access_control",
+        "target_row_hash": "sha256:47c6b9bc49824eda60be6c9f9f0a1e53b53dc89e1cdaea6d7d89e836857c0452",
+        "target_row_id": "exp5896-access_control-canonical",
+        "visible_problem_sha256": "sha256:8b9976598352137f9cc5eb3a6e0da6fbbb584ca765f2c4d84ce2757c10a76798"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "case_id": "attribute_semantic_price_cap_false",
+        "case_index": 3,
+        "expected_semantic_success": false,
+        "split": "held_family",
+        "target_family": "menu_recommendation",
+        "target_row_hash": "sha256:78cb578f84f6cb96899c49f88d6137db3efb1087bdb5d5d06173074179c1baa3",
+        "target_row_id": "exp5896-menu_recommendation-canonical",
+        "visible_problem_sha256": "sha256:9138f52af8c83b71e4b89e14ecd176fb960bea6be61b2b9e47bfbd7c773b4178"
+      }
+    ],
+    "decoding_parameters": {
+      "repeat_penalty": 1.05,
+      "stop": [
+        "</s>",
+        "<eos>",
+        "<|eot_id|>"
+      ],
+      "temperature": 0.0,
+      "top_p": 1.0
+    },
+    "exact_verifier": "exp5896_parse_type_python_z3_behavior_hash_equivalence_v1",
+    "prompt_seed_budget_rows": [
+      {
+        "adversary_kind": "correct",
+        "arm_id": "direct",
+        "arm_order_index": 0,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "train_task_canonical",
+        "prompt_sha256": "sha256:feb755446243ed9d9edd4e578c37c5a39fc6f3853ff637de1b45a15242412110",
+        "seed": 5923,
+        "split": "train"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "prompt_structured",
+        "arm_order_index": 1,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "train_task_canonical",
+        "prompt_sha256": "sha256:126b0b3b69719986ec352902b34dfa6981676e2a26d861401c3bace0526848db",
+        "seed": 5924,
+        "split": "train"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "schema_first_ir_token",
+        "arm_order_index": 2,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 192
+        },
+        "case_id": "train_task_canonical",
+        "prompt_sha256": "sha256:0d75006d375d7707476245f3fe9c0834c1a9ad9856e30917a8f20a3691adb4ba",
+        "seed": 5925,
+        "split": "train"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "reason_then_schema_first_ir_token",
+        "arm_order_index": 3,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 48,
+          "schema_tokens": 144
+        },
+        "case_id": "train_task_canonical",
+        "prompt_sha256": "sha256:e0f852cd64ab6bf61916181969b02e840bfb4ede132ced8f0d0097c032093085",
+        "seed": 5926,
+        "split": "train"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "direct",
+        "arm_order_index": 0,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "held_family_menu_canonical",
+        "prompt_sha256": "sha256:268b0589e25f2fdfab57560a7380e6d471aba3ecd956eea26fd59e902e64b8fe",
+        "seed": 6023,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "prompt_structured",
+        "arm_order_index": 1,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "held_family_menu_canonical",
+        "prompt_sha256": "sha256:9f2eda2971152c1328ecdb0d0d6fb7f61156b50299f56ba38e5038091d1ea443",
+        "seed": 6024,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "schema_first_ir_token",
+        "arm_order_index": 2,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 192
+        },
+        "case_id": "held_family_menu_canonical",
+        "prompt_sha256": "sha256:acc4eb95eee0d2d850a6614325628f1be81b43ca6abc9d9897ec33e00bc22c52",
+        "seed": 6025,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "reason_then_schema_first_ir_token",
+        "arm_order_index": 3,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 48,
+          "schema_tokens": 144
+        },
+        "case_id": "held_family_menu_canonical",
+        "prompt_sha256": "sha256:ca697cc4d80d32c8bb44a2a059439a0ceccc7cf4b4e79ff3e700b52d8b9b953d",
+        "seed": 6026,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "direct",
+        "arm_order_index": 0,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "held_composition_nested_and",
+        "prompt_sha256": "sha256:d8eb2493937b392bd61bd9b7d7575d56dde9da1f05032be4d2f5349a30ada12b",
+        "seed": 6123,
+        "split": "held_composition"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "prompt_structured",
+        "arm_order_index": 1,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "held_composition_nested_and",
+        "prompt_sha256": "sha256:83945626f1db9b534c3b7b145385afd3863dba0b631dd463a74a88127b4f2b46",
+        "seed": 6124,
+        "split": "held_composition"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "schema_first_ir_token",
+        "arm_order_index": 2,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 192
+        },
+        "case_id": "held_composition_nested_and",
+        "prompt_sha256": "sha256:77354dd1ac77ebc68af00232848f8118d0dffd89dfa186573ba6f8e6bdb4b28c",
+        "seed": 6125,
+        "split": "held_composition"
+      },
+      {
+        "adversary_kind": "correct",
+        "arm_id": "reason_then_schema_first_ir_token",
+        "arm_order_index": 3,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 48,
+          "schema_tokens": 144
+        },
+        "case_id": "held_composition_nested_and",
+        "prompt_sha256": "sha256:d2b5739126077a091cbcce9471e9dd215162ff8433b61da37688d84e2c61cc97",
+        "seed": 6126,
+        "split": "held_composition"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "arm_id": "direct",
+        "arm_order_index": 0,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "attribute_semantic_price_cap_false",
+        "prompt_sha256": "sha256:268b0589e25f2fdfab57560a7380e6d471aba3ecd956eea26fd59e902e64b8fe",
+        "seed": 6223,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "arm_id": "prompt_structured",
+        "arm_order_index": 1,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 0
+        },
+        "case_id": "attribute_semantic_price_cap_false",
+        "prompt_sha256": "sha256:9f2eda2971152c1328ecdb0d0d6fb7f61156b50299f56ba38e5038091d1ea443",
+        "seed": 6224,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "arm_id": "schema_first_ir_token",
+        "arm_order_index": 2,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 0,
+          "schema_tokens": 192
+        },
+        "case_id": "attribute_semantic_price_cap_false",
+        "prompt_sha256": "sha256:acc4eb95eee0d2d850a6614325628f1be81b43ca6abc9d9897ec33e00bc22c52",
+        "seed": 6225,
+        "split": "held_family"
+      },
+      {
+        "adversary_kind": "attribute_semantic_adversary",
+        "arm_id": "reason_then_schema_first_ir_token",
+        "arm_order_index": 3,
+        "budget": {
+          "max_tokens": 192,
+          "reasoning_tokens": 48,
+          "schema_tokens": 144
+        },
+        "case_id": "attribute_semantic_price_cap_false",
+        "prompt_sha256": "sha256:ca697cc4d80d32c8bb44a2a059439a0ceccc7cf4b4e79ff3e700b52d8b9b953d",
+        "seed": 6226,
+        "split": "held_family"
+      }
+    ],
+    "run_date": "20260725",
+    "semantic_equivalence_rules": "Executable behavior and certificates own equivalence.",
+    "stopping_rules": {
+      "max_rows": 48,
+      "no_complete_answer_enumeration": true,
+      "no_repair_call": true
+    },
+    "token_budgets": {
+      "direct": {
+        "max_tokens": 192,
+        "reasoning_tokens": 0,
+        "schema_tokens": 0
+      },
+      "n_batch": 256,
+      "n_ctx": 8192,
+      "n_gpu_layers": -1,
+      "prompt_structured": {
+        "max_tokens": 192,
+        "reasoning_tokens": 0,
+        "schema_tokens": 0
+      },
+      "reason_then_schema_first_ir_token": {
+        "max_tokens": 192,
+        "reasoning_tokens": 48,
+        "schema_tokens": 144
+      },
+      "schema_first_ir_token": {
+        "max_tokens": 192,
+        "reasoning_tokens": 0,
+        "schema_tokens": 192
+      }
+    }
+  },
+  "status": "retired",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5923_sota_schema_supported_constraintir_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5923_sota_schema_supported_constraintir_ab.py -m pytest tests/python/test_experiment_5923_sota_schema_supported_constraintir_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5923_sota_schema_supported_constraintir_ab.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_5923_sota_schema_supported_constraintir_ab",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5923_sota_schema_supported_constraintir_ab.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {},
+  "token_latency_gpu_and_memory_accounting": {
+    "all_rows_report_gpu_telemetry": true,
+    "completion_tokens": 8640,
+    "latency_s": 129.399199,
+    "max_vram_delta_mb": 26675.0,
+    "prompt_tokens": 3924,
+    "rows": 48,
+    "total_tokens": 12564
+  },
+  "verifier_is_oracle": true
+}

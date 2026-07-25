@@ -20163,3 +20163,76 @@ only for a complete valid structural prefix.
 **Then** each smoke uses the public `llama_cpp.Llama` / `logits_processor`
 surface, records real GPU-offload receipts, and reports no semantic, latency,
 or generation-quality claim.
+
+## REQ-VERIFY-5923: Paired SOTA Schema-Supported ConstraintIR Exact-Semantic A/B
+
+The repository SHALL provide Exp5923 as a preregistered paired all-three-model
+comparison of direct generation, prompt-structured generation, schema-supported
+decoding from the first ConstraintIR token, and reason-then-schema-supported
+decoding from the first ConstraintIR token.  The experiment SHALL replay the
+Exp5922 gate before any model load, define `MODEL_SPECS` for
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, resolve the first two through
+`cached_sota_pair()` plus the cached third family, hash concrete GGUF files,
+load only embedded GGUF tokenizers, use public llama.cpp CUDA with nonzero GPU
+offload, and block honestly when host resources or protected-workload checks do
+not pass.
+
+The panel SHALL freeze train, held-family, held-operation/composition, and
+attribute-semantic adversary cases, prompts, seeds, budgets, decoding
+parameters, arm order, exact verifier, semantic-equivalence rules, stopping
+rules, and bootstrap intervals before inference.  Every completed row SHALL be
+adjudicated by exact parse, type, scope, compile, execution/certificate, and
+semantic-equivalence checks; syntax, type, scope, or compile gains SHALL NOT
+substitute for exact semantic success over the best matched control.
+
+The workflow SHALL write
+`results/experiment_5923_sota_schema_supported_constraintir_ab.events.jsonl`
+as a chronological hash-chained event stream containing committed row identity,
+model/arm/case/split, visible proposal text, exact outcome, prefix checksum, and
+no hidden reference answer.  It SHALL write
+`results/experiment_5923_sota_schema_supported_constraintir_ab.json` with the
+required Exp5923 fields, including structural/exact metrics, diversity and
+overpruning, missing/spurious/unsafe acceptance, held-family and
+attribute-semantic results, token/latency/GPU accounting, event-stream replay
+receipt, retirement decision, no-repair/no-answer-enumeration receipt,
+`chronological_event_stream_ready_score`, `schema_decode_live_ready_score`,
+`inference_substrate`, `verifier_is_oracle`, and terminal `honest_verdict`.
+
+If all three models have zero exact semantic success in both schema-supported
+arms, or if structural gains reduce exact success, increase unsafe acceptance,
+or materially collapse correct-mode diversity relative to the best control, the
+artifact SHALL retire this mechanism rather than schedule another reprompt.
+`chronological_event_stream_ready_score` SHALL be bare `1.0` only for a
+complete, untampered, real-model chronology; `schema_decode_live_ready_score`
+SHALL be bare `1.0` only for positive held exact-semantic improvement, zero
+unsafe accepts, and no material correct-mode collapse.
+
+### SCENARIO-VERIFY-5923: Paired Arms Are Frozen And Exactly Adjudicated
+
+**Given** Exp5922 is ready and the three mandated GGUF models are resolved
+through the required cache path
+**When** Exp5923 builds the sealed panel and executes all four arms for every
+model/case pair
+**Then** the artifact records matched budgets, frozen prompts/seeds/arm order,
+exact parse/type/scope/compile/execution/certificate outcomes, missing/spurious
+constraints, unsafe acceptance, diversity, latency, token, and GPU telemetry for
+every row.
+
+### SCENARIO-VERIFY-5923: Event Stream Replays And Tamper Fails
+
+**Given** Exp5923 has written a chronological event stream
+**When** the event stream is replayed by prefix checksum
+**Then** all rows validate in chronological order, the row count matches the
+sealed model/arm/case design, no event contains hidden reference answers, and
+any row tampering breaks replay.
+
+### SCENARIO-VERIFY-5923: Null Schema Semantics Retire Mechanism
+
+**Given** schema-supported arms improve structure but have zero exact semantic
+success for all three models, increase unsafe acceptance, or collapse
+correct-mode diversity against the best control
+**When** Exp5923 computes the primary comparison and intervals
+**Then** `schema_decode_live_ready_score` is `0.0`, the honest verdict starts
+with `retired:` or `complete_null:`, and the retirement decision does not
+schedule another repair or reprompt.

@@ -346,6 +346,35 @@ ARMS: dict[str, dict[str, Any]] = {
             "frontier_gradient": False,
             "edge_bar_hud_mask": True,
             "hud_mask_collapse_guard": True,
+            "hud_mask_stage2_confirm": False,
+        },
+        "deterministic": False,
+    },
+    # G3 (added 2026-07-25 after the adversarial review) -- THE ONLY FLIP CANDIDATE.
+    #
+    # WHY G AND G2 CANNOT BE FLIP CANDIDATES, measured:
+    #   * Arm G ships Stage-1 geometry BARE. On ar25 that newly masks all 64 cells of column 63,
+    #     which is a FILL-LEVEL GAUGE and not a clock: 1554 distinct raw frames collapse to 233
+    #     graph nodes, and the collapse guard proves aliasing keys there. Arm G's one ar25 "win"
+    #     (1 of 3 seeds) DEPENDS on that aliasing. Arm G also REGRESSES lp85 (B2 wins 3/3 at
+    #     649/67/417 actions; G loses seed 20260726), so it fails its own pre-registered gate on
+    #     any corpus containing lp85 -- the 3-game smoke that reported it passing never measured
+    #     5 of the 6 games where the repair changes the mask at all.
+    #   * Arm G2 arms Stage 3 but not Stage 2, so a bad mask is applied first and retracted at
+    #     runtime -- and retraction cannot undo the nodes already built under it.
+    # G3 = detector + Stage 2 (behavioural confirmation BEFORE the mask is ever applied) + Stage 3
+    # (runtime collapse refusal). It is the configuration whose flags are coupled in
+    # `arc_competition_agent._assert_hud_flag_coupling`, i.e. the only one a flag flip can
+    # actually produce.
+    "G3": {
+        "label": "edge_bar_hud_mask_stage2_confirmed_with_collapse_guard_flip_candidate",
+        "kwargs": {
+            "tier_exhaustion": True,
+            "tier_uniform_random": True,
+            "frontier_gradient": False,
+            "edge_bar_hud_mask": True,
+            "hud_mask_collapse_guard": True,
+            "hud_mask_stage2_confirm": True,
         },
         "deterministic": False,
     },
@@ -771,7 +800,19 @@ def run_cell(
         # "did the detector fire, and did dedup actually happen".
         "hud_mask_resolved": (hud_diag or {}).get("hud_mask_resolved"),
         "hud_mask_cell_count": (hud_diag or {}).get("hud_mask_cell_count"),
+        # THE MASK'S IDENTITY, not its size. Two masks must be compared on this digest: equal
+        # cell COUNTS do not imply the same cells, so a repair that moved a mask instead of
+        # widening it would have read as inert under the previous count comparison.
+        "hud_mask_digest": (hud_diag or {}).get("hud_mask_digest"),
         "hud_mask_source": (hud_diag or {}).get("hud_mask_source"),
+        # Stage 2's verdict on this cell: admitted / refused / discarded / pending / no_candidate.
+        # A `refused` row is the safety mechanism WORKING (the candidate was never applied), and
+        # is reported distinctly from "the detector found nothing".
+        "hud_mask_stage2_verdict": ((hud_diag or {}).get("stage2") or {}).get("stage2_verdict"),
+        "hud_mask_stage2_reason": ((hud_diag or {}).get("stage2") or {}).get("stage2_reason"),
+        "hud_mask_stage2_candidate_cells": ((hud_diag or {}).get("stage2") or {}).get(
+            "candidate_cell_count"
+        ),
         "unique_frames": (hud_diag or {}).get("unique_frames"),
         "graph_nodes": (hud_diag or {}).get("graph_nodes"),
         # graph_nodes / distinct UNMASKED frames. 1.0 = every distinct raw frame became its own
@@ -1243,8 +1284,14 @@ CLICK_PIXEL_CONTROL_ARM = "B2"
 
 # REQ-ARC-WMTE-5960: the repaired HUD detector arms. Same matched control (B2 = the current
 # live configuration), same one-flag-difference discipline as the sampler arms above.
-HUD_MASK_ARMS = ("G", "G2")
+HUD_MASK_ARMS = ("G", "G2", "G3")
 HUD_MASK_CONTROL_ARM = "B2"
+# Only arms whose SAFETY STAGES ARE ARMED can be flip candidates. G (no guard, no Stage 2) and
+# G2 (no Stage 2) are MECHANISM-ISOLATION arms: they answer "what does dedup buy" and "what does
+# the runtime guard cost", not "is this safe to ship". The gate previously passed on
+# `any_pass` across all HUD arms, which stamped `acceptance_gate_hud_mask_passed: True` on the
+# strength of arm G -- the one arm whose entire safety block was null.
+HUD_MASK_FLIP_CANDIDATE_ARMS = ("G3",)
 
 
 def positive_control_health(rows: Sequence[dict]) -> dict:
@@ -1680,6 +1727,109 @@ def _click_pixel_gate_pass_region_witness() -> dict:
     }
 
 
+_MASK_DELTA_CACHE: dict[tuple[str, ...], dict] = {}
+
+
+def hud_mask_delta_table(games: Sequence[str]) -> dict:
+    """Per-game mask under the SHIPPED classifier vs the REPAIRED one, from the reset frame.
+
+    WHY THIS IS A GATE INPUT AND NOT A CURIOSITY (2026-07-25 adversarial review). The repair
+    changes the mask on only SIX of the 25 public games; on the other nineteen the treatment arm
+    is byte-identical to its control. A smoke that measured r11l, lf52 and tu93 therefore
+    exercised the newly-added cells on exactly ONE of the six -- and both halves of the gate,
+    including the regression clause the gate's own docstring calls "the load-bearing half", were
+    evaluated over games where the intervention does nothing. The gate now REFUSES to report a
+    pass unless every repair-affected game was actually measured, and this table is how it knows
+    which games those are.
+
+    Cost: one env reset per game, no actions taken, so it is affordable to compute up front.
+    Masks are compared by CELL-SET DIGEST, never by cell count -- two masks of equal size can
+    occupy different cells.
+    """
+
+    key = tuple(sorted(str(g) for g in games))
+    if key in _MASK_DELTA_CACHE:
+        return _MASK_DELTA_CACHE[key]
+    out: dict[str, Any] = {
+        "method": (
+            "one offline env reset per game; _compute_hud_mask_from_frame with "
+            "edge_bar_detector False vs True on the SAME first frame; compared by cell-set digest"
+        ),
+        "per_game": {},
+        "games_where_mask_changed": [],
+        "games_where_mask_is_inert": [],
+        "games_unavailable": [],
+        "total_shipped_cells": 0,
+        "total_repaired_cells": 0,
+        "total_cells_dropped_by_the_repair": 0,
+        "total_cells_added_by_the_repair": 0,
+    }
+    try:
+        import numpy as np
+        from carnot.agentic import arc_solver_kit as kit
+        from carnot.agentic.arc_competition_agent import _compute_hud_mask_from_frame
+        from carnot.agentic.arc_hud_bar_detector import mask_cell_digest
+
+        arc = kit.offline_arcade()
+    except Exception as exc:  # pragma: no cover - environment-dependent
+        out["error"] = f"{type(exc).__name__}:{exc}"
+        _MASK_DELTA_CACHE[key] = out
+        return out
+
+    for game in key:
+        try:
+            env = arc.make(_resolve_game_id(arc, game), scorecard_id=arc.open_scorecard())
+            frame = env.reset()
+            shipped = _compute_hud_mask_from_frame(frame, edge_bar_detector=False)
+            repaired = _compute_hud_mask_from_frame(frame, edge_bar_detector=True)
+        except Exception as exc:  # pragma: no cover - environment-dependent
+            out["per_game"][game] = {"error": f"{type(exc).__name__}:{exc}"}
+            out["games_unavailable"].append(game)
+            continue
+        shipped_arr = (
+            np.zeros((1, 1), dtype=bool) if shipped is None else np.asarray(shipped, dtype=bool)
+        )
+        repaired_arr = (
+            np.zeros_like(shipped_arr) if repaired is None else np.asarray(repaired, dtype=bool)
+        )
+        if shipped is None and repaired is not None:
+            shipped_arr = np.zeros_like(repaired_arr)
+        added = int((repaired_arr & ~shipped_arr).sum()) if repaired_arr.shape == shipped_arr.shape else None
+        dropped = (
+            int((shipped_arr & ~repaired_arr).sum()) if repaired_arr.shape == shipped_arr.shape else None
+        )
+        shipped_digest = mask_cell_digest(shipped)
+        repaired_digest = mask_cell_digest(repaired)
+        changed = shipped_digest != repaired_digest
+        row = {
+            "shipped_cells": int(shipped_arr.sum()) if shipped is not None else 0,
+            "repaired_cells": int(repaired_arr.sum()) if repaired is not None else 0,
+            "shipped_digest": shipped_digest,
+            "repaired_digest": repaired_digest,
+            "cells_added_by_the_repair": added,
+            "cells_dropped_by_the_repair": dropped,
+            "mask_changed": bool(changed),
+        }
+        out["per_game"][game] = row
+        out["total_shipped_cells"] += row["shipped_cells"]
+        out["total_repaired_cells"] += row["repaired_cells"]
+        out["total_cells_added_by_the_repair"] += int(added or 0)
+        out["total_cells_dropped_by_the_repair"] += int(dropped or 0)
+        (out["games_where_mask_changed"] if changed else out["games_where_mask_is_inert"]).append(
+            game
+        )
+    out["superset_by_construction"] = bool(
+        not out["games_unavailable"] and out["total_cells_dropped_by_the_repair"] == 0
+    )
+    out["superset_note"] = (
+        "the repaired detector ORs IN the shipped predicate, so it can only ADD cells. "
+        "total_cells_dropped_by_the_repair is the mechanical check of that claim; a non-zero "
+        "value would mean an A/B difference could come from a cell that stopped being masked"
+    )
+    _MASK_DELTA_CACHE[key] = out
+    return out
+
+
 def _hud_mask_gate_pass_region_witness() -> dict:
     """Prove the HUD gate below CAN pass, by evaluating its predicate on a synthetic run.
 
@@ -1692,56 +1842,96 @@ def _hud_mask_gate_pass_region_witness() -> dict:
     the gate.
     """
 
-    seed = 1
-    synthetic = [
-        {
-            "arm": HUD_MASK_CONTROL_ARM,
-            "game": "gA",
-            "condition": "real",
-            "seed": seed,
-            "ran": True,
-            "levels": 1,
-            "node_inflation": 1.0,
-            "hud_mask_resolved": False,
-        },
-        {
-            "arm": HUD_MASK_ARMS[0],
-            "game": "gA",
-            "condition": "real",
-            "seed": seed,
-            "ran": True,
-            "levels": 1,
-            "node_inflation": 0.2,
-            "hud_mask_resolved": True,
-        },
-        {
-            "arm": HUD_MASK_ARMS[0],
-            "game": "gB",
-            "condition": "real",
-            "seed": seed,
-            "ran": True,
-            "levels": 1,
-            "node_inflation": 0.1,
-            "hud_mask_resolved": True,
-        },
-    ]
+    arm = HUD_MASK_FLIP_CANDIDATE_ARMS[0]
+    seeds = (1, 2)
+    synthetic: list[dict] = []
+    for seed in seeds:
+        synthetic.append(
+            {
+                "arm": HUD_MASK_CONTROL_ARM,
+                "game": "gA",
+                "condition": "real",
+                "seed": seed,
+                "ran": True,
+                "levels": 1,
+                "node_inflation": 1.0,
+                "hud_mask_resolved": False,
+                "hud_mask_digest": None,
+            }
+        )
+        for game, inflation in (("gA", 0.2), ("gB", 0.1)):
+            synthetic.append(
+                {
+                    "arm": arm,
+                    "game": game,
+                    "condition": "real",
+                    "seed": seed,
+                    "ran": True,
+                    "levels": 1,
+                    "node_inflation": inflation,
+                    "hud_mask_resolved": True,
+                    "hud_mask_digest": f"digest_{game}",
+                    "hud_mask_stage2_verdict": "admitted",
+                    # The SAFETY block the gate now requires as a conjunct. Present here so a
+                    # tightened safety predicate turns this witness False instead of silently
+                    # voiding the gate -- the same construction the win predicate already had.
+                    "hud_mask": {
+                        "hud_mask_stage2_confirm_enabled": True,
+                        "hud_mask_safety_stages_explicitly_disabled": [],
+                        "collapse_guard": {
+                            "collapse_refusals": 0,
+                            "keys_with_multiple_successors": 4,
+                            "non_deterministic_keys_excluded_by_control": 0,
+                            "uncontrolled_branchings_declined": 0,
+                            "control_live": True,
+                            "keys_with_repeated_unmasked_antecedent": 2,
+                            "proven_collapses": 0,
+                            "unproven_masked_branchings": 0,
+                            "globally_revoked": False,
+                            "split_budget_exceeded": False,
+                            "attribution": {
+                                "branchings_differing_in_repair_added_region": 0,
+                                "branchings_differing_in_already_shipped_region": 0,
+                                "branchings_differing_outside_the_mask": 0,
+                                "attribution_unavailable": 0,
+                                "regions_supplied": True,
+                            },
+                        },
+                        "stage2": {"stage2_verdict": "admitted"},
+                    },
+                }
+            )
     control = _per_seed_win_sets(synthetic, HUD_MASK_CONTROL_ARM)
-    treat = _per_seed_win_sets(synthetic, HUD_MASK_ARMS[0])
-    gained = bool(treat.get(seed, set()) - control.get(seed, set()))
-    regressed = bool(control.get(seed, set()) - treat.get(seed, set()))
+    treat = _per_seed_win_sets(synthetic, arm)
+    per_seed_gained = [bool(treat.get(s, set()) - control.get(s, set())) for s in seeds]
+    # ALL seeds, not any -- see `hud_mask_gate`. A witness built on an any-seed disjunction could
+    # not detect that the decision boolean was looser than the advertised contract.
+    gained = bool(per_seed_gained) and all(per_seed_gained)
+    regressed = any(bool(control.get(s, set()) - treat.get(s, set())) for s in seeds)
     # The SIGNAL half, evaluated with the same helper the real gate uses, so the witness fails
     # if the signal computation is broken rather than only if the win predicate is.
-    signal = _hud_mask_signal(synthetic, HUD_MASK_ARMS[0], game="gA", condition="real")
+    signal = _hud_mask_signal(synthetic, arm, game="gA", condition="real")
+    safety = _hud_arm_safety(synthetic, arm, "real")
+    safety_ok = bool(
+        safety.get("guard_armed")
+        and safety.get("control_live_on_all_cells")
+        and safety.get("stage2_armed_on_all_cells")
+        and not safety.get("globally_revoked_cells")
+        and not safety.get("safety_stages_explicitly_disabled")
+    )
     return {
         "construction": (
-            "control wins {gA} with node_inflation 1.0 and no mask; treatment wins {gA, gB} "
-            "with a resolved mask and node_inflation 0.2 on the same seed"
+            "control wins {gA} with node_inflation 1.0 and no mask; the FLIP-CANDIDATE arm wins "
+            "{gA, gB} on EVERY seed with a Stage-2-admitted mask, an armed guard with a live "
+            "control, and no revocation"
         ),
-        "gained": gained,
+        "arm": arm,
+        "gained_on_every_seed": gained,
         "regressed": regressed,
         "signal_computable": bool(signal.get("measured")),
         "signal_inflation_fell": bool(signal.get("inflation_improved")),
-        "passes": bool(gained and not regressed),
+        "safety_conjuncts_satisfiable": safety_ok,
+        "passes": bool(gained and not regressed and safety_ok),
     }
 
 
@@ -1842,14 +2032,22 @@ def _hud_mask_signal(
     }
 
 
-def hud_mask_gate(rows: Sequence[dict], *, condition: str = "real") -> dict:
+def hud_mask_gate(
+    rows: Sequence[dict],
+    *,
+    condition: str = "real",
+    mask_delta: Optional[dict] = None,
+) -> dict:
     """REQ-ARC-WMTE-5960's PRE-REGISTERED gate, stated before any sweep was run.
 
     THE HEADLINE CONDITION (the thing that decides the flag):
 
-        Per seed, on the REAL condition, against the MATCHED CONTROL (arm B2 = the current
-        live configuration): the treatment arm loses NO game the control wins on that same
-        seed, and gains at least one.
+        On the REAL condition, against the MATCHED CONTROL (arm B2 = the current live
+        configuration), for a FLIP-CANDIDATE arm (one with both safety stages armed):
+        on EVERY shared seed the arm gains at least one game the control does not win, it
+        loses NO game the control wins on that same seed, its safety axis is MEASURED
+        (guard armed, unmasked control live on every cell, Stage 2 armed, no revocation), and
+        every repair-affected game was actually measured.
 
     THE PRE-REGISTERED SIGNAL (reported, deliberately NOT gated on): r11l's mask RESOLVES and
     its node inflation falls. See `_hud_mask_signal` for why gating on one public game would
@@ -1860,6 +2058,26 @@ def hud_mask_gate(rows: Sequence[dict], *, condition: str = "real") -> dict:
     * MATCHED CONTROL IS B2, NOT ARM A -- arm A pins the pre-flip flags as explicit
       constructor kwargs and `_fd_gate` ranks an explicit kwarg above the SUBMITTED_* default,
       so arm A is the PRE-flip agent. B2 differs from G by exactly one flag.
+    * ONLY A FLIP-CANDIDATE ARM CAN PASS (added 2026-07-25). The gate used to compute
+      `passed = any_pass` over every HUD arm, so it stamped PASSED on arm G -- the one arm with
+      the collapse guard DISABLED, whose entire `safety` block was therefore null
+      (`guard_armed: false`, `collapse_refusals: null`) alongside its own honest
+      `zero_refusals_is_not_proof_of_no_aliasing: true`. Under this experiment's stated
+      asymmetry (over-masking destroys correctness, under-masking only costs efficiency) safety
+      belongs in the CONJUNCTION, not the appendix, so an arm with an unmeasured safety axis is
+      now `informative: false` rather than `passed: true`.
+    * THE GAIN AXIS IS PER SEED, NOT AN ANY-SEED UNION (fixed 2026-07-25). The previous
+      implementation computed `gained = any(s['new_wins'] ...)`, contradicting this docstring's
+      own "PER SEED ... not an any-seed union" and letting a treatment that gains on ONE seed
+      and is flat on the rest decide a flag flip. `all_seeds_gained` is now the decision
+      boolean; `any_seed_gained` is still reported. The regression half stays `any()`, which is
+      the conservative direction.
+    * EVERY REPAIR-AFFECTED GAME MUST BE MEASURED (added 2026-07-25). The repair changes the
+      mask on only 6 of 25 public games; a 3-game smoke measured ONE of them and the gate still
+      reported a pass, so both halves -- including the regression clause -- were evaluated
+      almost entirely over games where the intervention is a no-op. `hud_mask_delta_table`
+      enumerates the affected games from reset frames at zero action cost, and an arm with any
+      of them unmeasured cannot pass.
     * PER SEED, PER GAME -- not a pooled rate, not an any-seed union.
     * NO CONJUNCT ENCODES AN ASSUMED VALUE -- every clause is a difference measured in this
       same run, and the pass region's non-emptiness is COMPUTED
@@ -1879,8 +2097,10 @@ def hud_mask_gate(rows: Sequence[dict], *, condition: str = "real") -> dict:
     witness = _hud_mask_gate_pass_region_witness()
     out: dict[str, Any] = {
         "condition": (
-            "on the REAL condition, PER SEED, against matched control B2: the treatment arm "
-            "loses no game B2 wins on that seed AND gains at least one"
+            "on the REAL condition, against matched control B2, for a FLIP-CANDIDATE arm (both "
+            "safety stages armed): gains at least one game on EVERY shared seed, loses none on "
+            "any seed, safety axis measured (guard armed + live control + Stage 2 armed + no "
+            "revocation), and every repair-affected game measured"
         ),
         "principle": (
             "a node-identity change earns a flag flip by making games REACHABLE that the "
@@ -1896,12 +2116,35 @@ def hud_mask_gate(rows: Sequence[dict], *, condition: str = "real") -> dict:
         ),
         "pass_region_nonempty": bool(witness.get("passes")),
         "pass_region_witness": witness,
+        "flip_candidate_arms": list(HUD_MASK_FLIP_CANDIDATE_ARMS),
+        "why_only_flip_candidate_arms_can_pass": (
+            "arms G (no guard, no Stage 2) and G2 (no Stage 2) are MECHANISM-ISOLATION arms: "
+            "they measure what dedup buys and what the runtime guard costs. An arm with a "
+            "disabled safety stage has a structurally UNMEASURED safety axis, and over-masking "
+            "destroys correctness while under-masking only costs efficiency -- so it can be "
+            "informative but never flip-eligible"
+        ),
         "signal_is_not_the_gate": (
             "r11l 0->1 and node_inflation falling are the PRE-REGISTERED SIGNAL that the "
             "mechanism worked as diagnosed. They are reported, never gated on: one public "
             "game is worth ~0 on the hidden set and gating on it would be hand-fitting"
         ),
         "per_arm": {},
+    }
+    delta = mask_delta if isinstance(mask_delta, dict) else None
+    affected_games = set((delta or {}).get("games_where_mask_changed") or [])
+    out["mechanism_coverage"] = {
+        "repair_affected_games": sorted(affected_games),
+        "inert_games": sorted((delta or {}).get("games_where_mask_is_inert") or []),
+        "mask_delta_available": delta is not None and not delta.get("error"),
+        "note": (
+            "a no-regression result over games where the treatment mask EQUALS the control mask "
+            "is not safety evidence -- the intervention is a no-op there. Every game in "
+            "repair_affected_games must be measured before an arm can pass. Inert games are NOT "
+            "dropped from the regression clause (a regression on an inert game is real -- it is "
+            "caused by the GUARD rather than by the mask, e.g. the measured tu93 1->0 under "
+            "global revocation -- and dropping it would only make the gate looser)"
+        ),
     }
     control = _per_seed_win_sets(rows, HUD_MASK_CONTROL_ARM, condition)
     if not control:
@@ -1910,7 +2153,7 @@ def hud_mask_gate(rows: Sequence[dict], *, condition: str = "real") -> dict:
         out["reason"] = f"matched control arm {HUD_MASK_CONTROL_ARM} not measured in this run"
         return out
     control_ran = _per_seed_measured_games(rows, HUD_MASK_CONTROL_ARM, condition)
-    any_pass = False
+    flip_candidate_pass = False
     reachable_all: set[str] = set()
     for arm in HUD_MASK_ARMS:
         treat = _per_seed_win_sets(rows, arm, condition)

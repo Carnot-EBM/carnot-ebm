@@ -102,6 +102,15 @@ STAGE 1 -- ``edge_bar_hud_mask(frame)``: single-frame geometry. Zero action cost
   "twins"/dotted-bar rule masking scattered single pixels that are candidate CLICK targets
   -- deliberately NOT ported).
 
+  STAGE 1 ALONE IS NOT SAFE TO SHIP, and that is not a hypothetical (measured 2026-07-25).
+  Across the 25 public games the repair changes the mask on exactly SIX -- ar25 63->127
+  cells (adds column 63), sc25 0->128 (columns 62-63), lp85 0->64 (column 0), r11l 0->64
+  (column 0), tn36 0->61 (row 1), cn04 0->32 (row 0) -- and on ar25 the newly-masked column
+  is a FILL-LEVEL GAUGE, i.e. a decision-relevant state variable, not a clock. Masking it
+  turned 1554 distinct raw frames into 233 nodes and the Stage-3 guard proved 4 aliasing
+  keys on the first seed measured. Stage 1 must therefore be gated by Stage 2 before it is
+  applied to identity; see ``DeferredMaskActivation``.
+
 STAGE 2 -- ``region_hud_evidence(grids, mask, ...)``: multi-frame behavioural confirmation
   from transitions the agent ALREADY takes (zero extra actions, unlike
   ``arc_graph_explore.discover_hud_mask`` which burns up to 4 real actions from reset and is
@@ -112,15 +121,25 @@ STAGE 2 -- ``region_hud_evidence(grids, mask, ...)``: multi-frame behavioural co
   monotone FILLING bar changes only ONE cell per action. The correct statistic is
   REGION-level -- "the region ticks even when the rest of the board does not".
 
+STAGE 2b -- ``DeferredMaskActivation``: the SEQUENCING that makes Stage 2 usable. Stage 1
+  proposes a candidate; identity stays UNMASKED (today's shipped behaviour) until Stage 2 has
+  >=16 observed transitions to judge it on; only an ``admit`` verdict ever applies the mask.
+  Measured on the reset frames + real transitions: refuses ar25/sc25/lp85/cn04, admits
+  r11l/tn36. This is the component that prevents Stage 1's ar25 over-mask from shipping.
+
 STAGE 3 -- ``MaskCollapseGuard``: the runtime hard refusal. A ``(masked_node,
-  concrete_action)`` key that is observed to produce TWO DIFFERENT masked successors proves
-  one masked hash is covering two behaviourally distinct true states. Every such proof is
-  counted and the offending node is un-masked (locally split); past a small cap the mask is
-  globally revoked and identity falls back to unmasked. It carries a MANDATORY unmasked
+  concrete_action)`` key that is observed to produce TWO DIFFERENT masked successors shows
+  one masked hash is covering two behaviourally distinct true states. Every such branching is
+  counted and the offending node is un-masked (locally split, UNBOUNDED -- there is no global
+  revocation, because flipping the hash convention mid-run was measured to corrupt 97.7% of
+  the graph and to be strictly worse than no guard at all). It carries a MANDATORY unmasked
   CONTROL: if the same key also produces two different UNMASKED successors, the environment
   is simply non-deterministic at that node and the violation is NOT attributable to the mask
   (measured: sc25 shows 2-3 masked violations AND 2-3 unmasked-control violations, so
-  nothing there is the mask's fault).
+  nothing there is the mask's fault). The control's POWER is reported separately from its
+  liveness: it can only exonerate when the unmasked antecedent REPEATS, which never happens
+  on a monotone-counter region, so branchings on such keys are reported as
+  ``unproven_masked_branchings`` (acted on conservatively, but not called proofs).
 
 =====================================================================================
 CO-CHANGE AUDIT -- everything that could have interacted, checked one by one
@@ -155,10 +174,17 @@ audited rather than assumed:
 * The CLICK-PIXEL REDRAW BUDGET -- stored on the node dict itself, not in a hash-keyed map, so
   a split node starts with a fresh budget. Benign.
 * ADJACENCY (``self.adj[origin]``) -- edges recorded before a split stay under the old masked
-  key while new edges land under the compound key, i.e. the graph briefly holds two identity
-  conventions for that one node. This is the real, bounded cost of local retraction, taken
+  key while new edges land under the compound key, i.e. the graph holds two identity
+  conventions for THAT ONE NODE. This is the real, bounded cost of local retraction, taken
   deliberately (see ``MaskCollapseGuard``) instead of the rehash-everything approach that
   makes the reference solver re-initialise its graph hundreds of times per run.
+  CORRECTION 2026-07-25: an earlier version of this bullet described the same cost as applying
+  to GLOBAL revocation, calling it "brief" and "bounded by max_split_nodes". That was wrong and
+  it understated a measured 97.7%: revocation flipped the hash convention for every subsequent
+  frame while leaving all pre-revocation nodes under the old convention, so 640 of 655 nodes on
+  tu93 and 1100 of 1161 on ar25 landed on the far side of the switch, 58 of 658 distinct raw
+  frames held BOTH key forms, and the pre-revocation subgraph became unreachable. Global
+  revocation is no longer the default and no longer changes hashing.
 
 =====================================================================================
 HONEST LIMITS
@@ -167,6 +193,13 @@ HONEST LIMITS
   with budget (lf52: 1 of 9 observable keys at 394 actions -> 3 of 30 at 765). Zero
   violations is therefore never proof of zero aliasing. ``observable_keys`` is always
   reported as the honest denominator.
+* The Stage-3 control cannot exonerate on a monotone-counter region (its unmasked antecedent
+  never repeats), so ``non_deterministic_keys_excluded_by_control: 0`` on such a key is a
+  CONSTRUCTIONAL zero, not evidence. Consequence for the claim this module made earlier about
+  the ALREADY-SHIPPED mask on tu93/lf52: "the shipped mask collapses provably-distinct states"
+  is a HYPOTHESIS with a named confound (masked content causal vs. hidden state that is never
+  rendered into the frame), not an established property of the live flag. The evidence is
+  attributed, not asserted -- see ``unproven_masked_branchings``.
 * Stage 2's thresholds were calibrated on 9 public games x 5 seeds. They separate that
   corpus cleanly but could be over-fit to it; they should be re-checked, not hand-tuned,
   when a full-corpus run happens.
@@ -187,6 +220,7 @@ HONEST LIMITS
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass, field
 from typing import Any, Mapping, Optional, Sequence
 
@@ -547,15 +581,211 @@ def region_hud_evidence(
 
 
 # ---------------------------------------------------------------------------
+# Stage 2b -- DEFERRED ACTIVATION: Stage 1 proposes, Stage 2 confirms, only then apply
+# ---------------------------------------------------------------------------
+
+# Hard cap on how many frames the deferred-activation buffer holds while waiting for enough
+# transitions to run Stage 2. Bounded because this buffer lives for the whole episode on a
+# game that never accumulates `min_transitions` usable transitions, and an unbounded buffer on
+# a 64x64 uint8 frame stream is a memory leak in a live agent. Past the cap the candidate is
+# DISCARDED (never applied) rather than admitted on partial evidence -- the conservative
+# direction, since under-masking only costs search efficiency.
+DEFERRED_ACTIVATION_MAX_BUFFERED_FRAMES = 64
+
+
+@dataclass
+class DeferredMaskActivation:
+    """Hold a Stage-1 candidate mask UNAPPLIED until Stage 2 confirms it behaves like a HUD.
+
+    WHY THIS EXISTS -- the measured defect it repairs (2026-07-25 adversarial review).
+    Stage 1 is single-frame GEOMETRY. Geometry is a shape prior and provably cannot tell a live
+    counter from a decision-relevant state variable that happens to be drawn as an edge strip.
+    On the public game ``ar25`` that distinction is load-bearing and Stage 1 gets it wrong: a
+    colour-11 blob at bbox (0,63)-(63,63), h=64 w=1, fires ``is_edge_bar_like`` via
+    ``on_right and long_vertical`` and newly masks all 64 cells of COLUMN 63. Column 63 is a
+    FILL-LEVEL GAUGE, not a clock. Masking it collapsed provably-distinct states: with the mask
+    applied, 1554 distinct raw frames became 233 graph nodes, and the Stage-3 guard proved 4
+    aliasing keys (independent post-hoc analysis over a full 1168-transition arm-G log found 17
+    observable keys and 17 proven collapses, 0 non-deterministic, with the environment's
+    determinism separately confirmed on 20 repeated raw keys). Two antecedents differing in 6
+    cells INSIDE the mask and 0 cells outside produced successors differing in 144 NON-masked
+    cells, and ``col63_fill_height -> successor`` was a 1:1 function over fill heights 7..61.
+    That is a state variable, and masking it is the CARDINAL SIN this module's own docstring
+    names: over-masking destroys correctness, under-masking only costs efficiency.
+
+    Stage 2 (``region_hud_evidence``) SEPARATES that corpus correctly -- measured on the same
+    reset frames and the agent's own transitions: it REFUSES ar25 (``region_not_action_ubiquitous``,
+    ubiquity 0.0, 110-115 in-episode revisits), sc25, lp85 and cn04, and ADMITS exactly the two
+    clean winners r11l and tn36 (tick rate 1.0, ubiquity 1.0, 0 revisits). Its only blocker was
+    SEQUENCING: it needs >=16 transitions and therefore cannot run at the single-frame,
+    first-contact point ``REQ-ARC-WMTE-5583`` mandates the mask be computed at.
+
+    THE FIX IS THE SEQUENCING, NOT THE STATISTIC. Identity stays UNMASKED (i.e. exactly today's
+    shipped behaviour) until Stage 2 has enough evidence to decide. Admit -> the mask activates
+    from that frame on. Refuse -> the candidate is discarded permanently and the run continues
+    unmasked. Abstain past the buffer cap -> discarded.
+
+    WHY LATE ACTIVATION IS SAFE BUT LATE REVOCATION IS NOT (the asymmetry that decides the
+    design). Nodes created before activation carry unmasked keys; frames after it carry masked
+    keys. The same true state can therefore appear under two keys -- that is DUPLICATION, i.e.
+    under-dedup, i.e. a bounded search-efficiency cost. The reverse move (applying a mask early
+    and withdrawing it mid-run, which is what ``MaskCollapseGuard``'s legacy global revocation
+    did) leaves already-created nodes keyed by a COLLAPSING convention while new frames use
+    another, and measured 97.7% of the graph on the wrong side of the switch. Under-masking is
+    recoverable; over-masking is not.
+    """
+
+    min_transitions: int = REGION_EVIDENCE_MIN_TRANSITIONS
+    max_buffered_frames: int = DEFERRED_ACTIVATION_MAX_BUFFERED_FRAMES
+    min_ubiquity: float = REGION_EVIDENCE_MIN_UBIQUITY
+    max_revisits: int = REGION_EVIDENCE_MAX_REVISITS
+    candidate: Optional[np.ndarray] = None
+    verdict: str = "no_candidate"
+    reason: str = "stage1_proposed_nothing"
+    evidence: dict = field(default_factory=dict)
+    activated_after_transitions: Optional[int] = None
+    _grids: list = field(default_factory=list)
+    _actions: list = field(default_factory=list)
+
+    def propose(self, candidate: Any) -> None:
+        """Register the Stage-1 candidate. Does NOT apply it -- that is the whole point."""
+
+        if candidate is None:
+            self.candidate = None
+            self.verdict = "no_candidate"
+            self.reason = "stage1_proposed_nothing"
+            return
+        self.candidate = np.asarray(candidate, dtype=bool)
+        self.verdict = "pending"
+        self.reason = "awaiting_stage2_transitions"
+
+    @property
+    def pending(self) -> bool:
+        return self.verdict == "pending" and self.candidate is not None
+
+    def observe(self, grid: Any, action_label: Any = None) -> Optional[np.ndarray]:
+        """Record one observed frame. Returns the mask to ACTIVATE, or None.
+
+        A non-None return happens at most ONCE per instance (the frame on which Stage 2
+        admitted). Every other call returns None, which the caller reads as "keep the current
+        identity convention" -- so a caller that ignores the return value silently keeps
+        today's unmasked behaviour rather than silently masking.
+        """
+
+        if not self.pending:
+            return None
+        prepared = _as_grid(grid)
+        self._grids.append(prepared)
+        self._actions.append(action_label)
+
+        usable = sum(1 for g in self._grids if g is not None)
+        if usable < int(self.min_transitions) + 1:
+            if len(self._grids) >= int(self.max_buffered_frames):
+                self.verdict = "discarded"
+                self.reason = "buffer_cap_reached_without_enough_usable_transitions"
+                self.evidence = {
+                    "buffered_frames": len(self._grids),
+                    "usable_frames": usable,
+                }
+                self._release()
+            return None
+
+        evidence = region_hud_evidence(
+            self._grids,
+            self.candidate,
+            actions=self._actions,
+            min_transitions=self.min_transitions,
+            min_ubiquity=self.min_ubiquity,
+            max_revisits=self.max_revisits,
+        )
+        self.evidence = evidence
+        if evidence.get("verdict") == "admit":
+            self.verdict = "admitted"
+            self.reason = str(evidence.get("reason") or "action_ubiquitous_and_monotone")
+            self.activated_after_transitions = int(evidence.get("n_transitions") or 0)
+            mask = self.candidate
+            self._release()
+            return mask
+        if evidence.get("verdict") == "refuse":
+            self.verdict = "refused"
+            self.reason = str(evidence.get("reason") or "stage2_refused")
+            self._release()
+            return None
+        # abstain: keep buffering until the cap, then discard rather than guess.
+        if len(self._grids) >= int(self.max_buffered_frames):
+            self.verdict = "discarded"
+            self.reason = "buffer_cap_reached_while_stage2_still_abstaining"
+            self._release()
+        return None
+
+    def _release(self) -> None:
+        """Drop the frame buffer. A decided instance must not keep holding frames."""
+
+        self._grids = []
+        self._actions = []
+
+    def diagnostics(self) -> dict:
+        return {
+            "stage2_verdict": str(self.verdict),
+            "stage2_reason": str(self.reason),
+            "stage2_min_transitions": int(self.min_transitions),
+            "candidate_cell_count": (
+                int(np.asarray(self.candidate, dtype=bool).sum())
+                if self.candidate is not None
+                else 0
+            ),
+            "activated_after_transitions": self.activated_after_transitions,
+            "buffered_frames": len(self._grids),
+            "evidence": dict(self.evidence),
+            # The honest reading of an unapplied candidate: identity is EXACTLY today's
+            # shipped behaviour, not "the detector failed".
+            "identity_convention_while_pending": "unmasked_same_as_shipped_default",
+        }
+
+
+# ---------------------------------------------------------------------------
 # Stage 3 -- the runtime collapse guard (HARD refusal)
 # ---------------------------------------------------------------------------
 
-# How many nodes may be individually un-masked before the mask is revoked outright. Small
-# on purpose: a handful of proven aliases is a local defect worth splitting, but many is
-# evidence the mask itself is wrong. NOT zero, because a strict zero-violation rule would
-# throw away the mask that wins tu93 on 3/3 seeds over 2 bad nodes out of 58 -- the
-# asymmetry cuts both ways once the guard exists to bound the damage.
-HUD_MASK_GUARD_MAX_SPLIT_NODES = 3
+# Local splits are UNBOUNDED by default (None). Each split un-masks exactly the one node that
+# branched, so N splits degrade the run gracefully toward unmasked identity -- one identity
+# convention per node, no global switch.
+#
+# WHY THE OLD CAP OF 3 WAS REMOVED (measured harm, 2026-07-25 adversarial review). Past the cap
+# the guard set `globally_revoked`, after which `is_split()` returned True UNCONDITIONALLY and
+# `_hash` emitted the compound `masked|u:unmasked` key for EVERY frame -- while nodes created
+# BEFORE revocation kept their plain masked keys. That is not "fall back to the unmasked
+# baseline"; it is two identity conventions in one graph, and it was measured to be strictly
+# WORSE than shipping no guard at all:
+#
+#   * tu93, where the repaired mask is IDENTICAL to the shipped one (64 cells both), so arming
+#     the guard was the ONLY difference from the live config: 1 level / 361 actions -> 0 levels
+#     / 1953 actions on 3 of 3 seeds. Same on lf52 seed 20260726 (1 -> 0).
+#   * Instrumented on tu93 seed 20260724: 72 hashes computed pre-revocation, 1927 post, and 58
+#     of 658 distinct RAW frames ended up holding BOTH a plain masked key and a compound key --
+#     the same true state present twice under two conventions. 640 of 655 graph nodes (97.7%)
+#     were post-revocation; on ar25, 1100 of 1161.
+#   * The pre-revocation subgraph becomes structurally UNREACHABLE (`_hash` can never re-emit a
+#     plain key), so its accumulated `path`/`adj` knowledge is dead while navigation can still
+#     target it.
+#
+# The module docstring previously described this as "the graph BRIEFLY carries two identity
+# conventions ... BOUNDED BY max_split_nodes". That is true of a LOCAL split and false of
+# revocation, which is unbounded. Corrected here rather than left understated.
+HUD_MASK_GUARD_MAX_SPLIT_NODES: Optional[int] = None
+
+# Purely for REPORTING: past this many splits the mask is probably wrong wholesale and the
+# artifact should say so. It changes NO behaviour (see `split_budget_exceeded`), because the
+# only correctness-preserving way to withdraw a mask mid-run would be to REHASH the whole graph
+# under the unmasked key, and the explorer does not retain node frames to rehash from.
+HUD_MASK_GUARD_SPLIT_REPORTING_THRESHOLD = 3
+
+# The two revocation modes. `local_split_only` is the default and the only one that keeps one
+# identity convention per node. `global_hash_flip` is the measured-harmful legacy behaviour,
+# retained ONLY so a regression test can demonstrate the corruption; it must not be enabled on
+# any live or flip-candidate configuration.
+HUD_MASK_GUARD_REVOCATION_LOCAL = "local_split_only"
+HUD_MASK_GUARD_REVOCATION_GLOBAL_HASH_FLIP = "global_hash_flip_measured_harmful_do_not_ship"
 
 
 @dataclass
@@ -569,24 +799,48 @@ class MaskCollapseGuard:
     causal proof from the agent's OWN transitions: no oracle, no source reading, no per-game
     knowledge.
 
-    THE MANDATORY CONTROL. The same statistic is kept on UNMASKED hashes. If the unmasked
-    key ALSO shows two successors then the environment (or our observation of it) is simply
-    non-deterministic there, and the violation is NOT attributable to the mask. Without this
-    control the guard would fire spuriously: measured on sc25, 2-3 masked violations per seed
-    are matched by 2-3 unmasked-control violations, so none of them is the mask's fault.
+    THE MANDATORY CONTROL, AND ITS POWER LIMIT. The same statistic is kept on UNMASKED hashes.
+    If the unmasked key ALSO shows two successors then the environment (or our observation of
+    it) is simply non-deterministic there, and the violation is NOT attributable to the mask.
+    Without this control the guard would fire spuriously: measured on sc25, 2-3 masked
+    violations per seed are matched by 2-3 unmasked-control violations, so none of them is the
+    mask's fault.
 
-    THE RESPONSE, in escalating order:
-      1. LOCAL SPLIT (default). The offending masked hash joins ``split_hashes``; the caller
-         then hashes frames at that node by masked+unmasked, i.e. un-masks exactly the node
-         that provably failed and keeps dedup everywhere else.
-      2. GLOBAL REVOCATION, past ``max_split_nodes``. ``globally_revoked`` goes True and the
-         caller falls back to unmasked identity for every subsequent frame.
+    But LIVENESS IS NOT POWER, and conflating them overstated every conclusion this guard has
+    ever supported (found 2026-07-25 by adversarial review, then confirmed by direct probe).
+    The exoneration branch can only fire when the UNMASKED antecedent REPEATS -- and if the
+    masked region is a monotone counter, the unmasked antecedent never repeats by construction,
+    so the branch is unreachable. On such a key ``non_deterministic_keys_excluded_by_control ==
+    0`` is a CONSTRUCTIONAL zero, not evidence of determinism. Probe result: a genuinely
+    non-deterministic node with a ticking masked region was CONVICTED (excluded_by_control 0,
+    control_live True), while the identical scenario with a non-ticking region was correctly
+    exonerated (excluded 1). So this class now reports three distinct outcomes:
 
-    An HONEST NOTE ON REVOCATION. Nodes created BEFORE a split/revocation keep their old
-    keys, so the graph briefly carries two identity conventions. That is a real cost, taken
-    deliberately and bounded by ``max_split_nodes``: the alternative -- rehashing the whole
-    graph -- is precisely what makes the reference solver re-initialise its graph hundreds of
-    times per run and livelock. Every split and every revocation is COUNTED and surfaced in
+      * ``proven_collapses`` -- the control had POWER (that unmasked key was observed 2+ times)
+        and showed exactly ONE successor. Non-determinism is genuinely ruled out.
+      * ``unproven_masked_branchings`` -- the control was live but POWERLESS (the unmasked
+        antecedent never repeated). The branching is still strong evidence that the masked
+        content is decision-relevant (two frames identical OUTSIDE the mask, differing INSIDE
+        it, produced different successors), but "unobserved hidden state that is never rendered
+        into the frame" is an equally consistent explanation, so it is NOT a proof.
+      * ``non_deterministic_keys`` -- the control had power and branched: excluded, no action.
+
+    WHY AN UNPROVEN BRANCHING IS STILL ACTED ON. Splitting costs search efficiency; not
+    splitting risks correctness. Under the module's stated asymmetry the conservative response
+    is to un-mask the node in BOTH the proven and the unproven case, and to be honest in the
+    reporting about which one happened. The alternative -- act only on proofs -- would make the
+    guard structurally powerless on exactly the region class the mask exists for.
+
+    THE RESPONSE: LOCAL SPLIT, unbounded. The offending masked hash joins ``split_hashes``; the
+    caller then hashes frames at that node by masked+unmasked, i.e. un-masks exactly the node
+    that failed and keeps dedup everywhere else. There is NO global revocation by default -- see
+    ``HUD_MASK_GUARD_MAX_SPLIT_NODES`` above for the measured 97.7%-of-the-graph corruption that
+    mode caused, and ``revocation_mode`` for why it survives only as a test fixture.
+
+    An HONEST NOTE ON LOCAL SPLITS. Nodes created BEFORE a split keep their old key, so that ONE
+    node's edges live under the plain masked key while new edges land under the compound key.
+    That cost is genuinely bounded (one node per split, one convention per node) -- unlike the
+    global flip, which re-keyed everything. Every split is COUNTED and surfaced in
     ``diagnostics()`` so the guard's activity is never invisible.
 
     OBSERVABILITY LIMIT. A violation can only be seen for a key tried at least twice.
@@ -594,18 +848,42 @@ class MaskCollapseGuard:
     observable keys says nothing at all.
     """
 
-    max_split_nodes: int = HUD_MASK_GUARD_MAX_SPLIT_NODES
+    max_split_nodes: Optional[int] = HUD_MASK_GUARD_MAX_SPLIT_NODES
+    revocation_mode: str = HUD_MASK_GUARD_REVOCATION_LOCAL
+    split_reporting_threshold: int = HUD_MASK_GUARD_SPLIT_REPORTING_THRESHOLD
+    # REGION ATTRIBUTION (optional). When the caller supplies the mask the SHIPPED classifier
+    # would have produced and the mask actually applied, every acted-on branching is attributed
+    # to the REPAIR-ADDED region or to the already-shipped region -- computed from the guard's
+    # own antecedent frames, so it needs no win to have been lost and covers every game in a
+    # run. See `_hud_aliasing_attribution`'s window defect for why this exists.
+    applied_mask: Optional[np.ndarray] = None
+    shipped_mask: Optional[np.ndarray] = None
     _masked_successors: dict[tuple, set[str]] = field(default_factory=dict)
     _unmasked_successors: dict[tuple, set[str]] = field(default_factory=dict)
+    _unmasked_key_counts: dict[tuple, int] = field(default_factory=dict)
     _controlled_keys: set[tuple] = field(default_factory=set)
+    _masked_key_grids: dict[tuple, Any] = field(default_factory=dict)
     split_hashes: set[str] = field(default_factory=set)
     violations: int = 0
     refusals: int = 0
+    proven_collapses: int = 0
+    unproven_masked_branchings: int = 0
     non_deterministic_keys: int = 0
     uncontrolled_observations: int = 0
     uncontrolled_branchings_declined: int = 0
+    keys_with_repeated_unmasked_antecedent: int = 0
     globally_revoked: bool = False
     observations: int = 0
+    attribution_added_region: int = 0
+    attribution_shipped_region: int = 0
+    attribution_outside_mask: int = 0
+    attribution_unavailable: int = 0
+
+    # Bound on how many antecedent grids are retained for region attribution. One 64x64 uint8
+    # grid is 4 KiB, so 512 keys is ~2 MiB -- enough to cover every observable key in every
+    # measured cell (max seen: 25) with three orders of magnitude of headroom, while still being
+    # a hard bound rather than an unbounded per-run leak.
+    max_retained_antecedent_grids: int = 512
 
     def observe(
         self,
@@ -615,8 +893,9 @@ class MaskCollapseGuard:
         action_key: Any,
         successor_masked: Optional[str],
         successor_unmasked: Optional[str],
+        origin_grid: Any = None,
     ) -> bool:
-        """Record one realized transition. Returns True iff this call PROVED a new collapse.
+        """Record one realized transition. Returns True iff this call ACTED on a new branching.
 
         FAIL-SAFE ON A MISSING CONTROL (fixed 2026-07-25, found by this module's own smoke run
         rather than assumed): if the caller cannot supply the unmasked antecedent, there is NO
@@ -630,6 +909,10 @@ class MaskCollapseGuard:
         bare explorer only RETAINS node frames when one of several optional components is
         enabled, so it was None on 1952 of 1952 transitions. Declined observations are counted
         (``uncontrolled_branchings_declined``) so a dead control can never again look clean.
+
+        ``origin_grid`` is optional and is used ONLY for region attribution (which part of the
+        mask the differing antecedent cells fall in). Omitting it costs a counted
+        ``attribution_unavailable``, never a changed decision.
         """
 
         if not origin_masked or not successor_masked:
@@ -637,14 +920,31 @@ class MaskCollapseGuard:
         self.observations += 1
         masked_key = (str(origin_masked), _hashable(action_key))
         masked_seen = self._masked_successors.setdefault(masked_key, set())
+        first_successor_for_key = not masked_seen
         masked_seen.add(str(successor_masked))
+        if (
+            first_successor_for_key
+            and origin_grid is not None
+            and len(self._masked_key_grids) < int(self.max_retained_antecedent_grids)
+        ):
+            retained = _as_grid(origin_grid)
+            if retained is not None:
+                self._masked_key_grids[masked_key] = retained.copy()
 
         controlled = bool(origin_unmasked and successor_unmasked)
+        control_had_power = False
         if controlled:
             self._controlled_keys.add(masked_key)
             unmasked_key = (str(origin_unmasked), _hashable(action_key))
             unmasked_seen = self._unmasked_successors.setdefault(unmasked_key, set())
             unmasked_seen.add(str(successor_unmasked))
+            seen_count = self._unmasked_key_counts.get(unmasked_key, 0) + 1
+            self._unmasked_key_counts[unmasked_key] = seen_count
+            if seen_count == 2:
+                # First time this unmasked antecedent+action REPEATED: from here on the control
+                # is capable of exonerating, which is what "power" means.
+                self.keys_with_repeated_unmasked_antecedent += 1
+            control_had_power = seen_count >= 2
         else:
             self.uncontrolled_observations += 1
             unmasked_seen = set()
@@ -662,12 +962,60 @@ class MaskCollapseGuard:
         if str(origin_masked) in self.split_hashes:
             return False
 
+        if control_had_power:
+            self.proven_collapses += 1
+        else:
+            # The control was live but could not have fired (the unmasked antecedent never
+            # repeated). Acted on conservatively, reported as UNPROVEN.
+            self.unproven_masked_branchings += 1
+        self._attribute(masked_key, origin_grid)
         self.violations += 1
         self.split_hashes.add(str(origin_masked))
         self.refusals += 1
-        if len(self.split_hashes) > int(self.max_split_nodes):
+        if (
+            self.revocation_mode == HUD_MASK_GUARD_REVOCATION_GLOBAL_HASH_FLIP
+            and self.max_split_nodes is not None
+            and len(self.split_hashes) > int(self.max_split_nodes)
+        ):
             self.globally_revoked = True
         return True
+
+    def _attribute(self, masked_key: tuple, origin_grid: Any) -> None:
+        """Which REGION do the two antecedents differ in -- repair-added, or already-shipped?
+
+        Computed from the guard's own retained antecedent grid for this key, so it needs no win
+        to have been lost and covers every game in a run (the defect in the harness's
+        win/loss-keyed attribution window).
+        """
+
+        if self.applied_mask is None:
+            self.attribution_unavailable += 1
+            return
+        previous = self._masked_key_grids.get(masked_key)
+        current = _as_grid(origin_grid)
+        if previous is None or current is None or previous.shape != current.shape:
+            self.attribution_unavailable += 1
+            return
+        applied = np.asarray(self.applied_mask, dtype=bool)
+        if applied.shape != previous.shape:
+            self.attribution_unavailable += 1
+            return
+        differing = previous != current
+        shipped = (
+            np.asarray(self.shipped_mask, dtype=bool)
+            if self.shipped_mask is not None and np.asarray(self.shipped_mask).shape == applied.shape
+            else np.zeros_like(applied)
+        )
+        added = applied & ~shipped
+        if bool((differing & added).any()):
+            self.attribution_added_region += 1
+        elif bool((differing & shipped).any()):
+            self.attribution_shipped_region += 1
+        else:
+            # Differing cells lie entirely OUTSIDE the mask. That cannot be the mask's fault --
+            # two frames differing outside the mask would not share a masked hash -- so it is
+            # recorded rather than attributed.
+            self.attribution_outside_mask += 1
 
     def observable_key_count(self) -> int:
         """Keys observed with >=2 DISTINCT masked successors -- where a collapse was provable.
@@ -681,7 +1029,17 @@ class MaskCollapseGuard:
         return int(sum(1 for seen in self._masked_successors.values() if len(seen) >= 2))
 
     def is_split(self, masked_hash: Optional[str]) -> bool:
-        if self.globally_revoked:
+        """Should this masked hash be keyed by masked+unmasked instead?
+
+        In the default ``local_split_only`` mode this is TRUE only for hashes that actually
+        branched -- one identity convention per node. The legacy ``global_hash_flip`` mode
+        returns True for EVERYTHING once revoked, which is the measured-harmful behaviour kept
+        only as a test fixture; see ``HUD_MASK_GUARD_MAX_SPLIT_NODES``.
+        """
+
+        if self.globally_revoked and self.revocation_mode == (
+            HUD_MASK_GUARD_REVOCATION_GLOBAL_HASH_FLIP
+        ):
             return True
         return bool(masked_hash) and str(masked_hash) in self.split_hashes
 
@@ -695,6 +1053,19 @@ class MaskCollapseGuard:
             "collapse_refusals": int(self.refusals),
             "split_node_count": int(len(self.split_hashes)),
             "non_deterministic_keys_excluded_by_control": int(self.non_deterministic_keys),
+            # THE CONTROL-POWER FIELDS (added 2026-07-25). `control_live` says an unmasked
+            # antecedent was SUPPLIED; it does NOT say the control could have fired. The
+            # exoneration branch needs the unmasked antecedent to REPEAT, which never happens
+            # when the masked region is a monotone counter -- so on those keys
+            # `non_deterministic_keys_excluded_by_control: 0` is a constructional zero.
+            # `proven_collapses` counts only branchings where the control genuinely had power.
+            "proven_collapses": int(self.proven_collapses),
+            "unproven_masked_branchings": int(self.unproven_masked_branchings),
+            "keys_with_repeated_unmasked_antecedent": int(
+                self.keys_with_repeated_unmasked_antecedent
+            ),
+            "control_had_power_on_any_key": bool(self.keys_with_repeated_unmasked_antecedent),
+            "refusals_are_all_proven": bool(self.unproven_masked_branchings == 0),
             # THE CONTROL-CHANNEL HEALTH FIELDS. `control_live` False means the guard had no
             # control at all and therefore could not have proved anything, whatever the other
             # counters say. Emitted so a dead control can never read as a clean one again.
@@ -702,8 +1073,27 @@ class MaskCollapseGuard:
             "uncontrolled_branchings_declined": int(self.uncontrolled_branchings_declined),
             "controlled_keys": int(len(self._controlled_keys)),
             "control_live": bool(self._controlled_keys),
+            # REGION ATTRIBUTION: whose mask is aliasing. Zero-filled when the caller supplied
+            # no `applied_mask`/`origin_grid`, and that state is COUNTED
+            # (`attribution_unavailable`) rather than reported as "no added-region aliasing".
+            "attribution": {
+                "branchings_differing_in_repair_added_region": int(self.attribution_added_region),
+                "branchings_differing_in_already_shipped_region": int(
+                    self.attribution_shipped_region
+                ),
+                "branchings_differing_outside_the_mask": int(self.attribution_outside_mask),
+                "attribution_unavailable": int(self.attribution_unavailable),
+                "regions_supplied": bool(self.applied_mask is not None),
+            },
+            "revocation_mode": str(self.revocation_mode),
+            # Reporting only: past the threshold the mask is probably wrong wholesale. Changes
+            # NO behaviour -- withdrawing a mask mid-run corrupts the graph (measured 97.7%).
+            "split_budget_exceeded": bool(
+                len(self.split_hashes) > int(self.split_reporting_threshold)
+            ),
+            "split_reporting_threshold": int(self.split_reporting_threshold),
             "globally_revoked": bool(self.globally_revoked),
-            "max_split_nodes": int(self.max_split_nodes),
+            "max_split_nodes": self.max_split_nodes,
         }
 
 
@@ -723,11 +1113,31 @@ def _hashable(value: Any) -> Any:
     return value
 
 
+def mask_cell_digest(mask: Any) -> Optional[str]:
+    """A content digest of the mask's CELL SET -- the identity two masks must be compared on.
+
+    WHY A DIGEST AND NOT ``cell_count`` (fixed 2026-07-25). The harness compared a control mask
+    to a treatment mask by equality of ``cell_count``. Equal counts DO imply "the repair added
+    nothing" on the games measured so far, but the converse is not sound in general: two masks of
+    equal size can occupy different cells, and reading equal counts as "same mask" would silently
+    exonerate a repair that MOVED the mask instead of widening it. The digest is exact.
+    """
+
+    if mask is None:
+        return None
+    arr = np.asarray(mask, dtype=bool)
+    if not arr.any():
+        return None
+    return hashlib.sha256(
+        b"|".join([str(arr.shape).encode("ascii"), np.packbits(arr).tobytes()])
+    ).hexdigest()[:16]
+
+
 def mask_summary(mask: Any) -> dict:
     """Small serialisable description of a mask, for artifact rows."""
 
     if mask is None:
-        return {"resolved": False, "cell_count": 0, "rows": [], "cols": []}
+        return {"resolved": False, "cell_count": 0, "rows": [], "cols": [], "digest": None}
     arr = np.asarray(mask, dtype=bool)
     rows = sorted({int(y) for y in np.nonzero(arr.any(axis=1))[0].tolist()})
     cols = sorted({int(x) for x in np.nonzero(arr.any(axis=0))[0].tolist()})
@@ -736,20 +1146,27 @@ def mask_summary(mask: Any) -> dict:
         "cell_count": int(arr.sum()),
         "rows": rows,
         "cols": cols,
+        "digest": mask_cell_digest(arr),
     }
 
 
 __all__ = [
+    "DeferredMaskActivation",
     "EdgeBarThresholds",
     "MaskCollapseGuard",
+    "DEFERRED_ACTIVATION_MAX_BUFFERED_FRAMES",
     "EDGE_BAR_EDGE_TOLERANCE",
     "EDGE_BAR_MIN_ELONGATION",
     "EDGE_BAR_MAX_MASK_AREA_FRACTION",
     "HUD_MASK_GUARD_MAX_SPLIT_NODES",
+    "HUD_MASK_GUARD_REVOCATION_GLOBAL_HASH_FLIP",
+    "HUD_MASK_GUARD_REVOCATION_LOCAL",
+    "HUD_MASK_GUARD_SPLIT_REPORTING_THRESHOLD",
     "REGION_EVIDENCE_MIN_TRANSITIONS",
     "REGION_EVIDENCE_MIN_UBIQUITY",
     "edge_bar_hud_mask",
     "is_edge_bar_like",
+    "mask_cell_digest",
     "mask_summary",
     "region_hud_evidence",
 ]
