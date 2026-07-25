@@ -17691,3 +17691,214 @@ prefix, and the diagnostic target states the discrepancy is not yet attributable
 **When** the reproduction gate selects its sample
 **Then** every arm with a win appears in the checks, `arms_not_reproduced` is empty, and the
 requested and effective limits are both recorded.
+
+### REQ-ARC-WMTE-5960: Orientation-Complete HUD Status-Bar Detection, Gated by Behavioural Confirmation and a Runtime Collapse Guard
+
+**Origin:** 2026-07-25. `ops/known-issues.md`'s 2026-07-25 entry records a measured,
+causally-proven diagnosis: the public game `r11l` renders a MONOTONE step counter into frame
+COLUMN 0, `SUBMITTED_AUTO_HUD_MASK_ENABLED` is already True and the mask IS attempted, but
+`ColorBlobSaliencePrior.is_status_bar_like` resolves to None there, so nothing leaves node
+identity. Consequence: 1956 actions produced 1392 graph nodes over 31 true game states (44.9x
+inflation on arm A), dedup never fired, and a single WALL-blocked, game-state-INERT click that
+changes exactly one cell -- in column 0 -- was re-popped for 1371 of those 1956 actions. Masking
+column 0 and changing NOTHING else flips r11l 0 -> 1 level on 3 of 3 seeds. That column-0 mask
+was ORACLE-DERIVED from the public game's source and is a DIAGNOSTIC ONLY.
+
+The shipped predicate's failure is STRUCTURAL, not mis-thresholded: its geometric branch requires
+`width >= 0.75 * frame_width AND height <= 2`, a horizontal-bar template that no vertical bar can
+satisfy at any frame size, and its edge test reads `bbox[0]`/`bbox[2]` -- both Y coordinates -- so
+the LEFT and RIGHT columns are never tested at all.
+
+**THE CENTRAL ASYMMETRY THIS REQUIREMENT IS BUILT AROUND.** Under-masking costs search
+efficiency. Over-masking destroys CORRECTNESS: a mask that collapses two behaviourally distinct
+states makes the graph record contradictory successors. A mask that collapses distinct states is
+therefore WORSE than no mask at all, and every design and gate decision below reflects that
+asymmetry rather than treating the two error directions symmetrically. The 3rd-place reference
+solver (arXiv:2512.24156) is simultaneously the proof that legal detection is possible -- its
+`FrameProcessor.identify_status_bars` returns a 64-cell column-0 mask on the identical r11l reset
+frame, byte-for-byte equal to the oracle diagnostic -- AND a worked example of the application
+going wrong: on lf52/tu93/su15 its masked-hash graph shows up to 88x hash COLLAPSE, it trips its
+own assert, and 72-97% of its `choose_action` calls raise.
+
+The system SHALL provide a detector deriving the mask from FRAME STATISTICS ALONE -- no per-game
+constants, no source reading, no oracle mask -- in
+`carnot.agentic.arc_hud_bar_detector`, in three independently-testable stages, wired into
+`StepwiseExplorer` behind DEFAULT-OFF flags with constructor kwargs and env overrides
+(resolution order explicit-kwarg > env > `SUBMITTED_*` default).
+
+**STAGE 1 (`edge_bar_hud_mask`)** SHALL test all FOUR frame edges with a symmetric tolerance and
+a scale-free orientation-aware elongation ratio, SHALL OR IN the currently-shipped predicate so
+its output is a SUPERSET of today's mask BY CONSTRUCTION, and SHALL refuse a candidate exceeding
+a total-area ceiling ENTIRELY rather than truncating it. Measured across all 25 public games:
+1151 -> 1564 cells, 0 cells dropped on 25/25, mask changed on exactly SIX games (ar25 63->127,
+sc25 0->128, lp85 0->64, r11l 0->64, tn36 0->61, cn04 0->32).
+
+**STAGE 1 ALONE SHALL NOT BE APPLIED TO NODE IDENTITY.** Geometry is a shape prior and provably
+cannot distinguish a live counter from a decision-relevant state variable drawn as an edge strip.
+On ar25 the newly-masked column 63 is a FILL-LEVEL GAUGE: with it masked, 1554 distinct raw
+frames collapsed to 233 graph nodes; the runtime guard proved 4 aliasing keys on the first seed
+measured, an independent post-hoc analysis over a 1168-transition log found 17 of 17 observable
+keys collapsing with 0 non-deterministic (environment determinism separately confirmed on 20
+repeated raw keys), and `col63_fill_height -> successor` was a 1:1 function over fill heights
+7..61.
+
+**STAGE 2 (`region_hud_evidence` + `DeferredMaskActivation`)** SHALL hold the Stage-1 candidate
+UNAPPLIED -- identity remaining exactly today's unmasked behaviour -- until at least
+`REGION_EVIDENCE_MIN_TRANSITIONS` transitions the agent ALREADY took are available, then SHALL
+admit only a region that is action-ubiquitous and monotone, SHALL discard a refused candidate
+permanently, and SHALL discard rather than guess when it is still abstaining at its buffer cap.
+Measured on the affected games: refuses ar25, cn04, lp85 and sc25; admits r11l and tn36. Late
+ACTIVATION is safe (pre-activation nodes are DUPLICATED under a second key, an efficiency cost);
+late REVOCATION is not (see Stage 3).
+
+**STAGE 3 (`MaskCollapseGuard`)** SHALL prove aliasing at runtime from the agent's OWN
+transitions: a `(masked_hash, concrete_action)` key observed to produce TWO DIFFERENT masked
+successors shows the masked hash covers at least two behaviourally distinct true states. It SHALL
+carry a MANDATORY unmasked control, SHALL DECLINE to act when no control was supplied (counting
+the declines), and SHALL report control POWER separately from control LIVENESS: the exoneration
+branch requires the unmasked antecedent to REPEAT, which never happens on a monotone-counter
+region, so `non_deterministic_keys_excluded_by_control: 0` on such a key is a CONSTRUCTIONAL zero.
+Branchings SHALL therefore be split into `proven_collapses` (control had power) and
+`unproven_masked_branchings` (acted on conservatively, NOT called proofs).
+
+**REVOCATION SHALL BE LOCAL, NEVER A MID-RUN HASH-CONVENTION FLIP.** The first implementation, past
+a small split cap, set `globally_revoked`, after which `is_split` returned True unconditionally and
+`_hash` emitted a compound `masked|u:unmasked` key for every subsequent frame while pre-revocation
+nodes kept plain masked keys. That is two identity conventions in one graph, not a fallback to the
+unmasked baseline, and it was measured strictly WORSE than no guard: on tu93 -- where the repaired
+mask is IDENTICAL to the shipped one, so arming the guard was the only difference -- 1 level / 361
+actions became 0 levels / 1953 actions on 3 of 3 seeds; instrumented, 72 hashes pre-revocation vs
+1927 post, 58 of 658 distinct raw frames holding BOTH key forms, and 640 of 655 nodes (97.7%) on
+the far side of the switch, with the pre-revocation subgraph structurally unreachable. Splits SHALL
+be local and unbounded (one convention per node); the split budget SHALL be REPORTING-ONLY.
+
+**THE THREE FLAGS SHALL BE COUPLED.** `SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = True` SHALL imply
+both `SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED` and
+`SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED`, enforced by an import-time assertion, and the
+runtime SHALL default both safety stages ON whenever the detector is on. Only an EXPLICIT
+constructor kwarg may disable a stage (so an A/B can isolate mechanisms), and any arm that does
+so SHALL record it (`hud_mask_safety_stages_explicitly_disabled`) and SHALL NOT be flip-eligible.
+
+**THE PRE-REGISTERED GATE (`hud_mask_gate`)** SHALL, for a FLIP-CANDIDATE arm only (both safety
+stages armed), against the matched control that pins the CURRENT live configuration (arm B2, not
+the pre-flip arm A): require a new win on EVERY shared seed (never an any-seed union), no lost win
+on ANY seed, a MEASURED safety axis (guard armed, unmasked control live on every cell, Stage 2
+armed, no revocation), and that EVERY repair-affected game was measured. It SHALL emit a computed
+WITNESS demonstrating the pass region is non-empty, INCLUDING the safety conjuncts. Aliasing
+attribution SHALL be sourced from the guard's own per-node evidence over every measured game (not
+from win/loss bookkeeping) and SHALL compare masks by CELL-SET DIGEST (not by cell count).
+
+Required field provenance principles SHALL include:
+
+- `hud_mask_resolved` / `hud_mask_cell_count` / `hud_mask_digest`: principle "a mask must be identified by its CELL SET; equal cell counts do not imply the same cells, so a count comparison would exonerate a repair that MOVED a mask."
+- `hud_mask_stage2_verdict`: principle "a Stage-2 REFUSAL is the safety mechanism working and must be distinguishable from 'the detector found nothing', or the artifact cannot tell a prevented over-mask from an absent bar."
+- `unique_frames` / `graph_nodes` / `node_inflation`: principle "dedup is the mechanism under test; without both counts an arm cannot be shown to have deduped anything, and node_inflation is the oracle-free stand-in for true inflation."
+- `collapse_guard.proven_collapses` vs `unproven_masked_branchings`: principle "a control that could not have fired proves nothing; conflating liveness with power turns a constructional zero into a claimed proof."
+- `hud_mask_safety_stages_explicitly_disabled`: principle "an arm with a disabled safety stage has a structurally UNMEASURED safety axis and must be reported as mechanism-isolation, never certified as flip-eligible."
+- `games_where_mask_changed_vs_control`: principle "a no-regression result over games where the treatment mask equals the control's is a measurement of nothing, and must never read as safety evidence."
+
+### SCENARIO-ARC-WMTE-5960-VERTICAL-EDGE-COUNTER-DETECTED
+
+**Given** a frame whose only HUD is a 64-cell single-colour blob in column 0 (r11l's shape)
+**When** the repaired detector runs on that frame
+**Then** it returns a 64-cell mask covering column 0 and nothing else, while the shipped
+classifier returns None on the same frame.
+
+### SCENARIO-ARC-WMTE-5960-SUPERSET-OF-SHIPPED-CLASSIFIER
+
+**Given** any frame on which the shipped classifier resolves a mask
+**When** the repaired detector runs on that frame
+**Then** no cell the shipped classifier masks is dropped, so an A/B difference can only come
+from newly-detected cells; verified corpus-wide with per-game cell counts and digests persisted
+in the artifact (`hud_mask_delta_table`), 0 cells dropped on 25/25 games.
+
+### SCENARIO-ARC-WMTE-5960-OVER-BROAD-MASK-REFUSED
+
+**Given** a candidate mask exceeding the total-area ceiling
+**When** the detector assembles it
+**Then** the mask is refused ENTIRELY (returns None, i.e. today's behaviour) rather than
+truncated, because a partially-applied over-broad mask is the correctness hazard.
+
+### SCENARIO-ARC-WMTE-5960-STAGE1-ALONE-IS-NOT-APPLIED
+
+**Given** a game whose edge bar is a decision-relevant state variable (ar25's column-63 fill
+gauge), which is geometrically indistinguishable from a monotone counter
+**When** the detector is enabled with its coupled defaults
+**Then** Stage 1 proposes the candidate, Stage 2 REFUSES it, `hud_mask` stays None for the whole
+episode, and the row records `stage2_verdict: refused` with a non-zero candidate cell count --
+so the prevented over-mask is visible rather than looking like an absent bar.
+
+### SCENARIO-ARC-WMTE-5960-STAGE2-DEFERS-THEN-ACTIVATES
+
+**Given** a game whose edge bar IS a monotone counter (r11l)
+**When** the detector is enabled with its coupled defaults
+**Then** node identity is unmasked until Stage 2 has at least the minimum transitions, after
+which the mask activates exactly once, and the row's `hud_mask_source` distinguishes
+`stage2_pending` from `stage2_confirmed`.
+
+### SCENARIO-ARC-WMTE-5960-COLLAPSE-GUARD-HARD-REFUSAL
+
+**Given** a `(masked_hash, concrete_action)` key observed producing two different masked
+successors, with the unmasked control not branching
+**When** the guard records the second observation
+**Then** that node is un-masked locally (`_hash` returns a compound `masked|u:unmasked` key for
+it), the branching is counted, and it is classified as `proven_collapses` only if the unmasked
+antecedent had repeated -- otherwise as `unproven_masked_branchings`.
+
+### SCENARIO-ARC-WMTE-5960-NO-GLOBAL-HASH-FLIP
+
+**Given** a guard that has split more nodes than its reporting threshold
+**When** any subsequent frame is hashed
+**Then** only the nodes that actually branched are un-masked, a node never observed is NOT
+un-masked, `globally_revoked` is False, and `split_budget_exceeded` is reported without changing
+behaviour.
+
+### SCENARIO-ARC-WMTE-5960-FLAG-COUPLING
+
+**Given** `SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = True` with either safety-stage flag False
+**When** the agent module is imported
+**Then** an AssertionError is raised naming both required flags, so no shipped configuration can
+apply the wider mask without the two mechanisms that can refuse it.
+
+### SCENARIO-ARC-WMTE-5960-GATE-REQUIRES-EVERY-SEED
+
+**Given** a treatment arm that gains a game on ONE of three seeds and is flat on the others,
+with no regressions
+**When** the gate is evaluated
+**Then** `any_seed_gained` is true, `all_seeds_gained` is false, and the gate does NOT pass.
+
+### SCENARIO-ARC-WMTE-5960-GATE-REQUIRES-AN-ARMED-SAFETY-AXIS
+
+**Given** an arm that gains a game on every seed but has a safety stage explicitly disabled
+**When** the gate is evaluated
+**Then** that arm is reported as `role: mechanism_isolation_only` with `flip_eligible: false` and
+a `safety_axis_unmeasured` blocker, and the gate's overall `passed` is false -- a gate cannot be
+satisfied by an arm whose safety axis is structurally unmeasured.
+
+### SCENARIO-ARC-WMTE-5960-GATE-REQUIRES-EVERY-AFFECTED-GAME-MEASURED
+
+**Given** a run that measures only a subset of the games where the repaired mask differs from the
+shipped one
+**When** the gate is evaluated
+**Then** `unmeasured_repair_affected_games` is non-empty, the arm carries a
+`repair_affected_games_unmeasured` blocker, the gate does not pass, and the honest verdict says
+`hud_detector_gate_undecided_<k>_of_<n>_repair_affected_games_unmeasured`.
+
+### SCENARIO-ARC-WMTE-5960-ATTRIBUTION-COVERS-EVERY-MEASURED-GAME
+
+**Given** a game where the guard fired but NO control-held win was lost (and which the win/loss
+window therefore cannot see)
+**When** aliasing attribution runs
+**Then** that game appears in `per_game_guard_evidence` with its refusal count and its
+repair-added-region attribution, and the shipped-mask aliasing claim is reported as a HYPOTHESIS
+with its named confound rather than as a boolean assertion.
+
+### SCENARIO-ARC-WMTE-5960-ARTIFACT-IDENTITY
+
+**Given** a run whose arms include any HUD arm
+**When** the artifact is assembled
+**Then** `experiment_id` is 5960, the title names REQ-ARC-WMTE-5960,
+`requirements_exercised` contains `REQ-ARC-WMTE-5960`, the honest verdict carries the HUD
+mechanism's own result (even when no reference positive control ran, since the HUD gate compares
+against a matched control measured in the same run), and the 25-game mask-delta table is
+persisted in the artifact.

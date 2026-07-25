@@ -130,6 +130,10 @@ EXPERIMENT_ID = 5836
 # REQ-ARC-WMTE-5950 measurement and must declare that identity, not 5836's -- see the identity
 # derivation in `run()`.
 CLICK_PIXEL_EXPERIMENT_ID = 5950
+# REQ-ARC-WMTE-5960's own experiment id. Without it a HUD run wrote `experiment_id: 5836` and a
+# title about frontier discipline, so the HUD result was undiscoverable by requirement or by id
+# while a fifth artifact folded into the already-published 5836 record.
+HUD_MASK_EXPERIMENT_ID = 5960
 ARTIFACT = REPO / "results" / "experiment_5836_frontier_discipline_ab.json"
 RANDOM_SEED = 20260724
 DEFAULT_BUDGET = 2000
@@ -334,7 +338,12 @@ ARMS: dict[str, dict[str, Any]] = {
             "tier_uniform_random": True,
             "frontier_gradient": False,
             "edge_bar_hud_mask": True,
+            # BOTH safety stages pinned OFF **explicitly**. Since 2026-07-25 the runtime DEFAULTS
+            # both stages on whenever the detector is on (so no flag flip can ship the detector
+            # bare), and an explicit kwarg is the only thing that outranks that -- so without
+            # these two lines arm G would silently become arm G3 and stop isolating anything.
             "hud_mask_collapse_guard": False,
+            "hud_mask_stage2_confirm": False,
         },
         "deterministic": False,
     },
@@ -1786,18 +1795,25 @@ def hud_mask_delta_table(games: Sequence[str]) -> dict:
             out["per_game"][game] = {"error": f"{type(exc).__name__}:{exc}"}
             out["games_unavailable"].append(game)
             continue
+        # `None` means "found nothing", which is an EMPTY mask of the frame's shape -- not an
+        # absent measurement. Normalising it that way is what makes the added/dropped counts
+        # meaningful on the four games where one side resolves and the other does not.
+        shape = None
+        for candidate in (shipped, repaired):
+            if candidate is not None:
+                shape = np.asarray(candidate).shape
+                break
+        if shape is None:
+            shape = (1, 1)
         shipped_arr = (
-            np.zeros((1, 1), dtype=bool) if shipped is None else np.asarray(shipped, dtype=bool)
+            np.zeros(shape, dtype=bool) if shipped is None else np.asarray(shipped, dtype=bool)
         )
         repaired_arr = (
-            np.zeros_like(shipped_arr) if repaired is None else np.asarray(repaired, dtype=bool)
+            np.zeros(shape, dtype=bool) if repaired is None else np.asarray(repaired, dtype=bool)
         )
-        if shipped is None and repaired is not None:
-            shipped_arr = np.zeros_like(repaired_arr)
-        added = int((repaired_arr & ~shipped_arr).sum()) if repaired_arr.shape == shipped_arr.shape else None
-        dropped = (
-            int((shipped_arr & ~repaired_arr).sum()) if repaired_arr.shape == shipped_arr.shape else None
-        )
+        comparable = shipped_arr.shape == repaired_arr.shape
+        added = int((repaired_arr & ~shipped_arr).sum()) if comparable else None
+        dropped = int((shipped_arr & ~repaired_arr).sum()) if comparable else None
         shipped_digest = mask_cell_digest(shipped)
         repaired_digest = mask_cell_digest(repaired)
         changed = shipped_digest != repaired_digest
@@ -2293,22 +2309,50 @@ def hud_mask_gate(
     return out
 
 
-def _hud_aliasing_attribution(rows: Sequence[dict], gate: dict, condition: str = "real") -> dict:
+def _hud_aliasing_attribution(
+    rows: Sequence[dict],
+    gate: dict,
+    condition: str = "real",
+    *,
+    mask_delta: Optional[dict] = None,
+) -> dict:
     """WHOSE mask is aliasing -- the repair's newly-masked cells, or the ALREADY-SHIPPED mask?
 
-    This distinction decides who owns the problem, and getting it wrong would credit (or
-    blame) the wrong mechanism -- the failure mode this experiment family has already made
-    once. It is computed, not asserted: for every game where a guard-armed arm LOST a win the
-    matched control holds, compare that game's ``hud_mask_cell_count`` between control and
-    treatment.
+    This distinction decides who owns the problem, and getting it wrong would credit (or blame)
+    the wrong mechanism -- the failure mode this experiment family has already made once.
 
-      * EQUAL cell counts  -> the repair added NOTHING on that game, so the aliasing the guard
-        proved is in the mask the SHIPPED classifier already resolves there. That is a defect
-        in the currently-live `SUBMITTED_AUTO_HUD_MASK_ENABLED=True` configuration, surfaced by
-        this experiment but NOT introduced by it -- and it is operator-visible.
-      * DIFFERENT cell counts -> the repair widened the mask on that game and the widening is
-        the prime suspect.
+    REWRITTEN 2026-07-25 after the review found the previous version STRUCTURALLY BLIND to the
+    worst case in the corpus. It iterated only games where a guard-armed arm LOST A WIN, so it
+    could not report aliasing on (a) a game that was not run, or (b) a game where the guard-armed
+    arm did not lose a control-held win. ar25's 17-of-17 proven collapses sat outside that window
+    on both counts, and the function's empty
+    ``regressions_attributable_to_the_REPAIR_widening_the_mask`` was then read as "0 regressions
+    attributable to the repair". Two changes:
+
+    1. PER-GAME GUARD EVIDENCE FOR EVERY MEASURED GAME, sourced from the guard's own per-node
+       counters rather than from win/loss bookkeeping. The guard now records, at refusal time,
+       whether the two antecedents differ inside the REPAIR-ADDED region or inside the
+       already-shipped region -- computable from data it already holds, needing no win to have
+       been lost.
+    2. MASKS COMPARED BY CELL-SET DIGEST, not by ``cell_count`` equality. Equal counts happen to
+       imply "the repair added nothing" on the games measured so far, but two masks of equal size
+       can occupy different cells, so the count test would exonerate a repair that MOVED a mask.
+
+    The win/loss window is KEPT (renamed to say what it actually covers) because "the control's
+    win on this game depends on the mask collapsing states" is a genuinely different and useful
+    fact -- it just is not the whole picture.
     """
+
+    def _digests(arm: str, game: str) -> set[Optional[str]]:
+        return {
+            r.get("hud_mask_digest")
+            for r in rows
+            if r.get("arm") == arm
+            and r.get("game") == game
+            and r.get("condition") == condition
+            and r.get("ran")
+            and r.get("hud_mask_resolved") is not None
+        }
 
     def _cells(arm: str, game: str) -> set[int]:
         return {
@@ -2321,39 +2365,122 @@ def _hud_aliasing_attribution(rows: Sequence[dict], gate: dict, condition: str =
             and r.get("hud_mask_cell_count") is not None
         }
 
+    affected = set((mask_delta or {}).get("games_where_mask_changed") or [])
     shipped_mask_games: list[dict] = []
     repair_widened_games: list[dict] = []
+    per_game_guard_evidence: list[dict] = []
     for arm, detail in (gate.get("per_arm") or {}).items():
         if not detail.get("measured"):
             continue
         if not (detail.get("safety") or {}).get("guard_armed"):
             continue
+
+        # ---- (1) THE WIDE WINDOW: every measured game, keyed on the guard, not on wins. ----
+        for row in rows:
+            if row.get("arm") != arm or row.get("condition") != condition or not row.get("ran"):
+                continue
+            guard = (row.get("hud_mask") or {}).get("collapse_guard")
+            if not guard:
+                continue
+            attribution = guard.get("attribution") or {}
+            refusals = int(guard.get("collapse_refusals") or 0)
+            if not refusals:
+                continue
+            per_game_guard_evidence.append(
+                {
+                    "arm": arm,
+                    "game": row.get("game"),
+                    "seed": row.get("seed"),
+                    "mask_changed_by_the_repair_on_this_game": row.get("game") in affected,
+                    "refusals": refusals,
+                    "observable_keys": guard.get("keys_with_multiple_successors"),
+                    "proven_collapses": guard.get("proven_collapses"),
+                    "unproven_masked_branchings": guard.get("unproven_masked_branchings"),
+                    "control_had_power_on_any_key": guard.get("control_had_power_on_any_key"),
+                    "differing_cells_in_repair_added_region": attribution.get(
+                        "branchings_differing_in_repair_added_region"
+                    ),
+                    "differing_cells_in_already_shipped_region": attribution.get(
+                        "branchings_differing_in_already_shipped_region"
+                    ),
+                    "attribution_unavailable": attribution.get("attribution_unavailable"),
+                }
+            )
+
+        # ---- (2) THE NARROW WINDOW: regressions, i.e. wins that DEPEND on a collapse. ----
         lost = sorted({g for s in detail.get("per_seed", []) for g in s.get("lost_wins", [])})
         for game in lost:
-            control_cells = _cells(HUD_MASK_CONTROL_ARM, game)
-            treat_cells = _cells(arm, game)
+            control_digests = _digests(HUD_MASK_CONTROL_ARM, game)
+            treat_digests = _digests(arm, game)
             row = {
                 "arm": arm,
                 "game": game,
-                "control_mask_cells": sorted(control_cells),
-                "treatment_mask_cells": sorted(treat_cells),
+                "control_mask_digests": sorted(d for d in control_digests if d),
+                "treatment_mask_digests": sorted(d for d in treat_digests if d),
+                "control_mask_cells": sorted(_cells(HUD_MASK_CONTROL_ARM, game)),
+                "treatment_mask_cells": sorted(_cells(arm, game)),
+                "mask_changed_by_the_repair_on_this_game": game in affected,
             }
-            if control_cells and control_cells == treat_cells:
+            same_mask = bool(control_digests) and control_digests == treat_digests
+            if same_mask:
                 shipped_mask_games.append(row)
             else:
                 repair_widened_games.append(row)
+
+    added_region_branchings = sum(
+        int(e.get("differing_cells_in_repair_added_region") or 0) for e in per_game_guard_evidence
+    )
+    shipped_region_branchings = sum(
+        int(e.get("differing_cells_in_already_shipped_region") or 0)
+        for e in per_game_guard_evidence
+    )
+    unproven_total = sum(
+        int(e.get("unproven_masked_branchings") or 0) for e in per_game_guard_evidence
+    )
+    proven_total = sum(int(e.get("proven_collapses") or 0) for e in per_game_guard_evidence)
     return {
-        "regressions_attributable_to_the_ALREADY_SHIPPED_mask": shipped_mask_games,
-        "regressions_attributable_to_the_REPAIR_widening_the_mask": repair_widened_games,
+        # RENAMED so an empty list cannot read as "the repair is clean". It means exactly: no
+        # guard-armed arm lost a control-held win on a MEASURED game.
+        "guard_armed_arms_losing_a_control_win_where_the_mask_is_UNCHANGED": shipped_mask_games,
+        "guard_armed_arms_losing_a_control_win_where_the_mask_WIDENED": repair_widened_games,
+        "window_limitation": (
+            "the two lists above are keyed on LOST WINS, so they are silent about a game that "
+            "was not run and about a game where the guard fired but no control-held win was "
+            "lost. per_game_guard_evidence below is the wide window -- every measured cell whose "
+            "guard fired, regardless of wins -- and it is what must be read to answer 'is the "
+            "repair-added region aliasing'"
+        ),
+        "per_game_guard_evidence": per_game_guard_evidence,
+        "branchings_where_antecedents_differ_in_the_REPAIR_ADDED_region": added_region_branchings,
+        "branchings_where_antecedents_differ_in_the_ALREADY_SHIPPED_region": (
+            shipped_region_branchings
+        ),
+        "proven_collapses_total": proven_total,
+        "unproven_masked_branchings_total": unproven_total,
         "interpretation": (
-            "a regression on a game where control and treatment mask the SAME number of cells "
+            "a regression on a game whose treatment and control mask DIGESTS are identical "
             "cannot have been caused by the repair -- the repair added no cell there. It means "
-            "the guard proved that the mask the SHIPPED classifier already applies on that game "
-            "collapses behaviourally distinct states, and that the win on that game DEPENDS on "
-            "that collapse. That is a pre-existing property of the live configuration, made "
+            "the guard observed that the mask the SHIPPED classifier already applies on that "
+            "game covers behaviourally distinct states, and that the win on that game DEPENDS "
+            "on that collapse. That is a pre-existing property of the live configuration, made "
             "visible here rather than created here"
         ),
-        "shipped_mask_aliasing_detected": bool(shipped_mask_games),
+        # DEMOTED from a boolean assertion to attributed evidence (2026-07-25). The guard's
+        # unmasked control can only exonerate when the unmasked antecedent REPEATS, which never
+        # happens on a monotone-counter region -- so on those keys the branching is consistent
+        # with BOTH "the masked content is causal" and "there is hidden state never rendered into
+        # the frame". `proven_collapses_total` counts only the keys where the control genuinely
+        # had power; `unproven_masked_branchings_total` counts the rest.
+        "shipped_mask_aliasing_hypothesis": {
+            "supported_by_lost_wins_on_unchanged_masks": bool(shipped_mask_games),
+            "proven_collapses": proven_total,
+            "unproven_branchings": unproven_total,
+            "named_confound": (
+                "masked content causal vs. unrendered hidden state; the unmasked control cannot "
+                "distinguish them on a key whose unmasked antecedent never repeats"
+            ),
+            "is_a_proof": bool(proven_total > 0),
+        },
     }
 
 
@@ -2368,6 +2495,9 @@ def _hud_arm_mechanism_active(rows: Sequence[dict], arm: str, condition: str = "
 
     resolved_games: set[str] = set()
     control_resolved_games: set[str] = set()
+    treat_digest: dict[str, set] = {}
+    control_digest: dict[str, set] = {}
+    stage2_verdicts: dict[str, set] = {}
     instrumented = False
     total_cells = 0
     for row in rows:
@@ -2375,14 +2505,33 @@ def _hud_arm_mechanism_active(rows: Sequence[dict], arm: str, condition: str = "
             continue
         if row.get("hud_mask_resolved") is None:
             continue
+        game = str(row.get("game"))
         if row.get("arm") == arm:
             instrumented = True
             total_cells += 1
+            treat_digest.setdefault(game, set()).add(row.get("hud_mask_digest"))
+            verdict = row.get("hud_mask_stage2_verdict")
+            if verdict:
+                stage2_verdicts.setdefault(game, set()).add(str(verdict))
             if row.get("hud_mask_resolved"):
-                resolved_games.add(str(row.get("game")))
-        elif row.get("arm") == HUD_MASK_CONTROL_ARM and row.get("hud_mask_resolved"):
-            control_resolved_games.add(str(row.get("game")))
+                resolved_games.add(game)
+        elif row.get("arm") == HUD_MASK_CONTROL_ARM:
+            control_digest.setdefault(game, set()).add(row.get("hud_mask_digest"))
+            if row.get("hud_mask_resolved"):
+                control_resolved_games.add(game)
     newly = sorted(resolved_games - control_resolved_games)
+    # Compared on the mask's CELL-SET DIGEST, so a mask that MOVED counts as changed. The
+    # resolved/unresolved comparison above cannot see that case at all.
+    changed = sorted(
+        game
+        for game, digests in treat_digest.items()
+        if game in control_digest and digests != control_digest[game]
+    )
+    inert = sorted(
+        game
+        for game, digests in treat_digest.items()
+        if game in control_digest and digests == control_digest[game]
+    )
     return {
         "instrumented": instrumented,
         "cells_instrumented": total_cells,
@@ -2390,7 +2539,15 @@ def _hud_arm_mechanism_active(rows: Sequence[dict], arm: str, condition: str = "
         "control_games_with_mask_resolved": sorted(control_resolved_games),
         # THE activity witness: games where the repair found a bar the shipped classifier missed.
         "games_newly_masked_vs_control": newly,
-        "active": bool(instrumented and newly),
+        # THE MECHANISM-INERTNESS witness. On a game in `games_where_mask_is_inert_vs_control`
+        # this arm is byte-identical to its control, so a no-regression result there is not
+        # safety evidence about the mask -- it is a measurement of nothing. Both sets are emitted
+        # as first-class fields because the smoke's regression clause was evaluated almost
+        # entirely over the inert set.
+        "games_where_mask_changed_vs_control": changed,
+        "games_where_mask_is_inert_vs_control": inert,
+        "stage2_verdicts_by_game": {g: sorted(v) for g, v in sorted(stage2_verdicts.items())},
+        "active": bool(instrumented and (newly or changed)),
     }
 
 
@@ -2401,20 +2558,42 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
     key tried at least twice, and the count grows with budget (measured on lf52: 1 of 9
     observable keys at 394 actions -> 3 of 30 at 765). So zero refusals is NOT proof of zero
     aliasing, and `guard_armed` must be checked before reading a zero at all.
+
+    CONTROL LIVENESS IS NOT CONTROL POWER (added 2026-07-25). `control_live` says an unmasked
+    antecedent was SUPPLIED. The guard's exoneration branch additionally needs that unmasked
+    antecedent to REPEAT -- and on a monotone-counter region it never does, so
+    `non_deterministic_keys_excluded_by_control: 0` there is a CONSTRUCTIONAL zero rather than
+    evidence of determinism. `keys_with_repeated_unmasked_antecedent` is the power denominator,
+    and refusals are split into `proven_collapses` (control had power) and
+    `unproven_masked_branchings` (acted on conservatively, not proven).
     """
 
     armed = False
+    stage2_armed_cells = 0
     refusals = 0
     provable_keys = 0
     excluded_by_control = 0
     declined = 0
+    proven = 0
+    unproven = 0
+    power_keys = 0
     cells_with_live_control = 0
+    cells_with_power = 0
     cells_seen = 0
     revoked_cells: list[str] = []
+    split_budget_exceeded_cells: list[str] = []
+    stages_disabled: set[str] = set()
+    attribution_added = 0
+    attribution_shipped = 0
+    attribution_unavailable = 0
     for row in rows:
         if row.get("arm") != arm or row.get("condition") != condition or not row.get("ran"):
             continue
-        guard = (row.get("hud_mask") or {}).get("collapse_guard")
+        hud = row.get("hud_mask") or {}
+        stages_disabled.update(hud.get("hud_mask_safety_stages_explicitly_disabled") or [])
+        if hud.get("hud_mask_stage2_confirm_enabled"):
+            stage2_armed_cells += 1
+        guard = hud.get("collapse_guard")
         if not guard:
             continue
         armed = True
@@ -2423,12 +2602,38 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
         provable_keys += int(guard.get("keys_with_multiple_successors") or 0)
         excluded_by_control += int(guard.get("non_deterministic_keys_excluded_by_control") or 0)
         declined += int(guard.get("uncontrolled_branchings_declined") or 0)
+        proven += int(guard.get("proven_collapses") or 0)
+        unproven += int(guard.get("unproven_masked_branchings") or 0)
+        power_keys += int(guard.get("keys_with_repeated_unmasked_antecedent") or 0)
+        attribution = guard.get("attribution") or {}
+        attribution_added += int(
+            attribution.get("branchings_differing_in_repair_added_region") or 0
+        )
+        attribution_shipped += int(
+            attribution.get("branchings_differing_in_already_shipped_region") or 0
+        )
+        attribution_unavailable += int(attribution.get("attribution_unavailable") or 0)
         if guard.get("control_live"):
             cells_with_live_control += 1
+        if guard.get("control_had_power_on_any_key"):
+            cells_with_power += 1
         if guard.get("globally_revoked"):
             revoked_cells.append(f"{row.get('game')}@seed{row.get('seed')}")
+        if guard.get("split_budget_exceeded"):
+            split_budget_exceeded_cells.append(f"{row.get('game')}@seed{row.get('seed')}")
+    n_arm_cells = sum(
+        1
+        for row in rows
+        if row.get("arm") == arm and row.get("condition") == condition and row.get("ran")
+    )
     return {
         "guard_armed": armed,
+        # STAGE 2's ARMED-NESS is a gate conjunct in its own right: Stage 3 retracts a bad mask
+        # only AFTER nodes have been built under it, whereas Stage 2 refuses it before it is ever
+        # applied. An arm without Stage 2 is a mechanism-isolation arm, not a flip candidate.
+        "stage2_armed_cells": stage2_armed_cells,
+        "stage2_armed_on_all_cells": bool(n_arm_cells and stage2_armed_cells == n_arm_cells),
+        "safety_stages_explicitly_disabled": sorted(stages_disabled),
         "collapse_refusals": refusals if armed else None,
         "keys_with_multiple_successors": provable_keys if armed else None,
         "non_deterministic_keys_excluded_by_control": excluded_by_control if armed else None,
@@ -2441,14 +2646,31 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
         "cells_with_live_control": cells_with_live_control if armed else None,
         "cells_instrumented": cells_seen if armed else None,
         "control_live_on_all_cells": bool(armed and cells_with_live_control == cells_seen),
+        # CONTROL POWER, distinct from liveness. See the docstring.
+        "keys_with_repeated_unmasked_antecedent": power_keys if armed else None,
+        "cells_where_control_had_power": cells_with_power if armed else None,
+        "proven_collapses": proven if armed else None,
+        "unproven_masked_branchings": unproven if armed else None,
+        "refusals_are_all_proven": bool(armed and unproven == 0),
         "uncontrolled_branchings_declined": declined if armed else None,
+        "attribution_branchings_in_repair_added_region": attribution_added if armed else None,
+        "attribution_branchings_in_already_shipped_region": (
+            attribution_shipped if armed else None
+        ),
+        "attribution_unavailable": attribution_unavailable if armed else None,
         "globally_revoked_cells": revoked_cells,
+        "split_budget_exceeded_cells": split_budget_exceeded_cells,
         "zero_refusals_is_not_proof_of_no_aliasing": True,
+        "control_liveness_is_not_control_power": True,
     }
 
 
 def acceptance_gates(
-    cap: dict, paired: dict, power: dict, rows: Sequence[dict] | None = None
+    cap: dict,
+    paired: dict,
+    power: dict,
+    rows: Sequence[dict] | None = None,
+    mask_delta: Optional[dict] = None,
 ) -> dict:
     """Explicit, COMPARATIVE, falsifiable gates -- self-reported pass/fail.
 
@@ -2533,7 +2755,7 @@ def acceptance_gates(
         # reason as the sampler's: that field is already on the record as the
         # frontier-discipline verdict, and folding a third mechanism into it would redefine a
         # published number.
-        hud_gate = hud_mask_gate(rows)
+        hud_gate = hud_mask_gate(rows, mask_delta=mask_delta)
         gates["acceptance_gate_hud_mask"] = hud_gate
         gates["acceptance_gate_hud_mask_passed"] = bool(hud_gate.get("passed"))
     return gates
@@ -2761,6 +2983,43 @@ def run_scope(
     }
 
 
+def _hud_verdict_tail(hud_gate: Optional[dict]) -> str:
+    """The HUD mechanism's own result, as a verdict fragment. Empty when no HUD arm ran.
+
+    Names the three states that matter and are otherwise easy to conflate:
+      * the flip candidate PASSED / FAILED its own gate,
+      * repair-affected games were NOT ALL MEASURED (so the gate could not decide),
+      * the flip candidate was not run at all (only mechanism-isolation arms were).
+    """
+
+    if not isinstance(hud_gate, dict) or not hud_gate.get("per_arm"):
+        return ""
+    per_arm = hud_gate.get("per_arm") or {}
+    candidates = [a for a in HUD_MASK_FLIP_CANDIDATE_ARMS if (per_arm.get(a) or {}).get("measured")]
+    if not candidates:
+        return "_hud_detector_mechanism_isolation_only_no_flip_candidate_arm_measured"
+    unmeasured = sorted(
+        {
+            g
+            for a in candidates
+            for g in ((per_arm.get(a) or {}).get("unmeasured_repair_affected_games") or [])
+        }
+    )
+    if unmeasured:
+        return (
+            "_hud_detector_gate_undecided_"
+            f"{len(unmeasured)}_of_"
+            f"{len((hud_gate.get('mechanism_coverage') or {}).get('repair_affected_games') or [])}"
+            "_repair_affected_games_unmeasured"
+        )
+    if hud_gate.get("passed"):
+        return "_hud_detector_gate_passed_on_flip_candidate_arm"
+    blockers = sorted(
+        {b for a in candidates for b in ((per_arm.get(a) or {}).get("gate_blockers") or [])}
+    )
+    return "_hud_detector_gate_failed_" + ("_".join(blockers) if blockers else "unspecified")
+
+
 def verdict_for(
     scope: dict,
     cap: dict,
@@ -2769,6 +3028,7 @@ def verdict_for(
     error_rate: float,
     control_health: Optional[dict] = None,
     cps_gate: Optional[dict] = None,
+    hud_gate: Optional[dict] = None,
 ) -> str:
     """The honest_verdict string. States SCOPE and the CAPABILITY result, not the efficiency delta.
 
@@ -2795,19 +3055,32 @@ def verdict_for(
             f"_graft_new_wins_{int(cap.get('new_wins_vs_baseline') or 0)}"
             f"_control_new_wins_{int(cap.get('positive_control_new_wins') or 0)}"
         )
+    # THE HUD RESULT MUST BE IN THE VERDICT (added 2026-07-25). The previous run measured the HUD
+    # detector repair and then reported
+    # `complete_frontier_discipline_ab_measured_but_uninterpretable_no_positive_control` -- a
+    # verdict about a DIFFERENT mechanism, saying "uninterpretable", on the artifact carrying the
+    # session's only real result. The HUD tail is computed FIRST and prefixes the verdict when HUD
+    # arms ran, so the first line of the artifact describes what was actually measured. It is also
+    # placed BEFORE the positive-control branches: the HUD gate compares treatment arms against
+    # arm B2 (a matched control measured in this same run) and does not depend on the reference
+    # positive control at all, so a missing arm E must not erase it.
+    hud_tail = _hud_verdict_tail(hud_gate)
     if not positive_control_ran:
-        return "complete_frontier_discipline_ab_measured_but_uninterpretable_no_positive_control"
+        return (
+            "complete_frontier_discipline_ab_measured_but_uninterpretable_no_positive_control"
+            + hud_tail
+        )
     if error_rate > 0.05:
         return (
             "complete_frontier_discipline_ab_measured_but_uninterpretable_"
-            f"errored_cell_rate_{error_rate:.2f}"
+            f"errored_cell_rate_{error_rate:.2f}" + hud_tail
         )
     if control_health is not None and not control_health.get("healthy", True):
         return (
             "complete_frontier_discipline_ab_measured_but_uninterpretable_arm_error_rate_"
             f"positive_control_degenerate_{control_health.get('n_degenerate_cells')}"
             f"_of_{control_health.get('n_cells')}_cells_worst_"
-            f"{float(control_health.get('worst_cell_fallback_fraction') or 0.0):.2f}"
+            f"{float(control_health.get('worst_cell_fallback_fraction') or 0.0):.2f}" + hud_tail
         )
     cps_tail = ""
     if cps_gate is not None and "informative" in cps_gate:
@@ -2826,10 +3099,10 @@ def verdict_for(
             )
         )
     if scope.get("full_declared_spec"):
-        return "complete_frontier_discipline_ab_measured" + cap_tail + cps_tail
+        return "complete_frontier_discipline_ab_measured" + cap_tail + cps_tail + hud_tail
     return (
         f"partial_frontier_discipline_ab_smoke_scale_{int(scope.get('n_games') or 0)}games_"
-        f"budget{int(scope.get('budget') or 0)}_not_full_spec" + cap_tail + cps_tail
+        f"budget{int(scope.get('budget') or 0)}_not_full_spec" + cap_tail + cps_tail + hud_tail
     )
 
 
@@ -3129,7 +3402,11 @@ def run(
     power = power_ceiling(games, guard_games)
     control_health = positive_control_health(rows)
     cap = capability_summary(agg, cmp_, control_healthy=bool(control_health.get("healthy")))
-    gates = acceptance_gates(cap, paired, power, rows)
+    # WHICH GAMES THE REPAIRED DETECTOR ACTUALLY CHANGES, computed from reset frames at zero
+    # action cost. The HUD gate needs it to refuse a pass when a repair-affected game was never
+    # measured -- the defect that let a 3-game smoke certify a 6-game intervention.
+    mask_delta = hud_mask_delta_table(games) if set(arms) & set(HUD_MASK_ARMS) else None
+    gates = acceptance_gates(cap, paired, power, rows, mask_delta=mask_delta)
     repro = replay_validate(rows, budget=budget, je_runner=je_runner, limit=replay_limit)
 
     positive_control_ran = any(r.get("arm") == "E" and r.get("ran") for r in rows)
@@ -3153,6 +3430,7 @@ def run(
         error_rate=error_rate,
         control_health=control_health,
         cps_gate=cps_gate_for_verdict,
+        hud_gate=gates.get("acceptance_gate_hud_mask"),
     )
 
     config = {
@@ -3174,28 +3452,53 @@ def run(
     # existing artifacts carry experiment=5836) and leaves REQ-ARC-WMTE-5950 with no artifact
     # claiming it. Identity is therefore derived from WHICH ARMS RAN, not hardcoded.
     sampler_arms_present = [a for a in arms if a in set(CLICK_PIXEL_ARMS)]
-    graft_arms_present = [a for a in arms if a in set(GRAFTED_ARMS) - set(CLICK_PIXEL_ARMS)]
+    hud_arms_present = [a for a in arms if a in set(HUD_MASK_ARMS)]
+    graft_arms_present = [
+        a for a in arms if a in set(GRAFTED_ARMS) - set(CLICK_PIXEL_ARMS) - set(HUD_MASK_ARMS)
+    ]
     sampler_run = bool(sampler_arms_present)
-    exp_id = CLICK_PIXEL_EXPERIMENT_ID if sampler_run else EXPERIMENT_ID
-    requirement = "REQ-ARC-WMTE-5950" if sampler_run else "REQ-ARC-WMTE-5836"
+    hud_run = bool(hud_arms_present)
+    exp_id = (
+        HUD_MASK_EXPERIMENT_ID
+        if hud_run
+        else (CLICK_PIXEL_EXPERIMENT_ID if sampler_run else EXPERIMENT_ID)
+    )
+    requirement = (
+        "REQ-ARC-WMTE-5960"
+        if hud_run
+        else ("REQ-ARC-WMTE-5950" if sampler_run else "REQ-ARC-WMTE-5836")
+    )
     title = (
-        "Click-pixel sampling A/B (REQ-ARC-WMTE-5950): per-object uniform pixel vs truncated "
-        "centroid, against the live configuration"
-        if sampler_run
-        else "Frontier-discipline A/B: just-explore tier exhaustion + distance gradient"
+        "HUD status-bar detector repair A/B (REQ-ARC-WMTE-5960): orientation-complete edge-bar "
+        "detection with Stage-2 pre-activation confirmation and a runtime collapse guard, "
+        "against the live configuration"
+        if hud_run
+        else (
+            "Click-pixel sampling A/B (REQ-ARC-WMTE-5950): per-object uniform pixel vs truncated "
+            "centroid, against the live configuration"
+            if sampler_run
+            else "Frontier-discipline A/B: just-explore tier exhaustion + distance gradient"
+        )
     )
     art: dict[str, Any] = {
         "experiment": exp_id,
         "experiment_id": exp_id,
         "title": title,
         "requirement": requirement,
-        "requirements_exercised": (["REQ-ARC-WMTE-5950"] if sampler_run else [])
-        + (["REQ-ARC-WMTE-5836"] if graft_arms_present or not sampler_run else []),
+        "requirements_exercised": (["REQ-ARC-WMTE-5960"] if hud_run else [])
+        + (["REQ-ARC-WMTE-5950"] if sampler_run else [])
+        + (["REQ-ARC-WMTE-5836"] if graft_arms_present or not (sampler_run or hud_run) else []),
         "identity_derivation": (
-            "experiment_id/requirement are derived from which arms ran: arms F/F1 present -> "
+            "experiment_id/requirement are derived from which arms ran: arms G/G2/G3 present -> "
+            "REQ-ARC-WMTE-5960 (the HUD detector repair, which takes precedence because it is "
+            "the mechanism under test whenever it is measured); else arms F/F1 present -> "
             "REQ-ARC-WMTE-5950 (the click-pixel sampler); otherwise REQ-ARC-WMTE-5836 (the "
             "frontier-discipline graft). Hardcoding 5836 previously made a 5950 run write an "
-            "artifact that folded into the already-published 5836 record"
+            "artifact that folded into the already-published 5836 record, and a 5960 run then "
+            "did the same thing again -- experiment_id 5836, title 'Frontier-discipline A/B', "
+            "requirements_exercised ['REQ-ARC-WMTE-5836'] only, and honest_verdict "
+            "'...uninterpretable_no_positive_control' -- so the one real result in that session "
+            "was not discoverable by requirement or by experiment id"
         ),
         "reference": "arXiv:2512.24156 (just-explore, ARC-AGI-3 Preview private leaderboard 3rd)",
         "honest_verdict": verdict,
@@ -3233,6 +3536,13 @@ def run(
         "positive_control_new_wins": cap.get("positive_control_new_wins"),
         "capability_summary": cap,
         **gates,
+        # THE 25-GAME MASK SUPERSET TABLE, persisted (2026-07-25). The claim "the repaired mask is
+        # a strict superset of the shipped mask on 25/25 games, 1151 -> 1564 cells, 0 dropped"
+        # previously existed only in a chat report -- load-bearing safety evidence recorded
+        # nowhere, on an artifact whose aliasing attribution never recorded mask identity at all.
+        # It is now computed by the harness and written here, with per-game cell counts AND
+        # cell-set digests, so the superset claim is auditable from the artifact alone.
+        "hud_mask_delta_table": mask_delta,
         "paired_efficiency_vs_baseline": paired,
         "power_ceiling": power,
         "regression_guard_provenance": guard_provenance,
@@ -3420,7 +3730,8 @@ def recompute_derived(art: dict) -> dict:
     power = power_ceiling(games, guard_games)
     control_health = positive_control_health(rows)
     cap = capability_summary(agg, cmp_, control_healthy=bool(control_health.get("healthy")))
-    gates = acceptance_gates(cap, paired, power, rows)
+    mask_delta = hud_mask_delta_table(games) if set(arms) & set(HUD_MASK_ARMS) else None
+    gates = acceptance_gates(cap, paired, power, rows, mask_delta=mask_delta)
     positive_control_ran = any(r.get("arm") == "E" and r.get("ran") for r in rows)
     positive_control_usable = bool(positive_control_ran and control_health.get("healthy"))
     error_rate = (len(errored) / len(rows)) if rows else 1.0
@@ -3451,6 +3762,7 @@ def recompute_derived(art: dict) -> dict:
                 error_rate=error_rate,
                 control_health=control_health,
                 cps_gate=cps_gate_for_verdict,
+                hud_gate=gates.get("acceptance_gate_hud_mask"),
             ),
             "headline": build_headline(
                 cap,

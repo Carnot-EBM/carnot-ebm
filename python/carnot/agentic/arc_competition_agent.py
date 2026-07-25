@@ -2270,14 +2270,32 @@ class StepwiseExplorer:
                     else candidate
                 )
                 if self._hud_deferred_activation is not None:
-                    # STAGE 2 GATE: propose, do NOT apply. Identity stays unmasked (today's
-                    # behaviour) until enough transitions exist to judge the candidate.
-                    self._hud_deferred_activation.propose(candidate)
-                    self._hud_mask_source = (
-                        "edge_bar_detector_req5960_stage2_pending"
-                        if candidate is not None
-                        else "unresolved_no_bar_detected"
-                    )
+                    # STAGE 2 GATE: propose the wider candidate, apply only the SHIPPED baseline.
+                    # Identity is therefore EXACTLY today's live behaviour until Stage 2 admits
+                    # the repair-added cells -- never worse, which is the superset-by-construction
+                    # property this requirement rests on. (Feeding Stage 2 the union instead, and
+                    # falling back to NO mask on a refusal, cost su15 and dc22 their wins on games
+                    # with zero repair-added cells; measured, then fixed.)
+                    self._hud_deferred_activation.propose(candidate, self._hud_shipped_mask)
+                    stage2 = self._hud_deferred_activation
+                    if stage2.verdict == "no_added_region":
+                        # Nothing to judge: the candidate IS today's mask. Apply immediately.
+                        self.hud_mask = candidate
+                        self._hud_mask_source = (
+                            "status_bar_classifier_req5583_no_repair_added_cell"
+                            if candidate is not None
+                            else "unresolved_no_bar_detected"
+                        )
+                        self._arm_guard_regions()
+                    else:
+                        self.hud_mask = stage2.fallback_mask()
+                        if self.hud_mask is not None:
+                            self._arm_guard_regions()
+                        self._hud_mask_source = (
+                            "edge_bar_detector_req5960_stage2_pending"
+                            if candidate is not None
+                            else "unresolved_no_bar_detected"
+                        )
                 else:
                     self.hud_mask = candidate
                     self._hud_mask_source = (
@@ -2316,6 +2334,17 @@ class StepwiseExplorer:
                 self.hud_mask = activated
                 self._hud_mask_source = "edge_bar_detector_req5960_stage2_confirmed"
                 self._arm_guard_regions()
+            elif not self._hud_deferred_activation.pending:
+                # Stage 2 REFUSED or DISCARDED the repair-added cells. Identity stays on the
+                # SHIPPED mask -- today's live behaviour -- rather than dropping to no mask.
+                self.hud_mask = self._hud_deferred_activation.fallback_mask()
+                self._hud_mask_source = (
+                    "status_bar_classifier_req5583_stage2_refused_the_repair_added_cells"
+                    if self.hud_mask is not None
+                    else "unresolved_stage2_refused_and_no_shipped_bar"
+                )
+                if self.hud_mask is not None:
+                    self._arm_guard_regions()
         unmasked_now = self._unmasked_hash(latest)
         # The UNMASKED hash of the frame the agent was standing on when it issued the action
         # that produced `latest` -- i.e. the raw antecedent. Read from the previous _ingest, NOT

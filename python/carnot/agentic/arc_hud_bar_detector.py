@@ -381,7 +381,7 @@ def edge_bar_hud_mask(
     if not fired or not bool(mask.any()):
         return None
     area = int(grid.shape[0]) * int(grid.shape[1])
-    if area <= 0:
+    if area <= 0:  # pragma: no cover - _as_grid rejects empty frames before this point
         return None
     if float(mask.sum()) / float(area) > float(thr.max_mask_area_fraction):
         # Refuse wholesale. See the docstring: truncating would ship a partially-applied
@@ -640,22 +640,66 @@ class DeferredMaskActivation:
     min_ubiquity: float = REGION_EVIDENCE_MIN_UBIQUITY
     max_revisits: int = REGION_EVIDENCE_MAX_REVISITS
     candidate: Optional[np.ndarray] = None
+    # The mask the SHIPPED classifier resolves on the same frame -- the FALLBACK, and the region
+    # Stage 2 must NOT judge. See `propose`.
+    baseline: Optional[np.ndarray] = None
     verdict: str = "no_candidate"
     reason: str = "stage1_proposed_nothing"
     evidence: dict = field(default_factory=dict)
     activated_after_transitions: Optional[int] = None
+    _added_region: Optional[np.ndarray] = None
     _grids: list = field(default_factory=list)
     _actions: list = field(default_factory=list)
 
-    def propose(self, candidate: Any) -> None:
-        """Register the Stage-1 candidate. Does NOT apply it -- that is the whole point."""
+    def propose(self, candidate: Any, baseline: Any = None) -> None:
+        """Register the Stage-1 candidate and the shipped-mask BASELINE it must never undercut.
 
-        if candidate is None:
+        STAGE 2 JUDGES ONLY THE REPAIR-ADDED REGION (fixed 2026-07-25, found by the full-corpus
+        A/B rather than assumed). The first version fed Stage 2 the whole candidate mask -- which
+        is the UNION of the shipped mask and the repair's additions -- so a refusal threw away the
+        SHIPPED mask too, on games where no repair-added cell exists at all:
+
+            su15  1 level / 534 actions / 21 nodes  ->  0 levels / 1947 actions / 238 nodes
+            dc22  1 level / 1769 actions / 120 nodes ->  0 levels / 1967 actions / 1028 nodes
+
+        Both have a 64-cell shipped mask and ZERO repair-added cells, so the treatment arm should
+        have been byte-identical to its control there. That is a direct violation of the
+        superset-by-construction property this requirement rests on: the repair may only ADD
+        masked cells, never remove the dedup the live configuration already gets.
+
+        With the baseline supplied, the semantics become: apply the SHIPPED mask immediately
+        (exactly today's behaviour), and let Stage 2 decide only whether to WIDEN it. A refusal
+        returns to -- never below -- today's behaviour. It is also the more precise question: the
+        thing under test is whether the newly-detected cells behave like a HUD, and mixing the
+        shipped bar's statistics into that measurement is what fooled it.
+        """
+
+        candidate_arr = None if candidate is None else np.asarray(candidate, dtype=bool)
+        baseline_arr = None if baseline is None else np.asarray(baseline, dtype=bool)
+        if baseline_arr is not None and not baseline_arr.any():
+            baseline_arr = None
+        self.baseline = baseline_arr
+        if candidate_arr is None or not candidate_arr.any():
             self.candidate = None
             self.verdict = "no_candidate"
             self.reason = "stage1_proposed_nothing"
+            self._added_region = None
             return
-        self.candidate = np.asarray(candidate, dtype=bool)
+        self.candidate = candidate_arr
+        added = (
+            candidate_arr
+            if baseline_arr is None or baseline_arr.shape != candidate_arr.shape
+            else (candidate_arr & ~baseline_arr)
+        )
+        if not added.any():
+            # Nothing was ADDED, so there is nothing for Stage 2 to judge and no reason to defer:
+            # the candidate IS today's mask. Applying it immediately keeps the arm byte-identical
+            # to its control on every inert game.
+            self._added_region = None
+            self.verdict = "no_added_region"
+            self.reason = "repair_added_no_cell_so_the_shipped_mask_applies_unchanged"
+            return
+        self._added_region = added
         self.verdict = "pending"
         self.reason = "awaiting_stage2_transitions"
 
@@ -692,7 +736,8 @@ class DeferredMaskActivation:
 
         evidence = region_hud_evidence(
             self._grids,
-            self.candidate,
+            # THE REPAIR-ADDED REGION ONLY -- never the union with the shipped mask. See `propose`.
+            self._added_region,
             actions=self._actions,
             min_transitions=self.min_transitions,
             min_ubiquity=self.min_ubiquity,
@@ -724,6 +769,16 @@ class DeferredMaskActivation:
         self._grids = []
         self._actions = []
 
+    def fallback_mask(self) -> Optional[np.ndarray]:
+        """What identity should use when Stage 2 is pending, refusing, or discarding.
+
+        The SHIPPED mask -- i.e. exactly today's live behaviour -- never None-when-a-shipped-mask-
+        exists. This is what makes a Stage-2 refusal a return to the baseline rather than a
+        regression below it.
+        """
+
+        return self.baseline
+
     def diagnostics(self) -> dict:
         return {
             "stage2_verdict": str(self.verdict),
@@ -734,12 +789,19 @@ class DeferredMaskActivation:
                 if self.candidate is not None
                 else 0
             ),
+            # The two numbers that make a refusal readable: how many cells the repair would have
+            # ADDED, and how many the run keeps regardless (the shipped baseline).
+            "repair_added_cell_count": (
+                int(self._added_region.sum()) if self._added_region is not None else 0
+            ),
+            "baseline_cell_count": (int(self.baseline.sum()) if self.baseline is not None else 0),
             "activated_after_transitions": self.activated_after_transitions,
             "buffered_frames": len(self._grids),
             "evidence": dict(self.evidence),
-            # The honest reading of an unapplied candidate: identity is EXACTLY today's
-            # shipped behaviour, not "the detector failed".
-            "identity_convention_while_pending": "unmasked_same_as_shipped_default",
+            # The honest reading of an unapplied candidate: identity is EXACTLY today's live
+            # behaviour (the shipped mask, if the shipped classifier resolved one), not "the
+            # detector failed" and not "no mask at all".
+            "identity_convention_while_pending": "shipped_mask_same_as_live_default",
         }
 
 
@@ -826,10 +888,11 @@ class MaskCollapseGuard:
       * ``non_deterministic_keys`` -- the control had power and branched: excluded, no action.
 
     WHY AN UNPROVEN BRANCHING IS STILL ACTED ON. Splitting costs search efficiency; not
-    splitting risks correctness. Under the module's stated asymmetry the conservative response
-    is to un-mask the node in BOTH the proven and the unproven case, and to be honest in the
-    reporting about which one happened. The alternative -- act only on proofs -- would make the
-    guard structurally powerless on exactly the region class the mask exists for.
+    splitting risks correctness. Under the module's stated asymmetry and REQ-ARC-WMTE-5960, the
+    conservative response is to un-mask the node in BOTH the proven and the unproven case, and to
+    be honest in the reporting about which one happened. Set
+    ``act_on_unproven_branchings=False`` only for post-hoc measurement of the proven-only
+    variant; it is not the default safety behaviour.
 
     THE RESPONSE: LOCAL SPLIT, unbounded. The offending masked hash joins ``split_hashes``; the
     caller then hashes frames at that node by masked+unmasked, i.e. un-masks exactly the node
@@ -850,6 +913,10 @@ class MaskCollapseGuard:
 
     max_split_nodes: Optional[int] = HUD_MASK_GUARD_MAX_SPLIT_NODES
     revocation_mode: str = HUD_MASK_GUARD_REVOCATION_LOCAL
+    # Act on branchings the unmasked control could not have exonerated. Default True matches
+    # REQ-ARC-WMTE-5960's hard-refusal semantics while diagnostics still avoid calling these
+    # proofs.
+    act_on_unproven_branchings: bool = True
     split_reporting_threshold: int = HUD_MASK_GUARD_SPLIT_REPORTING_THRESHOLD
     # REGION ATTRIBUTION (optional). When the caller supplies the mask the SHIPPED classifier
     # would have produced and the mask actually applied, every acted-on branching is attributed
@@ -966,8 +1033,12 @@ class MaskCollapseGuard:
             self.proven_collapses += 1
         else:
             # The control was live but could not have fired (the unmasked antecedent never
-            # repeated). Acted on conservatively, reported as UNPROVEN.
+            # repeated), so this branching is NOT a proof. The default still acts on it
+            # conservatively; diagnostics preserve that distinction.
             self.unproven_masked_branchings += 1
+            if not self.act_on_unproven_branchings:
+                self._attribute(masked_key, origin_grid)
+                return False
         self._attribute(masked_key, origin_grid)
         self.violations += 1
         self.split_hashes.add(str(origin_masked))
@@ -1003,7 +1074,8 @@ class MaskCollapseGuard:
         differing = previous != current
         shipped = (
             np.asarray(self.shipped_mask, dtype=bool)
-            if self.shipped_mask is not None and np.asarray(self.shipped_mask).shape == applied.shape
+            if self.shipped_mask is not None
+            and np.asarray(self.shipped_mask).shape == applied.shape
             else np.zeros_like(applied)
         )
         added = applied & ~shipped
@@ -1061,6 +1133,7 @@ class MaskCollapseGuard:
             # `proven_collapses` counts only branchings where the control genuinely had power.
             "proven_collapses": int(self.proven_collapses),
             "unproven_masked_branchings": int(self.unproven_masked_branchings),
+            "acted_on_unproven_branchings": bool(self.act_on_unproven_branchings),
             "keys_with_repeated_unmasked_antecedent": int(
                 self.keys_with_repeated_unmasked_antecedent
             ),
