@@ -1,478 +1,454 @@
-# Carnot Research Roadmap vNEXT — Milestone 2026.07.524
+# Carnot Research Roadmap vNEXT — Milestone 2026.07.525
 
-**Milestone:** 2026.07.524  
-**Title:** Grounded Constraint IR, Shortcut-Safe Self-Learning, and Structured Live Memory  
-**Status:** Proposed  
-**Task range:** Exp5890-Exp5903 (14 experiments)  
-**Execution file:** `research-roadmap-next.yaml`  
+**Milestone:** 2026.07.525
+**Title:** Verified Constraint Synthesis, Transactional Self-Learning, and Live Structured Memory
+**Status:** Proposed
+**Task range:** Exp5905-Exp5917 (13 experiments; Exp5904 is reserved by concurrent click-target work)
+**Execution file:** `research-roadmap-next.yaml`
 **Date planned:** 2026-07-24
 
 ---
 
-## What Milestone 2026.07.523 Actually Proved
+## What Milestone 2026.07.524 Actually Proved
 
-Milestone `.523` reached a terminal conductor state with six activated tasks, not
-the 13 tasks described in its planning document. Proposed Exp5883-Exp5889 were
-never activated and are not evidence.
+Milestone `.524` reached a terminal conductor state with all 14 activated task
+identities classified. The capstone recorded positive, null, blocked-precondition,
+and gate-blocked evidence without converting one class into another.
 
-| Area | Terminal evidence | Consequence for `.524` |
+| Area | Terminal evidence | Consequence for `.525` |
 |---|---|---|
-| Boundary | Exp5877 archived the seven activated `.522` tasks and preserved absent, blocked, retired, ready, and unactivated identities. | Exp5890 must archive exactly the six activated `.523` tasks and must reserve Exp5890-Exp5903 without treating Exp5883-Exp5889 as completed. |
-| Source currency | Exp5878 completed a post-marker sweep with zero accepted additions. Its artifact also exposed a methodology warning: external primary-source synthesis must not be mislabeled as live-model inference. | Exp5891 searches only after `V524-PLANNER-REFRESH-20260724-END` and keeps `aggregation_from_external_primary_sources` distinct from LLM inference. |
-| Hardness surface | Exp5879 preserved the immutable Exp5868 rows, separated non-oracle nuisance controls from oracle-derived telemetry, found non-oracle maximum AUROC `0.583333`, and emitted `hardness_surface_headroom_ready_score=1.0`. | The scientific admission conditions are met, but the conductor retired the task after three `artifact_not_updated_past_bootstrap` failures because its artifact remained `blocked: science_ready_but_unrelated_global_suite_debt`. Exp5892 creates a changed evidence-escrow admission path; no task may depend on retired Exp5879 directly. |
-| Shortcut science | Exp5880 was pre-emptively skipped because Exp5879 was retired. Exp5881 emitted only a conductor gate-block artifact because Exp5880 was absent. Exp5882 was pre-emptively skipped because Exp5881 was retired. | `.523` did not test the ICLP shortcut-grounding hypothesis or continuous self-learning. `.524` may run it only behind a new non-retired admission artifact. |
-| Current-model internal energy | The `.523` layer-dynamic tasks were not activated. Planning-time inspection of installed `llama-cpp-python==0.3.33` found public final embeddings and logits but no public intermediate-layer state API. | Do not spend a task on a surface already known to be unavailable, do not patch private llama.cpp internals, and do not fall back to the disqualified Exp5853 final-embedding route. |
-| ARC | No ARC task was activated in `.523`. Prior compact-ledger, leave-one-game-out interaction, and active-observation experiments remain clean nulls. | The mandatory ARC generalization slot must test a materially different memory architecture on the live E3 path, not re-solve any of the 25 cleared public games. |
+| Boundary and source currency | Exp5890 completed the exact transition. Exp5891 found no post-marker source delta. | Exp5905 archives exactly Exp5890-Exp5903. Exp5906 searches only after `V525-PLANNER-REFRESH-20260724-END`; zero accepted findings remains valid. |
+| Grounding and continuous learning | Exp5892-Exp5894 qualified the headroom escrow, exact shortcut fixture, and one-to-one grounding with zero unsafe accepts. Exp5895 then achieved prospective semantic lift `0.25` over the best shortcut control with 95% interval `[0.111111, 0.416667]`, retention `1.0`, zero unsafe accepts, exact rollback, and immutable weights. Its ready score remained `0.0` solely because the required full Python suite exited `2`; focused tests, coverage, spec checks, root-clutter, and adversarial verification passed. | Preserve the scientific result and the operational null simultaneously. Exp5912 must identify and repair only attributable suite debt, re-run the frozen mechanism, and retire the retry if the same verdict recurs. Exp5913-Exp5914 then test a materially changed transactional learner on real SOTA ConstraintIR events. |
+| Typed constraints | Exp5896 built a three-family typed ConstraintIR fixture with exact Python/Z3 agreement and ready score `1.0`. | The fixture is useful, but its producer and consumer disagreed on the artifact reproducibility checksum. Exp5907 must establish one canonical producer-consumer replay contract before any model task loads. |
+| Constraint repair | Exp5897 passed every model, CUDA, cache, RAM, disk, and dual-RTX preflight, but blocked before model load because Exp5896 replay raised `ConstraintIRReplayError: artifact reproducibility checksum mismatch`. Exp5898 and Exp5899 were consequently gate-blocked. | `.524` produced no live SOTA constraint-extraction or repair evidence. Exp5908-Exp5911 use a clean replay boundary and a VeriSynth-style decomposition, retrieval, exact-diagnostic repair, and portability sequence. |
+| Structured ARC memory | Exp5900 qualified a bounded agent-owned tape/index contract. Exp5901 causally established exact structured retrieval at `5/5` versus `0/5` for raw and no-memory controls, with relevant-deletion utility and no solve claim. | The offline memory mechanism is qualified. Do not redesign it or target a cleared public game. |
+| Live ARC generalization | Exp5902 found healthy caches, embedded GGUF tokenizers, public llama.cpp CUDA, two healthy RTX 3090s, and a clean adapter-disabled E3 path, but blocked before inference because `live_runner_permission=false`. | Exp5915 creates a machine-checkable live-runner capability lease. Exp5916 retries the same held generalization A/B only if that lease is positive and still forbids public solve credit. |
 
-The exact lesson is operational as well as scientific: a valid scalar inside a
-retired upstream artifact is not a safe conductor dependency. `.524` first
-creates a clean, immutable evidence-admission boundary, then fans out into
-independent grounded-reasoning and live-memory branches.
+The largest `.524` lesson is that scientific readiness and execution readiness
+must be independently replayable. A scalar in a producer artifact is not enough
+when the consumer cannot reconstruct its checksum, and a scientifically positive
+learner is not promotable while a required test command remains nonzero.
 
 ---
 
 ## The Three Largest Gaps to the PRD Vision
 
-### Gap 1 — Natural language still does not reliably become executable constraints
+### Gap 1 — Constraint extraction is exact in fixtures but not execution-ready on current models
 
-The PRD requires real constraint extraction, not a hand-authored fixture or a
-model-written answer that is scored afterward. Carnot has exact validators,
-typed semantic-grounding utilities, and rule-specific extractors, but no
-engine-neutral constraint IR benchmark that measures translation, compilation,
-proof-trace inspection, and repair across current local SOTA models.
+The PRD requires natural-language constraints to become executable structure.
+Carnot now has a useful typed IR and exact certificates, but the first live SOTA
+consumer never loaded a model because producer and consumer canonicalized the
+same artifact differently. There is therefore no evidence that current local
+models benefit from semantic decomposition, retrieval grounding, or exact
+diagnostic repair.
 
-**Milestone response:** Exp5896 builds an exact typed-IR fixture. Exp5897 compares
-single-pass extraction, exact-trace-guided repair, and matched-compute no-trace
-controls on all three mandated GGUF families. Exp5898 tests bounded
-constraint-wise recursive improvement. Exp5899 performs portability, leakage,
-and camouflage audits.
+**Milestone response:** Exp5907 fixes and independently qualifies the replay
+boundary. Exp5908 creates a semantic-decomposition and retrieval fixture without
+model calls. Exp5909 runs direct, decomposed, and decomposed-plus-retrieval
+synthesis on all three mandated GGUF families. Exp5910 tests one
+verification-guided repair against matched second-call controls. Exp5911 audits
+held-family, model, surface-camouflage, and diagnostic-portability effects.
 
-### Gap 2 — Positive self-learning is not yet shortcut-resistant
+### Gap 2 — Continuous self-learning is scientifically promising but not yet promotable or deployed on live proposals
 
-Exp5858 showed that bounded external structural memory can preserve a prospective
-lift with only 1.67% of the full exact-query budget and zero unsafe accepts. It
-did not establish that learned structure represents the intended semantics
-rather than a satisfying shortcut, biased grounding, or nuisance surface.
+Exp5895 already showed positive prospective lift, perfect retention, zero unsafe
+accepts, bounded versioned state, and exact rollback. Its null classification was
+operational: one required global suite command exited `2`. It also learned from a
+deterministic shortcut fixture rather than chronological errors produced by the
+current flagship models.
 
-**Milestone response:** Exp5893 builds paired exact shortcut rows, Exp5894 tests
-one-to-one logical-atom grounding against soft/distributed alternatives, and
-Exp5895 runs the accepted mechanism prospectively with exact future-event
-validation, an AREX-inspired unresolved-constraint state, quarantine, rollback,
-protected-prefix retention, and a backend-neutral hardware mapping.
+**Milestone response:** Exp5912 freezes the science and requalifies only the
+test-debt boundary. Exp5913 builds a read-snapshot-then-validate-then-write
+transactional policy over sealed Exp5909 events, motivated by Memoir and guarded
+by poison-burst controls. Exp5914 runs a prospective chronological A/B in which
+immutable SOTA GGUF models consult bounded exact-validated external memory.
 
-### Gap 3 — The live ARC agent lacks a task-relevant persistent evidence architecture
+### Gap 3 — Causally useful ARC memory has not run through the submitted live held path
 
-The scored `E3AgentPolicy` has a compact ledger and optional observation/action
-mechanisms, but prior experiments showed no held-out lift. PRO-LONG suggests
-lossless programmatic access; arXiv:2607.21571 sharpens the hypothesis by showing
-that persistence alone is insufficient when memory omits task-relevant semantic
-evidence.
+Exp5901 proved the structured index carries causal information over the same
+bytes, but Exp5902 did not execute a single live measurement row. The remaining
+blocker is not another memory design or public solve; it is a reproducible
+capability and permission contract for the live runner.
 
-**Milestone response:** Exp5900 defines an append-only agent-owned event tape and
-a structured evidence index over identical bytes. Exp5901 requires exact
-retrieval, deletion utility, stale/shuffled controls, and bounded query cost.
-Exp5902 runs a no-memory/raw-tape/structured-index live E3 A/B on held-out
-measurement episodes. No public level is targeted or re-solved.
+**Milestone response:** Exp5915 requires an explicit scoped live-runner lease,
+dry-run isolation receipt, teardown receipt, and denial-path test. Exp5916 then
+runs the preregistered no-memory/raw-tape/structured-index comparison on held
+episodes with adapters disabled, identical event bytes, and no registry update.
 
 ---
 
 ## Research Findings Incorporated
 
 The dated source ledger is
-`research-references.md#v524-planner-refresh---20260724`.
+`research-references.md#v525-planner-refresh---20260724`.
 
 | Finding | Milestone use | Authority boundary |
 |---|---|---|
-| Differentiable Logic Programming to Mitigate Reasoning Shortcuts (`2607.21185`) | Exp5893-Exp5895: constraint-satisfaction/cognition shortcuts, one-to-one atom grounding, prospective shortcut-safe learning | Exact semantic and solver labels own acceptance; learned energy/rankers never certify themselves. |
-| Euclid-MCP (`2607.21412`) | Exp5896-Exp5899: engine-neutral typed IR and translate-run-inspect-repair | Parser, compiler, exact solver, and replay traces are authoritative; LLM prose and self-scores are not. |
-| AREX (`2607.21461`) | Exp5895 and Exp5898: bounded unresolved-constraint state and targeted recursive improvement | Only exact-validated state updates persist; learned compression, weight mutation, and model-authored labels are excluded. |
-| PRO-LONG (`2607.20064v2`) | Exp5900-Exp5902: programmatic access to a complete agent-owned interaction tape | Import the memory mechanism, not public ARC scores, closed APIs, Docker harnesses, or prior-game leakage. |
-| Beyond Episodic Evaluation (`2607.21571`) | Exp5900-Exp5902: compare structured task-relevant evidence with raw tape and no memory | Live E3 receipts and agent-owned observations/actions only; no source inspection, offline BFS, or per-game adapter. |
-| Pipelined p-computer (`2607.21077`) and Extropic Z1 availability page | Hardware mapping and future ABI context only | No board or TSU execution claim without an authenticated local route and same-input reference receipt. |
+| VeriSynth (`2607.19795`) | Exp5908-Exp5911: semantic decomposition, retrieval-grounded constraint synthesis, and exact-diagnostic auto-repair | The LLM is a formalization frontend. Typed parsing, exact execution, certificates, and semantic replay remain authoritative. |
+| Memoir (`2607.20792`) | Exp5913-Exp5914: read from a frozen pre-event memory snapshot and defer all writes until after commit and exact validation | Same-event memory writes, future labels, model-authored labels, and weight mutation receive no credit. |
+| Continual learning against poisoning (ICML 2026, `EvIDneKgn1`) | Exp5913-Exp5914: bounded poison bursts, task-to-task consistency, quarantine, rollback, and protected-prefix retention | The paper motivates stress controls only; exact validators own every promotion and poisoning result. |
+| HALLMARK (`2607.18360`) | Exp5906: report false-positive and false-negative source decisions separately and preserve training-cutoff/date confounds | Source lookup receipts never become model-inference evidence. |
+| ML-assisted Monte Carlo criticality (`2607.20243`) | Hardware policy: future learned-sampler claims must include training amortization | No sampling task is promoted in `.525`; no relaxation-only speed claim is allowed. |
+| CLASP/ECRAM (`2607.19661`) | Exp5913-Exp5914 hardware mapping: fixed-width insert, lookup, quarantine, promote, supersede, and rollback operations | No ECRAM device is attached; mapping is descriptive and no speed or energy claim is allowed. |
+| Kona 1.0 and June 2026 formal-verification pages | Architecture context: LLM interface, globally checked constraint layer, and Spec/Code/Proof separation | Kona remains proprietary with no local weights or reproducible comparator. |
 
-OpenReview, Hugging Face Papers, Semantic Scholar, GitHub Trending, Extropic,
-and Logical Intelligence yielded no other source that supersedes exact
-validators or reopens final embeddings, generated-answer repair, KAN mutation,
-unchanged board probes, or public ARC solves.
-
-The final 2026-07-24 planning verification directly replayed the Semantic
-Scholar citation APIs: EBT (`2507.02092`) returned 29 citing records and
-ARM-EBM (`2512.15605`) returned eight. Solver-Hard (`2607.17047`) remains the
-newest actionable EBT-citation mechanism and is already embodied by the
-Exp5868 hardness fixture; the ARM-EBM trail added no unindexed method. The
-same-day Hugging Face Papers and GitHub Trending checks added no repository or
-paper that changes the task allocation below.
+OpenReview and Hugging Face searches repeated already-indexed EBM, KAN, and
+verification work. Semantic Scholar returned 30 EBT citing records and eight
+ARM-EBM citing records on 2026-07-24; Memoir was the new actionable EBT-citation
+item, while the ARM-EBM trail added no unindexed method. GitHub Trending exposed
+no maintained dependency that supersedes Carnot's exact backends or local GGUF
+stack. Extropic's official writing index still provides no authenticated local
+TSU execution route.
 
 ---
 
 ## Target Architecture
 
 ```text
-       natural-language requirement / chronological exact event
-                              |
-                              v
-   Qwen3.6-35B-A3B | Gemma-4-31B | Gemma-4-26B-A4B
-             immutable local GGUF proposal models
-                              |
-                    typed ConstraintIR proposal
-                              |
-           +------------------+------------------+
-           |                                     |
-           v                                     v
-   exact parser/compiler                learned external-state
-   Z3/Python/optional Prolog            energy/ranker (advisory)
-           |                                     |
-           v                                     |
-   proof/violation trace ------------------------+
-           |
-   unresolved-constraint queue
-           |
-   bounded inspect/repair loop
-           |
-           v
-   exact semantic-equivalence gate
-           |
-     accept / quarantine / rollback
-           |
-           +--> protected bounded constraint memory
-                         |
-                         v
-                  future-event evaluation
+ natural-language constraint event
+              |
+              v
+  semantic decomposition + retrieved exact exemplars
+              |
+              v
+ Qwen3.6-35B-A3B | Gemma-4-31B | Gemma-4-26B-A4B
+        immutable local GGUF proposal models
+              |
+              v
+      typed ConstraintIR candidate
+              |
+      canonical parser/typechecker
+              |
+         Python/Z3 execution
+              |
+     exact diagnostic + certificate
+              |
+      one bounded repair attempt
+              |
+   exact semantic-equivalence decision
+              |
+      +-------+--------+
+      |                |
+    reject          quarantine
+                       |
+             transactional external memory
+        frozen read snapshot -> commit -> validate -> write
+                       |
+                  versioned promote
+                       |
+            future chronological events
 
-   E3AgentPolicy live action/observation stream
-                         |
-             append-only agent-owned tape
-                    /             \
-              raw queries     structured evidence index
-                    \             /
-             budget-matched policy context
-                         |
-                  submitted live E3 path
+ submitted adapter-disabled E3 live path
+              |
+       agent-owned event bytes
+        /                  \
+   raw tape           structured index
+        \                  /
+     budget-matched policy context
+              |
+        held live episodes only
 ```
 
-The learned components rank proposals or decide which exact check to request.
-They never replace the exact parser, compiler, solver, semantic replay, or live
-ARC environment.
+Learned models propose or retrieve. They never replace exact ConstraintIR
+execution, exact promotion checks, or the live ARC environment. The two learning
+lanes share a backend-neutral external-state ABI, not weights or labels.
 
 ---
 
-## Phase 0 — Boundary and Evidence Admission (Exp5890-Exp5892)
+## Phase 0 — Boundary, Source, and Replay Qualification (Exp5905-Exp5907)
 
-### Exp5890 — Exact `.523` transition and collision-free allocation
+### Exp5905 — Exact `.524` transition and collision-free allocation
 
-Archive exactly Exp5877-Exp5882. Preserve Exp5879's operational failure and
-scientific-ready scalar simultaneously; preserve Exp5880/Exp5882 as missing
-pre-emptive skips and Exp5881 as a gate-block artifact. Record Exp5883-Exp5889
-as unactivated proposal IDs. Prove Exp5890-Exp5903 collision-free.
+Archive exactly Exp5890-Exp5903 from declared paths, preserving Exp5895 as an
+operational null with positive scientific submetrics, Exp5897 and Exp5902 as
+blocked preconditions, and Exp5898-Exp5899 as gate-blocked. Preserve the
+uncommitted Exp5904 click-target work as an externally reserved ID and allocate
+Exp5905-Exp5917 without touching it.
 
-**Deliverable:** `results/experiment_5890_transition_v524.json`
+**Deliverable:** `results/experiment_5905_transition_v525.json`
 
-### Exp5891 — Post-V524 source-delta receipt
+### Exp5906 — Post-V525 source-delta receipt
 
-Search only after `V524-PLANNER-REFRESH-20260724-END`. Zero accepted findings is
-a valid complete result. A new item may sharpen controls inside existing `.524`
-tasks but may not change task identities, gates, model policy, or retired-scope
-boundaries.
+Search only after `V525-PLANNER-REFRESH-20260724-END`. Report accepted and
+rejected items with dated primary-source receipts, source false positives,
+source false negatives where known, and cutoff confounds. A zero-delta result is
+complete.
 
-**Deliverable:** `results/experiment_5891_v524_source_delta_ingestion.json`
+**Deliverable:** `results/experiment_5906_v525_source_delta_ingestion.json`
 
-### Exp5892 — Immutable headroom evidence escrow
+### Exp5907 — Canonical ConstraintIR producer-consumer replay contract
 
-Do not rerun or mutate Exp5868, Exp5869, or Exp5879. Re-adjudicate their hashes
-and scientific gate receipts through a new evidence-escrow contract. Freshly
-run the owned checks and current relevant verification/spec checks. Global
-failures may be classified as unrelated only with exact failing node IDs,
-ownership paths, and proof that they cannot alter the fixture, audit, schemas, or
-gate fields.
+Reproduce the Exp5896/Exp5897 checksum mismatch without model load, define one
+versioned canonical projection for checksums, independently replay it from a
+fresh process, and make producer and consumer share the same public helper.
+Historical Exp5896 and Exp5897 artifacts remain immutable.
 
-**Deliverable:** `results/experiment_5892_headroom_evidence_escrow.json`  
-**Gate:** `headroom_admission_ready_score == 1.0`.
+**Deliverable:** `results/experiment_5907_constraint_ir_replay_contract.json`
+**Gate:** `constraint_ir_replay_contract_ready_score == 1.0`.
 
 ---
 
-## Phase 1 — Grounded Constraint Learning and Exact IR (Exp5893-Exp5899)
+## Phase 1 — Verified Constraint Synthesis (Exp5908-Exp5911)
 
-### Exp5893 — Exact grounding-shortcut fixture
+### Exp5908 — VeriSynth-style decomposition and retrieval fixture
 
-Extend the immutable hardness surface with canonical, constraint-satisfaction
-shortcut, cognition-shortcut, one-to-one, soft/distributed, shuffled,
-frequency-balanced, label-permuted, and no-information grounding pairs. Separate
-`intended_semantics` from `encoded_constraint_outcome` and certify both exactly.
+Build a deterministic prompt-plan fixture over Exp5896 rows: direct
+formalization, semantic decomposition into state/transition/invariant/query
+units, and retrieval of exact training exemplars using train-visible structure
+only. Include wrong-family retrieval, shuffled decomposition, omitted component,
+and no-information controls.
 
 **Deliverables:**
 
-- `results/experiment_5893_grounding_shortcut_fixture.json`
-- `results/experiment_5893_grounding_shortcut_fixture.rows.jsonl`
+- `results/experiment_5908_verisynth_constraint_fixture.json`
+- `results/experiment_5908_verisynth_constraint_fixture.rows.jsonl`
 
-**Gate:** `grounding_shortcut_fixture_ready_score == 1.0`.
+**Gate:** `verisynth_constraint_fixture_ready_score == 1.0`.
 
-### Exp5894 — One-to-one atom-grounding structural-acquisition A/B
+### Exp5909 — Three-family direct/decomposed/retrieval synthesis A/B
 
-Compare one-to-one logical-atom grounding with soft/distributed, shuffled,
-frequency-matched, and parameter-matched controls. Use chronology-safe
-train/admit/future splits, held grounding families, and exact semantic labels.
-The learner remains bounded external state.
+Run all three mandated local GGUF families on direct ConstraintIR synthesis,
+semantic decomposition, and semantic decomposition plus exact-example retrieval.
+Use group-held rows, identical decoding and output budgets, exact executable
+equivalence, and raw-output receipts. This task creates the first clean
+chronological SOTA proposal stream for later self-learning.
 
-**Deliverable:** `results/experiment_5894_one_to_one_grounding_ab.json`  
-**Gate:** `one_to_one_grounding_ready_score == 1.0` with positive held-family
-lower bounds and zero unsafe accepts.
+**Deliverable:** `results/experiment_5909_sota_constraint_synthesis_ab.json`
+**Gates:** `constraint_stream_ready_score == 1.0` records a complete exact-labeled
+stream; `verification_repair_admission_ready_score == 1.0` additionally requires
+enough residual, diagnostic-addressable headroom for Exp5910.
 
-### Exp5895 — Prospective shortcut-resistant continuous self-learning
+### Exp5910 — Verification-guided exact-diagnostic repair
 
-Run the accepted grounding mechanism through exact future-event validation. Add
-an AREX-inspired state containing verified evidence plus unresolved constraints;
-compare it with fixed validated memory and no-memory controls. Require bounded
-state, quarantine, rollback, rejected-update non-propagation, protected-prefix
-retention, held-family lift, and no weight mutation.
+For rows admitted by Exp5909, compare one exact-diagnostic repair with a matched
+second call without diagnostics, a no-information diagnostic, and no repair.
+Freeze the error taxonomy before the run and allow only deployment-visible
+parser, type, compile, solver, and certificate diagnostics.
 
-**Deliverable:** `results/experiment_5895_shortcut_safe_continuous_self_learning.json`  
-**Gate:** `shortcut_resistant_csl_ready_score == 1.0`.
+**Deliverable:** `results/experiment_5910_verification_guided_constraint_repair.json`
+**Gate:** `verification_guided_repair_ready_score == 1.0`.
 
-### Exp5896 — Engine-neutral typed ConstraintIR fixture
+### Exp5911 — Portability, camouflage, and diagnostic ablation
 
-Define a minimal typed IR for facts, Horn implications, finite-domain predicates,
-arithmetic relations, negation, and query goals. Compile it to existing exact
-backends. Build exact natural-language/IR/certificate rows with held templates,
-paraphrases, symbol renamings, invalid IR, unsatisfiable IR, and
-semantic-non-equivalence controls.
+Audit positive repair evidence across model families, held constraint families,
+paraphrases, symbol renamings, operator reorderings, surface camouflage, wrong
+retrieval, shuffled diagnostics, and diagnostic-component deletion. Pooled lift
+cannot hide a nonpositive model-family or constraint-family cell.
 
-**Deliverables:**
-
-- `results/experiment_5896_typed_constraint_ir_fixture.json`
-- `results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl`
-
-**Gate:** `typed_constraint_ir_fixture_ready_score == 1.0`.
-
-### Exp5897 — Three-family translate-run-inspect-repair A/B
-
-On all three mandated GGUF families, compare:
-
-1. single-pass typed-IR extraction;
-2. one exact parser/solver-trace-guided repair;
-3. a matched two-call no-trace control.
-
-Measure parse validity, compilation, exact semantic equivalence, unsafe accepted
-constraints, latency, tokens, and GPU receipts on group-held templates and
-domains. This is constraint extraction, not generated-answer repair.
-
-**Deliverable:** `results/experiment_5897_sota_constraint_ir_repair_ab.json`  
-**Gate:** `trace_repair_mechanism_ready_score == 1.0`.
-
-### Exp5898 — Constraint-wise recursive improvement
-
-Use at most three exact-check rounds. Compare an unresolved-constraint scheduler
-with first-error, random-error, and matched-compute controls. The model receives
-only parser/compiler/solver trace information that would be available in a real
-run; it never sees hidden answer labels. Model weights stay immutable.
-
-**Deliverable:** `results/experiment_5898_recursive_constraint_improvement.json`  
-**Gate:** `recursive_constraint_improvement_ready_score == 1.0`.
-
-### Exp5899 — Portability, leakage, and camouflage audit
-
-Audit the accepted recursive path without fitting a new model. Hold out model
-family, constraint family, templates, names, and render. Swap exact evaluators,
-shuffle or delete traces, equalize length/token budgets, and test whether
-surface, model identity, or direct label proxies explain the apparent gain.
-
-**Deliverable:** `results/experiment_5899_constraint_repair_portability_audit.json`  
-**Gate:** `constraint_repair_portability_ready_score == 1.0`.
+**Deliverable:** `results/experiment_5911_constraint_repair_portability_audit.json`
 
 ---
 
-## Phase 2 — Structured Live ARC Memory (Exp5900-Exp5902)
+## Phase 2 — Transactional Continuous Self-Learning (Exp5912-Exp5914)
 
-### Exp5900 — Agent-owned tape and structured evidence-index contract
+### Exp5912 — Frozen Exp5895 exact-slot requalification
 
-Add a default-off append-only tape to the scored `E3AgentPolicy` boundary. The
-raw and structured arms must contain identical agent-owned events. The
-structured index may expose time, object/glyph, spatial relation, action effect,
-uncertainty, and evidence provenance, but it may not inspect game source, load
-prior-game logs, invoke offline BFS, or encode per-game rules.
+Identify the exact global-suite node IDs behind Exp5895's exit `2`, prove
+ownership and causal relevance, repair only current owned test debt where
+necessary, then rerun the frozen Exp5895 mechanism under current tests. Do not
+rewrite the historical artifact or change rows, arms, seeds, budgets, thresholds,
+or ready logic. The retry retires if it repeats the same null verdict.
 
-**Deliverable:** `results/experiment_5900_arc_structured_evidence_memory_contract.json`  
-**Gate:** `structured_evidence_memory_contract_ready_score == 1.0`.
+**Deliverable:** `results/experiment_5912_csl_exact_slot_requalification.json`
+**Gate:** `csl_exact_slot_ready_score == 1.0`.
 
-### Exp5901 — Retrieval fidelity and causal necessity
+### Exp5913 — Transactional memory and poison-control fixture
 
-Use deterministic agent-owned traces to test exact retrieval fidelity, shuffled
-index, stale evidence, index deletion, evidence deletion, irrelevant growth,
-bounded query count, byte budget, and latency. Compare no memory, raw tape, and
-structured index over identical bytes. Promotion requires a causal advantage,
-not merely more context.
+Use sealed Exp5909 raw events to qualify a bounded external-memory policy that
+reads a frozen pre-event snapshot, commits a proposal before reveal, and only
+then exact-validates and writes a new version. Compare coupled same-event writes,
+fixed validated memory, shuffled retrieval, and no memory. Inject bounded poison
+bursts and require quarantine, rejected-update non-propagation, rollback,
+restart equivalence, and protected-prefix retention.
 
-**Deliverable:** `results/experiment_5901_arc_structured_memory_causal_audit.json`  
-**Gate:** `structured_memory_causal_ready_score == 1.0`.
+**Deliverable:** `results/experiment_5913_transactional_constraint_memory_fixture.json`
+**Gate:** `transactional_memory_fixture_ready_score == 1.0`.
 
-### Exp5902 — Adapter-disabled live E3 memory A/B
+### Exp5914 — Prospective SOTA transactional continuous self-learning
 
-Registry-precheck first: all 25 public games are already cleared, so the task
-must not target or headline a level solve. On preregistered held-out measurement
-episodes, run no memory, raw tape, and structured index with identical action,
-token, wall-clock, and query budgets. Use at least Qwen3.6-35B-A3B and
-Gemma-4-26B-A4B. Any incidental solve is credited only if independently new and
-reproduced by the submitted live mechanism.
+Run a sealed chronological A/B on all three mandated local GGUF families.
+Compare transactional exact-validated memory with fixed retrieved examples,
+coupled same-event writes, shuffled memory, and no memory. Measure future exact
+semantic equivalence, query efficiency, dynamic regret, recurrence, retention,
+unsafe accepts, poison recovery, state bounds, rollback, and latency. GGUF
+weights remain immutable.
 
-**Deliverable:** `results/experiment_5902_arc_structured_memory_live_ab.json`  
-**Gate:** `structured_memory_live_ready_score == 1.0` only for a positive
-preregistered lower bound with no safety or budget regression.
-
----
-
-## Phase 3 — Reconciliation (Exp5903)
-
-### Exp5903 — Milestone reconciliation
-
-Aggregate every activated task by exact task ID and declared deliverable.
-Classify each branch independently as ready, null, blocked, disqualified,
-retired, gate-blocked, or missing. Re-run fresh adversarial verification on
-present artifacts, append `.524` exactly once to completion history, reconcile
-specs/traceability/status/changelog, and produce the next three falsifiable
-recommendations. Never convert an upstream scalar inside a retired artifact into
-a completed downstream experiment.
-
-**Deliverable:** `results/experiment_5903_v524_capstone_reconciliation.json`
+**Deliverable:** `results/experiment_5914_sota_transactional_continuous_self_learning.json`
+**Gate:** `transactional_csl_ready_score == 1.0`.
 
 ---
 
-## Dependency Graph
+## Phase 3 — Live Held Memory and Reconciliation (Exp5915-Exp5917)
+
+### Exp5915 — Scoped live-runner capability lease
+
+Create a machine-checkable capability receipt for the exact Exp5916 runner:
+permission source, scope, expiry, command allowlist, environment binding,
+adapter-disabled E3 import, state isolation, bounded dry run, teardown, and
+denial-path behavior. It may not execute a scored public level or load a model.
+
+**Deliverable:** `results/experiment_5915_arc_live_runner_capability_lease.json`
+**Gate:** `live_runner_capability_ready_score == 1.0`.
+
+### Exp5916 — Adapter-disabled held structured-memory live A/B
+
+Retry Exp5902 only after the capability lease passes. Use at least Qwen3.6-35B
+and Gemma-4-26B-A4B, adding Gemma-4-31B when cached capacity permits. Compare no
+memory, raw tape, and structured index over identical agent-owned bytes and
+matched budgets. Include shuffled-index and relevant-evidence deletion controls.
+No public level is targeted, no registry entry is changed, and incidental solve
+telemetry is non-headline.
+
+**Deliverable:** `results/experiment_5916_arc_structured_memory_live_held_ab.json`
+**Gate:** `structured_memory_live_ready_score == 1.0`.
+
+### Exp5917 — Branch-independent `.525` capstone
+
+Reconcile every activated identity by exact declared path whether other branches
+pass, null, block, or gate-skip. Preserve the continuous-self-learning slot,
+ConstraintIR checksums, live-runner receipts, model/GPU evidence, exclusions,
+specs, traceability, status, changelog, conductor log, and completion history.
+
+**Deliverable:** `results/experiment_5917_v525_capstone_reconciliation.json`
+
+---
+
+## Dependency Graph and Conductor Order
 
 ```text
-Exp5890 transition ──────────────────────────────────────────────────────┐
-Exp5891 source receipt ──────────────────────────────────────────────────┤
-                                                                         │
-Exp5868 + Exp5869 + Exp5879 immutable evidence                           │
-                    └──> Exp5892 evidence escrow                         │
-                              └──> Exp5893 shortcut fixture              │
-                                         └──> Exp5894 grounding A/B     │
-                                                   └──> Exp5895 CSL      │
-                                                                         │
-existing exact extractors ──> Exp5896 typed IR fixture                   │
-                                    └──> Exp5897 SOTA repair A/B         │
-                                              └──> Exp5898 recursion     │
-                                                        └──> Exp5899 audit
-                                                                         ├──> Exp5903
-Exp5726/5766/5860 null evidence                                           │
-                    └──> Exp5900 structured memory contract              │
-                              └──> Exp5901 causal audit                   │
-                                        └──> Exp5902 live E3 A/B         │
-                                                                         │
-all terminal task/deliverable identities ────────────────────────────────┘
+Exp5905 transition
+   |
+   +--> Exp5906 source delta
+   |
+   +--> Exp5907 ConstraintIR replay contract
+           |
+           v
+        Exp5908 decomposition/retrieval fixture
+           |
+           v
+        Exp5909 SOTA synthesis stream
+           |                    \
+           v                     v
+        Exp5910 repair        Exp5913 transactional fixture
+           |                     ^       ^
+           v                     |       |
+        Exp5911 audit         Exp5912 ---+
+
+Exp5915 live-runner capability
+   |
+   v
+Exp5916 held live memory A/B
+
+Exp5917 capstone consumes every terminal branch independently
 ```
 
-The IR and ARC branches are independent of Exp5892 so a headroom-admission
-failure cannot erase the whole milestone. Exp5903 is deliberately ungated and
-must reconcile blocked branches.
+Conductor execution order is Exp5905 through Exp5917. Structured `gated_on`
+fields skip Exp5908, Exp5909, Exp5910, Exp5911, Exp5913, Exp5914, and Exp5916
+before agent invocation when their prerequisite scalar is not satisfied.
+Exp5912 and Exp5915 are independent precondition repairs so a ConstraintIR null
+cannot suppress the live-runner branch.
 
 ---
 
-## Model Policy
+## Model and Inference Policy
 
-Every task that invokes an LLM must define `MODEL_SPECS` with at least one
-mandated local GGUF. Headline tasks use:
+Every experiment that invokes an LLM defines `MODEL_SPECS` before inference and
+uses at least one mandated current local model:
 
-| Experiment | Required headline models | Purpose |
-|---|---|---|
-| Exp5897 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it | Single-pass versus exact-trace repair |
-| Exp5898 | the same three families | Bounded recursive constraint improvement |
-| Exp5902 | Qwen3.6-35B-A3B and Gemma-4-26B-A4B-it; Gemma-4-31B confirmatory if budget permits | Live E3 memory A/B |
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-`cached_sota_pair()` is the required cache-resolution pattern. Qwen3.5-0.8B and
-Gemma-4-E4B-it may run CPU smoke tests only and may not support a headline
-verdict. All GGUF weights remain immutable.
+Exp5909, Exp5910, and Exp5914 require all three families. Exp5916 requires
+Qwen3.6-35B-A3B and Gemma-4-26B-A4B and includes Gemma-4-31B when cache and
+budget permit. Headline inference uses public CUDA-enabled llama.cpp with real
+offload and utilization receipts. GGUF tokenizers load from embedded metadata;
+`AutoTokenizer.from_pretrained()` is forbidden. Legacy Qwen3.5-0.8B and
+Gemma-4-E4B may appear only as labeled CPU smoke tests and cannot support a
+headline claim.
+
+All fixed-fixture, replay, contract, source, and capstone tasks declare their
+non-LLM substrate explicitly. External web aggregation is never labeled as live
+model inference.
 
 ---
 
 ## Hardware Requirements
 
-| Resource | Tasks | Requirement and claim boundary |
+| Resource | Tasks | Requirement |
 |---|---|---|
-| CPU/RAM/disk | Exp5890-Exp5896, Exp5899-Exp5901, Exp5903 | Existing host, deterministic solvers, atomic JSON/JSONL writes, exact replay, bounded external state |
-| Dual RTX 3090, 24 GB each | Exp5897, Exp5898, Exp5902 | Healthy CUDA, cache resolution, real GPU offload/utilization/VRAM receipts, no protected concurrent workload |
-| KV260 / PolarFire / GateMate | none | No unchanged continuity probe. Exp5865 retired the available adaptive-kernel chain and Exp5861 found no changed authenticated route. |
-| Extropic XTR-0/Z1 | none | Public availability context only; no authenticated local route |
+| Dual RTX 3090, CUDA llama.cpp | Exp5909, Exp5910, Exp5914, Exp5916 | Two healthy devices, sufficient VRAM/RAM/disk, real offload, utilization and peak-VRAM receipts, atomic outputs, and no protected workload. |
+| CPU/RAM and exact solvers | Exp5907-Exp5914 | Deterministic canonical JSON, Python/Z3 execution, certificate replay, group bootstrap, state serialization, and exact checksums. |
+| Local GGUF cache | All LLM tasks | Model paths and SHA-256 receipts for the required SOTA families; embedded GGUF tokenizer checks before inference. |
+| Live ARC runner | Exp5915-Exp5916 | Explicit scoped capability lease, environment binding, adapter-disabled E3 path, isolated state, teardown, and no source/BFS/prior-game access. |
+| KV260, PolarFire, GateMate | None | No changed authenticated kernel or board route exists; do not repeat board probes. |
+| Extropic TSU/Z1, ECRAM | None | Architecture and bounded-ABI context only; no authenticated local device, execution, power, energy, or speedup claim. |
 
-Exp5895 must emit a backend-neutral state-operation map for insert, quarantine,
-lookup, supersede, rollback, and sparse energy/ranking. This is an interface
-contract, not a hardware speedup claim. A future hardware task may open only
-after a ready bounded kernel and an authenticated changed route both exist.
-
-## Decentralization Implications
-
-The milestone strengthens the local-first path without making a new sovereignty
-claim: all headline model inference uses immutable cached GGUFs, all acceptance
-authority is local exact code, learned state is bounded and exportable, and the
-ARC tape contains only agent-owned observations/actions. The ConstraintIR,
-versioned self-learning state, and event-index schemas remain backend-neutral so
-they can later map to Rust, FPGA, or probabilistic accelerators. CUDA and exact
-solver dependencies are disclosed; no attached board or Extropic route is
-credited in `.524`.
+The transactional state path must retain a falsifiable backend-neutral operation
+contract for `lookup`, `insert`, `quarantine`, `promote`, `supersede`,
+`rollback`, and `restart`. No milestone task may convert this mapping into a
+hardware-performance claim. Future learned-sampler claims must count proposal
+training and amortization cost, not only relaxation time.
 
 ---
 
-## Failed-Experiment Discipline
+## Failed-Experiment and Exclusion Discipline
 
-The YAML carries four-field `prior_failures` entries where scope overlaps a
-failed or retired experiment:
-
-- Exp5892 addresses Exp5869 and Exp5879 by separating immutable scientific
-  admission from producer-task retirement and by proving any remaining suite
-  debt unrelated at exact node/path granularity.
-- Exp5893 addresses pre-emptively skipped Exp5880 through the changed,
-  non-retired Exp5892 evidence-admission chain.
-- Exp5894 addresses Exp5749, Exp5773, and gate-blocked Exp5881 with a non-KAN,
-  exact-fixture, one-to-one grounding mechanism.
-- Exp5895 addresses Exp5750, Exp5787, Exp5867, and pre-emptively skipped Exp5882
-  with a qualified grounding upstream and deterministic bounded external state
-  rather than the retired adaptive-kernel chain.
-- Exp5900-Exp5902 address the applicable Exp5726, Exp5766, and Exp5860 scopes
-  with identical-byte raw versus structured lossless memory, rather than
-  compact cross-game summaries, component interactions, or active observation
-  selection.
-- Exp5903 addresses blocked Exp5862 through branch-independent exact
-  reconciliation that cannot be cascade-skipped.
-
-Every entry sets `retire_if_same_verdict: true`. No gate or dependency names a
-retired upstream experiment.
+- Exp5907, Exp5909, and Exp5910 explicitly declare Exp5897 and older
+  exact-feedback failures where their scope overlaps.
+- Exp5911 declares the gate-blocked Exp5899 portability scope.
+- Exp5912-Exp5914 declare Exp5750, Exp5787, Exp5867, Exp5882, and Exp5895.
+  Every entry contains the prior honest verdict, a changed-mechanism or
+  changed-precondition explanation, and `retire_if_same_verdict: true`.
+- Exp5915-Exp5916 declare Exp5902; Exp5916 also preserves the compact-ledger,
+  component-interaction, and active-observation nulls.
+- No `requires` or `gated_on` chain references a retired experiment.
+- Recurring transition, source, and capstone tasks carry dated standing
+  `operator_override` text only for archival false positives.
+- Exp5904 is not reused, required, gated, edited, or classified. It is reserved
+  because concurrent click-target work already occupies that identity.
 
 ---
 
-## Explicit Scope Exclusions
+## ARC Live-Path and Generalization Discipline
 
-This milestone does not authorize:
-
-- rerunning the retired PHASE D generated-text/logprob verifier;
-- grammar, stop-token, or parser tuning for the retired finite-ID answer channel;
-- final-embedding verification after Exp5853;
-- private llama.cpp hooks or a custom intermediate-layer fork;
-- KAN rendering, knot mutation, or adaptive-kernel requalification;
-- model-weight writes, GRPO, or model-authored training labels;
-- generated-answer repair disguised as constraint extraction;
-- source inspection, offline BFS, per-game adapters, or public ARC re-solves;
-- unchanged board probes, RTL redesign, TSU execution, or hardware speedup claims;
-- Kona/Aleph execution without public weights or an authenticated endpoint;
-- external publication, push, or modification of `scripts/research_conductor.py`.
+- Registry-precheck occurs before any Exp5915/Exp5916 execution.
+- All 25 public games are already cleared; no task selects a public level target.
+- Exp5916 sets `public_level_solve_claimed: false` and
+  `source_bfs_adapter_prior_game_and_hidden_state_access_count: 0`.
+- The submitted live agent reaches the structured index using only its own
+  observations, actions, outcomes, and runtime evidence.
+- No game source, offline exhaustive BFS, hand-built `GameAdapter`, per-game
+  calibration, prior-game log, hidden state, or outer-loop reverse engineering
+  may support credit.
+- Because Exp5916 does not claim a level solve, `solve_provenance` is not a
+  required field. Any incidental solve is non-headline and cannot update the
+  registry in this milestone.
 
 ---
 
 ## Milestone Success Criteria
 
-The milestone succeeds operationally when all 14 activated identities reach an
-honestly classified terminal state and Exp5903 reconciles them. Scientific
-promotion remains branch-specific:
+Milestone `.525` is terminally successful when all 13 activated task identities
+have honest artifacts, even if one or more scientific branches return null or
+block. Scientific promotion remains branch-specific:
 
-1. **Grounding/CSL:** positive held-family lower bounds, zero unsafe accepts or
-   transfers, exact retention, quarantine, rollback, and bounded state.
-2. **Constraint extraction:** exact semantic-equivalence lift over both
-   single-pass and matched-compute no-trace controls, no label leakage, and
-   survival under held-model/family/render audits.
-3. **ARC memory:** exact retrieval plus deletion utility and a positive
-   preregistered live-path lower bound for structured indexing over both raw
-   tape and no memory, with no registry laundering.
-4. **Evidence discipline:** zero history amplification, zero retired dependency,
-   zero protected-file mutation, exact field provenance, and fresh adversarial
-   verification of every present artifact.
+1. **Execution-ready ConstraintIR:** canonical producer-consumer replay is exact,
+   all three SOTA families emit an exact-labeled stream, and any repair claim
+   beats matched controls with zero unsafe increase and positive held-cell lower
+   bounds.
+2. **Continuous self-learning:** Exp5895's exact slot is requalified without
+   altering historical evidence, and the new transactional learner achieves
+   positive prospective held lift over fixed, coupled-write, shuffled, and
+   no-memory controls with zero unsafe accepts, exact retention/rollback,
+   poison recovery, bounded state, and immutable GGUF weights.
+3. **Live structured memory:** an explicit live-runner capability exists and the
+   structured index beats both raw tape and no memory on preregistered held
+   live metrics without safety, budget, or authority regression.
+4. **Operational integrity:** every task has exact declared-path provenance,
+   required tests and E2E checks, adversarial verification, spec coverage,
+   exclusion handling, and branch-independent capstone reconciliation.
 
-Null results are complete results. A blocked precondition is not a scientific
-null, and a scalar inside a retired artifact is not a completed downstream
-experiment.
+A clean null is useful evidence. A gate-blocked task is not scientific evidence,
+and a fixture-ready scalar never substitutes for a live-model or live-agent
+result.

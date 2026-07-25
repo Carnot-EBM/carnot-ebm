@@ -3290,3 +3290,16 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | 7 | 2026-07-17T21:39:19Z | 2026-07-17T21:44:02Z | `lf52` L9 outcome: replayed the 827-action prefix, exhaustively inventoried six visible peg sprites, searched 668,532 source-faithful logistics states, real-engine-executed a 100-action carrier/relay suffix to level 10, then passed official level-9 reproduction plus five fresh 927-action replays and banked registry level 9. | ~80k |
 | 8 | 2026-07-17T20:39:11Z | 2026-07-17T21:58:27Z | `bp35` L9 round 26: replayed the 342-action prefix, isolated support topology with matched closed/open-door flights, found the x27 dead-zone body ascent and x56 upper channel, crossed the color-12 ceiling through supported x27/x45 columns, opened the upper horizontal door into the x3 shaft, won on full action 410, passed official reproduction plus five fresh full replays, and reconciled the adversarial-clean artifact/registry/changelog as a 9/9 clear. | ~260k |
 | 9 | 2026-07-17T21:46:33Z | 2026-07-17T22:13:59Z | `lf52` L10 outcome: replayed the 927-action prefix, exhaustively inventoried the offset board, decomposed the 12-peg/eight-carrier search into a 203,900-state exact stage and a 372,127-state carrier BFS, real-engine-executed the 82-action terminal suffix to `levels_completed=10`/WIN, then passed official level-10 reproduction plus five fresh 1,009-action replays and banked the full 10/10 game clear. | ~180k |
+
+## Session: 2026-07-24 Milestone 2026.07.525 Research Planning
+
+User instruction summary: review the completed `.524` milestone and full research
+program, perform a current 2025-2026 literature sweep, append promising sources,
+and stage the next 10-14 experiment roadmap without changing the active roadmap,
+the conductor, or pushing.
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-07-24T23:51:37Z | 2026-07-25T00:14:43Z | Read the required project and terminal `.524` evidence, searched the requested primary/secondary sources, appended the V525 research refresh, designed milestone 2026.07.525 with 13 tasks across four phases, staged the vNEXT doc and conductor YAML, preserved concurrent Exp5904 work, updated status/changelog, and passed schema, gate, prior-failure, exclusion, model-policy, collision, canonical-URL, and root-clutter checks. | ~85k |

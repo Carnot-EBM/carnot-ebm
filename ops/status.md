@@ -1,6 +1,108 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-22 (milestone 2026.07.516 research plan staged; active `.515` roadmap and conductor unchanged)
+**Last Updated:** 2026-07-24 (milestone 2026.07.525 research plan staged; concurrent REQ-ARC-FCP-5904 work preserved)
+
+## Session 2026-07-24 - REQ-ARC-FCP-5904 Coordinate-Aware Online Click-Target Discrimination
+
+### What's Working
+
+- **The coordinate-blindness of the live ARC click router is now MEASURED, documented, and
+  repairable.** `arc_discriminative_router._action_id` returns the action TYPE integer, so all
+  clicks are `6`, and `cross_game_features_v3` consumes it through a 7-dim one-hot where
+  coordinates are structurally unrepresentable. Measured on the offline arcade: 38-48 distinct
+  click targets per state collapse to exactly ONE router score, with `rank()` a stable no-op.
+  Reproduces on all 19 click-capable public games. This explains REQ-ARC-FCP-5758's wash: there
+  was no discriminating signal to reorder by.
+- **`python/carnot/agentic/arc_click_target_features.py`** (NEW): 21 coordinate-aware features,
+  split per-FRAME (content-cached context, 0.9-4.8 ms/frame) vs per-CANDIDATE (13-20
+  us/candidate), plus `OnlineClickTargetDiscriminator` (numpy logistic head, variance FLOOR not
+  `std + 1e-8`, z-clip, bounded buffer). `blob_topology()` deliberately unused (322 ms/frame) and
+  a test enforces that.
+- **`OnlineClickTargetRouter`** in `arc_discriminative_router.py`: purely additive (the only
+  removed line in the diff is the docstring's spec-refs line), DEFAULT OFF via
+  `SUBMITTED_ONLINE_CLICK_TARGET_ROUTER_ENABLED`. Flag-off output is byte-identical AND does zero
+  blob segmentation. Cold start (sample gate unmet) contributes exactly 0.0. Online state keyed on
+  the frame's own `(game_id, guid)`, bounded to 2 episodes, and a constructor-injected
+  discriminator is consumed on first use -- so no wiring can turn it into a cross-game head.
+- **46 new tests, all passing, no skips.** Includes a defect lock-in against the REAL committed v3
+  checkpoint (asserts the one-distinct-score collapse, so an accidental default flip or a v3
+  change is noticed), flag-off byte parity, cold-start no-op, episode isolation in the
+  `arc_leaderboard_eval.py` shared-router shape, the saturation guard, and a
+  per-frame-not-per-candidate segmentation-count regression test.
+- Verification actually run: `adversarial_verify.py` 0 flags; `arc_orphan_solver_lint.py` clean
+  (62 modules in the live closure); `canonical_url_lint.py` clean; `verifier_authenticity_lint.py`
+  clean; ruff check + ruff format clean; `check_spec_coverage.py` reports zero violations for the
+  new tests.
+
+### Known Constraints (read these with the numbers)
+
+- **STAGE-1 SMOKE ONLY** (2 games, 4 states, 182 rows). Within-state AUROC (metric of record):
+  blind 0.500 exactly, coord 0.980, static-salience 0.936, shipped-Random control 0.631,
+  zero-perception step-index control 0.500. Gate passed, label-validity valid.
+- **The honest comparator is `coord - static = +0.044`**, not the +0.48 against the constant blind
+  arm. The smoke label is predominantly frame-change (21 of 28 positives; only 7 level-ups, below
+  the N>=30 floor) and the static sort already reaches 0.936 on that easy component.
+- **Offline AUROC licenses nothing** (exp4545's 0.725-AUROC discriminator REGRESSED live search,
+  hence `SUBMITTED_VALUE_WEIGHT = 1e-12`). Terminal gate is a live A/B on banked levels.
+- **`observe_click_outcome` has no live caller.** That site is in `arc_competition_agent.py`, out
+  of scope this run (owned by a concurrent workflow).
+- **Even flag-on, reach is regime-dependent.** `rich_action_candidates` re-sorts after the router
+  with `rank_arc_actions(scorer=GroundTruthValidatedFrameChangeScorer)`. The router fully owns
+  click order only where that scorer is unvalidated (measured: bp35/lp85/su15 yes; tn36/r11l no).
+  Any live A/B must stratify on `frame_diff_ground_truth_validated`.
+- Pre-existing ARC-suite failures are unrelated to this change: the failing tests were confirmed
+  to fail identically on a clean `git worktree` at HEAD.
+
+### What's Next (operator follow-ups, NOT done this session)
+
+1. Full multi-game corpus run of `experiment_5904_click_target_discrimination.py` (no `--smoke`).
+2. Live A/B on banked levels, stratified by `frame_diff_ground_truth_validated`, before any
+  consideration of flipping the default.
+3. The one-line agent-side `observe_click_outcome` hook next to the existing `observe_transition`
+  hooks in `arc_competition_agent.py`.
+4. Grow positive supply for the LEVEL-UP label via self-play state generation (27 positives across
+   12 audited games at distance 1 is below the N>=30 floor).
+
+## Session 2026-07-24 - Milestone 2026.07.525 Research Planning
+
+### What's Working
+
+- The next milestone is staged in `research-roadmap-next.yaml` with 13 tasks,
+  Exp5905-Exp5917, across four phases: replay qualification, verified constraint
+  synthesis, transactional continuous self-learning, and held live ARC memory.
+  Exp5904 remains reserved for the concurrent click-target work and is neither
+  edited nor referenced by a dependency.
+- The plan directly addresses `.524`'s three terminal blockers: Exp5896/Exp5897's
+  checksum mismatch, Exp5895's scientifically positive but suite-blocked ready
+  slot, and Exp5902's missing live-runner permission.
+- Four headline inference tasks use the mandated current local GGUF models.
+  Exp5909, Exp5910, and Exp5914 require all three families; Exp5916 requires
+  Qwen3.6-35B-A3B and Gemma-4-26B-A4B and includes Gemma-4-31B when capacity
+  permits. Embedded GGUF tokenizers and public CUDA llama.cpp remain mandatory.
+- The mandatory continuous self-learning slot is explicit in Exp5913-Exp5914:
+  frozen pre-event reads, commit-before-reveal, exact validation, versioned
+  writes, bounded poison bursts, quarantine, rollback, retention, and immutable
+  model weights.
+- The dated V525 source refresh adds VeriSynth (`2607.19795`), Memoir
+  (`2607.20792`), continual-learning poisoning theory, HALLMARK (`2607.18360`),
+  ML-assisted Monte Carlo criticality (`2607.20243`), and CLASP/ECRAM
+  (`2607.19661`) to `research-references.md`.
+- YAML/Pydantic parsing, all eight gate-field cross-references, prompt-section
+  and ending checks, model-policy checks, collision scan, prior-failure
+  validation, roadmap gate audit, exclusion-manifest lint, canonical URL lint,
+  and root-clutter sweep pass.
+
+### What's Next
+
+1. Operator review and activation of milestone `.525`.
+2. Exp5907 must qualify one canonical ConstraintIR producer-consumer replay
+   contract before any constraint-synthesis model loads.
+3. Exp5912 must requalify the frozen Exp5895 science without rewriting its
+   historical artifact before the transactional learner can run.
+4. Exp5915 must obtain an externally bound scoped live-runner capability before
+   the held ARC A/B. No public level solve or registry update is planned.
+
+`research-roadmap.yaml` and `scripts/research_conductor.py` remain unchanged.
 
 ## Session 2026-07-22 - Milestone 2026.07.516 Research Planning
 

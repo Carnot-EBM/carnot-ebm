@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (59 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (62 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,27 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (59 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0/4 qualify as self-discovery advances — 3 `OUTER_LOOP_RE`, 1 `DUPLICATE`. Reachability does not prove causal live-agent discovery.**
+**TL;DR: 0/2 qualify — 1 `OUTER_LOOP_RE`, 1 `DUPLICATE`. Reachability and successful replay do not prove autonomous discovery.**
 
-- `outer_loop_lf52_l8plus_probe_20260717.json`
+- `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly read `lf52.py`, built source-faithful per-game planning scripts, and ran large offline searches. `env.step` replay proves executability, not autonomous discovery. Artifact admits `development_proxy`.
-  - **Recommended action:** Revoke L8–L10 autonomous-agent credit. Retain only as a development fixture until a clean live-entrypoint run independently rediscovers the solution.
+  - **Evidence:** Explicitly read `lf52.py`, hand-ported an L9-specific model, ran constrained offline best-first search, then replayed the fixed route live. It admits `development_proxy` and `new_levels_banked: 0`.
+  - **Recommended action:** Retain only as route/API compatibility engineering. Revoke any autonomous-agent capability credit until a clean live-entrypoint run independently discovers the route.
 
-- `outer_loop_round26_bp35_probe_l9_20260717.json`
-  - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Despite the `live_agent_self_discovery` label, this is an outer-loop probe targeting L9 with a stored 342-action prefix, prior-round survivor paths, matched controls, and manually directed mechanic isolation. No live-entrypoint receipt or trace shows Carnot’s agent chose those experiments and actions itself.
-  - **Recommended action:** Relabel and revoke autonomous credit. Require an auditable observation→hypothesis→action trace originating inside a named live entrypoint.
-
-- `outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
-  - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Read source, hand-ported an L9-specific model, ran constrained best-first search, then replayed the resulting fixed route live. The artifact says `development_proxy` and `new_levels_banked: 0`; live validation only confirms execution.
-  - **Recommended action:** Keep solely as route/API compatibility engineering. Do not count it as hidden-game discovery capability.
-
-- `arc_loop_solve_tu93.json`
+- `results/arc_loop_solve_tu93.json`
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches only L4 using `hand_verifier_cold_start_no_spatial_checkpoint`; the registry already records `tu93` fully cleared through L9. It also declares `development_proxy`.
-  - **Recommended action:** Exclude from solve-delta metrics; retain only as a regression fixture.
+  - **Evidence:** Reaches only L4 with `hand_verifier_cold_start_no_spatial_checkpoint`, in `standing_arc_loop_offline_no_quota` mode, and declares `development_proxy`. The registry already records `tu93` fully cleared through L9.
+  - **Recommended action:** Exclude from solve-delta and self-discovery metrics; keep only as a regression fixture.
 
-**Pattern watch:** The project is repeatedly conflating real `env.step` execution, reproduction gates, and live replay with autonomous discovery. Banked-prefix continuation, outer-loop probing, source-derived models, and per-game searches remain forbidden outer-loop solving regardless of provenance labels or module reachability.
+**Pattern watch:** The project is conflating executability with discovery. Offline reproduction gates, live replay, generic-operator metadata, and live-path reachability cannot launder source-derived models, hand verifiers, or precomputed routes into autonomous hidden-game solving.
 

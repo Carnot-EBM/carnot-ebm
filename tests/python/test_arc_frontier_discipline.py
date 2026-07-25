@@ -241,9 +241,7 @@ def test_gradient_prefers_the_navigation_nearest_frontier_not_the_shallowest():
         "MID": [(_edge(3), "CUR")],
         "CUR": [(_edge(4), "NEAR_OPEN")],
     }
-    target = fd.gradient_frontier_target(
-        forward, None, ["SHALLOW_OPEN", "NEAR_OPEN"], "CUR"
-    )
+    target = fd.gradient_frontier_target(forward, None, ["SHALLOW_OPEN", "NEAR_OPEN"], "CUR")
     assert target == "NEAR_OPEN"
 
     # From ROOT the nearest open node IS the shallow one, so the two criteria agree there.
@@ -389,7 +387,11 @@ def test_wired_frontier_batch_only_pops_tier_admitted_rows():
     exp = StepwiseExplorer(tier_exhaustion=True, frontier_batch_size="all")
     node = {
         "path": [],
-        "untested": [_row(6, tier=4, x=1, y=1), _row(6, tier=0, x=2, y=2), _row(6, tier=0, x=3, y=3)],
+        "untested": [
+            _row(6, tier=4, x=1, y=1),
+            _row(6, tier=0, x=2, y=2),
+            _row(6, tier=0, x=3, y=3),
+        ],
         "value": None,
     }
     batch = exp._pop_frontier_batch(node)
@@ -405,8 +407,11 @@ def test_wired_gradient_target_prefers_the_nearest_open_frontier_node():
         "SHALLOW": {"path": [], "untested": [_row(6, x=1, y=1)], "value": None},
         "MID": {"path": [{"action": 1, "data": None}], "untested": [], "value": None},
         "CUR": {"path": [{"action": 1, "data": None}] * 2, "untested": [], "value": None},
-        "NEAR": {"path": [{"action": 1, "data": None}] * 3, "untested": [_row(6, x=2, y=2)],
-                 "value": None},
+        "NEAR": {
+            "path": [{"action": 1, "data": None}] * 3,
+            "untested": [_row(6, x=2, y=2)],
+            "value": None,
+        },
     }
     exp.cur = "CUR"
     exp._record_forward_edge("ROOT", {"action": 1, "data": None}, "SHALLOW")
@@ -422,6 +427,133 @@ def test_wired_gradient_target_prefers_the_nearest_open_frontier_node():
     assert exp.frontier_discipline_diagnostics()["gradient_misses"] == 1
 
 
+def test_gradient_never_returns_a_depth_capped_current_node():
+    """REGRESSION (adversarial review 2026-07-24): MECHANISM (b) must not cancel max_depth.
+
+    ``next_move`` step 1 rides the current node only while ``len(path) < max_depth``; step 2's
+    ``th == self.cur`` branch then expands a returned current node IN PLACE with NO depth test.
+    Since ``self.cur`` is normally one of the gradient's own seeds, it sits at distance 0 and
+    ``nearest_open_node`` returned it EVERY time -- so on deep-graph games the "gradient" was
+    really re-enabling a branch the backtrack cap had abandoned (measured: 140/140 picks on r11l
+    at budget 600, 195/195 at budget 800). Arms C/D were therefore confounded with the removal of
+    max_depth rather than measuring frontier distance.
+
+    The minimal reproduction is asserted directly: with a depth-capped ``cur``, the flag-ON
+    explorer must choose what the flag-OFF explorer chooses, not the capped node.
+    """
+
+    def _build(**kw):
+        exp = StepwiseExplorer(max_depth=2, **kw)
+        exp.graph = {
+            "ROOT": {"path": [], "untested": [_row(6, x=1, y=1)], "value": None},
+            "DEEP": {
+                "path": [{"action": 1, "data": None}] * 5,
+                "untested": [_row(6, x=2, y=2)],
+                "value": None,
+            },
+        }
+        exp.cur = "DEEP"
+        exp._record_forward_edge("ROOT", {"action": 1, "data": None}, "DEEP")
+        return exp
+
+    off = _build(frontier_gradient=False)
+    on = _build(frontier_gradient=True)
+    assert off._frontier() == "ROOT"
+    assert on._frontier() == "ROOT", "a depth-capped cur must never be handed back as the target"
+    diag = on.frontier_discipline_diagnostics()
+    assert diag["gradient_cur_at_depth_cap_excluded"] == 1
+    assert diag["gradient_pick_current_node"] == 0
+    assert diag["max_depth"] == 2
+
+    # ...and the mechanism still works: with cur UNDER the cap it may legitimately pick cur,
+    # which is what best_first mode relies on (step 1 never runs there).
+    under = StepwiseExplorer(max_depth=45, frontier_gradient=True)
+    under.graph = {
+        "CUR": {
+            "path": [{"action": 1, "data": None}],
+            "untested": [_row(6, x=1, y=1)],
+            "value": None,
+        }
+    }
+    under.cur = "CUR"
+    assert under._gradient_frontier_target(["CUR"]) == "CUR"
+    d2 = under.frontier_discipline_diagnostics()
+    assert d2["gradient_pick_current_node"] == 1 and d2["gradient_pick_other_node"] == 0
+
+
+def test_gradient_picks_another_node_when_cur_is_depth_capped_and_a_route_exists():
+    """The real mechanism: with cur refused, the gradient still chooses the NEAREST other node.
+
+    Distinguishes the fix "cur is excluded as a seed" from a bogus fix "the gradient is disabled
+    whenever cur is capped": a reachable, nearer open node must still be selected, and it must be
+    counted as an OTHER pick so the artifact can show what the gradient actually did.
+    """
+    exp = StepwiseExplorer(max_depth=3, frontier_gradient=True)
+    exp.graph = {
+        "ROOT": {"path": [], "untested": [_row(6, x=9, y=9)], "value": None},
+        "CUR": {
+            "path": [{"action": 1, "data": None}] * 5,  # over the cap
+            "untested": [_row(6, x=1, y=1)],
+            "value": None,
+        },
+        "NEXT": {
+            "path": [{"action": 1, "data": None}] * 6,
+            "untested": [_row(6, x=2, y=2)],
+            "value": None,
+        },
+    }
+    exp.cur = "CUR"
+    exp._record_forward_edge("ROOT", {"action": 1, "data": None}, "CUR")
+    exp._record_forward_edge("CUR", {"action": 2, "data": None}, "NEXT")
+
+    # ROOT is shallowest-from-root; NEXT is nearest-from-here and forward-reachable.
+    assert exp._gradient_frontier_target(["ROOT", "CUR", "NEXT"]) == "NEXT"
+    diag = exp.frontier_discipline_diagnostics()
+    assert diag["gradient_pick_other_node"] == 1
+    assert diag["gradient_pick_current_node"] == 0
+    assert diag["gradient_cur_at_depth_cap_excluded"] == 1
+
+
+def test_within_tier_uniform_draw_is_unrestricted_not_the_diversity_topk():
+    """REGRESSION: arm B2's draw must be the reference's UNRESTRICTED uniform choice.
+
+    The wiring used to pass ``self._div_topk`` (default 8, the knob of the unrelated
+    hybrid-diversity feature), which (a) made the arm a top-8 draw rather than the reference's
+    ``random.choice`` over all untested edges in groups 0..p, and (b) coupled an A/B arm to a
+    foreign env var, so an operator tuning CARNOT_ARC_EXPLORE_DIV_TOPK would silently change the
+    experiment. Asserted by construction (top_k is None) AND behaviourally (a row beyond index 8
+    is reachable).
+    """
+    exp = StepwiseExplorer(tier_exhaustion=True, tier_uniform_random=True)
+    assert exp._fd_draw_topk is None
+    assert exp.frontier_discipline_diagnostics()["tier_draw_top_k"] is None
+    # The foreign knob must NOT be what the draw reads.
+    exp._div_topk = 2
+    node = {"path": [], "untested": [_row(6, tier=0, x=i, y=i) for i in range(20)], "value": None}
+    exp.graph = {"N": node}
+    seen = set()
+    for _ in range(200):
+        if not node["untested"]:
+            break
+        seen.add(exp._pop_untested(node)["data"]["x"])
+    assert max(seen) > 8, f"draw is restricted to a top-k slice: only reached {sorted(seen)}"
+    assert len(seen) == 20
+
+
+def test_explicit_draw_topk_env_is_honoured_and_reported_as_a_deviation(monkeypatch):
+    """A top-k restriction is measurable, but only as an EXPLICIT, self-reported deviation."""
+    monkeypatch.setenv("CARNOT_ARC_FRONTIER_TIER_DRAW_TOPK", "3")
+    exp = StepwiseExplorer(tier_exhaustion=True, tier_uniform_random=True)
+    assert exp._fd_draw_topk == 3
+    assert exp.frontier_discipline_diagnostics()["tier_draw_top_k"] == 3
+    node = {"path": [], "untested": [_row(6, tier=0, x=i, y=i) for i in range(10)], "value": None}
+    first = {
+        exp._pop_untested(dict(node, untested=list(node["untested"])))["data"]["x"]
+        for _ in range(60)
+    }
+    assert max(first) <= 2, f"top_k=3 must draw only among the first 3 rows, saw {sorted(first)}"
+
+
 def test_env_flags_toggle_the_mechanisms_without_mutating_module_globals(monkeypatch):
     """The A/B harness flips arms by env var; module globals must stay at their OFF defaults."""
     import carnot.agentic.arc_competition_agent as agent_mod
@@ -435,3 +567,485 @@ def test_env_flags_toggle_the_mechanisms_without_mutating_module_globals(monkeyp
     assert agent_mod.SUBMITTED_FRONTIER_DISTANCE_GRADIENT_ENABLED is False
     # an explicit kwarg still wins over the env var
     assert StepwiseExplorer(tier_exhaustion=False).tier_exhaustion_enabled is False
+
+
+# ---------------------------------------------------------------------------
+# The A/B harness's own logic (pure; no games are run here)
+# ---------------------------------------------------------------------------
+
+
+def _hrow(arm, game, cond, seed, levels, first=None, states=None):
+    return {
+        "arm": arm,
+        "game": game,
+        "condition": cond,
+        "seed": seed,
+        "ran": True,
+        "levels": levels,
+        "reached": levels,
+        "actions": 10,
+        "efficiency": 0.0,
+        "actions_to_first_levelup": first,
+        "states_expanded": states,
+        "duration_s": 0.1,
+        "frontier_discipline": None,
+    }
+
+
+def _harness():
+    import importlib.util
+
+    path = (
+        Path(__file__).resolve().parents[2]
+        / "python"
+        / "carnot"
+        / "experiment_5836_frontier_discipline_ab.py"
+    )
+    spec = importlib.util.spec_from_file_location("_exp5836_test", path)
+    assert spec is not None and spec.loader is not None
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_exp5836_test"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_control():
+    """The uniform-within-tier arm and the reference positive control are BOTH mandatory.
+
+    Without B2 a null on B is confounded with the greedy-draw hypothesis; without E a flat
+    result cannot be told apart from a broken harness.
+    """
+    m = _harness()
+    assert set(m.ARMS) == {"A", "B", "B2", "C", "D", "E"}
+    assert m.ARMS["B"]["kwargs"]["tier_uniform_random"] is False
+    assert m.ARMS["B2"]["kwargs"]["tier_uniform_random"] is True
+    assert m.ARMS["B2"]["deterministic"] is False
+    assert m.ARMS["C"]["kwargs"]["frontier_gradient"] is True
+    assert m.ARMS["D"]["kwargs"] == {
+        "tier_exhaustion": True,
+        "tier_uniform_random": False,
+        "frontier_gradient": True,
+    }
+    # Deterministic arms must NOT be given a fake replication axis.
+    assert m._seeds_for("A", 3) == [m.RANDOM_SEED]
+    assert len(m._seeds_for("B2", 3)) == 3
+    # Budget 200 was measured degenerate (0/25 wins) -> the default must be well above it.
+    assert m.DEFAULT_BUDGET >= 2000
+
+
+def test_harness_ci_is_none_for_a_single_run_never_zero_width():
+    """A width-zero interval would read as certainty. n<2 must report None."""
+    m = _harness()
+    assert m._mean_ci95([5.0])["ci95"] is None
+    assert m._mean_ci95([])["mean"] is None
+    ci = m._mean_ci95([10.0, 20.0, 30.0])
+    assert ci["n"] == 3 and ci["mean"] == 20.0 and ci["ci95"][0] < 20.0 < ci["ci95"][1]
+
+
+def test_harness_aggregate_and_regression_guard_detect_a_lost_baseline_win():
+    """A new win bought by losing an existing one must be surfaced, not netted to zero."""
+    m = _harness()
+    rows = [
+        _hrow("A", "lp85", "real", 1, 1, first=20, states=5),
+        _hrow("A", "vc33", "real", 1, 1, first=60, states=6),
+        _hrow("A", "bp35", "real", 1, 0, states=9),
+        _hrow("B", "lp85", "real", 1, 0, states=5),  # LOST a baseline win
+        _hrow("B", "vc33", "real", 1, 1, first=22, states=6),
+        _hrow("B", "bp35", "real", 1, 1, first=88, states=9),  # gained a new one
+    ]
+    agg = m.aggregate(rows, ["lp85", "vc33", "bp35"])
+    assert agg["A|real"]["n_games_won_any_seed"] == 2
+    assert agg["B|real"]["n_games_won_any_seed"] == 2
+    cmp_ = m.compare_to_baseline(agg, ["lp85", "vc33", "bp35"], rows)
+    assert cmp_["regression_guard_provenance"].startswith("derived_from_arm_A")
+    assert cmp_["B"]["new_wins"] == ["bp35"]
+    assert cmp_["B"]["lost_wins"] == ["lp85"]
+    assert cmp_["B"]["regressed_baseline_win"] is True, "a lost baseline win must not net to zero"
+    assert cmp_["B"]["n_win_delta"] == 0
+
+
+def test_harness_recolor_control_only_asserts_inertness_where_it_is_predicted():
+    """Recolour is inert for the baseline order but NOT for the colour-keyed tier arms.
+
+    Measured in this experiment's own smoke: arm B's mean actions-to-first-win went 13.5 (real)
+    -> 168.5 (recoloured), because just-explore's tier predicate keys on ABSOLUTE colour values.
+    That is a real limitation of the mechanism; flagging it as a control violation would
+    mislabel it as a harness bug, and skipping the check for arm A would hide genuine leakage.
+    """
+    m = _harness()
+    rows = [
+        _hrow("A", "vc33", "real", 1, 1, first=60, states=6),
+        _hrow("A", "vc33", "recolor_negative_control", 1, 1, first=60, states=6),
+        _hrow("B", "vc33", "real", 1, 1, first=22, states=6),
+        _hrow("B", "vc33", "recolor_negative_control", 1, 1, first=303, states=17),
+    ]
+    agg = m.aggregate(rows, ["vc33"])
+    ctl = m.compare_to_baseline(agg, ["vc33"])["recolor_control"]
+    assert ctl["A"]["expected_inert"] is True and ctl["A"]["control_violated"] is False
+    assert ctl["B"]["expected_inert"] is False
+    assert ctl["B"]["colour_dependent_by_construction"] is True
+    assert ctl["B"]["control_violated"] is False, "a colour-keyed arm's delta is not a harness bug"
+    assert ctl["B"]["mean_actions_real"] != ctl["B"]["mean_actions_recolor"], "delta is reported"
+
+    # ...but genuine colour leakage on a baseline-order arm IS flagged.
+    leak = [
+        _hrow("A", "vc33", "real", 1, 1, first=60, states=6),
+        _hrow("A", "vc33", "recolor_negative_control", 1, 1, first=999, states=6),
+    ]
+    ctl2 = m.compare_to_baseline(m.aggregate(leak, ["vc33"]), ["vc33"])
+    assert ctl2["recolor_control"]["A"]["control_violated"] is True
+    assert ctl2["recolor_control_violations"] == ["A"]
+
+
+def test_harness_pooled_ci_is_small_sample_corrected_clamped_and_non_inferential():
+    """REGRESSION: the pooled CI must not fake certainty, understate width, or go negative.
+
+    Three defects in one function, all measured in this experiment's own smoke run:
+      * two identical values produced ci95 [1.0, 1.0] -- a zero-width interval, i.e. exactly the
+        fake certainty the function's docstring promised to avoid;
+      * a normal-approximation 1.96 at n=2 understates the interval ~6.5x (t=12.706);
+      * an action-count interval reported a physically impossible negative lower bound (-3.16).
+    """
+    m = _harness()
+    zero_var = m._mean_ci95([1.0, 1.0])
+    assert zero_var["ci95"] is None
+    assert "zero_variance" in zero_var["ci95_absent_reason"]
+
+    two = m._mean_ci95([20.0, 60.0])
+    assert two["ci95_method"] == "t_distribution_small_sample"
+    half = (two["ci95"][1] - two["ci95"][0]) / 2
+    normal_half = 1.96 * two["sd"] / (2**0.5)
+    assert half > 4 * normal_half, "small-n t correction must widen the interval, not fake it"
+
+    clamped = m._mean_ci95([20.0, 60.0], clamp_min=0.0)
+    assert clamped["ci95"][0] == 0.0 and clamped["ci95_clamped_at_min"] is True
+
+    agg = m.aggregate([_hrow("A", "lp85", "real", 1, 1, first=20, states=5)], ["lp85"])
+    assert agg["A|real"]["mean_actions_to_first_win_is_inferential"] is False
+
+
+def test_harness_paired_statistic_sees_a_unanimous_effect_the_pooled_ci_cannot():
+    """REGRESSION (fatal): the primary efficiency statistic must be PAIRED, with a p-value.
+
+    The exact smoke data: arm A wins lp85 in 20 and vc33 in 60 actions; arm B wins them in 5 and
+    22. Pooled, A's mean is 40.0 and B's is 13.5 with heavily overlapping intervals -- the
+    statistic cannot see the effect. Paired, both deltas are positive (+15, +38): unanimous. The
+    pairing is free (same games, same seeds, policy is the only difference), so discarding it was
+    pure loss of power. This test asserts the paired table exists, is signed the documented way,
+    and carries a real sign-test p (which at n=2 is 0.5 -- i.e. the '40.0 -> 13.5' headline was
+    NOT significant, and the artifact now says so).
+    """
+    m = _harness()
+    rows = [
+        _hrow("A", "lp85", "real", 1, 1, first=20, states=5),
+        _hrow("A", "vc33", "real", 1, 1, first=60, states=6),
+        _hrow("B", "lp85", "real", 1, 1, first=5, states=5),
+        _hrow("B", "vc33", "real", 1, 1, first=22, states=6),
+    ]
+    paired = m.paired_efficiency_vs_baseline(rows)
+    real = paired["B"]["real"]
+    assert real["n_paired_games"] == 2
+    assert [p["delta"] for p in real["pairs"]] == [20 - 5, 60 - 22]
+    assert real["sign_test"]["n_favouring_arm"] == 2
+    assert real["sign_test"]["p_value"] == 0.5, "n=2 cannot be significant -- say so"
+    assert real["median_paired_delta"]["ci95"] is None, "n<3 bootstrap must not look informative"
+
+    # A game only one arm wins is a CAPABILITY difference and must NOT enter the paired table.
+    rows_cap = rows + [_hrow("B", "bp35", "real", 1, 1, first=99), _hrow("A", "bp35", "real", 1, 0)]
+    assert m.paired_efficiency_vs_baseline(rows_cap)["B"]["real"]["n_paired_games"] == 2
+
+    # Six unanimous games DO reach significance -- the test can fire when the data supports it.
+    six = []
+    for i, g in enumerate(["cd82", "lf52", "lp85", "sp80", "su15", "vc33"]):
+        six.append(_hrow("A", g, "real", 1, 1, first=100 + i))
+        six.append(_hrow("B", g, "real", 1, 1, first=50 + i))
+    st = m.paired_efficiency_vs_baseline(six)["B"]["real"]["sign_test"]
+    assert st["p_value"] < 0.05 and st["n_pairs_nonzero"] == 6
+
+
+def test_harness_publishes_its_power_ceiling():
+    """An underpowered null must be labelled underpowered, not reported as evidence of absence."""
+    m = _harness()
+    p6 = m.power_ceiling(
+        ["cd82", "lf52", "lp85", "sp80", "su15", "vc33"], m.ASSUMED_BASELINE_WIN_GAMES
+    )
+    assert p6["max_paired_deltas"] == 6
+    assert p6["smallest_attainable_two_sided_p"] == 0.03125
+    assert p6["clears_0.05_only_if_unanimous"] is True
+    p2 = m.power_ceiling(["lp85", "vc33"], m.ASSUMED_BASELINE_WIN_GAMES)
+    assert p2["smallest_attainable_two_sided_p"] == 0.5
+    assert p2["clears_0.05_only_if_unanimous"] is False
+
+
+def test_harness_headline_is_the_capability_result_not_the_efficiency_delta():
+    """REGRESSION (fatal): a zero-capability graft beside a winning control must be the headline.
+
+    Measured reality: every grafted arm won the IDENTICAL game set as the baseline (n_win_delta
+    = 0 in all three conditions) while the just-explore control won a game no Carnot arm won.
+    The first write-up led with an unreplicated efficiency delta on games already solved. These
+    fields exist so no downstream capstone can aggregate the efficiency number without the
+    capability null attached.
+    """
+    m = _harness()
+    rows = [
+        _hrow("A", "lp85", "real", 1, 1, first=20),
+        _hrow("A", "vc33", "real", 1, 1, first=60),
+        _hrow("A", "r11l", "real", 1, 0),
+        _hrow("B", "lp85", "real", 1, 1, first=5),
+        _hrow("B", "vc33", "real", 1, 1, first=22),
+        _hrow("B", "r11l", "real", 1, 0),
+        _hrow("E", "lp85", "real", 1, 2, first=30),
+        _hrow("E", "vc33", "real", 1, 1, first=64),
+        _hrow("E", "r11l", "real", 1, 1, first=14),  # the game NO Carnot arm wins
+    ]
+    games = ["lp85", "vc33", "r11l"]
+    agg = m.aggregate(rows, games)
+    cmp_ = m.compare_to_baseline(agg, games, rows)
+    cap = m.capability_summary(agg, cmp_)
+    assert cap["new_wins_vs_baseline"] == 0, "the graft transferred no capability"
+    assert cap["positive_control_new_wins"] == 1
+    assert cap["games_won_only_by_positive_control"] == ["r11l"]
+    assert "r11l" not in cap["new_win_games_vs_baseline"]
+    assert "instrument what the reference does differently" in cap["diagnostic_target"]
+
+
+def test_harness_acceptance_gates_are_comparative_and_fail_the_measured_result():
+    """The old gate (first-win rate >= 0.12) is passed by the BASELINE -- it measures nothing.
+
+    0.12 x 25 = 3 wins required; arm A already wins ~7 of 25 (rate 0.28). A gate the negative
+    control clears cannot separate the intervention from doing nothing. The replacements are
+    comparative, and the measured result must FAIL them (0 new wins; sign test underpowered).
+    """
+    m = _harness()
+    cap = {
+        "available": True,
+        "new_wins_vs_baseline": 0,
+        "lost_wins_vs_baseline": [],
+        "positive_control_new_wins": 1,
+    }
+    paired = {"B": {"real": {"n_paired_games": 2, "sign_test": {"p_value": 0.5}}}}
+    power = m.power_ceiling(["lp85", "vc33"], m.ASSUMED_BASELINE_WIN_GAMES)
+    gates = m.acceptance_gates(cap, paired, power)
+    assert gates["acceptance_gate_capability"]["passed"] is False
+    assert gates["acceptance_gate_efficiency"]["passed"] is False, "p=0.5 at n=2 must not pass"
+    assert gates["acceptance_gate_efficiency"]["min_n_required"] == 6
+    assert gates["acceptance_gates_all_passed"] is False
+
+    # And they PASS on a result that genuinely earns it.
+    good_cap = dict(cap, new_wins_vs_baseline=1)
+    good_paired = {"B": {"real": {"n_paired_games": 6, "sign_test": {"p_value": 0.03125}}}}
+    good = m.acceptance_gates(good_cap, good_paired, power)
+    assert good["acceptance_gate_capability"]["passed"] is True
+    assert good["acceptance_gate_efficiency"]["passed"] is True
+    assert good["acceptance_gates_all_passed"] is True
+
+    # A new win bought by losing a baseline win does NOT pass the capability gate.
+    traded = m.acceptance_gates(
+        dict(cap, new_wins_vs_baseline=1, lost_wins_vs_baseline=["lp85"]), good_paired, power
+    )
+    assert traded["acceptance_gate_capability"]["passed"] is False
+
+
+def test_harness_regression_guard_is_derived_from_measured_rows_not_a_hardcoded_claim():
+    """The guard list must be self-consistent with the baseline it guards.
+
+    The constant was previously commented "measured at budget 2000" with no artifact behind it
+    (the nearest real artifact is a different policy with a different 15-game win set), which is
+    the fabrication-adjacent shape CLAUDE.md's Adversarial Artifact Verification discipline
+    targets. It is now derived from arm A's own rows, and the fallback is labelled ASSUMED.
+    """
+    m = _harness()
+    rows = [
+        _hrow("A", "lp85", "real", 1, 1, first=20),
+        _hrow("A", "vc33", "real", 1, 0),
+        _hrow("A", "cd82", "real", 1, 1, first=1747),
+    ]
+    guard, prov = m._guard_games_from_rows(rows)
+    assert guard == ["cd82", "lp85"], "only games arm A actually won in THIS run"
+    assert prov.startswith("derived_from_arm_A")
+
+    empty_guard, empty_prov = m._guard_games_from_rows([])
+    assert empty_guard == list(m.ASSUMED_BASELINE_WIN_GAMES)
+    assert empty_prov.startswith("ASSUMED_fallback")
+    assert not hasattr(m, "BASELINE_WIN_GAMES"), "the unsourced '(measured)' constant must be gone"
+
+    cmp_ = m.compare_to_baseline(
+        m.aggregate(rows, ["lp85", "vc33", "cd82"]), ["lp85", "cd82"], rows
+    )
+    assert cmp_["regression_guard_games"] == ["cd82", "lp85"]
+    assert cmp_["regression_guard_provenance"].startswith("derived_from_arm_A")
+
+
+def test_harness_levels_banked_total_is_flagged_as_not_arm_comparable():
+    """Arms A-D early-stop at the first level-up; arm E runs to budget. Do not compare the sums.
+
+    Measured on the same 3 games: A-D = 2, E = 4 -- half that gap is the stopping rule, not
+    capability. The flag has to travel with the number or a capstone will compare it.
+    """
+    m = _harness()
+    rows = [
+        dict(_hrow("A", "lp85", "real", 1, 1, first=20), levels_capped_by_early_stop=True),
+        dict(_hrow("E", "lp85", "real", 1, 2, first=30), levels_capped_by_early_stop=False),
+    ]
+    agg = m.aggregate(rows, ["lp85"])
+    assert agg["A|real"]["levels_capped_by_early_stop"] is True
+    assert agg["E|real"]["levels_capped_by_early_stop"] is False
+    assert agg["A|real"]["levels_banked_total_cross_arm_comparable"] is False
+    assert agg["E|real"]["levels_banked_total_cross_arm_comparable"] is False
+
+
+def test_harness_scope_and_verdict_distinguish_a_smoke_from_the_full_run():
+    """A 3-game smoke at 1/5 the budget must NOT carry a verdict that says 'measured'."""
+    m = _harness()
+    full = m.run_scope(m.ALL_GAMES, tuple(m.ARMS), m.CONDITIONS, m.DEFAULT_BUDGET)
+    smoke = m.run_scope(("lp85", "vc33", "r11l"), tuple(m.ARMS), m.CONDITIONS, 400)
+    assert full["full_declared_spec"] is True
+    assert smoke["full_declared_spec"] is False and smoke["n_games"] == 3
+
+    cap = {"available": True, "new_wins_vs_baseline": 0, "positive_control_new_wins": 1}
+    v_full = m.verdict_for(full, cap, positive_control_ran=True, error_rate=0.0)
+    v_smoke = m.verdict_for(smoke, cap, positive_control_ran=True, error_rate=0.0)
+    assert v_full.startswith("complete_") and "measured" in v_full
+    assert v_smoke.startswith("partial_") and "not_full_spec" in v_smoke
+    # Both must carry the capability result in the verdict itself.
+    for v in (v_full, v_smoke):
+        assert "graft_new_wins_0" in v and "control_new_wins_1" in v
+    # No positive control -> uninterpretable, whatever the scope.
+    assert "uninterpretable" in m.verdict_for(full, cap, positive_control_ran=False, error_rate=0.0)
+
+
+def test_harness_spec_deviations_declare_the_tier_advancement_substitution():
+    """A null on B/B2/D must not be written up as 'just-explore does not transfer'.
+
+    The reference advances its priority group on UNREACHABILITY FROM THE CURRENT NODE
+    (graph_explorer._maybe_advance_group: `while distance == INFINITY`); the graft advances only
+    on GLOBAL set-exhaustion, which is STRICTER. The substitution is defensible (Carnot can
+    always RESET-replay, so no distance is ever infinite) but it was missing from the artifact's
+    spec_deviations, so a flat result would have been attributed to the reference mechanism
+    rather than to this stricter variant.
+    """
+    m = _harness()
+    art = m.run(
+        games=[],
+        arms=["A"],
+        conditions=["real"],
+        budget=1,
+        n_seeds=1,
+        artifact_path=Path(m.REPO) / "results" / "_test_5836_deviations_only.json",
+        replay_limit=0,
+    )
+    joined = " ".join(
+        f"{d.get('spec', '')} {d.get('actual', '')} {d.get('why', '')} "
+        f"{d.get('consequence_for_interpretation', '')}"
+        for d in art["spec_deviations"]
+    ).lower()
+    assert "_maybe_advance_group" in joined or "maybe_advance_group" in joined
+    assert "global set-exhaustion" in joined
+    assert "does not falsify the reference mechanism" in joined
+    assert "top-k" in joined or "top_k" in joined, "the draw deviation must be declared"
+    assert "reset" in joined, "arm E's reset-count convention must be declared"
+    assert "0.12" in joined, "the retired non-discriminative gate must be recorded"
+    (Path(m.REPO) / "results" / "_test_5836_deviations_only.json").unlink(missing_ok=True)
+
+
+def test_harness_preconditions_are_real_observations():
+    m = _harness()
+    pre = m.check_preconditions()
+    by = {p["resource"]: p for p in pre}
+    for required in (
+        "offline_arcade_environment_files",
+        "frontier_discipline_module",
+        "live_explorer_flags_wired",
+        "llm_proposer_deliberately_absent",
+    ):
+        assert required in by, required
+    assert by["frontier_discipline_module"]["available"] is True
+    assert by["live_explorer_flags_wired"]["available"] is True
+
+
+def test_harness_never_fabricates_arm_e_and_blocks_when_the_reference_is_missing(monkeypatch):
+    """Arm E must be recorded as ran:false with a reason, never synthesized."""
+    m = _harness()
+    monkeypatch.setattr(m, "JE_ROOT", Path("/definitely/not/here"))
+    runner, reason = m.load_just_explore_runner()
+    assert runner is None
+    assert reason.startswith("reference_clone_absent")
+    # A cell for arm E with no runner records the absence rather than inventing a number.
+    cell = m.run_cell("E", "vc33", budget=1, seed=1, variant=0, reflect=None, je_runner=None)
+    assert cell["ran"] is False and "reason" in cell
+    assert "levels" not in cell, "an unrun arm must not carry a levels number"
+
+
+def test_harness_artifact_has_the_required_principle_annotated_fields():
+    m = _harness()
+    required = (
+        "honest_verdict",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "solve_provenance",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s",
+        "preconditions_checked",
+    )
+    for f in required:
+        assert f in m.FIELD_PRINCIPLES, f
+        assert len(m.FIELD_PRINCIPLES[f]) > 40, f"{f} principle must explain WHY"
+    # The substrate value must be the canonical CLAUDE.md token for a no-LLM live-agent run.
+    art = m.run(
+        games=[],
+        arms=["A"],
+        conditions=["real"],
+        budget=1,
+        n_seeds=1,
+        artifact_path=Path(m.REPO) / "results" / "_test_5836_shape_only.json",
+        replay_limit=0,
+    )
+    assert art["inference_substrate"] == "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+    assert art["solve_provenance"] == "development_proxy"
+    assert art["verifier_is_oracle"] is True, "level-ups come from the env oracle -- disclose it"
+    assert art["honest_verdict"].startswith(("complete_", "blocked_"))
+    # No games measured -> the positive control never ran -> NOT interpretable, and it says so.
+    assert art["ab_interpretable"] is False
+    assert "uninterpretable" in art["honest_verdict"]
+    assert "offline_reproduced" not in art, (
+        "must not emit a solve-claim shape: all 25 public games are already registry-cleared, "
+        "so a solve claim would trip the adversarial duplicate check"
+    )
+    (Path(m.REPO) / "results" / "_test_5836_shape_only.json").unlink(missing_ok=True)
+
+
+def test_barrier_never_livelocks_the_decision_loop():
+    """ADVERSARIAL: the barrier must never leave next_move unable to act OR to terminate.
+
+    The dangerous shape is a gate that makes _frontier return a node while _pop_frontier_batch
+    returns nothing for it -- the pending queue stays empty and _serve() raises IndexError -- or
+    a state where neither an action nor explored_out is ever produced. This drives the real
+    decision loop over a hand-built graph whose ONLY remaining work sits at the top tier, and
+    asserts it either emits an action or terminates within a bounded number of turns.
+    """
+    exp = StepwiseExplorer(tier_exhaustion=True, frontier_gradient=True)
+    exp.graph = {
+        "ROOT": {"path": [], "untested": [_row(6, tier=4, x=1, y=1)], "value": None},
+        "CHILD": {
+            "path": [{"action": 1, "data": None}],
+            "untested": [_row(6, tier=4, x=2, y=2)],
+            "value": None,
+        },
+    }
+    exp.root, exp.cur = "ROOT", "ROOT"
+    exp._record_forward_edge("ROOT", {"action": 1, "data": None}, "CHILD")
+
+    acted = 0
+    for _ in range(50):
+        th = exp._frontier()
+        if th is None:
+            break
+        node = exp.graph[th]
+        assert exp._node_has_open_tier(node), "_frontier must never return a fully-deferred node"
+        batch = exp._pop_frontier_batch(node)
+        assert batch, "a returned frontier node must yield at least one action (else _serve raises)"
+        acted += len(batch)
+    assert acted == 2, f"both deferred rows must eventually be spent, got {acted}"
+    assert exp._frontier() is None, "and then the search must terminate, not spin"
+    assert exp._tier_deferrals == 0, "the defensive fail-open path must never have been needed"

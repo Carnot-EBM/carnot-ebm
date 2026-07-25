@@ -97,6 +97,15 @@ off when paired with a uniform-random draw. ``select_index`` therefore supports 
 draws (deterministic-first and uniform-random-among-eligible) so the A/B can separate
 "the barrier helped" from "merely breaking the static tie helped".
 
+The uniform draw is faithful ONLY at ``top_k=None``: the reference's ``choose_edge`` does
+``random.choice(untested_edges)`` over every untested edge in groups ``0..active_group``,
+with no top-k restriction whatsoever. ``top_k`` exists here so a top-n restriction can be
+measured as its own explicitly-declared arm; passing a ``top_k`` is a DEVIATION from the
+reference and any experiment that does so must record it in ``spec_deviations``. (The wiring
+originally defaulted this to the unrelated hybrid-diversity knob's value of 8, which made
+"the reference's uniform draw" arm silently a top-8 draw coupled to a foreign env var --
+caught by adversarial review 2026-07-24.)
+
 -------------------------------------------------------------------------------------
 DESIGN CONSTRAINT: EVERYTHING HERE IS PURE
 -------------------------------------------------------------------------------------
@@ -289,9 +298,7 @@ class TierExhaustionPolicy:
 
     tier_count: int = TIER_COUNT
 
-    def eligible_indices(
-        self, rows: Sequence[Mapping[str, Any]], active_tier: int
-    ) -> list[int]:
+    def eligible_indices(self, rows: Sequence[Mapping[str, Any]], active_tier: int) -> list[int]:
         """Indices of rows selectable at ``active_tier``, in the caller's existing order.
 
         CUMULATIVE (``tier <= active_tier``), matching the reference's ``has_open_group``,
@@ -300,11 +307,7 @@ class TierExhaustionPolicy:
         """
 
         limit = int(active_tier)
-        return [
-            idx
-            for idx, row in enumerate(rows)
-            if int(row.get("tier", DEFAULT_TIER)) <= limit
-        ]
+        return [idx for idx, row in enumerate(rows) if int(row.get("tier", DEFAULT_TIER)) <= limit]
 
     def node_has_open_tier(
         self, rows: Sequence[Mapping[str, Any]] | None, active_tier: int
@@ -378,9 +381,7 @@ class TierExhaustionPolicy:
         ceiling = max(0, int(self.tier_count) - 1)
         # Materialise once: the caller may hand us a generator and we need several passes.
         rows_list = list(nodes_rows)
-        while tier < ceiling and not any(
-            self.node_has_open_tier(rows, tier) for rows in rows_list
-        ):
+        while tier < ceiling and not any(self.node_has_open_tier(rows, tier) for rows in rows_list):
             tier += 1
         return tier
 
@@ -396,9 +397,7 @@ class FrontierDistanceField:
     """
 
     distance: dict[Hashable, int] = field(default_factory=dict)
-    next_hop: dict[Hashable, tuple[Mapping[str, Any], Hashable]] = field(
-        default_factory=dict
-    )
+    next_hop: dict[Hashable, tuple[Mapping[str, Any], Hashable]] = field(default_factory=dict)
 
     def is_open(self, node: Hashable) -> bool:
         """True iff ``node`` is itself a gradient source (distance 0 = has open work)."""
@@ -516,6 +515,16 @@ def gradient_frontier_target(
     ``forward_adj`` is accepted so callers that do not maintain an incremental reverse index
     can pass only the forward one and have it inverted here; if both are given, the supplied
     reverse index wins (it is the caller's incrementally-maintained copy).
+
+    CALLER OBLIGATION (learned the hard way, 2026-07-24). ``current`` is normally itself a
+    member of ``open_nodes``, and a source of the multi-source BFS sits at distance 0 -- so this
+    function returns ``current`` unchanged whenever ``current`` still has open work. That is
+    correct as a pure answer to "which open node is nearest", but it means a caller who expands a
+    returned ``current`` IN PLACE, bypassing whatever depth/backtrack cap it applies elsewhere,
+    turns this preference into a cap-cancelling intervention rather than a re-ordering one. Such
+    a caller must exclude its own current node from ``open_nodes`` when it has already decided
+    not to expand there. ``StepwiseExplorer._gradient_frontier_target`` does exactly that for its
+    ``max_depth`` cap and counts the exclusions.
     """
 
     opens = list(open_nodes)

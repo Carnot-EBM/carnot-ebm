@@ -897,7 +897,28 @@ class StepwiseExplorer:
         self.radj: dict[str, list] = {}
         self._gradient_targets = 0
         self._gradient_misses = 0
+        # Pick-kind split for MECHANISM (b). An adversarial review (2026-07-24) found that a bare
+        # "gradient fired N times" counter cannot distinguish the two very different things the
+        # gradient can do, and that on deep-graph games the counter was 100% the degenerate case:
+        # the gradient was returning self.cur (distance 0, because cur was one of its own seeds)
+        # at a moment when the depth-first ride had ALREADY been refused by the max_depth cap --
+        # so the "gradient" was really just cancelling the backtrack cap. These counters make that
+        # visible in the artifact instead of hiding it inside one aggregate number.
+        self._gradient_pick_cur = 0  # target == self.cur, cur legitimately under the depth cap
+        self._gradient_pick_other = 0  # target is some OTHER node -- the real mechanism
+        self._gradient_cur_at_cap_excluded = 0  # cur was depth-capped and refused as a seed
         self._fd_rng = __import__("random").Random(int(frontier_discipline_seed))
+        # Own knob for the within-tier UNIFORM draw. DEFAULT None = draw uniformly over EVERY
+        # tier-admitted row, which is the reference's `random.choice(untested_edges)`. Set
+        # CARNOT_ARC_FRONTIER_TIER_DRAW_TOPK=<n> only to deliberately measure a top-n restriction
+        # as a SEPARATE arm; it is a documented deviation from the reference, not the default.
+        _fd_topk_raw = _fd_os.environ.get("CARNOT_ARC_FRONTIER_TIER_DRAW_TOPK")
+        try:
+            self._fd_draw_topk: int | None = (
+                int(_fd_topk_raw) if _fd_topk_raw not in (None, "") else None
+            )
+        except ValueError:
+            self._fd_draw_topk = None
         self.candidate_router = candidate_router
         self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
         self.structured_evidence_memory = coerce_structured_evidence_memory(
@@ -2152,8 +2173,12 @@ class StepwiseExplorer:
         # REQ-ARC-WMTE-5836 MECHANISM (b): prefer the navigation-NEAREST eligible node over the
         # shallowest-from-root one. Applied here, AFTER discriminative pruning and the tier gate,
         # so the gradient can only ever choose among nodes the existing machinery already deemed
-        # expandable -- it reorders, it never widens. Falls through to the historical key ordering
-        # whenever the gradient has no opinion (nothing reachable over known-working edges).
+        # expandable -- it reorders the ELIGIBLE SET, it never widens it. Falls through to the
+        # historical key ordering whenever the gradient has no opinion (nothing reachable over
+        # known-working edges). One thing it must ALSO not do, and did not do correctly until the
+        # 2026-07-24 fix: it must not hand back a depth-capped self.cur, because the caller
+        # expands a returned self.cur IN PLACE with no depth test, which would re-enable a branch
+        # the max_depth cap had deliberately abandoned. See _gradient_frontier_target.
         if self.frontier_gradient_enabled and eligible:
             gradient_target = self._gradient_frontier_target([h for h, *_ in eligible])
             if gradient_target is not None:
@@ -2488,7 +2513,17 @@ class StepwiseExplorer:
         lst = node["untested"]
         if self.tier_exhaustion_enabled:
             rng = self._fd_rng if self.tier_uniform_random_enabled else None
-            top_k = self._div_topk if self.tier_uniform_random_enabled else None
+            # top_k=None => UNRESTRICTED uniform draw over every tier-admitted row, which is what
+            # the reference actually does (graph_explorer.choose_edge: `random.choice(untested_
+            # edges)` accumulated over groups 0..active_group, with no top-k of any kind).
+            # This used to read self._div_topk (default 8) -- the knob belonging to the UNRELATED
+            # hybrid-diversity feature. That was wrong twice over: it silently made the arm a
+            # top-8 draw instead of the reference's uniform-over-all draw (on r11l a node carries
+            # ~34 candidates, so the distributions differ materially), and it coupled an A/B arm
+            # to a foreign env var, so an operator tuning CARNOT_ARC_EXPLORE_DIV_TOPK for
+            # diversity would have silently changed the experiment. The frontier-discipline draw
+            # now has its OWN knob, unset by default = faithful to the reference.
+            top_k = self._fd_draw_topk if self.tier_uniform_random_enabled else None
             idx = self.tier_policy.select_index(lst, self._active_tier, rng=rng, top_k=top_k)
             if idx is not None:
                 return lst.pop(idx)
@@ -2553,6 +2588,22 @@ class StepwiseExplorer:
             self._tier_advances += new_tier - self._active_tier
             self._active_tier = new_tier
 
+    def _cur_is_depth_capped(self) -> bool:
+        """True when the depth-first ride has already been REFUSED for the current node.
+
+        ``next_move`` step 1 rides the current node only while ``len(path) < max_depth``; past
+        that cap the intent is explicitly to ABANDON this branch and go expand somewhere else.
+        The frontier chooser must therefore know about the cap, because step 2's ``th == self.cur``
+        branch expands in place with no depth test of its own."""
+
+        node = self.graph.get(self.cur) if self.cur is not None else None
+        if not node:
+            return False
+        try:
+            return len(node.get("path") or []) >= int(self.max_depth)
+        except Exception:
+            return False
+
     def _gradient_frontier_target(self, eligible_hashes: Sequence[str]) -> Optional[str]:
         """MECHANISM (b): the navigation-NEAREST eligible frontier node, or None (no opinion).
 
@@ -2560,19 +2611,55 @@ class StepwiseExplorer:
         with hops-to-nearest-open-node; following the next-hop chain from ``self.cur`` names the
         node the gradient leads to. Returning None (nothing open, or no known-working route from
         here) makes the caller fall back to its existing depth-primary ordering -- the gradient is
-        a PREFERENCE, never a veto, so it can never render a reachable node unreachable."""
+        a PREFERENCE, never a veto, so it can never render a reachable node unreachable.
+
+        DEPTH-CAP INTERACTION (fixed 2026-07-24 after an adversarial review; this is the
+        load-bearing subtlety of the whole mechanism). ``self.cur`` is normally one of the
+        eligible nodes, and a seed of the multi-source BFS sits at distance 0 -- so
+        ``nearest_open_node`` would return ``self.cur`` itself EVERY time the current node still
+        has open work, and the caller's ``th == self.cur`` branch would then expand it in place
+        with no depth check. On deep-graph games that is precisely the state the caller is in
+        when it reaches here: step 1 was skipped BECAUSE ``len(path) >= max_depth``. Measured on
+        r11l before the fix: 140 of 140 gradient picks (and 195 of 195 at budget 800) were
+        exactly this case, so what looked like "the distance gradient fired" was in fact "the
+        max_depth=45 backtrack cap was silently cancelled" -- a completely different
+        intervention, and one that confounded arms C/D beyond interpretation.
+
+        The fix is to refuse ``self.cur`` as a GRADIENT SEED when it is at/over the depth cap.
+        The gradient then does what it says: it chooses among the OTHER open nodes by
+        navigation distance. When cur is under the cap it stays an eligible seed, because in
+        ``best_first`` mode step 1 never runs and expanding cur in place is legitimate there.
+        A cur that is depth-capped and is the ONLY open node yields no seeds -> None -> the
+        caller falls back to its historical ordering, i.e. still never a veto."""
 
         if not self.frontier_gradient_enabled or self.cur is None or not eligible_hashes:
             return None
+        seeds = list(eligible_hashes)
+        cur_at_cap = self._cur_is_depth_capped()
+        if cur_at_cap and self.cur in seeds:
+            seeds = [h for h in seeds if h != self.cur]
+            self._gradient_cur_at_cap_excluded += 1
+        if not seeds:
+            self._gradient_misses += 1
+            return None
         try:
-            field_ = frontier_distance_field(self.radj, eligible_hashes)
+            field_ = frontier_distance_field(self.radj, seeds)
             target = nearest_open_node(field_, self.cur)
         except Exception:
             return None
         if target is None or target not in self.graph:
             self._gradient_misses += 1
             return None
+        # Belt-and-braces: even with cur refused as a seed, never hand the caller a target that
+        # equals a depth-capped cur (a malformed field could in principle walk back to it).
+        if target == self.cur and cur_at_cap:
+            self._gradient_misses += 1
+            return None
         self._gradient_targets += 1
+        if target == self.cur:
+            self._gradient_pick_cur += 1
+        else:
+            self._gradient_pick_other += 1
         return str(target)
 
     def frontier_discipline_diagnostics(self) -> dict[str, Any]:
@@ -2586,8 +2673,20 @@ class StepwiseExplorer:
             "active_tier": int(self._active_tier),
             "tier_advances": int(self._tier_advances),
             "tier_deferral_fallbacks": int(self._tier_deferrals),
+            # None = the reference's unrestricted uniform draw over all tier-admitted rows.
+            "tier_draw_top_k": self._fd_draw_topk,
             "gradient_targets_chosen": int(self._gradient_targets),
             "gradient_misses": int(self._gradient_misses),
+            # Pick-kind split (see _gradient_frontier_target). gradient_pick_other is the ONLY
+            # kind that is the mechanism-under-test; gradient_pick_cur is an in-place expansion
+            # of a node still under the depth cap; gradient_cur_at_cap_excluded counts the
+            # decisions where a depth-capped current node was refused as a seed (which, before
+            # the 2026-07-24 fix, were instead reported as successful gradient picks and
+            # silently cancelled the max_depth backtrack cap).
+            "gradient_pick_other_node": int(self._gradient_pick_other),
+            "gradient_pick_current_node": int(self._gradient_pick_cur),
+            "gradient_cur_at_depth_cap_excluded": int(self._gradient_cur_at_cap_excluded),
+            "max_depth": int(self.max_depth),
             "reverse_edges": int(sum(len(v) for v in self.radj.values())),
         }
 
