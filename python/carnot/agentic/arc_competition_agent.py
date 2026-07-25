@@ -281,7 +281,31 @@ SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
 # game-over transition, i.e. a decision-relevant state variable hiding inside a textbook HUD.
 # So the flip needs its own matched-budget per-seed full-corpus A/B (arm G vs arm B2 in
 # experiment_5836), and the submitted agent stays byte-identical until then.
-SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = False
+#
+# FLIPPED ON 2026-07-25 by operator decision, after exactly that A/B ran.
+# EVIDENCE (results/experiment_5960_hud_mask_repair_full_corpus.json; 300 cells, real condition,
+# matched-seed against arm B2 = the current live config):
+#     arm            seed .724        seed .725              seed .726        verdict
+#     G   detector   +r11l +tn36      +ar25 +r11l +tn36      -lp85            REGRESSES
+#     G2  +guard     +r11l +tn36      +r11l +tn36            -lp85            REGRESSES
+#     G3  +Stage2    +r11l            +r11l                  +r11l            CLEAN
+#   Only the FULLY-SAFE configuration (G3 = detector + Stage 2 + collapse guard) gains on EVERY
+#   seed while losing nothing. That is why the coupling below is an assertion and not advice: the
+#   safety stages are not overhead on top of a working lever, they are what MAKE it a working
+#   lever. G and G2 buy tn36/ar25 by over-masking and pay for it with lp85.
+# DETECTOR FIDELITY: verified against the reference on all 25 public games -- 1151 -> 1564 mask
+#   cells, 0 cells dropped (25/25), 0 extra vs the reference (25/25); r11l's 64 cells are
+#   byte-identical to the oracle diagnostic, while being derived from FRAME STATISTICS ALONE (no
+#   per-game constants, no source reading, hidden-game legal). r11l node inflation 0.9986 -> 0.201.
+# HONEST LIMIT, same as the frontier flip earlier today: this is PUBLIC-corpus evidence via the
+#   offline dev twin. r11l is a game the agent had never won, which is why it is the signal -- but
+#   public games score ~0 on the hidden set, so this is a capability argument, NOT demonstrated
+#   hidden-game transfer. The gate was full-corpus per-seed regression; r11l was the pre-registered
+#   signal, never the gate.
+# NOT changed by this flip: SUBMITTED_AUTO_HUD_MASK_ENABLED (already True, pre-existing). The
+#   open question about that flag's own over-masking is recorded in ops/known-issues.md as a
+#   HYPOTHESIS WITH A NAMED CONFOUND -- do not cite it as proven.
+SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = True
 SUBMITTED_EDGE_BAR_HUD_MASK_MODE = "orientation_complete_edge_bar_geometry_single_frame"
 # The runtime HARD REFUSAL that makes the above safe to consider at all. A
 # `(masked_node, concrete_action)` key observed to produce TWO DIFFERENT masked successors
@@ -292,7 +316,7 @@ SUBMITTED_EDGE_BAR_HUD_MASK_MODE = "orientation_complete_edge_bar_geometry_singl
 # misattributed to the mask (measured: sc25's masked violations are matched 1:1 by
 # unmasked-control violations, so none of them is the mask's fault). Default OFF so it is
 # flipped together with the detector it guards, never silently ahead of it.
-SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = False
+SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = True
 SUBMITTED_HUD_MASK_COLLAPSE_GUARD_MODE = "per_node_successor_branching_proof_with_unmasked_control"
 # STAGE-2 BEHAVIOURAL CONFIRMATION BEFORE THE MASK IS EVER APPLIED (added 2026-07-25 after the
 # adversarial review found the cardinal sin present on ar25). Stage 1 is single-frame GEOMETRY,
@@ -305,7 +329,7 @@ SUBMITTED_HUD_MASK_COLLAPSE_GUARD_MODE = "per_node_successor_branching_proof_wit
 # ACTIVATION until that evidence exists: identity is UNMASKED (exactly today's behaviour) until
 # Stage 2 admits, and a refused candidate is discarded permanently. See
 # `carnot.agentic.arc_hud_bar_detector.DeferredMaskActivation`.
-SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED = False
+SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED = True
 SUBMITTED_HUD_MASK_STAGE2_CONFIRM_MODE = "region_behavioural_evidence_before_activation"
 
 

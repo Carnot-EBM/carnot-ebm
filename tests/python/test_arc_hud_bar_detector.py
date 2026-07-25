@@ -975,18 +975,32 @@ def test_mask_cell_digest_treats_none_and_empty_masks_as_unresolved() -> None:
 def test_defaults_are_off_and_published_in_the_submitted_config() -> None:
     """SCENARIO-ARC-WMTE-5960-DEFAULT-OFF-PARITY (part 1)."""
 
-    assert SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED is False
-    assert SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED is False
-    assert SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED is False
-    assert SUBMITTED_AGENT_CONFIG["edge_bar_hud_mask_enabled"] is False
-    assert SUBMITTED_AGENT_CONFIG["hud_mask_collapse_guard_enabled"] is False
-    assert SUBMITTED_AGENT_CONFIG["hud_mask_stage2_confirm_enabled"] is False
+    # FLIPPED ON 2026-07-25 (operator decision) after the full-corpus per-seed A/B: arm G3
+    # (detector + Stage 2 + collapse guard) gains r11l on EVERY seed and loses nothing, while
+    # detector-alone (G) and detector+guard (G2) both REGRESS lp85. See the flag block in
+    # arc_competition_agent.py. These assertions pinned the shipped default and existed to force
+    # a conscious update before any flip -- which is what happened.
+    assert SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED is True
+    assert SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED is True
+    assert SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED is True
+    assert SUBMITTED_AGENT_CONFIG["edge_bar_hud_mask_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["hud_mask_collapse_guard_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["hud_mask_stage2_confirm_enabled"] is True
 
     explorer = StepwiseExplorer()
-    assert explorer.edge_bar_hud_mask_enabled is False
-    assert explorer.hud_mask_collapse_guard_enabled is False
-    assert explorer.hud_mask_stage2_confirm_enabled is False
-    assert explorer._hud_collapse_guard is None
+    assert explorer.edge_bar_hud_mask_enabled is True
+    assert explorer.hud_mask_collapse_guard_enabled is True
+    assert explorer.hud_mask_stage2_confirm_enabled is True
+
+    # the OFF behaviour is still a real, load-bearing property (it is what arm B2 measures against),
+    # so it is now requested EXPLICITLY rather than inherited from the module defaults
+    off = StepwiseExplorer(
+        edge_bar_hud_mask=False, hud_mask_collapse_guard=False, hud_mask_stage2_confirm=False
+    )
+    assert off.edge_bar_hud_mask_enabled is False
+    assert off.hud_mask_collapse_guard_enabled is False
+    assert off.hud_mask_stage2_confirm_enabled is False
+    assert off._hud_collapse_guard is None
 
 
 def test_default_off_leaves_node_identity_byte_identical() -> None:
@@ -1000,7 +1014,7 @@ def test_default_off_leaves_node_identity_byte_identical() -> None:
     frame_a = _FakeFrame(_r11l_like_grid(filled=0))
     frame_b = _FakeFrame(_r11l_like_grid(filled=7))
 
-    control = StepwiseExplorer()
+    control = StepwiseExplorer(edge_bar_hud_mask=False, hud_mask_stage2_confirm=False)
     control._ingest(frame_a)
     control._ingest(frame_b)
     assert control.hud_mask is None
@@ -1046,13 +1060,15 @@ def test_hud_mask_source_records_which_detector_resolved_the_mask() -> None:
     assert deferred._hud_mask_source == "edge_bar_detector_req5960_stage2_pending"
     assert deferred.hud_mask is None
 
-    control = StepwiseExplorer()
+    # the PRE-FLIP control must now be requested explicitly (all three flags ship True since
+    # 2026-07-25); with Stage 2 left armed this would report stage2_pending, not "no bar found"
+    control = StepwiseExplorer(edge_bar_hud_mask=False, hud_mask_stage2_confirm=False)
     control._ingest(_FakeFrame(_r11l_like_grid()))
     assert control._hud_mask_source == "unresolved_no_bar_detected"
 
     horizontal = np.full((32, 32), 3, dtype=int)
     horizontal[0, :] = 8
-    shipped = StepwiseExplorer()
+    shipped = StepwiseExplorer(edge_bar_hud_mask=False, hud_mask_stage2_confirm=False)
     shipped._ingest(_FakeFrame(horizontal))
     assert shipped._hud_mask_source == "status_bar_classifier_req5583"
 
@@ -1326,7 +1342,7 @@ def test_stage2_verdict_is_reported_in_the_diagnostics() -> None:
     assert diag["stage2"]["stage2_verdict"] == "pending"
     assert diag["hud_mask_resolved"] is False
 
-    off = StepwiseExplorer()
+    off = StepwiseExplorer(edge_bar_hud_mask=False, hud_mask_stage2_confirm=False)
     assert off.hud_mask_diagnostics()["stage2"] is None
 
 
@@ -1356,16 +1372,25 @@ def test_the_detector_cannot_be_enabled_without_both_safety_stages() -> None:
     ]
 
     # And the SUBMITTED-flag combination that would ship the detector bare is refused at import.
-    assert _assert_hud_flag_coupling() is None  # the current (all-off) configuration is legal
+    assert _assert_hud_flag_coupling() is None  # the SHIPPED (all-three-on) configuration is legal
     import carnot.agentic.arc_competition_agent as agent_module
 
-    original = agent_module.SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED
+    # UPDATED 2026-07-25: all three flags now ship True, so setting the DETECTOR true is the legal
+    # shipped configuration and raises nothing. The property under test is unchanged -- the detector
+    # must never ship without BOTH safety stages -- so provoke it by turning a SAFETY stage off.
+    original_guard = agent_module.SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED
+    original_stage2 = agent_module.SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED
     try:
-        agent_module.SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = True
+        agent_module.SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = False
+        with pytest.raises(AssertionError, match="requires BOTH"):
+            agent_module._assert_hud_flag_coupling()
+        agent_module.SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = True
+        agent_module.SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED = False
         with pytest.raises(AssertionError, match="requires BOTH"):
             agent_module._assert_hud_flag_coupling()
     finally:
-        agent_module.SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED = original
+        agent_module.SUBMITTED_HUD_MASK_COLLAPSE_GUARD_ENABLED = original_guard
+        agent_module.SUBMITTED_HUD_MASK_STAGE2_CONFIRM_ENABLED = original_stage2
 
 
 def test_guard_attributes_a_branching_to_the_repair_added_region() -> None:
