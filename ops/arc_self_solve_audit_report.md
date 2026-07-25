@@ -16,17 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (62 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0/2 qualify — 1 `OUTER_LOOP_RE`, 1 `DUPLICATE`. Reachability and successful replay do not prove autonomous discovery.**
+**TL;DR: REJECT — 0 self-discovery advances. The sole artifact is OUTER_LOOP_RE and also duplicates an already-recorded level.**
 
-- `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
-  - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly read `lf52.py`, hand-ported an L9-specific model, ran constrained offline best-first search, then replayed the fixed route live. It admits `development_proxy` and `new_levels_banked: 0`.
-  - **Recommended action:** Retain only as route/API compatibility engineering. Revoke any autonomous-agent capability credit until a clean live-entrypoint run independently discovers the route.
+### `results/arc_loop_solve_tu93.json`
 
-- `results/arc_loop_solve_tu93.json`
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches only L4 with `hand_verifier_cold_start_no_spatial_checkpoint`, in `standing_arc_loop_offline_no_quota` mode, and declares `development_proxy`. The registry already records `tu93` fully cleared through L9.
-  - **Recommended action:** Exclude from solve-delta and self-discovery metrics; keep only as a regression fixture.
+- **Verdict:** `OUTER_LOOP_RE` *(additionally duplicate)*
+- **Evidence:** The artifact declares `development_proxy`, `standing_arc_loop_offline_no_quota`, an offline reproduction gate, and `hand_verifier_cold_start_no_spatial_checkpoint`. The reachable entrypoint explicitly says this path uses a hand-registered per-game adapter and is **not** live-agent self-discovery. The `tu93` adapter hard-codes the player/goal colors, Manhattan verifier, depth caps, and game-specific reset behavior. Registry already records `tu93` level 4, so this adds no capability.
+- **Recommended action:** Do not count or promote it as an ARC solve. Retain only as an offline regression fixture and mark it `OUTER_LOOP_RE`/duplicate. A valid replacement must show the live agent discovering the mechanics and advancing beyond registered L4 from runtime observations, without a `tu93` adapter, hand verifier, or offline search.
 
-**Pattern watch:** The project is conflating executability with discovery. Offline reproduction gates, live replay, generic-operator metadata, and live-path reachability cannot launder source-derived models, hand verifiers, or precomputed routes into autonomous hidden-game solving.
+**Pattern watch:** Severe semantic laundering risk: placing a hand-built per-game offline solver inside a reachable entrypoint proves wiring, not autonomy. The long “generic operators” list does not change the actual causal path. Reachability checks must not allow `development_proxy` artifacts to masquerade as live self-discovery.
 

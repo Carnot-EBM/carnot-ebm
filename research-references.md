@@ -31523,3 +31523,101 @@ sealed V524 sweep or newly relevant to the terminal `.524` evidence.
   sampler and make no unchanged board probe or speedup claim.
 
 <!-- V525-PLANNER-REFRESH-20260724-END -->
+
+## V526 Planner Refresh - 20260725
+
+Incremental planning sweep after the terminal `.525` conductor run and after the
+`V525-PLANNER-REFRESH-20260724-END` boundary. The primary pass queried arXiv
+for 2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising and thermodynamic sampling, hallucination detection, KANs,
+constrained generation, continual learning, and verification-aware memory. The
+secondary pass rechecked OpenReview, Hugging Face Papers, direct Semantic
+Scholar citation APIs for EBT (`2507.02092`) and ARM-EBM (`2512.15605`),
+GitHub Trending and targeted repositories, Extropic's writing index, and
+Logical Intelligence's Kona/Aleph pages. This block promotes only sources that
+were absent from the sealed V525 sweep or became newly actionable because
+Exp5909 and Exp5910 closed the prompt-only synthesis and one-shot repair paths.
+
+### New actionable delta
+
+- **Cross-Dialect Generalization Without Retraining: Benchmarks and Evaluation
+  of Schema-Derived Constrained Decoding for MLIR** - arXiv:2607.18254,
+  https://arxiv.org/abs/2607.18254; submitted 2026-05-14 and indexed in the
+  July feed. The method derives three constraints mechanically from a dialect
+  schema: a context-free grammar over operation signatures, type-domain splits
+  from a type lattice, and an SSA-scope validator with bounded rejection
+  sampling. Its positive cells are dominated by structural constraints; cells
+  whose semantics depend on attribute values are explicit non-wins. Carnot
+  hook: replace Exp5909's prompt-only ConstraintIR serialization with a
+  schema-derived decode-time support set and keep three outcomes separate:
+  grammar-valid, type/scope-valid, and exact-semantic-equivalent. Use held
+  families and attribute-value adversaries, preserve the unconstrained
+  transcript and token budget as matched controls, and let Python/Z3 replay
+  remain the only acceptance authority. This is a new decoding mechanism, not
+  a retry of semantic-decomposition prompting or exact-diagnostic reprompting.
+
+### Guarded implementation and hardware finding
+
+- **SonicSampler: Unified Tile-Aware Kernels for LLM Sampling and Speculative
+  Verification** - arXiv:2607.20475,
+  https://arxiv.org/abs/2607.20475; submitted 2026-05-24 and indexed in the
+  July feed. SonicSampler fuses grammar masks, sampling transforms, token
+  selection, and speculative verification into CUDA-Graph-compatible Triton
+  kernels and reports large kernel-level speedups on heterogeneous workloads.
+  Carnot impact: future throughput accounting for constrained generation should
+  measure the complete mask/sampling/verification path rather than grammar-mask
+  latency alone. The published implementation surface is not Carnot's public
+  llama.cpp GGUF CUDA runtime, so `.526` must not claim compatibility, import a
+  new serving stack, or convert these paper speedups into local hardware
+  evidence. Any later port needs matched output-equivalence and end-to-end
+  latency receipts on Carnot's actual runtime.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the direct APIs returned the same visible EBT and
+  ARM-EBM citation families as the V525 sweep. EBT still leads with Memoir,
+  Solver-Hard, Fixed-Point Reasoners, LoopUS, causal-energy parameterization,
+  and energy-workload studies. ARM-EBM still exposes Distributional EBMs,
+  safe distillation, LoopUS, ontology/graph-energy work, and false-first-step
+  planning. No new citation supplied a stronger `.526` mechanism, and no
+  unstable citation-count claim is made.
+- **OpenReview / Hugging Face Papers:** searches repeated Energy-Based
+  Constraint Networks, Distributional EBMs, LLM-as-a-Verifier,
+  pseudo-formal/block verification, delayed constraint application, and
+  AgentLTL. These reinforce exact external authority and the
+  reason-then-constrain control, but they do not supersede the schema-derived
+  decode-time experiment above or reopen the retired external
+  generated-text/logprob scorer family.
+- **GitHub:** monthly Trending contained no EBM, CSP, KAN, or verifier
+  dependency that displaces Carnot's exact backends or live E3 path. Targeted
+  search surfaced `youtube/static-constraint-decoding`, an accelerator-native
+  implementation for a fixed finite set of valid token sequences. That shape
+  overlaps Carnot's retired finite-ID answer-transport scope, so it is recorded
+  as ecosystem context and is not imported or promoted.
+- **Extropic:** the official writing index still ends with the October 2025
+  X0/XTR-0/TSU material. Carnot still has no authenticated local TSU route, so
+  no TSU execution, convergence, power, energy, or speedup task is eligible.
+- **Logical Intelligence:** the June 2026 Aleph material continues to separate
+  candidate construction from deterministic Lean checking and describes Kona
+  only as an alpha EBRM component. Public Kona weights, a documented local
+  inference API, and a reproducible comparator remain unavailable; the
+  architecture is context, not experimental evidence.
+
+### V526 planning impact
+
+- Build a mechanically derived ConstraintIR decode contract with distinct
+  grammar, type/scope, and exact-semantic gates before spending another
+  all-model inference run.
+- Compare schema-constrained generation with unconstrained, prompt-structured,
+  and reason-then-constrain controls on all three mandated GGUF families.
+- Rebuild continuous self-learning on a new transactional event stream that
+  does not require the retired Exp5895 exact-slot requalification, and preserve
+  immutable weights, poison quarantine, rollback, and chronological evaluation.
+- Treat ARC click-target work as a powered qualification first: its stage-1
+  progress-conditioned slice is chance-level and under the required positive
+  floor even though coordinate blindness is real.
+- Keep external sampling hardware and fused CUDA kernels as ABI/throughput
+  context only; authenticated local board receipts and exact output equivalence
+  remain prerequisites for any execution claim.
+
+<!-- V526-PLANNER-REFRESH-20260725-END -->
