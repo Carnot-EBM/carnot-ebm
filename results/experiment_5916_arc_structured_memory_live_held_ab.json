@@ -1,0 +1,1117 @@
+{
+  "capability_scope_expiry_and_environment_receipts": {
+    "checked_before_model_load": true,
+    "exp5915_sha256": "sha256:feec853a2898a1ff8ec67994f4e3e1699dda580360ed3386f191fc1d9a9ba2d0",
+    "issue_expiry": {
+      "expires_at": "2026-07-25T12:05:00Z",
+      "expiry_valid_under_replay_clock": true,
+      "issued_at": "2026-07-25T12:00:00Z"
+    },
+    "lease_scope": {
+      "adapter_disabled_required": true,
+      "allowed_episode_class": "bounded_non_scored_synthetic",
+      "environment": "synthetic_non_scored_arc_harness",
+      "runner": "carnot.agentic.arc_competition_agent:E3AgentPolicy"
+    },
+    "ok": true,
+    "teardown_ready": true
+  },
+  "duration_s": 45.068,
+  "embedded_tokenizer_loader_cuda_gpu_utilization_and_vram_receipts": {
+    "dual_rtx3090_health": {
+      "gpus": [
+        {
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 567,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "healthy_rtx3090_count": 2,
+      "nvidia_smi_ok": true,
+      "ok": true,
+      "reason": null
+    },
+    "gguf_tokenizers": {
+      "method": "gguf_tokenizer_loadable",
+      "ok": true,
+      "reason": null,
+      "tokenizers": [
+        {
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+          "embedded_tokenizer_loadable": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+          "embedded_tokenizer_loadable": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "used_hf_autotokenizer": false
+    },
+    "live_gpu_receipts": [],
+    "llama_cpp_cuda": {
+      "llama_cpp_importable": true,
+      "ok": true,
+      "public_cuda_build": true,
+      "reason": null,
+      "supports_gpu_offload": true,
+      "version": "0.3.33"
+    },
+    "model_hashes": {
+      "hash_algorithm": "sha256",
+      "models": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B",
+          "present": true,
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it",
+          "present": true,
+          "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "name": "Gemma4-31B-it",
+          "present": true,
+          "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+        }
+      ],
+      "ok": true,
+      "reason": null
+    },
+    "model_resolution": {
+      "ok": true,
+      "optional_gemma_31b_cached": true,
+      "reason": null,
+      "required_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "resolved_count": 2,
+      "resolved_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "resolved_model_specs": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        },
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "included": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "name": "Gemma4-31B-it",
+          "preferred_quant": "Q4_K_M",
+          "required": false,
+          "role": "dense_optional"
+        }
+      ],
+      "resolver": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))"
+    },
+    "real_offload_utilization": {
+      "checked_before_inference": true,
+      "gpu_snapshot": [
+        {
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 567,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "ok": true,
+      "reason": null,
+      "requires_live_llama_cpp_cuda_receipts": true
+    },
+    "resources": {
+      "disk": {
+        "free": 1223030726656,
+        "total": 3953289023488,
+        "used": 2730258296832
+      },
+      "disk_ok": true,
+      "meminfo": {
+        "Active": "39193348 kB",
+        "Active(anon)": "1323256 kB",
+        "Active(file)": "37870092 kB",
+        "AnonHugePages": "694272 kB",
+        "AnonPages": "1500504 kB",
+        "Balloon": "0 kB",
+        "Bounce": "0 kB",
+        "Buffers": "60 kB",
+        "Cached": "60768320 kB",
+        "CmaFree": "0 kB",
+        "CmaTotal": "0 kB",
+        "CommitLimit": "216573600 kB",
+        "Committed_AS": "9728804 kB",
+        "DirectMap1G": "10485760 kB",
+        "DirectMap2M": "108605440 kB",
+        "DirectMap4k": "15431412 kB",
+        "Dirty": "0 kB",
+        "FileHugePages": "1325056 kB",
+        "FilePmdMapped": "479232 kB",
+        "GPUActive": "32544 kB",
+        "GPUReclaim": "2080 kB",
+        "HardwareCorrupted": "0 kB",
+        "HugePages_Free": "0",
+        "HugePages_Rsvd": "0",
+        "HugePages_Surp": "0",
+        "HugePages_Total": "0",
+        "Hugepagesize": "2048 kB",
+        "Hugetlb": "0 kB",
+        "Inactive": "22844080 kB",
+        "Inactive(anon)": "358344 kB",
+        "Inactive(file)": "22485736 kB",
+        "KReclaimable": "1333368 kB",
+        "KernelStack": "13840 kB",
+        "Mapped": "1270056 kB",
+        "MemAvailable": "120214068 kB",
+        "MemFree": "59963372 kB",
+        "MemTotal": "131157332 kB",
+        "Mlocked": "15400 kB",
+        "NFS_Unstable": "0 kB",
+        "PageTables": "24740 kB",
+        "Percpu": "21120 kB",
+        "SReclaimable": "1333368 kB",
+        "SUnreclaim": "456124 kB",
+        "SecPageTables": "9544 kB",
+        "Shmem": "179732 kB",
+        "ShmemHugePages": "0 kB",
+        "ShmemPmdMapped": "0 kB",
+        "Slab": "1789492 kB",
+        "SwapCached": "116 kB",
+        "SwapFree": "149888872 kB",
+        "SwapTotal": "150994936 kB",
+        "Unaccepted": "0 kB",
+        "Unevictable": "236524 kB",
+        "VmallocChunk": "0 kB",
+        "VmallocTotal": "34359738367 kB",
+        "VmallocUsed": "314520 kB",
+        "Writeback": "0 kB",
+        "WritebackTmp": "0 kB",
+        "Zswap": "0 kB",
+        "Zswapped": "0 kB"
+      },
+      "model_bytes": 57405800192,
+      "ok": true,
+      "ram_ok": true,
+      "reason": null,
+      "vram_ok": true
+    },
+    "used_hf_autotokenizer": false
+  },
+  "evidence_utilization_receipts": {
+    "bytes_read_by_arm": {
+      "no_memory": 0,
+      "raw_tape": 0,
+      "structured_index": 0
+    },
+    "evidence_utilization_by_arm": {
+      "no_memory": 0,
+      "raw_tape": 0,
+      "structured_index": 0
+    },
+    "query_count_by_arm": {
+      "no_memory": 0,
+      "raw_tape": 0,
+      "structured_index": 0
+    },
+    "structured_uses_live_agent_owned_evidence": false
+  },
+  "experiment": "experiment_5916_arc_structured_memory_live_held_ab",
+  "field_provenance": {
+    "capability_scope_expiry_and_environment_receipts": {
+      "principle": "Exp5916 required artifact field `capability_scope_expiry_and_environment_receipts` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "duration_s": {
+      "principle": "Exp5916 required artifact field `duration_s` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "embedded_tokenizer_loader_cuda_gpu_utilization_and_vram_receipts": {
+      "principle": "Exp5916 required artifact field `embedded_tokenizer_loader_cuda_gpu_utilization_and_vram_receipts` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "evidence_utilization_receipts": {
+      "principle": "Exp5916 required artifact field `evidence_utilization_receipts` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "field_provenance": {
+      "principle": "Exp5916 required artifact field `field_provenance` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "held_accuracy_progress_efficiency_and_safety_metrics": {
+      "principle": "Exp5916 required artifact field `held_accuracy_progress_efficiency_and_safety_metrics` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "honest_verdict": {
+      "principle": "use complete_positive:, complete_null:, unsafe:, blocked_precondition:, or blocked:.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    },
+    "identical_event_byte_and_budget_parity": {
+      "principle": "memory access structure is the only treatment.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    },
+    "incidental_completion_receipts": {
+      "principle": "Exp5916 required artifact field `incidental_completion_receipts` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "inference_substrate": {
+      "principle": "use live_llm_inference.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    },
+    "model_file_hashes": {
+      "principle": "Exp5916 required artifact field `model_file_hashes` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "model_specs": {
+      "principle": "Exp5916 required artifact field `model_specs` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "no_memory_raw_and_structured_live_metrics": {
+      "principle": "Exp5916 required artifact field `no_memory_raw_and_structured_live_metrics` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "per_model_game_episode_lower_bounds": {
+      "principle": "Exp5916 required artifact field `per_model_game_episode_lower_bounds` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "preconditions_checked": {
+      "principle": "Exp5916 required artifact field `preconditions_checked` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "preregistered_held_episode_group_and_arm_design": {
+      "principle": "Exp5916 required artifact field `preregistered_held_episode_group_and_arm_design` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "protected_files_unchanged": {
+      "principle": "Exp5916 required artifact field `protected_files_unchanged` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "public_level_solve_claimed": {
+      "principle": "must be bare false because the experiment targets held generalization, not a cleared level.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    },
+    "registry_precheck": {
+      "principle": "Exp5916 required artifact field `registry_precheck` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "registry_unchanged": {
+      "principle": "Exp5916 required artifact field `registry_unchanged` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "reproducibility_checksum": {
+      "principle": "Exp5916 required artifact field `reproducibility_checksum` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "shuffled_and_deletion_confirmatory_controls": {
+      "principle": "Exp5916 required artifact field `shuffled_and_deletion_confirmatory_controls` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "source_bfs_adapter_prior_game_and_hidden_state_access_count": {
+      "principle": "must be bare zero.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    },
+    "state_isolation_and_teardown_receipts": {
+      "principle": "Exp5916 required artifact field `state_isolation_and_teardown_receipts` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "status": {
+      "principle": "Exp5916 required artifact field `status` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "structured_memory_live_ready_score": {
+      "principle": "emit bare 1.0 only for positive preregistered structured-over-raw and structured-over-none lower bounds with no safety, budget, capability, or authority regression.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    },
+    "submitted_e3_and_adapter_disabled_receipts": {
+      "principle": "Exp5916 required artifact field `submitted_e3_and_adapter_disabled_receipts` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "test_commands": {
+      "principle": "Exp5916 required artifact field `test_commands` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "test_exit_codes": {
+      "principle": "Exp5916 required artifact field `test_exit_codes` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "upstream_capability_gate_and_hashes": {
+      "principle": "Exp5916 required artifact field `upstream_capability_gate_and_hashes` is emitted by the held live builder.",
+      "satisfied_by": "Exp5916 precondition-gated artifact builder"
+    },
+    "verifier_is_oracle": {
+      "principle": "false; policy memory consumes only visible agent-owned events.",
+      "satisfied_by": "REQ-ARC-LRHL-5916 principle-annotated artifact contract"
+    }
+  },
+  "held_accuracy_progress_efficiency_and_safety_metrics": {
+    "budget_regression": false,
+    "held_objective_accuracy_by_arm": {
+      "no_memory": 0.0,
+      "raw_tape": 0.0,
+      "structured_index": 0.0
+    },
+    "invalid_actions_by_arm": {
+      "no_memory": 0,
+      "raw_tape": 0,
+      "structured_index": 0
+    },
+    "noop_actions_by_arm": {
+      "no_memory": 0,
+      "raw_tape": 0,
+      "structured_index": 0
+    },
+    "repeated_actions_by_arm": {
+      "no_memory": 0,
+      "raw_tape": 0,
+      "structured_index": 0
+    },
+    "safety_regression": false,
+    "structured_actions_delta_vs_none": 0,
+    "structured_actions_delta_vs_raw": 0,
+    "structured_over_none_accuracy_delta": 0.0,
+    "structured_over_none_progress_delta": 0.0,
+    "structured_over_raw_accuracy_delta": 0.0,
+    "structured_over_raw_progress_delta": 0.0
+  },
+  "honest_verdict": "blocked_precondition: live_runner_execution_binding",
+  "identical_event_byte_and_budget_parity": {
+    "all_raw_structured_event_bytes_identical": true,
+    "budget_violations": [],
+    "budgets_identical": true,
+    "decoding_identical": true,
+    "not_exercised_due_to_precondition_block": true,
+    "paired_raw_structured_cell_count": 0,
+    "principle": "memory access structure is the only treatment.",
+    "prompts_identical": true,
+    "violations": []
+  },
+  "incidental_completion_receipts": {
+    "incidental_completion_rows": [],
+    "new_completion_headline_allowed": false,
+    "note": "Incidental held completions are telemetry only and receive no registry credit.",
+    "public_level_solve_claimed": false,
+    "registry_credit_requested": false,
+    "registry_updated": false
+  },
+  "inference_substrate": "live_llm_inference",
+  "model_file_hashes": {
+    "hash_algorithm": "sha256",
+    "models": [
+      {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B",
+        "present": true,
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "present": true,
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+      },
+      {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "name": "Gemma4-31B-it",
+        "present": true,
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      }
+    ],
+    "ok": true,
+    "reason": null
+  },
+  "model_specs": {
+    "never_uses_hf_autotokenizer_for_gguf": true,
+    "optional_hf_ids": [
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "preregistered_model_specs": [
+      {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "name": "Qwen3.6-35B-A3B",
+        "preferred_quant": "Q4_K_M",
+        "required": true,
+        "role": "moe"
+      },
+      {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "name": "Gemma4-26B-A4B-it",
+        "preferred_quant": "Q4_K_M",
+        "required": true,
+        "role": "moe"
+      },
+      {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "name": "Gemma4-31B-it",
+        "preferred_quant": "Q4_K_M",
+        "required": false,
+        "role": "dense_optional"
+      }
+    ],
+    "required_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "resolved_model_specs": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      },
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "included": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "name": "Gemma4-31B-it",
+        "preferred_quant": "Q4_K_M",
+        "required": false,
+        "role": "dense_optional"
+      }
+    ],
+    "resolved_via_cached_sota_pair": true,
+    "third_model_included_only_if_cached_and_budgeted": true
+  },
+  "no_memory_raw_and_structured_live_metrics": {
+    "live_row_count": 0,
+    "no_memory": {
+      "actions": 0,
+      "actions_per_correct_episode": null,
+      "bytes_read": 0,
+      "episode_count": 0,
+      "evidence_utilization_count": 0,
+      "held_episode_accuracy": 0.0,
+      "held_episode_correct_count": 0,
+      "held_objective_accuracy": 0.0,
+      "held_objective_correct_count": 0,
+      "invalid_actions": 0,
+      "latency_s": 0,
+      "levels_completed_incidental": 0,
+      "mean_environment_score": 0.0,
+      "mean_progress": 0.0,
+      "noop_actions": 0,
+      "query_count": 0,
+      "repeated_actions": 0,
+      "tokens": 0
+    },
+    "raw_tape": {
+      "actions": 0,
+      "actions_per_correct_episode": null,
+      "bytes_read": 0,
+      "episode_count": 0,
+      "evidence_utilization_count": 0,
+      "held_episode_accuracy": 0.0,
+      "held_episode_correct_count": 0,
+      "held_objective_accuracy": 0.0,
+      "held_objective_correct_count": 0,
+      "invalid_actions": 0,
+      "latency_s": 0,
+      "levels_completed_incidental": 0,
+      "mean_environment_score": 0.0,
+      "mean_progress": 0.0,
+      "noop_actions": 0,
+      "query_count": 0,
+      "repeated_actions": 0,
+      "tokens": 0
+    },
+    "structured_index": {
+      "actions": 0,
+      "actions_per_correct_episode": null,
+      "bytes_read": 0,
+      "episode_count": 0,
+      "evidence_utilization_count": 0,
+      "held_episode_accuracy": 0.0,
+      "held_episode_correct_count": 0,
+      "held_objective_accuracy": 0.0,
+      "held_objective_correct_count": 0,
+      "invalid_actions": 0,
+      "latency_s": 0,
+      "levels_completed_incidental": 0,
+      "mean_environment_score": 0.0,
+      "mean_progress": 0.0,
+      "noop_actions": 0,
+      "query_count": 0,
+      "repeated_actions": 0,
+      "tokens": 0
+    }
+  },
+  "per_model_game_episode_lower_bounds": {
+    "group_count": 0,
+    "groups": [],
+    "interval_method": "minimum paired held model/game/episode lower bound",
+    "method": "preregistered held episode group minimum lower bound",
+    "structured_actions_saved_vs_raw_lower_bound": 0.0,
+    "structured_over_none_accuracy_lower_bound": 0.0,
+    "structured_over_raw_accuracy_lower_bound": 0.0
+  },
+  "preconditions_checked": {
+    "dual_rtx3090_health": {
+      "gpus": [
+        {
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 567,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "healthy_rtx3090_count": 2,
+      "nvidia_smi_ok": true,
+      "ok": true,
+      "reason": null
+    },
+    "gguf_tokenizers": {
+      "method": "gguf_tokenizer_loadable",
+      "ok": true,
+      "reason": null,
+      "tokenizers": [
+        {
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+          "embedded_tokenizer_loadable": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+          "embedded_tokenizer_loadable": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "used_hf_autotokenizer": false
+    },
+    "live_runner_execution_binding": {
+      "allow_live_env": false,
+      "checked_after_exp5915_capability_replay": true,
+      "conductor_live_runner_bound": false,
+      "ok": false,
+      "reason": "Exp5916 live held runner is not bound by the conductor"
+    },
+    "llama_cpp_cuda": {
+      "llama_cpp_importable": true,
+      "ok": true,
+      "public_cuda_build": true,
+      "reason": null,
+      "supports_gpu_offload": true,
+      "version": "0.3.33"
+    },
+    "model_hashes": {
+      "hash_algorithm": "sha256",
+      "models": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B",
+          "present": true,
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it",
+          "present": true,
+          "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "name": "Gemma4-31B-it",
+          "present": true,
+          "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+        }
+      ],
+      "ok": true,
+      "reason": null
+    },
+    "model_resolution": {
+      "ok": true,
+      "optional_gemma_31b_cached": true,
+      "reason": null,
+      "required_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "resolved_count": 2,
+      "resolved_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "resolved_model_specs": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        },
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "included": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "name": "Gemma4-31B-it",
+          "preferred_quant": "Q4_K_M",
+          "required": false,
+          "role": "dense_optional"
+        }
+      ],
+      "resolver": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))"
+    },
+    "ok": false,
+    "output_path": {
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true,
+      "path": "results/experiment_5916_arc_structured_memory_live_held_ab.json",
+      "reason": null
+    },
+    "protected_workloads": {
+      "nvidia_smi_compute_apps_ok": true,
+      "ok": true,
+      "protected_training_processes": [],
+      "reason": null
+    },
+    "real_offload_utilization": {
+      "checked_before_inference": true,
+      "gpu_snapshot": [
+        {
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 567,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "ok": true,
+      "reason": null,
+      "requires_live_llama_cpp_cuda_receipts": true
+    },
+    "registry_precheck": {
+      "all_public_games_cleared": true,
+      "checked_before_model_load": true,
+      "full_game_clear_count": 25,
+      "ok": true,
+      "public_games_count": 25,
+      "public_level_target_selected": false,
+      "reason": null,
+      "registry_hash_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+      "registry_present": true,
+      "registry_update_allowed": false,
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    "resources": {
+      "disk": {
+        "free": 1223030726656,
+        "total": 3953289023488,
+        "used": 2730258296832
+      },
+      "disk_ok": true,
+      "meminfo": {
+        "Active": "39193348 kB",
+        "Active(anon)": "1323256 kB",
+        "Active(file)": "37870092 kB",
+        "AnonHugePages": "694272 kB",
+        "AnonPages": "1500504 kB",
+        "Balloon": "0 kB",
+        "Bounce": "0 kB",
+        "Buffers": "60 kB",
+        "Cached": "60768320 kB",
+        "CmaFree": "0 kB",
+        "CmaTotal": "0 kB",
+        "CommitLimit": "216573600 kB",
+        "Committed_AS": "9728804 kB",
+        "DirectMap1G": "10485760 kB",
+        "DirectMap2M": "108605440 kB",
+        "DirectMap4k": "15431412 kB",
+        "Dirty": "0 kB",
+        "FileHugePages": "1325056 kB",
+        "FilePmdMapped": "479232 kB",
+        "GPUActive": "32544 kB",
+        "GPUReclaim": "2080 kB",
+        "HardwareCorrupted": "0 kB",
+        "HugePages_Free": "0",
+        "HugePages_Rsvd": "0",
+        "HugePages_Surp": "0",
+        "HugePages_Total": "0",
+        "Hugepagesize": "2048 kB",
+        "Hugetlb": "0 kB",
+        "Inactive": "22844080 kB",
+        "Inactive(anon)": "358344 kB",
+        "Inactive(file)": "22485736 kB",
+        "KReclaimable": "1333368 kB",
+        "KernelStack": "13840 kB",
+        "Mapped": "1270056 kB",
+        "MemAvailable": "120214068 kB",
+        "MemFree": "59963372 kB",
+        "MemTotal": "131157332 kB",
+        "Mlocked": "15400 kB",
+        "NFS_Unstable": "0 kB",
+        "PageTables": "24740 kB",
+        "Percpu": "21120 kB",
+        "SReclaimable": "1333368 kB",
+        "SUnreclaim": "456124 kB",
+        "SecPageTables": "9544 kB",
+        "Shmem": "179732 kB",
+        "ShmemHugePages": "0 kB",
+        "ShmemPmdMapped": "0 kB",
+        "Slab": "1789492 kB",
+        "SwapCached": "116 kB",
+        "SwapFree": "149888872 kB",
+        "SwapTotal": "150994936 kB",
+        "Unaccepted": "0 kB",
+        "Unevictable": "236524 kB",
+        "VmallocChunk": "0 kB",
+        "VmallocTotal": "34359738367 kB",
+        "VmallocUsed": "314520 kB",
+        "Writeback": "0 kB",
+        "WritebackTmp": "0 kB",
+        "Zswap": "0 kB",
+        "Zswapped": "0 kB"
+      },
+      "model_bytes": 57405800192,
+      "ok": true,
+      "ram_ok": true,
+      "reason": null,
+      "vram_ok": true
+    },
+    "state_isolation_teardown": {
+      "cell_final_state_lengths_before_teardown": [
+        1,
+        1
+      ],
+      "cell_initial_state_lengths": [
+        0,
+        0
+      ],
+      "cell_state_lengths_after_teardown": [
+        0,
+        0
+      ],
+      "ok": true,
+      "persistent_cross_cell_state_detected": false,
+      "teardown_called_count": 2
+    },
+    "submitted_e3_adapter_disabled": {
+      "adapters_disabled_by_experiment_design": true,
+      "e3_policy_importable": true,
+      "hidden_state_disabled": true,
+      "offline_bfs_disabled": true,
+      "ok": true,
+      "policy": "E3AgentPolicy",
+      "prior_game_log_disabled": true,
+      "reason": null,
+      "source_solution_import_disabled": true,
+      "submitted_structured_evidence_memory_default": false
+    },
+    "upstream_capability_gate": {
+      "checked_before_model_load": true,
+      "exp5900_sha256": "sha256:adb2b20636747ecfed802a9b15ed50af1a7f5b45ceb7af5216b4b68fa3e7801e",
+      "exp5901_sha256": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7",
+      "exp5902_sha256": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595",
+      "exp5915_path": "results/experiment_5915_arc_live_runner_capability_lease.json",
+      "exp5915_sha256": "sha256:feec853a2898a1ff8ec67994f4e3e1699dda580360ed3386f191fc1d9a9ba2d0",
+      "ok": true,
+      "reason": null,
+      "replay_validation_error": null,
+      "replayed_artifact_valid": true,
+      "replayed_honest_verdict": "complete_ready: exp5916_live_runner_capability_lease_bound",
+      "replayed_ready_score": 1.0,
+      "source_path_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/agentic-harness/spec.md": "sha256:3ad3dfbc69738114f3e31e167431fc1de05d4035de6b8f42f3485b218c046357",
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:a87acb3ffb746059bb185f2106adeaa72fb80f7e20b35aa924f8f44b7a5bb3a8",
+        "python/carnot/agentic/arc_live_runner_capability_lease.py": "sha256:f86c6a100428d4af51e46979ba5708ce1bdd6b5496c950d08467fbcf66e7d694",
+        "python/carnot/agentic/arc_structured_evidence_memory.py": "sha256:904c1b41666cc71c3612aed8e75a0f6bb646b2d0396ffc489afbb0d86712173a",
+        "python/carnot/agentic/arc_structured_memory_causal_audit.py": "sha256:4aeb456c2c517dbd51ac981f94fdc0581da1b1bed668ce4d88dd1584225ff126",
+        "python/carnot/agentic/arc_structured_memory_live_ab.py": "sha256:560164498807f14607a33a7e343ffc015baa02f90e70f90808b84679dd7ee81d",
+        "python/carnot/agentic/arc_structured_memory_live_held_ab.py": "sha256:93a36bd38738a6107a1ed82079c03ef78eaaab230d83e0cecb75ed5c53121800",
+        "python/carnot/agentic/arc_typed_memory_provenance_guard.py": "sha256:e35f2b19d274ecce09237b284c1a5e691615491365f33d601760b86f43e33928",
+        "python/carnot/inference/sota_models.py": "sha256:db9b6d3f56d4fb137117230575c3559dadeec97e2d02d37358895225e33dcd1d",
+        "tests/python/test_experiment_5916_arc_structured_memory_live_held_ab.py": "sha256:1586d91b50909b198c93014a982d255aa2412b8c82f9a7df9b69953ceffad9f5"
+      },
+      "stored_artifact_valid": true,
+      "stored_honest_verdict": "complete_ready: exp5916_live_runner_capability_lease_bound",
+      "stored_ready_score": 1.0,
+      "stored_validation_error": null
+    }
+  },
+  "preregistered_held_episode_group_and_arm_design": {
+    "arm_order": {
+      "counterbalance_seed": 2026072501,
+      "orders": [
+        [
+          "raw_tape",
+          "no_memory",
+          "structured_index"
+        ],
+        [
+          "structured_index",
+          "raw_tape",
+          "no_memory"
+        ],
+        [
+          "no_memory",
+          "structured_index",
+          "raw_tape"
+        ]
+      ],
+      "state_isolation": "fresh E3AgentPolicy, environment, proposer, and memory state per cell"
+    },
+    "arms": [
+      "no_memory",
+      "raw_tape",
+      "structured_index"
+    ],
+    "budgets": {
+      "max_actions_per_episode_arm": 180,
+      "max_event_bytes_per_episode_arm": 262144,
+      "max_queries_per_episode_arm": 16,
+      "max_tokens_per_episode_arm": 4096,
+      "max_wall_clock_s_per_episode_arm": 300.0
+    },
+    "confidence_thresholds": {
+      "budget_regression": false,
+      "capability_or_authority_regression": false,
+      "safety_regression": false,
+      "structured_over_none_accuracy_lower_bound": "> 0.0",
+      "structured_over_raw_accuracy_lower_bound": "> 0.0"
+    },
+    "episode_groups": [
+      {
+        "episode": "held-ep-0001",
+        "game": "held-gamma",
+        "group": "held_live_generalization_navigation",
+        "measurement_role": "held_out_navigation_like"
+      },
+      {
+        "episode": "held-ep-0002",
+        "game": "held-delta",
+        "group": "held_live_generalization_object_interaction",
+        "measurement_role": "held_out_interaction_like"
+      }
+    ],
+    "experiment_id": "experiment_5916_arc_structured_memory_live_held_ab",
+    "frozen_on": "2026-07-25",
+    "no_public_level_target": true,
+    "primary_metrics": [
+      "held_objective_accuracy",
+      "mean_environment_score",
+      "mean_progress",
+      "actions_per_correct_episode",
+      "structured_over_raw_accuracy_lower_bound",
+      "structured_over_none_accuracy_lower_bound"
+    ],
+    "proposal_prompts_and_decoding": {
+      "adapter_disabled": true,
+      "identical_across_arms": true,
+      "local_gguf_only": true
+    },
+    "random_seeds": [
+      2026072501,
+      2026072502
+    ],
+    "safety_metrics": [
+      "invalid_actions",
+      "noop_actions",
+      "repeated_actions",
+      "budget_violations",
+      "source_bfs_adapter_prior_game_hidden_access_count"
+    ]
+  },
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": true,
+    "all_unchanged": true,
+    "combined_hash": "sha256:0eca0466ffc801d9eaa67371577c22d6effc27c90805e515227d22cd0e7e8309",
+    "hashes": {
+      "_bmad/traceability.md": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
+      "ops/changelog.md": "sha256:1f24927578ae6676e34be4864dd2531a62276efc2d0d42ccba7040aba295a466",
+      "ops/status.md": "sha256:eda040b1c97c3108e440468451d60fec994d29291f770d657688dd9df1e104a1",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "scripts/research_conductor.py": true
+  },
+  "public_level_solve_claimed": false,
+  "registry_precheck": {
+    "all_public_games_cleared": true,
+    "checked_before_model_load": true,
+    "full_game_clear_count": 25,
+    "ok": true,
+    "public_games_count": 25,
+    "public_level_target_selected": false,
+    "reason": null,
+    "registry_hash_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "registry_present": true,
+    "registry_update_allowed": false,
+    "source": "ops/arc_solve_registry.yaml"
+  },
+  "registry_unchanged": true,
+  "reproducibility_checksum": "sha256:13bd4e68a7c5861ad89688f8fd0426f634e38e32db379843e17ca6d274ad5a83",
+  "result_path": "results/experiment_5916_arc_structured_memory_live_held_ab.json",
+  "schema": "carnot.exp5916.arc_structured_memory_live_held_ab.v1",
+  "shuffled_and_deletion_confirmatory_controls": {
+    "budget_matched": true,
+    "connected_to_exp5901_causal_mechanism": false,
+    "controls_passed": false,
+    "irrelevant_deletion_accuracy": 0.0,
+    "relevant_deletion_accuracy": 0.0,
+    "relevant_deletion_effect_delta": 0.0,
+    "safety_regression": false,
+    "shuffle_accuracy": 0.0,
+    "shuffle_effect_delta": 0.0,
+    "structured_baseline_accuracy": 0.0,
+    "subset_size": 0
+  },
+  "source_bfs_adapter_prior_game_and_hidden_state_access_count": 0,
+  "state_isolation_and_teardown_receipts": {
+    "cell_final_state_lengths_before_teardown": [
+      1,
+      1
+    ],
+    "cell_initial_state_lengths": [
+      0,
+      0
+    ],
+    "cell_state_lengths_after_teardown": [
+      0,
+      0
+    ],
+    "ok": true,
+    "persistent_cross_cell_state_detected": false,
+    "teardown_called_count": 2
+  },
+  "status": "blocked_precondition",
+  "structured_memory_live_ready_score": 0.0,
+  "submitted_e3_and_adapter_disabled_receipts": {
+    "adapters_disabled_by_experiment_design": true,
+    "e3_policy_importable": true,
+    "hidden_state_disabled": true,
+    "offline_bfs_disabled": true,
+    "ok": true,
+    "policy": "E3AgentPolicy",
+    "prior_game_log_disabled": true,
+    "reason": null,
+    "source_solution_import_disabled": true,
+    "submitted_structured_evidence_memory_default": false
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5916_arc_structured_memory_live_held_ab.py -q -n0 -o addopts=''",
+    ".venv/bin/python -m coverage erase && .venv/bin/python -m coverage run --include='*/python/carnot/agentic/arc_structured_memory_live_held_ab.py' -m pytest tests/python/test_experiment_5916_arc_structured_memory_live_held_ab.py -q -n0 -o addopts='' && .venv/bin/python -m coverage report --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5916_arc_structured_memory_live_held_ab.json --json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5916_arc_structured_memory_live_held_ab.py",
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --quiet -- ops/arc_solve_registry.yaml",
+    "git diff --quiet -- _bmad/traceability.md ops/changelog.md ops/status.md scripts/research_conductor.py"
+  ],
+  "test_exit_codes": {
+    "pre_implementation_focused_test_expected_failure": 2
+  },
+  "upstream_capability_gate_and_hashes": {
+    "checked_before_model_load": true,
+    "exp5900_sha256": "sha256:adb2b20636747ecfed802a9b15ed50af1a7f5b45ceb7af5216b4b68fa3e7801e",
+    "exp5901_sha256": "sha256:1a5b09a56d7fee3fcae2840be123b2a3b5b232af44da2f5e3b631f6d74a00fb7",
+    "exp5902_sha256": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595",
+    "exp5915_path": "results/experiment_5915_arc_live_runner_capability_lease.json",
+    "exp5915_sha256": "sha256:feec853a2898a1ff8ec67994f4e3e1699dda580360ed3386f191fc1d9a9ba2d0",
+    "ok": true,
+    "reason": null,
+    "replay_validation_error": null,
+    "replayed_artifact_valid": true,
+    "replayed_honest_verdict": "complete_ready: exp5916_live_runner_capability_lease_bound",
+    "replayed_ready_score": 1.0,
+    "source_path_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/agentic-harness/spec.md": "sha256:3ad3dfbc69738114f3e31e167431fc1de05d4035de6b8f42f3485b218c046357",
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:a87acb3ffb746059bb185f2106adeaa72fb80f7e20b35aa924f8f44b7a5bb3a8",
+      "python/carnot/agentic/arc_live_runner_capability_lease.py": "sha256:f86c6a100428d4af51e46979ba5708ce1bdd6b5496c950d08467fbcf66e7d694",
+      "python/carnot/agentic/arc_structured_evidence_memory.py": "sha256:904c1b41666cc71c3612aed8e75a0f6bb646b2d0396ffc489afbb0d86712173a",
+      "python/carnot/agentic/arc_structured_memory_causal_audit.py": "sha256:4aeb456c2c517dbd51ac981f94fdc0581da1b1bed668ce4d88dd1584225ff126",
+      "python/carnot/agentic/arc_structured_memory_live_ab.py": "sha256:560164498807f14607a33a7e343ffc015baa02f90e70f90808b84679dd7ee81d",
+      "python/carnot/agentic/arc_structured_memory_live_held_ab.py": "sha256:93a36bd38738a6107a1ed82079c03ef78eaaab230d83e0cecb75ed5c53121800",
+      "python/carnot/agentic/arc_typed_memory_provenance_guard.py": "sha256:e35f2b19d274ecce09237b284c1a5e691615491365f33d601760b86f43e33928",
+      "python/carnot/inference/sota_models.py": "sha256:db9b6d3f56d4fb137117230575c3559dadeec97e2d02d37358895225e33dcd1d",
+      "tests/python/test_experiment_5916_arc_structured_memory_live_held_ab.py": "sha256:1586d91b50909b198c93014a982d255aa2412b8c82f9a7df9b69953ceffad9f5"
+    },
+    "stored_artifact_valid": true,
+    "stored_honest_verdict": "complete_ready: exp5916_live_runner_capability_lease_bound",
+    "stored_ready_score": 1.0,
+    "stored_validation_error": null
+  },
+  "verifier_is_oracle": false
+}

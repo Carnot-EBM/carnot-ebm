@@ -108,3 +108,124 @@ registry hash is unchanged, protected file hashes are unchanged, the
 `1.0` only if the lease binding, dry run, isolation, teardown, and denial matrix
 all pass, and `honest_verdict` begins with `complete_ready:`, `retired:`, or
 `blocked_precondition:`.
+
+### REQ-ARC-LRHL-5916: Held Live E3 Structured Memory A/B
+
+Experiment 5916 SHALL run the exact Exp5915-qualified live-runner capability
+gate before any model load, then execute only a preregistered, budget-matched,
+adapter-disabled held live `E3AgentPolicy` A/B for no memory, raw agent-owned
+tape, and structured evidence indexing. The experiment SHALL target held
+generalization only. Because all 25 public games are cleared, no public level
+target may be selected, no public solve may be headlined, and
+`ops/arc_solve_registry.yaml` SHALL NOT be updated by this task.
+
+Before live inference, Exp5916 SHALL run the registry precheck and replay/hash
+Exp5915's capability lease. It SHALL define `MODEL_SPECS` with at least
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; it MAY include
+`unsloth/gemma-4-31B-it-GGUF` only when cache and budget permit, never as a
+replacement for the required pair. The required pair SHALL be resolved through
+`cached_sota_pair()`, concrete GGUF file hashes SHALL be recorded, tokenizer
+preflight SHALL load the embedded GGUF tokenizer, and HuggingFace
+`AutoTokenizer` SHALL NOT be used for GGUFs. The gate SHALL verify public
+llama-cpp CUDA support, two healthy RTX 3090s, RAM/disk/VRAM headroom, real
+offload/utilization receipts, output path writability, protected-workload
+safety, lease scope/expiry/environment receipts, and teardown readiness. Any
+failed gate SHALL produce a terminal `blocked_precondition:` artifact before
+model load or live inference.
+
+The preregistration SHALL freeze held measurement episode groups, arms, seeds,
+counterbalanced order, action/token/wall-clock/query/byte budgets, proposal
+prompts, decoding, primary held accuracy/progress/efficiency metrics, safety
+metrics, and confidence thresholds before outcomes. Every cell SHALL instantiate
+fresh adapter-disabled `E3AgentPolicy`, environment, proposer, and memory
+state. Game adapters, game source access, offline BFS, prior-game logs,
+registry trajectories, hidden state, and per-game constants SHALL be disabled
+and counted as bare zero.
+
+The raw-tape and structured-index arms SHALL consume identical agent-owned event
+bytes, identical proposal prompts/decoding, and identical budgets; memory access
+structure SHALL be the only treatment. Exp5916 SHALL measure environment
+score/progress, held objective accuracy, actions, invalid/no-op/repeated
+actions, tokens, latency, GPU receipts, query counts, bytes, evidence
+utilization, and per-model/game/episode intervals. It SHALL run structured-index
+shuffle and relevant-evidence deletion controls on a bounded confirmatory subset
+to connect any live effect to Exp5901's causal mechanism rather than extra bytes
+or calls.
+
+Experiment 5916 SHALL write
+`results/experiment_5916_arc_structured_memory_live_held_ab.json` with bare
+top-level fields `status`, `preconditions_checked`,
+`upstream_capability_gate_and_hashes`, `registry_precheck`,
+`public_level_solve_claimed`,
+`preregistered_held_episode_group_and_arm_design`, `model_specs`,
+`model_file_hashes`,
+`embedded_tokenizer_loader_cuda_gpu_utilization_and_vram_receipts`,
+`capability_scope_expiry_and_environment_receipts`,
+`submitted_e3_and_adapter_disabled_receipts`,
+`identical_event_byte_and_budget_parity`,
+`no_memory_raw_and_structured_live_metrics`,
+`held_accuracy_progress_efficiency_and_safety_metrics`,
+`per_model_game_episode_lower_bounds`,
+`shuffled_and_deletion_confirmatory_controls`,
+`evidence_utilization_receipts`,
+`source_bfs_adapter_prior_game_and_hidden_state_access_count`,
+`incidental_completion_receipts`, `registry_unchanged`,
+`state_isolation_and_teardown_receipts`, `protected_files_unchanged`,
+`structured_memory_live_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field provenance principles SHALL include:
+
+- `public_level_solve_claimed`: principle "must be bare false because the experiment targets held generalization, not a cleared level."
+- `identical_event_byte_and_budget_parity`: principle "memory access structure is the only treatment."
+- `source_bfs_adapter_prior_game_and_hidden_state_access_count`: principle "must be bare zero."
+- `structured_memory_live_ready_score`: principle "emit bare 1.0 only for positive preregistered structured-over-raw and structured-over-none lower bounds with no safety, budget, capability, or authority regression."
+- `inference_substrate`: principle "use live_llm_inference."
+- `verifier_is_oracle`: principle "false; policy memory consumes only visible agent-owned events."
+- `honest_verdict`: principle "use complete_positive:, complete_null:, unsafe:, blocked_precondition:, or blocked:."
+
+### SCENARIO-ARC-LRHL-5916-PRECONDITION-BLOCK
+
+**Given** the registry, Exp5915 capability replay, GGUF model cache, embedded
+tokenizer, llama-cpp CUDA, dual RTX 3090, resource, output-path,
+protected-workload, submitted-E3, isolation, and teardown checks
+**When** any required precondition fails before model load
+**Then** Exp5916 writes a complete blocked artifact with all required fields,
+zero live inference rows, no public solve claim, unchanged registry/protected
+files, source/BFS/adapter/prior-game/hidden-state access count equal to bare
+zero, and an honest verdict beginning with `blocked_precondition:`.
+
+### SCENARIO-ARC-LRHL-5916-MATCHED-HELD-LIVE-AB
+
+**Given** all preconditions pass and the submitted `E3AgentPolicy` is created
+fresh with adapters disabled for every model/game/episode/arm cell
+**When** no-memory, raw-tape, and structured-index arms run in the
+preregistered counterbalanced order
+**Then** prompts, decoding, action/token/wall-clock/query/byte budgets, and
+agent-owned event bytes are matched between raw and structured arms; the
+artifact reports held accuracy, progress, efficiency, safety, GPU, query-byte,
+evidence-utilization, and per-model/game/episode lower-bound metrics without
+updating the registry.
+
+### SCENARIO-ARC-LRHL-5916-CAUSAL-CONTROLS
+
+**Given** the structured-index treatment has live evidence utilization on the
+bounded confirmatory subset
+**When** relevant evidence is deleted and structured links are shuffled under
+the same budgets
+**Then** relevant deletion reduces structured utility, shuffling does not
+preserve the live effect, safety and budget regressions are reported, and
+`structured_memory_live_ready_score` remains `0.0` unless both preregistered
+structured lower bounds are positive with clean safety, budget, capability, and
+authority receipts.
+
+### SCENARIO-ARC-LRHL-5916-NO-SOLVE-CREDIT
+
+**Given** a held live run records incidental progress or a completion
+**When** Exp5916 writes the artifact
+**Then** `public_level_solve_claimed` is bare `false`, incidental completions
+are telemetry only, no registry credit is requested, `registry_unchanged` is
+true, and the task does not modify `ops/arc_solve_registry.yaml`.
