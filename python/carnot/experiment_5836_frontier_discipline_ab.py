@@ -2191,32 +2191,87 @@ def hud_mask_gate(
                     "n_games_at_ceiling": len(control_wins),
                 }
             )
-        gained = any(s["new_wins"] for s in per_seed)
+        # PER SEED, not an any-seed union. `all_seeds_gained` is the DECISION boolean; the
+        # any-seed value is still reported because it is the honest description of a
+        # one-seed-only gain, which is exactly what must NOT decide a flag flip.
+        all_seeds_gained = bool(per_seed) and all(s["new_wins"] for s in per_seed)
+        any_seed_gained = any(s["new_wins"] for s in per_seed)
         regressed = any(s["lost_wins"] for s in per_seed)
-        passed = bool(gained and not regressed)
-        any_pass = any_pass or passed
+        safety = _hud_arm_safety(rows, arm, condition)
+        mechanism = _hud_arm_mechanism_active(rows, arm, condition)
+        measured_games = sorted({g for games in treat_ran.values() for g in games})
+        unmeasured_affected = sorted(affected_games - set(measured_games))
+        # SAFETY AS A CONJUNCT, not an appendix.
+        safety_measured = bool(
+            safety.get("guard_armed")
+            and safety.get("control_live_on_all_cells")
+            and safety.get("stage2_armed_on_all_cells")
+            and not safety.get("safety_stages_explicitly_disabled")
+        )
+        no_revocation = not safety.get("globally_revoked_cells")
+        flip_eligible = bool(arm in HUD_MASK_FLIP_CANDIDATE_ARMS and safety_measured)
+        coverage_complete = bool(
+            out["mechanism_coverage"]["mask_delta_available"] and not unmeasured_affected
+        )
+        passed = bool(
+            flip_eligible
+            and coverage_complete
+            and all_seeds_gained
+            and not regressed
+            and no_revocation
+        )
+        flip_candidate_pass = flip_candidate_pass or passed
         reachable_all |= reachable_arm
+        blockers = [
+            name
+            for name, ok in (
+                ("not_a_flip_candidate_arm", arm in HUD_MASK_FLIP_CANDIDATE_ARMS),
+                ("safety_axis_unmeasured", safety_measured),
+                ("repair_affected_games_unmeasured", coverage_complete),
+                ("did_not_gain_on_every_seed", all_seeds_gained),
+                ("regressed_on_at_least_one_seed", not regressed),
+                ("mask_was_revoked_at_runtime", no_revocation),
+            )
+            if not ok
+        ]
         out["per_arm"][arm] = {
             "measured": True,
             "shared_seeds": shared,
             "per_seed": per_seed,
-            "any_seed_gained": gained,
+            "all_seeds_gained": all_seeds_gained,
+            "any_seed_gained": any_seed_gained,
             "any_seed_regressed": regressed,
             "reachable_new_win_games": sorted(reachable_arm),
             "headroom_present": bool(reachable_arm),
-            "informative": bool(reachable_arm) or passed,
+            # An arm whose safety axis is unmeasured is not "informative about shipping" even if
+            # it is informative about the mechanism -- so the two are reported separately.
+            "informative": bool(reachable_arm) or all_seeds_gained,
+            "flip_candidate": arm in HUD_MASK_FLIP_CANDIDATE_ARMS,
+            "flip_eligible": flip_eligible,
+            "role": (
+                "flip_candidate"
+                if arm in HUD_MASK_FLIP_CANDIDATE_ARMS
+                else "mechanism_isolation_only"
+            ),
+            "safety_axis_measured": safety_measured,
+            "repair_affected_games_measured": coverage_complete,
+            "unmeasured_repair_affected_games": unmeasured_affected,
+            "measured_games": measured_games,
+            "gate_blockers": blockers,
             "passed": passed,
-            "mechanism_active": _hud_arm_mechanism_active(rows, arm, condition),
+            "mechanism_active": mechanism,
             "signal_r11l": _hud_mask_signal(rows, arm, condition=condition),
-            "safety": _hud_arm_safety(rows, arm, condition),
+            "safety": safety,
         }
     out["reachable_new_win_games"] = sorted(reachable_all)
     out["headroom_present"] = bool(reachable_all)
     out["n_reachable_new_win_games"] = len(reachable_all)
     out["headroom_narrow"] = bool(0 < len(reachable_all) <= 1)
-    out["passed"] = bool(any_pass)
-    out["informative"] = bool(reachable_all) or any_pass
-    out["aliasing_attribution"] = _hud_aliasing_attribution(rows, out, condition)
+    # PASSED means "a FLIP-CANDIDATE arm passed", never "some arm passed". The previous
+    # `any_pass` over all HUD arms certified the arm with the safety mechanism disabled.
+    out["passed"] = bool(flip_candidate_pass)
+    out["informative"] = bool(reachable_all) or flip_candidate_pass
+    out["aliasing_attribution"] = _hud_aliasing_attribution(rows, out, condition, mask_delta=delta)
     if out["headroom_narrow"]:
         out["headroom_narrow_note"] = (
             "the win axis had exactly ONE candidate game "
