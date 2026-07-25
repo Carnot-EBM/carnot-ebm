@@ -14273,3 +14273,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 08:20 UTC | Gated on Exp5910 repair: model, family, camouflage | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5910-verification-guided-constraint-rep |
 | 2026-07-25 08:23 UTC | Gated on Exp5910 repair: model, family, camouflage | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5910-verification-guided-constraint-rep |
 | 2026-07-25 08:25 UTC | Gated on Exp5910 repair: model, family, camouflage | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5910-verification-guided-constraint-rep |
+| 2026-07-25 09:48 UTC | Frozen-science requalification of Exp5895 continuo | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ;exec(eval(sys |
