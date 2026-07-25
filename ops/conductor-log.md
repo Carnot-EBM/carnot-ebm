@@ -14265,3 +14265,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 04:00 UTC | Exact terminal-boundary handoff from .524 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: wait out the r |
 | 2026-07-25 04:03 UTC | Dated evidence refresh after the V525 planner mark | SKIP | Pre-tests failing, self-heal failed: 1 failed, 154 passed, 1 warning in 10.18s |
 | 2026-07-25 04:23 UTC | Dated evidence refresh after the V525 planner mark | OK | 87 passed, 2 warnings in 6.95s |
+| 2026-07-25 04:54 UTC | Canonical producer-consumer replay contract for ty | OK | 101 passed, 1 warning in 27.64s |
