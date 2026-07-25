@@ -14267,3 +14267,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-25 04:23 UTC | Dated evidence refresh after the V525 planner mark | OK | 87 passed, 2 warnings in 6.95s |
 | 2026-07-25 04:54 UTC | Canonical producer-consumer replay contract for ty | OK | 101 passed, 1 warning in 27.64s |
 | 2026-07-25 05:39 UTC | Gated on Exp5907 replay: VeriSynth-style decomposi | OK | 92 passed, 1 warning in 47.06s |
+| 2026-07-25 06:39 UTC | Gated on Exp5908 fixture: three-family direct, dec | OK | 87 passed, 1 warning in 28.33s |
