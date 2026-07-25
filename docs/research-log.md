@@ -6021,3 +6021,9 @@ The critical path for milestone .250:
 - theme: compute-path GPU disengagement surfaced during a short, synthesis-heavy operational closeout
 - key result: honest operational negative -- the 2-minute three-family repair A/B and 1-minute live E3 structured-memory A/B led the compute tail while the available monitor showed both GPUs idle; causal phase timing and evidence of a concurrent multi-model DualGPURunner miss are unavailable
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.525
+- exp_range: exp5908-exp5915 (gate-reference ID bounds only; the complete milestone range is not available)
+- theme: fixture-gated multi-family compute concentrated the milestone's operational tail
+- key result: honest operational limitation -- the 31.8-minute entry leads compute runtime; the locked compute-idle field is false, while absent model-overlap evidence prevents a conclusion that dual-GPU dispatch was skipped
+- acceptance: no data available this milestone
