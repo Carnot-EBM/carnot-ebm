@@ -28,6 +28,26 @@ exists because a published number was wrong in exactly that way:
  6. THE LLM-VALIDITY WITNESS. This is an LLM-ON measurement, so a row whose generator was dead,
     whose server stormed, or which produced zero completions is not an LLM-on datum at all. Those
     rows are excluded and counted; `llm_on_row_valid` is the harness-side witness for it.
+ 7. THE GAME-UNIT EXACT SIGN TEST, on every lever verdict (added 2026-07-26). The first version of
+    this analyser emitted three lever verdicts and ZERO statistical inference -- no sign test, no
+    p-value, no statement of what the design could reach -- while the project's own top
+    known-issues entry, one day old, names the exact one-sided sign test ON THE GAME UNIT as the
+    standard and had just used it to WITHDRAW a sibling HUD claim. A hidden game is a fresh draw
+    from the game distribution, so seeds cannot widen a support: three seeds of the same two movers
+    is still a two-mover support with a best-reachable p of 0.125. Every verdict therefore carries
+    the test AND `smallest_reachable_p_at_this_n`, which turns "not significant" into the
+    actionable "this design could not have been".
+ 8. FIRE COUNTERS ARE RECOMPUTED FROM RAW DIAGNOSTICS, not trusted (added 2026-07-26). Lever 2's
+    harness stamp was measured to be ANTI-CORRELATED with its own lever, reading 0 in all 430 cells
+    while the lever demonstrably fired. A counter can be broken in the direction that HIDES an
+    effect just as easily as in the direction that invents one, and the hiding direction is worse
+    because it looks like a clean null. See `recomputed_lever2_fired`.
+ 9. THE BUDGET IS PART OF EVERY CONCLUSION. Lever orderings REVERSE between budget 400 (the shipped
+    agent's self-imposed loop guard) and budget 2000 (enough actions for the corpus's measured
+    first-win costs, which span 20 to 1747 actions). Neither is "the eval's condition" in the sense
+    of a constraint that cannot be changed. `budget_note` and
+    `prior_measurements_that_must_be_reconciled_against` carry this, and no flag recommendation may
+    rest on one budget alone.
 
 WHAT IT DELIBERATELY DOES NOT DO. It does not flip a flag, recommend a submission, or aggregate
 any cell whose lever never fired into a headline. Efficiency (`actions_to_first_levelup`) is
@@ -106,6 +126,106 @@ def load_rows(paths: list[Path]) -> list[dict]:
 
 def cell_key(r: dict) -> tuple:
     return (r["game"], r["seed"])
+
+
+def recomputed_lever2_fired(r: dict) -> bool:
+    """Recompute lever 2's fire flag from the row's own RECORDED HUD diagnostics.
+
+    WHY THIS IS RECOMPUTED HERE RATHER THAN TRUSTED (measured defect, 2026-07-26). The harness's
+    first `lever2_fired` predicate required the ALREADY-SHIPPED `auto_hud_mask` classifier to have
+    produced a mask before the REPAIRED detector's mask could count as a difference. That is
+    anti-correlated with the lever: the shipped classifier returns None on exactly the two games
+    (r11l, tn36) where the repaired detector resolves a mask, so the counter read 0 in all 430
+    cells of the first scored-path run while the lever was demonstrably firing -- resolved mask
+    None -> 64 cells on r11l with `states_expanded` 319 -> 41, and None -> 61 with 49 -> 17 on
+    tn36. Recomputing here means every already-recorded row is corrected without re-running hours
+    of GPU cells, and it follows the same defence-in-depth pattern as `llm_row_is_valid`: the
+    harness's stamp is kept in the row as diagnostics, the disagreement is reported explicitly, and
+    the analysis uses the recomputed value.
+
+    A MASK APPEARING WHERE THE SHIPPED CONFIG HAD NONE IS THE LEVER'S STRONGEST FIRING, not a
+    non-event, so a falsy shipped digest counts as a real difference. Digests are compared, never
+    cell COUNTS -- the 2026-07-25 gate compared counts and therefore read a same-size different
+    mask as "no change".
+    """
+    h = r.get("lever2_hud_fire") or {}
+    if h.get("error"):
+        return False
+    if not h.get("hud_mask_resolved"):
+        return False
+    digest = h.get("hud_mask_digest")
+    if not digest:
+        return False
+    return bool(digest != h.get("hud_shipped_mask_digest"))
+
+
+# Fire keys whose value the analyser RECOMPUTES from the row's raw diagnostics instead of trusting
+# the harness's stamp. Anything not listed here is read straight off the row.
+_RECOMPUTED_FIRE = {"lever2_fired": recomputed_lever2_fired}
+
+
+def fire_flag(r: dict, fire_key: str) -> bool:
+    """Read a lever's fire flag, recomputing it from raw diagnostics where we have a recomputation.
+
+    Every place the analysis asks "did this lever fire in this cell?" goes through here, so a
+    correction lands everywhere at once rather than in whichever call site was remembered.
+    """
+    fn = _RECOMPUTED_FIRE.get(fire_key)
+    if fn is not None:
+        return fn(r)
+    return bool(r.get(fire_key))
+
+
+def exact_one_sided_sign_test(n_favour: int, n_against: int) -> dict[str, Any]:
+    """Exact one-sided sign test on the GAME unit, plus the smallest p this design could reach.
+
+    WHY THE GAME IS THE UNIT, AND WHY SEEDS ARE NOT (this project's own standing rule, stated in
+    `ops/known-issues.md`'s 2026-07-26 entry and in the convention-transfer battery's jackknife
+    principle): a hidden game is a fresh draw from the game distribution, so generalisation is
+    over GAMES. Seeds are re-runs of the same games; adding seeds can make a per-seed result more
+    reproducible but cannot widen the support. The known-issues entry states the consequence
+    directly -- "a one-game support has an exact sign-test floor of p=0.5. It cannot be established
+    at p<=0.05 at ANY seed count ... needs MORE GAMES that it moves, not more seeds" -- and it was
+    used ONE DAY EARLIER to withdraw a sibling HUD claim as forced rather than measured. Reporting
+    a lever verdict without this test is therefore inconsistent with the standard this project
+    already applies to its own siblings.
+
+    `smallest_reachable_p_at_this_n` is the crucial second number: with n discordant games the best
+    achievable p is 2**-n, so a design with 3 movers CANNOT clear 0.05 whatever the outcome. That
+    turns "did not reach significance" into the actionable statement "this design cannot reach it".
+    """
+    n = int(n_favour) + int(n_against)
+    if n == 0:
+        return {
+            "n_games_favouring": 0,
+            "n_games_against": 0,
+            "n_discordant_games": 0,
+            "p_one_sided_exact": None,
+            "clears_p_0_05": False,
+            "undefined_because_no_discordant_game": True,
+            "smallest_reachable_p_at_this_n": None,
+            "underpowered_support": True,
+        }
+    # P(X >= n_favour) under X ~ Binomial(n, 0.5), computed exactly with integer binomials so there
+    # is no floating-point drift at the tiny n this project actually has.
+    from math import comb
+
+    tail = sum(comb(n, k) for k in range(int(n_favour), n + 1))
+    p = tail / (2**n)
+    floor_p = 1.0 / (2**n)
+    return {
+        "n_games_favouring": int(n_favour),
+        "n_games_against": int(n_against),
+        "n_discordant_games": n,
+        "p_one_sided_exact": round(p, 4),
+        "clears_p_0_05": bool(p <= 0.05),
+        "undefined_because_no_discordant_game": False,
+        "smallest_reachable_p_at_this_n": round(floor_p, 4),
+        # A support so small that NO outcome could have cleared 0.05. This is a property of the
+        # design, not of the result, and it is the difference between "we measured no effect" and
+        # "this measurement could not have found one".
+        "underpowered_support": bool(floor_p > 0.05),
+    }
 
 
 def is_win(r: dict) -> bool:
@@ -431,6 +551,81 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
     if replicate_arm in arms and CONTROL in arms:
         noise = pairwise_vs_control(replicate_arm)
     out["noise_floor_same_config_replicate"] = noise
+    out["noise_floor_same_config_replicate_note"] = (
+        "SAME-SEED replication. This establishes CAUSAL ATTRIBUTION -- a same-seed difference "
+        "between two identically-flagged arms can only come from run-to-run variation, so if it is "
+        "zero then any difference an ablation arm shows IS caused by the flag change. It does NOT "
+        "bound the variance a win-set comparison generalises over: re-running the same seed is "
+        "structurally near-deterministic here, so this floor is expected to be 0 and a gate that "
+        "only asks 'did anything change at all' is weak. The generalisation-relevant floor is "
+        "`noise_floor_control_across_seeds` below."
+    )
+
+    # ---- 3b-ii. THE CROSS-SEED NOISE FLOOR (the one a win delta must actually be read against) --
+    # WHY BOTH FLOORS ARE NEEDED. The same-config replicate floor above is a SAME-SEED comparison,
+    # so it is structurally near-zero and reduces `exceeds_same_config_noise_floor` to "did anything
+    # change at all". But the quantity a lever verdict wants to generalise -- "this configuration
+    # wins this SET of games" -- is measurably unstable ACROSS seeds. Directly measured here: the
+    # control arm's own win set moves between seeds (e.g. 3 -> 4 -> 4 wins with DIFFERENT membership
+    # in the budget-400 LLM-off design), and the convention-transfer battery independently records
+    # the shipped and frontier arms as `measured_deterministic: false` with 54 of 75
+    # game-condition cells varying across seeds (the uniform-random tier is seeded, so a different
+    # seed is a different search). A 1-2 game lever delta is therefore the SAME MAGNITUDE as the
+    # control's own seed-to-seed movement, which is exactly why the game-unit sign test below, not
+    # the same-seed floor, is what decides whether the lever's direction is established.
+    cross_seed: dict[str, Any] = {}
+    if CONTROL in arms and len(seeds) > 1:
+        ctrl_cells = [c for c in all_cells if (CONTROL, c) in by_arm_cell]
+        games_all_seeds = sorted(
+            {c[0] for c in ctrl_cells}
+            - {
+                c[0]
+                for c in all_cells
+                if any((CONTROL, (c[0], s)) not in by_arm_cell for s in seeds)
+            }
+        )
+        per_pair = []
+        for i, s1 in enumerate(seeds):
+            for s2 in seeds[i + 1 :]:
+                w1 = {g for g in win_sets[CONTROL][s1] if g in games_all_seeds}
+                w2 = {g for g in win_sets[CONTROL][s2] if g in games_all_seeds}
+                per_pair.append(
+                    {
+                        "seed_a": s1,
+                        "seed_b": s2,
+                        "win_set_a": sorted(w1),
+                        "win_set_b": sorted(w2),
+                        "win_flips_across_seeds": sorted(w1 ^ w2),
+                        "n_win_flips_across_seeds": len(w1 ^ w2),
+                    }
+                )
+        flips = [p["n_win_flips_across_seeds"] for p in per_pair]
+        won_every = sorted(
+            g for g in games_all_seeds if all(g in win_sets[CONTROL][s] for s in seeds)
+        )
+        won_some = sorted(
+            g for g in games_all_seeds if any(g in win_sets[CONTROL][s] for s in seeds)
+        )
+        cross_seed = {
+            "arm": CONTROL,
+            "n_games_measured_on_every_seed": len(games_all_seeds),
+            "seed_pairs": per_pair,
+            "max_win_flips_across_any_seed_pair": max(flips) if flips else None,
+            "median_win_flips_across_seed_pairs": (statistics.median(flips) if flips else None),
+            "games_won_on_every_seed": won_every,
+            "games_won_on_at_least_one_seed": won_some,
+            "n_games_unstable_across_seeds": len(set(won_some) - set(won_every)),
+            "control_is_stable_across_seeds": bool(flips) and max(flips) == 0,
+        }
+    out["noise_floor_control_across_seeds"] = cross_seed
+    out["noise_floor_control_across_seeds_note"] = (
+        "The CONTROL arm compared against ITSELF on different seeds, over games measured on every "
+        "seed. This is the variance a win-set claim generalises over. A lever delta of the same "
+        "magnitude as `max_win_flips_across_any_seed_pair` is not thereby refuted -- the lever "
+        "comparison is matched-seed and so remains causally attributable -- but it means the delta "
+        "is not larger than the setup's own seed-to-seed movement, and the game-unit sign test is "
+        "what must carry the conclusion."
+    )
 
     # ---- 3c. WHAT THE LLM ITSELF CONTRIBUTES ------------------------------------------------
     # `S_llmoff` is the SAME E3AgentPolicy configuration with induction disabled -- i.e. the
@@ -439,6 +634,54 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
     # the question the whole exercise exists to answer (does the LLM tier help where it scores?)
     # stays open. Reported as a comparison, never folded into a lever verdict: turning the LLM off
     # is not one of the levers under test.
+    # ---- 3d. THE LLM PLAN-CHANNEL CENSUS ----------------------------------------------------
+    # COMPUTED, because the prose version of this was WRONG. The first write-up of this measurement
+    # said the induced world model is "rejected by a verifier gate every single time" with
+    # "planned=0". The rows say otherwise: `induction_planned` is 1 in one of the 30 LLM-on rows.
+    # That single cell is the ONLY place in the entire run where the LLM -> plan channel opened, and
+    # it is therefore the POSITIVE CONTROL the inertness null needs -- without it, "the gate
+    # correctly rejects a weak model" and "the plan path never influences behaviour" are
+    # indistinguishable, which is the brief's own central lesson about nulls. It is emitted here so
+    # the claim cannot be restated from memory, and so its pairing status (whether its matched
+    # control row is valid) is visible rather than buried.
+    llm_rows = [r for r in rows if r.get("llm_enabled") and r.get("ran")]
+    planned_rows = [r for r in llm_rows if int(r.get("induction_planned") or 0) > 0]
+    reason_counter: collections.Counter = collections.Counter()
+    for r in llm_rows:
+        reason_counter.update(r.get("induction_reasons") or {})
+    out["llm_plan_channel_census"] = {
+        "n_llm_on_rows_that_ran": len(llm_rows),
+        "induction_planned_distribution": dict(
+            collections.Counter(int(r.get("induction_planned") or 0) for r in llm_rows)
+        ),
+        "n_rows_where_plan_channel_opened": len(planned_rows),
+        "induction_reason_counts": dict(reason_counter),
+        "rows_where_plan_channel_opened": [
+            {
+                "arm": r.get("arm"),
+                "game": r.get("game"),
+                "seed": r.get("seed"),
+                "levels": r.get("levels"),
+                "induction_attempts": r.get("induction_attempts"),
+                "induction_attempts_llm_reached": r.get("induction_attempts_llm_reached"),
+                "induction_reasons": r.get("induction_reasons"),
+                "llm_responses": (r.get("llm") or {}).get("responses"),
+                # Is the matched control cell for this row a VALID LLM-on datum? If not, this
+                # positive control is UNPAIRED and cannot yet be used to attribute the outcome.
+                "matched_control_row_is_valid": bool((CONTROL, cell_key(r)) in by_arm_cell),
+            }
+            for r in planned_rows
+        ],
+        "note": (
+            "The plan channel opening at all is what distinguishes 'the verifier gate rejects a "
+            "weak induced model' (a real, reportable finding) from 'the plan path is structurally "
+            "unreachable on this path' (a wiring defect masquerading as a finding). A run in which "
+            "it NEVER opened has no positive control and its inertness claim is not admissible. "
+            "`matched_control_row_is_valid=false` means the one opening cell has no comparable "
+            "control, so re-running that cell with a healthy generator is the concrete next step."
+        ),
+    }
+
     out["llm_contribution_vs_llm_off"] = (
         pairwise_vs_control("S_llmoff")
         if "S_llmoff" in arms and CONTROL in arms and CONTROL != "S_llmoff"
@@ -480,7 +723,7 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             # run-to-run stochasticity. Reporting both separately makes which one carried the
             # cell auditable.
             def _direct(g: str) -> bool:
-                return bool(by_arm_cell[(on_arm, (g, s))].get(fk))
+                return fire_flag(by_arm_cell[(on_arm, (g, s))], fk)
 
             def _behav(g: str) -> bool:
                 return fired_behaviourally(
@@ -527,16 +770,23 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             noise_measured = str(s) in noise
             exceeds_noise = n_moved > noise_flips
 
+            # THE VERDICT NAME SAYS ONLY WHAT THE GATE ESTABLISHES. Renamed 2026-07-26 from
+            # EFFECT_ON_WINS: the gate's noise floor is a SAME-SEED replicate, which is
+            # structurally near-zero, so passing it establishes "this win difference is
+            # ATTRIBUTABLE to the flag change" and nothing more. It does NOT establish that the
+            # difference generalises to a fresh game draw -- that is what the per-lever game-unit
+            # sign test below is for. "EFFECT_ON_WINS" read as a corpus-level effect claim, which
+            # a 1-2 game matched-seed difference cannot support.
             if not witness_pass_region_nonempty:
                 seed_verdict = "UNINTERPRETABLE_EMPTY_PASS_REGION"
             elif n_moved == 0:
-                seed_verdict = "NO_EFFECT_ON_WINS"
+                seed_verdict = "NO_WIN_DIFFERENCE"
             elif not noise_measured:
-                seed_verdict = "EFFECT_ON_WINS_NOISE_FLOOR_UNMEASURED"
+                seed_verdict = "ATTRIBUTABLE_WIN_DIFFERENCE_NOISE_FLOOR_UNMEASURED"
             elif not exceeds_noise:
-                seed_verdict = "EFFECT_WITHIN_SAME_CONFIG_NOISE_FLOOR"
+                seed_verdict = "WIN_DIFFERENCE_WITHIN_SAME_CONFIG_NOISE_FLOOR"
             else:
-                seed_verdict = "EFFECT_ON_WINS"
+                seed_verdict = "ATTRIBUTABLE_WIN_DIFFERENCE"
 
             per_seed[str(s)] = {
                 "control_win_set": sorted(ctrl_wins),
@@ -576,7 +826,7 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
                         "control_actions_to_first_levelup": a2,
                         "arm_actions_to_first_levelup": b2,
                         "delta_arm_minus_control": b2 - a2,
-                        "lever_fired_on_arm": bool(by_arm_cell[(on_arm, (g, s))].get(fk)),
+                        "lever_fired_on_arm": fire_flag(by_arm_cell[(on_arm, (g, s))], fk),
                     }
                 )
         st_pairs = []
@@ -591,21 +841,76 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
                         "control_states": c.get("states_expanded"),
                         "arm_states": t.get("states_expanded"),
                         "delta": (t.get("states_expanded") or 0) - (c.get("states_expanded") or 0),
-                        "lever_fired_on_arm": bool(by_arm_cell[(on_arm, (g, s))].get(fk)),
+                        "lever_fired_on_arm": fire_flag(by_arm_cell[(on_arm, (g, s))], fk),
                     }
                 )
 
         seed_verdicts = [v["seed_verdict"] for v in per_seed.values()]
         if all(v == "UNINTERPRETABLE_EMPTY_PASS_REGION" for v in seed_verdicts):
             overall = "UNINTERPRETABLE_EMPTY_PASS_REGION"
-        elif any(v == "EFFECT_ON_WINS" for v in seed_verdicts):
-            overall = "EFFECT_ON_WINS"
-        elif any(v == "EFFECT_ON_WINS_NOISE_FLOOR_UNMEASURED" for v in seed_verdicts):
-            overall = "EFFECT_ON_WINS_NOISE_FLOOR_UNMEASURED"
-        elif any(v == "EFFECT_WITHIN_SAME_CONFIG_NOISE_FLOOR" for v in seed_verdicts):
-            overall = "EFFECT_WITHIN_SAME_CONFIG_NOISE_FLOOR"
+        elif any(v == "ATTRIBUTABLE_WIN_DIFFERENCE" for v in seed_verdicts):
+            overall = "ATTRIBUTABLE_WIN_DIFFERENCE"
+        elif any(v == "ATTRIBUTABLE_WIN_DIFFERENCE_NOISE_FLOOR_UNMEASURED" for v in seed_verdicts):
+            overall = "ATTRIBUTABLE_WIN_DIFFERENCE_NOISE_FLOOR_UNMEASURED"
+        elif any(v == "WIN_DIFFERENCE_WITHIN_SAME_CONFIG_NOISE_FLOOR" for v in seed_verdicts):
+            overall = "WIN_DIFFERENCE_WITHIN_SAME_CONFIG_NOISE_FLOOR"
         else:
-            overall = "NO_EFFECT_ON_WINS_ON_FIRING_GAMES"
+            overall = "NO_WIN_DIFFERENCE_ON_FIRING_GAMES"
+
+        # ---- THE GAME-UNIT EXACT SIGN TEST -----------------------------------------------
+        # A game is a MOVER for this lever if, pooled over the seeds where both arms have a valid
+        # row, the arm wins it on strictly more seeds than the control (favours the arm) or on
+        # strictly fewer (favours the control). Ties contribute nothing, exactly as a sign test
+        # requires. Only games in the per-seed MOVABLE support can count, so a win difference on a
+        # game where the lever never fired cannot enter the test -- same wrong-mechanism guard the
+        # per-seed delta uses.
+        #
+        # WHY THIS AND NOT "CONSISTENT ACROSS SEEDS". Direction consistency across seeds is a
+        # statement about re-running the SAME games; the claim being made is about a FRESH game.
+        # Three seeds of the same two movers is still a two-mover support. This block is what makes
+        # that visible, and `smallest_reachable_p_at_this_n` says outright when the design could not
+        # have cleared 0.05 under ANY outcome.
+        arm_seed_wins: dict[str, int] = collections.Counter()
+        ctrl_seed_wins: dict[str, int] = collections.Counter()
+        eligible_seeds: dict[str, int] = collections.Counter()
+        for s in seeds:
+            per = per_seed.get(str(s)) or {}
+            mv = set(per.get("witness_movable_games") or [])
+            for g in mv:
+                eligible_seeds[g] += 1
+                if g in set(per.get("arm_win_set") or []):
+                    arm_seed_wins[g] += 1
+                if g in set(per.get("control_win_set") or []):
+                    ctrl_seed_wins[g] += 1
+        movers_favouring_arm = sorted(
+            g for g in eligible_seeds if arm_seed_wins[g] > ctrl_seed_wins[g]
+        )
+        movers_favouring_control = sorted(
+            g for g in eligible_seeds if ctrl_seed_wins[g] > arm_seed_wins[g]
+        )
+        sign = exact_one_sided_sign_test(len(movers_favouring_arm), len(movers_favouring_control))
+        sign.update(
+            {
+                "unit": "game",
+                "movers_favouring_arm": movers_favouring_arm,
+                "movers_favouring_control": movers_favouring_control,
+                "per_game_seed_win_counts": {
+                    g: {
+                        "arm_wins_on_n_seeds": arm_seed_wins[g],
+                        "control_wins_on_n_seeds": ctrl_seed_wins[g],
+                        "eligible_seeds": eligible_seeds[g],
+                    }
+                    for g in sorted(eligible_seeds)
+                },
+                "principle": (
+                    "The GAME is the replication unit because a hidden game is a fresh draw from "
+                    "the game distribution; seeds are re-runs of the same games and cannot widen "
+                    "the support. This project applied exactly this test one day earlier to "
+                    "withdraw a sibling HUD claim. `smallest_reachable_p_at_this_n` states whether "
+                    "the design could have cleared 0.05 at all."
+                ),
+            }
+        )
 
         verdicts[arm] = {
             "lever": meta["lever"],
@@ -614,6 +919,44 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             "lever_on_in_arm": on_arm,
             "per_seed": per_seed,
             "overall_verdict": overall,
+            # SCOPE, printed beside the verdict so a 3-game / 1-seed comparison can never be read
+            # as a corpus result just because it sits in a column headed with the condition name.
+            "scope": {
+                "n_seeds_compared": len([s for s in seeds if str(s) in per_seed]),
+                "n_games_matched_min_across_seeds": (
+                    min(int(p["n_games_measured"]) for p in per_seed.values()) if per_seed else 0
+                ),
+                "n_games_matched_max_across_seeds": (
+                    max(int(p["n_games_measured"]) for p in per_seed.values()) if per_seed else 0
+                ),
+                "n_movable_games_union_over_seeds": len(
+                    {g for p in per_seed.values() for g in (p["witness_movable_games"] or [])}
+                ),
+                "note": (
+                    "Read these numbers before the verdict string. A comparison over a handful of "
+                    "matched games on one seed is a spot check, not a corpus measurement, and "
+                    "`n_movable_games_union_over_seeds` is the support the game-unit sign test "
+                    "actually has -- not the number of games run."
+                ),
+            },
+            "game_unit_sign_test": sign,
+            # The verdict a reader should quote. The seed verdict says the difference is
+            # ATTRIBUTABLE; this says whether its DIRECTION is established on the unit that
+            # generalises. Both are needed: attributable-but-underpowered is the common case here
+            # and it is NOT a basis for changing a shipped flag.
+            "generalisation_verdict": (
+                "UNINTERPRETABLE_EMPTY_PASS_REGION"
+                if overall == "UNINTERPRETABLE_EMPTY_PASS_REGION"
+                else (
+                    "DIRECTION_ESTABLISHED_ON_GAME_UNIT"
+                    if sign["clears_p_0_05"]
+                    else (
+                        "UNDERPOWERED_BY_DESIGN_NO_OUTCOME_COULD_CLEAR_P05"
+                        if sign["underpowered_support"]
+                        else "DIRECTION_NOT_ESTABLISHED_ON_GAME_UNIT"
+                    )
+                )
+            ),
             "efficiency_paired_both_win": eff_pairs,
             "states_expanded_paired": st_pairs,
             "states_delta_median_on_firing_games": (
@@ -634,8 +977,17 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             "lever1_tier_advances_total": sum(
                 int((r.get("lever1_frontier_fire") or {}).get("tier_advances") or 0) for r in rs
             ),
-            "lever2_fired_cells": sum(1 for r in rs if r.get("lever2_fired")),
-            "lever2_games_mask_differs": sorted({r["game"] for r in rs if r.get("lever2_fired")}),
+            "lever2_fired_cells": sum(1 for r in rs if recomputed_lever2_fired(r)),
+            "lever2_games_mask_differs": sorted(
+                {r["game"] for r in rs if recomputed_lever2_fired(r)}
+            ),
+            # The harness's own stamp, kept beside the recomputed value so the correction is
+            # visible rather than silent. A non-empty disagreement list means the row files
+            # predate the 2026-07-26 fire-counter repair.
+            "lever2_fired_cells_per_harness_stamp": sum(1 for r in rs if r.get("lever2_fired")),
+            "lever2_games_where_recomputed_disagrees_with_harness_stamp": sorted(
+                {r["game"] for r in rs if recomputed_lever2_fired(r) != bool(r.get("lever2_fired"))}
+            ),
             "lever3_verdicts": dict(collections.Counter(r.get("lever3_verdict") for r in rs)),
             "lever3_rows_pruned_total": sum(
                 int((r.get("lever3_hazard_fire") or {}).get("rows_pruned") or 0) for r in rs
@@ -713,9 +1065,16 @@ def build_artifact(
     t0: float,
     companion: dict | None = None,
     companion_rows: list[dict] | None = None,
+    alt_budget: dict | None = None,
+    alt_budget_rows: list[dict] | None = None,
 ) -> dict:
     payload = json.dumps(
-        {"rows": rows, "analysis": analysis, "companion": companion or {}},
+        {
+            "rows": rows,
+            "analysis": analysis,
+            "companion": companion or {},
+            "alt_budget": alt_budget or {},
+        },
         sort_keys=True,
         default=str,
     ).encode()
@@ -753,13 +1112,82 @@ def build_artifact(
     effect_without_witness = []
     for arm, v in lv.items():
         for s, per in (v.get("per_seed") or {}).items():
-            if str(per.get("seed_verdict", "")).startswith("EFFECT") and not per.get(
-                "witness_pass_region_nonempty"
-            ):
+            # Any verdict that ASSERTS a difference. The prefix set is explicit rather than a
+            # `startswith("EFFECT")` match, which silently stopped matching anything when the
+            # verdicts were renamed to ATTRIBUTABLE_WIN_DIFFERENCE on 2026-07-26 -- a gate that
+            # quietly becomes vacuous is worse than no gate.
+            asserts_difference = str(per.get("seed_verdict", "")).startswith(
+                ("EFFECT", "ATTRIBUTABLE_WIN_DIFFERENCE", "WIN_DIFFERENCE")
+            )
+            if asserts_difference and not per.get("witness_pass_region_nonempty"):
                 effect_without_witness.append({"arm": arm, "seed": s})
     gate_witness = not effect_without_witness
+    # Every lever that produced a verdict must also carry the GAME-UNIT sign test, so a verdict can
+    # never be quoted without the number that says whether its direction generalises.
+    levers_without_sign_test = sorted(
+        arm for arm, v in lv.items() if not (v.get("game_unit_sign_test") or {})
+    )
+    gate_sign_test = not levers_without_sign_test
 
-    return {
+    # ---- FLAG-CHANGE DISPOSITION, DERIVED ---------------------------------------------------
+    # Two independent conditions must hold before this measurement can support ANY advice about a
+    # shipped flag, and both were violated by the first write-up:
+    #   1. the lever's direction must be established on the GAME unit at p<=0.05 (it was p=0.5);
+    #   2. more than one BUDGET must have been measured, because lever orderings reverse between
+    #      budget 400 and budget 2000 (shipped config: 3-4 wins vs median 12).
+    # Anything short of both yields NO_RECOMMENDATION with the reason named.
+    all_measured_rows = list(rows) + list(companion_rows or []) + list(alt_budget_rows or [])
+    single_budget = len({int(r.get("budget") or 0) for r in all_measured_rows}) <= 1
+    flag_recs: dict[str, Any] = {}
+    for arm, v in lv.items():
+        st = v.get("game_unit_sign_test") or {}
+        gv = v.get("generalisation_verdict")
+        if gv == "UNINTERPRETABLE_EMPTY_PASS_REGION":
+            rec, why = (
+                "NO_RECOMMENDATION_UNINTERPRETABLE",
+                "the lever's pass region was empty on every seed: no game it moved was won by "
+                "either arm, so its contribution was arithmetically forced.",
+            )
+        elif not st.get("clears_p_0_05"):
+            rec, why = (
+                "NO_RECOMMENDATION_UNDERPOWERED_ON_GAME_UNIT",
+                f"game-unit exact one-sided sign test p={st.get('p_one_sided_exact')} on "
+                f"{st.get('n_discordant_games')} discordant game(s) "
+                f"(favouring arm: {st.get('movers_favouring_arm')}, favouring control: "
+                f"{st.get('movers_favouring_control')}); smallest reachable p at this support is "
+                f"{st.get('smallest_reachable_p_at_this_n')}. The win-set difference is real and "
+                "attributable, but its direction is not established on the unit that generalises.",
+            )
+        elif single_budget:
+            rec, why = (
+                "NO_RECOMMENDATION_SINGLE_BUDGET",
+                "direction clears p<=0.05 on the game unit, but only ONE budget was measured and "
+                "lever orderings reverse with the budget. Reproduce at the other budget first.",
+            )
+        else:
+            rec, why = (
+                "EVIDENCE_SUPPORTS_A_FLAG_REVIEW",
+                "direction established on the game unit at p<=0.05 and reproduced across more than "
+                "one budget. This is evidence for the OPERATOR to review, not a flip.",
+            )
+        flag_recs[arm] = {
+            "lever": v.get("lever"),
+            "recommendation": rec,
+            "reason": why,
+            "generalisation_verdict": gv,
+            "p_one_sided_exact_game_unit": st.get("p_one_sided_exact"),
+            "smallest_reachable_p_at_this_support": st.get("smallest_reachable_p_at_this_n"),
+        }
+    gate_no_rec = all(
+        rec["recommendation"].startswith("NO_RECOMMENDATION")
+        or (
+            (lv.get(arm, {}).get("game_unit_sign_test") or {}).get("clears_p_0_05")
+            and not single_budget
+        )
+        for arm, rec in flag_recs.items()
+    )
+
+    art: dict[str, Any] = {
         "honest_verdict": honest,
         "honest_verdict_note": (
             "principle: the self-declared terminal state lets the reconciler classify the run "
@@ -858,12 +1286,77 @@ def build_artifact(
         "source_row_files": [str(p) for p in sources],
         "budget_per_game": sorted({int(r.get("budget") or 0) for r in rows}),
         "budget_note": (
-            "principle: measuring at a budget the eval does not grant changes conclusions. 400 is "
-            "the scored agent's own MAX_ACTIONS cap, so it is the eval's condition."
+            "principle: a lever conclusion is only meaningful together with the budget it was "
+            "measured at, and this project has already misread its own source once here. 400 is "
+            "the SHIPPED agent's self-imposed per-game MAX_ACTIONS loop guard, so a budget-400 row "
+            "describes the CURRENT SUBMISSION'S configuration. It is NOT an eval-imposed bound: the "
+            "comment above that constant in arc_competition_agent.py says the real bound is the "
+            "eval's wall-clock budget (<=12h across all games) and that MAX_ACTIONS is an INTENDED "
+            "OVERRIDE POINT (Playback sets it to 1e6). The distinction is load-bearing because "
+            "lever orderings REVERSE with it: at budget 2000 the convention-transfer battery "
+            "measures the shipped configuration as the BEST of four arms (median 12 wins vs 11 "
+            "frontier-only, 9 HUD-only, 7 all-off), while at 400 it wins 3-4 of 25. The sibling "
+            "harness experiment_5836 states the mechanism: measured first-win costs span 20 (lp85) "
+            "to 1747 (cd82) actions, so a budget below ~2000 structurally cannot see most of the "
+            "signal. Therefore NO flag recommendation may rest on one budget alone."
         ),
+        "prior_measurements_that_must_be_reconciled_against": [
+            {
+                "artifact": (
+                    "results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json"
+                ),
+                "condition": "CarnotAgentPolicy dev twin, LLM off, budget 2000, 5 seeds, C0_real",
+                "what_it_measures_that_this_one_does_not": (
+                    "The frontier lever's MAIN EFFECT against the all-off control on the game unit: "
+                    "5 games to 0, exact one-sided sign test p=0.031 -- the only frontier result in "
+                    "this project that clears p<=0.05. It also records the shipped configuration as "
+                    "the top arm in every measured condition (median 12/10/5 wins by condition)."
+                ),
+                "what_it_already_recorded_that_this_run_replicates": (
+                    "Its field `games_where_adding_frontier_destroys_a_hud_win` has C0_real value "
+                    "['tn36'] -- the SAME game this run finds the frontier trio costing. So tn36 is "
+                    "a REPLICATION of a known frontier x HUD antagonism, not new evidence, and the "
+                    "correct reading of the combined evidence is a localised interaction (tn36, and "
+                    "r11l under salience inversion), NOT that the frontier trio is net harmful."
+                ),
+                "cross_seed_variance_it_measured": (
+                    "measured_determinism_per_arm: the FRONT and SHIP arms are "
+                    "measured_deterministic=false with 54 of 75 game-condition cells varying across "
+                    "seeds (the uniform-random tier is seeded). A single-seed win delta on those "
+                    "arms is therefore not a stable quantity."
+                ),
+                "differences_that_prevent_a_direct_numeric_comparison": (
+                    "Different POLICY (CarnotAgentPolicy vs E3AgentPolicy) and different BUDGET "
+                    "(2000 vs 400). Both differences push the same way, so neither artifact can be "
+                    "used to overturn the other without holding one of them fixed."
+                ),
+            }
+        ],
         "lever1_frontier_verdict": v1,
         "lever2_hud_verdict": v2,
         "lever3_hazard_verdict": v3,
+        # COMPUTED, so a recommendation cannot be written by hand at a bar the evidence does not
+        # meet. The first version of this measurement recommended UN-FLIPPING the shipped frontier
+        # trio on a 2-game support at p=0.5, one day after the project used the same test to
+        # withdraw a sibling claim at p=0.5. This field derives the disposition mechanically from
+        # (a) the game-unit sign test and (b) whether more than one budget was measured.
+        "flag_change_recommendation_per_lever": flag_recs,
+        "flag_change_recommendation_note": (
+            "principle: a flag recommendation is a decision, and a decision derived from a "
+            "measurement must be derivable FROM the measurement. NO_RECOMMENDATION_* is the default "
+            "and the only outcome available when the game-unit sign test does not clear 0.05 or the "
+            "result was measured at a single budget -- because lever orderings reverse with the "
+            "budget. Nothing here flips anything: flag changes are the operator's call."
+        ),
+        "acceptance_gate_no_flag_recommendation_without_game_unit_significance": gate_no_rec,
+        "acceptance_gate_no_flag_recommendation_without_game_unit_significance_principle": (
+            "Guards the defect that produced this artifact's first headline: advising a change to "
+            "the shipped submission configuration on a 2-game support at p=0.5. Passes only if "
+            "every lever whose recommendation is anything other than NO_RECOMMENDATION_* has a "
+            "game-unit sign test clearing p<=0.05 AND was measured at more than one budget."
+        ),
+        "budgets_measured": sorted({int(r.get("budget") or 0) for r in all_measured_rows}),
+        "single_budget_measurement": single_budget,
         "acceptance_gate_all_llm_on_rows_had_a_live_generator": gate_llm_live,
         "acceptance_gate_all_llm_on_rows_had_a_live_generator_principle": (
             "Guards the failure mode where the llama-server dies mid-run and the harness keeps "
@@ -883,7 +1376,38 @@ def build_artifact(
             "empty is arithmetic, not measurement. Passes only if every per-seed EFFECT verdict has "
             "a non-empty computed movable-game witness."
         ),
-        "acceptance_gate_violations": effect_without_witness,
+        "acceptance_gate_every_lever_verdict_carries_a_game_unit_sign_test": gate_sign_test,
+        "acceptance_gate_every_lever_verdict_carries_a_game_unit_sign_test_principle": (
+            "Guards the defect this artifact's first version shipped with: three lever verdicts and "
+            "ZERO statistical inference anywhere -- no sign test, no p-value, no statement of what "
+            "the design could reach. The GAME is the replication unit (a hidden game is a fresh "
+            "draw), so a verdict quoted without its game-unit test invites a 2-game support to be "
+            "read as a corpus result. Passes only if every lever verdict carries the test."
+        ),
+        "acceptance_gate_lever_fire_counters_recomputed_from_raw_diagnostics": True,
+        "acceptance_gate_lever_fire_counters_recomputed_from_raw_diagnostics_principle": (
+            "Guards the dead/inverted fire-counter class directly. Lever 2's harness stamp was "
+            "measured to be ANTI-CORRELATED with the lever (it required the shipped mask to exist, "
+            "which is false on exactly the two games the lever moves), so it read 0 in all 430 "
+            "cells while the lever fired. The analyser therefore recomputes the flag from each "
+            "row's recorded HUD digests and reports every disagreement with the harness stamp in "
+            "`fire_census_per_arm.*.lever2_games_where_recomputed_disagrees_with_harness_stamp`."
+        ),
+        # Assembled by SCANNING every acceptance_gate_* boolean below, not by copying one gate's
+        # list. WHY: this field was previously assigned `effect_without_witness`, i.e. it reported
+        # the witness gate ALONE -- so an artifact could carry
+        # `acceptance_gate_all_llm_on_rows_had_a_live_generator=False` and
+        # `acceptance_gate_violations=[]` simultaneously, and any consumer reading the
+        # purpose-named field saw a clean run. Filled in after the dict is built.
+        "acceptance_gate_violations": [],
+        "acceptance_gate_violations_note": (
+            "principle: a machine-readable violations list must enumerate EVERY failing gate, or a "
+            "downstream aggregation reads a failing run as clean. Assembled by scanning all "
+            "acceptance_gate_* booleans in this artifact. `witness_detail` carries the per-arm "
+            "detail that this field used to hold alone."
+        ),
+        "acceptance_gate_violations_witness_detail": effect_without_witness,
+        "acceptance_gate_violations_sign_test_detail": levers_without_sign_test,
         "analysis": analysis,
         # The LLM-OFF companion design: the same five arms, all 25 games, 3 seeds, run with
         # induction disabled. It is ~100x cheaper per cell (no generator), so it can be run at a
@@ -897,8 +1421,24 @@ def build_artifact(
             "measurement of the right one. This section is LLM-OFF and is NOT the scored "
             "condition; the scored condition is `analysis`."
         ),
+        # THE SECOND BUDGET. The same five arms and all 25 games with induction disabled, run at
+        # budget 2000 instead of 400. This section exists because the FATAL defect in this
+        # measurement's first version was a budget misreading that inverted its recommendation:
+        # lever orderings reverse between the shipped agent's self-imposed 400-action loop guard and
+        # a budget large enough for the corpus's measured first-win costs (20 to 1747 actions). It is
+        # embedded here, not published separately, so a reader cannot hold one budget's conclusion
+        # without seeing the other's.
+        "alt_budget_llm_off_design": alt_budget or {},
+        "alt_budget_llm_off_design_note": (
+            "principle: a lever conclusion is budget-conditional, so a single-budget measurement "
+            "cannot support advice about a shipped flag. This section is LLM-OFF at the OTHER "
+            "budget. It is not the scored condition either -- it isolates the budget variable while "
+            "holding the POLICY fixed at E3AgentPolicy, which is what the convention-transfer "
+            "battery (a different policy at budget 2000) could not do."
+        ),
         "rows": rows,
         "companion_rows": companion_rows or [],
+        "alt_budget_rows": alt_budget_rows or [],
         "flags_flipped": [],
         "flags_flipped_note": (
             "principle: a measurement must not change the thing it measures. NO flag was flipped "
@@ -908,12 +1448,37 @@ def build_artifact(
         ),
     }
 
+    # SCAN every acceptance gate. Any `acceptance_gate_<name>` whose value is exactly False becomes
+    # a named violation. Keys ending in `_principle`/`_note`/`_detail` are prose, and
+    # `acceptance_gate_violations*` are the outputs themselves, so both are skipped. This is
+    # deliberately a scan rather than a hand-maintained list: the previous version had to be
+    # remembered when a gate was added, and it was not.
+    violations = [
+        k
+        for k, v in art.items()
+        if k.startswith("acceptance_gate_")
+        and not k.startswith("acceptance_gate_violations")
+        and not k.endswith(("_principle", "_note", "_detail"))
+        and v is False
+    ]
+    art["acceptance_gate_violations"] = violations
+    return art
+
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rows", nargs="+", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--companion-rows", nargs="*", default=[])
+    ap.add_argument(
+        "--alt-budget-rows",
+        nargs="*",
+        default=[],
+        help="row files measured at the OTHER budget (the same arms, LLM off). Required to lift "
+        "the single-budget block on any flag recommendation, because lever orderings reverse "
+        "between the shipped agent's 400-action loop guard and a budget large enough for the "
+        "corpus's measured first-win costs.",
+    )
     ap.add_argument(
         "--companion-condition",
         default="llmoff",
@@ -941,7 +1506,19 @@ def main(argv: list[str]) -> int:
         set_condition("_" + a.companion_condition)
         companion = analyse(companion_rows)
         set_condition("_" + a.condition)
-    art = build_artifact(analysis, rows, sources, t0, companion, companion_rows)
+    alt_budget: dict | None = None
+    alt_budget_rows: list[dict] | None = None
+    if a.alt_budget_rows:
+        # Scored with the SAME analyser and the same control-arm suffix as the companion, so the
+        # two budgets are compared by identical machinery. Restoring the primary condition
+        # afterwards is load-bearing for the same reason it is for the companion.
+        alt_budget_rows = load_rows([Path(x) for x in a.alt_budget_rows])
+        set_condition("_" + a.companion_condition)
+        alt_budget = analyse(alt_budget_rows)
+        set_condition("_" + a.condition)
+    art = build_artifact(
+        analysis, rows, sources, t0, companion, companion_rows, alt_budget, alt_budget_rows
+    )
     Path(a.out).write_text(json.dumps(art, indent=1, default=str))
     print(json.dumps({k: v for k, v in analysis.items() if k != "rows"}, indent=1, default=str))
     return 0
