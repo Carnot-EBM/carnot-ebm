@@ -2,12 +2,10 @@ import numpy as np
 
 def engine(grid, action, data):
     if action == 6:
-        if data is None:
-            return grid
         px, py = data['x'], data['y']
-        if grid[py, px] == 14:
-            grid[py, px] = 15
+        if 0 <= py < 64 and 0 <= px < 64:
+            grid[py, px] = 14
     return grid
 
 def is_level_complete(grid):
-    return np.all(grid == 15)
+    return grid[63, 0] == 14
