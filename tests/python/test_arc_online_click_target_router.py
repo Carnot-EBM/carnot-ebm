@@ -3,7 +3,8 @@
 Spec refs: REQ-ARC-FCP-5904, SCENARIO-ARC-FCP-5904-COORDINATE-BLINDNESS-IS-REPAIRED,
 SCENARIO-ARC-FCP-5904-COLD-START-IS-A-NO-OP, SCENARIO-ARC-FCP-5904-EPISODE-ISOLATION,
 SCENARIO-ARC-FCP-5904-PER-FRAME-NOT-PER-CANDIDATE,
-SCENARIO-ARC-FCP-5904-ONLY-CLICK-POSITIONS-CHANGE.
+SCENARIO-ARC-FCP-5904-ONLY-CLICK-POSITIONS-CHANGE,
+REQ-ARC-FCP-5927, SCENARIO-ARC-FCP-5927-COMMITTED-OUTCOME-HOOK.
 
 Two of these tests are the load-bearing ones:
 
@@ -543,6 +544,119 @@ def test_observe_click_outcome_labels_from_the_observed_frame_pair() -> None:
     )
     assert head.stats()["n_positives"] == 2
     assert head.stats()["n_level_up_labels"] == 1
+
+
+def test_req_5927_committed_outcome_hook_updates_only_matching_commit() -> None:
+    """SCENARIO-ARC-FCP-5927-COMMITTED-OUTCOME-HOOK: delayed outcomes are allowed, but
+    an uncommitted or cross-game outcome must not create samples."""
+
+    grid = _grid()
+    before = _Frame(grid, game_id="aa11-game", guid="episode-a")
+    other_game = _Frame(grid, game_id="bb22-game", guid="episode-b")
+    changed = _Frame(grid.copy(), game_id="aa11-game", guid="episode-a")
+    changed.frame[22, 22] = 5
+    action = _Action(6, 2, 16)
+
+    router = OnlineClickTargetRouter(None, enabled=True)
+    assert (
+        router.observe_click_outcome(
+            before, action, changed, commit_id="missing", outcome_id="out-missing"
+        )
+        is False
+    )
+    assert router.stats()["episodes"] == 0
+
+    receipt = router.commit_click_action(before, action, commit_id="commit-1")
+    assert receipt["committed"] is True
+    assert router.stats()["pending_committed_outcomes"] == 1
+
+    assert (
+        router.observe_click_outcome(
+            other_game, action, changed, commit_id="commit-1", outcome_id="out-cross"
+        )
+        is False
+    )
+    assert router.discriminator_for(before).stats()["n_samples"] == 0
+
+    assert (
+        router.observe_click_outcome(
+            before, action, changed, commit_id="commit-1", outcome_id="out-1"
+        )
+        is True
+    )
+    assert router.discriminator_for(before).stats()["n_samples"] == 1
+    assert router.stats()["pending_committed_outcomes"] == 0
+
+    assert (
+        router.observe_click_outcome(
+            before, action, changed, commit_id="commit-1", outcome_id="out-1"
+        )
+        is False
+    )
+    assert router.discriminator_for(before).stats()["n_samples"] == 1
+
+
+def test_req_5927_rollback_reset_duplicate_missing_and_replay_matrix() -> None:
+    """SCENARIO-ARC-FCP-5927-COMMITTED-OUTCOME-HOOK: every non-matching outcome path
+    is fail-closed and bounded within the episode."""
+
+    grid = _grid()
+    before = _Frame(grid, game_id="aa11-game", guid="episode-a")
+    after = _Frame(grid.copy(), game_id="aa11-game", guid="episode-a")
+    after.frame[20, 20] = 12
+    action = _Action(6, 8, 16)
+    router = OnlineClickTargetRouter(None, enabled=True, max_pending_outcomes=2)
+
+    assert router.commit_click_action(before, action, commit_id="rollback")["committed"] is True
+    assert router.rollback_click_outcome("rollback", frame=before)["rolled_back"] is True
+    assert (
+        router.observe_click_outcome(
+            before, action, after, commit_id="rollback", outcome_id="out-rollback"
+        )
+        is False
+    )
+
+    assert router.commit_click_action(before, action, commit_id="c1")["committed"] is True
+    assert router.commit_click_action(before, action, commit_id="c2")["committed"] is True
+    assert router.commit_click_action(before, action, commit_id="c3")["committed"] is True
+    assert router.stats()["pending_committed_outcomes"] == 2
+    assert (
+        router.observe_click_outcome(before, action, after, commit_id="c1", outcome_id="out-c1")
+        is False
+    )
+
+    assert (
+        router.observe_click_outcome(before, action, after, commit_id="c2", outcome_id="out-c2")
+        is True
+    )
+    assert (
+        router.observe_click_outcome(before, action, after, commit_id="c3", outcome_id="out-c2")
+        is False
+    )
+    assert router.discriminator_for(before).stats()["n_samples"] == 1
+
+    router.commit_click_action(before, action, commit_id="reset-me")
+    assert router.stats()["pending_committed_outcomes"] >= 1
+    router.reset_episode()
+    assert router.stats()["pending_committed_outcomes"] == 0
+    assert (
+        router.observe_click_outcome(
+            before, action, after, commit_id="reset-me", outcome_id="out-reset"
+        )
+        is False
+    )
+
+
+@pytest.mark.memory_watchdog_skip
+def test_req_5927_submitted_loader_exposes_default_off_observation_hook() -> None:
+    """REQ-ARC-FCP-5927: the hook must be reachable while preserving the default-off path."""
+
+    from carnot.agentic.arc_competition_agent import _load_submitted_candidate_router
+
+    router = _load_submitted_candidate_router(game_id="aa11-test")
+    assert isinstance(router, OnlineClickTargetRouter)
+    assert router.enabled is False
+    assert hasattr(router, "observe_click_outcome")
 
 
 def test_observe_click_outcome_is_a_no_op_when_disabled() -> None:

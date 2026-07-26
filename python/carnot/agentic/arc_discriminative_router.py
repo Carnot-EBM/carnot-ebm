@@ -272,6 +272,8 @@ class OnlineClickTargetRouter:
         weight: float = 0.25,
         discriminator: OnlineClickTargetDiscriminator | None = None,
         max_episodes: int = 2,
+        max_pending_outcomes: int = 16,
+        max_observed_outcomes: int = 64,
     ) -> None:
         self.base = base
         self.enabled = (
@@ -279,6 +281,8 @@ class OnlineClickTargetRouter:
         )
         self.weight = float(weight)
         self.max_episodes = max(1, int(max_episodes))
+        self.max_pending_outcomes = max(1, int(max_pending_outcomes))
+        self.max_observed_outcomes = max(1, int(max_observed_outcomes))
         # An explicitly-supplied discriminator is a TEST/EXPERIMENT INJECTION so the caller can
         # hold a handle on the head. It is bound to the FIRST episode only; every subsequent
         # episode gets a fresh head.
@@ -293,6 +297,8 @@ class OnlineClickTargetRouter:
         # cross-game head, whatever the caller intended.
         self._pending_injected_discriminator = discriminator
         self._episodes: "OrderedDict[tuple[str, str], tuple[OnlineClickTargetDiscriminator, ClickEpisodeState]]" = OrderedDict()
+        self._pending_outcomes: "OrderedDict[tuple[str, str, str], dict[str, Any]]" = OrderedDict()
+        self._observed_outcome_ids: "OrderedDict[tuple[str, str, str], None]" = OrderedDict()
 
     # ------------------------------------------------------------------ episode state
 
@@ -319,6 +325,8 @@ class OnlineClickTargetRouter:
         """Forget all online state. Never persisted to disk; nothing survives a process."""
 
         self._episodes.clear()
+        self._pending_outcomes.clear()
+        self._observed_outcome_ids.clear()
 
     def discriminator_for(self, frame: Any) -> OnlineClickTargetDiscriminator:
         return self._episode(frame)[0]
@@ -473,6 +481,85 @@ class OnlineClickTargetRouter:
 
     # ------------------------------------------------------------------ observation
 
+    def commit_click_action(
+        self,
+        frame_before: Any,
+        action: Any,
+        *,
+        commit_id: str,
+    ) -> dict[str, Any]:
+        """Record that a click was actually committed before its delayed outcome arrives."""
+
+        if not self.enabled:
+            return {"committed": False, "reason": "disabled"}
+        coords = click_coordinates(action)
+        if coords is None:
+            return {"committed": False, "reason": "not_click"}
+        try:
+            context = click_target_frame_context(frame_before)
+            _discriminator, episode_state = self._episode(frame_before)
+            features = click_target_features(
+                context, coords[0], coords[1], episode_state=episode_state
+            )
+            game_id, guid = _episode_key(frame_before)
+            key = (game_id, guid, str(commit_id))
+            self._pending_outcomes[key] = {
+                "features": list(features),
+                "coords": (int(coords[0]), int(coords[1])),
+                "object_identity": click_target_object_identity(context, coords[0], coords[1]),
+                "action_key": candidate_action_key(action),
+            }
+            self._pending_outcomes.move_to_end(key)
+            while len(self._pending_outcomes) > self.max_pending_outcomes:
+                self._pending_outcomes.popitem(last=False)
+            return {
+                "committed": True,
+                "commit_id": str(commit_id),
+                "episode": f"{game_id}/{guid}",
+                "pending": len(self._pending_outcomes),
+            }
+        except Exception:
+            return {"committed": False, "reason": "exception"}
+
+    def rollback_click_outcome(
+        self,
+        commit_id: str,
+        *,
+        frame: Any | None = None,
+    ) -> dict[str, Any]:
+        """Discard a committed click when the caller rolls back before an outcome arrives."""
+
+        commit = str(commit_id)
+        if frame is None:
+            keys = [key for key in self._pending_outcomes if key[2] == commit]
+        else:
+            game_id, guid = _episode_key(frame)
+            keys = [(game_id, guid, commit)]
+        removed = 0
+        for key in keys:
+            if self._pending_outcomes.pop(key, None) is not None:
+                removed += 1
+        return {"rolled_back": bool(removed), "removed": removed}
+
+    def _record_click_outcome(
+        self,
+        frame_before: Any,
+        action: Any,
+        frame_after: Any,
+        *,
+        features: Sequence[float],
+        coords: tuple[int, int],
+        object_identity: str | None,
+        leveled_up: bool,
+    ) -> bool:
+        discriminator, episode_state = self._episode(frame_before)
+        changed = _grids_differ(frame_before, frame_after)
+        label = 1.0 if (changed or leveled_up) else 0.0
+        discriminator.observe(features, label, leveled_up=bool(leveled_up))
+        episode_state.observe_click(coords[0], coords[1], object_identity)
+        discriminator.maybe_fit()
+        return True
+
     def observe_click_outcome(
         self,
         frame_before: Any,
@@ -480,6 +567,8 @@ class OnlineClickTargetRouter:
         frame_after: Any,
         *,
         leveled_up: bool = False,
+        commit_id: str | None = None,
+        outcome_id: str | None = None,
     ) -> bool:
         """Feed one of the agent's OWN executed clicks back into the online head.
 
@@ -496,22 +585,50 @@ class OnlineClickTargetRouter:
         coords = click_coordinates(action)
         if coords is None:
             return False
+        if commit_id is not None:
+            try:
+                game_id, guid = _episode_key(frame_before)
+                outcome_key = (game_id, guid, str(outcome_id or commit_id))
+                if outcome_key in self._observed_outcome_ids:
+                    return False
+                pending_key = (game_id, guid, str(commit_id))
+                pending = self._pending_outcomes.get(pending_key)
+                if pending is None:
+                    return False
+                if tuple(pending.get("action_key", ())) != candidate_action_key(action):
+                    return False
+                recorded = self._record_click_outcome(
+                    frame_before,
+                    action,
+                    frame_after,
+                    features=pending["features"],
+                    coords=pending["coords"],
+                    object_identity=pending.get("object_identity"),
+                    leveled_up=bool(leveled_up),
+                )
+                if recorded:
+                    self._pending_outcomes.pop(pending_key, None)
+                    self._observed_outcome_ids[outcome_key] = None
+                    self._observed_outcome_ids.move_to_end(outcome_key)
+                    while len(self._observed_outcome_ids) > self.max_observed_outcomes:
+                        self._observed_outcome_ids.popitem(last=False)
+                return recorded
+            except Exception:
+                return False
         try:
             context = click_target_frame_context(frame_before)
-            discriminator, episode_state = self._episode(frame_before)
             features = click_target_features(
-                context, coords[0], coords[1], episode_state=episode_state
+                context, coords[0], coords[1], episode_state=self._episode(frame_before)[1]
             )
-            changed = _grids_differ(frame_before, frame_after)
-            label = 1.0 if (changed or leveled_up) else 0.0
-            discriminator.observe(features, label, leveled_up=bool(leveled_up))
-            episode_state.observe_click(
-                coords[0],
-                coords[1],
-                click_target_object_identity(context, coords[0], coords[1]),
+            return self._record_click_outcome(
+                frame_before,
+                action,
+                frame_after,
+                features=features,
+                coords=(int(coords[0]), int(coords[1])),
+                object_identity=click_target_object_identity(context, coords[0], coords[1]),
+                leveled_up=bool(leveled_up),
             )
-            discriminator.maybe_fit()
-            return True
         except Exception:
             return False
 
@@ -520,6 +637,8 @@ class OnlineClickTargetRouter:
             "enabled": self.enabled,
             "weight": self.weight,
             "episodes": len(self._episodes),
+            "pending_committed_outcomes": len(self._pending_outcomes),
+            "observed_outcome_ids": len(self._observed_outcome_ids),
             "per_episode": {
                 f"{game_id}/{guid}": discriminator.stats()
                 for (game_id, guid), (discriminator, _state) in self._episodes.items()

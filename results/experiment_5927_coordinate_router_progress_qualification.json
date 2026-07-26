@@ -1,0 +1,431 @@
+{
+  "coordinate_over_static_delta_and_interval": {
+    "ci95": [
+      0.07042296413264151,
+      0.23027026351567498
+    ],
+    "delta": 0.14546217457212277,
+    "excludes_zero": true,
+    "fraction_replicates_le_zero": 0.0,
+    "n_bootstrap": 300,
+    "n_replicates_dropped_degenerate": 0,
+    "n_replicates_used": 300,
+    "resampling": "paired row bootstrap within each (game,state_index)"
+  },
+  "coordinate_router_progress_ready_score": 0.0,
+  "coordinate_static_blind_step_and_random_controls": {
+    "blind_action_id": {
+      "distinct_scores": 1,
+      "distinct_scores_per_state_max": 1,
+      "n_scores": 389,
+      "source": "coordinate-blind action id"
+    },
+    "coordinate": {
+      "distinct_scores": 330,
+      "distinct_scores_per_state_max": 48,
+      "n_scores": 389,
+      "source": "leave-state-out OnlineClickTargetDiscriminator"
+    },
+    "random": {
+      "distinct_scores": 389,
+      "distinct_scores_per_state_max": 48,
+      "n_scores": 389,
+      "source": "seeded hash control"
+    },
+    "static_salience": {
+      "distinct_scores": 48,
+      "distinct_scores_per_state_max": 48,
+      "n_scores": 389,
+      "source": "inverse candidate salience rank"
+    },
+    "step_index": {
+      "distinct_scores": 13,
+      "distinct_scores_per_state_max": 1,
+      "n_scores": 389,
+      "source": "zero-perception state index"
+    }
+  },
+  "cross_game_checkpoint_loaded": false,
+  "cross_game_isolation_and_leakage_checks": {
+    "cross_game_checkpoint_loaded": false,
+    "feature_keys_exclude_labels": true,
+    "future_outcomes_used_as_current_features": false,
+    "label_columns_excluded_from_current_features": [
+      "raw_frame_change",
+      "ui_animation",
+      "state_novelty",
+      "validated_progress"
+    ],
+    "leave_state_training_scope": "same_game_only",
+    "online_within_game_only": true
+  },
+  "default_enabled": false,
+  "duration_s": 31.697457,
+  "field_provenance": {
+    "coordinate_over_static_delta_and_interval": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "coordinate_router_progress_ready_score": {
+      "principle": "emit bare 1.0 only for at least 30 hard positives, interval-separated coordinate gain over static salience, no leakage, random sanity, hook correctness, and no old-path regression.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "coordinate_static_blind_step_and_random_controls": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "cross_game_checkpoint_loaded": {
+      "principle": "must be bare false.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "cross_game_isolation_and_leakage_checks": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "default_enabled": {
+      "principle": "must be bare false unless the full preregistered promotion gate passes, and the task still may not mutate the default.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "duration_s": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "field_provenance": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "frame_change_vs_validated_progress_receipts": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "games_states_rows_and_label_manifest": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "hard_progress_positive_count_and_power_gate": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "honest_verdict": {
+      "principle": "use `complete_ready:`, `complete_underpowered:`, `retired:`, or `blocked:`.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "inference_substrate": {
+      "principle": "use `deterministic_offline_arc_development_proxy_no_llm`.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "no_level_solve_or_registry_update": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "observe_click_outcome_contract_and_tests": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "old_path_regression_receipt": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "online_within_game_only": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "preconditions_checked": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "protected_files_unchanged": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "random_control_sanity": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "registry_precheck_receipt": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "reproducibility_checksum": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "reset_rollback_delay_duplicate_missing_and_replay_matrix": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "solve_provenance": {
+      "principle": "use `development_proxy`; this offline qualification receives no level credit.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "status": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "test_commands": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "test_exit_codes": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "verifier_is_oracle": {
+      "principle": "true only for environment progress, action legality, and exact replay labels.",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    },
+    "within_state_and_leave_state_out_metrics": {
+      "principle": "required artifact schema field",
+      "source": "REQ-ARC-FCP-5927 task contract, normalized corpus, tests, or command receipt"
+    }
+  },
+  "frame_change_vs_validated_progress_receipts": {
+    "label_contract_frozen_before_fitting": true,
+    "primary_slice": "validated_progress conditioned on raw_frame_change",
+    "raw_frame_change_rows": 389,
+    "state_novelty_rows": 119,
+    "ui_animation_rows": 0,
+    "validated_progress_rows": 27,
+    "validated_progress_without_raw_frame_change_rows": 0
+  },
+  "games_states_rows_and_label_manifest": {
+    "games": [
+      "lp85",
+      "r11l",
+      "su15",
+      "tn36",
+      "vc33"
+    ],
+    "label_contract": {
+      "raw_frame_change": "settled grid bytes changed after stepping the candidate click",
+      "state_novelty": "candidate outcome produced a novel settled state within that source state",
+      "ui_animation": "raw rendered frame changed while the settled grid did not",
+      "validated_progress": "environment level counter increased after the candidate click"
+    },
+    "n_games": 5,
+    "n_states": 14,
+    "per_game": {
+      "lp85": {
+        "rows": 182,
+        "states": 4,
+        "validated_progress_rows": 7
+      },
+      "r11l": {
+        "rows": 26,
+        "states": 1,
+        "validated_progress_rows": 10
+      },
+      "su15": {
+        "rows": 26,
+        "states": 1,
+        "validated_progress_rows": 2
+      },
+      "tn36": {
+        "rows": 330,
+        "states": 7,
+        "validated_progress_rows": 7
+      },
+      "vc33": {
+        "rows": 11,
+        "states": 1,
+        "validated_progress_rows": 1
+      }
+    },
+    "raw_frame_change_rows": 389,
+    "row_count": 575,
+    "state_novelty_rows": 119,
+    "ui_animation_only_rows": 0,
+    "validated_progress_rows": 27
+  },
+  "hard_progress_positive_count_and_power_gate": {
+    "hard_progress_positive_count": 27,
+    "hard_progress_row_count": 389,
+    "min_positive_rows": 30,
+    "powered": false,
+    "status": "underpowered"
+  },
+  "honest_verdict": "complete_underpowered: hard_progress_positive_count_27_below_30_no_promotion",
+  "inference_substrate": "deterministic_offline_arc_development_proxy_no_llm",
+  "no_level_solve_or_registry_update": {
+    "no_level_solve_claimed": true,
+    "offline_qualification_receives_level_credit": false,
+    "principle": "development_proxy evidence receives no ARC solve credit",
+    "registry_update_performed": false
+  },
+  "observe_click_outcome_contract_and_tests": {
+    "bounded_within_game_state": true,
+    "committed_action_required_for_delayed_outcome": true,
+    "default_off_no_observation_side_effect": true,
+    "direct_observe_path_retained_for_existing_offline_tests": true,
+    "passed": true,
+    "tests": [
+      "test_req_5927_committed_outcome_hook_updates_only_matching_commit",
+      "test_req_5927_rollback_reset_duplicate_missing_and_replay_matrix",
+      "test_req_5927_submitted_loader_exposes_default_off_observation_hook"
+    ],
+    "updates_only_after_later_validated_outcome": true
+  },
+  "old_path_regression_receipt": {
+    "default_off": true,
+    "non_click_position_contract_retained": true,
+    "old_coordinate_blind_base_router_remains_wrapped": true,
+    "passed": true,
+    "submitted_loader_returns_default_off_online_wrapper": true
+  },
+  "online_within_game_only": true,
+  "preconditions_checked": {
+    "atomic_checkpoint_resume": {
+      "atomic_write": true,
+      "checkpoint_path": "results/checkpoints/experiment_5927_coordinate_router_progress_qualification.corpus.json",
+      "enabled": true
+    },
+    "cross_game_checkpoint_loaded": false,
+    "deterministic_seeds": [
+      5927
+    ],
+    "disk_free_bytes": 1221855506432,
+    "online_within_game_only": true,
+    "output_path": "results/experiment_5927_coordinate_router_progress_qualification.json",
+    "ram_available_bytes": 126291394560,
+    "random_seed": 5927,
+    "registry_precheck_passed": true,
+    "rows_normalized": 575,
+    "run_date": "20260726",
+    "source_and_input_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/arc-human-replay-frame-change/spec.md": "sha256:8e2dd3ec18c7785a8b8ac2b69abf3ee288aed06226518ab741a0e8521711de9c",
+      "ops/arc_solve_registry.yaml": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+      "ops/known-issues.md": "sha256:9a62ec592a4d02ef5723061794ee518dbf5cfd53684820df87907e3905f4eb95",
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:ff21a6fb724c025609869c62468600bb612e2603e898c80650992a92125d7274",
+      "python/carnot/agentic/arc_discriminative_router.py": "sha256:72b0a1f1e747532230f1628873a334fdeb55dc760c6910356e34f057ade4cb83",
+      "python/carnot/experiment_5927_coordinate_router_progress_qualification.py": "sha256:f9514ae8d364511e141bd43edc58ee899644574e9fbf344b87d667a78385a1cd",
+      "results/experiment_5758_click_ranking_fix_ab.json": "sha256:bed9cb38ccf7eb24ac12b27559e2b8ef530f1d09612b9cc78d90aadc68b30b88",
+      "results/experiment_5904_click_target_discrimination.json": "sha256:292d6922982ee5916c743e530057e2dd2f4f0362f83a4dd55a35e0a37830e7db",
+      "scripts/arc_loop_solve.py": "sha256:444761539f0e8acf796cbd3c9bdc1f80e8946c1af64d1a8c5e7d00fedf1f2086",
+      "tests/python/test_arc_online_click_target_router.py": "sha256:a24aec0ee6586c4fb14e43cc4eafcf2cf0dd78ad6d43ec9e6923d62d60127428",
+      "tests/python/test_experiment_5927_coordinate_router_progress_qualification.py": "sha256:db26e04d4e373d1b6232cc6fbf2e081d6a7e8830c492dd5c5f517d32d7d03e9e"
+    }
+  },
+  "protected_files_unchanged": {
+    "hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:6398b2531e17c612eb80b4a5e7173f52bfba7a009d104343f9d3569590255e96",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "note": "no writes are performed to protected files by this experiment module",
+    "protected_paths": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "unchanged": true
+  },
+  "random_control_sanity": {
+    "distinct_scores": 389,
+    "passed": true,
+    "seed": 5927,
+    "within_state_auroc": 0.5595026642984015
+  },
+  "registry_precheck_receipt": {
+    "all_selected_games_known": true,
+    "excluded_solve_target": true,
+    "receipt": "selected games checked against registry; no solve target selected",
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_sha256": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "selected_games": [
+      "lp85",
+      "r11l",
+      "su15",
+      "tn36",
+      "vc33"
+    ],
+    "solve_target_selected": false
+  },
+  "reproducibility_checksum": "sha256:663fb12930af522c5f563273f19a2121e51a9df1196b385794a521164a540acf",
+  "reset_rollback_delay_duplicate_missing_and_replay_matrix": {
+    "all_passed": true,
+    "cross_game_isolation": "commit key includes game_id and guid",
+    "delayed_outcome": "matching commit id records one sample",
+    "duplicate_outcome": "duplicate outcome id rejected",
+    "missing_outcome": "unknown commit id rejected without creating an episode",
+    "replay": "same committed outcome cannot be replayed into a second sample",
+    "reset": "pending commits and observed outcome ids cleared",
+    "rollback": "matching pending commit removed before outcome"
+  },
+  "solve_provenance": "development_proxy",
+  "status": "complete_underpowered",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5927_coordinate_router_progress_qualification.py tests/python/test_arc_online_click_target_router.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5927_coordinate_router_progress_qualification.py -m pytest tests/python/test_experiment_5927_coordinate_router_progress_qualification.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5927_coordinate_router_progress_qualification.py --fail-under=100",
+    ".venv/bin/ruff check python/carnot/experiment_5927_coordinate_router_progress_qualification.py python/carnot/agentic/arc_discriminative_router.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_5927_coordinate_router_progress_qualification.py tests/python/test_arc_online_click_target_router.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5927_coordinate_router_progress_qualification.py python/carnot/agentic/arc_discriminative_router.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_5927_coordinate_router_progress_qualification.py tests/python/test_arc_online_click_target_router.py",
+    ".venv/bin/python -m carnot.experiment_5927_coordinate_router_progress_qualification --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5927_coordinate_router_progress_qualification.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5927_coordinate_router_progress_qualification.py tests/python/test_arc_online_click_target_router.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {},
+  "verifier_is_oracle": true,
+  "within_state_and_leave_state_out_metrics": {
+    "leave_state_out": {
+      "blind_action_id": {
+        "auroc": 0.5,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "coordinate": {
+        "auroc": 0.7744227353463587,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "random": {
+        "auroc": 0.5595026642984015,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "static_salience": {
+        "auroc": 0.6358792184724689,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "step_index": {
+        "auroc": 0.5,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      }
+    },
+    "within_state": {
+      "blind_action_id": {
+        "auroc": 0.5,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "coordinate": {
+        "auroc": 0.7744227353463587,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "random": {
+        "auroc": 0.5595026642984015,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "static_salience": {
+        "auroc": 0.6358792184724689,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      },
+      "step_index": {
+        "auroc": 0.5,
+        "n_scored_rows": 389,
+        "n_scored_states": 14
+      }
+    }
+  }
+}
