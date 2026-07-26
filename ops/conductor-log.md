@@ -14317,3 +14317,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 07:24 UTC | Exact terminal-boundary handoff from .526 into .52 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-26 08:05 UTC | Aggregation-aware adversarial-verifier substrate r | OK | 137 passed, 1 warning in 12.33s |
 | 2026-07-26 08:45 UTC | Dated evidence refresh after the V527 planner mark | OK | 111 passed, 2 warnings in 17.11s |
+| 2026-07-26 09:09 UTC | Non-pruning atomic ConstraintIR support and exact- | OK | 111 passed, 1 warning in 9.59s |
