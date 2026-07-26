@@ -36,10 +36,71 @@ much larger private holdout (reports cite ~110 games split public/private leader
 **Consequence: our 11 banked replays score ~0 on the leaderboard (those public games are
 not in the eval set). The recognize-and-replay v1 agent validated the harness
 integration but is WORTHLESS for scoring. The GENERIC step-wise solver (#2) is the
-ENTIRE competitive value.** Scoring also rewards EFFICIENCY:
-per-level score = `min(human_actions / agent_actions, 1.0)`, squared — so fewer actions
-(our verifier-routed search) is directly worth more. Final eval cap (preview): 8h
+ENTIRE competitive value.** Scoring also rewards EFFICIENCY. Final eval cap (preview): 8h
 wall-clock, 10 steps/sec.
+
+**CORRECTION 2026-07-26 — the efficiency formula stated here was a PROJECT PARAPHRASE and it was
+wrong.** This paragraph originally read "per-level score = `min(human_actions / agent_actions, 1.0)`,
+squared". It was already caught and retracted inside the eval harness on 2026-06-20
+(`scripts/arc_leaderboard_eval.py:340-348`) but this document was never corrected, so the wrong
+formula stayed quotable for five weeks and was re-derived from here more than once. Read off the
+INSTALLED `arc_agi.scorecard` — the package the competition gateway itself runs — the real
+definitions are:
+
+- **Per level (the STORED per-level score):**
+  `min((baseline_actions / actions_taken)**2 * 100, 115.0)` (`scorecard.py:166-173`). There is no
+  clamp at 1.0 before squaring, so a superhuman solve does store a value above 100 — but see the
+  next bullet: that headroom is clamped away at game level, so it cannot reward superhuman play in
+  the score anyone is graded on.
+- **A level that was not completed scores `0.0`**, regardless of how many actions were charged to it
+  (`scorecard.py:178-183`).
+- **Actions are charged PER LEVEL by differencing successive level-up checkpoints**,
+  `level_actions = actions_at_level - prev_actions` (`scorecard.py:474-491`). Everything after the
+  LAST level-up therefore lands in the first not-completed level's bucket, which scores 0 — **the
+  post-solve tail costs exactly zero score.**
+- **Per game:** an INDEX-WEIGHTED mean over the game's full level list, **then clamped to the
+  all-scoring-levels ceiling** (`scorecard.py:189-206`):
+  `score = min(sum(level_score_i * i) / sum(i), max_weights / total_weights * 100)`, where `i` is the
+  1-based level index used as the weight (`level_index=level_idx + 1`, `scorecard.py:486`) and
+  `max_weights` sums the weights of only the levels that scored above zero. Unsolved levels
+  contribute 0 to the numerator but their weight stays in the denominator, so **DEPTH is the
+  dominant lever** — 1/2/4/8 of 8 levels solved at exactly human speed scores
+  2.78 / 8.33 / 27.78 / 100 (all four reproduced against the installed scorer, 2026-07-26).
+- **A GAME score can never exceed 100, so the 115 per-level cap is unreachable in the graded
+  number.** Because `max_weights <= total_weights` always, the clamp above is `<= 100`. Worked
+  example, run against the installed `EnvironmentScoreCalculator`: a 20-action human baseline solved
+  in 15 actions stores a per-level score of **115.0** and yields a game score of exactly **100.0**.
+  A 20,000-configuration random search over level counts, completion patterns, baselines and action
+  counts found a maximum game score of exactly 100.0. **What the clamp means in practice: a game can
+  never score above what human-speed play on the levels it solved would have scored.** Verified
+  against the installed scorer: 1 of 8 levels solved scores 2.7778 at human speed and 2.7778 at 10x
+  human speed — identical. Superhuman efficiency is therefore worth exactly zero as a bonus; its only
+  value is COMPENSATORY, offsetting a level solved SLOWER than human (2 of 8 with L1 at 1.4x human
+  actions scores 6.9728 with human-speed L2, 7.8061 with 10x-superhuman L2, against the 8.3333
+  human-speed-everywhere ceiling). **Depth, then not-being-slow. Never speed for its own sake.**
+  (Added 2026-07-26: an earlier draft of THIS correction
+  block claimed "115, not 100" for that example — the same misreading of the same file, one bullet
+  away from the paraphrase it was retracting. The clamp had been omitted.)
+- **RESET is charged as an action by the gateway** (`scorecard.py:701-704`) but as zero by our offline
+  harness (`arc_leaderboard_eval.py:308-313`), so offline efficiency is optimistic by the number of
+  resets inside each level.
+
+Two consequences that were being read backwards from the old paraphrase: raising the action budget
+cannot cost score through a post-solve tail (only by delaying a level-up, which a raised cap cannot
+do), and cutting that tail cannot gain score either — it is a wall-clock and memory lever. Measured
+2026-07-26, `results/outer_loop_arc_early_stop_grace_sweep_20260726.json`.
+
+At the SHIPPED budget (`MAX_ACTIONS = 400`) that wall-clock lever is close to worthless, and the
+measurement says so precisely rather than by assertion. A grace window is safe in-sample only above
+the largest inter-level-up gap (340.2 frames) and fires at all only below the largest post-solve tail
+(372.3 frames), so the whole usable range at b400 is roughly (340, 372). The one value measured inside
+it, grace 350, fires on **1 of 75 cells**, costs no level, moves no score, and saves **0.072% of
+corpus actions**. Nothing about the mechanism is broken; there is simply almost no post-solve tail to
+cut inside a 400-action cap. Note also that no fixed grace value tested was safe at more than one
+budget: 3 of the 4 values tested at two or more budgets passed at one and regressed levels at another,
+so a fixed window does not generalise — an adaptive one (scaled to the run's own observed gaps) is the
+only form that could, and it is unmeasured. `SUBMITTED_EARLY_STOP_GRACE` remains `None`; the decision
+is the operator's.
 
 ### (historical) The open question this resolved:
 - **If eval == the public 25 games (same layouts):** an agent that runs our solver +

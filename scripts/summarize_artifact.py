@@ -38,9 +38,11 @@ USAGE
     python3 scripts/summarize_artifact.py 3507          # by experiment id
     python3 scripts/summarize_artifact.py --recent 10   # last N by mtime
 """
+
 from __future__ import annotations
 
 import glob
+import hashlib
 import json
 import re
 import sys
@@ -57,9 +59,26 @@ RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 
 # Field-name fragments that usually carry the headline number of an experiment.
 _HEADLINE_HINTS = (
-    "auroc", "accuracy", "acc", "solve_rate", "pass_rate", "tpr", "fpr",
-    "f1", "precision", "recall", "delta", "lift", "improvement", "score",
-    "energy", "kl", "flip", "n_samples", "n_problems", "n_completed",
+    "auroc",
+    "accuracy",
+    "acc",
+    "solve_rate",
+    "pass_rate",
+    "tpr",
+    "fpr",
+    "f1",
+    "precision",
+    "recall",
+    "delta",
+    "lift",
+    "improvement",
+    "score",
+    "energy",
+    "kl",
+    "flip",
+    "n_samples",
+    "n_problems",
+    "n_completed",
 )
 _DIAGNOSIS_CONTEXT_FIELDS = (
     "barrier_diagnosis",
@@ -176,20 +195,77 @@ def readable_diagnosis_context(
     classification = classify_known_false_positive_null_delta(artifact, flags)
     if classification is None:
         return None
-    context = {
-        field: artifact[field]
-        for field in _DIAGNOSIS_CONTEXT_FIELDS
-        if field in artifact
-    }
+    context = {field: artifact[field] for field in _DIAGNOSIS_CONTEXT_FIELDS if field in artifact}
     if not context:
         return None
     context["corrigendum"] = classification
     return context
 
 
+def _staleness_banner(path: Path, d: dict[str, Any]) -> tuple[str, int]:
+    """Is this artifact the output of the code and inputs on disk right now?
+
+    WHY THIS IS FIRST, ABOVE THE VERDICT (added 2026-07-26). A stale artifact's numbers get quoted
+    with exactly the same confidence as a fresh one's, because nothing distinguishes them at read
+    time. The incident: `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` sat committed
+    for ~1h56m after its analyser was edited and committed without a rebuild. That window happened
+    to change no number, but nobody could have known that without rebuilding and diffing -- which is
+    precisely the work a reader does not do before citing.
+
+    This module is the ONLY sanctioned way to read a result artifact (CLAUDE.md Reading-Results
+    Discipline), so wiring the check here is what makes it unmissable. Purely hash-based: it
+    recomputes the sha256 of each dependency the artifact recorded in its own `provenance` block.
+    Artifacts with no `provenance` block (everything written before the guard) report UNKNOWN, never
+    "fresh" -- an unchecked artifact is not a checked-and-clean one.
+
+    Returns (banner_text, severity) where severity 2 = STALE (joins the critical tier and the exit
+    code), 1 = unverifiable, 0 = fresh / not-applicable.
+    """
+    prov = d.get("provenance")
+    if not isinstance(prov, dict) or not prov:
+        # Silent for the overwhelming majority of artifacts, which are single-shot experiment
+        # results with no separate analyser step and nothing to go stale against.
+        return ("", 0)
+    recorded: list[dict[str, Any]] = list(prov.get("code") or [])
+    for group in (prov.get("rows_sources") or {}).values():
+        recorded.extend(group or [])
+    if not recorded:
+        return ("", 0)
+    drift, unreadable = [], []
+    for entry in recorded:
+        p = Path(str(entry.get("path", "")))
+        try:
+            now = hashlib.sha256(p.read_bytes()).hexdigest()
+        except OSError as exc:
+            unreadable.append(f"{p} ({type(exc).__name__})")
+            continue
+        if now != entry.get("sha256"):
+            drift.append(str(p))
+    if drift:
+        lines = [
+            "  *** STALE: this artifact was NOT built from the code/inputs now on disk. ***",
+            *[f"      drifted: {p}" for p in drift],
+        ]
+        cmd = prov.get("rebuild_command")
+        if cmd:
+            lines.append(f"      rebuild: {str(cmd).replace('<this file>', str(path))}")
+        lines.append("      Do NOT cite numbers from it until it is rebuilt and re-diffed.")
+        return ("\n".join(lines), 2)
+    if unreadable:
+        return (
+            "  !! staleness UNVERIFIABLE: "
+            + f"{len(unreadable)} recorded dependency file(s) could not be read "
+            + f"({unreadable[0]}{'...' if len(unreadable) > 1 else ''}). "
+            + "This is not a pass; the question was not answered.",
+            1,
+        )
+    return (f"  staleness       : FRESH ({len(recorded)} dependencies verified)", 0)
+
+
 def summarize(path: Path) -> int:
-    """Print the disciplined summary. Return 2 if any LIVE critical flag, 1 if
-    any warn (incl. FALSE_NEGATIVE_RISK), else 0 — usable as an exit signal."""
+    """Print the disciplined summary. Return 2 if any LIVE critical flag OR the
+    artifact is STALE w.r.t. its own recorded provenance, 1 if any warn (incl.
+    FALSE_NEGATIVE_RISK or unverifiable staleness), else 0 — usable as an exit signal."""
     try:
         d = json.loads(path.read_text())
     except Exception as e:
@@ -203,13 +279,18 @@ def summarize(path: Path) -> int:
     crit = [f for f in flags if _sev(f) == "critical"]
     warn = [f for f in flags if _sev(f) == "warn"]
     fnr = [f for f in flags if f.get("kind") == "FALSE_NEGATIVE_RISK"]
-    fnr_open = [
-        f for f in fnr if "false_negative_risk_open" in str(f.get("detail", ""))
-    ]
+    fnr_open = [f for f in fnr if "false_negative_risk_open" in str(f.get("detail", ""))]
 
     print("=" * 78)
     print(f"ARTIFACT  {path.name}")
     print("-" * 78)
+
+    # 0. STALENESS, printed ABOVE the verdict on purpose: if the artifact was not built from the
+    #    code on disk, every number below it is of unknown provenance and the verdict is the first
+    #    thing a reader would otherwise take at face value.
+    stale_banner, stale_sev = _staleness_banner(path, d)
+    if stale_banner:
+        print(stale_banner)
 
     # 1. verdict
     print(f"  verdict          : {d.get('honest_verdict')}")
@@ -218,20 +299,28 @@ def summarize(path: Path) -> int:
     live = "CRITICAL" if crit else ("warn" if warn else "clean")
     print(f"  flagged_adversarial (stamped): {stamped}   |   LIVE re-check: {live}")
     if stamped and not crit:
-        print("    note: stamped-flagged but live re-check is clean "
-              "(rule may have been fixed since; verify the corrigendum).")
+        print(
+            "    note: stamped-flagged but live re-check is clean "
+            "(rule may have been fixed since; verify the corrigendum)."
+        )
     null_delta_corrigendum = readable_diagnosis_context(d, flags)
     if null_delta_corrigendum is not None:
-        print("    note: annotated null-delta TAUTOLOGY corrigendum; diagnosis "
-              "context may be read, headline numbers remain quarantined.")
+        print(
+            "    note: annotated null-delta TAUTOLOGY corrigendum; diagnosis "
+            "context may be read, headline numbers remain quarantined."
+        )
     if crit and not stamped:
-        print("    *** GAP: live verifier flags CRITICAL but artifact is NOT "
-              "stamped flagged_adversarial. Do not cite as clean. ***")
+        print(
+            "    *** GAP: live verifier flags CRITICAL but artifact is NOT "
+            "stamped flagged_adversarial. Do not cite as clean. ***"
+        )
 
     # 3. acceptance gates — the experiment's own self-report
     gate_fields = {
-        k: v for k, v in d.items()
-        if "acceptance_gate" in k.lower() or k.lower().startswith("gate_")
+        k: v
+        for k, v in d.items()
+        if "acceptance_gate" in k.lower()
+        or k.lower().startswith("gate_")
         or k.lower().endswith("_gate")
     }
     if gate_fields:
@@ -245,8 +334,7 @@ def summarize(path: Path) -> int:
         print("  acceptance gates : (none found — claim has no self-reported gate)")
 
     # 4. plausibility floor
-    print(f"  duration_s       : {d.get('duration_s')}   "
-          f"substrate: {d.get('inference_substrate')}")
+    print(f"  duration_s       : {d.get('duration_s')}   substrate: {d.get('inference_substrate')}")
     floor = av.duration_floor_for_artifact(d)
     if floor is None:
         print("  duration floor   : none")
@@ -258,9 +346,7 @@ def summarize(path: Path) -> int:
     methodology = av.offline_arc_methodology_descriptor(d)
     if methodology is not None:
         fields = ", ".join(methodology.get("evidence_fields", []))
-        print(
-            f"  methodology      : {methodology.get('kind')} via {fields}"
-        )
+        print(f"  methodology      : {methodology.get('kind')} via {fields}")
 
     # 5. headline metrics (only now), annotated with any flag touching them
     flag_fields = {
@@ -270,8 +356,10 @@ def summarize(path: Path) -> int:
         if "=" in seg
     }
     heads = {
-        k: v for k, v in d.items()
-        if isinstance(v, (int, float)) and not isinstance(v, bool)
+        k: v
+        for k, v in d.items()
+        if isinstance(v, (int, float))
+        and not isinstance(v, bool)
         and any(h in k.lower() for h in _HEADLINE_HINTS)
     }
     if heads:
@@ -299,7 +387,10 @@ def summarize(path: Path) -> int:
     else:
         print("  adversarial flags: none")
 
-    return 2 if crit else (1 if warn else 0)
+    # STALE joins the critical tier: a number of unknown provenance is not a lesser problem than a
+    # number with an adversarial flag, and folding it into the exit code is what stops an automated
+    # reader from treating a stale artifact as clean.
+    return max(stale_sev, 2 if crit else (1 if warn else 0))
 
 
 def main(argv: list[str]) -> int:

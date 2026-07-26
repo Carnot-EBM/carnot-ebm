@@ -298,6 +298,28 @@ repos:
         files: '^(python/carnot/agentic/arc_.*\.py|scripts/arc_loop_solve\.py)$'
         pass_filenames: false
 
+      # Artifact freshness lint: refuse a commit that leaves an ANALYSER-PRODUCED
+      # artifact stale w.r.t. the code that built it. Origin 2026-07-26: an
+      # artifact sat committed for ~1h56m after its analyser was edited and
+      # committed WITHOUT a rebuild. That window changed no number (verified by
+      # rebuild + deep-diff), but nobody could have known that without doing the
+      # rebuild -- and a stale artifact's figures are quoted exactly as
+      # confidently as a fresh one's. CRITICALLY the `files:` list matches the
+      # ANALYSER / harness / shared-schema side as well as results/, because in
+      # the real incident the artifact was NOT touched: an artifact-only trigger
+      # would have waved it straight through. pass_filenames: false so the whole
+      # registered set is re-checked whichever side moved. Reads the small
+      # ops/analyzer_artifact_index.json rather than scanning the 6.1 GB
+      # results/ tree.
+      - id: artifact-freshness-lint
+        name: Analyser-produced artifacts are not stale
+        entry: python3 scripts/artifact_freshness_lint.py
+        language: system
+        # GENERATED, do not hand-edit: python3 scripts/artifact_freshness_lint.py --emit-hook-pattern
+        # (the lint itself refuses the commit if this drifts from the registered dependency union)
+        files: '^(python/carnot/agentic/arc_competition_agent\.py|python/carnot/agentic/arc_hud_row_schema\.py|scripts/analyze_arc_early_stop_sweep\.py|scripts/analyze_scored_path_lever_ab\.py|scripts/arc_leaderboard_eval\.py|scripts/arc_scored_path_early_stop_sweep\.py|scripts/arc_scored_path_lever_harness\.py|scripts/analyze_.*\.py|ops/analyzer_artifact_index\.json|results/.*\.json)$'
+        pass_filenames: false
+
       # NOTE: the blog publish guard runs as a STANDALONE git pre-push hook
       # (scripts/git-hooks/pre-push, installed via scripts/install-git-hooks.sh),
       # NOT as a pre-commit hook. pre-commit's pre-push dispatcher stashes

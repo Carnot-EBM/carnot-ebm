@@ -417,132 +417,35 @@ def _llama_server_count() -> int:
         return -1
 
 
-def hud_lever_fired(hud: dict | None) -> bool:
-    """Did the HUD edge-bar trio (lever 2) actually DO SOMETHING in this cell?
-
-    THE DEFECT THIS FUNCTION EXISTS TO FIX (2026-07-26, measured). The first version of this
-    predicate ANDed in `hud_shipped_mask_digest` -- i.e. it required the ALREADY-SHIPPED
-    `auto_hud_mask` classifier to have produced a mask before the repaired detector's mask could
-    count as a difference. That is ANTI-CORRELATED with the lever it measures: the whole reason
-    REQ-ARC-WMTE-5960 exists is that the shipped classifier returns None on r11l and tn36, and
-    those are the only two games in the corpus where the repaired detector resolves a mask the
-    shipped one does not. So `lever2_fired` was False in ALL 430 cells of the first scored-path
-    run while the lever was demonstrably firing: on r11l the resolved mask goes None -> 64 cells
-    (`hud_mask_source=edge_bar_detector_req5960_stage2_confirmed`, Stage 2 `admitted`) and
-    states_expanded goes 319 -> 41; on tn36 None -> 61 cells and 49 -> 17. A zero fire counter on a
-    lever that is in fact firing is the exp5836 DEAD-CHANNEL defect with the sign flipped -- it
-    would have let a real result be discarded as "the channel is dead", and it made the run's
-    supporting claim ("the mask differs from shipped on zero games") false.
-
-    THE CORRECT PREDICATE. A mask APPEARING where the shipped configuration had none is the
-    lever's strongest possible firing, not a non-event. So a falsy shipped digest is treated as a
-    real difference, and the only requirements are that the repaired detector actually resolved a
-    mask in this cell and that the mask it resolved differs from the shipped one. Digests are
-    compared, never cell COUNTS -- the 2026-07-25 gate compared counts and therefore read a
-    same-size different mask as "no change".
-    """
-    h = hud or {}
-    if h.get("error"):
-        return False
-    if not h.get("hud_mask_resolved"):
-        return False
-    digest = h.get("hud_mask_digest")
-    if not digest:
-        return False
-    if "hud_shipped_mask_digest" not in h:
-        # THE SHIPPED DIGEST IS *UNKNOWN*, NOT *ABSENT*. A row that never recorded the field is
-        # not evidence that the shipped classifier resolved nothing -- and the two must not be
-        # conflated, because `digest != None` is TRUE for every resolved mask, so treating an
-        # unrecorded field as None would arithmetically force "fired" on every resolved cell.
-        # Measured: the 1713 recorded `results/cptb_20260726_cells/*.jsonl.gz` rows carry
-        # `hud_mask_digest` but no `hud_shipped_mask_digest` at all; a fallback that read the
-        # missing key as None would have stamped 1058 of them "fired" without a single
-        # shipped-side comparison ever happening.
-        return False
-    return digest != h.get("hud_shipped_mask_digest")
-
-
-# Stamped onto every row so a row produced by the PRE-FIX predicate is distinguishable from one
-# produced by the current predicate. Without this, `lever2_fired: False` on an already-recorded row
-# is ambiguous between "the lever did not fire" and "the broken predicate could not see it fire" --
-# and the 430 recorded budget-400 cells are all of the second kind. Bump on any predicate change.
-LEVER2_FIRE_PREDICATE_VERSION = "2026-07-26.appearing-mask-counts-digest-compared"
-
-# The FLAT hud_* key names emitted by `experiment_5836_frontier_discipline_ab.run_cell`
-# (python/carnot/experiment_5836_frontier_discipline_ab.py:843-855). Named here so the two harnesses
-# are provably comparable rather than accidentally similar.
-HUD_FLAT_ROW_KEYS = (
-    "hud_mask_resolved",
-    "hud_mask_cell_count",
-    "hud_mask_digest",
-    "hud_mask_source",
-    "hud_mask_stage2_verdict",
-    "hud_mask_stage2_reason",
-    "hud_mask_stage2_candidate_cells",
-    "unique_frames",
-    "graph_nodes",
+# THE HUD ROW SCHEMA IS SHARED, NOT DUPLICATED (2026-07-26).
+# These four names used to be DEFINED here, and `experiment_5836_frontier_discipline_ab.run_cell`
+# hand-rolled its own second projection of the SAME `hud_mask_diagnostics()` dict. Two independent
+# projections of one source dict is exactly the defect that produced the two-address split: this
+# harness emitted the fields nested, exp5836 emitted a DIFFERENT flat subset (omitting the
+# shipped-side comparator and renaming node inflation), and each reader saw `None` on the other's
+# rows. They now come from ONE module so a future added field has exactly one place to be added and
+# both writers get it. Re-exported under the original names because this module's public surface is
+# what `tests/python/test_arc_scored_path_lever_harness.py` and the analyser import.
+from carnot.agentic.arc_hud_row_schema import (  # noqa: E402
+    HUD_ROW_KEYS,
+    LEVER2_FIRE_PREDICATE_VERSION,
+    hud_lever_fired,
+    hud_row_fields,
+    lever2_scoreable,
 )
 
+# Historical spelling, kept so already-written call sites and tests do not have to change in the
+# same commit that unifies the schema. `HUD_ROW_KEYS` is the canonical name.
+HUD_FLAT_ROW_KEYS = HUD_ROW_KEYS
 
-def hud_row_fields(hud: dict | None) -> dict:
-    """Project a live `StepwiseExplorer.hud_mask_diagnostics()` dict onto the ROW.
-
-    THE DEFECT THIS FIXES (measured 2026-07-26). This harness recorded the HUD diagnostics ONLY
-    nested, under `row["lever2_hud_fire"]` and `row["hud_diagnostics"]`. The sibling harness
-    `experiment_5836_frontier_discipline_ab.run_cell` records the SAME diagnostics FLAT, at row top
-    level. So the same quantity has two different addresses depending on which harness wrote the
-    row, and every consumer written against one schema silently reads `None` on the other's rows.
-    Both directions were measured, and both are 100% silent zeros:
-
-      * FLAT readers on THIS harness's rows: `r.get("hud_mask_resolved")` is None in all 805
-        recorded rows of `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json`
-        (55 scored + 375 companion + 375 alt-budget) -- while the NESTED copy of the very same
-        field is populated in all 805 (True in 598, False in 207). Nothing was ever unmeasured on
-        the scored path; it was unreadable at the address the readers use.
-      * NESTED readers on exp5836-schema rows: `recomputed_lever2_fired` in
-        `scripts/analyze_scored_path_lever_ab.py` reads `r["lever2_hud_fire"]`, which those rows do
-        not have, so it returns False on all 1713 rows of `results/cptb_20260726_cells/*.jsonl.gz`.
-
-    `None` rather than `False` is the tell in both cases, and it is the same class of defect as the
-    exp5836 dead observe channel: a diagnostic that reads as a clean, error-free zero when in fact
-    nothing was consulted. Emitting BOTH addresses from ONE projection is what makes the two
-    harnesses' rows interchangeable, and `hud_diagnostics_readable` is the witness that separates
-    "the detector resolved nothing" (readable, resolved False) from "nobody asked the detector"
-    (not readable).
-    """
-    h = hud or {}
-    err = h.get("error")
-    stage2 = h.get("stage2") or {}
-    out = {
-        # --- schema parity with exp5836's flat row keys -------------------------------------
-        "hud_mask_resolved": h.get("hud_mask_resolved"),
-        "hud_mask_cell_count": h.get("hud_mask_cell_count"),
-        "hud_mask_digest": h.get("hud_mask_digest"),
-        "hud_mask_source": h.get("hud_mask_source"),
-        "hud_mask_stage2_verdict": stage2.get("stage2_verdict"),
-        "hud_mask_stage2_reason": stage2.get("stage2_reason"),
-        "hud_mask_stage2_candidate_cells": stage2.get("candidate_cell_count"),
-        "unique_frames": h.get("unique_frames"),
-        "graph_nodes": h.get("graph_nodes"),
-        # --- the shipped-side comparator the fire predicate needs, also flat ----------------
-        # exp5836's schema omits these two, which is why a flat-only row cannot answer "did the
-        # repair differ from shipped". Emitting them here means a row from THIS harness can be
-        # scored by a flat reader without the missing-key ambiguity documented in
-        # `hud_lever_fired`.
-        "hud_shipped_mask_cell_count": h.get("hud_shipped_mask_cell_count"),
-        "hud_shipped_mask_digest": h.get("hud_shipped_mask_digest"),
-        "node_inflation_vs_unique_frames": h.get("node_inflation_vs_unique_frames"),
-        "collapse_guard_refusals": h.get("collapse_guard_refusals"),
-        # --- populated-vs-unread witness ----------------------------------------------------
-        # True only if `hud_mask_diagnostics()` was actually called AND returned a real payload.
-        # A row with `hud_diagnostics_readable: False` carries NO evidence about lever 2 in either
-        # direction and must be excluded from a denominator, never counted as a non-fire.
-        "hud_diagnostics_readable": bool(err is None and h.get("hud_mask_resolved") is not None),
-        "hud_diagnostics_error": err,
-        "lever2_fired": hud_lever_fired(hud),
-        "lever2_fired_predicate": LEVER2_FIRE_PREDICATE_VERSION,
-    }
-    return out
+__all_hud_schema__ = (
+    "HUD_ROW_KEYS",
+    "HUD_FLAT_ROW_KEYS",
+    "LEVER2_FIRE_PREDICATE_VERSION",
+    "hud_lever_fired",
+    "hud_row_fields",
+    "lever2_scoreable",
+)
 
 
 def _hazard_verdict(hz: dict, row: dict) -> str:
@@ -599,10 +502,27 @@ def run_cell(
     llm: bool,
     extra_kwargs: dict | None = None,
     arm: str = "E3_shipped",
+    early_stop_grace: int | None = None,
 ) -> dict:
     """One (game, seed, arm) cell on the SCORED path. `llm=False` sets the disable-induction env for
     the duration of THIS cell only, so an LLM-on / LLM-off contrast can be run in one process
-    without two harnesses."""
+    without two harnesses.
+
+    `early_stop_grace` SWEEPS THE PARAMETER WITHOUT FLIPPING THE FLAG. `StepwiseExplorer.__init__`
+    already takes `early_stop_grace` (arc_competition_agent.py:1003) and `is_done` already
+    implements the window (:3936-3946), but `E3AgentPolicy.__init__` never forwards it, so the
+    module global `SUBMITTED_EARLY_STOP_GRACE` is currently DEAD CODE -- it is read nowhere. Setting
+    the attribute on the constructed explorer is therefore the only way to exercise the mechanism at
+    all, and it deliberately does NOT touch any `SUBMITTED_*` global: the shipped configuration is
+    unchanged by this measurement, which is what "sweep by parameter, report, leave the decision to
+    the operator" requires. Default None == the shipped behaviour, byte-for-byte.
+
+    PRINCIPLE (why the attribute-set is safe rather than a behaviour change of its own): the three
+    pieces of grace state (`early_stop_grace`, `_early_stop_level_mark`, `_early_stop_frame_mark`,
+    `early_stopped`) are initialised together at :1344-1347 and are read ONLY inside `is_done`.
+    Nothing else in `__init__` branches on the value, so assigning it immediately after construction
+    is indistinguishable from having been passed through the constructor. Asserted below rather than
+    asserted by eye."""
     import random
 
     import numpy as np
@@ -637,6 +557,14 @@ def run_cell(
     kw.update(extra_kwargs or {})
     policy = E3AgentPolicy(game, **kw)
     ex = policy.explorer
+    # SET THE SWEPT PARAMETER, then READ IT BACK off the live explorer (below, `early_stop_grace`
+    # in the row) -- never trust that the assignment took. An arm whose parameter silently failed to
+    # apply is an UNINSTRUMENTED arm, and it would look like a clean null.
+    if early_stop_grace is not None:
+        ex.early_stop_grace = int(early_stop_grace)
+        ex._early_stop_level_mark = 0
+        ex._early_stop_frame_mark = 0
+        ex.early_stopped = False
     construct_s = time.time() - t0
 
     row: dict = {
@@ -665,6 +593,15 @@ def run_cell(
         },
     }
     row["retains_node_frames"] = any(row["frame_retention_components"].values())
+    # THE SWEPT PARAMETER, READ BACK off the live explorer -- not echoed from the argument. If the
+    # attribute-set above ever stopped working (a __slots__, a property, a renamed attribute), this
+    # reads None on a treatment arm and the arm is detectably uninstrumented rather than silently
+    # equal to the control.
+    row["early_stop_grace"] = (
+        int(ex.early_stop_grace) if getattr(ex, "early_stop_grace", None) is not None else None
+    )
+    row["early_stop_grace_requested"] = early_stop_grace
+    row["early_stop_grace_applied"] = bool(row["early_stop_grace"] == early_stop_grace)
 
     t1 = time.time()
     try:
@@ -689,6 +626,20 @@ def run_cell(
             crash_hud = {"error": f"{type(diag_exc).__name__}:{diag_exc}"}
         row["hud_diagnostics"] = crash_hud
         row.update(hud_row_fields(crash_hud))
+        # Same reasoning as the HUD projection above: a crash row that OMITS these keys reads as
+        # `None` to a flat consumer, which is indistinguishable from "measured and empty". Emit the
+        # full key set explicitly, with `early_stopped` read off the explorer (it is meaningful
+        # after a crash -- whatever the explorer did before the exception is what it did).
+        row.update(
+            per_level=None,
+            level_up_actions=None,
+            inter_levelup_gaps=None,
+            actions_after_last_levelup=None,
+            reached_any_level=None,
+            early_stopped=bool(getattr(ex, "early_stopped", False)) if ex is not None else None,
+            n_resets=None,
+            n_frames=None,
+        )
         if prev_disable is None:
             os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
         else:
@@ -853,6 +804,46 @@ def run_cell(
                 "is_click": bool(isinstance(data, dict) and "x" in data),
             }
         )
+    # ---- THE QUANTITIES THE SCORER ACTUALLY DIFFERENCES --------------------------------------
+    # `actions_to_first_levelup` alone cannot attribute a score delta to a level, and cannot show
+    # the post-solve tail at all. The authoritative scorer charges each COMPLETED level
+    # `actions_at_level - prev_actions` (arc_agi/scorecard.py:479) -- i.e. it differences a vector
+    # of cumulative checkpoints. `run_game` computes that vector but returns only its first element,
+    # so it is reconstructed here from `per_level` (whose `agent_actions` ARE those differences, in
+    # order) and persisted. With it, any score claim in this sweep is recomputable from the row
+    # without re-running the cell, and the inter-level-up GAP distribution -- the quantity that
+    # decides whether a given grace value can cost a level -- is computable per row.
+    per_level = list(r.get("per_level") or [])
+    row["per_level"] = per_level
+    _cum, _lua = 0, []
+    for _pl in per_level:
+        _cum += int(_pl.get("agent_actions") or 0)
+        if _pl.get("completed"):
+            _lua.append(_cum)
+    row["level_up_actions"] = _lua
+    row["inter_levelup_gaps"] = [_lua[i] - _lua[i - 1] for i in range(1, len(_lua))]
+    # THE TAIL: actions spent after the LAST level-up. This is the quantity early-stop cuts, and
+    # (per the resolved charge model) the quantity that costs zero score -- so it is the mechanism's
+    # entire benefit, and it must be measured, not inferred from `actions`.
+    row["actions_after_last_levelup"] = (
+        int(r["actions"]) - _lua[-1] if _lua else (int(r["actions"]) if r.get("actions") else 0)
+    )
+    row["reached_any_level"] = bool(_lua)
+    # DID THE MECHANISM FIRE? Read off the explorer, not inferred from the action count. A treatment
+    # arm with zero fires anywhere in the corpus contributes no evidence and must be stamped so.
+    row["early_stopped"] = bool(getattr(ex, "early_stopped", False))
+    # RESETS. The live gateway charges a RESET one action (arc_agi/scorecard.py:701-704 via
+    # update_scorecard); this offline harness charges it zero (arc_leaderboard_eval.py:308-313).
+    # Our agent uses RESET-and-replay as a navigation fallback, so offline action counts -- and
+    # therefore offline efficiency -- are OPTIMISTIC by exactly this many actions per level. Counted
+    # per row so the live-vs-offline gap is visible rather than assumed away. It also converts the
+    # grace window's unit: the window counts len(frames) (loop iterations, RESET INCLUDED), so a
+    # grace of G frames buys only G * actions/frames actions.
+    _n_resets = sum(
+        1 for fr in (r.get("frame_sequence") or []) if (fr.get("move") or {}).get("kind") == "RESET"
+    )
+    row["n_resets"] = _n_resets
+    row["n_frames"] = len(r.get("frame_sequence") or [])
     hist = collections.Counter(rc["key"] for rc in recs)
     top = hist.most_common(5)
     n_click = sum(1 for rc in recs if rc["is_click"])

@@ -3930,9 +3930,23 @@ class StepwiseExplorer:
             return True
         # Smart grace-period early-stop: cut the fruitless post-solve tail WITHOUT capping levels. Once at
         # least one level is reached, a new level-up resets the window; if no new level appears within
-        # `early_stop_grace` moves, stop (the agent is churning on unreachable deeper levels, and every
-        # extra action quadratically erodes the (human/agent_actions)^2 efficiency score). Riding
-        # consecutive level-ups keeps the window alive, so reachable deeper levels are still solved.
+        # `early_stop_grace` moves, stop. Riding consecutive level-ups keeps the window alive, so
+        # reachable deeper levels are still solved.
+        #
+        # CORRECTION 2026-07-26 -- what this mechanism buys, and what it does NOT.
+        # This comment used to justify the cut with "every extra action quadratically erodes the
+        # (human/agent_actions)^2 efficiency score". THAT IS FALSE FOR THE TAIL THIS CUTS, and the
+        # claim was believed for long enough to shape a budget conclusion. The competition gateway
+        # runs `arc_agi.scorecard`, which charges a COMPLETED level only the difference of successive
+        # level-up checkpoints (`level_actions = actions_at_level - prev_actions`, scorecard.py:479);
+        # actions after the LAST level-up land in the first NOT-completed level's bucket, and an
+        # incomplete level scores 0.0 no matter how many actions were charged to it (:178-183).
+        # So the post-solve tail costs EXACTLY ZERO score. The quadratic erosion is real, but only
+        # for actions spent INSIDE a level that is later COMPLETED -- which is precisely the part
+        # this window does not touch.
+        # The benefit is therefore WALL CLOCK and MEMORY (which buy budget for other games inside the
+        # eval's ~12h cap), and the risk is losing a level-up that would have arrived after the
+        # window closed. Measured 2026-07-26, `results/outer_loop_arc_early_stop_grace_sweep_20260726.json`.
         if (
             self.early_stop_grace is not None
             and self.start_level is not None
