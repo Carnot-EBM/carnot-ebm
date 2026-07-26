@@ -449,7 +449,100 @@ def hud_lever_fired(hud: dict | None) -> bool:
     digest = h.get("hud_mask_digest")
     if not digest:
         return False
+    if "hud_shipped_mask_digest" not in h:
+        # THE SHIPPED DIGEST IS *UNKNOWN*, NOT *ABSENT*. A row that never recorded the field is
+        # not evidence that the shipped classifier resolved nothing -- and the two must not be
+        # conflated, because `digest != None` is TRUE for every resolved mask, so treating an
+        # unrecorded field as None would arithmetically force "fired" on every resolved cell.
+        # Measured: the 1713 recorded `results/cptb_20260726_cells/*.jsonl.gz` rows carry
+        # `hud_mask_digest` but no `hud_shipped_mask_digest` at all; a fallback that read the
+        # missing key as None would have stamped 1058 of them "fired" without a single
+        # shipped-side comparison ever happening.
+        return False
     return digest != h.get("hud_shipped_mask_digest")
+
+
+# Stamped onto every row so a row produced by the PRE-FIX predicate is distinguishable from one
+# produced by the current predicate. Without this, `lever2_fired: False` on an already-recorded row
+# is ambiguous between "the lever did not fire" and "the broken predicate could not see it fire" --
+# and the 430 recorded budget-400 cells are all of the second kind. Bump on any predicate change.
+LEVER2_FIRE_PREDICATE_VERSION = "2026-07-26.appearing-mask-counts-digest-compared"
+
+# The FLAT hud_* key names emitted by `experiment_5836_frontier_discipline_ab.run_cell`
+# (python/carnot/experiment_5836_frontier_discipline_ab.py:843-855). Named here so the two harnesses
+# are provably comparable rather than accidentally similar.
+HUD_FLAT_ROW_KEYS = (
+    "hud_mask_resolved",
+    "hud_mask_cell_count",
+    "hud_mask_digest",
+    "hud_mask_source",
+    "hud_mask_stage2_verdict",
+    "hud_mask_stage2_reason",
+    "hud_mask_stage2_candidate_cells",
+    "unique_frames",
+    "graph_nodes",
+)
+
+
+def hud_row_fields(hud: dict | None) -> dict:
+    """Project a live `StepwiseExplorer.hud_mask_diagnostics()` dict onto the ROW.
+
+    THE DEFECT THIS FIXES (measured 2026-07-26). This harness recorded the HUD diagnostics ONLY
+    nested, under `row["lever2_hud_fire"]` and `row["hud_diagnostics"]`. The sibling harness
+    `experiment_5836_frontier_discipline_ab.run_cell` records the SAME diagnostics FLAT, at row top
+    level. So the same quantity has two different addresses depending on which harness wrote the
+    row, and every consumer written against one schema silently reads `None` on the other's rows.
+    Both directions were measured, and both are 100% silent zeros:
+
+      * FLAT readers on THIS harness's rows: `r.get("hud_mask_resolved")` is None in all 805
+        recorded rows of `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json`
+        (55 scored + 375 companion + 375 alt-budget) -- while the NESTED copy of the very same
+        field is populated in all 805 (True in 598, False in 207). Nothing was ever unmeasured on
+        the scored path; it was unreadable at the address the readers use.
+      * NESTED readers on exp5836-schema rows: `recomputed_lever2_fired` in
+        `scripts/analyze_scored_path_lever_ab.py` reads `r["lever2_hud_fire"]`, which those rows do
+        not have, so it returns False on all 1713 rows of `results/cptb_20260726_cells/*.jsonl.gz`.
+
+    `None` rather than `False` is the tell in both cases, and it is the same class of defect as the
+    exp5836 dead observe channel: a diagnostic that reads as a clean, error-free zero when in fact
+    nothing was consulted. Emitting BOTH addresses from ONE projection is what makes the two
+    harnesses' rows interchangeable, and `hud_diagnostics_readable` is the witness that separates
+    "the detector resolved nothing" (readable, resolved False) from "nobody asked the detector"
+    (not readable).
+    """
+    h = hud or {}
+    err = h.get("error")
+    stage2 = h.get("stage2") or {}
+    out = {
+        # --- schema parity with exp5836's flat row keys -------------------------------------
+        "hud_mask_resolved": h.get("hud_mask_resolved"),
+        "hud_mask_cell_count": h.get("hud_mask_cell_count"),
+        "hud_mask_digest": h.get("hud_mask_digest"),
+        "hud_mask_source": h.get("hud_mask_source"),
+        "hud_mask_stage2_verdict": stage2.get("stage2_verdict"),
+        "hud_mask_stage2_reason": stage2.get("stage2_reason"),
+        "hud_mask_stage2_candidate_cells": stage2.get("candidate_cell_count"),
+        "unique_frames": h.get("unique_frames"),
+        "graph_nodes": h.get("graph_nodes"),
+        # --- the shipped-side comparator the fire predicate needs, also flat ----------------
+        # exp5836's schema omits these two, which is why a flat-only row cannot answer "did the
+        # repair differ from shipped". Emitting them here means a row from THIS harness can be
+        # scored by a flat reader without the missing-key ambiguity documented in
+        # `hud_lever_fired`.
+        "hud_shipped_mask_cell_count": h.get("hud_shipped_mask_cell_count"),
+        "hud_shipped_mask_digest": h.get("hud_shipped_mask_digest"),
+        "node_inflation_vs_unique_frames": h.get("node_inflation_vs_unique_frames"),
+        "collapse_guard_refusals": h.get("collapse_guard_refusals"),
+        # --- populated-vs-unread witness ----------------------------------------------------
+        # True only if `hud_mask_diagnostics()` was actually called AND returned a real payload.
+        # A row with `hud_diagnostics_readable: False` carries NO evidence about lever 2 in either
+        # direction and must be excluded from a denominator, never counted as a non-fire.
+        "hud_diagnostics_readable": bool(err is None and h.get("hud_mask_resolved") is not None),
+        "hud_diagnostics_error": err,
+        "lever2_fired": hud_lever_fired(hud),
+        "lever2_fired_predicate": LEVER2_FIRE_PREDICATE_VERSION,
+    }
+    return out
 
 
 def _hazard_verdict(hz: dict, row: dict) -> str:
@@ -584,6 +677,18 @@ def run_cell(
             wall_s=round(time.time() - t1, 2),
             states_expanded=(len(ex.graph) if ex is not None else None),
         )
+        # THE CRASH PATH MUST BE INSTRUMENTED TOO. A row that omits the hud_* keys entirely reads
+        # as `None` to a flat consumer, which is the same unreadable-vs-resolved-nothing ambiguity
+        # this projection exists to remove -- and a crashed arm reading as a clean null across a
+        # whole condition is a defect this project has already shipped once. The diagnostics are
+        # still meaningful after a crash: whatever the explorer ingested before the exception is
+        # what it ingested.
+        try:
+            crash_hud = ex.hud_mask_diagnostics() if ex is not None else {"error": "no_explorer"}
+        except Exception as diag_exc:  # instrumentation must never mask the original failure
+            crash_hud = {"error": f"{type(diag_exc).__name__}:{diag_exc}"}
+        row["hud_diagnostics"] = crash_hud
+        row.update(hud_row_fields(crash_hud))
         if prev_disable is None:
             os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
         else:
@@ -695,7 +800,13 @@ def run_cell(
         "node_inflation_vs_unique_frames": (hud or {}).get("node_inflation_vs_unique_frames"),
         "stage2": (hud or {}).get("stage2"),
     }
-    row["lever2_fired"] = hud_lever_fired(hud)
+    # ALSO emit the SAME fields FLAT at row top level, from ONE projection. Until 2026-07-26 this
+    # harness recorded them nested only, so every consumer written against exp5836's flat row schema
+    # read `None` for `hud_mask_resolved` / `hud_mask_cell_count` / `hud_mask_source` on all 805
+    # recorded scored-path rows -- indistinguishable from "the detector resolved nothing". See
+    # `hud_row_fields` for the measurement. `lever2_fired` is set HERE (not separately) so the row's
+    # stamp and its flat fields can never come from two different reads of the diagnostics.
+    row.update(hud_row_fields(hud))
     # Lever 3 (REQ-ARC-WMTE-5970, the NAV-side hazard move-pruner). This lever needs the most
     # careful fire accounting of the three, because its expected outcome IS zero prunes and there
     # are four structurally different ways to get there. `lever3_verdict` names which one happened,
