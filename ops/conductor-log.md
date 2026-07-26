@@ -14426,3 +14426,8 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 16:29 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-26 16:31 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-26 16:33 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-26 16:36 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-26 16:38 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-26 16:40 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-26 16:42 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-26 16:44 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |

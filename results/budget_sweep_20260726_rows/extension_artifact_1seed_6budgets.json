@@ -3,12 +3,12 @@
  "honest_verdict": "complete_budget_sweep_measured_wins_median_1_at_b200_to_12_at_b4000_over_25_games_1_seeds_per_seed_matched_llm_off_saturates_at_b4000_authoritative_score_sum_ROSE_2.1547_to_2.2038_llm_off_wall_never_binding_but_llm_on_model_binds_above_b400_under_the_8h_envelope_and_memory_binds_first_largest_worst_case_safe_budget_b1000_time_and_memory_axes_recorded_no_flag_changed",
  "honest_verdict_principle": "Terminal 'complete_' prefix so the conductor's reconciler classifies this as a finished experiment; without a prefix, words like 'saturates' risk a false-positive partial classification. The verdict string is COMPUTED from the curve so it cannot disagree with the artifact's own numbers.",
  "title": "MAX_ACTIONS budget sweep on the scored path: (budget -> wins, TIME) over the 25 public games, shipped flag configuration, LLM-off",
- "run_date": "2026-07-26T16:17:11Z",
+ "run_date": "2026-07-26T16:42:26Z",
  "schema": "carnot.arc_budget_sweep.v1",
  "duration_s": 2285.9,
  "total_cell_compute_s": 4076.4,
- "analysis_pass_duration_s": 0.416,
- "git_head": "084c15a06a398900ad49c9134501a9649b224f70",
+ "analysis_pass_duration_s": 0.339,
+ "git_head": "25ada39397061d697e46f0417e576d9e7a4c6386",
  "random_seed": 20260724,
  "random_seeds_used": [
   20260724
@@ -754,10 +754,39 @@
    "n_cells_frozen_zero_both_budgets": 22,
    "n_cells_won_at_both_budgets": 1,
    "WITNESS_pass_region_nonempty": {
+    "n_games_that_could_gain": 24,
+    "n_games_that_could_regress": 1,
+    "games_that_could_gain": [
+     "ar25",
+     "bp35",
+     "cd82",
+     "cn04",
+     "dc22",
+     "ft09",
+     "g50t",
+     "ka59",
+     "lf52",
+     "lp85",
+     "ls20",
+     "m0r0",
+     "r11l",
+     "re86",
+     "s5i5",
+     "sb26",
+     "sc25",
+     "sk48",
+     "sp80",
+     "su15",
+     "tn36",
+     "tr87",
+     "tu93",
+     "wa30"
+    ],
+    "nonempty_at_the_game_unit": true,
     "n_cells_that_could_gain": 24,
     "n_cells_that_could_regress": 1,
     "nonempty": true,
-    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+    "principle": "A budget step can only be interpreted if something was structurally able to move. If every game were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation. The witness is stated at the GAME unit because that is the unit the headline test uses -- a per-cell witness for a game-unit test is the exact defect shape CLAUDE.md names ('a per-cell witness for a median gate is how that defect recurred')."
    },
    "games_gained": [
     "sp80",
@@ -816,10 +845,37 @@
    "n_cells_frozen_zero_both_budgets": 16,
    "n_cells_won_at_both_budgets": 3,
    "WITNESS_pass_region_nonempty": {
+    "n_games_that_could_gain": 22,
+    "n_games_that_could_regress": 3,
+    "games_that_could_gain": [
+     "ar25",
+     "bp35",
+     "cd82",
+     "cn04",
+     "dc22",
+     "ft09",
+     "g50t",
+     "ka59",
+     "lf52",
+     "lp85",
+     "ls20",
+     "m0r0",
+     "r11l",
+     "re86",
+     "s5i5",
+     "sb26",
+     "sc25",
+     "sk48",
+     "su15",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "nonempty_at_the_game_unit": true,
     "n_cells_that_could_gain": 22,
     "n_cells_that_could_regress": 3,
     "nonempty": true,
-    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+    "principle": "A budget step can only be interpreted if something was structurally able to move. If every game were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation. The witness is stated at the GAME unit because that is the unit the headline test uses -- a per-cell witness for a game-unit test is the exact defect shape CLAUDE.md names ('a per-cell witness for a median gate is how that defect recurred')."
    },
    "games_gained": [
     "cd82",
@@ -878,10 +934,31 @@
    "n_cells_frozen_zero_both_budgets": 14,
    "n_cells_won_at_both_budgets": 9,
    "WITNESS_pass_region_nonempty": {
+    "n_games_that_could_gain": 16,
+    "n_games_that_could_regress": 9,
+    "games_that_could_gain": [
+     "ar25",
+     "bp35",
+     "cn04",
+     "dc22",
+     "ft09",
+     "g50t",
+     "ka59",
+     "ls20",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "nonempty_at_the_game_unit": true,
     "n_cells_that_could_gain": 16,
     "n_cells_that_could_regress": 9,
     "nonempty": true,
-    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+    "principle": "A budget step can only be interpreted if something was structurally able to move. If every game were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation. The witness is stated at the GAME unit because that is the unit the headline test uses -- a per-cell witness for a game-unit test is the exact defect shape CLAUDE.md names ('a per-cell witness for a median gate is how that defect recurred')."
    },
    "games_gained": [
     "dc22",
@@ -935,10 +1012,29 @@
    "n_cells_frozen_zero_both_budgets": 13,
    "n_cells_won_at_both_budgets": 11,
    "WITNESS_pass_region_nonempty": {
+    "n_games_that_could_gain": 14,
+    "n_games_that_could_regress": 11,
+    "games_that_could_gain": [
+     "ar25",
+     "bp35",
+     "cn04",
+     "g50t",
+     "ka59",
+     "ls20",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "nonempty_at_the_game_unit": true,
     "n_cells_that_could_gain": 14,
     "n_cells_that_could_regress": 11,
     "nonempty": true,
-    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+    "principle": "A budget step can only be interpreted if something was structurally able to move. If every game were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation. The witness is stated at the GAME unit because that is the unit the headline test uses -- a per-cell witness for a game-unit test is the exact defect shape CLAUDE.md names ('a per-cell witness for a median gate is how that defect recurred')."
    },
    "games_gained": [
     "m0r0"
@@ -993,10 +1089,28 @@
    "n_cells_frozen_zero_both_budgets": 12,
    "n_cells_won_at_both_budgets": 11,
    "WITNESS_pass_region_nonempty": {
+    "n_games_that_could_gain": 13,
+    "n_games_that_could_regress": 12,
+    "games_that_could_gain": [
+     "ar25",
+     "bp35",
+     "cn04",
+     "g50t",
+     "ka59",
+     "ls20",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "nonempty_at_the_game_unit": true,
     "n_cells_that_could_gain": 13,
     "n_cells_that_could_regress": 12,
     "nonempty": true,
-    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+    "principle": "A budget step can only be interpreted if something was structurally able to move. If every game were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation. The witness is stated at the GAME unit because that is the unit the headline test uses -- a per-cell witness for a game-unit test is the exact defect shape CLAUDE.md names ('a per-cell witness for a median gate is how that defect recurred')."
    },
    "games_gained": [
     "tn36"
@@ -1362,10 +1476,19 @@
    "inductions_growth_over_the_measured_budget_range": 1.615,
    "why_the_previous_band_was_wrong": "The retired band's LOWER bound held LLM cost fixed (1.0x) and its UPPER bound scaled it with the budget (~10x at b4000). Measured induction growth across that same range is 1.62x, so the truth is neither bound and the band spanned a factor of ~10 for no reason: the identifying variable was recorded on every row.",
    "residuals": [
+    "THE BUDGET-400 ROW IS ARITHMETICALLY FORCED, NOT A TEST. The model is calibrated to reproduce the measured b400 anchor exactly, so its b400 projection equals the measurement BY CONSTRUCTION and that row's FITS/OVER verdict carries ZERO independent information. Only the b1000+ rows are model OUTPUT. (Flagged by adversarial review of this fix: an anchor whose value is forced is the same defect class as a gate whose pass region is empty.)",
     "s_per_induction measured only at budget 400",
     "calibration factor applied multiplicatively across budgets",
     "induction_attempts on LLM-off rows counts PLANNED inductions, not executed ones",
     "one LLM-on run at b1000/b2000 would replace this model with a direct anchor"
+   ],
+   "budget_400_row_is_forced_by_calibration": true,
+   "budgets_that_are_genuine_model_output": [
+    200,
+    1000,
+    2000,
+    4000,
+    8000
    ],
    "projected_s_per_game_by_budget": {
     "200": 210.7,
@@ -1488,7 +1611,9 @@
   "measured": true,
   "method": "one clean process per (game, budget); every module run_cell imports lazily is imported EAGERLY before the baseline snapshot, so the baseline is the SHARED term and the delta is the PER-THREAD term (env + policy + retained graph)",
   "probe_script": "scripts/arc_budget_memory_probe.py",
+  "probe_rows_source": "/home/ianblenke/github.com/ianblenke/carnot/results/budget_sweep_20260726_rows/memory_probe_rows.jsonl",
   "n_probe_cells": 24,
+  "probe_total_cell_compute_s": 270.5,
   "shared_libs_rss_mib_median": 813.0,
   "host_ram_gib_assumed": 16.0,
   "host_ram_is_UNCONFIRMED": "The 16 GiB figure in the requirements note refers to VRAM, not host RAM. The real host RAM of the ARC-AGI-3 instance pool is NOT confirmed, and it is what decides whether the marginal budgets below are safe. Confirm before acting on this.",
@@ -1505,6 +1630,9 @@
      "tu93",
      "vc33"
     ],
+    "corpus_argmax_game_by_nodes_with_frame": "cn04",
+    "probe_set_contains_the_corpus_worst_case": true,
+    "probe_coverage_note": "The worst-case term is a max over the PROBED games, so it only bounds the corpus if the probe set contains the corpus's heaviest game. That is checked, not assumed. Even when true it does NOT bound the ~110 HIDDEN games, which have no adapters and may retain differently -- that remains unmeasured.",
     "A_25games_12h": {
      "n_games": 25,
      "projected_peak_gib_if_every_game_is_worst_case": 2.16,
@@ -1542,6 +1670,9 @@
      "tu93",
      "vc33"
     ],
+    "corpus_argmax_game_by_nodes_with_frame": "cn04",
+    "probe_set_contains_the_corpus_worst_case": true,
+    "probe_coverage_note": "The worst-case term is a max over the PROBED games, so it only bounds the corpus if the probe set contains the corpus's heaviest game. That is checked, not assumed. Even when true it does NOT bound the ~110 HIDDEN games, which have no adapters and may retain differently -- that remains unmeasured.",
     "A_25games_12h": {
      "n_games": 25,
      "projected_peak_gib_if_every_game_is_worst_case": 2.92,
@@ -1579,6 +1710,9 @@
      "tu93",
      "vc33"
     ],
+    "corpus_argmax_game_by_nodes_with_frame": "cn04",
+    "probe_set_contains_the_corpus_worst_case": true,
+    "probe_coverage_note": "The worst-case term is a max over the PROBED games, so it only bounds the corpus if the probe set contains the corpus's heaviest game. That is checked, not assumed. Even when true it does NOT bound the ~110 HIDDEN games, which have no adapters and may retain differently -- that remains unmeasured.",
     "A_25games_12h": {
      "n_games": 25,
      "projected_peak_gib_if_every_game_is_worst_case": 4.32,
@@ -1616,6 +1750,9 @@
      "tu93",
      "vc33"
     ],
+    "corpus_argmax_game_by_nodes_with_frame": "cn04",
+    "probe_set_contains_the_corpus_worst_case": true,
+    "probe_coverage_note": "The worst-case term is a max over the PROBED games, so it only bounds the corpus if the probe set contains the corpus's heaviest game. That is checked, not assumed. Even when true it does NOT bound the ~110 HIDDEN games, which have no adapters and may retain differently -- that remains unmeasured.",
     "A_25games_12h": {
      "n_games": 25,
      "projected_peak_gib_if_every_game_is_worst_case": 7.12,
@@ -1825,40 +1962,52 @@
   },
   "max_score_clamp": {
    "formula": "max_score = sum(weights of levels with score>0) / sum(all weights) * 100",
+   "applied_as": "score = min(index_weighted_mean_of_level_scores, max_score)",
    "source": "arc_agi/scorecard.py:192-206 (to_score)",
    "probe_on_an_8_level_game": {
     "1": {
      "levels_solved_of_8": 1,
      "score_with_superhuman_speed_on_every_solved_level": 2.7778,
+     "score_at_exactly_human_speed_on_every_solved_level": 2.7778,
      "clamp_index_weighted_fraction_times_100": 2.7778
     },
     "2": {
      "levels_solved_of_8": 2,
      "score_with_superhuman_speed_on_every_solved_level": 8.3333,
+     "score_at_exactly_human_speed_on_every_solved_level": 8.3333,
      "clamp_index_weighted_fraction_times_100": 8.3333
     },
     "3": {
      "levels_solved_of_8": 3,
      "score_with_superhuman_speed_on_every_solved_level": 16.6667,
+     "score_at_exactly_human_speed_on_every_solved_level": 16.6667,
      "clamp_index_weighted_fraction_times_100": 16.6667
     },
     "4": {
      "levels_solved_of_8": 4,
      "score_with_superhuman_speed_on_every_solved_level": 27.7778,
+     "score_at_exactly_human_speed_on_every_solved_level": 27.7778,
      "clamp_index_weighted_fraction_times_100": 27.7778
     },
     "6": {
      "levels_solved_of_8": 6,
      "score_with_superhuman_speed_on_every_solved_level": 58.3333,
+     "score_at_exactly_human_speed_on_every_solved_level": 58.3333,
      "clamp_index_weighted_fraction_times_100": 58.3333
     },
     "8": {
      "levels_solved_of_8": 8,
      "score_with_superhuman_speed_on_every_solved_level": 100.0,
+     "score_at_exactly_human_speed_on_every_solved_level": 100.0,
      "clamp_index_weighted_fraction_times_100": 100.0
     }
    },
-   "consequence": "DEPTH dominates SPEED. An agent that is superhuman on level 1 and solves nothing else is clamped to 2.78/100; one that solves 4 of 8 levels is clamped to 27.78. So the score lever that matters is levels solved, and the per-level action efficiency only matters within the ceiling those levels set."
+   "grinding_counterexample": {
+    "four_of_eight_levels_solved_slowly_400_900_1500_2200": 0.1207,
+    "one_level_solved_fast_15": 2.7778,
+    "note": "The deeper-but-slower run scores LOWER. The clamp is a ceiling, so depth raises what speed can earn but does not earn it."
+   },
+   "consequence": "The clamp is a CEILING, so the honest statement is conditional: at EQUAL per-level speed, depth is the dominant lever (1/2/4/8 levels at human speed score 2.78/8.33/27.78/100). But depth obtained by GRINDING -- which is what a larger action budget buys -- can score below a fast shallow solve. That is why this sweep's tripled win count moves the score only ~2%: the extra wins arrive hundreds-to-thousands of actions in, so they sit far under the ceiling they raise."
   },
   "premise_coverage_budget_exhaustion": {
    "200": {
@@ -2100,7 +2249,15 @@
    "4000": 12,
    "8000": 12
   },
-  "best_measured_budget": 4000,
+  "budget_with_most_wins_NOT_A_RECOMMENDATION": 4000,
+  "budget_with_most_wins_basis": "argmax of wins_median. Wins are NOT the scored quantity and NOT constraint-aware; see authoritative_score_sum_by_budget for the scored quantity and constraint_feasible_budget below for what actually fits.",
+  "constraint_feasible_budget": {
+   "memory_worst_case_110_games": 1000,
+   "llm_on_wall_12h_110_games": 4000,
+   "llm_on_wall_8h_110_games": 400,
+   "binding_of_the_three": 1000,
+   "principle": "The budget that wins the most games is not the budget that can be run. Reporting the win-count argmax without the feasible ceiling beside it is how a report recommends a configuration that cannot be deployed."
+  },
   "authoritative_score_sum_by_budget": {
    "200": 2.0897,
    "400": 2.1547,

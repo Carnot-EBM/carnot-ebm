@@ -1,6 +1,65 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-26 (convention-perturbation battery repaired after adversarial review; one lever's verdict withdrawn)
+**Last Updated:** 2026-07-26 (budget-sweep scoring conclusion CORRECTED — it was inverted; memory, not time, is the binding constraint)
+
+## Session 2026-07-26 - Adversarial-review repairs to the MAX_ACTIONS budget sweep
+
+### What's Working
+
+- **The budget-sweep effect size is real and survives every correction.** Raising the offline
+  action budget from 400 to 2000 buys **+7 median games (4 -> 11) with ZERO regressions in 75/75
+  matched cells**. Nothing in this session's repairs touched that; the sweep's 375 recorded cells
+  are unchanged.
+- **The scoring axis is now derived from the INSTALLED scorer instead of a paraphrase of the spec.**
+  `arc_agi.scorecard` ships in the analysis venv, so the analyser DRIVES it
+  (`_resolve_charging_rule`, `_max_score_clamp_table`) rather than modelling it. Measured: a solve
+  scores identically with a 15-action tail and a 100,000-action tail — the post-solve tail is
+  score-FREE, and the authoritative score sum RISES monotonically 8.8283 -> 9.2370 across budgets
+  200..4000.
+- **Both halves of the score story are now stated.** The score rises, but only **x1.02 while won
+  cells go x3.27** — the win count overstates the leaderboard benefit ~150x, because newly-won cells
+  arrive at 415-2715 actions against human baselines of tens (0.0072 mean score each). The
+  mechanism is `to_score`'s `max_score` CEILING: depth is the dominant lever only at equal per-level
+  speed, and grinding is what a raised budget buys.
+- **Memory is measured, and it is the constraint that binds first.**
+  `scripts/arc_budget_memory_probe.py` (24 cells, 6 games, one clean process each): shared libs
+  813 MiB + per-game worst 55.8/87.0/144.3/259.2 MiB at budgets 400/1000/2000/4000, projected to 110
+  concurrent threads = **6.79 / 10.14 / 16.29 / 28.64 GiB**. The probe set is verified to contain the
+  corpus's heaviest game (sp80) at every budget.
+- **Statistical inference is at the unit of generalization.** Headline sign tests are on the GAME
+  (a hidden game is a fresh draw); cell-level values are retained under an explicit within-game-
+  replicates name. Game-level two-sided p by step: 0.5 / 0.0156 / 0.25 / 0.5.
+- **The lever-A/B artifact's HUD diagnostics are readable in the published record**: 805/805 rows
+  back-filled from the nested copy, with structure, gates and verdict byte-identical.
+
+### What's Next
+
+- **CONFIRM THE TARGET INSTANCE'S HOST RAM. This is now the highest-value unknown.** The 16 GiB
+  figure inherited from the requirements note is a **VRAM** number. Whether budget 2000 (16.29 GiB
+  worst case at 110 games) is safe or fatal turns entirely on the real host RAM. Until it is
+  confirmed, the defensible ceiling is **budget 1000**, not the 4000 the win curve points at.
+- **Run ONE LLM-on cell at budget 1000 or 2000.** Every LLM-on row on file is budget 400, so the
+  LLM-on cost curve is a calibrated model, not a measurement. Its budget-400 row is arithmetically
+  forced by that calibration and carries no independent information. One raised-budget LLM-on run
+  replaces the model with a direct anchor, and it is the cheapest decisive next measurement — it is
+  NOT a budget flip.
+- **Measure retained-graph memory on games WITHOUT a `GameAdapter`.** The projection multiplies a
+  PUBLIC-corpus worst case by 110 HIDDEN games, which have no adapters and may explore (and retain)
+  differently. That gap is the projection's largest remaining source of error.
+- **Correct the 2026-06-21 audit's "the tail quadratically erodes the score" claim wherever it is
+  cited.** It does not survive contact with the shipped scorer, and it is what seeded the inverted
+  conclusion this session repaired.
+
+### Known Constraints (this session)
+
+- The budget-sweep memory envelope bounds the 25 PUBLIC games only; hidden-game retention is
+  UNMEASURED.
+- `s_per_induction` is measured only at budget 400, and the LLM-on model's calibration factor
+  (1.2202) is applied multiplicatively at every budget.
+- The gateway's documented 10 steps/sec rate remains UNCONFIRMED for 2026 and cannot be checked
+  locally; if real it caps ~2,618 actions/game at 110 games over an 8h play window.
+- No flag was changed: `CarnotAgent.MAX_ACTIONS` stays 400, module-level stays 200, no `SUBMITTED_*`
+  touched, no submission made. The budget decision is the operator's.
 
 ## Session 2026-07-26 - Adversarial-review repairs to the convention-perturbation transfer battery
 
