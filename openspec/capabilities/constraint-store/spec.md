@@ -267,3 +267,39 @@ Then every previous-state hash, resulting-state hash, ledger hash, rollback
 hash, restart hash, active-memory hash, and quarantine hash reproduces exactly,
 protected-prefix labels are retained, rejected updates have zero propagation,
 and validator-substitution tampering fails closed.
+
+### REQ-STORE-5926 — Adaptive-state ABI v2 parity receipt store
+
+Carnot SHALL store Exp5926 adaptive-state ABI v2 evidence as a versioned
+Python/Rust/PyO3 conformance ledger derived from the executed Exp5924
+transaction ledger. The store-level artifact SHALL preserve Exp5924 gate replay
+hashes, Exp5859 preservation hashes, ABI v2 schema and operation receipts,
+per-operation previous and resulting state hashes, payload hashes, proposal
+identities, validator receipt hashes, ownership/lifetime receipts,
+serialization bytes hashes, crash-prefix recovery receipts, rollback receipts,
+fresh-process recovery receipts, tamper rejection receipts, protected-file
+hashes, task-owned command receipts, and global failure-delta receipts.
+
+Stored ABI v2 receipts SHALL distinguish snapshot reads from committed writes,
+proposals from commits, exact validation from promotion authority, active facts
+from quarantined/rejected proposals, superseded entries from evicted entries,
+rollback targets from crash-recovery checkpoints, and Python/Rust/PyO3 parity
+from historical Exp5859 ABI v1 evidence. Replaying the stored traces SHALL
+reproduce byte, state, status, and error parity exactly; tampering with
+operation order, expected prior state, resulting state, schema version,
+checkpoint bytes, validator receipt, replayed commit state, stale snapshot
+state, or released-core lifetime SHALL reject without partial state writes.
+
+### SCENARIO-STORE-5926 — ABI v2 parity hashes replay
+
+Given Exp5926 has consumed Exp5924's executed transaction ledger without
+mutating Exp5859,
+
+When its ABI schema, conformance trace manifest, operation receipts,
+serialization receipts, rollback receipts, crash-prefix recovery receipts,
+fresh-process receipts, and tamper rejection receipts are replayed,
+
+Then Python, Rust, and PyO3 produce identical canonical bytes, state hashes,
+status values, and error codes; rejected updates have zero propagation;
+released cores reject use-after-release and double release; and stale,
+replayed, corrupt, or tampered operations fail closed.

@@ -1,0 +1,783 @@
+{
+  "adaptive_state_abi_v2_ready_score": 1.0,
+  "adaptive_state_abi_v2_schema_and_operations": {
+    "abi_version": 2,
+    "checkpoint_schema": "carnot.adaptive_state_abi.v2.checkpoint",
+    "expected_prior_state_required": true,
+    "fixed_width_fields": {
+      "abi_version": "u16",
+      "active_capacity": "u32_bounded_1_to_16",
+      "event_index": "u32",
+      "quarantine_capacity": "u32_bounded_1_to_32",
+      "state_version": "u32_compatible"
+    },
+    "operation_schema": "carnot.adaptive_state_abi.v2.operation",
+    "payload_hash_required_for_propose": true,
+    "principle": "Fixed-width versioned operations make ordering, hashing, recovery, and hardware mapping finite.",
+    "state_schema": "carnot.adaptive_state_abi.v2.state",
+    "supported_operations": [
+      "snapshot",
+      "lookup",
+      "propose",
+      "commit",
+      "validate",
+      "promote",
+      "quarantine",
+      "supersede",
+      "reject",
+      "rollback",
+      "recover"
+    ],
+    "validator_receipt_required_for_validate": true
+  },
+  "byte_state_status_and_error_parity": {
+    "byte_parity": true,
+    "operation_count": 37,
+    "parity_failures": [],
+    "principle": "Equivalent backends must match bytes, state hashes, statuses, and errors, not just final success.",
+    "python_checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+    "python_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+    "rust_checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+    "rust_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+    "state_hash_parity": true,
+    "status_error_parity": true,
+    "trace_count": 1
+  },
+  "conformance_trace_manifest": {
+    "adversarial_permutation_count": 5,
+    "operation_count": 37,
+    "operations_present": [
+      "commit",
+      "lookup",
+      "promote",
+      "propose",
+      "quarantine",
+      "recover",
+      "reject",
+      "rollback",
+      "snapshot",
+      "supersede",
+      "validate"
+    ],
+    "principle": "Ledger-derived and adversarial traces define the task-owned parity boundary.",
+    "source_artifact": "results/experiment_5924_transactional_constraint_memory_v2.json",
+    "trace_count": 1,
+    "trace_hash": "sha256:6843442226b802e610d811c6eec5764739299765cf7129c59d0bf82e88602a81"
+  },
+  "crash_prefix_recovery_and_rollback": {
+    "crash_prefix_checkpoint_hash": "sha256:5c238d40274632b62fd9717b778c2894fde724ae5dbb268f9dc9aaa2e47f7e26",
+    "crash_prefix_exact": true,
+    "principle": "Crash-prefix recovery and rollback must reproduce exact prior hashes deterministically.",
+    "recovered_final_matches_full": false,
+    "rollback_exact": true,
+    "rollback_result_hash": "sha256:cbc58c98cf13d218814d814d3d65658b6bca96e819002a3e4cec64ec5fcf35f9",
+    "rollback_target_hash": "sha256:cbc58c98cf13d218814d814d3d65658b6bca96e819002a3e4cec64ec5fcf35f9",
+    "suffix_receipt_count": 25
+  },
+  "duration_s": 0.0,
+  "exp5859_preserved_and_scope_delta": {
+    "exp5859_path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+    "exp5859_ready_score": 0.0,
+    "exp5859_rewritten": false,
+    "exp5859_sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
+    "exp5859_status": "blocked",
+    "principle": "ABI v2 names new transaction semantics and cannot relabel or overwrite Exp5859.",
+    "scope_delta": "abi_v2_transaction_semantics_from_exp5924",
+    "v1_artifact_reused_as_v2": false
+  },
+  "experiment_id": "experiment_5926_adaptive_state_abi_v2_parity",
+  "field_principles": {
+    "adaptive_state_abi_v2_ready_score": "Emit bare 1.0 only for complete Python/Rust/PyO3 parity, ownership safety, tamper rejection, crash recovery, rollback, clean task-owned checks, and non-amplified global debt.",
+    "adaptive_state_abi_v2_schema_and_operations": "Fixed-width versioned operations make ordering, hashing, recovery, and hardware mapping finite.",
+    "byte_state_status_and_error_parity": "Equivalent backends must match bytes, state hashes, statuses, and errors, not just final success.",
+    "conformance_trace_manifest": "Ledger-derived and adversarial traces define the task-owned parity boundary.",
+    "crash_prefix_recovery_and_rollback": "Crash-prefix recovery and rollback must reproduce exact prior hashes deterministically.",
+    "duration_s": "Measured wall time exposes deterministic conformance work.",
+    "exp5859_preserved_and_scope_delta": "ABI v2 names new transaction semantics and cannot relabel or overwrite Exp5859.",
+    "field_provenance": "Every field traces to prompt, specs, upstream artifacts, code, tests, or command receipts.",
+    "gate_replay_receipt": "Exp5924 readiness and ledger replay must pass before ABI v2 can consume its transaction semantics.",
+    "historical_artifacts_unchanged": "Prior experiment JSON remains evidence, not a mutable working buffer.",
+    "honest_verdict": "Use `complete_ready:`, `retired:`, or `blocked:`.",
+    "inference_substrate": "Use `deterministic_python_rust_pyo3_conformance_no_llm`.",
+    "invalid_order_stale_replay_and_tamper_rejection": "Unsafe transaction permutations must fail closed without partial mutation.",
+    "ownership_and_lifetime_matrix": "Released cores must reject use-after-release and double release rather than relying on caller discipline.",
+    "preconditions_checked": "Hashes, toolchains, resources, schemas, outputs, and atomic writes prevent fabricated parity evidence.",
+    "protected_files_unchanged": "Operator-curated and conductor files stay byte-identical.",
+    "python_rust_and_pyo3_implementation_receipts": "Independent Python, Rust, and binding paths must identify the exact code that produced parity.",
+    "reproducibility_checksum": "A checksum detects ABI schema, implementation, trace, command, or artifact drift.",
+    "serialization_and_fresh_process_receipts": "Durable bytes must recover across fresh processes, not only within one Python object graph.",
+    "status": "A terminal state distinguishes complete ABI v2 parity from blocked or retired evidence.",
+    "task_owned_test_boundary_and_global_failure_delta": "Focused checks must pass and global-suite debt must not increase.",
+    "test_commands": "Commands document focused unit/coverage, Rust/PyO3, property/conformance, serialization, tamper, recovery, rollback, global-delta, adversarial, spec, E2E, protected-file, and clutter checks.",
+    "test_exit_codes": "Exit codes prevent failed parity commands from becoming readiness.",
+    "verifier_is_oracle": "True only for ABI schema, byte/state parity, hashes, ordering, and recovery."
+  },
+  "field_provenance": {
+    "adaptive_state_abi_v2_ready_score": {
+      "principle": "Emit bare 1.0 only for complete Python/Rust/PyO3 parity, ownership safety, tamper rejection, crash recovery, rollback, clean task-owned checks, and non-amplified global debt.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "adaptive_state_abi_v2_schema_and_operations": {
+      "principle": "Fixed-width versioned operations make ordering, hashing, recovery, and hardware mapping finite.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "byte_state_status_and_error_parity": {
+      "principle": "Equivalent backends must match bytes, state hashes, statuses, and errors, not just final success.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "conformance_trace_manifest": {
+      "principle": "Ledger-derived and adversarial traces define the task-owned parity boundary.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "crash_prefix_recovery_and_rollback": {
+      "principle": "Crash-prefix recovery and rollback must reproduce exact prior hashes deterministically.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time exposes deterministic conformance work.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "exp5859_preserved_and_scope_delta": {
+      "principle": "ABI v2 names new transaction semantics and cannot relabel or overwrite Exp5859.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to prompt, specs, upstream artifacts, code, tests, or command receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "gate_replay_receipt": {
+      "principle": "Exp5924 readiness and ledger replay must pass before ABI v2 can consume its transaction semantics.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "historical_artifacts_unchanged": {
+      "principle": "Prior experiment JSON remains evidence, not a mutable working buffer.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `deterministic_python_rust_pyo3_conformance_no_llm`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "invalid_order_stale_replay_and_tamper_rejection": {
+      "principle": "Unsafe transaction permutations must fail closed without partial mutation.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "ownership_and_lifetime_matrix": {
+      "principle": "Released cores must reject use-after-release and double release rather than relying on caller discipline.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes, toolchains, resources, schemas, outputs, and atomic writes prevent fabricated parity evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Operator-curated and conductor files stay byte-identical.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "python_rust_and_pyo3_implementation_receipts": {
+      "principle": "Independent Python, Rust, and binding paths must identify the exact code that produced parity.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A checksum detects ABI schema, implementation, trace, command, or artifact drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "serialization_and_fresh_process_receipts": {
+      "principle": "Durable bytes must recover across fresh processes, not only within one Python object graph.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes complete ABI v2 parity from blocked or retired evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "task_owned_test_boundary_and_global_failure_delta": {
+      "principle": "Focused checks must pass and global-suite debt must not increase.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/coverage, Rust/PyO3, property/conformance, serialization, tamper, recovery, rollback, global-delta, adversarial, spec, E2E, protected-file, and clutter checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed parity commands from becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True only for ABI schema, byte/state parity, hashes, ordering, and recovery.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "python/carnot/adaptive_state_abi_v2.py",
+        "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "crates/carnot-core/src/adaptive_state.rs",
+        "crates/carnot-python/src/adaptive_state.rs"
+      ]
+    }
+  },
+  "gate_replay_receipt": {
+    "artifact_path": "results/experiment_5924_transactional_constraint_memory_v2.json",
+    "artifact_sha256": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3",
+    "exp5924_complete_ready": true,
+    "exp5924_ready_score": 1.0,
+    "ledger_hash": "sha256:d314d176e445d06332f70d27be3668ec25bdf69c28bcc7e93cf83a80952ddb91",
+    "ledger_hash_chain_valid": true,
+    "operation_count": 260,
+    "operations_present": [
+      "commit",
+      "lookup",
+      "promote",
+      "propose",
+      "quarantine",
+      "reject",
+      "rollback",
+      "snapshot",
+      "supersede",
+      "validate"
+    ],
+    "principle": "Exp5924 readiness and ledger replay must pass before ABI v2 can consume its transaction semantics."
+  },
+  "historical_artifacts_unchanged": {
+    "after_hashes": {
+      "results/experiment_5859_adaptive_state_microkernel_parity.json": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
+      "results/experiment_5924_transactional_constraint_memory_v2.json": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3"
+    },
+    "before_hashes": {
+      "results/experiment_5859_adaptive_state_microkernel_parity.json": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
+      "results/experiment_5924_transactional_constraint_memory_v2.json": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3"
+    },
+    "changed_files": [],
+    "unchanged": true
+  },
+  "honest_verdict": "complete_ready: adaptive_state_abi_v2_python_rust_pyo3_parity",
+  "inference_substrate": "deterministic_python_rust_pyo3_conformance_no_llm",
+  "invalid_order_stale_replay_and_tamper_rejection": {
+    "all_rejected": true,
+    "cases": [
+      {
+        "accepted": false,
+        "case": "prior_state_tamper",
+        "code": "PRIOR_STATE_MISMATCH",
+        "state_hash_after": "sha256:bb33d12d7075e95d6511acb46020c3340ff7a7213c2683ce964707c8c9f46057",
+        "state_hash_before": "sha256:bb33d12d7075e95d6511acb46020c3340ff7a7213c2683ce964707c8c9f46057",
+        "state_hash_unchanged": true
+      },
+      {
+        "accepted": false,
+        "case": "replayed_commit",
+        "code": "REPLAYED_COMMIT",
+        "state_hash_after": "sha256:968af0afe181b2cb895a43b2d38ee0551f32038503ace871afbfd9c028e2565e",
+        "state_hash_before": "sha256:968af0afe181b2cb895a43b2d38ee0551f32038503ace871afbfd9c028e2565e",
+        "state_hash_unchanged": true
+      },
+      {
+        "accepted": false,
+        "case": "invalid_order",
+        "code": "INVALID_ORDER",
+        "state_hash_after": "sha256:968af0afe181b2cb895a43b2d38ee0551f32038503ace871afbfd9c028e2565e",
+        "state_hash_before": "sha256:968af0afe181b2cb895a43b2d38ee0551f32038503ace871afbfd9c028e2565e",
+        "state_hash_unchanged": true
+      },
+      {
+        "accepted": false,
+        "case": "stale_snapshot",
+        "code": "STALE_SNAPSHOT",
+        "state_hash_after": "sha256:3dbd30d353dd92e9a0b72a8c17945c21c6e18ca6661b3c9d53f470c5dbed0e3b",
+        "state_hash_before": "sha256:3dbd30d353dd92e9a0b72a8c17945c21c6e18ca6661b3c9d53f470c5dbed0e3b",
+        "state_hash_unchanged": true
+      },
+      {
+        "accepted": false,
+        "case": "partial_state_transition",
+        "code": "PARTIAL_STATE_TRANSITION_REJECTED",
+        "state_hash_after": "sha256:3dbd30d353dd92e9a0b72a8c17945c21c6e18ca6661b3c9d53f470c5dbed0e3b",
+        "state_hash_before": "sha256:3dbd30d353dd92e9a0b72a8c17945c21c6e18ca6661b3c9d53f470c5dbed0e3b",
+        "state_hash_unchanged": true
+      }
+    ],
+    "commit_accept_code": "OK",
+    "corrupt_bytes_rejected": true,
+    "principle": "Unsafe transaction permutations must fail closed without partial mutation.",
+    "promote_accept_code": "OK",
+    "schema_version_mismatch_rejected": true,
+    "state_hash_unchanged_for_all_rejections": true,
+    "validate_accept_code": "OK"
+  },
+  "ownership_and_lifetime_matrix": {
+    "double_release_code": "DOUBLE_RELEASE",
+    "double_release_rejected": true,
+    "principle": "Released cores must reject use-after-release and double release rather than relying on caller discipline.",
+    "release_accepted": true,
+    "use_after_release_code": "USE_AFTER_RELEASE",
+    "use_after_release_rejected": true
+  },
+  "preconditions_checked": {
+    "atomic_writes": {
+      "detail": "tempfile_replace_supported",
+      "ok": true
+    },
+    "checks": {
+      "atomic_output": true,
+      "cargo_available": true,
+      "disk": true,
+      "exp5859_exists": true,
+      "exp5924_exists": true,
+      "output_parent_writable": true,
+      "ram": true,
+      "rustc_available": true
+    },
+    "context_hashes": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+      },
+      {
+        "exists": true,
+        "path": "research-program.md",
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/self-learning/spec.md",
+        "sha256": "sha256:dc0d25e52f4e18abc2713e4dd8aa62d8beff291285d79d5f4bc8ae0585c3042a"
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/constraint-store/spec.md",
+        "sha256": "sha256:cf3ea13e673d467f8694b7d7ea2e2a7cdfafff8912355ac74a1ff69e8737aa4b"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/adaptive_state_abi_v2.py",
+        "sha256": "sha256:f9cd3b11439f451f3d7d88c7bbfe5ebe77b6068ad88ef179c639269f2961cfcd"
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+        "sha256": "sha256:05676a3eb677bc2018831f6c1efa778b8be85f9c0771d7553d3c710d9250e4c7"
+      },
+      {
+        "exists": true,
+        "path": "crates/carnot-core/src/adaptive_state.rs",
+        "sha256": "sha256:2ca588f00b944c5d15efb057602a3038b74821c3e3f41c0cb7dc340e1ac2972e"
+      },
+      {
+        "exists": true,
+        "path": "crates/carnot-python/src/adaptive_state.rs",
+        "sha256": "sha256:c3d404f47dbd6245fb4d1bdafd2fb5af784d48447f12c58dedfed655e89a82ef"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "sha256": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3"
+      }
+    ],
+    "disk": {
+      "available_mb": 1165267,
+      "ok": true,
+      "required_mb": 512
+    },
+    "preconditions_ready": true,
+    "principle": "Hashes, toolchains, resources, schemas, outputs, and atomic writes prevent fabricated parity evidence.",
+    "ram": {
+      "available_mb": 89747,
+      "ok": true,
+      "required_mb": 512
+    },
+    "run_date": "20260726",
+    "toolchains": {
+      "cargo": {
+        "available": true,
+        "command": [
+          "cargo",
+          "--version"
+        ],
+        "duration_ms": 8.327,
+        "returncode": 0,
+        "version": "cargo 1.97.1 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.1-1.1)"
+      },
+      "python": "3.12.13",
+      "rustc": {
+        "available": true,
+        "command": [
+          "rustc",
+          "--version"
+        ],
+        "duration_ms": 11.47,
+        "returncode": 0,
+        "version": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)"
+      },
+      "system": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43"
+    }
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:5c398485b04f69e99c8178c85fab407a7947a34165e1391f546fcc23f7a6d47b",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:5c398485b04f69e99c8178c85fab407a7947a34165e1391f546fcc23f7a6d47b",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "changed_files": [],
+    "unchanged": true
+  },
+  "python_rust_and_pyo3_implementation_receipts": {
+    "principle": "Independent Python, Rust, and binding paths must identify the exact code that produced parity.",
+    "pyo3_binding_available": true,
+    "pyo3_binding_class": "RustAdaptiveStateAbiV2Kernel",
+    "pyo3_binding_path": "crates/carnot-python/src/adaptive_state.rs",
+    "pyo3_binding_sha256": "sha256:c3d404f47dbd6245fb4d1bdafd2fb5af784d48447f12c58dedfed655e89a82ef",
+    "pyo3_methods": [
+      "snapshot",
+      "lookup",
+      "propose",
+      "commit",
+      "validate",
+      "promote",
+      "quarantine",
+      "supersede",
+      "reject",
+      "rollback",
+      "recover",
+      "canonical_state_hash",
+      "canonical_state_json",
+      "serialize",
+      "release"
+    ],
+    "python_reference_available": true,
+    "python_reference_path": "python/carnot/adaptive_state_abi_v2.py",
+    "python_reference_sha256": "sha256:f9cd3b11439f451f3d7d88c7bbfe5ebe77b6068ad88ef179c639269f2961cfcd",
+    "rust_core_available": true,
+    "rust_core_path": "crates/carnot-core/src/adaptive_state.rs",
+    "rust_core_sha256": "sha256:2ca588f00b944c5d15efb057602a3038b74821c3e3f41c0cb7dc340e1ac2972e"
+  },
+  "random_seed": 5926,
+  "reproducibility_checksum": "sha256:c2e24f05a2dafa02314fb4e6035215e2d77da6fe82d08085b2058110da70855a",
+  "run_date": "20260726",
+  "schema": "carnot.experiment_5926.adaptive_state_abi_v2_parity.v1",
+  "serialization_and_fresh_process_receipts": {
+    "checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+    "fresh_process_command": ".venv/bin/python -c <recover ABI v2 checkpoint>",
+    "fresh_process_exit_code": 0,
+    "fresh_process_recovered": true,
+    "fresh_process_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+    "principle": "Durable bytes must recover across fresh processes, not only within one Python object graph.",
+    "serialized_byte_parity": true
+  },
+  "status": "complete_ready",
+  "task_owned_test_boundary_and_global_failure_delta": {
+    "after_node_count": 116,
+    "all_task_owned_commands_clean": true,
+    "baseline_node_count": 116,
+    "global_command": ".venv/bin/pytest tests/python -q",
+    "global_command_clean": false,
+    "global_command_exit_code": 2,
+    "global_suite_failure_delta": 0,
+    "global_suite_zero_required": false,
+    "new_node_ids": [],
+    "nonzero_task_owned_commands": [],
+    "principle": "Focused checks must pass and global-suite debt must not increase.",
+    "ready_allowed": true,
+    "task_owned_commands": [
+      ".venv/bin/pytest tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_abi_v2.py -m pytest tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_abi_v2.py --fail-under=100",
+      "cargo test -p carnot-core adaptive_state_abi_v2 --lib",
+      "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python && cp target/debug/libcarnot_python.so python/carnot/_rust$(.venv/bin/python -c \"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))\")",
+      "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs",
+      ".venv/bin/ruff check python/carnot/adaptive_state_abi_v2.py tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+      "cargo clippy -p carnot-core --lib -- -D warnings",
+      "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_5926_adaptive_state_abi_v2_parity.json",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+    ]
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_abi_v2.py -m pytest tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_abi_v2.py --fail-under=100",
+    "cargo test -p carnot-core adaptive_state_abi_v2 --lib",
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python && cp target/debug/libcarnot_python.so python/carnot/_rust$(.venv/bin/python -c \"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))\")",
+    "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs",
+    ".venv/bin/ruff check python/carnot/adaptive_state_abi_v2.py tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+    "cargo clippy -p carnot-core --lib -- -D warnings",
+    "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5926_adaptive_state_abi_v2_parity.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_abi_v2.py -m pytest tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_abi_v2.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5926_adaptive_state_abi_v2_parity.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/adaptive_state_abi_v2.py tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py": 0,
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python && cp target/debug/libcarnot_python.so python/carnot/_rust$(.venv/bin/python -c \"import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))\")": 0,
+    "cargo clippy -p carnot-core --lib -- -D warnings": 0,
+    "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments": 0,
+    "cargo test -p carnot-core adaptive_state_abi_v2 --lib": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0,
+    "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs": 0
+  },
+  "verifier_is_oracle": true
+}
