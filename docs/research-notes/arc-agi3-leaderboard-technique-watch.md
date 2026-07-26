@@ -50,3 +50,7 @@ CHECK_TIMED_OUT
 
 - **Dinesh Kumar Thiyagarajan (#10) — newly discovered `brain-v1` artifact.** Its `BrainV2` package implements object-centric parsing, hash-state frontier BFS, an explicit EXPLORE→MODEL→PLAN→RECOVER controller, competing mechanic hypotheses, an LLM-written executable world model backtested against observed transitions, cross-game mechanic memory, and failure reflection. **Classification: (b) GENERAL-PURPOSE components.** However, its prompt also maps known public game prefixes to mechanic classes and accepts pre-solved/analytical prefix lists. **Classification: (a) EXPLOIT/HARDCODED contamination.** No game-source reading appears in this artifact, and nothing links it to the current submission; bundled “Omega Prime” additions are explicitly disabled/unscored. [Dataset](https://www.kaggle.com/datasets/dineshkumar0705/brain-v1), [leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-07-26 13:33 UTC -- NEW
+
+- **New top-five entrant:** **Yuchen20** (`yuchen2066`) is now **#5 at 1.58**, tied with ippeiogawa. No submission-linked public code or ARC-AGI-3 writeup was found, so no evidence-based exploit/general-purpose classification or Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/yuchen2066/code)
+
