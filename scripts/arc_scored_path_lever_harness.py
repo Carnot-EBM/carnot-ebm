@@ -69,9 +69,31 @@ os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
 os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
 
 GAMES_25 = [
-    "ar25", "bp35", "cd82", "cn04", "dc22", "ft09", "g50t", "ka59", "lf52", "lp85",
-    "ls20", "m0r0", "r11l", "re86", "s5i5", "sb26", "sc25", "sk48", "sp80", "su15",
-    "tn36", "tr87", "tu93", "vc33", "wa30",
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30",
 ]
 SEEDS = [20260724, 20260725, 20260726]
 
@@ -105,8 +127,12 @@ SHIPPED_2026_07_25 = {
     # dict so that "S" stays the control even after a future flip -- the whole point of pinning.
     "hazard_move_pruner": False,
 }
-_FRONTIER_KEYS = ("tier_exhaustion", "tier_uniform_random", "tier_click_vocab_only",
-                  "frontier_gradient")
+_FRONTIER_KEYS = (
+    "tier_exhaustion",
+    "tier_uniform_random",
+    "tier_click_vocab_only",
+    "frontier_gradient",
+)
 _HUD_KEYS = ("edge_bar_hud_mask", "hud_mask_collapse_guard", "hud_mask_stage2_confirm")
 
 # EVERY arm pins ALL EIGHT flags. A partially-pinned arm inherits whatever the module globals say
@@ -120,18 +146,32 @@ ARMS: dict[str, dict] = {
     # Lever 2 removed (the HUD edge-bar trio), frontier held at shipped.
     "S_minus_hud": {**SHIPPED_2026_07_25, **{k: False for k in _HUD_KEYS}},
     # Both removed -- the pre-2026-07-25 agent, for context only (not a single-lever delta).
-    "S_minus_both": {**SHIPPED_2026_07_25,
-                     **{k: False for k in _FRONTIER_KEYS},
-                     **{k: False for k in _HUD_KEYS}},
+    "S_minus_both": {
+        **SHIPPED_2026_07_25,
+        **{k: False for k in _FRONTIER_KEYS},
+        **{k: False for k in _HUD_KEYS},
+    },
     # Lever 3 ADDED (the nav-side hazard move-pruner). Its control is "S", which differs from it in
     # exactly one flag -- asserted below rather than asserted by eye.
     "S_plus_hazard": {**SHIPPED_2026_07_25, "hazard_move_pruner": True},
+    # THE NOISE FLOOR (2026-07-26). Byte-identical configuration to "S" -- deliberately NOT a
+    # treatment. With the LLM ON the run is no longer a deterministic function of the seed: the
+    # generator's sampling, and the server's slot/checkpoint state, vary between two runs of the
+    # SAME config. Without this arm, ANY difference between S and a treatment arm is
+    # indistinguishable from that variation, and an A/B on a single seed would report sampling
+    # noise as a lever effect. This arm measures the noise directly, on the same games and seeds,
+    # so the lever deltas can be read against it instead of against an assumption of determinism.
+    "S_replicate": dict(SHIPPED_2026_07_25),
 }
-assert all(set(v) == set(SHIPPED_2026_07_25) for v in ARMS.values()), \
+assert ARMS["S_replicate"] == ARMS["S"], (
+    "S_replicate must be byte-identical to S -- it is the same-config noise floor, not a treatment"
+)
+assert all(set(v) == set(SHIPPED_2026_07_25) for v in ARMS.values()), (
     "every arm must pin all eight gated flags"
-assert {k for k in SHIPPED_2026_07_25
-        if ARMS["S_plus_hazard"][k] != ARMS["S"][k]} == {"hazard_move_pruner"}, \
-    "S_plus_hazard must isolate the nav pruner against the live config, nothing else"
+)
+assert {k for k in SHIPPED_2026_07_25 if ARMS["S_plus_hazard"][k] != ARMS["S"][k]} == {
+    "hazard_move_pruner"
+}, "S_plus_hazard must isolate the nav pruner against the live config, nothing else"
 
 
 def assert_shipped_dict_matches_module_globals() -> dict:
@@ -173,17 +213,21 @@ class InstrumentedProposer:
 
     def __init__(self, inner):
         object.__setattr__(self, "_inner", inner)
-        object.__setattr__(self, "stats", {
-            "generate_calls": 0,
-            "complete_text_calls": 0,
-            "responses": 0,
-            "tokens_prompt": 0,
-            "tokens_predicted": 0,
-            "llm_wall_s": 0.0,
-            "stop_type_limit": 0,
-            "prompt_truncated": 0,
-            "errors": 0,
-        })
+        object.__setattr__(
+            self,
+            "stats",
+            {
+                "generate_calls": 0,
+                "complete_text_calls": 0,
+                "responses": 0,
+                "tokens_prompt": 0,
+                "tokens_predicted": 0,
+                "llm_wall_s": 0.0,
+                "stop_type_limit": 0,
+                "prompt_truncated": 0,
+                "errors": 0,
+            },
+        )
         # PATCH THE INNER INSTANCE, not just this wrapper. Delegation alone under-counts: the agent
         # calls high-level methods (`induce`, `refactor`, `induce_programmatic_experts`) that are
         # defined ON LocalGGUFProposer, so `__getattr__` hands back a method BOUND TO THE INNER
@@ -262,13 +306,43 @@ class InstrumentedProposer:
         With spawning forbidden, a transient health blip costs ONE induction (`generate()` returns
         its `(False, "GPU llama-server failed ...")` tuple, the agent logs `proposer_failed`) instead
         of forking a second copy of a 12 GB model onto the card.
+
+        MEASURED 2026-07-26, THE OTHER HALF OF THIS PROBLEM. Forbidding the spawn is necessary but
+        not sufficient, because `_healthy()` hard-codes a 2-SECOND urllib timeout. Under this
+        harness's own load (two shard processes at ~300% CPU each, plus the server mid-generation)
+        that probe can fail on a server that is perfectly alive -- and with spawning forbidden a
+        failed probe makes `generate()` return its `(False, ...)` tuple, so the agent logs
+        `proposer_failed` and the cell completes with ZERO completions. Observed: an ar25 cell that
+        had produced 7 real completions on an earlier run came back with `resp=0` and
+        `genok=True->False` while the server was demonstrably up and serving at 165 tok/s. The row
+        is correctly stamped `llm_on_row_valid: False`, so it is not silently believed -- but it is
+        a WASTED cell, and if the blip is frequent enough the whole run degrades to LLM-off.
+        So the replacement is a RETRYING probe with a longer timeout: several attempts, spaced, at
+        a timeout appropriate to a loaded box. It still NEVER spawns, so the storm stays impossible;
+        it just stops treating one slow response as a dead server. A genuinely dead server (systemd
+        restarts it in ~12s, model load included) is still caught -- it simply gets the few seconds
+        it needs to come back rather than being declared dead on the first 2s miss.
         """
         inner = self._inner
 
-        def _health_only() -> bool:
-            return bool(inner._healthy())
+        def _health_only(attempts: int = 6, timeout: float = 10.0, gap: float = 3.0) -> bool:
+            import urllib.request
+
+            for i in range(attempts):
+                try:
+                    with urllib.request.urlopen(inner._url() + "/health", timeout=timeout) as r:
+                        if b"ok" in r.read():
+                            return True
+                except Exception:
+                    pass
+                if i < attempts - 1:
+                    time.sleep(gap)
+            return False
 
         inner._ensure_server = _health_only  # type: ignore[method-assign]
+        # The per-cell liveness WITNESS must use the same tolerant probe, or a cell whose LLM
+        # worked fine gets stamped invalid by a 2s blip at the moment the cell happens to end.
+        inner._healthy = _health_only  # type: ignore[method-assign]
 
     def snapshot(self) -> dict:
         return dict(self.stats)
@@ -318,6 +392,7 @@ def _llama_server_count() -> int:
     was measured during a server storm (see InstrumentedProposer.forbid_spawn) and its wall clock is
     contended -- the number that matters most here -- so the count is recorded per cell."""
     import subprocess
+
     try:
         out = subprocess.run(["ps", "-eo", "args"], capture_output=True, text=True, timeout=10)
         return sum(1 for ln in out.stdout.splitlines() if "llama-server" in ln)
@@ -370,8 +445,16 @@ def _action_key(move: dict) -> str:
     return str(kind)
 
 
-def run_cell(game: str, seed: int, *, budget: int, proposer, llm: bool,
-             extra_kwargs: dict | None = None, arm: str = "E3_shipped") -> dict:
+def run_cell(
+    game: str,
+    seed: int,
+    *,
+    budget: int,
+    proposer,
+    llm: bool,
+    extra_kwargs: dict | None = None,
+    arm: str = "E3_shipped",
+) -> dict:
     """One (game, seed, arm) cell on the SCORED path. `llm=False` sets the disable-induction env for
     the duration of THIS cell only, so an LLM-on / LLM-off contrast can be run in one process
     without two harnesses."""
@@ -443,9 +526,12 @@ def run_cell(game: str, seed: int, *, budget: int, proposer, llm: bool,
         r = lb.run_game(game, policy, budget=budget, variant=0, reflect=None)
         row["ran"] = True
     except Exception as exc:
-        row.update(ran=False, reason=f"{type(exc).__name__}:{exc}",
-                   wall_s=round(time.time() - t1, 2),
-                   states_expanded=(len(ex.graph) if ex is not None else None))
+        row.update(
+            ran=False,
+            reason=f"{type(exc).__name__}:{exc}",
+            wall_s=round(time.time() - t1, 2),
+            states_expanded=(len(ex.graph) if ex is not None else None),
+        )
         if prev_disable is None:
             os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
         else:
@@ -456,8 +542,10 @@ def run_cell(game: str, seed: int, *, budget: int, proposer, llm: bool,
     # ---- LLM cost, differenced so a shared proposer still gives per-cell numbers -----------
     if proposer is not None:
         now = proposer.snapshot()
-        row["llm"] = {k: (round(now[k] - llm0[k], 3) if isinstance(now[k], float)
-                          else now[k] - llm0[k]) for k in now}
+        row["llm"] = {
+            k: (round(now[k] - llm0[k], 3) if isinstance(now[k], float) else now[k] - llm0[k])
+            for k in now
+        }
         row["generator_healthy_before"] = gen_ok_before
         row["generator_healthy_after"] = bool(proposer._inner._healthy())
         row["llama_servers_before"] = servers_before
@@ -470,9 +558,11 @@ def run_cell(game: str, seed: int, *, budget: int, proposer, llm: bool,
         # never reached it -- in neither case is the row evidence about the LLM tier.
         row["llm_on_row_valid"] = bool(
             (not llm)
-            or (row["llm"]["responses"] > 0
+            or (
+                row["llm"]["responses"] > 0
                 and row["generator_healthy_after"]
-                and not row["server_storm_suspected"])
+                and not row["server_storm_suspected"]
+            )
         )
     else:
         row["llm"] = None
@@ -593,16 +683,18 @@ def run_cell(game: str, seed: int, *, budget: int, proposer, llm: bool,
 
     # ---- outcome + the NAV/CLICK action mix (the TASK-2 target sizing) ---------------------
     recs = []
-    for fr in (r.get("frame_sequence") or []):
+    for fr in r.get("frame_sequence") or []:
         mv = fr.get("move") or {}
         k = mv.get("kind")
         if k in (None, "RESET"):
             continue
         data = mv.get("data") or {}
-        recs.append({
-            "key": _action_key(mv),
-            "is_click": bool(isinstance(data, dict) and "x" in data),
-        })
+        recs.append(
+            {
+                "key": _action_key(mv),
+                "is_click": bool(isinstance(data, dict) and "x" in data),
+            }
+        )
     hist = collections.Counter(rc["key"] for rc in recs)
     top = hist.most_common(5)
     n_click = sum(1 for rc in recs if rc["is_click"])
@@ -641,19 +733,34 @@ def main(argv) -> int:
     ap.add_argument("--budget", type=int, default=400)
     ap.add_argument("--port", type=int, default=8931)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--no-llm", action="store_true",
-                    help="control arm: same policy, induction disabled (the 2026-07-25 condition)")
-    ap.add_argument("--both", action="store_true",
-                    help="run BOTH llm-off and llm-on per cell, round-robin by arm")
-    ap.add_argument("--no-spawn", action="store_true",
-                    help="forbid the proposer from launching a server; the caller must have started "
-                         "one already (start_gen.sh). Prevents the measured server-storm.")
-    ap.add_argument("--arms", default="",
-                    help="comma-separated ARMS keys (S, S_minus_frontier, S_minus_hud, "
-                         "S_minus_both, S_plus_hazard). Empty = the bare default policy, no flag "
-                         "kwargs pinned.")
-    ap.add_argument("--games-all", action="store_true",
-                    help="use all 25 public survey games (overrides --games)")
+    ap.add_argument(
+        "--no-llm",
+        action="store_true",
+        help="control arm: same policy, induction disabled (the 2026-07-25 condition)",
+    )
+    ap.add_argument(
+        "--both",
+        action="store_true",
+        help="run BOTH llm-off and llm-on per cell, round-robin by arm",
+    )
+    ap.add_argument(
+        "--no-spawn",
+        action="store_true",
+        help="forbid the proposer from launching a server; the caller must have started "
+        "one already (start_gen.sh). Prevents the measured server-storm.",
+    )
+    ap.add_argument(
+        "--arms",
+        default="",
+        help="comma-separated ARMS keys (S, S_minus_frontier, S_minus_hud, "
+        "S_minus_both, S_plus_hazard). Empty = the bare default policy, no flag "
+        "kwargs pinned.",
+    )
+    ap.add_argument(
+        "--games-all",
+        action="store_true",
+        help="use all 25 public survey games (overrides --games)",
+    )
     a = ap.parse_args(argv)
     if a.games_all:
         a.games = ",".join(GAMES_25)
@@ -664,27 +771,37 @@ def main(argv) -> int:
         if x and x not in ARMS:
             raise SystemExit(f"unknown arm {x!r}; known: {sorted(ARMS)}")
 
-    assert os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") is None, \
+    assert os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") is None, (
         "CARNOT_ARC_DISABLE_INDUCTION must be unset at harness start"
+    )
 
     # Record (and shout about) any drift between this file's pinned SHIPPED dict and the agent's own
     # SUBMITTED_* globals. Pinning keeps an ARM stable; only this check tells you whether the arm
     # named "S" is still the LIVE configuration.
     parity = assert_shipped_dict_matches_module_globals()
     if parity["pinned_vs_live_drift"]:
-        print(f"[WARNING] pinned SHIPPED dict differs from the live SUBMITTED_* globals: "
-              f"{parity['pinned_vs_live_drift']} -- arm 'S' is NOT the live config; "
-              f"update SHIPPED_2026_07_25 before treating it as the control.", flush=True)
+        print(
+            f"[WARNING] pinned SHIPPED dict differs from the live SUBMITTED_* globals: "
+            f"{parity['pinned_vs_live_drift']} -- arm 'S' is NOT the live config; "
+            f"update SHIPPED_2026_07_25 before treating it as the control.",
+            flush=True,
+        )
     if a.budget != 400:
-        print(f"[NOTE] budget={a.budget}; the scored agent's own cap is MAX_ACTIONS=400. "
-              f"Do not report this as the eval's condition.", flush=True)
+        print(
+            f"[NOTE] budget={a.budget}; the scored agent's own cap is MAX_ACTIONS=400. "
+            f"Do not report this as the eval's condition.",
+            flush=True,
+        )
 
     proposer = build_proposer(a.port)
     t_srv = time.time()
     server_ok = proposer._inner._ensure_server()
     srv_s = round(time.time() - t_srv, 2)
-    print(f"[generator] ensure_server={server_ok} in {srv_s}s port={a.port} "
-          f"gpu_pin={os.environ.get('CARNOT_ARC_GENERATOR_CUDA_GPU')}", flush=True)
+    print(
+        f"[generator] ensure_server={server_ok} in {srv_s}s port={a.port} "
+        f"gpu_pin={os.environ.get('CARNOT_ARC_GENERATOR_CUDA_GPU')}",
+        flush=True,
+    )
     if not server_ok:
         print("[generator] FAILED -- refusing to run an LLM-on measurement without a live server")
         return 2
@@ -702,7 +819,11 @@ def main(argv) -> int:
             for arm_key in arms:
                 for llm in modes:
                     row = run_cell(
-                        g, s, budget=a.budget, proposer=proposer, llm=llm,
+                        g,
+                        s,
+                        budget=a.budget,
+                        proposer=proposer,
+                        llm=llm,
                         extra_kwargs=(dict(ARMS[arm_key]) if arm_key else None),
                         arm=f"{arm_key or 'E3_default'}_llm{'on' if llm else 'off'}",
                     )
@@ -725,20 +846,31 @@ def main(argv) -> int:
                         f"VALID={row.get('llm_on_row_valid')}",
                         flush=True,
                     )
-                    Path(a.out).write_text(json.dumps(
-                        {"rows": rows, "server_spawn_s": srv_s, "port": a.port,
-                         "shipped_config": SHIPPED_2026_07_25, "arms_used": arms,
-                         "budget": a.budget,
-                         "scored_agent_max_actions": 400,
-                         "budget_matches_scored_cap": a.budget == 400,
-                         "flag_parity_vs_live_globals": parity,
-                         "elapsed_s": round(time.time() - t0, 1)}, indent=1))
-    print(f"TOTAL {round(time.time()-t0,1)}s n={len(rows)}")
+                    Path(a.out).write_text(
+                        json.dumps(
+                            {
+                                "rows": rows,
+                                "server_spawn_s": srv_s,
+                                "port": a.port,
+                                "shipped_config": SHIPPED_2026_07_25,
+                                "arms_used": arms,
+                                "budget": a.budget,
+                                "scored_agent_max_actions": 400,
+                                "budget_matches_scored_cap": a.budget == 400,
+                                "flag_parity_vs_live_globals": parity,
+                                "elapsed_s": round(time.time() - t0, 1),
+                            },
+                            indent=1,
+                        )
+                    )
+    print(f"TOTAL {round(time.time() - t0, 1)}s n={len(rows)}")
     verdicts = collections.Counter(r.get("lever3_verdict") for r in rows)
     print(f"lever3 (hazard pruner) verdicts: {dict(verdicts)}")
     if verdicts.get("UNINTERPRETABLE_NO_OBSERVE"):
-        print("[WARNING] some hazard-pruner cells never observed a transition -- that is a WIRING "
-              "DEFECT (the exp5836 dead-channel class), not a null. Fix before reporting.")
+        print(
+            "[WARNING] some hazard-pruner cells never observed a transition -- that is a WIRING "
+            "DEFECT (the exp5836 dead-channel class), not a null. Fix before reporting."
+        )
     return 0
 
 

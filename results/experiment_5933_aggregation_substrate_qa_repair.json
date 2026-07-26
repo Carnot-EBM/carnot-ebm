@@ -1,0 +1,716 @@
+{
+  "current_changed_file_hashes": {
+    "openspec/capabilities/verification/spec.md": "82dffcea8549fcbdf018a25a1c897f0a525f9cbe4c4fbf9d66fd97b993ff0f1b",
+    "scripts/adversarial_verify.py": "42dbbe7cc98a61c8fbc39254879a7cb568f609d3a9f77d0e4557a75b5da9b645",
+    "tests/python/test_adversarial_verify_substrate_classification_5933.py": "466a0e9d47e12a13f7f716cca1a3d6e616ff14f81735dbb2aa6451485b570ea7"
+  },
+  "duration_s": 581.5,
+  "exp5931_post_fix_receipt": {
+    "artifact": "results/experiment_5931_v526_capstone_reconciliation.json",
+    "artifact_modified": false,
+    "artifact_sha256_after": "cf6a857f16da6f1af9478cb42960a4df9febb0da643a667c5840322735b6da0c",
+    "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5931_v526_capstone_reconciliation.json",
+    "exit_code": 0,
+    "flag_count": 0,
+    "flags": [],
+    "removed_flags_vs_pre_fix": [
+      {
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      },
+      {
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ]
+  },
+  "experiment": "5933",
+  "field_provenance": {
+    "duration_s": "sum of pytest-reported validation runtimes: full tests 575.52s plus related substrate 3.57s plus coverage run 1.47s plus focused pre-coverage run 0.94s",
+    "exp5931_post_fix_receipt": "real CLI replay after verifier change, Exp5931 hash unchanged",
+    "honest_verdict": "terminal verdict with complete_partial prefix because full repo validation remains outside this repair",
+    "inference_substrate": "deterministic QA regression over local artifacts and tests; no model inference performed",
+    "intended_false_positive_removals": "only Exp5931 and Exp5932 aggregation live-rule false positives disappeared",
+    "malformed_or_missing_substrate_policy": "paired fixture tests prove unknown/missing declarations remain conservative",
+    "paired_aggregation_and_live_controls": "from tests/python/test_adversarial_verify_substrate_classification_5933.py, 11 passed",
+    "per_artifact_before_after_flag_vectors": "before vectors preserved from pre-edit run; after vectors recomputed with current scripts/adversarial_verify.py",
+    "pre_fix_flag_vector": "exact Exp5931 adversarial_verify output preserved before implementation: DURATION_TOO_SHORT critical and METHODOLOGY_MISSING warn",
+    "preconditions_checked": "from pre-edit hashes, instruction reads, requested-path existence checks, and pre-fix Exp5931 CLI output captured before changing scripts/adversarial_verify.py",
+    "protected_files_unchanged": "sha256 pre/post comparison and empty protected-file git diff; Exp5931 and scripts/research_conductor.py unchanged",
+    "qa_substrate_classifier_ready_score": "bare 1.0 because paired controls passed, Exp5931 is clean post-fix, unintended downgrades are zero, and protected files are unchanged",
+    "regression_corpus_manifest_and_hashes": "sha256 hashes of dated capstone/live/blocked/hardware/simulated corpus files on 2026-07-26",
+    "reproducibility_checksum": "sha256 over this artifact content with checksum field blank, current changed-file hashes, protected hashes, and after flag vectors",
+    "status": "set to complete_partial because the substrate repair is verified but the mandatory full repository pytest command still has unrelated existing failures and a worker crash",
+    "substrate_classifier_contract": "derived from REQ-VERIFY-5933 and scripts/adversarial_verify.py explicit allowlists",
+    "test_commands": "command strings and observed summaries below",
+    "test_exit_codes": "exit codes observed from shell commands during this run",
+    "true_live_short_duration_detection_rate": "4 of 4 true live short-duration controls still emitted DURATION_TOO_SHORT critical",
+    "unintended_severity_downgrade_count": "computed by excluding intended aggregation removals and comparing maximum before/after severity ranks"
+  },
+  "honest_verdict": "complete_partial: substrate classifier repair is ready with paired controls, clean immutable Exp5931 replay, zero unintended corpus downgrade, and unchanged protected files; mandatory full-repo pytest, full spec coverage, and whole-repo ruff still fail on unrelated pre-existing repository issues",
+  "inference_substrate": "deterministic_qa_regression_no_llm",
+  "intended_false_positive_removals": [
+    {
+      "path": "results/experiment_5931_v526_capstone_reconciliation.json",
+      "reason": "top-level aggregation substrate owns classification; nested quoted live markers are upstream provenance only",
+      "removed": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ]
+    },
+    {
+      "path": "results/experiment_5932_transition_v527.json",
+      "reason": "top-level aggregation substrate owns classification; nested quoted live markers are upstream provenance only",
+      "removed": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ]
+    }
+  ],
+  "malformed_or_missing_substrate_policy": {
+    "paired_fixture_observation": "missing and typo substrate controls both emitted DURATION_TOO_SHORT critical plus METHODOLOGY_MISSING warn",
+    "policy": "fail closed: missing, unknown, or malformed inference_substrate values do not claim aggregation and therefore keep compute-marker live-duration and methodology checks"
+  },
+  "paired_aggregation_and_live_controls": {
+    "aggregation_control": {
+      "duration_s": 5.966263,
+      "expected_absent_flags": [
+        "DURATION_TOO_SHORT",
+        "METHODOLOGY_MISSING"
+      ],
+      "observed": "pass",
+      "substrate": "aggregation_from_exact_declared_artifacts"
+    },
+    "hardware_and_simulated_controls": {
+      "hardware_smoke": "existing compute-marker behavior preserved",
+      "simulation_without_markers": "clean no-flag behavior preserved"
+    },
+    "live_paired_control": {
+      "duration_s": 5.966263,
+      "expected_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "observed": "pass",
+      "substrate": "live_llm_inference"
+    },
+    "malformed_and_missing_controls": {
+      "malformed_substrate": "conservative DURATION_TOO_SHORT critical and METHODOLOGY_MISSING warn preserved",
+      "missing_substrate": "conservative DURATION_TOO_SHORT critical and METHODOLOGY_MISSING warn preserved"
+    },
+    "quoted_markers": [
+      "GGUF",
+      "CUDA",
+      "torch.cuda",
+      "llama.cpp"
+    ],
+    "test_file": "tests/python/test_adversarial_verify_substrate_classification_5933.py"
+  },
+  "per_artifact_before_after_flag_vectors": [
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5862_v521_capstone_reconciliation.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5903_v524_capstone_reconciliation.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5917_v525_capstone_reconciliation.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "path": "results/experiment_5931_v526_capstone_reconciliation.json",
+      "removed": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ]
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "path": "results/experiment_5932_transition_v527.json",
+      "removed": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ]
+    },
+    {
+      "added": [],
+      "after": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_5588_tier3_induction_live_path_sanity_check.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "path": "results/experiment_5860_live_active_observation_ab.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5713_qwen27b_q4_mtp_enabled_ab.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5916_arc_structured_memory_live_held_ab.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "before": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "path": "results/experiment_5506_hardware_multiboard_receipts_v499.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_5930_adaptive_state_board_mapping.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_2161_kv260_simulation.json",
+      "removed": []
+    },
+    {
+      "added": [],
+      "after": [],
+      "before": [],
+      "path": "results/experiment_1399_discrete_sb_kv260_cpu_simulation.json",
+      "removed": []
+    }
+  ],
+  "pre_fix_flag_vector": {
+    "artifact": "results/experiment_5931_v526_capstone_reconciliation.json",
+    "flags": [
+      {
+        "detail": "duration_s=5.966263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "sha256": "cf6a857f16da6f1af9478cb42960a4df9febb0da643a667c5840322735b6da0c"
+  },
+  "preconditions_checked": {
+    "instructions_read": [
+      "AGENTS.md",
+      "CODEX.md",
+      "CLAUDE.md relevant verification/reporting sections",
+      "ops/e2e-test-plan.md",
+      "ops/known-issues.md"
+    ],
+    "pre_fix_exp5931_cli": {
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5931_v526_capstone_reconciliation.json",
+      "exit_code": 1,
+      "flag_vector_preserved_before_code_change": [
+        {
+          "detail": "duration_s=5.966263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ]
+    },
+    "pre_fix_hashes": {
+      "openspec/capabilities/research-reporting/spec.md": "a09cb8f110b2e3f33f7cf24a45a9bd5fb4018ccb51b7dc7a7e7f863b7ba63ed4",
+      "openspec/capabilities/verification/spec.md": "3d73110a5668c992c2a05d7495584580d15f1c02802043f8deb77ed6806f0e3d",
+      "ops/e2e-test-plan.md": "580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/known-issues.md": "bded96593532d255389e4ec2b5650f48ccfaa67815097b8fd38a4f99581017ea",
+      "results/experiment_5931_v526_capstone_reconciliation.json": "cf6a857f16da6f1af9478cb42960a4df9febb0da643a667c5840322735b6da0c",
+      "scripts/adversarial_verify.py": "a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de"
+    },
+    "requested_paths_checked": {
+      "CLAUDE.md": "present_read",
+      "CODEX.md": "present_read",
+      "openspec/capabilities/adversarial-verification/spec.md": "requested_path_missing; active verifier spec is openspec/capabilities/verification/spec.md",
+      "openspec/capabilities/research-reporting/spec.md": "present_read",
+      "results/experiment_5931_v526_capstone_reconciliation.json": "present_hashed_and_left_unchanged",
+      "scripts/adversarial_verify.py": "present_hashed_before_edit",
+      "tests/python/test_adversarial_verify.py": "requested_path_missing; existing adversarial tests are tests/python/test_adversarial_verify_*.py"
+    }
+  },
+  "protected_files_unchanged": {
+    "git_diff_name_only": [],
+    "post_hashes": {
+      "_bmad/traceability.md": "52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "89292876adc70cb1b20f2131e774b6db0b7f7529a9eb6c7f145b520b2f82fac3",
+      "ops/status.md": "a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+      "research-complete.yaml": "80db4dc1b768fbf8a7cf994e39d758e7d1d67499088056050b95ef52503134de",
+      "research-roadmap.yaml": "af841fbcf084c0893bbb9749dc9a13879e7a876b38248f1dc57bdbe49788a081",
+      "results/experiment_5931_v526_capstone_reconciliation.json": "cf6a857f16da6f1af9478cb42960a4df9febb0da643a667c5840322735b6da0c",
+      "scripts/research_conductor.py": "353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "pre_hashes": {
+      "_bmad/traceability.md": "52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "89292876adc70cb1b20f2131e774b6db0b7f7529a9eb6c7f145b520b2f82fac3",
+      "ops/status.md": "a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+      "research-complete.yaml": "80db4dc1b768fbf8a7cf994e39d758e7d1d67499088056050b95ef52503134de",
+      "research-roadmap.yaml": "af841fbcf084c0893bbb9749dc9a13879e7a876b38248f1dc57bdbe49788a081",
+      "results/experiment_5931_v526_capstone_reconciliation.json": "cf6a857f16da6f1af9478cb42960a4df9febb0da643a667c5840322735b6da0c",
+      "scripts/research_conductor.py": "353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "unchanged": true
+  },
+  "qa_substrate_classifier_ready_score": 1.0,
+  "regression_corpus_manifest_and_hashes": [
+    {
+      "category": "recent_clean_aggregation_capstone",
+      "duration_s": 2.852889,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_5862_v521_capstone_reconciliation.json",
+      "sha256": "9fddb452750256e4d968446346db0bd2c658c883d6670953ff740427c303d433"
+    },
+    {
+      "category": "recent_clean_aggregation_capstone",
+      "duration_s": 9.112738,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_5903_v524_capstone_reconciliation.json",
+      "sha256": "a0ac1099a07bc0df8fb220bcb8040b150dda7a4e55f0d615ed101dfb99ec6a24"
+    },
+    {
+      "category": "recent_clean_aggregation_capstone",
+      "duration_s": 6.120376,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_5917_v525_capstone_reconciliation.json",
+      "sha256": "40bf1e2f438139f18299d6875880cc9f31d7fccd9d48335a99c4cf7a633be039"
+    },
+    {
+      "category": "target_aggregation_false_positive",
+      "duration_s": 5.966263,
+      "inference_substrate": "aggregation_from_exact_declared_artifacts",
+      "path": "results/experiment_5931_v526_capstone_reconciliation.json",
+      "sha256": "cf6a857f16da6f1af9478cb42960a4df9febb0da643a667c5840322735b6da0c"
+    },
+    {
+      "category": "transition_aggregation_false_positive",
+      "duration_s": 35.19903,
+      "inference_substrate": "aggregation_from_upstream_artifacts_no_llm",
+      "path": "results/experiment_5932_transition_v527.json",
+      "sha256": "47f1c4be64c23d28438e86f72c59d956960753a4235df982809e23ec27af5ced"
+    },
+    {
+      "category": "true_live_short_duration_control",
+      "duration_s": 11.389,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5588_tier3_induction_live_path_sanity_check.json",
+      "sha256": "fccaaf32ec77a133920c7eefb6877712eca8908200ecfaeab46d7d7b388a860d"
+    },
+    {
+      "category": "true_live_short_duration_control",
+      "duration_s": 37.086,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
+      "sha256": "fe3cee2fbf2cd964cd4c6cf5e53ddd05f477460e746310f99d8a003f73a1b99a"
+    },
+    {
+      "category": "true_live_short_duration_control",
+      "duration_s": 33.452,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
+      "sha256": "8d945fe6838394638908f28cfbcf1ad842fdd5c78c5bec9b2103c8206069c5c0"
+    },
+    {
+      "category": "true_live_short_duration_control",
+      "duration_s": 53.853,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5860_live_active_observation_ab.json",
+      "sha256": "52aed7bd4fed5ec79fb3160b6c94568aa7362b9d98c4436aa803dd89215cbd96"
+    },
+    {
+      "category": "blocked_precondition_control",
+      "duration_s": 96.785687,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5897_sota_constraint_ir_repair_ab.json",
+      "sha256": "3481f27c0ba603ead764c52c4d617ac80c001852ab3bb6559d6abbac0b6dc91d"
+    },
+    {
+      "category": "blocked_or_specialized_live_control",
+      "duration_s": 0.143891,
+      "inference_substrate": {
+        "principle": "Declares live local SOTA GGUF inference plus deterministic solver scoring over the rebuilt Exp 5273 fixture.",
+        "value": "live_llm_inference_local_gguf_sota"
+      },
+      "path": "results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json",
+      "sha256": "d009df0b506261912d0c8e5aa5860fe4813ad844044bc379e66f91c632cd8ec7"
+    },
+    {
+      "category": "blocked_precondition_control",
+      "duration_s": 0.0,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5713_qwen27b_q4_mtp_enabled_ab.json",
+      "sha256": "12e9153dfea1307b10e9f88aa066f22ea03d4fd3a928f74e066d71a1996fadc8"
+    },
+    {
+      "category": "blocked_precondition_control",
+      "duration_s": 45.068,
+      "inference_substrate": "live_llm_inference",
+      "path": "results/experiment_5916_arc_structured_memory_live_held_ab.json",
+      "sha256": "446b57b111d537d6a70439150d56aedbc06c6e4fb5ba13e104e6d1af41309be5"
+    },
+    {
+      "category": "hardware_smoke_control",
+      "duration_s": 8.891696,
+      "inference_substrate": "hardware_smoke",
+      "path": "results/experiment_5506_hardware_multiboard_receipts_v499.json",
+      "sha256": "94354692a43227ca0f4823605abc2fe6f45ec431b27937e73a96caa586afa183"
+    },
+    {
+      "category": "no_llm_static_or_simulated_control",
+      "duration_s": 0.0,
+      "inference_substrate": "rtl_hls_simulation_and_static_synthesis_no_llm",
+      "path": "results/experiment_5930_adaptive_state_board_mapping.json",
+      "sha256": "2391848e75f3af302de8a0863cd594faf427b6a413ffd6aac17e193ce749025b"
+    },
+    {
+      "category": "simulated_or_blocked_control",
+      "duration_s": 0.0,
+      "inference_substrate": null,
+      "path": "results/experiment_2161_kv260_simulation.json",
+      "sha256": "d81a7d52fd944d7e4090e1da8d00e699080c184933470ee43962fdbf2143e893"
+    },
+    {
+      "category": "simulated_control",
+      "duration_s": null,
+      "inference_substrate": null,
+      "path": "results/experiment_1399_discrete_sb_kv260_cpu_simulation.json",
+      "sha256": "1cb1fe78caa2058b9c1e39149eecfa488bc230f9ca2ea7d00bc157a9e3976166"
+    }
+  ],
+  "reproducibility_checksum": "sha256:984dd8fedde505da53770d273934e059a14857bf101315dd03c4161e990ecb06",
+  "run_date": "2026-07-26",
+  "status": "complete_partial",
+  "substrate_classifier_contract": {
+    "aggregation_allowlist": [
+      "aggregation_from_upstream_artifacts",
+      "aggregation_from_exact_declared_artifacts",
+      "aggregation_from_upstream_artifacts_no_llm",
+      "aggregation_from_external_primary_sources",
+      "aggregation_from_exp5603_exp5611_artifacts",
+      "artifact_reconciliation_and_validation_only",
+      "artifact_reconciliation_only",
+      "artifact_synthesis_and_gate_reconciliation",
+      "cached_artifact_reconciliation_no_llm",
+      "capstone_aggregation_from_upstream_artifacts",
+      "exact_local_artifact_conductor_gate_and_document_reconciliation_no_llm",
+      "local_artifact_aggregation_and_doc_reconcile"
+    ],
+    "conservative_fallback_rule": "unknown, malformed, or missing top-level substrate still falls through to compute-bound marker checks",
+    "live_model_allowlist_examples": [
+      "live_llm_inference",
+      "live_llm_inference_local_gguf_sota",
+      "live_llm_embedding_extraction",
+      "local_native_llama_cpp_gguf_backend_bisect"
+    ],
+    "no_llm_allowlist_examples": [
+      "artifact_qa_lint_tests",
+      "deterministic_qa_regression_no_llm",
+      "deterministic_smt_hint_validation_no_llm",
+      "simulation",
+      "web_bibliographic_search_only"
+    ],
+    "provenance_context_fields": [
+      "field_provenance.inference_substrate",
+      "field_principles.inference_substrate"
+    ],
+    "quoted_upstream_marker_rule": "nested strings such as GGUF, CUDA, torch.cuda, and llama.cpp never upgrade allowlisted aggregation/no-LLM artifacts to live inference",
+    "source_of_truth": "top-level inference_substrate after principle-wrapper normalization"
+  },
+  "test_commands": [
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/test_adversarial_verify_substrate_classification_5933.py -q",
+      "exit_code": 0,
+      "label": "focused_unit_paired_fixture",
+      "summary": "11 passed in 0.94s; coverage rerun 11 passed in 1.47s"
+    },
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/test_adversarial_verify_substrate_classification_5933.py tests/python/test_adversarial_verify_exp5895_no_llm_substrate.py tests/python/test_adversarial_verify_local_sota_gguf_small_n_substrate.py tests/python/test_adversarial_verify_web_bibliographic_search_only_substrate.py tests/python/test_adversarial_verify_native_gguf_backend_bisect_substrate.py tests/python/test_adversarial_verify_blocked_verdict_duration_exemption.py -q",
+      "exit_code": 0,
+      "label": "related_substrate_regression_tests",
+      "summary": "51 passed in 3.57s"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot_exp5933.coverage .venv/bin/python -m coverage run --rcfile=/dev/null --branch --source=scripts -m pytest -o addopts='' tests/python/test_adversarial_verify_substrate_classification_5933.py -q && coverage json plus diff-line parser",
+      "exit_code": 0,
+      "label": "new_code_coverage",
+      "summary": "new_code_statement_line_coverage=1.0, missed_added_statement_lines=[]"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5931_v526_capstone_reconciliation.json",
+      "exit_code": 0,
+      "label": "real_cli_exp5931",
+      "summary": "flag_count=0, flagged_count=0"
+    },
+    {
+      "command": "python verifier corpus comparison over 17 dated artifacts",
+      "exit_code": 0,
+      "label": "regression_corpus_and_severity_diff",
+      "summary": "only intended aggregation removals; no true-live severity downgrades"
+    },
+    {
+      "command": ".venv/bin/ruff format scripts/adversarial_verify.py tests/python/test_adversarial_verify_substrate_classification_5933.py && .venv/bin/ruff check scripts/adversarial_verify.py tests/python/test_adversarial_verify_substrate_classification_5933.py",
+      "exit_code": 0,
+      "label": "touched_ruff",
+      "summary": "2 files left unchanged; All checks passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_adversarial_verify_substrate_classification_5933.py",
+      "exit_code": 0,
+      "label": "targeted_spec_coverage",
+      "summary": "OK: All tests reference specification requirements"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "label": "full_pytest_tests_python",
+      "summary": "21 failed, 10857 passed, 7 skipped, 121 warnings in 575.52s; xdist worker crashed in an unrelated Z3 path"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "label": "full_spec_coverage",
+      "summary": "pre-existing repository-wide spec-reference debt: 1265 tests lacking spec refs"
+    },
+    {
+      "command": ".venv/bin/ruff check python/ tests/ scripts/adversarial_verify.py",
+      "exit_code": 1,
+      "label": "whole_repo_ruff_check",
+      "summary": "pre-existing repository-wide lint debt: 4029 findings; touched files passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/ tests/ scripts/adversarial_verify.py",
+      "exit_code": 1,
+      "label": "whole_repo_ruff_format_check",
+      "summary": "pre-existing repository-wide formatting debt: 5113 files would be reformatted; touched files passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "label": "root_clutter_dry_run",
+      "summary": "0 files to quarantine; 0 regenerable artifacts to delete"
+    },
+    {
+      "command": "sha256sum scripts/research_conductor.py results/experiment_5931_v526_capstone_reconciliation.json research-roadmap.yaml research-complete.yaml ops/status.md ops/changelog.md _bmad/traceability.md",
+      "exit_code": 0,
+      "label": "protected_file_hashes",
+      "summary": "all protected hashes unchanged from precondition snapshot"
+    },
+    {
+      "command": "ops/e2e-test-plan.md inspection plus real CLI Exp5931 and 17-artifact corpus replay",
+      "exit_code": 0,
+      "label": "applicable_e2e",
+      "summary": "no adversarial-verifier-specific e2e entry exists; CLI replay used as applicable end-to-end check"
+    }
+  ],
+  "test_exit_codes": {
+    "applicable_e2e": 0,
+    "focused_unit_paired_fixture": 0,
+    "full_pytest_tests_python": 2,
+    "full_spec_coverage": 1,
+    "new_code_coverage": 0,
+    "protected_file_hashes": 0,
+    "real_cli_exp5931": 0,
+    "regression_corpus_and_severity_diff": 0,
+    "related_substrate_regression_tests": 0,
+    "root_clutter_dry_run": 0,
+    "targeted_spec_coverage": 0,
+    "touched_ruff": 0,
+    "whole_repo_ruff_check": 1,
+    "whole_repo_ruff_format_check": 1
+  },
+  "title": "Aggregation substrate adversarial QA repair",
+  "true_live_short_duration_controls": {
+    "controls": [
+      "results/experiment_5588_tier3_induction_live_path_sanity_check.json",
+      "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
+      "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
+      "results/experiment_5860_live_active_observation_ab.json"
+    ],
+    "detected": [
+      "results/experiment_5588_tier3_induction_live_path_sanity_check.json",
+      "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
+      "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
+      "results/experiment_5860_live_active_observation_ab.json"
+    ],
+    "detected_count": 4,
+    "total_count": 4
+  },
+  "true_live_short_duration_detection_rate": 1.0,
+  "unintended_severity_downgrade_count": 0,
+  "unintended_severity_downgrades": []
+}

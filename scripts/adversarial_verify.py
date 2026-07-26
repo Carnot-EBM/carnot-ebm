@@ -215,6 +215,30 @@ AGGREGATION_SCHEMA_PREFIXES = (
 )
 AGGREGATION_MIN_DURATION_S = 0.0001  # 100us floor catches truly-zero/missing
 
+# Explicit substrate classes. These are deliberately top-level declarations:
+# quoted upstream receipts can contain GGUF/CUDA strings without changing what
+# THIS artifact executed. Unknown or missing declarations still fall through to
+# the conservative compute-marker scan.
+SUBSTRATE_KIND_AGGREGATION = "aggregation"
+SUBSTRATE_KIND_NO_LLM = "no_llm"
+SUBSTRATE_KIND_LIVE_MODEL = "live_model"
+SUBSTRATE_KIND_UNKNOWN = "unknown"
+
+AGGREGATION_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
+    AGGREGATION_SUBSTRATE,
+    "aggregation_from_exact_declared_artifacts",
+    "aggregation_from_upstream_artifacts_no_llm",
+    "aggregation_from_external_primary_sources",
+    "aggregation_from_exp5603_exp5611_artifacts",
+    "artifact_reconciliation_and_validation_only",
+    "artifact_reconciliation_only",
+    "artifact_synthesis_and_gate_reconciliation",
+    "cached_artifact_reconciliation_no_llm",
+    "capstone_aggregation_from_upstream_artifacts",
+    "exact_local_artifact_conductor_gate_and_document_reconciliation_no_llm",
+    "local_artifact_aggregation_and_doc_reconcile",
+)
+
 # Deterministic verifier artifacts replay or aggregate checked-in candidate
 # evidence. They can honestly cite upstream GGUF model names while making no
 # new LLM call of their own, so they need a JSON-work duration floor rather
@@ -335,6 +359,68 @@ WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S = 0.0001
 # compute-bound artifacts; they do not declare this substrate.
 ARTIFACT_QA_LINT_TESTS_SUBSTRATE = "artifact_qa_lint_tests"
 ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S = 0.0001
+DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE = "deterministic_qa_regression_no_llm"
+
+NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
+    VERIFIER_SCORING_SUBSTRATE,
+    *DETERMINISTIC_VERIFIER_SUBSTRATES,
+    ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
+    ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE,
+    ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
+    LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
+    WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
+    ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
+    DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE,
+    DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
+    "cached_exp5567_responses_no_llm",
+    "cached_fixture_replay_no_llm",
+    "deterministic_automaton_no_llm",
+    "deterministic_validation_over_canonical_pool",
+    "offline_exact_forensics_over_existing_real_gguf_rows_no_llm",
+    "online_exact_membership_query_sidecar_no_llm",
+    "primary_source_metadata_and_local_ledger_synthesis_no_experiment_llm",
+    "simulation",
+)
+
+LIVE_MODEL_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
+    LIVE_LLM_SUBSTRATE,
+    LLM_EMBEDDING_EXTRACTION_SUBSTRATE,
+    LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
+    NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
+    "actual_capability_bound_adapter_disabled_e3_local_mandated_gguf_public_llama_cpp_cuda",
+    "exact_validated_local_sota_gguf_panel",
+    "live_llm_generation_with_deterministic_execution_guard",
+    "live_llm_hidden_state_extraction",
+    "live_llm_inference_and_row_reanalysis",
+    "live_llm_inference_plus_z3",
+    "live_llm_inference_with_frozen_policy_state",
+    "live_llm_internal_telemetry_local_gguf_sota",
+    "live_local_sota_gguf_cross_model_csl",
+    "live_local_sota_gguf_cross_model_csl_transfer_or_gate_skip",
+    "live_local_sota_gguf_exact_validated_panel",
+    "live_local_sota_reset_free_exact_feedback_harness",
+    "local_gguf_llamacpp_cuda",
+    "local_gguf_llamacpp_cuda_evidence_fixture",
+    "local_llama_cpp_python_cuda_gguf",
+    "local_llama_cpp_python_cuda_gguf_diagnostic",
+    "local_llama_cpp_python_cuda_gguf_exact_proposal_stream",
+    "local_llama_cpp_python_cuda_gguf_finite_choice_proposals",
+    "local_llama_cpp_python_cuda_gguf_plus_exact_validators",
+    "local_llama_cpp_gguf_runtime",
+    "local_mandated_gguf_public_llama_cpp_cuda_schema_supported_decoding",
+    "local_native_llama_cpp_stability_receipts",
+    "local_sota_gguf_bounded_smoke",
+    "local_sota_gguf_constrained_generation_or_verified_repair",
+    "local_sota_gguf_csl_memory_panel",
+    "local_sota_gguf_llama_cpp_or_blocked",
+    "local_sota_gguf_plus_deterministic_solver_feedback",
+    "public_llama_cpp_cuda_tokenizer_bridge_smoke",
+    "real_local_llama_cpp_cuda_gguf_generation_plus_exact_validation",
+    "real_local_llama_cpp_cuda_gguf_generation_plus_exact_z3_validation",
+    "structured_output_fixture_or_live_llm_smoke",
+    "structured_output_fixture_plus_live_llm_smoke",
+    "structured_output_repair_fixture_plus_live_llm_smoke",
+)
 
 # Offline ARC solve / learned-verifier artifacts do not have a model to name:
 # their methodology is the solver entrypoint, reproduce gate/checksum, and
@@ -1731,18 +1817,26 @@ def _has_compute_bound_marker(d: dict[str, Any]) -> bool:
 
 
 def _inference_substrate_text(d: dict[str, Any]) -> str:
-    """Return the declared substrate as a stripped string."""
-    return str(d.get("inference_substrate") or "").strip()
+    """Return the top-level declared substrate as a stripped string.
+
+    Principle-annotated artifacts may store the field as
+    ``{"value": "...", "principle": "..."}``. Handle that shape here too so
+    direct helper tests and caller-normalized verification use the same
+    top-level declaration.
+    """
+    value = d.get("inference_substrate")
+    if isinstance(value, dict) and "value" in value:
+        value = value.get("value")
+    return str(value or "").strip()
 
 
-def _inference_substrate_matches(d: dict[str, Any], canonical: str) -> bool:
-    """True when `inference_substrate` declares a canonical substrate value.
+def _inference_substrate_value_matches(raw: str, canonical: str) -> bool:
+    """True when a raw substrate string declares a canonical substrate value.
 
     Newer ARC artifacts often store the canonical value followed by a human
     principle explanation (`value -- why this floor applies`). Matching the
     leading value keeps that reader annotation from changing verifier behavior.
     """
-    raw = _inference_substrate_text(d)
     if raw == canonical:
         return True
     # Tolerate a human principle/floor note appended after the canonical value
@@ -1759,6 +1853,57 @@ def _inference_substrate_matches(d: dict[str, Any], canonical: str) -> bool:
     if raw.startswith(canonical):
         return raw[len(canonical) : len(canonical) + 1] in {" ", "-", ";", ",", ":", "."}
     return False
+
+
+def _inference_substrate_matches(d: dict[str, Any], canonical: str) -> bool:
+    """True when `inference_substrate` declares a canonical substrate value."""
+    return _inference_substrate_value_matches(_inference_substrate_text(d), canonical)
+
+
+def _match_declared_substrate(raw: str, candidates: tuple[str, ...]) -> str | None:
+    """Return the allowlisted substrate value matched by the top-level declaration."""
+    for canonical in candidates:
+        if _inference_substrate_value_matches(raw, canonical):
+            return canonical
+    return None
+
+
+def _classify_inference_substrate(d: dict[str, Any]) -> dict[str, str]:
+    """Classify substrate from explicit top-level provenance only.
+
+    This helper intentionally ignores arbitrary nested strings. If the top-level
+    declaration is missing, malformed, or unknown, callers keep using the legacy
+    compute-marker scan as the conservative fallback.
+    """
+    raw = _inference_substrate_text(d)
+    if not raw:
+        return {
+            "kind": SUBSTRATE_KIND_UNKNOWN,
+            "declared_value": "",
+            "matched_value": "",
+            "source": "missing_top_level_inference_substrate",
+        }
+
+    for kind, candidates in (
+        (SUBSTRATE_KIND_AGGREGATION, AGGREGATION_SUBSTRATE_ALIASES),
+        (SUBSTRATE_KIND_NO_LLM, NO_LLM_SUBSTRATE_ALIASES),
+        (SUBSTRATE_KIND_LIVE_MODEL, LIVE_MODEL_SUBSTRATE_ALIASES),
+    ):
+        matched = _match_declared_substrate(raw, candidates)
+        if matched is not None:
+            return {
+                "kind": kind,
+                "declared_value": raw,
+                "matched_value": matched,
+                "source": "top_level_inference_substrate",
+            }
+
+    return {
+        "kind": SUBSTRATE_KIND_UNKNOWN,
+        "declared_value": raw,
+        "matched_value": "",
+        "source": "unknown_top_level_inference_substrate",
+    }
 
 
 def _is_live_llm_inference(d: dict[str, Any]) -> bool:
@@ -1925,7 +2070,7 @@ def _is_aggregation_only(d: dict[str, Any]) -> bool:
     markers (when present) are inherited from upstream sources cited
     in the artifact body, not invoked by the artifact itself.
     """
-    if _inference_substrate_matches(d, AGGREGATION_SUBSTRATE):
+    if _classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_AGGREGATION:
         return True
     schema = str(d.get("schema") or d.get("schema_version") or "")
     return any(schema.startswith(p) for p in AGGREGATION_SCHEMA_PREFIXES)
@@ -2005,7 +2150,9 @@ def _is_web_bibliographic_search_only(d: dict[str, Any]) -> bool:
 def _is_artifact_qa_lint_tests(d: dict[str, Any]) -> bool:
     """True when the artifact declares fixture-driven artifact QA lint tests."""
 
-    return _inference_substrate_matches(d, ARTIFACT_QA_LINT_TESTS_SUBSTRATE)
+    return _inference_substrate_matches(
+        d, ARTIFACT_QA_LINT_TESTS_SUBSTRATE
+    ) or _inference_substrate_matches(d, DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE)
 
 
 def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
@@ -2096,6 +2243,7 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     """
     if _is_precondition_check_only_blocked(d):
         return None
+    classification = _classify_inference_substrate(d)
     if _is_verifier_scoring_only(d):
         cheap_floor = _cheap_learned_value_floor_descriptor(d)
         if cheap_floor is not None:
@@ -2107,7 +2255,7 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
         }
     if _is_aggregation_only(d):
         return {
-            "substrate": AGGREGATION_SUBSTRATE,
+            "substrate": classification["matched_value"] or AGGREGATION_SUBSTRATE,
             "min_duration_s": AGGREGATION_MIN_DURATION_S,
             "reason": "aggregation",
         }
@@ -2143,7 +2291,7 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
         }
     if _is_artifact_qa_lint_tests(d):
         return {
-            "substrate": ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
+            "substrate": classification["matched_value"] or ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
             "min_duration_s": ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S,
             "reason": "artifact_qa_lint_tests",
         }
@@ -2192,6 +2340,26 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     if not _is_finite_number(duration):
         return
     if _is_precondition_check_only_blocked(d):
+        return
+    classification = _classify_inference_substrate(d)
+    if classification["kind"] == SUBSTRATE_KIND_AGGREGATION:
+        floor = duration_floor_for_artifact(d)
+        assert floor is not None
+        min_duration = float(floor["min_duration_s"])
+        if float(duration) < min_duration:
+            flags.append(
+                Flag(
+                    kind="DURATION_TOO_SHORT",
+                    severity="critical",
+                    detail=(
+                        f"duration_s={duration} but artifact declares "
+                        f"aggregation substrate. Even loading upstream "
+                        f"JSON takes microseconds; a value below "
+                        f"{min_duration}s suggests the "
+                        f"duration was not measured at all."
+                    ),
+                )
+            )
         return
     if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
         return
@@ -2382,6 +2550,8 @@ def check_gate_passed_without_data(d: dict[str, Any], flags: list[Flag]) -> None
 
 def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact missing methodology evidence."""
+    if _classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_AGGREGATION:
+        return
     if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
         return
     # An honest blocked_* verdict (Pre-Launch Preconditions Discipline) means no

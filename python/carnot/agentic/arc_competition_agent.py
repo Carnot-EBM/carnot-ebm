@@ -1984,9 +1984,7 @@ class StepwiseExplorer:
             "flag_resolved": bool(getattr(self, "hazard_move_pruner_enabled", False)),
             "observe_calls": int(getattr(self, "_hazard_observed", 0)),
             "observe_errors": int(getattr(self, "_hazard_observe_errors", 0)),
-            "antecedent_from_last_grid": int(
-                getattr(self, "_hazard_antecedent_from_last_grid", 0)
-            ),
+            "antecedent_from_last_grid": int(getattr(self, "_hazard_antecedent_from_last_grid", 0)),
             "rows_pruned": int(getattr(self, "_hazard_rows_pruned", 0)),
             "prune_errors": int(getattr(self, "_hazard_prune_errors", 0)),
             "all_pruned_nodes": int(getattr(self, "_hazard_all_pruned_nodes", 0)),
