@@ -46949,6 +46949,124 @@ has provenance, and the terminal verdict starts with `complete:` or
 |---|---|---|
 | REQ-REPORT-5918 | Implemented (`python/carnot/experiment_5918_transition_v526.py`, `results/experiment_5918_transition_v526.json`) | Implemented (`tests/python/test_experiment_5918_transition_v526.py`) |
 
+### REQ-REPORT-5931: V526 Capstone Reconciles Exact Declared Deliverables Independently
+
+The Exp5931 capstone workflow SHALL reconcile milestone `2026.07.526` by
+parsing the active roadmap, optionally parsing `research-roadmap-next.yaml`
+when present, and building the exact activated task matrix for Exp5918 through
+Exp5931. Evidence SHALL be resolved only by exact
+`(milestone, task_id, declared_deliverable)` identity. Numeric-prefix matching,
+task-title inference, source-file inference, downstream-gate inference, or
+adjacent artifact substitution SHALL NOT count as task evidence.
+
+The workflow SHALL classify every activated identity into one disjoint terminal
+class. It SHALL preserve positive, null, underpowered, blocked-precondition,
+retired, gate-blocked, no-change, and missing receipts independently. A
+gate-blocked or failed branch SHALL NOT erase positive readiness in another
+branch, and a downstream gate SHALL NOT manufacture an upstream result.
+
+The workflow SHALL run or ingest a fresh adversarial verifier receipt for every
+present declared `.526` deliverable and SHALL record missing declared
+deliverables without substituting same-number or numeric-prefix paths. The
+capstone SHALL keep structural validity, exact semantic success, continuous
+self-learning chronology and retention, ARC offline qualification, actual live
+execution binding, live rows, ABI parity, static synthesis, and physical board
+receipts as separate evidence classes.
+
+The workflow SHALL audit every activated task `prior_failures` entry. A
+`retire_if_same_verdict: true` decision SHALL append an exclusion-manifest
+scope only when the current exact task artifact proves the same verdict
+recurred; adjacent open mechanisms SHALL NOT be retired. Existing duplicate
+completion history SHALL be measured, and
+`duplicate_history_amplification_count` SHALL be the bare integer `0`.
+
+The workflow SHALL append the exact `.526` milestone block to
+`research-complete.yaml` at most once when absent. It SHALL leave
+`research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/arc_solve_registry.yaml`, `ops/north-star.md`, public docs, and unrelated
+changes untouched. It MAY defer `_bmad/traceability.md`, `ops/status.md`,
+`ops/changelog.md`, and `ops/conductor-log.md` to the conductor stop-rule
+reconciliation step.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_and_task_range`,
+`activated_task_and_declared_deliverable_matrix`,
+`exact_terminal_classification`, `adversarial_verifier_receipts`,
+`transition_and_source_receipt`,
+`schema_constraintir_structural_and_exact_semantic_receipt`,
+`continuous_self_learning_chronology_lift_safety_retention_and_rollback_receipt`,
+`arc_coordinate_execution_binding_and_live_receipt`,
+`adaptive_state_abi_and_hardware_receipt`, `branch_independence_receipt`,
+`prior_failure_and_retirement_decisions`,
+`missing_gate_blocked_and_reserved_receipts`,
+`duplicate_history_amplification_count`, `research_complete_append_receipt`,
+`docs_reconciled`, `next_three_falsifiable_recommendations`,
+`registry_unchanged`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty provenance entry and a principle. The
+`inference_substrate` SHALL be `aggregation_from_exact_declared_artifacts`, and
+`honest_verdict` SHALL start with `complete:`, `complete_with_nulls:`, or
+`blocked:`.
+
+Required field principles:
+
+- `activated_task_and_declared_deliverable_matrix`: principle "only exact activated identities and exact declared paths count."
+- `exact_terminal_classification`: principle "positive, null, underpowered, blocked-precondition, retired, gate-blocked, no-change, and missing classes remain disjoint."
+- `branch_independence_receipt`: principle "a gate block or branch failure cannot erase or manufacture evidence in another branch."
+- `prior_failure_and_retirement_decisions`: principle "same-verdict retirement is mechanical and scope-specific."
+- `duplicate_history_amplification_count`: principle "must be bare zero."
+- `inference_substrate`: principle "use `aggregation_from_exact_declared_artifacts`."
+- `honest_verdict`: principle "use `complete:`, `complete_with_nulls:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5931-EXACT-MATRIX: V526 Activated Identities Use Declared Paths Only
+
+**Given** the active `.526` roadmap declares Exp5918 through Exp5931 and exact
+deliverable paths
+**When** the Exp5931 capstone builds the matrix
+**Then** it records exactly 14 activated identities, records every declared
+deliverable path, and does not use numeric-prefix globbing, source-file
+inference, or downstream-gate inference.
+
+#### SCENARIO-REPORT-5931-TERMINAL-CLASSES: Branch Outcomes Stay Disjoint
+
+**Given** `.526` artifacts include positive, null, underpowered,
+blocked-precondition, retired, gate-blocked, no-change, and missing receipts
+**When** the Exp5931 capstone classifies terminal outcomes
+**Then** every activated task has exactly one terminal class, Exp5925 remains
+missing plus gate-blocked, Exp5927 remains underpowered, Exp5930 remains
+no-change for physical acceleration, and no branch result promotes another
+branch.
+
+#### SCENARIO-REPORT-5931-BRANCH-SEMANTICS: Structural Live And Hardware Evidence Are Not Laundered
+
+**Given** Exp5921-Exp5923 report structural support and exact semantic results,
+Exp5924-Exp5926 report CSL and ABI receipts, Exp5927-Exp5929 report ARC
+offline, execution-binding, and live evidence, and Exp5930 reports static
+mapping with no physical probe
+**When** the Exp5931 capstone summarizes branches
+**Then** it keeps structural validity separate from exact semantic success,
+keeps offline ARC qualification separate from live execution and live rows, and
+keeps static hardware mapping separate from physical acceleration.
+
+#### SCENARIO-REPORT-5931-APPEND-RETIRE-AND-RECOMMEND: Completion And Next Steps Are Exact
+
+**Given** `.526` completion history may be absent and an activated prior
+failure declares `retire_if_same_verdict: true`
+**When** the Exp5931 capstone emits its artifact
+**Then** it appends `.526` at most once, amplifies no duplicate history,
+applies only exact same-verdict retirements, emits exactly three falsifiable
+recommendations that do not depend on retired or missing upstream IDs, records
+registry/protected-file/test/verifier receipts, declares
+`aggregation_from_exact_declared_artifacts`, and includes every required field,
+principle, provenance entry, checksum, and terminal verdict prefix.
+
+## Implementation Status (REQ-REPORT-5931)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5931 | Planned (`python/carnot/experiment_5931_v526_capstone_reconciliation.py`, `results/experiment_5931_v526_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5931_v526_capstone_reconciliation.py`) |
+
 ### REQ-REPORT-5919: V526 Post-Marker Source Delta Ingestion Preserves Activated Boundaries
 
 The Exp5919 workflow SHALL run a bounded source refresh after the
