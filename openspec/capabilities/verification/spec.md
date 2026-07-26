@@ -12,6 +12,95 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-5933: Adversarial QA Substrate Classification
+
+The adversarial artifact verifier SHALL classify an artifact's inference
+substrate from explicit top-level provenance before applying any nested
+compute-marker scan. The primary declaration is the top-level
+`inference_substrate` field after principle-wrapper normalization; top-level
+`field_provenance` or `field_principles` may provide audit context, but
+arbitrary nested strings from quoted upstream artifacts SHALL NOT upgrade an
+allowlisted aggregation or no-LLM artifact into live model inference.
+
+The classifier SHALL use an explicit allowlist for aggregation/no-LLM substrate
+values and an explicit allowlist for live-model substrate values. It SHALL
+recognize `aggregation_from_upstream_artifacts`,
+`aggregation_from_exact_declared_artifacts`, and
+`aggregation_from_upstream_artifacts_no_llm` as aggregation/no-LLM values. It
+SHALL recognize `live_llm_inference` as the strict live model substrate and
+preserve existing specialized live-model floors such as
+`live_llm_inference_local_gguf_sota`, `live_llm_embedding_extraction`, and
+`local_native_llama_cpp_gguf_backend_bisect`.
+
+For an allowlisted aggregation artifact, the verifier SHALL NOT emit
+live-model `DURATION_TOO_SHORT` or `METHODOLOGY_MISSING` flags merely because
+quoted upstream receipts contain strings such as GGUF, CUDA, `torch.cuda`, or
+`llama.cpp`. For an otherwise identical artifact declaring live GGUF inference,
+the verifier SHALL continue to emit the live-duration and live-methodology
+flags when duration or methodology evidence is insufficient.
+
+Malformed, unknown, or missing `inference_substrate` declarations SHALL remain
+conservative: when they contain compute-bound marker strings, the verifier SHALL
+fall back to live-model duration and methodology checks rather than assuming
+aggregation. Hardware-smoke and simulated artifacts SHALL retain their existing
+classification behavior unless their top-level substrate is explicitly added to
+the allowlist in a future requirement.
+
+The Exp 5933 regression repair SHALL run a dated paired-control and corpus
+comparison over recent capstones, genuine live artifacts, blocked preconditions,
+hardware receipts, and simulated artifacts. The comparison SHALL permit only
+intended aggregation false-positive removals and SHALL report zero unintended
+CRITICAL/WARN severity downgrades on true live controls.
+
+### SCENARIO-VERIFY-5933-AGGREGATION-QUOTED-MARKERS: Aggregation Ignores Quoted Upstream Compute Markers
+
+Given an artifact declares top-level
+`inference_substrate="aggregation_from_exact_declared_artifacts"` and records
+`field_provenance.inference_substrate` showing the value came from exact local
+artifact reconciliation
+And the artifact quotes upstream GGUF, CUDA, `torch.cuda`, or `llama.cpp`
+markers in nested receipt text
+And its measured duration is below the live-model floor but above the
+aggregation JSON-read floor
+When adversarial verification runs
+Then the verifier SHALL NOT emit live-model `DURATION_TOO_SHORT` or
+`METHODOLOGY_MISSING` flags for that artifact.
+
+### SCENARIO-VERIFY-5933-LIVE-PAIRED-CONTROL: Declared Live GGUF Still Enforces Live Rules
+
+Given an otherwise identical artifact declares top-level
+`inference_substrate="live_llm_inference"` and quotes the same GGUF, CUDA,
+`torch.cuda`, or `llama.cpp` markers
+When adversarial verification runs with duration below 60 seconds and missing
+model methodology fields
+Then the verifier SHALL emit `DURATION_TOO_SHORT` with critical severity and
+`METHODOLOGY_MISSING` with warn severity.
+
+### SCENARIO-VERIFY-5933-MALFORMED-CONSERVATIVE: Unknown Or Missing Substrate Fails Closed
+
+Given an artifact has a missing, unknown, or malformed top-level
+`inference_substrate` declaration
+And it contains compute-bound marker strings
+When adversarial verification runs with a too-short duration or missing
+methodology evidence
+Then the verifier SHALL apply the conservative live-model fallback and keep the
+corresponding live-duration and methodology flags.
+
+### SCENARIO-VERIFY-5933-CORPUS-NO-SEVERITY-REGRESSION: Corpus Diff Preserves True Live Detection
+
+Given a dated corpus containing recent aggregation capstones, genuine live GGUF
+controls, blocked preconditions, hardware receipts, and simulated artifacts
+When the Exp 5933 before/after verifier comparison runs
+Then only the intended aggregation false-positive flags may disappear and the
+true-live short-duration detection rate SHALL remain 1.0 for the paired and
+corpus live controls.
+
+## Implementation Status (REQ-VERIFY-5933)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5933 | Implemented (`scripts/adversarial_verify.py`, `results/experiment_5933_aggregation_substrate_qa_repair.json`) | Implemented (`tests/python/test_adversarial_verify_substrate_classification_5933.py`) |
+
 ### REQ-VERIFY-5251: Token-Guard Fragment-Level Carnot Pilot
 
 The repository shall provide an Exp 5251 local SOTA GGUF pilot that tests a

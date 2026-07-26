@@ -1,53 +1,58 @@
+import numpy as np
+
 def engine(grid, action, data):
-    """
-    Updates the grid based on the given action and data.
-    The grid is an 8x4 matrix.
-    """
-    val00 = grid[0][0]
-    new_grid = [row[:] for row in grid]
-    
-    # Common header for both actions
-    new_grid[0][1] = 63
-    new_grid[0][2] = 11
-    new_grid[0][3] = 5
+    H, W = grid.shape
+    new_grid = grid.copy()
     
     if action == 2:
-        # Action 2: Linear progression in column 1, constant values in others
-        for r in range(1, 8):
-            new_grid[r][0] = 3 * val00
-            new_grid[r][1] = r + 2
-            new_grid[r][2] = 5
-            new_grid[r][3] = 9
-            
+        # Action 2: Move right, push blocks
+        for r in range(H):
+            for c in range(W - 1):
+                if grid[r, c] != 0 and grid[r, c + 1] == 0:
+                    new_grid[r, c + 1] = grid[r, c]
+                    new_grid[r, c] = 0
+                elif grid[r, c] != 0 and grid[r, c + 1] != 0 and grid[r, c + 1] == grid[r, c]:
+                    new_grid[r, c + 1] = grid[r, c]
+                    new_grid[r, c] = 0
     elif action == 3:
-        # Action 3: Segmented progression in column 1, alternating values in others
-        for r in range(1, 8):
-            new_grid[r][0] = 15
-        
-        # First segment: rows 1-3
-        start1 = 15 - 3 * val00
-        for r in range(1, 4):
-            new_grid[r][1] = start1 + (r - 1)
-            new_grid[r][2] = 9
-            new_grid[r][3] = 5
-        
-        # Second segment: rows 4-6
-        start2 = 24 - 3 * val00
-        for r in range(4, 7):
-            new_grid[r][1] = start2 + (r - 4)
-            new_grid[r][2] = 5
-            new_grid[r][3] = 9
-        
-        # Final row: row 7
-        new_grid[7][1] = start2 * val00
-        new_grid[7][2] = 4
-        new_grid[7][3] = 9
-        
+        # Action 3: Move left, push blocks
+        for r in range(H):
+            for c in range(W - 1, 0, -1):
+                if grid[r, c] != 0 and grid[r, c - 1] == 0:
+                    new_grid[r, c - 1] = grid[r, c]
+                    new_grid[r, c] = 0
+                elif grid[r, c] != 0 and grid[r, c - 1] != 0 and grid[r, c - 1] == grid[r, c]:
+                    new_grid[r, c - 1] = grid[r, c]
+                    new_grid[r, c] = 0
+    elif action == 4:
+        # Action 4: Move up, push blocks
+        for c in range(W):
+            for r in range(H - 1, 0, -1):
+                if grid[r, c] != 0 and grid[r - 1, c] == 0:
+                    new_grid[r - 1, c] = grid[r, c]
+                    new_grid[r, c] = 0
+                elif grid[r, c] != 0 and grid[r - 1, c] != 0 and grid[r - 1, c] == grid[r, c]:
+                    new_grid[r - 1, c] = grid[r, c]
+                    new_grid[r, c] = 0
+    elif action == 7:
+        # Action 7: Move down, push blocks
+        for c in range(W):
+            for r in range(H - 1):
+                if grid[r, c] != 0 and grid[r + 1, c] == 0:
+                    new_grid[r + 1, c] = grid[r, c]
+                    new_grid[r, c] = 0
+                elif grid[r, c] != 0 and grid[r + 1, c] != 0 and grid[r + 1, c] == grid[r, c]:
+                    new_grid[r + 1, c] = grid[r, c]
+                    new_grid[r, c] = 0
+    elif action == 6:
+        # Action 6: Click at pixel coordinates (x, y)
+        px, py = data['x'], data['y']
+        new_grid[py, px] = 0
+    # Actions 1 and 5 are not observed but follow similar logic if needed
+    
     return new_grid
 
 def is_level_complete(grid):
-    """
-    Determines if the current grid state represents a completed level.
-    """
-    # No specific completion criteria provided in the transition data.
-    return False
+    H, W = grid.shape
+    # Check if the grid is full of color 9 (the target color)
+    return np.all(grid == 9)
