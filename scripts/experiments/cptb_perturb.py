@@ -58,6 +58,37 @@ REFLECT_DIAG_ROLL = 903
 
 ROLL_K = 3  # > EDGE_BAR_EDGE_TOLERANCE (2), so an edge-hugging bar leaves the edge
 
+# DOSE-PARAMETERISED roll sentinels, added 2026-07-25 after the recorded run measured that
+# the k=3 roll is not a "mild" perturbation at all: it takes the pre-flip control from 7 wins
+# to 1 and takes the number of games no arm can win from 11/25 to 18/25 (see the dose-ceiling
+# fields in the analysis).  A perturbation that razes 86% of the control's capability
+# auto-falsifies any lever whose support is a couple of games, independently of that lever's
+# mechanism -- so the roll needs a DOSE AXIS, not just a single magnitude, before a flat
+# result under it can be attributed to a broken convention.
+#
+# Encoding: sentinel 910 + k selects roll magnitude k (911 -> k=1, ... 919 -> k=9).  903 is
+# left alone so every already-recorded C2 row stays byte-reproducible.
+REFLECT_DIAG_ROLL_K_BASE = 910
+ROLL_K_MIN, ROLL_K_MAX = 1, 9
+
+
+def reflect_code_for_roll_k(k: int) -> int:
+    """The `reflect` sentinel that selects a roll of magnitude k."""
+
+    k = int(k)
+    if not ROLL_K_MIN <= k <= ROLL_K_MAX:
+        raise ValueError(f"roll magnitude {k} outside the sentinel range")
+    return REFLECT_DIAG_ROLL_K_BASE + k
+
+
+def _roll_k_of_code(code: int) -> int | None:
+    """k if `code` is a dose-parameterised roll sentinel, else None."""
+
+    c = int(code)
+    if REFLECT_DIAG_ROLL_K_BASE + ROLL_K_MIN <= c <= REFLECT_DIAG_ROLL_K_BASE + ROLL_K_MAX:
+        return c - REFLECT_DIAG_ROLL_K_BASE
+    return None
+
 _N_COLORS = 16
 _SALIENT = frozenset(range(6, 16))  # must match arc_graph_explore._TIER_SALIENT_COLORS
 
@@ -132,9 +163,21 @@ def roll_grid(grid: np.ndarray, k: int = ROLL_K) -> np.ndarray:
     Clicks are inverse-mapped (below) so a click on what the agent sees lands on the
     intended real cell.  A roll -- unlike the existing reflection condition -- COMMUTES with
     direction, so an unremapped directional move action still moves the agent the way the
-    agent intends; the only structural damage is that objects straddling the wrap seam are
-    seen as two pieces.  That makes it a milder mechanic perturbation than reflection, while
-    being a much sharper perturbation of the specific convention under test.
+    agent intends; the only structural damage in the OBSERVATION is that objects straddling
+    the wrap seam are seen as two pieces.
+
+    2026-07-25 CORRECTION -- this docstring used to conclude from the paragraph above that the
+    roll "makes it a milder mechanic perturbation than reflection".  The recorded run
+    MEASURED the opposite and the claim is withdrawn: at k=3 the pre-flip control drops from
+    7 wins to 1 (86% of its capability), and the number of games no arm can win rises from
+    11/25 to 18/25.  Whatever the argument from commutativity suggests, the roll as
+    instantiated is a corpus-razing perturbation, not a mild one.  Two consequences, both now
+    handled rather than reasoned away: (i) any lever whose gain rests on a couple of games is
+    auto-falsified under it for reasons that have nothing to do with that lever's convention,
+    so the analysis stamps a DOSE_SATURATED marker instead of reporting a retention ratio;
+    and (ii) `k` is now a measurable dose axis (see `reflect_code_for_roll_k`) so the
+    magnitude at which the corpus dies can be separated from the magnitude at which the HUD
+    predicate stops firing, rather than assumed to be far apart.
     """
 
     g = np.asarray(grid)
@@ -184,11 +227,17 @@ def install(game_palettes: dict[str, list[int]]) -> None:
     def reflect_grid(grid, axis: int = 1):
         if int(axis) == REFLECT_DIAG_ROLL:
             return roll_grid(grid)
+        k = _roll_k_of_code(axis)
+        if k is not None:
+            return roll_grid(grid, k=k)
         return _ORIG["reflect_grid"](grid, axis=axis)
 
     def remap_click_for_reflection(x: int, y: int, w: int, h: int, axis: int = 1):
         if int(axis) == REFLECT_DIAG_ROLL:
             return unroll_click(x, y, width=w, height=h)
+        k = _roll_k_of_code(axis)
+        if k is not None:
+            return unroll_click(x, y, width=w, height=h, k=k)
         return _ORIG["remap_click_for_reflection"](x, y, w, h, axis=axis)
 
     vg.color_permutation = color_permutation

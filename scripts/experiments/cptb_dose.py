@@ -21,6 +21,7 @@ Two doses, one per lever, each measured on the lever's OWN causal channel:
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -104,6 +105,16 @@ def main() -> int:
         c1 = vg.transform_frame_grid(base, g, P.VARIANT_SALIENCE_INVERSION, reflect=None)
         # C2: row roll, colour identity
         c2 = vg.transform_frame_grid(base, g, P.VARIANT_IDENTITY_COLOR, reflect=P.REFLECT_DIAG_ROLL)
+        # C3: the DOSE AXIS of the same roll (added 2026-07-25).  The k=3 roll was measured to
+        # raze the corpus, which auto-falsifies any narrow-support lever under it regardless of
+        # mechanism.  Measuring the HUD mask at smaller k separates "the magnitude at which the
+        # Stage-1 predicate stops firing" from "the magnitude at which the games stop being
+        # winnable", which the single-magnitude design conflated.
+        c3 = {
+            f"C3_roll_k{k}": vg.transform_frame_grid(
+                base, g, P.VARIANT_IDENTITY_COLOR, reflect=P.reflect_code_for_roll_k(k))
+            for k in (1, 2)
+        }
 
         t0 = _tiers(base)
         m0 = _mask_cells(base)
@@ -119,7 +130,7 @@ def main() -> int:
             "baseline_hud_mask_cells": (len(m0) if m0 is not None else None),
             "bottom_k_rows_nonbg_cells_that_wrap": int((base[-P.ROLL_K :] != 0).sum()),
         }
-        for label, gridx in (("C1_salience_inversion", c1), ("C2_diag_roll", c2)):
+        for label, gridx in [("C1_salience_inversion", c1), ("C2_diag_roll", c2), *c3.items()]:
             tx = _tiers(gridx)
             mx = _mask_cells(gridx)
             # tier change fraction: match components by centroid where possible (C1 keeps
@@ -150,7 +161,7 @@ def main() -> int:
         rows.append(row)
         print(json.dumps(row))
 
-    out = Path(__file__).resolve().parent / "cptb_dose.json"
+    out = Path(os.environ.get("CPTB_WORKDIR") or Path(__file__).resolve().parent) / "cptb_dose.json"
     out.write_text(json.dumps({"rows": rows}, indent=1))
     print("WROTE", out)
     return 0

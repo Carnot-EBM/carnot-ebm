@@ -31,10 +31,19 @@ import cptb_perturb as P  # noqa: E402
 from cptb_arms import CPTB_ARMS  # noqa: E402
 
 # (label, variant, reflect)
+#
+# C3_* are the DOSE AXIS of the geometric perturbation, added 2026-07-25.  C2 (k=3) was
+# measured to raze the corpus -- the pre-flip control drops 7 wins -> 1 -- which auto-falsifies
+# any narrow-support lever there for reasons unrelated to that lever's convention.  The smaller
+# magnitudes exist so the dose at which the HUD Stage-1 predicate stops firing can be separated
+# from the dose at which the games stop being winnable at all.  They are additional conditions,
+# not replacements: C0/C1/C2 keep their exact meaning and every recorded row stays valid.
 CONDITIONS = (
     ("C0_real", 0, None),
     ("C1_salience_inversion", P.VARIANT_SALIENCE_INVERSION, None),
     ("C2_diag_roll", P.VARIANT_IDENTITY_COLOR, P.REFLECT_DIAG_ROLL),
+    ("C3_roll_k1", P.VARIANT_IDENTITY_COLOR, P.reflect_code_for_roll_k(1)),
+    ("C3_roll_k2", P.VARIANT_IDENTITY_COLOR, P.reflect_code_for_roll_k(2)),
 )
 
 BASE_SEED = 20260726

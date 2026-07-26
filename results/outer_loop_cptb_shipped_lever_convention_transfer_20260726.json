@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_cptb_shipped_lever_convention_transfer",
  "title": "Convention-perturbation transfer battery for the two levers flipped ON 2026-07-25 (frontier tier discipline; HUD edge-bar mask)",
- "run_date": "2026-07-26T01:09:10Z",
+ "run_date": "2026-07-26T01:36:54Z",
  "duration_s": 16178.36,
  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
  "solve_provenance": "development_proxy",
@@ -2000,6 +2000,99 @@
    "inert_for_this_arm": false
   }
  },
+ "dose_ceiling_witness": {
+  "C0_real": {
+   "control_median_absolute_wins": 7,
+   "control_per_seed_absolute_wins": [
+    7,
+    7,
+    7,
+    7,
+    7
+   ],
+   "control_wins_as_fraction_of_C0": 1.0,
+   "n_games_dead_for_all_arms": 11,
+   "n_games": 25,
+   "games_dead_for_all_arms": [
+    "ar25",
+    "cn04",
+    "g50t",
+    "ka59",
+    "ls20",
+    "re86",
+    "sb26",
+    "sc25",
+    "sk48",
+    "tr87",
+    "wa30"
+   ],
+   "dose_saturated": false,
+   "principle": "The design had a dose FLOOR (a perturbation that moves nothing tests nothing) but no dose CEILING. A condition that removes most of the control's own capability makes every lever with a two-game support read as retention 0.0 independently of mechanism, so DOSE_SATURATED marks the reading as a statement about the perturbation's strength, not about the lever."
+  },
+  "C1_salience_inversion": {
+   "control_median_absolute_wins": 7,
+   "control_per_seed_absolute_wins": [
+    7,
+    7,
+    7,
+    7,
+    7
+   ],
+   "control_wins_as_fraction_of_C0": 1.0,
+   "n_games_dead_for_all_arms": 11,
+   "n_games": 25,
+   "games_dead_for_all_arms": [
+    "ar25",
+    "dc22",
+    "g50t",
+    "ka59",
+    "ls20",
+    "re86",
+    "sb26",
+    "sc25",
+    "sk48",
+    "tr87",
+    "wa30"
+   ],
+   "dose_saturated": false,
+   "principle": "The design had a dose FLOOR (a perturbation that moves nothing tests nothing) but no dose CEILING. A condition that removes most of the control's own capability makes every lever with a two-game support read as retention 0.0 independently of mechanism, so DOSE_SATURATED marks the reading as a statement about the perturbation's strength, not about the lever."
+  },
+  "C2_diag_roll": {
+   "control_median_absolute_wins": 1,
+   "control_per_seed_absolute_wins": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "control_wins_as_fraction_of_C0": 0.1429,
+   "n_games_dead_for_all_arms": 18,
+   "n_games": 25,
+   "games_dead_for_all_arms": [
+    "bp35",
+    "cn04",
+    "dc22",
+    "g50t",
+    "ka59",
+    "lf52",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "sb26",
+    "sc25",
+    "sk48",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "wa30"
+   ],
+   "dose_saturated": true,
+   "principle": "The design had a dose FLOOR (a perturbation that moves nothing tests nothing) but no dose CEILING. A condition that removes most of the control's own capability makes every lever with a two-game support read as retention 0.0 independently of mechanism, so DOSE_SATURATED marks the reading as a statement about the perturbation's strength, not about the lever."
+  }
+ },
  "pass_region_witness": {
   "frontier_given_hud_off": {
    "pass_region_nonempty": true,
@@ -2086,7 +2179,307 @@
     }
    ],
    "n_witness_cells": 20,
-   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+   "anchor_games_at_C0": [
+    "bp35",
+    "dc22",
+    "ft09",
+    "m0r0",
+    "s5i5"
+   ],
+   "per_condition": {
+    "C0_real": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "dc22",
+       "seed": 20260726
+      },
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260726
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260726
+      },
+      {
+       "game": "bp35",
+       "seed": 20260727
+      },
+      {
+       "game": "dc22",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "dc22",
+       "seed": 20260728
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260728
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260728
+      },
+      {
+       "game": "dc22",
+       "seed": 20260729
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260729
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260729
+      },
+      {
+       "game": "dc22",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 20,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 5,
+     "discriminating_games_at_this_condition": [
+      "bp35",
+      "dc22",
+      "ft09",
+      "m0r0",
+      "s5i5"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 1,
+      "dc22": 5,
+      "ft09": 5,
+      "m0r0": 4,
+      "s5i5": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C1_salience_inversion": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260726
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260726
+      },
+      {
+       "game": "cn04",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260728
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260728
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260729
+      },
+      {
+       "game": "bp35",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260730
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 16,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 5,
+     "discriminating_games_at_this_condition": [
+      "bp35",
+      "cn04",
+      "ft09",
+      "m0r0",
+      "s5i5"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 1,
+      "dc22": 0,
+      "ft09": 5,
+      "m0r0": 4,
+      "s5i5": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C2_diag_roll": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "sp80",
+       "seed": 20260726
+      },
+      {
+       "game": "vc33",
+       "seed": 20260726
+      },
+      {
+       "game": "cd82",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "sp80",
+       "seed": 20260727
+      },
+      {
+       "game": "vc33",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "sp80",
+       "seed": 20260728
+      },
+      {
+       "game": "vc33",
+       "seed": 20260728
+      },
+      {
+       "game": "cd82",
+       "seed": 20260729
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "sp80",
+       "seed": 20260729
+      },
+      {
+       "game": "vc33",
+       "seed": 20260729
+      },
+      {
+       "game": "ar25",
+       "seed": 20260730
+      },
+      {
+       "game": "cd82",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "sp80",
+       "seed": 20260730
+      },
+      {
+       "game": "vc33",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 20,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 6,
+     "discriminating_games_at_this_condition": [
+      "ar25",
+      "cd82",
+      "ft09",
+      "s5i5",
+      "sp80",
+      "vc33"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 0,
+      "dc22": 0,
+      "ft09": 5,
+      "m0r0": 0,
+      "s5i5": 1
+     },
+     "anchor_support_still_live": true
+    }
+   },
+   "principle": "A gate whose pass region is empty is not a gate, and a witness computed at one condition does not certify a gate scored at another. This emits the concrete (game, seed) cells at EVERY condition, plus whether any arm at all can still win the anchor's games there -- so a reader can tell a measured failure from an arithmetically forced zero before reading any verdict."
   },
   "frontier_given_hud_on": {
    "pass_region_nonempty": true,
@@ -2173,7 +2566,310 @@
     }
    ],
    "n_witness_cells": 20,
-   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+   "anchor_games_at_C0": [
+    "bp35",
+    "dc22",
+    "ft09",
+    "m0r0",
+    "s5i5"
+   ],
+   "per_condition": {
+    "C0_real": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "dc22",
+       "seed": 20260726
+      },
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260726
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260726
+      },
+      {
+       "game": "bp35",
+       "seed": 20260727
+      },
+      {
+       "game": "dc22",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "dc22",
+       "seed": 20260728
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260728
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260728
+      },
+      {
+       "game": "dc22",
+       "seed": 20260729
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260729
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260729
+      },
+      {
+       "game": "dc22",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 20,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 6,
+     "discriminating_games_at_this_condition": [
+      "bp35",
+      "dc22",
+      "ft09",
+      "m0r0",
+      "s5i5",
+      "tn36"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 1,
+      "dc22": 5,
+      "ft09": 5,
+      "m0r0": 4,
+      "s5i5": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C1_salience_inversion": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260726
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260726
+      },
+      {
+       "game": "cn04",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260728
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260728
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260729
+      },
+      {
+       "game": "bp35",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260730
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 16,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 7,
+     "discriminating_games_at_this_condition": [
+      "bp35",
+      "cn04",
+      "ft09",
+      "m0r0",
+      "r11l",
+      "s5i5",
+      "tn36"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 1,
+      "dc22": 0,
+      "ft09": 5,
+      "m0r0": 4,
+      "s5i5": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C2_diag_roll": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "sp80",
+       "seed": 20260726
+      },
+      {
+       "game": "vc33",
+       "seed": 20260726
+      },
+      {
+       "game": "cd82",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "sp80",
+       "seed": 20260727
+      },
+      {
+       "game": "vc33",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "sp80",
+       "seed": 20260728
+      },
+      {
+       "game": "vc33",
+       "seed": 20260728
+      },
+      {
+       "game": "cd82",
+       "seed": 20260729
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "sp80",
+       "seed": 20260729
+      },
+      {
+       "game": "vc33",
+       "seed": 20260729
+      },
+      {
+       "game": "ar25",
+       "seed": 20260730
+      },
+      {
+       "game": "cd82",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "sp80",
+       "seed": 20260730
+      },
+      {
+       "game": "vc33",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 20,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 6,
+     "discriminating_games_at_this_condition": [
+      "ar25",
+      "cd82",
+      "ft09",
+      "s5i5",
+      "sp80",
+      "vc33"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 0,
+      "dc22": 0,
+      "ft09": 5,
+      "m0r0": 0,
+      "s5i5": 1
+     },
+     "anchor_support_still_live": true
+    }
+   },
+   "principle": "A gate whose pass region is empty is not a gate, and a witness computed at one condition does not certify a gate scored at another. This emits the concrete (game, seed) cells at EVERY condition, plus whether any arm at all can still win the anchor's games there -- so a reader can tell a measured failure from an arithmetically forced zero before reading any verdict."
   },
   "hud_given_frontier_on": {
    "pass_region_nonempty": true,
@@ -2200,7 +2896,68 @@
     }
    ],
    "n_witness_cells": 5,
-   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+   "anchor_games_at_C0": [
+    "r11l"
+   ],
+   "per_condition": {
+    "C0_real": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "r11l",
+       "seed": 20260726
+      },
+      {
+       "game": "r11l",
+       "seed": 20260727
+      },
+      {
+       "game": "r11l",
+       "seed": 20260728
+      },
+      {
+       "game": "r11l",
+       "seed": 20260729
+      },
+      {
+       "game": "r11l",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 5,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 1,
+     "discriminating_games_at_this_condition": [
+      "r11l"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "r11l": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C1_salience_inversion": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [],
+     "n_witness_cells_at_this_condition": 0,
+     "pass_region_nonempty_at_this_condition": false,
+     "n_discriminating_games_at_this_condition": 0,
+     "discriminating_games_at_this_condition": [],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "r11l": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C2_diag_roll": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [],
+     "n_witness_cells_at_this_condition": 0,
+     "pass_region_nonempty_at_this_condition": false,
+     "n_discriminating_games_at_this_condition": 0,
+     "discriminating_games_at_this_condition": [],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "r11l": 0
+     },
+     "anchor_support_still_live": false
+    }
+   },
+   "principle": "A gate whose pass region is empty is not a gate, and a witness computed at one condition does not certify a gate scored at another. This emits the concrete (game, seed) cells at EVERY condition, plus whether any arm at all can still win the anchor's games there -- so a reader can tell a measured failure from an arithmetically forced zero before reading any verdict."
   },
   "hud_given_frontier_off": {
    "pass_region_nonempty": true,
@@ -2247,7 +3004,137 @@
     }
    ],
    "n_witness_cells": 10,
-   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+   "anchor_games_at_C0": [
+    "r11l",
+    "tn36"
+   ],
+   "per_condition": {
+    "C0_real": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "r11l",
+       "seed": 20260726
+      },
+      {
+       "game": "tn36",
+       "seed": 20260726
+      },
+      {
+       "game": "r11l",
+       "seed": 20260727
+      },
+      {
+       "game": "tn36",
+       "seed": 20260727
+      },
+      {
+       "game": "r11l",
+       "seed": 20260728
+      },
+      {
+       "game": "tn36",
+       "seed": 20260728
+      },
+      {
+       "game": "r11l",
+       "seed": 20260729
+      },
+      {
+       "game": "tn36",
+       "seed": 20260729
+      },
+      {
+       "game": "r11l",
+       "seed": 20260730
+      },
+      {
+       "game": "tn36",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 10,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 2,
+     "discriminating_games_at_this_condition": [
+      "r11l",
+      "tn36"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "r11l": 5,
+      "tn36": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C1_salience_inversion": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "r11l",
+       "seed": 20260726
+      },
+      {
+       "game": "tn36",
+       "seed": 20260726
+      },
+      {
+       "game": "r11l",
+       "seed": 20260727
+      },
+      {
+       "game": "tn36",
+       "seed": 20260727
+      },
+      {
+       "game": "r11l",
+       "seed": 20260728
+      },
+      {
+       "game": "tn36",
+       "seed": 20260728
+      },
+      {
+       "game": "r11l",
+       "seed": 20260729
+      },
+      {
+       "game": "tn36",
+       "seed": 20260729
+      },
+      {
+       "game": "r11l",
+       "seed": 20260730
+      },
+      {
+       "game": "tn36",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 10,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 2,
+     "discriminating_games_at_this_condition": [
+      "r11l",
+      "tn36"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "r11l": 5,
+      "tn36": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C2_diag_roll": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [],
+     "n_witness_cells_at_this_condition": 0,
+     "pass_region_nonempty_at_this_condition": false,
+     "n_discriminating_games_at_this_condition": 0,
+     "discriminating_games_at_this_condition": [],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "r11l": 0,
+      "tn36": 0
+     },
+     "anchor_support_still_live": false
+    }
+   },
+   "principle": "A gate whose pass region is empty is not a gate, and a witness computed at one condition does not certify a gate scored at another. This emits the concrete (game, seed) cells at EVERY condition, plus whether any arm at all can still win the anchor's games there -- so a reader can tell a measured failure from an arithmetically forced zero before reading any verdict."
   },
   "both_levers_shipped_vs_preflip": {
    "pass_region_nonempty": true,
@@ -2354,7 +3241,332 @@
     }
    ],
    "n_witness_cells": 25,
-   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+   "anchor_games_at_C0": [
+    "bp35",
+    "dc22",
+    "ft09",
+    "m0r0",
+    "r11l",
+    "s5i5"
+   ],
+   "per_condition": {
+    "C0_real": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "dc22",
+       "seed": 20260726
+      },
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260726
+      },
+      {
+       "game": "r11l",
+       "seed": 20260726
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260726
+      },
+      {
+       "game": "bp35",
+       "seed": 20260727
+      },
+      {
+       "game": "dc22",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260727
+      },
+      {
+       "game": "r11l",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "dc22",
+       "seed": 20260728
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260728
+      },
+      {
+       "game": "r11l",
+       "seed": 20260728
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260728
+      },
+      {
+       "game": "dc22",
+       "seed": 20260729
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260729
+      },
+      {
+       "game": "r11l",
+       "seed": 20260729
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260729
+      },
+      {
+       "game": "dc22",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "r11l",
+       "seed": 20260730
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 25,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 6,
+     "discriminating_games_at_this_condition": [
+      "bp35",
+      "dc22",
+      "ft09",
+      "m0r0",
+      "r11l",
+      "s5i5"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 1,
+      "dc22": 5,
+      "ft09": 5,
+      "m0r0": 4,
+      "r11l": 5,
+      "s5i5": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C1_salience_inversion": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260726
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260726
+      },
+      {
+       "game": "cn04",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260728
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260728
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260729
+      },
+      {
+       "game": "bp35",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "m0r0",
+       "seed": 20260730
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 16,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 5,
+     "discriminating_games_at_this_condition": [
+      "bp35",
+      "cn04",
+      "ft09",
+      "m0r0",
+      "s5i5"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 1,
+      "dc22": 0,
+      "ft09": 5,
+      "m0r0": 4,
+      "r11l": 5,
+      "s5i5": 5
+     },
+     "anchor_support_still_live": true
+    },
+    "C2_diag_roll": {
+     "witness_cells_treatment_wins_control_does_not_at_this_condition": [
+      {
+       "game": "ft09",
+       "seed": 20260726
+      },
+      {
+       "game": "sp80",
+       "seed": 20260726
+      },
+      {
+       "game": "vc33",
+       "seed": 20260726
+      },
+      {
+       "game": "cd82",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260727
+      },
+      {
+       "game": "s5i5",
+       "seed": 20260727
+      },
+      {
+       "game": "sp80",
+       "seed": 20260727
+      },
+      {
+       "game": "vc33",
+       "seed": 20260727
+      },
+      {
+       "game": "ft09",
+       "seed": 20260728
+      },
+      {
+       "game": "sp80",
+       "seed": 20260728
+      },
+      {
+       "game": "vc33",
+       "seed": 20260728
+      },
+      {
+       "game": "cd82",
+       "seed": 20260729
+      },
+      {
+       "game": "ft09",
+       "seed": 20260729
+      },
+      {
+       "game": "sp80",
+       "seed": 20260729
+      },
+      {
+       "game": "vc33",
+       "seed": 20260729
+      },
+      {
+       "game": "ar25",
+       "seed": 20260730
+      },
+      {
+       "game": "cd82",
+       "seed": 20260730
+      },
+      {
+       "game": "ft09",
+       "seed": 20260730
+      },
+      {
+       "game": "sp80",
+       "seed": 20260730
+      },
+      {
+       "game": "vc33",
+       "seed": 20260730
+      }
+     ],
+     "n_witness_cells_at_this_condition": 20,
+     "pass_region_nonempty_at_this_condition": true,
+     "n_discriminating_games_at_this_condition": 6,
+     "discriminating_games_at_this_condition": [
+      "ar25",
+      "cd82",
+      "ft09",
+      "s5i5",
+      "sp80",
+      "vc33"
+     ],
+     "anchor_game_max_seeds_won_across_ALL_arms": {
+      "bp35": 0,
+      "dc22": 0,
+      "ft09": 5,
+      "m0r0": 0,
+      "r11l": 0,
+      "s5i5": 1
+     },
+     "anchor_support_still_live": true
+    }
+   },
+   "principle": "A gate whose pass region is empty is not a gate, and a witness computed at one condition does not certify a gate scored at another. This emits the concrete (game, seed) cells at EVERY condition, plus whether any arm at all can still win the anchor's games there -- so a reader can tell a measured failure from an arithmetically forced zero before reading any verdict."
   }
  },
  "per_arm_condition_wins": {
@@ -3146,7 +4358,18 @@
       "ft09",
       "s5i5"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 5,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 5,
+      "p_one_sided_exact": 0.0312,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0312,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C1_salience_inversion": {
      "per_seed_gain": {
@@ -3200,7 +4423,18 @@
       "ft09",
       "s5i5"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 5,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 5,
+      "p_one_sided_exact": 0.0312,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0312,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C2_diag_roll": {
      "per_seed_gain": {
@@ -3259,22 +4493,88 @@
       "sp80",
       "vc33"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 6,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 6,
+      "p_one_sided_exact": 0.0156,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0156,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     }
    },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
    "anchor_median_gain_C0": 4,
    "retention": {
     "C1_salience_inversion": {
      "transfer_median_gain": 3,
      "retention_ratio": 0.75,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -1,
+      -1,
+      -1,
+      -2,
+      1
+     ],
+     "n_seeds_declining": 4,
+     "n_seeds_improving": 1,
+     "decline_sign_test_p_one_sided": 0.1875,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, -1, -1, -2, 1]; the one-sided sign test for a decline is p=0.1875. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "dc22",
+      "ft09",
+      "s5i5"
+     ],
+     "games_gained_on_every_seed_here": [
+      "ft09",
+      "s5i5"
+     ],
+     "gained_set_jaccard_vs_C0": 0.6667,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": false,
+     "control_wins_as_fraction_of_C0": 1.0,
+     "retention_ratio_interpretable": true
     },
     "C2_diag_roll": {
      "transfer_median_gain": 4,
      "retention_ratio": 1.0,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -1,
+      0,
+      -1,
+      0,
+      2
+     ],
+     "n_seeds_declining": 2,
+     "n_seeds_improving": 1,
+     "decline_sign_test_p_one_sided": 0.5,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, 0, -1, 0, 2]; the one-sided sign test for a decline is p=0.5. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "dc22",
+      "ft09",
+      "s5i5"
+     ],
+     "games_gained_on_every_seed_here": [
+      "ft09",
+      "sp80",
+      "vc33"
+     ],
+     "gained_set_jaccard_vs_C0": 0.2,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": true,
+     "control_wins_as_fraction_of_C0": 0.1429,
+     "retention_ratio_interpretable": false
     }
    }
   },
@@ -3351,7 +4651,18 @@
      ],
      "games_lost_on_every_seed": [
       "tn36"
-     ]
+     ],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 5,
+      "n_games_control_wins_on_more_seeds": 1,
+      "n_independent_replicates": 6,
+      "p_one_sided_exact": 0.1094,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0156,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C1_salience_inversion": {
      "per_seed_gain": {
@@ -3423,7 +4734,18 @@
      "games_lost_on_every_seed": [
       "r11l",
       "tn36"
-     ]
+     ],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 5,
+      "n_games_control_wins_on_more_seeds": 2,
+      "n_independent_replicates": 7,
+      "p_one_sided_exact": 0.2266,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0078,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C2_diag_roll": {
      "per_seed_gain": {
@@ -3482,22 +4804,88 @@
       "sp80",
       "vc33"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 6,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 6,
+      "p_one_sided_exact": 0.0156,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0156,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     }
    },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
    "anchor_median_gain_C0": 3,
    "retention": {
     "C1_salience_inversion": {
      "transfer_median_gain": 1,
      "retention_ratio": 0.3333,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -2,
+      -2,
+      -2,
+      -3,
+      0
+     ],
+     "n_seeds_declining": 4,
+     "n_seeds_improving": 0,
+     "decline_sign_test_p_one_sided": 0.0625,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -2, -2, -3, 0]; the one-sided sign test for a decline is p=0.0625. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "dc22",
+      "ft09",
+      "s5i5"
+     ],
+     "games_gained_on_every_seed_here": [
+      "ft09",
+      "s5i5"
+     ],
+     "gained_set_jaccard_vs_C0": 0.6667,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": false,
+     "control_wins_as_fraction_of_C0": 1.0,
+     "retention_ratio_interpretable": true
     },
     "C2_diag_roll": {
      "transfer_median_gain": 4,
      "retention_ratio": 1.3333,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      0,
+      1,
+      0,
+      1,
+      3
+     ],
+     "n_seeds_declining": 0,
+     "n_seeds_improving": 3,
+     "decline_sign_test_p_one_sided": 1.0,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [0, 1, 0, 1, 3]; the one-sided sign test for a decline is p=1.0. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "dc22",
+      "ft09",
+      "s5i5"
+     ],
+     "games_gained_on_every_seed_here": [
+      "ft09",
+      "sp80",
+      "vc33"
+     ],
+     "gained_set_jaccard_vs_C0": 0.2,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": true,
+     "control_wins_as_fraction_of_C0": 0.1429,
+     "retention_ratio_interpretable": false
     }
    }
   },
@@ -3545,7 +4933,18 @@
      "games_gained_on_every_seed": [
       "r11l"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 1,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 1,
+      "p_one_sided_exact": 0.5,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.5,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": true,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C1_salience_inversion": {
      "per_seed_gain": {
@@ -3575,7 +4974,18 @@
       "20260730": []
      },
      "games_gained_on_every_seed": [],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 0,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 0,
+      "p_one_sided_exact": null,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": true,
+      "smallest_reachable_p_at_this_n": null,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C2_diag_roll": {
      "per_seed_gain": {
@@ -3605,22 +5015,77 @@
       "20260730": []
      },
      "games_gained_on_every_seed": [],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 0,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 0,
+      "p_one_sided_exact": null,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": true,
+      "smallest_reachable_p_at_this_n": null,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     }
    },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
    "anchor_median_gain_C0": 1,
    "retention": {
     "C1_salience_inversion": {
      "transfer_median_gain": 0,
      "retention_ratio": 0.0,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "n_seeds_declining": 5,
+     "n_seeds_improving": 0,
+     "decline_sign_test_p_one_sided": 0.0312,
+     "decline_resolved_at_this_n": true,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, -1, -1, -1, -1]; the one-sided sign test for a decline is p=0.0312. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "r11l"
+     ],
+     "games_gained_on_every_seed_here": [],
+     "gained_set_jaccard_vs_C0": 0.0,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": false,
+     "control_wins_as_fraction_of_C0": 1.0,
+     "retention_ratio_interpretable": true
     },
     "C2_diag_roll": {
      "transfer_median_gain": 0,
      "retention_ratio": 0.0,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "n_seeds_declining": 5,
+     "n_seeds_improving": 0,
+     "decline_sign_test_p_one_sided": 0.0312,
+     "decline_resolved_at_this_n": true,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, -1, -1, -1, -1]; the one-sided sign test for a decline is p=0.0312. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "r11l"
+     ],
+     "games_gained_on_every_seed_here": [],
+     "gained_set_jaccard_vs_C0": 0.0,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": true,
+     "control_wins_as_fraction_of_C0": 0.1429,
+     "retention_ratio_interpretable": false
     }
    }
   },
@@ -3674,7 +5139,18 @@
       "r11l",
       "tn36"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 2,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 2,
+      "p_one_sided_exact": 0.25,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.25,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C1_salience_inversion": {
      "per_seed_gain": {
@@ -3722,7 +5198,18 @@
       "r11l",
       "tn36"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 2,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 2,
+      "p_one_sided_exact": 0.25,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.25,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C2_diag_roll": {
      "per_seed_gain": {
@@ -3752,22 +5239,82 @@
       "20260730": []
      },
      "games_gained_on_every_seed": [],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 0,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 0,
+      "p_one_sided_exact": null,
+      "clears_p_0_05": false,
+      "undefined_because_no_discordant_game": true,
+      "smallest_reachable_p_at_this_n": null,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     }
    },
+   "seeds_are_a_replication_axis_for_this_contrast": false,
+   "n_seed_replicates_effective": 1,
    "anchor_median_gain_C0": 2,
    "retention": {
     "C1_salience_inversion": {
      "transfer_median_gain": 2,
      "retention_ratio": 1.0,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_seeds_declining": 0,
+     "n_seeds_improving": 0,
+     "decline_sign_test_p_one_sided": null,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [0, 0, 0, 0, 0]; the one-sided sign test for a decline is undefined (no seed moved). Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "r11l",
+      "tn36"
+     ],
+     "games_gained_on_every_seed_here": [
+      "r11l",
+      "tn36"
+     ],
+     "gained_set_jaccard_vs_C0": 1.0,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": false,
+     "control_wins_as_fraction_of_C0": 1.0,
+     "retention_ratio_interpretable": true
     },
     "C2_diag_roll": {
      "transfer_median_gain": 0,
      "retention_ratio": 0.0,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -2,
+      -2,
+      -2,
+      -2,
+      -2
+     ],
+     "n_seeds_declining": 5,
+     "n_seeds_improving": 0,
+     "decline_sign_test_p_one_sided": 0.0312,
+     "decline_resolved_at_this_n": true,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -2, -2, -2, -2]; the one-sided sign test for a decline is p=0.0312. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "r11l",
+      "tn36"
+     ],
+     "games_gained_on_every_seed_here": [],
+     "gained_set_jaccard_vs_C0": 0.0,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": true,
+     "control_wins_as_fraction_of_C0": 0.1429,
+     "retention_ratio_interpretable": false
     }
    }
   },
@@ -3838,7 +5385,18 @@
       "r11l",
       "s5i5"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 6,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 6,
+      "p_one_sided_exact": 0.0156,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0156,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C1_salience_inversion": {
      "per_seed_gain": {
@@ -3892,7 +5450,18 @@
       "ft09",
       "s5i5"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 5,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 5,
+      "p_one_sided_exact": 0.0312,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0312,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     },
     "C2_diag_roll": {
      "per_seed_gain": {
@@ -3951,22 +5520,90 @@
       "sp80",
       "vc33"
      ],
-     "games_lost_on_every_seed": []
+     "games_lost_on_every_seed": [],
+     "game_unit_sign_test": {
+      "n_games_treatment_wins_on_more_seeds": 6,
+      "n_games_control_wins_on_more_seeds": 0,
+      "n_independent_replicates": 6,
+      "p_one_sided_exact": 0.0156,
+      "clears_p_0_05": true,
+      "undefined_because_no_discordant_game": false,
+      "smallest_reachable_p_at_this_n": 0.0156,
+      "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+      "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+     }
     }
    },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
    "anchor_median_gain_C0": 5,
    "retention": {
     "C1_salience_inversion": {
      "transfer_median_gain": 3,
      "retention_ratio": 0.6,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -2,
+      -2,
+      -2,
+      -3,
+      0
+     ],
+     "n_seeds_declining": 4,
+     "n_seeds_improving": 0,
+     "decline_sign_test_p_one_sided": 0.0625,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -2, -2, -3, 0]; the one-sided sign test for a decline is p=0.0625. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "dc22",
+      "ft09",
+      "r11l",
+      "s5i5"
+     ],
+     "games_gained_on_every_seed_here": [
+      "ft09",
+      "s5i5"
+     ],
+     "gained_set_jaccard_vs_C0": 0.5,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": false,
+     "control_wins_as_fraction_of_C0": 1.0,
+     "retention_ratio_interpretable": true
     },
     "C2_diag_roll": {
      "transfer_median_gain": 4,
      "retention_ratio": 0.8,
      "computable": true,
-     "reason_if_not_computable": null
+     "reason_if_not_computable": null,
+     "paired_per_seed_delta_vs_C0": [
+      -2,
+      -1,
+      -2,
+      -1,
+      1
+     ],
+     "n_seeds_declining": 4,
+     "n_seeds_improving": 1,
+     "decline_sign_test_p_one_sided": 0.1875,
+     "decline_resolved_at_this_n": false,
+     "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -1, -2, -1, 1]; the one-sided sign test for a decline is p=0.1875. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation.",
+     "games_gained_on_every_seed_at_C0": [
+      "dc22",
+      "ft09",
+      "r11l",
+      "s5i5"
+     ],
+     "games_gained_on_every_seed_here": [
+      "ft09",
+      "sp80",
+      "vc33"
+     ],
+     "gained_set_jaccard_vs_C0": 0.1667,
+     "gained_set_note": "A retention ratio near 1.0 on a gained set that barely overlaps C0's is NOT 'the same gain retained' -- it is a similarly-sized gain on different games. The Jaccard makes that distinguishable.",
+     "dose_saturated": true,
+     "control_wins_as_fraction_of_C0": 0.1429,
+     "retention_ratio_interpretable": false
     }
    }
   }
@@ -4913,7 +6550,6 @@
   ],
   "C2_diag_roll": []
  },
- "flagged_adversarial": false,
  "arm_flag_resolution_receipt": {
   "CTRL": {
    "requested": {
@@ -5012,6 +6648,44 @@
    "explorer_has_game_id": false
   }
  },
+ "per_lever_decidability": {
+  "both": {
+   "decidable_by_this_design": true,
+   "usable_on_target_evaluable_gates": [
+    "both_levers_shipped_vs_preflip|C1_salience_inversion",
+    "both_levers_shipped_vs_preflip|C2_diag_roll"
+   ],
+   "why_each_candidate_gate_is_or_is_not_usable": {
+    "both_levers_shipped_vs_preflip|C1_salience_inversion": "USABLE",
+    "both_levers_shipped_vs_preflip|C2_diag_roll": "USABLE"
+   }
+  },
+  "frontier": {
+   "decidable_by_this_design": true,
+   "usable_on_target_evaluable_gates": [
+    "frontier_given_hud_off|C1_salience_inversion",
+    "frontier_given_hud_off|C2_diag_roll",
+    "frontier_given_hud_on|C1_salience_inversion",
+    "frontier_given_hud_on|C2_diag_roll"
+   ],
+   "why_each_candidate_gate_is_or_is_not_usable": {
+    "frontier_given_hud_off|C1_salience_inversion": "USABLE",
+    "frontier_given_hud_off|C2_diag_roll": "USABLE",
+    "frontier_given_hud_on|C1_salience_inversion": "USABLE",
+    "frontier_given_hud_on|C2_diag_roll": "USABLE"
+   }
+  },
+  "hud": {
+   "decidable_by_this_design": false,
+   "usable_on_target_evaluable_gates": [],
+   "why_each_candidate_gate_is_or_is_not_usable": {
+    "hud_given_frontier_on|C2_diag_roll": "NOT_EVALUABLE: the games carrying this contrast's C0 anchor (['r11l']) are won by NO arm under C2_diag_roll (max seeds won across all four arms: {'r11l': 0}), and there are 0 discriminating games here. The perturbed gain is therefore arithmetically FORCED to 0 -- this gate could not have returned any other value, so it is not a measurement. Same class of defect as the empty pass region that VOIDED exp5835.",
+    "hud_given_frontier_on|C1_salience_inversion": "OFF_TARGET: absolute-colour salience ({6..15}), which ONLY the frontier tier predi",
+    "hud_given_frontier_off|C2_diag_roll": "NOT_EVALUABLE: the games carrying this contrast's C0 anchor (['r11l', 'tn36']) are won by NO arm under C2_diag_roll (max seeds won across all four arms: {'r11l': 0, 'tn36': 0}), and there are 0 discriminating games here. The perturbed gain is therefore arithmetically FORCED to 0 -- this gate could not have returned any other value, so it is not a measurement. Same class of defect as the empty pass region that VOIDED exp5835.",
+    "hud_given_frontier_off|C1_salience_inversion": "OFF_TARGET: absolute-colour salience ({6..15}), which ONLY the frontier tier predi"
+   }
+  }
+ },
  "acceptance_gates": {
   "frontier_given_hud_off|C1_salience_inversion": {
    "lever": "frontier",
@@ -5023,7 +6697,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "dc22",
      "seed": 20260726
@@ -5105,6 +6780,80 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "cn04",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "bp35",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 5,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "bp35": 1,
+    "dc22": 0,
+    "ft09": 5,
+    "m0r0": 4,
+    "s5i5": 5
+   },
    "behavioural_dose_treatment_fraction_moved": 0.76,
    "behavioural_dose_control_fraction_moved": 0.0,
    "anchor_median_gain_C0": 4,
@@ -5119,6 +6868,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": true,
    "retention_ratio": 0.75,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -1,
+     -1,
+     -1,
+     -2,
+     1
+    ],
+    "decline_sign_test_p_one_sided": 0.1875,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 0.6667,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, -1, -1, -2, 1]; the one-sided sign test for a decline is p=0.1875. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 5,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 5,
+    "p_one_sided_exact": 0.0312,
+    "clears_p_0_05": true,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0312,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": false,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 1.0,
    "games_gained_on_every_seed_under_perturbation": [
     "ft09",
     "s5i5"
@@ -5140,7 +6917,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "dc22",
      "seed": 20260726
@@ -5222,6 +7000,96 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "sp80",
+     "seed": 20260726
+    },
+    {
+     "game": "vc33",
+     "seed": 20260726
+    },
+    {
+     "game": "cd82",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "sp80",
+     "seed": 20260727
+    },
+    {
+     "game": "vc33",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "sp80",
+     "seed": 20260728
+    },
+    {
+     "game": "vc33",
+     "seed": 20260728
+    },
+    {
+     "game": "cd82",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "sp80",
+     "seed": 20260729
+    },
+    {
+     "game": "vc33",
+     "seed": 20260729
+    },
+    {
+     "game": "ar25",
+     "seed": 20260730
+    },
+    {
+     "game": "cd82",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "sp80",
+     "seed": 20260730
+    },
+    {
+     "game": "vc33",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 6,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "bp35": 0,
+    "dc22": 0,
+    "ft09": 5,
+    "m0r0": 0,
+    "s5i5": 1
+   },
    "behavioural_dose_treatment_fraction_moved": 0.84,
    "behavioural_dose_control_fraction_moved": 0.88,
    "anchor_median_gain_C0": 4,
@@ -5236,6 +7104,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": true,
    "retention_ratio": 1.0,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -1,
+     0,
+     -1,
+     0,
+     2
+    ],
+    "decline_sign_test_p_one_sided": 0.5,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 0.2,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, 0, -1, 0, 2]; the one-sided sign test for a decline is p=0.5. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 6,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 6,
+    "p_one_sided_exact": 0.0156,
+    "clears_p_0_05": true,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0156,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": true,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 0.1429,
    "games_gained_on_every_seed_under_perturbation": [
     "ft09",
     "sp80",
@@ -5246,7 +7142,7 @@
    "reason_if_not_evaluable": null,
    "perturbation_targets_this_levers_convention": true,
    "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
-   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+   "verdict": "SURVIVES_CONVENTION_VIOLATION_IN_A_DOSE_SATURATED_CORPUS"
   },
   "frontier_given_hud_on|C1_salience_inversion": {
    "lever": "frontier",
@@ -5258,7 +7154,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "dc22",
      "seed": 20260726
@@ -5340,6 +7237,80 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "cn04",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "bp35",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 7,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "bp35": 1,
+    "dc22": 0,
+    "ft09": 5,
+    "m0r0": 4,
+    "s5i5": 5
+   },
    "behavioural_dose_treatment_fraction_moved": 0.76,
    "behavioural_dose_control_fraction_moved": 0.0,
    "anchor_median_gain_C0": 3,
@@ -5354,6 +7325,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": false,
    "retention_ratio": 0.3333,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -2,
+     -2,
+     -2,
+     -3,
+     0
+    ],
+    "decline_sign_test_p_one_sided": 0.0625,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 0.6667,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -2, -2, -3, 0]; the one-sided sign test for a decline is p=0.0625. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 5,
+    "n_games_control_wins_on_more_seeds": 2,
+    "n_independent_replicates": 7,
+    "p_one_sided_exact": 0.2266,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0078,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": false,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 1.0,
    "games_gained_on_every_seed_under_perturbation": [
     "ft09",
     "s5i5"
@@ -5366,7 +7365,7 @@
    "reason_if_not_evaluable": null,
    "perturbation_targets_this_levers_convention": true,
    "what_convention_this_perturbation_attacks": "absolute-colour salience ({6..15}), which ONLY the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and is provably unaffected (static dose witness: 0 of 25 games change their HUD mask)",
-   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+   "verdict": "PARTIALLY_SURVIVES"
   },
   "frontier_given_hud_on|C2_diag_roll": {
    "lever": "frontier",
@@ -5378,7 +7377,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "dc22",
      "seed": 20260726
@@ -5460,6 +7460,96 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "sp80",
+     "seed": 20260726
+    },
+    {
+     "game": "vc33",
+     "seed": 20260726
+    },
+    {
+     "game": "cd82",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "sp80",
+     "seed": 20260727
+    },
+    {
+     "game": "vc33",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "sp80",
+     "seed": 20260728
+    },
+    {
+     "game": "vc33",
+     "seed": 20260728
+    },
+    {
+     "game": "cd82",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "sp80",
+     "seed": 20260729
+    },
+    {
+     "game": "vc33",
+     "seed": 20260729
+    },
+    {
+     "game": "ar25",
+     "seed": 20260730
+    },
+    {
+     "game": "cd82",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "sp80",
+     "seed": 20260730
+    },
+    {
+     "game": "vc33",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 6,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "bp35": 0,
+    "dc22": 0,
+    "ft09": 5,
+    "m0r0": 0,
+    "s5i5": 1
+   },
    "behavioural_dose_treatment_fraction_moved": 0.88,
    "behavioural_dose_control_fraction_moved": 0.92,
    "anchor_median_gain_C0": 3,
@@ -5474,6 +7564,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": true,
    "retention_ratio": 1.3333,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     0,
+     1,
+     0,
+     1,
+     3
+    ],
+    "decline_sign_test_p_one_sided": 1.0,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 0.2,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [0, 1, 0, 1, 3]; the one-sided sign test for a decline is p=1.0. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 6,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 6,
+    "p_one_sided_exact": 0.0156,
+    "clears_p_0_05": true,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0156,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": true,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 0.1429,
    "games_gained_on_every_seed_under_perturbation": [
     "ft09",
     "sp80",
@@ -5484,7 +7602,7 @@
    "reason_if_not_evaluable": null,
    "perturbation_targets_this_levers_convention": true,
    "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
-   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+   "verdict": "SURVIVES_CONVENTION_VIOLATION_IN_A_DOSE_SATURATED_CORPUS"
   },
   "hud_given_frontier_on|C2_diag_roll": {
    "lever": "hud",
@@ -5496,7 +7614,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": false,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "r11l",
      "seed": 20260726
@@ -5518,6 +7637,11 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [],
+   "n_discriminating_games_at_this_condition": 0,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "r11l": 0
+   },
    "behavioural_dose_treatment_fraction_moved": 0.88,
    "behavioural_dose_control_fraction_moved": 0.84,
    "anchor_median_gain_C0": 1,
@@ -5532,13 +7656,41 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": false,
    "retention_ratio": 0.0,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -1,
+     -1,
+     -1,
+     -1,
+     -1
+    ],
+    "decline_sign_test_p_one_sided": 0.0312,
+    "decline_resolved_at_this_n": true,
+    "gained_set_jaccard_vs_C0": 0.0,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, -1, -1, -1, -1]; the one-sided sign test for a decline is p=0.0312. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 0,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 0,
+    "p_one_sided_exact": null,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": true,
+    "smallest_reachable_p_at_this_n": null,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": true,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 0.1429,
    "games_gained_on_every_seed_under_perturbation": [],
    "games_lost_on_every_seed_under_perturbation": [],
-   "evaluable": true,
-   "reason_if_not_evaluable": null,
+   "evaluable": false,
+   "reason_if_not_evaluable": "the games carrying this contrast's C0 anchor (['r11l']) are won by NO arm under C2_diag_roll (max seeds won across all four arms: {'r11l': 0}), and there are 0 discriminating games here. The perturbed gain is therefore arithmetically FORCED to 0 -- this gate could not have returned any other value, so it is not a measurement. Same class of defect as the empty pass region that VOIDED exp5835.",
    "perturbation_targets_this_levers_convention": true,
    "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
-   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
+   "verdict": "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD"
   },
   "hud_given_frontier_on|C1_salience_inversion": {
    "lever": "hud",
@@ -5550,7 +7702,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "r11l",
      "seed": 20260726
@@ -5572,6 +7725,11 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [],
+   "n_discriminating_games_at_this_condition": 0,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "r11l": 5
+   },
    "behavioural_dose_treatment_fraction_moved": 0.76,
    "behavioural_dose_control_fraction_moved": 0.76,
    "anchor_median_gain_C0": 1,
@@ -5586,6 +7744,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": false,
    "retention_ratio": 0.0,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -1,
+     -1,
+     -1,
+     -1,
+     -1
+    ],
+    "decline_sign_test_p_one_sided": 0.0312,
+    "decline_resolved_at_this_n": true,
+    "gained_set_jaccard_vs_C0": 0.0,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-1, -1, -1, -1, -1]; the one-sided sign test for a decline is p=0.0312. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 0,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 0,
+    "p_one_sided_exact": null,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": true,
+    "smallest_reachable_p_at_this_n": null,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": false,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 1.0,
    "games_gained_on_every_seed_under_perturbation": [],
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
@@ -5605,7 +7791,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": false,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "r11l",
      "seed": 20260726
@@ -5647,6 +7834,12 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [],
+   "n_discriminating_games_at_this_condition": 0,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "r11l": 0,
+    "tn36": 0
+   },
    "behavioural_dose_treatment_fraction_moved": 0.92,
    "behavioural_dose_control_fraction_moved": 0.88,
    "anchor_median_gain_C0": 2,
@@ -5661,13 +7854,41 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": false,
    "retention_ratio": 0.0,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -2,
+     -2,
+     -2,
+     -2,
+     -2
+    ],
+    "decline_sign_test_p_one_sided": 0.0312,
+    "decline_resolved_at_this_n": true,
+    "gained_set_jaccard_vs_C0": 0.0,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -2, -2, -2, -2]; the one-sided sign test for a decline is p=0.0312. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 0,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 0,
+    "p_one_sided_exact": null,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": true,
+    "smallest_reachable_p_at_this_n": null,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": false,
+   "n_seed_replicates_effective": 1,
+   "perturbation_is_dose_saturated": true,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 0.1429,
    "games_gained_on_every_seed_under_perturbation": [],
    "games_lost_on_every_seed_under_perturbation": [],
-   "evaluable": true,
-   "reason_if_not_evaluable": null,
+   "evaluable": false,
+   "reason_if_not_evaluable": "the games carrying this contrast's C0 anchor (['r11l', 'tn36']) are won by NO arm under C2_diag_roll (max seeds won across all four arms: {'r11l': 0, 'tn36': 0}), and there are 0 discriminating games here. The perturbed gain is therefore arithmetically FORCED to 0 -- this gate could not have returned any other value, so it is not a measurement. Same class of defect as the empty pass region that VOIDED exp5835.",
    "perturbation_targets_this_levers_convention": true,
    "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
-   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
+   "verdict": "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD"
   },
   "hud_given_frontier_off|C1_salience_inversion": {
    "lever": "hud",
@@ -5679,7 +7900,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": false,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "r11l",
      "seed": 20260726
@@ -5721,6 +7943,53 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "tn36",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "tn36",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "tn36",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "tn36",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "tn36",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 2,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "r11l": 5,
+    "tn36": 5
+   },
    "behavioural_dose_treatment_fraction_moved": 0.0,
    "behavioural_dose_control_fraction_moved": 0.0,
    "anchor_median_gain_C0": 2,
@@ -5735,6 +8004,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": true,
    "retention_ratio": 1.0,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "decline_sign_test_p_one_sided": null,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 1.0,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [0, 0, 0, 0, 0]; the one-sided sign test for a decline is undefined (no seed moved). Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 2,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 2,
+    "p_one_sided_exact": 0.25,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.25,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": false,
+   "n_seed_replicates_effective": 1,
+   "perturbation_is_dose_saturated": false,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 1.0,
    "games_gained_on_every_seed_under_perturbation": [
     "r11l",
     "tn36"
@@ -5756,7 +8053,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "dc22",
      "seed": 20260726
@@ -5858,6 +8156,81 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "cn04",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "bp35",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 5,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "bp35": 1,
+    "dc22": 0,
+    "ft09": 5,
+    "m0r0": 4,
+    "r11l": 5,
+    "s5i5": 5
+   },
    "behavioural_dose_treatment_fraction_moved": 0.76,
    "behavioural_dose_control_fraction_moved": 0.0,
    "anchor_median_gain_C0": 5,
@@ -5872,6 +8245,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": true,
    "retention_ratio": 0.6,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -2,
+     -2,
+     -2,
+     -3,
+     0
+    ],
+    "decline_sign_test_p_one_sided": 0.0625,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 0.5,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -2, -2, -3, 0]; the one-sided sign test for a decline is p=0.0625. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 5,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 5,
+    "p_one_sided_exact": 0.0312,
+    "clears_p_0_05": true,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0312,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": false,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 1.0,
    "games_gained_on_every_seed_under_perturbation": [
     "ft09",
     "s5i5"
@@ -5893,7 +8294,8 @@
    "PRECONDITION_pass_region_nonempty": true,
    "PRECONDITION_anchor_median_gain_C0_positive": true,
    "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
-   "witness_cells_at_C0": [
+   "PRECONDITION_anchor_support_still_live_under_perturbation": true,
+   "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": [
     {
      "game": "dc22",
      "seed": 20260726
@@ -5995,6 +8397,97 @@
      "seed": 20260730
     }
    ],
+   "witness_cells_AT_THIS_CONDITION": [
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "sp80",
+     "seed": 20260726
+    },
+    {
+     "game": "vc33",
+     "seed": 20260726
+    },
+    {
+     "game": "cd82",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "sp80",
+     "seed": 20260727
+    },
+    {
+     "game": "vc33",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "sp80",
+     "seed": 20260728
+    },
+    {
+     "game": "vc33",
+     "seed": 20260728
+    },
+    {
+     "game": "cd82",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "sp80",
+     "seed": 20260729
+    },
+    {
+     "game": "vc33",
+     "seed": 20260729
+    },
+    {
+     "game": "ar25",
+     "seed": 20260730
+    },
+    {
+     "game": "cd82",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "sp80",
+     "seed": 20260730
+    },
+    {
+     "game": "vc33",
+     "seed": 20260730
+    }
+   ],
+   "n_discriminating_games_at_this_condition": 6,
+   "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": {
+    "bp35": 0,
+    "dc22": 0,
+    "ft09": 5,
+    "m0r0": 0,
+    "r11l": 0,
+    "s5i5": 1
+   },
    "behavioural_dose_treatment_fraction_moved": 0.88,
    "behavioural_dose_control_fraction_moved": 0.88,
    "anchor_median_gain_C0": 5,
@@ -6009,6 +8502,34 @@
    "perturbed_no_seed_regresses": true,
    "perturbed_strict_per_seed_dominance": true,
    "retention_ratio": 0.8,
+   "retention_precision": {
+    "paired_per_seed_delta_vs_C0": [
+     -2,
+     -1,
+     -2,
+     -1,
+     1
+    ],
+    "decline_sign_test_p_one_sided": 0.1875,
+    "decline_resolved_at_this_n": false,
+    "gained_set_jaccard_vs_C0": 0.1667,
+    "retention_ratio_precision_note": "A ratio of two medians over 5 seeds. The paired deltas are [-2, -1, -2, -1, 1]; the one-sided sign test for a decline is p=0.1875. Where that does not clear 0.05, the SURVIVAL of the gain may be established while its DEGRADATION is NOT resolved at this sample size, and the point estimate must not be reported as a measured degradation."
+   },
+   "game_unit_sign_test": {
+    "n_games_treatment_wins_on_more_seeds": 6,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 6,
+    "p_one_sided_exact": 0.0156,
+    "clears_p_0_05": true,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0156,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "seeds_are_a_replication_axis_for_this_contrast": true,
+   "n_seed_replicates_effective": 5,
+   "perturbation_is_dose_saturated": true,
+   "control_wins_as_fraction_of_C0_under_this_perturbation": 0.1429,
    "games_gained_on_every_seed_under_perturbation": [
     "ft09",
     "sp80",
@@ -6019,28 +8540,103 @@
    "reason_if_not_evaluable": null,
    "perturbation_targets_this_levers_convention": true,
    "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
-   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+   "verdict": "SURVIVES_CONVENTION_VIOLATION_IN_A_DOSE_SATURATED_CORPUS"
   }
  },
  "acceptance_gate_headline_per_lever": {
   "frontier": {
    "gate": "frontier_given_hud_off|C1_salience_inversion",
    "verdict": "SURVIVES_CONVENTION_VIOLATION",
+   "verdict_of_the_designated_gate_itself": "SURVIVES_CONVENTION_VIOLATION",
+   "decidable_by_this_design": true,
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
    "anchor_median_gain_C0": 4,
    "perturbed_median_gain": 3,
-   "retention_ratio": 0.75
+   "retention_ratio": 0.75,
+   "game_unit_sign_test_p_one_sided": 0.0312,
+   "n_independent_replicates": 5,
+   "WHY_THIS_GATE_WAS_DESIGNATED": "the frontier flip was measured with the HUD off (it predates the HUD flip), so this gate replicates the configuration the flip decision was made in. It is NOT the shipped configuration -- see acceptance_gate_shipped_configuration_marginal_per_lever for that."
   },
   "hud": {
    "gate": "hud_given_frontier_on|C2_diag_roll",
-   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION",
+   "verdict": "NOT_DECIDABLE_BY_THIS_DESIGN",
+   "verdict_of_the_designated_gate_itself": "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD",
+   "decidable_by_this_design": false,
+   "evaluable": false,
+   "reason_if_not_evaluable": "the games carrying this contrast's C0 anchor (['r11l']) are won by NO arm under C2_diag_roll (max seeds won across all four arms: {'r11l': 0}), and there are 0 discriminating games here. The perturbed gain is therefore arithmetically FORCED to 0 -- this gate could not have returned any other value, so it is not a measurement. Same class of defect as the empty pass region that VOIDED exp5835.",
    "anchor_median_gain_C0": 1,
    "perturbed_median_gain": 0,
-   "retention_ratio": 0.0
+   "retention_ratio": 0.0,
+   "game_unit_sign_test_p_one_sided": null,
+   "n_independent_replicates": 0,
+   "WHY_THIS_GATE_WAS_DESIGNATED": "the HUD flip was measured with the frontier lever already on, so this is the shipped HUD contrast. Whether it is EVALUABLE is a separate question, answered by its own preconditions."
+  }
+ },
+ "acceptance_gate_shipped_configuration_marginal_per_lever": {
+  "frontier": {
+   "gate": "frontier_given_hud_on|C1_salience_inversion",
+   "verdict": "PARTIALLY_SURVIVES",
+   "anchor_median_gain_C0": 3,
+   "perturbed_median_gain": 1,
+   "retention_ratio": 0.3333,
+   "perturbed_per_seed_gain": {
+    "20260726": 1,
+    "20260727": 2,
+    "20260728": 1,
+    "20260729": 0,
+    "20260730": 2
+   },
+   "perturbed_strict_per_seed_dominance": false,
+   "games_lost_on_every_seed_under_perturbation": [
+    "r11l",
+    "tn36"
+   ],
+   "game_unit_sign_test_at_C0": {
+    "n_games_treatment_wins_on_more_seeds": 5,
+    "n_games_control_wins_on_more_seeds": 1,
+    "n_independent_replicates": 6,
+    "p_one_sided_exact": 0.1094,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.0156,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "note": "This is the lever's marginal contribution IN THE SHIPPED CONFIGURATION (the other lever already ON), which is what the live agent runs today."
+  },
+  "hud": {
+   "gate": "hud_given_frontier_on|C2_diag_roll",
+   "verdict": "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD",
+   "anchor_median_gain_C0": 1,
+   "perturbed_median_gain": 0,
+   "retention_ratio": 0.0,
+   "perturbed_per_seed_gain": {
+    "20260726": 0,
+    "20260727": 0,
+    "20260728": 0,
+    "20260729": 0,
+    "20260730": 0
+   },
+   "perturbed_strict_per_seed_dominance": false,
+   "games_lost_on_every_seed_under_perturbation": [],
+   "game_unit_sign_test_at_C0": {
+    "n_games_treatment_wins_on_more_seeds": 1,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 1,
+    "p_one_sided_exact": 0.5,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.5,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": true,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "note": "This is the lever's marginal contribution IN THE SHIPPED CONFIGURATION (the other lever already ON), which is what the live agent runs today."
   }
  },
  "acceptance_gates_all_evaluable": false,
  "acceptance_gates_all_passed": false,
- "honest_verdict": "complete_convention_perturbation_transfer_battery_frontier_survives_hud_gain_does_not_survive",
+ "honest_verdict": "complete_convention_perturbation_transfer_battery_frontier_survives_hud_not_decidable_by_this_design",
  "absolute_win_level_context": {
   "C0_real": {
    "CTRL": [
@@ -6158,11 +8754,63 @@
    "why_this_matters": "Arms A and B2 in the upstream harness pin only a subset of the gated flags, so since the 2026-07-25 flips they inherit the treatment defaults and can no longer serve as controls. This arm pins all seven, and still lands on the same 7 games."
   },
   "2_frontier_lever_survives_both_convention_violations": {
-   "claim": "The frontier lever's gain degrades but stays positive when the absolute-colour salience convention it keys on is inverted, and is undiminished under the geometric roll.",
+   "claim": "The frontier lever's gain SURVIVES inversion of the absolute-colour salience convention it keys on -- positive on every seed, and the game-unit sign test at C1 clears 0.05 (numbers in survival_is_established). Whether it DEGRADES is a SEPARATE question and is NOT resolved at this sample size: see degradation_is_not_resolved_at_this_n.",
    "anchor_median_gain_C0": 4,
    "retention": {
     "C1_salience_inversion": 0.75,
     "C2_diag_roll": 1.0
+   },
+   "survival_is_established": {
+    "per_seed_gain_at_C1": {
+     "20260726": 3,
+     "20260727": 4,
+     "20260728": 3,
+     "20260729": 2,
+     "20260730": 4
+    },
+    "min_gain_at_C1": 2,
+    "strict_per_seed_dominance_at_C1": true,
+    "game_unit_sign_test_at_C1": {
+     "n_games_treatment_wins_on_more_seeds": 5,
+     "n_games_control_wins_on_more_seeds": 0,
+     "n_independent_replicates": 5,
+     "p_one_sided_exact": 0.0312,
+     "clears_p_0_05": true,
+     "undefined_because_no_discordant_game": false,
+     "smallest_reachable_p_at_this_n": 0.0312,
+     "UNDERPOWERED_SINGLE_GAME_SUPPORT": false,
+     "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+    }
+   },
+   "degradation_is_not_resolved_at_this_n": {
+    "paired_per_seed_delta_vs_C0": [
+     -1,
+     -1,
+     -1,
+     -2,
+     1
+    ],
+    "n_seeds_declining": 4,
+    "n_seeds_improving": 1,
+    "decline_sign_test_p_one_sided": 0.1875,
+    "decline_resolved_at_this_n": false
+   },
+   "what_the_retention_0_75_point_estimate_is_and_is_not": "It is the ratio of the C1 median gain to the C0 median gain, both over 5 seeds, on a difference of one game. It is NOT a measured degradation: the paired sign test does not clear 0.05, so 'no degradation' remains fully consistent with the data. Resolving it needs more seeds (or more games), not a re-reading of these.",
+   "retention_at_C2_is_dose_saturated_not_a_survival": {
+    "retention_ratio": 1.0,
+    "control_wins_as_fraction_of_C0": 0.1429,
+    "gained_set_jaccard_vs_C0": 0.2,
+    "games_gained_on_every_seed_at_C0": [
+     "dc22",
+     "ft09",
+     "s5i5"
+    ],
+    "games_gained_on_every_seed_at_C2": [
+     "ft09",
+     "sp80",
+     "vc33"
+    ],
+    "reading": "Read the ratio next to the two fields above it. Where the gained SET barely overlaps C0's and the control has lost most of its own capability, a retention ratio near 1.0 is NOT 'the same gain retained' -- it is a similarly-sized gain on DIFFERENT games in a razed corpus."
    },
    "strict_per_seed_dominance_in_every_condition": true,
    "no_seed_ever_regresses": true,
@@ -6176,15 +8824,32 @@
     ]
    }
   },
-  "3_hud_lever_shipped_gain_is_one_game_and_does_not_survive": {
-   "claim": "The HUD lever's marginal gain in the shipped configuration is exactly one game (r11l) and it is zero on every seed under both perturbations.",
+  "3_hud_lever_convention_robustness_is_NOT_DECIDABLE_BY_THIS_DESIGN": {
+   "claim": "The HUD lever's marginal gain in the shipped configuration is exactly one game (r11l), and this battery CANNOT decide whether that gain depends on the edge-adjacency convention. The first recorded run reported it as GAIN_DOES_NOT_SURVIVE; that verdict is WITHDRAWN as uninterpretable, because neither perturbed condition can answer the question.",
    "anchor_median_gain_C0": 1,
    "retention": {
     "C1_salience_inversion": 0.0,
     "C2_diag_roll": 0.0
    },
    "single_game_carrying_the_whole_gain": "r11l",
-   "median_gain_without_that_game": 0
+   "median_gain_without_that_game": 0,
+   "support_is_a_SINGLE_game_so_no_p_can_clear": {
+    "n_games_treatment_wins_on_more_seeds": 1,
+    "n_games_control_wins_on_more_seeds": 0,
+    "n_independent_replicates": 1,
+    "p_one_sided_exact": 0.5,
+    "clears_p_0_05": false,
+    "undefined_because_no_discordant_game": false,
+    "smallest_reachable_p_at_this_n": 0.5,
+    "UNDERPOWERED_SINGLE_GAME_SUPPORT": true,
+    "principle": "The jackknife's own stated unit is the game (a hidden game is a fresh draw from the game distribution), so the sign test runs on games, not seeds. A support of one game can never clear 0.05 (floor 0.5) however consistent it is across seeds -- that is labelled, not smoothed over."
+   },
+   "WHY_NOT_DECIDABLE": {
+    "C1_salience_inversion": "OFF TARGET. C1 perturbs absolute colour, which only the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and the static dose witness measures ZERO HUD-mask change on all 25 games. Whatever happens to the HUD lever's gain here is a statement about the OTHER lever's input distribution, not about edge adjacency.",
+    "C2_diag_roll": "ANCHOR SUPPORT DEAD. Under the k=3 roll, r11l and tn36 -- the only two games this lever has ever moved -- are won by NO arm on any seed, leaving zero discriminating games and an undefined sign test. The perturbed gain of 0 was arithmetically FORCED and could not have come out any other way. See the gate's own PRECONDITION_anchor_support_still_live_under_perturbation, which now fails."
+   },
+   "WHAT_WAS_WRONG_WITH_THE_FIRST_RUNS_VERDICT": "The pass-region witness was computed ONLY at C0 and then attached to every gate for the contrast, so the C2 gate certified 'my pass region is non-empty' using 5 r11l cells measured at C0 -- a witness for a different condition than the one being scored. All three preconditions read green and the gate reported evaluable=true with reason_if_not_evaluable=null, while the confound was disclosed only three levels deep in prose. Same class of defect as the empty pass region that VOIDED exp5835: a gate that could not fail is not a gate, and a gate that could not pass is not one either.",
+   "THE_ONLY_HUD_MECHANISM_EVIDENCE_THAT_SURVIVES": "The corpus-wide mask-resolution collapse under the roll, which is measured independently of any win: see hud_mask_resolution_mechanism_evidence. That shows the edge-adjacency convention is load-bearing FOR THE DETECTOR, exactly as the predicate's `y1 < tol` source predicts. It does NOT show what happens to the lever's GAIN when the convention is violated -- for that, a perturbation is needed that moves the bar off the edge WITHOUT making the games unwinnable. The dose axis added in cptb_perturb (C3_roll_k1/k2) is the hook for building one; it is NOT measured in this run."
   },
   "4_the_two_perturbations_break_the_hud_gain_by_DIFFERENT_mechanisms": {
    "claim": "Under the geometric roll the detector itself stops working; under salience inversion the detector works perfectly and the frontier lever destroys the win instead. These are separate failure modes and the artifact does not merge them.",
@@ -6194,7 +8859,21 @@
     "r11l_seeds_mask_resolved_C0": 5,
     "r11l_seeds_mask_resolved_C2": 0,
     "interpretation": "Moving every edge-hugging bar 3 cells inward takes r11l's mask from resolving on 5 of 5 seeds to 0 of 5. The edge-adjacency convention is load-bearing, exactly as the predicate's `y1 < tol` source predicts.",
-    "HONEST_CONFOUND": "Under C2 r11l is unwinnable for EVERY arm (including the control), so the vanished gain alone would not prove the mask is why. The mask-resolution collapse is the independent mechanism evidence; the win-level evidence is confounded and is not relied on."
+    "HONEST_CONFOUND": "Under C2 r11l is unwinnable for EVERY arm (including the control), so the vanished gain alone would not prove the mask is why. The mask-resolution collapse is the independent mechanism evidence; the win-level evidence is confounded and is not relied on.",
+    "THIS_CONFOUND_IS_NOW_A_GATE_PRECONDITION": {
+     "gate": "hud_given_frontier_on|C2_diag_roll",
+     "precondition": "PRECONDITION_anchor_support_still_live_under_perturbation",
+     "value": false,
+     "gate_verdict_now": "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD",
+     "n_discriminating_games_at_C2": 0
+    },
+    "DOSE_CEILING_AT_C2": {
+     "control_median_absolute_wins": 1,
+     "control_wins_as_fraction_of_C0": 0.1429,
+     "n_games_dead_for_all_arms": 18,
+     "n_games": 25,
+     "dose_saturated": true
+    }
    },
    "C1_salience_inversion_mask_is_UNAFFECTED_but_the_win_is_lost": {
     "corpus_fraction_resolved_C0": 0.76,
@@ -6241,83 +8920,876 @@
    },
    "WHY_A_BUDGET_SWEEP_WAS_REQUIRED": "At budget 2000 both cases read as 'SHIP loses a game HUDO wins'. This project has already documented one such loss (arm B2's cd82) that turned out to be a budget WALL rather than lost capability, so the same alternative explanation had to be excluded here before either could be called a regression. The first draft of this finding called tn36 a capability loss; the sweep refuted that, and the corrected reading is below.",
    "budget_sweep": {
-    "tn36_C0_SHIP": {
-     "budget_2000": {
-      "levels": 0,
-      "actions": 1676,
-      "states_expanded": 17
-     },
-     "budget_4000": {
-      "levels": 0,
-      "actions": 3511,
-      "states_expanded": 17
-     },
-     "budget_8000": {
-      "levels": 1,
-      "actions": 5337,
-      "states_expanded": 27
-     },
-     "verdict": "BUDGET_WALL_NOT_CAPABILITY_LOSS"
+    "r11l|C0_real|CTRL|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      2308
+     ],
+     "hud_mask_resolved_per_seed": [
+      false
+     ]
     },
-    "tn36_C0_HUDO": {
-     "budget_2000": {
-      "levels": 1,
-      "actions": 1506,
-      "states_expanded": 52
-     },
-     "budget_8000": {
-      "levels": 1,
-      "actions": 1506,
-      "states_expanded": 52
-     },
-     "verdict": "wins at every budget; the cheaper arm"
+    "r11l|C0_real|CTRL|budget_8000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      3974
+     ],
+     "hud_mask_resolved_per_seed": [
+      false
+     ]
     },
-    "r11l_C1_SHIP": {
-     "budget_2000": {
-      "levels": 0,
-      "actions": 1897
-     },
-     "budget_4000": {
-      "levels": 0,
-      "actions": 3848
-     },
-     "budget_8000": {
-      "levels": 0,
-      "actions": 7504
-     },
-     "budget_16000": {
-      "levels": 0,
-      "actions": 14774,
-      "states_expanded": 872
-     },
-     "verdict": "CAPABILITY_LOSS_not_a_budget_wall_still_0_at_8x_budget"
+    "r11l|C0_real|FRONT|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      892
+     ],
+     "hud_mask_resolved_per_seed": [
+      false
+     ]
     },
-    "r11l_C1_HUDO": {
-     "budget_2000": {
-      "levels": 1,
-      "actions": 1068
-     },
-     "budget_16000": {
-      "levels": 1,
-      "actions": 1068,
-      "states_expanded": 207
-     },
-     "verdict": "wins in 1068 actions at every budget tested"
+    "r11l|C0_real|FRONT|budget_8000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      1075
+     ],
+     "hud_mask_resolved_per_seed": [
+      false
+     ]
     },
-    "raw_rows": [
-     "results/cptb_20260726_cells/budget_sweep_C0.jsonl.gz",
-     "results/cptb_20260726_cells/budget_sweep_r11l_C1.jsonl.gz"
-    ]
+    "r11l|C0_real|HUDO|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      1
+     ],
+     "n_seeds_won": 1,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1068
+     ],
+     "median_actions_to_first_levelup": 1068,
+     "min_actions_to_first_levelup": 1068,
+     "max_actions_to_first_levelup": 1068,
+     "states_expanded_per_seed": [
+      207
+     ],
+     "hud_mask_resolved_per_seed": [
+      true
+     ]
+    },
+    "r11l|C0_real|HUDO|budget_8000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      1
+     ],
+     "n_seeds_won": 1,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1068
+     ],
+     "median_actions_to_first_levelup": 1068,
+     "min_actions_to_first_levelup": 1068,
+     "max_actions_to_first_levelup": 1068,
+     "states_expanded_per_seed": [
+      207
+     ],
+     "hud_mask_resolved_per_seed": [
+      true
+     ]
+    },
+    "r11l|C0_real|SHIP|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      1
+     ],
+     "n_seeds_won": 1,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      758
+     ],
+     "median_actions_to_first_levelup": 758,
+     "min_actions_to_first_levelup": 758,
+     "max_actions_to_first_levelup": 758,
+     "states_expanded_per_seed": [
+      46
+     ],
+     "hud_mask_resolved_per_seed": [
+      true
+     ]
+    },
+    "r11l|C0_real|SHIP|budget_8000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      1
+     ],
+     "n_seeds_won": 1,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      758
+     ],
+     "median_actions_to_first_levelup": 758,
+     "min_actions_to_first_levelup": 758,
+     "max_actions_to_first_levelup": 758,
+     "states_expanded_per_seed": [
+      46
+     ],
+     "hud_mask_resolved_per_seed": [
+      true
+     ]
+    },
+    "r11l|C1_salience_inversion|CTRL|budget_16000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      7267,
+      7267
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false
+     ]
+    },
+    "r11l|C1_salience_inversion|CTRL|budget_4000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      2308,
+      2308
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false
+     ]
+    },
+    "r11l|C1_salience_inversion|CTRL|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      3974,
+      3974,
+      3974,
+      3974,
+      3974
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "r11l|C1_salience_inversion|FRONT|budget_16000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      1118,
+      1120
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false
+     ]
+    },
+    "r11l|C1_salience_inversion|FRONT|budget_4000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      692,
+      765
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false
+     ]
+    },
+    "r11l|C1_salience_inversion|FRONT|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      1021,
+      985,
+      1029,
+      1017,
+      1020
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "r11l|C1_salience_inversion|HUDO|budget_16000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      1,
+      1
+     ],
+     "n_seeds_won": 2,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1068,
+      1068
+     ],
+     "median_actions_to_first_levelup": 1068.0,
+     "min_actions_to_first_levelup": 1068,
+     "max_actions_to_first_levelup": 1068,
+     "states_expanded_per_seed": [
+      207,
+      207
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true
+     ]
+    },
+    "r11l|C1_salience_inversion|HUDO|budget_4000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      1,
+      1
+     ],
+     "n_seeds_won": 2,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1068,
+      1068
+     ],
+     "median_actions_to_first_levelup": 1068.0,
+     "min_actions_to_first_levelup": 1068,
+     "max_actions_to_first_levelup": 1068,
+     "states_expanded_per_seed": [
+      207,
+      207
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true
+     ]
+    },
+    "r11l|C1_salience_inversion|HUDO|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "n_seeds_won": 5,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1068,
+      1068,
+      1068,
+      1068,
+      1068
+     ],
+     "median_actions_to_first_levelup": 1068,
+     "min_actions_to_first_levelup": 1068,
+     "max_actions_to_first_levelup": 1068,
+     "states_expanded_per_seed": [
+      207,
+      207,
+      207,
+      207,
+      207
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    },
+    "r11l|C1_salience_inversion|SHIP|budget_16000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      872,
+      863
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true
+     ]
+    },
+    "r11l|C1_salience_inversion|SHIP|budget_4000": {
+     "n_seeds": 2,
+     "seeds": [
+      20260726,
+      20260727
+     ],
+     "levels_per_seed": [
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      153,
+      154
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true
+     ]
+    },
+    "r11l|C1_salience_inversion|SHIP|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      524,
+      506,
+      499,
+      505,
+      523
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    },
+    "tn36|C0_real|CTRL|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      316
+     ],
+     "hud_mask_resolved_per_seed": [
+      false
+     ]
+    },
+    "tn36|C0_real|CTRL|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      712,
+      712,
+      712,
+      712,
+      712
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "tn36|C0_real|FRONT|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      61
+     ],
+     "hud_mask_resolved_per_seed": [
+      false
+     ]
+    },
+    "tn36|C0_real|FRONT|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      61,
+      61,
+      61,
+      61,
+      61
+     ],
+     "hud_mask_resolved_per_seed": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "tn36|C0_real|HUDO|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      1
+     ],
+     "n_seeds_won": 1,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1506
+     ],
+     "median_actions_to_first_levelup": 1506,
+     "min_actions_to_first_levelup": 1506,
+     "max_actions_to_first_levelup": 1506,
+     "states_expanded_per_seed": [
+      52
+     ],
+     "hud_mask_resolved_per_seed": [
+      true
+     ]
+    },
+    "tn36|C0_real|HUDO|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "n_seeds_won": 5,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      1506,
+      1506,
+      1506,
+      1506,
+      1506
+     ],
+     "median_actions_to_first_levelup": 1506,
+     "min_actions_to_first_levelup": 1506,
+     "max_actions_to_first_levelup": 1506,
+     "states_expanded_per_seed": [
+      52,
+      52,
+      52,
+      52,
+      52
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    },
+    "tn36|C0_real|SHIP|budget_4000": {
+     "n_seeds": 1,
+     "seeds": [
+      20260726
+     ],
+     "levels_per_seed": [
+      0
+     ],
+     "n_seeds_won": 0,
+     "wins_on_every_seed": false,
+     "actions_to_first_levelup_per_seed": [],
+     "median_actions_to_first_levelup": null,
+     "min_actions_to_first_levelup": null,
+     "max_actions_to_first_levelup": null,
+     "states_expanded_per_seed": [
+      17
+     ],
+     "hud_mask_resolved_per_seed": [
+      true
+     ]
+    },
+    "tn36|C0_real|SHIP|budget_8000": {
+     "n_seeds": 5,
+     "seeds": [
+      20260726,
+      20260727,
+      20260728,
+      20260729,
+      20260730
+     ],
+     "levels_per_seed": [
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "n_seeds_won": 5,
+     "wins_on_every_seed": true,
+     "actions_to_first_levelup_per_seed": [
+      5337,
+      5327,
+      5405,
+      5528,
+      5843
+     ],
+     "median_actions_to_first_levelup": 5405,
+     "min_actions_to_first_levelup": 5327,
+     "max_actions_to_first_levelup": 5843,
+     "states_expanded_per_seed": [
+      27,
+      28,
+      31,
+      39,
+      57
+     ],
+     "hud_mask_resolved_per_seed": [
+      true,
+      true,
+      true,
+      true,
+      true
+     ]
+    }
+   },
+   "budget_sweep_n_seeds_per_bucket": {
+    "r11l|C0_real|CTRL|budget_4000": 1,
+    "r11l|C0_real|CTRL|budget_8000": 1,
+    "r11l|C0_real|FRONT|budget_4000": 1,
+    "r11l|C0_real|FRONT|budget_8000": 1,
+    "r11l|C0_real|HUDO|budget_4000": 1,
+    "r11l|C0_real|HUDO|budget_8000": 1,
+    "r11l|C0_real|SHIP|budget_4000": 1,
+    "r11l|C0_real|SHIP|budget_8000": 1,
+    "r11l|C1_salience_inversion|CTRL|budget_16000": 2,
+    "r11l|C1_salience_inversion|CTRL|budget_4000": 2,
+    "r11l|C1_salience_inversion|CTRL|budget_8000": 5,
+    "r11l|C1_salience_inversion|FRONT|budget_16000": 2,
+    "r11l|C1_salience_inversion|FRONT|budget_4000": 2,
+    "r11l|C1_salience_inversion|FRONT|budget_8000": 5,
+    "r11l|C1_salience_inversion|HUDO|budget_16000": 2,
+    "r11l|C1_salience_inversion|HUDO|budget_4000": 2,
+    "r11l|C1_salience_inversion|HUDO|budget_8000": 5,
+    "r11l|C1_salience_inversion|SHIP|budget_16000": 2,
+    "r11l|C1_salience_inversion|SHIP|budget_4000": 2,
+    "r11l|C1_salience_inversion|SHIP|budget_8000": 5,
+    "tn36|C0_real|CTRL|budget_4000": 1,
+    "tn36|C0_real|CTRL|budget_8000": 5,
+    "tn36|C0_real|FRONT|budget_4000": 1,
+    "tn36|C0_real|FRONT|budget_8000": 5,
+    "tn36|C0_real|HUDO|budget_4000": 1,
+    "tn36|C0_real|HUDO|budget_8000": 5,
+    "tn36|C0_real|SHIP|budget_4000": 1,
+    "tn36|C0_real|SHIP|budget_8000": 5
+   },
+   "budget_sweep_raw_rows": [
+    "results/cptb_20260726_cells/budget_sweep_C0.jsonl.gz",
+    "results/cptb_20260726_cells/budget_sweep_r11l_C1.jsonl.gz",
+    "sweep_r11l_C1_b16000_5seed.jsonl",
+    "sweep_r11l_C1_b8000_5seed.jsonl",
+    "sweep_tn36_C0_b8000.jsonl"
+   ],
+   "cost_ratios": {
+    "tn36_C0_SHIP_vs_HUDO_at_budget_8000": {
+     "defined": true,
+     "treatment": "tn36|C0_real|SHIP|budget_8000",
+     "control": "tn36|C0_real|HUDO|budget_8000",
+     "n_seeds_treatment": 5,
+     "n_seeds_control": 5,
+     "treatment_actions_per_seed": [
+      5337,
+      5327,
+      5405,
+      5528,
+      5843
+     ],
+     "control_actions_per_seed": [
+      1506,
+      1506,
+      1506,
+      1506,
+      1506
+     ],
+     "ratio_per_treatment_seed_vs_control_median": [
+      3.544,
+      3.537,
+      3.589,
+      3.671,
+      3.88
+     ],
+     "ratio_range": [
+      3.537,
+      3.88
+     ],
+     "ratio_median": 3.589,
+     "note": "ratio of actions-to-first-level-up; a RANGE over seeds, not a single cell"
+    },
+    "r11l_C1_SHIP_vs_HUDO_at_budget_8000": {
+     "defined": false,
+     "reason": "one of the two arms never reached a level-up at this budget, so there is no cost to compare (a capability difference, not an efficiency one)"
+    }
    },
    "corrected_reading": {
-    "tn36_on_real_games": "The frontier lever makes tn36 roughly 3.5x more expensive (HUDO 1506 actions vs SHIP 5337) with the SAME 61-cell mask resolved in both arms, which pushes the win past the 2000-action budget. It is an efficiency regression with a budget-visible consequence, in the same class as the already-known cd82 residual -- NOT a destroyed capability.",
-    "r11l_under_salience_inversion": "This one is real. HUD-alone wins r11l in 1068 actions under inverted salience at every budget tested; the shipped both-on configuration is still at 0 levels after 14774 actions (8x the measured budget) with the mask resolving normally. The frontier lever removes a capability the HUD lever supplies, once the colour convention no longer holds."
+    "tn36_on_real_games": "The frontier lever makes tn36 substantially more expensive to solve with the SAME mask resolved in both arms, which pushes the win past the 2000-action budget -- an efficiency regression with a budget-visible consequence, in the same class as the already-known cd82 residual, NOT a destroyed capability. The cost ratio is reported as a RANGE over seeds in `cost_ratios`, not as the single-cell '~3.5x' the first run quoted.",
+    "tn36_reclassification_now_rests_on_5_seeds": "This reclassification was originally made on ONE seed at budget 8000 while the loss it reclassified was measured on five at budget 2000 -- the weaker evidence overturning the stronger, in the direction that made the shipped configuration look better. The sweep was re-run on all 5 seeds; see `budget_sweep_n_seeds_per_bucket` for the n behind every number here.",
+    "r11l_under_salience_inversion": "This one is real. HUD-alone wins r11l under inverted salience at every budget tested, on every seed; the shipped both-on configuration is still at 0 levels at 4x and 8x the measured budget with the mask resolving normally. The frontier lever removes a capability the HUD lever supplies, once the colour convention no longer holds."
    },
    "mechanism": "In both cases HUDO and SHIP resolve the SAME mask, so the mask is not the difference. The difference is search shape: on tn36 at budget 2000 HUDO expands 52 graph nodes and banks the level while SHIP expands 17; the global tier barrier defers the branch containing the win behind an exhaustive lower-tier sweep, which costs actions rather than reachability. Under salience inversion the tier assignment itself is wrong, so the deferral no longer converges within any budget tested.",
    "what_this_does_and_does_not_argue": "It does NOT argue for un-flipping either lever: the shipped configuration still has the highest median win count of the four arms at every condition (see per_arm_condition_wins). These are specific, reproducible, previously unmeasured costs, and the decision is the operator's."
   }
  },
- "headline": "FRONTIER LEVER: its gain SURVIVES violation of the absolute-colour salience convention it keys on -- median +4 -> +3 games (retention 0.75), strict per-seed dominance, no seed regresses -- and the gain is spread over 4 games, so no single public game carries it. Under the geometric roll the absolute gain is also +4, but read that with the absolute win level: the roll collapses the pre-flip control from 7 wins to 1, so a 'retention 1.0' there sits on a far smaller base and is not the same statement as at C0. HUD LEVER: its marginal gain in the shipped configuration is exactly ONE game (r11l) -- remove r11l and the gain is 0 -- and it is 0 on every seed under both perturbations, for two DIFFERENT reasons that the artifact keeps separate: under the roll the detector itself stops working (r11l's mask resolves on 5/5 seeds at C0 and 0/5 under the roll, measured independently of any win), while under salience inversion the mask is provably untouched and the FRONTIER lever destroys the win instead. NEW: the two levers interact, and a budget sweep splits it into two different things. On REAL unperturbed tn36, HUD-alone wins on 5/5 seeds and the shipped both-on config on 0/5 with an identical 61-cell mask -- but SHIP DOES win tn36 at budget 8000 (5337 actions vs HUD-alone's 1506), so that is a ~3.5x EFFICIENCY regression crossing the budget, not a lost capability (the first draft of this finding said capability loss; the sweep refuted it). The genuine capability loss is r11l under salience inversion: HUD-alone wins it in 1068 actions at every budget, the shipped config is still at 0 after 14774 actions -- 8x the measured budget. Neither flip's own A/B could have seen either, because both of their controls also lose these games. NO hidden-game transfer is claimed or measured here, and none can be from this harness: all 25 public games are already solved and the scored path is operator-only. This measures CONVENTION-DEPENDENCE, which is necessary but not sufficient for transfer.",
+ "headline": "FRONTIER LEVER, AS MEASURED AT FLIP TIME (HUD off -- the configuration the flip decision was made in): the gain SURVIVES inversion of the absolute-colour salience convention it keys on. Per-seed gain at C1 [3, 4, 3, 2, 4], minimum +2, positive on every seed; on the GAME unit 5 games favour it to 0 against, exact one-sided sign test p=0.0312. Whether it DEGRADES is NOT resolved at this sample size: median 4 -> 3 is a ratio of two 5-seed medians on a difference of one game, the paired per-seed deltas are [-1, -1, -1, -2, 1], and the one-sided sign test for a decline gives p=0.1875 -- fully consistent with no degradation. The earlier reading that quoted 'retention 0.75' as a measured degradation is WITHDRAWN; the survival claim stands. FRONTIER LEVER, IN THE SHIPPED CONFIGURATION (HUD on -- what the live agent runs today): the same lever's marginal gain is median 3 at C0 and 1 at C1 (retention 0.3333), per-seed [1, 2, 1, 0, 2] -- one seed at zero, so per-seed dominance is NOT strict -- and it loses ['r11l', 'tn36'] on every seed. This is the contrast the operator's decision is actually about, and it is less flattering than the flip-time one. Under the geometric roll the frontier gain is nominally undiminished, but that condition is DOSE SATURATED: it takes the pre-flip control from 7 wins to 1 and takes the games no arm can win from 11/25 to 18/25, and the gained set overlaps C0's with Jaccard 0.2. A similarly-sized gain on different games in a razed corpus is not the same statement as at C0. HUD LEVER: NOT DECIDABLE BY THIS DESIGN. Its marginal gain in the shipped configuration is exactly ONE game (r11l) -- a single-game support, which no sign test at any seed count can clear -- and neither perturbed condition can test the edge-adjacency convention it depends on. C1 provably does not touch the HUD mask (off-target; zero mask change on all 25 games) and is behaviourally inert on the HUD-alone arm. C2 kills the anchor: r11l and tn36, the only two games this lever has ever moved, are won by NO arm on any seed there, leaving 0 discriminating games, so the perturbed gain of 0 was arithmetically FORCED. The earlier GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION verdict is WITHDRAWN as uninterpretable (the gate had certified its pass region with cells measured at a DIFFERENT condition -- the exp5835 defect in a new location). What DOES survive as HUD mechanism evidence is the corpus-wide mask-resolution collapse under the roll, measured independently of any win: r11l's mask resolves on 5/5 seeds at C0 and 0/5 under the roll. That shows the convention is load-bearing for the DETECTOR; it does not show what happens to the lever's GAIN. THE TWO LEVERS INTERACT, and a 5-seed budget sweep splits it into two different things. On REAL unperturbed tn36 the shipped config loses a game HUD-alone wins at budget 2000, but it DOES win at budget 8000 on 5/5 seeds, at [3.537, 3.88]x the cost -- an EFFICIENCY regression crossing the budget, not a lost capability. (That reclassification originally rested on ONE seed while the loss it overturned rested on five; it has now been re-run on all 5 seeds and holds.) The genuine CAPABILITY loss is r11l under salience inversion: HUD-alone wins it on 5/5 seeds in 1068 actions, while the shipped config is still at 0 levels on 5/5 seeds at 4x the measured budget, with the mask resolving normally. Neither flip's own A/B could have seen either, because both of their controls also lose these games. NO hidden-game transfer is claimed or measured here, and none can be from this harness: all 25 public games are already solved and the scored path is operator-only. This measures CONVENTION-DEPENDENCE, which is necessary but not sufficient for transfer -- and it now does so for ONE of the two levers, not both.",
  "preconditions_checked": [
   {
    "resource": "offline_arcade_environment_files",
@@ -6359,8 +9831,21 @@
    "A hidden-game score. The scored path is operator-only and no hidden game is available locally; all 25 public games are already solved.",
    "Whether the gain survives in the FULL scored configuration. This battery runs the bare StepwiseExplorer core (CarnotAgentPolicy, force_explore, no proposer). The scored E3AgentPolicy resolves the SAME seven lever values -- verified -- but runs them alongside a value head, candidate router, frame-change scorer, goal bias, epistemic ledger and the LLM induce/verify/plan cascade, none of which are present here, and at target_levels=3 rather than 1.",
    "Selection overfit to the 25-game corpus as such. The jackknife bounds how concentrated the gain is across games, but the corpus itself is the one the levers were iterated against and no measurement here can remove that.",
-   "Conventions nobody enumerated. This battery bounds the two KNOWN convention risks; it cannot certify transfer."
+   "Conventions nobody enumerated. This battery bounds the two KNOWN convention risks; it cannot certify transfer.",
+   "The HUD lever's convention-dependence AT ALL. Added 2026-07-25: neither perturbed condition can test it (C1 is off-target and inert on the HUD mask; C2 makes the lever's only two support games unwinnable for every arm). The battery bounds the FRONTIER lever's convention-dependence and leaves the HUD lever's open. A dose-parameterised roll (C3_roll_k1/k2, wired into cptb_perturb + cptb_run) is the hook for a condition that moves the bar off the edge without razing the corpus.",
+   "Any effect small enough to need more than this design's resolution. With 5 seeds the smallest reachable exact sign-test p on the seed axis is 0.031, and on the GAME axis it is 0.5 for a one-game support and 0.25 for a two-game support -- so a one- or two-game gain CANNOT be established at p<=0.05 here however consistent it is. Every contrast now reports its own n_independent_replicates and its smallest_reachable_p_at_this_n rather than leaving that implicit."
   ],
+  "statistical_resolution_of_this_design": {
+   "replication_unit_for_transfer": "the GAME (a hidden game is a fresh draw from the game distribution), which is why the sign tests run on games, not seeds",
+   "n_games": 25,
+   "n_seeds": 5,
+   "seed_axis_smallest_reachable_p": 0.03125,
+   "arms_measured_deterministic": [
+    "CTRL",
+    "HUDO"
+   ],
+   "note": "For a contrast between two measured-deterministic arms the seeds are ONE observation repeated, not five trials; those contrasts report n_seed_replicates_effective = 1. The harness already declared these arms deterministic in cptb_arms.py and the first run's gates did not use that flag."
+  },
   "corrected_caveat_wording_for_the_two_flips": "Measured on the 25 PUBLIC games with the LLM-free StepwiseExplorer core -- NO per-game GameAdapter, no banked plan, no trained value head or candidate router (verified: arc_game_adapters is absent from sys.modules after constructing every arm, and StepwiseExplorer takes no game-id parameter at all). The earlier caveat 'public games WITH per-game adaptation' was WRONG on the adaptation half: the measurement was already adapter-free, i.e. the generic solver. What remains undemonstrated is (i) that the effect survives on games outside the corpus the levers were selected against, and (ii) that it survives inside the full scored E3 cascade.",
   "flags_flipped_by_this_experiment": "NONE. This is a measurement task; no SUBMITTED_* default and no shipped configuration was changed."
  },
@@ -6399,9 +9884,19 @@
   "conclusion": "The concurrent edit is inert for this battery's arms by both checks, so all 1500 cells are comparable."
  },
  "provenance": {
-  "git_head": "755bf504adbf54ec0985ba4c9cf7f7613d22ab95",
+  "git_head": "e5e2e1d34cd47462927ab401fd7f181e1ed25223",
   "working_tree_dirty_at_run_time": true,
-  "unstaged_files_at_run_time_not_authored_by_this_experiment": [
+  "modified_or_untracked_files_at_artifact_build_time": [
+   "penspec/capabilities/agentic-harness/spec.md",
+   "results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json",
+   "scripts/experiments/cptb_analyze.py",
+   "scripts/experiments/cptb_artifact.py",
+   "scripts/experiments/cptb_perturb.py",
+   "scripts/experiments/cptb_run.py",
+   "python/carnot/agentic/arc_structured_memory_bound_live_ab.py",
+   "tests/python/test_experiment_5929_arc_structured_memory_bound_live_ab.py"
+  ],
+  "unstaged_files_at_original_battery_run_time_not_authored_by_this_experiment": [
    "python/carnot/agentic/arc_competition_agent.py",
    "python/carnot/agentic/arc_discriminative_router.py",
    "openspec/capabilities/arc-human-replay-frame-change/spec.md",

@@ -31,6 +31,38 @@ empty is not a gate (exp5835 was VOIDED for exactly this).  Two witnesses are re
                        row actually changes between C0 and the perturbed condition.  A
                        perturbation with zero behavioural dose on an arm cannot have moved
                        that arm, so a flat result under it is uninterpretable, not reassuring.
+
+CORRECTIONS APPLIED 2026-07-25 (adversarial review of the first recorded run)
+----------------------------------------------------------------------------
+1. THE WITNESS IS NOW COMPUTED PER CONDITION.  It used to be computed ONLY at C0 and then
+   attached to every gate for the contrast, including gates evaluated at C1/C2.  That is the
+   exp5835 pathology in a new location: the gate certified "my pass region is non-empty"
+   with cells from a DIFFERENT condition than the one it was scoring.  Concretely, the HUD
+   lever's designated headline gate (hud_given_frontier_on at C2) declared its pass region
+   non-empty on the strength of 5 r11l cells at C0, while at C2 r11l is won 0/5 by ALL FOUR
+   arms and there is not a single discriminating game -- so its FAIL verdict was arithmetically
+   forced and was not a measurement.  Both witnesses are now emitted, per condition, and a
+   fourth precondition (`anchor_support_still_live`) fails when every arm has lost the games
+   that carried the C0 anchor.
+
+2. INFERENCE ON THE UNIT THE JACKKNIFE PRINCIPLE ALREADY NAMES.  A hidden game is a fresh
+   draw from the game distribution, so the replication unit is the GAME, not the seed.  Every
+   contrast x condition now carries an exact one-sided binomial sign test on games, plus the
+   number of independent replicates behind it.  Seeds are NOT replicates for a contrast whose
+   two arms are both measured-deterministic (CTRL and HUDO are: 0 of 75 game-condition cells
+   vary across seeds), so `n_seed_replicates_effective` is 1 there rather than 5.
+
+3. RETENTION RATIOS CARRY THEIR PRECISION.  A ratio of two medians over 5 seeds on a
+   difference of one game is a point estimate, not a measured degradation.  Each retention
+   entry now also reports the PAIRED per-seed deltas against C0 and their sign test, so
+   "declines" and "not resolvable at this n" cannot be confused.
+
+4. THE PERTURBATION HAS A DOSE CEILING, NOT ONLY A DOSE FLOOR.  A condition that destroys
+   the task auto-falsifies every narrow-support lever regardless of mechanism.  Per-condition
+   `dose_ceiling` reports the control's absolute win count and the number of games no arm can
+   win, and stamps DOSE_SATURATED when the control loses more than half its C0 wins.  The
+   gained-set Jaccard against C0 is reported next to every retention ratio, because "retention
+   1.0" on a nearly disjoint set of games is not "the same gain retained".
 """
 
 from __future__ import annotations
@@ -42,7 +74,27 @@ import statistics
 import sys
 import time
 from collections import defaultdict
+from math import comb
 from pathlib import Path
+
+
+def sign_test_one_sided(favourable: int, unfavourable: int):
+    """Exact one-sided binomial sign test against p=0.5, on the count of discordant units.
+
+    Returns P(X >= favourable | X ~ Binomial(favourable + unfavourable, 0.5)), or None when
+    there are no discordant units at all (in which case the test is UNDEFINED, and reporting
+    a flat result there as a null is exactly the uninformative-measurement trap).
+
+    The smallest p this design can reach is 2**-n for a clean sweep of n units, so with 5
+    seeds the floor is 0.03125 and with 2 games it is 0.25 -- a single-game support can NEVER
+    clear 0.05 no matter how consistent it is.  That is a property of the design, not of the
+    lever, and it is reported rather than hidden behind a median.
+    """
+
+    n = favourable + unfavourable
+    if n == 0:
+        return None
+    return sum(comb(n, k) for k in range(favourable, n + 1)) / 2**n
 
 # Work directory holding the JSONL cell rows + intermediate JSON. Overridable so the
 # battery can be run out of a scratch dir (as it was for the recorded run) or a
@@ -50,7 +102,10 @@ from pathlib import Path
 SCRATCH = Path(os.environ.get("CPTB_WORKDIR") or Path(__file__).resolve().parent)
 REPO = Path(__file__).resolve().parents[2]
 
-CONDS = ["C0_real", "C1_salience_inversion", "C2_diag_roll"]
+# Canonical ordering.  Which of these are actually PRESENT is read from the rows, so a run
+# that adds the C3 dose-axis conditions is analysed without editing this list, and the
+# recorded C0/C1/C2-only run analyses identically to before.
+CONDS_ORDER = ["C0_real", "C1_salience_inversion", "C2_diag_roll", "C3_roll_k1", "C3_roll_k2"]
 ARMS = ["CTRL", "FRONT", "HUDO", "SHIP"]
 
 # (name, treatment, control, what it isolates)
@@ -82,6 +137,8 @@ def main() -> int:
     by = {key(r): r for r in rows}
     games = sorted({r["game"] for r in rows})
     seeds = sorted({int(r["seed"]) for r in rows})
+    present = {r["condition"] for r in rows}
+    CONDS = [c for c in CONDS_ORDER if c in present] + sorted(present - set(CONDS_ORDER))
 
     # ---------------------------------------------------------------- coverage + integrity
     expected = len(ARMS) * len(games) * len(CONDS) * len(seeds)
@@ -199,9 +256,47 @@ def main() -> int:
         wt, wc = wins[(t, cond, seed)], wins[(c, cond, seed)]
         return len(wt - wc) - len(wc - wt)
 
+    # ------------------------------------------------- dose CEILING (not only a dose floor)
+    # A perturbation strong enough to destroy the TASK auto-falsifies every narrow-support
+    # lever under it, for reasons that have nothing to do with that lever's convention.  The
+    # recorded k=3 roll does exactly that: the pre-flip control goes from 7 wins to 1 and the
+    # number of games no arm can win goes from 11/25 to 18/25.  These fields are first-class so
+    # a retention ratio measured in a razed corpus cannot be read as a robustness statement.
+    ctrl_c0 = statistics.median([len(wins[("CTRL", "C0_real", s)]) for s in seeds])
+    dose_ceiling = {}
+    for cond in CONDS:
+        ctrl_med = statistics.median([len(wins[("CTRL", cond, s)]) for s in seeds])
+        dead = [g for g in games
+                if all(g not in wins[(a, cond, s)] for a in ARMS for s in seeds)]
+        frac = (ctrl_med / ctrl_c0) if ctrl_c0 else None
+        dose_ceiling[cond] = {
+            "control_median_absolute_wins": ctrl_med,
+            "control_per_seed_absolute_wins": [len(wins[("CTRL", cond, s)]) for s in seeds],
+            "control_wins_as_fraction_of_C0": (round(frac, 4) if frac is not None else None),
+            "n_games_dead_for_all_arms": len(dead),
+            "n_games": len(games),
+            "games_dead_for_all_arms": dead,
+            "dose_saturated": bool(frac is not None and cond != "C0_real" and frac < 0.5),
+            "principle": (
+                "The design had a dose FLOOR (a perturbation that moves nothing tests nothing) "
+                "but no dose CEILING. A condition that removes most of the control's own "
+                "capability makes every lever with a two-game support read as retention 0.0 "
+                "independently of mechanism, so DOSE_SATURATED marks the reading as a "
+                "statement about the perturbation's strength, not about the lever."
+            ),
+        }
+
     contrasts = {}
     for name, t, c in CONTRASTS:
         entry = {"treatment_arm": t, "control_arm": c, "per_condition": {}}
+        # Seeds replicate only what is stochastic.  CTRL and HUDO are MEASURED deterministic
+        # (0 of 75 game-condition cells vary across seeds), so a CTRL-vs-HUDO contrast has ONE
+        # observation replicated five times -- reporting "strict per-seed dominance on 5 of 5
+        # seeds" there would be a fabricated width-zero interval.
+        both_det = determinism[t]["measured_deterministic"] and determinism[c][
+            "measured_deterministic"]
+        entry["seeds_are_a_replication_axis_for_this_contrast"] = not both_det
+        entry["n_seed_replicates_effective"] = 1 if both_det else len(seeds)
         for cond in CONDS:
             g_by_seed = {str(s): gain(t, c, cond, s) for s in seeds}
             gained = {str(s): sorted(wins[(t, cond, s)] - wins[(c, cond, s)]) for s in seeds}
@@ -223,11 +318,49 @@ def main() -> int:
                     set.intersection(*[wins[(c, cond, s)] - wins[(t, cond, s)] for s in seeds])
                 ),
             }
+            # ---- inference on the GAME unit, which is the unit a hidden game is drawn from
+            pro = con = 0
+            for g in games:
+                nt = sum(1 for s in seeds if g in wins[(t, cond, s)])
+                nc = sum(1 for s in seeds if g in wins[(c, cond, s)])
+                if nt > nc:
+                    pro += 1
+                elif nc > nt:
+                    con += 1
+            p = sign_test_one_sided(pro, con)
+            entry["per_condition"][cond]["game_unit_sign_test"] = {
+                "n_games_treatment_wins_on_more_seeds": pro,
+                "n_games_control_wins_on_more_seeds": con,
+                "n_independent_replicates": pro + con,
+                "p_one_sided_exact": (round(p, 4) if p is not None else None),
+                "clears_p_0_05": bool(p is not None and p <= 0.05),
+                "undefined_because_no_discordant_game": p is None,
+                "smallest_reachable_p_at_this_n": (
+                    round(0.5 ** (pro + con), 4) if (pro + con) else None),
+                "UNDERPOWERED_SINGLE_GAME_SUPPORT": bool((pro + con) == 1),
+                "principle": (
+                    "The jackknife's own stated unit is the game (a hidden game is a fresh "
+                    "draw from the game distribution), so the sign test runs on games, not "
+                    "seeds. A support of one game can never clear 0.05 (floor 0.5) however "
+                    "consistent it is across seeds -- that is labelled, not smoothed over."
+                ),
+            }
         a0 = entry["per_condition"]["C0_real"]["median_gain"]
         entry["anchor_median_gain_C0"] = a0
+        gained_c0 = set.intersection(
+            *[wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)] for s in seeds])
         entry["retention"] = {}
-        for cond in CONDS[1:]:
+        for cond in [x for x in CONDS if x != "C0_real"]:
             tg = entry["per_condition"][cond]["median_gain"]
+            # PAIRED per-seed change against the SAME seed's C0 gain.  A ratio of two medians
+            # cannot say whether a decline is real; the paired deltas and their sign test can.
+            paired = [gain(t, c, cond, s) - gain(t, c, "C0_real", s) for s in seeds]
+            n_down = sum(1 for v in paired if v < 0)
+            n_up = sum(1 for v in paired if v > 0)
+            p_decline = sign_test_one_sided(n_down, n_up)
+            gained_x = set.intersection(
+                *[wins[(t, cond, s)] - wins[(c, cond, s)] for s in seeds])
+            union = gained_c0 | gained_x
             entry["retention"][cond] = {
                 "transfer_median_gain": tg,
                 "retention_ratio": (round(tg / a0, 4) if a0 > 0 else None),
@@ -237,24 +370,91 @@ def main() -> int:
                     "anchor median gain at C0_real is <= 0, so a retention ratio is undefined; "
                     "there is no measured effect for the perturbation to retain"
                 ),
+                # --- precision of the ratio, which the ratio itself does not carry
+                "paired_per_seed_delta_vs_C0": paired,
+                "n_seeds_declining": n_down,
+                "n_seeds_improving": n_up,
+                "decline_sign_test_p_one_sided": (
+                    round(p_decline, 4) if p_decline is not None else None),
+                "decline_resolved_at_this_n": bool(p_decline is not None and p_decline <= 0.05),
+                "retention_ratio_precision_note": (
+                    "A ratio of two medians over "
+                    f"{len(seeds)} seeds. The paired deltas are {paired}; the one-sided sign "
+                    "test for a decline is "
+                    f"{('p=' + str(round(p_decline, 4))) if p_decline is not None else 'undefined (no seed moved)'}"
+                    ". Where that does not clear 0.05, the SURVIVAL of the gain may be "
+                    "established while its DEGRADATION is NOT resolved at this sample size, "
+                    "and the point estimate must not be reported as a measured degradation."
+                ),
+                # --- is the retained gain the SAME gain?
+                "games_gained_on_every_seed_at_C0": sorted(gained_c0),
+                "games_gained_on_every_seed_here": sorted(gained_x),
+                "gained_set_jaccard_vs_C0": (
+                    round(len(gained_c0 & gained_x) / len(union), 4) if union else None),
+                "gained_set_note": (
+                    "A retention ratio near 1.0 on a gained set that barely overlaps C0's is "
+                    "NOT 'the same gain retained' -- it is a similarly-sized gain on different "
+                    "games. The Jaccard makes that distinguishable."
+                ),
+                # --- dose ceiling context
+                "dose_saturated": dose_ceiling[cond]["dose_saturated"],
+                "control_wins_as_fraction_of_C0": dose_ceiling[cond][
+                    "control_wins_as_fraction_of_C0"],
+                "retention_ratio_interpretable": bool(
+                    a0 > 0 and not dose_ceiling[cond]["dose_saturated"]),
             }
         contrasts[name] = entry
 
     # ---------------------------------------------------------------- pass-region witness
+    #
+    # CORRECTED 2026-07-25.  The witness used to be computed ONLY at C0 and then attached to
+    # every gate for the contrast, including gates scored at C1/C2.  A gate at C2 therefore
+    # certified "my pass region is non-empty" with cells measured at C0 -- a witness for a
+    # DIFFERENT condition than the one being scored, which is the same class of defect that
+    # VOIDED exp5835 (a precondition that could not fail).  Now: one witness PER CONDITION,
+    # plus an explicit check that the games carrying the C0 anchor are still winnable by SOME
+    # arm under the perturbation.  When they are not, the perturbed gain is arithmetically
+    # forced to 0 and the comparison is uninterpretable, not a measured failure.
     witness = {}
     for name, t, c in CONTRASTS:
-        cells = []
-        for s in seeds:
-            for g in sorted(wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)]):
-                cells.append({"game": g, "seed": s})
+        anchor_cells = [{"game": g, "seed": s} for s in seeds
+                        for g in sorted(wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)])]
+        anchor_games = sorted({d["game"] for d in anchor_cells})
+        per_cond = {}
+        for cond in CONDS:
+            cells = [{"game": g, "seed": s} for s in seeds
+                     for g in sorted(wins[(t, cond, s)] - wins[(c, cond, s)])]
+            # Is the anchor's SUPPORT still alive at all under this perturbation?  Max over
+            # ALL FOUR arms, so this asks "can anyone still win this game here?" -- a question
+            # about the perturbation, deliberately independent of which arm wins.
+            live = {g: max(sum(1 for s in seeds if g in wins[(a, cond, s)]) for a in ARMS)
+                    for g in anchor_games}
+            discriminating = sorted({g for s in seeds
+                                     for g in (wins[(t, cond, s)] ^ wins[(c, cond, s)])})
+            per_cond[cond] = {
+                "witness_cells_treatment_wins_control_does_not_at_this_condition": cells,
+                "n_witness_cells_at_this_condition": len(cells),
+                "pass_region_nonempty_at_this_condition": bool(cells),
+                "n_discriminating_games_at_this_condition": len(discriminating),
+                "discriminating_games_at_this_condition": discriminating,
+                "anchor_game_max_seeds_won_across_ALL_arms": live,
+                "anchor_support_still_live": bool(anchor_games) and any(
+                    v > 0 for v in live.values()),
+            }
         witness[name] = {
-            "pass_region_nonempty": bool(cells),
-            "witness_cells_treatment_wins_control_does_not_at_C0": cells,
-            "n_witness_cells": len(cells),
+            # kept under its original key so nothing downstream silently changes meaning:
+            # this IS the C0 anchor witness and is now labelled as such
+            "pass_region_nonempty": bool(anchor_cells),
+            "witness_cells_treatment_wins_control_does_not_at_C0": anchor_cells,
+            "n_witness_cells": len(anchor_cells),
+            "anchor_games_at_C0": anchor_games,
+            "per_condition": per_cond,
             "principle": (
-                "A gate whose pass region is empty is not a gate. This emits the concrete "
-                "(game, seed) cells that make the anchor non-zero, so a reader can verify the "
-                "comparison could have registered an effect before reading any verdict."
+                "A gate whose pass region is empty is not a gate, and a witness computed at "
+                "one condition does not certify a gate scored at another. This emits the "
+                "concrete (game, seed) cells at EVERY condition, plus whether any arm at all "
+                "can still win the anchor's games there -- so a reader can tell a measured "
+                "failure from an arithmetically forced zero before reading any verdict."
             ),
         }
 
@@ -415,6 +615,7 @@ def main() -> int:
         "measured_determinism_per_arm": determinism,
         "static_convention_dose_witness": dose_static,
         "behavioural_dose_witness": behavioural_dose,
+        "dose_ceiling_witness": dose_ceiling,
         "pass_region_witness": witness,
         "per_arm_condition_wins": per_arm_condition_wins,
         "contrasts": contrasts,

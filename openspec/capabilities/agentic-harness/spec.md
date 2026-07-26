@@ -324,3 +324,114 @@ to the environment or output, the registry before/after hashes are exactly
 equal, protected file hashes are unchanged, and
 `live_runner_execution_binding_ready_score` is bare `1.0` only if every binding,
 denial, teardown, and immutability gate passed.
+
+### REQ-ARC-LRBH-5929: Capability-Bound Held Live Structured Memory A/B
+
+Experiment 5929 SHALL rerun the preregistered no-memory, raw-tape, and
+structured-index structured ARC memory comparison only through the actual
+Exp5928-qualified, parent-issued, process-bound, adapter-disabled E3 execution
+path. It SHALL write
+`results/experiment_5929_arc_structured_memory_bound_live_ab.json`.
+
+The experiment SHALL satisfy these subrequirements before any model load or
+live held inference: REQ-ARC-LRBH-5929-CAPABILITY-REPLAY (registry precheck and
+Exp5928 capability receipt replay/validation before model load),
+REQ-ARC-LRBH-5929-HELD-CELL (selected cells are frozen held generalization
+episodes and not public solve targets), REQ-ARC-LRBH-5929-ARM-ISOLATION (fresh
+adapter-disabled E3 policy, environment, proposer, and memory state per cell),
+REQ-ARC-LRBH-5929-BYTE-BUDGET-PARITY (raw-tape and structured-index arms share
+identical event bytes, prompts, seeds, decoding, model allocation, context,
+token, action, query, byte, latency, and stopping budgets),
+REQ-ARC-LRBH-5929-ADAPTER-DISABLED (no per-game adapter, source, BFS,
+prior-game log, hidden-state, or public solve target access),
+REQ-ARC-LRBH-5929-LIVE-PROVENANCE (only live-agent rows can populate utility
+metrics; Exp5901 offline causal evidence can be hashed but cannot fill missing
+rows), REQ-ARC-LRBH-5929-TEARDOWN (capability expiry, nonce invalidation,
+orphan-process, output, protected workload, checkpoint/resume, RAM/disk/VRAM,
+nonzero offload, public llama.cpp CUDA, embedded GGUF tokenizer, and dual RTX
+health receipts are recorded), and REQ-ARC-LRBH-5929-REGISTRY-IMMUTABILITY
+(`ops/arc_solve_registry.yaml` remains byte-hash unchanged).
+
+Experiment 5929 SHALL define `MODEL_SPECS` with
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The required pair SHALL resolve through
+`cached_sota_pair()` and the cached third family SHALL resolve through the
+local GGUF cache. Exact model hashes SHALL be recorded. Embedded GGUF
+tokenizers SHALL be loaded through llama.cpp/vocab-only or equivalent GGUF
+metadata checks, and HuggingFace `AutoTokenizer` SHALL NOT be used on GGUFs.
+Any failed gate SHALL produce a complete `blocked_precondition:` artifact
+before model load or held inference.
+
+Before inference, Exp5929 SHALL freeze held episode cells, event-byte streams,
+memory transforms, prompts, seeds, model allocation, context/token/action/query/
+byte/wall-clock budgets, stopping rules, primary utility metric, intervals, and
+the no-target/no-registry-credit rule. The only treatment difference between
+raw-tape and structured-index arms SHALL be the memory representation.
+
+Experiment 5929 SHALL report retrieval relevance, action legality, verified
+progress events, efficiency, abstention, context/token/latency/GPU/memory use,
+arm crossover, capability expiry/teardown, and per-model/episode rows. If an
+incidental level outcome appears, `solve_provenance` SHALL be
+`live_agent_self_discovery`, the registry SHALL remain unchanged, and the
+already-cleared public level SHALL NOT be headlined, resubmitted, or credited.
+Any proxy, adapted, offline, or off-path row SHALL void the live claim and keep
+`structured_memory_live_ready_score` at `0.0`.
+
+Experiment 5929 SHALL write bare top-level fields `status`,
+`gate_and_capability_replay_receipt`, `preconditions_checked`,
+`registry_precheck_and_selected_held_cells`, `model_specs`,
+`model_file_hashes`,
+`embedded_tokenizer_loader_cuda_gpu_and_vram_receipts`,
+`actual_bound_e3_entrypoint_receipt`, `adapter_disabled`,
+`no_per_game_adapter_or_public_solve_target`, `solve_provenance`,
+`identical_event_bytes_and_arm_budget_parity`,
+`sealed_prompts_seeds_models_arms_and_stopping_rules`,
+`per_model_episode_retrieval_progress_legality_efficiency_and_abstention`,
+`primary_live_utility_comparison_and_intervals`,
+`token_context_latency_gpu_and_memory_accounting`,
+`capability_expiry_teardown_and_orphan_receipts`, `registry_unchanged`,
+`protected_files_unchanged`, `structured_memory_live_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field provenance principles SHALL include:
+
+- `solve_provenance`: principle "use live_agent_self_discovery for any observed level outcome; no development proxy or outer-loop result can satisfy this task."
+- `identical_event_bytes_and_arm_budget_parity`: principle "arms may differ only in memory representation."
+- `structured_memory_live_ready_score`: principle "emit bare 1.0 only for complete bound live rows, adapter-disabled execution, interval-separated held utility over both controls, clean teardown, and immutable registry."
+- `inference_substrate`: principle "use actual_capability_bound_adapter_disabled_e3_local_mandated_gguf_public_llama_cpp_cuda."
+- `verifier_is_oracle`: principle "true only for environment legality, progress, exact event replay, capability checks, and registry hashes."
+- `honest_verdict`: principle "use complete_positive:, complete_null:, retired:, or blocked_precondition:."
+
+### SCENARIO-ARC-LRBH-5929-PRECONDITION-BLOCK
+
+**Given** the registry, Exp5928 capability replay, held-cell isolation, GGUF
+cache, embedded tokenizer, public llama.cpp CUDA, dual RTX health, resources,
+output path, protected workload, adapter-disabled E3 entrypoint, checkpoint/
+resume, and teardown checks
+**When** any required precondition fails before model load
+**Then** Exp5929 writes a complete blocked artifact with all required fields,
+zero live-agent rows, immutable registry/protected files, no public solve target,
+no proxy provenance, `structured_memory_live_ready_score` equal to bare `0.0`,
+and an honest verdict beginning with `blocked_precondition:`.
+
+### SCENARIO-ARC-LRBH-5929-BOUND-MATCHED-HELD-LIVE-AB
+
+**Given** every precondition passes and the actual Exp5928-bound child runner
+consumes its capability before creating fresh adapter-disabled E3 cells
+**When** no-memory, raw-tape, and structured-index arms run in the frozen order
+on held E3 episodes
+**Then** raw-tape and structured-index cells have identical underlying event
+bytes and matched model/context/action/token/query/byte/latency budgets; only
+memory representation differs; per-model/episode rows report retrieval,
+progress, action legality, efficiency, abstention, token/context/latency/GPU
+and memory accounting; and no registry update or public solve claim occurs.
+
+### SCENARIO-ARC-LRBH-5929-NO-SOLVE-CREDIT
+
+**Given** a bound held live row incidentally reaches a level outcome
+**When** Exp5929 writes the artifact
+**Then** `solve_provenance` is `live_agent_self_discovery`, the level outcome is
+telemetry only, `ops/arc_solve_registry.yaml` is hash-unchanged, no public
+target is selected, and no headline/resubmission/registry-credit claim is made.
