@@ -9,6 +9,7 @@ REQ-ARC-WMTE-5980 / SCENARIO-scored-path-lever-ab-analysis.
 from __future__ import annotations
 
 import importlib.util
+import time
 from pathlib import Path
 
 _SPEC = importlib.util.spec_from_file_location(
@@ -43,6 +44,10 @@ def row(
         "budget": 400,
         "llm_on_row_valid": valid,
         "llm": {"responses": responses, "tokens_predicted": 100, "llm_wall_s": 1.0},
+        # A realistic cell records generator health on BOTH sides; the analyser's recomputed validity
+        # criterion reads these, so omitting them would make every synthetic LLM-on row invalid.
+        "generator_healthy_before": True,
+        "generator_healthy_after": True,
         "lever1_fired": lever1,
         "lever1_frontier_fire": {"tier_advances": 3 if lever1 else 0},
         "lever2_fired": lever2,
@@ -130,6 +135,10 @@ def test_game_won_by_no_arm_is_forced_and_stamped_uninterpretable() -> None:
     out = AN.analyse(rows)
     assert out["discriminating_games_per_seed"]["1"] == []
     assert out["nondiscriminating_games_per_seed"]["1"] == ["aaaa"]
+    # The corpus summary must not disagree with the per-lever detail: a game won by SOME arm shows
+    # up as discriminating even when it is not matched across every arm (the partial-run case).
+    partial = AN.analyse(rows + [row("S_plus_hazard_llmon", "bbbb", 1, 1)])
+    assert partial["discriminating_games_per_seed"]["1"] == ["bbbb"]
     for arm in ("S_minus_frontier_llmon", "S_minus_hud_llmon"):
         v = out["lever_verdicts"][arm]
         assert v["overall_verdict"] == "UNINTERPRETABLE_EMPTY_PASS_REGION"
@@ -217,7 +226,11 @@ def test_llm_invalid_rows_are_excluded_and_counted() -> None:
     with no LLM in them.
     """
     rows = _arms_for("aaaa", 1)
-    rows.append(row("S_llmon", "cccc", 1, 1, valid=False, responses=0))
+    bad = row("S_llmon", "cccc", 1, 1, valid=False, responses=0)
+    # An LLM-ON row whose generator died: zero completions AND unhealthy after the cell. (A row with
+    # zero completions that never claimed the LLM is a perfectly valid LLM-off row, not this case.)
+    bad.update(llm_enabled=True, generator_healthy_after=False)
+    rows.append(bad)
     out = AN.analyse(rows)
     assert out["rows_total"] == 4
     assert out["rows_llm_valid"] == 3
@@ -353,6 +366,159 @@ def test_honest_verdict_is_terminal_prefixed_and_derived_from_the_verdicts() -> 
     # Derived, not hand-written: the per-lever verdicts must appear inside it.
     assert "uninterpretable_empty_pass_region" in hv
     assert art["lever1_frontier_verdict"] == "UNINTERPRETABLE_EMPTY_PASS_REGION"
+
+
+def test_duplicate_cells_are_detected_not_silently_overwritten() -> None:
+    """Two row files containing the same cell must not silently pick a winner.
+
+    DEFECT GUARDED: keying by (arm, game, seed) makes the LAST file loaded win, which is an
+    invisible choice about which measurement counts. A divergent duplicate is a free independent
+    replication and must be surfaced; an identical one confirms determinism.
+    """
+    rows = _arms_for("aaaa", 1, s=1, mf=1, mh=1)
+    dup_same = dict(rows[0])
+    dup_same["_source"] = "second_file.json"
+    dup_diff = dict(rows[0])
+    dup_diff["_source"] = "third_file.json"
+    dup_diff["levels"] = 0
+    dup_diff["states_expanded"] = 999
+    out = AN.analyse(rows + [dup_same, dup_diff])
+    assert len(out["duplicate_cells_identical"]) == 1
+    assert len(out["duplicate_cells_divergent"]) == 1
+    assert out["duplicate_cells_divergent"][0]["duplicate_states"] == 999
+    # The FIRST occurrence is what is used, so the control still counts 'aaaa' as a win.
+    assert out["win_sets_per_seed"]["S_llmon"]["1"] == ["aaaa"]
+
+
+def test_storm_false_positive_is_rescued_but_a_real_dead_generator_is_not() -> None:
+    """The validity witness must not discard a cell for activity belonging to other processes.
+
+    DEFECT REPRODUCED (measured): the harness's stamp ANDs in a GLOBAL llama-server process count,
+    which on this box also counts the conductor's own server and `[llama-server] <defunct>` zombies.
+    Three cells whose generator was healthy on both sides and produced real completions were stamped
+    invalid because that unrelated count rose from 2 to 5. Recomputing rescues them -- and must still
+    reject a cell whose own generator really was dead.
+    """
+    good = row("S_llmon", "aaaa", 1, 1)
+    good.update(
+        llm_enabled=True,
+        llm_on_row_valid=False,  # the harness's (wrong) stamp
+        generator_healthy_before=True,
+        generator_healthy_after=True,
+        llama_servers_before=2,
+        llama_servers_after=5,
+        server_storm_suspected=True,
+    )
+    dead = row("S_minus_hud_llmon", "aaaa", 1, 1)
+    dead.update(
+        llm_enabled=True,
+        llm_on_row_valid=False,
+        llm={"responses": 0, "tokens_predicted": 0, "llm_wall_s": 0.0},
+        generator_healthy_before=True,
+        generator_healthy_after=False,
+    )
+    assert AN.llm_row_is_valid(good) is True
+    assert AN.llm_row_is_valid(dead) is False
+    out = AN.analyse([good, dead])
+    assert out["rows_llm_valid"] == 1
+    rescued = out["rows_rescued_from_harness_storm_false_positive"]
+    assert len(rescued) == 1 and rescued[0]["arm"] == "S_llmon"
+    assert rescued[0]["llama_servers_after"] == 5
+    assert [x["arm"] for x in out["rows_excluded_llm_invalid"]] == ["S_minus_hud_llmon"]
+
+
+def test_companion_llm_off_analysis_does_not_become_the_headline() -> None:
+    """The cheap LLM-OFF design must be embedded WITHOUT displacing the scored verdicts.
+
+    DEFECT GUARDED: the companion is ~100x cheaper per cell, so it can be run at a power the scored
+    design cannot afford -- which makes it the most dangerous number in the artifact. It must appear
+    under its own key, and the headline lever verdicts must still be the LLM-ON ones.
+    """
+    on_rows = _arms_for("aaaa", 1, s=1, mf=0, mh=1, lever2_S=True)
+    off_rows = [
+        row(a.replace("_llmon", "_llmoff"), "aaaa", 1, 1) for a in ("S_llmon", "S_minus_hud_llmon")
+    ]
+    AN.set_condition("_llmoff")
+    companion = AN.analyse(off_rows)
+    AN.set_condition("_llmon")
+    primary = AN.analyse(on_rows)
+    art = AN.build_artifact(primary, on_rows, [Path("x.json")], 0.0, companion, off_rows)
+    assert art["companion_llm_off_design"] is companion
+    assert "S_minus_hud_llmoff" in companion["lever_verdicts"]
+    # The headline verdicts come from the LLM-ON analysis, not the companion.
+    assert (
+        art["lever1_frontier_verdict"]
+        == (primary["lever_verdicts"]["S_minus_frontier_llmon"]["overall_verdict"])
+    )
+    assert art["companion_rows"] == off_rows
+
+
+def test_duration_s_is_measured_compute_not_analyser_runtime() -> None:
+    """duration_s must be the compute the conclusions rest on, not how long the analyser took.
+
+    DEFECT REPRODUCED (caught by running the real linter): the first draft set duration_s from the
+    analyser's own clock, so the artifact declared a live-LLM substrate and a 0.01s duration --
+    adversarial_verify raised CRITICAL DURATION_TOO_SHORT on a run that had used hours of GPU time.
+    """
+    rows = _arms_for("aaaa", 1, s=1, mf=1, mh=1)
+    for r in rows:
+        r["llm_enabled"] = True
+        r["wall_s"] = 300.0
+        r["llm"] = {"responses": 4, "tokens_predicted": 1000, "llm_wall_s": 270.0}
+    # t0 is a real clock reading here; passing 0.0 would make analysis_duration_s the epoch.
+    art = AN.build_artifact(AN.analyse(rows), rows, [Path("x.json")], time.time())
+    assert art["duration_s"] == 900.0  # 3 cells x 300s of real measured compute
+    assert art["measured_llm_wall_s"] == 810.0
+    assert art["duration_s"] > 60.0, "must clear the live_llm_inference floor"
+    assert art["analysis_duration_s"] < art["duration_s"]
+
+
+def test_cost_is_split_by_condition_so_the_pooled_median_cannot_mislead() -> None:
+    """An LLM-off cell costs seconds and an LLM-on cell costs minutes; pooling them is misleading.
+
+    DEFECT REPRODUCED: the pooled median read 3.2s for a design whose LLM-on cells were ~300s each,
+    and that pooled number is exactly what a next-run scoping decision would have used.
+    """
+    on = _arms_for("aaaa", 1, s=1, mf=1, mh=1)
+    for r in on:
+        r["llm_enabled"] = True
+        r["wall_s"] = 300.0
+    off = [row("S_llmoff", "aaaa", 1, 1)]
+    off[0]["llm_enabled"] = False
+    off[0]["wall_s"] = 3.0
+    out = AN.analyse(on + off)
+    assert out["cost"]["llm_on"]["wall_s_per_cell_median"] == 300.0
+    assert out["cost"]["llm_off"]["wall_s_per_cell_median"] == 3.0
+    assert out["cost"]["llm_on"]["n_cells"] == 3
+    assert out["cost"]["llm_off"]["n_cells"] == 1
+    assert out["cost"]["llm_on"]["projected_hours_25games_x_1seed_x_5arms_serial"] > 10
+
+
+def test_acceptance_gates_are_computed_and_can_actually_fail() -> None:
+    """The gates must be falsifiable, and must gate the MEASUREMENT'S validity, not the result.
+
+    A gate that can only pass is not a check. Here: the noise-floor gate fails when no replicate arm
+    was run, and the live-generator gate fails when an LLM-on row recorded zero completions.
+    """
+    rows = _arms_for("aaaa", 1, s=1, mf=1, mh=1)
+    for r in rows:
+        r["llm_enabled"] = True
+        r["wall_s"] = 300.0
+    art = AN.build_artifact(AN.analyse(rows), rows, [Path("x.json")], time.time())
+    assert art["acceptance_gate_all_llm_on_rows_had_a_live_generator"] is True
+    assert art["acceptance_gate_noise_floor_was_measured"] is False  # no replicate arm present
+    assert art["acceptance_gate_no_effect_reported_without_a_witness"] is True
+
+    # A dead generator on an LLM-on row must fail the liveness gate.
+    dead = [dict(r) for r in rows]
+    dead[0]["llm"] = {"responses": 0, "tokens_predicted": 0, "llm_wall_s": 0.0}
+    art2 = AN.build_artifact(AN.analyse(dead), dead, [Path("x.json")], time.time())
+    assert art2["acceptance_gate_all_llm_on_rows_had_a_live_generator"] is False
+
+    # With a replicate arm the noise-floor gate passes.
+    with_rep = rows + [dict(rows[0], arm="S_replicate_llmon")]
+    art3 = AN.build_artifact(AN.analyse(with_rep), with_rep, [Path("x.json")], time.time())
+    assert art3["acceptance_gate_noise_floor_was_measured"] is True
 
 
 def test_artifact_declares_every_mandatory_field() -> None:

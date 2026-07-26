@@ -14315,3 +14315,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 06:11 UTC | Exact terminal-boundary handoff from .526 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: root)
 +    emi |
 | 2026-07-26 07:24 UTC | Exact terminal-boundary handoff from .526 into .52 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-26 08:05 UTC | Aggregation-aware adversarial-verifier substrate r | OK | 137 passed, 1 warning in 12.33s |

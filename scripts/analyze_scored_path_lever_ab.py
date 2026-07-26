@@ -50,31 +50,48 @@ from typing import Any
 REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
 
 # The arm whose configuration is what ships today. Every delta is measured against THIS.
+# Parameterised by the harness's arm SUFFIX (`_llmon` / `_llmoff`) so the SAME machinery scores the
+# LLM-on design and the much cheaper LLM-off design without a second, divergent analyser -- two
+# analysers is how two conclusions drift apart.
 CONTROL = "S_llmon"
+SUFFIX = "_llmon"
 
-# Which lever each treatment arm removes/adds, and which fire counter decides whether a cell
-# carries evidence about it. `on_arm` is the arm in which the lever is ON -- that is the arm whose
-# fire counter must be non-zero, because a lever that is OFF trivially does not fire.
-LEVERS = {
-    "S_minus_frontier_llmon": {
-        "lever": "lever1_frontier_tier_trio",
-        "direction": "removed",
-        "fire_key": "lever1_fired",
-        "on_arm": CONTROL,
-    },
-    "S_minus_hud_llmon": {
-        "lever": "lever2_edge_bar_hud_trio",
-        "direction": "removed",
-        "fire_key": "lever2_fired",
-        "on_arm": CONTROL,
-    },
-    "S_plus_hazard_llmon": {
-        "lever": "lever3_hazard_move_pruner",
-        "direction": "added",
-        "fire_key": "lever3_fired",
-        "on_arm": "S_plus_hazard_llmon",
-    },
-}
+
+def set_condition(suffix: str) -> None:
+    global CONTROL, SUFFIX, LEVERS
+    SUFFIX = suffix
+    CONTROL = f"S{suffix}"
+    LEVERS = build_levers(suffix)
+
+
+def build_levers(suffix: str) -> dict[str, dict]:
+    """Which lever each treatment arm removes/adds, and which fire counter decides whether a cell
+    carries evidence about it. `on_arm` is the arm in which the lever is ON -- that is the arm whose
+    fire counter must be non-zero, because a lever that is OFF trivially does not fire."""
+    ctrl = f"S{suffix}"
+    return {
+        f"S_minus_frontier{suffix}": {
+            "lever": "lever1_frontier_tier_trio",
+            "direction": "removed",
+            "fire_key": "lever1_fired",
+            "on_arm": ctrl,
+        },
+        f"S_minus_hud{suffix}": {
+            "lever": "lever2_edge_bar_hud_trio",
+            "direction": "removed",
+            "fire_key": "lever2_fired",
+            "on_arm": ctrl,
+        },
+        f"S_plus_hazard{suffix}": {
+            "lever": "lever3_hazard_move_pruner",
+            "direction": "added",
+            "fire_key": "lever3_fired",
+            "on_arm": f"S_plus_hazard{suffix}",
+        },
+    }
+
+
+LEVERS = build_levers(SUFFIX)
 
 
 def load_rows(paths: list[Path]) -> list[dict]:
@@ -160,14 +177,52 @@ def fully_inert(arm_row: dict, ctrl_row: dict) -> bool:
     return behaviour_tuple(arm_row) == behaviour_tuple(ctrl_row)
 
 
+def llm_row_is_valid(r: dict) -> bool:
+    """Is this row a genuine LLM-on datum? RECOMPUTED here, not taken from the harness's stamp.
+
+    WHY THE HARNESS'S OWN STAMP IS NOT TRUSTED -- a measured false positive, 2026-07-26. The
+    harness's `llm_on_row_valid` ANDs in `not server_storm_suspected`, and `server_storm_suspected`
+    is `llama_servers_after > llama_servers_before` where the count is every process on the box whose
+    command line contains "llama-server". On this machine that count also includes (a) the
+    CONDUCTOR's own generator on port 8924 and (b) `[llama-server] <defunct>` ZOMBIES left behind by
+    conductor experiment subprocesses -- three were present simultaneously. So the count rose from 2
+    to 5 during cells whose OWN generator was demonstrably fine (`generator_healthy_before=True`,
+    `generator_healthy_after=True`, 3-5 real completions), and three perfectly good cells were
+    discarded for activity belonging to unrelated work.
+
+    THIS IS NOT A CONVENIENT RELAXATION, and the distinction matters. The storm test was protecting
+    against a pile-up of servers on THIS harness's OWN port, which silently degrades cells to
+    LLM-off. Two things make it redundant here: (1) every run in this measurement passes
+    `--no-spawn`, which replaces `_ensure_server` with a health check that can never launch a
+    server, so a same-port pile-up is impossible BY CONSTRUCTION; and (2) the degradation it was
+    meant to catch shows up directly in the fields that ARE checked -- a cell served by a dying
+    server records zero completions or fails the post-cell health check. A global process count
+    measures other processes, not this cell.
+
+    So the criterion is: the generator answered this cell (>=1 real completion) and was healthy on
+    BOTH sides of it. The raw counts stay in the row and the disagreement with the harness's stamp is
+    reported, so nothing is hidden.
+    """
+    if not r.get("ran"):
+        return False
+    if not r.get("llm_enabled"):
+        return True  # an LLM-off row makes no LLM claim to invalidate
+    llm = r.get("llm") or {}
+    return bool(
+        int(llm.get("responses") or 0) > 0
+        and r.get("generator_healthy_before")
+        and r.get("generator_healthy_after")
+    )
+
+
 def analyse(rows: list[dict]) -> dict[str, Any]:
     out: dict[str, Any] = {}
 
     # ---- 0. LLM-validity gate on the rows themselves -------------------------------------
     # An LLM-ON measurement whose generator was dead is not an LLM-on measurement. Excluded and
     # counted, never silently averaged in.
-    valid = [r for r in rows if r.get("ran") and r.get("llm_on_row_valid")]
-    invalid = [r for r in rows if not (r.get("ran") and r.get("llm_on_row_valid"))]
+    valid = [r for r in rows if llm_row_is_valid(r)]
+    invalid = [r for r in rows if not llm_row_is_valid(r)]
     out["rows_total"] = len(rows)
     out["rows_llm_valid"] = len(valid)
     out["rows_excluded_llm_invalid"] = [
@@ -178,15 +233,68 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             "ran": r.get("ran"),
             "reason": r.get("reason"),
             "llm_responses": (r.get("llm") or {}).get("responses"),
+            "generator_healthy_before": r.get("generator_healthy_before"),
             "generator_healthy_after": r.get("generator_healthy_after"),
             "server_storm_suspected": r.get("server_storm_suspected"),
         }
         for r in invalid
     ]
+    # Where the recomputed criterion DISAGREES with the harness's stamp, say so explicitly with the
+    # evidence, so the relaxation is auditable rather than silent.
+    out["rows_rescued_from_harness_storm_false_positive"] = [
+        {
+            "arm": r.get("arm"),
+            "game": r.get("game"),
+            "seed": r.get("seed"),
+            "llm_responses": (r.get("llm") or {}).get("responses"),
+            "generator_healthy_before": r.get("generator_healthy_before"),
+            "generator_healthy_after": r.get("generator_healthy_after"),
+            "llama_servers_before": r.get("llama_servers_before"),
+            "llama_servers_after": r.get("llama_servers_after"),
+        }
+        for r in rows
+        if llm_row_is_valid(r) and not r.get("llm_on_row_valid")
+    ]
 
+    # DUPLICATE (arm, game, seed) CELLS. Two row files can legitimately contain the same cell (e.g.
+    # a standalone LLM-off run and the LLM-off arm of a larger design). Keying a dict by
+    # (arm, cell) would silently keep whichever loaded last -- a hidden choice about which
+    # measurement counts. Duplicates are instead DETECTED and reported: if they disagree on the
+    # outcome they are a free independent replication of that condition (real information about
+    # run-to-run variation), and if they agree they confirm determinism. Either way the reader is
+    # told, and the FIRST occurrence is the one used so the choice is deterministic rather than
+    # dependent on file order.
     by_arm_cell: dict[tuple[str, tuple], dict] = {}
+    dup_agree: list[dict] = []
+    dup_disagree: list[dict] = []
     for r in valid:
-        by_arm_cell[(r["arm"], cell_key(r))] = r
+        k = (r["arm"], cell_key(r))
+        if k in by_arm_cell:
+            first = by_arm_cell[k]
+            rec = {
+                "arm": r["arm"],
+                "game": r["game"],
+                "seed": r["seed"],
+                "first_levels": first.get("levels"),
+                "duplicate_levels": r.get("levels"),
+                "first_states": first.get("states_expanded"),
+                "duplicate_states": r.get("states_expanded"),
+                "first_source": first.get("_source"),
+                "duplicate_source": r.get("_source"),
+            }
+            if behaviour_tuple(first) == behaviour_tuple(r):
+                dup_agree.append(rec)
+            else:
+                dup_disagree.append(rec)
+            continue
+        by_arm_cell[k] = r
+    out["duplicate_cells_identical"] = dup_agree
+    out["duplicate_cells_divergent"] = dup_disagree
+    out["duplicate_cells_note"] = (
+        "Duplicates are an independent re-run of the same (arm, game, seed). 'divergent' ones "
+        "measure run-to-run variation directly; 'identical' ones confirm the condition is "
+        "deterministic. The first occurrence is used in all comparisons."
+    )
     arms = sorted({r["arm"] for r in valid})
     seeds = sorted({r["seed"] for r in valid})
     out["arms"] = arms
@@ -240,14 +348,26 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
     # A game won by NO arm on a seed is non-discriminating THERE: every arm's contribution to the
     # delta on that game is arithmetically forced to zero. Report the discriminating support
     # explicitly so a "0 difference" can never be read as "no effect" when the support was empty.
+    # Computed over EVERY cell any arm has a valid row for -- NOT over the all-arms-matched subset.
+    # An earlier draft gated this on all-arms matching, which reported an EMPTY discriminating set
+    # while the pairwise comparisons were correctly finding discriminating games: on a partially
+    # complete run almost nothing is matched across all five arms, so the global summary
+    # contradicted the per-lever detail. The per-lever verdicts use their own PAIRWISE set
+    # (`discriminating_games_in_this_comparison`); this is the corpus-level summary.
     discriminating: dict[int, list[str]] = {}
     for s in seeds:
         discriminating[s] = sorted(
-            {c[0] for c in matched if c[1] == s and any(is_win(by_arm_cell[(a, c)]) for a in arms)}
+            {
+                c[0]
+                for c in all_cells
+                if c[1] == s
+                and any((a, c) in by_arm_cell and is_win(by_arm_cell[(a, c)]) for a in arms)
+            }
         )
     out["discriminating_games_per_seed"] = {str(s): v for s, v in discriminating.items()}
     out["nondiscriminating_games_per_seed"] = {
-        str(s): sorted({c[0] for c in matched if c[1] == s} - set(discriminating[s])) for s in seeds
+        str(s): sorted({c[0] for c in all_cells if c[1] == s} - set(discriminating[s]))
+        for s in seeds
     }
 
     # ---- 3b. THE SAME-CONFIG NOISE FLOOR ---------------------------------------------------
@@ -297,8 +417,9 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
         return res
 
     noise: dict[str, Any] = {}
-    if "S_replicate_llmon" in arms and CONTROL in arms:
-        noise = pairwise_vs_control("S_replicate_llmon")
+    replicate_arm = f"S_replicate{SUFFIX}"
+    if replicate_arm in arms and CONTROL in arms:
+        noise = pairwise_vs_control(replicate_arm)
     out["noise_floor_same_config_replicate"] = noise
 
     # ---- 3c. WHAT THE LLM ITSELF CONTRIBUTES ------------------------------------------------
@@ -309,7 +430,9 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
     # stays open. Reported as a comparison, never folded into a lever verdict: turning the LLM off
     # is not one of the levers under test.
     out["llm_contribution_vs_llm_off"] = (
-        pairwise_vs_control("S_llmoff") if "S_llmoff" in arms and CONTROL in arms else {}
+        pairwise_vs_control("S_llmoff")
+        if "S_llmoff" in arms and CONTROL in arms and CONTROL != "S_llmoff"
+        else {}
     )
 
     # ---- 4. PER-LEVER VERDICT, each with its own computed witness ---------------------------
@@ -532,27 +655,66 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
 
     # ---- 6. COST ---------------------------------------------------------------------------
     walls = [float(r.get("wall_s") or 0) for r in valid if r.get("wall_s")]
+    llm_walls = [
+        float((r.get("llm") or {}).get("llm_wall_s") or 0.0) for r in valid if r.get("llm_enabled")
+    ]
     out["cost"] = {
         "n_cells": len(walls),
         "wall_s_total": round(sum(walls), 1),
+        # The wall clock actually spent INSIDE the generator, summed over LLM-on cells. This is the
+        # number that makes the live-inference claim auditable: it is the measured compute the
+        # artifact's conclusions rest on, and it is what `duration_s` reports (NOT the analyser's own
+        # runtime, which is milliseconds -- reporting that as duration_s made the fabrication linter
+        # correctly flag DURATION_TOO_SHORT on a run that had in fact used hours of GPU time).
+        "llm_wall_s_total": round(sum(llm_walls), 1),
+        "llm_wall_fraction_of_total": (
+            round(sum(llm_walls) / sum(walls), 4) if sum(walls) else None
+        ),
         "wall_s_per_cell_median": round(statistics.median(walls), 1) if walls else None,
         "wall_s_per_cell_min": round(min(walls), 1) if walls else None,
         "wall_s_per_cell_max": round(max(walls), 1) if walls else None,
-        "projected_hours_25games_x_1seed_x_4arms": (
-            round(statistics.median(walls) * 25 * 4 / 3600, 2) if walls else None
-        ),
     }
+    # SPLIT BY CONDITION. A median over a mixed set is meaningless here: an LLM-off cell costs a
+    # couple of seconds and an LLM-on cell costs ~5 minutes, so pooling them reports a median of ~3s
+    # for a design that actually takes hours -- and that number would then be used to scope the next
+    # run. The affordability decision needs the LLM-ON per-cell cost specifically.
+    for label, sel in (("llm_on", True), ("llm_off", False)):
+        w = [float(r.get("wall_s") or 0) for r in valid if bool(r.get("llm_enabled")) is sel]
+        w = [x for x in w if x]
+        out["cost"][label] = {
+            "n_cells": len(w),
+            "wall_s_total": round(sum(w), 1),
+            "wall_s_per_cell_median": round(statistics.median(w), 1) if w else None,
+            "wall_s_per_cell_min": round(min(w), 1) if w else None,
+            "wall_s_per_cell_max": round(max(w), 1) if w else None,
+            # What the FULL design would have cost at this per-cell price, as a serial sum. The
+            # actual runs used two concurrent shards, so elapsed time was roughly half this.
+            "projected_hours_25games_x_1seed_x_5arms_serial": (
+                round(statistics.median(w) * 25 * 5 / 3600, 2) if w else None
+            ),
+        }
     return out
 
 
-def build_artifact(analysis: dict, rows: list[dict], sources: list[Path], t0: float) -> dict:
-    payload = json.dumps({"rows": rows, "analysis": analysis}, sort_keys=True, default=str).encode()
+def build_artifact(
+    analysis: dict,
+    rows: list[dict],
+    sources: list[Path],
+    t0: float,
+    companion: dict | None = None,
+    companion_rows: list[dict] | None = None,
+) -> dict:
+    payload = json.dumps(
+        {"rows": rows, "analysis": analysis, "companion": companion or {}},
+        sort_keys=True,
+        default=str,
+    ).encode()
     checksum = hashlib.sha256(payload).hexdigest()
 
     lv = analysis.get("lever_verdicts", {})
-    v1 = (lv.get("S_minus_frontier_llmon") or {}).get("overall_verdict")
-    v2 = (lv.get("S_minus_hud_llmon") or {}).get("overall_verdict")
-    v3 = (lv.get("S_plus_hazard_llmon") or {}).get("overall_verdict")
+    v1 = (lv.get(f"S_minus_frontier{SUFFIX}") or {}).get("overall_verdict")
+    v2 = (lv.get(f"S_minus_hud{SUFFIX}") or {}).get("overall_verdict")
+    v3 = (lv.get(f"S_plus_hazard{SUFFIX}") or {}).get("overall_verdict")
 
     # honest_verdict is COMPUTED from the three per-lever verdicts, never hand-written, so it
     # cannot drift from what the analysis actually found. The `complete_` terminal prefix is
@@ -565,6 +727,27 @@ def build_artifact(analysis: dict, rows: list[dict], sources: list[Path], t0: fl
         f"__lever2_hud_{str(v2).lower()}"
         f"__lever3_hazard_{str(v3).lower()}"
     )
+
+    # ---- SELF-REPORTED ACCEPTANCE GATES, all COMPUTED ---------------------------------------
+    # These are gates on the MEASUREMENT'S OWN VALIDITY, not on a hoped-for result -- a gate that
+    # can only pass if the answer is the one we wanted is not a gate. Each is falsifiable and each
+    # guards a specific way this measurement could be worthless:
+    #   1. every LLM-on row really had a live generator (else it is an LLM-off row mislabelled);
+    #   2. the noise floor was actually measured (else a 1-game delta cannot be interpreted);
+    #   3. nothing is reported as an EFFECT without a non-empty computed witness.
+    llm_on_rows = [r for r in rows if r.get("llm_enabled")]
+    gate_llm_live = bool(llm_on_rows) and all(
+        llm_row_is_valid(r) for r in llm_on_rows if r.get("ran")
+    )
+    gate_noise = bool(analysis.get("noise_floor_same_config_replicate"))
+    effect_without_witness = []
+    for arm, v in lv.items():
+        for s, per in (v.get("per_seed") or {}).items():
+            if str(per.get("seed_verdict", "")).startswith("EFFECT") and not per.get(
+                "witness_pass_region_nonempty"
+            ):
+                effect_without_witness.append({"arm": arm, "seed": s})
+    gate_witness = not effect_without_witness
 
     return {
         "honest_verdict": honest,
@@ -581,7 +764,22 @@ def build_artifact(analysis: dict, rows: list[dict], sources: list[Path], t0: fl
         ),
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "schema": "carnot.scored_path_lever_ab.v1",
-        "duration_s": round(time.time() - t0, 2),
+        # duration_s is the MEASURED COMPUTE this artifact rests on -- the summed wall clock of
+        # every cell that was run -- NOT this analyser's own runtime. Reporting the analyser's
+        # runtime (milliseconds) made adversarial_verify correctly raise DURATION_TOO_SHORT on a
+        # run that had used hours of live GPU inference: the artifact declared a live-LLM substrate
+        # while claiming to have completed in 0.01s. The analyser's own runtime is reported
+        # separately as analysis_duration_s so nothing is hidden.
+        "duration_s": round(float((analysis.get("cost") or {}).get("wall_s_total") or 0.0), 2),
+        "duration_s_note": (
+            "principle: real compute takes wall-clock time, and a missing or implausibly short "
+            "duration is the load-bearing fabrication signal. This is the summed per-cell wall "
+            "clock of the measurement itself; of it, llm_wall_s_total was spent inside the "
+            "generator. Cells ran across two concurrent shard processes, so this SUM exceeds the "
+            "elapsed session time -- it is compute-seconds, not elapsed seconds."
+        ),
+        "analysis_duration_s": round(time.time() - t0, 2),
+        "measured_llm_wall_s": float((analysis.get("cost") or {}).get("llm_wall_s_total") or 0.0),
         "inference_substrate": "live_llm_inference",
         "inference_substrate_note": (
             "principle: the substrate declaration is what lets the fabrication linter pick the "
@@ -656,8 +854,41 @@ def build_artifact(analysis: dict, rows: list[dict], sources: list[Path], t0: fl
         "lever1_frontier_verdict": v1,
         "lever2_hud_verdict": v2,
         "lever3_hazard_verdict": v3,
+        "acceptance_gate_all_llm_on_rows_had_a_live_generator": gate_llm_live,
+        "acceptance_gate_all_llm_on_rows_had_a_live_generator_principle": (
+            "Guards the failure mode where the llama-server dies mid-run and the harness keeps "
+            "emitting rows LABELLED llm_on that contain no LLM at all -- a clean, error-free, "
+            "entirely worthless measurement. Passes only if every LLM-on row that ran was stamped "
+            "llm_on_row_valid AND recorded at least one real completion."
+        ),
+        "acceptance_gate_noise_floor_was_measured": gate_noise,
+        "acceptance_gate_noise_floor_was_measured_principle": (
+            "With an LLM in the loop a seeded run is not guaranteed deterministic, so a one-game "
+            "win delta may be sampling variation. Passes only if the same-config replicate arm was "
+            "actually run; without it no small effect can be interpreted."
+        ),
+        "acceptance_gate_no_effect_reported_without_a_witness": gate_witness,
+        "acceptance_gate_no_effect_reported_without_a_witness_principle": (
+            "Guards the forced-value defect: an EFFECT verdict on a support that is structurally "
+            "empty is arithmetic, not measurement. Passes only if every per-seed EFFECT verdict has "
+            "a non-empty computed movable-game witness."
+        ),
+        "acceptance_gate_violations": effect_without_witness,
         "analysis": analysis,
+        # The LLM-OFF companion design: the same five arms, all 25 games, 3 seeds, run with
+        # induction disabled. It is ~100x cheaper per cell (no generator), so it can be run at a
+        # power the LLM-on design cannot afford. Embedded rather than published separately so a
+        # reader cannot pick up the well-powered LLM-OFF result and mistake it for the SCORED
+        # condition -- the distinction this whole measurement exists to draw.
+        "companion_llm_off_design": companion or {},
+        "companion_llm_off_design_note": (
+            "principle: a cheap high-power measurement of the WRONG condition is the most "
+            "dangerous kind, because its confidence interval looks better than the expensive "
+            "measurement of the right one. This section is LLM-OFF and is NOT the scored "
+            "condition; the scored condition is `analysis`."
+        ),
         "rows": rows,
+        "companion_rows": companion_rows or [],
         "flags_flipped": [],
         "flags_flipped_note": (
             "principle: a measurement must not change the thing it measures. NO flag was flipped "
@@ -672,12 +903,35 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rows", nargs="+", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--companion-rows", nargs="*", default=[])
+    ap.add_argument(
+        "--companion-condition",
+        default="llmoff",
+        choices=["llmon", "llmoff"],
+    )
+    ap.add_argument(
+        "--condition",
+        default="llmon",
+        choices=["llmon", "llmoff"],
+        help="which arm suffix is the control condition; llmon is the SCORED condition",
+    )
     a = ap.parse_args(argv)
+    set_condition("_" + a.condition)
     t0 = time.time()
     sources = [Path(x) for x in a.rows]
     rows = load_rows(sources)
     analysis = analyse(rows)
-    art = build_artifact(analysis, rows, sources, t0)
+    companion: dict | None = None
+    companion_rows: list[dict] | None = None
+    if a.companion_rows:
+        # Analysed with its OWN control arm. Restoring the primary condition afterwards is
+        # load-bearing: build_artifact reads SUFFIX to pick which lever verdicts to headline, so
+        # leaving it set to the companion would headline the LLM-OFF verdicts as the scored result.
+        companion_rows = load_rows([Path(x) for x in a.companion_rows])
+        set_condition("_" + a.companion_condition)
+        companion = analyse(companion_rows)
+        set_condition("_" + a.condition)
+    art = build_artifact(analysis, rows, sources, t0, companion, companion_rows)
     Path(a.out).write_text(json.dumps(art, indent=1, default=str))
     print(json.dumps({k: v for k, v in analysis.items() if k != "rows"}, indent=1, default=str))
     return 0
