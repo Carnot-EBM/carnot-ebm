@@ -1,5 +1,66 @@
 # Carnot — Changelog
 
+## 2026-07-26 (convention-perturbation transfer battery for the two levers flipped ON 2026-07-25)
+
+- User instruction: the two levers flipped ON 2026-07-25 (frontier tier discipline; HUD edge-bar
+  mask) both shipped carrying the caveat "capability argument, NOT demonstrated hidden-game
+  transfer". Replace that caveat with evidence, in either direction. First answer explicitly
+  whether the exp5836 A/B path loads a per-game GameAdapter. Do not flip any flag.
+- **THE CAVEAT WAS WRONG ON HALF ITS CLAIM. The exp5836 A/B path loads NO per-game GameAdapter.**
+  `_explorer_policy` builds `CarnotAgentPolicy(game, {}, force_explore=True)`; `solutions={}`
+  bypasses `load_solutions()`, `force_explore` empties the plan, and the resulting
+  `StepwiseExplorer` takes no game-id parameter at all. `arc_game_adapters` is absent from
+  `sys.modules` after constructing every arm (recorded per-arm in `arm_receipt.json`), and
+  `grep` finds zero references to it in `arc_competition_agent.py`. The same is true of the SCORED
+  `E3AgentPolicy`, which resolves the identical seven lever values (verified). So both flips were
+  ALREADY measured adapter-free -- the generic solver. The caveat narrows from "public games WITH
+  per-game adaptation" to "public GAMES, generic solver"; what remains undemonstrated is that the
+  effect survives outside the corpus the levers were selected against, and inside the full scored
+  E3 cascade.
+- **NEITHER ARM A NOR ARM B2 IS A VALID CONTROL ANY MORE.** `_fd_gate` ranks explicit-kwarg > env >
+  `SUBMITTED_*` default, and both arms pin only a subset of the seven gated flags -- so since the
+  flips they INHERIT the treatment defaults. Arm B2, the control for the HUD A/B, has become the
+  HUD treatment. Every arm in this battery pins all seven flags explicitly; the reconstructed
+  pre-flip control reproduces the historical arm-A win set exactly (7 games, identical membership).
+- Measured: 2x2 factorial (pre-flip / frontier-only / HUD-only / shipped-both) x 3 conditions
+  (real; salience inversion, attacking the frontier tier predicate's absolute-colour convention;
+  a both-axis roll, attacking the HUD detector's edge-adjacency convention) x 25 public games x
+  5 seeds = 1500 cells at budget 2000, zero missing, zero crashed, per-seed matched scoring only.
+  Each perturbation carries a measured dose witness: salience inversion changes the tier map on
+  25 of 25 games and the HUD mask on 0 of 25 (the Stage-1 predicate is pure geometry), so the two
+  conditions are mechanism-orthogonal by measurement, not by assertion.
+- **FRONTIER LEVER: gain survives its convention being violated.** Median +4 -> +3 games under
+  salience inversion (retention 0.75), strict per-seed dominance in all three conditions, no seed
+  regresses, and a leave-one-game-out jackknife shows the gain spread over 4 games with no single
+  game's removal taking it to zero. The pre-flip control is byte-identical under salience
+  inversion (0 of 125 cells move), which makes it a built-in negative control: the degradation is
+  attributable to the lever, not to environment noise.
+- **HUD LEVER: its shipped marginal gain is one game and does not survive.** The gain is exactly
+  r11l -- remove r11l and it is 0 -- and it is 0 on every seed under both perturbations, by two
+  DIFFERENT mechanisms that are kept separate: under the roll the detector itself stops working
+  (r11l's mask resolves on 5/5 seeds at real and 0/5 under the roll, measured independently of any
+  win), while under salience inversion the mask is provably untouched and the frontier lever
+  destroys the win instead. Honest confound recorded: under the roll r11l is unwinnable for every
+  arm including the control, so the win-level evidence alone would not identify the mask as the
+  cause -- the mask-resolution collapse is the independent evidence and is what the finding rests on.
+- **A BUDGET SWEEP OVERTURNED THIS SESSION'S OWN FIRST DRAFT.** At budget 2000 the shipped config
+  loses tn36 that HUD-alone wins on 5/5 seeds, which the first draft called a capability
+  regression. Sweeping the budget refuted that: the shipped config WINS tn36 at budget 8000 (5337
+  actions vs HUD-alone's 1506, same 61-cell mask), so it is a ~3.5x EFFICIENCY regression that
+  crosses the budget -- the same class as the already-documented cd82 residual. The genuine
+  capability loss is r11l under salience inversion, where the shipped config is still at 0 levels
+  after 14774 actions (8x budget) while HUD-alone wins in 1068 at every budget tested.
+- NO flag was flipped; this was a measurement task. The shipped configuration still has the
+  highest median win count of the four arms in every condition, so nothing here is an argument to
+  un-flip -- the costs are specific, reproducible and previously unmeasured, and the decision is
+  the operator's. NO hidden-game transfer is claimed: all 25 public games are solved and the
+  scored path is operator-only, so this measures convention-dependence, which is necessary but
+  not sufficient for transfer.
+- Artifact: `results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json`
+  (adversarial_verify: 0 flagged; summarize_artifact: live re-check clean). Raw cells + dose and
+  flag-resolution receipts: `results/cptb_20260726_cells/`. Code:
+  `scripts/experiments/cptb_{perturb,arms,dose,run,analyze,artifact}.py`.
+
 ## 2026-07-25 (REQ-ARC-WMTE-5950 -- adversarial-review repairs to the click-pixel sampler AND to the measurement that judged it)
 
 - User instruction: apply an 8-finding adversarial review of the REQ-ARC-WMTE-5950 click-pixel

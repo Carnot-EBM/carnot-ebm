@@ -301,25 +301,87 @@ def main() -> int:
                                   "win, with the detector working normally.",
             },
         },
-        "5_NEW_destructive_interaction_visible_on_REAL_games_today": {
-            "claim": "On the unperturbed real games, in today's shipped configuration, the "
-                     "frontier lever costs a game that the HUD lever alone wins on every "
-                     "seed. Neither flip's own A/B could see this, because both of their "
-                     "controls also lose that game.",
+        "5_the_two_levers_interact_and_the_two_cases_are_DIFFERENT_in_kind": {
+            "claim": "Adding the frontier lever on top of the HUD lever costs games the HUD "
+                     "lever alone wins. A budget sweep separates two cases that look identical "
+                     "at budget 2000 but are not: tn36 is an EFFICIENCY regression that "
+                     "crosses the budget, r11l-under-salience-inversion is a genuine "
+                     "CAPABILITY loss. Neither flip's own A/B could see either, because both "
+                     "of their controls also lose these games.",
             "games_HUDO_wins_and_SHIP_loses_on_every_seed": di,
             "tn36_win_matrix_C0": wm["C0_real"]["tn36"],
             "r11l_win_matrix_C0": wm["C0_real"]["r11l"],
-            "mechanism": "On tn36 at C0 both HUDO and SHIP resolve the SAME 61-cell mask, so "
-                         "the difference is not the mask. HUDO expands 52 graph nodes and "
-                         "banks the level in 1506 actions; SHIP expands 17 and never reaches "
-                         "it. The global tier barrier prunes the branch that contains the win.",
+            "r11l_win_matrix_C1": wm["C1_salience_inversion"]["r11l"],
+            "WHY_A_BUDGET_SWEEP_WAS_REQUIRED": (
+                "At budget 2000 both cases read as 'SHIP loses a game HUDO wins'. This "
+                "project has already documented one such loss (arm B2's cd82) that turned out "
+                "to be a budget WALL rather than lost capability, so the same alternative "
+                "explanation had to be excluded here before either could be called a "
+                "regression. The first draft of this finding called tn36 a capability loss; "
+                "the sweep refuted that, and the corrected reading is below."
+            ),
+            "budget_sweep": {
+                "tn36_C0_SHIP": {
+                    "budget_2000": {"levels": 0, "actions": 1676, "states_expanded": 17},
+                    "budget_4000": {"levels": 0, "actions": 3511, "states_expanded": 17},
+                    "budget_8000": {"levels": 1, "actions": 5337, "states_expanded": 27},
+                    "verdict": "BUDGET_WALL_NOT_CAPABILITY_LOSS",
+                },
+                "tn36_C0_HUDO": {
+                    "budget_2000": {"levels": 1, "actions": 1506, "states_expanded": 52},
+                    "budget_8000": {"levels": 1, "actions": 1506, "states_expanded": 52},
+                    "verdict": "wins at every budget; the cheaper arm",
+                },
+                "r11l_C1_SHIP": {
+                    "budget_2000": {"levels": 0, "actions": 1897},
+                    "budget_4000": {"levels": 0, "actions": 3848},
+                    "budget_8000": {"levels": 0, "actions": 7504},
+                    "budget_16000": {"levels": 0, "actions": 14774, "states_expanded": 872},
+                    "verdict": "CAPABILITY_LOSS_not_a_budget_wall_still_0_at_8x_budget",
+                },
+                "r11l_C1_HUDO": {
+                    "budget_2000": {"levels": 1, "actions": 1068},
+                    "budget_16000": {"levels": 1, "actions": 1068, "states_expanded": 207},
+                    "verdict": "wins in 1068 actions at every budget tested",
+                },
+                "raw_rows": [
+                    "results/cptb_20260726_cells/budget_sweep_C0.jsonl.gz",
+                    "results/cptb_20260726_cells/budget_sweep_r11l_C1.jsonl.gz",
+                ],
+            },
+            "corrected_reading": {
+                "tn36_on_real_games": "The frontier lever makes tn36 roughly 3.5x more "
+                                      "expensive (HUDO 1506 actions vs SHIP 5337) with the "
+                                      "SAME 61-cell mask resolved in both arms, which pushes "
+                                      "the win past the 2000-action budget. It is an "
+                                      "efficiency regression with a budget-visible "
+                                      "consequence, in the same class as the already-known "
+                                      "cd82 residual -- NOT a destroyed capability.",
+                "r11l_under_salience_inversion": "This one is real. HUD-alone wins r11l in "
+                                                 "1068 actions under inverted salience at "
+                                                 "every budget tested; the shipped both-on "
+                                                 "configuration is still at 0 levels after "
+                                                 "14774 actions (8x the measured budget) with "
+                                                 "the mask resolving normally. The frontier "
+                                                 "lever removes a capability the HUD lever "
+                                                 "supplies, once the colour convention no "
+                                                 "longer holds.",
+            },
+            "mechanism": "In both cases HUDO and SHIP resolve the SAME mask, so the mask is "
+                         "not the difference. The difference is search shape: on tn36 at "
+                         "budget 2000 HUDO expands 52 graph nodes and banks the level while "
+                         "SHIP expands 17; the global tier barrier defers the branch "
+                         "containing the win behind an exhaustive lower-tier sweep, which "
+                         "costs actions rather than reachability. Under salience inversion the "
+                         "tier assignment itself is wrong, so the deferral no longer converges "
+                         "within any budget tested.",
             "what_this_does_and_does_not_argue": "It does NOT argue for un-flipping either "
                                                  "lever: the shipped configuration still has "
                                                  "the highest median win count of the four "
-                                                 "arms (see per_arm_condition_wins). It is a "
-                                                 "specific, reproducible, previously "
-                                                 "unmeasured cost, and the decision is the "
-                                                 "operator's.",
+                                                 "arms at every condition (see "
+                                                 "per_arm_condition_wins). These are specific, "
+                                                 "reproducible, previously unmeasured costs, "
+                                                 "and the decision is the operator's.",
         },
     }
 
@@ -338,10 +400,15 @@ def main() -> int:
         "0/5 under the roll, measured independently of any win), while under salience "
         "inversion the mask is provably untouched and the FRONTIER lever destroys the win "
         "instead. "
-        "NEW, on REAL unperturbed games: the two levers interact destructively. HUD-alone wins "
-        "tn36 on 5/5 seeds; the shipped both-levers-on configuration wins it on 0/5, with an "
-        "identical 61-cell mask resolved. Neither flip's own A/B could have seen this, because "
-        "both of their controls also lose tn36. "
+        "NEW: the two levers interact, and a budget sweep splits it into two different things. "
+        "On REAL unperturbed tn36, HUD-alone wins on 5/5 seeds and the shipped both-on config "
+        "on 0/5 with an identical 61-cell mask -- but SHIP DOES win tn36 at budget 8000 (5337 "
+        "actions vs HUD-alone's 1506), so that is a ~3.5x EFFICIENCY regression crossing the "
+        "budget, not a lost capability (the first draft of this finding said capability loss; "
+        "the sweep refuted it). The genuine capability loss is r11l under salience inversion: "
+        "HUD-alone wins it in 1068 actions at every budget, the shipped config is still at 0 "
+        "after 14774 actions -- 8x the measured budget. Neither flip's own A/B could have seen "
+        "either, because both of their controls also lose these games. "
         "NO hidden-game transfer is claimed or measured here, and none can be from this "
         "harness: all 25 public games are already solved and the scored path is operator-only. "
         "This measures CONVENTION-DEPENDENCE, which is necessary but not sufficient for "

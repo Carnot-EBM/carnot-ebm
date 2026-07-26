@@ -229,3 +229,98 @@ authority receipts.
 **Then** `public_level_solve_claimed` is bare `false`, incidental completions
 are telemetry only, no registry credit is requested, `registry_unchanged` is
 true, and the task does not modify `ops/arc_solve_registry.yaml`.
+
+### REQ-ARC-LREB-5928: Live Runner Execution Binding
+
+Experiment 5928 SHALL independently qualify the execution prerequisite that
+Exp5916 lacked: a parent/controller-issued, process-bound capability consumed
+by the actual adapter-disabled live runner before any environment or model
+action. This requirement establishes execution authority only. It SHALL NOT run
+a model comparison, solve a game, select a scoring target, attempt a public
+level, update `ops/arc_solve_registry.yaml`, or treat a self-issued token as
+authority. The experiment SHALL write
+`results/experiment_5928_arc_live_runner_execution_binding.json`.
+
+The capability issuer SHALL be separate from the child runner. The parent
+controller SHALL issue the capability with signing material unavailable to the
+child. The child SHALL verify with public material only and SHALL NOT be able to
+issue, broaden, refresh, or self-approve a capability. A self-issued or
+child-issued capability SHALL be denied before execution.
+
+The capability SHALL bind the issuer identity, child OS process identity,
+executable hash, exact argv hash, environment allowlist hash, adapter-disabled
+flag, exact scope, issue and monotonic expiry, nonce, run ID, and exact output
+path. The actual child runner SHALL consume the capability before any synthetic
+environment action. Missing, self-issued, expired, replayed, wrong-process,
+wrong-command, wrong-environment, wrong-executable, adapter-enabled,
+scope-broadened, or output-mismatched capabilities SHALL be refused before
+environment/model action.
+
+Before the dry run, Exp5928 SHALL run a registry precheck and hash the live
+runner, capability code, Exp5915/Exp5916/Exp5902 receipts, environment schema,
+output path, registry, and protected files. It SHALL assert no model load, no
+scoring target, no public solve target, atomic output readiness, teardown
+readiness, and immutable registry/protected files.
+
+Exp5928 SHALL run only a bounded non-scoring adapter-disabled dry run through
+the actual parent and child process boundary. The dry run SHALL capture parent
+issue, child consume, OS process and executable receipts, exact command and
+environment receipts, monotonic expiry, adapter-disabled binding, teardown,
+output binding, denial receipts, replay/nonce invalidation, orphan-process
+check, no credential/secret persistence, and before/after registry hash equality.
+
+Experiment 5928 SHALL write bare top-level fields `status`,
+`preconditions_checked`, `registry_precheck_receipt`,
+`no_model_inference_or_level_attempt`,
+`issuer_child_and_os_process_receipts`,
+`capability_schema_scope_expiry_nonce_and_run_id`,
+`executable_argv_environment_and_output_binding`,
+`adapter_disabled_binding`,
+`actual_live_entrypoint_consumption_receipt`,
+`absent_self_issued_expired_replayed_wrong_process_command_environment_scope_and_output_denials`,
+`non_scoring_dry_run_receipt`,
+`teardown_nonce_invalidation_and_orphan_check`, `registry_unchanged`,
+`protected_files_unchanged`, `live_runner_execution_binding_ready_score`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field provenance principles SHALL include:
+
+- `actual_live_entrypoint_consumption_receipt`: principle "only a capability consumed by the actual child runner before environment action counts; fixture-only validation is insufficient."
+- `registry_unchanged`: principle "must include exact before/after hash equality."
+- `live_runner_execution_binding_ready_score`: principle "emit bare 1.0 only for external issuer separation, actual child consumption, all denial paths, clean teardown, and immutable registry."
+- `inference_substrate`: principle "use actual_live_runner_capability_preflight_no_llm."
+- `honest_verdict`: principle "use complete_ready:, retired:, or blocked_precondition:."
+
+### SCENARIO-ARC-LREB-5928-PARENT-CHILD-CONSUME
+
+**Given** a parent controller starts an adapter-disabled child runner with an
+exact command, exact environment allowlist, exact output path, and teardown
+ledger
+**When** the parent issues a process-bound capability to that child
+**Then** the actual `arc_competition_agent` live entrypoint consumes it before
+the synthetic environment action, records the child PID/PPID/executable/argv/env
+binding, performs no model load or level attempt, writes only the bound output,
+and exits cleanly.
+
+### SCENARIO-ARC-LREB-5928-DENIAL-MATRIX
+
+**Given** absent, self-issued, expired, replayed, wrong-process,
+wrong-command, wrong-environment, wrong-executable, adapter-enabled,
+scope-broadened, and output-mismatched capability variants
+**When** each variant is submitted to the live-runner binding
+**Then** the runner denies the call before environment/model action, records a
+deterministic denial reason, does not mutate synthetic state, and does not
+consume model, scoring, registry, source, BFS, adapter, prior-game, or hidden
+state resources.
+
+### SCENARIO-ARC-LREB-5928-TEARDOWN-IMMUTABILITY
+
+**Given** the dry run has completed and the nonce has been consumed
+**When** Exp5928 performs teardown and immutable-file checks
+**Then** the nonce cannot be replayed before teardown, the nonce ledger is
+removed during teardown, no child process remains, no issuer secret is written
+to the environment or output, the registry before/after hashes are exactly
+equal, protected file hashes are unchanged, and
+`live_runner_execution_binding_ready_score` is bare `1.0` only if every binding,
+denial, teardown, and immutability gate passed.
