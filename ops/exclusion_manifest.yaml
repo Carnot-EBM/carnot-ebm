@@ -912,3 +912,24 @@ retired_extras:
   blocked_patterns:
   - exp5895 CSL exact-slot requalification with repeated global suite exit 2
   - frozen Exp5895 shortcut-safe CSL replay promoted as ready after same verdict
+- id: exp5923_schema_supported_constraintir_zero_exact_semantics_retired_v526
+  scope_key: schema_supported_constraintir_zero_exact_semantics_v526
+  experiment_scope: Exp5923 schema-supported ConstraintIR live A/B exact-semantic zero-result reprompt scope
+  reason: >-
+    retire_if_same_verdict: Exp5923 replayed the ready schema/tokenizer
+    support through all three mandated GGUF families and still produced zero
+    exact semantic success, so this exact schema-supported reprompt mechanism
+    is retired. Open structural compiler, tokenizer bridge, exact executor,
+    CSL memory, and unrelated constraint mechanisms remain separate.
+  experiment_ids:
+  - exp5909-sota-constraint-synthesis-ab
+  - exp5910-verification-guided-constraint-repair
+  - exp5923-sota-schema-supported-constraintir-ab
+  retired_milestone: 2026.07.526
+  retired_by_artifact: results/experiment_5923_sota_schema_supported_constraintir_ab.json
+  recorded_by_artifact: results/experiment_5931_v526_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - schema-supported ConstraintIR reprompt after zero exact semantic success
+  - treating structural validity as semantic success after Exp5923 retirement

@@ -1,0 +1,4144 @@
+{
+  "activated_task_and_declared_deliverable_matrix": {
+    "activated_task_count": 14,
+    "principle": "only exact activated identities and exact declared paths count.",
+    "selection_policy": "exact_declared_deliverable",
+    "tasks": [
+      {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-07-25 16:51 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5918_transit |",
+          "latest_status": "FAIL"
+        },
+        "declared_deliverable": "results/experiment_5918_transition_v526.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:eea1b4bc715db476d7460062926dff3948254f8747c1c36c5e2e4668850a9bfe",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "blocked: Exp5918 transition preconditions failed",
+        "identity": [
+          "2026.07.526",
+          "exp5918-transition-v526",
+          "results/experiment_5918_transition_v526.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "blocked",
+        "task_id": "exp5918-transition-v526",
+        "terminal_class": "blocked-precondition",
+        "terminal_subclass": "blocked",
+        "title": "Exact terminal-boundary handoff from .525 into .526"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-25 17:27 UTC | Dated evidence refresh after the V526 planner mark | OK | 87 passed, 2 warnings in 14.37s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5919_v526_source_delta_ingestion.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:bccc37b9d0667c52d8817f2fd30a3b7ef992ba6b3f10c883a93dd18eb49f7b29",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_null: no accepted post-V526 source deltas; references unchanged",
+        "identity": [
+          "2026.07.526",
+          "exp5919-v526-source-delta-ingestion",
+          "results/experiment_5919_v526_source_delta_ingestion.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete",
+        "task_id": "exp5919-v526-source-delta-ingestion",
+        "terminal_class": "null",
+        "terminal_subclass": "honest-null",
+        "title": "Dated evidence refresh after the V526 planner marker"
+      },
+      {
+        "conductor": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-07-25 19:05 UTC | Fresh prospective event-stream admission and task- | OK | 148 passed, 1 warning in 58.53s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5920_prospective_event_stream_admission.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:2916f8fe3c588e9074c69460e570d0bd21bdac8fd83fbf70301938d39a2a1222",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_ready: prospective_event_stream_admission_boundary_ready",
+        "identity": [
+          "2026.07.526",
+          "exp5920-prospective-event-stream-admission",
+          "results/experiment_5920_prospective_event_stream_admission.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_ready",
+        "task_id": "exp5920-prospective-event-stream-admission",
+        "terminal_class": "positive",
+        "terminal_subclass": "ready-or-positive",
+        "title": "Fresh prospective event-stream admission and task-owned execution boundary"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-25 19:35 UTC | Schema-derived ConstraintIR grammar, type-domain,  | OK | 130 passed, 1 warning in 84.56s (0:01:24) |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5921_schema_derived_constraintir_support.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:71edda567b31f0fa4cac49c897da28884257fc922816de5910172933f8318c69",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_ready: schema-derived ConstraintIR support is deterministic, open, and exact-boundary safe",
+        "identity": [
+          "2026.07.526",
+          "exp5921-schema-derived-constraintir-support",
+          "results/experiment_5921_schema_derived_constraintir_support.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_ready",
+        "task_id": "exp5921-schema-derived-constraintir-support",
+        "terminal_class": "positive",
+        "terminal_subclass": "ready-or-positive",
+        "title": "Schema-derived ConstraintIR grammar, type-domain, and scope fixture"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-25 20:09 UTC | Gated on Exp5921 ready: embedded-GGUF schema decod | OK | 149 passed, 1 warning in 20.70s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5922_gguf_schema_decoder_bridge.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:82d57990b456cb59b35dd1ea82b09a287c1dcd717baa49c65291dd8768924a15",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_ready: all three embedded GGUF tokenizers replay schema support through public llama.cpp logits_processor with fail-closed dead-end controls",
+        "identity": [
+          "2026.07.526",
+          "exp5922-gguf-schema-decoder-bridge",
+          "results/experiment_5922_gguf_schema_decoder_bridge.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_ready",
+        "task_id": "exp5922-gguf-schema-decoder-bridge",
+        "terminal_class": "positive",
+        "terminal_subclass": "ready-or-positive",
+        "title": "Gated on Exp5921 ready: embedded-GGUF schema decoder bridge"
+      },
+      {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-07-25 22:29 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |",
+          "latest_status": "FAIL"
+        },
+        "declared_deliverable": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+        "identity": [
+          "2026.07.526",
+          "exp5923-sota-schema-supported-constraintir-ab",
+          "results/experiment_5923_sota_schema_supported_constraintir_ab.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "retired",
+        "task_id": "exp5923-sota-schema-supported-constraintir-ab",
+        "terminal_class": "retired",
+        "terminal_subclass": "retire-if-same-verdict",
+        "title": "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-25 22:53 UTC | Gated on Exp5920 ready: transactional constraint-m | OK | 88 passed, 1 warning in 8.10s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_ready: transactional_constraint_memory_v2_ready",
+        "identity": [
+          "2026.07.526",
+          "exp5924-transactional-constraint-memory-v2",
+          "results/experiment_5924_transactional_constraint_memory_v2.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_ready",
+        "task_id": "exp5924-transactional-constraint-memory-v2",
+        "terminal_class": "positive",
+        "terminal_subclass": "ready-or-positive",
+        "title": "Gated on Exp5920 ready: transactional constraint-memory clean-room fixture"
+      },
+      {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-07-26 00:19 UTC | Gated on Exp5923 stream and Exp5924 fixture: prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5923-sota-schema-supported-constraintir-a |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "declared_deliverable": "results/experiment_5925_sota_transactional_csl_prospective.json",
+        "declared_deliverable_loadable": false,
+        "declared_deliverable_present": false,
+        "declared_deliverable_sha256": null,
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "",
+        "identity": [
+          "2026.07.526",
+          "exp5925-sota-transactional-csl-prospective",
+          "results/experiment_5925_sota_transactional_csl_prospective.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "",
+        "task_id": "exp5925-sota-transactional-csl-prospective",
+        "terminal_class": "gate-blocked",
+        "terminal_subclass": "missing-deliverable-with-conductor-gate-block",
+        "title": "Gated on Exp5923 stream and Exp5924 fixture: prospective all-three-model continuous self-learning"
+      },
+      {
+        "conductor": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-07-26 00:42 UTC | Gated on Exp5924 ready: adaptive-state ABI v2 Pyth | OK | 200 passed, 1 warning in 14.34s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:eeefe30580820cd19bd7cb60c65fe80b4bd9352ecbbf915b2a8b3018e75b9f67",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_ready: adaptive_state_abi_v2_python_rust_pyo3_parity",
+        "identity": [
+          "2026.07.526",
+          "exp5926-adaptive-state-abi-v2-parity",
+          "results/experiment_5926_adaptive_state_abi_v2_parity.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_ready",
+        "task_id": "exp5926-adaptive-state-abi-v2-parity",
+        "terminal_class": "positive",
+        "terminal_subclass": "ready-or-positive",
+        "title": "Gated on Exp5924 ready: adaptive-state ABI v2 Python/Rust/PyO3 parity"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-26 01:06 UTC | Powered multi-game coordinate-router progress qual | OK | 135 passed, 1 warning in 11.35s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5927_coordinate_router_progress_qualification.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:41c04a77db4d8b24427a26f9e72ed4c0a5ec1868dfcf22cdda89488f84d365f0",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_underpowered: hard_progress_positive_count_27_below_30_no_promotion",
+        "identity": [
+          "2026.07.526",
+          "exp5927-coordinate-router-progress-qualification",
+          "results/experiment_5927_coordinate_router_progress_qualification.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_underpowered",
+        "task_id": "exp5927-coordinate-router-progress-qualification",
+        "terminal_class": "underpowered",
+        "terminal_subclass": "underpowered",
+        "title": "Powered multi-game coordinate-router progress qualification and outcome hook"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-26 01:22 UTC | Actual parent-issued live-runner execution binding | OK | 110 passed, 1 warning in 14.23s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5928_arc_live_runner_execution_binding.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:42f740f816bf840feb58bccce9c7162013a37b8b20eca557d6ccb6bb9842c7a4",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_ready: actual_child_live_runner_execution_binding_ready",
+        "identity": [
+          "2026.07.526",
+          "exp5928-arc-live-runner-execution-binding",
+          "results/experiment_5928_arc_live_runner_execution_binding.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_ready",
+        "task_id": "exp5928-arc-live-runner-execution-binding",
+        "terminal_class": "positive",
+        "terminal_subclass": "ready-or-positive",
+        "title": "Actual parent-issued live-runner execution binding and teardown"
+      },
+      {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-07-26 01:41 UTC | Gated on Exp5928 ready: adapter-disabled held stru | OK | 88 passed, 1 warning in 8.62s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5929_arc_structured_memory_bound_live_ab.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:7fc656897b3386d298e96be196beee786003675096fc9b531107a081cb44aef7",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "blocked_precondition: bound_live_runner",
+        "identity": [
+          "2026.07.526",
+          "exp5929-arc-structured-memory-bound-live-ab",
+          "results/experiment_5929_arc_structured_memory_bound_live_ab.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "blocked_precondition",
+        "task_id": "exp5929-arc-structured-memory-bound-live-ab",
+        "terminal_class": "blocked-precondition",
+        "terminal_subclass": "blocked-precondition",
+        "title": "Gated on Exp5928 ready: adapter-disabled held structured-memory live A/B"
+      },
+      {
+        "conductor": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-07-26 03:23 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | OK | 134 passed, 1 warning in 9.49s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5930_adaptive_state_board_mapping.json",
+        "declared_deliverable_loadable": true,
+        "declared_deliverable_present": true,
+        "declared_deliverable_sha256": "sha256:2391848e75f3af302de8a0863cd594faf427b6a413ffd6aac17e193ce749025b",
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "complete_static_mapping: ABI v2 trace parity and local static RTL/HLS synthesis receipts complete; physical_probe_executed=false; kv260=programmed_image_poc polarfire=prior_physical_workload_only gatemate=blocked_idcode; no speed power energy thermalization convergence TSU Kona or sovereignty claim",
+        "identity": [
+          "2026.07.526",
+          "exp5930-adaptive-state-board-mapping",
+          "results/experiment_5930_adaptive_state_board_mapping.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "complete_static_mapping_no_physical_probe",
+        "task_id": "exp5930-adaptive-state-board-mapping",
+        "terminal_class": "no-change",
+        "terminal_subclass": "static-mapping-no-physical-probe",
+        "title": "Gated on Exp5926 ready: adaptive-state ABI v2 attached-board capability mapping"
+      },
+      {
+        "conductor": {
+          "attempt_count": 0,
+          "latest_line": null,
+          "latest_status": "MISSING"
+        },
+        "declared_deliverable": "results/experiment_5931_v526_capstone_reconciliation.json",
+        "declared_deliverable_loadable": false,
+        "declared_deliverable_present": false,
+        "declared_deliverable_sha256": null,
+        "evidence_selection": "declared_deliverable_path",
+        "honest_verdict": "",
+        "identity": [
+          "2026.07.526",
+          "exp5931-v526-capstone-reconciliation",
+          "results/experiment_5931_v526_capstone_reconciliation.json"
+        ],
+        "milestone": "2026.07.526",
+        "status": "",
+        "task_id": "exp5931-v526-capstone-reconciliation",
+        "terminal_class": "positive",
+        "terminal_subclass": "current-capstone-emission",
+        "title": "Branch-independent .526 capstone and exact reconciliation"
+      }
+    ]
+  },
+  "adaptive_state_abi_and_hardware_receipt": {
+    "abi_v2": {
+      "operations": {
+        "abi_version": 2,
+        "checkpoint_schema": "carnot.adaptive_state_abi.v2.checkpoint",
+        "expected_prior_state_required": true,
+        "fixed_width_fields": {
+          "abi_version": "u16",
+          "active_capacity": "u32_bounded_1_to_16",
+          "event_index": "u32",
+          "quarantine_capacity": "u32_bounded_1_to_32",
+          "state_version": "u32_compatible"
+        },
+        "operation_schema": "carnot.adaptive_state_abi.v2.operation",
+        "payload_hash_required_for_propose": true,
+        "principle": "Fixed-width versioned operations make ordering, hashing, recovery, and hardware mapping finite.",
+        "state_schema": "carnot.adaptive_state_abi.v2.state",
+        "supported_operations": [
+          "snapshot",
+          "lookup",
+          "propose",
+          "commit",
+          "validate",
+          "promote",
+          "quarantine",
+          "supersede",
+          "reject",
+          "rollback",
+          "recover"
+        ],
+        "validator_receipt_required_for_validate": true
+      },
+      "parity": {
+        "byte_parity": true,
+        "operation_count": 37,
+        "parity_failures": [],
+        "principle": "Equivalent backends must match bytes, state hashes, statuses, and errors, not just final success.",
+        "python_checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+        "python_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+        "rust_checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+        "rust_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+        "state_hash_parity": true,
+        "status_error_parity": true,
+        "trace_count": 1
+      },
+      "ready_score": 1.0,
+      "terminal_class": "positive"
+    },
+    "abi_v2_ready": true,
+    "hardware_mapping": {
+      "board_state_receipts": {
+        "gatemate": "blocked_idcode",
+        "kv260": "programmed_image_poc",
+        "polarfire": "prior_physical_workload_only"
+      },
+      "operation_mapping": {
+        "hls_semantics": "same fixed-width request/response record, no model weights",
+        "operation_mapping": {
+          "commit": {
+            "atomic_boundary": true,
+            "mutates_state": true,
+            "opcode": 4,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "lookup": {
+            "atomic_boundary": false,
+            "mutates_state": false,
+            "opcode": 2,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": true,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "promote": {
+            "atomic_boundary": true,
+            "mutates_state": true,
+            "opcode": 6,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "propose": {
+            "atomic_boundary": false,
+            "mutates_state": true,
+            "opcode": 3,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": true,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "quarantine": {
+            "atomic_boundary": true,
+            "mutates_state": true,
+            "opcode": 7,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "recover": {
+            "atomic_boundary": true,
+            "mutates_state": true,
+            "opcode": 11,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "reject": {
+            "atomic_boundary": true,
+            "mutates_state": true,
+            "opcode": 9,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "rollback": {
+            "atomic_boundary": true,
+            "mutates_state": true,
+            "opcode": 10,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "snapshot": {
+            "atomic_boundary": false,
+            "mutates_state": false,
+            "opcode": 1,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "supersede": {
+            "atomic_boundary": false,
+            "mutates_state": true,
+            "opcode": 8,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": false,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          },
+          "validate": {
+            "atomic_boundary": false,
+            "mutates_state": true,
+            "opcode": 5,
+            "present_in_exp5926": true,
+            "request_record": "adaptive_state_abi_v2_request_t",
+            "requires_snapshot": false,
+            "requires_validator_receipt": true,
+            "response_record": "adaptive_state_abi_v2_response_t"
+          }
+        },
+        "rtl_source": "hardware/fpga/adaptive_state_abi_v2_iface.v",
+        "schema_hash": "sha256:14d5603bfe2ee9c14d35b177f1c5e13b674f3757276a20e0d4a47220b6ff8424"
+      },
+      "physical_probe_executed": false,
+      "ready_score": 1.0,
+      "simulator_reference_trace_parity": {
+        "exact_tolerance": "canonical_json_state_hash_status_error_identical",
+        "operation_count": 37,
+        "parity_failures": [],
+        "reference_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+        "simulator_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+        "state_hash_parity": true,
+        "status_error_parity": true,
+        "trace_count": 1,
+        "trace_hash": "sha256:6843442226b802e610d811c6eec5764739299765cf7129c59d0bf82e88602a81"
+      },
+      "static_synthesis_timing_estimate_and_resource_reports": {
+        "board_targets": {
+          "gatemate": "yosys_gatemate_static_estimate_no_idcode_probe_no_pnr",
+          "kv260": "vivado_missing_or_not_used_static_mapping_only",
+          "polarfire": "linux_workload_prior_only_no_new_physical_route"
+        },
+        "resource_report": {
+          "cell_count_estimate": 7651,
+          "exit_code": 0,
+          "measurement_type": "static_estimate",
+          "physical_measurement": false,
+          "report_sha256": "sha256:d350b16e8d230b7383e3502d9ce788bed99dd20639bd637dc8426ddef98c2263",
+          "target": "generic_static_synthesis_resource_estimate",
+          "tool_receipt": "yosys_generic_synth"
+        },
+        "timing_estimate": {
+          "clock_constraint_hz": null,
+          "estimate_label": "no_physical_timing_measurement_no_board_route",
+          "measurement_type": "static_estimate",
+          "physical_measurement": false,
+          "timing_closed": null,
+          "tool_receipt": "yosys_generic_synth"
+        }
+      },
+      "terminal_class": "no-change"
+    },
+    "physical_probe_executed": false,
+    "principle": "ABI parity, static synthesis, and physical board execution are distinct receipts.",
+    "static_mapping_is_physical_acceleration": false,
+    "static_mapping_ready": true
+  },
+  "adversarial_verifier_receipts": {
+    "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5918_transition_v526.json results/experiment_5919_v526_source_delta_ingestion.json results/experiment_5920_prospective_event_stream_admission.json results/experiment_5921_schema_derived_constraintir_support.json results/experiment_5922_gguf_schema_decoder_bridge.json results/experiment_5923_sota_schema_supported_constraintir_ab.json results/experiment_5924_transactional_constraint_memory_v2.json results/experiment_5926_adaptive_state_abi_v2_parity.json results/experiment_5927_coordinate_router_progress_qualification.json results/experiment_5928_arc_live_runner_execution_binding.json results/experiment_5929_arc_structured_memory_bound_live_ab.json results/experiment_5930_adaptive_state_board_mapping.json",
+    "exit_code": 0,
+    "flagged_count": 0,
+    "missing_declared_deliverables_not_verified": [
+      "results/experiment_5925_sota_transactional_csl_prospective.json"
+    ],
+    "principle": "Fresh verifier receipts cover every present declared .526 artifact without replacing missing ones.",
+    "reports": [
+      {
+        "artifact": "results/experiment_5918_transition_v526.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5918-transition-v526"
+      },
+      {
+        "artifact": "results/experiment_5919_v526_source_delta_ingestion.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5919-v526-source-delta-ingestion"
+      },
+      {
+        "artifact": "results/experiment_5920_prospective_event_stream_admission.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5920-prospective-event-stream-admission"
+      },
+      {
+        "artifact": "results/experiment_5921_schema_derived_constraintir_support.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5921-schema-derived-constraintir-support"
+      },
+      {
+        "artifact": "results/experiment_5922_gguf_schema_decoder_bridge.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5922-gguf-schema-decoder-bridge"
+      },
+      {
+        "artifact": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5923-sota-schema-supported-constraintir-ab"
+      },
+      {
+        "artifact": "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5924-transactional-constraint-memory-v2"
+      },
+      {
+        "artifact": "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5926-adaptive-state-abi-v2-parity"
+      },
+      {
+        "artifact": "results/experiment_5927_coordinate_router_progress_qualification.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5927-coordinate-router-progress-qualification"
+      },
+      {
+        "artifact": "results/experiment_5928_arc_live_runner_execution_binding.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5928-arc-live-runner-execution-binding"
+      },
+      {
+        "artifact": "results/experiment_5929_arc_structured_memory_bound_live_ab.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5929-arc-structured-memory-bound-live-ab"
+      },
+      {
+        "artifact": "results/experiment_5930_adaptive_state_board_mapping.json",
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "task_id": "exp5930-adaptive-state-board-mapping"
+      }
+    ],
+    "stdout_sha256": "sha256:d901cc33f5cb12b3883d78b5aba22f71ca7745ca022f5f609197edca085568bc",
+    "verified_present_declared_deliverable_count": 12,
+    "warnings": []
+  },
+  "arc_coordinate_execution_binding_and_live_receipt": {
+    "actual_execution_binding_ready": true,
+    "bound_live_ab": {
+      "actual_bound_e3_entrypoint_receipt": {
+        "actual_capability_bound_adapter_disabled_e3_path": true,
+        "actual_live_entrypoint": "carnot.agentic.arc_competition_agent:consume_process_bound_capability_preflight",
+        "adapter_disabled": true,
+        "capability_allowed": true,
+        "capability_consumed_before_environment_action": true,
+        "capability_reason": "allowed",
+        "child_pid": 1232297,
+        "child_ppid": 1232269,
+        "environment_action_count": 1,
+        "fixture_only_validation": false,
+        "level_attempt_count": 0,
+        "live_inference_started": false,
+        "model_load_count": 0,
+        "ok": true,
+        "output_path": "/tmp/carnot-exp5929-exp5928-replay-1232269/child-consumption-receipt.json",
+        "process_context": {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "carnot.agentic.arc_live_runner_execution_binding",
+            "--child",
+            "--run-id",
+            "exp5928-parent-child-dry-run",
+            "--output",
+            "/tmp/carnot-exp5929-exp5928-replay-1232269/child-consumption-receipt.json",
+            "--nonce-ledger",
+            "/tmp/carnot-exp5929-exp5928-replay-1232269/nonce-ledger"
+          ],
+          "argv_hash": "sha256:d8711ace8a6403449b4ad06b2f3c7b58e88b09acb7da3d7716bcd93d947870aa",
+          "environment_allowlist": {
+            "CARNOT_ARC_LIVE_BINDING_ADAPTER_DISABLED": "1",
+            "CARNOT_ARC_LIVE_BINDING_NO_MODEL_LOAD": "1",
+            "CARNOT_ARC_LIVE_BINDING_RUN_ID": "exp5928-parent-child-dry-run",
+            "CARNOT_ARC_LIVE_BINDING_SCOPE": "actual_live_runner_capability_preflight_no_llm",
+            "JAX_PLATFORMS": "cpu",
+            "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python"
+          },
+          "environment_allowlist_hash": "sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4",
+          "executable_hash": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "output_path": "/tmp/carnot-exp5929-exp5928-replay-1232269/child-consumption-receipt.json",
+          "pid": 1232297,
+          "ppid": 1232269
+        },
+        "public_solve_target_selected": false,
+        "runner_id": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+        "scoring_target_selected": false,
+        "synthetic_state_length_after_teardown": 0,
+        "synthetic_state_length_before_teardown": 1
+      },
+      "primary_live_utility_comparison_and_intervals": {
+        "complete_bound_live_rows": false,
+        "expected_group_count": 6,
+        "group_count": 0,
+        "groups": [],
+        "intervals_separated_over_both_controls": false,
+        "method": "paired minimum lower bound across frozen model/held-cell cells",
+        "structured_over_none_interval_lower": 0.0,
+        "structured_over_raw_interval_lower": 0.0,
+        "structured_over_raw_progress_lower": 0.0
+      },
+      "ready_score": 0.0,
+      "registry_unchanged": true,
+      "terminal_class": "blocked-precondition"
+    },
+    "coordinate_router_offline_qualification": {
+      "no_level_solve_or_registry_update": {
+        "no_level_solve_claimed": true,
+        "offline_qualification_receives_level_credit": false,
+        "principle": "development_proxy evidence receives no ARC solve credit",
+        "registry_update_performed": false
+      },
+      "power_gate": {
+        "hard_progress_positive_count": 27,
+        "hard_progress_row_count": 389,
+        "min_positive_rows": 30,
+        "powered": false,
+        "status": "underpowered"
+      },
+      "ready_score": 0.0,
+      "terminal_class": "underpowered"
+    },
+    "execution_binding": {
+      "actual_entrypoint_consumption": {
+        "actual_live_entrypoint": "carnot.agentic.arc_competition_agent:consume_process_bound_capability_preflight",
+        "adapter_disabled": true,
+        "capability_allowed": true,
+        "capability_consumed_before_environment_action": true,
+        "capability_reason": "allowed",
+        "child_pid": 1224147,
+        "child_ppid": 1224111,
+        "environment_action_count": 1,
+        "fixture_only_validation": false,
+        "level_attempt_count": 0,
+        "model_load_count": 0,
+        "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+        "process_context": {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "carnot.agentic.arc_live_runner_execution_binding",
+            "--child",
+            "--run-id",
+            "exp5928-parent-child-dry-run",
+            "--output",
+            "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+            "--nonce-ledger",
+            "/tmp/carnot-exp5928-1224111/nonce-ledger"
+          ],
+          "argv_hash": "sha256:8749a90a64f06a6fd9c3daa66017e411e29e16f78b8e465692ff5bdc1a35dc63",
+          "environment_allowlist": {
+            "CARNOT_ARC_LIVE_BINDING_ADAPTER_DISABLED": "1",
+            "CARNOT_ARC_LIVE_BINDING_NO_MODEL_LOAD": "1",
+            "CARNOT_ARC_LIVE_BINDING_RUN_ID": "exp5928-parent-child-dry-run",
+            "CARNOT_ARC_LIVE_BINDING_SCOPE": "actual_live_runner_capability_preflight_no_llm",
+            "JAX_PLATFORMS": "cpu",
+            "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python"
+          },
+          "environment_allowlist_hash": "sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4",
+          "executable_hash": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+          "pid": 1224147,
+          "ppid": 1224111
+        },
+        "public_solve_target_selected": false,
+        "runner_id": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+        "scoring_target_selected": false,
+        "synthetic_state_length_after_teardown": 0,
+        "synthetic_state_length_before_teardown": 1
+      },
+      "fixture_only_validation": false,
+      "ready_score": 1.0,
+      "terminal_class": "positive"
+    },
+    "live_rows_completed": 0,
+    "offline_qualification_receives_live_credit": false,
+    "principle": "Offline ARC qualification, execution binding, and live rows are different authorities.",
+    "registry_update_performed": false
+  },
+  "branch_independence_receipt": {
+    "branch_classes": {
+      "arc": [
+        "underpowered",
+        "positive",
+        "blocked-precondition"
+      ],
+      "continuous_self_learning": [
+        "positive",
+        "gate-blocked",
+        "positive"
+      ],
+      "hardware": [
+        "no-change"
+      ],
+      "schema_constraint_ir": [
+        "positive",
+        "positive",
+        "retired"
+      ],
+      "transition_and_source": [
+        "blocked-precondition",
+        "null"
+      ]
+    },
+    "branch_independence_preserved": true,
+    "branch_task_ids": {
+      "arc": [
+        "exp5927-coordinate-router-progress-qualification",
+        "exp5928-arc-live-runner-execution-binding",
+        "exp5929-arc-structured-memory-bound-live-ab"
+      ],
+      "continuous_self_learning": [
+        "exp5924-transactional-constraint-memory-v2",
+        "exp5925-sota-transactional-csl-prospective",
+        "exp5926-adaptive-state-abi-v2-parity"
+      ],
+      "hardware": [
+        "exp5930-adaptive-state-board-mapping"
+      ],
+      "schema_constraint_ir": [
+        "exp5921-schema-derived-constraintir-support",
+        "exp5922-gguf-schema-decoder-bridge",
+        "exp5923-sota-schema-supported-constraintir-ab"
+      ],
+      "transition_and_source": [
+        "exp5918-transition-v526",
+        "exp5919-v526-source-delta-ingestion"
+      ]
+    },
+    "downstream_gate_does_not_infer_upstream_success": true,
+    "offline_arc_does_not_infer_live_evidence": true,
+    "principle": "a gate block or branch failure cannot erase or manufacture evidence in another branch.",
+    "static_mapping_does_not_infer_acceleration": true,
+    "structural_validity_does_not_infer_exact_semantics": true
+  },
+  "continuous_self_learning_chronology_lift_safety_retention_and_rollback_receipt": {
+    "adaptive_state_abi": {
+      "operations": {
+        "abi_version": 2,
+        "checkpoint_schema": "carnot.adaptive_state_abi.v2.checkpoint",
+        "expected_prior_state_required": true,
+        "fixed_width_fields": {
+          "abi_version": "u16",
+          "active_capacity": "u32_bounded_1_to_16",
+          "event_index": "u32",
+          "quarantine_capacity": "u32_bounded_1_to_32",
+          "state_version": "u32_compatible"
+        },
+        "operation_schema": "carnot.adaptive_state_abi.v2.operation",
+        "payload_hash_required_for_propose": true,
+        "principle": "Fixed-width versioned operations make ordering, hashing, recovery, and hardware mapping finite.",
+        "state_schema": "carnot.adaptive_state_abi.v2.state",
+        "supported_operations": [
+          "snapshot",
+          "lookup",
+          "propose",
+          "commit",
+          "validate",
+          "promote",
+          "quarantine",
+          "supersede",
+          "reject",
+          "rollback",
+          "recover"
+        ],
+        "validator_receipt_required_for_validate": true
+      },
+      "parity": {
+        "byte_parity": true,
+        "operation_count": 37,
+        "parity_failures": [],
+        "principle": "Equivalent backends must match bytes, state hashes, statuses, and errors, not just final success.",
+        "python_checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+        "python_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+        "rust_checkpoint_hash": "sha256:68e874cbd0b615aa14ede25e35c3fc40316e63e38099cf48b6c911166b25f99a",
+        "rust_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+        "state_hash_parity": true,
+        "status_error_parity": true,
+        "trace_count": 1
+      },
+      "ready_score": 1.0,
+      "rollback": {
+        "crash_prefix_checkpoint_hash": "sha256:5c238d40274632b62fd9717b778c2894fde724ae5dbb268f9dc9aaa2e47f7e26",
+        "crash_prefix_exact": true,
+        "principle": "Crash-prefix recovery and rollback must reproduce exact prior hashes deterministically.",
+        "recovered_final_matches_full": false,
+        "rollback_exact": true,
+        "rollback_result_hash": "sha256:cbc58c98cf13d218814d814d3d65658b6bca96e819002a3e4cec64ec5fcf35f9",
+        "rollback_target_hash": "sha256:cbc58c98cf13d218814d814d3d65658b6bca96e819002a3e4cec64ec5fcf35f9",
+        "suffix_receipt_count": 25
+      },
+      "terminal_class": "positive"
+    },
+    "principle": "CSL chronology, missing live lift, safety, retention, rollback, and ABI operations stay separate.",
+    "prospective_live_csl": {
+      "declared_deliverable": "results/experiment_5925_sota_transactional_csl_prospective.json",
+      "declared_deliverable_present": false,
+      "lift_measured": false,
+      "lift_result": "missing_gate_blocked_no_live_csl_rows",
+      "terminal_class": "gate-blocked"
+    },
+    "same_event_or_future_label_leakage_promoted": false,
+    "stream_admission": {
+      "chronology": {
+        "event_ids_unique": true,
+        "event_order_is_chronological": true,
+        "first_event_id": "exp5920-event-000000",
+        "future_label_visibility_count": 0,
+        "last_event_id": "exp5920-event-000197",
+        "principle": "Monotone ids, stable split, and no future-label prompt visibility are mandatory.",
+        "split_counts": {
+          "dev": 60,
+          "heldout": 60,
+          "train": 78
+        }
+      },
+      "exact_label_authority": {
+        "all_labels_recomputed_and_match": true,
+        "authority": "exp5909.evaluate_candidate",
+        "label_projection_fields": [
+          "parse_valid",
+          "type_valid",
+          "compiled",
+          "satisfiability_correct",
+          "exact_semantic_equivalence",
+          "query_correct",
+          "unsafe_accepted_constraints"
+        ],
+        "principle": "Exact verifier labels and diagnostics are adjudication authority after proposal only.",
+        "row_count": 198,
+        "verifier_is_oracle_scope": "schema, checksum, chronology, visibility, and exact-label adjudication",
+        "visible_after_proposal_only": true
+      },
+      "ready_score": 1.0,
+      "terminal_class": "positive"
+    },
+    "transactional_memory": {
+      "gate_replay_receipt": {
+        "artifact_sha256": "sha256:2916f8fe3c588e9074c69460e570d0bd21bdac8fd83fbf70301938d39a2a1222",
+        "artifact_validates": true,
+        "exp5920_artifact_path": "results/experiment_5920_prospective_event_stream_admission.json",
+        "exp5920_ready_score": 1.0,
+        "exp5920_rows_path": "results/experiment_5920_prospective_event_stream_admission.rows.jsonl",
+        "exp5920_status": "complete_ready",
+        "final_prefix_checksum": "sha256:1b816bd76c2ba07704c45882dbbdb10ca05e593b22d359e443d1f7ffb3218852",
+        "principle": "Exp5920 gate and stream replay must pass before the fixture consumes events.",
+        "retired_exp5912_dependency_used": false,
+        "row_count": 198,
+        "row_file_sha256": "sha256:747721852349534113403394e577d4b2bee339411d1ab5f15ddfada0c0a59b10",
+        "stream_replay_ok": true
+      },
+      "hardware_mapping_contract": {
+        "bounded_active_capacity": 3,
+        "bounded_quarantine_capacity": 6,
+        "finite_operation_set": [
+          "snapshot",
+          "lookup",
+          "propose",
+          "commit",
+          "validate",
+          "promote",
+          "quarantine",
+          "supersede",
+          "rollback",
+          "reject"
+        ],
+        "fixed_hash": "sha256_canonical_json",
+        "hardware_execution_claimed": false,
+        "hardware_mapping": "CPU orchestration with FPGA-addressable bounded lookup tables",
+        "principle": "The state machine remains finite, bounded, and hardware-mappable without claiming board execution.",
+        "state_schema": "carnot.experiment_5924.transactional_constraint_memory_v2.v1.state",
+        "transaction_schema": "carnot.experiment_5924.transactional_constraint_memory_v2.v1.transaction"
+      },
+      "ready_score": 1.0,
+      "safety_retention_rollback": {
+        "deterministic_quarantine": true,
+        "poison_burst_count": 3,
+        "poison_or_near_miss_promoted_count": 0,
+        "poison_quarantined_count": 3,
+        "principle": "Poison and near-miss updates quarantine deterministically while protected prefixes retain exact labels.",
+        "protected_prefix_retention_score": 1.0,
+        "restart_recovery_hash_matches": true,
+        "rollback_recovery_hash_matches": true,
+        "semantic_near_miss_count": 2,
+        "semantic_near_miss_quarantined_count": 2
+      },
+      "terminal_class": "positive"
+    }
+  },
+  "docs_reconciled": {
+    "openspec_capstone_req_5931_present": true,
+    "openspec_research_reporting_req_5931_present": true,
+    "ops_changelog_deferred_to_conductor_stop_rule": true,
+    "ops_conductor_log_deferred_to_conductor_stop_rule": true,
+    "ops_status_deferred_to_conductor_stop_rule": true,
+    "principle": "Relevant OpenSpec entries are recorded while conductor-owned ledgers are deferred by the stop rule.",
+    "traceability_deferred_to_conductor_stop_rule": true
+  },
+  "duplicate_history_amplification_count": 0,
+  "duration_s": 5.966263,
+  "exact_terminal_classification": {
+    "all_activated_classified_once": true,
+    "disjoint_terminal_classes": [
+      "positive",
+      "null",
+      "underpowered",
+      "blocked-precondition",
+      "retired",
+      "gate-blocked",
+      "no-change",
+      "missing"
+    ],
+    "invalid_artifact_task_ids": [],
+    "principle": "positive, null, underpowered, blocked-precondition, retired, gate-blocked, no-change, and missing classes remain disjoint.",
+    "task_ids_by_terminal_class": {
+      "blocked-precondition": [
+        "exp5918-transition-v526",
+        "exp5929-arc-structured-memory-bound-live-ab"
+      ],
+      "gate-blocked": [
+        "exp5925-sota-transactional-csl-prospective"
+      ],
+      "missing": [],
+      "no-change": [
+        "exp5930-adaptive-state-board-mapping"
+      ],
+      "null": [
+        "exp5919-v526-source-delta-ingestion"
+      ],
+      "positive": [
+        "exp5920-prospective-event-stream-admission",
+        "exp5921-schema-derived-constraintir-support",
+        "exp5922-gguf-schema-decoder-bridge",
+        "exp5924-transactional-constraint-memory-v2",
+        "exp5926-adaptive-state-abi-v2-parity",
+        "exp5928-arc-live-runner-execution-binding",
+        "exp5931-v526-capstone-reconciliation"
+      ],
+      "retired": [
+        "exp5923-sota-schema-supported-constraintir-ab"
+      ],
+      "underpowered": [
+        "exp5927-coordinate-router-progress-qualification"
+      ]
+    },
+    "terminal_class_by_task_id": {
+      "exp5918-transition-v526": "blocked-precondition",
+      "exp5919-v526-source-delta-ingestion": "null",
+      "exp5920-prospective-event-stream-admission": "positive",
+      "exp5921-schema-derived-constraintir-support": "positive",
+      "exp5922-gguf-schema-decoder-bridge": "positive",
+      "exp5923-sota-schema-supported-constraintir-ab": "retired",
+      "exp5924-transactional-constraint-memory-v2": "positive",
+      "exp5925-sota-transactional-csl-prospective": "gate-blocked",
+      "exp5926-adaptive-state-abi-v2-parity": "positive",
+      "exp5927-coordinate-router-progress-qualification": "underpowered",
+      "exp5928-arc-live-runner-execution-binding": "positive",
+      "exp5929-arc-structured-memory-bound-live-ab": "blocked-precondition",
+      "exp5930-adaptive-state-board-mapping": "no-change",
+      "exp5931-v526-capstone-reconciliation": "positive"
+    },
+    "terminal_subclass_by_task_id": {
+      "exp5918-transition-v526": "blocked",
+      "exp5919-v526-source-delta-ingestion": "honest-null",
+      "exp5920-prospective-event-stream-admission": "ready-or-positive",
+      "exp5921-schema-derived-constraintir-support": "ready-or-positive",
+      "exp5922-gguf-schema-decoder-bridge": "ready-or-positive",
+      "exp5923-sota-schema-supported-constraintir-ab": "retire-if-same-verdict",
+      "exp5924-transactional-constraint-memory-v2": "ready-or-positive",
+      "exp5925-sota-transactional-csl-prospective": "missing-deliverable-with-conductor-gate-block",
+      "exp5926-adaptive-state-abi-v2-parity": "ready-or-positive",
+      "exp5927-coordinate-router-progress-qualification": "underpowered",
+      "exp5928-arc-live-runner-execution-binding": "ready-or-positive",
+      "exp5929-arc-structured-memory-bound-live-ab": "blocked-precondition",
+      "exp5930-adaptive-state-board-mapping": "static-mapping-no-physical-probe",
+      "exp5931-v526-capstone-reconciliation": "current-capstone-emission"
+    }
+  },
+  "experiment": "experiment_5931_v526_capstone_reconciliation",
+  "experiment_id": "exp5931-v526-capstone-reconciliation",
+  "field_principles": {
+    "activated_task_and_declared_deliverable_matrix": "only exact activated identities and exact declared paths count.",
+    "adaptive_state_abi_and_hardware_receipt": "ABI parity, static synthesis, and physical board execution are distinct receipts.",
+    "adversarial_verifier_receipts": "Fresh verifier receipts cover every present declared .526 artifact without replacing missing ones.",
+    "arc_coordinate_execution_binding_and_live_receipt": "Offline ARC qualification, execution binding, and live rows are different authorities.",
+    "branch_independence_receipt": "a gate block or branch failure cannot erase or manufacture evidence in another branch.",
+    "continuous_self_learning_chronology_lift_safety_retention_and_rollback_receipt": "CSL chronology, missing live lift, safety, retention, rollback, and ABI operations stay separate.",
+    "docs_reconciled": "Relevant OpenSpec entries are recorded while conductor-owned ledgers are deferred by the stop rule.",
+    "duplicate_history_amplification_count": "must be bare zero.",
+    "duration_s": "Measured wall time exposes aggregation-only execution.",
+    "exact_terminal_classification": "positive, null, underpowered, blocked-precondition, retired, gate-blocked, no-change, and missing classes remain disjoint.",
+    "field_provenance": "Every required field traces to exact paths, hashes, receipts, commands, or classifications.",
+    "honest_verdict": "use `complete:`, `complete_with_nulls:`, or `blocked:`.",
+    "inference_substrate": "use `aggregation_from_exact_declared_artifacts`.",
+    "milestone_and_task_range": "The activated milestone must be exactly 2026.07.526 with Exp5918 through Exp5931.",
+    "missing_gate_blocked_and_reserved_receipts": "Missing deliverables, gate-blocked tasks, invalid receipts, and current capstone emission stay visible.",
+    "next_three_falsifiable_recommendations": "Exactly three recommendations carry prerequisites, stop rules, authority boundaries, and excluded scopes.",
+    "preconditions_checked": "Roadmaps, declared artifacts, history, logs, exclusions, ARC registry, protected files, verifier state, resources, and output path are checked before completion.",
+    "prior_failure_and_retirement_decisions": "same-verdict retirement is mechanical and scope-specific.",
+    "protected_files_unchanged": "Protected roadmap, conductor, ARC, north-star, public docs, and ops-ledger files remain byte-identical.",
+    "registry_unchanged": "The ARC registry before and after hashes must match.",
+    "reproducibility_checksum": "A checksum detects later ledger, artifact, or protected-file drift.",
+    "research_complete_append_receipt": "The completion append receipt records exact zero-or-one .526 append behavior.",
+    "schema_constraintir_structural_and_exact_semantic_receipt": "Structural grammar/tokenizer support is separate from exact semantic success.",
+    "status": "Terminal capstone state over the activated .526 identities.",
+    "test_commands": "Commands document focused unit, coverage, YAML, verifier, branch, manifest, append, registry, reconciliation, spec, E2E, protected-file, and root-clutter checks.",
+    "test_exit_codes": "Exit codes prevent failed checks from being reported as success.",
+    "transition_and_source_receipt": "Transition blockage and source-refresh nulls are separate receipts, not milestone-wide conclusions."
+  },
+  "field_provenance": {
+    "activated_task_and_declared_deliverable_matrix": "activated_task_and_declared_deliverable_matrix derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "adaptive_state_abi_and_hardware_receipt": "adaptive_state_abi_and_hardware_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "adversarial_verifier_receipts": "adversarial_verifier_receipts derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "arc_coordinate_execution_binding_and_live_receipt": "arc_coordinate_execution_binding_and_live_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "branch_independence_receipt": "branch_independence_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "continuous_self_learning_chronology_lift_safety_retention_and_rollback_receipt": "continuous_self_learning_chronology_lift_safety_retention_and_rollback_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "docs_reconciled": "docs_reconciled derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "duplicate_history_amplification_count": "duplicate_history_amplification_count derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "duration_s": "duration_s derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "exact_terminal_classification": "exact_terminal_classification derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "field_provenance": "field_provenance derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "honest_verdict": "honest_verdict derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "inference_substrate": "inference_substrate derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "milestone_and_task_range": "milestone_and_task_range derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "missing_gate_blocked_and_reserved_receipts": "missing_gate_blocked_and_reserved_receipts derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "next_three_falsifiable_recommendations": "next_three_falsifiable_recommendations derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "preconditions_checked": "preconditions_checked derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "prior_failure_and_retirement_decisions": "prior_failure_and_retirement_decisions derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "protected_files_unchanged": "protected_files_unchanged derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "registry_unchanged": "registry_unchanged derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "reproducibility_checksum": "reproducibility_checksum derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "research_complete_append_receipt": "research_complete_append_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "schema_constraintir_structural_and_exact_semantic_receipt": "schema_constraintir_structural_and_exact_semantic_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "status": "status derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "test_commands": "test_commands derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "test_exit_codes": "test_exit_codes derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests.",
+    "transition_and_source_receipt": "transition_and_source_receipt derived from active roadmap exact declared artifacts, local hashes, adversarial receipts, append receipts, protected-file receipts, or tests."
+  },
+  "honest_verdict": "complete_with_nulls: .526 reconciled by exact declared deliverables with positive, null, underpowered, blocked-precondition, retired, gate-blocked, no-change, and missing receipts preserved independently",
+  "inference_substrate": "aggregation_from_exact_declared_artifacts",
+  "milestone": "2026.07.526",
+  "milestone_and_task_range": {
+    "activated_task_count": 14,
+    "exact_range": true,
+    "expected_task_count": 14,
+    "milestone": "2026.07.526",
+    "principle": "The activated milestone must be exactly 2026.07.526 with Exp5918 through Exp5931.",
+    "task_ids": [
+      "exp5918-transition-v526",
+      "exp5919-v526-source-delta-ingestion",
+      "exp5920-prospective-event-stream-admission",
+      "exp5921-schema-derived-constraintir-support",
+      "exp5922-gguf-schema-decoder-bridge",
+      "exp5923-sota-schema-supported-constraintir-ab",
+      "exp5924-transactional-constraint-memory-v2",
+      "exp5925-sota-transactional-csl-prospective",
+      "exp5926-adaptive-state-abi-v2-parity",
+      "exp5927-coordinate-router-progress-qualification",
+      "exp5928-arc-live-runner-execution-binding",
+      "exp5929-arc-structured-memory-bound-live-ab",
+      "exp5930-adaptive-state-board-mapping",
+      "exp5931-v526-capstone-reconciliation"
+    ],
+    "task_range": "Exp5918-Exp5931"
+  },
+  "missing_gate_blocked_and_reserved_receipts": {
+    "current_capstone_emission_task_id": "exp5931-v526-capstone-reconciliation",
+    "current_capstone_not_counted_missing": true,
+    "gate_blocked_missing_declared_deliverable_task_ids": [
+      "exp5925-sota-transactional-csl-prospective"
+    ],
+    "gate_blocked_task_ids": [
+      "exp5925-sota-transactional-csl-prospective"
+    ],
+    "invalid_artifact_task_ids": [],
+    "missing_declared_deliverable_task_ids": [
+      "exp5925-sota-transactional-csl-prospective"
+    ],
+    "principle": "Missing deliverables, gate-blocked tasks, invalid receipts, and current capstone emission stay visible."
+  },
+  "next_three_falsifiable_recommendations": [
+    {
+      "authority_boundaries": [
+        "Grammar, type, and scope checks authorize syntax only",
+        "Exact executor receipts alone authorize semantic success"
+      ],
+      "evidence_task_ids": [
+        "exp5921-schema-derived-constraintir-support",
+        "exp5922-gguf-schema-decoder-bridge"
+      ],
+      "excluded_scopes": [
+        "retired schema-supported reprompt mechanism",
+        "numeric-prefix artifact substitution",
+        "structural validity reported as a semantic win"
+      ],
+      "falsifiable_success_condition": "On sealed held cases, exact semantic success exceeds the direct-control rate by a preregistered positive lower CI bound with zero unsafe accepts.",
+      "id": "next_constraint_semantic_executor_gate",
+      "prerequisites": [
+        "Exp5921 schema support ready score remains 1.0",
+        "Exp5922 embedded GGUF tokenizer bridge ready score remains 1.0",
+        "A fresh held exact-executor fixture is sealed before model output is read"
+      ],
+      "stop_rules": [
+        "Stop before model load if tokenizer replay or exact-executor hashes drift",
+        "Stop after the first unsafe exact accept",
+        "Stop if structural validity improves while exact semantic success remains at zero"
+      ],
+      "terminal_evidence": "Exp5921 and Exp5922 are ready structural/tokenizer receipts, while exact semantic success must remain executor-owned."
+    },
+    {
+      "authority_boundaries": [
+        "Exact validator receipts authorize promotion",
+        "Memory similarity and model-authored labels do not authorize promotion"
+      ],
+      "evidence_task_ids": [
+        "exp5920-prospective-event-stream-admission",
+        "exp5924-transactional-constraint-memory-v2",
+        "exp5926-adaptive-state-abi-v2-parity"
+      ],
+      "excluded_scopes": [
+        "missing prospective all-three-model CSL run",
+        "retired frozen-slot CSL replay",
+        "model weight mutation"
+      ],
+      "falsifiable_success_condition": "A chronological A/B reports positive prospective exact-semantic transfer over fixed-memory and shuffled-history controls with retention 1.0 and zero unsafe promotions.",
+      "id": "next_csl_fixture_to_live_lift_gate",
+      "prerequisites": [
+        "Exp5920 stream prefix chain replays exactly",
+        "Exp5924 transactional memory ready score remains 1.0",
+        "Exp5926 ABI parity remains 1.0 across fresh processes"
+      ],
+      "stop_rules": [
+        "Stop on same-event read-after-write leakage",
+        "Stop on future-label visibility",
+        "Stop when rollback or restart recovery hash parity fails"
+      ],
+      "terminal_evidence": "Exp5920, Exp5924, and Exp5926 provide chronology, transactional memory, rollback, retention, and ABI receipts without live CSL lift rows."
+    },
+    {
+      "authority_boundaries": [
+        "Offline progress can size the test but cannot count as live evidence",
+        "Execution binding can authorize process scope but not scientific success"
+      ],
+      "evidence_task_ids": [
+        "exp5927-coordinate-router-progress-qualification",
+        "exp5928-arc-live-runner-execution-binding"
+      ],
+      "excluded_scopes": [
+        "public ARC solve credit",
+        "offline AUROC treated as live search",
+        "adapter-enabled or unbound runner path"
+      ],
+      "falsifiable_success_condition": "Capability-bound adapter-disabled held episodes complete live rows and the structured arm beats both no-memory and raw-tape controls by preregistered lower CI bounds.",
+      "id": "next_arc_bound_live_power_gate",
+      "prerequisites": [
+        "Exp5928 actual child binding ready score remains 1.0",
+        "Registry before hash equals after hash before the first scored episode",
+        "A powered held-cell plan reaches the preregistered minimum positive-row count"
+      ],
+      "stop_rules": [
+        "Stop if capability is absent, self-issued, expired, replayed, or wrong-scope",
+        "Stop if any public solve target is selected",
+        "Stop if completed live rows remain zero after preflight"
+      ],
+      "terminal_evidence": "Exp5927 is underpowered offline progress evidence and Exp5928 proves actual runner binding; live structured-memory rows remain absent."
+    }
+  ],
+  "preconditions_checked": {
+    "adversarial_verifier_state": {
+      "receipt_exit_code": 0,
+      "receipt_sha256": "sha256:d901cc33f5cb12b3883d78b5aba22f71ca7745ca022f5f609197edca085568bc",
+      "script_sha256": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de"
+    },
+    "arc_registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72"
+    },
+    "atomic_output": {
+      "error": null,
+      "ok": true,
+      "parent_exists": true,
+      "parent_writable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5931_v526_capstone_reconciliation.json"
+    },
+    "completion_history": {
+      "path": "research-complete.yaml",
+      "sha256": "sha256:1cd784dee94fd00c532f29a8eaa99328a229fcb0636c4f6b99a27cb824a722ff"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:1ee80675e229b96a152250584d70cceee21f83d6422fcb201a46d167d96b318e"
+    },
+    "declared_path_count": 14,
+    "declared_paths": [
+      "results/experiment_5918_transition_v526.json",
+      "results/experiment_5919_v526_source_delta_ingestion.json",
+      "results/experiment_5920_prospective_event_stream_admission.json",
+      "results/experiment_5921_schema_derived_constraintir_support.json",
+      "results/experiment_5922_gguf_schema_decoder_bridge.json",
+      "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+      "results/experiment_5924_transactional_constraint_memory_v2.json",
+      "results/experiment_5925_sota_transactional_csl_prospective.json",
+      "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+      "results/experiment_5927_coordinate_router_progress_qualification.json",
+      "results/experiment_5928_arc_live_runner_execution_binding.json",
+      "results/experiment_5929_arc_structured_memory_bound_live_ab.json",
+      "results/experiment_5930_adaptive_state_board_mapping.json",
+      "results/experiment_5931_v526_capstone_reconciliation.json"
+    ],
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:8126755444fbf526e0737284b67f1245af290b7f3e781c95b8b2563d4d4fcba1"
+    },
+    "principle": "Roadmaps, declared artifacts, history, logs, exclusions, ARC registry, protected files, verifier state, resources, and output path are checked before completion.",
+    "resources": {
+      "disk": {
+        "available_mb": 1164509,
+        "ok": true,
+        "required_mb": 512
+      },
+      "ram": {
+        "available_mb": 120355,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "roadmap": {
+      "active_roadmap": {
+        "error": null,
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "present": true,
+        "sha256": "sha256:8b26193a22f63c0d57a07c8488e303c90280706709bd065432a31114511bd0a7"
+      },
+      "exact_range": true,
+      "expected_task_count": 14,
+      "expected_task_ids": [
+        "exp5918",
+        "exp5919",
+        "exp5920",
+        "exp5921",
+        "exp5922",
+        "exp5923",
+        "exp5924",
+        "exp5925",
+        "exp5926",
+        "exp5927",
+        "exp5928",
+        "exp5929",
+        "exp5930",
+        "exp5931"
+      ],
+      "milestone": "2026.07.526",
+      "milestone_matches": true,
+      "task_count": 14,
+      "task_ids": [
+        "exp5918-transition-v526",
+        "exp5919-v526-source-delta-ingestion",
+        "exp5920-prospective-event-stream-admission",
+        "exp5921-schema-derived-constraintir-support",
+        "exp5922-gguf-schema-decoder-bridge",
+        "exp5923-sota-schema-supported-constraintir-ab",
+        "exp5924-transactional-constraint-memory-v2",
+        "exp5925-sota-transactional-csl-prospective",
+        "exp5926-adaptive-state-abi-v2-parity",
+        "exp5927-coordinate-router-progress-qualification",
+        "exp5928-arc-live-runner-execution-binding",
+        "exp5929-arc-structured-memory-bound-live-ab",
+        "exp5930-adaptive-state-board-mapping",
+        "exp5931-v526-capstone-reconciliation"
+      ],
+      "task_numbers": [
+        5918,
+        5919,
+        5920,
+        5921,
+        5922,
+        5923,
+        5924,
+        5925,
+        5926,
+        5927,
+        5928,
+        5929,
+        5930,
+        5931
+      ]
+    },
+    "roadmap_next": {
+      "loadable": false,
+      "milestone": null,
+      "present": false,
+      "sha256": null,
+      "task_ids": []
+    },
+    "source_hashes": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c"
+      },
+      "openspec/capabilities/capstone/spec.md": {
+        "present": true,
+        "sha256": "sha256:db42e8c94b424ee374faf4e89ff7e18bdca02033fbe9ccc95d5c195f97658462"
+      },
+      "openspec/capabilities/research-reporting/spec.md": {
+        "present": true,
+        "sha256": "sha256:6e90086dd804f13531538a24537f4446f650321758c7a5a3e3de521ef1a2a31b"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:3707520285ed28ca4f10fed7b15b533570c8c8854dad7187db64a28bc6e30669"
+      },
+      "ops/arc_solve_registry.yaml": {
+        "present": true,
+        "sha256": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:55875cd5c67967e3466c3798325e860892f43e34d6f5289d1d2e2997a99ee3aa"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:1ee80675e229b96a152250584d70cceee21f83d6422fcb201a46d167d96b318e"
+      },
+      "ops/e2e-test-plan.md": {
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:8126755444fbf526e0737284b67f1245af290b7f3e781c95b8b2563d4d4fcba1"
+      },
+      "ops/north-star.md": {
+        "present": true,
+        "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc"
+      },
+      "research-complete.yaml": {
+        "present": true,
+        "sha256": "sha256:1cd784dee94fd00c532f29a8eaa99328a229fcb0636c4f6b99a27cb824a722ff"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:8b26193a22f63c0d57a07c8488e303c90280706709bd065432a31114511bd0a7"
+      },
+      "results/experiment_5917_v525_capstone_reconciliation.json": {
+        "present": true,
+        "sha256": "sha256:40bf1e2f438139f18299d6875880cc9f31d7fccd9d48335a99c4cf7a633be039"
+      },
+      "results/experiment_5918_transition_v526.json": {
+        "present": true,
+        "sha256": "sha256:eea1b4bc715db476d7460062926dff3948254f8747c1c36c5e2e4668850a9bfe"
+      },
+      "results/experiment_5919_v526_source_delta_ingestion.json": {
+        "present": true,
+        "sha256": "sha256:bccc37b9d0667c52d8817f2fd30a3b7ef992ba6b3f10c883a93dd18eb49f7b29"
+      },
+      "results/experiment_5920_prospective_event_stream_admission.json": {
+        "present": true,
+        "sha256": "sha256:2916f8fe3c588e9074c69460e570d0bd21bdac8fd83fbf70301938d39a2a1222"
+      },
+      "results/experiment_5921_schema_derived_constraintir_support.json": {
+        "present": true,
+        "sha256": "sha256:71edda567b31f0fa4cac49c897da28884257fc922816de5910172933f8318c69"
+      },
+      "results/experiment_5922_gguf_schema_decoder_bridge.json": {
+        "present": true,
+        "sha256": "sha256:82d57990b456cb59b35dd1ea82b09a287c1dcd717baa49c65291dd8768924a15"
+      },
+      "results/experiment_5923_sota_schema_supported_constraintir_ab.json": {
+        "present": true,
+        "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
+      },
+      "results/experiment_5924_transactional_constraint_memory_v2.json": {
+        "present": true,
+        "sha256": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3"
+      },
+      "results/experiment_5925_sota_transactional_csl_prospective.json": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_5926_adaptive_state_abi_v2_parity.json": {
+        "present": true,
+        "sha256": "sha256:eeefe30580820cd19bd7cb60c65fe80b4bd9352ecbbf915b2a8b3018e75b9f67"
+      },
+      "results/experiment_5927_coordinate_router_progress_qualification.json": {
+        "present": true,
+        "sha256": "sha256:41c04a77db4d8b24427a26f9e72ed4c0a5ec1868dfcf22cdda89488f84d365f0"
+      },
+      "results/experiment_5928_arc_live_runner_execution_binding.json": {
+        "present": true,
+        "sha256": "sha256:42f740f816bf840feb58bccce9c7162013a37b8b20eca557d6ccb6bb9842c7a4"
+      },
+      "results/experiment_5929_arc_structured_memory_bound_live_ab.json": {
+        "present": true,
+        "sha256": "sha256:7fc656897b3386d298e96be196beee786003675096fc9b531107a081cb44aef7"
+      },
+      "results/experiment_5930_adaptive_state_board_mapping.json": {
+        "present": true,
+        "sha256": "sha256:2391848e75f3af302de8a0863cd594faf427b6a413ffd6aac17e193ce749025b"
+      },
+      "results/experiment_5931_v526_capstone_reconciliation.json": {
+        "present": false,
+        "sha256": null
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:a002b15ab311865bcd009254bd27b5bbf0e0e182eff06c410db11aa4fc8388de"
+      },
+      "scripts/in_process_doc_reconcile.py": {
+        "present": true,
+        "sha256": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      }
+    }
+  },
+  "prior_failure_and_retirement_decisions": {
+    "manifest_append_count": 1,
+    "manifest_update_receipt": {
+      "after_sha256": "sha256:8126755444fbf526e0737284b67f1245af290b7f3e781c95b8b2563d4d4fcba1",
+      "appended": true,
+      "before_sha256": "sha256:bb0a0af893ef37303ff197422c57a29c3c928692dc9b85b355be7b4d83235179",
+      "manifest_append_count": 1,
+      "reason": "same_verdict_recurred"
+    },
+    "principle": "same-verdict retirement is mechanical and scope-specific.",
+    "prior_failure_audit": [
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5905-transition-v525",
+        "prior_verdict": "blocked: Exp5905 transition preconditions failed",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5918-transition-v526"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5906-v525-source-delta-ingestion",
+        "prior_verdict": "complete_null: no accepted post-V525 source deltas; references unchanged",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5919-v526-source-delta-ingestion"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5912-csl-exact-slot-requalification",
+        "prior_verdict": "retired: repeated_global_suite_exit_2_after_frozen_science_parity",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5920-prospective-event-stream-admission"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+        "prior_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5921-schema-derived-constraintir-support"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+        "prior_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5922-gguf-schema-decoder-bridge"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "artifact_retirement_decision_retire_true",
+        "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+        "prior_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": true,
+        "task_id": "exp5923-sota-schema-supported-constraintir-ab"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "artifact_retirement_decision_retire_true",
+        "prior_experiment_id": "exp5910-verification-guided-constraint-repair",
+        "prior_verdict": "complete_null: exact diagnostics did not beat matched repair controls",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": true,
+        "task_id": "exp5923-sota-schema-supported-constraintir-ab"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5913-transactional-constraint-memory-fixture",
+        "prior_verdict": "blocked_gate_check_failed",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5924-transactional-constraint-memory-v2"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5914-sota-transactional-csl-prospective",
+        "prior_verdict": "gate-blocked: upstream transactional fixture depended on retired Exp5912 exact-slot requalification",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5925-sota-transactional-csl-prospective"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5859-adaptive-state-microkernel-parity",
+        "prior_verdict": "blocked: adaptive_state_microkernel_conformance_incomplete",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5926-adaptive-state-abi-v2-parity"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5904-click-target-discrimination",
+        "prior_verdict": "complete_coordinate_blindness_repaired_but_gain_over_static_baseline_unestablished",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5927-coordinate-router-progress-qualification"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5758-click-action-ranking",
+        "prior_verdict": "complete: small_object_first_click_reorder_changes_search_on_7_arm_games_but_no_level_gain_over_baseline_1_and_offline_rank_shift_is_a_wash_reduced_0_of_2_decisive_games_missing_verifier_gap",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5927-coordinate-router-progress-qualification"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5916-arc-structured-memory-live-held-ab",
+        "prior_verdict": "blocked_precondition: live_runner_execution_binding",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5928-arc-live-runner-execution-binding"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5902-arc-structured-memory-live-ab",
+        "prior_verdict": "blocked_precondition: live_runner_permission",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5928-arc-live-runner-execution-binding"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5916-arc-structured-memory-live-held-ab",
+        "prior_verdict": "blocked_precondition: live_runner_execution_binding",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5929-arc-structured-memory-bound-live-ab"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5902-arc-structured-memory-live-ab",
+        "prior_verdict": "blocked_precondition: live_runner_permission",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5929-arc-structured-memory-bound-live-ab"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5861-attached-board-state-receipts",
+        "prior_verdict": "no-change: exp5859_not_ready and no changed authenticated board state-operation route; kv260=programmed_image_poc polarfire=prior_physical_workload_only gatemate=blocked_idcode; authenticated_state_operation_parity_score=0.0; no_speedup no_power no_energy no_thermalization no_convergence no_tsu no_kona no_unsupported_sovereignty_claim",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5930-adaptive-state-board-mapping"
+      },
+      {
+        "adjacent_open_mechanism_retired": false,
+        "evidence": "no_exact_same_verdict_retirement_receipt",
+        "prior_experiment_id": "exp5917-v525-capstone-reconciliation",
+        "prior_verdict": "complete_with_nulls: .525 reconciled by exact declared deliverables with positive, null, blocked, retired, gate-blocked, and missing receipts preserved independently",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": false,
+        "task_id": "exp5931-v526-capstone-reconciliation"
+      }
+    ],
+    "retire_if_same_verdict_decisions": [
+      {
+        "decision": "retire_exact_scope",
+        "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": true,
+        "scope_key": "schema_supported_constraintir_zero_exact_semantics_v526",
+        "task_id": "exp5923-sota-schema-supported-constraintir-ab"
+      },
+      {
+        "decision": "retire_exact_scope",
+        "prior_experiment_id": "exp5910-verification-guided-constraint-repair",
+        "retire_if_same_verdict": true,
+        "same_verdict_recurred": true,
+        "scope_key": "schema_supported_constraintir_zero_exact_semantics_v526",
+        "task_id": "exp5923-sota-schema-supported-constraintir-ab"
+      }
+    ],
+    "retired_adjacent_open_mechanism_count": 0,
+    "retired_task_ids_reopened": []
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "README.md": {
+        "present": true,
+        "sha256_after": "sha256:d74b61a601e2be573901ea3223fcddf1a46b936b70e563862335bc15d0447b00",
+        "sha256_before": "sha256:d74b61a601e2be573901ea3223fcddf1a46b936b70e563862335bc15d0447b00",
+        "unchanged": true
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256_after": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "sha256_before": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "unchanged": true
+      },
+      "docs/index.html": {
+        "present": true,
+        "sha256_after": "sha256:02ed89654a0889d485d14caee5b7e9966548eb07664ca53e94871af140b69714",
+        "sha256_before": "sha256:02ed89654a0889d485d14caee5b7e9966548eb07664ca53e94871af140b69714",
+        "unchanged": true
+      },
+      "ops/arc_solve_registry.yaml": {
+        "present": true,
+        "sha256_after": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+        "sha256_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256_after": "sha256:55875cd5c67967e3466c3798325e860892f43e34d6f5289d1d2e2997a99ee3aa",
+        "sha256_before": "sha256:55875cd5c67967e3466c3798325e860892f43e34d6f5289d1d2e2997a99ee3aa",
+        "unchanged": true
+      },
+      "ops/north-star.md": {
+        "present": true,
+        "sha256_after": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "sha256_before": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256_after": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+        "sha256_before": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256_after": null,
+        "sha256_before": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256_after": "sha256:8b26193a22f63c0d57a07c8488e303c90280706709bd065432a31114511bd0a7",
+        "sha256_before": "sha256:8b26193a22f63c0d57a07c8488e303c90280706709bd065432a31114511bd0a7",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256_after": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "sha256_before": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
+        "unchanged": true
+      }
+    },
+    "principle": "Protected roadmap, conductor, ARC, north-star, public docs, and ops-ledger files remain byte-identical."
+  },
+  "registry_unchanged": {
+    "path": "ops/arc_solve_registry.yaml",
+    "principle": "The ARC registry before and after hashes must match.",
+    "sha256_after": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "sha256_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:4efc2fb2c29529b5e4a329ae0653e7207c5d10f961c23a1bf6cc96fb74e6c7c3",
+  "research_complete_append_receipt": {
+    "after_duplicate_history_count": 897,
+    "after_sha256": "sha256:1cd784dee94fd00c532f29a8eaa99328a229fcb0636c4f6b99a27cb824a722ff",
+    "append_count": 1,
+    "appended": true,
+    "before_duplicate_history_count": 897,
+    "before_sha256": "sha256:907310bd54262c5bfcd8835746cfe6bb3ca182c0bbc8bc16f26a7d3ef737ca50",
+    "duplicate_history_amplification_count": 0,
+    "principle": "The completion append receipt records exact zero-or-one .526 append behavior.",
+    "reason": "milestone_block_absent"
+  },
+  "schema": "carnot.experiment_5931.v526_capstone_reconciliation.v1",
+  "schema_constraintir_structural_and_exact_semantic_receipt": {
+    "compiler_structural_receipt": {
+      "bounded_rejection_controls": {
+        "dead_end_policy": "reject_prefix_and_advance_to_next_candidate",
+        "max_rejections": 5
+      },
+      "deterministic_support_replay": {
+        "deterministic_replay": true,
+        "left_hash": "sha256:0fcb3013966dc3ef4887ad955e6316791e67c1ca12ea591eb97e799dd9d9629c",
+        "right_hash": "sha256:0fcb3013966dc3ef4887ad955e6316791e67c1ca12ea591eb97e799dd9d9629c"
+      },
+      "grammar_terminals": {
+        "arith_ops": [
+          "<",
+          "<=",
+          "==",
+          ">",
+          ">="
+        ],
+        "domain_keys": [
+          "id",
+          "type",
+          "values"
+        ],
+        "domain_types": [
+          "int",
+          "symbol"
+        ],
+        "entity_keys": [
+          "domain",
+          "id"
+        ],
+        "expression_nodes": [
+          "and",
+          "arith",
+          "atom",
+          "not"
+        ],
+        "fact_keys": [
+          "args",
+          "predicate",
+          "truth"
+        ],
+        "predicate_keys": [
+          "arg_types",
+          "id"
+        ],
+        "query_keys": [
+          "vars",
+          "where"
+        ],
+        "rule_keys": [
+          "body",
+          "head",
+          "id",
+          "variables"
+        ],
+        "top_level_keys": [
+          "domains",
+          "entities",
+          "facts",
+          "predicates",
+          "query",
+          "rules",
+          "schema_version"
+        ],
+        "truth_literals": [
+          false,
+          true
+        ]
+      },
+      "mechanically_derived_from_signature_schema": true,
+      "scope_rules": {
+        "domains": {
+          "defines": "global_domain_namespace"
+        },
+        "entities": {
+          "defines": "global_entity_namespace",
+          "uses": "domains"
+        },
+        "predicates": {
+          "defines": "global_predicate_namespace",
+          "uses": "domains"
+        },
+        "query.variables": {
+          "leaks_to_rules": false,
+          "scope": "query_local"
+        },
+        "rule.variables": {
+          "leaks_to_query": false,
+          "scope": "rule_local"
+        }
+      },
+      "signature_schema_hash": "sha256:1bf1681b2283a57104f082278089271cbb55765fd38bc61c2341c942c3b5fce7",
+      "support_schema_hash": "sha256:2c1004c371781a9568242ba42da08665f01031b09127675087e2aa1f27941e9a",
+      "support_schema_version": "carnot.constraint_ir.schema_derived_support.v1",
+      "type_domain_transitions": {
+        "arith": {
+          "ops": [
+            "<",
+            "<=",
+            "==",
+            ">",
+            ">="
+          ],
+          "uses": [
+            "integer_domain"
+          ]
+        },
+        "domain": {
+          "defines": [
+            "domain.id"
+          ],
+          "valid_types": [
+            "int",
+            "symbol"
+          ]
+        },
+        "entity": {
+          "requires": [
+            "symbol_domain"
+          ],
+          "uses": [
+            "domain.id"
+          ]
+        },
+        "fact": {
+          "uses": [
+            "predicate.args"
+          ]
+        },
+        "predicate": {
+          "defines": [
+            "predicate.id"
+          ],
+          "uses": [
+            "domain.id"
+          ]
+        },
+        "query": {
+          "defines": [
+            "query.variables"
+          ],
+          "uses": [
+            "domain.id",
+            "predicate.args"
+          ]
+        },
+        "rule": {
+          "defines": [
+            "rule.variables"
+          ],
+          "uses": [
+            "domain.id",
+            "predicate.args"
+          ]
+        }
+      }
+    },
+    "exact_semantic_primary_comparison_and_intervals": {
+      "best_control_arm": "direct",
+      "best_schema_supported_arm": "schema_first_ir_token",
+      "by_arm_held": {
+        "direct": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 9,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 9,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "prompt_structured": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 9,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 9,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "reason_then_schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 9,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 9,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        },
+        "schema_first_ir_token": {
+          "compile_rate": 0.0,
+          "exact_semantic_success_rate": 0.0,
+          "n": 9,
+          "parse_rate": 0.0,
+          "scope_rate": 0.0,
+          "semantic_n": 9,
+          "type_rate": 0.0,
+          "unsafe_accept_rate": 0.0
+        }
+      },
+      "held_exact_semantic_delta_vs_best_control": 0.0,
+      "paired_bootstrap_ci95": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0,
+        "n_pairs": 9
+      },
+      "principle": "syntax, type, and scope improvements cannot substitute for an exact semantic win over the best matched control."
+    },
+    "exact_semantic_success_promoted": false,
+    "exp5921_terminal_class": "positive",
+    "exp5922_terminal_class": "positive",
+    "exp5923_terminal_class": "retired",
+    "principle": "Structural grammar/tokenizer support is separate from exact semantic success.",
+    "retirement_decision": {
+      "next_action": "retire_mechanism_no_reprompt",
+      "principle": "retire rather than scheduling another reprompt when schema support fails exact semantics or safety/diversity.",
+      "reasons": [
+        "all_three_models_zero_exact_success_in_schema_supported_arms"
+      ],
+      "retire": true
+    },
+    "schema_decode_live_ready_score": 0.0,
+    "semantic_authority_boundary": {
+      "grammar_type_scope_counted_as_semantic_correct": false,
+      "principle": "Structural admission never licenses exact semantic success.",
+      "semantic_success_authority": "Exp5896 Python/Z3 behavior hash and query bindings",
+      "structurally_admitted_semantically_false_case_ids": [
+        "held_operation_strict_greater_than",
+        "attribute_semantic_price_cap_false",
+        "missing_constraint_pair_omitted_budget",
+        "spurious_constraint_pair_extra_suspension",
+        "syntactically_valid_semantically_false"
+      ],
+      "structurally_admitted_semantically_false_cases": 5,
+      "unsafe_semantic_acceptance_count": 0
+    },
+    "structural_support_ready": true,
+    "structural_validity_is_semantic_success": false,
+    "tokenizer_bridge_receipt": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "embedded_tokenizer_only": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "multi_token_terminals": {
+          "\"<\"": {
+            "token_count": 2,
+            "token_ids": [
+              21777,
+              1
+            ],
+            "utf8_bytes_hex": "223c22"
+          },
+          "\"<=\"": {
+            "token_count": 2,
+            "token_ids": [
+              21777,
+              420
+            ],
+            "utf8_bytes_hex": "223c3d22"
+          },
+          "\"==\"": {
+            "token_count": 2,
+            "token_ids": [
+              1,
+              10714
+            ],
+            "utf8_bytes_hex": "223d3d22"
+          },
+          "\">\"": {
+            "token_count": 2,
+            "token_ids": [
+              731,
+              1
+            ],
+            "utf8_bytes_hex": "223e22"
+          },
+          "\">=\"": {
+            "token_count": 2,
+            "token_ids": [
+              731,
+              420
+            ],
+            "utf8_bytes_hex": "223e3d22"
+          },
+          "\"?var\"": {
+            "token_count": 3,
+            "token_ids": [
+              42418,
+              917,
+              1
+            ],
+            "utf8_bytes_hex": "223f76617222"
+          },
+          "\"and\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              429,
+              1
+            ],
+            "utf8_bytes_hex": "22616e6422"
+          },
+          "\"arg_types\"": {
+            "token_count": 4,
+            "token_ids": [
+              1,
+              832,
+              9471,
+              1
+            ],
+            "utf8_bytes_hex": "226172675f747970657322"
+          },
+          "\"args\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              2048,
+              1
+            ],
+            "utf8_bytes_hex": "226172677322"
+          },
+          "\"arith\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              54741,
+              1
+            ],
+            "utf8_bytes_hex": "22617269746822"
+          },
+          "\"atom\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              21183,
+              1
+            ],
+            "utf8_bytes_hex": "2261746f6d22"
+          },
+          "\"body\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              2513,
+              1
+            ],
+            "utf8_bytes_hex": "22626f647922"
+          },
+          "\"caf\u00e9\"": {
+            "token_count": 4,
+            "token_ids": [
+              1,
+              895,
+              56868,
+              1
+            ],
+            "utf8_bytes_hex": "22636166c3a922"
+          },
+          "\"carnot.constraint_ir.v1\"": {
+            "token_count": 8,
+            "token_ids": [
+              93602,
+              1820,
+              349,
+              28162,
+              49701,
+              3033,
+              16,
+              1
+            ],
+            "utf8_bytes_hex": "226361726e6f742e636f6e73747261696e745f69722e763122"
+          },
+          "\"domain\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              11856,
+              1
+            ],
+            "utf8_bytes_hex": "22646f6d61696e22"
+          },
+          "\"domains\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              57605,
+              1
+            ],
+            "utf8_bytes_hex": "22646f6d61696e7322"
+          },
+          "\"entities\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              10186,
+              1
+            ],
+            "utf8_bytes_hex": "22656e74697469657322"
+          },
+          "\"facts\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              65756,
+              1
+            ],
+            "utf8_bytes_hex": "22666163747322"
+          },
+          "\"head\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              1916,
+              1
+            ],
+            "utf8_bytes_hex": "226865616422"
+          },
+          "\"id\"": {
+            "token_count": 2,
+            "token_ids": [
+              27761,
+              1
+            ],
+            "utf8_bytes_hex": "22696422"
+          },
+          "\"identifier\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              15441,
+              1
+            ],
+            "utf8_bytes_hex": "226964656e74696669657222"
+          },
+          "\"int\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              390,
+              1
+            ],
+            "utf8_bytes_hex": "22696e7422"
+          },
+          "\"not\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              1856,
+              1
+            ],
+            "utf8_bytes_hex": "226e6f7422"
+          },
+          "\"predicate\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              59701,
+              1
+            ],
+            "utf8_bytes_hex": "2270726564696361746522"
+          },
+          "\"predicates\"": {
+            "token_count": 4,
+            "token_ids": [
+              1,
+              22732,
+              24036,
+              1
+            ],
+            "utf8_bytes_hex": "227072656469636174657322"
+          },
+          "\"query\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              1574,
+              1
+            ],
+            "utf8_bytes_hex": "22717565727922"
+          },
+          "\"rules\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              21299,
+              1
+            ],
+            "utf8_bytes_hex": "2272756c657322"
+          },
+          "\"schema_version\"": {
+            "token_count": 4,
+            "token_ids": [
+              1,
+              16838,
+              9159,
+              1
+            ],
+            "utf8_bytes_hex": "22736368656d615f76657273696f6e22"
+          },
+          "\"symbol\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              18218,
+              1
+            ],
+            "utf8_bytes_hex": "2273796d626f6c22"
+          },
+          "\"truth\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              56598,
+              1
+            ],
+            "utf8_bytes_hex": "22747275746822"
+          },
+          "\"type\"": {
+            "token_count": 2,
+            "token_ids": [
+              42993,
+              1
+            ],
+            "utf8_bytes_hex": "227479706522"
+          },
+          "\"values\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              3535,
+              1
+            ],
+            "utf8_bytes_hex": "2276616c75657322"
+          },
+          "\"variables\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              18055,
+              1
+            ],
+            "utf8_bytes_hex": "227661726961626c657322"
+          },
+          "\"vars\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              14932,
+              1
+            ],
+            "utf8_bytes_hex": "227661727322"
+          },
+          "\"where\"": {
+            "token_count": 3,
+            "token_ids": [
+              1,
+              2777,
+              1
+            ],
+            "utf8_bytes_hex": "22776865726522"
+          },
+          "-1": {
+            "token_count": 2,
+            "token_ids": [
+              12,
+              16
+            ],
+            "utf8_bytes_hex": "2d31"
+          },
+          "12": {
+            "token_count": 2,
+            "token_ids": [
+              16,
+              17
+            ],
+            "utf8_bytes_hex": "3132"
+          },
+          "arg_types": {
+            "token_count": 2,
+            "token_ids": [
+              832,
+              9471
+            ],
+            "utf8_bytes_hex": "6172675f7479706573"
+          },
+          "predicates": {
+            "token_count": 2,
+            "token_ids": [
+              22732,
+              24036
+            ],
+            "utf8_bytes_hex": "70726564696361746573"
+          },
+          "schema_version": {
+            "token_count": 2,
+            "token_ids": [
+              16838,
+              9159
+            ],
+            "utf8_bytes_hex": "736368656d615f76657273696f6e"
+          }
+        },
+        "single_token_terminals": {
+          "\t": {
+            "token_count": 1,
+            "token_ids": [
+              197
+            ],
+            "utf8_bytes_hex": "09"
+          },
+          "\n": {
+            "token_count": 1,
+            "token_ids": [
+              198
+            ],
+            "utf8_bytes_hex": "0a"
+          },
+          " ": {
+            "token_count": 1,
+            "token_ids": [
+              220
+            ],
+            "utf8_bytes_hex": "20"
+          },
+          "\"": {
+            "token_count": 1,
+            "token_ids": [
+              1
+            ],
+            "utf8_bytes_hex": "22"
+          },
+          ",": {
+            "token_count": 1,
+            "token_ids": [
+              11
+            ],
+            "utf8_bytes_hex": "2c"
+          },
+          "0": {
+            "token_count": 1,
+            "token_ids": [
+              15
+            ],
+            "utf8_bytes_hex": "30"
+          },
+          "1": {
+            "token_count": 1,
+            "token_ids": [
+              16
+            ],
+            "utf8_bytes_hex": "31"
+          },
+          ":": {
+            "token_count": 1,
+            "token_ids": [
+              25
+            ],
+            "utf8_bytes_hex": "3a"
+          },
+          "<": {
+            "token_count": 1,
+            "token_ids": [
+              27
+            ],
+            "utf8_bytes_hex": "3c"
+          },
+          "<=": {
+            "token_count": 1,
+            "token_ids": [
+              7946
+            ],
+            "utf8_bytes_hex": "3c3d"
+          },
+          "==": {
+            "token_count": 1,
+            "token_ids": [
+              410
+            ],
+            "utf8_bytes_hex": "3d3d"
+          },
+          ">": {
+            "token_count": 1,
+            "token_ids": [
+              29
+            ],
+            "utf8_bytes_hex": "3e"
+          },
+          ">=": {
+            "token_count": 1,
+            "token_ids": [
+              9628
+            ],
+            "utf8_bytes_hex": "3e3d"
+          },
+          "[": {
+            "token_count": 1,
+            "token_ids": [
+              58
+            ],
+            "utf8_bytes_hex": "5b"
+          },
+          "]": {
+            "token_count": 1,
+            "token_ids": [
+              60
+            ],
+            "utf8_bytes_hex": "5d"
+          },
+          "and": {
+            "token_count": 1,
+            "token_ids": [
+              429
+            ],
+            "utf8_bytes_hex": "616e64"
+          },
+          "args": {
+            "token_count": 1,
+            "token_ids": [
+              2048
+            ],
+            "utf8_bytes_hex": "61726773"
+          },
+          "arith": {
+            "token_count": 1,
+            "token_ids": [
+              54741
+            ],
+            "utf8_bytes_hex": "6172697468"
+          },
+          "atom": {
+            "token_count": 1,
+            "token_ids": [
+              21183
+            ],
+            "utf8_bytes_hex": "61746f6d"
+          },
+          "body": {
+            "token_count": 1,
+            "token_ids": [
+              2513
+            ],
+            "utf8_bytes_hex": "626f6479"
+          },
+          "domain": {
+            "token_count": 1,
+            "token_ids": [
+              11856
+            ],
+            "utf8_bytes_hex": "646f6d61696e"
+          },
+          "domains": {
+            "token_count": 1,
+            "token_ids": [
+              57605
+            ],
+            "utf8_bytes_hex": "646f6d61696e73"
+          },
+          "entities": {
+            "token_count": 1,
+            "token_ids": [
+              10186
+            ],
+            "utf8_bytes_hex": "656e746974696573"
+          },
+          "facts": {
+            "token_count": 1,
+            "token_ids": [
+              65756
+            ],
+            "utf8_bytes_hex": "6661637473"
+          },
+          "false": {
+            "token_count": 1,
+            "token_ids": [
+              3721
+            ],
+            "utf8_bytes_hex": "66616c7365"
+          },
+          "head": {
+            "token_count": 1,
+            "token_ids": [
+              1916
+            ],
+            "utf8_bytes_hex": "68656164"
+          },
+          "id": {
+            "token_count": 1,
+            "token_ids": [
+              306
+            ],
+            "utf8_bytes_hex": "6964"
+          },
+          "int": {
+            "token_count": 1,
+            "token_ids": [
+              390
+            ],
+            "utf8_bytes_hex": "696e74"
+          },
+          "not": {
+            "token_count": 1,
+            "token_ids": [
+              1856
+            ],
+            "utf8_bytes_hex": "6e6f74"
+          },
+          "predicate": {
+            "token_count": 1,
+            "token_ids": [
+              59701
+            ],
+            "utf8_bytes_hex": "707265646963617465"
+          },
+          "query": {
+            "token_count": 1,
+            "token_ids": [
+              1574
+            ],
+            "utf8_bytes_hex": "7175657279"
+          },
+          "rules": {
+            "token_count": 1,
+            "token_ids": [
+              21299
+            ],
+            "utf8_bytes_hex": "72756c6573"
+          },
+          "symbol": {
+            "token_count": 1,
+            "token_ids": [
+              18218
+            ],
+            "utf8_bytes_hex": "73796d626f6c"
+          },
+          "true": {
+            "token_count": 1,
+            "token_ids": [
+              1802
+            ],
+            "utf8_bytes_hex": "74727565"
+          },
+          "truth": {
+            "token_count": 1,
+            "token_ids": [
+              56598
+            ],
+            "utf8_bytes_hex": "7472757468"
+          },
+          "type": {
+            "token_count": 1,
+            "token_ids": [
+              1267
+            ],
+            "utf8_bytes_hex": "74797065"
+          },
+          "values": {
+            "token_count": 1,
+            "token_ids": [
+              3535
+            ],
+            "utf8_bytes_hex": "76616c756573"
+          },
+          "variables": {
+            "token_count": 1,
+            "token_ids": [
+              18055
+            ],
+            "utf8_bytes_hex": "7661726961626c6573"
+          },
+          "vars": {
+            "token_count": 1,
+            "token_ids": [
+              14932
+            ],
+            "utf8_bytes_hex": "76617273"
+          },
+          "where": {
+            "token_count": 1,
+            "token_ids": [
+              2777
+            ],
+            "utf8_bytes_hex": "7768657265"
+          },
+          "{": {
+            "token_count": 1,
+            "token_ids": [
+              90
+            ],
+            "utf8_bytes_hex": "7b"
+          },
+          "}": {
+            "token_count": 1,
+            "token_ids": [
+              92
+            ],
+            "utf8_bytes_hex": "7d"
+          }
+        },
+        "terminal_count": 82,
+        "unsupported_terminals": {},
+        "used_hf_autotokenizer": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "embedded_tokenizer_only": true,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "multi_token_terminals": {
+          "\"<\"": {
+            "token_count": 2,
+            "token_ids": [
+              143648,
+              236775
+            ],
+            "utf8_bytes_hex": "223c22"
+          },
+          "\"<=\"": {
+            "token_count": 2,
+            "token_ids": [
+              143648,
+              718
+            ],
+            "utf8_bytes_hex": "223c3d22"
+          },
+          "\"==\"": {
+            "token_count": 2,
+            "token_ids": [
+              236775,
+              21528
+            ],
+            "utf8_bytes_hex": "223d3d22"
+          },
+          "\">\"": {
+            "token_count": 2,
+            "token_ids": [
+              905,
+              236775
+            ],
+            "utf8_bytes_hex": "223e22"
+          },
+          "\">=\"": {
+            "token_count": 2,
+            "token_ids": [
+              905,
+              718
+            ],
+            "utf8_bytes_hex": "223e3d22"
+          },
+          "\"?var\"": {
+            "token_count": 3,
+            "token_ids": [
+              51653,
+              1967,
+              236775
+            ],
+            "utf8_bytes_hex": "223f76617222"
+          },
+          "\"and\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              624,
+              236775
+            ],
+            "utf8_bytes_hex": "22616e6422"
+          },
+          "\"arg_types\"": {
+            "token_count": 5,
+            "token_ids": [
+              236775,
+              1187,
+              236779,
+              9846,
+              236775
+            ],
+            "utf8_bytes_hex": "226172675f747970657322"
+          },
+          "\"args\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              5985,
+              236775
+            ],
+            "utf8_bytes_hex": "226172677322"
+          },
+          "\"arith\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              30139,
+              236775
+            ],
+            "utf8_bytes_hex": "22617269746822"
+          },
+          "\"atom\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              21992,
+              236775
+            ],
+            "utf8_bytes_hex": "2261746f6d22"
+          },
+          "\"body\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              3063,
+              236775
+            ],
+            "utf8_bytes_hex": "22626f647922"
+          },
+          "\"caf\u00e9\"": {
+            "token_count": 4,
+            "token_ids": [
+              236775,
+              123125,
+              236859,
+              236775
+            ],
+            "utf8_bytes_hex": "22636166c3a922"
+          },
+          "\"carnot.constraint_ir.v1\"": {
+            "token_count": 11,
+            "token_ids": [
+              236775,
+              172717,
+              557,
+              236761,
+              35377,
+              236779,
+              583,
+              236761,
+              236766,
+              236770,
+              236775
+            ],
+            "utf8_bytes_hex": "226361726e6f742e636f6e73747261696e745f69722e763122"
+          },
+          "\"domain\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              19645,
+              236775
+            ],
+            "utf8_bytes_hex": "22646f6d61696e22"
+          },
+          "\"domains\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              133624,
+              236775
+            ],
+            "utf8_bytes_hex": "22646f6d61696e7322"
+          },
+          "\"entities\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              47792,
+              236775
+            ],
+            "utf8_bytes_hex": "22656e74697469657322"
+          },
+          "\"facts\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              59769,
+              236775
+            ],
+            "utf8_bytes_hex": "22666163747322"
+          },
+          "\"head\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              2834,
+              236775
+            ],
+            "utf8_bytes_hex": "226865616422"
+          },
+          "\"id\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              547,
+              236775
+            ],
+            "utf8_bytes_hex": "22696422"
+          },
+          "\"identifier\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              32817,
+              236775
+            ],
+            "utf8_bytes_hex": "226964656e74696669657222"
+          },
+          "\"int\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              720,
+              236775
+            ],
+            "utf8_bytes_hex": "22696e7422"
+          },
+          "\"not\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              2217,
+              236775
+            ],
+            "utf8_bytes_hex": "226e6f7422"
+          },
+          "\"predicate\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              118143,
+              236775
+            ],
+            "utf8_bytes_hex": "2270726564696361746522"
+          },
+          "\"predicates\"": {
+            "token_count": 4,
+            "token_ids": [
+              236775,
+              6936,
+              54172,
+              236775
+            ],
+            "utf8_bytes_hex": "227072656469636174657322"
+          },
+          "\"query\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              3278,
+              236775
+            ],
+            "utf8_bytes_hex": "22717565727922"
+          },
+          "\"rules\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              27590,
+              236775
+            ],
+            "utf8_bytes_hex": "2272756c657322"
+          },
+          "\"schema_version\"": {
+            "token_count": 5,
+            "token_ids": [
+              236775,
+              19754,
+              236779,
+              4406,
+              236775
+            ],
+            "utf8_bytes_hex": "22736368656d615f76657273696f6e22"
+          },
+          "\"symbol\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              22037,
+              236775
+            ],
+            "utf8_bytes_hex": "2273796d626f6c22"
+          },
+          "\"truth\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              57985,
+              236775
+            ],
+            "utf8_bytes_hex": "22747275746822"
+          },
+          "\"type\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              2084,
+              236775
+            ],
+            "utf8_bytes_hex": "227479706522"
+          },
+          "\"values\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              7558,
+              236775
+            ],
+            "utf8_bytes_hex": "2276616c75657322"
+          },
+          "\"variables\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              25485,
+              236775
+            ],
+            "utf8_bytes_hex": "227661726961626c657322"
+          },
+          "\"vars\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              17954,
+              236775
+            ],
+            "utf8_bytes_hex": "227661727322"
+          },
+          "\"where\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              3350,
+              236775
+            ],
+            "utf8_bytes_hex": "22776865726522"
+          },
+          "-1": {
+            "token_count": 2,
+            "token_ids": [
+              236772,
+              236770
+            ],
+            "utf8_bytes_hex": "2d31"
+          },
+          "12": {
+            "token_count": 2,
+            "token_ids": [
+              236770,
+              236778
+            ],
+            "utf8_bytes_hex": "3132"
+          },
+          "arg_types": {
+            "token_count": 3,
+            "token_ids": [
+              1187,
+              236779,
+              9846
+            ],
+            "utf8_bytes_hex": "6172675f7479706573"
+          },
+          "predicates": {
+            "token_count": 2,
+            "token_ids": [
+              6936,
+              54172
+            ],
+            "utf8_bytes_hex": "70726564696361746573"
+          },
+          "schema_version": {
+            "token_count": 3,
+            "token_ids": [
+              19754,
+              236779,
+              4406
+            ],
+            "utf8_bytes_hex": "736368656d615f76657273696f6e"
+          }
+        },
+        "single_token_terminals": {
+          "\t": {
+            "token_count": 1,
+            "token_ids": [
+              255968
+            ],
+            "utf8_bytes_hex": "09"
+          },
+          "\n": {
+            "token_count": 1,
+            "token_ids": [
+              107
+            ],
+            "utf8_bytes_hex": "0a"
+          },
+          " ": {
+            "token_count": 1,
+            "token_ids": [
+              236743
+            ],
+            "utf8_bytes_hex": "20"
+          },
+          "\"": {
+            "token_count": 1,
+            "token_ids": [
+              236775
+            ],
+            "utf8_bytes_hex": "22"
+          },
+          ",": {
+            "token_count": 1,
+            "token_ids": [
+              236764
+            ],
+            "utf8_bytes_hex": "2c"
+          },
+          "0": {
+            "token_count": 1,
+            "token_ids": [
+              236771
+            ],
+            "utf8_bytes_hex": "30"
+          },
+          "1": {
+            "token_count": 1,
+            "token_ids": [
+              236770
+            ],
+            "utf8_bytes_hex": "31"
+          },
+          ":": {
+            "token_count": 1,
+            "token_ids": [
+              236787
+            ],
+            "utf8_bytes_hex": "3a"
+          },
+          "<": {
+            "token_count": 1,
+            "token_ids": [
+              236820
+            ],
+            "utf8_bytes_hex": "3c"
+          },
+          "<=": {
+            "token_count": 1,
+            "token_ids": [
+              22159
+            ],
+            "utf8_bytes_hex": "3c3d"
+          },
+          "==": {
+            "token_count": 1,
+            "token_ids": [
+              1224
+            ],
+            "utf8_bytes_hex": "3d3d"
+          },
+          ">": {
+            "token_count": 1,
+            "token_ids": [
+              236813
+            ],
+            "utf8_bytes_hex": "3e"
+          },
+          ">=": {
+            "token_count": 1,
+            "token_ids": [
+              11957
+            ],
+            "utf8_bytes_hex": "3e3d"
+          },
+          "[": {
+            "token_count": 1,
+            "token_ids": [
+              236840
+            ],
+            "utf8_bytes_hex": "5b"
+          },
+          "]": {
+            "token_count": 1,
+            "token_ids": [
+              236842
+            ],
+            "utf8_bytes_hex": "5d"
+          },
+          "and": {
+            "token_count": 1,
+            "token_ids": [
+              624
+            ],
+            "utf8_bytes_hex": "616e64"
+          },
+          "args": {
+            "token_count": 1,
+            "token_ids": [
+              5985
+            ],
+            "utf8_bytes_hex": "61726773"
+          },
+          "arith": {
+            "token_count": 1,
+            "token_ids": [
+              30139
+            ],
+            "utf8_bytes_hex": "6172697468"
+          },
+          "atom": {
+            "token_count": 1,
+            "token_ids": [
+              21992
+            ],
+            "utf8_bytes_hex": "61746f6d"
+          },
+          "body": {
+            "token_count": 1,
+            "token_ids": [
+              3063
+            ],
+            "utf8_bytes_hex": "626f6479"
+          },
+          "domain": {
+            "token_count": 1,
+            "token_ids": [
+              19645
+            ],
+            "utf8_bytes_hex": "646f6d61696e"
+          },
+          "domains": {
+            "token_count": 1,
+            "token_ids": [
+              133624
+            ],
+            "utf8_bytes_hex": "646f6d61696e73"
+          },
+          "entities": {
+            "token_count": 1,
+            "token_ids": [
+              47792
+            ],
+            "utf8_bytes_hex": "656e746974696573"
+          },
+          "facts": {
+            "token_count": 1,
+            "token_ids": [
+              59769
+            ],
+            "utf8_bytes_hex": "6661637473"
+          },
+          "false": {
+            "token_count": 1,
+            "token_ids": [
+              4530
+            ],
+            "utf8_bytes_hex": "66616c7365"
+          },
+          "head": {
+            "token_count": 1,
+            "token_ids": [
+              2834
+            ],
+            "utf8_bytes_hex": "68656164"
+          },
+          "id": {
+            "token_count": 1,
+            "token_ids": [
+              547
+            ],
+            "utf8_bytes_hex": "6964"
+          },
+          "int": {
+            "token_count": 1,
+            "token_ids": [
+              720
+            ],
+            "utf8_bytes_hex": "696e74"
+          },
+          "not": {
+            "token_count": 1,
+            "token_ids": [
+              2217
+            ],
+            "utf8_bytes_hex": "6e6f74"
+          },
+          "predicate": {
+            "token_count": 1,
+            "token_ids": [
+              118143
+            ],
+            "utf8_bytes_hex": "707265646963617465"
+          },
+          "query": {
+            "token_count": 1,
+            "token_ids": [
+              3278
+            ],
+            "utf8_bytes_hex": "7175657279"
+          },
+          "rules": {
+            "token_count": 1,
+            "token_ids": [
+              27590
+            ],
+            "utf8_bytes_hex": "72756c6573"
+          },
+          "symbol": {
+            "token_count": 1,
+            "token_ids": [
+              22037
+            ],
+            "utf8_bytes_hex": "73796d626f6c"
+          },
+          "true": {
+            "token_count": 1,
+            "token_ids": [
+              3397
+            ],
+            "utf8_bytes_hex": "74727565"
+          },
+          "truth": {
+            "token_count": 1,
+            "token_ids": [
+              57985
+            ],
+            "utf8_bytes_hex": "7472757468"
+          },
+          "type": {
+            "token_count": 1,
+            "token_ids": [
+              2084
+            ],
+            "utf8_bytes_hex": "74797065"
+          },
+          "values": {
+            "token_count": 1,
+            "token_ids": [
+              7558
+            ],
+            "utf8_bytes_hex": "76616c756573"
+          },
+          "variables": {
+            "token_count": 1,
+            "token_ids": [
+              25485
+            ],
+            "utf8_bytes_hex": "7661726961626c6573"
+          },
+          "vars": {
+            "token_count": 1,
+            "token_ids": [
+              17954
+            ],
+            "utf8_bytes_hex": "76617273"
+          },
+          "where": {
+            "token_count": 1,
+            "token_ids": [
+              3350
+            ],
+            "utf8_bytes_hex": "7768657265"
+          },
+          "{": {
+            "token_count": 1,
+            "token_ids": [
+              236782
+            ],
+            "utf8_bytes_hex": "7b"
+          },
+          "}": {
+            "token_count": 1,
+            "token_ids": [
+              236783
+            ],
+            "utf8_bytes_hex": "7d"
+          }
+        },
+        "terminal_count": 82,
+        "unsupported_terminals": {},
+        "used_hf_autotokenizer": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "embedded_tokenizer_only": true,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "multi_token_terminals": {
+          "\"<\"": {
+            "token_count": 2,
+            "token_ids": [
+              143648,
+              236775
+            ],
+            "utf8_bytes_hex": "223c22"
+          },
+          "\"<=\"": {
+            "token_count": 2,
+            "token_ids": [
+              143648,
+              718
+            ],
+            "utf8_bytes_hex": "223c3d22"
+          },
+          "\"==\"": {
+            "token_count": 2,
+            "token_ids": [
+              236775,
+              21528
+            ],
+            "utf8_bytes_hex": "223d3d22"
+          },
+          "\">\"": {
+            "token_count": 2,
+            "token_ids": [
+              905,
+              236775
+            ],
+            "utf8_bytes_hex": "223e22"
+          },
+          "\">=\"": {
+            "token_count": 2,
+            "token_ids": [
+              905,
+              718
+            ],
+            "utf8_bytes_hex": "223e3d22"
+          },
+          "\"?var\"": {
+            "token_count": 3,
+            "token_ids": [
+              51653,
+              1967,
+              236775
+            ],
+            "utf8_bytes_hex": "223f76617222"
+          },
+          "\"and\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              624,
+              236775
+            ],
+            "utf8_bytes_hex": "22616e6422"
+          },
+          "\"arg_types\"": {
+            "token_count": 5,
+            "token_ids": [
+              236775,
+              1187,
+              236779,
+              9846,
+              236775
+            ],
+            "utf8_bytes_hex": "226172675f747970657322"
+          },
+          "\"args\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              5985,
+              236775
+            ],
+            "utf8_bytes_hex": "226172677322"
+          },
+          "\"arith\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              30139,
+              236775
+            ],
+            "utf8_bytes_hex": "22617269746822"
+          },
+          "\"atom\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              21992,
+              236775
+            ],
+            "utf8_bytes_hex": "2261746f6d22"
+          },
+          "\"body\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              3063,
+              236775
+            ],
+            "utf8_bytes_hex": "22626f647922"
+          },
+          "\"caf\u00e9\"": {
+            "token_count": 4,
+            "token_ids": [
+              236775,
+              123125,
+              236859,
+              236775
+            ],
+            "utf8_bytes_hex": "22636166c3a922"
+          },
+          "\"carnot.constraint_ir.v1\"": {
+            "token_count": 11,
+            "token_ids": [
+              236775,
+              172717,
+              557,
+              236761,
+              35377,
+              236779,
+              583,
+              236761,
+              236766,
+              236770,
+              236775
+            ],
+            "utf8_bytes_hex": "226361726e6f742e636f6e73747261696e745f69722e763122"
+          },
+          "\"domain\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              19645,
+              236775
+            ],
+            "utf8_bytes_hex": "22646f6d61696e22"
+          },
+          "\"domains\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              133624,
+              236775
+            ],
+            "utf8_bytes_hex": "22646f6d61696e7322"
+          },
+          "\"entities\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              47792,
+              236775
+            ],
+            "utf8_bytes_hex": "22656e74697469657322"
+          },
+          "\"facts\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              59769,
+              236775
+            ],
+            "utf8_bytes_hex": "22666163747322"
+          },
+          "\"head\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              2834,
+              236775
+            ],
+            "utf8_bytes_hex": "226865616422"
+          },
+          "\"id\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              547,
+              236775
+            ],
+            "utf8_bytes_hex": "22696422"
+          },
+          "\"identifier\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              32817,
+              236775
+            ],
+            "utf8_bytes_hex": "226964656e74696669657222"
+          },
+          "\"int\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              720,
+              236775
+            ],
+            "utf8_bytes_hex": "22696e7422"
+          },
+          "\"not\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              2217,
+              236775
+            ],
+            "utf8_bytes_hex": "226e6f7422"
+          },
+          "\"predicate\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              118143,
+              236775
+            ],
+            "utf8_bytes_hex": "2270726564696361746522"
+          },
+          "\"predicates\"": {
+            "token_count": 4,
+            "token_ids": [
+              236775,
+              6936,
+              54172,
+              236775
+            ],
+            "utf8_bytes_hex": "227072656469636174657322"
+          },
+          "\"query\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              3278,
+              236775
+            ],
+            "utf8_bytes_hex": "22717565727922"
+          },
+          "\"rules\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              27590,
+              236775
+            ],
+            "utf8_bytes_hex": "2272756c657322"
+          },
+          "\"schema_version\"": {
+            "token_count": 5,
+            "token_ids": [
+              236775,
+              19754,
+              236779,
+              4406,
+              236775
+            ],
+            "utf8_bytes_hex": "22736368656d615f76657273696f6e22"
+          },
+          "\"symbol\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              22037,
+              236775
+            ],
+            "utf8_bytes_hex": "2273796d626f6c22"
+          },
+          "\"truth\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              57985,
+              236775
+            ],
+            "utf8_bytes_hex": "22747275746822"
+          },
+          "\"type\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              2084,
+              236775
+            ],
+            "utf8_bytes_hex": "227479706522"
+          },
+          "\"values\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              7558,
+              236775
+            ],
+            "utf8_bytes_hex": "2276616c75657322"
+          },
+          "\"variables\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              25485,
+              236775
+            ],
+            "utf8_bytes_hex": "227661726961626c657322"
+          },
+          "\"vars\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              17954,
+              236775
+            ],
+            "utf8_bytes_hex": "227661727322"
+          },
+          "\"where\"": {
+            "token_count": 3,
+            "token_ids": [
+              236775,
+              3350,
+              236775
+            ],
+            "utf8_bytes_hex": "22776865726522"
+          },
+          "-1": {
+            "token_count": 2,
+            "token_ids": [
+              236772,
+              236770
+            ],
+            "utf8_bytes_hex": "2d31"
+          },
+          "12": {
+            "token_count": 2,
+            "token_ids": [
+              236770,
+              236778
+            ],
+            "utf8_bytes_hex": "3132"
+          },
+          "arg_types": {
+            "token_count": 3,
+            "token_ids": [
+              1187,
+              236779,
+              9846
+            ],
+            "utf8_bytes_hex": "6172675f7479706573"
+          },
+          "predicates": {
+            "token_count": 2,
+            "token_ids": [
+              6936,
+              54172
+            ],
+            "utf8_bytes_hex": "70726564696361746573"
+          },
+          "schema_version": {
+            "token_count": 3,
+            "token_ids": [
+              19754,
+              236779,
+              4406
+            ],
+            "utf8_bytes_hex": "736368656d615f76657273696f6e"
+          }
+        },
+        "single_token_terminals": {
+          "\t": {
+            "token_count": 1,
+            "token_ids": [
+              255968
+            ],
+            "utf8_bytes_hex": "09"
+          },
+          "\n": {
+            "token_count": 1,
+            "token_ids": [
+              107
+            ],
+            "utf8_bytes_hex": "0a"
+          },
+          " ": {
+            "token_count": 1,
+            "token_ids": [
+              236743
+            ],
+            "utf8_bytes_hex": "20"
+          },
+          "\"": {
+            "token_count": 1,
+            "token_ids": [
+              236775
+            ],
+            "utf8_bytes_hex": "22"
+          },
+          ",": {
+            "token_count": 1,
+            "token_ids": [
+              236764
+            ],
+            "utf8_bytes_hex": "2c"
+          },
+          "0": {
+            "token_count": 1,
+            "token_ids": [
+              236771
+            ],
+            "utf8_bytes_hex": "30"
+          },
+          "1": {
+            "token_count": 1,
+            "token_ids": [
+              236770
+            ],
+            "utf8_bytes_hex": "31"
+          },
+          ":": {
+            "token_count": 1,
+            "token_ids": [
+              236787
+            ],
+            "utf8_bytes_hex": "3a"
+          },
+          "<": {
+            "token_count": 1,
+            "token_ids": [
+              236820
+            ],
+            "utf8_bytes_hex": "3c"
+          },
+          "<=": {
+            "token_count": 1,
+            "token_ids": [
+              22159
+            ],
+            "utf8_bytes_hex": "3c3d"
+          },
+          "==": {
+            "token_count": 1,
+            "token_ids": [
+              1224
+            ],
+            "utf8_bytes_hex": "3d3d"
+          },
+          ">": {
+            "token_count": 1,
+            "token_ids": [
+              236813
+            ],
+            "utf8_bytes_hex": "3e"
+          },
+          ">=": {
+            "token_count": 1,
+            "token_ids": [
+              11957
+            ],
+            "utf8_bytes_hex": "3e3d"
+          },
+          "[": {
+            "token_count": 1,
+            "token_ids": [
+              236840
+            ],
+            "utf8_bytes_hex": "5b"
+          },
+          "]": {
+            "token_count": 1,
+            "token_ids": [
+              236842
+            ],
+            "utf8_bytes_hex": "5d"
+          },
+          "and": {
+            "token_count": 1,
+            "token_ids": [
+              624
+            ],
+            "utf8_bytes_hex": "616e64"
+          },
+          "args": {
+            "token_count": 1,
+            "token_ids": [
+              5985
+            ],
+            "utf8_bytes_hex": "61726773"
+          },
+          "arith": {
+            "token_count": 1,
+            "token_ids": [
+              30139
+            ],
+            "utf8_bytes_hex": "6172697468"
+          },
+          "atom": {
+            "token_count": 1,
+            "token_ids": [
+              21992
+            ],
+            "utf8_bytes_hex": "61746f6d"
+          },
+          "body": {
+            "token_count": 1,
+            "token_ids": [
+              3063
+            ],
+            "utf8_bytes_hex": "626f6479"
+          },
+          "domain": {
+            "token_count": 1,
+            "token_ids": [
+              19645
+            ],
+            "utf8_bytes_hex": "646f6d61696e"
+          },
+          "domains": {
+            "token_count": 1,
+            "token_ids": [
+              133624
+            ],
+            "utf8_bytes_hex": "646f6d61696e73"
+          },
+          "entities": {
+            "token_count": 1,
+            "token_ids": [
+              47792
+            ],
+            "utf8_bytes_hex": "656e746974696573"
+          },
+          "facts": {
+            "token_count": 1,
+            "token_ids": [
+              59769
+            ],
+            "utf8_bytes_hex": "6661637473"
+          },
+          "false": {
+            "token_count": 1,
+            "token_ids": [
+              4530
+            ],
+            "utf8_bytes_hex": "66616c7365"
+          },
+          "head": {
+            "token_count": 1,
+            "token_ids": [
+              2834
+            ],
+            "utf8_bytes_hex": "68656164"
+          },
+          "id": {
+            "token_count": 1,
+            "token_ids": [
+              547
+            ],
+            "utf8_bytes_hex": "6964"
+          },
+          "int": {
+            "token_count": 1,
+            "token_ids": [
+              720
+            ],
+            "utf8_bytes_hex": "696e74"
+          },
+          "not": {
+            "token_count": 1,
+            "token_ids": [
+              2217
+            ],
+            "utf8_bytes_hex": "6e6f74"
+          },
+          "predicate": {
+            "token_count": 1,
+            "token_ids": [
+              118143
+            ],
+            "utf8_bytes_hex": "707265646963617465"
+          },
+          "query": {
+            "token_count": 1,
+            "token_ids": [
+              3278
+            ],
+            "utf8_bytes_hex": "7175657279"
+          },
+          "rules": {
+            "token_count": 1,
+            "token_ids": [
+              27590
+            ],
+            "utf8_bytes_hex": "72756c6573"
+          },
+          "symbol": {
+            "token_count": 1,
+            "token_ids": [
+              22037
+            ],
+            "utf8_bytes_hex": "73796d626f6c"
+          },
+          "true": {
+            "token_count": 1,
+            "token_ids": [
+              3397
+            ],
+            "utf8_bytes_hex": "74727565"
+          },
+          "truth": {
+            "token_count": 1,
+            "token_ids": [
+              57985
+            ],
+            "utf8_bytes_hex": "7472757468"
+          },
+          "type": {
+            "token_count": 1,
+            "token_ids": [
+              2084
+            ],
+            "utf8_bytes_hex": "74797065"
+          },
+          "values": {
+            "token_count": 1,
+            "token_ids": [
+              7558
+            ],
+            "utf8_bytes_hex": "76616c756573"
+          },
+          "variables": {
+            "token_count": 1,
+            "token_ids": [
+              25485
+            ],
+            "utf8_bytes_hex": "7661726961626c6573"
+          },
+          "vars": {
+            "token_count": 1,
+            "token_ids": [
+              17954
+            ],
+            "utf8_bytes_hex": "76617273"
+          },
+          "where": {
+            "token_count": 1,
+            "token_ids": [
+              3350
+            ],
+            "utf8_bytes_hex": "7768657265"
+          },
+          "{": {
+            "token_count": 1,
+            "token_ids": [
+              236782
+            ],
+            "utf8_bytes_hex": "7b"
+          },
+          "}": {
+            "token_count": 1,
+            "token_ids": [
+              236783
+            ],
+            "utf8_bytes_hex": "7d"
+          }
+        },
+        "terminal_count": 82,
+        "unsupported_terminals": {},
+        "used_hf_autotokenizer": false
+      }
+    }
+  },
+  "status": "complete_with_nulls",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5931_v526_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5931_v526_capstone_reconciliation.py -m pytest tests/python/test_experiment_5931_v526_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5931_v526_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/ruff check python/carnot/experiment_5931_v526_capstone_reconciliation.py tests/python/test_experiment_5931_v526_capstone_reconciliation.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5931_v526_capstone_reconciliation.py tests/python/test_experiment_5931_v526_capstone_reconciliation.py",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5918_transition_v526.json results/experiment_5919_v526_source_delta_ingestion.json results/experiment_5920_prospective_event_stream_admission.json results/experiment_5921_schema_derived_constraintir_support.json results/experiment_5922_gguf_schema_decoder_bridge.json results/experiment_5923_sota_schema_supported_constraintir_ab.json results/experiment_5924_transactional_constraint_memory_v2.json results/experiment_5926_adaptive_state_abi_v2_parity.json results/experiment_5927_coordinate_router_progress_qualification.json results/experiment_5928_arc_live_runner_execution_binding.json results/experiment_5929_arc_structured_memory_bound_live_ab.json results/experiment_5930_adaptive_state_board_mapping.json > /tmp/exp5931_v526_adversarial_verify.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5931_v526_capstone_reconciliation.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5931_v526_capstone_reconciliation.py -m pytest tests/python/test_experiment_5931_v526_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5931_v526_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5918_transition_v526.json results/experiment_5919_v526_source_delta_ingestion.json results/experiment_5920_prospective_event_stream_admission.json results/experiment_5921_schema_derived_constraintir_support.json results/experiment_5922_gguf_schema_decoder_bridge.json results/experiment_5923_sota_schema_supported_constraintir_ab.json results/experiment_5924_transactional_constraint_memory_v2.json results/experiment_5926_adaptive_state_abi_v2_parity.json results/experiment_5927_coordinate_router_progress_qualification.json results/experiment_5928_arc_live_runner_execution_binding.json results/experiment_5929_arc_structured_memory_bound_live_ab.json results/experiment_5930_adaptive_state_board_mapping.json > /tmp/exp5931_v526_adversarial_verify.json": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5931_v526_capstone_reconciliation.py tests/python/test_experiment_5931_v526_capstone_reconciliation.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_5931_v526_capstone_reconciliation.py tests/python/test_experiment_5931_v526_capstone_reconciliation.py": 0
+  },
+  "transition_and_source_receipt": {
+    "exp5918_transition": {
+      "failed_preconditions": [
+        "required_tests_failed"
+      ],
+      "honest_verdict": "blocked: Exp5918 transition preconditions failed",
+      "status": "blocked",
+      "terminal_class": "blocked-precondition"
+    },
+    "exp5919_source_delta": {
+      "accepted_finding_count": null,
+      "honest_verdict": "complete_null: no accepted post-V526 source deltas; references unchanged",
+      "references_changed": null,
+      "status": "complete",
+      "terminal_class": "null"
+    },
+    "principle": "Transition blockage and source-refresh nulls are separate receipts, not milestone-wide conclusions.",
+    "source_null_is_not_no_change_to_all_branches": true,
+    "transition_blockage_is_not_milestone_wide": true
+  }
+}
