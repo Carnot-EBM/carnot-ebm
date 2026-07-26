@@ -245,6 +245,12 @@ def _explorer_policy(game: str, **explorer_kwargs: Any):
 #
 # tier_click_vocab_only is INERT when tier_exhaustion is False (see StepwiseExplorer._tier_active),
 # so the tier-off arms pin it False for explicitness rather than to change behaviour.
+# REQ-ARC-WMTE-5970 (2026-07-26): `hazard_move_pruner` joins the gated set. It is a CANDIDATE-SET
+# mutator (it can DROP a nav row), not merely a re-orderer, so an arm that left it unpinned would be
+# a contaminated control the instant the flag were ever flipped -- the exact drift class this pinning
+# block exists to prevent. It is added to `_FRONTIER_OFF`/`_FRONTIER_ON` rather than to `_HUD_OFF`
+# because arms G/G2/G3 spread `_FRONTIER_ON` but NOT `_HUD_OFF`; those two dicts between them cover
+# every arm except the reference shim E.
 GATED_FLAGS = (
     "tier_exhaustion",
     "tier_uniform_random",
@@ -253,18 +259,21 @@ GATED_FLAGS = (
     "edge_bar_hud_mask",
     "hud_mask_collapse_guard",
     "hud_mask_stage2_confirm",
+    "hazard_move_pruner",
 )
 _FRONTIER_OFF = {
     "tier_exhaustion": False,
     "tier_uniform_random": False,
     "tier_click_vocab_only": False,
     "frontier_gradient": False,
+    "hazard_move_pruner": False,
 }
 _FRONTIER_ON = {  # the configuration flipped live on 2026-07-25
     "tier_exhaustion": True,
     "tier_uniform_random": True,
     "tier_click_vocab_only": True,
     "frontier_gradient": False,  # measured WORSE than B2; stayed off at the flip
+    "hazard_move_pruner": False,  # wired 2026-07-26, DEFAULT-OFF, never flipped
 }
 _HUD_OFF = {
     "edge_bar_hud_mask": False,
@@ -380,6 +389,39 @@ ARMS: dict[str, dict[str, Any]] = {
     "G3": {
         "label": "edge_bar_hud_mask_stage2_confirmed_with_collapse_guard_flip_candidate",
         "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": True, "hud_mask_stage2_confirm": True},
+        "deterministic": False,
+    },
+    # REQ-ARC-WMTE-5970 (2026-07-26): the NAV-side hazard move-pruner on the live configuration.
+    #
+    # THE CONTROL FOR THIS ARM IS G3, NOT B2 AND NOT A. G3 pins exactly what ships today (frontier
+    # on + all three HUD stages), so H - G3 isolates the pruner against the live agent. B2 pins the
+    # HUD trio OFF, which was the live config only BEFORE the 2026-07-25 flip; arm A is the
+    # pre-frontier-flip agent. Using either as the control would measure the pruner PLUS a HUD or
+    # frontier delta.
+    #
+    # WHAT IT CHANGES: `StepwiseExplorer._candidates` drops candidate rows whose nav action the
+    # online-fit hazard model predicts removes the avatar, and `_ingest` feeds the pruner the
+    # search's own realized transitions so it can fit at all. Nothing else moves.
+    #
+    # READ THE FIRE-COUNTERS BEFORE READING THE DELTA. Two independent pre-wiring censuses say this
+    # lever is INERT on this corpus (fits 0 of 25 games over 22,758 captured transitions; fits 1 of
+    # 15 games -- tu93 only -- on the scored explorer's own live transitions, and prunes 0 there).
+    # So the EXPECTED result is a byte-identical null, and a byte-identical null is only a FINDING if
+    # `hazard_move_pruner_diagnostics()` shows `observed_nav_transitions > 0` AND
+    # `model_fitted is True` AND `rows_pruned == 0`. Any other zero pattern is UNINTERPRETABLE:
+    # observe_calls == 0 is a wiring bug, model_fitted False means the hypothesis class did not fit.
+    # A large part of the non-fitting is FORCED upstream -- `InducedNavWorldModel`'s avatar fit is
+    # degenerate on 21 of 25 games, so the avatar-removal death predicate can barely fire -- which is
+    # why the honest next step may be fixing that fit rather than spending scored-path cells here.
+    "H": {
+        "label": "hazard_move_pruner_nav_side_on_live_config",
+        "kwargs": {
+            **_FRONTIER_ON,
+            "edge_bar_hud_mask": True,
+            "hud_mask_collapse_guard": True,
+            "hud_mask_stage2_confirm": True,
+            "hazard_move_pruner": True,
+        },
         "deterministic": False,
     },
     "C": {

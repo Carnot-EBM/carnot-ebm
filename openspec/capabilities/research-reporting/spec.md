@@ -47067,6 +47067,146 @@ principle, provenance entry, checksum, and terminal verdict prefix.
 |---|---|---|
 | REQ-REPORT-5931 | Planned (`python/carnot/experiment_5931_v526_capstone_reconciliation.py`, `results/experiment_5931_v526_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5931_v526_capstone_reconciliation.py`) |
 
+### REQ-REPORT-5932: V527 Transition Uses Exact V526 Terminal Classes And Debt Non-Amplification
+
+The Exp5932 transition workflow SHALL archive milestone `2026.07.526` into
+`2026.07.527` by selecting exactly the 14 activated `.526` identities Exp5918
+through Exp5931 from `results/experiment_5931_v526_capstone_reconciliation.json`
+and each task's exact declared deliverable path. Evidence SHALL be resolved only
+by `(milestone, task_id, declared_deliverable)`. Numeric-prefix substitution,
+same-number aliases, task-title inference, source-file inference, downstream-gate
+inference, or conductor status substitution SHALL NOT count as milestone
+evidence.
+
+The workflow SHALL preserve disjoint terminal classes without laundering:
+Exp5918 SHALL remain transition-blocked, Exp5919 SHALL remain a source-null,
+Exp5920, Exp5921, Exp5922, Exp5924, Exp5926, Exp5928, and Exp5931 SHALL remain
+ready or positive, Exp5923 SHALL remain retired, Exp5925 SHALL remain
+gate-blocked, Exp5927 SHALL remain underpowered, Exp5929 SHALL remain a
+blocked-precondition, and Exp5930 SHALL remain no-change. Exp5931's
+post-emission QA flag SHALL be recorded independently and SHALL NOT erase its
+capstone terminal class.
+
+The workflow SHALL parse `research-roadmap.yaml`, optionally parse
+`research-roadmap-next.yaml` when present, hash `research-complete.yaml`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, `ops/known-issues.md`,
+protected files, and every present declared `.526` deliverable. It SHALL verify
+disk and memory availability, atomic output capability, and
+`scripts/adversarial_verify.py` availability before trusting the transition. It
+SHALL run or ingest fresh adversarial verifier receipts for every present exact
+declared artifact and SHALL record missing declared artifacts separately.
+
+The workflow SHALL define readiness from clean task-owned unit, coverage, YAML
+parse, exact-path/hash, duplicate-history, task-owned spec coverage,
+adversarial-verifier, exclusion-manifest, range-collision, debt-delta,
+optional-staging-file, protected-file, reconciliation, applicable-E2E, and
+root-clutter receipts. Pre-existing unrelated global-suite failures,
+spec-coverage gaps, and root-clutter findings SHALL be disclosed by exact
+node/file identity but SHALL NOT block transition completion when
+`global_suite_failure_delta <= 0`, `global_spec_gap_delta <= 0`, and
+`root_clutter_delta <= 0`.
+
+The workflow SHALL append the exact `.526` milestone block to
+`research-complete.yaml` at most once only when an exact `.526` milestone block
+is absent. Existing duplicate history SHALL be measured but SHALL NOT be
+amplified, and `duplicate_history_amplification_count` SHALL be the bare integer
+`0`.
+
+The workflow SHALL scan active and staging roadmaps when present, completion
+history, proposals, exclusions, results, source, tests, and allocation receipts
+for bare Exp5932 through Exp5943 references. Only exact declared allocation
+documents and Exp5932-owned implementation, tests, spec, and result paths SHALL
+be allowed. `next_range_collision_count` SHALL be a bare integer and SHALL equal
+`0` before the transition is complete. Absence of
+`research-roadmap-next.yaml` after activation SHALL be informational, not a
+failure.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`exact_terminal_classification`, `adversarial_verifier_receipts`,
+`task_owned_gate_receipts`,
+`global_suite_spec_and_root_debt_baselines_and_deltas`,
+`research_complete_append_count`, `duplicate_history_amplification_count`,
+`next_task_range`, `next_range_collision_count`,
+`optional_staging_roadmap_receipt`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. `inference_substrate` SHALL
+be `aggregation_from_upstream_artifacts_no_llm`, and `honest_verdict` SHALL
+start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "report the actual terminal state and every checked prerequisite without turning unrelated inherited debt into a task failure."
+- `preconditions_checked`: principle "report the actual terminal state and every checked prerequisite without turning unrelated inherited debt into a task failure."
+- `milestone_transition`: principle "exact activated identities and declared paths are the only evidence keys; no numeric-prefix substitution."
+- `activated_task_and_deliverable_matrix`: principle "exact activated identities and declared paths are the only evidence keys; no numeric-prefix substitution."
+- `exact_terminal_classification`: principle "exact activated identities and declared paths are the only evidence keys; no numeric-prefix substitution."
+- `adversarial_verifier_receipts`: principle "transition authority comes from fresh exact-path checks and task-owned tests."
+- `task_owned_gate_receipts`: principle "transition authority comes from fresh exact-path checks and task-owned tests."
+- `global_suite_spec_and_root_debt_baselines_and_deltas`: principle "inherited debt must be preserved by exact node/file identity and may not increase; global zero is not required."
+- `research_complete_append_count`: principle "append at most once and require zero duplicate amplification."
+- `duplicate_history_amplification_count`: principle "append at most once and require zero duplicate amplification."
+- `next_task_range`: principle "only bare zero collisions authorize Exp5932-Exp5943, and an absent post-promotion staging file is informational."
+- `next_range_collision_count`: principle "only bare zero collisions authorize Exp5932-Exp5943, and an absent post-promotion staging file is informational."
+- `optional_staging_roadmap_receipt`: principle "only bare zero collisions authorize Exp5932-Exp5943, and an absent post-promotion staging file is informational."
+- `docs_reconciled`: principle "update only transition-owned internal ledgers and preserve protected/unrelated state."
+- `protected_files_unchanged`: principle "update only transition-owned internal ledgers and preserve protected/unrelated state."
+- `duration_s`: principle "use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`."
+- `inference_substrate`: principle "use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`."
+- `field_provenance`: principle "use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`."
+- `test_commands`: principle "use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`."
+- `test_exit_codes`: principle "use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`."
+- `reproducibility_checksum`: principle "use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`."
+- `honest_verdict`: principle "use a `complete:` or `blocked:` prefix."
+
+#### SCENARIO-REPORT-5932-EXACT-MATRIX: V526 Archive Uses Declared Deliverables Only
+
+**Given** Exp5931 records the exact `.526` activated matrix for Exp5918 through
+Exp5931
+**When** the Exp5932 transition builds its archive matrix
+**Then** it records exactly 14 activated identities, reads only each declared
+deliverable path, records Exp5931's actual exact artifact when present, and
+does not use numeric-prefix aliases.
+
+#### SCENARIO-REPORT-5932-TERMINAL-CLASSES: V526 Terminal Outcomes Stay Disjoint
+
+**Given** `.526` contains transition-blocked, source-null, ready, retired,
+gate-blocked, underpowered, blocked-precondition, no-change, and capstone QA
+receipts
+**When** the Exp5932 transition classifies terminal outcomes
+**Then** every activated task has exactly one terminal class, Exp5923 remains
+retired, Exp5925 remains gate-blocked, Exp5927 remains underpowered, Exp5929
+remains blocked-precondition, Exp5930 remains no-change, and Exp5931's
+post-emission QA flag remains independent.
+
+#### SCENARIO-REPORT-5932-TASK-OWNED-GATES: Inherited Global Debt Is Non-Blocking When Not Amplified
+
+**Given** task-owned receipts are clean and inherited global-suite,
+spec-coverage, or root-clutter debt may already exist
+**When** Exp5932 evaluates transition readiness
+**Then** the transition may complete with the inherited debt disclosed by exact
+node/file identity, but any task-owned failure or positive debt delta blocks
+the artifact.
+
+#### SCENARIO-REPORT-5932-HISTORY-AND-RANGE: Append Once And Require Exp5932-Exp5943 Bare Zero
+
+**Given** `.526` completion history may already contain one or more exact
+milestone blocks and the `.527` roadmap may have consumed
+`research-roadmap-next.yaml`
+**When** Exp5932 runs
+**Then** it appends no additional `.526` block when any exact `.526` block is
+present, reports zero duplicate-history amplification, treats absent staging as
+informational, and requires bare-zero unowned collisions for Exp5932 through
+Exp5943.
+
+## Implementation Status (REQ-REPORT-5932)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5932 | Planned (`python/carnot/experiment_5932_transition_v527.py`, `results/experiment_5932_transition_v527.json`) | Planned (`tests/python/test_experiment_5932_transition_v527.py`) |
+
 ### REQ-REPORT-5919: V526 Post-Marker Source Delta Ingestion Preserves Activated Boundaries
 
 The Exp5919 workflow SHALL run a bounded source refresh after the

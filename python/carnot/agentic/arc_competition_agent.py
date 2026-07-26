@@ -55,6 +55,12 @@ from carnot.agentic.arc_program_synthesis_filter import (
     induce_action_effect_proposal_filter,
 )
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
+
+# REQ-ARC-WMTE-5970: TOP-LEVEL (not function-local) so `scripts/arc_orphan_solver_lint.py` sees
+# `arc_hazard_pruner` in the SCORED entrypoint's import closure. Before this import the module was
+# reachable only from `scripts/arc_loop_solve.py` (the offline dev twin), which is itself an allowed
+# live entrypoint -- so the lint passed while the pruner had never touched the scored path at all.
+from carnot.agentic.arc_hazard_pruner import coerce_hazard_move_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
 from carnot.agentic.arc_component_sampling import (
@@ -206,6 +212,44 @@ SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE = (
 # reproduced levels) per the solve_rate_dropped guardrail -- not assumed safe just because it's
 # reachable. See python/carnot/agentic/arc_inert_click_pruner.py module docstring.
 SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False
+# REQ-ARC-WMTE-5970 (2026-07-26): HazardMovePruner on the SCORED path, DEFAULT-OFF.
+#
+# WHY IT IS WIRED AT ALL. Every pruning lever this project has measured was CLICK-side
+# (`inert_click_pruner`, click-pixel sampling, the frontier click-vocab tier barrier), while a
+# corpus census of the shipped scored agent found the NAV side is where the action mass is: 17 of
+# 25 public games' modal repeated action is nav/keyboard and 6 games issue ZERO clicks in 2000
+# actions. `arc_hazard_pruner.HazardMovePruner` was the one nav-side pruner the project already
+# owned, and it was NOT reachable from this file at all -- one prose comment referenced it (see
+# `_candidates`) while the only consumer was `arc_solver_kit.OfflineSolver` via
+# `scripts/arc_loop_solve.py`, the OFFLINE dev twin. So its single measured result (tu93 L3,
+# states_expanded 2947 -> 2859, solve preserved -- `results/arc_hazard_prune_ab_tu93.json`) says
+# nothing about the scored agent.
+#
+# WHY DEFAULT-OFF, AND WHY THE HONEST PRIOR IS "THIS WILL PRUNE NOTHING". Two independent
+# pre-wiring censuses agree that the lever is measurably INERT on this corpus, and neither is a
+# reason to skip the wiring -- they are the reason the wiring must carry fire-counters:
+#   * Over 22,758 agent-captured transitions across all 25 public games, the hazard model fits on
+#     0 of 25 games and would prune 0 of 22,758 moves. Only 3 games reach `min_deaths=3`, and on
+#     all 3 the pruner's own trust/specificity gate REFUSED to fit.
+#   * Driven with the scored explorer's own live transitions at budget 2000, it fits on 1 of 15
+#     games (tu93, 16 observed deaths, trust 1.0, specificity 1.0) and still prunes 0 moves.
+# A large part of those zeros is FORCED rather than measured: `HazardMovePruner._death_labels`
+# needs every avatar-coloured cell to vanish, and the upstream `InducedNavWorldModel` avatar fit is
+# degenerate on 21 of 25 games (empty, or a colour present in >=95% of frames), so "all avatar
+# cells vanished" is structurally near-unsatisfiable there. Fixing that fit is UPSTREAM work and is
+# deliberately NOT bundled here.
+#
+# THEREFORE, FOR WHOEVER RUNS THE A/B: a null from this lever is only a finding if the
+# fire-counters are non-zero. `hazard_move_pruner_diagnostics()` reports `observed`, `n_deaths`,
+# `model_fitted` and `rows_pruned` precisely so `observed == 0` (dead observe channel),
+# `model_fitted is False` (the hypothesis class does not fit this game) and `rows_pruned == 0`
+# (fitted but predicts nothing lethal) are three DISTINGUISHABLE outcomes. Report a
+# zero-fire cell as UNINTERPRETABLE, never as "the lever does not help" -- that conflation is
+# exactly the exp5836 dead-observe-channel defect this project has already made once.
+SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED = False
+SUBMITTED_HAZARD_MOVE_PRUNER_MODE = (
+    "online_charger_hazard_fit_from_own_deaths_trust_and_specificity_gated"
+)
 SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
 # IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,
@@ -982,6 +1026,10 @@ class StepwiseExplorer:
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
         program_synthesis_filter: Any | None = None,
         inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+        # REQ-ARC-WMTE-5970: default None (not the SUBMITTED_* value) because this is a GATED flag
+        # resolved through the `_fd_gate` ladder below, where None means "no explicit kwarg -- fall
+        # through to the env override, then to SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED".
+        hazard_move_pruner: Any | bool | None = None,
         amortized_first_contact_prior: Any | bool | None = (
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
         ),
@@ -1351,6 +1399,45 @@ class StepwiseExplorer:
         )
         self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         self.inert_click_pruner = coerce_inert_click_pruner(inert_click_pruner)
+        # REQ-ARC-WMTE-5970: the nav-side hazard move-pruner, resolved through the SAME
+        # explicit-kwarg > env override > SUBMITTED_* ladder as every other gated flag (`_fd_gate`
+        # is a closure defined earlier in this __init__ and is still in scope here). The env path
+        # exists so an A/B harness can flip one arm without mutating module globals, which would
+        # leak across arms inside a single process.
+        #
+        # A PRE-BUILT INSTANCE COUNTS AS AN EXPLICIT ENABLE. `_fd_gate` only understands
+        # bool-or-None, so an injected pruner object (used by the never-empty-guard test and by any
+        # arm that needs a widened refit cadence) is translated to `True` for the gate and then
+        # passed through unchanged by `coerce_hazard_move_pruner`.
+        _hz_explicit: bool | None
+        if hazard_move_pruner is None or isinstance(hazard_move_pruner, bool):
+            _hz_explicit = hazard_move_pruner
+        else:
+            _hz_explicit = True
+        self.hazard_move_pruner_enabled = _fd_gate(
+            _hz_explicit,
+            "CARNOT_ARC_HAZARD_MOVE_PRUNER",
+            SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED,
+        )
+        if not self.hazard_move_pruner_enabled:
+            self.hazard_move_pruner = None
+        elif isinstance(hazard_move_pruner, bool) or hazard_move_pruner is None:
+            # Enabled by env or by the SUBMITTED_* default, with no instance supplied -> build one.
+            self.hazard_move_pruner = coerce_hazard_move_pruner(True)
+        else:
+            self.hazard_move_pruner = coerce_hazard_move_pruner(hazard_move_pruner)
+        # Fire-counters. These exist so a zero-delta A/B cell can be classified rather than
+        # reported: `_hazard_observed == 0` is a DEAD OBSERVE CHANNEL (a wiring bug), a fitted model
+        # with `_hazard_rows_pruned == 0` is a real "predicts nothing lethal here", and an unfitted
+        # model is "the hypothesis class does not fit this game". Conflating those three is the
+        # exp5836 defect (0 of 122 graph nodes carried `previous_frame`, so a pruner reported
+        # observed=0/pruned=0 -- a byte-identical null that was pure harness artifact).
+        self._hazard_observed = 0
+        self._hazard_observe_errors = 0
+        self._hazard_rows_pruned = 0
+        self._hazard_prune_errors = 0
+        self._hazard_all_pruned_nodes = 0
+        self._hazard_antecedent_from_last_grid = 0
         self.generic_causal_primitive = coerce_generic_causal_primitive(generic_causal_primitive)
         self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
             amortized_first_contact_prior
@@ -1871,6 +1958,82 @@ class StepwiseExplorer:
         except Exception:
             return None
 
+    def hazard_move_pruner_diagnostics(self) -> dict:
+        """REQ-ARC-WMTE-5970: per-run FIRE-COUNTERS for the nav-side hazard move-pruner.
+
+        Always safe to call (returns `enabled: False` with zeroed counters when the lever is off).
+
+        READ IT IN THIS ORDER -- the whole point is that a zero prune count has THREE distinct
+        causes and an A/B must not conflate them:
+          1. ``observe_calls == 0``           -> DEAD OBSERVE CHANNEL. A wiring bug, not a null.
+          2. ``observed_nav_transitions == 0`` -> the game issued no keyboard-nav actions at all
+             (six public games are 100% click); the lever has no jurisdiction. UNINTERPRETABLE.
+          3. ``model_fitted is False``        -> transitions were seen but the hypothesis class did
+             not fit (too few avatar-removal deaths, or the trust/specificity gate refused).
+             UNINTERPRETABLE as a statement about pruning value.
+          4. ``model_fitted is True and rows_pruned == 0`` -> the ONLY genuine "fired and found
+             nothing lethal" reading. This is a real, reportable null.
+        ``all_pruned_nodes > 0`` means the never-empty guard had to retain a row it would otherwise
+        have dropped; a large count there means the model is over-predicting death and the arm's
+        search is being shaped by the guard rather than by the pruner.
+        """
+
+        pruner = getattr(self, "hazard_move_pruner", None)
+        out = {
+            "enabled": pruner is not None,
+            "flag_resolved": bool(getattr(self, "hazard_move_pruner_enabled", False)),
+            "observe_calls": int(getattr(self, "_hazard_observed", 0)),
+            "observe_errors": int(getattr(self, "_hazard_observe_errors", 0)),
+            "antecedent_from_last_grid": int(
+                getattr(self, "_hazard_antecedent_from_last_grid", 0)
+            ),
+            "rows_pruned": int(getattr(self, "_hazard_rows_pruned", 0)),
+            "prune_errors": int(getattr(self, "_hazard_prune_errors", 0)),
+            "all_pruned_nodes": int(getattr(self, "_hazard_all_pruned_nodes", 0)),
+        }
+        if pruner is None:
+            out.update(
+                {
+                    "observed_nav_transitions": 0,
+                    "pruner_prune_calls_lethal": 0,
+                    "clicks_skipped": 0,
+                    "nav_actions_only": None,
+                    "n_deaths": 0,
+                    "lethal_mode": None,
+                    "model_fitted": False,
+                }
+            )
+            return out
+        try:
+            stats = pruner.stats()
+        except Exception:
+            stats = {}
+        out["observed_nav_transitions"] = int(stats.get("observed") or 0)
+        # The pruner's own `pruned` counter counts every should_prune() that returned True,
+        # INCLUDING the ones the never-empty guard then put back; `rows_pruned` above is the net
+        # number actually withheld from the search. Reporting both makes the guard's cost visible.
+        out["pruner_prune_calls_lethal"] = int(stats.get("pruned") or 0)
+        for key in (
+            "n_deaths",
+            "lethal_mode",
+            "trust",
+            "specificity",
+            "model_fitted",
+            "transitions_buffered",
+            "min_deaths",
+            "min_trust",
+            "min_specificity",
+            # Whether the scored path's click labels are being filtered out of the nav fit, and how
+            # many were. A live click label is `{"action": 6, "data": {...}}`, which the pruner's
+            # decoder reads as the int 6 -- unfiltered, those rows would be buffered as keyboard-nav
+            # transitions and the nav displacement fit would be asked to explain the pointer.
+            "nav_actions_only",
+            "clicks_skipped",
+        ):
+            if key in stats:
+                out[key] = stats[key]
+        return out
+
     def hud_mask_diagnostics(self) -> dict:
         """Per-run HUD/identity evidence for an artifact row. Always safe to call."""
 
@@ -2044,6 +2207,42 @@ class StepwiseExplorer:
                 rows = self.inert_click_pruner.rank_candidates(frame, rows)
             except Exception:
                 pass
+        # REQ-ARC-WMTE-5970: the nav-side hazard filter. Placed HERE -- after every ranker that
+        # reorders, before the frontier-tier stamping below -- for two reasons. (1) A node's action
+        # list is built exactly once, at node creation, and stored as `graph[h]["untested"]`; this is
+        # the only site that sees the node's OWN frame, which is precisely the antecedent
+        # `should_prune(frame, label)` needs. (2) Filtering BEFORE the tier stamp means the surviving
+        # rows carry the same tier values they would have carried anyway (`row_tier` is a pure
+        # function of the row, so dropping rows cannot change another row's tier).
+        #
+        # Deliberately NOT hooked at `_serve`/`_pop_frontier_batch`: `self.pending` interleaves probe
+        # steps with RESET-replay and forward-walk NAVIGATION steps, so dropping a step there
+        # desyncs the replayed path, and a batch's rows belong to a REMOTE node reached by replay --
+        # `self._last_grid` is the wrong frame to judge them against.
+        if self.hazard_move_pruner is not None and rows:
+            kept = []
+            for _hz_row in rows:
+                try:
+                    _hz_lethal = bool(self.hazard_move_pruner.should_prune(frame, _hz_row))
+                except Exception:
+                    _hz_lethal = False
+                    self._hazard_prune_errors += 1
+                if _hz_lethal:
+                    self._hazard_rows_pruned += 1
+                else:
+                    kept.append(_hz_row)
+            if not kept:
+                # NEVER-EMPTY GUARD, load-bearing rather than defensive politeness. A node with an
+                # empty `untested` list makes `_node_has_open_tier` False, which can drive
+                # `next_move` to `explored_out = True` and END THE RUN EARLY -- a mechanical null
+                # indistinguishable from a behavioural one (the same "catastrophic" failure the
+                # tier-barrier code guards against). Keep the top-ranked row and count the event so
+                # the A/B can see it; un-count its prune so `rows_pruned` stays the count of moves
+                # actually withheld from the search.
+                self._hazard_all_pruned_nodes += 1
+                self._hazard_rows_pruned -= 1
+                kept = [rows[0]]
+            rows = kept
         if self.generic_causal_primitive is not None and rows:
             try:
                 rows = self.generic_causal_primitive.rank_candidates(frame, rows)
@@ -2560,6 +2759,46 @@ class StepwiseExplorer:
                     )
                 except Exception:
                     pass
+            # REQ-ARC-WMTE-5970: feed HazardMovePruner the same realized
+            # (before, label, after, leveled_up) transition every sibling online-learning component
+            # gets. This is its ONLY learning channel -- without it `should_prune` is wired but
+            # permanently a no-op, because the hazard model is fit exclusively from observed deaths.
+            #
+            # THE DEAD-CHANNEL FIX IS PRE-APPLIED HERE, not left to be discovered later. The obvious
+            # antecedent, `o["previous_frame"]`, is `graph[origin]["frame"]`, and node frames are
+            # RETAINED only when one of nine unrelated optional components is attached;
+            # `o["grid"]` is `_grid_for_hash(origin)`, which reads the SAME `node["frame"]` and is
+            # therefore None in exactly the same cases, so an `or o.get("grid")` fallback rescues
+            # nothing. `hazard_move_pruner` is not in that nine-component list. Measured
+            # consequence of getting this wrong (the inert-click pruner made the identical mistake,
+            # fixed 2026-07-26 just above): on the scored path the channel is alive only
+            # INCIDENTALLY because `goal_bias` and `action_effect_expansion_prior` happen to be
+            # attached (measured 220 of 221 nodes carrying `previous_frame`), while on
+            # `CarnotAgentPolicy` -- which attaches NEITHER, and which the exp5836 A/B harness uses
+            # -- 0 of 122 nodes carried one and the lever reported observed=0/pruned=0. That was a
+            # clean, zero-error, byte-identical NULL that was pure harness artifact.
+            #
+            # So fall back to `grid_before` (`self._last_grid` from the previous `_ingest`), which
+            # this method maintains UNCONDITIONALLY and which is therefore independent of every
+            # optional component. Pure WIDENING: when `previous_frame` is present the antecedent
+            # passed is byte-identical to what it would otherwise be.
+            hazard_move_pruner = getattr(self, "hazard_move_pruner", None)
+            _hz_antecedent = o.get("previous_frame") or o.get("grid")
+            if _hz_antecedent is None:
+                _hz_antecedent = grid_before
+                if hazard_move_pruner is not None and _hz_antecedent is not None:
+                    self._hazard_antecedent_from_last_grid += 1
+            if hazard_move_pruner is not None and _hz_antecedent is not None:
+                try:
+                    hazard_move_pruner.observe(
+                        _hz_antecedent,
+                        {"action": int(o["action"]), "data": o.get("data")},
+                        latest,
+                        leveled_up=bool(level_increased),
+                    )
+                    self._hazard_observed += 1
+                except Exception:
+                    self._hazard_observe_errors += 1
             generic_causal_primitive = getattr(self, "generic_causal_primitive", None)
             if generic_causal_primitive is not None and o.get("previous_frame") is not None:
                 try:
@@ -3849,6 +4088,14 @@ class CarnotAgentPolicy:
         click_pixel_sampling_seed: int | None = None,
         candidate_router: Any | None = None,
         similarity_retrieval: bool | None = None,
+        # REQ-ARC-WMTE-5970: exposed here too so the exp5836 A/B arms -- which construct
+        # CarnotAgentPolicy, not E3AgentPolicy -- can PIN the flag explicitly like every other
+        # gated flag. Note the honest caveat: this policy attaches neither `goal_bias` nor
+        # `action_effect_expansion_prior`, so node frames are NOT retained on this path and the
+        # pruner's observe channel here depends entirely on the `grid_before` fallback in
+        # `_ingest`. `hazard_move_pruner_diagnostics()["antecedent_from_last_grid"]` is the witness
+        # that the fallback is what is carrying it.
+        hazard_move_pruner: Any | bool | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -3894,6 +4141,7 @@ class CarnotAgentPolicy:
                 click_pixel_sampling_seed=click_pixel_sampling_seed,
                 candidate_router=candidate_router,
                 similarity_retrieval=similarity_retrieval,
+                hazard_move_pruner=hazard_move_pruner,
             )
         )
 
@@ -3984,6 +4232,11 @@ class E3AgentPolicy:
             SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
         ),
         inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+        # REQ-ARC-WMTE-5970: None = "no explicit kwarg", so the explorer's `_fd_gate` ladder decides
+        # (env override, then SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED = False). Passing the SUBMITTED_*
+        # value here instead would make it an EXPLICIT kwarg and silently defeat the env path the
+        # A/B harness uses to flip one arm without mutating module globals.
+        hazard_move_pruner: Any | bool | None = None,
         object_history_salience: Any | bool | None = SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED,
         amortized_first_contact_prior: Any | bool | None = (
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
@@ -4125,6 +4378,7 @@ class E3AgentPolicy:
             object_centric_proposal=object_centric_proposal,
             program_synthesis_filter=initial_program_filter,
             inert_click_pruner=inert_click_pruner,
+            hazard_move_pruner=hazard_move_pruner,
             amortized_first_contact_prior=amortized_first_contact_prior,
             go_explore_archive=go_explore_archive,
             similarity_retrieval=similarity_retrieval,
@@ -5798,6 +6052,9 @@ SUBMITTED_AGENT_CONFIG = {
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
     ),
     "inert_click_pruner_enabled": SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+    "hazard_move_pruner_enabled": SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED,
+    "hazard_move_pruner_mode": SUBMITTED_HAZARD_MOVE_PRUNER_MODE,
+    "hazard_move_pruner_wired": True,
     "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
