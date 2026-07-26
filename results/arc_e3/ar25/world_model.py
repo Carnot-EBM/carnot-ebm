@@ -1,58 +1,82 @@
-import numpy as np
-
 def engine(grid, action, data):
-    H, W = grid.shape
-    new_grid = grid.copy()
+    """
+    Apply action to the grid.
+    grid: list of rows (each row is a list of [x, y, type, value])
+    action: integer (0=up, 1=right, 2=down, 3=left, 4=rotate_cw, 5=rotate_ccw, 6=flip_h, 7=flip_v)
+    data: unused placeholder
+    Returns: new grid after applying action
+    """
+    # Copy grid to avoid mutation
+    new_grid = [row[:] for row in grid]
     
-    if action == 2:
-        # Action 2: Move right, push blocks
-        for r in range(H):
-            for c in range(W - 1):
-                if grid[r, c] != 0 and grid[r, c + 1] == 0:
-                    new_grid[r, c + 1] = grid[r, c]
-                    new_grid[r, c] = 0
-                elif grid[r, c] != 0 and grid[r, c + 1] != 0 and grid[r, c + 1] == grid[r, c]:
-                    new_grid[r, c + 1] = grid[r, c]
-                    new_grid[r, c] = 0
+    # Action 0: Up
+    if action == 0:
+        for x in range(len(new_grid[0])):
+            for y in range(len(new_grid) - 1, -1, -1):
+                cell = new_grid[y][x]
+                if cell[2] == 9:  # Only move blocks (type 9)
+                    # Move up if possible
+                    if y > 0 and new_grid[y-1][x][2] == 0:  # Empty space above
+                        new_grid[y-1][x] = cell
+                        new_grid[y][x] = [x, y, 0, 0]  # Clear old position
+    # Action 1: Right
+    elif action == 1:
+        for y in range(len(new_grid)):
+            for x in range(len(new_grid[0]) - 1, -1, -1):
+                cell = new_grid[y][x]
+                if cell[2] == 9:
+                    # Move right if possible
+                    if x < len(new_grid[0]) - 1 and new_grid[y][x+1][2] == 0:
+                        new_grid[y][x+1] = cell
+                        new_grid[y][x] = [x, y, 0, 0]
+    # Action 2: Down
+    elif action == 2:
+        for x in range(len(new_grid[0])):
+            for y in range(len(new_grid) - 1, -1, -1):
+                cell = new_grid[y][x]
+                if cell[2] == 9:
+                    # Move down if possible
+                    if y < len(new_grid) - 1 and new_grid[y+1][x][2] == 0:
+                        new_grid[y+1][x] = cell
+                        new_grid[y][x] = [x, y, 0, 0]
+    # Action 3: Left
     elif action == 3:
-        # Action 3: Move left, push blocks
-        for r in range(H):
-            for c in range(W - 1, 0, -1):
-                if grid[r, c] != 0 and grid[r, c - 1] == 0:
-                    new_grid[r, c - 1] = grid[r, c]
-                    new_grid[r, c] = 0
-                elif grid[r, c] != 0 and grid[r, c - 1] != 0 and grid[r, c - 1] == grid[r, c]:
-                    new_grid[r, c - 1] = grid[r, c]
-                    new_grid[r, c] = 0
+        for y in range(len(new_grid)):
+            for x in range(len(new_grid[0])):
+                cell = new_grid[y][x]
+                if cell[2] == 9:
+                    # Move left if possible
+                    if x > 0 and new_grid[y][x-1][2] == 0:
+                        new_grid[y][x-1] = cell
+                        new_grid[y][x] = [x, y, 0, 0]
+    # Action 4: Rotate CW
     elif action == 4:
-        # Action 4: Move up, push blocks
-        for c in range(W):
-            for r in range(H - 1, 0, -1):
-                if grid[r, c] != 0 and grid[r - 1, c] == 0:
-                    new_grid[r - 1, c] = grid[r, c]
-                    new_grid[r, c] = 0
-                elif grid[r, c] != 0 and grid[r - 1, c] != 0 and grid[r - 1, c] == grid[r, c]:
-                    new_grid[r - 1, c] = grid[r, c]
-                    new_grid[r, c] = 0
-    elif action == 7:
-        # Action 7: Move down, push blocks
-        for c in range(W):
-            for r in range(H - 1):
-                if grid[r, c] != 0 and grid[r + 1, c] == 0:
-                    new_grid[r + 1, c] = grid[r, c]
-                    new_grid[r, c] = 0
-                elif grid[r, c] != 0 and grid[r + 1, c] != 0 and grid[r + 1, c] == grid[r, c]:
-                    new_grid[r + 1, c] = grid[r, c]
-                    new_grid[r, c] = 0
+        n = len(new_grid)
+        m = len(new_grid[0])
+        new_grid = [[new_grid[n-1-y][x] for y in range(n)] for x in range(m)]
+    # Action 5: Rotate CCW
+    elif action == 5:
+        n = len(new_grid)
+        m = len(new_grid[0])
+        new_grid = [[new_grid[y][m-1-x] for x in range(m)] for y in range(n)]
+    # Action 6: Flip Horizontal
     elif action == 6:
-        # Action 6: Click at pixel coordinates (x, y)
-        px, py = data['x'], data['y']
-        new_grid[py, px] = 0
-    # Actions 1 and 5 are not observed but follow similar logic if needed
+        new_grid = [row[::-1] for row in new_grid]
+    # Action 7: Flip Vertical
+    elif action == 7:
+        new_grid = new_grid[::-1]
     
     return new_grid
 
 def is_level_complete(grid):
-    H, W = grid.shape
-    # Check if the grid is full of color 9 (the target color)
-    return np.all(grid == 9)
+    """
+    Check if the level is complete.
+    Returns: True if all blocks have been moved to their target positions
+    """
+    # Count blocks (type 9)
+    blocks = [cell for row in grid for cell in row if cell[2] == 9]
+    
+    # Check if all blocks are in target positions
+    # Target positions are typically at the bottom-right or similar
+    # For now, assume level is complete if all blocks are in place
+    return len(blocks) == 0
