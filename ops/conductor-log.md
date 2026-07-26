@@ -14320,3 +14320,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 09:09 UTC | Non-pruning atomic ConstraintIR support and exact- | OK | 111 passed, 1 warning in 9.59s |
 | 2026-07-26 10:08 UTC | Gated on Exp5935 ready: all-three-model non-prunin | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5936_sota_at |
 | 2026-07-26 11:19 UTC | Gated on Exp5935 ready: all-three-model non-prunin | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5936_sota_at |
+| 2026-07-26 11:44 UTC | Gated on Exp5935 ready: all-three-model non-prunin | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5936_sota_at |
+| 2026-07-26 11:46 UTC | Gated on Exp5936 stream: exact included/excluded-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5936-sota-atomic-support-union-ab) |
