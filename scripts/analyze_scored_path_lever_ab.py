@@ -114,12 +114,76 @@ def build_levers(suffix: str) -> dict[str, dict]:
 LEVERS = build_levers(SUFFIX)
 
 
+# The HUD fields the fire predicate and the row-level readers need, in the FLAT spelling used by
+# `experiment_5836_frontier_discipline_ab.run_cell`. `arc_scored_path_lever_harness.hud_row_fields`
+# emits exactly these plus the two shipped-side comparators.
+_HUD_FLAT_KEYS = (
+    "hud_mask_resolved",
+    "hud_mask_cell_count",
+    "hud_mask_digest",
+    "hud_mask_source",
+    "hud_shipped_mask_cell_count",
+    "hud_shipped_mask_digest",
+    "unique_frames",
+    "graph_nodes",
+    "node_inflation_vs_unique_frames",
+    "collapse_guard_refusals",
+)
+
+
+def backfill_hud_flat_fields(r: dict) -> str:
+    """Make a row readable at BOTH addresses, and report which schema it arrived in.
+
+    WHY (measured 2026-07-26). The HUD diagnostics live at two different addresses depending on which
+    harness wrote the row, and each address reads `None` on the other's rows -- a clean, error-free
+    zero that is indistinguishable from "the detector resolved nothing":
+
+      * `arc_scored_path_lever_harness` wrote them NESTED under `row["lever2_hud_fire"]` only. All
+        805 recorded rows of `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` have
+        `r["hud_mask_resolved"] is None` FLAT while the nested copy is populated in all 805.
+      * exp5836 / cptb write them FLAT only. All 1713 rows of
+        `results/cptb_20260726_cells/*.jsonl.gz` have no `lever2_hud_fire` key, so this module's
+        `recomputed_lever2_fired` -- which read the nested key exclusively -- returned False on
+        every one of them.
+
+    The harness now emits both. This back-fill covers rows ALREADY RECORDED under the nested-only
+    schema so hours of GPU cells do not have to be re-run, and it returns the schema tag so the
+    artifact can state how many rows needed it (a silent back-fill would be one more unwitnessed
+    transformation between measurement and claim).
+
+    Returns one of: `both` (row already carried both), `nested_only` (back-filled from nested),
+    `flat_only` (an exp5836-schema row, left as-is), `absent` (no HUD diagnostics at all -- carries
+    no lever-2 evidence in either direction).
+    """
+    nested = r.get("lever2_hud_fire")
+    has_nested = isinstance(nested, dict) and bool(nested)
+    has_flat = "hud_mask_resolved" in r
+    if has_nested and has_flat:
+        return "both"
+    if has_nested:
+        for k in _HUD_FLAT_KEYS:
+            if k in nested:
+                r[k] = nested[k]
+        stage2 = nested.get("stage2") or {}
+        r.setdefault("hud_mask_stage2_verdict", stage2.get("stage2_verdict"))
+        r.setdefault("hud_mask_stage2_reason", stage2.get("stage2_reason"))
+        r.setdefault("hud_mask_stage2_candidate_cells", stage2.get("candidate_cell_count"))
+        r["hud_flat_fields_backfilled_from_nested"] = True
+        return "nested_only"
+    if has_flat:
+        return "flat_only"
+    return "absent"
+
+
 def load_rows(paths: list[Path]) -> list[dict]:
     rows: list[dict] = []
     for p in paths:
         d = json.loads(p.read_text())
         for r in d.get("rows", []):
             r["_source"] = p.name
+            # Single chokepoint: every row entering the analyser is made readable at both HUD
+            # addresses here, so no downstream call site can be the one that was forgotten.
+            r["_hud_row_schema"] = backfill_hud_flat_fields(r)
             rows.append(r)
     return rows
 
@@ -147,14 +211,29 @@ def recomputed_lever2_fired(r: dict) -> bool:
     non-event, so a falsy shipped digest counts as a real difference. Digests are compared, never
     cell COUNTS -- the 2026-07-25 gate compared counts and therefore read a same-size different
     mask as "no change".
+
+    READS EITHER ROW SCHEMA (added 2026-07-26 with the population fix). The nested
+    `lever2_hud_fire` dict is preferred when present; otherwise the FLAT `hud_mask_*` keys are used,
+    so exp5836-schema rows are scored instead of silently reading False -- which is what happened to
+    all 1713 rows of `results/cptb_20260726_cells/*.jsonl.gz`.
+
+    A MISSING `hud_shipped_mask_digest` KEY IS *UNKNOWN*, NOT None. `digest != None` is true for
+    every resolved mask, so treating an unrecorded shipped digest as None would arithmetically force
+    "fired" on every resolved cell -- 1058 of those 1713 cptb rows, none of which recorded a
+    shipped-side comparison at all. Such a row is scored as NOT fired, and its
+    `_hud_row_schema`/`hud_diagnostics_readable` tags are what tell a reader it carries no evidence
+    rather than negative evidence.
     """
-    h = r.get("lever2_hud_fire") or {}
-    if h.get("error"):
+    nested = r.get("lever2_hud_fire")
+    h = nested if isinstance(nested, dict) and nested else r
+    if h.get("error") or h.get("hud_diagnostics_error"):
         return False
     if not h.get("hud_mask_resolved"):
         return False
     digest = h.get("hud_mask_digest")
     if not digest:
+        return False
+    if "hud_shipped_mask_digest" not in h:
         return False
     return bool(digest != h.get("hud_shipped_mask_digest"))
 
@@ -1026,6 +1105,32 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             "lever2_fired_cells_per_harness_stamp": sum(1 for r in rs if r.get("lever2_fired")),
             "lever2_games_where_recomputed_disagrees_with_harness_stamp": sorted(
                 {r["game"] for r in rs if recomputed_lever2_fired(r) != bool(r.get("lever2_fired"))}
+            ),
+            # WHICH PREDICATE VERSION STAMPED THE ROW. Absent (`unstamped_pre_2026_07_26`) means the
+            # row was written by the pre-fix harness, so its `lever2_fired: False` is uninformative
+            # -- it cannot be distinguished from "the broken predicate could not see it fire". This
+            # is what makes the disagreement list above interpretable instead of alarming.
+            "lever2_fired_predicate_versions": dict(
+                collections.Counter(
+                    r.get("lever2_fired_predicate") or "unstamped_pre_2026_07_26" for r in rs
+                )
+            ),
+            # HOW THE HUD DIAGNOSTICS REACHED THIS ANALYSER. `nested_only` counts rows that needed
+            # the flat back-fill (i.e. rows on which a flat reader saw None); `absent` counts rows
+            # carrying NO lever-2 evidence in either direction, which must never be read as a
+            # non-fire. A silent back-fill would be an unwitnessed transformation between the
+            # measurement and the claim, so the census states it per arm.
+            "hud_row_schema": dict(
+                collections.Counter(r.get("_hud_row_schema") or "unknown" for r in rs)
+            ),
+            "hud_diagnostics_unreadable_cells": sorted(
+                r["game"]
+                for r in rs
+                if not (
+                    r.get("hud_diagnostics_readable")
+                    if "hud_diagnostics_readable" in r
+                    else r.get("hud_mask_resolved") is not None
+                )
             ),
             "lever3_verdicts": dict(collections.Counter(r.get("lever3_verdict") for r in rs)),
             "lever3_rows_pruned_total": sum(
