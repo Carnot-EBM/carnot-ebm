@@ -1,0 +1,381 @@
+milestone: "2026.07.527"
+milestone_title: "Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp5932-transition-v527
+    milestone: "2026.07.527"
+    title: "Exact terminal-boundary handoff from .526 into .527"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5932_transition_v527.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5918-transition-v526
+        verdict: "blocked: Exp5918 transition preconditions failed"
+        addressed_by: "This attempt removes global-suite-zero, global spec-coverage-zero, and pre-existing root-clutter as transition preconditions; it uses clean task-owned gates plus exact node/file non-amplification and does not require research-roadmap-next.yaml to exist after activation."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.07.526 is terminal with exactly 14 activated identities, Exp5918-Exp5931. Its capstone preserves transition-blocked, source-null, ready, retired, gate-blocked, underpowered, blocked-precondition, no-change, and missing classes independently. Exp5918 itself blocked because unrelated global suite/spec/root-clutter debt was treated as a hard transition precondition even though task-owned tests passed. The active `.527` roadmap may have been promoted from research-roadmap-next.yaml before this task runs, so absence of the next-roadmap staging file is not a failure. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_5918_transition_v526.json
+      - {project_root}/results/experiment_5931_v526_capstone_reconciliation.json
+      - {project_root}/scripts/evidence_index_collision_preflight.py
+      - {project_root}/scripts/in_process_doc_reconcile.py
+      - {project_root}/scripts/root_clutter_sweep.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Archive exactly the activated `.526` identities without laundering any terminal class; append `.526` to research-complete.yaml exactly once only if its exact milestone block is absent; prove Exp5932-Exp5943 collision-free; replace the failed global-zero transition gate with task-owned clean checks plus exact debt non-amplification; and write results/experiment_5932_transition_v527.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: parse the active roadmap and Exp5931 exact task matrix; hash completion history, conductor log, exclusions, known global failure node IDs, root-clutter inventory, protected files, and every present `.526` declared deliverable. Verify disk/RAM, atomic output, and adversarial-verifier availability. Treat research-roadmap-next.yaml as optional after activation.
+      1. Add or extend REQ-* exact-transition, task-owned-gate, debt-non-amplification, duplicate-history, and collision requirements plus focused failing tests before implementation.
+      2. Resolve `.526` evidence only by `(milestone, task_id, declared_deliverable)` from Exp5931 and exact paths. Freshly adversarial-verify every present artifact. Preserve Exp5923 retirement, Exp5925 gate block, Exp5927 underpower, Exp5929 blocked precondition, Exp5930 no-change, and Exp5931's post-emission QA flag independently.
+      3. Define transition readiness as clean task-owned unit/coverage/spec/applicable-E2E commands plus `global_suite_failure_delta<=0`, `global_spec_gap_delta<=0`, and `root_clutter_delta<=0` against exact pre-task inventories. Pre-existing unrelated debt cannot block the transition and cannot be hidden, deselected, deleted, or amplified.
+      4. Append `.526` to research-complete.yaml only if its exact milestone block is absent. Never mutate historical artifacts. Require duplicate-history amplification count zero.
+      5. Scan active/staging roadmaps when present, completion history, proposals, exclusions, results, source, tests, and allocation receipts for Exp5932-Exp5943. Treat only their exact declared allocation documents and task-owned implementation/tests as allowed references; require bare collision count zero.
+      6. Reconcile only transition-owned requirements, traceability, ops/status.md, ops/changelog.md, and ops/conductor-log.md. Preserve research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, historical results, and unrelated user changes.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, activated_task_and_deliverable_matrix, exact_terminal_classification, adversarial_verifier_receipts, task_owned_gate_receipts, global_suite_spec_and_root_debt_baselines_and_deltas, research_complete_append_count, duplicate_history_amplification_count, next_task_range, next_range_collision_count, optional_staging_roadmap_receipt, docs_reconciled, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status/preconditions_checked principle: report the actual terminal state and every checked prerequisite without turning unrelated inherited debt into a task failure.
+         milestone_transition/activated_task_and_deliverable_matrix/exact_terminal_classification principle: exact activated identities and declared paths are the only evidence keys; no numeric-prefix substitution.
+         adversarial_verifier_receipts/task_owned_gate_receipts principle: transition authority comes from fresh exact-path checks and task-owned tests.
+         global_suite_spec_and_root_debt_baselines_and_deltas principle: inherited debt must be preserved by exact node/file identity and may not increase; global zero is not required.
+         research_complete_append_count/duplicate_history_amplification_count principle: append at most once and require zero duplicate amplification.
+         next_task_range/next_range_collision_count/optional_staging_roadmap_receipt principle: only bare zero collisions authorize Exp5932-Exp5943, and an absent post-promotion staging file is informational.
+         docs_reconciled/protected_files_unchanged principle: update only transition-owned internal ledgers and preserve protected/unrelated state.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured task-owned aggregation receipts with exact command provenance and `aggregation_from_upstream_artifacts_no_llm`.
+         honest_verdict principle: use a `complete:` or `blocked:` prefix.
+      8. Run focused unit/coverage, YAML parse, exact-path/hash, duplicate-history, task-owned spec coverage, adversarial-verifier, exclusion-manifest, range-collision, debt-delta, optional-staging-file, protected-file, reconciliation, applicable E2E, and no-new-root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5933-aggregation-substrate-qa-repair
+    milestone: "2026.07.527"
+    title: "Aggregation-aware adversarial-verifier substrate repair"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5931-v526-capstone-reconciliation
+        verdict: "complete_with_nulls: .526 reconciled by exact declared deliverables with positive, null, underpowered, blocked-precondition, retired, gate-blocked, no-change, and missing receipts preserved independently"
+        addressed_by: "This task fixes the downstream QA classifier that falsely treated a 5.97-second aggregation artifact quoting upstream GGUF/CUDA receipts as live inference, adds paired aggregation/live controls, and leaves the immutable Exp5931 artifact untouched."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5931 correctly declared `inference_substrate=aggregation_from_exact_declared_artifacts`, performed no model inference, and completed in 5.97 seconds. A post-emission adversarial pass nevertheless CRITICAL-flagged `DURATION_TOO_SHORT` and warned `METHODOLOGY_MISSING` because upstream receipts contained GGUF/CUDA strings. This masks real capstone quality while risking an overbroad fix that could let fabricated live inference pass. The QA layer, not Exp5931, must change. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_5931_v526_capstone_reconciliation.json
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/tests/python/test_adversarial_verify.py
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities/adversarial-verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Make adversarial verification classify inference substrate from explicit top-level provenance before scanning quoted upstream markers; exempt genuine aggregation from live-duration/model-methodology rules while preserving those rules for actual live inference; run a regression corpus; and write results/experiment_5933_aggregation_substrate_qa_repair.json without modifying Exp5931.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash scripts/adversarial_verify.py, its specs/tests, Exp5931, a representative clean aggregation corpus, representative true live-GGUF artifacts, and protected files. Record the exact pre-fix flag vector.
+      1. Add REQ-* substrate-classification, quoted-upstream-marker, paired-control, and no-severity-regression requirements plus failing tests before implementation.
+      2. Introduce one explicit substrate classifier with an allowlist of aggregation/no-LLM values and live-model values. Top-level `inference_substrate` and field provenance own the classification; arbitrary nested strings never upgrade aggregation to live inference.
+      3. Add paired fixtures: a short aggregation artifact quoting GGUF/CUDA that must not receive live-duration or model-methodology flags; an otherwise identical artifact declaring live GGUF inference that must receive them; malformed/missing-substrate cases that remain conservative; and hardware-smoke/simulated cases that preserve existing behavior.
+      4. Re-run Exp5931 through the real CLI and require zero `DURATION_TOO_SHORT` and zero live-model `METHODOLOGY_MISSING` flags without editing the artifact. Preserve other legitimate flags.
+      5. Run a dated corpus comparison across recent capstones, genuine live artifacts, blocked preconditions, hardware receipts, and simulated artifacts. Permit only the intended aggregation false-positive removals; require no CRITICAL/WARN downgrade on true live controls.
+      6. Do not modify scripts/research_conductor.py, result history, task prompts, or duration thresholds. Reconcile the QA spec, traceability, known issue, status, and changelog only.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, pre_fix_flag_vector, substrate_classifier_contract, paired_aggregation_and_live_controls, exp5931_post_fix_receipt, regression_corpus_manifest_and_hashes, per_artifact_before_after_flag_vectors, intended_false_positive_removals, unintended_severity_downgrade_count, true_live_short_duration_detection_rate, malformed_or_missing_substrate_policy, protected_files_unchanged, qa_substrate_classifier_ready_score, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status/preconditions_checked/pre_fix_flag_vector principle: preserve the observed failure before changing QA code.
+         substrate_classifier_contract/malformed_or_missing_substrate_policy principle: explicit top-level provenance classifies known substrates; unknown or missing values remain conservative.
+         paired_aggregation_and_live_controls/true_live_short_duration_detection_rate principle: the same nested compute markers must be ignored for aggregation and enforced for declared live inference.
+         exp5931_post_fix_receipt/intended_false_positive_removals principle: Exp5931 is immutable and only the two misapplied live-inference rules may disappear.
+         regression_corpus_manifest_and_hashes/per_artifact_before_after_flag_vectors/unintended_severity_downgrade_count principle: corpus hashes and exact vectors must prove zero unintended downgrade.
+         protected_files_unchanged/qa_substrate_classifier_ready_score principle: emit bare 1.0 only for paired-control success, clean Exp5931 classification, zero unintended downgrade, and unchanged protected files.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: this is `deterministic_qa_regression_no_llm` with measured commands and exact provenance.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, or `blocked:`.
+      8. Run focused unit/coverage, paired fixture, real-CLI Exp5931, regression-corpus, malformed-substrate, severity-diff, ruff, spec-coverage, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5934-v527-source-delta-ingestion
+    milestone: "2026.07.527"
+    title: "Dated evidence refresh after the V527 planner marker"
+    priority: high
+    track: research
+    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 90
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5919-v526-source-delta-ingestion
+        verdict: "complete_null: no accepted post-V526 source deltas; references unchanged"
+        addressed_by: "This task starts after the disjoint V527 marker, uses a new publication/change window, and targets non-pruning semantic support, excluded-pool certification, neighborhood memory utility, ARC convention generalization, and authenticated hardware changes."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The planning sweep is sealed at `V527-PLANNER-REFRESH-20260726-END` in research-references.md. It adds finite-sample excluded-pool coverage audits, first-pass-poisoning/search-inertness evidence, workflow-localized memory, UMEM neighborhood utility, and guarded AttriMem/M2Note/Best-of-Evidence findings. This task accepts only primary evidence published or materially changed after that exact marker receipt. Zero accepted findings is complete. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/research-studying.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_5919_v526_source_delta_ingestion.json
+      - {project_root}/scripts/sweep_clusters.py
+      - {project_root}/scripts/sweep_semscholar.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Search the bounded post-marker window through arXiv, OpenReview, Hugging Face Papers, Semantic Scholar citation trails for EBT and ARM-EBM, GitHub, Extropic, and Logical Intelligence; classify every receipt; append only actionable non-duplicate deltas to research-references.md; and write results/experiment_5934_v527_source_delta_ingestion.json without rewriting activated task identities, gates, or exclusions.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the exact V527 end marker, roadmaps, references, exclusions, sweep code, output path, and protected files. Record UTC start/end, query families, endpoint failures, rate limits, and source cutoffs.
+      1. Add or extend REQ-* source-ingestion, post-marker-window, provenance, and task-immutability requirements plus focused failing tests.
+      2. Search only evidence published or changed after the exact marker. Cover the requested EBM verification/reasoning, neural CSP, Ising, hallucination, KAN, energy-guided decoding, hardware sampling, and continual-learning topics. Prefer arXiv/OpenReview/official project pages; label mirrors and discovery indexes as secondary until their primary source is opened.
+      3. Recheck direct Semantic Scholar citation APIs for EBT `2507.02092` and ARM-EBM `2512.15605`; Extropic writing/hardware; Hugging Face Papers; GitHub Trending and targeted repositories; and Logical Intelligence Kona/Aleph. Date all counts and negative receipts.
+      4. Deduplicate by identifier, title, authors, mechanism, and existing headings. Reject renamings of retired schema reprompt, exact-diagnostic reprompt, finite-ID transport, external scorers, KAN mutation, public ARC solves, or unchanged board probes.
+      5. Report accepted, rejected, abstained, false-positive, known false-negative, cutoff-confounded, and endpoint-failed findings separately. Append accepted findings under one dated post-V527 subheading; do not rewrite the sealed marker.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, search_window_and_marker_receipt, source_queries_and_endpoint_receipts, primary_secondary_and_official_source_counts, accepted_rejected_abstained_findings, false_positive_false_negative_cutoff_and_rate_limit_receipts, semantic_scholar_ebt_and_arm_ebm_receipts, extropic_github_huggingface_openreview_and_kona_receipts, duplicate_and_retired_scope_filter, references_append_receipt, task_identity_gate_and_exclusion_immutability, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status/preconditions_checked/search_window_and_marker_receipt principle: only a hash-anchored post-marker window is eligible.
+         source_queries_and_endpoint_receipts/primary_secondary_and_official_source_counts principle: every query and source class remains dated and auditable.
+         accepted_rejected_abstained_findings/false_positive_false_negative_cutoff_and_rate_limit_receipts principle: uncertainty and access failure cannot be silently converted into rejection.
+         semantic_scholar_ebt_and_arm_ebm_receipts/extropic_github_huggingface_openreview_and_kona_receipts principle: discovery receipts are context until a primary reproducible artifact is opened.
+         duplicate_and_retired_scope_filter principle: no duplicate or renamed retired mechanism enters the ledger.
+         references_append_receipt/task_identity_gate_and_exclusion_immutability principle: source aggregation may append references but cannot rewrite the activated milestone.
+         protected_files_unchanged principle: active roadmap, conductor, exclusions, historical results, and unrelated user changes remain byte-identical.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use `aggregation_from_external_primary_sources_no_experimental_llm`.
+         honest_verdict principle: use `complete_delta:`, `complete_null:`, or `blocked:`.
+      7. Run focused unit/coverage, marker/hash, date-window, deduplication, source-classification, cutoff/rate-limit, references-marker, roadmap/gate/exclusion immutability, schema, adversarial-verify, spec-coverage, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5935-non-pruning-atomic-constraint-support
+    milestone: "2026.07.527"
+    title: "Non-pruning atomic ConstraintIR support and exact-completion fixture"
+    priority: critical
+    track: constraint-extraction
+    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
+        addressed_by: "This deterministic task does not reprompt or decode full ConstraintIR; it defines an overcomplete atom-level proposal protocol that forbids model-side hard pruning, unions independent semantic views before exact completion, and audits the excluded pool."
+        retire_if_same_verdict: true
+      - experiment_id: exp5909-sota-constraint-synthesis-ab
+        verdict: "complete_null: structured prompt arms did not improve exact synthesis"
+        addressed_by: "The deliverable changes from one-shot structured emission to a generic candidate-atom universe, non-pruning support, exact subset completion, and hidden-label coverage audit with no model inference."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5921-Exp5922 provide reusable grammar/type/scope and tokenizer support, but Exp5923 retired schema-supported full-IR decoding after zero exact semantic successes on every mandated model. `arXiv:2607.19635` shows that exact search becomes inert when a first neural pass has deleted the true value; `arXiv:2607.21480` shows that accepted-pool inspection cannot certify what a high-recall generator omitted. Carnot needs an open atomic proposal surface that keeps multiple semantic hypotheses alive until exact completion. This task performs no LLM inference. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5908_verisynth_constraint_fixture.json
+      - {project_root}/results/experiment_5908_verisynth_constraint_fixture.rows.jsonl
+      - {project_root}/results/experiment_5921_schema_derived_constraintir_support.json
+      - {project_root}/results/experiment_5922_gguf_schema_decoder_bridge.json
+      - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
+      - {project_root}/python/carnot/constraint_ir_replay.py
+      - {project_root}/python/carnot/constraint_store.py
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
+
+      TASK:
+      Implement and independently qualify a generic high-recall ConstraintIR atom universe, non-pruning candidate-support protocol, deterministic paraphrase/entity-permutation view transforms, exact subset-completion engine, and included/excluded-pool audit contract over sealed held families; write results/experiment_5935_non_pruning_atomic_constraint_support.json without invoking an LLM or reopening schema reprompting.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: replay and hash Exp5908, Exp5921, Exp5922, exact Python/Z3 authorities, schemas, held splits, output paths, exclusions, and protected files. Verify disk/RAM and atomic JSON/JSONL output.
+      1. Add REQ-* atom-universe, non-pruning, independent-view, exact-completion, excluded-pool, label-secrecy, and tamper-rejection requirements plus failing tests before implementation.
+      2. Define a versioned atom schema over declarations, typed relations, comparisons, domains, cardinalities, and compositions. Derive legal atom shapes mechanically from the open operation/type schema. Enumerating complete answers, per-case solution IDs, or a hidden-reference token list is forbidden.
+      3. For each sealed case, derive a model-visible atom vocabulary from entities/types and a hidden exact reference set from the fixture. Keep those paths separate and hash both. The proposal contract accepts overcomplete atom sets, records provenance per atom, and may rank but never hard-delete a legal atom before the union is sealed.
+      4. Implement deterministic meaning-preserving paraphrase and entity-permutation transforms with inverse maps. Prove exact reference invariance, no answer leakage, and transform independence from model output.
+      5. Implement bounded exact subset completion over the sealed union. Python/Z3 agreement and certificate replay own acceptance. Test injected missing atoms, spurious atoms, contradictions, duplicates, type/scope failures, empty supports, support saturation, and candidate-order permutations.
+      6. Define preregistered included/excluded pools and audit strata before labels are opened. The exact reference set labels atom relevance; accepted-pool-only recall claims must be rejected mechanically.
+      7. Report whether exact completion recovers injected cases only when the true atoms remain in support; demonstrate that search cannot manufacture a deleted required atom.
+      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, immutable_upstream_hashes, atom_schema_version_and_hash, generic_atom_universe_contract, model_visible_vs_hidden_reference_separation, non_pruning_support_contract, semantic_view_transforms_and_inverse_receipts, exact_completion_contract_and_bounds, python_z3_certificate_parity, injected_omission_spurious_contradiction_and_order_matrix, included_and_excluded_pool_contract, label_secrecy_and_no_complete_answer_enumeration_receipt, search_reachability_and_inertness_receipt, held_family_and_adversary_manifest, replay_and_tamper_matrix, protected_files_unchanged, atom_support_fixture_ready_score, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         status/preconditions_checked/immutable_upstream_hashes principle: readiness requires exact replay of immutable structural and verifier inputs.
+         atom_schema_version_and_hash/generic_atom_universe_contract principle: legal atoms derive from public type/operation schemas, never per-case answers.
+         model_visible_vs_hidden_reference_separation/label_secrecy_and_no_complete_answer_enumeration_receipt principle: hidden exact labels cannot enter prompts, candidate vocabularies, transforms, or token supports.
+         non_pruning_support_contract/search_reachability_and_inertness_receipt principle: ranking is allowed, irreversible pre-union deletion is not; exact search cannot receive credit for unreachable truth.
+         semantic_view_transforms_and_inverse_receipts principle: transforms are deterministic, meaning-preserving, invertible, and output-independent.
+         exact_completion_contract_and_bounds/python_z3_certificate_parity principle: bounded exact execution with cross-backend agreement is the only semantic authority.
+         injected_omission_spurious_contradiction_and_order_matrix/included_and_excluded_pool_contract principle: audit both admitted and omitted atoms under frozen strata and reject accepted-only recall.
+         held_family_and_adversary_manifest/replay_and_tamper_matrix principle: held splits, adversaries, checksums, and rejection behavior are sealed before later model rows.
+         protected_files_unchanged/atom_support_fixture_ready_score principle: emit bare 1.0 only for complete no-leakage, no-enumeration, exact-parity, non-pruning, and tamper-safe evidence.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use `deterministic_exact_executor_fixture_no_llm`.
+         verifier_is_oracle/missing_verifier_gaps principle: true only for the synthetic fixture's exact semantics, with any natural-language ambiguity gaps listed explicitly.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+      9. Run focused unit/coverage, upstream replay/hash, atom-schema derivation, no-enumeration, label-secrecy, transform invariance, Python/Z3 parity, omission/spurious/contradiction, exact-completion bounds, included/excluded audit, fresh-process replay/tamper, adversarial-verify, spec-coverage, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5936-sota-atomic-support-union-ab
+    milestone: "2026.07.527"
+    title: "Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B"
+    priority: critical
+    track: constraint-extraction
+    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 960
+    requires_gpu: true
+    gated_on:
+      - upstream: exp5935-non-pruning-atomic-constraint-support
+        artifact_field: atom_support_fixture_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
+        addressed_by: "This attempt never constrains or reprompts a full IR sequence; it collects overcomplete atomic hypotheses, compares repeated-original with meaning-preserving transformed-view unions at matched call/token budgets, and invokes exact completion only after union."
+        retire_if_same_verdict: true
+      - experiment_id: exp5909-sota-constraint-synthesis-ab
+        verdict: "complete_null: structured prompt arms did not improve exact synthesis"
+        addressed_by: "The primary arm is an atom-support union rather than one-shot structured output, and the exact omitted-atom pool plus matched repeated-original control isolates semantic coverage from formatting."
+        retire_if_same_verdict: true
+      - experiment_id: exp5910-verification-guided-constraint-repair
+        verdict: "complete_null: exact diagnostics did not beat matched repair controls"
+        addressed_by: "There is no diagnostic reprompt: all independent views are generated before exact labels are revealed, their union is sealed, and one deterministic exact completion follows."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5923 retired schema-supported full-IR decoding after all three mandated models achieved zero exact semantic success. Exp5935, if ready, supplies a materially different proposal surface: overcomplete atoms, independent semantic views, no model-side hard pruning, exact completion after union, and explicit excluded-pool labels. `arXiv:2607.19635` predicts that transformed-view union can repair first-pass poisoning while ordinary search cannot; this experiment tests that prediction on Carnot's current local models. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5909_sota_constraint_synthesis_ab.json
+      - {project_root}/results/experiment_5910_verification_guided_constraint_repair.json
+      - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
+      - {project_root}/results/experiment_5935_non_pruning_atomic_constraint_support.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/constraint_ir_replay.py
+      - {project_root}/python/carnot/atomic_constraint_support.py
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+      - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
+
+      TASK:
+      Run a preregistered all-three-model held-family comparison of direct one-shot IR, single-view atomic support, repeated-original atomic union, and meaning-preserving transformed-view atomic union; seal support before exact labels, perform one deterministic exact completion, write a chronological event stream, and write results/experiment_5936_sota_atomic_support_union_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS AND GATE: replay Exp5935 by exact path/hash and require bare `atom_support_fixture_ready_score==1.0`; otherwise emit no model rows. Gate principle: only complete no-leakage, non-pruning, exact-parity fixture evidence authorizes inference. Define `MODEL_SPECS` with `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`; resolve through `cached_sota_pair()` plus the cached third family. Verify embedded tokenizers, exact model hashes, public llama.cpp CUDA, two healthy RTX 3090s, RAM/disk/VRAM, nonzero real offload, atomic checkpoint/resume, and no protected workload. Never use `AutoTokenizer.from_pretrained()` or a downloaded side tokenizer.
+      1. Add REQ-* paired-arm, non-pruning, transformed-view, exact-completion, chronology, checkpoint, and GPU-provenance requirements plus failing tests before inference.
+      2. Freeze at least 36 shared held cases per model, held families, attribute/value adversaries, prompts, semantic transforms, inverse maps, seeds, arm order, call/token budgets, exact validators, completion bounds, retirement rules, stopping rules, and paired interval method before opening model output.
+      3. Run four arms: A direct one-shot ConstraintIR; B one-call original-view atomic support; C a three-call repeated-original atomic union; D a three-call original/paraphrase/entity-permutation atomic union. C and D must have identical call/token/temperature budgets. A/B are cost baselines, not matched evidence for the transformation effect.
+      4. For atom arms, accept overcomplete hypotheses and record per-atom provenance/rank. Never pass hidden references or exact diagnostics back to a model, never use model confidence as a hard mask, and never drop a legal proposed atom before the arm's union is sealed.
+      5. After sealing each arm, run exactly one deterministic bounded exact completion. Report parse/type/scope, included relevant/irrelevant atoms, excluded relevant/irrelevant atoms, exact semantics, missing/spurious constraints, contradictions, unsafe acceptance, correct-mode diversity, search expansions, whether search changed correctness, calls/tokens/latency, and GPU telemetry.
+      6. Primary comparison is transformed-view union D versus matched repeated-original union C on held exact semantic success with a paired preregistered interval. Secondary comparisons include B and direct A. Structural validity, atom recall, or search effort cannot substitute for exact semantics.
+      7. Stop on the first unsafe exact accept, label leak, hidden-reference prompt hash, model-side irreversible pruning, tokenizer/runtime drift, or GPU fallback. Retire the mechanism if all three models again have zero exact semantic success in D or D fails to improve semantic coverage over C while adding material cost/unsafe behavior.
+      8. Write and tamper-test a chronological `.events.jsonl` containing event/model/case/family/split/arm/view identities, visible prompt/proposal hashes, sealed atom support, exact completion result, omitted/spurious atom labels revealed only after seal, GPU receipt, and prefix checksum. Stream readiness means complete real rows, not positive science.
+      9. REQUIRED ARTIFACT FIELDS: status, gate_replay_receipt, preconditions_checked, model_specs, model_file_hashes, embedded_tokenizer_public_llama_cpp_cuda_dual_gpu_and_vram_receipts, sealed_cases_families_adversaries_prompts_transforms_seeds_arms_and_budgets, per_model_arm_atom_and_exact_metrics, transformed_vs_repeated_original_primary_comparison_and_interval, direct_and_single_view_secondary_comparisons, included_and_excluded_relevant_atom_counts, exact_semantic_missing_spurious_contradiction_and_unsafe_receipts, correct_mode_diversity_and_support_saturation, search_correctness_change_vs_cleanup_receipt, calls_tokens_latency_gpu_and_memory_accounting, chronological_event_stream_path_hash_rows_and_prefix_chain, chronological_event_stream_ready_score, no_label_feedback_no_hard_pruning_no_schema_reprompt_and_no_answer_enumeration_receipt, retirement_decision, protected_files_unchanged, atomic_semantic_live_ready_score, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         gate_replay_receipt principle: only exact Exp5935 readiness authorizes model loading.
+         preconditions_checked/model_specs/model_file_hashes/embedded_tokenizer_public_llama_cpp_cuda_dual_gpu_and_vram_receipts principle: every headline row uses a mandated hashed GGUF with its embedded tokenizer and real local CUDA offload.
+         sealed_cases_families_adversaries_prompts_transforms_seeds_arms_and_budgets principle: the complete design is frozen before output or exact labels are opened.
+         per_model_arm_atom_and_exact_metrics/transformed_vs_repeated_original_primary_comparison_and_interval principle: D versus matched C owns the transformation claim; report models separately and pooled only with provenance.
+         direct_and_single_view_secondary_comparisons principle: cheaper arms remain cost baselines and cannot be called budget-matched to D.
+         included_and_excluded_relevant_atom_counts/exact_semantic_missing_spurious_contradiction_and_unsafe_receipts principle: audit omissions and exact outcomes separately; zero unsafe acceptance is mandatory.
+         correct_mode_diversity_and_support_saturation/search_correctness_change_vs_cleanup_receipt principle: distinguish recovered reachability from repeated-invalid-work cleanup and report overcomplete-support cost.
+         calls_tokens_latency_gpu_and_memory_accounting principle: include all view-generation and exact-completion costs, not only the winning arm's final call.
+         chronological_event_stream_path_hash_rows_and_prefix_chain/chronological_event_stream_ready_score principle: bare 1.0 means complete tamper-safe real chronology even when the scientific result is null.
+         no_label_feedback_no_hard_pruning_no_schema_reprompt_and_no_answer_enumeration_receipt principle: any violation invalidates the experiment and overlaps retired scope.
+         retirement_decision/protected_files_unchanged/atomic_semantic_live_ready_score principle: emit bare 1.0 only for D beating C by a positive lower paired bound, zero unsafe accepts, no material correct-mode collapse, and no retirement condition.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use `local_mandated_gguf_public_llama_cpp_cuda_atomic_support_union`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact fixture execution/certificates are oracle only inside the sealed synthetic domains; list ambiguity gaps.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:`.
+      10. Run focused unit/coverage, gate replay, exact cache/hash, embedded-tokenizer, public llama.cpp CUDA/dual-GPU, paired-row integrity, prompt-label separation, matched-budget C/D, no-pruning, exact semantics, excluded-pool labels, unsafe-accept, event-stream replay/tamper, checkpoint-resume, GPU telemetry, adversarial-verify, spec-coverage, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5937-excluded-pool-coverage-audit
+    milestone: "2026.07.527"
+    title: "Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit"
+    priority: critical
+    track: constraint-extraction
+    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    estimated_wall_time_min: 120
+    requires_gpu: false
+    gated_on:
+      - upstream: exp5936-sota-atomic-support-union-ab
+        artifact_field: chronological_event_stream_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      `arXiv:2607.21480` proves that a high-recall candidate generator cannot certify low missed relevant mass by auditing only admitted candidates. Exp5935 preregisters atom universes, generator families, strata, and included/excluded pools. Exp5936, if its chronological stream is ready, provides real all-three-model candidate supports sealed before hidden exact atom labels were revealed. This task performs no LLM inference and cannot change generator families after inspecting outcomes. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5935_non_pruning_atomic_constraint_support.json
+      - {project_root}/results/experiment_5936_sota_atomic_support_union_ab.json
+      - {project_root}/results/experiment_5936_sota_atomic_support_union_ab.events.jsonl
+      - {project_root}/python/carnot/atomic_constraint_support.py
+      - {project_root}/python/carnot/constraint_ir_replay.py
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Replay the sealed all-model event stream; label included and excluded atom pools with exact hidden fixture semantics; compute exact finite-corpus/binomial/hypergeometric missed-mass and recall certificates for preregistered arm/model/family/perturbation strata; reject accepted-pool-only claims; and write results/experiment_5937_excluded_pool_coverage_audit.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS AND GATE: require exact `chronological_event_stream_ready_score==1.0` and replay the path/hash/prefix chain before reading labels. Gate principle: only complete untampered real-model chronology authorizes a coverage audit. Hash Exp5935's frozen generator-family/audit contract and Exp5936's sealed design.
+      1. Add REQ-* excluded-pool sampling, preregistration, exact finite-sample inversion, family-wise coverage, and accepted-only-rejection requirements plus focused failing tests.
+      2. Prove candidate generator families, nested support variants, perturbations, audit strata, stopping rules, and the one-sided confidence level were fixed before exact labels. If any were selected after labels, report the affected claim invalid.
+      3. For every model/arm/family, construct disjoint included and excluded atom pools from the sealed universe. Use exact fixture semantics to label relevance. Audit the excluded pool directly; use a census where bounded and the preregistered exact sample otherwise.
+      4. Compute exact finite-corpus hypergeometric or binomial inversion, not asymptotic normal approximations. Report missed relevant mass, recall, review burden, simultaneous-family adjustment, and perturbation stress certificates with numerators/denominators.
+      5. Include negative controls that audit the admitted pool only and require mechanical refusal to certify recall. Tamper pool membership, hidden labels, generator family, and stopping order one at a time and require rejection.
+      6. Keep scientific quality separate from audit readiness. `coverage_audit_ready_score` may be 1.0 for a correct audit whose bound is poor; `coverage_target_met` is true only when the preregistered 95% upper bound on missed relevant mass is at most 0.05 without invalid selection.
+      7. REQUIRED ARTIFACT FIELDS: status, gate_replay_receipt, preconditions_checked, immutable_stream_and_contract_hashes, preregistered_generator_families_strata_stopping_rules_and_confidence, per_model_arm_family_included_and_excluded_pool_sizes, exact_label_authority, excluded_pool_audit_samples_and_receipts, finite_corpus_binomial_or_hypergeometric_certificates, missed_relevant_mass_and_recall_bounds, simultaneous_family_and_perturbation_certificates, review_burden, accepted_pool_only_negative_control, post_label_selection_violations, replay_and_tamper_matrix, coverage_target_and_decision, protected_files_unchanged, coverage_audit_ready_score, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         gate_replay_receipt/immutable_stream_and_contract_hashes principle: exact untampered stream and preregistered audit hashes are prerequisites.
+         preconditions_checked/preregistered_generator_families_strata_stopping_rules_and_confidence principle: no family, stratum, or stopping choice may be selected after exact labels.
+         per_model_arm_family_included_and_excluded_pool_sizes/excluded_pool_audit_samples_and_receipts principle: omitted atoms are sampled where missed truth can actually exist.
+         exact_label_authority/finite_corpus_binomial_or_hypergeometric_certificates principle: hidden exact fixture semantics label atoms and exact finite-sample math owns intervals.
+         missed_relevant_mass_and_recall_bounds/simultaneous_family_and_perturbation_certificates/review_burden principle: report raw counts, exact bounds, multiplicity, and inspection cost together.
+         accepted_pool_only_negative_control principle: admitted-only inspection must be mechanically unable to certify nontrivial recall.
+         post_label_selection_violations/replay_and_tamper_matrix principle: any data-dependent audit selection invalidates only the affected claim and remains visible.
+         coverage_target_and_decision/coverage_audit_ready_score principle: audit correctness and scientific target are separate; readiness 1.0 does not imply missed-mass target success.
+         protected_files_unchanged principle: model rows, exact labels, active roadmap, conductor, and historical artifacts remain immutable.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use `aggregation_from_exact_atom_event_stream_no_llm`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact atom relevance is oracle only for sealed fixtures; list external-domain gaps.
+         honest_verdict principle: use `complete_target_met:`, `complete_target_not_met:`, `invalid_selection:`, or `blocked:`.
+      8. Run focused unit/coverage, gate replay, prefix-chain, preregistration-hash, exact finite-sample reference vectors, included/excluded disjointness, accepted-only refusal, simultaneous-family, perturbation, tamper rejection, adversarial-verify, spec-coverage, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

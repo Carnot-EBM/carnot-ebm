@@ -2521,11 +2521,39 @@ class StepwiseExplorer:
             # live clicks (matching HazardMovePruner's own online-observation discipline) --
             # without this, rank_candidates would be wired but permanently a no-op (every
             # signature stays "unproven" forever).
+            # DEFECT FIX (2026-07-26, adversarial review of
+            # results/outer_loop_inert_click_pruner_shipped_config_ab_20260726.json): this hook
+            # used to be guarded on `o.get("previous_frame") is not None` ALONE, which made the
+            # pruner's ONLY learning channel depend on a component it has nothing to do with.
+            # `awaiting["previous_frame"]` is `graph[origin]["frame"]`, and node frames are
+            # RETAINED only when one of nine unrelated optional components is attached (see the
+            # `"frame": latest if self.goal_bias is not None or ...` expressions below);
+            # `awaiting["grid"]` is `_grid_for_hash(origin)`, which reads the SAME
+            # `node["frame"]` and is therefore None in exactly the same cases, so the existing
+            # `or o.get("grid")` fallback rescued nothing. `inert_click_pruner` is not in that
+            # nine-component list. Measured consequence: on the shipped scored path the channel
+            # was alive only INCIDENTALLY, because `goal_bias=RelationalGoalEnergy` and
+            # `action_effect_expansion_prior=ActionEffectExpansionPrior` happen to be attached;
+            # disabling goal_bias would have silently returned the pruner to a permanent no-op
+            # (measured: CarnotAgentPolicy(force_explore=True) + pruner -> observed 0 of 397
+            # transitions), which is indistinguishable from a real lever null.
+            #
+            # The fix mirrors how the HUD collapse guard's control channel was repaired above
+            # (see the `unmasked_before = self._last_unmasked_hash` comment at the top of this
+            # method): fall back to `grid_before`, the raw grid of the PREVIOUS _ingest, which
+            # this method maintains UNCONDITIONALLY in `self._last_grid` and which is therefore
+            # independent of every optional component. This is a pure WIDENING -- when
+            # `previous_frame` is present (every shipped-config transition) the antecedent
+            # passed is byte-identical to before, so no measured A/B cell changes; it only adds
+            # a live channel where there previously was none.
             inert_click_pruner = getattr(self, "inert_click_pruner", None)
-            if inert_click_pruner is not None and o.get("previous_frame") is not None:
+            _inert_antecedent = o.get("previous_frame") or o.get("grid")
+            if _inert_antecedent is None:
+                _inert_antecedent = grid_before
+            if inert_click_pruner is not None and _inert_antecedent is not None:
                 try:
                     inert_click_pruner.observe(
-                        o.get("previous_frame") or o.get("grid"),
+                        _inert_antecedent,
                         {"action": int(o["action"]), "data": o.get("data")},
                         latest,
                         leveled_up=bool(level_increased),

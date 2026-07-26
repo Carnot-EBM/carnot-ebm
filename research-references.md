@@ -31621,3 +31621,142 @@ Exp5909 and Exp5910 closed the prompt-only synthesis and one-shot repair paths.
   remain prerequisites for any execution claim.
 
 <!-- V526-PLANNER-REFRESH-20260725-END -->
+
+## V527 Planner Refresh - 20260726
+
+Incremental planning sweep after the terminal `.526` conductor run and after the
+`V526-PLANNER-REFRESH-20260725-END` boundary. The primary pass queried arXiv
+for 2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising and thermodynamic sampling, hallucination detection, KANs,
+energy-guided and constrained generation, continual/online learning, and
+verification-aware memory. The secondary pass rechecked OpenReview, Hugging
+Face Papers, direct Semantic Scholar citation APIs for EBT (`2507.02092`) and
+ARM-EBM (`2512.15605`), GitHub Trending and targeted repositories, Extropic's
+writing and hardware pages, and Logical Intelligence's Kona/Aleph pages. This
+block promotes sources absent from the sealed V526 sweep that materially change
+how Carnot should proceed after Exp5923 retired schema-supported reprompting.
+
+### New actionable deltas
+
+- **Finite-Sample Coverage Audits for High-Recall Candidate Generation:
+  Certification and Learning-Theoretic Design** - arXiv:2607.21480,
+  https://arxiv.org/abs/2607.21480; submitted 2026-07-23. The paper proves that
+  labels sampled only from inside a candidate set cannot certify low missed
+  relevant mass: the excluded pool is the only place where omitted positives
+  can be found. It provides exact binomial/hypergeometric inversion for
+  preregistered generator families and perturbation audits. Carnot hook:
+  replace one-shot ConstraintIR emission with a preregistered high-recall atomic
+  support, then audit omitted/spurious atoms in both the included and excluded
+  pools before allowing exact completion to claim coverage. Generator variants,
+  audit rules, perturbations, and sample sizes must be frozen before labels are
+  examined; exact fixture semantics remain the labels.
+- **Anatomy of a Sound Neural Reasoner: One-Shot Amortization, First-Pass
+  Poisoning, and Search Inertness in Clue-Rich Completion** -
+  arXiv:2607.19635, https://arxiv.org/abs/2607.19635; submitted 2026-07-22.
+  The study finds that learned branching, backtracking, value exclusion, and
+  nogoods cannot improve clue-rich Sudoku accuracy after a neural first pass
+  has already deleted the true value, while symmetry augmentation and union
+  over symmetry-transformed passes repair that coverage failure. Carnot hook:
+  an executor-in-the-loop extractor must never let the model irreversibly prune
+  the semantic support before the exact solver sees it. Compare single-view
+  atomic support with a budget-matched union over independent paraphrase and
+  entity-permutation views, then let the exact executor search only after the
+  union. Report whether search changes exact semantics or merely removes
+  repeated invalid derivations.
+- **Workflow-Localized Mechanism Learning: Attribution-Guided Repair and
+  Knowledge Reuse for Structured Agent Skills** - arXiv:2607.20999,
+  https://arxiv.org/abs/2607.20999; submitted 2026-07-23. WML localizes failures
+  to the smallest workflow node/mechanism, applies bounded patches, and stores
+  only evaluated outcomes in optimizer-side memory; compiled execution reduces
+  calls relative to a direct agent. Carnot hook: transactional FR-11 updates
+  should be keyed to exact failure atoms and smallest valid edit targets, not
+  whole-response notes. Promotion must still use future-event exact utility,
+  protected-prefix retention, quarantine, and rollback; model-authored
+  attribution is a proposal, not authority.
+- **UMEM: Unified Memory Extraction and Management Framework for Generalizable
+  Memory** - ICML 2026 OpenReview,
+  https://openreview.net/forum?id=BoiXvrwtdi. UMEM evaluates a memory edit by
+  marginal utility over a semantic neighborhood rather than the single
+  producing instance, directly targeting instance-level overfitting. Carnot
+  hook: add a neighborhood-utility admission arm to the immutable-weight
+  transactional learner and compare it with single-event admission, fixed
+  validated memory, shuffled retrieval, and no memory on a chronological held
+  stream. Carnot must use exact future-event outcomes rather than GRPO or an
+  LLM judge as the release authority.
+
+### Guarded findings
+
+- **M2Note: Continual Evolution of Vision Language Models via Mistake Notebook
+  Learning** - arXiv:2607.00685, https://arxiv.org/abs/2607.00685. M2Note
+  externalizes recurring failures into retrieved guidance and uses
+  post-verification plus rollback without changing model weights. Its
+  same-batch commit check is weaker than Carnot's required chronological
+  future-event validation and can overfit the producing batch. Treat it as
+  support for the external-memory/rollback architecture, not as permission to
+  relax prospective promotion or claim self-learning from same-event replay.
+- **AttriMem: Attribution-Guided Process Feedback for Agent Memory Learning** -
+  arXiv:2607.21106, https://arxiv.org/abs/2607.21106. Token-level contribution
+  rewards improve memory-policy credit assignment in long-horizon dialogue, but
+  these learned attributions are not exact correctness labels. They may inform
+  diagnostic logging for which stored atom affected a decision; they cannot
+  admit, promote, or certify a Carnot memory edit.
+- **Best-of-Evidence: Best-of-N Selection under Partial Verification** -
+  arXiv:2607.20950, https://arxiv.org/abs/2607.20950. Its signed
+  candidate-factor graph and decision-relevant evidence budgeting are useful
+  when only fragments of an answer are verifiable. Carnot's synthetic
+  ConstraintIR fixtures have full exact semantics, so the immediate milestone
+  should use the exact executor rather than introduce a partial-verification
+  proxy. Preserve the factor-ledger idea for later naturally partial domains.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the dated 2026-07-26 API receipts returned 30 visible
+  EBT citing records and eight ARM-EBM citing records. Memoir
+  (`2607.20792`) and Solver-Hard (`2607.17047`) remain the newest directly
+  relevant EBT items already indexed in V525/V522; the ARM-EBM list remains
+  unchanged through Path-Measure Dynamics. Counts are discovery receipts, not
+  stable bibliometric claims.
+- **OpenReview / Hugging Face Papers:** UMEM is promoted above. Searches also
+  repeated continual-memory poisoning, Distributional EBMs,
+  LLM-as-a-Verifier, DCCD/CRANE, AREX, and other already-indexed methods.
+  None supersedes exact validators or reopens the retired generated-text,
+  logprob, schema-reprompt, or final-embedding scorer families.
+- **GitHub:** daily/monthly Trending and targeted EBM, CSP, constrained-decoding,
+  KAN, and verifier searches exposed no maintained dependency that displaces
+  Carnot's local exact executor, immutable transaction log, mandated GGUF
+  runtime, or live E3 path. Implement the small candidate-support and audit
+  interfaces locally instead of importing an unrelated agent-memory harness.
+- **Extropic:** the official writing index still ends with the October 2025
+  X0/XTR-0/TSU launch material, and the hardware page still labels Z1 as early
+  access in 2026. Carnot has no authenticated TSU route, so TSU execution,
+  convergence, power, energy, and speedup remain ineligible.
+- **Logical Intelligence:** the public Kona/Aleph pages still support a
+  candidate-construction plus machine-checking boundary, but expose no public
+  Kona weights, documented local inference API, or reproducible comparator.
+  The architecture remains context rather than experimental evidence.
+- **KAN / Ising / hardware:** the sweep found no new KAN result that repairs
+  Carnot's retired adaptive-kernel chains and no changed authenticated sampler
+  hardware route. Existing bounded CPU/Rust update operations and the ABI-v2
+  static board mapping remain the honest portability evidence for this
+  milestone.
+
+### V527 planning impact
+
+- Build a high-recall, non-pruning atomic ConstraintIR support fixture before
+  another flagship inference run; keep model proposal, exact completion, and
+  exact semantic certification as separate stages.
+- Compare single-view support with budget-matched multi-view union, and audit
+  the excluded pool with exact finite-sample intervals before interpreting
+  solver completion as semantic acquisition.
+- Run continuous self-learning only on a fresh exact event stream created by
+  the changed support mechanism. Compare single-event and semantic-neighborhood
+  admission under immutable weights, future-event validation, poison
+  quarantine, protected-prefix retention, and rollback.
+- Satisfy the standing ARC generalization floor through the live adapter-free
+  path and a convention perturbation/held-game analysis, not by retrying the
+  externally blocked Exp5929 runner or re-solving public levels.
+- Repair the Exp5931 aggregation-substrate adversarial false positive before
+  trusting the next capstone, and keep attached boards/TSUs out of execution
+  scope absent a changed authenticated route.
+
+<!-- V527-PLANNER-REFRESH-20260726-END -->
