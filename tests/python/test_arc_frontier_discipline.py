@@ -671,11 +671,14 @@ def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_contro
     assert m.ARMS["B2"]["kwargs"]["tier_uniform_random"] is True
     assert m.ARMS["B2"]["deterministic"] is False
     assert m.ARMS["C"]["kwargs"]["frontier_gradient"] is True
-    assert m.ARMS["D"]["kwargs"] == {
-        "tier_exhaustion": True,
-        "tier_uniform_random": False,
-        "frontier_gradient": True,
-    }
+    # UPDATED 2026-07-25: every explorer arm now pins all seven gated flags explicitly (see
+    # test_every_explorer_arm_pins_all_seven_gated_flags for why), so exact-dict equality on one
+    # arm's kwargs is brittle to that pinning. Assert D's DEFINING values instead -- tier barrier on
+    # with the GREEDY draw, plus the gradient -- which is what distinguishes it from B2 and C.
+    assert m.ARMS["D"]["kwargs"]["tier_exhaustion"] is True
+    assert m.ARMS["D"]["kwargs"]["tier_uniform_random"] is False
+    assert m.ARMS["D"]["kwargs"]["frontier_gradient"] is True
+    assert m.ARMS["D"]["kwargs"]["edge_bar_hud_mask"] is False
     # Deterministic arms must NOT be given a fake replication axis.
     assert m._seeds_for("A", 3) == [m.RANDOM_SEED]
     assert len(m._seeds_for("B2", 3)) == 3
@@ -1157,3 +1160,46 @@ def test_barrier_never_livelocks_the_decision_loop():
     assert acted == 2, f"both deferred rows must eventually be spent, got {acted}"
     assert exp._frontier() is None, "and then the search must terminate, not spin"
     assert exp._tier_deferrals == 0, "the defensive fail-open path must never have been needed"
+
+
+def test_every_explorer_arm_pins_all_seven_gated_flags():
+    """REQ-ARC-WMTE-5836 / SCENARIO: arm-definition drift cannot silently recontaminate a control.
+
+    WHY THIS EXISTS (2026-07-25). An arm that pins only a SUBSET of the gated flags inherits module
+    defaults for the rest, so the moment a flag is flipped that arm's meaning changes underneath
+    already-published numbers. It happened: arm A pinned 2 of 7 and arm B2 pinned 3 of 7, so after
+    the frontier and HUD flips, arm A stopped being the pre-flip agent and arm B2 -- the HUD A/B's
+    own CONTROL -- became the HUD TREATMENT. Any future A/B using them as a control would have been
+    measuring a contaminated control. This test makes that class of drift impossible to reintroduce
+    quietly: adding a new gated flag, or a new arm, fails here until every arm pins it explicitly.
+
+    Arm E is exempt: it is the just-explore reference shim and constructs no StepwiseExplorer.
+    """
+    m = _harness()
+    seven = set(m.GATED_FLAGS)
+    assert len(seven) == 7
+    for name, arm in m.ARMS.items():
+        if name == "E":
+            assert arm["kwargs"] == {}, "the reference shim must take no explorer kwargs"
+            continue
+        missing = seven - set(arm["kwargs"])
+        assert not missing, f"arm {name} inherits defaults for {sorted(missing)}"
+
+
+def test_pinning_preserved_each_arms_measured_semantics():
+    """The pinning change must not REDEFINE any arm whose numbers are already published."""
+    m = _harness()
+    a, b2 = m.ARMS["A"]["kwargs"], m.ARMS["B2"]["kwargs"]
+    # arm A is the pre-flip agent: every lever off
+    assert a["tier_exhaustion"] is False and a["tier_uniform_random"] is False
+    assert a["frontier_gradient"] is False
+    assert a["edge_bar_hud_mask"] is False
+    # arm B2 is the frontier configuration that was flipped live, with the HUD levers OFF -- that is
+    # what it was when it served as the HUD A/B's control
+    assert b2["tier_exhaustion"] is True and b2["tier_uniform_random"] is True
+    assert b2["tier_click_vocab_only"] is True and b2["frontier_gradient"] is False
+    assert b2["edge_bar_hud_mask"] is False
+    # G3 is the flip-candidate HUD arm: frontier on plus all three HUD stages
+    g3 = m.ARMS["G3"]["kwargs"]
+    assert g3["edge_bar_hud_mask"] is True
+    assert g3["hud_mask_collapse_guard"] is True and g3["hud_mask_stage2_confirm"] is True

@@ -227,28 +227,65 @@ def _explorer_policy(game: str, **explorer_kwargs: Any):
     return CarnotAgentPolicy(game, {}, force_explore=True, **explorer_kwargs)
 
 
+# ---------------------------------------------------------------------------
+# EXPLICIT SEVEN-FLAG PINNING (2026-07-25). Every explorer arm below pins ALL SEVEN gated flags.
+#
+# WHY. An arm that pins only a SUBSET silently inherits the module defaults for the rest -- so the
+# moment a flag is flipped, that arm's meaning changes underneath already-published numbers. This
+# actually happened: arm A pinned 2 of 7 and arm B2 pinned 3 of 7, so after the 2026-07-25 frontier
+# and HUD flips, arm A stopped being "the pre-flip agent" and arm B2 -- the HUD A/B's own CONTROL --
+# became the HUD TREATMENT. Retrospectively the published runs are unaffected (they executed before
+# the flips, when the inherited defaults were the intended values), but any FUTURE A/B using A or B2
+# as a control would have been measuring a contaminated control.
+#
+# The values below preserve each arm's MEASURED semantics exactly -- this is a pinning change, not a
+# redefinition. The reconstruction was validated empirically by the convention-perturbation battery
+# (scripts/experiments/cptb_arms.py), whose explicitly-pinned pre-flip control reproduces arm A's
+# historical win set {cd82, lf52, lp85, sp80, su15, tu93, vc33} exactly.
+#
+# tier_click_vocab_only is INERT when tier_exhaustion is False (see StepwiseExplorer._tier_active),
+# so the tier-off arms pin it False for explicitness rather than to change behaviour.
+GATED_FLAGS = (
+    "tier_exhaustion",
+    "tier_uniform_random",
+    "tier_click_vocab_only",
+    "frontier_gradient",
+    "edge_bar_hud_mask",
+    "hud_mask_collapse_guard",
+    "hud_mask_stage2_confirm",
+)
+_FRONTIER_OFF = {
+    "tier_exhaustion": False,
+    "tier_uniform_random": False,
+    "tier_click_vocab_only": False,
+    "frontier_gradient": False,
+}
+_FRONTIER_ON = {  # the configuration flipped live on 2026-07-25
+    "tier_exhaustion": True,
+    "tier_uniform_random": True,
+    "tier_click_vocab_only": True,
+    "frontier_gradient": False,  # measured WORSE than B2; stayed off at the flip
+}
+_HUD_OFF = {
+    "edge_bar_hud_mask": False,
+    "hud_mask_collapse_guard": False,
+    "hud_mask_stage2_confirm": False,
+}
+
 ARMS: dict[str, dict[str, Any]] = {
     "A": {
         "label": "baseline_live_explorer",
-        "kwargs": {"tier_exhaustion": False, "frontier_gradient": False},
+        "kwargs": {**_FRONTIER_OFF, **_HUD_OFF},
         "deterministic": True,
     },
     "B": {
         "label": "tier_exhaustion_greedy_draw",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": False,
-            "frontier_gradient": False,
-        },
+        "kwargs": {**_FRONTIER_ON, "tier_uniform_random": False, **_HUD_OFF},
         "deterministic": True,
     },
     "B2": {
         "label": "tier_exhaustion_uniform_draw",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "frontier_gradient": False,
-        },
+        "kwargs": {**_FRONTIER_ON, **_HUD_OFF},
         "deterministic": False,
     },
     # 2026-07-25: isolates the runtime click-vocabulary gate. B2 now inherits the gate from its
@@ -256,12 +293,7 @@ ARMS: dict[str, dict[str, Any]] = {
     # B2 - B2_nofix attributes any change to the gate alone rather than to drift in the barrier.
     "B2_nofix": {
         "label": "tier_exhaustion_uniform_draw_no_click_vocab_gate",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "tier_click_vocab_only": False,
-            "frontier_gradient": False,
-        },
+        "kwargs": {**_FRONTIER_ON, "tier_click_vocab_only": False, **_HUD_OFF},
         "deterministic": False,
     },
     # REQ-ARC-WMTE-5950 (2026-07-25): per-object CLICK-PIXEL SAMPLING, the just-explore
@@ -286,24 +318,12 @@ ARMS: dict[str, dict[str, Any]] = {
     # F1 is the flip candidate.
     "F": {
         "label": "click_pixel_sampling_with_bounded_redraw_on_live_config",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "frontier_gradient": False,
-            "click_pixel_sampling": True,
-            "click_pixel_redraw_budget": 3,
-        },
+        "kwargs": {**_FRONTIER_ON, **_HUD_OFF, "click_pixel_sampling": True, "click_pixel_redraw_budget": 3},
         "deterministic": False,
     },
     "F1": {
         "label": "click_pixel_sampling_one_shot_on_live_config",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "frontier_gradient": False,
-            "click_pixel_sampling": True,
-            "click_pixel_redraw_budget": 1,
-        },
+        "kwargs": {**_FRONTIER_ON, **_HUD_OFF, "click_pixel_sampling": True, "click_pixel_redraw_budget": 1},
         "deterministic": False,
     },
     # REQ-ARC-WMTE-5960 (2026-07-25): the REPAIRED, orientation-complete HUD status-bar
@@ -333,30 +353,12 @@ ARMS: dict[str, dict[str, Any]] = {
     # asymmetry is why the guard exists at all and why G alone is not the flip candidate.
     "G": {
         "label": "edge_bar_hud_mask_detection_only_on_live_config",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "frontier_gradient": False,
-            "edge_bar_hud_mask": True,
-            # BOTH safety stages pinned OFF **explicitly**. Since 2026-07-25 the runtime DEFAULTS
-            # both stages on whenever the detector is on (so no flag flip can ship the detector
-            # bare), and an explicit kwarg is the only thing that outranks that -- so without
-            # these two lines arm G would silently become arm G3 and stop isolating anything.
-            "hud_mask_collapse_guard": False,
-            "hud_mask_stage2_confirm": False,
-        },
+        "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": False, "hud_mask_stage2_confirm": False},
         "deterministic": False,
     },
     "G2": {
         "label": "edge_bar_hud_mask_with_collapse_guard_on_live_config",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "frontier_gradient": False,
-            "edge_bar_hud_mask": True,
-            "hud_mask_collapse_guard": True,
-            "hud_mask_stage2_confirm": False,
-        },
+        "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": True, "hud_mask_stage2_confirm": False},
         "deterministic": False,
     },
     # G3 (added 2026-07-25 after the adversarial review) -- THE ONLY FLIP CANDIDATE.
@@ -377,28 +379,17 @@ ARMS: dict[str, dict[str, Any]] = {
     # actually produce.
     "G3": {
         "label": "edge_bar_hud_mask_stage2_confirmed_with_collapse_guard_flip_candidate",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": True,
-            "frontier_gradient": False,
-            "edge_bar_hud_mask": True,
-            "hud_mask_collapse_guard": True,
-            "hud_mask_stage2_confirm": True,
-        },
+        "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": True, "hud_mask_stage2_confirm": True},
         "deterministic": False,
     },
     "C": {
         "label": "frontier_distance_gradient",
-        "kwargs": {"tier_exhaustion": False, "frontier_gradient": True},
+        "kwargs": {**_FRONTIER_OFF, "frontier_gradient": True, **_HUD_OFF},
         "deterministic": True,
     },
     "D": {
         "label": "tier_exhaustion_plus_gradient",
-        "kwargs": {
-            "tier_exhaustion": True,
-            "tier_uniform_random": False,
-            "frontier_gradient": True,
-        },
+        "kwargs": {**_FRONTIER_ON, "tier_uniform_random": False, "frontier_gradient": True, **_HUD_OFF},
         "deterministic": True,
     },
     "E": {
