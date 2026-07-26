@@ -14309,3 +14309,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 03:04 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:    )
 +    live |
 | 2026-07-26 03:23 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | OK | 134 passed, 1 warning in 9.49s |
+| 2026-07-26 03:43 UTC | Branch-independent .526 capstone and exact reconci | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
