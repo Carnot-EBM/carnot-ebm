@@ -25877,6 +25877,132 @@ propagation, exact retention, and exact verifier promotion authority.
 |---|---|---|
 | REQ-LEARN-5924 | Implemented (`python/carnot/experiment_5924_transactional_constraint_memory_v2.py`, `results/experiment_5924_transactional_constraint_memory_v2.json`) | Implemented (`tests/python/test_experiment_5924_transactional_constraint_memory_v2.py`) |
 
+## REQ-LEARN-5926: Adaptive-State ABI V2 Transaction Parity
+
+The self-learning tier SHALL provide Exp5926, a deterministic no-LLM adaptive
+state ABI v2 derived from Exp5924's executed transaction ledger, not from the
+older Exp5859 ABI v1 operation set. Exp5926 SHALL implement a Python reference
+at `python/carnot/adaptive_state_abi_v2.py`, a Rust core in
+`crates/carnot-core/src/adaptive_state.rs`, thin PyO3 bindings exposed as
+`RustAdaptiveStateAbiV2Kernel`, and the terminal artifact
+`results/experiment_5926_adaptive_state_abi_v2_parity.json`.
+
+Before any readiness claim, Exp5926 SHALL replay Exp5924's gate receipt and
+ledger hash chain; hash Exp5859 evidence, Exp5924 evidence, current
+Python/Rust/PyO3 code, schemas, outputs, protected files, disk/RAM, toolchains,
+and atomic output support; and prove that Exp5859 is preserved as historical
+ABI v1 evidence rather than relabeled or overwritten by ABI v2.
+
+The ABI v2 operation set SHALL be fixed, versioned, and finite:
+`snapshot`, `lookup`, `propose`, `commit`, `validate`, `promote`,
+`quarantine`, `supersede`, `reject`, `rollback`, and `recover`. Every operation
+receipt SHALL bind ABI version, operation name, event identity, expected prior
+state hash, proposal identity when applicable, validator receipt when
+applicable, payload hash when applicable, status/error code, and resulting
+state hash. Operations SHALL reject stale snapshots, replayed commits, invalid
+ordering, schema/version mismatch, truncated or corrupt checkpoint bytes,
+tampered prior/result hashes, use-after-release, double release, and partial
+state transitions without mutating committed state.
+
+The Python reference, Rust core, and PyO3 binding SHALL produce identical
+accept/reject decisions, error codes, status values, canonical state JSON,
+serialized bytes, SHA-256 state hashes, crash-prefix recovery states, rollback
+states, capacity effects, quarantine/reject propagation behavior, and
+supersession ordering for conformance traces derived from the Exp5924 ledger
+plus adversarial permutations. Fresh-process serialization checks SHALL recover
+the same checkpoint bytes and state hash without relying on an in-process
+cache.
+
+The terminal artifact MUST include `status`, `gate_replay_receipt`,
+`preconditions_checked`, `exp5859_preserved_and_scope_delta`,
+`adaptive_state_abi_v2_schema_and_operations`,
+`python_rust_and_pyo3_implementation_receipts`,
+`ownership_and_lifetime_matrix`, `conformance_trace_manifest`,
+`byte_state_status_and_error_parity`,
+`invalid_order_stale_replay_and_tamper_rejection`,
+`crash_prefix_recovery_and_rollback`,
+`serialization_and_fresh_process_receipts`,
+`task_owned_test_boundary_and_global_failure_delta`,
+`historical_artifacts_unchanged`, `protected_files_unchanged`,
+`adaptive_state_abi_v2_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes complete ABI v2 parity from blocked or retired evidence.
+- `gate_replay_receipt`: Exp5924 readiness and ledger replay must pass before ABI v2 can consume its transaction semantics.
+- `preconditions_checked`: Hashes, toolchains, resources, schemas, outputs, and atomic writes prevent fabricated parity evidence.
+- `exp5859_preserved_and_scope_delta`: ABI v2 names new transaction semantics and cannot relabel or overwrite Exp5859.
+- `adaptive_state_abi_v2_schema_and_operations`: Fixed-width versioned operations make ordering, hashing, recovery, and hardware mapping finite.
+- `python_rust_and_pyo3_implementation_receipts`: Independent Python, Rust, and binding paths must identify the exact code that produced parity.
+- `ownership_and_lifetime_matrix`: Released cores must reject use-after-release and double release rather than relying on caller discipline.
+- `conformance_trace_manifest`: Ledger-derived and adversarial traces define the task-owned parity boundary.
+- `byte_state_status_and_error_parity`: Equivalent backends must match bytes, state hashes, statuses, and errors, not just final success.
+- `invalid_order_stale_replay_and_tamper_rejection`: Unsafe transaction permutations must fail closed without partial mutation.
+- `crash_prefix_recovery_and_rollback`: Crash-prefix recovery and rollback must reproduce exact prior hashes deterministically.
+- `serialization_and_fresh_process_receipts`: Durable bytes must recover across fresh processes, not only within one Python object graph.
+- `task_owned_test_boundary_and_global_failure_delta`: Focused checks must pass and global-suite debt must not increase.
+- `historical_artifacts_unchanged`: Prior experiment JSON remains evidence, not a mutable working buffer.
+- `protected_files_unchanged`: Operator-curated and conductor files stay byte-identical.
+- `adaptive_state_abi_v2_ready_score`: Emit bare 1.0 only for complete Python/Rust/PyO3 parity, ownership safety, tamper rejection, crash recovery, rollback, clean task-owned checks, and non-amplified global debt.
+- `duration_s`: Measured wall time exposes deterministic conformance work.
+- `inference_substrate`: Use `deterministic_python_rust_pyo3_conformance_no_llm`.
+- `verifier_is_oracle`: True only for ABI schema, byte/state parity, hashes, ordering, and recovery.
+- `field_provenance`: Every field traces to prompt, specs, upstream artifacts, code, tests, or command receipts.
+- `test_commands`: Commands document focused unit/coverage, Rust/PyO3, property/conformance, serialization, tamper, recovery, rollback, global-delta, adversarial, spec, E2E, protected-file, and clutter checks.
+- `test_exit_codes`: Exit codes prevent failed parity commands from becoming readiness.
+- `reproducibility_checksum`: A checksum detects ABI schema, implementation, trace, command, or artifact drift.
+- `honest_verdict`: Use `complete_ready:`, `retired:`, or `blocked:`.
+
+`adaptive_state_abi_v2_ready_score` SHALL be the bare scalar `1.0` only when
+Exp5924 gate replay passes, Exp5859 remains preserved, Python/Rust/PyO3
+implementations match on byte/state/status/error parity, ownership and lifetime
+checks reject misuse, invalid order/stale/replay/tamper checks reject without
+mutation, crash-prefix recovery and rollback are exact, fresh-process
+serialization passes, task-owned checks exit zero, and global failure delta is
+at most zero. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5926-PRECONDITIONS: Exp5924 Gate And Exp5859 Preservation
+
+**Given** Exp5924 is complete and Exp5859 is historical ABI v1 evidence
+**When** Exp5926 checks preconditions
+**Then** Exp5924's ledger chain is replayed, Exp5859's JSON hash is recorded,
+current Python/Rust/PyO3/schema/protected files are hashed, and ABI v2 readiness
+does not mutate or relabel Exp5859.
+
+### SCENARIO-LEARN-5926-ORDERING: Transaction Operations Are Versioned And Ordered
+
+**Given** ledger-derived ABI v2 operations with expected prior state hashes
+**When** snapshot, lookup, propose, commit, validate, promote, quarantine,
+supersede, reject, rollback, and recover are applied
+**Then** every accepted operation binds event identity, proposal or validator
+receipt where applicable, payload hash where applicable, resulting state hash,
+and deterministic status.
+
+### SCENARIO-LEARN-5926-FAIL-CLOSED: Stale Replay Tamper And Lifetime Misuse Reject
+
+**Given** a valid ABI v2 state hash
+**When** stale snapshots, replayed commits, invalid order, schema/version
+mismatch, corrupt bytes, tampered prior/result hashes, use-after-release,
+double release, or partial state transitions are attempted
+**Then** the operation returns a typed rejection and the committed state hash is
+unchanged.
+
+### SCENARIO-LEARN-5926-PARITY: Python Rust PyO3 Bytes And Hashes Match
+
+**Given** Exp5924-derived traces and adversarial valid permutations
+**When** Python, Rust, and PyO3 execute the same ABI v2 operations
+**Then** operation receipts, canonical state JSON, serialized bytes, state
+hashes, rollback results, crash-prefix recovery, and fresh-process recovery all
+match exactly.
+
+## Implementation Status (Exp 5926)
+
+| Requirement | Python | Rust | Tests |
+|---|---|---|---|
+| REQ-LEARN-5926 | Implemented (`python/carnot/adaptive_state_abi_v2.py`, `results/experiment_5926_adaptive_state_abi_v2_parity.json`) | Implemented (`crates/carnot-core/src/adaptive_state.rs`, `crates/carnot-python/src/adaptive_state.rs`) | Implemented (`tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py`, Rust unit tests) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded

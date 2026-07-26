@@ -1,6 +1,6 @@
 use carnot_core::adaptive_state::{
-    AdaptiveEvent, AdaptiveStateKernel, OperationResult, MAX_EVENT_ID_LEN, MAX_REASON_LEN,
-    MAX_REPLAY_LIMIT,
+    AbiV2OperationResult, AdaptiveEvent, AdaptiveStateAbiV2Kernel, AdaptiveStateKernel,
+    OperationResult, MAX_EVENT_ID_LEN, MAX_REASON_LEN, MAX_REPLAY_LIMIT,
 };
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
@@ -12,6 +12,14 @@ use pyo3::types::{PyAny, PyBytes, PyDict};
 #[pyclass(name = "RustAdaptiveStateKernel")]
 pub struct PyAdaptiveStateKernel {
     inner: AdaptiveStateKernel,
+}
+
+/// Adaptive-state ABI v2 transaction kernel exposed through PyO3.
+///
+/// Spec: REQ-LEARN-5926, SCENARIO-LEARN-5926-PARITY.
+#[pyclass(name = "RustAdaptiveStateAbiV2Kernel")]
+pub struct PyAdaptiveStateAbiV2Kernel {
+    inner: AdaptiveStateAbiV2Kernel,
 }
 
 #[pymethods]
@@ -98,6 +106,223 @@ impl PyAdaptiveStateKernel {
     }
 }
 
+#[pymethods]
+impl PyAdaptiveStateAbiV2Kernel {
+    #[new]
+    #[pyo3(signature = (active_capacity=3, quarantine_capacity=6))]
+    fn new(active_capacity: u32, quarantine_capacity: u32) -> PyResult<Self> {
+        let inner = AdaptiveStateAbiV2Kernel::new(active_capacity, quarantine_capacity)
+            .map_err(PyValueError::new_err)?;
+        Ok(Self { inner })
+    }
+
+    #[staticmethod]
+    fn recover(checkpoint: &Bound<'_, PyAny>) -> PyResult<Self> {
+        let bytes = checkpoint.extract::<Vec<u8>>()?;
+        let inner = AdaptiveStateAbiV2Kernel::recover(&bytes).map_err(PyValueError::new_err)?;
+        Ok(Self { inner })
+    }
+
+    fn snapshot<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        event_index: u32,
+        row_prefix_checksum: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner.snapshot(
+                &event_id,
+                event_index,
+                &row_prefix_checksum,
+                &expected_prior_state_hash,
+            ),
+        )
+    }
+
+    fn lookup<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        snapshot_id: String,
+        key: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .lookup(&event_id, &snapshot_id, &key, &expected_prior_state_hash),
+        )
+    }
+
+    fn propose<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        snapshot_id: String,
+        proposal_kind: String,
+        key: String,
+        payload_hash: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner.propose(
+                &event_id,
+                &snapshot_id,
+                &proposal_kind,
+                &key,
+                &payload_hash,
+                &expected_prior_state_hash,
+            ),
+        )
+    }
+
+    fn commit<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        proposal_id: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .commit(&event_id, &proposal_id, &expected_prior_state_hash),
+        )
+    }
+
+    fn validate<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        proposal_id: String,
+        validator_receipt_hash: String,
+        validator_status: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner.validate(
+                &event_id,
+                &proposal_id,
+                &validator_receipt_hash,
+                &validator_status,
+                &expected_prior_state_hash,
+            ),
+        )
+    }
+
+    fn supersede<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        proposal_id: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .supersede(&event_id, &proposal_id, &expected_prior_state_hash),
+        )
+    }
+
+    fn promote<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        proposal_id: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .promote(&event_id, &proposal_id, &expected_prior_state_hash),
+        )
+    }
+
+    fn quarantine<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        proposal_id: String,
+        reason_code: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner.quarantine(
+                &event_id,
+                &proposal_id,
+                &reason_code,
+                &expected_prior_state_hash,
+            ),
+        )
+    }
+
+    fn reject<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        proposal_id: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .reject_update(&event_id, &proposal_id, &expected_prior_state_hash),
+        )
+    }
+
+    fn rollback<'py>(
+        &mut self,
+        py: Python<'py>,
+        event_id: String,
+        target_state_hash: String,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .rollback(&event_id, &target_state_hash, &expected_prior_state_hash),
+        )
+    }
+
+    fn partial_state_transition_probe<'py>(
+        &mut self,
+        py: Python<'py>,
+        expected_prior_state_hash: String,
+    ) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(
+            py,
+            self.inner
+                .partial_state_transition_probe(&expected_prior_state_hash),
+        )
+    }
+
+    fn release<'py>(&mut self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        abi_v2_result_to_dict(py, self.inner.release())
+    }
+
+    fn serialize<'py>(&self, py: Python<'py>) -> Bound<'py, PyBytes> {
+        PyBytes::new(py, &self.inner.serialize())
+    }
+
+    fn canonical_state_json(&self) -> String {
+        self.inner.canonical_state_json()
+    }
+
+    fn canonical_state_hash(&self) -> String {
+        self.inner.canonical_state_hash()
+    }
+
+    fn version(&self) -> u32 {
+        self.inner.version()
+    }
+}
+
 fn result_to_dict(py: Python<'_>, result: OperationResult) -> PyResult<Bound<'_, PyDict>> {
     let dict = PyDict::new(py);
     dict.set_item("accepted", result.accepted)?;
@@ -107,6 +332,28 @@ fn result_to_dict(py: Python<'_>, result: OperationResult) -> PyResult<Bound<'_,
     if let Some(selected) = result.selected_replay {
         dict.set_item("selected_replay", selected)?;
     }
+    Ok(dict)
+}
+
+fn abi_v2_result_to_dict(
+    py: Python<'_>,
+    result: AbiV2OperationResult,
+) -> PyResult<Bound<'_, PyDict>> {
+    let dict = PyDict::new(py);
+    dict.set_item("abi_version", result.abi_version)?;
+    dict.set_item("accepted", result.accepted)?;
+    dict.set_item("code", result.code)?;
+    dict.set_item("event_id", result.event_id)?;
+    dict.set_item("operation", result.operation)?;
+    dict.set_item("payload_hash", result.payload_hash)?;
+    dict.set_item("previous_state_hash", result.previous_state_hash)?;
+    dict.set_item("proposal_id", result.proposal_id)?;
+    dict.set_item("resulting_state_hash", result.resulting_state_hash)?;
+    dict.set_item("schema", result.schema)?;
+    dict.set_item("snapshot_id", result.snapshot_id)?;
+    dict.set_item("status", result.status)?;
+    dict.set_item("validator_receipt_hash", result.validator_receipt_hash)?;
+    dict.set_item("version", result.version)?;
     Ok(dict)
 }
 
@@ -174,5 +421,6 @@ fn reject(kernel: &AdaptiveStateKernel, code: &str) -> OperationResult {
 
 pub fn register_adaptive_state_module(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     parent.add_class::<PyAdaptiveStateKernel>()?;
+    parent.add_class::<PyAdaptiveStateAbiV2Kernel>()?;
     Ok(())
 }
