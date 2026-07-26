@@ -4,6 +4,53 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-26 (outer-loop, OPEN): the HUD lever's convention-dependence is UNDECIDED, and the roll-family perturbation provably cannot decide it
+
+**Status:** OPEN, and it is a measurement gap, not a code defect. The convention-perturbation
+transfer battery
+(`results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json`) established that the
+FRONTIER lever's gain survives violation of the absolute-colour salience convention it keys on
+(5 games to 0 on the game unit, exact one-sided sign test p=0.031). It established NOTHING about
+the HUD edge-bar lever, and an adversarial review showed the verdict it originally reported for
+that lever was arithmetically forced rather than measured — that claim is withdrawn (see
+ops/changelog.md 2026-07-26).
+
+**Why the existing perturbations cannot answer it (all measured, not argued):**
+
+- `C1_salience_inversion` is OFF-TARGET: it perturbs absolute colour, which only the frontier tier
+  predicate reads. The static dose witness measures ZERO HUD-mask change on all 25 games, and the
+  condition is behaviourally INERT on the HUD-alone arm (0 of 125 cells move).
+- `C2_diag_roll` (k=3) kills the anchor: r11l and tn36 — the only two games the HUD lever has ever
+  moved — are won by NO arm on any seed there, leaving zero discriminating games.
+- The dose axis added to test the middle ground closes the gap NEGATIVELY. The Stage-1 predicate is
+  `on_top = y1 < EDGE_BAR_EDGE_TOLERANCE` with tolerance 2, and r11l's mask is a single 64-cell row
+  at index 0, so at k=1 the convention still HOLDS (y1: 0 -> 1 < 2), the detector still fires, and
+  HUD-alone still wins r11l 5/5. The first magnitude that violates it is k=2 — at which r11l is won
+  by no arm. tn36's mask already dies at k=1, and tn36 is won by no arm at k=1. Inside the roll
+  family, convention-breakage and task-destruction are inseparable.
+
+**What would decide it (the concrete next experiment):** a transform that moves the status bar at
+least `EDGE_BAR_EDGE_TOLERANCE` cells off its edge while leaving the playfield's object contiguity
+and reachability intact — i.e. NOT a whole-grid wrap. The obvious candidate is a row/column STRIP
+SWAP (exchange rows `0..t-1` with rows `t..2t-1`): it is a permutation, so no content is lost, and
+every row below `2t` is untouched. Wire it as another sentinel in
+`scripts/experiments/cptb_perturb.py` (the magnitude-parameterised roll sentinels 910+k are the
+pattern to copy), add it to `CONDITIONS` in `cptb_run.py` and to `CONDITION_TARGETS` in
+`cptb_artifact.py`, then run the full 25-game x 4-arm x 5-seed condition (~500 cells, ~8.3s/cell as
+measured). The gate machinery already refuses to report a verdict when the anchor support dies, so
+a failed attempt will say so rather than produce a forced answer.
+
+**A second, independent limitation that no perturbation can fix:** the HUD lever's marginal gain in
+the shipped configuration is exactly ONE game (r11l). On the GAME unit — which the battery's own
+jackknife principle names as the replication unit, because a hidden game is a fresh draw from the
+game distribution — a one-game support has an exact sign-test floor of p=0.5. It cannot be
+established at p<=0.05 at ANY seed count. Deciding the HUD lever's value, as opposed to its
+convention-dependence, needs MORE GAMES that it moves, not more seeds on the one it has.
+
+**Not a reason to un-flip anything.** The shipped configuration still has the highest median win
+count of the four arms in every measured condition. The decision is the operator's; this entry
+records what is and is not known.
+
 ### 2026-07-25 (outer-loop, RESOLVED-PENDING-OPERATOR-FLIP): the HUD detector repair (REQ-ARC-WMTE-5960) — r11l gained on 3/3 seeds with ZERO corpus regressions, but only after four measured defects were fixed
 
 **Status:** the mechanism is built, default-OFF, and its flip candidate PASSES a full 25-game

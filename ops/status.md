@@ -1,6 +1,42 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-24 (milestone 2026.07.525 research plan staged; concurrent REQ-ARC-FCP-5904 work preserved)
+**Last Updated:** 2026-07-26 (convention-perturbation battery repaired after adversarial review; one lever's verdict withdrawn)
+
+## Session 2026-07-26 - Adversarial-review repairs to the convention-perturbation transfer battery
+
+### What's Working
+
+- **The FRONTIER lever's convention-robustness claim survives review.** Its gain survives
+  inversion of the absolute-colour salience convention it keys on: positive on 5/5 seeds
+  (minimum +2), and on the GAME unit 5 games favour it to 0 against — exact one-sided sign test
+  p=0.031. Measured adapter-free (the generic `StepwiseExplorer`; no per-game `GameAdapter` is
+  loaded on the measured path, verified per-arm at runtime).
+- **The measurement machinery now refuses to report a verdict it cannot support.** The pass-region
+  witness is computed PER CONDITION (it used to be computed at C0 and attached to gates scored at
+  other conditions), a fourth precondition fails when the anchor's games are unwinnable for every
+  arm, exact sign tests run on the GAME unit for every contrast, retention ratios carry their
+  paired per-seed deltas and a decline sign test, and a per-condition dose CEILING stamps
+  DOSE_SATURATED when the perturbation removes more than half the control's own capability.
+- **Every budget-sweep number is now derived from rows with `n_seeds` attached.** The tn36
+  efficiency reclassification (originally one seed) re-ran on 5 seeds and HOLDS: the shipped config
+  wins tn36 at budget 8000 on 5/5 seeds at 3.54–3.88x HUD-alone's cost. The r11l capability loss
+  under salience inversion re-ran on 5 seeds at budgets 8000 and 16000 and HOLDS: HUD-alone 5/5
+  wins at 1068 actions, shipped config 0/5 at both.
+
+### What's Next
+
+- **The HUD lever's convention-dependence is UNDECIDED and needs a new perturbation.** Its earlier
+  "does not survive" verdict is withdrawn as uninterpretable. The roll family provably cannot decide
+  it (the smallest magnitude that violates edge-adjacency is already one that makes the support
+  games unwinnable for every arm). The concrete next experiment — a row-strip SWAP that moves the
+  bar off its edge while preserving object contiguity — is specified in `ops/known-issues.md`
+  2026-07-26.
+- **Deciding the HUD lever's VALUE needs more games, not more seeds.** Its marginal gain in the
+  shipped configuration is one game (r11l), and a one-game support has an exact sign-test floor of
+  p=0.5 on the replication unit that matters for transfer.
+- Still true and unchanged: NO hidden-game transfer is measured by any of this. All 25 public games
+  are solved and the scored path is operator-only, so the battery measures convention-dependence,
+  which is necessary but not sufficient for transfer.
 
 ## Session 2026-07-24 - REQ-ARC-FCP-5904 Coordinate-Aware Online Click-Target Discrimination
 

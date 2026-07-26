@@ -96,6 +96,7 @@ def sign_test_one_sided(favourable: int, unfavourable: int):
         return None
     return sum(comb(n, k) for k in range(favourable, n + 1)) / 2**n
 
+
 # Work directory holding the JSONL cell rows + intermediate JSON. Overridable so the
 # battery can be run out of a scratch dir (as it was for the recorded run) or a
 # repo-local dir, without editing the file.
@@ -190,9 +191,13 @@ def main() -> int:
         for g in games:
             for c in CONDS:
                 sig = {
-                    (by[(arm, g, c, s)].get("levels"), by[(arm, g, c, s)].get("actions"),
-                     by[(arm, g, c, s)].get("states_expanded"))
-                    for s in seeds if (arm, g, c, s) in by
+                    (
+                        by[(arm, g, c, s)].get("levels"),
+                        by[(arm, g, c, s)].get("actions"),
+                        by[(arm, g, c, s)].get("states_expanded"),
+                    )
+                    for s in seeds
+                    if (arm, g, c, s) in by
                 }
                 total += 1
                 if len(sig) > 1:
@@ -241,7 +246,9 @@ def main() -> int:
                         continue
                     total += 1
                     if (r0.get("levels"), r0.get("actions"), r0.get("states_expanded")) != (
-                        rx.get("levels"), rx.get("actions"), rx.get("states_expanded")
+                        rx.get("levels"),
+                        rx.get("actions"),
+                        rx.get("states_expanded"),
                     ):
                         moved += 1
             behavioural_dose[f"{a}|{c}"] = {
@@ -266,8 +273,7 @@ def main() -> int:
     dose_ceiling = {}
     for cond in CONDS:
         ctrl_med = statistics.median([len(wins[("CTRL", cond, s)]) for s in seeds])
-        dead = [g for g in games
-                if all(g not in wins[(a, cond, s)] for a in ARMS for s in seeds)]
+        dead = [g for g in games if all(g not in wins[(a, cond, s)] for a in ARMS for s in seeds)]
         frac = (ctrl_med / ctrl_c0) if ctrl_c0 else None
         dose_ceiling[cond] = {
             "control_median_absolute_wins": ctrl_med,
@@ -293,8 +299,9 @@ def main() -> int:
         # (0 of 75 game-condition cells vary across seeds), so a CTRL-vs-HUDO contrast has ONE
         # observation replicated five times -- reporting "strict per-seed dominance on 5 of 5
         # seeds" there would be a fabricated width-zero interval.
-        both_det = determinism[t]["measured_deterministic"] and determinism[c][
-            "measured_deterministic"]
+        both_det = (
+            determinism[t]["measured_deterministic"] and determinism[c]["measured_deterministic"]
+        )
         entry["seeds_are_a_replication_axis_for_this_contrast"] = not both_det
         entry["n_seed_replicates_effective"] = 1 if both_det else len(seeds)
         for cond in CONDS:
@@ -336,7 +343,8 @@ def main() -> int:
                 "clears_p_0_05": bool(p is not None and p <= 0.05),
                 "undefined_because_no_discordant_game": p is None,
                 "smallest_reachable_p_at_this_n": (
-                    round(0.5 ** (pro + con), 4) if (pro + con) else None),
+                    round(0.5 ** (pro + con), 4) if (pro + con) else None
+                ),
                 "UNDERPOWERED_SINGLE_GAME_SUPPORT": bool((pro + con) == 1),
                 "principle": (
                     "The jackknife's own stated unit is the game (a hidden game is a fresh "
@@ -348,7 +356,8 @@ def main() -> int:
         a0 = entry["per_condition"]["C0_real"]["median_gain"]
         entry["anchor_median_gain_C0"] = a0
         gained_c0 = set.intersection(
-            *[wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)] for s in seeds])
+            *[wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)] for s in seeds]
+        )
         entry["retention"] = {}
         for cond in [x for x in CONDS if x != "C0_real"]:
             tg = entry["per_condition"][cond]["median_gain"]
@@ -358,16 +367,16 @@ def main() -> int:
             n_down = sum(1 for v in paired if v < 0)
             n_up = sum(1 for v in paired if v > 0)
             p_decline = sign_test_one_sided(n_down, n_up)
-            gained_x = set.intersection(
-                *[wins[(t, cond, s)] - wins[(c, cond, s)] for s in seeds])
+            gained_x = set.intersection(*[wins[(t, cond, s)] - wins[(c, cond, s)] for s in seeds])
             union = gained_c0 | gained_x
             entry["retention"][cond] = {
                 "transfer_median_gain": tg,
                 "retention_ratio": (round(tg / a0, 4) if a0 > 0 else None),
                 "computable": a0 > 0,
                 "reason_if_not_computable": (
-                    None if a0 > 0 else
-                    "anchor median gain at C0_real is <= 0, so a retention ratio is undefined; "
+                    None
+                    if a0 > 0
+                    else "anchor median gain at C0_real is <= 0, so a retention ratio is undefined; "
                     "there is no measured effect for the perturbation to retain"
                 ),
                 # --- precision of the ratio, which the ratio itself does not carry
@@ -375,7 +384,8 @@ def main() -> int:
                 "n_seeds_declining": n_down,
                 "n_seeds_improving": n_up,
                 "decline_sign_test_p_one_sided": (
-                    round(p_decline, 4) if p_decline is not None else None),
+                    round(p_decline, 4) if p_decline is not None else None
+                ),
                 "decline_resolved_at_this_n": bool(p_decline is not None and p_decline <= 0.05),
                 "retention_ratio_precision_note": (
                     "A ratio of two medians over "
@@ -390,7 +400,8 @@ def main() -> int:
                 "games_gained_on_every_seed_at_C0": sorted(gained_c0),
                 "games_gained_on_every_seed_here": sorted(gained_x),
                 "gained_set_jaccard_vs_C0": (
-                    round(len(gained_c0 & gained_x) / len(union), 4) if union else None),
+                    round(len(gained_c0 & gained_x) / len(union), 4) if union else None
+                ),
                 "gained_set_note": (
                     "A retention ratio near 1.0 on a gained set that barely overlaps C0's is "
                     "NOT 'the same gain retained' -- it is a similarly-sized gain on different "
@@ -399,9 +410,11 @@ def main() -> int:
                 # --- dose ceiling context
                 "dose_saturated": dose_ceiling[cond]["dose_saturated"],
                 "control_wins_as_fraction_of_C0": dose_ceiling[cond][
-                    "control_wins_as_fraction_of_C0"],
+                    "control_wins_as_fraction_of_C0"
+                ],
                 "retention_ratio_interpretable": bool(
-                    a0 > 0 and not dose_ceiling[cond]["dose_saturated"]),
+                    a0 > 0 and not dose_ceiling[cond]["dose_saturated"]
+                ),
             }
         contrasts[name] = entry
 
@@ -417,20 +430,29 @@ def main() -> int:
     # forced to 0 and the comparison is uninterpretable, not a measured failure.
     witness = {}
     for name, t, c in CONTRASTS:
-        anchor_cells = [{"game": g, "seed": s} for s in seeds
-                        for g in sorted(wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)])]
+        anchor_cells = [
+            {"game": g, "seed": s}
+            for s in seeds
+            for g in sorted(wins[(t, "C0_real", s)] - wins[(c, "C0_real", s)])
+        ]
         anchor_games = sorted({d["game"] for d in anchor_cells})
         per_cond = {}
         for cond in CONDS:
-            cells = [{"game": g, "seed": s} for s in seeds
-                     for g in sorted(wins[(t, cond, s)] - wins[(c, cond, s)])]
+            cells = [
+                {"game": g, "seed": s}
+                for s in seeds
+                for g in sorted(wins[(t, cond, s)] - wins[(c, cond, s)])
+            ]
             # Is the anchor's SUPPORT still alive at all under this perturbation?  Max over
             # ALL FOUR arms, so this asks "can anyone still win this game here?" -- a question
             # about the perturbation, deliberately independent of which arm wins.
-            live = {g: max(sum(1 for s in seeds if g in wins[(a, cond, s)]) for a in ARMS)
-                    for g in anchor_games}
-            discriminating = sorted({g for s in seeds
-                                     for g in (wins[(t, cond, s)] ^ wins[(c, cond, s)])})
+            live = {
+                g: max(sum(1 for s in seeds if g in wins[(a, cond, s)]) for a in ARMS)
+                for g in anchor_games
+            }
+            discriminating = sorted(
+                {g for s in seeds for g in (wins[(t, cond, s)] ^ wins[(c, cond, s)])}
+            )
             per_cond[cond] = {
                 "witness_cells_treatment_wins_control_does_not_at_this_condition": cells,
                 "n_witness_cells_at_this_condition": len(cells),
@@ -438,8 +460,8 @@ def main() -> int:
                 "n_discriminating_games_at_this_condition": len(discriminating),
                 "discriminating_games_at_this_condition": discriminating,
                 "anchor_game_max_seeds_won_across_ALL_arms": live,
-                "anchor_support_still_live": bool(anchor_games) and any(
-                    v > 0 for v in live.values()),
+                "anchor_support_still_live": bool(anchor_games)
+                and any(v > 0 for v in live.values()),
             }
         witness[name] = {
             # kept under its original key so nothing downstream silently changes meaning:
@@ -504,8 +526,10 @@ def main() -> int:
                     # only where BOTH won the same game -- otherwise "actions" is a
                     # budget-bound non-comparable quantity
                     if int(rt.get("levels") or 0) > 0 and int(rc.get("levels") or 0) > 0:
-                        at, ac = rt.get("actions_to_first_levelup"), rc.get(
-                            "actions_to_first_levelup")
+                        at, ac = (
+                            rt.get("actions_to_first_levelup"),
+                            rc.get("actions_to_first_levelup"),
+                        )
                         if at is not None and ac is not None:
                             deltas_actions.append(int(at) - int(ac))
                         st, sc_ = rt.get("states_expanded"), rc.get("states_expanded")
@@ -514,9 +538,11 @@ def main() -> int:
             per_cond[cond] = {
                 "n_commonly_won_cells": len(deltas_actions),
                 "median_delta_actions_to_first_levelup": (
-                    statistics.median(deltas_actions) if deltas_actions else None),
+                    statistics.median(deltas_actions) if deltas_actions else None
+                ),
                 "median_delta_states_expanded": (
-                    statistics.median(deltas_states) if deltas_states else None),
+                    statistics.median(deltas_states) if deltas_states else None
+                ),
                 "note": "negative = treatment cheaper. Only cells BOTH arms won are compared.",
             }
         efficiency[name] = per_cond
@@ -548,23 +574,23 @@ def main() -> int:
                 "n_cells": tot,
                 "n_cells_mask_resolved": res,
                 "fraction_resolved": round(res / max(1, tot), 4),
-                "n_games_resolved_on_every_seed": sum(1 for v in per_game.values() if v == len(seeds)),
+                "n_games_resolved_on_every_seed": sum(
+                    1 for v in per_game.values() if v == len(seeds)
+                ),
                 "per_game_seeds_resolved": per_game,
             }
 
     # Per-game per-condition win matrix -- the failure SET view (#6), so a reader sees WHICH
     # game moved rather than a total.  Value = number of seeds (of 5) the arm won that game.
     win_matrix = {
-        c: {
-            g: {a: sum(1 for s in seeds if g in wins[(a, c, s)]) for a in ARMS}
-            for g in games
-        }
+        c: {g: {a: sum(1 for s in seeds if g in wins[(a, c, s)]) for a in ARMS} for g in games}
         for c in CONDS
     }
     # Games where the two levers INTERACT destructively: HUDO wins and SHIP does not.
     destructive_interaction = {
         c: sorted(
-            g for g in games
+            g
+            for g in games
             if all(g in wins[("HUDO", c, s)] for s in seeds)
             and all(g not in wins[("SHIP", c, s)] for s in seeds)
         )
@@ -578,8 +604,16 @@ def main() -> int:
     payload_for_hash = json.dumps(
         sorted(
             [
-                [r["arm"], r["game"], r["condition"], int(r["seed"]), r.get("levels"),
-                 r.get("actions"), r.get("states_expanded"), r.get("hud_mask_resolved")]
+                [
+                    r["arm"],
+                    r["game"],
+                    r["condition"],
+                    int(r["seed"]),
+                    r.get("levels"),
+                    r.get("actions"),
+                    r.get("states_expanded"),
+                    r.get("hud_mask_resolved"),
+                ]
                 for r in rows
             ]
         ),
