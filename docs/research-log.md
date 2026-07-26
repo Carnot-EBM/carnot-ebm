@@ -6033,3 +6033,9 @@ The critical path for milestone .250:
 - theme: readiness-gated schema and held structured-memory work shaped the reconstructed compute tail
 - key result: honest operational limitation -- the 5.57-minute embedded-GGUF bridge was the longest compute path, but task-scoped GPU idle is false and no simultaneous-model or runner trace establishes a missed DualGPURunner dispatch
 - acceptance: 3/3 compute-bound-entry accounting criteria met
+
+### Milestone 2026.07.527
+- exp_range: exp5935-exp5935 (only experiment ID present in the authoritative timing data; the complete milestone range is not available)
+- theme: gated multi-model atomic-support evaluation concentrated the compute-bound operational tail
+- key result: honest operational limitation -- runtime ordering is known, but causal phase timing, task-correlated GPU efficiency, and evidence of concurrent multi-model runner selection are unavailable
+- acceptance: 4/4 operational questions answered

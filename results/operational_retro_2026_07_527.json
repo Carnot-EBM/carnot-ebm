@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.527",
+  "generated_at": "2026-07-26T11:49:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 63.6,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B",
+      "duration_minutes": 53.27,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Aggregation-aware adversarial-verifier substrate repair",
+      "duration_minutes": 9.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .526 into .527",
+      "duration_minutes": 0.59,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Non-pruning atomic ConstraintIR support and exact-completion fixture",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Dated evidence refresh after the V527 planner marker",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Five experiments occupied 63.6 minutes, including two compute-bound entries. The 53.27-minute gated all-three-model atomic-support union A/B was the primary operational tail, followed by the 9.69-minute aggregation-aware repair; the supplied records rank these entries but do not separate readiness waiting, setup, and active computation.",
+  "bottlenecks_identified": [
+    "The 53.27-minute gated all-three-model atomic-support union A/B concentrated most of the recorded wall time, but no phase spans identify whether the delay occurred before or during computation.",
+    "The 9.69-minute aggregation-aware adversarial-verifier substrate repair was the second-longest compute-bound entry, with no finer timing attribution available.",
+    "The GPU monitor snapshot is not joined to experiment start and end times; consistent with the locked false classification, compute-task utilization efficiency is not established.",
+    "No supplied trace records simultaneous model count or runner selection, so a failure to engage DualGPURunner cannot be established."
+  ],
+  "improvements_suggested": [
+    "Emit readiness-wait, setup, active-compute, and teardown timestamps in every compute-bound experiment artifact.",
+    "Sample GPU utilization by experiment, process, and device throughout each active-compute span so utilization snapshots can be interpreted in task context.",
+    "Add a model-count-aware runner preflight that records the dispatch decision and selects DualGPURunner only when two or more models will be loaded simultaneously.",
+    "Trigger gated work directly from prerequisite-artifact readiness and record the trigger timestamp to expose avoidable scheduling delay."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the long gated experiment with readiness-to-start and per-phase timers.",
+    "Add task-scoped GPU process telemetry covering the full active-compute interval.",
+    "Record planned simultaneous model count and automatically dispatch eligible multi-model work through DualGPURunner."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data identifies the compute tail precisely but cannot explain its cause or grade GPU efficiency over task lifetimes. A joined experiment-phase, GPU-process, model-concurrency, and runner trace is required before assigning a nonzero savings estimate."
+}
