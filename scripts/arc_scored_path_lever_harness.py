@@ -38,13 +38,30 @@ prunes nothing. `lever3_verdict` therefore distinguishes FOUR outcomes that all 
   * FIRED_NO_PRUNE               -- fitted and predicted nothing lethal. The only reportable null.
 Only FIRED_NO_PRUNE and FIRED_AND_PRUNED are evidence about the lever's value.
 
-BUDGET: THE DEFAULT IS 400, NOT 2000. The scored agent is capped at `MAX_ACTIONS = 400` per game
-(`arc_competition_agent.py`'s CarnotAgent adapter; the framework loop is
-`while not done and action_counter <= MAX_ACTIONS`). Measuring at budget 2000 gives the agent ~5x
-more play than the eval allows, and it changes conclusions: measured at 400, four of five spot-checked
-games lose at least one level, and r11l -- the only game the HUD lever has ever been shown to move --
-drops to zero levels. Pass `--budget 2000` deliberately if you want the historical condition, but do
-not report it as the eval's condition.
+BUDGET: THE DEFAULT IS 400 BECAUSE THAT IS WHAT THE SHIPPED AGENT DOES -- NOT BECAUSE THE EVAL
+IMPOSES IT. CORRECTED 2026-07-26 after an adversarial review caught this docstring misreading its
+own source. The shipped agent is capped at `MAX_ACTIONS = 400` per game (`arc_competition_agent.py`'s
+CarnotAgent adapter; the framework loop is `while not done and action_counter <= MAX_ACTIONS`), so
+400 is the condition the CURRENT SUBMISSION runs under and that is why it is the default here. But
+400 is a SELF-IMPOSED PER-GAME LOOP GUARD that we chose and can raise, not an eval-imposed bound.
+The comment directly above that constant says so: "The real bound is the eval's wall-clock budget
+(<=12h across all games), NOT this per-game loop guard; Playback overrides it to 1e6 for the same
+reason, so it is an INTENDED OVERRIDE POINT. 400 comfortably covers our multi-level replays +
+explore while staying well inside the time budget."
+
+WHY THE DISTINCTION IS LOAD-BEARING, WITH NUMBERS. Lever conclusions REVERSE with the budget. At
+budget 2000 on the LLM-off dev twin the convention-perturbation battery
+(`results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json`, C0_real) measures the
+SHIPPED configuration as the BEST of four arms -- median 12 wins vs 11 frontier-only, 9 HUD-only,
+7 all-off. At budget 400 the same shipped configuration wins only 3-4 of 25. The sibling harness
+`experiment_5836_frontier_discipline_ab` states the mechanism outright: measured first-win costs on
+its baseline span 20 (lp85) to 1747 (cd82) actions, so a budget below ~2000 structurally cannot see
+most of the signal. THEREFORE: a budget-400 result is a statement about the CURRENT SUBMISSION'S
+configuration, and a budget-2000 result is a statement about the levers themselves. Neither is
+"the eval's condition" in the sense of a constraint we cannot change, and neither may be used to
+recommend a flag change without the other. Pass `--budget 2000` for the lever-value condition; the
+emitted row file records `budget`, `scored_agent_max_actions` and `budget_matches_scored_cap` so a
+reader can always tell which one they are holding.
 """
 
 from __future__ import annotations
@@ -400,6 +417,41 @@ def _llama_server_count() -> int:
         return -1
 
 
+def hud_lever_fired(hud: dict | None) -> bool:
+    """Did the HUD edge-bar trio (lever 2) actually DO SOMETHING in this cell?
+
+    THE DEFECT THIS FUNCTION EXISTS TO FIX (2026-07-26, measured). The first version of this
+    predicate ANDed in `hud_shipped_mask_digest` -- i.e. it required the ALREADY-SHIPPED
+    `auto_hud_mask` classifier to have produced a mask before the repaired detector's mask could
+    count as a difference. That is ANTI-CORRELATED with the lever it measures: the whole reason
+    REQ-ARC-WMTE-5960 exists is that the shipped classifier returns None on r11l and tn36, and
+    those are the only two games in the corpus where the repaired detector resolves a mask the
+    shipped one does not. So `lever2_fired` was False in ALL 430 cells of the first scored-path
+    run while the lever was demonstrably firing: on r11l the resolved mask goes None -> 64 cells
+    (`hud_mask_source=edge_bar_detector_req5960_stage2_confirmed`, Stage 2 `admitted`) and
+    states_expanded goes 319 -> 41; on tn36 None -> 61 cells and 49 -> 17. A zero fire counter on a
+    lever that is in fact firing is the exp5836 DEAD-CHANNEL defect with the sign flipped -- it
+    would have let a real result be discarded as "the channel is dead", and it made the run's
+    supporting claim ("the mask differs from shipped on zero games") false.
+
+    THE CORRECT PREDICATE. A mask APPEARING where the shipped configuration had none is the
+    lever's strongest possible firing, not a non-event. So a falsy shipped digest is treated as a
+    real difference, and the only requirements are that the repaired detector actually resolved a
+    mask in this cell and that the mask it resolved differs from the shipped one. Digests are
+    compared, never cell COUNTS -- the 2026-07-25 gate compared counts and therefore read a
+    same-size different mask as "no change".
+    """
+    h = hud or {}
+    if h.get("error"):
+        return False
+    if not h.get("hud_mask_resolved"):
+        return False
+    digest = h.get("hud_mask_digest")
+    if not digest:
+        return False
+    return digest != h.get("hud_shipped_mask_digest")
+
+
 def _hazard_verdict(hz: dict, row: dict) -> str:
     """Classify a hazard-pruner cell. THE POINT: `rows_pruned == 0` has four different meanings and
     only two of them are evidence about the lever.
@@ -643,12 +695,7 @@ def run_cell(
         "node_inflation_vs_unique_frames": (hud or {}).get("node_inflation_vs_unique_frames"),
         "stage2": (hud or {}).get("stage2"),
     }
-    row["lever2_fired"] = bool(
-        (hud or {}).get("hud_mask_resolved")
-        and (hud or {}).get("hud_mask_digest")
-        and (hud or {}).get("hud_shipped_mask_digest")
-        and (hud or {}).get("hud_mask_digest") != (hud or {}).get("hud_shipped_mask_digest")
-    )
+    row["lever2_fired"] = hud_lever_fired(hud)
     # Lever 3 (REQ-ARC-WMTE-5970, the NAV-side hazard move-pruner). This lever needs the most
     # careful fire accounting of the three, because its expected outcome IS zero prunes and there
     # are four structurally different ways to get there. `lever3_verdict` names which one happened,
@@ -728,8 +775,10 @@ def main(argv) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--games", default="lp85")
     ap.add_argument("--seeds", default="20260724")
-    # 400 = the scored agent's own per-game MAX_ACTIONS. Budget 2000 is ~5x more play than the eval
-    # allows and CHANGES CONCLUSIONS (see the module docstring), so it must be asked for explicitly.
+    # 400 = the SHIPPED agent's own per-game MAX_ACTIONS, i.e. the condition the current submission
+    # runs under. It is a self-imposed loop guard and an intended override point, NOT an eval-imposed
+    # bound (the eval's bound is <=12h wall clock across all games). Budget choice CHANGES
+    # CONCLUSIONS -- see the module docstring for the measured reversal -- so it is explicit here.
     ap.add_argument("--budget", type=int, default=400)
     ap.add_argument("--port", type=int, default=8931)
     ap.add_argument("--out", required=True)
@@ -788,8 +837,10 @@ def main(argv) -> int:
         )
     if a.budget != 400:
         print(
-            f"[NOTE] budget={a.budget}; the scored agent's own cap is MAX_ACTIONS=400. "
-            f"Do not report this as the eval's condition.",
+            f"[NOTE] budget={a.budget}; the SHIPPED agent's own cap is MAX_ACTIONS=400. This run "
+            f"therefore measures the LEVERS (a budget the agent could be given -- 400 is a "
+            f"self-imposed loop guard and a documented override point), NOT the current "
+            f"submission's configuration. Report which one you measured.",
             flush=True,
         )
 
@@ -857,6 +908,14 @@ def main(argv) -> int:
                                 "budget": a.budget,
                                 "scored_agent_max_actions": 400,
                                 "budget_matches_scored_cap": a.budget == 400,
+                                "budget_semantics": (
+                                    "400 is the SHIPPED agent's self-imposed per-game MAX_ACTIONS "
+                                    "loop guard (an intended override point), NOT an eval-imposed "
+                                    "bound -- the eval's bound is <=12h wall clock across all "
+                                    "games. A budget-400 row describes the CURRENT SUBMISSION's "
+                                    "condition; a budget-2000 row describes the levers themselves. "
+                                    "Lever orderings differ between the two."
+                                ),
                                 "flag_parity_vs_live_globals": parity,
                                 "elapsed_s": round(time.time() - t0, 1),
                             },

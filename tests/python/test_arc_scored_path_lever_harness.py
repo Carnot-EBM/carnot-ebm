@@ -81,12 +81,19 @@ def test_each_single_lever_arm_differs_from_the_control_in_exactly_its_own_lever
         assert got, f"arm {arm} is identical to the control -- it measures nothing"
 
 
-def test_the_budget_default_is_the_scored_agents_own_action_cap():
-    """The scored agent is capped at MAX_ACTIONS=400 per game (the CarnotAgent adapter in
+def test_the_budget_default_is_the_shipped_agents_own_action_cap():
+    """The SHIPPED agent is capped at MAX_ACTIONS=400 per game (the CarnotAgent adapter in
     ``arc_competition_agent``; the framework loop is ``while not done and action_counter <=
-    MAX_ACTIONS``). Defaulting the harness to 2000 gives the agent ~5x more play than the eval
-    allows, and it CHANGES CONCLUSIONS: measured at 400, four of five spot-checked games lose at
-    least one level and r11l -- the only game the HUD lever has been shown to move -- reaches zero.
+    MAX_ACTIONS``), so 400 is the condition the CURRENT SUBMISSION runs under and that is why it is
+    the default here.
+
+    CORRECTED 2026-07-26. This test's previous docstring, and the harness prose it guarded, said 400
+    was what "the eval allows". It is not: the comment directly above that constant states that the
+    real bound is the eval's wall-clock budget (<=12h across all games) and that MAX_ACTIONS is an
+    INTENDED OVERRIDE POINT (Playback sets it to 1e6). The misreading is load-bearing because lever
+    orderings REVERSE with the budget -- at 2000 the shipped configuration is the best of four arms
+    (median 12 wins in the convention-transfer battery), at 400 it wins 3-4 of 25 -- so a
+    recommendation derived from one budget alone is not supported.
 
     Asserted against the value a caller who passes no ``--budget`` actually receives, not against a
     separate constant that could drift away from the parser.
@@ -99,12 +106,19 @@ def test_the_budget_default_is_the_scored_agents_own_action_cap():
     match = re.search(r'add_argument\(\s*"--budget",\s*type=int,\s*default=(\d+)\s*\)', source)
     assert match, "could not find the --budget argument definition"
     assert int(match.group(1)) == 400, (
-        f"harness default budget is {match.group(1)}, expected 400 (the scored agent's own cap)"
+        f"harness default budget is {match.group(1)}, expected 400 (the shipped agent's own cap)"
     )
-    # And the run artifact must record whether the budget it used matched that cap, so a
-    # budget-2000 run can never be read later as if it were the eval's condition.
+    # And the run artifact must record whether the budget it used matched that cap, plus what the
+    # cap MEANS, so neither a budget-400 nor a budget-2000 run can be read as the other.
     assert "budget_matches_scored_cap" in source
     assert "scored_agent_max_actions" in source
+    assert "budget_semantics" in source
+    # The prose must not reassert the misreading.
+    assert "more play than the eval allows" not in source, (
+        "the harness prose again claims 400 is an eval-imposed bound; it is a self-imposed "
+        "per-game loop guard and a documented override point"
+    )
+    assert "self-imposed" in source and "INTENDED OVERRIDE POINT" in source
 
 
 def test_hazard_verdict_separates_a_non_firing_lever_from_a_real_null():
@@ -186,3 +200,69 @@ def test_the_four_uninterpretable_verdicts_are_not_counted_as_fired():
     source = open(m.__file__, encoding="utf-8").read()
     for token in firing | uninterpretable | {"LEVER_OFF"}:
         assert token in source, f"{token} must be produced by the harness"
+
+
+def test_hud_lever_fire_predicate_is_not_anti_correlated_with_its_own_lever():
+    """THE FIRE COUNTER THAT WAS BROKEN AND UNTESTED. Real recorded detector output, not a hand-set
+    flag.
+
+    DEFECT REPRODUCED (measured 2026-07-26): the first predicate ANDed in
+    ``hud_shipped_mask_digest``, i.e. it required the ALREADY-SHIPPED ``auto_hud_mask`` classifier to
+    have produced a mask before the REPAIRED detector's mask could count as a difference. But the
+    entire reason REQ-ARC-WMTE-5960 exists is that the shipped classifier resolves None on r11l and
+    tn36 -- the ONLY two games where the repaired detector resolves a mask it does not. So the
+    counter was anti-correlated with the lever it measures and read 0 in all 430 cells of the first
+    scored-path run, while the lever demonstrably fired (r11l: mask None -> 64 cells,
+    states_expanded 319 -> 41; tn36: None -> 61 cells, 49 -> 17, deterministic on 3/3 seeds).
+
+    Lever 1 and lever 3 both had verdict tests; the one lever that was broken was the one with none.
+    """
+
+    m = _harness()
+    # Copied verbatim from recorded rows of
+    # results/outer_loop_scored_path_lever_ab_llm_on_20260726.json (fields the predicate reads).
+    r11l = {
+        "hud_mask_resolved": True,
+        "hud_mask_source": "edge_bar_detector_req5960_stage2_confirmed",
+        "hud_mask_cell_count": 64,
+        "hud_mask_digest": "fcbba0b6818499b6",
+        "hud_shipped_mask_cell_count": 0,
+        "hud_shipped_mask_digest": None,
+    }
+    tn36 = dict(r11l, hud_mask_cell_count=61, hud_mask_digest="791a436c692cdbf8")
+    assert m.hud_lever_fired(r11l) is True, (
+        "a mask APPEARING where the shipped config had none is the lever's strongest firing"
+    )
+    assert m.hud_lever_fired(tn36) is True
+
+    # NEGATIVE CONTROLS. The fix must not collapse into "resolved == fired".
+    # lf52: the shipped classifier already resolves this exact mask, so the repair adds nothing.
+    lf52 = {
+        "hud_mask_resolved": True,
+        "hud_mask_source": "status_bar_classifier_req5583_no_repair_added_cell",
+        "hud_mask_cell_count": 64,
+        "hud_mask_digest": "e92122951bcd64e7",
+        "hud_shipped_mask_cell_count": 64,
+        "hud_shipped_mask_digest": "e92122951bcd64e7",
+    }
+    assert m.hud_lever_fired(lf52) is False
+    # HUD trio off / no bar detected: nothing resolved.
+    assert (
+        m.hud_lever_fired(
+            {
+                "hud_mask_resolved": False,
+                "hud_mask_source": "unresolved_no_bar_detected",
+                "hud_mask_digest": None,
+                "hud_shipped_mask_digest": None,
+            }
+        )
+        is False
+    )
+    # Unreadable diagnostics prove nothing in either direction.
+    assert m.hud_lever_fired({"error": "AttributeError:boom"}) is False
+    assert m.hud_lever_fired({}) is False
+    assert m.hud_lever_fired(None) is False
+    # A same-COUNT but different mask must still fire: the 2026-07-25 gate compared counts and
+    # therefore read a same-size different mask as "no change".
+    same_count_diff_mask = dict(lf52, hud_mask_digest="0000000000000000")
+    assert m.hud_lever_fired(same_count_diff_mask) is True
