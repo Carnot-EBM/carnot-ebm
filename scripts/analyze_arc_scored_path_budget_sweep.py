@@ -643,6 +643,16 @@ def main(argv) -> int:
         games_gained = sorted(g for g, d in per_game_delta.items() if d > 0)
         games_lost = sorted(g for g, d in per_game_delta.items() if d < 0)
         st_games = sign_test_two_sided(len(games_gained), len(games_lost))
+        # THE WITNESS MUST BE AT THE UNIT THE QUOTED p IS COMPUTED ON. Leaving it cell-only while the
+        # headline test moved to the game unit reproduces CLAUDE.md's own named defect verbatim: "a
+        # per-cell witness for a median gate is how that defect recurred". A game could GAIN if any of
+        # its seeds was unwon at the lower budget; it could REGRESS if any seed was won there.
+        games_could_gain = sorted(
+            {g for s, g in complete_pairs if not (cell(lo, s, g)["levels"] or 0) > 0}
+        )
+        games_could_regress = sorted(
+            {g for s, g in complete_pairs if (cell(lo, s, g)["levels"] or 0) > 0}
+        )
         steps.append(
             {
                 "from_budget": lo,
@@ -664,13 +674,23 @@ def main(argv) -> int:
                 "n_cells_frozen_zero_both_budgets": len(frozen_zero),
                 "n_cells_won_at_both_budgets": len(frozen_won),
                 "WITNESS_pass_region_nonempty": {
+                    # GAME unit FIRST: this is the unit the headline sign test -- and therefore the
+                    # quoted p-value -- is computed on, so it is the unit the witness must certify.
+                    "n_games_that_could_gain": len(games_could_gain),
+                    "n_games_that_could_regress": len(games_could_regress),
+                    "games_that_could_gain": games_could_gain,
+                    "nonempty_at_the_game_unit": len(games_could_gain) > 0,
+                    # Cell unit retained as the raw evidence, explicitly labelled as the finer grain.
                     "n_cells_that_could_gain": len(gained) + len(frozen_zero),
                     "n_cells_that_could_regress": len(lost) + len(frozen_won),
                     "nonempty": (len(gained) + len(frozen_zero)) > 0,
                     "principle": (
-                        "A budget step can only be interpreted if some cell was structurally able "
-                        "to move. If every cell were already won at the lower budget, a zero delta "
-                        "would be ARITHMETICALLY FORCED, not evidence of saturation."
+                        "A budget step can only be interpreted if something was structurally able to "
+                        "move. If every game were already won at the lower budget, a zero delta would "
+                        "be ARITHMETICALLY FORCED, not evidence of saturation. The witness is stated "
+                        "at the GAME unit because that is the unit the headline test uses -- a "
+                        "per-cell witness for a game-unit test is the exact defect shape CLAUDE.md "
+                        "names ('a per-cell witness for a median gate is how that defect recurred')."
                     ),
                 },
                 # THE HEADLINE TEST. See the clustering note above: the game is the unit of
@@ -951,11 +971,19 @@ def main(argv) -> int:
             "variable was recorded on every row."
         ),
         "residuals": [
+            "THE BUDGET-400 ROW IS ARITHMETICALLY FORCED, NOT A TEST. The model is calibrated to "
+            "reproduce the measured b400 anchor exactly, so its b400 projection equals the "
+            "measurement BY CONSTRUCTION and that row's FITS/OVER verdict carries ZERO independent "
+            "information. Only the b1000+ rows are model OUTPUT. (Flagged by adversarial review of "
+            "this fix: an anchor whose value is forced is the same defect class as a gate whose pass "
+            "region is empty.)",
             "s_per_induction measured only at budget 400",
             "calibration factor applied multiplicatively across budgets",
             "induction_attempts on LLM-off rows counts PLANNED inductions, not executed ones",
             "one LLM-on run at b1000/b2000 would replace this model with a direct anchor",
         ],
+        "budget_400_row_is_forced_by_calibration": True,
+        "budgets_that_are_genuine_model_output": [b for b in budgets if b != 400],
         "projected_s_per_game_by_budget": {
             str(b): round(llm_on_model_s_per_game(b), 1) for b in budgets
         },
@@ -1032,11 +1060,28 @@ def main(argv) -> int:
             # WORST-CASE, not mean. Every thread is live at once, so the swarm's peak is driven by
             # the games that retain the most, and a mean would understate a hard failure.
             worst, med = max(deltas), statistics.median(deltas)
+            probed_games = sorted({m["game"] for m in mem_rows if m["budget"] == b})
+            # DOES THE PROBE SET ACTUALLY CONTAIN THE CORPUS WORST CASE? The projection multiplies a
+            # per-game WORST by the hidden-set game count, so a worst taken over an arbitrary subset
+            # would understate it. Checked here against the full sweep's retained-frame counts rather
+            # than asserted: `nodes_with_frame` is the quantity the retained graph's size tracks.
+            corpus_argmax = max(
+                complete_pairs, key=lambda sg: cell(b, sg[0], sg[1]).get("nodes_with_frame") or 0
+            )
+            corpus_argmax_game = corpus_argmax[1]
             entry = {
                 "n_games_probed": len(deltas),
                 "per_game_delta_mib_worst": round(worst, 1),
                 "per_game_delta_mib_median": round(med, 1),
-                "games_probed": sorted({m["game"] for m in mem_rows if m["budget"] == b}),
+                "games_probed": probed_games,
+                "corpus_argmax_game_by_nodes_with_frame": corpus_argmax_game,
+                "probe_set_contains_the_corpus_worst_case": corpus_argmax_game in probed_games,
+                "probe_coverage_note": (
+                    "The worst-case term is a max over the PROBED games, so it only bounds the corpus "
+                    "if the probe set contains the corpus's heaviest game. That is checked, not "
+                    "assumed. Even when true it does NOT bound the ~110 HIDDEN games, which have no "
+                    "adapters and may retain differently -- that remains unmeasured."
+                ),
             }
             for env in ENVELOPES:
                 n = env["n_games"]
@@ -1776,7 +1821,49 @@ def main(argv) -> int:
         },
         "headline": {
             "wins_median_by_budget": wins_med,
-            "best_measured_budget": best_b,
+            # RENAMED AND QUALIFIED after the adversarial review of this fix. The old key was
+            # `best_measured_budget`, an unqualified recommendation-shaped number computed as the
+            # argmax of the WIN COUNT -- the very metric this analysis demotes -- sitting in the
+            # headline block while the same artifact's memory envelope says that budget is OVER host
+            # RAM at the hidden-set game count. "Best by wins" is not "best", and the name must say so.
+            "budget_with_most_wins_NOT_A_RECOMMENDATION": best_b,
+            "budget_with_most_wins_basis": (
+                "argmax of wins_median. Wins are NOT the scored quantity and NOT constraint-aware; "
+                "see authoritative_score_sum_by_budget for the scored quantity and "
+                "constraint_feasible_budget below for what actually fits."
+            ),
+            "constraint_feasible_budget": {
+                "memory_worst_case_110_games": (
+                    memory_envelope.get("largest_budget_that_FITS_at_worst_case_per_envelope") or {}
+                ).get("C_110games_12h"),
+                "llm_on_wall_12h_110_games": crossing["llm_on_band"]["C_110games_12h"][
+                    "largest_budget_that_fits"
+                ],
+                "llm_on_wall_8h_110_games": crossing["llm_on_band"]["B_110games_8h"][
+                    "largest_budget_that_fits"
+                ],
+                "binding_of_the_three": min(
+                    [
+                        x
+                        for x in [
+                            (
+                                memory_envelope.get(
+                                    "largest_budget_that_FITS_at_worst_case_per_envelope"
+                                )
+                                or {}
+                            ).get("C_110games_12h"),
+                            crossing["llm_on_band"]["C_110games_12h"]["largest_budget_that_fits"],
+                        ]
+                        if x is not None
+                    ],
+                    default=None,
+                ),
+                "principle": (
+                    "The budget that wins the most games is not the budget that can be run. Reporting "
+                    "the win-count argmax without the feasible ceiling beside it is how a report "
+                    "recommends a configuration that cannot be deployed."
+                ),
+            },
             # THE SCORE, ALONGSIDE THE WIN COUNT, because they move by very different factors and
             # only one of them is on the leaderboard. Reporting the win count alone overstates the
             # benefit by roughly two orders of magnitude on this corpus.

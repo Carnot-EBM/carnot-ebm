@@ -17994,3 +17994,27 @@ claim to the LLM-OFF condition it was measured in.
 **When** the work completes
 **Then** `CarnotAgent.MAX_ACTIONS` and every `SUBMITTED_*` flag are unchanged, no submission is made,
 and the artifact records `what_was_NOT_changed` — the decision is the operator's.
+
+## Implementation Status (REQ-ARC-WMTE-5981)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5981 | Implemented (`scripts/analyze_arc_scored_path_budget_sweep.py` — `_resolve_charging_rule`, `_max_score_clamp_table`, `HEADLINE_sign_test_on_GAMES_both_tails` + game-unit witness, `memory_envelope`, mechanistic `llm_on_band`; `scripts/arc_budget_memory_probe.py`; `scripts/arc_leaderboard_eval.py` docstring correction) | Implemented (`tests/python/test_analyze_arc_scored_path_budget_sweep.py`, 18 tests; 4 mutations proved caught) |
+
+**Measured outcome (2026-07-26).** The tail probe returns 2.7778 for every tail from 15 to 100,000
+actions, so `tail_is_score_relevant` is false. The authoritative score sum rises monotonically
+8.8283 -> 9.0557 -> 9.1973 -> 9.2258 -> 9.2370 across budgets 200..4000 (x1.02) while won cells go
+6 -> 11 -> 26 -> 33 -> 36 (x3.27 from budget 400). Game-level two-sided sign-test p by step is
+0.5 / 0.0156 / 0.25 / 0.5 against cell-level 0.0625 / 6.1e-5 / 0.0156 / 0.25. The memory envelope
+projects 6.79 / 10.14 / 16.29 / 28.64 GiB at 110 concurrent games for budgets 400/1000/2000/4000, so
+`largest_budget_that_FITS_at_worst_case_per_envelope` is 1000 for both 110-game envelopes. No flag
+was changed: `CarnotAgent.MAX_ACTIONS` remains 400 (module-level 200), no `SUBMITTED_*` flag was
+touched, and no submission was made.
+
+**Known residuals (not closed by this requirement).** The memory envelope bounds the 25 PUBLIC games
+only — the probe set is verified to contain the corpus argmax (sp80) at every budget, but the ~110
+HIDDEN games have no adapters and their retention is unmeasured. `s_per_induction` is measured only
+at budget 400, so the LLM-on model's budget-400 row is arithmetically forced by its own calibration
+and carries no independent information. The target instance's host RAM is UNCONFIRMED (the 16 GiB
+figure in the requirements note is a VRAM number), and it is what decides whether budget 2000 is
+safe.

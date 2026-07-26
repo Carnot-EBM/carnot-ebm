@@ -1,5 +1,117 @@
 # Carnot — Changelog
 
+## 2026-07-26 (adversarial-review repairs to the MAX_ACTIONS BUDGET SWEEP — the published scoring conclusion was INVERTED, and MEMORY, not time, is the binding constraint)
+
+- User instruction: apply a 6-finding adversarial review (1 fatal, 5 serious) of the budget sweep
+  (`results/outer_loop_scored_path_budget_sweep_20260726.json`); fix real defects, say so with
+  evidence where a finding is wrong, then rebuild the artifact and re-run the tests and lints.
+  **Every finding reproduced against the raw cells.** One review claim was itself imprecise and is
+  corrected below. No measurement was re-run to change a number — the sweep's 375 recorded cells are
+  unchanged; only the analysis of them, plus ONE new measurement the review demanded (memory).
+- **FATAL — the decision-relevant scoring conclusion was INVERTED, and it was baked into
+  `honest_verdict`.** The analyser claimed the gateway's action-charging rule was "NOT resolvable
+  locally", reported two charge models that "DISAGREE IN SIGN" (x0.18 at budget 2000), and stamped
+  `scored_efficiency_term_degrades_quadratically`. An operator following that report would have
+  LOWERED the action budget. All three parts are wrong:
+  - `arc_agi.scorecard` is INSTALLED in the analysis venv. Its authoritative card->score path
+    (`scorecard.py:474-491`) DIFFERENCES successive level-up checkpoints and assigns the trailing
+    tail to the first INCOMPLETE level — byte-for-byte what `arc_leaderboard_eval.run_game` already
+    drives into every row's `efficiency` field. The rule was a two-line local experiment, not an
+    open question.
+  - MEASURED by driving that scorer: the same solve scores **2.7778 with a 15-action tail and with a
+    100,000-action tail**. The post-solve tail is score-FREE. The "total-action charge" model
+    CONTRADICTED the shipped implementation rather than competing with it.
+  - That model recovered a human baseline by inverting `min(human/agent,1)^2` — the formula a
+    2026-06-20 adversarial review had ALREADY retracted — and omitted `to_score`'s `max_score` clamp
+    entirely. Its "textbook quadratic" fold-losses were the identity `(400/b)^2` by construction
+    (verified: predicted 0.16000/0.04000/0.01000 vs observed medians 0.16155/0.03971/0.00995).
+  The efficiency axis is now derived SOLELY from the authoritative scorer, which the analyser DRIVES
+  (`_resolve_charging_rule`, `_max_score_clamp_table`) instead of paraphrasing. **Restated headline:
+  the authoritative score sum RISES monotonically 8.8283 -> 9.0557 -> 9.1973 -> 9.2258 -> 9.2370
+  across budgets 200..4000 — but only x1.02 while won cells go 11 -> 36 (x3.27).** The win count
+  overstates the leaderboard benefit ~150x: the 25 newly-won cells contribute 0.1789 total score
+  (mean 0.0072) because they win at 415-2715 actions against human baselines of tens.
+- **A CORRECTION TO THE REVIEW ITSELF, found by writing the clamp's regression test.** The review
+  called `max_score` "the term that makes solving MORE levels the dominant lever". It is applied as a
+  `min()`, so it is a CEILING: depth is the dominant lever only at EQUAL per-level speed. Measured —
+  4 of 8 levels solved at 400/900/1500/2200 actions scores **0.1207, BELOW** 1 of 8 solved in 15
+  (**2.7778**). Grinding is exactly what a raised budget buys, and that is the mechanism behind the
+  +2%. Both halves are now asserted so neither over-claim can return.
+- **PSEUDO-REPLICATION — the headline sign test is now on the GAME.** Three seeds of one game share
+  its adapter, mechanics and win condition; the inferential target is a HIDDEN game. Game-level
+  two-sided p by step: **0.5 / 0.0156 / 0.25 / 0.5** — only ONE of four steps survives, against
+  cell-level 0.0625 / 6.1e-5 / 0.0156 / 0.25. The cell-level test is retained under an explicit
+  within-game-replicates name. The module docstring had already CLAIMED the game unit while the code
+  counted cells. **The EFFECT SIZE is untouched: +7 median games budget 400->2000, zero regressions
+  in 75/75 cells.**
+- **MEMORY IS THE BINDING CONSTRAINT, AND IT IS NOW MEASURED, NOT ESTIMATED.** The prior artifact
+  demoted it to an untested residual citing a 6.6 GiB estimate while recommending the largest
+  measured budget. `Swarm.main()` (`agents/swarm.py:76-99`) builds one agent + one Thread per game and
+  starts EVERY thread before joining any, so retained search graphs are concurrent. New
+  `scripts/arc_budget_memory_probe.py` (24 cells, 6 games, one clean process each, every lazily-
+  imported module imported EAGERLY first so the baseline is the SHARED term): shared libs 813 MiB;
+  per-game worst 55.8 / 87.0 / 144.3 / 259.2 MiB at budgets 400/1000/2000/4000. **Projected to 110
+  games: 6.79 / 10.14 / 16.29 / 28.64 GiB. The largest budget that FITS at worst case is 1000, NOT
+  the 4000 the prior report treated as saturating.** The probe set is verified to contain the corpus
+  argmax (sp80) at every budget, so the worst-case term bounds the PUBLIC corpus; the ~110 hidden
+  games remain unmeasured. The 16 GiB host figure is a VRAM number from the requirements note and is
+  labelled UNCONFIRMED — it is the number most worth pinning down before acting.
+  - A first probe attempt read 846 MiB per game at budget 400. That snapshot preceded the harness's
+    lazy `numpy`/`arcengine`/env-module imports and was almost entirely SHARED cost. Caught and fixed
+    before any use.
+- **LLM-ON WALL CLOCK — the factor-of-10 BAND is replaced by a mechanistic model, because the
+  identifying variable was already on every row.** LLM cost is inductions x seconds-per-induction,
+  and measured `induction_attempts`/game grow only **1.147 -> 1.613 (1.41x)** across a 10x budget
+  raise (induction is triggered by novel-observation events, not action count). So the retired band's
+  1.0x lower bound was optimistic and its ~10x upper bound wildly pessimistic. Calibrated to the
+  measured budget-400 anchor (227.3 s/game, factor 1.2202): budget 4000 = 343.5 s/game = **89.5% of
+  the code-VERIFIED 12h envelope at 110 games, but 135.8% of the 8h preview envelope**, which is
+  already exceeded above budget 400. `wall_clock_never_binding` is STRUCK; the replacement scopes the
+  claim to the LLM-OFF condition it was measured in. Disclosed: the budget-400 row is ARITHMETICALLY
+  FORCED by the calibration and carries no independent information.
+- **`honest_verdict` no longer contradicts the artifact's own numbers.** It states the measured score
+  RISE, scopes the wall-clock claim to LLM-OFF, and names memory as first-binding.
+- **`headline.best_measured_budget` is renamed and qualified.** It was an unqualified,
+  recommendation-shaped argmax of the WIN COUNT — the metric this analysis demotes — sitting in the
+  headline while the same artifact says that budget is over host RAM. Now
+  `budget_with_most_wins_NOT_A_RECOMMENDATION` alongside a computed `constraint_feasible_budget`
+  (memory 1000 / LLM-on-12h 4000 / LLM-on-8h 400; **binding of the three: 1000**).
+- **The WITNESS is now computed at the GAME unit** — the unit the quoted p-value uses. Leaving it
+  cell-only while the headline test moved to games reproduced CLAUDE.md's own named defect verbatim
+  ("a per-cell witness for a median gate is how that defect recurred"). Cell counts are retained as
+  the finer-grained raw evidence.
+- **lever2 instrumentation gap CLOSED IN THE PUBLISHED RECORD.**
+  `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` predated its own analyser by 42
+  minutes and still carried `hud_mask_resolved=None` on 55/55 scored rows, so the HUD lever was
+  neither a fire nor a true negative. Rebuilt with the committed analyser: **805/805 rows now
+  readable at the flat address** via the nested back-fill — no GPU cell re-run, no fabricated value.
+  Top-level structure, all acceptance gates and `honest_verdict` are BYTE-IDENTICAL (the one FAILING
+  gate, `all_llm_on_rows_had_a_live_generator`, was already failing and is unchanged). The HUD verdict
+  remains `UNINTERPRETABLE_EMPTY_PASS_REGION`, so the "12/12 matched cells favour keeping it"
+  directional claim is **WITHDRAWN, not asserted** — no committed artifact supports it.
+- **`scripts/arc_leaderboard_eval.py`'s header docstring still advertised the retracted formula**
+  while the code below it had been correct since 2026-06-20. That stale line is what the analyser read
+  as the definition. Corrected, with the retraction recorded inline so it cannot be re-paraphrased.
+- **TEST THEATRE IN THE FIX ITSELF, caught by the mandated adversarial sub-agent review and fixed.**
+  Three mutations initially passed the new suite: (a) the memory projection substituting MEDIAN for
+  WORST (the assertion was `worst >= median`, true with equality when the probed games' deltas
+  coincide); (b) `honest_verdict` re-asserting BOTH struck claims (the test read the COMMITTED
+  artifact, not a freshly built one — failure #9 reproduced inside the test suite); (c) the
+  "game-level" test computed from CELLS (the end-to-end fixture used ONE seed per game, so cell ==
+  game and the pseudo-replication defect was undetectable by construction). The fixture is now
+  3 seeds x 4 games shaped so the units DISAGREE (4 cells gained / 1 lost vs 2 games gained / 1
+  lost), the behavioural assertions run the analyser end-to-end, and the memory fixture uses unequal
+  per-game deltas. All four mutations now fail; baseline restored and md5-verified.
+- Verified: 18 new regression tests + 176 tests across the touched suites pass;
+  `scripts/arc_orphan_solver_lint.py` OK (65 modules in the live closure); `adversarial_verify.py`
+  0 flagged on all three artifacts; `summarize_artifact.py` clean with no live flags; all 9 applicable
+  pre-commit hooks pass.
+- **NOTHING FLIPPED.** `CarnotAgent.MAX_ACTIONS` stays 400, module-level stays 200, no `SUBMITTED_*`
+  flag touched, no submission made. The budget decision is the operator's — and the corrected analysis
+  says the ceiling is **1000 (memory-bound), not 4000**.
+- Spec: `REQ-ARC-WMTE-5981` + 6 scenarios in
+  `openspec/capabilities/arc-world-model-trust-energy/spec.md`.
+
 ## 2026-07-26 (adversarial-review repairs to the SCORED-PATH lever A/B — the un-flip recommendation is WITHDRAWN, and the budget-2000 measurement REVERSES it)
 
 - User instruction: apply an 8-finding adversarial review (2 fatal, 6 serious) of the scored-path

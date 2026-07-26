@@ -202,54 +202,78 @@ def _artifact_keys(obj, out=None):
     return out
 
 
-def _run_analyser_on_synthetic_rows(tmp_path) -> dict:
+def _run_analyser_on_synthetic_rows(tmp_path, with_memory: bool = False) -> dict:
     """Drive the analyser END-TO-END on a tiny synthetic sweep and return the emitted artifact.
 
-    WHY THIS EXISTS. The sibling tests below read the COMMITTED artifact, which means they cannot
-    tell "the analyser emits this section" from "the committed file happens to contain it". Proved by
-    mutation: deleting the `eff["max_score_clamp"] = ...` wiring left those tests GREEN, because the
-    on-disk artifact still had the key from the last rebuild. That is measurement-failure #9 (a stale
-    artifact read as current) reproduced inside the test suite. This runs the real analyser so a
-    section that stops being emitted fails immediately, with no rebuild required.
+    WHY THIS EXISTS. Tests that read the COMMITTED artifact cannot tell "the analyser emits this"
+    from "the on-disk file happens to contain it". Proved by mutation three separate times: deleting
+    the `max_score_clamp` wiring, and making `honest_verdict` re-assert BOTH struck claims, each left
+    the committed-artifact tests GREEN. That is measurement-failure #9 (a stale artifact read as
+    current) reproduced inside the test suite. Everything asserted about analyser BEHAVIOUR must go
+    through this fixture.
+
+    WHY THE DESIGN IS 3 SEEDS WITH A DISAGREEING GAME. A first version used ONE seed per game, which
+    makes cell == game and renders the pseudo-replication defect UNDETECTABLE BY CONSTRUCTION:
+    mutating `st_games = sign_test(len(games_gained), ...)` to `sign_test(len(gained), ...)` passed.
+    The fixture below is deliberately shaped so the two units DISAGREE:
+
+      ga -- won at both budgets on all 3 seeds        -> concordant, contributes no sign
+      gb -- won only at b2000, on all 3 seeds         -> 3 CELLS gained, 1 GAME gained
+      gc -- won only at b2000, on 1 of 3 seeds        -> 1 CELL gained,  1 GAME gained
+      gd -- won at b400 on 1 seed, lost at b2000      -> 1 CELL lost,    1 GAME lost
+
+    So the step has 4 cells gained / 1 cell lost but 2 games gained / 1 game lost. Any test that
+    conflates the units now fails.
     """
     import json
     import subprocess
     import sys
 
-    games, budgets = ["ga", "gb", "gc"], [400, 2000]
+    seeds, budgets = [1, 2, 3], [400, 2000]
+
+    def won_at(game: str, seed: int, b: int) -> bool:
+        if game == "ga":
+            return True
+        if game == "gb":
+            return b == 2000
+        if game == "gc":
+            return b == 2000 and seed == 1
+        return b == 400 and seed == 1  # gd: a REGRESSION at the higher budget
+
     rows = []
-    for gi, g in enumerate(games):
-        for b in budgets:
-            won = b == 2000 or gi == 0  # gb/gc are won only at the higher budget
-            rows.append(
-                {
-                    "game": g,
-                    "seed": 1,
-                    "budget": b,
-                    "ran": True,
-                    "levels": 1 if won else 0,
-                    "reached": 1 if won else 0,
-                    "actions": int(b * 0.98),
-                    "wall_s": round(b * 0.005, 3),
-                    "construct_s": 2.5,
-                    "efficiency": 2.0 if won else 0.0,
-                    "actions_to_first_levelup": 100 if won else None,
-                    "states_expanded": b,
-                    "nodes_total": b // 4,
-                    "nodes_with_frame": b // 4,
-                    "nodes_with_previous_frame": b // 4,
-                    "unique_frames": b // 4,
-                    "induction_attempts": 1,
-                    "lever1_fired": False,
-                    "lever2_fired": False,
-                    "lever3_verdict": "LEVER_OFF",
-                    "hud_mask_resolved": True,
-                    "hud_mask_cell_count": 63,
-                    "hud_diagnostics_readable": True,
-                    "gated_flags": {"tier_exhaustion": True},
-                    "arm": f"S_llmoff_b{b}",
-                }
-            )
+    for g in ["ga", "gb", "gc", "gd"]:
+        for s in seeds:
+            for b in budgets:
+                won = won_at(g, s, b)
+                rows.append(
+                    {
+                        "game": g,
+                        "seed": s,
+                        "budget": b,
+                        "ran": True,
+                        "levels": 1 if won else 0,
+                        "reached": 1 if won else 0,
+                        "actions": int(b * 0.98),
+                        "wall_s": round(b * 0.005, 3),
+                        "construct_s": 2.5,
+                        "efficiency": 2.0 if won else 0.0,
+                        "actions_to_first_levelup": 100 if won else None,
+                        "states_expanded": b,
+                        "nodes_total": b // 4,
+                        "nodes_with_frame": b // 4,
+                        "nodes_with_previous_frame": b // 4,
+                        "unique_frames": b // 4,
+                        "induction_attempts": 1,
+                        "lever1_fired": False,
+                        "lever2_fired": False,
+                        "lever3_verdict": "LEVER_OFF",
+                        "hud_mask_resolved": True,
+                        "hud_mask_cell_count": 63,
+                        "hud_diagnostics_readable": True,
+                        "gated_flags": {"tier_exhaustion": True},
+                        "arm": f"S_llmoff_b{b}",
+                    }
+                )
     rows_path = tmp_path / "synth_rows.json"
     rows_path.write_text(
         json.dumps(
@@ -257,8 +281,8 @@ def _run_analyser_on_synthetic_rows(tmp_path) -> dict:
                 "sweep": "synthetic",
                 "rows": rows,
                 "budgets_requested": budgets,
-                "seeds_requested": [1],
-                "games_requested": games,
+                "seeds_requested": seeds,
+                "games_requested": ["ga", "gb", "gc", "gd"],
                 "arm": "S",
                 "arm_flags": {},
                 "llm_enabled": False,
@@ -269,6 +293,36 @@ def _run_analyser_on_synthetic_rows(tmp_path) -> dict:
             }
         )
     )
+    extra: list[str] = []
+    if with_memory:
+        # Two games with DELIBERATELY DIFFERENT per-game deltas, so a projection that silently
+        # substitutes the median for the worst case produces a different number and fails. With
+        # equal deltas the `worst >= median` assertion holds with equality and the mutation survives.
+        mem_path = tmp_path / "mem.jsonl"
+        mem_path.write_text(
+            "\n".join(
+                json.dumps(
+                    {
+                        "game": g,
+                        "seed": 1,
+                        "budget": b,
+                        "ran": True,
+                        "levels": 1,
+                        "actions": b,
+                        "nodes_total": b // 4,
+                        "nodes_with_frame": b // 4,
+                        "wall_s": 5.0,
+                        "shared_libs_rss_mib": 800.0,
+                        "after_rss_mib": 800.0 + d,
+                        "per_game_delta_mib": d,
+                        "per_game_delta_peak_mib": d,
+                    }
+                )
+                for b in budgets
+                for g, d in (("ga", 40.0 * b / 400), ("gb", 100.0 * b / 400))
+            )
+        )
+        extra = ["--memory-rows", str(mem_path)]
     out = tmp_path / "artifact.json"
     proc = subprocess.run(
         [
@@ -278,6 +332,7 @@ def _run_analyser_on_synthetic_rows(tmp_path) -> dict:
             str(rows_path),
             "--out",
             str(out),
+            *extra,
         ],
         capture_output=True,
         text=True,
@@ -305,18 +360,51 @@ def test_analyser_emits_the_corrected_score_axis_sections(tmp_path):
 
 
 def test_analyser_emits_the_game_level_headline_test(tmp_path):
-    """END-TO-END: every budget step must carry the GAME-unit test, and the cell-level one must be
-    labelled as replicates. On this synthetic design 2 games move, so the game-level p is 0.5 while
-    the cell-level p is also 0.5 (1 seed) -- the point under test is that BOTH are emitted and named
-    correctly, which is what stops the cell-level value being quoted as the design's significance."""
+    """END-TO-END, ON A DESIGN WHERE THE TWO UNITS DISAGREE. See the fixture docstring: the step has
+    4 cells gained / 1 lost but 2 games gained / 1 lost, so a 'game-level' test secretly computed
+    from cells produces different discordant counts and fails here. A 1-seed design cannot catch
+    that, and the first version of this test used one -- the mutation passed."""
     art = _run_analyser_on_synthetic_rows(tmp_path)
-    for step in art["marginal_return_per_step"]:
-        assert "HEADLINE_sign_test_on_GAMES_both_tails" in step
-        assert "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent" in step
-        assert "sign_test_on_cells_both_tails" not in step, "the unqualified name is back"
-        assert "clustering_note" in step
-        assert step["games_gained"] == ["gb", "gc"]
-    assert "HEADLINE_game_level_sign_test_p_two_sided_by_step" in art["headline"]
+    (step,) = art["marginal_return_per_step"]
+    assert "clustering_note" in step
+    assert "sign_test_on_cells_both_tails" not in step, "the unqualified name is back"
+
+    games = step["HEADLINE_sign_test_on_GAMES_both_tails"]
+    cells = step["sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent"]
+    assert step["games_gained"] == ["gb", "gc"]
+    assert step["games_lost"] == ["gd"]
+    # THE LOAD-BEARING ASSERTIONS: the two units must carry DIFFERENT discordant counts.
+    assert (games["n_pos"], games["n_neg"]) == (2, 1)
+    assert (cells["n_pos"], cells["n_neg"]) == (4, 1)
+    assert games["n_discordant"] != cells["n_discordant"], (
+        "the game-level test is being computed from cells -- the pseudo-replication defect is back"
+    )
+    assert games["p_two_sided"] > cells["p_two_sided"], (
+        "clustering must not inflate the game-level p"
+    )
+    assert (
+        art["headline"]["HEADLINE_game_level_sign_test_p_two_sided_by_step"]["400->2000"]
+        == (games["p_two_sided"])
+    )
+    assert art["headline"]["n_distinct_games_that_moved_by_step"]["400->2000"] == 3
+
+
+def test_witness_is_computed_at_the_GAME_unit_the_headline_test_uses(tmp_path):
+    """THE GAP THE ADVERSARIAL REVIEW OF THIS FIX FOUND. Moving the headline test to the game unit
+    while leaving the witness at the cell unit reproduces CLAUDE.md's own named defect: 'a per-cell
+    witness for a median gate is how that defect recurred'. The witness must state how many GAMES
+    could have moved, since that is the unit the quoted p-value is computed on."""
+    art = _run_analyser_on_synthetic_rows(tmp_path)
+    (step,) = art["marginal_return_per_step"]
+    w = step["WITNESS_pass_region_nonempty"]
+    assert "n_games_that_could_gain" in w, "witness is still cell-only"
+    assert "n_games_that_could_regress" in w
+    assert w["nonempty_at_the_game_unit"] is True
+    # gb/gc/gd could gain (not won at b400 on some seed); ga/gd could regress.
+    assert w["n_games_that_could_gain"] >= len(step["games_gained"])
+    assert w["n_games_that_could_regress"] >= len(step["games_lost"])
+    # The cell-level counts stay, explicitly labelled, so the raw evidence is not lost.
+    assert "n_cells_that_could_gain" in w
 
 
 def test_retired_charge_model_is_not_emitted_as_a_live_artifact_field():
@@ -338,15 +426,16 @@ def test_retired_charge_model_is_not_emitted_as_a_live_artifact_field():
     assert "max_score_clamp" in keys
 
 
-def test_artifact_verdict_does_not_reassert_the_two_struck_claims():
-    """`scored_efficiency_term_degrades_quadratically` and `wall_clock_never_binding` both
+def test_verdict_does_not_reassert_the_two_struck_claims(tmp_path):
+    """END-TO-END. `scored_efficiency_term_degrades_quadratically` and `wall_clock_never_binding` both
     contradicted the artifact's own measured numbers, and honest_verdict is the FIRST thing the
-    Reading-Results Discipline says to read."""
-    import json
+    Reading-Results Discipline says to read.
 
-    art = json.loads(
-        (REPO / "results" / "outer_loop_scored_path_budget_sweep_20260726.json").read_text()
-    )
+    THIS RUNS THE ANALYSER rather than reading the committed file. Proved necessary by mutation: a
+    verdict template rewritten to re-assert BOTH struck claims left the committed-file version of
+    this test GREEN, because the on-disk artifact still held the corrected string.
+    """
+    art = _run_analyser_on_synthetic_rows(tmp_path)
     v = art["honest_verdict"]
     assert v.startswith("complete_")
     assert "degrades_quadratically" not in v
@@ -356,20 +445,39 @@ def test_artifact_verdict_does_not_reassert_the_two_struck_claims():
     assert "authoritative_score_sum_ROSE" in v
 
 
-def test_memory_envelope_is_measured_and_projected_by_the_concurrent_game_count():
-    """SCENARIO-ARC-WMTE-5981-MEMORY-ENVELOPE-IS-MEASURED.
-
-    Memory was previously a residual ('memory at 110 concurrent games untested') citing a 6.6 GiB
-    estimate, while the report recommended the largest measured budget. It is the constraint that
-    hard-fails. This asserts the envelope is present, that the projection really is
-    shared + n_games * per_game (rather than a per-game number quoted as a total), and that the
-    host-RAM figure is labelled unconfirmed rather than treated as known.
-    """
+def test_committed_artifact_matches_the_current_analyser_on_these_invariants():
+    """The COMMITTED artifact must also satisfy the invariants, or it is stale (failure #9: the
+    published artifact predated its own analyser by 42 minutes, so every corrected number was
+    missing from it). The end-to-end tests prove the analyser is right; this proves the published
+    file was rebuilt after the analyser changed."""
     import json
 
     art = json.loads(
         (REPO / "results" / "outer_loop_scored_path_budget_sweep_20260726.json").read_text()
     )
+    v = art["honest_verdict"]
+    assert "degrades_quadratically" not in v and "_wall_clock_never_binding" not in v
+    assert "llm_off_wall_never_binding" in v and "authoritative_score_sum_ROSE" in v
+    keys = set(_artifact_keys(art))
+    assert "max_score_clamp" in keys and "authoritative_scorer_resolution" in keys
+    assert "scored_sum_under_both_charge_models" not in keys
+    assert "n_games_that_could_gain" in keys, "witness is cell-only in the committed artifact"
+    for step in art["marginal_return_per_step"]:
+        assert "HEADLINE_sign_test_on_GAMES_both_tails" in step
+
+
+def test_memory_envelope_is_measured_and_projected_by_the_concurrent_game_count(tmp_path):
+    """SCENARIO-ARC-WMTE-5981-MEMORY-ENVELOPE-IS-MEASURED.
+
+    Memory was previously a residual ('memory at 110 concurrent games untested') citing a 6.6 GiB
+    estimate, while the report recommended the largest measured budget. It is the constraint that
+    hard-fails.
+
+    END-TO-END, WITH UNEQUAL PER-GAME DELTAS. The fixture's two games differ (40 vs 100 MiB at b400),
+    which is load-bearing: an earlier version probed games with equal deltas, so substituting the
+    MEDIAN for the WORST case satisfied `worst >= median` with equality and the mutation survived.
+    """
+    art = _run_analyser_on_synthetic_rows(tmp_path, with_memory=True)
     mem = art["memory_envelope"]
     assert mem["measured"] is True
     assert mem["n_probe_cells"] > 0
@@ -381,11 +489,12 @@ def test_memory_envelope_is_measured_and_projected_by_the_concurrent_game_count(
         assert math.isclose(
             env["projected_peak_gib_if_every_game_is_worst_case"], expected, abs_tol=0.02
         )
-        # The worst-case projection must never be below the median-case one.
+        # STRICTLY greater: the fixture's deltas differ, so a median-for-worst substitution fails.
         assert (
             env["projected_peak_gib_if_every_game_is_worst_case"]
-            >= env["projected_peak_gib_at_median_per_game"]
-        )
+            > env["projected_peak_gib_at_median_per_game"]
+        ), "the worst-case projection is not using the worst per-game delta"
+        assert entry["per_game_delta_mib_worst"] > entry["per_game_delta_mib_median"]
     # Memory must be ranked FIRST among binding constraints, not listed as a residual.
     keys = list(art["headline"]["BINDING_CONSTRAINT"])
     assert keys[0].startswith("1_memory")
