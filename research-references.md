@@ -31760,3 +31760,114 @@ how Carnot should proceed after Exp5923 retired schema-supported reprompting.
   scope absent a changed authenticated route.
 
 <!-- V527-PLANNER-REFRESH-20260726-END -->
+
+## V528 Planner Refresh - 20260726
+
+Incremental planning sweep after the terminal `.527` conductor run and after the
+`V527-PLANNER-REFRESH-20260726-END` boundary. The primary pass queried arXiv
+for 2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising and learned sampling, hallucination detection, KANs,
+energy-guided decoding, and continual/online learning. The secondary pass
+rechecked OpenReview, Hugging Face Papers, direct Semantic Scholar citation APIs
+for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub repositories,
+Extropic's writing and hardware pages, and Logical Intelligence's Kona page.
+This block records only sources absent from the sealed V527 sweep or newly
+actionable after Exp5936 retired transformed-view atomic generation.
+
+### New actionable finding
+
+- **HIDE and Seek: Detecting Hallucinations in Language Models via Decoupled
+  Representations** - arXiv:2506.17748,
+  https://arxiv.org/abs/2506.17748. HIDE measures statistical decoupling between
+  context and generated-output representations with HSIC in a single pass,
+  avoiding repeated generations. Carnot hook: do not reopen generated
+  ConstraintIR. Construct exact candidate atoms deterministically, pair each
+  natural-language constraint with compatible and proof-preserving hard-negative
+  atoms, and test whether per-model GGUF representation compatibility can rank
+  the exact atoms on family-held and relabel-held splits. This is a
+  discriminative acquisition mechanism, not a final-answer confidence scorer.
+  It must survive norm, length, label-permutation, claim-flip, family, and raw
+  model-identity controls before any end-to-end exact-semantic claim.
+
+### Guarded findings
+
+- **Learning Tractable Distributions of Language Model Continuations** -
+  arXiv:2511.16054, https://arxiv.org/abs/2511.16054. LTLA conditions a shared
+  tractable continuation model through LM representations and reuses exact
+  future-likelihood messages, improving sequence-level constraint satisfaction
+  with modest reported decoding overhead. It is promising for future
+  energy-guided decoding, but its demonstrated constraints are not Carnot's
+  natural-language-to-exact-semantic bottleneck. It does not justify another
+  grammar, finite-ID, stop-token, or parser retry.
+- **A Probabilistic Neuro-symbolic Layer for Algebraic Constraint
+  Satisfaction** - arXiv:2503.19466,
+  https://arxiv.org/abs/2503.19466. PAL guarantees satisfaction of non-convex
+  algebraic constraints by exact normalization and amortizes symbolic
+  integration on GPUs. The compile-once/exact-query boundary is relevant to
+  Carnot's backend contract, but PAL assumes the algebraic constraint is already
+  available; it does not solve semantic acquisition and therefore is not a
+  `.528` experiment.
+- **Monotonic Kolmogorov-Arnold Networks** - arXiv:2606.17886,
+  https://arxiv.org/abs/2606.17886. MKAN enforces monotonicity for all parameter
+  values through reparameterized splines and gives a bounded representation-cost
+  result. This is useful future architecture context for auditable monotone
+  energies, but it supplies no evidence that repairs Carnot's retired adaptive
+  KAN lineages. No KAN task is promoted.
+- **Unsupervised Neural Langevin Sampler for Mixed Integer Linear
+  Programming** - ICML 2026 OpenReview,
+  https://openreview.net/forum?id=R3za7ajCwo. The method combines exact
+  continuous-variable optimization with a learned Langevin sampler over integer
+  variables and reports feasible solutions without labeled training data. This
+  reinforces Carnot's learned-proposal/exact-authority split, but it neither
+  addresses semantic extraction nor supplies an authenticated local accelerator
+  route.
+
+### Citation-trail, ecosystem, and hardware status
+
+- **Semantic Scholar:** dated 2026-07-26 API receipts returned 30 visible EBT
+  citing records and eight ARM-EBM citing records. The directly relevant trail
+  still leads with Memoir (`2607.20792`) and Solver-Hard (`2607.17047`), already
+  indexed in V525/V522. The former supports read-before-validate-before-write
+  memory; the latter supports proof-preserving relabel and hardness controls.
+  Counts are discovery receipts, not stable bibliometric claims.
+- **Hugging Face Papers / GitHub:** the pass reconfirmed hidden-state
+  self-verification (`2504.05419`), quantized mid-layer hallucination probes
+  (`2606.02628`), Spilled Energy (`2602.18671`), and the public EBT and
+  spilled-energy repositories. Intermediate states remain unavailable from
+  Carnot's current public GGUF runtime, and the final-embedding MMLU path is
+  retired. `.528` therefore tests the changed exact-atom compatibility task
+  with explicit prior-failure controls rather than claiming a mid-layer
+  replication or reopening the retired generated-text/logprob scorer.
+- **FPGA / probabilistic hardware:** the pass reconfirmed the million-p-bit
+  networked FPGA sampler (`2606.25313`) and the dense pipelined p-computer
+  (`2607.21077`). Both strengthen the case for a fixed-width energy/sampling ABI
+  and for reporting communication, precision, and throughput-quality tradeoffs.
+  They do not create a changed authenticated route to Carnot's attached boards,
+  so no new bitstream, board probe, or speedup claim is eligible.
+- **Extropic:** the official writing index still ends with the October 2025
+  X0/XTR-0/TSU material; the hardware page still labels Z1 as early access
+  2026. Carnot has no authenticated XTR-0/Z1 route.
+- **Logical Intelligence:** Kona's public Sudoku demonstration continues to
+  support an energy-reasoning plus exact-checking architecture boundary, but
+  public weights, a documented local API, and a reproducible comparator remain
+  unavailable. It remains guarded architecture context.
+
+### V528 planning impact
+
+- Replace generated atomic/schema retries with deterministic candidate
+  enumeration plus SOTA-GGUF representation compatibility, and require
+  family-held exact-set recovery before calling the mechanism constraint
+  acquisition.
+- Reuse the ready hardness-controlled fixture and add proof-preserving relabel,
+  paraphrase, near-negative, norm, length, and permutation controls.
+- Exercise continuous self-learning on the ready transactional memory and ABI-v2
+  path using Memoir-style delayed commit versus same-event write-through, with
+  prospective utility, poison quarantine, retention, rollback, and immutable
+  model weights.
+- Resolve the two open ARC measurements independently: targeted strip-swap
+  convention transfer and LLM-on budget-2000 wall-clock feasibility. Neither
+  task re-solves or re-credits a public level.
+- Keep hardware work at the ABI/requirements level until an authenticated
+  changed route exists.
+
+<!-- V528-PLANNER-REFRESH-20260726-END -->

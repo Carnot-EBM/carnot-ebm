@@ -193,6 +193,16 @@ def exact_one_sided_sign_test(n_favour: int, n_against: int) -> dict[str, Any]:
     `smallest_reachable_p_at_this_n` is the crucial second number: with n discordant games the best
     achievable p is 2**-n, so a design with 3 movers CANNOT clear 0.05 whatever the outcome. That
     turns "did not reach significance" into the actionable statement "this design cannot reach it".
+
+    THE THIRD NUMBER, AND WHY IT WAS ADDED (2026-07-26, after the budget-2000 reconciliation).
+    A one-sided test reports only the tail in the ARM'S favour, so a result that points the OTHER
+    WAY comes back as a LARGE p -- and a large p reads to a human as "no effect". It is not: at
+    budget 2000 the frontier arm's removal LOSES 4 games and gains 2, which this function reports
+    as p=0.8906. Read alone that number invites exactly the wrong conclusion ("nothing here"), when
+    the honest reading is "the data favours the CONTROL, 4 games to 2, and that is a REVERSAL of the
+    budget-400 direction". So `p_one_sided_exact_opposite_direction` and `direction_favoured` are
+    reported alongside, and a reversal becomes a number instead of an inference the reader has to
+    make by inverting a tail probability in their head.
     """
     n = int(n_favour) + int(n_against)
     if n == 0:
@@ -201,7 +211,10 @@ def exact_one_sided_sign_test(n_favour: int, n_against: int) -> dict[str, Any]:
             "n_games_against": 0,
             "n_discordant_games": 0,
             "p_one_sided_exact": None,
+            "p_one_sided_exact_opposite_direction": None,
+            "direction_favoured": "no_discordant_game",
             "clears_p_0_05": False,
+            "opposite_direction_clears_p_0_05": False,
             "undefined_because_no_discordant_game": True,
             "smallest_reachable_p_at_this_n": None,
             "underpowered_support": True,
@@ -212,13 +225,23 @@ def exact_one_sided_sign_test(n_favour: int, n_against: int) -> dict[str, Any]:
 
     tail = sum(comb(n, k) for k in range(int(n_favour), n + 1))
     p = tail / (2**n)
+    # The mirror tail: P(X >= n_against), i.e. the same exact test run in the CONTROL'S favour.
+    tail_opp = sum(comb(n, k) for k in range(int(n_against), n + 1))
+    p_opp = tail_opp / (2**n)
     floor_p = 1.0 / (2**n)
     return {
         "n_games_favouring": int(n_favour),
         "n_games_against": int(n_against),
         "n_discordant_games": n,
         "p_one_sided_exact": round(p, 4),
+        "p_one_sided_exact_opposite_direction": round(p_opp, 4),
+        "direction_favoured": (
+            "arm"
+            if int(n_favour) > int(n_against)
+            else ("control" if int(n_against) > int(n_favour) else "tie")
+        ),
         "clears_p_0_05": bool(p <= 0.05),
+        "opposite_direction_clears_p_0_05": bool(p_opp <= 0.05),
         "undefined_because_no_discordant_game": False,
         "smallest_reachable_p_at_this_n": round(floor_p, 4),
         # A support so small that NO outcome could have cleared 0.05. This is a property of the
@@ -616,6 +639,22 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
             "games_won_on_at_least_one_seed": won_some,
             "n_games_unstable_across_seeds": len(set(won_some) - set(won_every)),
             "control_is_stable_across_seeds": bool(flips) and max(flips) == 0,
+        }
+    else:
+        # NOT MEASURABLE is not the same as MEASURED ZERO, and an empty dict cannot tell them apart.
+        # The scored (LLM-on) design has ONE seed, so this floor is structurally unavailable there --
+        # which is itself a limitation of that design, and a reader must be told so rather than
+        # seeing a blank and assuming it was measured and clean.
+        cross_seed = {
+            "not_measurable": True,
+            "reason": (
+                f"needs >=2 seeds of the control arm {CONTROL!r}; this design has "
+                f"{len(seeds)} seed(s). A single-seed design cannot bound its own "
+                "seed-to-seed win-set movement, so no win delta measured here may be "
+                "called larger than the noise it generalises over."
+            ),
+            "n_seeds_available": len(seeds),
+            "control_is_stable_across_seeds": None,
         }
     out["noise_floor_control_across_seeds"] = cross_seed
     out["noise_floor_control_across_seeds_note"] = (
@@ -1155,7 +1194,10 @@ def build_artifact(
                 f"{st.get('n_discordant_games')} discordant game(s) "
                 f"(favouring arm: {st.get('movers_favouring_arm')}, favouring control: "
                 f"{st.get('movers_favouring_control')}); smallest reachable p at this support is "
-                f"{st.get('smallest_reachable_p_at_this_n')}. The win-set difference is real and "
+                f"{st.get('smallest_reachable_p_at_this_n')}. The same exact test in the CONTROL'S "
+                f"favour gives p={st.get('p_one_sided_exact_opposite_direction')}, and the "
+                f"discordant games favour "
+                f"{st.get('direction_favoured')}. The win-set difference is real and "
                 "attributable, but its direction is not established on the unit that generalises.",
             )
         elif single_budget:
@@ -1185,6 +1227,65 @@ def build_artifact(
             and not single_budget
         )
         for arm, rec in flag_recs.items()
+    )
+
+    # ---- BUDGET-DIRECTION RECONCILIATION, COMPUTED ------------------------------------------
+    # THE DEFECT THIS EXISTS TO CLOSE. The first write-up recommended un-flipping the shipped
+    # frontier trio on a budget-400 result, without measuring the OTHER budget at all -- while the
+    # convention-transfer battery had already measured the shipped configuration as the BEST arm at
+    # budget 2000. `single_budget` above is the mechanical block on that class of advice, but a
+    # block is not a finding: a reader still cannot see WHETHER the two budgets agree.
+    #
+    # This does. It compares the SAME lever's discordant-game direction at the two budgets, holding
+    # the LLM condition FIXED at OFF -- the companion design (budget 400, LLM off) against the
+    # alt-budget design (budget 2000, LLM off). That pairing is the only clean budget contrast
+    # available: the headline rows are LLM-ON, so comparing them to the alt budget would confound
+    # budget with the LLM. AGREES / REVERSES / NOT_COMPARABLE is stamped per lever, and a REVERSAL
+    # is by itself sufficient to refuse any single-budget flag advice, independent of significance.
+    budget_dir: dict[str, Any] = {}
+    if companion and alt_budget:
+        lo = companion.get("lever_verdicts") or {}
+        hi = alt_budget.get("lever_verdicts") or {}
+        for arm in sorted(set(lo) | set(hi)):
+            st_lo = (lo.get(arm) or {}).get("game_unit_sign_test") or {}
+            st_hi = (hi.get(arm) or {}).get("game_unit_sign_test") or {}
+            d_lo, d_hi = st_lo.get("direction_favoured"), st_hi.get("direction_favoured")
+            if not d_lo or not d_hi or "no_discordant_game" in (d_lo, d_hi):
+                agree = "NOT_COMPARABLE_NO_DISCORDANT_GAME_AT_ONE_BUDGET"
+            elif d_lo == "tie" or d_hi == "tie":
+                agree = "NOT_COMPARABLE_TIED_SUPPORT_AT_ONE_BUDGET"
+            elif d_lo == d_hi:
+                agree = "AGREES"
+            else:
+                agree = "REVERSES"
+            budget_dir[arm] = {
+                "lever": (lo.get(arm) or hi.get(arm) or {}).get("lever"),
+                "budget_agreement": agree,
+                "low_budget": {
+                    "budget": sorted({int(r.get("budget") or 0) for r in (companion_rows or [])}),
+                    "direction_favoured": d_lo,
+                    "movers_favouring_arm": st_lo.get("movers_favouring_arm"),
+                    "movers_favouring_control": st_lo.get("movers_favouring_control"),
+                    "p_one_sided_exact": st_lo.get("p_one_sided_exact"),
+                    "p_one_sided_exact_opposite_direction": st_lo.get(
+                        "p_one_sided_exact_opposite_direction"
+                    ),
+                },
+                "high_budget": {
+                    "budget": sorted({int(r.get("budget") or 0) for r in (alt_budget_rows or [])}),
+                    "direction_favoured": d_hi,
+                    "movers_favouring_arm": st_hi.get("movers_favouring_arm"),
+                    "movers_favouring_control": st_hi.get("movers_favouring_control"),
+                    "p_one_sided_exact": st_hi.get("p_one_sided_exact"),
+                    "p_one_sided_exact_opposite_direction": st_hi.get(
+                        "p_one_sided_exact_opposite_direction"
+                    ),
+                },
+            }
+    # A lever whose direction REVERSES between the two budgets cannot support a flag change from
+    # either budget alone, whatever its p-value at one of them.
+    levers_reversing_with_budget = sorted(
+        a for a, v in budget_dir.items() if v.get("budget_agreement") == "REVERSES"
     )
 
     art: dict[str, Any] = {
@@ -1285,6 +1386,27 @@ def build_artifact(
         "analyzer": "scripts/analyze_scored_path_lever_ab.py",
         "source_row_files": [str(p) for p in sources],
         "budget_per_game": sorted({int(r.get("budget") or 0) for r in rows}),
+        "budget_per_game_all_designs": sorted(
+            {int(r.get("budget") or 0) for r in all_measured_rows}
+        ),
+        "budget_per_game_all_designs_note": (
+            "`budget_per_game` is the HEADLINE (scored, LLM-on) rows only. This field is every "
+            "budget measured anywhere in this artifact, including the companion and alt-budget "
+            "designs -- so a reader can see at a glance whether the single-budget block on flag "
+            "advice is in force."
+        ),
+        "budget_direction_agreement_per_lever": budget_dir,
+        "budget_direction_agreement_note": (
+            "principle: a lever conclusion is budget-conditional, so 'does the direction survive "
+            "the other budget?' is a question with a computed answer, not a caveat. Compares each "
+            "lever's discordant-game direction at budget 400 vs budget 2000 with the LLM condition "
+            "held FIXED at OFF (the companion vs the alt-budget design) -- the only clean budget "
+            "contrast available, since the headline rows are LLM-ON and comparing them would "
+            "confound budget with the LLM. REVERSES means the two budgets disagree about which arm "
+            "the discordant games favour; that alone refuses any single-budget flag advice for that "
+            "lever, independent of its p-value at either budget."
+        ),
+        "levers_whose_direction_reverses_with_budget": levers_reversing_with_budget,
         "budget_note": (
             "principle: a lever conclusion is only meaningful together with the budget it was "
             "measured at, and this project has already misread its own source once here. 400 is "

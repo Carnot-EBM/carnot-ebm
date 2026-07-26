@@ -1,5 +1,114 @@
 # Carnot — Changelog
 
+## 2026-07-26 (adversarial-review repairs to the SCORED-PATH lever A/B — the un-flip recommendation is WITHDRAWN, and the budget-2000 measurement REVERSES it)
+
+- User instruction: apply an 8-finding adversarial review (2 fatal, 6 serious) of the scored-path
+  (`E3AgentPolicy`, LLM ON) lever A/B; fix real defects, say so with evidence where a finding is
+  wrong, then re-run what the fixes invalidate plus the tests and lints. **All eight findings
+  reproduced against the raw cells; none was wrong.** The published artifact
+  (`results/outer_loop_scored_path_lever_ab_llm_on_20260726.json`) was rebuilt from the same
+  recorded rows, so no measurement was re-run to change a number — only the analysis of it.
+- **FATAL #1, and the recommendation is WITHDRAWN — the budget premise was a misreading of our own
+  source, and the conclusion REVERSES with it.** `budget_note` claimed "400 is the scored agent's
+  own MAX_ACTIONS cap, so it is the eval's condition". The comment directly above that constant in
+  `arc_competition_agent.py` says the opposite: the real bound is the eval's <=12h wall clock, and
+  `MAX_ACTIONS` is an INTENDED OVERRIDE POINT (Playback sets it to 1e6). The missing measurement was
+  then RUN: the same five arms, all 25 public games, 3 seeds, LLM off, at **budget 2000** (375 cells).
+  The frontier lever's direction **reverses**. At budget 400 removing the trio gains lp85+tn36 and
+  loses cd82 (2 for / 1 against, p=0.5). At budget 2000 removing it gains sc25+tn36 and loses
+  **cd82, dc22, ft09, s5i5** (2 for / 4 against; the same exact test in the CONTROL'S favour gives
+  p=0.344). Shipped wins 11/25 per seed at 2000 vs 9/25 with the trio removed, identically on 3/3
+  seeds. So the budget-400 advice to un-flip the shipped frontier trio is not merely underpowered —
+  it is CONTRADICTED at the larger budget, and it is withdrawn.
+- **FATAL #2 — a p=0.5 result on a support that could never clear 0.05 was presented as a
+  conclusion.** The artifact contained zero occurrences of sign_test / p_value / binomial /
+  significan while this project's own top known-issues entry, one day old, names the exact one-sided
+  sign test ON THE GAME UNIT as the standard and had just used it to withdraw a sibling HUD claim.
+  Recomputed: the LLM-ON frontier support is exactly ONE game (tn36), whose exact sign-test FLOOR is
+  p=0.5 — no outcome of that design could have cleared the bar. Every lever verdict now carries
+  `game_unit_sign_test` plus `smallest_reachable_p_at_this_n`, a `generalisation_verdict`
+  (`UNDERPOWERED_BY_DESIGN_NO_OUTCOME_COULD_CLEAR_P05` here), and a `scope` block printing
+  `n_games_matched` / `n_movable_games_union_over_seeds` beside the verdict string so a 3-game
+  single-seed spot check cannot read as a corpus result. Two new acceptance gates enforce it.
+- **SERIOUS — lever 2's fire counter was broken in the direction that HIDES an effect, and it was
+  the one lever with no verdict test.** `hud_lever_fired` ANDed in `hud_shipped_mask_digest`, i.e. it
+  required the ALREADY-SHIPPED classifier to have produced a mask before the repaired detector's
+  mask could count as a difference — but the entire reason REQ-ARC-WMTE-5960 exists is that the
+  shipped classifier resolves None on r11l and tn36, the only two games the lever moves. So the
+  counter was ANTI-CORRELATED with its own lever and read 0 in all 430 cells while the lever fired
+  (r11l: mask None -> 64 cells, states_expanded 319 -> 41; tn36: None -> 61, 49 -> 17). This is the
+  exp5836 dead-channel defect with the sign flipped. FIXED in the harness (a mask APPEARING where
+  there was none is the strongest firing, not a non-event) AND the analyser now RECOMPUTES the flag
+  from each row's recorded digests rather than trusting the stamp, reporting every disagreement. The
+  supporting prose claim "the mask differs from shipped on ZERO games" was FALSE and is corrected to
+  2 of 25 games. Test added that drives real recorded r11l/tn36 diagnostics through the harness's own
+  computation — no hand-injected `lever2_fired`, which is exactly how the broken stamp survived.
+- **SERIOUS — `acceptance_gate_violations` reported `[]` while a gate was False.** It was assigned
+  one gate's detail list, so failures of the other two were invisible to any consumer reading the
+  purpose-named field. It is now assembled by SCANNING every `acceptance_gate_*` boolean in the
+  emitted dict, and correctly reports
+  `['acceptance_gate_all_llm_on_rows_had_a_live_generator']`.
+- **SERIOUS — the "noise floor of 0" was a SAME-SEED replicate, so it is structurally zero.** It
+  establishes causal ATTRIBUTION but cannot bound the variance a win-set claim generalises over. The
+  verdict is renamed `EFFECT_ON_WINS` -> `ATTRIBUTABLE_WIN_DIFFERENCE` to say only what the gate
+  establishes, and a genuine cross-seed floor (`noise_floor_control_across_seeds`) was added. Where
+  it cannot be computed it now says so explicitly (`not_measurable: true` + reason) rather than
+  emitting a blank dict a reader would misread as "measured and clean" — the scored design has one
+  seed, so it is unavailable there; at budget 2000 with 3 seeds the control is measured stable
+  (0 win flips across every seed pair).
+- **SERIOUS — CPTB had already recorded this exact result and the opposite main effect, and neither
+  was cited.** CPTB's field `games_where_adding_frontier_destroys_a_hud_win` has C0_real value
+  `["tn36"]` — the same game presented here as a finding. So tn36 is a REPLICATION of a known
+  frontier x HUD antagonism, not new evidence, while the countervailing frontier main effect
+  (5 games to 0, p=0.031) went unmentioned. `prior_measurements_that_must_be_reconciled_against`
+  now carries both, and the finding is reframed as a localised interaction.
+- **SERIOUS — the LLM-inertness mechanism claim was factually wrong and excluded its own positive
+  control.** "Rejected by a verifier gate every single time / planned=0" was false: `induction_planned`
+  is `{0: 29, 1: 1}`, and the exception (arm `S_minus_frontier_llmon`, lp85, seed 20260724,
+  `level_up_reinduction`) is the ONLY cell where the LLM -> plan channel opened — the very positive
+  control the brief's central lesson demands. Its matched control is the one row excluded as invalid,
+  which is now recorded (`matched_control_row_is_valid: false`) with re-running that cell named as
+  the concrete next step. The mechanism wording is corrected too: reasons are
+  `{stall: 28, level_up_reinduction: 8}`, not "once per game on stall".
+- Two genuine gaps found while applying the above, both fixed with tests: a one-sided test reports
+  only the arm's tail, so a REVERSAL comes back as a large p that reads as "no effect" — the mirror
+  tail (`p_one_sided_exact_opposite_direction`) and `direction_favoured` are now reported alongside;
+  and there was no computed answer to "do the two budgets agree?", only a mechanical block on
+  single-budget advice — `budget_direction_agreement_per_lever` now stamps AGREES / REVERSES /
+  NOT_COMPARABLE per lever with the LLM condition held fixed, and
+  `levers_whose_direction_reverses_with_budget` is `['S_minus_frontier_llmoff']`.
+- **NEW, and previously unmeasurable: the HUD lever has a real result at budget 2000.** At budget
+  400 it was `UNINTERPRETABLE_EMPTY_PASS_REGION` (no game it moved was won by either arm). At budget
+  2000, removing the HUD trio LOSES r11l and tu93 and gains nothing, on 3/3 seeds — directionally
+  net-positive, though a 2-game support has a p-floor of 0.25 and cannot clear 0.05. This is
+  consistent with the standing known-issues entry that the HUD lever needs MORE GAMES it moves, not
+  more seeds. **No flag was flipped by any of this work**; the hazard pruner remains default-OFF and
+  is inert (`NO_WIN_DIFFERENCE_ON_FIRING_GAMES`) at both budgets.
+- Verification: 43 analyser tests + 7 harness tests + 67 HUD-detector + 23 exp5960 gate tests all
+  pass (140 total, 6 of them new here); `ruff check` + `ruff format` clean;
+  `arc_orphan_solver_lint.py` OK (65 live
+  modules); `adversarial_verify.py` on the rebuilt artifact: 0 flagged;
+  `summarize_artifact.py` prints the one real gate FAIL. Also fixed an always-red teardown ERROR on
+  `test_the_control_arm_is_the_live_configuration` (the agent-module import allocates ~580MB, over
+  the conftest's 500MB per-test threshold) with the project's established
+  `@pytest.mark.memory_watchdog_skip` marker — an always-red signal trains readers to ignore the suite.
+- **Disclosed, NOT caused here:** a broader `pytest tests/python -k "arc or scored_path or hud or
+  hazard or 5960 or 5836"` sweep shows 22 pre-existing failures across 14 experiment-artifact schema
+  test files. Established as pre-existing rather than asserted: the same 14 files were run in a
+  `git worktree` at clean HEAD and produced the IDENTICAL 22 failed / 117 passed, and none of the 14
+  files references any file changed here. They are artifact-schema drift (e.g. exp832 expects
+  `schema` to list every top-level key, but the adversarial-verify backfill added
+  `invariant_violations`). Separately, that sweep re-executed several experiment scripts and so
+  refreshed `results/experiment_{3583,3611,625,638,645}*.json` timestamps/durations — benign re-run
+  churn, not a content change, and left in place per the never-revert rule.
+- **Also disclosed, also NOT caused here:** `results/experiment_{1861,1938,2085,3734,4162,4170,696}*.json`
+  gained `flagged_adversarial` stamps in this working tree. That was the RUNNING conductor
+  (`journalctl --user -u carnot-conductor`, pid 1716836, 08:24:02, `[stamped] ...`), not this work:
+  the only backfill run here was `adversarial_verify.py --backfill --since-hours 24` with NO
+  `--apply`, i.e. a dry run, which merely LISTED the same 7 as `[would-stamp]`. Recorded because a
+  concurrently-running conductor mutating `results/` is the kind of thing a later reader would
+  otherwise attribute to whoever last touched the tree.
+
 ## 2026-07-26 (adversarial-review repairs to the convention-perturbation transfer battery — one FATAL claim withdrawn)
 
 - User instruction: apply a 6-finding adversarial review of the convention-perturbation transfer

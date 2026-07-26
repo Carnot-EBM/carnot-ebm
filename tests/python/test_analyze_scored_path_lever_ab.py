@@ -955,3 +955,170 @@ def test_a_single_budget_blocks_a_recommendation_even_when_the_sign_test_clears(
     assert "operator" in rec2["reason"].lower()
     assert art2["single_budget_measurement"] is False
     assert art2["flags_flipped"] == []
+
+
+def test_a_large_one_sided_p_does_not_hide_a_reversal_in_the_other_direction() -> None:
+    """THE DEFECT: a ONE-SIDED test reports only the tail in the ARM'S favour, so a result that
+    points the other way returns a LARGE p -- and a large p reads to a human as "no effect". It is
+    not. The measured budget-2000 frontier result is exactly this shape: removing the frontier trio
+    loses cd82/dc22/ft09/s5i5 and gains sc25/tn36, i.e. 2 for and 4 against, which the arm-direction
+    test reports as p=0.8906. Read alone that invites the wrong conclusion; the honest reading is
+    "the discordant games favour the CONTROL, 4 to 2".
+
+    So the mirror tail and the favoured direction are reported alongside, and the arithmetic is
+    pinned here: with n=6 discordant games, P(X>=4)=22/64=0.34375.
+    """
+    t = AN.exact_one_sided_sign_test
+    hi = t(2, 4)  # the real budget-2000 frontier support
+    assert hi["p_one_sided_exact"] == 0.8906
+    assert hi["p_one_sided_exact_opposite_direction"] == 0.3438
+    assert hi["direction_favoured"] == "control"
+    assert hi["clears_p_0_05"] is False
+    assert hi["opposite_direction_clears_p_0_05"] is False
+    # The budget-400 LLM-off support points the OTHER way on the same lever.
+    lo = t(2, 1)
+    assert lo["direction_favoured"] == "arm"
+    assert lo["p_one_sided_exact_opposite_direction"] == 0.875
+    # A tie must not be silently attributed to either arm.
+    assert t(2, 2)["direction_favoured"] == "tie"
+    assert t(2, 2)["p_one_sided_exact"] == t(2, 2)["p_one_sided_exact_opposite_direction"]
+    # No discordant game: no direction to favour, and neither tail is a number.
+    assert t(0, 0)["direction_favoured"] == "no_discordant_game"
+    assert t(0, 0)["p_one_sided_exact_opposite_direction"] is None
+    # The mirror tail must be a real complement-style computation, not a copy: a clean 6-0 sweep in
+    # the arm's favour makes the OPPOSITE direction the least significant outcome possible.
+    sweep = t(6, 0)
+    assert sweep["p_one_sided_exact"] == 0.0156
+    assert sweep["p_one_sided_exact_opposite_direction"] == 1.0
+    assert sweep["direction_favoured"] == "arm"
+
+
+def test_a_lever_whose_direction_reverses_with_budget_is_stamped_reverses() -> None:
+    """THE FATAL FINDING THIS CLOSES. The first write-up recommended UN-FLIPPING the shipped frontier
+    trio from a budget-400 result while never measuring the other budget -- and the convention-
+    transfer battery had already measured the shipped configuration as the BEST arm at budget 2000.
+    `single_budget_measurement` blocks that class of advice mechanically, but a block is not a
+    finding: a reader still could not see WHETHER the budgets agree.
+
+    The comparison holds the LLM condition FIXED at OFF (companion = budget 400, alt-budget =
+    budget 2000) because the headline rows are LLM-ON and comparing them would confound budget with
+    the LLM. Here the arm WINS the movable game at budget 400 and LOSES it at budget 2000, so the
+    direction must be stamped REVERSES and the lever must appear in the reversal list.
+    """
+    AN.set_condition("_llmoff")
+    try:
+
+        def off(game: str, seed: int, s: int, mf: int, budget: int) -> list[dict]:
+            return [
+                dict(row("S_llmoff", game, seed, s), budget=budget, llm_enabled=False),
+                dict(row("S_minus_frontier_llmoff", game, seed, mf), budget=budget),
+                dict(row("S_minus_hud_llmoff", game, seed, 1), budget=budget),
+                dict(row("S_replicate_llmoff", game, seed, s), budget=budget),
+            ]
+
+        # budget 400: control loses aaaa, arm wins it -> direction favours the ARM.
+        lo_rows = off("aaaa", 1, s=0, mf=1, budget=400)
+        # budget 2000: control wins aaaa, arm loses it -> direction favours the CONTROL.
+        hi_rows = off("aaaa", 1, s=1, mf=0, budget=2000)
+        lo, hi = AN.analyse(lo_rows), AN.analyse(hi_rows)
+        assert (
+            lo["lever_verdicts"]["S_minus_frontier_llmoff"]["game_unit_sign_test"][
+                "direction_favoured"
+            ]
+            == "arm"
+        )
+        assert (
+            hi["lever_verdicts"]["S_minus_frontier_llmoff"]["game_unit_sign_test"][
+                "direction_favoured"
+            ]
+            == "control"
+        )
+    finally:
+        AN.set_condition("_llmon")
+
+    head = _arms_for("bbbb", 1, s=0, mf=1, mh=1)
+    head += [dict(r, arm="S_replicate_llmon") for r in head if r["arm"] == "S_llmon"]
+    art = AN.build_artifact(
+        AN.analyse(head),
+        head,
+        [Path("x.json")],
+        0.0,
+        companion=lo,
+        companion_rows=lo_rows,
+        alt_budget=hi,
+        alt_budget_rows=hi_rows,
+    )
+    bd = art["budget_direction_agreement_per_lever"]
+    assert bd["S_minus_frontier_llmoff"]["budget_agreement"] == "REVERSES"
+    assert bd["S_minus_frontier_llmoff"]["low_budget"]["budget"] == [400]
+    assert bd["S_minus_frontier_llmoff"]["high_budget"]["budget"] == [2000]
+    assert art["levers_whose_direction_reverses_with_budget"] == ["S_minus_frontier_llmoff"]
+    # Both budgets are visible in the artifact even though the HEADLINE rows are one budget only.
+    assert art["budget_per_game"] == [400]
+    assert art["budget_per_game_all_designs"] == [400, 2000]
+    assert art["single_budget_measurement"] is False
+
+
+def test_agreement_is_not_claimed_when_a_budget_has_no_discordant_game() -> None:
+    """A lever that moves NO game at one budget cannot be said to agree OR disagree there. Claiming
+    AGREES on an empty support is the forced-value defect wearing a different hat, so the stamp must
+    be NOT_COMPARABLE and the lever must NOT enter the reversal list."""
+    AN.set_condition("_llmoff")
+    try:
+
+        def off(game: str, seed: int, s: int, mf: int, budget: int) -> list[dict]:
+            return [
+                dict(row("S_llmoff", game, seed, s), budget=budget, llm_enabled=False),
+                dict(row("S_minus_frontier_llmoff", game, seed, mf), budget=budget),
+                dict(row("S_minus_hud_llmoff", game, seed, 1), budget=budget),
+                dict(row("S_replicate_llmoff", game, seed, s), budget=budget),
+            ]
+
+        # Both arms win aaaa at budget 400 -> no discordant game for the frontier lever.
+        lo_rows = off("aaaa", 1, s=1, mf=1, budget=400)
+        hi_rows = off("aaaa", 1, s=1, mf=0, budget=2000)
+        lo, hi = AN.analyse(lo_rows), AN.analyse(hi_rows)
+    finally:
+        AN.set_condition("_llmon")
+    head = _arms_for("bbbb", 1, s=0, mf=1, mh=1)
+    head += [dict(r, arm="S_replicate_llmon") for r in head if r["arm"] == "S_llmon"]
+    art = AN.build_artifact(AN.analyse(head), head, [Path("x.json")], 0.0, lo, lo_rows, hi, hi_rows)
+    bd = art["budget_direction_agreement_per_lever"]["S_minus_frontier_llmoff"]
+    assert bd["budget_agreement"] == "NOT_COMPARABLE_NO_DISCORDANT_GAME_AT_ONE_BUDGET"
+    assert art["levers_whose_direction_reverses_with_budget"] == []
+
+
+def test_budget_agreement_is_absent_rather_than_fabricated_without_both_designs() -> None:
+    """With only one design measured there is nothing to reconcile. The field must be an empty dict
+    -- never a fabricated AGREES, which would silently satisfy a future reader looking for the
+    reconciliation."""
+    rows = _arms_for("aaaa", 1, s=0, mf=1, mh=1)
+    rows += [dict(r, arm="S_replicate_llmon") for r in rows if r["arm"] == "S_llmon"]
+    art = AN.build_artifact(AN.analyse(rows), rows, [Path("x.json")], 0.0)
+    assert art["budget_direction_agreement_per_lever"] == {}
+    assert art["levers_whose_direction_reverses_with_budget"] == []
+    assert art["budget_per_game_all_designs"] == [400]
+
+
+def test_an_unmeasurable_cross_seed_floor_says_so_instead_of_being_blank() -> None:
+    """NOT MEASURABLE is not MEASURED ZERO. The scored (LLM-on) design has ONE seed, so the
+    cross-seed floor is structurally unavailable there -- and an empty dict cannot tell a reader
+    'we measured it and it was clean' from 'this design could not measure it at all'. That is the
+    same defect class as the original same-seed floor being presented as if it bounded the variance
+    a win-set claim generalises over."""
+    one_seed = _arms_for("aaaa", 1, s=0, mf=1, mh=1)
+    one_seed += [dict(r, arm="S_replicate_llmon") for r in one_seed if r["arm"] == "S_llmon"]
+    out = AN.analyse(one_seed)
+    cs = out["noise_floor_control_across_seeds"]
+    assert cs["not_measurable"] is True
+    assert cs["n_seeds_available"] == 1
+    assert cs["control_is_stable_across_seeds"] is None
+    assert "2 seeds" in cs["reason"] or ">=2 seeds" in cs["reason"]
+    # With two seeds it becomes a real measurement, and a control that moves is reported as moving.
+    two = one_seed + [dict(r, seed=2) for r in one_seed]
+    # Make the control WIN aaaa on seed 2 only, so its own win set flips across seeds.
+    two = [dict(r, levels=1) if (r["arm"] == "S_llmon" and r["seed"] == 2) else r for r in two]
+    cs2 = AN.analyse(two)["noise_floor_control_across_seeds"]
+    assert "not_measurable" not in cs2
+    assert cs2["max_win_flips_across_any_seed_pair"] == 1
+    assert cs2["control_is_stable_across_seeds"] is False
