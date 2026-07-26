@@ -1,0 +1,6314 @@
+{
+ "experiment": "outer_loop_cptb_shipped_lever_convention_transfer",
+ "title": "Convention-perturbation transfer battery for the two levers flipped ON 2026-07-25 (frontier tier discipline; HUD edge-bar mask)",
+ "run_date": "2026-07-26T01:00:30Z",
+ "duration_s": 16178.36,
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "solve_provenance": "development_proxy",
+ "verifier_is_oracle": false,
+ "random_seed": 20260726,
+ "random_seeds_used": [
+  20260726,
+  20260727,
+  20260728,
+  20260729,
+  20260730
+ ],
+ "reproducibility_checksum": "59542ecf32d4a4c9c96e596cf142c60d4e3316f2d1c6cabd8e3979dbcf58e7c6",
+ "config": {
+  "games": [
+   "ar25",
+   "bp35",
+   "cd82",
+   "cn04",
+   "dc22",
+   "ft09",
+   "g50t",
+   "ka59",
+   "lf52",
+   "lp85",
+   "ls20",
+   "m0r0",
+   "r11l",
+   "re86",
+   "s5i5",
+   "sb26",
+   "sc25",
+   "sk48",
+   "sp80",
+   "su15",
+   "tn36",
+   "tr87",
+   "tu93",
+   "vc33",
+   "wa30"
+  ],
+  "arms": {
+   "CTRL": {
+    "label": "pre_flip_agent_all_six_levers_off_explicitly_pinned",
+    "kwargs": {
+     "tier_exhaustion": false,
+     "tier_uniform_random": false,
+     "tier_click_vocab_only": false,
+     "frontier_gradient": false,
+     "edge_bar_hud_mask": false,
+     "hud_mask_collapse_guard": false,
+     "hud_mask_stage2_confirm": false
+    },
+    "declared_deterministic": true,
+    "frontier": false,
+    "hud": false
+   },
+   "FRONT": {
+    "label": "frontier_trio_on_hud_off",
+    "kwargs": {
+     "tier_exhaustion": true,
+     "tier_uniform_random": true,
+     "tier_click_vocab_only": true,
+     "frontier_gradient": false,
+     "edge_bar_hud_mask": false,
+     "hud_mask_collapse_guard": false,
+     "hud_mask_stage2_confirm": false
+    },
+    "declared_deterministic": false,
+    "frontier": true,
+    "hud": false
+   },
+   "HUDO": {
+    "label": "hud_trio_on_frontier_off",
+    "kwargs": {
+     "tier_exhaustion": false,
+     "tier_uniform_random": false,
+     "tier_click_vocab_only": false,
+     "frontier_gradient": false,
+     "edge_bar_hud_mask": true,
+     "hud_mask_collapse_guard": true,
+     "hud_mask_stage2_confirm": true
+    },
+    "declared_deterministic": true,
+    "frontier": false,
+    "hud": true
+   },
+   "SHIP": {
+    "label": "shipped_live_configuration_both_levers_on",
+    "kwargs": {
+     "tier_exhaustion": true,
+     "tier_uniform_random": true,
+     "tier_click_vocab_only": true,
+     "frontier_gradient": false,
+     "edge_bar_hud_mask": true,
+     "hud_mask_collapse_guard": true,
+     "hud_mask_stage2_confirm": true
+    },
+    "declared_deterministic": false,
+    "frontier": true,
+    "hud": true
+   }
+  },
+  "conditions": [
+   "C0_real",
+   "C1_salience_inversion",
+   "C2_diag_roll"
+  ],
+  "budget": 2000,
+  "n_seeds": 5,
+  "policy_kind": "explorer_force_explore_no_proposer",
+  "llm_disabled": true,
+  "adapters_loaded": false
+ },
+ "cell_integrity": {
+  "n_cells_expected": 1500,
+  "n_cells_recorded": 1500,
+  "coverage_complete": true,
+  "n_rows_ran_false_or_errors": 0,
+  "errored_cell_rate": 0.0,
+  "n_ran_rows_missing_states_expanded": 0,
+  "per_arm_condition_errored": {
+   "CTRL|C0_real": 0,
+   "CTRL|C1_salience_inversion": 0,
+   "CTRL|C2_diag_roll": 0,
+   "FRONT|C0_real": 0,
+   "FRONT|C1_salience_inversion": 0,
+   "FRONT|C2_diag_roll": 0,
+   "HUDO|C0_real": 0,
+   "HUDO|C1_salience_inversion": 0,
+   "HUDO|C2_diag_roll": 0,
+   "SHIP|C0_real": 0,
+   "SHIP|C1_salience_inversion": 0,
+   "SHIP|C2_diag_roll": 0
+  },
+  "interpretable": true,
+  "principle": "An arm with no expansion count and no error count is an UNINSTRUMENTED arm; this project once read a 72-97%-crashed control as a legitimate null across 975 cells for exactly that reason. Every row of every arm carries states_expanded and an error count, and a run above a 5% errored-cell rate is refused interpretation."
+ },
+ "measured_determinism_per_arm": {
+  "CTRL": {
+   "n_game_condition_cells": 75,
+   "n_cells_varying_across_seeds": 0,
+   "measured_deterministic": true
+  },
+  "FRONT": {
+   "n_game_condition_cells": 75,
+   "n_cells_varying_across_seeds": 54,
+   "measured_deterministic": false
+  },
+  "HUDO": {
+   "n_game_condition_cells": 75,
+   "n_cells_varying_across_seeds": 0,
+   "measured_deterministic": true
+  },
+  "SHIP": {
+   "n_game_condition_cells": 75,
+   "n_cells_varying_across_seeds": 54,
+   "measured_deterministic": false
+  }
+ },
+ "static_convention_dose_witness": {
+  "rows": [
+   {
+    "game": "ar25",
+    "palette": [
+     0,
+     4,
+     5,
+     9,
+     10,
+     11
+    ],
+    "salience_map_pairs": [
+     [
+      4,
+      9
+     ],
+     [
+      5,
+      10
+     ],
+     [
+      9,
+      4
+     ],
+     [
+      10,
+      5
+     ]
+    ],
+    "n_components": 11,
+    "baseline_hud_mask_cells": 127,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.36363636363636365,
+     "frontier_tier_histogram_before": {
+      "0": 1,
+      "1": 2,
+      "2": 2,
+      "3": 6
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "2": 2,
+      "3": 6
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 127,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 1,
+      "1": 2,
+      "2": 2,
+      "3": 6
+     },
+     "frontier_tier_histogram_after": {
+      "0": 2,
+      "1": 2,
+      "2": 2,
+      "3": 7
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "bp35",
+    "palette": [
+     0,
+     3,
+     5,
+     9,
+     10,
+     11,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      3,
+      9
+     ],
+     [
+      5,
+      10
+     ],
+     [
+      9,
+      3
+     ],
+     [
+      10,
+      5
+     ]
+    ],
+    "n_components": 190,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 128,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.9526315789473684,
+     "frontier_tier_histogram_before": {
+      "0": 9,
+      "2": 2,
+      "3": 179
+     },
+     "frontier_tier_histogram_after": {
+      "0": 7,
+      "1": 2,
+      "2": 179,
+      "3": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 9,
+      "2": 2,
+      "3": 179
+     },
+     "frontier_tier_histogram_after": {
+      "0": 9,
+      "2": 3,
+      "3": 179
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 111,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "cd82",
+    "palette": [
+     0,
+     2,
+     3,
+     4,
+     5,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      15
+     ],
+     [
+      15,
+      2
+     ]
+    ],
+    "n_components": 13,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.38461538461538464,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 7,
+      "3": 3
+     },
+     "frontier_tier_histogram_after": {
+      "0": 1,
+      "1": 9,
+      "3": 3
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 7,
+      "3": 3
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 7,
+      "3": 3
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "cn04",
+    "palette": [
+     0,
+     4,
+     8,
+     10,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      4,
+      8
+     ],
+     [
+      8,
+      4
+     ]
+    ],
+    "n_components": 7,
+    "baseline_hud_mask_cells": 32,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.7142857142857143,
+     "frontier_tier_histogram_before": {
+      "0": 5,
+      "1": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 1,
+      "1": 5,
+      "2": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 32,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 5,
+      "1": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 5,
+      "1": 1,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "dc22",
+    "palette": [
+     0,
+     2,
+     3,
+     4,
+     5,
+     8,
+     9,
+     11,
+     13,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      8
+     ],
+     [
+      3,
+      9
+     ],
+     [
+      4,
+      11
+     ],
+     [
+      5,
+      13
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      9,
+      3
+     ],
+     [
+      11,
+      4
+     ],
+     [
+      13,
+      5
+     ]
+    ],
+    "n_components": 35,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 128,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.45714285714285713,
+     "frontier_tier_histogram_before": {
+      "0": 7,
+      "1": 16,
+      "2": 8,
+      "3": 4
+     },
+     "frontier_tier_histogram_after": {
+      "0": 4,
+      "1": 19,
+      "2": 3,
+      "3": 9
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 7,
+      "1": 16,
+      "2": 8,
+      "3": 4
+     },
+     "frontier_tier_histogram_after": {
+      "0": 7,
+      "1": 16,
+      "2": 8,
+      "3": 6
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "ft09",
+    "palette": [
+     0,
+     2,
+     4,
+     5,
+     8,
+     9,
+     12
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      8
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      5,
+      12
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      9,
+      4
+     ],
+     [
+      12,
+      5
+     ]
+    ],
+    "n_components": 64,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.8125,
+     "frontier_tier_histogram_before": {
+      "0": 36,
+      "1": 27,
+      "2": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 16,
+      "1": 47,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 36,
+      "1": 27,
+      "2": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 36,
+      "1": 27,
+      "2": 1,
+      "3": 7
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 156,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "g50t",
+    "palette": [
+     0,
+     1,
+     5,
+     8,
+     9
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      8
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      8,
+      1
+     ],
+     [
+      9,
+      5
+     ]
+    ],
+    "n_components": 10,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 64,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 1.0,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 1,
+      "2": 4,
+      "3": 2
+     },
+     "frontier_tier_histogram_after": {
+      "0": 1,
+      "1": 3,
+      "2": 2,
+      "3": 4
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 1,
+      "2": 4,
+      "3": 2
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 1,
+      "2": 4,
+      "3": 2
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "ka59",
+    "palette": [
+     0,
+     1,
+     2,
+     4,
+     5,
+     14,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      14
+     ],
+     [
+      2,
+      15
+     ],
+     [
+      14,
+      1
+     ],
+     [
+      15,
+      2
+     ]
+    ],
+    "n_components": 13,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.6153846153846154,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 7,
+      "3": 3
+     },
+     "frontier_tier_histogram_after": {
+      "0": 5,
+      "1": 5,
+      "3": 3
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 7,
+      "3": 3
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 7,
+      "3": 3
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "lf52",
+    "palette": [
+     0,
+     1,
+     5,
+     9,
+     10,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      9
+     ],
+     [
+      5,
+      10
+     ],
+     [
+      9,
+      1
+     ],
+     [
+      10,
+      5
+     ]
+    ],
+    "n_components": 58,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.8793103448275862,
+     "frontier_tier_histogram_before": {
+      "0": 5,
+      "1": 28,
+      "2": 2,
+      "3": 23
+     },
+     "frontier_tier_histogram_after": {
+      "0": 33,
+      "2": 21,
+      "3": 4
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 5,
+      "1": 28,
+      "2": 2,
+      "3": 23
+     },
+     "frontier_tier_histogram_after": {
+      "0": 5,
+      "1": 28,
+      "2": 2,
+      "3": 23
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "lp85",
+    "palette": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     8,
+     9,
+     10,
+     11,
+     14,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      8
+     ],
+     [
+      2,
+      9
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      4,
+      11
+     ],
+     [
+      5,
+      14
+     ],
+     [
+      8,
+      1
+     ],
+     [
+      9,
+      2
+     ],
+     [
+      10,
+      3
+     ],
+     [
+      11,
+      4
+     ],
+     [
+      14,
+      5
+     ]
+    ],
+    "n_components": 37,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.8918918918918919,
+     "frontier_tier_histogram_before": {
+      "0": 19,
+      "1": 7,
+      "2": 1,
+      "3": 10
+     },
+     "frontier_tier_histogram_after": {
+      "0": 11,
+      "1": 15,
+      "2": 10,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 19,
+      "1": 7,
+      "2": 1,
+      "3": 10
+     },
+     "frontier_tier_histogram_after": {
+      "0": 19,
+      "1": 9,
+      "2": 2,
+      "3": 10
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "ls20",
+    "palette": [
+     0,
+     1,
+     3,
+     4,
+     5,
+     8,
+     9,
+     11,
+     12
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      8
+     ],
+     [
+      3,
+      9
+     ],
+     [
+      4,
+      11
+     ],
+     [
+      5,
+      12
+     ],
+     [
+      8,
+      1
+     ],
+     [
+      9,
+      3
+     ],
+     [
+      11,
+      4
+     ],
+     [
+      12,
+      5
+     ]
+    ],
+    "n_components": 18,
+    "baseline_hud_mask_cells": null,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.9444444444444444,
+     "frontier_tier_histogram_before": {
+      "0": 8,
+      "1": 3,
+      "2": 2,
+      "3": 5
+     },
+     "frontier_tier_histogram_after": {
+      "0": 2,
+      "1": 9,
+      "2": 5,
+      "3": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 8,
+      "1": 3,
+      "2": 2,
+      "3": 5
+     },
+     "frontier_tier_histogram_after": {
+      "0": 8,
+      "1": 5,
+      "2": 2,
+      "3": 7
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 153,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "m0r0",
+    "palette": [
+     5,
+     10,
+     11,
+     12
+    ],
+    "salience_map_pairs": [
+     [
+      5,
+      10
+     ],
+     [
+      10,
+      5
+     ]
+    ],
+    "n_components": 4,
+    "baseline_hud_mask_cells": 128,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.5,
+     "frontier_tier_histogram_before": {
+      "0": 2,
+      "2": 2
+     },
+     "frontier_tier_histogram_after": {
+      "1": 2,
+      "2": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 2,
+      "2": 2
+     },
+     "frontier_tier_histogram_after": {
+      "0": 5,
+      "2": 3
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 122,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "r11l",
+    "palette": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      15
+     ],
+     [
+      6,
+      1
+     ],
+     [
+      15,
+      2
+     ]
+    ],
+    "n_components": 37,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 189,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.972972972972973,
+     "frontier_tier_histogram_before": {
+      "0": 1,
+      "1": 5,
+      "2": 15,
+      "3": 16
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 3,
+      "2": 15,
+      "3": 16
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 1,
+      "1": 5,
+      "2": 15,
+      "3": 16
+     },
+     "frontier_tier_histogram_after": {
+      "0": 1,
+      "1": 6,
+      "2": 15,
+      "3": 17
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "re86",
+    "palette": [
+     0,
+     4,
+     5,
+     9,
+     11,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      4,
+      9
+     ],
+     [
+      5,
+      11
+     ],
+     [
+      9,
+      4
+     ],
+     [
+      11,
+      5
+     ]
+    ],
+    "n_components": 23,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.9130434782608695,
+     "frontier_tier_histogram_before": {
+      "0": 1,
+      "1": 8,
+      "2": 13,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 8,
+      "1": 1,
+      "2": 1,
+      "3": 13
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 1,
+      "1": 8,
+      "2": 13,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 1,
+      "1": 8,
+      "2": 13,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "s5i5",
+    "palette": [
+     2,
+     3,
+     4,
+     5,
+     11,
+     13,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      11
+     ],
+     [
+      3,
+      13
+     ],
+     [
+      4,
+      14
+     ],
+     [
+      11,
+      2
+     ],
+     [
+      13,
+      3
+     ],
+     [
+      14,
+      4
+     ]
+    ],
+    "n_components": 27,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 1.0,
+     "frontier_tier_histogram_before": {
+      "0": 6,
+      "1": 6,
+      "2": 10,
+      "3": 5
+     },
+     "frontier_tier_histogram_after": {
+      "0": 6,
+      "1": 6,
+      "2": 5,
+      "3": 10
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 6,
+      "1": 6,
+      "2": 10,
+      "3": 5
+     },
+     "frontier_tier_histogram_after": {
+      "0": 6,
+      "1": 6,
+      "2": 10,
+      "3": 5
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "sb26",
+    "palette": [
+     0,
+     2,
+     4,
+     5,
+     8,
+     9,
+     11,
+     14,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      8
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      5,
+      11
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      9,
+      4
+     ],
+     [
+      11,
+      5
+     ]
+    ],
+    "n_components": 23,
+    "baseline_hud_mask_cells": null,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.6521739130434783,
+     "frontier_tier_histogram_before": {
+      "0": 9,
+      "1": 13,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 13,
+      "1": 9,
+      "2": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 9,
+      "1": 13,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 9,
+      "1": 13,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": false
+    }
+   },
+   {
+    "game": "sc25",
+    "palette": [
+     0,
+     2,
+     3,
+     5,
+     9,
+     10,
+     14,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      9
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      5,
+      14
+     ],
+     [
+      9,
+      2
+     ],
+     [
+      10,
+      3
+     ],
+     [
+      14,
+      5
+     ]
+    ],
+    "n_components": 22,
+    "baseline_hud_mask_cells": 128,
+    "bottom_k_rows_nonbg_cells_that_wrap": 189,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.6363636363636364,
+     "frontier_tier_histogram_before": {
+      "0": 8,
+      "1": 13,
+      "2": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 13,
+      "1": 8,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 8,
+      "1": 13,
+      "2": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 8,
+      "1": 14,
+      "2": 1,
+      "3": 3
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "sk48",
+    "palette": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     8,
+     9,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      3,
+      9
+     ],
+     [
+      4,
+      14
+     ],
+     [
+      6,
+      1
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      9,
+      3
+     ],
+     [
+      14,
+      4
+     ]
+    ],
+    "n_components": 45,
+    "baseline_hud_mask_cells": null,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 1.0,
+     "frontier_tier_histogram_before": {
+      "0": 10,
+      "1": 13,
+      "3": 22
+     },
+     "frontier_tier_histogram_after": {
+      "0": 11,
+      "1": 12,
+      "2": 22
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 10,
+      "1": 13,
+      "3": 22
+     },
+     "frontier_tier_histogram_after": {
+      "0": 10,
+      "1": 13,
+      "2": 2,
+      "3": 26
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 6,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "sp80",
+    "palette": [
+     1,
+     4,
+     6,
+     9,
+     11,
+     12,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      6,
+      1
+     ],
+     [
+      9,
+      4
+     ]
+    ],
+    "n_components": 7,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.5714285714285714,
+     "frontier_tier_histogram_before": {
+      "0": 4,
+      "1": 1,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 2,
+      "2": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 4,
+      "1": 1,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 4,
+      "1": 1,
+      "2": 1,
+      "3": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "su15",
+    "palette": [
+     0,
+     3,
+     4,
+     5,
+     9,
+     15
+    ],
+    "salience_map_pairs": [
+     [
+      3,
+      9
+     ],
+     [
+      4,
+      15
+     ],
+     [
+      9,
+      3
+     ],
+     [
+      15,
+      4
+     ]
+    ],
+    "n_components": 27,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 128,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.9259259259259259,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 2,
+      "3": 22
+     },
+     "frontier_tier_histogram_after": {
+      "0": 1,
+      "1": 4,
+      "2": 21,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 2,
+      "3": 22
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 2,
+      "3": 22
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "tn36",
+    "palette": [
+     0,
+     1,
+     4,
+     5,
+     9,
+     11
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      9
+     ],
+     [
+      4,
+      11
+     ],
+     [
+      9,
+      1
+     ],
+     [
+      11,
+      4
+     ]
+    ],
+    "n_components": 47,
+    "baseline_hud_mask_cells": 61,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.9787234042553191,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 35,
+      "2": 1,
+      "3": 8
+     },
+     "frontier_tier_histogram_after": {
+      "0": 35,
+      "1": 3,
+      "2": 7,
+      "3": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 61,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 3,
+      "1": 35,
+      "2": 1,
+      "3": 8
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 35,
+      "2": 2,
+      "3": 8
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "tr87",
+    "palette": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     7,
+     10
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      7
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      7,
+      1
+     ],
+     [
+      10,
+      2
+     ]
+    ],
+    "n_components": 63,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.5238095238095238,
+     "frontier_tier_histogram_before": {
+      "0": 19,
+      "1": 24,
+      "2": 12,
+      "3": 8
+     },
+     "frontier_tier_histogram_after": {
+      "1": 43,
+      "2": 1,
+      "3": 19
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 19,
+      "1": 24,
+      "2": 12,
+      "3": 8
+     },
+     "frontier_tier_histogram_after": {
+      "0": 19,
+      "1": 24,
+      "2": 12,
+      "3": 9
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "tu93",
+    "palette": [
+     0,
+     2,
+     4,
+     5,
+     6,
+     9,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      2,
+      6
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      5,
+      14
+     ],
+     [
+      6,
+      2
+     ],
+     [
+      9,
+      4
+     ],
+     [
+      14,
+      5
+     ]
+    ],
+    "n_components": 65,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.5538461538461539,
+     "frontier_tier_histogram_before": {
+      "0": 2,
+      "1": 61,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 32,
+      "1": 31,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 2,
+      "1": 61,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 2,
+      "1": 61,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "vc33",
+    "palette": [
+     0,
+     3,
+     4,
+     5,
+     7,
+     9,
+     11
+    ],
+    "salience_map_pairs": [
+     [
+      3,
+      7
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      5,
+      11
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      9,
+      4
+     ],
+     [
+      11,
+      5
+     ]
+    ],
+    "n_components": 10,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 156,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.8,
+     "frontier_tier_histogram_before": {
+      "0": 4,
+      "1": 5,
+      "2": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 3,
+      "1": 6,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 4,
+      "1": 5,
+      "2": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 4,
+      "1": 10,
+      "2": 3
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": null,
+     "hud_mask_changed": true
+    }
+   },
+   {
+    "game": "wa30",
+    "palette": [
+     0,
+     1,
+     2,
+     4,
+     7,
+     9,
+     14
+    ],
+    "salience_map_pairs": [
+     [
+      1,
+      7
+     ],
+     [
+      2,
+      9
+     ],
+     [
+      4,
+      14
+     ],
+     [
+      7,
+      1
+     ],
+     [
+      9,
+      2
+     ],
+     [
+      14,
+      4
+     ]
+    ],
+    "n_components": 11,
+    "baseline_hud_mask_cells": 64,
+    "bottom_k_rows_nonbg_cells_that_wrap": 192,
+    "C1_salience_inversion": {
+     "frontier_tier_change_fraction": 0.5454545454545454,
+     "frontier_tier_histogram_before": {
+      "0": 5,
+      "1": 4,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 4,
+      "1": 5,
+      "3": 2
+     },
+     "frontier_tier_multiset_changed": true,
+     "hud_mask_cells_after": 64,
+     "hud_mask_changed": false
+    },
+    "C2_diag_roll": {
+     "frontier_tier_change_fraction": null,
+     "frontier_tier_histogram_before": {
+      "0": 5,
+      "1": 4,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_histogram_after": {
+      "0": 5,
+      "1": 4,
+      "2": 1,
+      "3": 1
+     },
+     "frontier_tier_multiset_changed": false,
+     "hud_mask_cells_after": 128,
+     "hud_mask_changed": true
+    }
+   }
+  ]
+ },
+ "behavioural_dose_witness": {
+  "CTRL|C1_salience_inversion": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 0,
+   "fraction_moved": 0.0,
+   "inert_for_this_arm": true
+  },
+  "CTRL|C2_diag_roll": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 110,
+   "fraction_moved": 0.88,
+   "inert_for_this_arm": false
+  },
+  "FRONT|C1_salience_inversion": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 95,
+   "fraction_moved": 0.76,
+   "inert_for_this_arm": false
+  },
+  "FRONT|C2_diag_roll": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 105,
+   "fraction_moved": 0.84,
+   "inert_for_this_arm": false
+  },
+  "HUDO|C1_salience_inversion": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 0,
+   "fraction_moved": 0.0,
+   "inert_for_this_arm": true
+  },
+  "HUDO|C2_diag_roll": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 115,
+   "fraction_moved": 0.92,
+   "inert_for_this_arm": false
+  },
+  "SHIP|C1_salience_inversion": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 95,
+   "fraction_moved": 0.76,
+   "inert_for_this_arm": false
+  },
+  "SHIP|C2_diag_roll": {
+   "n_cells": 125,
+   "n_cells_behaviourally_moved": 110,
+   "fraction_moved": 0.88,
+   "inert_for_this_arm": false
+  }
+ },
+ "pass_region_witness": {
+  "frontier_given_hud_off": {
+   "pass_region_nonempty": true,
+   "witness_cells_treatment_wins_control_does_not_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "n_witness_cells": 20,
+   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+  },
+  "frontier_given_hud_on": {
+   "pass_region_nonempty": true,
+   "witness_cells_treatment_wins_control_does_not_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "n_witness_cells": 20,
+   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+  },
+  "hud_given_frontier_on": {
+   "pass_region_nonempty": true,
+   "witness_cells_treatment_wins_control_does_not_at_C0": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    }
+   ],
+   "n_witness_cells": 5,
+   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+  },
+  "hud_given_frontier_off": {
+   "pass_region_nonempty": true,
+   "witness_cells_treatment_wins_control_does_not_at_C0": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "tn36",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "tn36",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "tn36",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "tn36",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "tn36",
+     "seed": 20260730
+    }
+   ],
+   "n_witness_cells": 10,
+   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+  },
+  "both_levers_shipped_vs_preflip": {
+   "pass_region_nonempty": true,
+   "witness_cells_treatment_wins_control_does_not_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "n_witness_cells": 25,
+   "principle": "A gate whose pass region is empty is not a gate. This emits the concrete (game, seed) cells that make the anchor non-zero, so a reader can verify the comparison could have registered an effect before reading any verdict."
+  }
+ },
+ "per_arm_condition_wins": {
+  "CTRL|C0_real": {
+   "per_seed_win_counts": [
+    7,
+    7,
+    7,
+    7,
+    7
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 7,
+   "n_games_won_on_every_seed": 7,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 7
+  },
+  "CTRL|C1_salience_inversion": {
+   "per_seed_win_counts": [
+    7,
+    7,
+    7,
+    7,
+    7
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 7,
+   "n_games_won_on_every_seed": 7,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 7
+  },
+  "CTRL|C2_diag_roll": {
+   "per_seed_win_counts": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "lp85"
+    ],
+    "20260727": [
+     "lp85"
+    ],
+    "20260728": [
+     "lp85"
+    ],
+    "20260729": [
+     "lp85"
+    ],
+    "20260730": [
+     "lp85"
+    ]
+   },
+   "median_wins": 1,
+   "n_games_won_on_every_seed": 1,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 1
+  },
+  "FRONT|C0_real": {
+   "per_seed_win_counts": [
+    11,
+    12,
+    11,
+    11,
+    10
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "bp35",
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 11,
+   "n_games_won_on_every_seed": 10,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 12
+  },
+  "FRONT|C1_salience_inversion": {
+   "per_seed_win_counts": [
+    10,
+    11,
+    10,
+    9,
+    11
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "cn04",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "bp35",
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 10,
+   "n_games_won_on_every_seed": 9,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 12
+  },
+  "FRONT|C2_diag_roll": {
+   "per_seed_win_counts": [
+    4,
+    6,
+    4,
+    5,
+    6
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "ft09",
+     "lp85",
+     "s5i5",
+     "sp80",
+     "vc33"
+    ],
+    "20260728": [
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ],
+    "20260730": [
+     "ar25",
+     "cd82",
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ]
+   },
+   "median_wins": 5,
+   "n_games_won_on_every_seed": 4,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 7
+  },
+  "HUDO|C0_real": {
+   "per_seed_win_counts": [
+    9,
+    9,
+    9,
+    9,
+    9
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 9,
+   "n_games_won_on_every_seed": 9,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 9
+  },
+  "HUDO|C1_salience_inversion": {
+   "per_seed_win_counts": [
+    9,
+    9,
+    9,
+    9,
+    9
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "sp80",
+     "su15",
+     "tn36",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 9,
+   "n_games_won_on_every_seed": 9,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 9
+  },
+  "HUDO|C2_diag_roll": {
+   "per_seed_win_counts": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "lp85"
+    ],
+    "20260727": [
+     "lp85"
+    ],
+    "20260728": [
+     "lp85"
+    ],
+    "20260729": [
+     "lp85"
+    ],
+    "20260730": [
+     "lp85"
+    ]
+   },
+   "median_wins": 1,
+   "n_games_won_on_every_seed": 1,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 1
+  },
+  "SHIP|C0_real": {
+   "per_seed_win_counts": [
+    12,
+    13,
+    12,
+    12,
+    11
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "bp35",
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 12,
+   "n_games_won_on_every_seed": 11,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 13
+  },
+  "SHIP|C1_salience_inversion": {
+   "per_seed_win_counts": [
+    10,
+    11,
+    10,
+    9,
+    11
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "cn04",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260728": [
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ],
+    "20260730": [
+     "bp35",
+     "cd82",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   },
+   "median_wins": 10,
+   "n_games_won_on_every_seed": 9,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 12
+  },
+  "SHIP|C2_diag_roll": {
+   "per_seed_win_counts": [
+    4,
+    6,
+    4,
+    5,
+    6
+   ],
+   "per_seed_win_sets": {
+    "20260726": [
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ],
+    "20260727": [
+     "cd82",
+     "ft09",
+     "lp85",
+     "s5i5",
+     "sp80",
+     "vc33"
+    ],
+    "20260728": [
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ],
+    "20260729": [
+     "cd82",
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ],
+    "20260730": [
+     "ar25",
+     "cd82",
+     "ft09",
+     "lp85",
+     "sp80",
+     "vc33"
+    ]
+   },
+   "median_wins": 5,
+   "n_games_won_on_every_seed": 4,
+   "union_win_count_DO_NOT_USE_FOR_COMPARISON": 7
+  }
+ },
+ "contrasts": {
+  "frontier_given_hud_off": {
+   "treatment_arm": "FRONT",
+   "control_arm": "CTRL",
+   "per_condition": {
+    "C0_real": {
+     "per_seed_gain": {
+      "20260726": 4,
+      "20260727": 5,
+      "20260728": 4,
+      "20260729": 4,
+      "20260730": 3
+     },
+     "median_gain": 4,
+     "min_gain": 3,
+     "max_gain": 5,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260727": [
+       "bp35",
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260728": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260729": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260730": [
+       "dc22",
+       "ft09",
+       "s5i5"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "dc22",
+      "ft09",
+      "s5i5"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C1_salience_inversion": {
+     "per_seed_gain": {
+      "20260726": 3,
+      "20260727": 4,
+      "20260728": 3,
+      "20260729": 2,
+      "20260730": 4
+     },
+     "median_gain": 3,
+     "min_gain": 2,
+     "max_gain": 4,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260727": [
+       "cn04",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260728": [
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260729": [
+       "ft09",
+       "s5i5"
+      ],
+      "20260730": [
+       "bp35",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "ft09",
+      "s5i5"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C2_diag_roll": {
+     "per_seed_gain": {
+      "20260726": 3,
+      "20260727": 5,
+      "20260728": 3,
+      "20260729": 4,
+      "20260730": 5
+     },
+     "median_gain": 4,
+     "min_gain": 3,
+     "max_gain": 5,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260727": [
+       "cd82",
+       "ft09",
+       "s5i5",
+       "sp80",
+       "vc33"
+      ],
+      "20260728": [
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260729": [
+       "cd82",
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260730": [
+       "ar25",
+       "cd82",
+       "ft09",
+       "sp80",
+       "vc33"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "ft09",
+      "sp80",
+      "vc33"
+     ],
+     "games_lost_on_every_seed": []
+    }
+   },
+   "anchor_median_gain_C0": 4,
+   "retention": {
+    "C1_salience_inversion": {
+     "transfer_median_gain": 3,
+     "retention_ratio": 0.75,
+     "computable": true,
+     "reason_if_not_computable": null
+    },
+    "C2_diag_roll": {
+     "transfer_median_gain": 4,
+     "retention_ratio": 1.0,
+     "computable": true,
+     "reason_if_not_computable": null
+    }
+   }
+  },
+  "frontier_given_hud_on": {
+   "treatment_arm": "SHIP",
+   "control_arm": "HUDO",
+   "per_condition": {
+    "C0_real": {
+     "per_seed_gain": {
+      "20260726": 3,
+      "20260727": 4,
+      "20260728": 3,
+      "20260729": 3,
+      "20260730": 2
+     },
+     "median_gain": 3,
+     "min_gain": 2,
+     "max_gain": 4,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260727": [
+       "bp35",
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260728": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260729": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260730": [
+       "dc22",
+       "ft09",
+       "s5i5"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [
+       "tn36"
+      ],
+      "20260727": [
+       "tn36"
+      ],
+      "20260728": [
+       "tn36"
+      ],
+      "20260729": [
+       "tn36"
+      ],
+      "20260730": [
+       "tn36"
+      ]
+     },
+     "games_gained_on_every_seed": [
+      "dc22",
+      "ft09",
+      "s5i5"
+     ],
+     "games_lost_on_every_seed": [
+      "tn36"
+     ]
+    },
+    "C1_salience_inversion": {
+     "per_seed_gain": {
+      "20260726": 1,
+      "20260727": 2,
+      "20260728": 1,
+      "20260729": 0,
+      "20260730": 2
+     },
+     "median_gain": 1,
+     "min_gain": 0,
+     "max_gain": 2,
+     "strict_per_seed_dominance": false,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260727": [
+       "cn04",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260728": [
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260729": [
+       "ft09",
+       "s5i5"
+      ],
+      "20260730": [
+       "bp35",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [
+       "r11l",
+       "tn36"
+      ],
+      "20260727": [
+       "r11l",
+       "tn36"
+      ],
+      "20260728": [
+       "r11l",
+       "tn36"
+      ],
+      "20260729": [
+       "r11l",
+       "tn36"
+      ],
+      "20260730": [
+       "r11l",
+       "tn36"
+      ]
+     },
+     "games_gained_on_every_seed": [
+      "ft09",
+      "s5i5"
+     ],
+     "games_lost_on_every_seed": [
+      "r11l",
+      "tn36"
+     ]
+    },
+    "C2_diag_roll": {
+     "per_seed_gain": {
+      "20260726": 3,
+      "20260727": 5,
+      "20260728": 3,
+      "20260729": 4,
+      "20260730": 5
+     },
+     "median_gain": 4,
+     "min_gain": 3,
+     "max_gain": 5,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260727": [
+       "cd82",
+       "ft09",
+       "s5i5",
+       "sp80",
+       "vc33"
+      ],
+      "20260728": [
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260729": [
+       "cd82",
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260730": [
+       "ar25",
+       "cd82",
+       "ft09",
+       "sp80",
+       "vc33"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "ft09",
+      "sp80",
+      "vc33"
+     ],
+     "games_lost_on_every_seed": []
+    }
+   },
+   "anchor_median_gain_C0": 3,
+   "retention": {
+    "C1_salience_inversion": {
+     "transfer_median_gain": 1,
+     "retention_ratio": 0.3333,
+     "computable": true,
+     "reason_if_not_computable": null
+    },
+    "C2_diag_roll": {
+     "transfer_median_gain": 4,
+     "retention_ratio": 1.3333,
+     "computable": true,
+     "reason_if_not_computable": null
+    }
+   }
+  },
+  "hud_given_frontier_on": {
+   "treatment_arm": "SHIP",
+   "control_arm": "FRONT",
+   "per_condition": {
+    "C0_real": {
+     "per_seed_gain": {
+      "20260726": 1,
+      "20260727": 1,
+      "20260728": 1,
+      "20260729": 1,
+      "20260730": 1
+     },
+     "median_gain": 1,
+     "min_gain": 1,
+     "max_gain": 1,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "r11l"
+      ],
+      "20260727": [
+       "r11l"
+      ],
+      "20260728": [
+       "r11l"
+      ],
+      "20260729": [
+       "r11l"
+      ],
+      "20260730": [
+       "r11l"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "r11l"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C1_salience_inversion": {
+     "per_seed_gain": {
+      "20260726": 0,
+      "20260727": 0,
+      "20260728": 0,
+      "20260729": 0,
+      "20260730": 0
+     },
+     "median_gain": 0,
+     "min_gain": 0,
+     "max_gain": 0,
+     "strict_per_seed_dominance": false,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [],
+     "games_lost_on_every_seed": []
+    },
+    "C2_diag_roll": {
+     "per_seed_gain": {
+      "20260726": 0,
+      "20260727": 0,
+      "20260728": 0,
+      "20260729": 0,
+      "20260730": 0
+     },
+     "median_gain": 0,
+     "min_gain": 0,
+     "max_gain": 0,
+     "strict_per_seed_dominance": false,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [],
+     "games_lost_on_every_seed": []
+    }
+   },
+   "anchor_median_gain_C0": 1,
+   "retention": {
+    "C1_salience_inversion": {
+     "transfer_median_gain": 0,
+     "retention_ratio": 0.0,
+     "computable": true,
+     "reason_if_not_computable": null
+    },
+    "C2_diag_roll": {
+     "transfer_median_gain": 0,
+     "retention_ratio": 0.0,
+     "computable": true,
+     "reason_if_not_computable": null
+    }
+   }
+  },
+  "hud_given_frontier_off": {
+   "treatment_arm": "HUDO",
+   "control_arm": "CTRL",
+   "per_condition": {
+    "C0_real": {
+     "per_seed_gain": {
+      "20260726": 2,
+      "20260727": 2,
+      "20260728": 2,
+      "20260729": 2,
+      "20260730": 2
+     },
+     "median_gain": 2,
+     "min_gain": 2,
+     "max_gain": 2,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "r11l",
+       "tn36"
+      ],
+      "20260727": [
+       "r11l",
+       "tn36"
+      ],
+      "20260728": [
+       "r11l",
+       "tn36"
+      ],
+      "20260729": [
+       "r11l",
+       "tn36"
+      ],
+      "20260730": [
+       "r11l",
+       "tn36"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "r11l",
+      "tn36"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C1_salience_inversion": {
+     "per_seed_gain": {
+      "20260726": 2,
+      "20260727": 2,
+      "20260728": 2,
+      "20260729": 2,
+      "20260730": 2
+     },
+     "median_gain": 2,
+     "min_gain": 2,
+     "max_gain": 2,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "r11l",
+       "tn36"
+      ],
+      "20260727": [
+       "r11l",
+       "tn36"
+      ],
+      "20260728": [
+       "r11l",
+       "tn36"
+      ],
+      "20260729": [
+       "r11l",
+       "tn36"
+      ],
+      "20260730": [
+       "r11l",
+       "tn36"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "r11l",
+      "tn36"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C2_diag_roll": {
+     "per_seed_gain": {
+      "20260726": 0,
+      "20260727": 0,
+      "20260728": 0,
+      "20260729": 0,
+      "20260730": 0
+     },
+     "median_gain": 0,
+     "min_gain": 0,
+     "max_gain": 0,
+     "strict_per_seed_dominance": false,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [],
+     "games_lost_on_every_seed": []
+    }
+   },
+   "anchor_median_gain_C0": 2,
+   "retention": {
+    "C1_salience_inversion": {
+     "transfer_median_gain": 2,
+     "retention_ratio": 1.0,
+     "computable": true,
+     "reason_if_not_computable": null
+    },
+    "C2_diag_roll": {
+     "transfer_median_gain": 0,
+     "retention_ratio": 0.0,
+     "computable": true,
+     "reason_if_not_computable": null
+    }
+   }
+  },
+  "both_levers_shipped_vs_preflip": {
+   "treatment_arm": "SHIP",
+   "control_arm": "CTRL",
+   "per_condition": {
+    "C0_real": {
+     "per_seed_gain": {
+      "20260726": 5,
+      "20260727": 6,
+      "20260728": 5,
+      "20260729": 5,
+      "20260730": 4
+     },
+     "median_gain": 5,
+     "min_gain": 4,
+     "max_gain": 6,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "r11l",
+       "s5i5"
+      ],
+      "20260727": [
+       "bp35",
+       "dc22",
+       "ft09",
+       "m0r0",
+       "r11l",
+       "s5i5"
+      ],
+      "20260728": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "r11l",
+       "s5i5"
+      ],
+      "20260729": [
+       "dc22",
+       "ft09",
+       "m0r0",
+       "r11l",
+       "s5i5"
+      ],
+      "20260730": [
+       "dc22",
+       "ft09",
+       "r11l",
+       "s5i5"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "dc22",
+      "ft09",
+      "r11l",
+      "s5i5"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C1_salience_inversion": {
+     "per_seed_gain": {
+      "20260726": 3,
+      "20260727": 4,
+      "20260728": 3,
+      "20260729": 2,
+      "20260730": 4
+     },
+     "median_gain": 3,
+     "min_gain": 2,
+     "max_gain": 4,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260727": [
+       "cn04",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260728": [
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ],
+      "20260729": [
+       "ft09",
+       "s5i5"
+      ],
+      "20260730": [
+       "bp35",
+       "ft09",
+       "m0r0",
+       "s5i5"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "ft09",
+      "s5i5"
+     ],
+     "games_lost_on_every_seed": []
+    },
+    "C2_diag_roll": {
+     "per_seed_gain": {
+      "20260726": 3,
+      "20260727": 5,
+      "20260728": 3,
+      "20260729": 4,
+      "20260730": 5
+     },
+     "median_gain": 4,
+     "min_gain": 3,
+     "max_gain": 5,
+     "strict_per_seed_dominance": true,
+     "no_seed_regresses": true,
+     "games_gained_per_seed": {
+      "20260726": [
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260727": [
+       "cd82",
+       "ft09",
+       "s5i5",
+       "sp80",
+       "vc33"
+      ],
+      "20260728": [
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260729": [
+       "cd82",
+       "ft09",
+       "sp80",
+       "vc33"
+      ],
+      "20260730": [
+       "ar25",
+       "cd82",
+       "ft09",
+       "sp80",
+       "vc33"
+      ]
+     },
+     "games_lost_per_seed": {
+      "20260726": [],
+      "20260727": [],
+      "20260728": [],
+      "20260729": [],
+      "20260730": []
+     },
+     "games_gained_on_every_seed": [
+      "ft09",
+      "sp80",
+      "vc33"
+     ],
+     "games_lost_on_every_seed": []
+    }
+   },
+   "anchor_median_gain_C0": 5,
+   "retention": {
+    "C1_salience_inversion": {
+     "transfer_median_gain": 3,
+     "retention_ratio": 0.6,
+     "computable": true,
+     "reason_if_not_computable": null
+    },
+    "C2_diag_roll": {
+     "transfer_median_gain": 4,
+     "retention_ratio": 0.8,
+     "computable": true,
+     "reason_if_not_computable": null
+    }
+   }
+  }
+ },
+ "leave_one_game_out_jackknife": {
+  "frontier_given_hud_off": {
+   "full_corpus_median_gain": 4,
+   "median_gain_with_each_game_held_out": {
+    "ar25": 4,
+    "bp35": 4,
+    "cd82": 4,
+    "cn04": 4,
+    "dc22": 3,
+    "ft09": 3,
+    "g50t": 4,
+    "ka59": 4,
+    "lf52": 4,
+    "lp85": 4,
+    "ls20": 4,
+    "m0r0": 3,
+    "r11l": 4,
+    "re86": 4,
+    "s5i5": 3,
+    "sb26": 4,
+    "sc25": 4,
+    "sk48": 4,
+    "sp80": 4,
+    "su15": 4,
+    "tn36": 4,
+    "tr87": 4,
+    "tu93": 4,
+    "vc33": 4,
+    "wa30": 4
+   },
+   "single_game_whose_removal_costs_the_most": "dc22",
+   "median_gain_without_that_game": 3,
+   "n_games_whose_removal_drops_the_gain_to_zero_or_below": 0,
+   "principle": "A hidden game is a fresh draw from the game distribution. If the whole measured gain rests on one or two public games, the expected gain on a fresh draw is close to zero even though the corpus-level number looks large. This jackknife measures that concentration directly; it is NOT a threshold refit (the levers have no corpus-fitted threshold to refit -- the frontier tier constants are ported verbatim from the external reference, and the HUD thresholds sit in saturated margins where every fold refits identically)."
+  },
+  "frontier_given_hud_on": {
+   "full_corpus_median_gain": 3,
+   "median_gain_with_each_game_held_out": {
+    "ar25": 3,
+    "bp35": 3,
+    "cd82": 3,
+    "cn04": 3,
+    "dc22": 2,
+    "ft09": 2,
+    "g50t": 3,
+    "ka59": 3,
+    "lf52": 3,
+    "lp85": 3,
+    "ls20": 3,
+    "m0r0": 2,
+    "r11l": 3,
+    "re86": 3,
+    "s5i5": 2,
+    "sb26": 3,
+    "sc25": 3,
+    "sk48": 3,
+    "sp80": 3,
+    "su15": 3,
+    "tn36": 4,
+    "tr87": 3,
+    "tu93": 3,
+    "vc33": 3,
+    "wa30": 3
+   },
+   "single_game_whose_removal_costs_the_most": "dc22",
+   "median_gain_without_that_game": 2,
+   "n_games_whose_removal_drops_the_gain_to_zero_or_below": 0,
+   "principle": "A hidden game is a fresh draw from the game distribution. If the whole measured gain rests on one or two public games, the expected gain on a fresh draw is close to zero even though the corpus-level number looks large. This jackknife measures that concentration directly; it is NOT a threshold refit (the levers have no corpus-fitted threshold to refit -- the frontier tier constants are ported verbatim from the external reference, and the HUD thresholds sit in saturated margins where every fold refits identically)."
+  },
+  "hud_given_frontier_on": {
+   "full_corpus_median_gain": 1,
+   "median_gain_with_each_game_held_out": {
+    "ar25": 1,
+    "bp35": 1,
+    "cd82": 1,
+    "cn04": 1,
+    "dc22": 1,
+    "ft09": 1,
+    "g50t": 1,
+    "ka59": 1,
+    "lf52": 1,
+    "lp85": 1,
+    "ls20": 1,
+    "m0r0": 1,
+    "r11l": 0,
+    "re86": 1,
+    "s5i5": 1,
+    "sb26": 1,
+    "sc25": 1,
+    "sk48": 1,
+    "sp80": 1,
+    "su15": 1,
+    "tn36": 1,
+    "tr87": 1,
+    "tu93": 1,
+    "vc33": 1,
+    "wa30": 1
+   },
+   "single_game_whose_removal_costs_the_most": "r11l",
+   "median_gain_without_that_game": 0,
+   "n_games_whose_removal_drops_the_gain_to_zero_or_below": 1,
+   "principle": "A hidden game is a fresh draw from the game distribution. If the whole measured gain rests on one or two public games, the expected gain on a fresh draw is close to zero even though the corpus-level number looks large. This jackknife measures that concentration directly; it is NOT a threshold refit (the levers have no corpus-fitted threshold to refit -- the frontier tier constants are ported verbatim from the external reference, and the HUD thresholds sit in saturated margins where every fold refits identically)."
+  },
+  "hud_given_frontier_off": {
+   "full_corpus_median_gain": 2,
+   "median_gain_with_each_game_held_out": {
+    "ar25": 2,
+    "bp35": 2,
+    "cd82": 2,
+    "cn04": 2,
+    "dc22": 2,
+    "ft09": 2,
+    "g50t": 2,
+    "ka59": 2,
+    "lf52": 2,
+    "lp85": 2,
+    "ls20": 2,
+    "m0r0": 2,
+    "r11l": 1,
+    "re86": 2,
+    "s5i5": 2,
+    "sb26": 2,
+    "sc25": 2,
+    "sk48": 2,
+    "sp80": 2,
+    "su15": 2,
+    "tn36": 1,
+    "tr87": 2,
+    "tu93": 2,
+    "vc33": 2,
+    "wa30": 2
+   },
+   "single_game_whose_removal_costs_the_most": "r11l",
+   "median_gain_without_that_game": 1,
+   "n_games_whose_removal_drops_the_gain_to_zero_or_below": 0,
+   "principle": "A hidden game is a fresh draw from the game distribution. If the whole measured gain rests on one or two public games, the expected gain on a fresh draw is close to zero even though the corpus-level number looks large. This jackknife measures that concentration directly; it is NOT a threshold refit (the levers have no corpus-fitted threshold to refit -- the frontier tier constants are ported verbatim from the external reference, and the HUD thresholds sit in saturated margins where every fold refits identically)."
+  },
+  "both_levers_shipped_vs_preflip": {
+   "full_corpus_median_gain": 5,
+   "median_gain_with_each_game_held_out": {
+    "ar25": 5,
+    "bp35": 5,
+    "cd82": 5,
+    "cn04": 5,
+    "dc22": 4,
+    "ft09": 4,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 5,
+    "lp85": 5,
+    "ls20": 5,
+    "m0r0": 4,
+    "r11l": 4,
+    "re86": 5,
+    "s5i5": 4,
+    "sb26": 5,
+    "sc25": 5,
+    "sk48": 5,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 5,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 5,
+    "wa30": 5
+   },
+   "single_game_whose_removal_costs_the_most": "dc22",
+   "median_gain_without_that_game": 4,
+   "n_games_whose_removal_drops_the_gain_to_zero_or_below": 0,
+   "principle": "A hidden game is a fresh draw from the game distribution. If the whole measured gain rests on one or two public games, the expected gain on a fresh draw is close to zero even though the corpus-level number looks large. This jackknife measures that concentration directly; it is NOT a threshold refit (the levers have no corpus-fitted threshold to refit -- the frontier tier constants are ported verbatim from the external reference, and the HUD thresholds sit in saturated margins where every fold refits identically)."
+  }
+ },
+ "efficiency_axis": {
+  "frontier_given_hud_off": {
+   "C0_real": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": -35,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C1_salience_inversion": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": -11,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C2_diag_roll": {
+    "n_commonly_won_cells": 5,
+    "median_delta_actions_to_first_levelup": 316,
+    "median_delta_states_expanded": 29,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   }
+  },
+  "frontier_given_hud_on": {
+   "C0_real": {
+    "n_commonly_won_cells": 40,
+    "median_delta_actions_to_first_levelup": -43.0,
+    "median_delta_states_expanded": 0.0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C1_salience_inversion": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": -11,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C2_diag_roll": {
+    "n_commonly_won_cells": 5,
+    "median_delta_actions_to_first_levelup": 316,
+    "median_delta_states_expanded": 29,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   }
+  },
+  "hud_given_frontier_on": {
+   "C0_real": {
+    "n_commonly_won_cells": 55,
+    "median_delta_actions_to_first_levelup": 0,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C1_salience_inversion": {
+    "n_commonly_won_cells": 51,
+    "median_delta_actions_to_first_levelup": 0,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C2_diag_roll": {
+    "n_commonly_won_cells": 25,
+    "median_delta_actions_to_first_levelup": 0,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   }
+  },
+  "hud_given_frontier_off": {
+   "C0_real": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": 0,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C1_salience_inversion": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": 0,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C2_diag_roll": {
+    "n_commonly_won_cells": 5,
+    "median_delta_actions_to_first_levelup": 0,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   }
+  },
+  "both_levers_shipped_vs_preflip": {
+   "C0_real": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": -35,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C1_salience_inversion": {
+    "n_commonly_won_cells": 35,
+    "median_delta_actions_to_first_levelup": -11,
+    "median_delta_states_expanded": 0,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   },
+   "C2_diag_roll": {
+    "n_commonly_won_cells": 5,
+    "median_delta_actions_to_first_levelup": 316,
+    "median_delta_states_expanded": 29,
+    "note": "negative = treatment cheaper. Only cells BOTH arms won are compared."
+   }
+  }
+ },
+ "hud_mask_resolution_mechanism_evidence": {
+  "HUDO|C0_real": {
+   "n_cells": 125,
+   "n_cells_mask_resolved": 95,
+   "fraction_resolved": 0.76,
+   "n_games_resolved_on_every_seed": 19,
+   "per_game_seeds_resolved": {
+    "ar25": 5,
+    "bp35": 5,
+    "cd82": 5,
+    "cn04": 0,
+    "dc22": 5,
+    "ft09": 5,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 5,
+    "lp85": 0,
+    "ls20": 0,
+    "m0r0": 5,
+    "r11l": 5,
+    "re86": 5,
+    "s5i5": 5,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 5,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 5,
+    "wa30": 5
+   }
+  },
+  "HUDO|C1_salience_inversion": {
+   "n_cells": 125,
+   "n_cells_mask_resolved": 95,
+   "fraction_resolved": 0.76,
+   "n_games_resolved_on_every_seed": 19,
+   "per_game_seeds_resolved": {
+    "ar25": 5,
+    "bp35": 5,
+    "cd82": 5,
+    "cn04": 0,
+    "dc22": 5,
+    "ft09": 5,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 5,
+    "lp85": 0,
+    "ls20": 0,
+    "m0r0": 5,
+    "r11l": 5,
+    "re86": 5,
+    "s5i5": 5,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 5,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 5,
+    "wa30": 5
+   }
+  },
+  "HUDO|C2_diag_roll": {
+   "n_cells": 125,
+   "n_cells_mask_resolved": 65,
+   "fraction_resolved": 0.52,
+   "n_games_resolved_on_every_seed": 13,
+   "per_game_seeds_resolved": {
+    "ar25": 0,
+    "bp35": 0,
+    "cd82": 5,
+    "cn04": 0,
+    "dc22": 5,
+    "ft09": 5,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 0,
+    "lp85": 0,
+    "ls20": 5,
+    "m0r0": 0,
+    "r11l": 0,
+    "re86": 5,
+    "s5i5": 5,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 0,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 0,
+    "wa30": 5
+   }
+  },
+  "SHIP|C0_real": {
+   "n_cells": 125,
+   "n_cells_mask_resolved": 95,
+   "fraction_resolved": 0.76,
+   "n_games_resolved_on_every_seed": 19,
+   "per_game_seeds_resolved": {
+    "ar25": 5,
+    "bp35": 5,
+    "cd82": 5,
+    "cn04": 0,
+    "dc22": 5,
+    "ft09": 5,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 5,
+    "lp85": 0,
+    "ls20": 0,
+    "m0r0": 5,
+    "r11l": 5,
+    "re86": 5,
+    "s5i5": 5,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 5,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 5,
+    "wa30": 5
+   }
+  },
+  "SHIP|C1_salience_inversion": {
+   "n_cells": 125,
+   "n_cells_mask_resolved": 95,
+   "fraction_resolved": 0.76,
+   "n_games_resolved_on_every_seed": 19,
+   "per_game_seeds_resolved": {
+    "ar25": 5,
+    "bp35": 5,
+    "cd82": 5,
+    "cn04": 0,
+    "dc22": 5,
+    "ft09": 5,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 5,
+    "lp85": 0,
+    "ls20": 0,
+    "m0r0": 5,
+    "r11l": 5,
+    "re86": 5,
+    "s5i5": 5,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 5,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 5,
+    "wa30": 5
+   }
+  },
+  "SHIP|C2_diag_roll": {
+   "n_cells": 125,
+   "n_cells_mask_resolved": 65,
+   "fraction_resolved": 0.52,
+   "n_games_resolved_on_every_seed": 13,
+   "per_game_seeds_resolved": {
+    "ar25": 0,
+    "bp35": 0,
+    "cd82": 5,
+    "cn04": 0,
+    "dc22": 5,
+    "ft09": 5,
+    "g50t": 5,
+    "ka59": 5,
+    "lf52": 0,
+    "lp85": 0,
+    "ls20": 5,
+    "m0r0": 0,
+    "r11l": 0,
+    "re86": 5,
+    "s5i5": 5,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 5,
+    "su15": 5,
+    "tn36": 0,
+    "tr87": 5,
+    "tu93": 5,
+    "vc33": 0,
+    "wa30": 5
+   }
+  }
+ },
+ "per_game_win_matrix_seeds_won_of_5": {
+  "C0_real": {
+   "ar25": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "bp35": {
+    "CTRL": 0,
+    "FRONT": 1,
+    "HUDO": 0,
+    "SHIP": 1
+   },
+   "cd82": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "cn04": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "dc22": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "ft09": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "g50t": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "ka59": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "lf52": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "lp85": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "ls20": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "m0r0": {
+    "CTRL": 0,
+    "FRONT": 4,
+    "HUDO": 0,
+    "SHIP": 4
+   },
+   "r11l": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "re86": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "s5i5": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "sb26": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sc25": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sk48": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sp80": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "su15": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "tn36": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 0
+   },
+   "tr87": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "tu93": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "vc33": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "wa30": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   }
+  },
+  "C1_salience_inversion": {
+   "ar25": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "bp35": {
+    "CTRL": 0,
+    "FRONT": 1,
+    "HUDO": 0,
+    "SHIP": 1
+   },
+   "cd82": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "cn04": {
+    "CTRL": 0,
+    "FRONT": 1,
+    "HUDO": 0,
+    "SHIP": 1
+   },
+   "dc22": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "ft09": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "g50t": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "ka59": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "lf52": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "lp85": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "ls20": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "m0r0": {
+    "CTRL": 0,
+    "FRONT": 4,
+    "HUDO": 0,
+    "SHIP": 4
+   },
+   "r11l": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 0
+   },
+   "re86": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "s5i5": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "sb26": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sc25": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sk48": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sp80": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "su15": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "tn36": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 0
+   },
+   "tr87": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "tu93": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "vc33": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "wa30": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   }
+  },
+  "C2_diag_roll": {
+   "ar25": {
+    "CTRL": 0,
+    "FRONT": 1,
+    "HUDO": 0,
+    "SHIP": 1
+   },
+   "bp35": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "cd82": {
+    "CTRL": 0,
+    "FRONT": 3,
+    "HUDO": 0,
+    "SHIP": 3
+   },
+   "cn04": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "dc22": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "ft09": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "g50t": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "ka59": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "lf52": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "lp85": {
+    "CTRL": 5,
+    "FRONT": 5,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "ls20": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "m0r0": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "r11l": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "re86": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "s5i5": {
+    "CTRL": 0,
+    "FRONT": 1,
+    "HUDO": 0,
+    "SHIP": 1
+   },
+   "sb26": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sc25": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sk48": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "sp80": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "su15": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "tn36": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "tr87": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "tu93": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   },
+   "vc33": {
+    "CTRL": 0,
+    "FRONT": 5,
+    "HUDO": 0,
+    "SHIP": 5
+   },
+   "wa30": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 0,
+    "SHIP": 0
+   }
+  }
+ },
+ "games_where_adding_frontier_destroys_a_hud_win": {
+  "C0_real": [
+   "tn36"
+  ],
+  "C1_salience_inversion": [
+   "r11l",
+   "tn36"
+  ],
+  "C2_diag_roll": []
+ },
+ "flagged_adversarial": false,
+ "arm_flag_resolution_receipt": {
+  "CTRL": {
+   "requested": {
+    "tier_exhaustion": false,
+    "tier_uniform_random": false,
+    "tier_click_vocab_only": false,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": false,
+    "hud_mask_collapse_guard": false,
+    "hud_mask_stage2_confirm": false
+   },
+   "resolved_on_explorer": {
+    "tier_exhaustion": false,
+    "tier_uniform_random": false,
+    "tier_click_vocab_only": false,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": false,
+    "hud_mask_collapse_guard": false,
+    "hud_mask_stage2_confirm": false
+   },
+   "all_match": true,
+   "adapter_module_imported": false,
+   "has_plan": false,
+   "explorer_has_game_id": false
+  },
+  "FRONT": {
+   "requested": {
+    "tier_exhaustion": true,
+    "tier_uniform_random": true,
+    "tier_click_vocab_only": true,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": false,
+    "hud_mask_collapse_guard": false,
+    "hud_mask_stage2_confirm": false
+   },
+   "resolved_on_explorer": {
+    "tier_exhaustion": true,
+    "tier_uniform_random": true,
+    "tier_click_vocab_only": true,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": false,
+    "hud_mask_collapse_guard": false,
+    "hud_mask_stage2_confirm": false
+   },
+   "all_match": true,
+   "adapter_module_imported": false,
+   "has_plan": false,
+   "explorer_has_game_id": false
+  },
+  "HUDO": {
+   "requested": {
+    "tier_exhaustion": false,
+    "tier_uniform_random": false,
+    "tier_click_vocab_only": false,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": true,
+    "hud_mask_collapse_guard": true,
+    "hud_mask_stage2_confirm": true
+   },
+   "resolved_on_explorer": {
+    "tier_exhaustion": false,
+    "tier_uniform_random": false,
+    "tier_click_vocab_only": false,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": true,
+    "hud_mask_collapse_guard": true,
+    "hud_mask_stage2_confirm": true
+   },
+   "all_match": true,
+   "adapter_module_imported": false,
+   "has_plan": false,
+   "explorer_has_game_id": false
+  },
+  "SHIP": {
+   "requested": {
+    "tier_exhaustion": true,
+    "tier_uniform_random": true,
+    "tier_click_vocab_only": true,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": true,
+    "hud_mask_collapse_guard": true,
+    "hud_mask_stage2_confirm": true
+   },
+   "resolved_on_explorer": {
+    "tier_exhaustion": true,
+    "tier_uniform_random": true,
+    "tier_click_vocab_only": true,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": true,
+    "hud_mask_collapse_guard": true,
+    "hud_mask_stage2_confirm": true
+   },
+   "all_match": true,
+   "adapter_module_imported": false,
+   "has_plan": false,
+   "explorer_has_game_id": false
+  }
+ },
+ "acceptance_gates": {
+  "frontier_given_hud_off|C1_salience_inversion": {
+   "lever": "frontier",
+   "is_headline_pair_for_this_lever": true,
+   "contrast": "frontier_given_hud_off",
+   "treatment_arm": "FRONT",
+   "control_arm": "CTRL",
+   "perturbation_condition": "C1_salience_inversion",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.76,
+   "behavioural_dose_control_fraction_moved": 0.0,
+   "anchor_median_gain_C0": 4,
+   "perturbed_median_gain": 3,
+   "perturbed_per_seed_gain": {
+    "20260726": 3,
+    "20260727": 4,
+    "20260728": 3,
+    "20260729": 2,
+    "20260730": 4
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": true,
+   "retention_ratio": 0.75,
+   "games_gained_on_every_seed_under_perturbation": [
+    "ft09",
+    "s5i5"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+  },
+  "frontier_given_hud_off|C2_diag_roll": {
+   "lever": "frontier",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "frontier_given_hud_off",
+   "treatment_arm": "FRONT",
+   "control_arm": "CTRL",
+   "perturbation_condition": "C2_diag_roll",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.84,
+   "behavioural_dose_control_fraction_moved": 0.88,
+   "anchor_median_gain_C0": 4,
+   "perturbed_median_gain": 4,
+   "perturbed_per_seed_gain": {
+    "20260726": 3,
+    "20260727": 5,
+    "20260728": 3,
+    "20260729": 4,
+    "20260730": 5
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": true,
+   "retention_ratio": 1.0,
+   "games_gained_on_every_seed_under_perturbation": [
+    "ft09",
+    "sp80",
+    "vc33"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+  },
+  "frontier_given_hud_on|C1_salience_inversion": {
+   "lever": "frontier",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "frontier_given_hud_on",
+   "treatment_arm": "SHIP",
+   "control_arm": "HUDO",
+   "perturbation_condition": "C1_salience_inversion",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.76,
+   "behavioural_dose_control_fraction_moved": 0.0,
+   "anchor_median_gain_C0": 3,
+   "perturbed_median_gain": 1,
+   "perturbed_per_seed_gain": {
+    "20260726": 1,
+    "20260727": 2,
+    "20260728": 1,
+    "20260729": 0,
+    "20260730": 2
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": false,
+   "retention_ratio": 0.3333,
+   "games_gained_on_every_seed_under_perturbation": [
+    "ft09",
+    "s5i5"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [
+    "r11l",
+    "tn36"
+   ],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+  },
+  "frontier_given_hud_on|C2_diag_roll": {
+   "lever": "frontier",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "frontier_given_hud_on",
+   "treatment_arm": "SHIP",
+   "control_arm": "HUDO",
+   "perturbation_condition": "C2_diag_roll",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.88,
+   "behavioural_dose_control_fraction_moved": 0.92,
+   "anchor_median_gain_C0": 3,
+   "perturbed_median_gain": 4,
+   "perturbed_per_seed_gain": {
+    "20260726": 3,
+    "20260727": 5,
+    "20260728": 3,
+    "20260729": 4,
+    "20260730": 5
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": true,
+   "retention_ratio": 1.3333,
+   "games_gained_on_every_seed_under_perturbation": [
+    "ft09",
+    "sp80",
+    "vc33"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+  },
+  "hud_given_frontier_on|C2_diag_roll": {
+   "lever": "hud",
+   "is_headline_pair_for_this_lever": true,
+   "contrast": "hud_given_frontier_on",
+   "treatment_arm": "SHIP",
+   "control_arm": "FRONT",
+   "perturbation_condition": "C2_diag_roll",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.88,
+   "behavioural_dose_control_fraction_moved": 0.84,
+   "anchor_median_gain_C0": 1,
+   "perturbed_median_gain": 0,
+   "perturbed_per_seed_gain": {
+    "20260726": 0,
+    "20260727": 0,
+    "20260728": 0,
+    "20260729": 0,
+    "20260730": 0
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": false,
+   "retention_ratio": 0.0,
+   "games_gained_on_every_seed_under_perturbation": [],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
+  },
+  "hud_given_frontier_on|C1_salience_inversion": {
+   "lever": "hud",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "hud_given_frontier_on",
+   "treatment_arm": "SHIP",
+   "control_arm": "FRONT",
+   "perturbation_condition": "C1_salience_inversion",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.76,
+   "behavioural_dose_control_fraction_moved": 0.76,
+   "anchor_median_gain_C0": 1,
+   "perturbed_median_gain": 0,
+   "perturbed_per_seed_gain": {
+    "20260726": 0,
+    "20260727": 0,
+    "20260728": 0,
+    "20260729": 0,
+    "20260730": 0
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": false,
+   "retention_ratio": 0.0,
+   "games_gained_on_every_seed_under_perturbation": [],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
+  },
+  "hud_given_frontier_off|C2_diag_roll": {
+   "lever": "hud",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "hud_given_frontier_off",
+   "treatment_arm": "HUDO",
+   "control_arm": "CTRL",
+   "perturbation_condition": "C2_diag_roll",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "tn36",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "tn36",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "tn36",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "tn36",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "tn36",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.92,
+   "behavioural_dose_control_fraction_moved": 0.88,
+   "anchor_median_gain_C0": 2,
+   "perturbed_median_gain": 0,
+   "perturbed_per_seed_gain": {
+    "20260726": 0,
+    "20260727": 0,
+    "20260728": 0,
+    "20260729": 0,
+    "20260730": 0
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": false,
+   "retention_ratio": 0.0,
+   "games_gained_on_every_seed_under_perturbation": [],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
+  },
+  "hud_given_frontier_off|C1_salience_inversion": {
+   "lever": "hud",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "hud_given_frontier_off",
+   "treatment_arm": "HUDO",
+   "control_arm": "CTRL",
+   "perturbation_condition": "C1_salience_inversion",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": false,
+   "witness_cells_at_C0": [
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "tn36",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "tn36",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "tn36",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "tn36",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "tn36",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.0,
+   "behavioural_dose_control_fraction_moved": 0.0,
+   "anchor_median_gain_C0": 2,
+   "perturbed_median_gain": 2,
+   "perturbed_per_seed_gain": {
+    "20260726": 2,
+    "20260727": 2,
+    "20260728": 2,
+    "20260729": 2,
+    "20260730": 2
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": true,
+   "retention_ratio": 1.0,
+   "games_gained_on_every_seed_under_perturbation": [
+    "r11l",
+    "tn36"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": false,
+   "reason_if_not_evaluable": "the perturbation is behaviourally INERT on the treatment arm HUDO (0/125 cells moved), so the retention ratio here is arithmetic, not robustness. Reported as UNINTERPRETABLE rather than as a survival.",
+   "verdict": "UNINTERPRETABLE_INERT_OR_NO_ANCHOR"
+  },
+  "both_levers_shipped_vs_preflip|C1_salience_inversion": {
+   "lever": "both",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "both_levers_shipped_vs_preflip",
+   "treatment_arm": "SHIP",
+   "control_arm": "CTRL",
+   "perturbation_condition": "C1_salience_inversion",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.76,
+   "behavioural_dose_control_fraction_moved": 0.0,
+   "anchor_median_gain_C0": 5,
+   "perturbed_median_gain": 3,
+   "perturbed_per_seed_gain": {
+    "20260726": 3,
+    "20260727": 4,
+    "20260728": 3,
+    "20260729": 2,
+    "20260730": 4
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": true,
+   "retention_ratio": 0.6,
+   "games_gained_on_every_seed_under_perturbation": [
+    "ft09",
+    "s5i5"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+  },
+  "both_levers_shipped_vs_preflip|C2_diag_roll": {
+   "lever": "both",
+   "is_headline_pair_for_this_lever": false,
+   "contrast": "both_levers_shipped_vs_preflip",
+   "treatment_arm": "SHIP",
+   "control_arm": "CTRL",
+   "perturbation_condition": "C2_diag_roll",
+   "PRECONDITION_pass_region_nonempty": true,
+   "PRECONDITION_anchor_median_gain_C0_positive": true,
+   "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": true,
+   "witness_cells_at_C0": [
+    {
+     "game": "dc22",
+     "seed": 20260726
+    },
+    {
+     "game": "ft09",
+     "seed": 20260726
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260726
+    },
+    {
+     "game": "r11l",
+     "seed": 20260726
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726
+    },
+    {
+     "game": "bp35",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260727
+    },
+    {
+     "game": "ft09",
+     "seed": 20260727
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260727
+    },
+    {
+     "game": "r11l",
+     "seed": 20260727
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260727
+    },
+    {
+     "game": "dc22",
+     "seed": 20260728
+    },
+    {
+     "game": "ft09",
+     "seed": 20260728
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260728
+    },
+    {
+     "game": "r11l",
+     "seed": 20260728
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260728
+    },
+    {
+     "game": "dc22",
+     "seed": 20260729
+    },
+    {
+     "game": "ft09",
+     "seed": 20260729
+    },
+    {
+     "game": "m0r0",
+     "seed": 20260729
+    },
+    {
+     "game": "r11l",
+     "seed": 20260729
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260729
+    },
+    {
+     "game": "dc22",
+     "seed": 20260730
+    },
+    {
+     "game": "ft09",
+     "seed": 20260730
+    },
+    {
+     "game": "r11l",
+     "seed": 20260730
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260730
+    }
+   ],
+   "behavioural_dose_treatment_fraction_moved": 0.88,
+   "behavioural_dose_control_fraction_moved": 0.88,
+   "anchor_median_gain_C0": 5,
+   "perturbed_median_gain": 4,
+   "perturbed_per_seed_gain": {
+    "20260726": 3,
+    "20260727": 5,
+    "20260728": 3,
+    "20260729": 4,
+    "20260730": 5
+   },
+   "perturbed_no_seed_regresses": true,
+   "perturbed_strict_per_seed_dominance": true,
+   "retention_ratio": 0.8,
+   "games_gained_on_every_seed_under_perturbation": [
+    "ft09",
+    "sp80",
+    "vc33"
+   ],
+   "games_lost_on_every_seed_under_perturbation": [],
+   "evaluable": true,
+   "reason_if_not_evaluable": null,
+   "verdict": "SURVIVES_CONVENTION_VIOLATION"
+  }
+ },
+ "acceptance_gate_headline_per_lever": {
+  "frontier": {
+   "gate": "frontier_given_hud_off|C1_salience_inversion",
+   "verdict": "SURVIVES_CONVENTION_VIOLATION",
+   "anchor_median_gain_C0": 4,
+   "perturbed_median_gain": 3,
+   "retention_ratio": 0.75
+  },
+  "hud": {
+   "gate": "hud_given_frontier_on|C2_diag_roll",
+   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION",
+   "anchor_median_gain_C0": 1,
+   "perturbed_median_gain": 0,
+   "retention_ratio": 0.0
+  }
+ },
+ "acceptance_gates_all_evaluable": false,
+ "acceptance_gates_all_passed": false,
+ "honest_verdict": "complete_convention_perturbation_transfer_battery_frontier_survives_hud_gain_does_not_survive",
+ "absolute_win_level_context": {
+  "C0_real": {
+   "CTRL": [
+    7,
+    7,
+    7,
+    7,
+    7
+   ],
+   "FRONT": [
+    11,
+    12,
+    11,
+    11,
+    10
+   ],
+   "HUDO": [
+    9,
+    9,
+    9,
+    9,
+    9
+   ],
+   "SHIP": [
+    12,
+    13,
+    12,
+    12,
+    11
+   ]
+  },
+  "C1_salience_inversion": {
+   "CTRL": [
+    7,
+    7,
+    7,
+    7,
+    7
+   ],
+   "FRONT": [
+    10,
+    11,
+    10,
+    9,
+    11
+   ],
+   "HUDO": [
+    9,
+    9,
+    9,
+    9,
+    9
+   ],
+   "SHIP": [
+    10,
+    11,
+    10,
+    9,
+    11
+   ]
+  },
+  "C2_diag_roll": {
+   "CTRL": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "FRONT": [
+    4,
+    6,
+    4,
+    5,
+    6
+   ],
+   "HUDO": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "SHIP": [
+    4,
+    6,
+    4,
+    5,
+    6
+   ]
+  }
+ },
+ "key_findings": {
+  "1_baseline_independently_replicated": {
+   "claim": "The explicitly-pinned pre-flip control reproduces the historical baseline win set exactly, so the drift-free control is sound.",
+   "measured_CTRL_C0_win_set": [
+    "cd82",
+    "lf52",
+    "lp85",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "historical_arm_A_real_win_set": [
+    "cd82",
+    "lf52",
+    "lp85",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "identical": true,
+   "why_this_matters": "Arms A and B2 in the upstream harness pin only a subset of the gated flags, so since the 2026-07-25 flips they inherit the treatment defaults and can no longer serve as controls. This arm pins all seven, and still lands on the same 7 games."
+  },
+  "2_frontier_lever_survives_both_convention_violations": {
+   "claim": "The frontier lever's gain degrades but stays positive when the absolute-colour salience convention it keys on is inverted, and is undiminished under the geometric roll.",
+   "anchor_median_gain_C0": 4,
+   "retention": {
+    "C1_salience_inversion": 0.75,
+    "C2_diag_roll": 1.0
+   },
+   "strict_per_seed_dominance_in_every_condition": true,
+   "no_seed_ever_regresses": true,
+   "gain_is_spread_not_concentrated": {
+    "n_games_whose_removal_drops_the_gain_to_zero": 0,
+    "games_that_contribute": [
+     "dc22",
+     "ft09",
+     "m0r0",
+     "s5i5"
+    ]
+   }
+  },
+  "3_hud_lever_shipped_gain_is_one_game_and_does_not_survive": {
+   "claim": "The HUD lever's marginal gain in the shipped configuration is exactly one game (r11l) and it is zero on every seed under both perturbations.",
+   "anchor_median_gain_C0": 1,
+   "retention": {
+    "C1_salience_inversion": 0.0,
+    "C2_diag_roll": 0.0
+   },
+   "single_game_carrying_the_whole_gain": "r11l",
+   "median_gain_without_that_game": 0
+  },
+  "4_the_two_perturbations_break_the_hud_gain_by_DIFFERENT_mechanisms": {
+   "claim": "Under the geometric roll the detector itself stops working; under salience inversion the detector works perfectly and the frontier lever destroys the win instead. These are separate failure modes and the artifact does not merge them.",
+   "C2_diag_roll_mask_resolution_collapses": {
+    "corpus_fraction_resolved_C0": 0.76,
+    "corpus_fraction_resolved_C2": 0.52,
+    "r11l_seeds_mask_resolved_C0": 5,
+    "r11l_seeds_mask_resolved_C2": 0,
+    "interpretation": "Moving every edge-hugging bar 3 cells inward takes r11l's mask from resolving on 5 of 5 seeds to 0 of 5. The edge-adjacency convention is load-bearing, exactly as the predicate's `y1 < tol` source predicts.",
+    "HONEST_CONFOUND": "Under C2 r11l is unwinnable for EVERY arm (including the control), so the vanished gain alone would not prove the mask is why. The mask-resolution collapse is the independent mechanism evidence; the win-level evidence is confounded and is not relied on."
+   },
+   "C1_salience_inversion_mask_is_UNAFFECTED_but_the_win_is_lost": {
+    "corpus_fraction_resolved_C0": 0.76,
+    "corpus_fraction_resolved_C1": 0.76,
+    "r11l_seeds_mask_resolved_C1": 5,
+    "r11l_seeds_won_C1": {
+     "CTRL": 0,
+     "FRONT": 0,
+     "HUDO": 5,
+     "SHIP": 0
+    },
+    "interpretation": "The mask resolution is IDENTICAL to C0 (the Stage-1 predicate is colour-invariant by construction, and the static dose witness measured zero HUD-mask change on all 25 games). HUD-alone still wins r11l on 5 of 5 seeds. The shipped both-levers-on arm wins it on 0 of 5. So under inverted salience the FRONTIER lever destroys the HUD's win, with the detector working normally."
+   }
+  },
+  "5_NEW_destructive_interaction_visible_on_REAL_games_today": {
+   "claim": "On the unperturbed real games, in today's shipped configuration, the frontier lever costs a game that the HUD lever alone wins on every seed. Neither flip's own A/B could see this, because both of their controls also lose that game.",
+   "games_HUDO_wins_and_SHIP_loses_on_every_seed": {
+    "C0_real": [
+     "tn36"
+    ],
+    "C1_salience_inversion": [
+     "r11l",
+     "tn36"
+    ],
+    "C2_diag_roll": []
+   },
+   "tn36_win_matrix_C0": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 0
+   },
+   "r11l_win_matrix_C0": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 5
+   },
+   "mechanism": "On tn36 at C0 both HUDO and SHIP resolve the SAME 61-cell mask, so the difference is not the mask. HUDO expands 52 graph nodes and banks the level in 1506 actions; SHIP expands 17 and never reaches it. The global tier barrier prunes the branch that contains the win.",
+   "what_this_does_and_does_not_argue": "It does NOT argue for un-flipping either lever: the shipped configuration still has the highest median win count of the four arms (see per_arm_condition_wins). It is a specific, reproducible, previously unmeasured cost, and the decision is the operator's."
+  }
+ },
+ "headline": "Frontier lever: gain SURVIVES both convention violations (median +4 -> +3 under salience inversion, +4 under the geometric roll; strict per-seed dominance in all three conditions; no single game carries it). HUD lever: its shipped marginal gain is one game (r11l) and is 0 on every seed under BOTH perturbations -- under the roll because the mask stops resolving (5/5 -> 0/5 seeds), under salience inversion because the frontier lever destroys the win while the mask is intact. Separately, on REAL unperturbed games the two levers interact destructively: HUD-alone wins tn36 on 5/5 seeds, the shipped both-on config on 0/5. NO hidden-game transfer is claimed or measured.",
+ "preconditions_checked": [
+  {
+   "resource": "offline_arcade_environment_files",
+   "available": true,
+   "detail": "25 games instantiated from environment_files"
+  },
+  {
+   "resource": "no_per_game_GameAdapter_on_the_measured_path",
+   "available": true,
+   "detail": "carnot.agentic.arc_game_adapters absent from sys.modules after constructing every arm"
+  },
+  {
+   "resource": "all_seven_gated_flags_resolve_as_pinned",
+   "available": true,
+   "detail": "per-arm requested vs resolved-on-explorer comparison in arm_flag_resolution_receipt"
+  },
+  {
+   "resource": "no_llm_no_gpu_required",
+   "available": true,
+   "detail": "StepwiseExplorer has no proposer parameter; llm_disabled=True"
+  }
+ ],
+ "principle_annotations": {
+  "honest_verdict": "Terminal-prefixed self-declared state so the conductor reconciler can classify without re-running; a non-prefixed verdict risks false-positive partial classification.",
+  "inference_substrate": "Declares that no model was loaded, so the linter applies the offline-arcade duration floor instead of the 60s live-LLM floor; without it a fast-but-real run reads as fabrication.",
+  "solve_provenance": "development_proxy, because this runs the offline arcade over environment_files with the public games. It is NOT live_agent_self_discovery and NOT evidence the live agent self-discovers a hidden game.",
+  "verifier_is_oracle": "False, and no verifier-moat or verifier-value claim is made: the levers under test are a search-ordering barrier and a node-identity mask, not verifiers. Correctness is the real env's own levels_completed counter, read only for SCORING.",
+  "random_seed": "Determinism is the precondition for reproducibility; every cell is seeded and the per-arm determinism was MEASURED, not assumed.",
+  "reproducibility_checksum": "Content hash over every (arm, game, condition, seed, levels, actions, states_expanded, hud_mask_resolved) tuple, so a replication can be compared exactly.",
+  "duration_s": "Real compute takes wall-clock time; summed per-cell wall time is the load-bearing fabrication signal.",
+  "preconditions_checked": "Records WHICH resources were verified before measuring, pre-empting the failure mode where an agent silently lacks the resource and synthesises a passing artifact.",
+  "pass_region_witness": "A gate whose pass region is empty is not a gate; this emits the concrete cells that make each anchor non-zero.",
+  "behavioural_dose_witness": "A metric that cannot causally depend on the intervention is not a measurement; this proves each perturbation actually moved each arm before any verdict is read.",
+  "leave_one_game_out_jackknife": "A hidden game is a fresh draw from the game distribution; concentration of the gain on one or two public games bounds the expected fresh-draw gain."
+ },
+ "scope_and_limits": {
+  "what_this_measures": "Whether each shipped lever's measured gain depends on a CONVENTION that the 25 public games happen to share and an unseen game need not: absolute-colour salience for the frontier tier predicate, edge-adjacency for the HUD bar detector. This is the named, falsifiable mechanism by which a game-AGNOSTIC lever fails on a game it has never seen.",
+  "what_this_does_NOT_measure": [
+   "A hidden-game score. The scored path is operator-only and no hidden game is available locally; all 25 public games are already solved.",
+   "Whether the gain survives in the FULL scored configuration. This battery runs the bare StepwiseExplorer core (CarnotAgentPolicy, force_explore, no proposer). The scored E3AgentPolicy resolves the SAME seven lever values -- verified -- but runs them alongside a value head, candidate router, frame-change scorer, goal bias, epistemic ledger and the LLM induce/verify/plan cascade, none of which are present here, and at target_levels=3 rather than 1.",
+   "Selection overfit to the 25-game corpus as such. The jackknife bounds how concentrated the gain is across games, but the corpus itself is the one the levers were iterated against and no measurement here can remove that.",
+   "Conventions nobody enumerated. This battery bounds the two KNOWN convention risks; it cannot certify transfer."
+  ],
+  "corrected_caveat_wording_for_the_two_flips": "Measured on the 25 PUBLIC games with the LLM-free StepwiseExplorer core -- NO per-game GameAdapter, no banked plan, no trained value head or candidate router (verified: arc_game_adapters is absent from sys.modules after constructing every arm, and StepwiseExplorer takes no game-id parameter at all). The earlier caveat 'public games WITH per-game adaptation' was WRONG on the adaptation half: the measurement was already adapter-free, i.e. the generic solver. What remains undemonstrated is (i) that the effect survives on games outside the corpus the levers were selected against, and (ii) that it survives inside the full scored E3 cascade.",
+  "flags_flipped_by_this_experiment": "NONE. This is a measurement task; no SUBMITTED_* default and no shipped configuration was changed."
+ },
+ "code_stability_receipt": {
+  "concern": "arc_competition_agent.py was modified by a concurrent conductor session partway through the battery; cells measured before and after that edit would otherwise be a silent confound.",
+  "changed_hunks": [
+   "_load_submitted_candidate_router now returns load_online_click_target_router (reachable only from E3AgentPolicy, which this battery does not run)",
+   "a candidate_router.observe_click_outcome(...) call in StepwiseExplorer, guarded by `candidate_router is not None`"
+  ],
+  "code_path_analysis": {
+   "CarnotAgentPolicy_candidate_router_default": "None",
+   "explorer_candidate_router_observed_at_runtime": null,
+   "changed_loader_reachable_from_measured_path": false
+  },
+  "empirical_reproduction": {
+   "n_cells_rerun_against_post_edit_tree": 36,
+   "n_identical": 36,
+   "n_different": 0,
+   "fields_compared": [
+    "ran",
+    "levels",
+    "actions",
+    "states_expanded",
+    "errors",
+    "hud_mask_resolved",
+    "hud_mask_cell_count",
+    "actions_to_first_levelup"
+   ],
+   "games": [
+    "r11l",
+    "tn36",
+    "ft09"
+   ],
+   "raw_rows": "results/cptb_20260726_cells/reproduction_sample.jsonl.gz"
+  },
+  "conclusion": "The concurrent edit is inert for this battery's arms by both checks, so all 1500 cells are comparable."
+ },
+ "provenance": {
+  "git_head": "647db34945a915f1fa87058a9f217e0a87305457",
+  "working_tree_dirty_at_run_time": true,
+  "unstaged_files_at_run_time_not_authored_by_this_experiment": [
+   "python/carnot/agentic/arc_competition_agent.py",
+   "python/carnot/agentic/arc_discriminative_router.py",
+   "openspec/capabilities/arc-human-replay-frame-change/spec.md",
+   "tests/python/test_arc_online_click_target_router.py"
+  ],
+  "git_head_subject": "[conductor] Checkpoint: preserve uncommitted work from interrupted run",
+  "frontier_flip_commit": "c9e3c4459",
+  "hud_flip_commit": "53e503c1b",
+  "harness_reused": "python/carnot/experiment_5836_frontier_discipline_ab.py:run_cell",
+  "runner": "scratchpad cptb_run.py (round-robin by arm)"
+ }
+}

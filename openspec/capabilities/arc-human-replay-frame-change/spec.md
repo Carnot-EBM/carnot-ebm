@@ -10703,3 +10703,104 @@ stratified by `frame_diff_ground_truth_validated`, and the one-line agent-side o
 #### SCENARIO-ARC-FCP-5904-ONLY-CLICK-POSITIONS-CHANGE
 - **WHEN** the flag is ON, the head is fitted, and the candidate list interleaves non-click actions among clicks
 - **THEN** every non-click candidate SHALL occupy exactly the index it held in the wrapped router's own ordering (a stable partition over the click slots), the clicks SHALL be permuted only among those slots, and a `weight` of 0.0 SHALL reproduce the base ordering exactly -- so a live A/B varies click order and nothing else.
+
+### REQ-ARC-FCP-5927: Powered Coordinate-Router Progress Qualification
+
+Experiment 5927 SHALL qualify the coordinate-aware click router on a frozen
+multi-game candidate corpus before any live default-on A/B. The experiment SHALL
+NOT select a level-solve target, SHALL NOT update `ops/arc_solve_registry.yaml`,
+and SHALL NOT claim level credit. Its `solve_provenance` SHALL be
+`development_proxy`, because this is an offline qualification over public games.
+
+Before fitting, the experiment SHALL run a registry precheck for every selected
+game, hash Exp5904, Exp5758, source frames/actions, feature/router code, the
+registry, protected files, and the output path, and record deterministic seeds,
+disk/RAM receipts, `cross_game_checkpoint_loaded=false`,
+`online_within_game_only=true`, and an atomic checkpoint/resume receipt. The
+corpus SHALL freeze its row and label contract before scoring, separating raw
+frame change, UI animation-only change, state novelty, and verifier-validated
+progress. The primary hard/progress slice SHALL be
+`validated_progress` conditioned on raw frame change, and it SHALL require at
+least 30 positive rows; otherwise the artifact SHALL stop as
+`complete_underpowered:` without promotion.
+
+The measurement SHALL compare five controls on the same rows: coordinate-aware
+online features, static salience, coordinate-blind action id, step index, and a
+seeded deterministic random control. Metrics SHALL include within-state and
+leave-state-out AUROC receipts, a paired interval for coordinate minus static
+salience on the powered hard/progress slice, random-control sanity, leakage
+checks, and old-path regression receipts. The experiment SHALL never load a
+cross-game value checkpoint and SHALL never use future outcome labels as current
+features.
+
+`OnlineClickTargetRouter` SHALL expose a default-off `observe_click_outcome`
+update hook that records only the later validated outcome of a committed click
+action into bounded within-game state. It SHALL support reset, rollback,
+delayed outcome, duplicate outcome, missing outcome, replay, and cross-game
+isolation checks, and the submitted router loader SHALL make this hook reachable
+while preserving default-off old-path behavior.
+
+Experiment 5927 SHALL write
+`results/experiment_5927_coordinate_router_progress_qualification.json` with
+bare top-level fields `status`, `preconditions_checked`,
+`registry_precheck_receipt`, `games_states_rows_and_label_manifest`,
+`solve_provenance`, `no_level_solve_or_registry_update`,
+`cross_game_checkpoint_loaded`, `online_within_game_only`,
+`coordinate_static_blind_step_and_random_controls`,
+`frame_change_vs_validated_progress_receipts`,
+`hard_progress_positive_count_and_power_gate`,
+`within_state_and_leave_state_out_metrics`,
+`coordinate_over_static_delta_and_interval`, `random_control_sanity`,
+`observe_click_outcome_contract_and_tests`,
+`reset_rollback_delay_duplicate_missing_and_replay_matrix`,
+`cross_game_isolation_and_leakage_checks`, `default_enabled`,
+`old_path_regression_receipt`, `protected_files_unchanged`,
+`coordinate_router_progress_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `solve_provenance`: principle "use `development_proxy`; this offline qualification receives no level credit."
+- `cross_game_checkpoint_loaded`: principle "must be bare false."
+- `online_within_game_only`: principle "the router may learn only from the current game's committed outcomes."
+- `hard_progress_positive_count_and_power_gate`: principle "at least 30 validated-progress positives are required before interpreting coordinate-vs-static deltas."
+- `coordinate_over_static_delta_and_interval`: principle "promotion requires an interval-separated gain over the incumbent static salience sort, not just over a blind constant."
+- `default_enabled`: principle "must be bare false unless the full preregistered promotion gate passes, and the task still may not mutate the default."
+- `coordinate_router_progress_ready_score`: principle "emit bare 1.0 only for at least 30 hard positives, interval-separated coordinate gain over static salience, no leakage, random sanity, hook correctness, and no old-path regression."
+- `inference_substrate`: principle "use `deterministic_offline_arc_development_proxy_no_llm`."
+- `verifier_is_oracle`: principle "true only for environment progress, action legality, and exact replay labels."
+- `honest_verdict`: principle "use `complete_ready:`, `complete_underpowered:`, `retired:`, or `blocked:`."
+
+#### SCENARIO-ARC-FCP-5927-POWERED-PROGRESS-CORPUS
+- **WHEN** Exp5927 freezes the candidate corpus
+- **THEN** the manifest SHALL report selected games, state count, row count,
+  raw frame-change count, UI-animation-only count, state-novelty count,
+  verifier-validated progress count, and the hard/progress positive count; if
+  that hard positive count is below 30, the artifact SHALL be
+  `complete_underpowered:` with ready score `0.0`.
+
+#### SCENARIO-ARC-FCP-5927-CONTROLS-AND-LEAKAGE
+- **WHEN** Exp5927 scores the frozen rows
+- **THEN** coordinate, static-salience, blind, step-index, and seeded-random
+  controls SHALL be evaluated on within-state and leave-state-out splits, the
+  coordinate-minus-static interval SHALL be paired on the same rows, random
+  control scores SHALL be distinct and near chance, no cross-game checkpoint
+  SHALL be loaded, and future outcomes SHALL NOT appear in current-row features.
+
+#### SCENARIO-ARC-FCP-5927-COMMITTED-OUTCOME-HOOK
+- **WHEN** committed click outcomes are delayed, duplicated, missing, rolled
+  back, replayed, reset, or crossed between games
+- **THEN** only the first matching later outcome for the same committed
+  click and episode SHALL update the online discriminator; reset and rollback
+  SHALL remove pending state; missing, duplicate, replayed, and cross-game
+  outcomes SHALL be rejected without samples.
+
+#### SCENARIO-ARC-FCP-5927-NO-PROMOTION-WITHOUT-GATE
+- **WHEN** any promotion precondition is absent -- fewer than 30 hard positives,
+  a coordinate-over-static interval that includes zero, label leakage, random
+  control failure, hook failure, old-path regression, or default-on mutation
+- **THEN** `default_enabled` SHALL remain bare `false`,
+  `coordinate_router_progress_ready_score` SHALL be `0.0`, and the honest
+  verdict SHALL not make a level/solve claim.

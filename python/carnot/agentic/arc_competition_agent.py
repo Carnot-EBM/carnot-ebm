@@ -873,8 +873,8 @@ def _sge_candidate_router_requested() -> bool:
 
 
 def _load_submitted_candidate_router(game_id: str = "unknown_game") -> Any | None:
-    """Load the live candidate router. Default: the Exp4545 v3 discriminative router (a
-    safe candidate-order tie-breaker). REQ-ARC-FCP-5699-11: when
+    """Load the live candidate router. Default: the Exp5904/5927 online click wrapper,
+    default-off around the Exp4545 v3 discriminative router. REQ-ARC-FCP-5699-11: when
     SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED (or CARNOT_ARC_SGE_CANDIDATE_ROUTER=1, for
     measurement runs), tries the SGE router first, falling through to the discriminative
     router (never None-ing out the live path) if SGE construction fails for any reason --
@@ -888,7 +888,7 @@ def _load_submitted_candidate_router(game_id: str = "unknown_game") -> Any | Non
         except Exception:
             pass
     try:
-        return arc_discriminative_router.load_cross_game_discriminative_router(root=REPO)
+        return arc_discriminative_router.load_online_click_target_router(root=REPO)
     except Exception:
         return None
 
@@ -2497,6 +2497,21 @@ class StepwiseExplorer:
                         int(o["action"]),
                         o.get("data"),
                         latest,
+                    )
+                except Exception:
+                    pass
+            candidate_router = getattr(self, "candidate_router", None)
+            if (
+                candidate_router is not None
+                and hasattr(candidate_router, "observe_click_outcome")
+                and o.get("previous_frame") is not None
+            ):
+                try:
+                    candidate_router.observe_click_outcome(
+                        o.get("previous_frame") or o.get("grid"),
+                        {"action": int(o["action"]), "data": o.get("data")},
+                        latest,
+                        leveled_up=bool(level_increased),
                     )
                 except Exception:
                     pass
