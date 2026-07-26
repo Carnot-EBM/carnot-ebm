@@ -47922,65 +47922,127 @@ milestones:
     title: Branch-independent terminal reconciliation for milestone .525
     deliverable: results/experiment_5917_v525_capstone_reconciliation.json
     result: OK (conductor)
-- id: "2026.07.526"
-  title: "Schema-Decoding, Fresh CSL, Live-Runner Binding, ABI Mapping, and Exact Capstone"
-  doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
-  completed: "2026-07-26"
+- id: 2026.07.526
+  title: Schema-Decoding, Fresh CSL, Live-Runner Binding, ABI Mapping, and Exact Capstone
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-07-26'
   finding: Terminal outcomes preserved by Exp5931 capstone; see artifact.
   tasks:
-  - id: "exp5918-transition-v526"
-    title: "Exact terminal-boundary handoff from .525 into .526"
-    deliverable: "results/experiment_5918_transition_v526.json"
-    result: "blocked-precondition (blocked)"
-  - id: "exp5919-v526-source-delta-ingestion"
-    title: "Dated evidence refresh after the V526 planner marker"
-    deliverable: "results/experiment_5919_v526_source_delta_ingestion.json"
-    result: "null (honest-null)"
-  - id: "exp5920-prospective-event-stream-admission"
-    title: "Fresh prospective event-stream admission and task-owned execution boundary"
-    deliverable: "results/experiment_5920_prospective_event_stream_admission.json"
-    result: "positive (ready-or-positive)"
-  - id: "exp5921-schema-derived-constraintir-support"
-    title: "Schema-derived ConstraintIR grammar, type-domain, and scope fixture"
-    deliverable: "results/experiment_5921_schema_derived_constraintir_support.json"
-    result: "positive (ready-or-positive)"
-  - id: "exp5922-gguf-schema-decoder-bridge"
-    title: "Gated on Exp5921 ready: embedded-GGUF schema decoder bridge"
-    deliverable: "results/experiment_5922_gguf_schema_decoder_bridge.json"
-    result: "positive (ready-or-positive)"
-  - id: "exp5923-sota-schema-supported-constraintir-ab"
-    title: "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B"
-    deliverable: "results/experiment_5923_sota_schema_supported_constraintir_ab.json"
-    result: "retired (retire-if-same-verdict)"
-  - id: "exp5924-transactional-constraint-memory-v2"
-    title: "Gated on Exp5920 ready: transactional constraint-memory clean-room fixture"
-    deliverable: "results/experiment_5924_transactional_constraint_memory_v2.json"
-    result: "positive (ready-or-positive)"
-  - id: "exp5925-sota-transactional-csl-prospective"
-    title: "Gated on Exp5923 stream and Exp5924 fixture: prospective all-three-model continuous self-learning"
-    deliverable: "results/experiment_5925_sota_transactional_csl_prospective.json"
-    result: "gate-blocked (missing-deliverable-with-conductor-gate-block)"
-  - id: "exp5926-adaptive-state-abi-v2-parity"
-    title: "Gated on Exp5924 ready: adaptive-state ABI v2 Python/Rust/PyO3 parity"
-    deliverable: "results/experiment_5926_adaptive_state_abi_v2_parity.json"
-    result: "positive (ready-or-positive)"
-  - id: "exp5927-coordinate-router-progress-qualification"
-    title: "Powered multi-game coordinate-router progress qualification and outcome hook"
-    deliverable: "results/experiment_5927_coordinate_router_progress_qualification.json"
-    result: "underpowered (underpowered)"
-  - id: "exp5928-arc-live-runner-execution-binding"
-    title: "Actual parent-issued live-runner execution binding and teardown"
-    deliverable: "results/experiment_5928_arc_live_runner_execution_binding.json"
-    result: "positive (ready-or-positive)"
-  - id: "exp5929-arc-structured-memory-bound-live-ab"
-    title: "Gated on Exp5928 ready: adapter-disabled held structured-memory live A/B"
-    deliverable: "results/experiment_5929_arc_structured_memory_bound_live_ab.json"
-    result: "blocked-precondition (blocked-precondition)"
-  - id: "exp5930-adaptive-state-board-mapping"
-    title: "Gated on Exp5926 ready: adaptive-state ABI v2 attached-board capability mapping"
-    deliverable: "results/experiment_5930_adaptive_state_board_mapping.json"
-    result: "no-change (static-mapping-no-physical-probe)"
-  - id: "exp5931-v526-capstone-reconciliation"
-    title: "Branch-independent .526 capstone and exact reconciliation"
-    deliverable: "results/experiment_5931_v526_capstone_reconciliation.json"
-    result: "positive (current-capstone-emission)"
+  - id: exp5918-transition-v526
+    title: Exact terminal-boundary handoff from .525 into .526
+    deliverable: results/experiment_5918_transition_v526.json
+    result: blocked-precondition (blocked)
+  - id: exp5919-v526-source-delta-ingestion
+    title: Dated evidence refresh after the V526 planner marker
+    deliverable: results/experiment_5919_v526_source_delta_ingestion.json
+    result: null (honest-null)
+  - id: exp5920-prospective-event-stream-admission
+    title: Fresh prospective event-stream admission and task-owned execution boundary
+    deliverable: results/experiment_5920_prospective_event_stream_admission.json
+    result: positive (ready-or-positive)
+  - id: exp5921-schema-derived-constraintir-support
+    title: Schema-derived ConstraintIR grammar, type-domain, and scope fixture
+    deliverable: results/experiment_5921_schema_derived_constraintir_support.json
+    result: positive (ready-or-positive)
+  - id: exp5922-gguf-schema-decoder-bridge
+    title: 'Gated on Exp5921 ready: embedded-GGUF schema decoder bridge'
+    deliverable: results/experiment_5922_gguf_schema_decoder_bridge.json
+    result: positive (ready-or-positive)
+  - id: exp5923-sota-schema-supported-constraintir-ab
+    title: 'Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B'
+    deliverable: results/experiment_5923_sota_schema_supported_constraintir_ab.json
+    result: retired (retire-if-same-verdict)
+  - id: exp5924-transactional-constraint-memory-v2
+    title: 'Gated on Exp5920 ready: transactional constraint-memory clean-room fixture'
+    deliverable: results/experiment_5924_transactional_constraint_memory_v2.json
+    result: positive (ready-or-positive)
+  - id: exp5925-sota-transactional-csl-prospective
+    title: 'Gated on Exp5923 stream and Exp5924 fixture: prospective all-three-model continuous self-learning'
+    deliverable: results/experiment_5925_sota_transactional_csl_prospective.json
+    result: gate-blocked (missing-deliverable-with-conductor-gate-block)
+  - id: exp5926-adaptive-state-abi-v2-parity
+    title: 'Gated on Exp5924 ready: adaptive-state ABI v2 Python/Rust/PyO3 parity'
+    deliverable: results/experiment_5926_adaptive_state_abi_v2_parity.json
+    result: positive (ready-or-positive)
+  - id: exp5927-coordinate-router-progress-qualification
+    title: Powered multi-game coordinate-router progress qualification and outcome hook
+    deliverable: results/experiment_5927_coordinate_router_progress_qualification.json
+    result: underpowered (underpowered)
+  - id: exp5928-arc-live-runner-execution-binding
+    title: Actual parent-issued live-runner execution binding and teardown
+    deliverable: results/experiment_5928_arc_live_runner_execution_binding.json
+    result: positive (ready-or-positive)
+  - id: exp5929-arc-structured-memory-bound-live-ab
+    title: 'Gated on Exp5928 ready: adapter-disabled held structured-memory live A/B'
+    deliverable: results/experiment_5929_arc_structured_memory_bound_live_ab.json
+    result: blocked-precondition (blocked-precondition)
+  - id: exp5930-adaptive-state-board-mapping
+    title: 'Gated on Exp5926 ready: adaptive-state ABI v2 attached-board capability mapping'
+    deliverable: results/experiment_5930_adaptive_state_board_mapping.json
+    result: no-change (static-mapping-no-physical-probe)
+  - id: exp5931-v526-capstone-reconciliation
+    title: Branch-independent .526 capstone and exact reconciliation
+    deliverable: results/experiment_5931_v526_capstone_reconciliation.json
+    result: positive (current-capstone-emission)
+- id: 2026.07.526
+  title: Schema-Derived Constraint Decoding, Transactional Learning Reboot, and ARC Live-Path Qualification
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-07-26'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp5918-transition-v526
+    title: Exact terminal-boundary handoff from .525 into .526
+    deliverable: results/experiment_5918_transition_v526.json
+    result: OK (conductor)
+  - id: exp5919-v526-source-delta-ingestion
+    title: Dated evidence refresh after the V526 planner marker
+    deliverable: results/experiment_5919_v526_source_delta_ingestion.json
+    result: OK (conductor)
+  - id: exp5920-prospective-event-stream-admission
+    title: Fresh prospective event-stream admission and task-owned execution boundary
+    deliverable: results/experiment_5920_prospective_event_stream_admission.json
+    result: OK (conductor)
+  - id: exp5921-schema-derived-constraintir-support
+    title: Schema-derived ConstraintIR grammar, type-domain, and scope fixture
+    deliverable: results/experiment_5921_schema_derived_constraintir_support.json
+    result: OK (conductor)
+  - id: exp5922-gguf-schema-decoder-bridge
+    title: 'Gated on Exp5921 ready: embedded-GGUF schema decoder bridge'
+    deliverable: results/experiment_5922_gguf_schema_decoder_bridge.json
+    result: OK (conductor)
+  - id: exp5923-sota-schema-supported-constraintir-ab
+    title: 'Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B'
+    deliverable: results/experiment_5923_sota_schema_supported_constraintir_ab.json
+    result: OK (conductor)
+  - id: exp5924-transactional-constraint-memory-v2
+    title: 'Gated on Exp5920 ready: transactional constraint-memory clean-room fixture'
+    deliverable: results/experiment_5924_transactional_constraint_memory_v2.json
+    result: OK (conductor)
+  - id: exp5925-sota-transactional-csl-prospective
+    title: 'Gated on Exp5923 stream and Exp5924 fixture: prospective all-three-model continuous self-learning'
+    deliverable: results/experiment_5925_sota_transactional_csl_prospective.json
+    result: OK (conductor)
+  - id: exp5926-adaptive-state-abi-v2-parity
+    title: 'Gated on Exp5924 ready: adaptive-state ABI v2 Python/Rust/PyO3 parity'
+    deliverable: results/experiment_5926_adaptive_state_abi_v2_parity.json
+    result: OK (conductor)
+  - id: exp5927-coordinate-router-progress-qualification
+    title: Powered multi-game coordinate-router progress qualification and outcome hook
+    deliverable: results/experiment_5927_coordinate_router_progress_qualification.json
+    result: OK (conductor)
+  - id: exp5928-arc-live-runner-execution-binding
+    title: Actual parent-issued live-runner execution binding and teardown
+    deliverable: results/experiment_5928_arc_live_runner_execution_binding.json
+    result: OK (conductor)
+  - id: exp5929-arc-structured-memory-bound-live-ab
+    title: 'Gated on Exp5928 ready: adapter-disabled held structured-memory live A/B'
+    deliverable: results/experiment_5929_arc_structured_memory_bound_live_ab.json
+    result: OK (conductor)
+  - id: exp5930-adaptive-state-board-mapping
+    title: 'Gated on Exp5926 ready: adaptive-state ABI v2 attached-board capability mapping'
+    deliverable: results/experiment_5930_adaptive_state_board_mapping.json
+    result: OK (conductor)
+  - id: exp5931-v526-capstone-reconciliation
+    title: Branch-independent .526 capstone and exact reconciliation
+    deliverable: results/experiment_5931_v526_capstone_reconciliation.json
+    result: OK (conductor)
