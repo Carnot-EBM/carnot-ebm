@@ -18018,3 +18018,339 @@ at budget 400, so the LLM-on model's budget-400 row is arithmetically forced by 
 and carries no independent information. The target instance's host RAM is UNCONFIRMED (the 16 GiB
 figure in the requirements note is a VRAM number), and it is what decides whether budget 2000 is
 safe.
+
+## REQ-ARC-WMTE-5982: A Diagnostic Has ONE Address And An Analyser-Produced Artifact Declares The Code That Built It
+
+**Origin.** Two 2026-07-26 measurement-machinery defects, both of which produced a clean,
+error-free ZERO from a channel nobody consulted — the same shape as the exp5836 dead observe
+channel, one layer up.
+
+1. **THE TWO-ADDRESS SPLIT.** The HUD diagnostics dict (`StepwiseExplorer.hud_mask_diagnostics()`)
+   was projected onto result rows by TWO independently hand-rolled writers.
+   `scripts/arc_scored_path_lever_harness.py` wrote it NESTED under `row["lever2_hud_fire"]`;
+   `python/carnot/experiment_5836_frontier_discipline_ab.py:run_cell` wrote a DIFFERENT flat subset
+   at row top level. Each reader saw `None` on the other's rows. Measured in both directions: all
+   805 rows of `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` read `None` at the
+   flat address while the nested copy was populated in all 805 (True 598 / False 207); and all 1713
+   rows of `results/cptb_20260726_cells/*.jsonl.gz` scored `lever2_fired = False` under a
+   nested-only reader. `None` rather than `False` is the tell in both cases. Worse than the address
+   split, exp5836's subset OMITTED `hud_shipped_mask_digest` — the comparator the fire predicate
+   needs — so those 1713 rows are PERMANENTLY unable to answer the lever-2 question. No back-fill
+   can recover a field that was never written; only a re-run can.
+2. **THE STALE ARTIFACT.** `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` was
+   committed at 08:53; its analyser was edited and committed at 10:38 with no rebuild; the artifact
+   was refreshed at 12:34. For ~1h56m the file on disk was not the output of the code on disk.
+   Rebuilding and deep-diffing established that window changed no number — but that could only be
+   established BY rebuilding, which is precisely the work a reader does not do before quoting a
+   figure. Separately, `reproducibility_checksum` hashed only `rows` plus three derived analysis
+   dicts, leaving `companion_rows` and `alt_budget_rows` — 750 of 805 published rows, 93.2% —
+   outside the artifact's own integrity hash. Proven, not inferred: a rebuild that mutated `_source`
+   on all 375 companion rows produced a byte-identical checksum.
+
+This requirement fixes MEASUREMENT MACHINERY. It changes no lever behaviour, no shipped flag, and no
+submitted configuration.
+
+**Why each clause exists.**
+
+1. **ONE PROJECTION, NOT TWO.** Two writers projecting one source dict is the defect itself. A
+   shared function makes "a field added for one harness is present on the other" true by
+   construction rather than by memory.
+2. **A COMPATIBILITY READ AT A SINGLE CHOKEPOINT, WITH A REPORTED TAG.** Already-recorded rows of
+   either historical schema must remain readable without re-running hours of cells, and the schema
+   tag must be reported — a silent back-fill is one more unwitnessed step between measurement and
+   claim.
+3. **UNSCOREABLE IS NOT NON-FIRING.** `hud_lever_fired` returns False for two structurally different
+   reasons, and a denominator that pools them reports "the lever fired in 0 of 1713 cells" when the
+   honest statement is "1713 cells cannot say".
+4. **AN ARTIFACT DECLARES THE CODE THAT BUILT IT.** A stale artifact's numbers are cited with
+   exactly the same confidence as a fresh one's, because nothing at read time distinguishes them.
+5. **THE FRESHNESS TRIGGER FIRES ON THE ANALYSER SIDE.** In the real incident the ARTIFACT was not
+   touched; the analyser was. An artifact-only trigger would have waved it straight through.
+6. **"CANNOT CHECK" IS NEVER REPORTED AS "CHECKED AND CLEAN."** An artifact with no fingerprints, or
+   whose row-source inputs have since been deleted, is UNKNOWN / UNVERIFIABLE — never fresh.
+
+#### SCENARIO-ARC-WMTE-5960-ROW-SCHEMA-PARITY
+
+**Given** one HUD diagnostics dict recorded by each of the two writing harnesses
+**When** the rows are read through the analyser's load chokepoint
+**Then** both writers emit the IDENTICAL flat key set from the same shared projection function, a
+nested-schema row and a flat-schema row of the same cell score identically, the deprecated
+`node_inflation` alias resolves in both directions, and a flat row lacking
+`hud_shipped_mask_digest` is tagged `_lever2_scoreable: false` rather than counted as a non-fire.
+
+#### SCENARIO-ARC-WMTE-5960-ARTIFACT-FRESHNESS
+
+**Given** an analyser-produced artifact and a subsequent edit to the analyser, the harness, or the
+shared row-schema module, with the artifact file left untouched
+**When** the freshness guard runs
+**Then** it reports STALE, names the drifted dependency and the exact rebuild command the artifact
+recorded, refuses the commit, folds into `scripts/summarize_artifact.py`'s critical exit tier, and
+reports an artifact with no `provenance` block as UNKNOWN rather than fresh.
+
+## Implementation Status (REQ-ARC-WMTE-5982)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5982 | Implemented (`python/carnot/agentic/arc_hud_row_schema.py` — shared `HUD_ROW_KEYS` / `hud_row_fields` / `hud_lever_fired` / `lever2_scoreable` / `backfill_hud_flat_fields`, imported by `scripts/arc_scored_path_lever_harness.py`, `python/carnot/experiment_5836_frontier_discipline_ab.py` and `scripts/analyze_scored_path_lever_ab.py`; `provenance` block + `--check-fresh` + widened `reproducibility_checksum` scope in `scripts/analyze_scored_path_lever_ab.py`; `scripts/artifact_freshness_lint.py` + `.pre-commit-config.yaml:artifact-freshness-lint`; staleness banner in `scripts/summarize_artifact.py`) | Implemented (`tests/python/test_arc_hud_row_schema.py` 6 tests, `tests/python/test_artifact_freshness_lint.py` 5 tests; the schema-parity guard was mutation-proved to fail when a writer reverts to a hand-picked subset, and the freshness guard caught a real staleness during this change) |
+
+**Measured outcome (2026-07-26).** The artifact was rebuilt with the unified schema and the
+staleness guard, and deep-diffed against a rebuild of the same inputs by the pre-change analyser:
+1615 diff entries, of which 1610 are purely ADDITIVE row diagnostics (`_lever2_scoreable` and the
+`node_inflation` alias on all 805 rows), 1 is the new `provenance` block, and the remaining 4 are
+`run_date`, `analysis_duration_s`, `reproducibility_checksum` (a documented SCOPE change) and its
+note. ZERO measurement-bearing values changed: every field of `analysis`, `companion` and
+`alt_budget`, every `acceptance_gate_*`, the violations list and `honest_verdict` are identical, and
+no pre-existing row field changed on any of the 805 rows. `-k arc` failure SETS before/after are
+identical (zero new failures).
+
+**Known residuals (not closed by this requirement).** The 1713 recorded `cptb_20260726_cells` rows
+remain lever-2 unscoreable: `hud_shipped_mask_digest` was never written, so no back-fill recovers it
+and only a re-run can. The freshness lint reads `ops/analyzer_artifact_index.json` rather than
+scanning the 6.1 GB `results/` tree, so an artifact whose analyser never registers it is INVISIBLE
+to the guard — a stated coverage limit, not a pass. The lint blocks only on genuine content drift;
+unknown and unverifiable artifacts are reported but do not refuse the commit, deliberately, because
+a hook that blocks on "I cannot check" provokes the `--no-verify` bypass it is meant to prevent.
+
+## REQ-ARC-WMTE-5983: The Early-Stop Grace Window Is Swept As A Parameter, Gated On Safety And Score NON-INFERIORITY, And Reported As A Wall-Clock Lever
+
+**Origin.** `arc_competition_agent.SUBMITTED_EARLY_STOP_GRACE` (:128) is declared and read NOWHERE:
+`StepwiseExplorer.__init__` accepts `early_stop_grace` (:1003) and `is_done` implements the window
+(:3936-3946), but `E3AgentPolicy.__init__` never forwards it. Flipping the global would therefore
+have been a SILENT NO-OP — an uninstrumented arm producing a clean, meaningless null. The mechanism
+had never been measured; the one prior experiment often read as evidence for it (exp4524) swept a
+DIFFERENT parameter (`target_levels` 5 -> 1) and its "levels preserved" gate was arithmetically
+forced, because every game in both of its arms topped out at L1.
+
+**The requirement.** Any evaluation of the early-stop grace window MUST:
+
+1. **Sweep the PARAMETER, never flip the flag.** The value is set on the constructed explorer and
+   READ BACK per row; no `SUBMITTED_*` global is modified, and the run asserts the global is
+   unchanged at the end. The shipped configuration is not altered by a measurement.
+2. **Prove the arm is instrumented.** Every treatment arm must record `early_stopped: true` on at
+   least one cell, and every row must record that the parameter APPLIED. An arm that never fired
+   contributes no evidence and is stamped UNINTERPRETABLE, not reported as a safe null.
+3. **Gate on SAFETY and score NON-INFERIORITY — never on score improvement.** The authoritative
+   scorer charges a completed level `actions_at_level - prev_actions` and scores an INCOMPLETE level
+   0.0 regardless of the actions charged to it, so the post-solve tail is billed to a zero-scoring
+   bucket and costs EXACTLY ZERO. Cutting it can only hold the score or lose it. A gate of the form
+   "the efficiency sum must improve" therefore has an EMPTY PASS REGION and must be restated before
+   the run, not run as stated and reported as a forced failure.
+4. **Emit a computed WITNESS at each gate's own level of aggregation.** For SAFETY the movable set
+   is the cells whose CONTROL reached >= 2 levels (a control with <= 1 level cannot regress: the
+   window arms only after the first level-up and cannot undo it), of which the at-risk subset is
+   those whose measured inter-level-up gap, inflated from actions to frames, exceeds the grace. For
+   NON-INFERIORITY the movable set is the cells whose level-up CHECKPOINT VECTOR differs between the
+   arms — the score is a function of that vector and the human baselines alone, so a cell with an
+   identical vector is frozen by construction and its equal score is not evidence.
+5. **Compare PER-SEED MATCHED**, on the (game, seed, budget) key, dropping and reporting any cell
+   missing either side. An arm's cells are never compared against a control union over other seeds.
+6. **Report BOTH tails** of every test plus the minimum reachable p at the available support, so a
+   reversal cannot read as "no effect" and a small movable set cannot read as "not significant" when
+   no p below the floor was reachable.
+7. **Persist the level-up checkpoint vector and the reset count per row.** The checkpoint vector is
+   the quantity the scorer differences, so without it a score delta cannot be attributed to a level
+   or recomputed without re-running the cell. The live gateway charges a RESET one action while the
+   offline harness charges zero, so offline efficiency is optimistic by that amount and the gap must
+   be visible rather than assumed away.
+8. **Make the swept parameter the INNERMOST loop**, so a truncated run cannot leave one grace value
+   with more measured cells than another.
+9. **Measure contention rather than assume it away.** The benefit claim is a wall-clock claim, so
+   the measurement condition is stated: the primary sweep runs serially, and a separate control
+   quantifies what concurrency does to the wall number and confirms it changes no outcome.
+10. **Report the refuted total-action charge model as a SENSITIVITY CHECK, not an equal reading.**
+    The installed scorer's source settles the question; the alternative is computed so a reader can
+    see that the SAFETY verdict does not depend on the choice.
+
+#### SCENARIO-ARC-WMTE-5983-DEAD-FLAG-IS-DETECTED-NOT-NULLED
+
+**Given** a grace value swept on the scored path
+**When** the sweep runs
+**Then** the parameter is read back off the live explorer on every row, `early_stopped` is recorded
+from the explorer rather than inferred from the action count, an arm with zero fires anywhere is
+stamped UNINTERPRETABLE, and `SUBMITTED_EARLY_STOP_GRACE` is asserted unchanged at the end of the
+run.
+
+#### SCENARIO-ARC-WMTE-5983-EMPTY-PASS-REGION-IS-RESTATED-NOT-RUN
+
+**Given** a gate requiring the per-level efficiency sum to IMPROVE under a mechanism that only cuts
+score-free actions
+**When** the gate is evaluated against the resolved charge model
+**Then** the pass region is shown to be empty, the gate is restated as NON-INFERIORITY plus a
+measured wall-clock benefit before the run, and the artifact records why — rather than running the
+gate as stated and reporting an arithmetically forced failure as a finding.
+
+#### SCENARIO-ARC-WMTE-5983-SAFETY-WITNESS-IS-NON-EMPTY
+
+**Given** a safety gate asserting no level regression
+**When** the gate passes
+**Then** the artifact reports the count of MOVABLE cells (control reached >= 2 levels) and AT-RISK
+cells (a measured inter-level-up gap exceeding the grace) for that arm, and a pass over an empty
+movable set is stamped `UNINTERPRETABLE_EMPTY_MOVABLE_SET_NO_CELL_COULD_REGRESS` rather than
+reported as a pass.
+
+#### SCENARIO-ARC-WMTE-5983-A-PASS-WITH-NO-AT-RISK-CELL-IS-UNFALSIFIABLE
+
+**Given** a safety gate that PASSES for some grace value
+**When** the arm's AT-RISK witness count is zero
+**Then** the verdict is stamped `PASS_UNFALSIFIABLE_NO_CELL_WAS_AT_RISK` and `falsifiable: false`,
+because no cell COULD have regressed and the pass therefore restates its own precondition ("the grace
+exceeds every gap observed in this sample") rather than testing it; only an arm where an AT-RISK cell
+survived is stamped `PASS_AT_RISK_CELLS_SURVIVED`, and the headline prefers a falsifiable pass over a
+forced one and says which pool it drew from.
+
+#### SCENARIO-ARC-WMTE-5983-GRID-ADEQUACY-IS-COMPUTED-NOT-ASSUMED
+
+**Given** a gate asking whether a safe firing parameter value exists at a budget
+**When** the gate is evaluated over a finite grid of tested values
+**Then** the artifact computes the safe-and-firing WINDOW from the control arm alone (safe above the
+largest at-risk inter-level-up gap in frames, firing below the largest post-level-up tail in frames),
+reports whether the tested grid contains any value strictly inside it, and names the gate for the
+scope it actually measured (`a_TESTED_firing_grace_value_is_safe_...`) — so a grid that jumps over the
+window cannot report a GRID ARTIFACT as a property of the mechanism.
+
+#### SCENARIO-ARC-WMTE-5983-A-WALL-SAVING-IS-ATTRIBUTED-OR-STAMPED-NOISE
+
+**Given** an arm reporting a wall-clock saving as its benefit
+**When** the wall difference summed over cells where BOTH ARMS TOOK THE SAME NUMBER OF ACTIONS (which
+did byte-identical work, so their true difference is zero) is as large in magnitude as the wall
+difference on the cells whose action count actually changed
+**Then** the arm is stamped `noise_dominated: true` and a top-level acceptance gate FAILS, so the
+number cannot be quoted as a benefit — because wall clock is both this mechanism's entire case and the
+noisiest quantity measured. The test uses NO chosen threshold: the identical-work cells are the
+comparison's own measured noise floor. A seconds-per-action ratio may be reported beside it but must be
+named as a heuristic, and an arm that cannot fire at all must show a real part of exactly zero.
+
+#### SCENARIO-ARC-WMTE-5983-A-CONCURRENCY-CONTROL-KEEPS-EVERY-PROCESS
+
+**Given** a contention control in which N concurrent processes each ran the same cells
+**When** the control is summarised
+**Then** each process is compared against serial SEPARATELY and the outcome-identity gate is the worst
+process, and the wall figure is reported as a mean with min/max plus per-process detail — never as a
+single collapsed row, which would make the published number depend on the order the row files were
+listed and would leave N-1 processes' outcomes unchecked.
+
+#### SCENARIO-ARC-WMTE-5983-SCOPE-AND-POWER-TRAVEL-WITH-THE-VERDICT
+
+**Given** a decision gate evaluated at the shipped budget
+**When** the movable set is concentrated in a single game, or the score total is concentrated in a few
+cells
+**Then** the level distribution, the movable games, the AT-RISK support's minimum reachable two-sided
+p, and the top-1/top-4 share of the score total are reported AT THE TOP LEVEL beside the verdict — so
+a single-game, single-observation existence claim cannot read as a corpus estimate.
+
+#### SCENARIO-ARC-WMTE-5983-THE-ANALYSER-CLOCK-IS-NOT-THE-MEASUREMENT-CLOCK
+
+**Given** an artifact produced by an analyser pass over already-persisted measurement rows
+**When** its `inference_substrate` names a live-agent runtime while its `duration_s` times only the
+analyser
+**Then** the declaration SHALL be `aggregation_from_upstream_artifacts` and the artifact SHALL publish
+`measurement_wall_s` — the TRUE wall clock of the underlying live run, summed from each row file's own
+`elapsed_s` (never the summed per-cell `wall_s`, which omits per-cell setup and undercounted by ~25%:
+9126.0s vs 6861.1s measured) across EVERY arm including reproduction, contention and stress — so a
+reader sanity-checking whether the run is plausibly real reads the right clock. The shipped artifact
+declared the live-agent substrate beside `duration_s: 7.884` for a 1401-cell / 9126.0s (2.54 h)
+measurement, understating it by three orders of magnitude: the `DURATION_TOO_SHORT` failure mode
+reached from the opposite direction — not a fabricated run hiding behind a short duration, but a real
+run whose honest cost was invisible. A file lacking `elapsed_s` SHALL still be counted via the summed
+fallback AND named in `files_using_fallback_basis`, and an unreadable file SHALL be stamped rather
+than crash the analyser mid-sweep.
+
+## Implementation Status (REQ-ARC-WMTE-5983)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5983 | Implemented (`scripts/arc_scored_path_early_stop_sweep.py` — parameter sweep, grace innermost, flag-unchanged assertion; `scripts/arc_scored_path_lever_harness.py:run_cell` — `early_stop_grace` param + read-back witness + `level_up_actions` / `inter_levelup_gaps` / `actions_after_last_levelup` / `n_resets` / `n_frames` / `early_stopped` instrumentation, crash path included; `scripts/analyze_arc_early_stop_sweep.py` — both gates with computed witnesses, per-seed matched, both-tails sign test with reachable floor, contention + reproduction checks, refuted-charge-model sensitivity; and from the 2026-07-26 review: falsifiability-stamped safety verdicts, per-condition `safe_firing_window` + grid-adequacy gate, `wall_saving_attribution` (threshold-free identical-work jitter split) + noise gate, per-process contention control, hoisted `shipped_budget_scope_and_power`, cross-budget `fixed_grace_out_of_sample_fragility`, `dedupe_rows` on analysis rows only, measured-reachability inertness; and the substrate/clock fix: `measurement_wall_clock()` + `aggregation_from_upstream_artifacts` declaration + published `measurement_wall_s`) | Implemented (`tests/python/test_arc_early_stop_sweep.py`, 32 tests; 7 mutations proved caught: forced safety gate, any-seed union, one-sided test, frozen-vector pass, inert-vs-wiring conflation, dead-baseline sensitivity, widened cross-check tolerance; plus both branches asserted for the falsifiability stamp, the grid-adequacy window, the wall-noise stamp, the dedupe report, and contention order-independence + a not-last-process mismatch) |
+
+**REVISED MEASURED OUTCOME (2026-07-26, after adversarial review — read this before the table below,
+which is preserved unedited per never-prune).** The table's "no firing grace value is safe at b400"
+reading is a GRID ARTIFACT. The safe-and-firing window at b400 is (340.2, 372.3) frames, computed from
+the control arm, and the original grid contained no point inside it (its top point, 400, equalled the
+budget and was inert by construction). **`grace 350` was subsequently RUN: it fires on 1 of 75 cells,
+loses NO level, score delta exactly 0.0, and saves 21 actions = 0.072% of corpus actions** — its
+measured 2.42% wall saving is stamped `noise_dominated` (33.69x what 21 actions buy at the control's
+own rate) and fails its own acceptance gate. The corpus is now **1131 cells**. Two further narrowings:
+every safety PASS in the sweep has at_risk == 0 and is therefore `PASS_UNFALSIFIABLE_NO_CELL_WAS_AT_RISK`
+(no falsifiable pass occurred anywhere), and the b2000 grace-1300 "PASS" bolded below **regresses 6
+cells at b4000** — 3 of the 4 graces tested at more than one budget pass at one and fail at another.
+The operator-facing conclusion is UNCHANGED: do not ship at the shipped budget.
+
+**Measured outcome (2026-07-26).** 1056 cells: b400 (shipped, 25 games x 3 seeds x 6 grace values),
+b2000 (25 x 3 x 6), a b4000 safety-stress condition scoped to the 13 level-reaching games (x 3 seeds
+x 4 grace values), a 150-cell reproduction pass in a fresh process, and a 30-cell serial-vs-3-way-
+concurrent contention control. `SUBMITTED_EARLY_STOP_GRACE` was never modified (asserted at the end
+of every run).
+
+| condition | grace | safety | movable / at-risk | regressing games | score delta | actions saved | wall saved | cells fired |
+|---|---|---|---|---|---|---|---|---|
+| b400 (SHIPPED) | 50 | FAIL | 3 / 2 | vc33 | -0.2057 | 6.10% | 5.72% | 10 |
+| b400 | 100 | FAIL | 3 / 2 | vc33 | -0.2057 | 4.87% | 2.28% | 7 |
+| b400 | 150 | FAIL | 3 / 1 | vc33 | -0.0212 | 3.30% | 2.45% | 7 |
+| b400 | 200 | FAIL | 3 / 1 | vc33 | -0.0212 | 2.30% | 1.98% | 6 |
+| b400 | 400 | PASS (inert, cannot fire) | 3 / 0 | none | 0.0 | 0.00% | 0.78% | 0 |
+| b2000 | 200 | FAIL | 7 / 5 | cd82, tu93, vc33 | -0.0242 | 24.17% | 21.67% | 30 |
+| b2000 | 400 | FAIL | 7 / 4 | cd82, tu93 | -0.0030 | 20.11% | 17.97% | 29 |
+| b2000 | 800 | FAIL | 7 / 4 | cd82, tu93 | -0.0030 | 12.50% | 12.62% | 28 |
+| b2000 | 1300 | **PASS** | 7 / 0 | none | **0.0** | **3.70%** | **4.02%** | 15 |
+| b2000 | 2800 | PASS (inert, cannot fire) | 7 / 0 | none | 0.0 | 0.00% | -0.34% | 0 |
+| b4000 (subset) | 400 | FAIL | 13 / 10 | cd82, ft09, lp85, r11l, tu93 | -0.0124 | 62.81% | 67.83% | 36 |
+| b4000 (subset) | 1300 | FAIL | 13 / 6 | cd82, ft09, lp85, r11l | -0.0094 | 39.14% | 48.69% | 35 |
+| b4000 (subset) | 2800 | FAIL | 13 / 1 | r11l | -0.0013 | 8.87% | 14.78% | 21 |
+
+**THE DECISION GATE FAILS AT THE SHIPPED BUDGET, and its witness is non-empty.** Every grace value
+that FIRES at b400 costs at least one level on at least one seed; the only values that cost nothing
+(400 and above) cannot fire at all. The cause is that the inter-level-up gap is seed- and
+game-dependent over a 66x range — measured 42, 112, 330 actions at b400 and 42..2775 at b4000 — so a
+single window that fires on the small gaps closes before the large ones arrive. The safety witness
+records 3 movable cells at b400, so this is a MEASURED negative, not the arithmetically-forced pass
+that exp4524's identically-worded gate produced.
+
+**The mechanism's structural ceiling is far smaller than a won-cell tail fraction suggests.**
+`is_done` arms the window only after the FIRST level-up, so `mechanism_reach` bounds it: at b400 only
+14.67% of cells — and 14.67% of corpus actions — are reachable at all. 64 of 75 control cells never
+level up, and their full-budget tails are out of reach however long they are. At b2000 reach is
+43.89%.
+
+**Score non-inferiority holds only where nothing moved.** Every arm that preserved levels scored
+EXACTLY 0.0 delta and is stamped `PASS_STRUCTURALLY_FROZEN_NO_CELL_COULD_MOVE` — confirming the tail
+is score-free rather than claiming an improvement. Every arm that lost a level lost score. The
+reimplemented authoritative scorer matched the installed `arc_agi` scorer on every cell of every arm
+(0 mismatches, 75 cells carrying real human baselines), which is what makes the derived numbers and
+the sensitivity model trustworthy rather than assumed.
+
+**Supporting measurements.** Reproduction: 150/150 cells identical in a fresh process
+(`deterministic: true`), so the per-cell matched comparison is sound. Contention: 3 concurrent
+processes inflate wall clock 1.55x (51.6s -> 80.1s over 30 shared cells) with ZERO outcome
+mismatches — the primary sweep therefore ran serially and its wall numbers are contention-free.
+Inert-arm noise floor: the two arms that cannot fire saved exactly 0.00% of ACTIONS (a determinism
+witness) while their measured WALL saving was +0.78% and -0.34%, so the grace-1300 4.02% wall saving
+clears the noise floor by roughly 5x. Sign test on the grace-1300 action deltas: 15/15 negative,
+p_two_sided 6.1e-5 against a reachable floor of 6.1e-5, both tails reported.
+
+**The frames-vs-actions conversion is load-bearing, not a footnote.** r11l seed 20260724 at b4000 has
+a 2775-ACTION inter-level-up gap and still lost its level under grace=2800, because 219 resets
+inflate that gap to ~2936 FRAMES and the window counts frames. Without `n_frames` and `n_resets`
+persisted per row that regression would have looked impossible and invited the wrong diagnosis.
+
+**Two on-disk claims were corrected as part of this work, both project inference contradicted by the
+installed scorer's source.** The early-stop rationale comment in
+`python/carnot/agentic/arc_competition_agent.py` asserted that "every extra action quadratically
+erodes the (human/agent_actions)^2 efficiency score" — false for precisely the tail the mechanism
+cuts. And `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` stated the
+per-level score as `min(human/agent, 1.0)` squared, a paraphrase already retracted inside the eval
+harness on 2026-06-20 but never fixed in the document.
+
+**Known limitations, stated rather than smoothed over.** (1) The b400 safety witness rests on THREE
+movable cells, all vc33 — the only game reaching L2 at the shipped budget — so the shipped-budget
+negative is well-founded but narrow; the b4000 stress condition widens it to 13 movable cells across
+6 games at the cost of not being corpus-level. (2) The b4000 condition's score and saving SUMS are
+over a subset chosen for its level-reaching and must NOT be compared against the b400/b2000
+full-corpus sums; the artifact stamps `score_sums_are_corpus_level: false` on it. (3) The at-risk
+witness converts action-gaps to frames using each cell's whole-run frames/actions ratio rather than a
+per-level ratio; it errs toward counting MORE cells at risk, and the safety VERDICT is always decided
+by measured levels, never by this estimate. (4) The live gateway charges a RESET one action while this
+offline harness charges zero, so offline efficiency is optimistic; `n_resets` is recorded per row so
+the gap is visible rather than assumed away. (5) LLM-OFF only — the wall-clock case for early-stop is
+strongest under LLM-ON, where per-cell cost is roughly 61x, and that condition was not affordable
+across 1056 cells. (6) `E3AgentPolicy.__init__` still does not forward `early_stop_grace`, so
+`SUBMITTED_EARLY_STOP_GRACE` remains dead code: the flag cannot ship as written even if the operator
+wanted it, and wiring it is a separate change this measurement deliberately did not make.

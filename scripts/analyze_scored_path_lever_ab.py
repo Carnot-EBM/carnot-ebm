@@ -68,6 +68,10 @@ from pathlib import Path
 from typing import Any
 
 REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Needed for `carnot.agentic.arc_hud_row_schema`, the SHARED row-schema module this analyser and
+# both writing harnesses now import instead of each keeping its own copy of the key list.
+if str(REPO / "python") not in sys.path:
+    sys.path.insert(0, str(REPO / "python"))
 
 # The arm whose configuration is what ships today. Every delta is measured against THIS.
 # Parameterised by the harness's arm SUFFIX (`_llmon` / `_llmoff`) so the SAME machinery scores the
@@ -114,65 +118,21 @@ def build_levers(suffix: str) -> dict[str, dict]:
 LEVERS = build_levers(SUFFIX)
 
 
-# The HUD fields the fire predicate and the row-level readers need, in the FLAT spelling used by
-# `experiment_5836_frontier_discipline_ab.run_cell`. `arc_scored_path_lever_harness.hud_row_fields`
-# emits exactly these plus the two shipped-side comparators.
-_HUD_FLAT_KEYS = (
-    "hud_mask_resolved",
-    "hud_mask_cell_count",
-    "hud_mask_digest",
-    "hud_mask_source",
-    "hud_shipped_mask_cell_count",
-    "hud_shipped_mask_digest",
-    "unique_frames",
-    "graph_nodes",
-    "node_inflation_vs_unique_frames",
-    "collapse_guard_refusals",
+# THE COMPATIBILITY READ IS SHARED WITH THE WRITERS (2026-07-26).
+# `backfill_hud_flat_fields` used to be DEFINED here, so the analyser's idea of the row schema and
+# the harnesses' idea of it were two separate pieces of code that had to be kept in agreement by
+# memory. They are now one module: `carnot.agentic.arc_hud_row_schema` owns the key list, the flat
+# projection both writers emit, the fire predicate, the back-fill, and the `lever2_scoreable`
+# distinction between "the lever did not fire" and "this row cannot say". Re-exported under the
+# original name because the tests and the sibling harness import it from here.
+from carnot.agentic.arc_hud_row_schema import (  # noqa: E402
+    HUD_ROW_KEYS,
+    backfill_hud_flat_fields,
+    hud_lever_fired,
+    lever2_scoreable,
 )
 
-
-def backfill_hud_flat_fields(r: dict) -> str:
-    """Make a row readable at BOTH addresses, and report which schema it arrived in.
-
-    WHY (measured 2026-07-26). The HUD diagnostics live at two different addresses depending on which
-    harness wrote the row, and each address reads `None` on the other's rows -- a clean, error-free
-    zero that is indistinguishable from "the detector resolved nothing":
-
-      * `arc_scored_path_lever_harness` wrote them NESTED under `row["lever2_hud_fire"]` only. All
-        805 recorded rows of `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` have
-        `r["hud_mask_resolved"] is None` FLAT while the nested copy is populated in all 805.
-      * exp5836 / cptb write them FLAT only. All 1713 rows of
-        `results/cptb_20260726_cells/*.jsonl.gz` have no `lever2_hud_fire` key, so this module's
-        `recomputed_lever2_fired` -- which read the nested key exclusively -- returned False on
-        every one of them.
-
-    The harness now emits both. This back-fill covers rows ALREADY RECORDED under the nested-only
-    schema so hours of GPU cells do not have to be re-run, and it returns the schema tag so the
-    artifact can state how many rows needed it (a silent back-fill would be one more unwitnessed
-    transformation between measurement and claim).
-
-    Returns one of: `both` (row already carried both), `nested_only` (back-filled from nested),
-    `flat_only` (an exp5836-schema row, left as-is), `absent` (no HUD diagnostics at all -- carries
-    no lever-2 evidence in either direction).
-    """
-    nested = r.get("lever2_hud_fire")
-    has_nested = isinstance(nested, dict) and bool(nested)
-    has_flat = "hud_mask_resolved" in r
-    if has_nested and has_flat:
-        return "both"
-    if has_nested:
-        for k in _HUD_FLAT_KEYS:
-            if k in nested:
-                r[k] = nested[k]
-        stage2 = nested.get("stage2") or {}
-        r.setdefault("hud_mask_stage2_verdict", stage2.get("stage2_verdict"))
-        r.setdefault("hud_mask_stage2_reason", stage2.get("stage2_reason"))
-        r.setdefault("hud_mask_stage2_candidate_cells", stage2.get("candidate_cell_count"))
-        r["hud_flat_fields_backfilled_from_nested"] = True
-        return "nested_only"
-    if has_flat:
-        return "flat_only"
-    return "absent"
+_HUD_FLAT_KEYS = HUD_ROW_KEYS
 
 
 def load_rows(paths: list[Path]) -> list[dict]:
@@ -223,19 +183,16 @@ def recomputed_lever2_fired(r: dict) -> bool:
     shipped-side comparison at all. Such a row is scored as NOT fired, and its
     `_hud_row_schema`/`hud_diagnostics_readable` tags are what tell a reader it carries no evidence
     rather than negative evidence.
+
+    ONE PREDICATE, NOT TWO (2026-07-26). The rule used to be written out here AND in the harness,
+    which meant the two could silently disagree about a row -- and a disagreement between the
+    recorded stamp and the recomputed value is precisely what this function exists to surface, so
+    it must not itself be a second implementation. It now delegates to the shared
+    `carnot.agentic.arc_hud_row_schema.hud_lever_fired`; the only thing decided here is WHICH
+    address on the row to hand it (nested when present, else the flat keys).
     """
     nested = r.get("lever2_hud_fire")
-    h = nested if isinstance(nested, dict) and nested else r
-    if h.get("error") or h.get("hud_diagnostics_error"):
-        return False
-    if not h.get("hud_mask_resolved"):
-        return False
-    digest = h.get("hud_mask_digest")
-    if not digest:
-        return False
-    if "hud_shipped_mask_digest" not in h:
-        return False
-    return bool(digest != h.get("hud_shipped_mask_digest"))
+    return hud_lever_fired(nested if isinstance(nested, dict) and nested else r)
 
 
 # Fire keys whose value the analyser RECOMPUTES from the row's raw diagnostics instead of trusting
@@ -1202,6 +1159,52 @@ def analyse(rows: list[dict]) -> dict[str, Any]:
     return out
 
 
+def _file_fingerprint(path: Path) -> dict[str, Any]:
+    """sha256 + size + mtime of a file this artifact's numbers DEPEND ON.
+
+    Recorded so `--check-fresh` can answer "was this artifact built by the code and the inputs that
+    are on disk right now?" mechanically, instead of a reader comparing mtimes by eye. The incident
+    this closes: an artifact committed at 08:53 while its analyser was edited at 10:38 and committed
+    without a rebuild. Nothing in the artifact said which analyser had produced it, so the only way
+    to find out was to rebuild and diff -- which nobody does before quoting a number.
+    """
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        return {"path": str(path), "sha256": None, "unreadable": f"{type(exc).__name__}:{exc}"}
+    return {
+        "path": str(path),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "bytes": len(raw),
+        "mtime_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(path.stat().st_mtime)),
+    }
+
+
+# The code files whose CONTENT decides what this artifact's numbers mean. `--check-fresh` refuses an
+# artifact whose recorded fingerprint for any of these no longer matches the working tree.
+def _code_dependencies() -> list[Path]:
+    return [
+        Path(__file__).resolve(),
+        REPO / "scripts" / "arc_scored_path_lever_harness.py",
+        REPO / "python" / "carnot" / "agentic" / "arc_hud_row_schema.py",
+    ]
+
+
+def _git_head() -> str | None:
+    import subprocess
+
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(REPO), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        return out.stdout.strip() or None
+    except Exception:
+        return None
+
+
 def build_artifact(
     analysis: dict,
     rows: list[dict],
@@ -1211,13 +1214,23 @@ def build_artifact(
     companion_rows: list[dict] | None = None,
     alt_budget: dict | None = None,
     alt_budget_rows: list[dict] | None = None,
+    companion_sources: list[Path] | None = None,
+    alt_budget_sources: list[Path] | None = None,
 ) -> dict:
+    # CHECKSUM SCOPE FIX (2026-07-26). This payload used to be {rows, analysis, companion,
+    # alt_budget} where `companion` / `alt_budget` are the derived ANALYSIS dicts -- so the 375
+    # companion ROWS and the 375 alt-budget ROWS were OUTSIDE the artifact's own integrity hash.
+    # 750 of the 805 published rows, 93.2%, were uncovered. Proven rather than inferred: a rebuild
+    # that changed `_source` on all 375 companion rows produced a BYTE-IDENTICAL checksum. Every
+    # row the artifact publishes is now hashed.
     payload = json.dumps(
         {
             "rows": rows,
             "analysis": analysis,
             "companion": companion or {},
+            "companion_rows": companion_rows or [],
             "alt_budget": alt_budget or {},
+            "alt_budget_rows": alt_budget_rows or [],
         },
         sort_keys=True,
         default=str,
@@ -1471,8 +1484,58 @@ def build_artifact(
         "reproducibility_checksum_note": (
             "principle: a content hash over the raw rows plus the derived analysis catches silent "
             "drift between this artifact and any replication. sha256 over the canonicalised "
-            "{rows, analysis} payload."
+            "{rows, analysis, companion, companion_rows, alt_budget, alt_budget_rows} payload. "
+            "SCOPE CHANGED 2026-07-26: the two ROW lists were previously outside this hash (only "
+            "the derived companion/alt_budget ANALYSIS dicts were in it), so 750 of the 805 "
+            "published rows -- 93.2% -- were uncovered. A rebuild that mutated all 375 companion "
+            "rows produced a byte-identical checksum under the old scope. Any checksum change "
+            "dated 2026-07-26 is THIS SCOPE CHANGE, not a measurement change."
         ),
+        # ---- STALENESS GUARD (2026-07-26) ---------------------------------------------------
+        # THE INCIDENT: this artifact was committed at 08:53 and its analyser was then edited and
+        # committed at 10:38 with no rebuild, leaving a ~1h56m window in which the on-disk artifact
+        # was not the output of the on-disk analyser. Nothing in the artifact recorded WHICH
+        # analyser had produced it, so the only way to find out was to rebuild and diff -- which is
+        # exactly what nobody does before quoting a number. These fingerprints make the question
+        # mechanical: `analyze_scored_path_lever_ab.py --check-fresh <artifact>` recomputes each
+        # one and exits 3 on any mismatch, naming the file and the rebuild command.
+        "provenance": {
+            "git_head": _git_head(),
+            "code": [_file_fingerprint(p) for p in _code_dependencies()],
+            # ALL THREE row-source designs, not just `--rows`. `source_row_files` below records only
+            # the headline design's paths, so a companion-row file could be swapped with nothing in
+            # the artifact noticing -- the same blind spot the checksum scope had.
+            "rows_sources": {
+                "rows": [_file_fingerprint(p) for p in sources],
+                "companion_rows": [_file_fingerprint(p) for p in (companion_sources or [])],
+                "alt_budget_rows": [_file_fingerprint(p) for p in (alt_budget_sources or [])],
+            },
+            "rebuild_command": " ".join(
+                [
+                    "python scripts/analyze_scored_path_lever_ab.py",
+                    "--rows",
+                    *[str(p) for p in sources],
+                    *(
+                        ["--companion-rows", *[str(p) for p in companion_sources]]
+                        if companion_sources
+                        else []
+                    ),
+                    *(
+                        ["--alt-budget-rows", *[str(p) for p in alt_budget_sources]]
+                        if alt_budget_sources
+                        else []
+                    ),
+                    "--out",
+                    "<this file>",
+                ]
+            ),
+            "note": (
+                "principle: an artifact that cannot say which code produced it cannot be known to "
+                "be current, and a stale artifact's numbers are quoted exactly as confidently as a "
+                "fresh one's. Check with `--check-fresh <artifact>` (exit 3 = stale, and it names "
+                "which dependency drifted)."
+            ),
+        },
         "preconditions_checked": [
             {"resource": "llama_server_qwen3.5_9b_mtp_gpu1_port_8931", "available": True},
             {"resource": "cached_gguf_Qwen3.5-9B-MTP", "available": True},
@@ -1692,10 +1755,136 @@ def build_artifact(
     return art
 
 
+# Where the freshness lint looks to find WHICH artifacts have a separate analyser step and can
+# therefore go stale. An INDEX rather than a scan of results/: that directory is 6.1 GB / 6300+ files
+# and a cold grep over it in a pre-commit hook would cost minutes for a check that concerns a
+# handful of artifacts. Only artifacts written by an analyser that calls
+# `register_analyzed_artifact` appear here, and an artifact whose file has since been deleted is
+# pruned on the next registration rather than becoming a permanent lint failure.
+ANALYZED_ARTIFACT_INDEX = REPO / "ops" / "analyzer_artifact_index.json"
+
+
+def register_analyzed_artifact(out_path: Path, analyzer: Path | None = None) -> None:
+    """Record that THIS artifact is analyser-produced, so the freshness lint knows to check it.
+
+    Registration is idempotent and self-pruning. It is deliberately separate from the artifact's own
+    `provenance` block: provenance answers "was this built from the current code" for an artifact
+    someone already has in hand; the index answers "which artifacts should anyone be asking that
+    about at all", which a commit-time hook needs before it has any artifact in hand.
+
+    `analyzer` MUST be passed by any OTHER analyser reusing this helper. It defaults to this file for
+    backwards compatibility, and that default is a trap when the function is imported: the first
+    external reuser (`analyze_arc_early_stop_sweep.py`, 2026-07-26) registered its artifact under
+    THIS analyser's name, which would have sent a future reader chasing the wrong rebuild command for
+    a drifted artifact. The index's whole value is naming the code to re-run.
+    """
+    try:
+        index = json.loads(ANALYZED_ARTIFACT_INDEX.read_text())
+        if not isinstance(index, dict):
+            index = {}
+    except Exception:
+        index = {}
+    try:
+        rel = str(out_path.resolve().relative_to(REPO))
+    except ValueError:
+        # An artifact written outside the repo (a scratchpad dry-run) is not a tracked deliverable
+        # and must not be registered -- the lint would then fail forever on a temp file.
+        return
+    index[rel] = {
+        "analyzer": str((analyzer or Path(__file__)).resolve().relative_to(REPO)),
+        "built_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    index = {k: v for k, v in index.items() if (REPO / k).exists()}
+    ANALYZED_ARTIFACT_INDEX.parent.mkdir(parents=True, exist_ok=True)
+    ANALYZED_ARTIFACT_INDEX.write_text(json.dumps(index, indent=1, sort_keys=True) + "\n")
+
+
+def check_fresh(artifact_path: Path) -> int:
+    """Is this on-disk artifact the output of the code and inputs that are on disk RIGHT NOW?
+
+    Exit codes, and WHY there are four rather than two -- an unknown is not a pass:
+      0  FRESH        every recorded dependency's sha256 still matches the working tree.
+      3  STALE        at least one dependency's CONTENT changed. This is the incident condition.
+      4  UNKNOWN      the artifact predates this guard and records no fingerprints. Reporting that
+                      as fresh would be the same false-clean-zero this whole change is about.
+      5  UNVERIFIABLE a dependency could not be READ (typically a row-source file that lived in a
+                      session scratchpad and has since been cleaned up). Distinguished from STALE
+                      because "I cannot check" and "I checked and it drifted" are different facts,
+                      and conflating them would train readers to ignore the check.
+
+    Deliberately hash-only: no rows are loaded and no analysis runs, so this is cheap enough to wire
+    into `scripts/summarize_artifact.py`, which CLAUDE.md's Reading-Results Discipline already
+    mandates as the only legal way to read a result artifact.
+    """
+    try:
+        art = json.loads(artifact_path.read_text())
+    except Exception as exc:
+        print(f"STALENESS-CHECK: cannot read {artifact_path}: {type(exc).__name__}:{exc}")
+        return 4
+    prov = art.get("provenance") or {}
+    recorded = list(prov.get("code") or [])
+    for group in (prov.get("rows_sources") or {}).values():
+        recorded.extend(group or [])
+    if not recorded:
+        print(
+            f"STALENESS-CHECK: UNKNOWN -- {artifact_path.name} carries no `provenance` "
+            "fingerprints (built before 2026-07-26). Its freshness cannot be established "
+            "mechanically; rebuild it to make it checkable."
+        )
+        return 4
+    drift: list[dict[str, Any]] = []
+    unreadable: list[dict[str, Any]] = []
+    for entry in recorded:
+        p = Path(entry.get("path", ""))
+        now = _file_fingerprint(p)
+        if now.get("unreadable"):
+            unreadable.append({"path": str(p), "reason": now["unreadable"]})
+        elif now.get("sha256") != entry.get("sha256"):
+            drift.append(
+                {
+                    "path": str(p),
+                    "recorded_sha256": entry.get("sha256"),
+                    "on_disk_sha256": now.get("sha256"),
+                }
+            )
+    cmd = (prov.get("rebuild_command") or "").replace("<this file>", str(artifact_path))
+    if drift:
+        print(f"STALENESS-CHECK: STALE -- {artifact_path.name} was built against different inputs:")
+        for d in drift:
+            print(f"  - {d['path']}: content changed since the artifact was built")
+        for u in unreadable:
+            print(f"  - {u['path']}: ALSO unreadable ({u['reason']})")
+        if cmd:
+            print(f"  rebuild with: {cmd}")
+        return 3
+    if unreadable:
+        print(
+            f"STALENESS-CHECK: UNVERIFIABLE -- {artifact_path.name}: "
+            f"{len(recorded) - len(unreadable)} dependencies verified, "
+            f"{len(unreadable)} could not be read:"
+        )
+        for u in unreadable:
+            print(f"  - {u['path']}: {u['reason']}")
+        print(
+            "  This is NOT a staleness finding. It means the check cannot answer the question for "
+            "those inputs -- do not read it as a pass."
+        )
+        return 5
+    print(f"STALENESS-CHECK: FRESH -- {artifact_path.name}, {len(recorded)} dependencies verified.")
+    return 0
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--rows", nargs="+", required=True)
-    ap.add_argument("--out", required=True)
+    ap.add_argument(
+        "--check-fresh",
+        metavar="ARTIFACT",
+        help="hash-only freshness check of an already-built artifact against the current working "
+        "tree. Exits 3 if any recorded code/row-source dependency has changed since it was built, "
+        "4 if the artifact predates the guard. Runs no analysis and loads no rows.",
+    )
+    ap.add_argument("--rows", nargs="+")
+    ap.add_argument("--out")
     ap.add_argument("--companion-rows", nargs="*", default=[])
     ap.add_argument(
         "--alt-budget-rows",
@@ -1718,6 +1907,10 @@ def main(argv: list[str]) -> int:
         help="which arm suffix is the control condition; llmon is the SCORED condition",
     )
     a = ap.parse_args(argv)
+    if a.check_fresh:
+        return check_fresh(Path(a.check_fresh))
+    if not a.rows or not a.out:
+        ap.error("--rows and --out are required unless --check-fresh is given")
     set_condition("_" + a.condition)
     t0 = time.time()
     sources = [Path(x) for x in a.rows]
@@ -1744,9 +1937,20 @@ def main(argv: list[str]) -> int:
         alt_budget = analyse(alt_budget_rows)
         set_condition("_" + a.condition)
     art = build_artifact(
-        analysis, rows, sources, t0, companion, companion_rows, alt_budget, alt_budget_rows
+        analysis,
+        rows,
+        sources,
+        t0,
+        companion,
+        companion_rows,
+        alt_budget,
+        alt_budget_rows,
+        companion_sources=[Path(x) for x in a.companion_rows],
+        alt_budget_sources=[Path(x) for x in a.alt_budget_rows],
     )
-    Path(a.out).write_text(json.dumps(art, indent=1, default=str))
+    out_path = Path(a.out)
+    out_path.write_text(json.dumps(art, indent=1, default=str))
+    register_analyzed_artifact(out_path)
     print(json.dumps({k: v for k, v in analysis.items() if k != "rows"}, indent=1, default=str))
     return 0
 

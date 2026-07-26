@@ -1,6 +1,142 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-26 (budget-sweep scoring conclusion CORRECTED — it was inverted; memory, not time, is the binding constraint)
+**Last Updated:** 2026-07-26 (adversarial-review repairs to the early-stop grace sweep: the "no safe firing value" headline was a GRID ARTIFACT — grace 350 IS safe at b400 and buys 0.072% of actions)
+
+## Session 2026-07-26 (later) - Adversarial-review repairs to the early-stop grace sweep
+
+### What's Working
+
+- **The operator recommendation survives with a different, measured reason.** Do not ship
+  `SUBMITTED_EARLY_STOP_GRACE` at the shipped budget — not because no safe firing value exists, but
+  because the safe window is nearly empty of VALUE. The window is computable from the CONTROL arm
+  alone: safe above the largest at-risk inter-level-up gap (340.2 frames) and firing below the largest
+  post-solve tail (372.3 frames). The original grid (50/100/150/200/400) contained no point inside it
+  and its top point equalled the budget, so it was inert by construction — a 5-point grid can only
+  support "none of the values TESTED", never an existence claim over the parameter space.
+- **The missing point was RUN, not extrapolated.** grace 350 at b400 (75 cells, ~276s) fires on 1 of
+  75 cells, loses no level, moves the score by exactly 0.0, and saves 21 actions = 0.072% of corpus
+  actions. The pre-run prediction (1 cell, ~21.8 actions) matched.
+- **The wall saving is now split into measured jitter and real saving, with no chosen threshold.**
+  Cells where both arms took the same number of actions did identical work, so their wall difference is
+  jitter with a true value of zero. grace 350's 4.08s measured saving is **+3.19s jitter across 74
+  unchanged cells against 0.89s on the one cell that stopped early — 78.2% noise**; genuinely-firing
+  arms land at 0.1–9% jitter share. A new acceptance gate FAILS on it, so `summarize_artifact.py`
+  prints "a FAILED gate overrides any celebratory verdict" right under the new "there IS a safe firing
+  value at b400" pass.
+- **The contention control was reporting ONE ARBITRARY process of three and had never checked the
+  other two's outcomes.** The three processes ran the same 30 cells and were collapsed last-write-wins,
+  so the published wall figure depended on command-line order (80.08 / 81.10 / 79.76s) and
+  `outcomes_identical` covered 1 of 3. All three are in fact identical to serial (0 mismatches each).
+  Now per-process plus mean/range: inflation **1.558x (1.547–1.573)**, gated on the worst process.
+- **A safety PASS with zero at-risk cells is no longer stamped as a clean pass.** Every PASS in the
+  entire sweep has at_risk == 0, i.e. all of them are arithmetically forced
+  (`PASS_UNFALSIFIABLE_NO_CELL_WAS_AT_RISK`); no arm anywhere produced a falsifiable
+  `PASS_AT_RISK_CELLS_SURVIVED`. The previously-headlined grace 1300 at b2000 regresses 6 cells at
+  b4000, and 3 of the 4 graces tested at more than one budget pass at one and fail at another.
+- **Scope and power are hoisted out of per-arm residuals.** At b400, 64 of 75 control cells reach zero
+  levels and the 3 reaching two are all vc33; the smallest reachable two-sided p at that support is
+  0.5; and 91.35% of the corpus score total sits in 4 of 75 cells (one cell 52.58%).
+- **The freshness guard's own trigger no longer has a hole.** Its `files:` regex missed 3 of the 5
+  registered code dependencies including `arc_competition_agent.py`; the pattern is now GENERATED from
+  the registered dependency union, a coverage check refuses the commit on any gap, and a test asserts
+  it. Proven end-to-end by drifting the agent module and watching the hook refuse (file restored
+  byte-identical).
+
+### What's Next
+
+- **OPERATOR DECISION, still not taken.** `SUBMITTED_EARLY_STOP_GRACE` is `None`, `MAX_ACTIONS`
+  untouched, nothing submitted. The recommendation to weigh is unchanged: leave the grace disabled at
+  b400 (0.072% of actions on 1 of 75 cells is not worth a knife-edge safe window), and note that NO
+  fixed grace value tested was safe at more than one budget.
+- **An ADAPTIVE window is the only form that could generalise, and it is UNMEASURED.** Safety of a
+  fixed grace reduces to `grace > max observed gap in frames`; that maximum grows with the budget
+  (340 at b400, <1300 at b2000, >2800 at b4000) and varies 66x across (game, seed). A window scaled to
+  the run's own observed gaps is the candidate; nothing here measures it.
+- **Pre-existing failure NOT caused and NOT fixed here:**
+  `tests/python/test_arc_object_history_salience_live_wiring.py::test_scenario_5591_2_default_off_parity`
+  has been failing since 2026-07-14, when `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` was set False
+  ("disable pending re-validation", commit `620bf5f65`) without updating the test written the day
+  before, which still asserts `type(explorer.action_prior) is ColorBlobSaliencePrior`. Fixing it means
+  either flipping a `SUBMITTED_*` flag or weakening an assertion about a deliberately-disabled feature
+  — both out of scope here, and the second would mask the signal.
+
+### Known Constraints
+
+- Every safety PASS in this sweep is unfalsifiable (at_risk == 0). "Safe" here means "the grace
+  exceeded every gap observed in these 3 seeds", which does not generalise — demonstrated, not
+  conjectured, by grace 1300 passing at b2000 and losing 6 cells at b4000.
+- The b400 result is a single-game (vc33), single-seed existence claim with a two-sided p-floor of
+  0.5. No number of additional seeds on these games can make it significant.
+- The safe-window bounds convert action-unit measurements to frames with a whole-run frames/actions
+  ratio, not a per-level one. It errs toward a NARROWER claimed safe window; the one member inside it
+  was verified by running it.
+
+---
+
+## Session 2026-07-26 - Early-stop grace sweep on the scored path (REQ-ARC-WMTE-5983)
+
+> **PARTIALLY SUPERSEDED the same day — see the section above.** The "at the shipped budget there is
+> NO firing grace value that preserves levels" claim below is scoped too broadly (the tested grid
+> missed the safe window; grace 350 IS safe), and the "only safe firing point, grace 1300 at b2000"
+> is an arithmetically-forced pass that regresses 6 cells at b4000. The operator-facing conclusion
+> (leave the grace disabled at the shipped budget) is unchanged. Preserved unedited per never-prune.
+
+### What's Working
+
+- **The mechanism is measured for the first time, and it is a WALL-CLOCK lever, not a score lever.**
+  1056 cells across three budget conditions, per-seed matched, LLM-off, serial. Every arm that
+  preserved levels scored EXACTLY 0.0 score delta — confirming from measurement what the installed
+  scorer's source says: the post-solve tail costs zero.
+- **The swept parameter is genuinely instrumented.** `SUBMITTED_EARLY_STOP_GRACE` is DEAD CODE (read
+  nowhere; `E3AgentPolicy` never forwards it), so a flag-flip arm would have been a silent no-op. The
+  sweep sets the parameter on the constructed explorer, reads it back per row, records `early_stopped`
+  off the explorer, and separates arms that CANNOT fire (grace >= budget — a deliberate inert control)
+  from arms that could have fired and did not (the wiring-failure shape).
+- **Both gates carry a computed witness at their own aggregation level.** SAFETY reports movable
+  cells (control reached >=2 levels) and at-risk cells; NON-INFERIORITY reports cells whose level-up
+  checkpoint vector moved. An empty movable set is stamped UNINTERPRETABLE rather than passed — the
+  defect that made exp4524's identically-worded gate uninformative.
+- **The supporting controls all passed.** Reproduction 150/150 identical in a fresh process;
+  contention 1.55x wall inflation with ZERO outcome changes (so the primary sweep ran serially);
+  inert-arm noise floor +0.78%/-0.34% wall with exactly 0.00% action delta; reimplemented scorer
+  matches the installed `arc_agi` scorer on every cell of every arm.
+- Artifact `results/outer_loop_arc_early_stop_grace_sweep_20260726.json` passes
+  `adversarial_verify.py` (0 flagged) and `summarize_artifact.py` surfaces the failing decision gate
+  above the verdict. 17 tests, 7 mutations proved caught.
+
+### What's Next
+
+- **OPERATOR DECISION, not taken here.** No flag was flipped. At the shipped `MAX_ACTIONS = 400`
+  there is NO firing grace value that preserves levels: 50/100/150/200 each cost vc33's L2 on at
+  least one seed, and 400+ cannot fire. The only safe firing point measured anywhere was grace 1300
+  at budget 2000 (3.70% actions, 4.02% wall, score delta 0.0). Recommendation to weigh: leave the
+  grace disabled unless the budget is also raised, and treat it as a wall-clock lever with a
+  knife-edge safe window rather than a score optimisation.
+- **A prerequisite the operator should know about:** `E3AgentPolicy.__init__` does not forward
+  `early_stop_grace`, so the flag cannot ship as written even if wanted. Wiring it is a separate
+  change this measurement deliberately did not make.
+- **The gap distribution is the real obstacle, and it is a candidate for a better mechanism.** The
+  inter-level-up gap spans 42..2775 actions and varies by SEED on the same game, so no single fixed
+  window can be both safe and useful. A per-game or adaptive window (e.g. scaled to the observed
+  first-level-up cost) is the shape that could work; it has not been measured.
+- **Untested condition, stated as a limitation:** LLM-ON. The wall-clock case for early-stop is
+  strongest there (~61x per-cell cost) and it was not affordable across 1056 cells.
+
+### Known Constraints
+
+- The b400 safety witness rests on THREE movable cells, all vc33 — the only game reaching L2 at the
+  shipped budget. The negative is well-founded but narrow; the b4000 stress condition widens it to 13
+  movable cells over 6 games at the cost of not being corpus-level.
+- The b4000 condition's score and saving SUMS are over a subset chosen for level-reaching and must
+  NOT be compared against full-corpus sums; the artifact stamps `score_sums_are_corpus_level: false`.
+- The live gateway charges a RESET one action; this offline harness charges zero, so offline
+  efficiency is optimistic. `n_resets` is recorded per row so the gap is visible.
+- The at-risk witness converts action-gaps to frames with a whole-run ratio, not a per-level ratio.
+  It errs toward MORE cells at risk; the safety verdict is always decided by measured levels.
+
+---
+
+**Earlier sessions on 2026-07-26 are preserved below, unedited.**
 
 ## Session 2026-07-26 - Adversarial-review repairs to the MAX_ACTIONS budget sweep
 

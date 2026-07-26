@@ -125,6 +125,15 @@ for _p in (REPO / "python", REPO / "scripts"):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
+# THE SHARED HUD ROW PROJECTION (2026-07-26). This module used to hand-roll its own flat projection
+# of `StepwiseExplorer.hud_mask_diagnostics()`, and `scripts/arc_scored_path_lever_harness.py`
+# hand-rolled a second, NESTED one. Two independent projections of the same source dict is the
+# defect: this module's version OMITTED `hud_shipped_mask_digest` (the comparator the lever-2 fire
+# predicate needs) and RENAMED node inflation, so all 1713 already-recorded rows of
+# `results/cptb_20260726_cells/*.jsonl.gz` are permanently unscoreable for lever 2 -- not "0 fires",
+# but "cannot say". One shared function means a field added for one harness is present on both.
+from carnot.agentic.arc_hud_row_schema import hud_row_fields  # noqa: E402
+
 EXPERIMENT_ID = 5836
 # The SECOND requirement this module hosts. A run that includes the sampler arms (F/F1) is a
 # REQ-ARC-WMTE-5950 measurement and must declare that identity, not 5836's -- see the identity
@@ -327,12 +336,22 @@ ARMS: dict[str, dict[str, Any]] = {
     # F1 is the flip candidate.
     "F": {
         "label": "click_pixel_sampling_with_bounded_redraw_on_live_config",
-        "kwargs": {**_FRONTIER_ON, **_HUD_OFF, "click_pixel_sampling": True, "click_pixel_redraw_budget": 3},
+        "kwargs": {
+            **_FRONTIER_ON,
+            **_HUD_OFF,
+            "click_pixel_sampling": True,
+            "click_pixel_redraw_budget": 3,
+        },
         "deterministic": False,
     },
     "F1": {
         "label": "click_pixel_sampling_one_shot_on_live_config",
-        "kwargs": {**_FRONTIER_ON, **_HUD_OFF, "click_pixel_sampling": True, "click_pixel_redraw_budget": 1},
+        "kwargs": {
+            **_FRONTIER_ON,
+            **_HUD_OFF,
+            "click_pixel_sampling": True,
+            "click_pixel_redraw_budget": 1,
+        },
         "deterministic": False,
     },
     # REQ-ARC-WMTE-5960 (2026-07-25): the REPAIRED, orientation-complete HUD status-bar
@@ -362,12 +381,22 @@ ARMS: dict[str, dict[str, Any]] = {
     # asymmetry is why the guard exists at all and why G alone is not the flip candidate.
     "G": {
         "label": "edge_bar_hud_mask_detection_only_on_live_config",
-        "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": False, "hud_mask_stage2_confirm": False},
+        "kwargs": {
+            **_FRONTIER_ON,
+            "edge_bar_hud_mask": True,
+            "hud_mask_collapse_guard": False,
+            "hud_mask_stage2_confirm": False,
+        },
         "deterministic": False,
     },
     "G2": {
         "label": "edge_bar_hud_mask_with_collapse_guard_on_live_config",
-        "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": True, "hud_mask_stage2_confirm": False},
+        "kwargs": {
+            **_FRONTIER_ON,
+            "edge_bar_hud_mask": True,
+            "hud_mask_collapse_guard": True,
+            "hud_mask_stage2_confirm": False,
+        },
         "deterministic": False,
     },
     # G3 (added 2026-07-25 after the adversarial review) -- THE ONLY FLIP CANDIDATE.
@@ -388,7 +417,12 @@ ARMS: dict[str, dict[str, Any]] = {
     # actually produce.
     "G3": {
         "label": "edge_bar_hud_mask_stage2_confirmed_with_collapse_guard_flip_candidate",
-        "kwargs": {**_FRONTIER_ON, "edge_bar_hud_mask": True, "hud_mask_collapse_guard": True, "hud_mask_stage2_confirm": True},
+        "kwargs": {
+            **_FRONTIER_ON,
+            "edge_bar_hud_mask": True,
+            "hud_mask_collapse_guard": True,
+            "hud_mask_stage2_confirm": True,
+        },
         "deterministic": False,
     },
     # REQ-ARC-WMTE-5970 (2026-07-26): the NAV-side hazard move-pruner on the live configuration.
@@ -431,7 +465,12 @@ ARMS: dict[str, dict[str, Any]] = {
     },
     "D": {
         "label": "tier_exhaustion_plus_gradient",
-        "kwargs": {**_FRONTIER_ON, "tier_uniform_random": False, "frontier_gradient": True, **_HUD_OFF},
+        "kwargs": {
+            **_FRONTIER_ON,
+            "tier_uniform_random": False,
+            "frontier_gradient": True,
+            **_HUD_OFF,
+        },
         "deterministic": True,
     },
     "E": {
@@ -740,15 +779,14 @@ def run_cell(
             "frontier_discipline": None,
             # REQ-ARC-WMTE-5960: arm E is the reference solver through our shim; it keeps its
             # OWN mask and its own bookkeeping table, so our explorer's HUD/dedup counters do
-            # not exist for it. Explicitly stated with a reason rather than left absent, so
-            # "field missing" can never be read as "measured zero".
-            "hud_mask_resolved": None,
-            "hud_mask_cell_count": None,
+            # not exist for it. The FULL key set is emitted (all-None, from the SHARED projection)
+            # rather than a hand-picked subset, so "field missing" can never be read as "measured
+            # zero" and this row is schema-identical to every other row in the file. The two
+            # overrides after it are the row's own honest annotations: a REASON for the absent
+            # mask, and the reference solver's own node count.
+            **hud_row_fields(None),
             "hud_mask_source": "not_applicable_reference_solver_owns_its_own_mask",
-            "unique_frames": None,
             "graph_nodes": out.get("states_expanded"),
-            "node_inflation": None,
-            "collapse_guard_refusals": None,
             "hud_mask": None,
         }
 
@@ -775,13 +813,19 @@ def run_cell(
             "reason": f"{type(exc).__name__}:{exc}",
             "errors": 1,
             "states_expanded": (len(explorer.graph) if explorer is not None else None),
-            # REQ-ARC-WMTE-5960: a crashed cell still reports whatever HUD state it reached, so
-            # a partial crash cannot be mistaken for "the detector never resolved a mask".
+            # REQ-ARC-WMTE-5960: a crashed cell still reports whatever HUD state it reached, so a
+            # partial crash cannot be mistaken for "the detector never resolved a mask". The full
+            # shared key set is emitted first (all-None) so a crash row is schema-identical to a
+            # clean row; the three overrides below are the only things this row can honestly say.
+            # `hud_diagnostics_error` carries the crash reason, which is what makes this row's
+            # `lever2_fired: False` read as "no evidence" rather than "the lever did not fire".
+            **hud_row_fields(None),
             "hud_mask_resolved": (
                 bool(getattr(explorer, "hud_mask", None) is not None)
                 if explorer is not None
                 else None
             ),
+            "hud_diagnostics_error": f"cell_crashed_before_diagnostics:{type(exc).__name__}",
             "graph_nodes": (len(explorer.graph) if explorer is not None else None),
         }
     explorer = getattr(policy, "explorer", None)
@@ -840,33 +884,20 @@ def run_cell(
         # --- REQ-ARC-WMTE-5960 HUD / node-identity axis -------------------------------------
         # Lifted onto the row (not buried in `hud_mask`) so a reader never has to dig to answer
         # "did the detector fire, and did dedup actually happen".
-        "hud_mask_resolved": (hud_diag or {}).get("hud_mask_resolved"),
-        "hud_mask_cell_count": (hud_diag or {}).get("hud_mask_cell_count"),
-        # THE MASK'S IDENTITY, not its size. Two masks must be compared on this digest: equal
-        # cell COUNTS do not imply the same cells, so a repair that moved a mask instead of
-        # widening it would have read as inert under the previous count comparison.
-        "hud_mask_digest": (hud_diag or {}).get("hud_mask_digest"),
-        "hud_mask_source": (hud_diag or {}).get("hud_mask_source"),
-        # Stage 2's verdict on this cell: admitted / refused / discarded / pending / no_candidate.
-        # A `refused` row is the safety mechanism WORKING (the candidate was never applied), and
-        # is reported distinctly from "the detector found nothing".
-        "hud_mask_stage2_verdict": ((hud_diag or {}).get("stage2") or {}).get("stage2_verdict"),
-        "hud_mask_stage2_reason": ((hud_diag or {}).get("stage2") or {}).get("stage2_reason"),
-        "hud_mask_stage2_candidate_cells": ((hud_diag or {}).get("stage2") or {}).get(
-            "candidate_cell_count"
-        ),
-        "unique_frames": (hud_diag or {}).get("unique_frames"),
-        "graph_nodes": (hud_diag or {}).get("graph_nodes"),
-        # graph_nodes / distinct UNMASKED frames. 1.0 = every distinct raw frame became its own
-        # node (no dedup at all -- the measured r11l pathology). This is the oracle-free stand-in
-        # for true node inflation, which needs a per-game count of real game states and is
-        # therefore available only from public game source, i.e. diagnostic-only.
-        "node_inflation": (hud_diag or {}).get("node_inflation_vs_unique_frames"),
-        # THE GUARD'S ACTIVITY WITNESS. >0 means the guard PROVED the mask was collapsing
-        # distinct states and un-masked those nodes. An arm with the guard armed and 0 refusals
-        # is evidence the mask is clean on that cell, not evidence the guard is dead -- read it
-        # together with `collapse_guard.keys_with_multiple_successors`, the honest denominator.
-        "collapse_guard_refusals": (hud_diag or {}).get("collapse_guard_refusals"),
+        #
+        # THE PROJECTION IS SHARED, NOT HAND-ROLLED (2026-07-26). This used to be ~12 hand-picked
+        # keys, and the sibling `scripts/arc_scored_path_lever_harness.py` hand-picked a DIFFERENT
+        # set into a NESTED dict. The divergence was not cosmetic: this row omitted
+        # `hud_shipped_mask_digest` / `hud_shipped_mask_cell_count`, which is the comparator the
+        # lever-2 fire predicate needs, so all 1713 already-recorded cptb rows are permanently
+        # unable to answer "did the repaired mask differ from the shipped one" -- 0 of 1713 score
+        # as fired, and NO back-fill can recover a value that was never written. It also renamed
+        # node inflation to `node_inflation`, so a reader of the canonical name saw None on half
+        # the corpus. `hud_row_fields` emits the full canonical key set PLUS the deprecated
+        # `node_inflation` alias, so this module's own three readers keep working unchanged.
+        **hud_row_fields(hud_diag),
+        # The raw diagnostics dict, kept alongside the projection so a future field can be
+        # recovered from an already-recorded row without a re-run.
         "hud_mask": hud_diag,
     }
 
@@ -2669,9 +2700,12 @@ def _hud_arm_safety(rows: Sequence[dict], arm: str, condition: str = "real") -> 
         if row.get("arm") == arm and row.get("condition") == condition and row.get("ran")
     )
     shipped_region_not_acted_on = sum(
-        int(((row.get("hud_mask") or {}).get("collapse_guard") or {}).get(
-            "branchings_in_shipped_region_not_acted_on"
-        ) or 0)
+        int(
+            ((row.get("hud_mask") or {}).get("collapse_guard") or {}).get(
+                "branchings_in_shipped_region_not_acted_on"
+            )
+            or 0
+        )
         for row in rows
         if row.get("arm") == arm and row.get("condition") == condition and row.get("ran")
     )
