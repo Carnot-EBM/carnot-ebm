@@ -5856,6 +5856,71 @@ SUBMITTED_AGENT_CONFIG = {
 }
 
 
+def consume_process_bound_capability_preflight(
+    capability: Mapping[str, Any] | None,
+    *,
+    output_path: Path,
+    nonce_ledger_path: Path,
+    now_monotonic_s: float,
+    adapter_enabled: bool,
+) -> dict[str, Any]:
+    """REQ-ARC-LREB-5928: consume a parent-issued capability before environment action.
+
+    This is deliberately a preflight hook on the actual live runner module, not a
+    fixture validator. It verifies the process-bound capability first, then performs
+    exactly one synthetic adapter-disabled environment action so Exp5928 can prove
+    the parent-child execution prerequisite without loading a model or attempting a
+    level.
+    """
+
+    import os
+    import time
+
+    from carnot.agentic import arc_live_runner_execution_binding as binding
+
+    context = binding.ProcessBindingContext.current(output_path=Path(output_path))
+    validation_started_s = time.monotonic()
+    result = binding.verify_and_consume_capability(
+        capability,
+        context,
+        public_key=str((capability or {}).get("public_key") or ""),
+        now_monotonic_s=now_monotonic_s,
+        nonce_ledger=binding.NonceLedger(Path(nonce_ledger_path)),
+        adapter_enabled=adapter_enabled,
+    )
+    environment_action_count = 0
+    environment_action_monotonic_s = None
+    synthetic_state: list[str] = []
+    if result.allowed:
+        environment_action_monotonic_s = time.monotonic()
+        synthetic_state.append("adapter_disabled_visible_synthetic_event")
+        environment_action_count = 1
+    return {
+        "actual_live_entrypoint": binding.ACTUAL_LIVE_ENTRYPOINT,
+        "runner_id": binding.RUNNER_ID,
+        "child_pid": os.getpid(),
+        "child_ppid": os.getppid(),
+        "process_context": context.receipt(),
+        "capability_allowed": result.allowed,
+        "capability_reason": result.reason,
+        "capability_consumed_before_environment_action": bool(
+            result.allowed
+            and environment_action_monotonic_s is not None
+            and validation_started_s <= environment_action_monotonic_s
+        ),
+        "fixture_only_validation": False,
+        "adapter_disabled": not adapter_enabled,
+        "environment_action_count": environment_action_count,
+        "synthetic_state_length_before_teardown": len(synthetic_state),
+        "synthetic_state_length_after_teardown": 0,
+        "model_load_count": 0,
+        "level_attempt_count": 0,
+        "scoring_target_selected": False,
+        "public_solve_target_selected": False,
+        "output_path": str(output_path),
+    }
+
+
 def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.

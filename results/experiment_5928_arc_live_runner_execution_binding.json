@@ -1,0 +1,460 @@
+{
+  "absent_self_issued_expired_replayed_wrong_process_command_environment_scope_and_output_denials": {
+    "all_denied_before_environment_action": true,
+    "denial_case_count": 11,
+    "environment_action_count": 0,
+    "level_attempt_count": 0,
+    "model_load_count": 0,
+    "rows": [
+      {
+        "allowed": false,
+        "case": "absent",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "missing_capability"
+      },
+      {
+        "allowed": false,
+        "case": "self_issued",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "self_issued"
+      },
+      {
+        "allowed": false,
+        "case": "expired",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "expired"
+      },
+      {
+        "allowed": false,
+        "case": "replayed",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "nonce_replay"
+      },
+      {
+        "allowed": false,
+        "case": "wrong_process",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "wrong_process"
+      },
+      {
+        "allowed": false,
+        "case": "wrong_command",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "wrong_command"
+      },
+      {
+        "allowed": false,
+        "case": "wrong_environment",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "wrong_environment"
+      },
+      {
+        "allowed": false,
+        "case": "wrong_executable",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "wrong_executable"
+      },
+      {
+        "allowed": false,
+        "case": "adapter_enabled",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "adapter_enabled"
+      },
+      {
+        "allowed": false,
+        "case": "scope_broadened",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "scope_broadened"
+      },
+      {
+        "allowed": false,
+        "case": "output_mismatch",
+        "denied_before_environment_action": true,
+        "environment_action_count": 0,
+        "reason": "output_mismatch"
+      }
+    ]
+  },
+  "actual_live_entrypoint_consumption_receipt": {
+    "actual_live_entrypoint": "carnot.agentic.arc_competition_agent:consume_process_bound_capability_preflight",
+    "adapter_disabled": true,
+    "capability_allowed": true,
+    "capability_consumed_before_environment_action": true,
+    "capability_reason": "allowed",
+    "child_pid": 1224147,
+    "child_ppid": 1224111,
+    "environment_action_count": 1,
+    "fixture_only_validation": false,
+    "level_attempt_count": 0,
+    "model_load_count": 0,
+    "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+    "process_context": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.agentic.arc_live_runner_execution_binding",
+        "--child",
+        "--run-id",
+        "exp5928-parent-child-dry-run",
+        "--output",
+        "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+        "--nonce-ledger",
+        "/tmp/carnot-exp5928-1224111/nonce-ledger"
+      ],
+      "argv_hash": "sha256:8749a90a64f06a6fd9c3daa66017e411e29e16f78b8e465692ff5bdc1a35dc63",
+      "environment_allowlist": {
+        "CARNOT_ARC_LIVE_BINDING_ADAPTER_DISABLED": "1",
+        "CARNOT_ARC_LIVE_BINDING_NO_MODEL_LOAD": "1",
+        "CARNOT_ARC_LIVE_BINDING_RUN_ID": "exp5928-parent-child-dry-run",
+        "CARNOT_ARC_LIVE_BINDING_SCOPE": "actual_live_runner_capability_preflight_no_llm",
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python"
+      },
+      "environment_allowlist_hash": "sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4",
+      "executable_hash": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+      "pid": 1224147,
+      "ppid": 1224111
+    },
+    "public_solve_target_selected": false,
+    "runner_id": "carnot.agentic.arc_competition_agent:E3AgentPolicy",
+    "scoring_target_selected": false,
+    "synthetic_state_length_after_teardown": 0,
+    "synthetic_state_length_before_teardown": 1
+  },
+  "adapter_disabled_binding": {
+    "adapter_disabled_env": "1",
+    "adapter_disabled_required": true,
+    "adapter_enabled": false,
+    "model_loader_allowed": false,
+    "scoring_allowed": false
+  },
+  "capability_schema_scope_expiry_nonce_and_run_id": {
+    "capability_hash_method": "sha256_over_signed_canonical_capability",
+    "child_can_issue_broaden_or_refresh": false,
+    "expires_monotonic_s": 124685.948863674,
+    "issued_monotonic_s": 124655.948863674,
+    "nonce": "exp5928-parent-child-nonce",
+    "nonce_hash": "sha256:29957d614a3944930379289963da769fcd5ced0b6a9be18d29efbe83bf22e87f",
+    "required_fields": [
+      "schema",
+      "issuer_identity",
+      "child_process_identity",
+      "binding",
+      "adapter_disabled_required",
+      "scope",
+      "issued_monotonic_s",
+      "expires_monotonic_s",
+      "nonce",
+      "run_id",
+      "public_key",
+      "signature",
+      "capability_hash"
+    ],
+    "run_id": "exp5928-parent-child-dry-run",
+    "schema": "carnot.arc.live_runner_execution_capability.v1",
+    "scope": "actual_live_runner_capability_preflight_no_llm",
+    "signature_method": "ed25519_parent_private_child_public_verify"
+  },
+  "duration_s": 2.243,
+  "executable_argv_environment_and_output_binding": {
+    "argv_hash": "sha256:8749a90a64f06a6fd9c3daa66017e411e29e16f78b8e465692ff5bdc1a35dc63",
+    "environment_allowlist_hash": "sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4",
+    "exact_command_bound": true,
+    "exact_environment_allowlist_bound": true,
+    "exact_output_bound": true,
+    "executable_hash": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+    "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+    "output_path_hash": "sha256:3112759e9262795a748d75f96fede8d7d1f0d19a5aad00ae583f258f85656efd"
+  },
+  "experiment": "experiment_5928_arc_live_runner_execution_binding",
+  "field_provenance": {
+    "absent_self_issued_expired_replayed_wrong_process_command_environment_scope_and_output_denials": {
+      "principle": "Exp5928 required artifact field `absent_self_issued_expired_replayed_wrong_process_command_environment_scope_and_output_denials` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "actual_live_entrypoint_consumption_receipt": {
+      "principle": "only a capability consumed by the actual child runner before environment action counts; fixture-only validation is insufficient.",
+      "satisfied_by": "REQ-ARC-LREB-5928 principle-annotated artifact contract"
+    },
+    "adapter_disabled_binding": {
+      "principle": "Exp5928 required artifact field `adapter_disabled_binding` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "capability_schema_scope_expiry_nonce_and_run_id": {
+      "principle": "Exp5928 required artifact field `capability_schema_scope_expiry_nonce_and_run_id` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "duration_s": {
+      "principle": "Exp5928 required artifact field `duration_s` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "executable_argv_environment_and_output_binding": {
+      "principle": "Exp5928 required artifact field `executable_argv_environment_and_output_binding` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "field_provenance": {
+      "principle": "Exp5928 required artifact field `field_provenance` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "honest_verdict": {
+      "principle": "use complete_ready:, retired:, or blocked_precondition:.",
+      "satisfied_by": "REQ-ARC-LREB-5928 principle-annotated artifact contract"
+    },
+    "inference_substrate": {
+      "principle": "use actual_live_runner_capability_preflight_no_llm.",
+      "satisfied_by": "REQ-ARC-LREB-5928 principle-annotated artifact contract"
+    },
+    "issuer_child_and_os_process_receipts": {
+      "principle": "Exp5928 required artifact field `issuer_child_and_os_process_receipts` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "live_runner_execution_binding_ready_score": {
+      "principle": "emit bare 1.0 only for external issuer separation, actual child consumption, all denial paths, clean teardown, and immutable registry.",
+      "satisfied_by": "REQ-ARC-LREB-5928 principle-annotated artifact contract"
+    },
+    "no_model_inference_or_level_attempt": {
+      "principle": "Exp5928 required artifact field `no_model_inference_or_level_attempt` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "non_scoring_dry_run_receipt": {
+      "principle": "Exp5928 required artifact field `non_scoring_dry_run_receipt` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "preconditions_checked": {
+      "principle": "Exp5928 required artifact field `preconditions_checked` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "protected_files_unchanged": {
+      "principle": "Exp5928 required artifact field `protected_files_unchanged` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "registry_precheck_receipt": {
+      "principle": "Exp5928 required artifact field `registry_precheck_receipt` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "registry_unchanged": {
+      "principle": "must include exact before/after hash equality.",
+      "satisfied_by": "REQ-ARC-LREB-5928 principle-annotated artifact contract"
+    },
+    "reproducibility_checksum": {
+      "principle": "Exp5928 required artifact field `reproducibility_checksum` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "status": {
+      "principle": "Exp5928 required artifact field `status` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "teardown_nonce_invalidation_and_orphan_check": {
+      "principle": "Exp5928 required artifact field `teardown_nonce_invalidation_and_orphan_check` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "test_commands": {
+      "principle": "Exp5928 required artifact field `test_commands` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    },
+    "test_exit_codes": {
+      "principle": "Exp5928 required artifact field `test_exit_codes` is emitted by the binding builder.",
+      "satisfied_by": "Exp5928 parent-child live runner execution preflight"
+    }
+  },
+  "honest_verdict": "complete_ready: actual_child_live_runner_execution_binding_ready",
+  "inference_substrate": "actual_live_runner_capability_preflight_no_llm",
+  "issuer_child_and_os_process_receipts": {
+    "child_exit_code": 0,
+    "child_pid": 1224147,
+    "child_ppid": 1224111,
+    "child_reported_context": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.agentic.arc_live_runner_execution_binding",
+        "--child",
+        "--run-id",
+        "exp5928-parent-child-dry-run",
+        "--output",
+        "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+        "--nonce-ledger",
+        "/tmp/carnot-exp5928-1224111/nonce-ledger"
+      ],
+      "argv_hash": "sha256:8749a90a64f06a6fd9c3daa66017e411e29e16f78b8e465692ff5bdc1a35dc63",
+      "environment_allowlist": {
+        "CARNOT_ARC_LIVE_BINDING_ADAPTER_DISABLED": "1",
+        "CARNOT_ARC_LIVE_BINDING_NO_MODEL_LOAD": "1",
+        "CARNOT_ARC_LIVE_BINDING_RUN_ID": "exp5928-parent-child-dry-run",
+        "CARNOT_ARC_LIVE_BINDING_SCOPE": "actual_live_runner_capability_preflight_no_llm",
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python"
+      },
+      "environment_allowlist_hash": "sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4",
+      "executable_hash": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+      "pid": 1224147,
+      "ppid": 1224111
+    },
+    "issuer_pid": 1224111,
+    "os_process_boundary_crossed": true,
+    "parent_bound_context": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.agentic.arc_live_runner_execution_binding",
+        "--child",
+        "--run-id",
+        "exp5928-parent-child-dry-run",
+        "--output",
+        "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+        "--nonce-ledger",
+        "/tmp/carnot-exp5928-1224111/nonce-ledger"
+      ],
+      "argv_hash": "sha256:8749a90a64f06a6fd9c3daa66017e411e29e16f78b8e465692ff5bdc1a35dc63",
+      "environment_allowlist": {
+        "CARNOT_ARC_LIVE_BINDING_ADAPTER_DISABLED": "1",
+        "CARNOT_ARC_LIVE_BINDING_NO_MODEL_LOAD": "1",
+        "CARNOT_ARC_LIVE_BINDING_RUN_ID": "exp5928-parent-child-dry-run",
+        "CARNOT_ARC_LIVE_BINDING_SCOPE": "actual_live_runner_capability_preflight_no_llm",
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python"
+      },
+      "environment_allowlist_hash": "sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4",
+      "executable_hash": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+      "pid": 1224147,
+      "ppid": 1224111
+    }
+  },
+  "live_runner_execution_binding_ready_score": 1.0,
+  "no_model_inference_or_level_attempt": {
+    "level_attempt_count": 0,
+    "model_load_count": 0,
+    "no_level_attempt": true,
+    "no_model_inference": true,
+    "public_solve_target_selected": false,
+    "scoring_target_selected": false
+  },
+  "non_scoring_dry_run_receipt": {
+    "no_level_attempt": true,
+    "no_model_load": true,
+    "output_exists": true,
+    "output_path": "/tmp/carnot-exp5928-1224111/child-consumption-receipt.json",
+    "public_solve_target_selected": false,
+    "returncode": 0,
+    "scoring_target_selected": false,
+    "stderr": "",
+    "stdout": [
+      "{\"actual_live_entrypoint\": \"carnot.agentic.arc_competition_agent:consume_process_bound_capability_preflight\", \"adapter_disabled\": true, \"capability_allowed\": true, \"capability_consumed_before_environment_action\": true, \"capability_reason\": \"allowed\", \"child_pid\": 1224147, \"child_ppid\": 1224111, \"environment_action_count\": 1, \"fixture_only_validation\": false, \"level_attempt_count\": 0, \"model_load_count\": 0, \"output_path\": \"/tmp/carnot-exp5928-1224111/child-consumption-receipt.json\", \"process_context\": {\"argv\": [\"/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python\", \"-m\", \"carnot.agentic.arc_live_runner_execution_binding\", \"--child\", \"--run-id\", \"exp5928-parent-child-dry-run\", \"--output\", \"/tmp/carnot-exp5928-1224111/child-consumption-receipt.json\", \"--nonce-ledger\", \"/tmp/carnot-exp5928-1224111/nonce-ledger\"], \"argv_hash\": \"sha256:8749a90a64f06a6fd9c3daa66017e411e29e16f78b8e465692ff5bdc1a35dc63\", \"environment_allowlist\": {\"CARNOT_ARC_LIVE_BINDING_ADAPTER_DISABLED\": \"1\", \"CARNOT_ARC_LIVE_BINDING_NO_MODEL_LOAD\": \"1\", \"CARNOT_ARC_LIVE_BINDING_RUN_ID\": \"exp5928-parent-child-dry-run\", \"CARNOT_ARC_LIVE_BINDING_SCOPE\": \"actual_live_runner_capability_preflight_no_llm\", \"JAX_PLATFORMS\": \"cpu\", \"PYTHONPATH\": \"/home/ianblenke/github.com/ianblenke/carnot/python\"}, \"environment_allowlist_hash\": \"sha256:0cbb7ca21d2c2fe79d04f963d1105f85b81720284ef29f26b40fc7a1b76c6af4\", \"executable_hash\": \"sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b\", \"executable_path\": \"/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python\", \"output_path\": \"/tmp/carnot-exp5928-1224111/child-consumption-receipt.json\", \"pid\": 1224147, \"ppid\": 1224111}, \"public_solve_target_selected\": false, \"runner_id\": \"carnot.agentic.arc_competition_agent:E3AgentPolicy\", \"scoring_target_selected\": false, \"synthetic_state_length_after_teardown\": 0, \"synthetic_state_length_before_teardown\": 1}"
+    ]
+  },
+  "preconditions_checked": {
+    "atomic_output_ready": true,
+    "disk_free_bytes": 1221852180480,
+    "environment_schema": {
+      "adapter_disabled_required": true,
+      "environment_id": "synthetic_adapter_disabled_live_runner_preflight",
+      "level_attempt_allowed": false,
+      "model_load_allowed": false,
+      "scope": "actual_live_runner_capability_preflight_no_llm",
+      "scoring_target_allowed": false
+    },
+    "environment_schema_hash": "sha256:b968f8931d89bd5a239cc0b10c18facd6875cc098762a287f66b38e1fd714c5e",
+    "hashed_files": {
+      "ops/arc_solve_registry.yaml": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:cf77703bd7bc90dc6b90fe49d62c7aff9b39f3d4834e05b7ca1da8a341c0df58",
+      "python/carnot/agentic/arc_live_runner_execution_binding.py": "sha256:78b6f8812d29f858ed569b77004015a3bab93547a1cd9c414a4456a238a882be",
+      "results/experiment_5902_arc_structured_memory_live_ab.json": "sha256:8fb5ba03b64ada101b14967cf0d7ffeeb0bdaee627ae3e2cc5c43c6956308595",
+      "results/experiment_5915_arc_live_runner_capability_lease.json": "sha256:feec853a2898a1ff8ec67994f4e3e1699dda580360ed3386f191fc1d9a9ba2d0",
+      "results/experiment_5916_arc_structured_memory_live_held_ab.json": "sha256:446b57b111d537d6a70439150d56aedbc06c6e4fb5ba13e104e6d1af41309be5",
+      "scripts/arc_loop_solve.py": "sha256:444761539f0e8acf796cbd3c9bdc1f80e8946c1af64d1a8c5e7d00fedf1f2086"
+    },
+    "no_model_load": true,
+    "no_public_solve_target": true,
+    "no_scoring_target": true,
+    "ok": true,
+    "output_hash_before": null,
+    "output_parent_exists": true,
+    "output_parent_writable": true,
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5928_arc_live_runner_execution_binding.json",
+    "teardown_ready": true
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "hashes_after": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:9e4b15b8249887620645cce6c4a8f558b52ec88cd8b760234d0af9e8f35a5a75",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "hashes_before": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:9e4b15b8249887620645cce6c4a8f558b52ec88cd8b760234d0af9e8f35a5a75",
+      "ops/status.md": "sha256:d3ba1d941bcb5391b31afbde428e74ee74ee2362d423f6bb2a8e541a62ab90b8",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "protected_paths": [
+      "_bmad/traceability.md",
+      "ops/changelog.md",
+      "ops/status.md",
+      "scripts/research_conductor.py"
+    ]
+  },
+  "registry_precheck_receipt": {
+    "all_public_games_cleared": true,
+    "checked_before_parent_child_dry_run": true,
+    "full_game_clear_count": 25,
+    "ok": true,
+    "path": "ops/arc_solve_registry.yaml",
+    "public_games_count": 25,
+    "public_level_target_selected": false,
+    "registry_hash_after": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "registry_hash_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "registry_update_allowed": false
+  },
+  "registry_unchanged": {
+    "principle": "must include exact before/after hash equality.",
+    "registry_hash_after": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "registry_hash_before": "sha256:1520f0f179d5aedcea171ed2a6e313fd7757bae5f5ea60789317cb1164823b72",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:097b95e91cf1866ebed046e89de037680050d76417e6d00dea6fc56226e42913",
+  "result_path": "results/experiment_5928_arc_live_runner_execution_binding.json",
+  "schema": "carnot.exp5928.arc_live_runner_execution_binding.v1",
+  "status": "complete_ready",
+  "teardown_nonce_invalidation_and_orphan_check": {
+    "child_process_orphaned": false,
+    "credential_env_keys_present": [],
+    "issuer_secret_persisted": false,
+    "nonce": "exp5928-parent-child-nonce",
+    "nonce_ledger_removed_after_teardown": true,
+    "nonce_replay_denied_before_teardown": true,
+    "teardown_ready": true
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5928_arc_live_runner_execution_binding.py -q -n0 -o addopts=''",
+    ".venv/bin/python -m coverage erase && .venv/bin/python -m coverage run --include='*/python/carnot/agentic/arc_live_runner_execution_binding.py' -m pytest tests/python/test_experiment_5928_arc_live_runner_execution_binding.py -q -n0 -o addopts='' && .venv/bin/python -m coverage report --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.agentic.arc_live_runner_execution_binding --write-artifact",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5928_arc_live_runner_execution_binding.json --json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5928_arc_live_runner_execution_binding.py",
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --quiet -- ops/arc_solve_registry.yaml",
+    "git diff --quiet -- _bmad/traceability.md ops/changelog.md ops/status.md scripts/research_conductor.py"
+  ],
+  "test_exit_codes": {
+    "pre_implementation_focused_test_expected_failure": 2
+  }
+}

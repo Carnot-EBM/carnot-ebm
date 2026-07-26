@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_cptb_shipped_lever_convention_transfer",
  "title": "Convention-perturbation transfer battery for the two levers flipped ON 2026-07-25 (frontier tier discipline; HUD edge-bar mask)",
- "run_date": "2026-07-26T01:00:30Z",
+ "run_date": "2026-07-26T01:09:10Z",
  "duration_s": 16178.36,
  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
  "solve_provenance": "development_proxy",
@@ -138,7 +138,8 @@
    "SHIP|C2_diag_roll": 0
   },
   "interpretable": true,
-  "principle": "An arm with no expansion count and no error count is an UNINSTRUMENTED arm; this project once read a 72-97%-crashed control as a legitimate null across 975 cells for exactly that reason. Every row of every arm carries states_expanded and an error count, and a run above a 5% errored-cell rate is refused interpretation."
+  "principle": "An arm with no expansion count and no error count is an UNINSTRUMENTED arm; this project once read a 72-97%-crashed control as a legitimate null across 975 cells for exactly that reason. Every row of every arm carries states_expanded and an error count, and a run above a 5% errored-cell rate is refused interpretation.",
+  "HONEST_SCOPE_OF_THE_ERROR_COUNT": "Do NOT read errored_cell_rate == 0.0 as 'nothing was swallowed anywhere'. For an explorer arm, run_cell's `errors` counts only the click-pixel sampler's two internal exception paths, and click_pixel_sampling is OFF in all four arms here, so that counter is 0 BY CONSTRUCTION and carries almost no information. The load-bearing integrity signals in this run are the ones that are not vacuous: coverage_complete (1500 of 1500 expected cells present), zero rows with ran=False (a run_game crash is attributed to the raising arm's own row), and zero ran-rows missing states_expanded."
  },
  "measured_determinism_per_arm": {
   "CTRL": {
@@ -5125,6 +5126,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "absolute-colour salience ({6..15}), which ONLY the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and is provably unaffected (static dose witness: 0 of 25 games change their HUD mask)",
    "verdict": "SURVIVES_CONVENTION_VIOLATION"
   },
   "frontier_given_hud_off|C2_diag_roll": {
@@ -5241,6 +5244,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
    "verdict": "SURVIVES_CONVENTION_VIOLATION"
   },
   "frontier_given_hud_on|C1_salience_inversion": {
@@ -5359,6 +5364,8 @@
    ],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "absolute-colour salience ({6..15}), which ONLY the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and is provably unaffected (static dose witness: 0 of 25 games change their HUD mask)",
    "verdict": "SURVIVES_CONVENTION_VIOLATION"
   },
   "frontier_given_hud_on|C2_diag_roll": {
@@ -5475,6 +5482,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
    "verdict": "SURVIVES_CONVENTION_VIOLATION"
   },
   "hud_given_frontier_on|C2_diag_roll": {
@@ -5527,6 +5536,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
    "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
   },
   "hud_given_frontier_on|C1_salience_inversion": {
@@ -5579,7 +5590,10 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
-   "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
+   "perturbation_targets_this_levers_convention": false,
+   "what_convention_this_perturbation_attacks": "absolute-colour salience ({6..15}), which ONLY the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and is provably unaffected (static dose witness: 0 of 25 games change their HUD mask)",
+   "verdict": "OFF_TARGET_FOR_THIS_LEVER_observed_gain_does_not_survive_convention_violation",
+   "off_target_note": "C1_salience_inversion does not perturb the hud lever's own convention, so this result must NOT be read as 'hud is/is not convention-robust'. What it shows is how the hud lever's marginal contribution behaves when the OTHER lever's input distribution is disturbed."
   },
   "hud_given_frontier_off|C2_diag_roll": {
    "lever": "hud",
@@ -5651,6 +5665,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
    "verdict": "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION"
   },
   "hud_given_frontier_off|C1_salience_inversion": {
@@ -5726,6 +5742,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": false,
    "reason_if_not_evaluable": "the perturbation is behaviourally INERT on the treatment arm HUDO (0/125 cells moved), so the retention ratio here is arithmetic, not robustness. Reported as UNINTERPRETABLE rather than as a survival.",
+   "perturbation_targets_this_levers_convention": false,
+   "what_convention_this_perturbation_attacks": "absolute-colour salience ({6..15}), which ONLY the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and is provably unaffected (static dose witness: 0 of 25 games change their HUD mask)",
    "verdict": "UNINTERPRETABLE_INERT_OR_NO_ANCHOR"
   },
   "both_levers_shipped_vs_preflip|C1_salience_inversion": {
@@ -5861,6 +5879,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "absolute-colour salience ({6..15}), which ONLY the frontier tier predicate reads; the HUD Stage-1 predicate is pure geometry and is provably unaffected (static dose witness: 0 of 25 games change their HUD mask)",
    "verdict": "SURVIVES_CONVENTION_VIOLATION"
   },
   "both_levers_shipped_vs_preflip|C2_diag_roll": {
@@ -5997,6 +6017,8 @@
    "games_lost_on_every_seed_under_perturbation": [],
    "evaluable": true,
    "reason_if_not_evaluable": null,
+   "perturbation_targets_this_levers_convention": true,
+   "what_convention_this_perturbation_attacks": "edge adjacency (HUD Stage-1 `y1 < tol`) AND object geometry/position, which the frontier tier predicate's width test also reads -- so this condition is on-target for BOTH levers and is NOT a clean single-mechanism probe",
    "verdict": "SURVIVES_CONVENTION_VIOLATION"
   }
  },
@@ -6187,8 +6209,8 @@
     "interpretation": "The mask resolution is IDENTICAL to C0 (the Stage-1 predicate is colour-invariant by construction, and the static dose witness measured zero HUD-mask change on all 25 games). HUD-alone still wins r11l on 5 of 5 seeds. The shipped both-levers-on arm wins it on 0 of 5. So under inverted salience the FRONTIER lever destroys the HUD's win, with the detector working normally."
    }
   },
-  "5_NEW_destructive_interaction_visible_on_REAL_games_today": {
-   "claim": "On the unperturbed real games, in today's shipped configuration, the frontier lever costs a game that the HUD lever alone wins on every seed. Neither flip's own A/B could see this, because both of their controls also lose that game.",
+  "5_the_two_levers_interact_and_the_two_cases_are_DIFFERENT_in_kind": {
+   "claim": "Adding the frontier lever on top of the HUD lever costs games the HUD lever alone wins. A budget sweep separates two cases that look identical at budget 2000 but are not: tn36 is an EFFICIENCY regression that crosses the budget, r11l-under-salience-inversion is a genuine CAPABILITY loss. Neither flip's own A/B could see either, because both of their controls also lose these games.",
    "games_HUDO_wins_and_SHIP_loses_on_every_seed": {
     "C0_real": [
      "tn36"
@@ -6211,11 +6233,91 @@
     "HUDO": 5,
     "SHIP": 5
    },
-   "mechanism": "On tn36 at C0 both HUDO and SHIP resolve the SAME 61-cell mask, so the difference is not the mask. HUDO expands 52 graph nodes and banks the level in 1506 actions; SHIP expands 17 and never reaches it. The global tier barrier prunes the branch that contains the win.",
-   "what_this_does_and_does_not_argue": "It does NOT argue for un-flipping either lever: the shipped configuration still has the highest median win count of the four arms (see per_arm_condition_wins). It is a specific, reproducible, previously unmeasured cost, and the decision is the operator's."
+   "r11l_win_matrix_C1": {
+    "CTRL": 0,
+    "FRONT": 0,
+    "HUDO": 5,
+    "SHIP": 0
+   },
+   "WHY_A_BUDGET_SWEEP_WAS_REQUIRED": "At budget 2000 both cases read as 'SHIP loses a game HUDO wins'. This project has already documented one such loss (arm B2's cd82) that turned out to be a budget WALL rather than lost capability, so the same alternative explanation had to be excluded here before either could be called a regression. The first draft of this finding called tn36 a capability loss; the sweep refuted that, and the corrected reading is below.",
+   "budget_sweep": {
+    "tn36_C0_SHIP": {
+     "budget_2000": {
+      "levels": 0,
+      "actions": 1676,
+      "states_expanded": 17
+     },
+     "budget_4000": {
+      "levels": 0,
+      "actions": 3511,
+      "states_expanded": 17
+     },
+     "budget_8000": {
+      "levels": 1,
+      "actions": 5337,
+      "states_expanded": 27
+     },
+     "verdict": "BUDGET_WALL_NOT_CAPABILITY_LOSS"
+    },
+    "tn36_C0_HUDO": {
+     "budget_2000": {
+      "levels": 1,
+      "actions": 1506,
+      "states_expanded": 52
+     },
+     "budget_8000": {
+      "levels": 1,
+      "actions": 1506,
+      "states_expanded": 52
+     },
+     "verdict": "wins at every budget; the cheaper arm"
+    },
+    "r11l_C1_SHIP": {
+     "budget_2000": {
+      "levels": 0,
+      "actions": 1897
+     },
+     "budget_4000": {
+      "levels": 0,
+      "actions": 3848
+     },
+     "budget_8000": {
+      "levels": 0,
+      "actions": 7504
+     },
+     "budget_16000": {
+      "levels": 0,
+      "actions": 14774,
+      "states_expanded": 872
+     },
+     "verdict": "CAPABILITY_LOSS_not_a_budget_wall_still_0_at_8x_budget"
+    },
+    "r11l_C1_HUDO": {
+     "budget_2000": {
+      "levels": 1,
+      "actions": 1068
+     },
+     "budget_16000": {
+      "levels": 1,
+      "actions": 1068,
+      "states_expanded": 207
+     },
+     "verdict": "wins in 1068 actions at every budget tested"
+    },
+    "raw_rows": [
+     "results/cptb_20260726_cells/budget_sweep_C0.jsonl.gz",
+     "results/cptb_20260726_cells/budget_sweep_r11l_C1.jsonl.gz"
+    ]
+   },
+   "corrected_reading": {
+    "tn36_on_real_games": "The frontier lever makes tn36 roughly 3.5x more expensive (HUDO 1506 actions vs SHIP 5337) with the SAME 61-cell mask resolved in both arms, which pushes the win past the 2000-action budget. It is an efficiency regression with a budget-visible consequence, in the same class as the already-known cd82 residual -- NOT a destroyed capability.",
+    "r11l_under_salience_inversion": "This one is real. HUD-alone wins r11l in 1068 actions under inverted salience at every budget tested; the shipped both-on configuration is still at 0 levels after 14774 actions (8x the measured budget) with the mask resolving normally. The frontier lever removes a capability the HUD lever supplies, once the colour convention no longer holds."
+   },
+   "mechanism": "In both cases HUDO and SHIP resolve the SAME mask, so the mask is not the difference. The difference is search shape: on tn36 at budget 2000 HUDO expands 52 graph nodes and banks the level while SHIP expands 17; the global tier barrier defers the branch containing the win behind an exhaustive lower-tier sweep, which costs actions rather than reachability. Under salience inversion the tier assignment itself is wrong, so the deferral no longer converges within any budget tested.",
+   "what_this_does_and_does_not_argue": "It does NOT argue for un-flipping either lever: the shipped configuration still has the highest median win count of the four arms at every condition (see per_arm_condition_wins). These are specific, reproducible, previously unmeasured costs, and the decision is the operator's."
   }
  },
- "headline": "Frontier lever: gain SURVIVES both convention violations (median +4 -> +3 under salience inversion, +4 under the geometric roll; strict per-seed dominance in all three conditions; no single game carries it). HUD lever: its shipped marginal gain is one game (r11l) and is 0 on every seed under BOTH perturbations -- under the roll because the mask stops resolving (5/5 -> 0/5 seeds), under salience inversion because the frontier lever destroys the win while the mask is intact. Separately, on REAL unperturbed games the two levers interact destructively: HUD-alone wins tn36 on 5/5 seeds, the shipped both-on config on 0/5. NO hidden-game transfer is claimed or measured.",
+ "headline": "FRONTIER LEVER: its gain SURVIVES violation of the absolute-colour salience convention it keys on -- median +4 -> +3 games (retention 0.75), strict per-seed dominance, no seed regresses -- and the gain is spread over 4 games, so no single public game carries it. Under the geometric roll the absolute gain is also +4, but read that with the absolute win level: the roll collapses the pre-flip control from 7 wins to 1, so a 'retention 1.0' there sits on a far smaller base and is not the same statement as at C0. HUD LEVER: its marginal gain in the shipped configuration is exactly ONE game (r11l) -- remove r11l and the gain is 0 -- and it is 0 on every seed under both perturbations, for two DIFFERENT reasons that the artifact keeps separate: under the roll the detector itself stops working (r11l's mask resolves on 5/5 seeds at C0 and 0/5 under the roll, measured independently of any win), while under salience inversion the mask is provably untouched and the FRONTIER lever destroys the win instead. NEW: the two levers interact, and a budget sweep splits it into two different things. On REAL unperturbed tn36, HUD-alone wins on 5/5 seeds and the shipped both-on config on 0/5 with an identical 61-cell mask -- but SHIP DOES win tn36 at budget 8000 (5337 actions vs HUD-alone's 1506), so that is a ~3.5x EFFICIENCY regression crossing the budget, not a lost capability (the first draft of this finding said capability loss; the sweep refuted it). The genuine capability loss is r11l under salience inversion: HUD-alone wins it in 1068 actions at every budget, the shipped config is still at 0 after 14774 actions -- 8x the measured budget. Neither flip's own A/B could have seen either, because both of their controls also lose these games. NO hidden-game transfer is claimed or measured here, and none can be from this harness: all 25 public games are already solved and the scored path is operator-only. This measures CONVENTION-DEPENDENCE, which is necessary but not sufficient for transfer.",
  "preconditions_checked": [
   {
    "resource": "offline_arcade_environment_files",
@@ -6297,7 +6399,7 @@
   "conclusion": "The concurrent edit is inert for this battery's arms by both checks, so all 1500 cells are comparable."
  },
  "provenance": {
-  "git_head": "647db34945a915f1fa87058a9f217e0a87305457",
+  "git_head": "755bf504adbf54ec0985ba4c9cf7f7613d22ab95",
   "working_tree_dirty_at_run_time": true,
   "unstaged_files_at_run_time_not_authored_by_this_experiment": [
    "python/carnot/agentic/arc_competition_agent.py",
