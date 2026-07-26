@@ -1,0 +1,1016 @@
+{
+  "abi_v2_schema_hash_and_operation_mapping": {
+    "hls_semantics": "same fixed-width request/response record, no model weights",
+    "operation_mapping": {
+      "commit": {
+        "atomic_boundary": true,
+        "mutates_state": true,
+        "opcode": 4,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "lookup": {
+        "atomic_boundary": false,
+        "mutates_state": false,
+        "opcode": 2,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": true,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "promote": {
+        "atomic_boundary": true,
+        "mutates_state": true,
+        "opcode": 6,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "propose": {
+        "atomic_boundary": false,
+        "mutates_state": true,
+        "opcode": 3,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": true,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "quarantine": {
+        "atomic_boundary": true,
+        "mutates_state": true,
+        "opcode": 7,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "recover": {
+        "atomic_boundary": true,
+        "mutates_state": true,
+        "opcode": 11,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "reject": {
+        "atomic_boundary": true,
+        "mutates_state": true,
+        "opcode": 9,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "rollback": {
+        "atomic_boundary": true,
+        "mutates_state": true,
+        "opcode": 10,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "snapshot": {
+        "atomic_boundary": false,
+        "mutates_state": false,
+        "opcode": 1,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "supersede": {
+        "atomic_boundary": false,
+        "mutates_state": true,
+        "opcode": 8,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": false,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      },
+      "validate": {
+        "atomic_boundary": false,
+        "mutates_state": true,
+        "opcode": 5,
+        "present_in_exp5926": true,
+        "request_record": "adaptive_state_abi_v2_request_t",
+        "requires_snapshot": false,
+        "requires_validator_receipt": true,
+        "response_record": "adaptive_state_abi_v2_response_t"
+      }
+    },
+    "rtl_source": "hardware/fpga/adaptive_state_abi_v2_iface.v",
+    "schema_hash": "sha256:14d5603bfe2ee9c14d35b177f1c5e13b674f3757276a20e0d4a47220b6ff8424"
+  },
+  "authenticated_route_state_diff": {
+    "commands_run_for_diff": [],
+    "current_route_state_hash": "sha256:3eeb6f0fc16c718c617aaebc8220d1af9c6bac7c1cd39de812f1200213a60f7a",
+    "materially_new_authenticated_route": false,
+    "per_board": {
+      "gatemate": {
+        "authenticated_state_operation_execution": false,
+        "bounded_state_operation_authorized": false,
+        "route_changed_since_exp5861": false
+      },
+      "kv260": {
+        "authenticated_state_operation_execution": false,
+        "bounded_state_operation_authorized": false,
+        "route_changed_since_exp5861": false
+      },
+      "polarfire": {
+        "authenticated_state_operation_execution": false,
+        "bounded_state_operation_authorized": false,
+        "route_changed_since_exp5861": false
+      }
+    },
+    "physical_probe_authorized": false,
+    "previous_route_state_hash": "sha256:25bc95735a64cd0e36887c3d0a44cafcace336fd93ba6858c98f210d3765fd68",
+    "read_only_diff_before_board_command": true,
+    "source_artifact": "results/experiment_5861_attached_board_state_receipts.json",
+    "source_sha256": "sha256:50bdea2190a030b73719e80e55de4b36a3de63bda7552dabc0b14fa56229f8e2"
+  },
+  "board_abi_mapping_ready_score": 1.0,
+  "bounded_physical_trace_and_teardown_if_any": [],
+  "duration_s": 0.0,
+  "experiment": 5930,
+  "experiment_id": "experiment_5930_adaptive_state_board_mapping",
+  "field_principles": {
+    "abi_v2_schema_hash_and_operation_mapping": "Every supported ABI v2 operation has a finite board-neutral encoding.",
+    "authenticated_route_state_diff": "Only a materially new authenticated route may permit a board command.",
+    "board_abi_mapping_ready_score": "Bare 1.0 means ABI trace parity plus static tool receipts, not acceleration.",
+    "bounded_physical_trace_and_teardown_if_any": "Physical execution requires exact commands, identity, trace, rollback, and teardown.",
+    "duration_s": "Wall time exposes receipt generation scope.",
+    "field_provenance": "Every field traces to specs, upstream artifacts, source, tools, traces, or route diff.",
+    "fixed_width_request_response_and_error_contract": "Fixed-width request and response records make RTL/HLS behavior finite.",
+    "gate_replay_receipt": "Exp5926 readiness and trace hashes authorize mapping.",
+    "honest_verdict": "Use `complete_static_mapping:`, `complete_physical_receipt:`, `no_change:`, `retired:`, or `blocked:`.",
+    "inference_substrate": "Use `rtl_hls_simulation_and_static_synthesis_no_llm`.",
+    "installed_toolchain_target_command_exit_and_hash_receipts": "Tool receipts pin the local static evidence path.",
+    "kv260_polarfire_and_gatemate_state_receipts": "Upstream board states stay separate and cannot imply new execution.",
+    "no_speedup_power_energy_thermalization_convergence_tsu_kona_or_sovereignty_claim": "Bare true unless fresh physical measurements authorize a narrower claim.",
+    "no_unchanged_probe_receipt": "Retired probes are skipped when routes are unchanged.",
+    "ordering_backpressure_atomicity_rollback_and_recovery": "Valid/ready ordering, backpressure, commit, rollback, and recovery are explicit.",
+    "physical_probe_executed": "Bare true only after a fresh changed authenticated route and recorded teardown.",
+    "preconditions_checked": "Hash source, tools, routes, outputs, and protected files before any board command.",
+    "protected_files_unchanged": "Conductor and ops reconciliation files remain byte-identical.",
+    "reproducibility_checksum": "A checksum detects ABI, source, tool, trace, route, or artifact drift.",
+    "simulator_reference_trace_parity": "Simulation parity is ABI trace/state/status parity, not performance.",
+    "stale_replay_tamper_and_crash_matrix": "Unsafe sequences fail closed without partial mutation.",
+    "static_synthesis_timing_estimate_and_resource_reports": "Synthesis/resource/timing receipts are estimates unless physical measurement exists.",
+    "status": "Terminal mapping state without physical-performance implication.",
+    "test_commands": "Verification commands are recorded.",
+    "test_exit_codes": "Exit codes prevent failed static checks from becoming readiness.",
+    "verifier_is_oracle": "True only for ABI trace/state/status parity, hashes, and tool receipts."
+  },
+  "field_provenance": {
+    "abi_v2_schema_hash_and_operation_mapping": [
+      "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+      "REQ-FPGA-5930"
+    ],
+    "authenticated_route_state_diff": [
+      "results/experiment_5861_attached_board_state_receipts.json"
+    ],
+    "board_abi_mapping_ready_score": [
+      "trace parity",
+      "static tool receipts"
+    ],
+    "bounded_physical_trace_and_teardown_if_any": [
+      "physical command receipts when present"
+    ],
+    "duration_s": [
+      "local wall clock"
+    ],
+    "field_provenance": [
+      "REQ-HW-5930"
+    ],
+    "fixed_width_request_response_and_error_contract": [
+      "REQ-FPGA-5930",
+      "hardware/fpga/adaptive_state_abi_v2_iface.v"
+    ],
+    "gate_replay_receipt": [
+      "results/experiment_5926_adaptive_state_abi_v2_parity.json"
+    ],
+    "honest_verdict": [
+      "status",
+      "claim boundary",
+      "route diff"
+    ],
+    "inference_substrate": [
+      "REQ-HW-5930"
+    ],
+    "installed_toolchain_target_command_exit_and_hash_receipts": [
+      "local static commands"
+    ],
+    "kv260_polarfire_and_gatemate_state_receipts": [
+      "results/experiment_5861_attached_board_state_receipts.json"
+    ],
+    "no_speedup_power_energy_thermalization_convergence_tsu_kona_or_sovereignty_claim": [
+      "claim boundary"
+    ],
+    "no_unchanged_probe_receipt": [
+      "authenticated_route_state_diff"
+    ],
+    "ordering_backpressure_atomicity_rollback_and_recovery": [
+      "REQ-HW-5930",
+      "simulator"
+    ],
+    "physical_probe_executed": [
+      "authenticated_route_state_diff"
+    ],
+    "preconditions_checked": [
+      "source hashes",
+      "tool versions",
+      "route diff"
+    ],
+    "protected_files_unchanged": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "reproducibility_checksum": [
+      "canonical artifact JSON"
+    ],
+    "simulator_reference_trace_parity": [
+      "python reference",
+      "simulator"
+    ],
+    "stale_replay_tamper_and_crash_matrix": [
+      "adversarial simulator cases"
+    ],
+    "static_synthesis_timing_estimate_and_resource_reports": [
+      "yosys receipts"
+    ],
+    "status": [
+      "gate_replay_receipt",
+      "route_diff",
+      "static_tool_receipts"
+    ],
+    "test_commands": [
+      "test_exit_codes keys"
+    ],
+    "test_exit_codes": [
+      "caller supplied command receipts"
+    ],
+    "verifier_is_oracle": [
+      "ABI parity",
+      "hashes",
+      "tool receipts"
+    ]
+  },
+  "fixed_width_request_response_and_error_contract": {
+    "abi_version": 2,
+    "error_codes": {
+      "INVALID_OPCODE": 2,
+      "INVALID_ORDER": 3,
+      "INVALID_VALIDATOR_RECEIPT": 5,
+      "OK": 0,
+      "PARTIAL_STATE_TRANSITION_REJECTED": 9,
+      "PRIOR_STATE_MISMATCH": 7,
+      "REPLAYED_COMMIT": 4,
+      "ROLLBACK_TARGET_MISSING": 6,
+      "STALE_SNAPSHOT": 8,
+      "STALE_STATE_VERSION": 1,
+      "USE_AFTER_RELEASE": 10
+    },
+    "model_semantics_embedded": false,
+    "model_weights_embedded": false,
+    "request_bits": 1936,
+    "request_fields": {
+      "abi_version": "u16",
+      "event_hash": "u256",
+      "event_index": "u32",
+      "expected_state_version": "u32",
+      "flags": "u8",
+      "key_hash": "u256",
+      "opcode": "u8",
+      "payload_hash": "u256",
+      "proposal_id": "u256",
+      "reason_code": "u8",
+      "request_id": "u32",
+      "snapshot_id": "u256",
+      "target_state_hash": "u256",
+      "validator_receipt_hash": "u256",
+      "validator_status": "u8"
+    },
+    "response_bits": 1640,
+    "response_fields": {
+      "abi_version": "u16",
+      "accepted": "u8",
+      "error_code": "u8",
+      "payload_hash": "u256",
+      "previous_state_hash": "u256",
+      "proposal_id": "u256",
+      "request_id": "u32",
+      "resulting_state_hash": "u256",
+      "snapshot_id": "u256",
+      "state_version": "u32",
+      "status_code": "u8",
+      "validator_receipt_hash": "u256"
+    },
+    "state_version_rule": "req.expected_state_version must equal current state_version before mutation",
+    "status_codes": {
+      "ERROR": 1,
+      "OK": 0,
+      "STALL": 2
+    },
+    "valid_ready": {
+      "accept_condition": "req_valid && req_ready",
+      "backpressure_mutates_state": false,
+      "in_order_response": true,
+      "response_hold_condition": "resp_valid && !resp_ready"
+    },
+    "validator_receipt_transport": "u256 validator_receipt_hash required for validate"
+  },
+  "gate_replay_receipt": {
+    "abi_schema_hash": "sha256:14d5603bfe2ee9c14d35b177f1c5e13b674f3757276a20e0d4a47220b6ff8424",
+    "artifact_path": "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+    "artifact_sha256": "sha256:eeefe30580820cd19bd7cb60c65fe80b4bd9352ecbbf915b2a8b3018e75b9f67",
+    "exp5926_ready_score": 1.0,
+    "exp5926_status": "complete_ready",
+    "gate_replayed": true,
+    "operation_count": 37,
+    "supported_operations": [
+      "snapshot",
+      "lookup",
+      "propose",
+      "commit",
+      "validate",
+      "promote",
+      "quarantine",
+      "supersede",
+      "reject",
+      "rollback",
+      "recover"
+    ],
+    "trace_hash": "sha256:6843442226b802e610d811c6eec5764739299765cf7129c59d0bf82e88602a81"
+  },
+  "honest_verdict": "complete_static_mapping: ABI v2 trace parity and local static RTL/HLS synthesis receipts complete; physical_probe_executed=false; kv260=programmed_image_poc polarfire=prior_physical_workload_only gatemate=blocked_idcode; no speed power energy thermalization convergence TSU Kona or sovereignty claim",
+  "inference_substrate": "rtl_hls_simulation_and_static_synthesis_no_llm",
+  "installed_toolchain_target_command_exit_and_hash_receipts": {
+    "iverilog_lint": {
+      "command": "iverilog -g2012 -Wall -tnull hardware/fpga/adaptive_state_abi_v2_iface.v",
+      "duration_s": 0.0136,
+      "exit_code": 0,
+      "measurement_type": "static_estimate",
+      "name": "iverilog_lint",
+      "output_sha256": "sha256:c6dce958d10b2cd6ee306f8febeb8b89cb0a04c716c5eef23594ecbcf98e4e24",
+      "physical_measurement": false,
+      "scope": "local_static_tool_no_board_probe",
+      "stderr_excerpt": [],
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": [],
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_tail_excerpt": [],
+      "target": "rtl_lint"
+    },
+    "iverilog_sim_build": {
+      "command": "iverilog -g2012 -o output/experiment_5930_adaptive_state_board_mapping/adaptive_state_abi_v2_iface_tb.vvp hardware/fpga/adaptive_state_abi_v2_iface.v hardware/fpga/adaptive_state_abi_v2_iface_tb.v",
+      "duration_s": 0.014566,
+      "exit_code": 0,
+      "measurement_type": "static_estimate",
+      "name": "iverilog_sim_build",
+      "output_sha256": "sha256:96f8c3392206c7faf472f46f7801adf0410b0c14423d4b2a1c42b12bcfa44776",
+      "physical_measurement": false,
+      "scope": "local_static_tool_no_board_probe",
+      "stderr_excerpt": [],
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": [],
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_tail_excerpt": [],
+      "target": "rtl_simulation_build"
+    },
+    "rtl_simulation": {
+      "command": "vvp output/experiment_5930_adaptive_state_board_mapping/adaptive_state_abi_v2_iface_tb.vvp",
+      "duration_s": 0.007987,
+      "exit_code": 0,
+      "measurement_type": "static_estimate",
+      "name": "rtl_simulation",
+      "output_sha256": "sha256:05e92764b63bfe99d418481c561e541554ede9a0db496c601295be760a135966",
+      "physical_measurement": false,
+      "scope": "local_static_tool_no_board_probe",
+      "stderr_excerpt": [],
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": [
+        "EXP5930 ABI v2 RTL smoke PASS",
+        "hardware/fpga/adaptive_state_abi_v2_iface_tb.v:188: $finish called at 325000 (1ps)"
+      ],
+      "stdout_sha256": "sha256:ba45da609b92c7dc17bc849a06e297e8185465ed30ee9e997e250813741c5759",
+      "stdout_tail_excerpt": [
+        "EXP5930 ABI v2 RTL smoke PASS",
+        "hardware/fpga/adaptive_state_abi_v2_iface_tb.v:188: $finish called at 325000 (1ps)"
+      ],
+      "target": "rtl_simulation_trace_smoke"
+    },
+    "yosys_gatemate_synth_estimate": {
+      "command": "yosys -p 'read_verilog -sv hardware/fpga/adaptive_state_abi_v2_iface.v; synth_gatemate -top adaptive_state_abi_v2_iface -json output/experiment_5930_adaptive_state_board_mapping/adaptive_state_abi_v2_iface_gatemate.json; stat'",
+      "duration_s": 6.084591,
+      "exit_code": 0,
+      "measurement_type": "static_estimate",
+      "name": "yosys_gatemate_synth_estimate",
+      "output_sha256": "sha256:4e6f4656a6423c43b4e1610bba376dd034322229097e5194d514fd8fc4d78f3e",
+      "physical_measurement": false,
+      "scope": "local_static_tool_no_board_probe",
+      "stderr_excerpt": [],
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": [
+        "/----------------------------------------------------------------------------\\",
+        " |  yosys -- Yosys Open SYnthesis Suite                                       |",
+        " |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |",
+        " |  Distributed under an ISC-like license, type \"license\" to see terms        |",
+        " \\----------------------------------------------------------------------------/",
+        " Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+        "",
+        "-- Running command `read_verilog -sv hardware/fpga/adaptive_state_abi_v2_iface.v; synth_gatemate -top adaptive_state_abi_v2_iface -json output/experiment_5930_adaptive_state_board_mapping/adaptive_state_abi_v2_iface_gatemate.json; stat' --"
+      ],
+      "stdout_sha256": "sha256:85ef025a6fd94849bc533bcb6ff34cecc6c3ee817644733d90bf8819db7df304",
+      "stdout_tail_excerpt": [
+        "",
+        "=== adaptive_state_abi_v2_iface ===",
+        "",
+        "        +----------Local Count, excluding submodules.",
+        "        | ",
+        "     5887 wires",
+        "    20578 wire bits",
+        "       37 public wires",
+        "     4338 public wire bits",
+        "       29 ports",
+        "     3534 port bits",
+        "    10386 cells",
+        "       32   CC_ADDF",
+        "        1   CC_BUFG",
+        "     2127   CC_DFF",
+        "     1916   CC_IBUF",
+        "      597   CC_LUT2",
+        "      177   CC_LUT3",
+        "     3918   CC_LUT4",
+        "     1618   CC_OBUF",
+        "",
+        "End of script. Logfile hash: 5e9cce4dd9, time: 6.05s, user: 2.63s, system: 0.09s, MEM: 180.38 MB peak",
+        "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+        "Time spent: 58% 1x abc (3 sec), 6% 25x opt_clean (0 sec), ..."
+      ],
+      "target": "gatemate_static_synthesis_estimate_no_pnr_no_board"
+    },
+    "yosys_generic_synth": {
+      "command": "yosys -p 'read_verilog -sv hardware/fpga/adaptive_state_abi_v2_iface.v; synth -top adaptive_state_abi_v2_iface; stat'",
+      "duration_s": 2.812716,
+      "exit_code": 0,
+      "measurement_type": "static_estimate",
+      "name": "yosys_generic_synth",
+      "output_sha256": "sha256:d350b16e8d230b7383e3502d9ce788bed99dd20639bd637dc8426ddef98c2263",
+      "physical_measurement": false,
+      "scope": "local_static_tool_no_board_probe",
+      "stderr_excerpt": [],
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": [
+        "/----------------------------------------------------------------------------\\",
+        " |  yosys -- Yosys Open SYnthesis Suite                                       |",
+        " |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |",
+        " |  Distributed under an ISC-like license, type \"license\" to see terms        |",
+        " \\----------------------------------------------------------------------------/",
+        " Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+        "",
+        "-- Running command `read_verilog -sv hardware/fpga/adaptive_state_abi_v2_iface.v; synth -top adaptive_state_abi_v2_iface; stat' --"
+      ],
+      "stdout_sha256": "sha256:e28065389ca97bc979360c75351be169b7e84ac5f4e5c98b8cb13421d3618f9f",
+      "stdout_tail_excerpt": [
+        "        | ",
+        "     5018 wires",
+        "    10150 wire bits",
+        "       40 public wires",
+        "     4851 public wire bits",
+        "       29 ports",
+        "     3534 port bits",
+        "     7651 cells",
+        "       48   $_ANDNOT_",
+        "     1405   $_AND_",
+        "      515   $_MUX_",
+        "      850   $_NAND_",
+        "      254   $_NOR_",
+        "        3   $_NOT_",
+        "      297   $_ORNOT_",
+        "        3   $_OR_",
+        "     2121   $_SDFFE_PN0P_",
+        "        6   $_SDFFE_PN1P_",
+        "     1617   $_XNOR_",
+        "      532   $_XOR_",
+        "",
+        "End of script. Logfile hash: 14a7590896, time: 2.80s, user: 1.31s, system: 0.04s, MEM: 180.38 MB peak",
+        "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+        "Time spent: 55% 1x abc (1 sec), 9% 22x opt_clean (0 sec), ..."
+      ],
+      "target": "generic_static_synthesis_resource_estimate"
+    }
+  },
+  "kv260_polarfire_and_gatemate_state_receipts": {
+    "gatemate": "blocked_idcode",
+    "kv260": "programmed_image_poc",
+    "polarfire": "prior_physical_workload_only"
+  },
+  "no_speedup_power_energy_thermalization_convergence_tsu_kona_or_sovereignty_claim": true,
+  "no_unchanged_probe_receipt": {
+    "avoided": [
+      {
+        "avoided_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+        "board": "kv260",
+        "reason": "unchanged_or_blocked_route"
+      },
+      {
+        "avoided_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+        "board": "polarfire",
+        "reason": "unchanged_or_blocked_route"
+      },
+      {
+        "avoided_command": "openFPGALoader -c dirtyJtag --detect",
+        "board": "gatemate",
+        "reason": "unchanged_or_blocked_route"
+      }
+    ],
+    "reason": "no materially new authenticated route relative to Exp5861",
+    "skipped": true
+  },
+  "ordering_backpressure_atomicity_rollback_and_recovery": {
+    "atomic_commit": true,
+    "backpressure_stalls_mutation": true,
+    "in_order_single_response": true,
+    "partial_transition_visible": false,
+    "recover_restores_serialized_checkpoint": true,
+    "rollback_restores_prior_state_hash": true,
+    "state_version_checked_before_mutation": true,
+    "valid_ready_accepts_only_when": "req_valid && req_ready",
+    "validator_receipt_hash_required_for_validate": true
+  },
+  "physical_probe_executed": false,
+  "preconditions_checked": {
+    "atomic_output": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5930_adaptive_state_board_mapping.json",
+      "probe_sha256": "sha256:0d4eb4ed1c93094c8f2a5ccf2d7dcebcbabd32a4355069b9ddac96553a9a3213"
+    },
+    "board_commands_run_during_preconditions": [],
+    "hashed_inputs": {
+      "AGENTS.md": {
+        "bytes": 1165,
+        "path": "AGENTS.md",
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "bytes": 248157,
+        "path": "CLAUDE.md",
+        "present": true,
+        "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+      },
+      "CODEX.md": {
+        "bytes": 2396,
+        "path": "CODEX.md",
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "hardware/fpga/adaptive_state_abi_v2_iface.v": {
+        "bytes": 10621,
+        "path": "hardware/fpga/adaptive_state_abi_v2_iface.v",
+        "present": true,
+        "sha256": "sha256:db6478c47405259963e571de1028f2823f40c48644379d054723f9861a36c6cc"
+      },
+      "hardware/fpga/adaptive_state_abi_v2_iface_tb.v": {
+        "bytes": 7045,
+        "path": "hardware/fpga/adaptive_state_abi_v2_iface_tb.v",
+        "present": true,
+        "sha256": "sha256:2da08c3633ce5f65eff4701c90caad4f938643c2f496a0d9e7c103aed38039d4"
+      },
+      "openspec/capabilities/fpga/spec.md": {
+        "bytes": 851644,
+        "path": "openspec/capabilities/fpga/spec.md",
+        "present": true,
+        "sha256": "sha256:94f47d152a1dcba28aaabda09014eb88311876d0be8f2ef02fd2f263ed5da56b"
+      },
+      "openspec/capabilities/hardware/spec.md": {
+        "bytes": 25759,
+        "path": "openspec/capabilities/hardware/spec.md",
+        "present": true,
+        "sha256": "sha256:00a926a87c85cac4a7a3617b16a46aef2f8b7759a1a0ab4112d53b940b5c15bb"
+      },
+      "ops/known-issues.md": {
+        "bytes": 939544,
+        "path": "ops/known-issues.md",
+        "present": true,
+        "sha256": "sha256:4e503aa7f8f0dc9ac7dc433a85ab8b6ac00434b7faf3c8037f88d69495e6df00"
+      },
+      "python/carnot/adaptive_state_abi_v2.py": {
+        "bytes": 75588,
+        "path": "python/carnot/adaptive_state_abi_v2.py",
+        "present": true,
+        "sha256": "sha256:f9cd3b11439f451f3d7d88c7bbfe5ebe77b6068ad88ef179c639269f2961cfcd"
+      },
+      "python/carnot/experiment_5930_adaptive_state_board_mapping.py": {
+        "bytes": 47187,
+        "path": "python/carnot/experiment_5930_adaptive_state_board_mapping.py",
+        "present": true,
+        "sha256": "sha256:ad11417ee9facf99f132e321b31a1df335ef7ac5db7fe397cf2cf2e575a0d559"
+      },
+      "research-hardware-wishlist.md": {
+        "bytes": 29009,
+        "path": "research-hardware-wishlist.md",
+        "present": true,
+        "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+      },
+      "results/experiment_5861_attached_board_state_receipts.json": {
+        "bytes": 39176,
+        "path": "results/experiment_5861_attached_board_state_receipts.json",
+        "present": true,
+        "sha256": "sha256:50bdea2190a030b73719e80e55de4b36a3de63bda7552dabc0b14fa56229f8e2"
+      },
+      "results/experiment_5926_adaptive_state_abi_v2_parity.json": {
+        "bytes": 39992,
+        "path": "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "present": true,
+        "sha256": "sha256:eeefe30580820cd19bd7cb60c65fe80b4bd9352ecbbf915b2a8b3018e75b9f67"
+      },
+      "tests/python/test_experiment_5930_adaptive_state_board_mapping.py": {
+        "bytes": 14465,
+        "path": "tests/python/test_experiment_5930_adaptive_state_board_mapping.py",
+        "present": true,
+        "sha256": "sha256:9be1549d2681e575a5cda7342c89edd962b6f94ff309923ee4bd5ec634fc3952"
+      }
+    },
+    "protected_files": {
+      "after_hashes": {
+        "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "ops/changelog.md": "sha256:d30276c5efd123972bd4bbb6ce1e6372f86ac26037a0f3f141ec67c922a09101",
+        "ops/status.md": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "before_hashes": {
+        "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+        "ops/changelog.md": "sha256:d30276c5efd123972bd4bbb6ce1e6372f86ac26037a0f3f141ec67c922a09101",
+        "ops/status.md": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+        "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+      },
+      "changed_files": [],
+      "unchanged": true
+    },
+    "read_only_route_diff_before_board_command": true,
+    "recorded_before_any_board_command": true,
+    "requested_paths": {
+      "fpga": {
+        "bytes": 0,
+        "path": "fpga",
+        "present": false,
+        "sha256": null
+      },
+      "rust/carnot-kernels": {
+        "bytes": 0,
+        "path": "rust/carnot-kernels",
+        "present": false,
+        "sha256": null
+      },
+      "scripts/hardware_preflight.py": {
+        "bytes": 0,
+        "path": "scripts/hardware_preflight.py",
+        "present": false,
+        "sha256": null
+      }
+    },
+    "run_date": "20260726",
+    "run_host": {
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13"
+    },
+    "tool_versions": {
+      "gmpack": {
+        "command": "gmpack --version",
+        "duration_s": 0.002228,
+        "exit_code": 1,
+        "measurement_type": "static_estimate",
+        "name": "gmpack",
+        "output_sha256": "sha256:2c45510915d745ad86584901a3d90d6fec13acf53c0eaa9c3fc23a4d31a3c2f8",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [
+          "Error: unrecognised option '--version'",
+          "",
+          "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+          "Copyright (C) 2024 The Project Peppercorn Authors",
+          "",
+          "gmpack: GateMate bitstream packer",
+          "",
+          "Usage: gmpack input.config [output.bit] [options]"
+        ],
+        "stderr_sha256": "sha256:db9637b5d79483f951c72825a14840d41184808715709d8ff5bf2c6475ba6055",
+        "stdout_excerpt": [],
+        "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_tail_excerpt": [],
+        "target": "version"
+      },
+      "iverilog": {
+        "command": "iverilog -V",
+        "duration_s": 0.016131,
+        "exit_code": 0,
+        "measurement_type": "static_estimate",
+        "name": "iverilog",
+        "output_sha256": "sha256:dc8e473483daae3909111e4b5542a2ad7f5cad0140770a80237953fb6c87a877",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "Icarus Verilog version 14.0 (devel) (s20251012-148-gaeca2b07c)",
+          "",
+          "Copyright (c) 2000-2026 Stephen Williams (steve@icarus.com)",
+          "",
+          "  This program is free software; you can redistribute it and/or modify",
+          "  it under the terms of the GNU General Public License as published by",
+          "  the Free Software Foundation; either version 2 of the License, or",
+          "  (at your option) any later version."
+        ],
+        "stdout_sha256": "sha256:dff0e95c6ab1a4e8f60b42128de38bafd35d6affa7e0272ab40c05976ef8f40b",
+        "stdout_tail_excerpt": [
+          "  GNU General Public License for more details.",
+          "",
+          "  You should have received a copy of the GNU General Public License along",
+          "  with this program; if not, write to the Free Software Foundation, Inc.,",
+          "  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.",
+          "",
+          " FLAGS DLL vvp.tgt",
+          "vvp.tgt: Icarus Verilog VVP Code Generator 14.0 (devel) (s20251012-148-gaeca2b07c)",
+          "",
+          "Copyright (c) 2001-2026 Stephen Williams (steve@icarus.com)",
+          "",
+          "  This program is free software; you can redistribute it and/or modify",
+          "  it under the terms of the GNU General Public License as published by",
+          "  the Free Software Foundation; either version 2 of the License, or",
+          "  (at your option) any later version.",
+          "",
+          "  This program is distributed in the hope that it will be useful,",
+          "  but WITHOUT ANY WARRANTY; without even the implied warranty of",
+          "  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
+          "  GNU General Public License for more details.",
+          "",
+          "  You should have received a copy of the GNU General Public License along",
+          "  with this program; if not, write to the Free Software Foundation, Inc.,",
+          "  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+        ],
+        "target": "version"
+      },
+      "nextpnr-himbaechel": {
+        "command": "nextpnr-himbaechel --version",
+        "duration_s": 0.013303,
+        "exit_code": 0,
+        "measurement_type": "static_estimate",
+        "name": "nextpnr-himbaechel",
+        "output_sha256": "sha256:21e9b59b3563b751a0491ccd2de6993c6d699aed55f8d9b4b5279bc0d9440f92",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [
+          "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+        ],
+        "stderr_sha256": "sha256:1b9f06395421c7a842642ddf8d86695a65593fe8f99138ea656f6372c37fdf6d",
+        "stdout_excerpt": [],
+        "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_tail_excerpt": [],
+        "target": "version"
+      },
+      "python": {
+        "command": "python --version",
+        "duration_s": 0.001676,
+        "exit_code": 0,
+        "measurement_type": "static_estimate",
+        "name": "python",
+        "output_sha256": "sha256:7e5eaf46ad89ea4375550bf1a2537f10decac547059b83c3c8502f1762f0c2a6",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "Python 3.12.13"
+        ],
+        "stdout_sha256": "sha256:55ae85cf4bdb38743edbcd53ea68ff36511997ec6c21b1e83d8bebc939bf056b",
+        "stdout_tail_excerpt": [
+          "Python 3.12.13"
+        ],
+        "target": "version"
+      },
+      "verilator": {
+        "command": "verilator --version",
+        "duration_s": 0.050747,
+        "exit_code": 0,
+        "measurement_type": "static_estimate",
+        "name": "verilator",
+        "output_sha256": "sha256:5692e953f050be402c0ef4464cf498eeb6c6d215bb71d87e8596ce3c5b24c487",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)"
+        ],
+        "stdout_sha256": "sha256:bffc262ea1e1f0d456b43e6952c8783ba974b977de6f1aa8746bedbea869a1e0",
+        "stdout_tail_excerpt": [
+          "Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)"
+        ],
+        "target": "version"
+      },
+      "vivado": {
+        "command": "vivado -version",
+        "duration_s": 0.000264,
+        "exit_code": 127,
+        "measurement_type": "static_estimate",
+        "name": "vivado",
+        "output_sha256": "sha256:0e1c21f75989d238a7c1c50027ff665c2b65faf4193c85a93a77da5255b2395c",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [
+          "[Errno 2] No such file or directory: 'vivado'"
+        ],
+        "stderr_sha256": "sha256:38e0b7ef1e48ee4a7bb7b26138ef66c66d52e64c7eb274f910b057b36423e9b7",
+        "stdout_excerpt": [],
+        "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_tail_excerpt": [],
+        "target": "version"
+      },
+      "vvp": {
+        "command": "vvp -V",
+        "duration_s": 0.005157,
+        "exit_code": 0,
+        "measurement_type": "static_estimate",
+        "name": "vvp",
+        "output_sha256": "sha256:616762ecfeaa0dee57c5cb5865b91e4764495d3ef9a921dde3e0d4ea751e804a",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [
+          "Icarus Verilog runtime version 14.0 (devel) (s20251012-148-gaeca2b07c)",
+          "",
+          "Copyright (c) 2001-2026 Stephen Williams (steve@icarus.com)",
+          "",
+          "  This program is free software; you can redistribute it and/or modify",
+          "  it under the terms of the GNU General Public License as published by",
+          "  the Free Software Foundation; either version 2 of the License, or",
+          "  (at your option) any later version."
+        ],
+        "stderr_sha256": "sha256:e06b2b2ff85ef066defbbc4a3caf9b24ea36eb14cfa10b24c9ac4149d0e7fadf",
+        "stdout_excerpt": [],
+        "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_tail_excerpt": [],
+        "target": "version"
+      },
+      "yosys": {
+        "command": "yosys -V",
+        "duration_s": 0.006264,
+        "exit_code": 0,
+        "measurement_type": "static_estimate",
+        "name": "yosys",
+        "output_sha256": "sha256:b09c84bf34bd5aabd2065d46b245a2376100d126c5bb7bafd6ce8748e9a5824b",
+        "physical_measurement": false,
+        "scope": "local_static_tool_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+        ],
+        "stdout_sha256": "sha256:3e5d182bbe78885082bd07a2f3258ed451a9cbcf0c6584af0858643abdf82e02",
+        "stdout_tail_excerpt": [
+          "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+        ],
+        "target": "version"
+      }
+    }
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:d30276c5efd123972bd4bbb6ce1e6372f86ac26037a0f3f141ec67c922a09101",
+      "ops/status.md": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:52d533671cfa5ed07bfbb224744bd732fdbdc07f996598f27ceb2e1135c8008c",
+      "ops/changelog.md": "sha256:d30276c5efd123972bd4bbb6ce1e6372f86ac26037a0f3f141ec67c922a09101",
+      "ops/status.md": "sha256:a48b1657a6902ce48b6139651eb06f09d1a620d8e8afb92be67ab8e57af381dc",
+      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771"
+    },
+    "changed_files": [],
+    "unchanged": true
+  },
+  "random_seed": 5930,
+  "reproducibility_checksum": "sha256:3ac4bdc25b90291b287024eba7eb97cae8d9b9c39c5d865c9ce1203154efcccc",
+  "run_date": "20260726",
+  "schema": "carnot.experiment_5930.adaptive_state_board_mapping.v1",
+  "simulator_reference_trace_parity": {
+    "exact_tolerance": "canonical_json_state_hash_status_error_identical",
+    "operation_count": 37,
+    "parity_failures": [],
+    "reference_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+    "simulator_final_state_hash": "sha256:9d798fc572f1ea4e59a5712a409be457dec429b4335170a81213340891f5af2d",
+    "state_hash_parity": true,
+    "status_error_parity": true,
+    "trace_count": 1,
+    "trace_hash": "sha256:6843442226b802e610d811c6eec5764739299765cf7129c59d0bf82e88602a81"
+  },
+  "spec_refs": [
+    "REQ-HW-5930",
+    "SCENARIO-HW-5930",
+    "REQ-FPGA-5930",
+    "SCENARIO-FPGA-5930"
+  ],
+  "stale_replay_tamper_and_crash_matrix": {
+    "all_rejected_or_recovered": true,
+    "cases": {
+      "backpressure_stall": {
+        "accepted": false,
+        "error_code": "STALL",
+        "mutation_observed": false,
+        "state_hash_after": "sha256:aec59bd4ca655aa91ebd00b471f19fe170191623718a0f12bee5c9b89c8abdc5",
+        "state_hash_before": "sha256:aec59bd4ca655aa91ebd00b471f19fe170191623718a0f12bee5c9b89c8abdc5"
+      },
+      "crash_recovery": {
+        "checkpoint_state_hash": "sha256:cbc58c98cf13d218814d814d3d65658b6bca96e819002a3e4cec64ec5fcf35f9",
+        "recovered_exact": true,
+        "recovered_state_hash": "sha256:cbc58c98cf13d218814d814d3d65658b6bca96e819002a3e4cec64ec5fcf35f9"
+      },
+      "invalid_order": {
+        "accepted": false,
+        "error_code": "INVALID_ORDER",
+        "state_hash_unchanged": true
+      },
+      "replayed_commit": {
+        "accepted": false,
+        "error_code": "REPLAYED_COMMIT",
+        "first_commit_code": "REPLAYED_COMMIT",
+        "state_hash_unchanged": true
+      },
+      "stale_version": {
+        "accepted": false,
+        "error_code": "STALE_STATE_VERSION",
+        "state_hash_unchanged": true
+      },
+      "tamper_validator": {
+        "accepted": false,
+        "error_code": "INVALID_VALIDATOR_RECEIPT",
+        "state_hash_unchanged": true
+      }
+    },
+    "state_hash_unchanged_for_all_rejections": true
+  },
+  "static_synthesis_timing_estimate_and_resource_reports": {
+    "board_targets": {
+      "gatemate": "yosys_gatemate_static_estimate_no_idcode_probe_no_pnr",
+      "kv260": "vivado_missing_or_not_used_static_mapping_only",
+      "polarfire": "linux_workload_prior_only_no_new_physical_route"
+    },
+    "resource_report": {
+      "cell_count_estimate": 7651,
+      "exit_code": 0,
+      "measurement_type": "static_estimate",
+      "physical_measurement": false,
+      "report_sha256": "sha256:d350b16e8d230b7383e3502d9ce788bed99dd20639bd637dc8426ddef98c2263",
+      "target": "generic_static_synthesis_resource_estimate",
+      "tool_receipt": "yosys_generic_synth"
+    },
+    "timing_estimate": {
+      "clock_constraint_hz": null,
+      "estimate_label": "no_physical_timing_measurement_no_board_route",
+      "measurement_type": "static_estimate",
+      "physical_measurement": false,
+      "timing_closed": null,
+      "tool_receipt": "yosys_generic_synth"
+    }
+  },
+  "status": "complete_static_mapping_no_physical_probe",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5930_adaptive_state_board_mapping.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5930_adaptive_state_board_mapping.py -m pytest tests/python/test_experiment_5930_adaptive_state_board_mapping.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5930_adaptive_state_board_mapping.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5930_adaptive_state_board_mapping.py",
+    ".venv/bin/ruff check python/carnot/experiment_5930_adaptive_state_board_mapping.py tests/python/test_experiment_5930_adaptive_state_board_mapping.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5930_adaptive_state_board_mapping.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5930_adaptive_state_board_mapping.py -m pytest tests/python/test_experiment_5930_adaptive_state_board_mapping.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5930_adaptive_state_board_mapping.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5930_adaptive_state_board_mapping.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5930_adaptive_state_board_mapping.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5930_adaptive_state_board_mapping.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5930_adaptive_state_board_mapping.py tests/python/test_experiment_5930_adaptive_state_board_mapping.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "verifier_is_oracle": true
+}

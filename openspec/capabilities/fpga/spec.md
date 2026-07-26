@@ -13039,6 +13039,64 @@ required fields:
 
 ---
 
+### REQ-FPGA-5930
+
+**Title:** Adaptive-state ABI v2 RTL/HLS interface MUST be fixed-width, backpressured, and synthesis-receipted
+
+**Description:**
+Experiment 5930 SHALL provide a backend-neutral RTL/HLS interface for the
+Exp5926 adaptive-state ABI v2 operation set. The interface SHALL use fixed-width
+request and response records, valid/ready handshaking, explicit state-version
+checks, validator receipt hash transport, status/error codes, atomic commit,
+rollback, and recover semantics. It SHALL NOT embed model semantics, learned
+weights, or board-specific performance claims.
+
+The interface SHALL be synthesizable by installed local FPGA tools when those
+tools are available. Static lint, simulation, synthesis, timing-estimate, and
+resource-report receipts SHALL identify the source file, target, command, exit
+code, stdout/stderr hashes, output hashes, tool versions, and whether each
+receipt is a static estimate or a physical measurement. Failed or missing tools
+remain honest receipts, not physical execution evidence.
+
+**Acceptance criteria:**
+- `hardware/fpga/adaptive_state_abi_v2_iface.v` defines fixed-width op, status,
+  error, version, event, proposal, snapshot, payload hash, validator hash, and
+  response fields for snapshot, lookup, propose, commit, validate, promote,
+  quarantine, supersede, reject, rollback, and recover.
+- The RTL accepts a request only when `req_valid && req_ready`; stalled requests
+  cannot mutate state; every accepted request returns exactly one response with
+  `resp_valid` held until `resp_ready`.
+- The RTL rejects stale state-version requests, invalid operations, missing
+  validator receipts on validate, replayed commit, invalid operation order,
+  tamper, and rollback-missing cases with explicit error codes and unchanged
+  state version.
+- A simulator/reference harness replays the Exp5926 trace and adversarial stale,
+  replay, tamper, and crash sequences with matching state/status/error parity.
+- Installed local static flows record lint, simulation, synthesis, timing
+  estimate, and resource reports as estimates and never as speed, power, energy,
+  thermalization, convergence, TSU, Kona, or sovereignty claims.
+
+**Implementation status:** Planned (Exp 5930)
+
+---
+
+### SCENARIO-FPGA-5930
+
+**Scenario:** ABI v2 interface simulates and synthesizes as static evidence only.
+
+**Given:** Exp5926 supplies a qualified ABI v2 operation trace and local FPGA
+tools such as Icarus Verilog, Verilator, or Yosys may be installed,
+**When:** Experiment 5930 runs the RTL/HLS interface simulator and available
+static synthesis/resource flows,
+**Then:** the generated receipts show fixed-width valid/ready semantics,
+state/status/error parity with the Python reference, explicit rejection of
+adversarial sequences, and resource/timing estimates labelled as static
+non-physical evidence.
+
+**Implementation status:** Planned (Exp 5930)
+
+---
+
 ### REQ-HW-4921
 
 **Title:** KV260 continuity MUST write the Exp 4921 SSH-only overlay deliverable

@@ -145,6 +145,154 @@ Required field principles:
 
 ---
 
+### REQ-HW-5930
+
+**Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
+
+**Description:**
+Experiment 5930 SHALL translate the qualified Exp5926 adaptive-state ABI v2
+operations into backend-neutral RTL/HLS interface semantics and SHALL write
+`results/experiment_5930_adaptive_state_board_mapping.json`. The artifact is a
+static mapping and reproducibility receipt only unless a fresh pre-command
+authenticated route-state diff proves that an attached board has a materially
+new adaptive-state operation path compared with Exp5861. Repeating Exp5861's
+KV260 programmed-image proof of concept, PolarFire prior physical workload, or
+GateMate DirtyJTAG/IDCODE probes is prohibited when the route diff is unchanged.
+
+The mapper SHALL replay the Exp5926 gate, hash ABI schema/traces, Exp5861
+evidence, board state, installed toolchain versions, source files, generated
+outputs, and protected files. It SHALL define fixed-width request and response
+records for every ABI v2 operation, valid/ready ordering, state-version checks,
+validator receipt transport, status/error codes, atomic commit, rollback, and
+crash recovery without embedding model semantics or model weights. The
+simulator/reference harness SHALL replay Exp5926 conformance traces and
+adversarial stale, replay, tamper, and crash sequences with state/status/error
+parity.
+
+The mapper SHALL run available local lint, simulation, synthesis, timing
+estimate, and resource-report commands for installed toolchains, and each
+receipt SHALL record tool, version, target, command, exit code, stdout/stderr
+hashes, output hashes, and whether the result is an estimate rather than a
+physical measurement. If no authenticated route changed, the artifact SHALL set
+`physical_probe_executed=false`, preserve
+`kv260=programmed_image_poc`, `polarfire=prior_physical_workload_only`, and
+`gatemate=blocked_idcode`, and record the exact no-unchanged-probe decision.
+
+Required artifact fields:
+
+- `status`
+- `gate_replay_receipt`
+- `preconditions_checked`
+- `abi_v2_schema_hash_and_operation_mapping`
+- `fixed_width_request_response_and_error_contract`
+- `ordering_backpressure_atomicity_rollback_and_recovery`
+- `simulator_reference_trace_parity`
+- `stale_replay_tamper_and_crash_matrix`
+- `installed_toolchain_target_command_exit_and_hash_receipts`
+- `static_synthesis_timing_estimate_and_resource_reports`
+- `authenticated_route_state_diff`
+- `physical_probe_executed`
+- `bounded_physical_trace_and_teardown_if_any`
+- `kv260_polarfire_and_gatemate_state_receipts`
+- `no_unchanged_probe_receipt`
+- `no_speedup_power_energy_thermalization_convergence_tsu_kona_or_sovereignty_claim`
+- `protected_files_unchanged`
+- `board_abi_mapping_ready_score`
+- `duration_s`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_provenance`
+- `test_commands`
+- `test_exit_codes`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+Required field principles:
+
+- `status`: principle "Terminal mapping state without physical-performance implication."
+- `gate_replay_receipt`: principle "Exp5926 readiness and trace hashes authorize mapping."
+- `preconditions_checked`: principle "Hash source, tools, routes, outputs, and protected files before any board command."
+- `abi_v2_schema_hash_and_operation_mapping`: principle "Every supported ABI v2 operation has a finite board-neutral encoding."
+- `fixed_width_request_response_and_error_contract`: principle "Fixed-width request and response records make RTL/HLS behavior finite."
+- `ordering_backpressure_atomicity_rollback_and_recovery`: principle "Valid/ready ordering, backpressure, commit, rollback, and recovery are explicit."
+- `simulator_reference_trace_parity`: principle "Simulation parity is ABI trace/state/status parity, not performance."
+- `stale_replay_tamper_and_crash_matrix`: principle "Unsafe sequences fail closed without partial mutation."
+- `installed_toolchain_target_command_exit_and_hash_receipts`: principle "Tool receipts pin the local static evidence path."
+- `static_synthesis_timing_estimate_and_resource_reports`: principle "Synthesis/resource/timing receipts are estimates unless physical measurement exists."
+- `authenticated_route_state_diff`: principle "Only a materially new authenticated route may permit a board command."
+- `physical_probe_executed`: principle "Bare true only after a fresh changed authenticated route and recorded teardown."
+- `bounded_physical_trace_and_teardown_if_any`: principle "Physical execution requires exact commands, identity, trace, rollback, and teardown."
+- `kv260_polarfire_and_gatemate_state_receipts`: principle "Upstream board states stay separate and cannot imply new execution."
+- `no_unchanged_probe_receipt`: principle "Retired probes are skipped when routes are unchanged."
+- `no_speedup_power_energy_thermalization_convergence_tsu_kona_or_sovereignty_claim`: principle "Bare true unless fresh physical measurements authorize a narrower claim."
+- `protected_files_unchanged`: principle "Conductor and ops reconciliation files remain byte-identical."
+- `board_abi_mapping_ready_score`: principle "Bare 1.0 means ABI trace parity plus static tool receipts, not acceleration."
+- `duration_s`: principle "Wall time exposes receipt generation scope."
+- `inference_substrate`: principle "Use `rtl_hls_simulation_and_static_synthesis_no_llm`."
+- `verifier_is_oracle`: principle "True only for ABI trace/state/status parity, hashes, and tool receipts."
+- `field_provenance`: principle "Every field traces to specs, upstream artifacts, source, tools, traces, or route diff."
+- `test_commands`: principle "Verification commands are recorded."
+- `test_exit_codes`: principle "Exit codes prevent failed static checks from becoming readiness."
+- `reproducibility_checksum`: principle "A checksum detects ABI, source, tool, trace, route, or artifact drift."
+- `honest_verdict`: principle "Use `complete_static_mapping:`, `complete_physical_receipt:`, `no_change:`, `retired:`, or `blocked:`."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5930_adaptive_state_board_mapping --date 20260726`
+  writes `results/experiment_5930_adaptive_state_board_mapping.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5930`,
+  `SCENARIO-HW-5930`, `REQ-FPGA-5930`, and `SCENARIO-FPGA-5930`, with a stable
+  `reproducibility_checksum`.
+- Exp5926 is replay-gated by artifact hash, ready score, ABI schema, operation
+  set, trace hash, and test receipts before static mapping is marked ready.
+- Fixed-width request/response records cover snapshot, lookup, propose, commit,
+  validate, promote, quarantine, supersede, reject, rollback, and recover.
+- Valid/ready semantics preserve in-order acceptance, backpressure stalls
+  mutation, stale versions reject, validator receipts are transported as hashes,
+  and commit/rollback/recovery are atomic.
+- Simulator/reference replay reports exact state/status/error parity for the
+  Exp5926 trace and for stale, replay, tamper, and crash sequences.
+- Installed lint/simulation/synthesis/resource commands record tool, version,
+  target, command, exit code, stdout/stderr hash, and output hash. Timing and
+  resource reports are labelled as static estimates.
+- `physical_probe_executed=true` is valid only when
+  `authenticated_route_state_diff.materially_new_authenticated_route=true` and
+  exact physical commands plus teardown are recorded.
+- When the authenticated route diff is unchanged, `physical_probe_executed=false`,
+  `bounded_physical_trace_and_teardown_if_any=[]`, board states preserve
+  Exp5861's KV260/PolarFire/GateMate labels, and no SSH/JTAG/IDCODE/programming
+  commands are repeated.
+- The no-claim field is bare `true`, `inference_substrate` equals
+  `rtl_hls_simulation_and_static_synthesis_no_llm`, `verifier_is_oracle=true`,
+  `board_abi_mapping_ready_score=1.0`, and `honest_verdict` starts with an
+  allowed terminal prefix without speed, power, energy, thermalization,
+  convergence, TSU, Kona, or sovereignty claims.
+
+**Implementation status:** Planned (Exp 5930)
+
+---
+
+### SCENARIO-HW-5930
+
+**Scenario:** Exp5930 writes a complete static ABI v2 board-mapping receipt without repeating unchanged board probes.
+
+**Given:** Exp5926 reports ABI v2 ready score 1.0, Exp5861 reports no changed
+authenticated state-operation route, KV260 remains a programmed-image proof of
+concept, PolarFire remains prior physical workload only, and GateMate remains
+blocked by IDCODE,
+**When:** Experiment 5930 hashes inputs, computes a read-only route-state diff,
+maps ABI v2 fixed-width request/response records, replays the trace simulator,
+and runs installed static lint/simulation/synthesis/resource flows,
+**Then:** It writes
+`results/experiment_5930_adaptive_state_board_mapping.json` with complete ABI
+trace parity, static tool receipts, `physical_probe_executed=false`,
+`board_abi_mapping_ready_score=1.0`, preserved upstream board states, no
+unchanged probe receipt, bare no-claim true, and an `honest_verdict` beginning
+with `complete_static_mapping:`.
+
+**Implementation status:** Planned (Exp 5930)
+
+---
+
 ### REQ-HW-5861
 
 **Title:** Exp5861 attached-board state receipts MUST distinguish no-change, blocked, and authenticated state-operation execution
