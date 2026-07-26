@@ -6027,3 +6027,9 @@ The critical path for milestone .250:
 - theme: fixture-gated multi-family compute concentrated the milestone's operational tail
 - key result: honest operational limitation -- the 31.8-minute entry leads compute runtime; the locked compute-idle field is false, while absent model-overlap evidence prevents a conclusion that dual-GPU dispatch was skipped
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.526
+- exp_range: exp5921-exp5928 (gate-reference ID bounds only; the complete milestone range is not available)
+- theme: readiness-gated schema and held structured-memory work shaped the reconstructed compute tail
+- key result: honest operational limitation -- the 5.57-minute embedded-GGUF bridge was the longest compute path, but task-scoped GPU idle is false and no simultaneous-model or runner trace establishes a missed DualGPURunner dispatch
+- acceptance: 3/3 compute-bound-entry accounting criteria met

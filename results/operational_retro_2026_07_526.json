@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.526",
+  "generated_at": "2026-07-26T03:48:30Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 14.8,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp5921 ready: embedded-GGUF schema decoder bridge",
+      "duration_minutes": 5.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B",
+      "duration_minutes": 3.27,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Dated evidence refresh after the V526 planner marker",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5928 ready: adapter-disabled held structured-memory live A/B",
+      "duration_minutes": 1.73,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Powered multi-game coordinate-router progress qualification and outcome hook",
+      "duration_minutes": 0.53,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.526 completed 13 experiments in 14.8 minutes, including 3 compute-bound experiments. The 5.57-minute embedded-GGUF schema decoder bridge was the longest compute path; the locked task-scoped classification does not identify GPU idle during compute-bound work.",
+  "bottlenecks_identified": [
+    "The readiness-gated embedded-GGUF schema decoder bridge led the compute tail at 5.57 minutes, ahead of the 3.27-minute all-three-model ConstraintIR A/B and the 1.73-minute held structured-memory live A/B.",
+    "All listed compute-bound paths were readiness-gated, but modification-time reconstruction does not separate dependency wait, model loading, inference, verification, or artifact writing, so the cause of their elapsed time cannot be assigned.",
+    "The terminal GPU snapshot is not correlated with compute-task intervals, and no model-overlap or runner-selection record establishes that concurrent multi-model work failed to engage DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic phase timers for dependency readiness, model loading, inference, verification, and artifact writing on every compute-bound task.",
+    "Sample GPU activity inside each compute-task interval and persist the samples with the task identity, loaded-model count, overlap interval, and selected runner.",
+    "Add a cacheable handoff for schema support and embedded-GGUF setup between readiness-gated producer and consumer tasks, recording cache-hit and cold-start timing.",
+    "Select DualGPURunner only when scheduler metadata confirms that multiple models will execute in parallel; retain single-GPU dispatch for single-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument readiness-gated compute tasks with direct phase-level timing.",
+    "Attach task-scoped GPU, model-overlap, and runner-selection telemetry to every compute launch.",
+    "Cache reusable schema-support and embedded-GGUF setup across gated task handoffs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded data ranks the compute tail but cannot distinguish readiness delay from actual model execution, and the idle GPU snapshot is outside any supplied task interval. Until direct timing and a measured cached or parallel execution provide a comparison, a nonzero savings estimate or a missed DualGPURunner claim would be unsupported."
+}
