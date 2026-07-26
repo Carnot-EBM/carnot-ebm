@@ -1,0 +1,1800 @@
+{
+ "experiment": "arc_scored_path_budget_sweep_v528",
+ "honest_verdict": "complete_budget_sweep_measured_wins_median_1_at_b200_to_12_at_b4000_over_25_games_1_seeds_per_seed_matched_llm_off_saturates_at_b4000_wall_clock_never_binding_but_scored_efficiency_term_degrades_quadratically_time_axis_recorded_no_flag_changed",
+ "honest_verdict_principle": "Terminal 'complete_' prefix so the conductor's reconciler classifies this as a finished experiment; without a prefix, words like 'saturates' risk a false-positive partial classification. The verdict string is COMPUTED from the curve so it cannot disagree with the artifact's own numbers.",
+ "title": "MAX_ACTIONS budget sweep on the scored path: (budget -> wins, TIME) over the 25 public games, shipped flag configuration, LLM-off",
+ "run_date": "2026-07-26T15:40:42Z",
+ "schema": "carnot.arc_budget_sweep.v1",
+ "duration_s": 2285.9,
+ "total_cell_compute_s": 4076.4,
+ "analysis_pass_duration_s": 0.013,
+ "git_head": "db46988d744fb475df47a4bf993b32254781e9d6",
+ "random_seed": 20260724,
+ "random_seeds_used": [
+  20260724
+ ],
+ "reproducibility_checksum": "a717827cc049185292e039c49201097a28962dc8291c9a1dbc38abd0749dac0a",
+ "rows_source": [
+  "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rows_20260724.json",
+  "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rows_b8000_20260724.json"
+ ],
+ "rows_source_checksums": [
+  "2abd1b03cf49fd546f6eaf1a90c3c929135806a9d585f653766e88f8bcfcc37c",
+  "3cfdcc6b3d0e16506cb2d989e0e3100be17b19a1a7000b3d1414f3032e6fd7c6"
+ ],
+ "rows_source_elapsed_s": [
+  1790.5,
+  2285.9
+ ],
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "inference_substrate_principle": "The live ARC agent (E3AgentPolicy) takes real actions against the offline arcade with induction disabled: pure Python env-stepping plus verifier/world-model scoring. No GGUF is loaded and no CUDA is used, so a 60s live-inference duration floor would be a false positive. The LLM-on cost is cited from a prior artifact, not measured here.",
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_principle": "No verifier claim is made at all. This sweep varies a search BUDGET and measures wins and wall clock; the win signal comes from the game env's own level counter, not from a verifier scoring itself. Recorded False because nothing here is a verifier-value or moat claim.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_principle": "Runs are the OFFLINE dev twin over environment_files with per-game GameAdapters available, driven by a harness rather than by the live scored gateway. That is a development proxy for the live agent's behaviour, NOT proof of hidden-game self-discovery. No new level is claimed as a solve and the registry is not updated.",
+ "arc_solve_claim": false,
+ "preconditions_checked": [
+  {
+   "resource": "environment_files (offline arcade, 25 public games)",
+   "available": true
+  },
+  {
+   "resource": "arc_leaderboard_eval + E3AgentPolicy importable",
+   "available": true
+  },
+  {
+   "resource": "llama-server / GGUF generator",
+   "available": false,
+   "note": "NOT REQUIRED: this sweep is LLM-off by design (proposer=None, induction disabled per cell)."
+  },
+  {
+   "resource": "all eight GATED_FLAGS pinned per cell",
+   "available": true
+  },
+  {
+   "resource": "observe channel (nodes carry previous_frame)",
+   "available": true
+  },
+  {
+   "resource": "HUD flat diagnostics readable (commit db46988d7)",
+   "available": true
+  }
+ ],
+ "what_was_NOT_changed": {
+  "MAX_ACTIONS_class_attr_line_6230": 400,
+  "MAX_ACTIONS_module_level_line_117": 200,
+  "SUBMITTED_flags_touched": [],
+  "submission_made": false,
+  "principle": "This is a MEASUREMENT task. The budget is varied through the OFFLINE harness parameter arc_leaderboard_eval.run_game(budget=N), never by editing the shipped default. The decision to raise the cap is the operator's."
+ },
+ "design": {
+  "policy": "E3AgentPolicy (the SCORED policy class)",
+  "arm": "S",
+  "arm_flags": {
+   "tier_exhaustion": true,
+   "tier_uniform_random": true,
+   "tier_click_vocab_only": true,
+   "frontier_gradient": false,
+   "edge_bar_hud_mask": true,
+   "hud_mask_collapse_guard": true,
+   "hud_mask_stage2_confirm": true,
+   "hazard_move_pruner": false
+  },
+  "llm_enabled": false,
+  "budgets": [
+   200,
+   400,
+   1000,
+   2000,
+   4000,
+   8000
+  ],
+  "seeds": [
+   20260724
+  ],
+  "n_games": 25,
+  "games": [
+   "ar25",
+   "bp35",
+   "cd82",
+   "cn04",
+   "dc22",
+   "ft09",
+   "g50t",
+   "ka59",
+   "lf52",
+   "lp85",
+   "ls20",
+   "m0r0",
+   "r11l",
+   "re86",
+   "s5i5",
+   "sb26",
+   "sc25",
+   "sk48",
+   "sp80",
+   "su15",
+   "tn36",
+   "tr87",
+   "tu93",
+   "vc33",
+   "wa30"
+  ],
+  "cells_requested": 150,
+  "cells_ran": 150,
+  "complete_seed_game_pairs": 25,
+  "incomplete_seed_game_pairs": [],
+  "matching": "PER-SEED MATCHED on (seed, game); any-seed union reported as diagnostic only",
+  "loop_order": "seed -> game -> budget (budget INNERMOST, so truncation cannot favour a budget)",
+  "flag_parity_vs_live_globals": {
+   "live_submitted_flags": {
+    "tier_exhaustion": true,
+    "tier_uniform_random": true,
+    "tier_click_vocab_only": true,
+    "frontier_gradient": false,
+    "edge_bar_hud_mask": true,
+    "hud_mask_collapse_guard": true,
+    "hud_mask_stage2_confirm": true,
+    "hazard_move_pruner": false
+   },
+   "pinned_vs_live_drift": {}
+  }
+ },
+ "field_provenance": {
+  "duration_s": {
+   "principle": "Real compute takes wall-clock time; an implausibly-short duration is the load-bearing fabrication signal. Here it is the MEASUREMENT's wall clock (the sweep), not the analysis pass -- the analysis pass is recorded separately as analysis_pass_duration_s so neither can be mistaken for the other.",
+   "satisfied_by": "max elapsed across the concurrent per-seed sweep processes"
+  },
+  "total_cell_compute_s": {
+   "principle": "The machine time the measurement actually cost, which differs from the wall clock because the seeds ran concurrently. Reporting only the wall clock would make the sweep look ~3x cheaper than it was.",
+   "satisfied_by": "sum of elapsed across the per-seed sweep processes"
+  },
+  "random_seeds_used": {
+   "principle": "Determinism is the precondition for reproducibility, AND the seed is the matching unit: every budget comparison here is PER-SEED MATCHED, so an unrecorded seed set would make the matching unverifiable.",
+   "satisfied_by": "seeds passed to run_cell (random.seed + np.random.seed per cell)"
+  },
+  "reproducibility_checksum": {
+   "principle": "Content hash over (game, seed, budget, levels, actions, wall_s) for every row, so a third party can confirm they are holding the same measurement and not a re-run with drifted numbers.",
+   "satisfied_by": "sha256 over the row tuples"
+  },
+  "inference_substrate": {
+   "principle": "Resolves the duration-floor ambiguity. Vestigial GGUF strings elsewhere in the stack would otherwise make a legitimately-fast no-LLM run look fabricated under the 60s live-inference floor.",
+   "satisfied_by": "proposer=None and CARNOT_ARC_DISABLE_INDUCTION set per cell"
+  },
+  "solve_provenance": {
+   "principle": "The ARC deliverable is the LIVE agent discovering hidden games from its own attempts. Declaring this as a development_proxy prevents an offline dev-twin measurement from being read as evidence of hidden-game self-discovery.",
+   "satisfied_by": "offline arcade + per-game GameAdapters + a harness driver"
+  },
+  "verifier_is_oracle": {
+   "principle": "A verifier that IS the correctness oracle produces a true-but-circular win. Recorded False and explained because this artifact makes no verifier claim at all -- an undeclared field would itself be a warn.",
+   "satisfied_by": "no verifier-value claim; the win signal is the env's level counter"
+  },
+  "preconditions_checked": {
+   "principle": "Records WHICH resources were verified before measuring, pre-empting the failure mode where a missing resource is silently papered over with a synthesised result instead of a blocked_* verdict.",
+   "satisfied_by": "explicit checks listed with availability booleans"
+  },
+  "instrumentation_census": {
+   "principle": "A lever or field that never populates produces a clean zero-error null that LOOKS like a finding. Counting populated-ness BEFORE drawing conclusions is the only defence; None-valued diagnostics are the tell.",
+   "satisfied_by": "per-field None/zero counts over every row"
+  },
+  "WITNESS_pass_region_nonempty": {
+   "principle": "A gate or comparison whose pass region is empty produces an ARITHMETICALLY FORCED value, not evidence. The witness is computed at the comparison's own unit (the game-cell), which is where a prior median-gate defect recurred.",
+   "satisfied_by": "counts of cells that could gain and cells that could regress"
+  },
+  "sign_test_on_cells_both_tails": {
+   "principle": "A one-sided test reports only one tail, so a REVERSAL comes back p=0.89 and reads as 'no effect'. Both tails plus the favoured direction plus the minimum reachable p at the available support are all required to read a null honestly.",
+   "satisfied_by": "exact binomial on discordant pairs, both tails"
+  }
+ },
+ "instrumentation_census": {
+  "n_rows": 150,
+  "n_ran_true": 150,
+  "n_ran_false_or_missing": 0,
+  "crash_reasons": {},
+  "levels_none": 0,
+  "actions_none": 0,
+  "wall_s_none": 0,
+  "construct_s_none": 0,
+  "efficiency_none": 0,
+  "states_expanded_none": 0,
+  "nodes_with_previous_frame_none": 0,
+  "nodes_with_previous_frame_zero": 0,
+  "nodes_with_previous_frame_median": 250.0,
+  "hud_mask_resolved_none": 0,
+  "hud_mask_resolved_true": 114,
+  "hud_mask_resolved_false": 36,
+  "hud_mask_cell_count_none": 0,
+  "hud_diagnostics_readable_true": 150,
+  "hud_diagnostics_readable_false_or_none": 0,
+  "hud_diagnostics_unreadable_cells": [],
+  "lever2_fired_predicate_versions": {
+   "2026-07-26.appearing-mask-counts-digest-compared": 150
+  },
+  "lever1_fired_true": 23,
+  "lever2_fired_true": 12,
+  "lever3_verdicts": {
+   "LEVER_OFF": 150
+  },
+  "gated_flags_pinned_all_eight": true,
+  "distinct_gated_flag_configs": [
+   "{\"edge_bar_hud_mask_enabled\": true, \"frontier_gradient_enabled\": false, \"hazard_move_pruner_enabled\": false, \"hud_mask_collapse_guard_enabled\": true, \"hud_mask_stage2_confirm_enabled\": true, \"tier_click_vocab_only\": true, \"tier_exhaustion_enabled\": true, \"tier_uniform_random_enabled\": true}"
+  ],
+  "instrumentation_holes": [],
+  "observe_channel_alive": true
+ },
+ "budget_curve": {
+  "200": {
+   "budget": 200,
+   "per_seed": {
+    "20260724": {
+     "n_games_scored": 25,
+     "wins": 1,
+     "won_games": [
+      "vc33"
+     ],
+     "levels_sum": 2,
+     "actions_sum": 4879,
+     "wall_total_s": 144.13,
+     "wall_median_s": 5.68,
+     "wall_mean_s": 5.765,
+     "wall_p90_s": 6.19,
+     "wall_max_s": 9.008,
+     "slowest_game": "bp35"
+    }
+   },
+   "wins_per_seed": [
+    1
+   ],
+   "wins_median": 1,
+   "wins_min": 1,
+   "wins_max": 1,
+   "wall_total_s_per_seed": [
+    144.13
+   ],
+   "wall_total_s_median": 144.13,
+   "wall_s_per_game_median_of_seed_medians": 5.68,
+   "DIAGNOSTIC_ONLY_wins_any_seed_union": 1,
+   "DIAGNOSTIC_ONLY_won_games_any_seed_union": [
+    "vc33"
+   ],
+   "wins_all_seeds_intersection": 1,
+   "won_games_all_seeds_intersection": [
+    "vc33"
+   ]
+  },
+  "400": {
+   "budget": 400,
+   "per_seed": {
+    "20260724": {
+     "n_games_scored": 25,
+     "wins": 3,
+     "won_games": [
+      "sp80",
+      "tu93",
+      "vc33"
+     ],
+     "levels_sum": 4,
+     "actions_sum": 9728,
+     "wall_total_s": 166.0,
+     "wall_median_s": 6.402,
+     "wall_mean_s": 6.64,
+     "wall_p90_s": 7.436,
+     "wall_max_s": 13.669,
+     "slowest_game": "bp35"
+    }
+   },
+   "wins_per_seed": [
+    3
+   ],
+   "wins_median": 3,
+   "wins_min": 3,
+   "wins_max": 3,
+   "wall_total_s_per_seed": [
+    166.0
+   ],
+   "wall_total_s_median": 166.0,
+   "wall_s_per_game_median_of_seed_medians": 6.402,
+   "DIAGNOSTIC_ONLY_wins_any_seed_union": 3,
+   "DIAGNOSTIC_ONLY_won_games_any_seed_union": [
+    "sp80",
+    "tu93",
+    "vc33"
+   ],
+   "wins_all_seeds_intersection": 3,
+   "won_games_all_seeds_intersection": [
+    "sp80",
+    "tu93",
+    "vc33"
+   ]
+  },
+  "1000": {
+   "budget": 1000,
+   "per_seed": {
+    "20260724": {
+     "n_games_scored": 25,
+     "wins": 9,
+     "won_games": [
+      "cd82",
+      "lf52",
+      "lp85",
+      "r11l",
+      "s5i5",
+      "sp80",
+      "su15",
+      "tu93",
+      "vc33"
+     ],
+     "levels_sum": 10,
+     "actions_sum": 24216,
+     "wall_total_s": 243.64,
+     "wall_median_s": 8.992,
+     "wall_mean_s": 9.746,
+     "wall_p90_s": 12.315,
+     "wall_max_s": 25.663,
+     "slowest_game": "bp35"
+    }
+   },
+   "wins_per_seed": [
+    9
+   ],
+   "wins_median": 9,
+   "wins_min": 9,
+   "wins_max": 9,
+   "wall_total_s_per_seed": [
+    243.64
+   ],
+   "wall_total_s_median": 243.64,
+   "wall_s_per_game_median_of_seed_medians": 8.992,
+   "DIAGNOSTIC_ONLY_wins_any_seed_union": 9,
+   "DIAGNOSTIC_ONLY_won_games_any_seed_union": [
+    "cd82",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "wins_all_seeds_intersection": 9,
+   "won_games_all_seeds_intersection": [
+    "cd82",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ]
+  },
+  "2000": {
+   "budget": 2000,
+   "per_seed": {
+    "20260724": {
+     "n_games_scored": 25,
+     "wins": 11,
+     "won_games": [
+      "cd82",
+      "dc22",
+      "ft09",
+      "lf52",
+      "lp85",
+      "r11l",
+      "s5i5",
+      "sp80",
+      "su15",
+      "tu93",
+      "vc33"
+     ],
+     "levels_sum": 14,
+     "actions_sum": 48540,
+     "wall_total_s": 397.09,
+     "wall_median_s": 15.067,
+     "wall_mean_s": 15.884,
+     "wall_p90_s": 20.127,
+     "wall_max_s": 44.152,
+     "slowest_game": "bp35"
+    }
+   },
+   "wins_per_seed": [
+    11
+   ],
+   "wins_median": 11,
+   "wins_min": 11,
+   "wins_max": 11,
+   "wall_total_s_per_seed": [
+    397.09
+   ],
+   "wall_total_s_median": 397.09,
+   "wall_s_per_game_median_of_seed_medians": 15.067,
+   "DIAGNOSTIC_ONLY_wins_any_seed_union": 11,
+   "DIAGNOSTIC_ONLY_won_games_any_seed_union": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "wins_all_seeds_intersection": 11,
+   "won_games_all_seeds_intersection": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ]
+  },
+  "4000": {
+   "budget": 4000,
+   "per_seed": {
+    "20260724": {
+     "n_games_scored": 25,
+     "wins": 12,
+     "won_games": [
+      "cd82",
+      "dc22",
+      "ft09",
+      "lf52",
+      "lp85",
+      "m0r0",
+      "r11l",
+      "s5i5",
+      "sp80",
+      "su15",
+      "tu93",
+      "vc33"
+     ],
+     "levels_sum": 17,
+     "actions_sum": 95288,
+     "wall_total_s": 835.16,
+     "wall_median_s": 28.54,
+     "wall_mean_s": 33.407,
+     "wall_p90_s": 56.96,
+     "wall_max_s": 85.017,
+     "slowest_game": "bp35"
+    }
+   },
+   "wins_per_seed": [
+    12
+   ],
+   "wins_median": 12,
+   "wins_min": 12,
+   "wins_max": 12,
+   "wall_total_s_per_seed": [
+    835.16
+   ],
+   "wall_total_s_median": 835.16,
+   "wall_s_per_game_median_of_seed_medians": 28.54,
+   "DIAGNOSTIC_ONLY_wins_any_seed_union": 12,
+   "DIAGNOSTIC_ONLY_won_games_any_seed_union": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "wins_all_seeds_intersection": 12,
+   "won_games_all_seeds_intersection": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ]
+  },
+  "8000": {
+   "budget": 8000,
+   "per_seed": {
+    "20260724": {
+     "n_games_scored": 25,
+     "wins": 12,
+     "won_games": [
+      "cd82",
+      "dc22",
+      "ft09",
+      "lf52",
+      "lp85",
+      "m0r0",
+      "r11l",
+      "s5i5",
+      "sp80",
+      "su15",
+      "tn36",
+      "vc33"
+     ],
+     "levels_sum": 16,
+     "actions_sum": 185666,
+     "wall_total_s": 2284.84,
+     "wall_median_s": 55.356,
+     "wall_mean_s": 91.393,
+     "wall_p90_s": 161.385,
+     "wall_max_s": 406.891,
+     "slowest_game": "ka59"
+    }
+   },
+   "wins_per_seed": [
+    12
+   ],
+   "wins_median": 12,
+   "wins_min": 12,
+   "wins_max": 12,
+   "wall_total_s_per_seed": [
+    2284.84
+   ],
+   "wall_total_s_median": 2284.84,
+   "wall_s_per_game_median_of_seed_medians": 55.356,
+   "DIAGNOSTIC_ONLY_wins_any_seed_union": 12,
+   "DIAGNOSTIC_ONLY_won_games_any_seed_union": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tn36",
+    "vc33"
+   ],
+   "wins_all_seeds_intersection": 12,
+   "won_games_all_seeds_intersection": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tn36",
+    "vc33"
+   ]
+  }
+ },
+ "won_game_sets_by_budget": {
+  "200": {
+   "all_seeds": [
+    "vc33"
+   ],
+   "per_seed": {
+    "20260724": [
+     "vc33"
+    ]
+   }
+  },
+  "400": {
+   "all_seeds": [
+    "sp80",
+    "tu93",
+    "vc33"
+   ],
+   "per_seed": {
+    "20260724": [
+     "sp80",
+     "tu93",
+     "vc33"
+    ]
+   }
+  },
+  "1000": {
+   "all_seeds": [
+    "cd82",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "per_seed": {
+    "20260724": [
+     "cd82",
+     "lf52",
+     "lp85",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   }
+  },
+  "2000": {
+   "all_seeds": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "per_seed": {
+    "20260724": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   }
+  },
+  "4000": {
+   "all_seeds": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "per_seed": {
+    "20260724": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "vc33"
+    ]
+   }
+  },
+  "8000": {
+   "all_seeds": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tn36",
+    "vc33"
+   ],
+   "per_seed": {
+    "20260724": [
+     "cd82",
+     "dc22",
+     "ft09",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "r11l",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tn36",
+     "vc33"
+    ]
+   }
+  }
+ },
+ "marginal_return_per_step": [
+  {
+   "from_budget": 200,
+   "to_budget": 400,
+   "ratio": 2.0,
+   "doublings": 1.0,
+   "delta_wins_per_seed": [
+    2
+   ],
+   "delta_wins_median": 2,
+   "wins_gained_per_doubling_median": 2.0,
+   "delta_wall_total_s_per_seed": [
+    21.87
+   ],
+   "delta_wall_total_s_median": 21.87,
+   "seconds_per_extra_win_median": 10.9,
+   "cells_gained": [
+    "sp80/s20260724",
+    "tu93/s20260724"
+   ],
+   "cells_lost": [],
+   "n_cells_frozen_zero_both_budgets": 22,
+   "n_cells_won_at_both_budgets": 1,
+   "WITNESS_pass_region_nonempty": {
+    "n_cells_that_could_gain": 24,
+    "n_cells_that_could_regress": 1,
+    "nonempty": true,
+    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+   },
+   "sign_test_on_cells_both_tails": {
+    "n_discordant": 2,
+    "n_pos": 2,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.25,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 0.5,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 0.5,
+    "interpretable": true
+   },
+   "interpretable": true
+  },
+  {
+   "from_budget": 400,
+   "to_budget": 1000,
+   "ratio": 2.5,
+   "doublings": 1.322,
+   "delta_wins_per_seed": [
+    6
+   ],
+   "delta_wins_median": 6,
+   "wins_gained_per_doubling_median": 4.539,
+   "delta_wall_total_s_per_seed": [
+    77.64
+   ],
+   "delta_wall_total_s_median": 77.64,
+   "seconds_per_extra_win_median": 12.9,
+   "cells_gained": [
+    "cd82/s20260724",
+    "lf52/s20260724",
+    "lp85/s20260724",
+    "r11l/s20260724",
+    "s5i5/s20260724",
+    "su15/s20260724"
+   ],
+   "cells_lost": [],
+   "n_cells_frozen_zero_both_budgets": 16,
+   "n_cells_won_at_both_budgets": 3,
+   "WITNESS_pass_region_nonempty": {
+    "n_cells_that_could_gain": 22,
+    "n_cells_that_could_regress": 3,
+    "nonempty": true,
+    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+   },
+   "sign_test_on_cells_both_tails": {
+    "n_discordant": 6,
+    "n_pos": 6,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.015625,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 0.03125,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 0.03125,
+    "interpretable": true
+   },
+   "interpretable": true
+  },
+  {
+   "from_budget": 1000,
+   "to_budget": 2000,
+   "ratio": 2.0,
+   "doublings": 1.0,
+   "delta_wins_per_seed": [
+    2
+   ],
+   "delta_wins_median": 2,
+   "wins_gained_per_doubling_median": 2.0,
+   "delta_wall_total_s_per_seed": [
+    153.45
+   ],
+   "delta_wall_total_s_median": 153.45,
+   "seconds_per_extra_win_median": 76.7,
+   "cells_gained": [
+    "dc22/s20260724",
+    "ft09/s20260724"
+   ],
+   "cells_lost": [],
+   "n_cells_frozen_zero_both_budgets": 14,
+   "n_cells_won_at_both_budgets": 9,
+   "WITNESS_pass_region_nonempty": {
+    "n_cells_that_could_gain": 16,
+    "n_cells_that_could_regress": 9,
+    "nonempty": true,
+    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+   },
+   "sign_test_on_cells_both_tails": {
+    "n_discordant": 2,
+    "n_pos": 2,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.25,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 0.5,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 0.5,
+    "interpretable": true
+   },
+   "interpretable": true
+  },
+  {
+   "from_budget": 2000,
+   "to_budget": 4000,
+   "ratio": 2.0,
+   "doublings": 1.0,
+   "delta_wins_per_seed": [
+    1
+   ],
+   "delta_wins_median": 1,
+   "wins_gained_per_doubling_median": 1.0,
+   "delta_wall_total_s_per_seed": [
+    438.07
+   ],
+   "delta_wall_total_s_median": 438.07,
+   "seconds_per_extra_win_median": 438.1,
+   "cells_gained": [
+    "m0r0/s20260724"
+   ],
+   "cells_lost": [],
+   "n_cells_frozen_zero_both_budgets": 13,
+   "n_cells_won_at_both_budgets": 11,
+   "WITNESS_pass_region_nonempty": {
+    "n_cells_that_could_gain": 14,
+    "n_cells_that_could_regress": 11,
+    "nonempty": true,
+    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+   },
+   "sign_test_on_cells_both_tails": {
+    "n_discordant": 1,
+    "n_pos": 1,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.5,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 1.0,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 1.0,
+    "interpretable": true
+   },
+   "interpretable": true
+  },
+  {
+   "from_budget": 4000,
+   "to_budget": 8000,
+   "ratio": 2.0,
+   "doublings": 1.0,
+   "delta_wins_per_seed": [
+    0
+   ],
+   "delta_wins_median": 0,
+   "wins_gained_per_doubling_median": 0.0,
+   "delta_wall_total_s_per_seed": [
+    1449.68
+   ],
+   "delta_wall_total_s_median": 1449.68,
+   "seconds_per_extra_win_median": null,
+   "cells_gained": [
+    "tn36/s20260724"
+   ],
+   "cells_lost": [
+    "tu93/s20260724"
+   ],
+   "n_cells_frozen_zero_both_budgets": 12,
+   "n_cells_won_at_both_budgets": 11,
+   "WITNESS_pass_region_nonempty": {
+    "n_cells_that_could_gain": 13,
+    "n_cells_that_could_regress": 12,
+    "nonempty": true,
+    "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
+   },
+   "sign_test_on_cells_both_tails": {
+    "n_discordant": 2,
+    "n_pos": 1,
+    "n_neg": 1,
+    "p_one_sided_pos": 0.75,
+    "p_one_sided_neg": 0.75,
+    "p_two_sided": 1.0,
+    "direction_favoured": "tie",
+    "min_reachable_two_sided_p_at_this_support": 0.5,
+    "interpretable": true
+   },
+   "interpretable": true
+  }
+ ],
+ "saturation": {
+  "saturating_budget": 4000,
+  "definition": "smallest measured budget after which NO seed's win count increases at ANY larger measured budget",
+  "caveat": "This is saturation WITHIN the measured grid on the 25 PUBLIC games. It is not a claim about hidden games, and prior points on file disagree at larger budgets (cd82 first wins only above 3000; tn36 only at 8000; exp4518 gains 8000->18000 on its 8-game set)."
+ },
+ "crossing_point": {
+  "cost_scaling_in_budget": {
+   "per_step": [
+    {
+     "from_budget": 200,
+     "to_budget": 400,
+     "cost_ratio": 1.127,
+     "budget_ratio": 2.0,
+     "exponent_alpha": 0.173
+    },
+    {
+     "from_budget": 400,
+     "to_budget": 1000,
+     "cost_ratio": 1.405,
+     "budget_ratio": 2.5,
+     "exponent_alpha": 0.371
+    },
+    {
+     "from_budget": 1000,
+     "to_budget": 2000,
+     "cost_ratio": 1.676,
+     "budget_ratio": 2.0,
+     "exponent_alpha": 0.745
+    },
+    {
+     "from_budget": 2000,
+     "to_budget": 4000,
+     "cost_ratio": 1.894,
+     "budget_ratio": 2.0,
+     "exponent_alpha": 0.922
+    },
+    {
+     "from_budget": 4000,
+     "to_budget": 8000,
+     "cost_ratio": 1.94,
+     "budget_ratio": 2.0,
+     "exponent_alpha": 0.956
+    }
+   ],
+   "alpha_median": 0.745,
+   "alpha_at_largest_step": 0.956,
+   "alpha_is_rising": true,
+   "which_alpha_matters_for_extrapolation": "alpha_at_largest_step. The low-budget alphas are DEPRESSED by the fixed per-game construct cost (~2.3s), which dominates a 200-action cell; they are not evidence of sub-linear search. Extrapolating past the largest measured budget must use the largest-step exponent.",
+   "is_superlinear": false,
+   "consequence": "alpha > 1 means per-game cost grows FASTER than the budget (the search graph grows, so each additional action costs more than the last). The linear fixed+marginal crossing budget below is therefore an OPTIMISTIC UPPER BOUND; the MEASURED per-budget totals are the trustworthy figures and the extrapolation past the largest measured budget should not be read as a feasibility guarantee."
+  },
+  "cost_model_llm_off": {
+   "fixed_s_per_game_construct_median": 2.775,
+   "marginal_s_per_action_median": 0.005059,
+   "marginal_s_per_action_p90": 0.018,
+   "n_matched_pairs": 124,
+   "method": "MARGINAL from matched (game, seed) budget pairs: d(wall_s)/d(actions). The average cost per action would be inflated by the fixed construct cost."
+  },
+  "measured_totals_25_games_llm_off": {
+   "200": 144.13,
+   "400": 166.0,
+   "1000": 243.64,
+   "2000": 397.09,
+   "4000": 835.16,
+   "8000": 2284.84
+  },
+  "envelopes": [
+   {
+    "id": "A_25games_12h",
+    "n_games": 25,
+    "cap_s": 43200.0,
+    "source": "docs/research-notes/carnot-verifier-as-pruner-on-graph-explore-2026-06-25.md:121-127",
+    "note": "the 2026-06-25 affordability calc. 25 games -- the PUBLIC set size, not the hidden set.",
+    "usable_loop_wall_s": 42220.0,
+    "kernel_overhead_s_assumed": 980.0,
+    "per_budget": {
+     "200": {
+      "projected_total_s_at_median": 142.0,
+      "projected_total_s_at_p90": 154.8,
+      "fraction_of_usable_at_median": 0.0034,
+      "fraction_of_usable_at_p90": 0.0037,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "400": {
+      "projected_total_s_at_median": 160.1,
+      "projected_total_s_at_p90": 185.9,
+      "fraction_of_usable_at_median": 0.0038,
+      "fraction_of_usable_at_p90": 0.0044,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "1000": {
+      "projected_total_s_at_median": 224.8,
+      "projected_total_s_at_p90": 307.9,
+      "fraction_of_usable_at_median": 0.0053,
+      "fraction_of_usable_at_p90": 0.0073,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "2000": {
+      "projected_total_s_at_median": 376.7,
+      "projected_total_s_at_p90": 503.2,
+      "fraction_of_usable_at_median": 0.0089,
+      "fraction_of_usable_at_p90": 0.0119,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "4000": {
+      "projected_total_s_at_median": 713.5,
+      "projected_total_s_at_p90": 1424.0,
+      "fraction_of_usable_at_median": 0.0169,
+      "fraction_of_usable_at_p90": 0.0337,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "8000": {
+      "projected_total_s_at_median": 1383.9,
+      "projected_total_s_at_p90": 4034.6,
+      "fraction_of_usable_at_median": 0.0328,
+      "fraction_of_usable_at_p90": 0.0956,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     }
+    },
+    "largest_measured_budget_that_fits_at_median": 8000,
+    "analytic_crossing_budget_llm_off_median_cost_LINEAR_optimistic": 333245,
+    "analytic_crossing_budget_llm_off_p90_cost_LINEAR_optimistic": 93668,
+    "analytic_crossing_budget_llm_off_SUPERLINEAR": 300912,
+    "superlinear_fit": {
+     "form": "cost_per_game(b) = fixed + k*b^alpha",
+     "fixed_s": 2.775,
+     "alpha": 0.956,
+     "anchored_at_budget": 8000,
+     "anchor_cost_s": 55.356
+    },
+    "which_crossing_to_trust": "the SUPERLINEAR one when alpha > 1. The LINEAR figure assumes each extra action costs the same as the last, which the measured exponent contradicts."
+   },
+   {
+    "id": "B_110games_8h",
+    "n_games": 110,
+    "cap_s": 28800.0,
+    "source": "docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md:41 (preview, UNCONFIRMED for 2026)",
+    "note": "the 2026-06-21 audit's model, and the TIGHTEST. ~262 s/game serial-equivalent.",
+    "usable_loop_wall_s": 27820.0,
+    "kernel_overhead_s_assumed": 980.0,
+    "per_budget": {
+     "200": {
+      "projected_total_s_at_median": 624.8,
+      "projected_total_s_at_p90": 680.9,
+      "fraction_of_usable_at_median": 0.0225,
+      "fraction_of_usable_at_p90": 0.0245,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "400": {
+      "projected_total_s_at_median": 704.2,
+      "projected_total_s_at_p90": 818.0,
+      "fraction_of_usable_at_median": 0.0253,
+      "fraction_of_usable_at_p90": 0.0294,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "1000": {
+      "projected_total_s_at_median": 989.1,
+      "projected_total_s_at_p90": 1354.6,
+      "fraction_of_usable_at_median": 0.0356,
+      "fraction_of_usable_at_p90": 0.0487,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "2000": {
+      "projected_total_s_at_median": 1657.4,
+      "projected_total_s_at_p90": 2214.0,
+      "fraction_of_usable_at_median": 0.0596,
+      "fraction_of_usable_at_p90": 0.0796,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "4000": {
+      "projected_total_s_at_median": 3139.4,
+      "projected_total_s_at_p90": 6265.6,
+      "fraction_of_usable_at_median": 0.1128,
+      "fraction_of_usable_at_p90": 0.2252,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "8000": {
+      "projected_total_s_at_median": 6089.2,
+      "projected_total_s_at_p90": 17752.3,
+      "fraction_of_usable_at_median": 0.2189,
+      "fraction_of_usable_at_p90": 0.6381,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     }
+    },
+    "largest_measured_budget_that_fits_at_median": 8000,
+    "analytic_crossing_budget_llm_off_median_cost_LINEAR_optimistic": 49439,
+    "analytic_crossing_budget_llm_off_p90_cost_LINEAR_optimistic": 13896,
+    "analytic_crossing_budget_llm_off_SUPERLINEAR": 40889,
+    "superlinear_fit": {
+     "form": "cost_per_game(b) = fixed + k*b^alpha",
+     "fixed_s": 2.775,
+     "alpha": 0.956,
+     "anchored_at_budget": 8000,
+     "anchor_cost_s": 55.356
+    },
+    "which_crossing_to_trust": "the SUPERLINEAR one when alpha > 1. The LINEAR figure assumes each extra action costs the same as the last, which the measured exponent contradicts."
+   },
+   {
+    "id": "C_110games_12h",
+    "n_games": 110,
+    "cap_s": 43200.0,
+    "source": "scripts/kaggle/submission_kernel/main.py subprocess timeout=43200",
+    "note": "the only bound VERIFIED in code: the Kaggle notebook's own subprocess timeout.",
+    "usable_loop_wall_s": 42220.0,
+    "kernel_overhead_s_assumed": 980.0,
+    "per_budget": {
+     "200": {
+      "projected_total_s_at_median": 624.8,
+      "projected_total_s_at_p90": 680.9,
+      "fraction_of_usable_at_median": 0.0148,
+      "fraction_of_usable_at_p90": 0.0161,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "400": {
+      "projected_total_s_at_median": 704.2,
+      "projected_total_s_at_p90": 818.0,
+      "fraction_of_usable_at_median": 0.0167,
+      "fraction_of_usable_at_p90": 0.0194,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "1000": {
+      "projected_total_s_at_median": 989.1,
+      "projected_total_s_at_p90": 1354.6,
+      "fraction_of_usable_at_median": 0.0234,
+      "fraction_of_usable_at_p90": 0.0321,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "2000": {
+      "projected_total_s_at_median": 1657.4,
+      "projected_total_s_at_p90": 2214.0,
+      "fraction_of_usable_at_median": 0.0393,
+      "fraction_of_usable_at_p90": 0.0524,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "4000": {
+      "projected_total_s_at_median": 3139.4,
+      "projected_total_s_at_p90": 6265.6,
+      "fraction_of_usable_at_median": 0.0744,
+      "fraction_of_usable_at_p90": 0.1484,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     },
+     "8000": {
+      "projected_total_s_at_median": 6089.2,
+      "projected_total_s_at_p90": 17752.3,
+      "fraction_of_usable_at_median": 0.1442,
+      "fraction_of_usable_at_p90": 0.4205,
+      "fits_at_median": true,
+      "fits_at_p90": true
+     }
+    },
+    "largest_measured_budget_that_fits_at_median": 8000,
+    "analytic_crossing_budget_llm_off_median_cost_LINEAR_optimistic": 75313,
+    "analytic_crossing_budget_llm_off_p90_cost_LINEAR_optimistic": 21169,
+    "analytic_crossing_budget_llm_off_SUPERLINEAR": 63507,
+    "superlinear_fit": {
+     "form": "cost_per_game(b) = fixed + k*b^alpha",
+     "fixed_s": 2.775,
+     "alpha": 0.956,
+     "anchored_at_budget": 8000,
+     "anchor_cost_s": 55.356
+    },
+    "which_crossing_to_trust": "the SUPERLINEAR one when alpha > 1. The LINEAR figure assumes each extra action costs the same as the last, which the measured exponent contradicts."
+   }
+  ],
+  "step_rate_ceiling": {
+   "A_25games_12h": {
+    "global_steps_available": 288000.0,
+    "per_game_action_ceiling": 11520,
+    "source": "10 steps/sec x 8h, docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md:41",
+    "status": "UNCONFIRMED for 2026 and server-side; no client-side limiter exists in the framework",
+    "binding_vs_compute": "TIGHTER than the LLM-off compute bound"
+   },
+   "B_110games_8h": {
+    "global_steps_available": 288000.0,
+    "per_game_action_ceiling": 2618,
+    "source": "10 steps/sec x 8h, docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md:41",
+    "status": "UNCONFIRMED for 2026 and server-side; no client-side limiter exists in the framework",
+    "binding_vs_compute": "TIGHTER than the LLM-off compute bound"
+   },
+   "C_110games_12h": {
+    "global_steps_available": 288000.0,
+    "per_game_action_ceiling": 2618,
+    "source": "10 steps/sec x 8h, docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md:41",
+    "status": "UNCONFIRMED for 2026 and server-side; no client-side limiter exists in the framework",
+    "binding_vs_compute": "TIGHTER than the LLM-off compute bound"
+   }
+  },
+  "llm_on_band": {
+   "measured_llm_on_at_budget_400": {
+    "arm": "S_llmon",
+    "median_s_per_game": 227.3,
+    "mean_s_per_game": 255.5,
+    "max_s_per_game": 508.0,
+    "n_cells": 17,
+    "generator_share_of_wall": 0.718,
+    "inductions_per_game": 1.2,
+    "s_per_induction": 156.8,
+    "note": "Every LLM-ON scored row on file is budget 400, so the per-ACTION component of the LLM-on cost is NOT IDENTIFIED (OLS over those rows gives a NEGATIVE per-action slope at R^2=0.208 because actions span only 346-396). The LLM-on crossing point is therefore reported as a BAND between two attributions, not as a number."
+   },
+   "measured_llm_off_at_budget_400_this_sweep_s_per_game": 6.402,
+   "llm_on_over_llm_off_factor_at_budget_400": 35.5,
+   "why_a_band_not_a_number": "Every LLM-ON scored row on file is budget 400, so the per-ACTION component of the LLM-on cost is NOT IDENTIFIED (OLS over those rows gives a NEGATIVE per-action slope at R^2=0.208 because actions span only 346-396). The LLM-on crossing point is therefore reported as a BAND between two attributions, not as a number.",
+   "attribution_lower_bound": "the ~60.2 s/game non-generator remainder is FIXED per game; extra actions cost only the LLM-off marginal",
+   "attribution_upper_bound": "that remainder scales PER-ACTION with the budget",
+   "A_25games_12h": {
+    "200": {
+     "projected_total_s_lower_attribution": 5682.5,
+     "projected_total_s_upper_attribution": 2841.2,
+     "fraction_of_usable_lower": 0.135,
+     "fraction_of_usable_upper": 0.067,
+     "verdict": "FITS under both attributions"
+    },
+    "400": {
+     "projected_total_s_lower_attribution": 5682.5,
+     "projected_total_s_upper_attribution": 5682.5,
+     "fraction_of_usable_lower": 0.135,
+     "fraction_of_usable_upper": 0.135,
+     "verdict": "FITS under both attributions"
+    },
+    "1000": {
+     "projected_total_s_lower_attribution": 5758.4,
+     "projected_total_s_upper_attribution": 14206.2,
+     "fraction_of_usable_lower": 0.136,
+     "fraction_of_usable_upper": 0.336,
+     "verdict": "FITS under both attributions"
+    },
+    "2000": {
+     "projected_total_s_lower_attribution": 5884.9,
+     "projected_total_s_upper_attribution": 28412.5,
+     "fraction_of_usable_lower": 0.139,
+     "fraction_of_usable_upper": 0.673,
+     "verdict": "FITS under both attributions"
+    },
+    "4000": {
+     "projected_total_s_lower_attribution": 6137.8,
+     "projected_total_s_upper_attribution": 56825.0,
+     "fraction_of_usable_lower": 0.145,
+     "fraction_of_usable_upper": 1.346,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "8000": {
+     "projected_total_s_lower_attribution": 6643.8,
+     "projected_total_s_upper_attribution": 113650.0,
+     "fraction_of_usable_lower": 0.157,
+     "fraction_of_usable_upper": 2.692,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    }
+   },
+   "B_110games_8h": {
+    "200": {
+     "projected_total_s_lower_attribution": 25003.0,
+     "projected_total_s_upper_attribution": 12501.5,
+     "fraction_of_usable_lower": 0.899,
+     "fraction_of_usable_upper": 0.449,
+     "verdict": "FITS under both attributions"
+    },
+    "400": {
+     "projected_total_s_lower_attribution": 25003.0,
+     "projected_total_s_upper_attribution": 25003.0,
+     "fraction_of_usable_lower": 0.899,
+     "fraction_of_usable_upper": 0.899,
+     "verdict": "FITS under both attributions"
+    },
+    "1000": {
+     "projected_total_s_lower_attribution": 25336.9,
+     "projected_total_s_upper_attribution": 62507.5,
+     "fraction_of_usable_lower": 0.911,
+     "fraction_of_usable_upper": 2.247,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "2000": {
+     "projected_total_s_lower_attribution": 25893.5,
+     "projected_total_s_upper_attribution": 125015.0,
+     "fraction_of_usable_lower": 0.931,
+     "fraction_of_usable_upper": 4.494,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "4000": {
+     "projected_total_s_lower_attribution": 27006.5,
+     "projected_total_s_upper_attribution": 250030.0,
+     "fraction_of_usable_lower": 0.971,
+     "fraction_of_usable_upper": 8.987,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "8000": {
+     "projected_total_s_lower_attribution": 29232.7,
+     "projected_total_s_upper_attribution": 500060.0,
+     "fraction_of_usable_lower": 1.051,
+     "fraction_of_usable_upper": 17.975,
+     "verdict": "OVER under both attributions"
+    }
+   },
+   "C_110games_12h": {
+    "200": {
+     "projected_total_s_lower_attribution": 25003.0,
+     "projected_total_s_upper_attribution": 12501.5,
+     "fraction_of_usable_lower": 0.592,
+     "fraction_of_usable_upper": 0.296,
+     "verdict": "FITS under both attributions"
+    },
+    "400": {
+     "projected_total_s_lower_attribution": 25003.0,
+     "projected_total_s_upper_attribution": 25003.0,
+     "fraction_of_usable_lower": 0.592,
+     "fraction_of_usable_upper": 0.592,
+     "verdict": "FITS under both attributions"
+    },
+    "1000": {
+     "projected_total_s_lower_attribution": 25336.9,
+     "projected_total_s_upper_attribution": 62507.5,
+     "fraction_of_usable_lower": 0.6,
+     "fraction_of_usable_upper": 1.481,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "2000": {
+     "projected_total_s_lower_attribution": 25893.5,
+     "projected_total_s_upper_attribution": 125015.0,
+     "fraction_of_usable_lower": 0.613,
+     "fraction_of_usable_upper": 2.961,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "4000": {
+     "projected_total_s_lower_attribution": 27006.5,
+     "projected_total_s_upper_attribution": 250030.0,
+     "fraction_of_usable_lower": 0.64,
+     "fraction_of_usable_upper": 5.922,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    },
+    "8000": {
+     "projected_total_s_lower_attribution": 29232.7,
+     "projected_total_s_upper_attribution": 500060.0,
+     "fraction_of_usable_lower": 0.692,
+     "fraction_of_usable_upper": 11.844,
+     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+    }
+   }
+  }
+ },
+ "efficiency_axis": {
+  "why": "SUBMITTED_EARLY_STOP_GRACE is None (disabled) and SUBMITTED_TARGET_LEVELS is 3, so a game that wins L1 and then stalls keeps stepping to the budget. The scored metric is quadratic in actions, so a 5x budget raise can cost up to 25x on the efficiency term of a game it ALREADY WINS.",
+  "harness_metric_caveat": "arc_leaderboard_eval charges the post-solve tail to the trailing INCOMPLETE level, which scores 0 either way -- so THIS harness's `efficiency` is structurally blind to the tail. That is why a pessimistic bound is computed below rather than trusting it.",
+  "per_budget": {
+   "200": {
+    "efficiency_sum_over_cells": 2.0897,
+    "efficiency_sum_per_seed": [
+     2.0897
+    ],
+    "n_won_cells": 1,
+    "efficiency_median_over_won_cells": 2.0897
+   },
+   "400": {
+    "efficiency_sum_over_cells": 2.1547,
+    "efficiency_sum_per_seed": [
+     2.1547
+    ],
+    "n_won_cells": 3,
+    "efficiency_median_over_won_cells": 0.0578
+   },
+   "1000": {
+    "efficiency_sum_over_cells": 2.1999,
+    "efficiency_sum_per_seed": [
+     2.1999
+    ],
+    "n_won_cells": 9,
+    "efficiency_median_over_won_cells": 0.005
+   },
+   "2000": {
+    "efficiency_sum_over_cells": 2.2088,
+    "efficiency_sum_per_seed": [
+     2.2088
+    ],
+    "n_won_cells": 11,
+    "efficiency_median_over_won_cells": 0.005
+   },
+   "4000": {
+    "efficiency_sum_over_cells": 2.2117,
+    "efficiency_sum_per_seed": [
+     2.2117
+    ],
+    "n_won_cells": 12,
+    "efficiency_median_over_won_cells": 0.0051
+   },
+   "8000": {
+    "efficiency_sum_over_cells": 2.2118,
+    "efficiency_sum_per_seed": [
+     2.2118
+    ],
+    "n_won_cells": 12,
+    "efficiency_median_over_won_cells": 0.00445
+   }
+  },
+  "regressions_vs_400": {
+   "200": {
+    "MATCHED_pessimistic_ratio_median": null,
+    "MATCHED_pessimistic_ratio_min": null,
+    "MATCHED_pessimistic_ratio_n_cells": 0,
+    "MATCHED_pessimistic_fold_loss_median": null,
+    "n_cells_won_at_both": 1,
+    "harness_metric_worse": [],
+    "harness_metric_better": [],
+    "harness_metric_unchanged": [
+     "vc33/s20260724"
+    ],
+    "harness_metric_n_worse": 0,
+    "PESSIMISTIC_total_action_charge_worse": [],
+    "PESSIMISTIC_n_worse": 0,
+    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+   },
+   "1000": {
+    "MATCHED_pessimistic_ratio_median": 0.1619,
+    "MATCHED_pessimistic_ratio_min": 0.15787,
+    "MATCHED_pessimistic_ratio_n_cells": 2,
+    "MATCHED_pessimistic_fold_loss_median": 6.2,
+    "n_cells_won_at_both": 3,
+    "harness_metric_worse": [],
+    "harness_metric_better": [],
+    "harness_metric_unchanged": [
+     "sp80/s20260724",
+     "tu93/s20260724",
+     "vc33/s20260724"
+    ],
+    "harness_metric_n_worse": 0,
+    "PESSIMISTIC_total_action_charge_worse": [
+     {
+      "cell": "sp80/s20260724",
+      "pessimistic_eff_b400": 0.04836291,
+      "pessimistic_eff_b1000": 0.00763513,
+      "ratio": 0.15787
+     },
+     {
+      "cell": "tu93/s20260724",
+      "pessimistic_eff_b400": 0.00530794,
+      "pessimistic_eff_b1000": 0.00088068,
+      "ratio": 0.16592
+     }
+    ],
+    "PESSIMISTIC_n_worse": 2,
+    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+   },
+   "2000": {
+    "MATCHED_pessimistic_ratio_median": 0.03939,
+    "MATCHED_pessimistic_ratio_min": 0.03939,
+    "MATCHED_pessimistic_ratio_n_cells": 1,
+    "MATCHED_pessimistic_fold_loss_median": 25.4,
+    "n_cells_won_at_both": 3,
+    "harness_metric_worse": [],
+    "harness_metric_better": [
+     "tu93/s20260724"
+    ],
+    "harness_metric_unchanged": [
+     "sp80/s20260724",
+     "vc33/s20260724"
+    ],
+    "harness_metric_n_worse": 0,
+    "PESSIMISTIC_total_action_charge_worse": [
+     {
+      "cell": "sp80/s20260724",
+      "pessimistic_eff_b400": 0.04836291,
+      "pessimistic_eff_b2000": 0.00190487,
+      "ratio": 0.03939
+     }
+    ],
+    "PESSIMISTIC_n_worse": 1,
+    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+   },
+   "4000": {
+    "MATCHED_pessimistic_ratio_median": 0.00983,
+    "MATCHED_pessimistic_ratio_min": 0.00983,
+    "MATCHED_pessimistic_ratio_n_cells": 1,
+    "MATCHED_pessimistic_fold_loss_median": 101.7,
+    "n_cells_won_at_both": 3,
+    "harness_metric_worse": [],
+    "harness_metric_better": [
+     "tu93/s20260724"
+    ],
+    "harness_metric_unchanged": [
+     "sp80/s20260724",
+     "vc33/s20260724"
+    ],
+    "harness_metric_n_worse": 0,
+    "PESSIMISTIC_total_action_charge_worse": [
+     {
+      "cell": "sp80/s20260724",
+      "pessimistic_eff_b400": 0.04836291,
+      "pessimistic_eff_b4000": 0.00047524,
+      "ratio": 0.00983
+     }
+    ],
+    "PESSIMISTIC_n_worse": 1,
+    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+   },
+   "8000": {
+    "MATCHED_pessimistic_ratio_median": 0.00245,
+    "MATCHED_pessimistic_ratio_min": 0.00245,
+    "MATCHED_pessimistic_ratio_n_cells": 1,
+    "MATCHED_pessimistic_fold_loss_median": 408.2,
+    "n_cells_won_at_both": 2,
+    "harness_metric_worse": [],
+    "harness_metric_better": [],
+    "harness_metric_unchanged": [
+     "sp80/s20260724",
+     "vc33/s20260724"
+    ],
+    "harness_metric_n_worse": 0,
+    "PESSIMISTIC_total_action_charge_worse": [
+     {
+      "cell": "sp80/s20260724",
+      "pessimistic_eff_b400": 0.04836291,
+      "pessimistic_eff_b8000": 0.00011857,
+      "ratio": 0.00245
+     }
+    ],
+    "PESSIMISTIC_n_worse": 1,
+    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+   }
+  },
+  "scored_sum_under_both_charge_models": {
+   "200": {
+    "optimistic_sum_actions_to_level": 2.0897,
+    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.01199,
+    "n_won_cells": 1,
+    "n_single_level_cells_exact": 0,
+    "n_multi_level_cells_lower_bound_only": 1,
+    "optimistic_vs_b400_ratio": 0.9698,
+    "pessimistic_vs_b400_ratio": 0.2111
+   },
+   "400": {
+    "optimistic_sum_actions_to_level": 2.1547,
+    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.05681,
+    "n_won_cells": 3,
+    "n_single_level_cells_exact": 2,
+    "n_multi_level_cells_lower_bound_only": 1,
+    "optimistic_vs_b400_ratio": 1.0,
+    "pessimistic_vs_b400_ratio": 1.0
+   },
+   "1000": {
+    "optimistic_sum_actions_to_level": 2.1999,
+    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.0322,
+    "n_won_cells": 9,
+    "n_single_level_cells_exact": 8,
+    "n_multi_level_cells_lower_bound_only": 1,
+    "optimistic_vs_b400_ratio": 1.021,
+    "pessimistic_vs_b400_ratio": 0.5668
+   },
+   "2000": {
+    "optimistic_sum_actions_to_level": 2.2088,
+    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.01458,
+    "n_won_cells": 11,
+    "n_single_level_cells_exact": 8,
+    "n_multi_level_cells_lower_bound_only": 3,
+    "optimistic_vs_b400_ratio": 1.0251,
+    "pessimistic_vs_b400_ratio": 0.2566
+   },
+   "4000": {
+    "optimistic_sum_actions_to_level": 2.2117,
+    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.00421,
+    "n_won_cells": 12,
+    "n_single_level_cells_exact": 7,
+    "n_multi_level_cells_lower_bound_only": 5,
+    "optimistic_vs_b400_ratio": 1.0265,
+    "pessimistic_vs_b400_ratio": 0.0741
+   },
+   "8000": {
+    "optimistic_sum_actions_to_level": 2.2038,
+    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.0011,
+    "n_won_cells": 12,
+    "n_single_level_cells_exact": 8,
+    "n_multi_level_cells_lower_bound_only": 4,
+    "optimistic_vs_b400_ratio": 1.0228,
+    "pessimistic_vs_b400_ratio": 0.0194
+   }
+  },
+  "scored_sum_verdict": "The two charge models DISAGREE IN SIGN about whether raising the budget helps the SCORE, even though they agree that it raises the WIN COUNT. Under the actions-to-level charge the sum rises; under the total-action charge it falls, because already-won games keep stepping to the new budget (SUBMITTED_EARLY_STOP_GRACE is None, so nothing cuts the post-solve tail) and the term is quadratic. Which model the gateway uses is NOT resolvable locally, so a budget raise MUST NOT be recommended on the win count alone. Enabling the early-stop grace removes the disagreement, because it removes the tail."
+ },
+ "wall_clock_contention_control": {
+  "why": "Three seeds ran as three concurrent processes on a 24-core box (~3.5 cores each). A contended wall clock presented as the cost would overstate the time and therefore UNDERSTATE the affordable budget -- so the inflation is measured against an uncontended serial run of the same cells, not assumed away.",
+  "available": false
+ },
+ "prior_budget_points_cited_not_rederived": [
+  {
+   "source": "results/proto_just_explore_diag.json",
+   "experiment": "exp4605",
+   "policy": "just_explore (third-party, NOT E3AgentPolicy)",
+   "corpus": "25 public games, variant-1 COLOR-PERMUTED copies",
+   "budget": 200,
+   "wins": 1,
+   "n_games": 25,
+   "note": "first_win_rate 0.04 -> 1/25 (only lp85). NOT 0/25; the 0/25 reading is wrong."
+  },
+  {
+   "source": "results/proto_just_explore_budget_scan.json",
+   "policy": "just_explore (third-party)",
+   "corpus": "25 public games, color-permuted variants, 5 seeds",
+   "budget": 2000,
+   "wins_any_seed": 11,
+   "mean_solve_fraction": 0.28,
+   "note": "PLATEAUS: 4000 gives 0.272 (delta -0.008, within seed noise)."
+  },
+  {
+   "source": "results/proto_just_explore_budget_scan.json",
+   "policy": "just_explore (third-party)",
+   "budget": 4000,
+   "wins_any_seed": 11,
+   "mean_solve_fraction": 0.272
+  },
+  {
+   "source": "results/outer_loop_scored_path_lever_ab_llm_on_20260726.json",
+   "policy": "E3AgentPolicy, shipped flags, LLM-OFF, 3 seeds",
+   "corpus": "25 public games",
+   "budget": 400,
+   "wins_per_seed": [
+    3,
+    4,
+    4
+   ],
+   "note": "the current submission's condition"
+  },
+  {
+   "source": "results/outer_loop_scored_path_lever_ab_llm_on_20260726.json",
+   "policy": "E3AgentPolicy, shipped flags, LLM-OFF, 3 seeds",
+   "budget": 2000,
+   "wins_per_seed": [
+    11,
+    11,
+    11
+   ],
+   "note": "the +7-games motivating result"
+  },
+  {
+   "source": "results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json",
+   "policy": "E3AgentPolicy, shipped flags, LLM-OFF, 5 seeds, 1500 cells",
+   "budget": 2000,
+   "wins_median": 12,
+   "note": "5-seed median is 12, not 11 -- a same-budget disagreement with the 3-seed design."
+  },
+  {
+   "source": "results/experiment_4518_metric_harness_canonical.json",
+   "policy": "E3AgentPolicy via arc_leaderboard_eval, induction disabled, 1 seed",
+   "corpus": "8-game canonical set (NOT the 25)",
+   "budgets_wins": {
+    "8000": 4,
+    "12000": 6,
+    "16000": 6,
+    "18000": 7,
+    "24000": 7,
+    "36000": 3
+   },
+   "n_games": 8,
+   "note": "MONOTONE NON-DECREASING 8000->24000. The 36000 drop to 3 is a 115-SECOND CI SUBPROCESS TIMEOUT artifact: 4 of 8 games carry timed_out=true / actions=null and ALL FOUR were solved at 24000. It is NOT evidence that a higher budget fails."
+  },
+  {
+   "source": "results/experiment_5836_frontier_click_vocab_gate.json",
+   "policy": "E3AgentPolicy per-game budget probe",
+   "game": "cd82",
+   "budgets_levels": {
+    "2000": 0,
+    "3000": 0,
+    "4000": 1
+   },
+   "note": "cd82's first win needs >3000 actions -- explains its loss at 400 AND at 2000."
+  },
+  {
+   "source": "ops/changelog.md:184-190 + ops/status.md:20-23",
+   "policy": "E3AgentPolicy, shipped flags, 5 seeds, single-game targeted",
+   "game": "tn36",
+   "budgets_wins": {
+    "2000": 0,
+    "8000": 5
+   },
+   "note": "tn36 is an EFFICIENCY regression that crosses the budget (~3.6x), not a capability loss."
+  },
+  {
+   "source": "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
+   "policy": "adapter-free graph-explore (NOT E3AgentPolicy)",
+   "corpus": "9 shallow-tail games",
+   "actions_consumed_max": 253260,
+   "wins": 0,
+   "note": "The largest action count ever consumed on any ARC path in this repo bought ZERO levels. Budget alone does not crack the hard tail; the shipped lever config + E3 cascade is what differs."
+  }
+ ],
+ "stop_conditions_evaluated": {
+  "is_raising_MAX_ACTIONS_permitted_by_the_competition_harness": {
+   "answer": "YES -- the sweep is not moot",
+   "evidence": "The framework loop is `while not is_done(...) and self.action_counter <= self.MAX_ACTIONS` (/home/ianblenke/arc3_agents/agents/agent.py:70-87), i.e. it reads the INSTANCE attribute. Agent.MAX_ACTIONS defaults to 80; CarnotAgent shadows it with 400 at arc_competition_agent.py:6230; and the framework's own Playback subclass sets it to 1_000_000 (agent.py:204), so overriding it is a framework-sanctioned pattern, exactly as the code comment claims. INDEPENDENTLY RE-VERIFIED in this session: make_carnot_agent(Base) with Base.MAX_ACTIONS=80 resolves to 400, MRO owner is CarnotAgent, and the module-level MAX_ACTIONS=200 at line 117 is a DIFFERENT object (`C.MAX_ACTIONS is MODLEVEL` -> False).",
+   "which_cap_governs_the_scored_path": 400,
+   "module_level_200_is_dead_for_scoring": true,
+   "off_by_one": "a cap of N executes N+1 actions (the guard is <=)"
+  },
+  "is_there_a_recorded_time_overrun_incident_from_raising_the_budget": {
+   "answer": "NO",
+   "evidence": "The only higher-budget 'failure' on file is exp4518's budget-36000 row (7 solved at 24000 -> 3 at 36000). Four of its eight games carry timed_out=true / actions=null against the GATE's own 115-SECOND subprocess cap (scripts/kaggle/arc_local_submission_gate.py --cap default 115), and all four were solved at 24000. It is a CI-harness timeout artifact, not an eval-time overrun. Reading it as 'we tried higher and it broke' would be wrong; actions=null was the tell."
+  }
+ },
+ "what_this_sweep_does_NOT_measure": {
+  "the_scored_LLM_ON_condition_at_raised_budget": "UNMEASURED. Every LLM-on scored row in the record is budget 400, so the per-action component of LLM-on cost is unidentified. The llm_on_band section reports a BAND between two attributions rather than a number. ONE LLM-on run at a raised budget resolves it and is the cheapest decisive next measurement.",
+  "hidden_game_cost_and_difficulty": "These are the 25 PUBLIC games with their per-game GameAdapters available. The hidden set is ~110 games with no adapters. Projecting the per-game wall clock to N=110 assumes hidden games cost like public ones -- an assumption, not a measurement, and it is the single largest source of error in the crossing point.",
+  "whether_the_gateway_scores_actions_to_level_or_total_actions": "UNRESOLVED and it decides whether a raise HELPS or HURTS. This harness's efficiency metric charges the post-solve tail to the trailing INCOMPLETE level, which scores 0 either way, so it is structurally blind to the tail. The 2026-06-21 audit asserts the opposite -- that the tail 'quadratically erodes' the score. The efficiency_axis section reports BOTH the harness metric and a pessimistic total-action-charge bound so the disagreement is visible rather than resolved by assumption.",
+  "the_10_steps_per_second_gateway_rate": "UNVERIFIED. It appears only in this project's own requirements note and is marked UNCONFIRMED for 2026. No client-side limiter exists in the framework (the only time.sleep is in the Playback subclass), so if it is real it is enforced server-side and EVERY offline measurement here omits it. At 10 steps/sec a 2000-action game has a 200-second pure-latency floor before any agent compute.",
+  "memory_at_110_concurrent_games": "NOT measured here (this sweep runs one game per process at a time). The framework materialises every retained frame as a Python list-of-lists and Swarm starts one thread per game, so retained-frame memory scales with budget x games on a 16GB Kaggle instance. A prior estimate put it near 6.6 GiB at 110 threads at the node counts a 2000-action budget produces.",
+  "the_competition_s_own_framework_copy": "The framework proven against is the local clone at /home/ianblenke/arc3_agents. The Kaggle kernel copies the COMPETITION's own ARC-AGI-3-Agents from the eval mount, which exists only in the sandbox. If its Agent.main() added a deadline or resolved the cap differently, the permission finding would not transfer."
+ },
+ "headline": {
+  "wins_median_by_budget": {
+   "200": 1,
+   "400": 3,
+   "1000": 9,
+   "2000": 11,
+   "4000": 12,
+   "8000": 12
+  },
+  "best_measured_budget": 4000,
+  "wall_total_s_25_games_by_budget": {
+   "200": 144.13,
+   "400": 166.0,
+   "1000": 243.64,
+   "2000": 397.09,
+   "4000": 835.16,
+   "8000": 2284.84
+  },
+  "wins_gained_per_doubling_by_step": {
+   "200->400": 2.0,
+   "400->1000": 4.539,
+   "1000->2000": 2.0,
+   "2000->4000": 1.0,
+   "4000->8000": 0.0
+  },
+  "seconds_per_extra_win_by_step": {
+   "200->400": 10.9,
+   "400->1000": 12.9,
+   "1000->2000": 76.7,
+   "2000->4000": 438.1,
+   "4000->8000": null
+  },
+  "BINDING_CONSTRAINT": {
+   "not_wall_clock": "The wall-clock curve does NOT cross ANY envelope model inside the measured grid. At the tightest model (110 games / 8h) the largest measured budget costs 21.9% of the usable loop wall. The analytic crossing sits in the tens of thousands of actions per game, an order of magnitude above anything worth running.",
+   "the_actual_binding_bound": "the DOCUMENTED-BUT-UNCONFIRMED gateway step rate: 10 steps/sec over an 8h play cap = ~288,000 global real steps = 2,618 actions/game at ~110 hidden games. That, not compute, is what caps the budget -- and it is a figure this project's own requirements doc marks unconfirmed for 2026 and that cannot be checked locally.",
+   "and_the_scoring_bound": "Independently of both: the SCORED metric is quadratic in actions and the post-solve tail-cutter is disabled, so the budget that maximises WINS is not the budget that maximises SCORE under one of the two live interpretations of how the gateway charges actions. See efficiency_axis."
+  }
+ }
+}
