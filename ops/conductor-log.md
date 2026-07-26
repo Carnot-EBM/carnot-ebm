@@ -14308,3 +14308,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 01:41 UTC | Gated on Exp5928 ready: adapter-disabled held stru | OK | 88 passed, 1 warning in 8.62s |
 | 2026-07-26 03:04 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:    )
 +    live |
+| 2026-07-26 03:23 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | OK | 134 passed, 1 warning in 9.49s |
