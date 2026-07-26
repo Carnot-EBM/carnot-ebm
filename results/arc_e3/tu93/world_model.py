@@ -1,83 +1,79 @@
 def engine(grid, action, data):
     """
-    Simulate the action on the grid.
-    grid: 2D list of [row, col, type, state]
-    action: 0=up, 1=down, 2=left, 3=right, 4=rotate
-    data: unused
-    Returns: new grid
-    """
-    rows = len(grid)
-    cols = len(grid[0]) if rows > 0 else 0
+    Simulates the agent's movement and interaction with the grid.
+    The grid is a 2D array where:
+    - 0: Empty space
+    - 63: Wall
+    - 6: Agent
+    - 9: Target
+    - 4: Special target (possibly a different type)
+    - 15-23: Other entities or obstacles
 
-    # Map actions to direction vectors (row_delta, col_delta)
-    # 0=up, 1=down, 2=left, 3=right, 4=rotate
-    action_map = {
-        0: (-1, 0),
-        1: (1, 0),
-        2: (0, -1),
-        3: (0, 1),
-        4: (0, 0)
+    Actions:
+    - 0: Up
+    - 1: Down
+    - 2: Left
+    - 3: Right
+    - 4: Collect (or similar interaction)
+
+    The function updates the grid based on the action taken by the agent.
+    """
+    # Find the agent's current position
+    agent_pos = None
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] == 6:
+                agent_pos = (i, j)
+                break
+        if agent_pos:
+            break
+
+    if not agent_pos:
+        return grid
+
+    agent_row, agent_col = agent_pos
+
+    # Define movement directions
+    directions = {
+        0: (-1, 0),  # Up
+        1: (1, 0),   # Down
+        2: (0, -1),  # Left
+        3: (0, 1),   # Right
+        4: (0, 0)    # Collect (no movement)
     }
 
-    dr, dc = action_map.get(action, (0, 0))
+    dr, dc = directions.get(action, (0, 0))
+    new_row, new_col = agent_row + dr, agent_col + dc
 
-    # Create a deep copy of the grid
-    new_grid = [row[:] for row in grid]
+    # Check if the new position is within bounds
+    if 0 <= new_row < len(grid) and 0 <= new_col < len(grid[0]):
+        # Check if the new position is a wall
+        if grid[new_row][new_col] == 63:
+            return grid  # Cannot move into a wall
 
-    # Handle rotation (action 4)
-    if action == 4:
-        # Rotate the grid 90 degrees clockwise
-        new_grid = [[grid[rows - 1 - r][c] for r in range(rows)] for c in range(cols)]
-        return new_grid
+        # Check if the new position is a target (9 or 4)
+        if grid[new_row][new_col] in [9, 4]:
+            # Collect the target
+            grid[agent_row][agent_col] = 0  # Agent moves to the target
+            grid[new_row][new_col] = 6     # Target becomes agent
+            return grid
 
-    # Handle movement (actions 0, 1, 2, 3)
-    if dr == 0 and dc == 0:
-        return new_grid
+        # Move to the new position
+        grid[agent_row][agent_col] = 0
+        grid[new_row][new_col] = 6
+        return grid
 
-    # Identify all movable blocks (type != 0)
-    movable_blocks = []
-    for r in range(rows):
-        for c in range(cols):
-            if grid[r][c][2] != 0:
-                movable_blocks.append((r, c, grid[r][c]))
+    # If the new position is out of bounds, stay in place
+    return grid
 
-    # Move each block
-    for r, c, block in movable_blocks:
-        nr, nc = r + dr, c + dc
-
-        # Check bounds
-        if 0 <= nr < rows and 0 <= nc < cols:
-            # Check if target is empty or same type
-            if grid[nr][nc][2] == 0 or grid[nr][nc][2] == block[2]:
-                # Move the block
-                new_grid[nr][nc] = block[:]
-                new_grid[r][c] = [r, c, 0, 0]  # Clear old position
-            # If blocked by different type, stay in place
-        else:
-            # Out of bounds, stay in place
-            pass
-
-    return new_grid
 
 def is_level_complete(grid):
     """
-    Check if the level is complete.
-    Returns True if all movable blocks are in their final positions.
+    Checks if the level is complete.
+    The level is complete if there are no targets (9 or 4) left on the grid.
     """
-    rows = len(grid)
-    cols = len(grid[0]) if rows > 0 else 0
-
-    # Identify all movable blocks
-    movable_blocks = []
-    for r in range(rows):
-        for c in range(cols):
-            if grid[r][c][2] != 0:
-                movable_blocks.append((r, c, grid[r][c]))
-
-    # Check if all blocks are in their final positions
-    # A block is in its final position if it's not at the edge of the grid
-    for r, c, block in movable_blocks:
-        if r == 0 or r == rows - 1 or c == 0 or c == cols - 1:
-            return False
-
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] in [9, 4]:
+                return False
     return True

@@ -417,6 +417,20 @@ def test_storm_false_positive_is_rescued_but_a_real_dead_generator_is_not() -> N
         generator_healthy_before=True,
         generator_healthy_after=False,
     )
+    # A cell that STARTED while the server was restarting but then got real completions and ended
+    # healthy IS a valid LLM-on datum. DEFECT REPRODUCED: requiring health on both sides deleted the
+    # tn36 control -- 6 completions, 15514 predicted tokens -- which is the control for the only game
+    # in the LLM-on design where a lever changes the outcome.
+    started_mid_restart = row("S_llmon", "bbbb", 1, 0)
+    started_mid_restart.update(
+        llm_enabled=True,
+        llm_on_row_valid=True,
+        llm={"responses": 6, "tokens_predicted": 15514, "llm_wall_s": 120.0},
+        generator_healthy_before=False,
+        generator_healthy_after=True,
+    )
+    assert AN.llm_row_is_valid(started_mid_restart) is True
+
     assert AN.llm_row_is_valid(good) is True
     assert AN.llm_row_is_valid(dead) is False
     out = AN.analyse([good, dead])
