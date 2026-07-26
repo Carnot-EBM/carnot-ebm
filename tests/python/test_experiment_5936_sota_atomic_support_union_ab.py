@@ -245,8 +245,13 @@ def test_preregistered_panel_has_36_cases_and_matched_union_budgets() -> None:
     # REQ-VERIFY-5936, SCENARIO-VERIFY-5936-PREREG
     panel = exp5936.freeze_held_cases()
     prereg = exp5936.build_preregistration(exp5936.ExperimentConfig(started_at=0.0), panel)
+    atomic_prompt = exp5936.build_prompt(
+        panel[0], "single_view_atomic_support", "original"
+    )
 
     assert len(panel) >= 36
+    assert len(atomic_prompt) < 12_000
+    assert "sha256:" not in atomic_prompt
     assert all(case["split"] == "heldout" for case in panel)
     assert prereg["case_count"] == len(panel)
     assert prereg["model_case_rows_per_model"] == len(panel)
@@ -390,6 +395,16 @@ def test_checkpoint_refresh_and_validation_guards(tmp_path: Path) -> None:
     ]
     assert exp5936._proposal_atom_ids({"raw_output_text": "{"}) == []
     assert exp5936._proposal_atom_ids({"raw_output_text": "[]"}) == []
+
+    case = exp5936.freeze_held_cases()[0]
+    surface = exp5936.derive_surface_for_case(case, exp5935.versioned_atom_schema())
+    aliases = exp5936._visible_atom_aliases(surface)
+    assert aliases[0]["atom_alias"] == "a000"
+    alias_entry = exp5936._proposal_entries_from_raw(
+        surface,
+        [{"view_id": "original", "raw_output_text": json.dumps({"atom_ids": ["a000"]})}],
+    )
+    assert alias_entry[0]["atom"]["atom_id"] == aliases[0]["atom_id"]
 
     tokenizer_edges = exp5936._tokenizer_receipts(
         [
