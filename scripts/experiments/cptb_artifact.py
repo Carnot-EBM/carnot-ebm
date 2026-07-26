@@ -7,8 +7,10 @@ refuses to emit a verdict when its pass region is empty, so the artifact cannot 
 
 from __future__ import annotations
 
+import gzip
 import json
 import os
+import statistics
 import subprocess
 import sys
 import time
@@ -57,6 +59,99 @@ def _git(*args):
                           text=True).stdout.strip()
 
 
+# Where the budget-sweep rows live.  Globbed from both the work directory and the committed
+# cell directory so the artifact can be rebuilt from the repo alone.
+_SWEEP_DIRS = (SCRATCH, REPO / "results" / "cptb_20260726_cells")
+
+
+def _load_sweep_rows() -> list[dict]:
+    """Every budget-sweep row available, from .jsonl or .jsonl.gz, de-duplicated.
+
+    De-duplication is by the full cell key (arm, game, condition, seed, budget) because the
+    same cell exists in both the original 1-2 seed sweep and the 5-seed re-run; keeping both
+    copies would double-count a seed and inflate n_seeds, which is precisely the field these
+    rows exist to make honest.
+    """
+
+    seen: dict[tuple, dict] = {}
+    for d in _SWEEP_DIRS:
+        if not d.exists():
+            continue
+        for p in sorted(list(d.glob("*sweep*.jsonl")) + list(d.glob("*sweep*.jsonl.gz"))):
+            text = (gzip.open(p, "rt").read() if p.suffix == ".gz" else p.read_text())
+            for line in text.splitlines():
+                if not line.strip():
+                    continue
+                r = json.loads(line)
+                k = (r.get("arm"), r.get("game"), r.get("condition"), int(r.get("seed") or 0),
+                     int(r.get("budget") or 0))
+                seen.setdefault(k, r)
+    return list(seen.values())
+
+
+def _summarise_sweeps(rows: list[dict]) -> dict:
+    """Aggregate sweep rows per (game, condition, arm, budget) WITH n_seeds attached.
+
+    n_seeds is the whole point.  The first recorded run's budget-sweep reading rested on a
+    SINGLE seed for tn36 while the claim it overturned rested on five, and neither n appeared
+    anywhere in the artifact or the report -- so a reader could not tell that the reclassifying
+    evidence was weaker than the evidence it reclassified.
+    """
+
+    buckets: dict[str, list[dict]] = {}
+    for r in rows:
+        k = f"{r.get('game')}|{r.get('condition')}|{r.get('arm')}|budget_{r.get('budget')}"
+        buckets.setdefault(k, []).append(r)
+    out = {}
+    for k, rs in sorted(buckets.items()):
+        rs.sort(key=lambda r: int(r.get("seed") or 0))
+        a1 = [r.get("actions_to_first_levelup") for r in rs
+              if r.get("actions_to_first_levelup") is not None]
+        out[k] = {
+            "n_seeds": len(rs),
+            "seeds": [int(r.get("seed") or 0) for r in rs],
+            "levels_per_seed": [int(r.get("levels") or 0) for r in rs],
+            "n_seeds_won": sum(1 for r in rs if int(r.get("levels") or 0) > 0),
+            "wins_on_every_seed": all(int(r.get("levels") or 0) > 0 for r in rs),
+            "actions_to_first_levelup_per_seed": a1,
+            "median_actions_to_first_levelup": (statistics.median(a1) if a1 else None),
+            "min_actions_to_first_levelup": (min(a1) if a1 else None),
+            "max_actions_to_first_levelup": (max(a1) if a1 else None),
+            "states_expanded_per_seed": [r.get("states_expanded") for r in rs],
+            "hud_mask_resolved_per_seed": [r.get("hud_mask_resolved") for r in rs],
+        }
+    return out
+
+
+def _cost_ratio(sw: dict, treat_key: str, ctrl_key: str) -> dict:
+    """Per-seed-range cost ratio between two sweep buckets, or a stated reason it is undefined.
+
+    Reported as a RANGE across seeds, never as a single-cell point estimate: the first recorded
+    run's '~3.5x' was one seed's 5337/1506 with no n attached.
+    """
+
+    t, c = sw.get(treat_key), sw.get(ctrl_key)
+    if not t or not c or not t["actions_to_first_levelup_per_seed"] or not c[
+            "actions_to_first_levelup_per_seed"]:
+        return {"defined": False,
+                "reason": "one of the two arms never reached a level-up at this budget, so "
+                          "there is no cost to compare (a capability difference, not an "
+                          "efficiency one)"}
+    ratios = [round(a / statistics.median(c["actions_to_first_levelup_per_seed"]), 3)
+              for a in t["actions_to_first_levelup_per_seed"]]
+    return {
+        "defined": True,
+        "treatment": treat_key, "control": ctrl_key,
+        "n_seeds_treatment": t["n_seeds"], "n_seeds_control": c["n_seeds"],
+        "treatment_actions_per_seed": t["actions_to_first_levelup_per_seed"],
+        "control_actions_per_seed": c["actions_to_first_levelup_per_seed"],
+        "ratio_per_treatment_seed_vs_control_median": ratios,
+        "ratio_range": [min(ratios), max(ratios)],
+        "ratio_median": statistics.median(ratios),
+        "note": "ratio of actions-to-first-level-up; a RANGE over seeds, not a single cell",
+    }
+
+
 def main() -> int:
     A = json.loads((SCRATCH / "cptb_analysis.json").read_text())
     receipt = json.loads((SCRATCH / "arm_receipt.json").read_text())
@@ -84,6 +179,18 @@ def main() -> int:
         # that case is arithmetic, not robustness.  Requiring dose on the TREATMENT is the
         # binding condition (a moved control with a frozen treatment is also informative).
         dose_ok = not dose_t["inert_for_this_arm"]
+        # FOURTH PRECONDITION, added 2026-07-25.  The three above are all evaluated at C0 or on
+        # the perturbation in general; none of them asks the question that actually decides
+        # whether THIS gate could have returned anything other than what it returned: are the
+        # games that carried the C0 anchor still winnable by ANY arm under this perturbation?
+        # When they are not, the perturbed gain is arithmetically forced to zero -- the mirror
+        # image of the INERT case, and exactly what happened to the HUD lever's designated
+        # headline gate in the first recorded run (r11l and tn36, the only two games the HUD
+        # lever has ever moved, are won 0/5 by all four arms under the k=3 roll, leaving zero
+        # discriminating games and an undefined sign test).
+        wc = w["per_condition"][cond]
+        support_ok = bool(wc["anchor_support_still_live"])
+        sat = bool(c["retention"][cond].get("dose_saturated"))
         g = {
             "lever": lever,
             "is_headline_pair_for_this_lever": is_headline,
@@ -94,7 +201,15 @@ def main() -> int:
             "PRECONDITION_pass_region_nonempty": bool(w["pass_region_nonempty"]),
             "PRECONDITION_anchor_median_gain_C0_positive": anchor > 0,
             "PRECONDITION_perturbation_has_behavioural_dose_on_treatment": dose_ok,
-            "witness_cells_at_C0": w["witness_cells_treatment_wins_control_does_not_at_C0"],
+            "PRECONDITION_anchor_support_still_live_under_perturbation": support_ok,
+            "witness_cells_at_C0_ANCHOR_ONLY_not_a_witness_for_this_condition": w[
+                "witness_cells_treatment_wins_control_does_not_at_C0"],
+            "witness_cells_AT_THIS_CONDITION": wc[
+                "witness_cells_treatment_wins_control_does_not_at_this_condition"],
+            "n_discriminating_games_at_this_condition": wc[
+                "n_discriminating_games_at_this_condition"],
+            "anchor_game_max_seeds_won_across_ALL_arms_at_this_condition": wc[
+                "anchor_game_max_seeds_won_across_ALL_arms"],
             "behavioural_dose_treatment_fraction_moved": dose_t["fraction_moved"],
             "behavioural_dose_control_fraction_moved": dose_c["fraction_moved"],
             "anchor_median_gain_C0": anchor,
@@ -103,9 +218,22 @@ def main() -> int:
             "perturbed_no_seed_regresses": pc["no_seed_regresses"],
             "perturbed_strict_per_seed_dominance": pc["strict_per_seed_dominance"],
             "retention_ratio": c["retention"][cond]["retention_ratio"],
+            "retention_precision": {
+                k: c["retention"][cond][k] for k in (
+                    "paired_per_seed_delta_vs_C0", "decline_sign_test_p_one_sided",
+                    "decline_resolved_at_this_n", "gained_set_jaccard_vs_C0",
+                    "retention_ratio_precision_note")
+            },
+            "game_unit_sign_test": pc["game_unit_sign_test"],
+            "seeds_are_a_replication_axis_for_this_contrast": c[
+                "seeds_are_a_replication_axis_for_this_contrast"],
+            "n_seed_replicates_effective": c["n_seed_replicates_effective"],
+            "perturbation_is_dose_saturated": sat,
+            "control_wins_as_fraction_of_C0_under_this_perturbation": c["retention"][cond][
+                "control_wins_as_fraction_of_C0"],
             "games_gained_on_every_seed_under_perturbation": pc["games_gained_on_every_seed"],
             "games_lost_on_every_seed_under_perturbation": pc["games_lost_on_every_seed"],
-            "evaluable": bool(anchor_ok and dose_ok and interpretable),
+            "evaluable": bool(anchor_ok and dose_ok and support_ok and interpretable),
             "reason_if_not_evaluable": None,
         }
         if not interpretable:
@@ -122,6 +250,17 @@ def main() -> int:
                 "so the retention ratio here is arithmetic, not robustness. Reported as "
                 "UNINTERPRETABLE rather than as a survival."
             )
+        elif not support_ok:
+            g["reason_if_not_evaluable"] = (
+                f"the games carrying this contrast's C0 anchor "
+                f"({w['anchor_games_at_C0']}) are won by NO arm under {cond} "
+                f"(max seeds won across all four arms: "
+                f"{wc['anchor_game_max_seeds_won_across_ALL_arms']}), and there are "
+                f"{wc['n_discriminating_games_at_this_condition']} discriminating games here. "
+                "The perturbed gain is therefore arithmetically FORCED to 0 -- this gate could "
+                "not have returned any other value, so it is not a measurement. Same class of "
+                "defect as the empty pass region that VOIDED exp5835."
+            )
         on_target = lever in CONDITION_TARGETS[cond] or lever == "both"
         g["perturbation_targets_this_levers_convention"] = on_target
         g["what_convention_this_perturbation_attacks"] = (
@@ -134,12 +273,24 @@ def main() -> int:
             "for BOTH levers and is NOT a clean single-mechanism probe"
         )
         if g["evaluable"]:
+            # TIGHTENED 2026-07-25.  SURVIVES used to require only median > 0 and
+            # no_seed_regresses, and no_seed_regresses admits a seed at exactly ZERO -- so a
+            # contrast with a dead seed and a game lost on every seed still read as "survives".
+            # Surviving now means positive on EVERY seed (strict per-seed dominance), which is
+            # the standard the rest of this battery already uses to avoid any-seed-union
+            # reasoning.
             base = (
                 "SURVIVES_CONVENTION_VIOLATION"
-                if (pc["median_gain"] > 0 and pc["no_seed_regresses"])
+                if (pc["median_gain"] > 0 and pc["strict_per_seed_dominance"])
                 else ("PARTIALLY_SURVIVES" if pc["median_gain"] > 0
                       else "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION")
             )
+            if sat:
+                # A dose-saturated condition cannot clear a lever: the control itself has lost
+                # most of its capability there.  This is a SUFFIX, never a promotion -- it does
+                # not turn a failure into a survival, it marks the reading as a statement about
+                # the perturbation's strength as much as about the lever.
+                base += "_IN_A_DOSE_SATURATED_CORPUS"
             if on_target:
                 g["verdict"] = base
             else:
@@ -154,11 +305,39 @@ def main() -> int:
                     f"shows is how the {lever} lever's marginal contribution behaves when the "
                     f"OTHER lever's input distribution is disturbed."
                 )
+        elif not support_ok:
+            g["verdict"] = "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD"
         else:
             g["verdict"] = "UNINTERPRETABLE_INERT_OR_NO_ANCHOR"
         gates[f"{contrast}|{cond}"] = g
         if is_headline:
             headline[lever] = g
+
+    # ------------------------------------------------------- per-lever DECIDABILITY (derived)
+    # A lever's convention-robustness is only DECIDED if at least one gate that (a) attacks
+    # THAT lever's own convention and (b) is evaluable exists.  In the first recorded run the
+    # HUD lever had neither: C1 provably does not touch the HUD mask (off-target, and inert on
+    # HUDO), and C2 kills the only two games the lever moves.  Reporting the C2 FAIL as the
+    # HUD headline therefore stated a verdict the design could not deliver, which is why the
+    # headline is now computed rather than designated.
+    decidability = {}
+    for lev in sorted({g["lever"] for g in gates.values()}):
+        cands = {k: v for k, v in gates.items() if v["lever"] == lev}
+        usable = {k: v for k, v in cands.items()
+                  if v["evaluable"] and v["perturbation_targets_this_levers_convention"]}
+        decidability[lev] = {
+            "decidable_by_this_design": bool(usable),
+            "usable_on_target_evaluable_gates": sorted(usable),
+            "why_each_candidate_gate_is_or_is_not_usable": {
+                k: ("USABLE" if k in usable else
+                    ("OFF_TARGET: " + v["what_convention_this_perturbation_attacks"][:70]
+                     if not v["perturbation_targets_this_levers_convention"]
+                     else "NOT_EVALUABLE: " + str(v["reason_if_not_evaluable"])))
+                for k, v in cands.items()
+            },
+        }
+
+    A["per_lever_decidability"] = decidability
 
     # ---------------------------------------------------------------- honest verdict
     short_of = {
@@ -166,24 +345,83 @@ def main() -> int:
         "PARTIALLY_SURVIVES": "partial",
         "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION": "gain_does_not_survive",
         "UNINTERPRETABLE_INERT_OR_NO_ANCHOR": "uninterpretable",
+        "UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD": "not_decidable_by_this_design",
     }
-    parts = [f"{lev}_{short_of[headline[lev]['verdict']]}" for lev in ("frontier", "hud")]
+
+    def _short(lev):
+        if not decidability.get(lev, {}).get("decidable_by_this_design"):
+            return f"{lev}_not_decidable_by_this_design"
+        v = headline[lev]["verdict"]
+        for token, short in short_of.items():
+            if v.startswith(token):
+                return f"{lev}_{short}"
+        return f"{lev}_{v.lower()}"
+
+    parts = [_short(lev) for lev in ("frontier", "hud")]
     verdict = "complete_convention_perturbation_transfer_battery_" + "_".join(parts)
 
     A["acceptance_gates"] = gates
     A["acceptance_gate_headline_per_lever"] = {
         lev: {
             "gate": f"{g['contrast']}|{g['perturbation_condition']}",
-            "verdict": g["verdict"],
+            "verdict": ("NOT_DECIDABLE_BY_THIS_DESIGN"
+                        if not decidability[lev]["decidable_by_this_design"]
+                        else g["verdict"]),
+            "verdict_of_the_designated_gate_itself": g["verdict"],
+            "decidable_by_this_design": decidability[lev]["decidable_by_this_design"],
+            "evaluable": g["evaluable"],
+            "reason_if_not_evaluable": g["reason_if_not_evaluable"],
             "anchor_median_gain_C0": g["anchor_median_gain_C0"],
             "perturbed_median_gain": g["perturbed_median_gain"],
             "retention_ratio": g["retention_ratio"],
+            "game_unit_sign_test_p_one_sided": g["game_unit_sign_test"]["p_one_sided_exact"],
+            "n_independent_replicates": g["game_unit_sign_test"]["n_independent_replicates"],
+            "WHY_THIS_GATE_WAS_DESIGNATED": (
+                "the frontier flip was measured with the HUD off (it predates the HUD flip), "
+                "so this gate replicates the configuration the flip decision was made in. It "
+                "is NOT the shipped configuration -- see "
+                "acceptance_gate_shipped_configuration_marginal_per_lever for that."
+                if lev == "frontier" else
+                "the HUD flip was measured with the frontier lever already on, so this is the "
+                "shipped HUD contrast. Whether it is EVALUABLE is a separate question, "
+                "answered by its own preconditions."
+            ),
         }
         for lev, g in headline.items()
     }
+    # The gate above answers each lever's flip-time claim.  The SHIPPED configuration's
+    # marginal contrast is a different pair, and for the frontier lever it is materially less
+    # flattering -- so it is surfaced at the same level rather than left for a reader to dig
+    # out of `contrasts`.  Omitting it was a real defect in the first recorded run: the
+    # operator's decision is about the configuration that ships.
+    SHIPPED_MARGINAL = {"frontier": ("frontier_given_hud_on", "C1_salience_inversion"),
+                        "hud": ("hud_given_frontier_on", "C2_diag_roll")}
+    A["acceptance_gate_shipped_configuration_marginal_per_lever"] = {
+        lev: {
+            "gate": f"{ct}|{cd}",
+            "verdict": gates[f"{ct}|{cd}"]["verdict"],
+            "anchor_median_gain_C0": gates[f"{ct}|{cd}"]["anchor_median_gain_C0"],
+            "perturbed_median_gain": gates[f"{ct}|{cd}"]["perturbed_median_gain"],
+            "retention_ratio": gates[f"{ct}|{cd}"]["retention_ratio"],
+            "perturbed_per_seed_gain": gates[f"{ct}|{cd}"]["perturbed_per_seed_gain"],
+            "perturbed_strict_per_seed_dominance": gates[f"{ct}|{cd}"][
+                "perturbed_strict_per_seed_dominance"],
+            "games_lost_on_every_seed_under_perturbation": gates[f"{ct}|{cd}"][
+                "games_lost_on_every_seed_under_perturbation"],
+            "game_unit_sign_test_at_C0": A["contrasts"][ct]["per_condition"]["C0_real"][
+                "game_unit_sign_test"],
+            "note": (
+                "This is the lever's marginal contribution IN THE SHIPPED CONFIGURATION "
+                "(the other lever already ON), which is what the live agent runs today."
+            ),
+        }
+        for lev, (ct, cd) in SHIPPED_MARGINAL.items() if f"{ct}|{cd}" in gates
+    }
     A["acceptance_gates_all_evaluable"] = all(g["evaluable"] for g in gates.values())
     A["acceptance_gates_all_passed"] = all(
-        g["verdict"] == "SURVIVES_CONVENTION_VIOLATION" for g in headline.values()
+        g["verdict"].startswith("SURVIVES_CONVENTION_VIOLATION")
+        and decidability[lev]["decidable_by_this_design"]
+        for lev, g in headline.items()
     )
     A["honest_verdict"] = verdict
 
@@ -196,6 +434,33 @@ def main() -> int:
             for arm in ("CTRL", "FRONT", "HUDO", "SHIP")
         }
         for cond in A["config"]["conditions"]
+    }
+
+    # ---------------------------------------------------------------- budget sweeps (derived)
+    sweep_rows = _load_sweep_rows()
+    sweeps = _summarise_sweeps(sweep_rows)
+    sweep_files = sorted(
+        str(p.relative_to(REPO)) if str(p).startswith(str(REPO)) else p.name
+        for d in _SWEEP_DIRS if d.exists()
+        for p in list(d.glob("*sweep*.jsonl")) + list(d.glob("*sweep*.jsonl.gz"))
+    )
+    # duration_s from the analysis covers the 1500 battery cells only.  The budget sweeps are
+    # real additional compute and are accounted separately rather than silently omitted.
+    sweep_wall = round(sum(float(r.get("cell_wall_s") or 0) for r in sweep_rows), 2)
+    A["duration_s_breakdown"] = {
+        "battery_cells_wall_s": A["duration_s"],
+        "budget_sweep_cells_wall_s": sweep_wall,
+        "n_budget_sweep_cells": len(sweep_rows),
+        "note": "duration_s is the SUM of the two; the analysis alone measures the battery.",
+    }
+    A["duration_s"] = round(A["duration_s"] + sweep_wall, 2)
+
+    cost_ratios = {
+        "tn36_C0_SHIP_vs_HUDO_at_budget_8000": _cost_ratio(
+            sweeps, "tn36|C0_real|SHIP|budget_8000", "tn36|C0_real|HUDO|budget_8000"),
+        "r11l_C1_SHIP_vs_HUDO_at_budget_8000": _cost_ratio(
+            sweeps, "r11l|C1_salience_inversion|SHIP|budget_8000",
+            "r11l|C1_salience_inversion|HUDO|budget_8000"),
     }
 
     # ---------------------------------------------------------------- key findings (derived)
@@ -219,14 +484,64 @@ def main() -> int:
                                 "This arm pins all seven, and still lands on the same 7 games.",
         },
         "2_frontier_lever_survives_both_convention_violations": {
-            "claim": "The frontier lever's gain degrades but stays positive when the "
-                     "absolute-colour salience convention it keys on is inverted, and is "
-                     "undiminished under the geometric roll.",
+            "claim": "The frontier lever's gain SURVIVES inversion of the absolute-colour "
+                     "salience convention it keys on -- positive on every seed, and the "
+                     "game-unit sign test at C1 clears 0.05 (numbers in "
+                     "survival_is_established). Whether it DEGRADES is a SEPARATE question and "
+                     "is NOT resolved at this sample size: see "
+                     "degradation_is_not_resolved_at_this_n.",
             "anchor_median_gain_C0": A["contrasts"]["frontier_given_hud_off"][
                 "anchor_median_gain_C0"],
             "retention": {
                 k: v["retention_ratio"]
                 for k, v in A["contrasts"]["frontier_given_hud_off"]["retention"].items()
+            },
+            # CORRECTED 2026-07-25.  The first recorded run reported '+4 -> +3 games (retention
+            # 0.75)' as a measured degradation.  It is a ratio of two medians over 5 seeds on a
+            # difference of ONE game, and the paired per-seed deltas are [-1,-1,-1,-2,+1]: four
+            # seeds decline, one improves, one-sided sign test p=0.1875.  The SURVIVAL is
+            # robust; the DEGRADATION is a point estimate consistent with no degradation at all,
+            # and CLAUDE.md's sample-size rigor rule does not support reporting it as measured.
+            "survival_is_established": {
+                "per_seed_gain_at_C1": A["contrasts"]["frontier_given_hud_off"][
+                    "per_condition"]["C1_salience_inversion"]["per_seed_gain"],
+                "min_gain_at_C1": A["contrasts"]["frontier_given_hud_off"]["per_condition"][
+                    "C1_salience_inversion"]["min_gain"],
+                "strict_per_seed_dominance_at_C1": A["contrasts"]["frontier_given_hud_off"][
+                    "per_condition"]["C1_salience_inversion"]["strict_per_seed_dominance"],
+                "game_unit_sign_test_at_C1": A["contrasts"]["frontier_given_hud_off"][
+                    "per_condition"]["C1_salience_inversion"]["game_unit_sign_test"],
+            },
+            "degradation_is_not_resolved_at_this_n": {
+                k: A["contrasts"]["frontier_given_hud_off"]["retention"][
+                    "C1_salience_inversion"][k]
+                for k in ("paired_per_seed_delta_vs_C0", "n_seeds_declining", "n_seeds_improving",
+                          "decline_sign_test_p_one_sided", "decline_resolved_at_this_n")
+            },
+            "what_the_retention_0_75_point_estimate_is_and_is_not": (
+                "It is the ratio of the C1 median gain to the C0 median gain, both over 5 "
+                "seeds, on a difference of one game. It is NOT a measured degradation: the "
+                "paired sign test does not clear 0.05, so 'no degradation' remains fully "
+                "consistent with the data. Resolving it needs more seeds (or more games), not "
+                "a re-reading of these."
+            ),
+            "retention_at_C2_is_dose_saturated_not_a_survival": {
+                "retention_ratio": A["contrasts"]["frontier_given_hud_off"]["retention"][
+                    "C2_diag_roll"]["retention_ratio"],
+                "control_wins_as_fraction_of_C0": A["contrasts"]["frontier_given_hud_off"][
+                    "retention"]["C2_diag_roll"]["control_wins_as_fraction_of_C0"],
+                "gained_set_jaccard_vs_C0": A["contrasts"]["frontier_given_hud_off"][
+                    "retention"]["C2_diag_roll"]["gained_set_jaccard_vs_C0"],
+                "games_gained_on_every_seed_at_C0": A["contrasts"]["frontier_given_hud_off"][
+                    "retention"]["C2_diag_roll"]["games_gained_on_every_seed_at_C0"],
+                "games_gained_on_every_seed_at_C2": A["contrasts"]["frontier_given_hud_off"][
+                    "retention"]["C2_diag_roll"]["games_gained_on_every_seed_here"],
+                "reading": (
+                    "Read the ratio next to the two fields above it. Where the gained SET "
+                    "barely overlaps C0's and the control has lost most of its own capability, "
+                    "a retention ratio near 1.0 is NOT 'the same gain retained' -- it is a "
+                    "similarly-sized gain on DIFFERENT games in a razed corpus."
+                ),
             },
             "strict_per_seed_dominance_in_every_condition": all(
                 A["contrasts"]["frontier_given_hud_off"]["per_condition"][c][
@@ -249,9 +564,13 @@ def main() -> int:
                 ),
             },
         },
-        "3_hud_lever_shipped_gain_is_one_game_and_does_not_survive": {
+        "3_hud_lever_convention_robustness_is_NOT_DECIDABLE_BY_THIS_DESIGN": {
             "claim": "The HUD lever's marginal gain in the shipped configuration is exactly "
-                     "one game (r11l) and it is zero on every seed under both perturbations.",
+                     "one game (r11l), and this battery CANNOT decide whether that gain "
+                     "depends on the edge-adjacency convention. The first recorded run "
+                     "reported it as GAIN_DOES_NOT_SURVIVE; that verdict is WITHDRAWN as "
+                     "uninterpretable, because neither perturbed condition can answer the "
+                     "question.",
             "anchor_median_gain_C0": A["contrasts"]["hud_given_frontier_on"][
                 "anchor_median_gain_C0"],
             "retention": {
@@ -262,6 +581,49 @@ def main() -> int:
                 "single_game_whose_removal_costs_the_most"],
             "median_gain_without_that_game": loo["hud_given_frontier_on"][
                 "median_gain_without_that_game"],
+            "support_is_a_SINGLE_game_so_no_p_can_clear": A["contrasts"][
+                "hud_given_frontier_on"]["per_condition"]["C0_real"]["game_unit_sign_test"],
+            "WHY_NOT_DECIDABLE": {
+                "C1_salience_inversion": (
+                    "OFF TARGET. C1 perturbs absolute colour, which only the frontier tier "
+                    "predicate reads; the HUD Stage-1 predicate is pure geometry and the static "
+                    "dose witness measures ZERO HUD-mask change on all 25 games. Whatever "
+                    "happens to the HUD lever's gain here is a statement about the OTHER "
+                    "lever's input distribution, not about edge adjacency."
+                ),
+                "C2_diag_roll": (
+                    "ANCHOR SUPPORT DEAD. Under the k=3 roll, r11l and tn36 -- the only two "
+                    "games this lever has ever moved -- are won by NO arm on any seed, leaving "
+                    "zero discriminating games and an undefined sign test. The perturbed gain "
+                    "of 0 was arithmetically FORCED and could not have come out any other way. "
+                    "See the gate's own PRECONDITION_anchor_support_still_live_under_"
+                    "perturbation, which now fails."
+                ),
+            },
+            "WHAT_WAS_WRONG_WITH_THE_FIRST_RUNS_VERDICT": (
+                "The pass-region witness was computed ONLY at C0 and then attached to every "
+                "gate for the contrast, so the C2 gate certified 'my pass region is non-empty' "
+                "using 5 r11l cells measured at C0 -- a witness for a different condition than "
+                "the one being scored. All three preconditions read green and the gate reported "
+                "evaluable=true with reason_if_not_evaluable=null, while the confound was "
+                "disclosed only three levels deep in prose. Same class of defect as the empty "
+                "pass region that VOIDED exp5835: a gate that could not fail is not a gate, and "
+                "a gate that could not pass is not one either."
+            ),
+            "dose_axis_conditions_present_in_this_run": [
+                c for c in A["config"]["conditions"] if c.startswith("C3")
+            ] or "none -- the C3 dose axis is wired but not measured in this run",
+            "THE_ONLY_HUD_MECHANISM_EVIDENCE_THAT_SURVIVES": (
+                "The corpus-wide mask-resolution collapse under the roll, which is measured "
+                "independently of any win: see hud_mask_resolution_mechanism_evidence. That "
+                "shows the edge-adjacency convention is load-bearing FOR THE DETECTOR, exactly "
+                "as the predicate's `y1 < tol` source predicts. It does NOT show what happens "
+                "to the lever's GAIN when the convention is violated -- for that, a "
+                "perturbation is needed that moves the bar off the edge WITHOUT making the "
+                "games unwinnable. The dose axis added in cptb_perturb (C3_roll_k1/k2) is the "
+                "hook for building one; whether it was measured in THIS run is recorded in "
+                "dose_axis_conditions_present_in_this_run above, not asserted here."
+            ),
         },
         "4_the_two_perturbations_break_the_hud_gain_by_DIFFERENT_mechanisms": {
             "claim": "Under the geometric roll the detector itself stops working; under "
@@ -284,6 +646,28 @@ def main() -> int:
                                    "mask is why. The mask-resolution collapse is the "
                                    "independent mechanism evidence; the win-level evidence is "
                                    "confounded and is not relied on.",
+                # PROMOTED 2026-07-25 from prose-only disclosure to a machine-readable gate
+                # precondition.  In the first recorded run this confound was stated HERE, three
+                # levels deep, while the gate it invalidates reported evaluable=true with all
+                # preconditions green -- and summarize_artifact.py prints the gate block, not
+                # key_findings, so a reader or an aggregating capstone saw an unqualified FAIL.
+                # The confound is now enforced by
+                # PRECONDITION_anchor_support_still_live_under_perturbation, which fails, so the
+                # gate reports UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD instead of a verdict.
+                "THIS_CONFOUND_IS_NOW_A_GATE_PRECONDITION": {
+                    "gate": "hud_given_frontier_on|C2_diag_roll",
+                    "precondition": "PRECONDITION_anchor_support_still_live_under_perturbation",
+                    "value": gates["hud_given_frontier_on|C2_diag_roll"][
+                        "PRECONDITION_anchor_support_still_live_under_perturbation"],
+                    "gate_verdict_now": gates["hud_given_frontier_on|C2_diag_roll"]["verdict"],
+                    "n_discriminating_games_at_C2": gates["hud_given_frontier_on|C2_diag_roll"][
+                        "n_discriminating_games_at_this_condition"],
+                },
+                "DOSE_CEILING_AT_C2": {
+                    k: A["dose_ceiling_witness"]["C2_diag_roll"][k]
+                    for k in ("control_median_absolute_wins", "control_wins_as_fraction_of_C0",
+                              "n_games_dead_for_all_arms", "n_games", "dose_saturated")
+                },
             },
             "C1_salience_inversion_mask_is_UNAFFECTED_but_the_win_is_lost": {
                 "corpus_fraction_resolved_C0": mr["SHIP|C0_real"]["fraction_resolved"],
@@ -320,52 +704,38 @@ def main() -> int:
                 "regression. The first draft of this finding called tn36 a capability loss; "
                 "the sweep refuted that, and the corrected reading is below."
             ),
-            "budget_sweep": {
-                "tn36_C0_SHIP": {
-                    "budget_2000": {"levels": 0, "actions": 1676, "states_expanded": 17},
-                    "budget_4000": {"levels": 0, "actions": 3511, "states_expanded": 17},
-                    "budget_8000": {"levels": 1, "actions": 5337, "states_expanded": 27},
-                    "verdict": "BUDGET_WALL_NOT_CAPABILITY_LOSS",
-                },
-                "tn36_C0_HUDO": {
-                    "budget_2000": {"levels": 1, "actions": 1506, "states_expanded": 52},
-                    "budget_8000": {"levels": 1, "actions": 1506, "states_expanded": 52},
-                    "verdict": "wins at every budget; the cheaper arm",
-                },
-                "r11l_C1_SHIP": {
-                    "budget_2000": {"levels": 0, "actions": 1897},
-                    "budget_4000": {"levels": 0, "actions": 3848},
-                    "budget_8000": {"levels": 0, "actions": 7504},
-                    "budget_16000": {"levels": 0, "actions": 14774, "states_expanded": 872},
-                    "verdict": "CAPABILITY_LOSS_not_a_budget_wall_still_0_at_8x_budget",
-                },
-                "r11l_C1_HUDO": {
-                    "budget_2000": {"levels": 1, "actions": 1068},
-                    "budget_16000": {"levels": 1, "actions": 1068, "states_expanded": 207},
-                    "verdict": "wins in 1068 actions at every budget tested",
-                },
-                "raw_rows": [
-                    "results/cptb_20260726_cells/budget_sweep_C0.jsonl.gz",
-                    "results/cptb_20260726_cells/budget_sweep_r11l_C1.jsonl.gz",
-                ],
-            },
+            # DERIVED, not transcribed (corrected 2026-07-25).  The first recorded run
+            # hand-copied a handful of cells into this block with no n_seeds, and the two
+            # decisive cells happened to be n=1 (tn36 at budgets 4000/8000) while the claim they
+            # overturned was n=5.  Every bucket below now carries its own n_seeds, per-seed
+            # levels and per-seed action counts, read straight off the sweep rows.
+            "budget_sweep": sweeps,
+            "budget_sweep_n_seeds_per_bucket": {k: v["n_seeds"] for k, v in sweeps.items()},
+            "budget_sweep_raw_rows": sweep_files,
+            "cost_ratios": cost_ratios,
             "corrected_reading": {
-                "tn36_on_real_games": "The frontier lever makes tn36 roughly 3.5x more "
-                                      "expensive (HUDO 1506 actions vs SHIP 5337) with the "
-                                      "SAME 61-cell mask resolved in both arms, which pushes "
-                                      "the win past the 2000-action budget. It is an "
-                                      "efficiency regression with a budget-visible "
-                                      "consequence, in the same class as the already-known "
-                                      "cd82 residual -- NOT a destroyed capability.",
-                "r11l_under_salience_inversion": "This one is real. HUD-alone wins r11l in "
-                                                 "1068 actions under inverted salience at "
-                                                 "every budget tested; the shipped both-on "
-                                                 "configuration is still at 0 levels after "
-                                                 "14774 actions (8x the measured budget) with "
-                                                 "the mask resolving normally. The frontier "
-                                                 "lever removes a capability the HUD lever "
-                                                 "supplies, once the colour convention no "
-                                                 "longer holds.",
+                "tn36_on_real_games": (
+                    "The frontier lever makes tn36 substantially more expensive to solve with "
+                    "the SAME mask resolved in both arms, which pushes the win past the "
+                    "2000-action budget -- an efficiency regression with a budget-visible "
+                    "consequence, in the same class as the already-known cd82 residual, NOT a "
+                    "destroyed capability. The cost ratio is reported as a RANGE over seeds in "
+                    "`cost_ratios`, not as the single-cell '~3.5x' the first run quoted."
+                ),
+                "tn36_reclassification_now_rests_on_5_seeds": (
+                    "This reclassification was originally made on ONE seed at budget 8000 while "
+                    "the loss it reclassified was measured on five at budget 2000 -- the weaker "
+                    "evidence overturning the stronger, in the direction that made the shipped "
+                    "configuration look better. The sweep was re-run on all 5 seeds; see "
+                    "`budget_sweep_n_seeds_per_bucket` for the n behind every number here."
+                ),
+                "r11l_under_salience_inversion": (
+                    "This one is real. HUD-alone wins r11l under inverted salience at every "
+                    "budget tested, on every seed; the shipped both-on configuration is still "
+                    "at 0 levels at 4x and 8x the measured budget with the mask resolving "
+                    "normally. The frontier lever removes a capability the HUD lever supplies, "
+                    "once the colour convention no longer holds."
+                ),
             },
             "mechanism": "In both cases HUDO and SHIP resolve the SAME mask, so the mask is "
                          "not the difference. The difference is search shape: on tn36 at "
@@ -385,34 +755,97 @@ def main() -> int:
         },
     }
 
+    # ------------------------------------------------------------------------- headline
+    # Assembled FROM the computed fields, not transcribed, so it cannot drift from the data.
+    # Rewritten 2026-07-25 against the adversarial review: the previous version led with the
+    # frontier lever's PRE-HUD-FLIP contrast only, presented a ratio of two 5-seed medians as a
+    # measured degradation, and stated a HUD verdict this design cannot deliver.
+    fh_off = A["contrasts"]["frontier_given_hud_off"]
+    fh_on = A["contrasts"]["frontier_given_hud_on"]
+    ret_c1 = fh_off["retention"]["C1_salience_inversion"]
+    ret_on_c1 = fh_on["retention"]["C1_salience_inversion"]
+    dc2 = A["dose_ceiling_witness"]["C2_diag_roll"]
+    hud_gate = gates["hud_given_frontier_on|C2_diag_roll"]
+    tn36_ratio = cost_ratios["tn36_C0_SHIP_vs_HUDO_at_budget_8000"]
+    tn36_ship_8k = sweeps.get("tn36|C0_real|SHIP|budget_8000", {})
+    r11l_ship_8k = sweeps.get("r11l|C1_salience_inversion|SHIP|budget_8000", {})
+    r11l_hudo_8k = sweeps.get("r11l|C1_salience_inversion|HUDO|budget_8000", {})
+
     A["headline"] = (
-        "FRONTIER LEVER: its gain SURVIVES violation of the absolute-colour salience "
-        "convention it keys on -- median +4 -> +3 games (retention 0.75), strict per-seed "
-        "dominance, no seed regresses -- and the gain is spread over 4 games, so no single "
-        "public game carries it. Under the geometric roll the absolute gain is also +4, but "
-        "read that with the absolute win level: the roll collapses the pre-flip control from 7 "
-        "wins to 1, so a 'retention 1.0' there sits on a far smaller base and is not the same "
-        "statement as at C0. "
-        "HUD LEVER: its marginal gain in the shipped configuration is exactly ONE game (r11l) "
-        "-- remove r11l and the gain is 0 -- and it is 0 on every seed under both "
-        "perturbations, for two DIFFERENT reasons that the artifact keeps separate: under the "
-        "roll the detector itself stops working (r11l's mask resolves on 5/5 seeds at C0 and "
-        "0/5 under the roll, measured independently of any win), while under salience "
-        "inversion the mask is provably untouched and the FRONTIER lever destroys the win "
-        "instead. "
-        "NEW: the two levers interact, and a budget sweep splits it into two different things. "
-        "On REAL unperturbed tn36, HUD-alone wins on 5/5 seeds and the shipped both-on config "
-        "on 0/5 with an identical 61-cell mask -- but SHIP DOES win tn36 at budget 8000 (5337 "
-        "actions vs HUD-alone's 1506), so that is a ~3.5x EFFICIENCY regression crossing the "
-        "budget, not a lost capability (the first draft of this finding said capability loss; "
-        "the sweep refuted it). The genuine capability loss is r11l under salience inversion: "
-        "HUD-alone wins it in 1068 actions at every budget, the shipped config is still at 0 "
-        "after 14774 actions -- 8x the measured budget. Neither flip's own A/B could have seen "
-        "either, because both of their controls also lose these games. "
+        "FRONTIER LEVER, AS MEASURED AT FLIP TIME (HUD off -- the configuration the flip "
+        f"decision was made in): the gain SURVIVES inversion of the absolute-colour salience "
+        f"convention it keys on. Per-seed gain at C1 "
+        f"{list(fh_off['per_condition']['C1_salience_inversion']['per_seed_gain'].values())}, "
+        f"minimum +{fh_off['per_condition']['C1_salience_inversion']['min_gain']}, positive on "
+        f"every seed; on the GAME unit "
+        f"{fh_off['per_condition']['C1_salience_inversion']['game_unit_sign_test']['n_games_treatment_wins_on_more_seeds']}"
+        f" games favour it to "
+        f"{fh_off['per_condition']['C1_salience_inversion']['game_unit_sign_test']['n_games_control_wins_on_more_seeds']}"
+        f" against, exact one-sided sign test p="
+        f"{fh_off['per_condition']['C1_salience_inversion']['game_unit_sign_test']['p_one_sided_exact']}"
+        f". Whether it DEGRADES is NOT resolved at this sample size: median "
+        f"{fh_off['anchor_median_gain_C0']} -> {ret_c1['transfer_median_gain']} is a ratio of "
+        f"two {len(A['random_seeds_used'])}-seed medians on a difference of one game, the "
+        f"paired per-seed deltas are {ret_c1['paired_per_seed_delta_vs_C0']}, and the one-sided "
+        f"sign test for a decline gives p={ret_c1['decline_sign_test_p_one_sided']} -- fully "
+        "consistent with no degradation. The earlier reading that quoted 'retention 0.75' as a "
+        "measured degradation is WITHDRAWN; the survival claim stands. "
+        "FRONTIER LEVER, IN THE SHIPPED CONFIGURATION (HUD on -- what the live agent runs "
+        f"today): the same lever's marginal gain is median {fh_on['anchor_median_gain_C0']} at "
+        f"C0 and {ret_on_c1['transfer_median_gain']} at C1 (retention "
+        f"{ret_on_c1['retention_ratio']}), per-seed "
+        f"{list(fh_on['per_condition']['C1_salience_inversion']['per_seed_gain'].values())} -- "
+        "one seed at zero, so per-seed dominance is NOT strict -- and it loses "
+        f"{fh_on['per_condition']['C1_salience_inversion']['games_lost_on_every_seed']} on every "
+        "seed. This is the contrast the operator's decision is actually about, and it is less "
+        "flattering than the flip-time one. "
+        f"Under the geometric roll the frontier gain is nominally undiminished, but that "
+        f"condition is DOSE SATURATED: it takes the pre-flip control from "
+        f"{A['dose_ceiling_witness']['C0_real']['control_median_absolute_wins']} wins to "
+        f"{dc2['control_median_absolute_wins']} and takes the games no arm can win from "
+        f"{A['dose_ceiling_witness']['C0_real']['n_games_dead_for_all_arms']}/{dc2['n_games']} "
+        f"to {dc2['n_games_dead_for_all_arms']}/{dc2['n_games']}, and the gained set overlaps "
+        f"C0's with Jaccard "
+        f"{fh_off['retention']['C2_diag_roll']['gained_set_jaccard_vs_C0']}. A similarly-sized "
+        "gain on different games in a razed corpus is not the same statement as at C0. "
+        "HUD LEVER: NOT DECIDABLE BY THIS DESIGN. Its marginal gain in the shipped "
+        "configuration is exactly ONE game (r11l) -- a single-game support, which no sign test "
+        "at any seed count can clear -- and neither perturbed condition can test the "
+        "edge-adjacency convention it depends on. C1 provably does not touch the HUD mask "
+        "(off-target; zero mask change on all 25 games) and is behaviourally inert on the "
+        "HUD-alone arm. C2 kills the anchor: r11l and tn36, the only two games this lever has "
+        f"ever moved, are won by NO arm on any seed there, leaving "
+        f"{hud_gate['n_discriminating_games_at_this_condition']} discriminating games, so the "
+        "perturbed gain of 0 was arithmetically FORCED. The earlier "
+        "GAIN_DOES_NOT_SURVIVE_CONVENTION_VIOLATION verdict is WITHDRAWN as uninterpretable "
+        "(the gate had certified its pass region with cells measured at a DIFFERENT condition "
+        "-- the exp5835 defect in a new location). What DOES survive as HUD mechanism evidence "
+        "is the corpus-wide mask-resolution collapse under the roll, measured independently of "
+        "any win: r11l's mask resolves on "
+        f"{mr['SHIP|C0_real']['per_game_seeds_resolved']['r11l']}/"
+        f"{len(A['random_seeds_used'])} seeds at C0 and "
+        f"{mr['SHIP|C2_diag_roll']['per_game_seeds_resolved']['r11l']}/"
+        f"{len(A['random_seeds_used'])} under the roll. That shows the convention is "
+        "load-bearing for the DETECTOR; it does not show what happens to the lever's GAIN. "
+        "THE TWO LEVERS INTERACT, and a 5-seed budget sweep splits it into two different "
+        f"things. On REAL unperturbed tn36 the shipped config loses a game HUD-alone wins at "
+        f"budget 2000, but it DOES win at budget 8000 on "
+        f"{tn36_ship_8k.get('n_seeds_won')}/{tn36_ship_8k.get('n_seeds')} seeds, at "
+        f"{tn36_ratio.get('ratio_range')}x the cost -- an EFFICIENCY regression crossing the "
+        "budget, not a lost capability. (That reclassification originally rested on ONE seed "
+        "while the loss it overturned rested on five; it has now been re-run on all "
+        f"{tn36_ship_8k.get('n_seeds')} seeds and holds.) The genuine CAPABILITY loss is r11l "
+        f"under salience inversion: HUD-alone wins it on "
+        f"{r11l_hudo_8k.get('n_seeds_won')}/{r11l_hudo_8k.get('n_seeds')} seeds in "
+        f"{r11l_hudo_8k.get('median_actions_to_first_levelup')} actions, while the shipped "
+        f"config is still at 0 levels on {r11l_ship_8k.get('n_seeds')}/"
+        f"{r11l_ship_8k.get('n_seeds')} seeds at 4x the measured budget, with the mask "
+        "resolving normally. Neither flip's own A/B could have seen either, because both of "
+        "their controls also lose these games. "
         "NO hidden-game transfer is claimed or measured here, and none can be from this "
         "harness: all 25 public games are already solved and the scored path is operator-only. "
         "This measures CONVENTION-DEPENDENCE, which is necessary but not sufficient for "
-        "transfer."
+        "transfer -- and it now does so for ONE of the two levers, not both."
     )
 
     A["preconditions_checked"] = [
@@ -489,7 +922,35 @@ def main() -> int:
             "levers were iterated against and no measurement here can remove that.",
             "Conventions nobody enumerated. This battery bounds the two KNOWN convention "
             "risks; it cannot certify transfer.",
+            "The HUD lever's convention-dependence AT ALL. Added 2026-07-25: neither perturbed "
+            "condition can test it (C1 is off-target and inert on the HUD mask; C2 makes the "
+            "lever's only two support games unwinnable for every arm). The battery bounds the "
+            "FRONTIER lever's convention-dependence and leaves the HUD lever's open. A "
+            "dose-parameterised roll (C3_roll_k1/k2, wired into cptb_perturb + cptb_run) is the "
+            "hook for a condition that moves the bar off the edge without razing the corpus.",
+            "Any effect small enough to need more than this design's resolution. With 5 seeds "
+            "the smallest reachable exact sign-test p on the seed axis is 0.031, and on the "
+            "GAME axis it is 0.5 for a one-game support and 0.25 for a two-game support -- so a "
+            "one- or two-game gain CANNOT be established at p<=0.05 here however consistent it "
+            "is. Every contrast now reports its own n_independent_replicates and its "
+            "smallest_reachable_p_at_this_n rather than leaving that implicit.",
         ],
+        "statistical_resolution_of_this_design": {
+            "replication_unit_for_transfer": "the GAME (a hidden game is a fresh draw from the "
+                                             "game distribution), which is why the sign tests "
+                                             "run on games, not seeds",
+            "n_games": len(A["config"]["games"]),
+            "n_seeds": len(A["random_seeds_used"]),
+            "seed_axis_smallest_reachable_p": round(0.5 ** len(A["random_seeds_used"]), 5),
+            "arms_measured_deterministic": [a for a, d in A[
+                "measured_determinism_per_arm"].items() if d["measured_deterministic"]],
+            "note": (
+                "For a contrast between two measured-deterministic arms the seeds are ONE "
+                "observation repeated, not five trials; those contrasts report "
+                "n_seed_replicates_effective = 1. The harness already declared these arms "
+                "deterministic in cptb_arms.py and the first run's gates did not use that flag."
+            ),
+        },
         "corrected_caveat_wording_for_the_two_flips": (
             "Measured on the 25 PUBLIC games with the LLM-free StepwiseExplorer core -- NO "
             "per-game GameAdapter, no banked plan, no trained value head or candidate router "
@@ -552,10 +1013,14 @@ def main() -> int:
                       "all 1500 cells are comparable.",
     }
 
+    dirty = [ln[3:] for ln in _git("status", "--porcelain").splitlines() if ln.strip()]
     A["provenance"] = {
         "git_head": _git("rev-parse", "HEAD"),
-        "working_tree_dirty_at_run_time": True,
-        "unstaged_files_at_run_time_not_authored_by_this_experiment": [
+        "working_tree_dirty_at_run_time": bool(dirty),
+        # DERIVED (2026-07-25), was a hardcoded list.  A stale hardcoded dirty-file list is a
+        # provenance claim that silently stops being true.
+        "modified_or_untracked_files_at_artifact_build_time": dirty,
+        "unstaged_files_at_original_battery_run_time_not_authored_by_this_experiment": [
             "python/carnot/agentic/arc_competition_agent.py",
             "python/carnot/agentic/arc_discriminative_router.py",
             "openspec/capabilities/arc-human-replay-frame-change/spec.md",
