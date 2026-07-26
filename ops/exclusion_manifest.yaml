@@ -933,3 +933,48 @@ retired_extras:
   blocked_patterns:
   - schema-supported ConstraintIR reprompt after zero exact semantic success
   - treating structural validity as semantic success after Exp5923 retirement
+- id: inert_click_pruner_retired_v527
+  experiment_scope: ARC inert-click / click-signature pruning as a live-path lever
+    (SUBMITTED_INERT_CLICK_PRUNER_ENABLED), in any plain budget/roster A/B form
+  reason: >-
+    retire_if_same_verdict: FOURTH attempt (exp5595, exp5602, exp5756, and the
+    2026-07-26 shipped-config A/B) returning exp5756's verdict verbatim, now with a
+    measured COST rather than a bare null. exp5756's own retire condition was
+    explicit: "do NOT flip ... another plain budget/roster A/B is not warranted
+    without a NEW mechanism that makes pruning reduce rather than reshape search
+    cost." The 2026-07-26 run met that condition: 25 games x 3 seeds at budget 2000
+    against the SHIPPED configuration gave zero new wins on any seed, LOST ft09 on
+    2 of 3 seeds (a replicated safety regression the prior attempts never saw), and
+    states_expanded +12.0% concentrated 93% in 3 games. The lever genuinely FIRED
+    (147760 candidate rows pruned), so this is not a dead-lever artifact. Both
+    quantitative axes were additionally UNINTERPRETABLE, not merely failed: the
+    capability anchors were won by no arm so the value was arithmetically forced,
+    and of 31 both-win cells 20 were structurally frozen so the efficiency median's
+    pass region was EMPTY A PRIORI. The motivating claim was also FALSIFIED -- the
+    pruner could never have fixed r11l, because its inertness predicate computes
+    `changed` on the RAW grid (arc_inert_click_pruner.py:217) and r11l renders a
+    monotone step counter, so every action is raw-frame changed and nothing can look
+    inert; only the HUD/node-identity repair could fix r11l, and it did.
+  experiment_ids:
+  - exp5595-inert-click-pruner
+  - exp5602-inert-click-pruner-matched-budget-ab
+  - exp5756-inert-click-pruner-11game-ab
+  - outer-loop-inert-click-pruner-shipped-config-ab-20260726
+  retired_milestone: 2026.07.527
+  retired_by_artifact: results/outer_loop_inert_click_pruner_shipped_config_ab_20260726.json
+  recorded_by_artifact: results/experiment_5756_inert_click_pruner_11game_ab.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - inert-click pruner budget or roster A/B without a new mechanism
+  - click-signature pruning re-keyed after the 2026-07-26 shipped-config null
+  - crediting the pruner with an r11l fix delivered by the HUD node-identity repair
+  - citing exp5766 add:inert_click_pruner macro_delta 0.0 as a causal measurement
+  reopen_requires_new_mechanism: >-
+    A MASK-AWARE inertness predicate (compute `changed` on the HUD-masked grid, not
+    the raw one) would clear exp5756's "new mechanism" bar. Its anchors must be games
+    the ALREADY-SHIPPED auto_hud_mask unblocks, so any result is attributable to the
+    predicate fix rather than to the 2026-07-25 edge-bar repair, and r11l must NOT be
+    among them. Nav-side pruning is a SEPARATE direction and is not retired by this
+    entry, though the 2026-07-26 HazardMovePruner measurement found it inert at
+    budget 400 and search-reshaping (not reducing) at 2000.
