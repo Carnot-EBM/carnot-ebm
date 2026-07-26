@@ -486,25 +486,96 @@ def build_prompt(case: Mapping[str, Any], arm_id: str, view_id: str) -> str:
         )
     schema = exp5935.versioned_atom_schema()
     surface = derive_surface_for_case(case, schema)
-    visible_atoms = [
-        {
-            "atom_id": atom["atom_id"],
-            "atom_kind": atom["atom_kind"],
-            "payload": atom["payload"],
-        }
-        for atom in surface["_visible_atoms"]
-    ]
+    visible_atoms = "\n".join(
+        row["prompt_line"] for row in _visible_atom_aliases(surface)
+    )
     return (
-        "Return JSON with one key atom_ids whose value is a list of legal atom_id "
-        "strings from the visible vocabulary. Include every atom that could be relevant; "
+        "Return JSON with one key atom_ids whose value is a list of legal atom aliases "
+        "from the visible vocabulary. Include every atom that could be relevant; "
         "overcomplete lists are allowed. Do not rank by confidence as a hard mask. "
         "Do not include exact labels, hidden references, diagnostics, final answers, "
-        "or prose.\n"
+        "or prose. Atom lines use alias|kind|payload.\n"
         f"Arm: {arm_id}\n"
         f"View: {view_id}\n"
         f"Problem:\n{case['visible_problem_text']}\n"
-        f"Visible atom vocabulary:\n{canonical_json(visible_atoms)}\n"
+        f"Visible atom vocabulary:\n{visible_atoms}\n"
     )
+
+
+def _visible_atom_aliases(surface: Mapping[str, Any]) -> list[JsonDict]:
+    """Return compact visible aliases while preserving real atom IDs internally."""
+
+    return [
+        {
+            "atom_alias": f"a{index:03d}",
+            "atom_id": atom["atom_id"],
+            "atom_kind": atom["atom_kind"],
+            "payload": _copy_json(atom["payload"]),
+            "prompt_line": _atom_prompt_line(f"a{index:03d}", atom),
+        }
+        for index, atom in enumerate(surface["_visible_atoms"])
+    ]
+
+
+def _atom_prompt_line(alias: str, atom: Mapping[str, Any]) -> str:
+    """Serialize one atom in a compact, model-visible, no-hidden-hash format."""
+
+    payload = atom["payload"]
+    kind = str(atom["atom_kind"])
+    kind_code = {
+        "domain.declare": "dom",
+        "domain.cardinality": "card",
+        "entity.declare": "ent",
+        "predicate.declare": "pred",
+        "rule.variable": "rvar",
+        "query.variable": "qvar",
+        "composition.rule": "crule",
+        "composition.query": "cquery",
+        "fact.assert": "fact",
+        "rule.body.atom": "body",
+        "rule.body.not": "not",
+        "rule.body.comparison": "cmp",
+        "rule.head.atom": "head",
+        "query.where.atom": "where",
+    }.get(kind, kind)
+    if "predicate" in payload:
+        base = f"{payload['predicate']}({','.join(_slim_value(v) for v in payload.get('args', []))})"
+    elif "id" in payload:
+        base = str(payload["id"])
+    elif "variable" in payload:
+        base = f"{payload['variable']}:{payload.get('domain', '')}"
+    elif "left" in payload:
+        base = f"{payload.get('left')}{payload.get('op')}{payload.get('right')}"
+    else:
+        base = ";".join(f"{key}={_slim_value(payload[key])}" for key in sorted(payload))
+    extras = [
+        f"{key}={_slim_value(payload[key])}"
+        for key in (
+            "truth",
+            "rule_id",
+            "domain",
+            "type",
+            "values",
+            "min",
+            "max",
+            "body",
+            "head",
+            "where",
+            "target",
+        )
+        if key in payload and key not in {"predicate", "args"}
+    ]
+    return "|".join([alias, kind_code, base, *extras])
+
+
+def _slim_value(value: Any) -> str:
+    """Encode small payload values without JSON key overhead."""
+
+    if isinstance(value, list):
+        return "[" + ",".join(_slim_value(item) for item in value) + "]"
+    if isinstance(value, bool):
+        return "T" if value else "F"
+    return str(value)
 
 
 def build_preregistration(config: ExperimentConfig, panel: Sequence[Mapping[str, Any]]) -> JsonDict:
@@ -1623,15 +1694,20 @@ def _proposal_entries_from_raw(
     surface: Mapping[str, Any], raw_rows: Sequence[Mapping[str, Any]]
 ) -> list[JsonDict]:
     visible = dict(surface["_visible_by_id"])
+    alias_to_id = {
+        str(row["atom_alias"]): str(row["atom_id"])
+        for row in _visible_atom_aliases(surface)
+    }
     entries: list[JsonDict] = []
     for raw in raw_rows:
         view_id = str(raw.get("view_id") or "unknown_view")
-        for rank, atom_id in enumerate(_proposal_atom_ids(raw)):
+        for rank, proposed_id in enumerate(_proposal_atom_ids(raw)):
+            atom_id = alias_to_id.get(proposed_id, proposed_id)
             atom = visible.get(atom_id) or {
                 "schema_version": exp5935.ATOM_SCHEMA_VERSION,
                 "atom_kind": "invalid.proposed_atom_id",
-                "payload": {"atom_id": atom_id},
-                "atom_id": atom_id,
+                "payload": {"atom_id": proposed_id},
+                "atom_id": proposed_id,
             }
             entries.append(
                 {
