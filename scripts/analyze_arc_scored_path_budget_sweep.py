@@ -12,9 +12,25 @@ DISCIPLINES APPLIED, EACH AGAINST A SPECIFIC DEFECT THIS PROJECT HAS SHIPPED BEF
     per-seed count shows a control failing against itself.
   * BOTH TAILS on every test, plus the direction favoured. A one-sided test on a REVERSAL returns
     p=0.89 and reads as "no effect".
-  * A COMPUTED WITNESS that each comparison's pass region is non-empty, AT THE COMPARISON'S OWN UNIT
-    (the game). A comparison whose movable-game count is 0 is ARITHMETICALLY FORCED and is stamped
-    UNINTERPRETABLE rather than reported as a null.
+  * THE HEADLINE SIGN TEST IS ON THE GAME, NOT THE CELL (corrected 2026-07-26 after adversarial
+    review). Three seeds of one game are REPLICATES -- they share that game's adapter, mechanics and
+    win condition -- so a cell-level test treats them as independent and inflates significance by
+    1-2 orders of magnitude. The inferential target is a HIDDEN game, i.e. a fresh draw from the
+    game distribution, so the game is the unit of generalization. The cell-level test is retained
+    but explicitly labelled as within-game replicate counts. Earlier versions of this docstring
+    CLAIMED the game unit while the code counted cells; that mismatch is the defect being fixed.
+  * A COMPUTED WITNESS that each comparison's pass region is non-empty, AT THE COMPARISON'S OWN UNIT.
+    A comparison whose movable count is 0 is ARITHMETICALLY FORCED and is stamped UNINTERPRETABLE
+    rather than reported as a null.
+  * THE SCORE AXIS IS DERIVED FROM THE INSTALLED SCORER, NOT FROM A PARAPHRASE OF THE SPEC. The
+    authoritative `arc_agi.scorecard.EnvironmentScoreCalculator` is driven directly (see
+    `_resolve_charging_rule`), which is what resolves -- rather than speculates about -- how the
+    gateway charges actions. A prior version of this analyser reported that question as "not
+    resolvable locally" and built a competing "total-action charge" model on the retracted
+    min(human/agent,1)^2 formula; both are gone.
+  * MEMORY IS AN ENVELOPE, NOT A RESIDUAL. The framework runs every game as a CONCURRENT THREAD in
+    one process, so retained per-game search graphs multiply by the game count. That is measured and
+    projected alongside the wall clock, because it binds FIRST.
   * FAILURE SETS, not totals: which GAMES are won at each budget, so a "same count" that is a
     different set is visible.
   * INSTRUMENTATION CENSUS FIRST. Every field the conclusions rest on is counted for
@@ -245,6 +261,137 @@ def sign_test_two_sided(n_pos: int, n_neg: int) -> dict:
     }
 
 
+def _drive_scorer(baselines: list[int], level_up_actions: list[int], total_actions: int) -> float:
+    """Score a run with the INSTALLED authoritative scorer, exactly as the gateway does.
+
+    Mirrors `arc_agi.scorecard.EnvironmentScorecard._calculate_score` (scorecard.py:474-491), which
+    is also what `arc_leaderboard_eval.run_game` drives: iterate the game's FULL baseline list, take
+    per-level actions by DIFFERENCING successive level-up checkpoints, and assign the trailing tail
+    to the first INCOMPLETE level.
+    """
+    from arc_agi.scorecard import EnvironmentScoreCalculator
+
+    calc = EnvironmentScoreCalculator()
+    prev = 0
+    for li in range(len(baselines)):
+        if li < len(level_up_actions):
+            at = level_up_actions[li]
+            lvl_actions, done, prev = at - prev, True, at
+        else:
+            lvl_actions, done, prev = total_actions - prev, False, total_actions
+        calc.add_level(
+            level_index=li + 1,
+            completed=done,
+            actions_taken=lvl_actions,
+            baseline_actions=baselines[li],
+        )
+    return float(calc.to_score(include_levels=False).score)
+
+
+def _resolve_charging_rule() -> dict:
+    """MEASURE, against the installed scorer, whether the post-solve tail costs anything.
+
+    This exists because a prior version of this analyser reported the charging rule as "NOT
+    resolvable locally" and reported a sign disagreement that followed from that assumption. The
+    scorer is installed; the question is a two-line experiment, not an open question.
+    """
+    try:
+        import arc_agi.scorecard as _sc
+    except Exception as exc:  # pragma: no cover -- the package is a hard dependency of the harness
+        return {"resolvable_locally": False, "error": repr(exc)}
+    base8 = [20, 30, 40, 50, 60, 70, 80, 90]  # an 8-level game, L1 solved in 15 (superhuman)
+    tails = [15, 100, 400, 2000, 4000, 100000]
+    scores = {str(t): round(_drive_scorer(base8, [15], t), 4) for t in tails}
+    return {
+        "resolvable_locally": True,
+        "scorer_module_path": _sc.__file__,
+        "authoritative_path": "arc_agi/scorecard.py:474-491 (_calculate_score) -> add_level:166-183",
+        "per_level_score_formula": "min((baseline_actions / actions_taken)**2 * 100, 115.0)",
+        "per_game_aggregation": (
+            "index-weighted mean over the game's FULL level list: "
+            "sum(level_score[i]*(i+1)) / sum(i+1), then clamped by max_score"
+        ),
+        "tail_probe_same_solve_varying_tail": scores,
+        "tail_is_score_relevant": len(set(scores.values())) > 1,
+        "conclusion": (
+            "The tail is score-IRRELEVANT. A level the agent did NOT complete scores 0.0 no matter "
+            "how many actions were charged to it, and the differencing means those actions are "
+            "never charged to a COMPLETED level. So a post-solve tail costs exactly nothing, and "
+            "the 'total-action charge' model that a prior version of this analyser reported as an "
+            "equally-live reading contradicts the installed implementation."
+        ),
+        "retracted_formula_note": (
+            "min(human/agent,1)^2 is the formula a 2026-06-20 adversarial review already retracted. "
+            "For human=20/agent=15 it returns 1.0 where the authoritative scorer returns 2.7778 on "
+            "an 8-level game -- a different quantity on a different scale, so any model that "
+            "recovers a baseline by inverting it is unsound."
+        ),
+    }
+
+
+def _max_score_clamp_table() -> dict:
+    """The OMITTED term. `to_score` clamps the game score at the index-weighted fraction of levels
+    SOLVED, so the number of levels solved sets a CEILING that per-level speed cannot buy past.
+
+    This was absent from the previous analysis entirely, which is why that analysis could read the
+    score axis as a pure per-level efficiency trade-off. It is not: on an 8-level game, an agent that
+    is superhuman on level 1 and solves nothing else is capped at 2.78 out of 100.
+
+    A CORRECTION TO THE OBVIOUS READING OF THIS TERM, found by writing its regression test. `min()`
+    makes the clamp a CEILING, not a floor, so "solve more levels" is NOT unconditionally the
+    dominant lever. Holding per-level speed fixed, depth multiplies the score (2.78 -> 8.33 -> 27.78
+    -> 100 at 1/2/4/8 levels solved at exactly human speed). But depth bought by GRINDING scores
+    below shallow speed: 4 of 8 levels solved in 400/900/1500/2200 actions scores 0.1207, LESS than
+    one level solved in 15 actions (2.7778). Since grinding is exactly what a raised action budget
+    buys, this is the mechanism behind the measured result that tripling the win count raises the
+    score only ~2%.
+    """
+    base8 = [20, 30, 40, 50, 60, 70, 80, 90]
+    rows = {}
+    for nsolved in (1, 2, 3, 4, 6, 8):
+        fast = [10 * (i + 1) for i in range(nsolved)]  # superhuman on every solved level
+        at_human, cum = [], 0
+        for i in range(nsolved):  # exactly the human baseline on every solved level
+            cum += base8[i]
+            at_human.append(cum)
+        rows[str(nsolved)] = {
+            "levels_solved_of_8": nsolved,
+            "score_with_superhuman_speed_on_every_solved_level": round(
+                _drive_scorer(base8, fast, 10000), 4
+            ),
+            "score_at_exactly_human_speed_on_every_solved_level": round(
+                _drive_scorer(base8, at_human, 10000), 4
+            ),
+            "clamp_index_weighted_fraction_times_100": round(
+                sum(range(1, nsolved + 1)) / sum(range(1, 9)) * 100, 4
+            ),
+        }
+    return {
+        "formula": "max_score = sum(weights of levels with score>0) / sum(all weights) * 100",
+        "applied_as": "score = min(index_weighted_mean_of_level_scores, max_score)",
+        "source": "arc_agi/scorecard.py:192-206 (to_score)",
+        "probe_on_an_8_level_game": rows,
+        "grinding_counterexample": {
+            "four_of_eight_levels_solved_slowly_400_900_1500_2200": round(
+                _drive_scorer(base8, [400, 900, 1500, 2200], 4000), 4
+            ),
+            "one_level_solved_fast_15": round(_drive_scorer(base8, [15], 4000), 4),
+            "note": (
+                "The deeper-but-slower run scores LOWER. The clamp is a ceiling, so depth raises "
+                "what speed can earn but does not earn it."
+            ),
+        },
+        "consequence": (
+            "The clamp is a CEILING, so the honest statement is conditional: at EQUAL per-level "
+            "speed, depth is the dominant lever (1/2/4/8 levels at human speed score "
+            "2.78/8.33/27.78/100). But depth obtained by GRINDING -- which is what a larger action "
+            "budget buys -- can score below a fast shallow solve. That is why this sweep's tripled "
+            "win count moves the score only ~2%: the extra wins arrive hundreds-to-thousands of "
+            "actions in, so they sit far under the ceiling they raise."
+        ),
+    }
+
+
 def q(vals, p):
     vals = sorted(vals)
     if not vals:
@@ -272,6 +419,22 @@ def main(argv) -> int:
         "curve, because mixing a 1-seed budget into a 3-seed matched design would let one budget "
         "be "
         "scored on a different design than its neighbours.",
+    )
+    ap.add_argument(
+        "--memory-rows",
+        default="",
+        help="JSONL from scripts/arc_budget_memory_probe.py: one clean process per (game, budget) "
+        "reporting the shared-library RSS baseline and the PER-GAME retained-graph delta. Required "
+        "to build the memory envelope, which binds BEFORE wall clock because the framework runs "
+        "every game as a concurrent thread in ONE process.",
+    )
+    ap.add_argument(
+        "--host-ram-gib",
+        type=float,
+        default=16.0,
+        help="host RAM of the target instance, for the memory envelope. Default 16 GiB is a "
+        "PLACEHOLDER inherited from the requirements note's VRAM figure and is NOT a confirmed host-"
+        "RAM number; the artifact labels it as unconfirmed.",
     )
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
@@ -453,6 +616,33 @@ def main(argv) -> int:
         # have moved (the higher budget could have won it), so "movable" = every cell not already
         # won at the LOWER budget, plus every cell already won (which could regress).
         st = sign_test_two_sided(len(gained), len(lost))
+        # ------------------------------------------------------------------------------------
+        # THE GAME-UNIT (CLUSTERED) TEST -- THE HEADLINE. Cells are NOT independent: three seeds of
+        # the same game share that game's adapter, mechanics and win condition, so a cell-level sign
+        # test counts within-game replicates as independent observations and inflates significance
+        # by 1-2 orders of magnitude. The inferential target is a HIDDEN game -- a fresh draw from
+        # the game distribution -- so the GAME is unambiguously the unit of generalization.
+        #
+        # Found by adversarial review 2026-07-26. The defect is doubly embarrassing because this
+        # module's own docstring already claimed the witness/test unit was "AT THE COMPARISON'S OWN
+        # UNIT (the game)" while the code counted cells, AND a sibling lane had used exactly this
+        # clustering argument to WITHDRAW a HUD-lever claim ("support is 2 games, so the p-floor is
+        # 0.25 at any seed count") without either lane applying it to this budget curve.
+        #
+        # Aggregation: each game contributes ONE sign, from the count of its seeds that gained minus
+        # the count that lost. A game whose seeds disagree in equal numbers is concordant (no sign)
+        # and drops out of the discordant set, exactly as a tied pair does in any sign test.
+        per_game_delta: dict[str, int] = collections.defaultdict(int)
+        for s, g in complete_pairs:
+            wl = (cell(lo, s, g)["levels"] or 0) > 0
+            wh = (cell(hi, s, g)["levels"] or 0) > 0
+            if wh and not wl:
+                per_game_delta[g] += 1
+            elif wl and not wh:
+                per_game_delta[g] -= 1
+        games_gained = sorted(g for g, d in per_game_delta.items() if d > 0)
+        games_lost = sorted(g for g, d in per_game_delta.items() if d < 0)
+        st_games = sign_test_two_sided(len(games_gained), len(games_lost))
         steps.append(
             {
                 "from_budget": lo,
@@ -483,7 +673,21 @@ def main(argv) -> int:
                         "would be ARITHMETICALLY FORCED, not evidence of saturation."
                     ),
                 },
-                "sign_test_on_cells_both_tails": st,
+                # THE HEADLINE TEST. See the clustering note above: the game is the unit of
+                # generalization, so this is the p-value that may be quoted.
+                "games_gained": games_gained,
+                "games_lost": games_lost,
+                "HEADLINE_sign_test_on_GAMES_both_tails": st_games,
+                # RETAINED, EXPLICITLY DEMOTED. These are WITHIN-GAME REPLICATE counts, not
+                # independent observations. Kept because the cell-level gain/loss lists are the raw
+                # evidence and because the inflation between the two is itself worth seeing.
+                "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent": st,
+                "clustering_note": (
+                    "The cell-level p is inflated relative to the game-level p because the 3 seeds "
+                    "of a game are replicates of one game, not 3 draws from the game distribution. "
+                    "Quote the game-level p. The EFFECT SIZE (median wins, zero regressions) is "
+                    "unaffected by which unit the test uses."
+                ),
                 "interpretable": (len(gained) + len(frozen_zero)) > 0,
             }
         )
@@ -679,64 +883,314 @@ def main(argv) -> int:
     llmoff_b400 = (
         per_budget[str(400)]["wall_s_per_game_median_of_seed_medians"] if 400 in budgets else None
     )
+    # THE MECHANISTIC MODEL, replacing the fixed-vs-proportional BAND (corrected 2026-07-26 after
+    # adversarial review). The band was:
+    #     lower  = LLM-on cost is FIXED per game, extra actions cost only the LLM-off marginal (1.0x)
+    #     upper  = the whole LLM-on cost scales PROPORTIONALLY with the budget (~10x at b4000)
+    # Both are wrong, and the field that resolves it was ALREADY IN EVERY ROW. LLM cost is
+    # (number of inductions) x (seconds per induction); `induction_attempts` is recorded on every
+    # row of this sweep, and it grows only 1.15 -> 1.61 per game across a 10x budget raise -- because
+    # induction is triggered by novel-observation events, not by action count. So the fixed bound is
+    # optimistic (inductions DO grow) and the proportional bound is wildly pessimistic (they grow
+    # 1.4x, not 10x).
+    #
+    #   cost_per_game(b) = llm_off_cost(b) + inductions(b) * s_per_induction,
+    #   calibrated by a single multiplicative factor so the model REPRODUCES the measured LLM-on
+    #   227.3 s/game at b400.
+    #
+    # RESIDUALS, disclosed because they are the model's real limits: `s_per_induction` is measured
+    # only at b400; the calibration factor is applied multiplicatively at every budget; and
+    # `induction_attempts` on an LLM-OFF row counts PLANNED inductions (the generator is absent, so
+    # the call is skipped), which is the right scaling proxy only if the trigger rate does not itself
+    # depend on the generator's output. ONE LLM-on run at b1000 or b2000 would anchor this directly
+    # and is the next measurement worth making -- not a budget flip.
+    ind_per_game = {
+        b: statistics.mean(
+            [
+                cell(b, s, g).get("induction_attempts") or 0
+                for s, g in complete_pairs
+                if cell(b, s, g).get("induction_attempts") is not None
+            ]
+        )
+        for b in budgets
+    }
+    spi = LLM_ON_B400["s_per_induction"]
+    raw_b400 = (llmoff_b400 or 0.0) + ind_per_game.get(400, 0.0) * spi
+    calib = (LLM_ON_B400["median_s_per_game"] / raw_b400) if raw_b400 else 1.0
+
+    def llm_on_model_s_per_game(b: int) -> float:
+        base_off = per_budget[str(b)]["wall_s_per_game_median_of_seed_medians"]
+        return (base_off + ind_per_game[b] * spi) * calib
+
     crossing["llm_on_band"] = {
         "measured_llm_on_at_budget_400": LLM_ON_B400,
         "measured_llm_off_at_budget_400_this_sweep_s_per_game": llmoff_b400,
         "llm_on_over_llm_off_factor_at_budget_400": (
             round(LLM_ON_B400["median_s_per_game"] / llmoff_b400, 1) if llmoff_b400 else None
         ),
-        "why_a_band_not_a_number": LLM_ON_B400["note"],
-        "attribution_lower_bound": (
-            "the ~60.2 s/game non-generator remainder is FIXED per game; extra actions cost only "
-            "the LLM-off marginal"
+        "model": "cost_per_game(b) = llm_off_s_per_game(b) + inductions_per_game(b) * s_per_induction",
+        "model_calibration_factor": round(calib, 4),
+        "model_calibration_note": (
+            "applied multiplicatively at every budget so the model reproduces the MEASURED LLM-on "
+            f"{LLM_ON_B400['median_s_per_game']} s/game at b400 (raw model there: "
+            f"{round(raw_b400, 1)} s/game)"
         ),
-        "attribution_upper_bound": "that remainder scales PER-ACTION with the budget",
+        "measured_inductions_per_game_by_budget": {
+            str(b): round(v, 3) for b, v in ind_per_game.items()
+        },
+        "inductions_growth_over_the_measured_budget_range": (
+            round(ind_per_game[budgets[-1]] / ind_per_game[budgets[0]], 3)
+            if ind_per_game.get(budgets[0])
+            else None
+        ),
+        "why_the_previous_band_was_wrong": (
+            "The retired band's LOWER bound held LLM cost fixed (1.0x) and its UPPER bound scaled it "
+            "with the budget (~10x at b4000). Measured induction growth across that same range is "
+            f"{round(ind_per_game[budgets[-1]] / ind_per_game[budgets[0]], 2)}x, so the truth is "
+            "neither bound and the band spanned a factor of ~10 for no reason: the identifying "
+            "variable was recorded on every row."
+        ),
+        "residuals": [
+            "s_per_induction measured only at budget 400",
+            "calibration factor applied multiplicatively across budgets",
+            "induction_attempts on LLM-off rows counts PLANNED inductions, not executed ones",
+            "one LLM-on run at b1000/b2000 would replace this model with a direct anchor",
+        ],
+        "projected_s_per_game_by_budget": {
+            str(b): round(llm_on_model_s_per_game(b), 1) for b in budgets
+        },
     }
     for env in ENVELOPES:
         n_games_env, cap = env["n_games"], env["cap_s"]
         usable = cap - KERNEL_OVERHEAD_S
         band = {}
         for b in budgets:
-            extra_actions = max(0, b - 400)
-            lo_s = n_games_env * (LLM_ON_B400["median_s_per_game"] + extra_actions * marginal)
-            hi_s = n_games_env * (LLM_ON_B400["median_s_per_game"] * (b / 400.0))
+            tot = n_games_env * llm_on_model_s_per_game(b)
             band[str(b)] = {
-                "projected_total_s_lower_attribution": round(lo_s, 1),
-                "projected_total_s_upper_attribution": round(hi_s, 1),
-                "fraction_of_usable_lower": round(lo_s / usable, 3),
-                "fraction_of_usable_upper": round(hi_s / usable, 3),
-                "verdict": (
-                    "FITS under both attributions"
-                    if hi_s <= usable
-                    else (
-                        "STRADDLES: fits under the lower attribution, over under the upper"
-                        if lo_s <= usable
-                        else "OVER under both attributions"
-                    )
-                ),
+                "projected_total_s": round(tot, 1),
+                "fraction_of_usable": round(tot / usable, 3),
+                "verdict": "FITS" if tot <= usable else "OVER",
             }
+        band["largest_budget_that_fits"] = max(
+            [b for b in budgets if band[str(b)]["verdict"] == "FITS"], default=None
+        )
         crossing["llm_on_band"][env["id"]] = band
+    # The conditional conclusion, stated per envelope rather than as an unconditional claim.
+    fits_by_env = {
+        env["id"]: crossing["llm_on_band"][env["id"]]["largest_budget_that_fits"]
+        for env in ENVELOPES
+    }
+    crossing["llm_on_band"]["conclusion_is_CONDITIONAL_on_the_envelope"] = {
+        "largest_budget_that_fits_per_envelope": fits_by_env,
+        "statement": (
+            "Under the only envelope VERIFIED in code (C_110games_12h -- the Kaggle kernel's own "
+            f"subprocess timeout=43200), the model fits to budget {fits_by_env.get('C_110games_12h')} "
+            f"at {crossing['llm_on_band']['C_110games_12h'][str(budgets[-1])]['fraction_of_usable']} "
+            "of usable wall at the largest measured budget, i.e. ~10% headroom. Under the TIGHTEST "
+            "documented-but-unconfirmed envelope (B_110games_8h) the model is already OVER above "
+            f"budget {fits_by_env.get('B_110games_8h')}. So LLM-on wall clock is NOT unconditionally "
+            "non-binding: it is comfortable only under the 12h reading, and it binds under the 8h "
+            "reading."
+        ),
+    }
 
     # =========================================================================================
-    # STEP 4 -- THE EFFICIENCY AXIS. The scored metric is min(human/agent,1)^2 per level, so it is
-    # QUADRATIC in actions, and the tail-cutter is OFF (SUBMITTED_EARLY_STOP_GRACE = None). A win
-    # count alone cannot distinguish a score improvement from a score regression.
+    # STEP 3b -- THE MEMORY ENVELOPE. THIS IS THE CONSTRAINT THAT BINDS FIRST.
+    #
+    # A prior version of this analysis demoted memory to an untested residual ("memory at 110
+    # concurrent games untested", citing a prior ESTIMATE near 6.6 GiB) while recommending the
+    # largest measured budget. That was the wrong call twice over: the quantity is trivially
+    # measurable, and it is the one that hard-fails rather than merely running slow.
+    #
+    # WHY IT MULTIPLIES BY THE GAME COUNT. The competition framework's `Swarm.main()`
+    # (/home/ianblenke/arc3_agents/agents/swarm.py:76-99) constructs one agent + one Thread per game
+    # and starts EVERY thread before joining any, so all N games are live in ONE address space at
+    # once and each retains its own search graph. The projection is therefore
+    #     shared_libs_rss + n_games * per_game_retained_delta
+    # with the split taken at "everything importable" (shared) vs "env + policy + graph" (per-thread).
+    # =========================================================================================
+    memory_envelope: dict = {
+        "measured": False,
+        "why_it_binds_first": (
+            "Swarm.main() starts one thread per game before joining any, so retained per-game search "
+            "graphs are concurrent, not sequential. Exceeding host RAM is a hard failure, whereas "
+            "exceeding a wall-clock budget degrades gracefully into fewer games played."
+        ),
+    }
+    if a.memory_rows and Path(a.memory_rows).exists():
+        mem_rows = [
+            json.loads(ln)
+            for ln in Path(a.memory_rows).read_text().splitlines()
+            if ln.strip().startswith("{")
+        ]
+        mem_rows = [m for m in mem_rows if m.get("ran") and m.get("per_game_delta_mib")]
+        shared = statistics.median([m["shared_libs_rss_mib"] for m in mem_rows])
+        host_mib = a.host_ram_gib * 1024.0
+        per_budget_mem = {}
+        for b in sorted({m["budget"] for m in mem_rows}):
+            deltas = [m["per_game_delta_mib"] for m in mem_rows if m["budget"] == b]
+            # WORST-CASE, not mean. Every thread is live at once, so the swarm's peak is driven by
+            # the games that retain the most, and a mean would understate a hard failure.
+            worst, med = max(deltas), statistics.median(deltas)
+            entry = {
+                "n_games_probed": len(deltas),
+                "per_game_delta_mib_worst": round(worst, 1),
+                "per_game_delta_mib_median": round(med, 1),
+                "games_probed": sorted({m["game"] for m in mem_rows if m["budget"] == b}),
+            }
+            for env in ENVELOPES:
+                n = env["n_games"]
+                proj_worst = shared + n * worst
+                proj_med = shared + n * med
+                entry[env["id"]] = {
+                    "n_games": n,
+                    "projected_peak_gib_if_every_game_is_worst_case": round(proj_worst / 1024.0, 2),
+                    "projected_peak_gib_at_median_per_game": round(proj_med / 1024.0, 2),
+                    "fraction_of_host_ram_worst": round(proj_worst / host_mib, 3),
+                    "fraction_of_host_ram_median": round(proj_med / host_mib, 3),
+                    "verdict": (
+                        "FITS at worst case"
+                        if proj_worst <= host_mib
+                        else (
+                            "MARGINAL: fits at the median per-game cost, over at worst case"
+                            if proj_med <= host_mib
+                            else "OVER even at the median per-game cost"
+                        )
+                    ),
+                }
+            per_budget_mem[str(b)] = entry
+        budgets_mem = sorted(int(k) for k in per_budget_mem)
+        safe = {
+            env["id"]: max(
+                [
+                    b
+                    for b in budgets_mem
+                    if per_budget_mem[str(b)][env["id"]]["verdict"] == "FITS at worst case"
+                ],
+                default=None,
+            )
+            for env in ENVELOPES
+        }
+        memory_envelope = {
+            "measured": True,
+            "method": (
+                "one clean process per (game, budget); every module run_cell imports lazily is "
+                "imported EAGERLY before the baseline snapshot, so the baseline is the SHARED term "
+                "and the delta is the PER-THREAD term (env + policy + retained graph)"
+            ),
+            "probe_script": "scripts/arc_budget_memory_probe.py",
+            "probe_rows_source": str(Path(a.memory_rows).resolve()),
+            "n_probe_cells": len(mem_rows),
+            # The probe's own machine time, recorded so the artifact accounts for ALL the compute it
+            # rests on rather than only the sweep's.
+            "probe_total_cell_compute_s": round(sum(m.get("wall_s") or 0.0 for m in mem_rows), 1),
+            "shared_libs_rss_mib_median": round(shared, 1),
+            "host_ram_gib_assumed": a.host_ram_gib,
+            "host_ram_is_UNCONFIRMED": (
+                "The 16 GiB figure in the requirements note refers to VRAM, not host RAM. The real "
+                "host RAM of the ARC-AGI-3 instance pool is NOT confirmed, and it is what decides "
+                "whether the marginal budgets below are safe. Confirm before acting on this."
+            ),
+            "per_budget": per_budget_mem,
+            "largest_budget_that_FITS_at_worst_case_per_envelope": safe,
+            "why_it_binds_first": memory_envelope["why_it_binds_first"],
+            "measurement_defect_this_replaces": (
+                "A prior version reported memory as 'NOT measured here' with a cited ESTIMATE near "
+                "6.6 GiB, while recommending the largest measured budget. The estimate turns out to "
+                "have been for the SHIPPED budget; at the largest measured budget the projection is "
+                "several times larger."
+            ),
+        }
+    memory_envelope["nodes_with_frame_by_budget_for_extrapolation"] = {
+        str(b): {
+            "median": statistics.median(
+                [cell(b, s, g).get("nodes_with_frame") or 0 for s, g in complete_pairs]
+            ),
+            "max": max([cell(b, s, g).get("nodes_with_frame") or 0 for s, g in complete_pairs]),
+        }
+        for b in budgets
+    }
+
+    # =========================================================================================
+    # STEP 4 -- THE EFFICIENCY / SCORE AXIS, RESOLVED AGAINST THE INSTALLED SCORER.
+    #
+    # THE DEFECT THIS REPLACES (found by adversarial review 2026-07-26, and it INVERTED the
+    # recommendation). The previous version of this block computed the score two ways -- the
+    # harness's own metric, and a "pessimistic total-action charge" that assumed the gateway might
+    # charge a completed level for EVERY action the game ever took -- then reported that the two
+    # "DISAGREE IN SIGN" and that the charging rule was "NOT resolvable locally". All three parts
+    # were wrong:
+    #
+    #   1. IT IS RESOLVABLE LOCALLY. `arc_agi.scorecard` is installed in the very venv this analyser
+    #      runs in, and `EnvironmentScoreCalculator.add_level(actions_taken=...)` takes PER-LEVEL
+    #      actions. The authoritative card->score path (scorecard.py:474-491) DIFFERENCES successive
+    #      level checkpoints (`level_actions = actions_at_level - prev_actions`) and assigns the
+    #      trailing tail to the FIRST INCOMPLETE level -- which is byte-for-byte what
+    #      `arc_leaderboard_eval.run_game` already does (arc_leaderboard_eval.py:296-317). The
+    #      "total-action charge" was not a second reading of an ambiguous spec; it CONTRADICTED the
+    #      shipped implementation.
+    #   2. IT IS EMPIRICALLY FALSE. `authoritative_scorer_resolution` below DRIVES the installed
+    #      scorer to show that actions charged to an incomplete level are score-IRRELEVANT: the same
+    #      solve scores identically whether the tail is 10 actions or 100,000.
+    #   3. IT USED A RETRACTED FORMULA. The pessimistic model recovered a human baseline as
+    #      sqrt(eff)*atfl, which presumes `eff` is `min(human/agent,1)^2`. A 2026-06-20 adversarial
+    #      review already caught that formula as wrong on three counts; the real per-level score is
+    #      `min((baseline/actions)^2 * 100, 115)` and the per-GAME score is an INDEX-WEIGHTED mean
+    #      over ALL levels, clamped by `max_score` (see `max_score_clamp` below).
+    #
+    # So the efficiency axis is now derived SOLELY from the authoritative scorer, and the omitted
+    # `max_score` clamp -- the term that makes solving MORE levels the dominant lever -- is computed
+    # explicitly rather than left out.
     # =========================================================================================
     eff = {
         "why": (
-            "SUBMITTED_EARLY_STOP_GRACE is None (disabled) and SUBMITTED_TARGET_LEVELS is 3, so a "
-            "game that wins L1 and then stalls keeps stepping to the budget. The scored metric is "
-            "quadratic in actions, so a 5x budget raise can cost up to 25x on the efficiency term "
-            "of a game it ALREADY WINS."
+            "A win count is not the scored quantity. The scored quantity is the authoritative "
+            "per-game score from arc_agi.scorecard, which `arc_leaderboard_eval.run_game` already "
+            "computes into every row's `efficiency` field by driving the installed calculator. This "
+            "block reports how that score moves with budget, and separates the two levers inside it "
+            "(per-level action efficiency, and the max_score clamp set by how many levels are "
+            "solved)."
         ),
-        "harness_metric_caveat": (
-            "arc_leaderboard_eval charges the post-solve tail to the trailing INCOMPLETE level, "
-            "which scores 0 either way -- so THIS harness's `efficiency` is structurally blind to "
-            "the tail. That is why a pessimistic bound is computed below rather than trusting it."
+        "harness_metric_is_authoritative": (
+            "`efficiency` is NOT a harness-local approximation. arc_leaderboard_eval.py:296-317 "
+            "drives arc_agi.scorecard.EnvironmentScoreCalculator with the same level-differencing "
+            "as scorecard.py:474-491 and returns `calc.to_score().score`, so the field IS the "
+            "leaderboard's own per-game score for that run. It is reported here without a competing "
+            "model."
         ),
         "per_budget": {},
         "regressions_vs_400": {},
     }
+    # THE LOCAL RESOLUTION, COMPUTED NOT ASSERTED. Driving the installed scorer is what turns
+    # "the charging rule is unresolved" into a measured fact, so it is done here in the analyser
+    # rather than described in prose.
+    eff["authoritative_scorer_resolution"] = _resolve_charging_rule()
+    eff["max_score_clamp"] = _max_score_clamp_table()
+    # BUDGET-EXHAUSTION COVERAGE. Reported because it is the load-bearing premise behind ANY claim
+    # about post-solve tails: if the agent stopped early, there is no tail to argue about. Measured
+    # as a FRACTION of the budget consumed rather than an equality test, because the run stops a few
+    # actions short of the cap (resets are counted separately from stepped actions).
+    eff["premise_coverage_budget_exhaustion"] = {}
+    for b in budgets:
+        fracs = [
+            (cell(b, s, g).get("actions") or 0) / b
+            for s, g in complete_pairs
+            if cell(b, s, g).get("actions") is not None
+        ]
+        eff["premise_coverage_budget_exhaustion"][str(b)] = {
+            "n_cells": len(fracs),
+            "n_cells_at_or_above_95pct_of_budget": sum(1 for x in fracs if x >= 0.95),
+            "n_cells_below_90pct_of_budget": sum(1 for x in fracs if x < 0.90),
+            "fraction_of_budget_used_median": round(statistics.median(fracs), 4) if fracs else None,
+            "fraction_of_budget_used_min": round(min(fracs), 4) if fracs else None,
+        }
+    eff["premise_coverage_budget_exhaustion"]["principle"] = (
+        "SUBMITTED_EARLY_STOP_GRACE is None, so nothing cuts a run after a solve and essentially "
+        "every cell runs to the cap. That premise is what made the retired 'total-action charge' "
+        "model's arithmetic reduce to the identity (b_ref/b)^2 -- the model carried no information "
+        "beyond the budget ratio. The premise itself is real and measured here; the model built on "
+        "it was not."
+    )
     for b in budgets:
         vals = [
             cell(b, s, g)["efficiency"]
@@ -764,81 +1218,98 @@ def main(argv) -> int:
                 round(statistics.median(won_eff), 5) if won_eff else None
             ),
         }
-    # THE DECISION-RELEVANT NUMBER. A win count is not the scored quantity; the scored quantity is
-    # a sum of per-level min(human/agent, 1)^2 terms. Whether raising the budget RAISES or LOWERS
-    # that sum depends on an unresolved question: does the gateway charge actions-to-the-level, or
-    # total actions at game end? Both are computed so the disagreement is visible.
-    #   OPTIMISTIC  = this harness's own metric (charges actions-to-level; the post-solve tail lands
-    #                 on the trailing INCOMPLETE level, which scores 0 either way).
-    #   PESSIMISTIC = charge TOTAL actions to the completed level. human_actions is recovered as
-    #                 sqrt(eff) * actions_to_first_levelup, so the term becomes
-    #                 eff * (atfl / total_actions)^2. Exact for single-completed-level cells; for
-    #                 multi-level cells it is a LOWER bound (it charges the whole game's actions to
-    #                 the first level), and the count of such cells is reported.
-    eff["scored_sum_under_both_charge_models"] = {}
+    # THE DECISION-RELEVANT NUMBER, from the authoritative scorer only. Summed over matched cells so
+    # a budget's score total is comparable to another's on the SAME cell set.
+    eff["scored_sum_authoritative"] = {}
     for b in budgets:
-        opt = pess = 0.0
+        tot = 0.0
         n_single = n_multi = 0
         for s, g in complete_pairs:
             r = cell(b, s, g)
             if (r.get("levels") or 0) <= 0:
                 continue
-            e0 = r.get("efficiency") or 0.0
-            opt += e0
-            atfl, act = r.get("actions_to_first_levelup"), r.get("actions")
-            if atfl and act:
-                pess += e0 * (atfl / act) ** 2
-                if (r.get("levels") or 0) == 1:
-                    n_single += 1
-                else:
-                    n_multi += 1
+            tot += r.get("efficiency") or 0.0
+            if (r.get("levels") or 0) == 1:
+                n_single += 1
             else:
-                pess += e0
-        eff["scored_sum_under_both_charge_models"][str(b)] = {
-            "optimistic_sum_actions_to_level": round(opt, 5),
-            "pessimistic_sum_total_action_charge_LOWER_BOUND": round(pess, 5),
+                n_multi += 1
+        eff["scored_sum_authoritative"][str(b)] = {
+            "authoritative_score_sum_over_won_cells": round(tot, 5),
             "n_won_cells": n_single + n_multi,
-            "n_single_level_cells_exact": n_single,
-            "n_multi_level_cells_lower_bound_only": n_multi,
+            "n_single_level_cells": n_single,
+            "n_multi_level_cells": n_multi,
         }
-    base = eff["scored_sum_under_both_charge_models"].get("400")
+    base = eff["scored_sum_authoritative"].get("400")
     if base:
-        for v in eff["scored_sum_under_both_charge_models"].values():
-            v["optimistic_vs_b400_ratio"] = (
-                round(
-                    v["optimistic_sum_actions_to_level"] / base["optimistic_sum_actions_to_level"],
-                    4,
-                )
-                if base["optimistic_sum_actions_to_level"]
-                else None
+        ref = base["authoritative_score_sum_over_won_cells"]
+        for v in eff["scored_sum_authoritative"].values():
+            v["vs_b400_ratio"] = (
+                round(v["authoritative_score_sum_over_won_cells"] / ref, 4) if ref else None
             )
-            v["pessimistic_vs_b400_ratio"] = (
-                round(
-                    v["pessimistic_sum_total_action_charge_LOWER_BOUND"]
-                    / base["pessimistic_sum_total_action_charge_LOWER_BOUND"],
-                    4,
-                )
-                if base["pessimistic_sum_total_action_charge_LOWER_BOUND"]
-                else None
-            )
+        # WHERE THE SCORE GAIN COMES FROM, AND WHY IT IS SMALL. The win count triples while the
+        # score barely moves, because a newly-won cell is won LATE (hundreds to thousands of actions
+        # against human baselines of tens), so its per-level term is a rounding error against the
+        # clamp. Reporting only the win count would overstate the leaderboard benefit ~150x.
+        newly = [
+            (s, g)
+            for s, g in complete_pairs
+            if (cell(budgets[-1], s, g).get("levels") or 0) > 0
+            and (cell(400, s, g).get("levels") or 0) == 0
+        ]
+        new_scores = [cell(budgets[-1], s, g).get("efficiency") or 0.0 for s, g in newly]
+        new_atfl = [
+            cell(budgets[-1], s, g).get("actions_to_first_levelup")
+            for s, g in newly
+            if cell(budgets[-1], s, g).get("actions_to_first_levelup")
+        ]
+        eff["newly_won_cells_score_contribution"] = {
+            "reference_budget": 400,
+            "compared_budget": budgets[-1],
+            "n_newly_won_cells": len(newly),
+            "summed_authoritative_score_of_newly_won_cells": round(sum(new_scores), 5),
+            "mean_authoritative_score_per_newly_won_cell": (
+                round(sum(new_scores) / len(new_scores), 5) if new_scores else None
+            ),
+            "actions_to_first_levelup_of_newly_won_cells": {
+                "min": min(new_atfl) if new_atfl else None,
+                "median": statistics.median(new_atfl) if new_atfl else None,
+                "max": max(new_atfl) if new_atfl else None,
+            },
+            "principle": (
+                "A newly-won cell contributes its own per-level score, and that score is tiny "
+                "because the win arrives hundreds-to-thousands of actions in against human "
+                "baselines of tens. The win COUNT and the SCORE therefore move by very different "
+                "factors, and only the score is on the leaderboard."
+            ),
+        }
         eff["scored_sum_verdict"] = (
-            "The two charge models DISAGREE IN SIGN about whether raising the budget helps the "
-            "SCORE, even though they agree that it raises the WIN COUNT. Under the "
-            "actions-to-level "
-            "charge the sum rises; under the total-action charge it falls, because already-won "
-            "games "
-            "keep stepping to the new budget (SUBMITTED_EARLY_STOP_GRACE is None, so nothing cuts "
-            "the post-solve tail) and the term is quadratic. Which model the gateway uses is NOT "
-            "resolvable locally, so a budget raise MUST NOT be recommended on the win count alone. "
-            "Enabling the early-stop grace removes the disagreement, because it removes the tail."
+            "Raising the budget is score-POSITIVE, monotonically, on the authoritative metric -- "
+            "there is no sign disagreement to adjudicate, because the 'total-action charge' the "
+            "prior version of this analysis weighed against it contradicts the installed scorer "
+            "(see authoritative_scorer_resolution). But the gain is SMALL where the win count's gain "
+            "is large: the score sum rises "
+            f"{ref:.4f} -> "
+            f"{eff['scored_sum_authoritative'][str(budgets[-1])]['authoritative_score_sum_over_won_cells']:.4f}"
+            f" ({eff['scored_sum_authoritative'][str(budgets[-1])]['vs_b400_ratio']}x) while won "
+            f"cells go {base['n_won_cells']} -> "
+            f"{eff['scored_sum_authoritative'][str(budgets[-1])]['n_won_cells']}. Reporting the win "
+            "count as the benefit would overstate the leaderboard effect by roughly two orders of "
+            "magnitude. This is a PUBLIC-set figure: the public corpus already contains fast wins "
+            "that dilute the ratio, and the hidden set (where the shipped budget wins little) has no "
+            "such dilution, so the RELATIVE gain there is unmeasured and could be larger while the "
+            "absolute per-win contribution stays this small."
         )
 
     if 400 in budgets:
         for b in budgets:
             if b == 400:
                 continue
+            # MATCHED per-cell comparison on the AUTHORITATIVE score: same game, same seed, won at
+            # BOTH budgets, so no cell-set difference can explain a change. `actions_to_first_levelup`
+            # is carried alongside because it is the quantity the scorer actually charges, and it is
+            # the direct test of whether a bigger budget makes an already-won game slower.
             worse, better, same = [], [], []
-            pess_worse = []
+            atfl_same = atfl_worse = atfl_better = 0
             for s, g in complete_pairs:
                 r4, rb = cell(400, s, g), cell(b, s, g)
                 if (r4["levels"] or 0) <= 0 or (rb["levels"] or 0) <= 0:
@@ -847,49 +1318,31 @@ def main(argv) -> int:
                 (worse if eb < e4 - 1e-9 else (better if eb > e4 + 1e-9 else same)).append(
                     f"{g}/s{s}"
                 )
-                # PESSIMISTIC BOUND: if the gateway charged TOTAL actions at game end to the
-                # completed level instead of actions-to-that-level, the term becomes
-                # eff * (atfl/total_actions)^2. Derivable exactly only for single-level cells.
-                if (r4["levels"] or 0) == 1 and (rb["levels"] or 0) == 1:
-                    a4, ab = r4.get("actions_to_first_levelup"), rb.get("actions_to_first_levelup")
-                    if a4 and ab and r4.get("actions") and rb.get("actions"):
-                        p4 = e4 * (a4 / r4["actions"]) ** 2
-                        pb = eb * (ab / rb["actions"]) ** 2
-                        if pb < p4 - 1e-12:
-                            pess_worse.append(
-                                {
-                                    "cell": f"{g}/s{s}",
-                                    "pessimistic_eff_b400": round(p4, 8),
-                                    f"pessimistic_eff_b{b}": round(pb, 8),
-                                    "ratio": round(pb / p4, 5) if p4 else None,
-                                }
-                            )
-            # The MATCHED per-cell pessimistic ratio is the cleanest form of this evidence: same
-            # game, same seed, single completed level at BOTH budgets, so no cell-set difference can
-            # explain the change. The summed version above mixes exact and lower-bound cells whose
-            # membership shifts with budget; this one does not.
-            ratios = [x["ratio"] for x in pess_worse if x.get("ratio")]
-            all_ratios = ratios
+                a4, ab = r4.get("actions_to_first_levelup"), rb.get("actions_to_first_levelup")
+                if a4 and ab:
+                    if ab == a4:
+                        atfl_same += 1
+                    elif ab > a4:
+                        atfl_worse += 1
+                    else:
+                        atfl_better += 1
             eff["regressions_vs_400"][str(b)] = {
-                "MATCHED_pessimistic_ratio_median": (
-                    round(statistics.median(all_ratios), 5) if all_ratios else None
-                ),
-                "MATCHED_pessimistic_ratio_min": round(min(all_ratios), 5) if all_ratios else None,
-                "MATCHED_pessimistic_ratio_n_cells": len(all_ratios),
-                "MATCHED_pessimistic_fold_loss_median": (
-                    round(1.0 / statistics.median(all_ratios), 1) if all_ratios else None
-                ),
                 "n_cells_won_at_both": len(worse) + len(better) + len(same),
-                "harness_metric_worse": worse,
-                "harness_metric_better": better,
-                "harness_metric_unchanged": same,
-                "harness_metric_n_worse": len(worse),
-                "PESSIMISTIC_total_action_charge_worse": pess_worse,
-                "PESSIMISTIC_n_worse": len(pess_worse),
-                "pessimistic_derivation": (
-                    "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the "
-                    "term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only "
-                    "for single-completed-level cells; those are the ones reported."
+                "authoritative_score_worse": worse,
+                "authoritative_score_better": better,
+                "authoritative_score_unchanged": same,
+                "authoritative_score_n_worse": len(worse),
+                # THE PREMISE THE RETIRED PESSIMISTIC MODEL RESTED ON, measured directly. If a bigger
+                # budget made an already-won game reach its first level-up later, THAT would be a
+                # real scored regression. It does not.
+                "actions_to_first_levelup_identical_cells": atfl_same,
+                "actions_to_first_levelup_later_cells": atfl_worse,
+                "actions_to_first_levelup_earlier_cells": atfl_better,
+                "principle": (
+                    "The scorer charges a completed level the actions BETWEEN level-ups, so the only "
+                    "way a raised budget can cost score on a game it already won is by reaching that "
+                    "level-up later. Counting cells where it happens is the direct measurement; a "
+                    "modelled bound is not needed and the one previously reported here was unsound."
                 ),
             }
 
@@ -1000,11 +1453,34 @@ def main(argv) -> int:
         if sat is not None
         else f"no_saturation_within_measured_grid_b{lo_b}_to_b{hi_b}"
     )
+    #
+    # TWO CLAIMS WERE STRUCK FROM THIS STRING after adversarial review 2026-07-26, both because they
+    # contradicted the artifact's own measured numbers:
+    #   * `scored_efficiency_term_degrades_quadratically` -- the authoritative score sum RISES
+    #     monotonically with budget, and the quadratic loss existed only under a total-action charge
+    #     model that contradicts the installed scorer (see efficiency_axis).
+    #   * `wall_clock_never_binding` -- LLM-OFF wall never binds, but the LLM-ON mechanistic model
+    #     binds above budget 400 under the tightest envelope, and MEMORY binds before either.
+    # The replacements are computed from the measured numbers so they cannot drift from them.
+    score_lo = eff["scored_sum_authoritative"][str(400 if 400 in budgets else lo_b)][
+        "authoritative_score_sum_over_won_cells"
+    ]
+    score_hi = eff["scored_sum_authoritative"][str(hi_b)]["authoritative_score_sum_over_won_cells"]
+    mem_safe_c = (
+        memory_envelope.get("largest_budget_that_FITS_at_worst_case_per_envelope", {}) or {}
+    ).get("C_110games_12h")
+    mem_phrase = (
+        f"memory_binds_first_largest_worst_case_safe_budget_b{mem_safe_c}"
+        if mem_safe_c is not None
+        else "memory_envelope_NOT_measured"
+    )
     verdict = (
         f"complete_budget_sweep_measured_wins_median_{w_lo}_at_b{lo_b}_to_{w_hi}_at_b{best_b}_"
         f"over_{len(games)}_games_{len(seeds)}_seeds_per_seed_matched_llm_off_"
-        f"{sat_phrase}_wall_clock_never_binding_but_scored_efficiency_term_"
-        f"degrades_quadratically_time_axis_recorded_no_flag_changed"
+        f"{sat_phrase}_authoritative_score_sum_ROSE_{score_lo}_to_{score_hi}_"
+        f"llm_off_wall_never_binding_but_llm_on_model_binds_above_b"
+        f"{crossing['llm_on_band']['B_110games_8h']['largest_budget_that_fits']}_under_the_8h_"
+        f"envelope_and_{mem_phrase}_time_and_memory_axes_recorded_no_flag_changed"
     )
 
     artifact = {
@@ -1215,6 +1691,7 @@ def main(argv) -> int:
         "marginal_return_per_step": steps,
         "saturation": saturation,
         "crossing_point": crossing,
+        "memory_envelope": memory_envelope,
         "efficiency_axis": eff,
         "wall_clock_contention_control": contention,
         "prior_budget_points_cited_not_rederived": PRIOR_BUDGET_POINTS,
@@ -1253,11 +1730,12 @@ def main(argv) -> int:
         },
         "what_this_sweep_does_NOT_measure": {
             "the_scored_LLM_ON_condition_at_raised_budget": (
-                "UNMEASURED. Every LLM-on scored row in the record is budget 400, so the "
-                "per-action "
-                "component of LLM-on cost is unidentified. The llm_on_band section reports a BAND "
-                "between two attributions rather than a number. ONE LLM-on run at a raised budget "
-                "resolves it and is the cheapest decisive next measurement."
+                "NOT DIRECTLY MEASURED. Every LLM-on scored row in the record is budget 400. It is "
+                "now MODELLED rather than bracketed by a factor-of-10 band: llm_on_band fits "
+                "cost = llm_off(b) + inductions(b) * s_per_induction using the induction_attempts "
+                "already recorded on every row, calibrated to the measured b400 anchor. ONE LLM-on "
+                "run at b1000 or b2000 would replace the model with a direct anchor and remains the "
+                "cheapest decisive next measurement."
             ),
             "hidden_game_cost_and_difficulty": (
                 "These are the 25 PUBLIC games with their per-game GameAdapters available. The "
@@ -1266,13 +1744,14 @@ def main(argv) -> int:
                 "measurement, and it is the single largest source of error in the crossing point."
             ),
             "whether_the_gateway_scores_actions_to_level_or_total_actions": (
-                "UNRESOLVED and it decides whether a raise HELPS or HURTS. This harness's "
-                "efficiency metric charges the post-solve tail to the trailing INCOMPLETE level, "
-                "which scores 0 either way, so it is structurally blind to the tail. The "
-                "2026-06-21 audit asserts the opposite -- that the tail 'quadratically erodes' the "
-                "score. The efficiency_axis section reports BOTH the harness metric and a "
-                "pessimistic total-action-charge bound so the disagreement is visible rather than "
-                "resolved by assumption."
+                "RESOLVED, and a prior version of this artifact wrongly listed it here as "
+                "unresolvable. arc_agi.scorecard is INSTALLED in the analysis venv; its card->score "
+                "path differences successive level checkpoints and assigns the tail to the first "
+                "INCOMPLETE level, which scores 0. Driving it directly (see "
+                "efficiency_axis.authoritative_scorer_resolution) shows the same solve scores "
+                "identically with a 10-action tail and a 100,000-action tail. The 2026-06-21 audit's "
+                "'tail quadratically erodes the score' claim does not survive contact with the "
+                "shipped implementation and should be corrected wherever it is cited."
             ),
             "the_10_steps_per_second_gateway_rate": (
                 "UNVERIFIED. It appears only in this project's own requirements note and is marked "
@@ -1282,11 +1761,11 @@ def main(argv) -> int:
                 "2000-action game has a 200-second pure-latency floor before any agent compute."
             ),
             "memory_at_110_concurrent_games": (
-                "NOT measured here (this sweep runs one game per process at a time). The framework "
-                "materialises every retained frame as a Python list-of-lists and Swarm starts one "
-                "thread per game, so retained-frame memory scales with budget x games on a 16GB "
-                "Kaggle instance. A prior estimate put it near 6.6 GiB at 110 threads at the "
-                "node counts a 2000-action budget produces."
+                "NOW MEASURED, not estimated -- see the memory_envelope section, which is the "
+                "constraint that binds FIRST. What remains unmeasured is (a) the target instance's "
+                "real HOST RAM (the 16 GiB in the requirements note is a VRAM figure) and (b) whether "
+                "hidden games retain graphs like public ones. Both are needed before the memory "
+                "ceiling can be treated as exact."
             ),
             "the_competition_s_own_framework_copy": (
                 "The framework proven against is the local clone at /home/ianblenke/arc3_agents. "
@@ -1298,6 +1777,41 @@ def main(argv) -> int:
         "headline": {
             "wins_median_by_budget": wins_med,
             "best_measured_budget": best_b,
+            # THE SCORE, ALONGSIDE THE WIN COUNT, because they move by very different factors and
+            # only one of them is on the leaderboard. Reporting the win count alone overstates the
+            # benefit by roughly two orders of magnitude on this corpus.
+            "authoritative_score_sum_by_budget": {
+                str(b): eff["scored_sum_authoritative"][str(b)][
+                    "authoritative_score_sum_over_won_cells"
+                ]
+                for b in budgets
+            },
+            "won_cells_by_budget": {
+                str(b): eff["scored_sum_authoritative"][str(b)]["n_won_cells"] for b in budgets
+            },
+            "win_count_vs_score_divergence": (
+                f"won cells x{round(eff['scored_sum_authoritative'][str(hi_b)]['n_won_cells'] / max(1, eff['scored_sum_authoritative'][str(400 if 400 in budgets else lo_b)]['n_won_cells']), 2)} "
+                f"but authoritative score x{eff['scored_sum_authoritative'][str(hi_b)]['vs_b400_ratio']}"
+            ),
+            # GAME-LEVEL p-values. The cell-level values are within-game replicate counts and must
+            # not be quoted as the design's significance (see the clustering note on each step).
+            "HEADLINE_game_level_sign_test_p_two_sided_by_step": {
+                f"{s['from_budget']}->{s['to_budget']}": s[
+                    "HEADLINE_sign_test_on_GAMES_both_tails"
+                ]["p_two_sided"]
+                for s in steps
+            },
+            "cell_level_sign_test_p_NOT_INDEPENDENT_by_step": {
+                f"{s['from_budget']}->{s['to_budget']}": s[
+                    "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent"
+                ]["p_two_sided"]
+                for s in steps
+            },
+            "n_distinct_games_that_moved_by_step": {
+                f"{s['from_budget']}->{s['to_budget']}": len(s["games_gained"])
+                + len(s["games_lost"])
+                for s in steps
+            },
             "wall_total_s_25_games_by_budget": {
                 str(b): per_budget[str(b)]["wall_total_s_median"] for b in budgets
             },
@@ -1309,29 +1823,50 @@ def main(argv) -> int:
                 f"{s['from_budget']}->{s['to_budget']}": s["seconds_per_extra_win_median"]
                 for s in steps
             },
+            # Ordered by which constraint actually bites first. A prior version headlined
+            # "not wall clock -> the step rate is the bound" and demoted memory to an untested
+            # residual; memory is measured now and it is the tightest of the four.
             "BINDING_CONSTRAINT": {
-                "not_wall_clock": (
-                    "The wall-clock curve does NOT cross ANY envelope model inside the measured "
-                    "grid. At the tightest model (110 games / 8h) the largest measured budget "
-                    "costs "
-                    f"{tight_frac:.1%} "
-                    "of the usable loop wall. The analytic crossing sits in the tens of thousands "
-                    "of actions per game, an order of magnitude above anything worth running."
+                "1_memory_binds_FIRST": (
+                    (
+                        "MEASURED. Every game is a concurrent thread in one process, so retained "
+                        "search graphs multiply by the game count. Largest budget that fits at "
+                        "worst case, 110 games, "
+                        f"{memory_envelope.get('host_ram_gib_assumed')} GiB host: b"
+                        f"{(memory_envelope.get('largest_budget_that_FITS_at_worst_case_per_envelope') or {}).get('C_110games_12h')}"
+                        ". The host-RAM figure itself is UNCONFIRMED, so this ceiling is the number "
+                        "most worth pinning down before acting."
+                    )
+                    if memory_envelope.get("measured")
+                    else "NOT MEASURED in this pass -- rerun with --memory-rows."
                 ),
-                "the_actual_binding_bound": (
+                "2_llm_on_wall_clock_binds_CONDITIONALLY": (
+                    "LLM-OFF wall never crosses any envelope inside the measured grid (at the "
+                    f"tightest model the largest measured budget costs {tight_frac:.1%} of usable "
+                    "wall). But the scored submission runs the LLM, and the mechanistic LLM-on model "
+                    "fits only to b"
+                    f"{crossing['llm_on_band']['B_110games_8h']['largest_budget_that_fits']} under "
+                    "the 8h envelope versus b"
+                    f"{crossing['llm_on_band']['C_110games_12h']['largest_budget_that_fits']} under "
+                    "the code-verified 12h envelope. So 'wall clock never binds' is TRUE only of the "
+                    "LLM-off condition, which is not the scored one."
+                ),
+                "3_the_gateway_step_rate_if_it_is_real": (
                     "the DOCUMENTED-BUT-UNCONFIRMED gateway step rate: 10 steps/sec over an 8h "
                     "play "
                     f"cap = ~{int(STEP_RATE_TOTAL):,} global real steps = "
-                    f"{int(STEP_RATE_TOTAL / 110):,} actions/game at ~110 hidden games. That, not "
-                    "compute, is what caps the budget -- and it is a figure this project's own "
-                    "requirements doc marks unconfirmed for 2026 and that cannot be checked "
-                    "locally."
+                    f"{int(STEP_RATE_TOTAL / 110):,} actions/game at ~110 hidden games. A figure "
+                    "this project's own requirements doc marks unconfirmed for 2026 and that cannot "
+                    "be checked locally."
                 ),
-                "and_the_scoring_bound": (
-                    "Independently of both: the SCORED metric is quadratic in actions and the "
-                    "post-solve tail-cutter is disabled, so the budget that maximises WINS is not "
-                    "the budget that maximises SCORE under one of the two live interpretations of "
-                    "how the gateway charges actions. See efficiency_axis."
+                "4_the_scoring_axis_is_NOT_a_constraint": (
+                    "CORRECTED. A prior version listed a quadratic scoring penalty here. The "
+                    "authoritative scorer charges a completed level only the actions BETWEEN "
+                    "level-ups, so the post-solve tail is free, and the measured authoritative score "
+                    f"sum RISES {score_lo} -> {score_hi} across the budget range with zero cells "
+                    "regressing. The score axis therefore does not oppose a raise -- it just gains "
+                    "far less than the win count implies (see "
+                    "efficiency_axis.newly_won_cells_score_contribution)."
                 ),
             },
         },

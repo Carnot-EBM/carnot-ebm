@@ -17902,3 +17902,95 @@ with its named confound rather than as a boolean assertion.
 mechanism's own result (even when no reference positive control ran, since the HUD gate compares
 against a matched control measured in the same run), and the 25-game mask-delta table is
 persisted in the artifact.
+
+### REQ-ARC-WMTE-5981: The Budget-Sweep Score Axis Is Derived From The Installed Scorer, Tested At The Game Unit, And Bounded By A Measured Memory Envelope
+
+**Origin.** The 2026-07-26 adversarial review of `results/outer_loop_scored_path_budget_sweep_20260726.json`
+found that the artifact's decision-relevant conclusion was INVERTED. The analyser asserted that the
+gateway's action-charging rule was "NOT resolvable locally", reported two charge models that
+"DISAGREE IN SIGN", and stamped
+`honest_verdict: ..._scored_efficiency_term_degrades_quadratically`. An operator reading that report
+would have LOWERED the action budget. The data say the opposite: the authoritative score rises
+monotonically with budget. Three further defects rode alongside it — an omitted `max_score` clamp,
+sign tests run on a pseudo-replicated unit, and a memory constraint left as an estimate while being
+the constraint that binds first.
+
+This requirement fixes the MEASUREMENT MACHINERY, not a research direction. It changes no shipped
+flag and no submitted configuration.
+
+**Why each clause exists.** Each is a specific published-number defect, not a general principle.
+
+1. **THE SCORE AXIS IS DERIVED FROM THE INSTALLED SCORER.** `arc_agi.scorecard` ships in the analysis
+   venv. `EnvironmentScorecard._calculate_score` (scorecard.py:474-491) DIFFERENCES successive
+   level-up checkpoints and assigns the trailing tail to the first INCOMPLETE level, which scores
+   0.0 — which is byte-for-byte what `arc_leaderboard_eval.run_game` already drives into every row's
+   `efficiency` field. The charging rule is therefore a two-line local experiment, not an open
+   question, and a "total-action charge" model that charges a COMPLETED level for the whole game's
+   actions contradicts the shipped implementation rather than competing with it.
+2. **THE `max_score` CLAMP IS PART OF THE SCORE.** `to_score` (scorecard.py:192-206) applies
+   `score = min(index_weighted_mean_of_level_scores, max_score)` where
+   `max_score = (index-weighted fraction of levels SOLVED) * 100`. Omitting it lets the score axis be
+   read as a pure per-level efficiency trade-off. Because the clamp is a CEILING (a `min`), depth is
+   the dominant lever only at EQUAL per-level speed; depth bought by grinding — which is what a
+   raised action budget buys — can score BELOW a fast shallow solve.
+3. **THE HEADLINE SIGN TEST IS ON THE GAME.** Three seeds of one game share that game's adapter,
+   mechanics and win condition, so they are REPLICATES. The inferential target is a hidden game, i.e.
+   a fresh draw from the game distribution, so the game is the unit of generalization and a
+   cell-level test inflates significance by 1-2 orders of magnitude.
+4. **MEMORY IS AN ENVELOPE, NOT A RESIDUAL.** The framework's `Swarm.main()` constructs one agent and
+   one Thread per game and starts EVERY thread before joining any, so retained per-game search graphs
+   are concurrent. Exceeding host RAM is a hard failure, whereas exceeding a wall-clock budget
+   degrades into fewer games played, so the memory ceiling must be measured and projected as
+   `shared_libs_rss + n_games * per_game_retained_delta` rather than cited as an estimate.
+5. **THE LLM-ON PROJECTION USES THE IDENTIFYING VARIABLE THAT WAS ALREADY RECORDED.** Bracketing
+   LLM-on cost between "fixed per game" and "proportional to budget" spans a factor of ~10 for no
+   reason: `induction_attempts` is on every row, LLM cost is inductions x seconds-per-induction, and
+   induction is triggered by novel-observation events rather than by action count.
+
+#### SCENARIO-ARC-WMTE-5981-TAIL-IS-SCORE-IRRELEVANT
+
+**Given** one solved level followed by a tail of unproductive actions
+**When** the installed `EnvironmentScoreCalculator` is driven as the gateway drives it
+**Then** the score is IDENTICAL for a 15-action tail and a 100,000-action tail, the artifact records
+that probe under `efficiency_axis.authoritative_scorer_resolution`, and no total-action charge model
+is emitted as a competing reading.
+
+#### SCENARIO-ARC-WMTE-5981-CLAMP-IS-A-CEILING-NOT-A-FLOOR
+
+**Given** a deep-but-slow solve (4 of 8 levels at 400/900/1500/2200 actions) and a
+shallow-but-fast solve (1 of 8 levels at 15 actions) on the same baselines
+**When** both are scored by the installed scorer
+**Then** the deep-but-slow run scores LOWER, and the artifact states the depth-beats-speed claim
+conditionally (true at equal per-level speed) rather than unconditionally.
+
+#### SCENARIO-ARC-WMTE-5981-GAME-UNIT-TEST-IS-THE-HEADLINE
+
+**Given** a budget step whose gains are spread over fewer distinct GAMES than CELLS
+**When** the step is tested
+**Then** the artifact emits `HEADLINE_sign_test_on_GAMES_both_tails` alongside a cell-level test
+explicitly named as within-game replicates, the headline block quotes the GAME-level p, and a step
+significant at the cell level but not at the game level is reported as not significant.
+
+#### SCENARIO-ARC-WMTE-5981-MEMORY-ENVELOPE-IS-MEASURED
+
+**Given** per-(game, budget) RSS probes taken one clean process at a time, with every lazily-imported
+module imported eagerly before the baseline snapshot
+**When** the envelope is projected to the hidden-set game count
+**Then** the artifact reports the largest budget that FITS at worst case per envelope, labels the
+host-RAM figure as UNCONFIRMED, and the binding-constraint block ranks memory FIRST.
+
+#### SCENARIO-ARC-WMTE-5981-VERDICT-CANNOT-CONTRADICT-THE-MEASUREMENT
+
+**Given** an authoritative score sum that rises monotonically with budget and an LLM-on model that
+exceeds the tightest envelope above the shipped budget
+**When** `honest_verdict` is composed
+**Then** it carries neither `scored_efficiency_term_degrades_quadratically` nor an unqualified
+`wall_clock_never_binding`, and instead states the measured score rise and scopes the wall-clock
+claim to the LLM-OFF condition it was measured in.
+
+#### SCENARIO-ARC-WMTE-5981-NO-FLAG-IS-CHANGED
+
+**Given** any conclusion this requirement's analysis reaches about the action budget
+**When** the work completes
+**Then** `CarnotAgent.MAX_ACTIONS` and every `SUBMITTED_*` flag are unchanged, no submission is made,
+and the artifact records `what_was_NOT_changed` — the decision is the operator's.
