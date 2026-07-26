@@ -20355,3 +20355,164 @@ opened
 claims are mechanically rejected, replay/tamper controls fail closed, and the
 ready score is `1.0` only when no-leakage, no-enumeration, exact-parity,
 non-pruning, and tamper-safe evidence are complete.
+
+### REQ-VERIFY-5936: SOTA Atomic Support Union Exact-Semantic A/B
+
+The repository SHALL provide Exp5936 at
+`python/carnot/experiment_5936_sota_atomic_support_union_ab.py` and write
+`results/experiment_5936_sota_atomic_support_union_ab.json` plus a chronological
+`.events.jsonl` stream. Exp5936 SHALL replay
+`results/experiment_5935_non_pruning_atomic_constraint_support.json` by exact
+path and hash before model loading and SHALL emit no model rows unless
+`atom_support_fixture_ready_score` is bare `1.0`. The model panel SHALL define
+the three mandated local GGUF families
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; SHALL resolve them through
+`cached_sota_pair()` plus the cached third family; SHALL use only embedded GGUF
+tokenizers through public llama.cpp CUDA; and SHALL fail closed on tokenizer
+drift, GPU fallback, protected workload, missing dual RTX 3090/VRAM/RAM/disk,
+atomic checkpoint/resume failure, label leakage, model-side hard pruning, or
+unsafe exact acceptance.
+
+Before opening model output or exact relevance labels, Exp5936 SHALL freeze at
+least 36 shared held cases per model, held families, attribute/value
+adversaries, model-visible prompts, semantic transformed views, inverse maps,
+seeds, arm order, call/token/temperature budgets, exact validators,
+deterministic completion bounds, retirement rules, stopping rules, and the
+paired interval method. The four arms SHALL be: A direct one-shot ConstraintIR;
+B one-call original-view atomic support; C three-call repeated-original atomic
+union; and D three-call original/paraphrase/entity-permutation atomic union.
+C and D SHALL have identical call, token, and temperature budgets; A and B are
+reported only as cost baselines.
+
+For atomic arms, Exp5936 SHALL accept overcomplete legal hypotheses, record
+per-atom provenance and rank, and SHALL NOT pass hidden references, exact
+diagnostics, label feedback, schema reprompts, complete answer enumerations, or
+model confidence masks back to a model. No legal proposed atom may be dropped
+before that arm's union is sealed. After each arm is sealed, Exp5936 SHALL run
+exactly one deterministic bounded exact completion and report parse/type/scope,
+included relevant/irrelevant atoms, excluded relevant/irrelevant atoms, exact
+semantics, missing and spurious constraints, contradictions, unsafe acceptance,
+correct-mode diversity, support saturation, search expansions, whether search
+changed correctness, calls, tokens, latency, and GPU telemetry.
+
+The primary comparison SHALL be transformed-view union D versus matched
+repeated-original union C on held exact semantic success, with a preregistered
+paired interval. Structural validity, atom recall, and search effort SHALL NOT
+substitute for exact semantic success. Exp5936 SHALL retire the mechanism if
+all three models again have zero exact semantic success in D, or if D fails to
+improve semantic coverage over C while adding material cost or unsafe behavior.
+`chronological_event_stream_ready_score` SHALL be bare `1.0` only for a
+complete, hash-chained, real-model chronology. `atomic_semantic_live_ready_score`
+SHALL be bare `1.0` only when D beats C by a positive lower paired bound, has
+zero unsafe accepts, has no material correct-mode collapse, satisfies all
+no-leakage/no-pruning receipts, and avoids every retirement condition.
+
+The terminal artifact MUST include `status`, `gate_replay_receipt`,
+`preconditions_checked`, `model_specs`, `model_file_hashes`,
+`embedded_tokenizer_public_llama_cpp_cuda_dual_gpu_and_vram_receipts`,
+`sealed_cases_families_adversaries_prompts_transforms_seeds_arms_and_budgets`,
+`per_model_arm_atom_and_exact_metrics`,
+`transformed_vs_repeated_original_primary_comparison_and_interval`,
+`direct_and_single_view_secondary_comparisons`,
+`included_and_excluded_relevant_atom_counts`,
+`exact_semantic_missing_spurious_contradiction_and_unsafe_receipts`,
+`correct_mode_diversity_and_support_saturation`,
+`search_correctness_change_vs_cleanup_receipt`,
+`calls_tokens_latency_gpu_and_memory_accounting`,
+`chronological_event_stream_path_hash_rows_and_prefix_chain`,
+`chronological_event_stream_ready_score`,
+`no_label_feedback_no_hard_pruning_no_schema_reprompt_and_no_answer_enumeration_receipt`,
+`retirement_decision`, `protected_files_unchanged`,
+`atomic_semantic_live_ready_score`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `gate_replay_receipt`: only exact Exp5935 readiness authorizes model loading.
+- `preconditions_checked`, `model_specs`, `model_file_hashes`, and
+  `embedded_tokenizer_public_llama_cpp_cuda_dual_gpu_and_vram_receipts`: every
+  headline row uses a mandated hashed GGUF with its embedded tokenizer and real
+  local CUDA offload.
+- `sealed_cases_families_adversaries_prompts_transforms_seeds_arms_and_budgets`:
+  the complete design is frozen before output or exact labels are opened.
+- `per_model_arm_atom_and_exact_metrics` and
+  `transformed_vs_repeated_original_primary_comparison_and_interval`: D versus
+  matched C owns the transformation claim; models are reported separately and
+  pooled only with provenance.
+- `direct_and_single_view_secondary_comparisons`: cheaper A/B arms remain cost
+  baselines and cannot be called budget-matched to D.
+- `included_and_excluded_relevant_atom_counts` and
+  `exact_semantic_missing_spurious_contradiction_and_unsafe_receipts`: audit
+  omissions and exact outcomes separately; zero unsafe acceptance is mandatory.
+- `correct_mode_diversity_and_support_saturation` and
+  `search_correctness_change_vs_cleanup_receipt`: distinguish recovered
+  reachability from repeated-invalid-work cleanup and report overcomplete
+  support cost.
+- `calls_tokens_latency_gpu_and_memory_accounting`: include all view-generation
+  and exact-completion costs, not only the winning arm's final call.
+- `chronological_event_stream_path_hash_rows_and_prefix_chain` and
+  `chronological_event_stream_ready_score`: bare `1.0` means complete
+  tamper-safe real chronology even when the scientific result is null.
+- `no_label_feedback_no_hard_pruning_no_schema_reprompt_and_no_answer_enumeration_receipt`:
+  any violation invalidates the experiment and overlaps retired scope.
+- `retirement_decision`, `protected_files_unchanged`, and
+  `atomic_semantic_live_ready_score`: emit bare `1.0` only for D beating C by a
+  positive lower paired bound, zero unsafe accepts, no material correct-mode
+  collapse, and no retirement condition.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+  `test_exit_codes`, and `reproducibility_checksum`: use
+  `local_mandated_gguf_public_llama_cpp_cuda_atomic_support_union`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: exact fixture
+  execution/certificates are oracle only inside the sealed synthetic domains;
+  ambiguity gaps are listed explicitly.
+- `honest_verdict`: use `complete_positive:`, `complete_null:`, `retired:`, or
+  `blocked:`.
+
+### SCENARIO-VERIFY-5936-GATE: Exp5935 Readiness Gates Model Rows
+
+**Given** the Exp5935 artifact is missing, hash-mismatched, invalid, or lacks
+bare `atom_support_fixture_ready_score==1.0`
+**When** Exp5936 starts
+**Then** it writes a terminal blocked artifact, records the gate replay
+receipt, leaves the chronological event stream empty, and does not call the
+model-output collector.
+
+### SCENARIO-VERIFY-5936-PREREG: Paired Atomic Union Design Is Frozen
+
+**Given** Exp5935 is ready and all local runtime preconditions pass
+**When** Exp5936 preregisters the run
+**Then** at least 36 shared held cases per model, held families,
+attribute/value adversaries, prompts, transforms, inverse maps, seeds, arm
+order, budgets, exact validators, completion bounds, stopping rules,
+retirement rules, and paired interval method are present before any model
+proposal row is sealed.
+
+### SCENARIO-VERIFY-5936-UNION: Atomic Arms Seal Before Exact Labels
+
+**Given** model-visible atomic proposal rows from arms B, C, and D
+**When** Exp5936 seals each arm
+**Then** overcomplete legal atoms retain provenance/rank, no legal proposed atom
+is hard-pruned before union sealing, hidden references and exact diagnostics are
+absent from prompts/proposals, excluded-pool labels are opened only after seal,
+and exactly one bounded exact completion is run for that arm.
+
+### SCENARIO-VERIFY-5936-PRIMARY: Transformed View Union Owns The Claim
+
+**Given** complete paired rows for all three mandated models
+**When** Exp5936 aggregates exact outcomes
+**Then** transformed-view union D is compared against matched repeated-original
+union C with a paired interval on held exact semantic success, A/B are reported
+as secondary cost baselines, and structural validity or atom recall cannot set
+`atomic_semantic_live_ready_score`.
+
+### SCENARIO-VERIFY-5936-EVENTS: Chronology Replays And Tamper Fails
+
+**Given** Exp5936 has written its chronological event stream
+**When** the event stream is replayed by prefix checksum
+**Then** all rows validate in chronological order, event identities include
+model/case/family/split/arm/view details, visible prompt/proposal hashes, sealed
+support, exact completion, post-seal omitted/spurious labels, GPU receipt, and
+prefix checksums, and any row tampering breaks replay.
