@@ -199,20 +199,30 @@ def llm_row_is_valid(r: dict) -> bool:
     server records zero completions or fails the post-cell health check. A global process count
     measures other processes, not this cell.
 
-    So the criterion is: the generator answered this cell (>=1 real completion) and was healthy on
-    BOTH sides of it. The raw counts stay in the row and the disagreement with the harness's stamp is
-    reported, so nothing is hidden.
+    THE CRITERION, AND WHY `generator_healthy_before` IS NOT PART OF IT. A first draft required
+    health on BOTH sides and was measured to be WRONG in the other direction: the `S_llmon` cell on
+    tn36 -- the single most decision-relevant cell in the whole LLM-on design, because it is the
+    control for the game where the frontier lever changes the outcome -- has
+    `generator_healthy_before: False` (the server happened to be inside a systemd restart when the
+    cell began) yet returned SIX completions totalling 15,514 predicted tokens with
+    `generator_healthy_after: True`. The LLM provably ran. Excluding that cell would have deleted
+    the control for the only game that discriminates, purely because of when the cell started.
+
+    What actually needs establishing is that the generator SERVED this cell:
+      * `responses > 0` -- real completions, counted from llama.cpp's own `timings` block in each
+        response rather than estimated, so this cannot be satisfied without the server answering;
+      * `generator_healthy_after` -- the server was alive when the cell ended, so the completions
+        were not the truncated output of a dying server and the rest of the cell did not silently
+        run LLM-off.
+    Health BEFORE the cell says only whether the first induction attempt might have failed; it says
+    nothing about whether the LLM ran. It stays in the row as diagnostics.
     """
     if not r.get("ran"):
         return False
     if not r.get("llm_enabled"):
         return True  # an LLM-off row makes no LLM claim to invalidate
     llm = r.get("llm") or {}
-    return bool(
-        int(llm.get("responses") or 0) > 0
-        and r.get("generator_healthy_before")
-        and r.get("generator_healthy_after")
-    )
+    return bool(int(llm.get("responses") or 0) > 0 and r.get("generator_healthy_after"))
 
 
 def analyse(rows: list[dict]) -> dict[str, Any]:

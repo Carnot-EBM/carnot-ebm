@@ -20236,3 +20236,122 @@ correct-mode diversity against the best control
 **Then** `schema_decode_live_ready_score` is `0.0`, the honest verdict starts
 with `retired:` or `complete_null:`, and the retirement decision does not
 schedule another repair or reprompt.
+
+### REQ-VERIFY-5935: Non-Pruning Atomic ConstraintIR Support Fixture
+
+The repository SHALL provide Exp5935 at
+`python/carnot/experiment_5935_non_pruning_atomic_constraint_support.py` and
+write `results/experiment_5935_non_pruning_atomic_constraint_support.json`
+without invoking an LLM, schema reprompting, Hugging Face tokenizers, GGUF
+generation, or complete-answer token enumeration. Exp5935 SHALL replay and
+hash the immutable Exp5908, Exp5921, Exp5922, and Exp5923 upstream artifacts,
+the Exp5908 row stream, the exact Python/Z3 ConstraintIR authorities, relevant
+OpenSpec files, exclusions, output paths, and protected files before emitting a
+ready result.
+
+Exp5935 SHALL define a versioned generic atom schema over ConstraintIR
+declarations, typed relations, comparisons, domains, cardinalities, and
+compositions. Legal atom shapes SHALL be derived mechanically from the public
+operation/type schema emitted by Exp5921, not from per-case answers, solution
+identifiers, hidden-reference token lists, or final query bindings. For each
+sealed held fixture case, Exp5935 SHALL derive a model-visible legal atom
+vocabulary from public entities, domains, predicates, and types, and separately
+derive a hidden exact reference atom set from the fixture IR. The artifact
+SHALL hash both paths, report their separation, and SHALL NOT place hidden
+reference labels into prompts, candidate vocabularies, semantic transforms,
+token supports, or model-visible proposal rows.
+
+Exp5935 SHALL implement a non-pruning candidate-support protocol: proposal
+views may rank atoms and may include overcomplete, duplicate, spurious,
+contradictory, or invalid atoms, but they SHALL NOT irreversibly hard-delete a
+legal atom before the multi-view union is sealed. Deterministic paraphrase and
+entity-permutation views SHALL be meaning-preserving, invertible, and
+independent of model output; inverse receipts SHALL prove exact reference
+invariance and no answer leakage.
+
+Exp5935 SHALL implement bounded exact subset completion over the sealed union.
+Acceptance SHALL be owned only by exact ConstraintIR reconstruction, Python/Z3
+agreement, and certificate replay against the fixture semantics. Injected
+missing atoms, spurious atoms, contradictions, duplicates, type/scope failures,
+empty supports, support saturation, and candidate-order permutations SHALL be
+reported. Search SHALL recover injected cases only when all true required atoms
+remain in the sealed support; it SHALL NOT receive credit for manufacturing a
+required atom that was deleted upstream.
+
+Exp5935 SHALL preregister included and excluded atom-pool strata before labels
+are opened. Hidden exact reference labels MAY be used only after pool freezing
+to audit atom relevance in both admitted and omitted pools. Accepted-pool-only
+recall claims SHALL be mechanically rejected because omitted positives can
+exist only in the excluded pool. The terminal artifact MUST include `status`,
+`preconditions_checked`, `immutable_upstream_hashes`,
+`atom_schema_version_and_hash`, `generic_atom_universe_contract`,
+`model_visible_vs_hidden_reference_separation`,
+`non_pruning_support_contract`,
+`semantic_view_transforms_and_inverse_receipts`,
+`exact_completion_contract_and_bounds`, `python_z3_certificate_parity`,
+`injected_omission_spurious_contradiction_and_order_matrix`,
+`included_and_excluded_pool_contract`,
+`label_secrecy_and_no_complete_answer_enumeration_receipt`,
+`search_reachability_and_inertness_receipt`,
+`held_family_and_adversary_manifest`, `replay_and_tamper_matrix`,
+`protected_files_unchanged`, `atom_support_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `preconditions_checked` and `immutable_upstream_hashes`: readiness requires exact replay of immutable structural and verifier inputs.
+- `atom_schema_version_and_hash` and `generic_atom_universe_contract`: legal atoms derive from public type/operation schemas, never per-case answers.
+- `model_visible_vs_hidden_reference_separation` and `label_secrecy_and_no_complete_answer_enumeration_receipt`: hidden exact labels cannot enter prompts, candidate vocabularies, transforms, or token supports.
+- `non_pruning_support_contract` and `search_reachability_and_inertness_receipt`: ranking is allowed, irreversible pre-union deletion is not; exact search cannot receive credit for unreachable truth.
+- `semantic_view_transforms_and_inverse_receipts`: transforms are deterministic, meaning-preserving, invertible, and output-independent.
+- `exact_completion_contract_and_bounds` and `python_z3_certificate_parity`: bounded exact execution with cross-backend agreement is the only semantic authority.
+- `injected_omission_spurious_contradiction_and_order_matrix` and `included_and_excluded_pool_contract`: audit both admitted and omitted atoms under frozen strata and reject accepted-only recall.
+- `held_family_and_adversary_manifest` and `replay_and_tamper_matrix`: held splits, adversaries, checksums, and rejection behavior are sealed before later model rows.
+- `protected_files_unchanged` and `atom_support_fixture_ready_score`: emit bare `1.0` only for complete no-leakage, no-enumeration, exact-parity, non-pruning, and tamper-safe evidence.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: use `deterministic_exact_executor_fixture_no_llm`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: true only for the synthetic fixture's exact semantics, with natural-language ambiguity gaps listed explicitly.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-5935-ATOM-UNIVERSE: Legal Atoms Are Generic And Leak-Free
+
+**Given** the Exp5921 public operation/type schema and the sealed Exp5896 held
+families
+**When** Exp5935 derives atom shapes, model-visible vocabularies, and hidden
+reference atom-set hashes
+**Then** the generic atom universe covers declarations, typed relations,
+comparisons, domains, cardinalities, and compositions, contains no complete
+answer payloads, and keeps model-visible vocabulary bytes separate from hidden
+reference labels.
+
+### SCENARIO-VERIFY-5935-NON-PRUNING: View Union Preserves Legal Hypotheses
+
+**Given** deterministic paraphrase and entity-permutation proposal views with
+duplicates, spurious atoms, contradictions, invalid atoms, omitted required
+atoms, empty supports, support saturation, and candidate-order permutations
+**When** Exp5935 seals the multi-view union
+**Then** every legal pre-union atom remains reachable, invalid atoms are
+reported rather than silently accepted, ranking never hard-deletes legal atoms,
+and inverse transform receipts prove semantic invariance without inspecting
+model output.
+
+### SCENARIO-VERIFY-5935-EXACT-COMPLETION: Search Cannot Invent Deleted Truth
+
+**Given** a sealed atom union and the hidden exact fixture reference labels
+**When** Exp5935 runs bounded subset completion through exact ConstraintIR
+reconstruction, Python evaluation, Z3 evaluation, and certificate replay
+**Then** completion succeeds for overcomplete supports that retain all required
+atoms, rejects type/scope and contradictory supports as needed, is invariant to
+candidate order, stops at declared bounds for saturated supports, and fails
+missing-required-atom cases without crediting search for unreachable truth.
+
+### SCENARIO-VERIFY-5935-POOLS: Excluded Pool Audit Owns Recall Claims
+
+**Given** included and excluded atom-pool strata frozen before labels are
+opened
+**When** Exp5935 labels atom relevance from the hidden exact reference set
+**Then** both admitted and omitted pools are audited, accepted-pool-only recall
+claims are mechanically rejected, replay/tamper controls fail closed, and the
+ready score is `1.0` only when no-leakage, no-enumeration, exact-parity,
+non-pruning, and tamper-safe evidence are complete.
