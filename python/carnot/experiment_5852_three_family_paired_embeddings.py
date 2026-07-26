@@ -451,7 +451,17 @@ class LlamaCppOutputFreeEmbeddingBackend(
         self.model_spec = dict(model_spec)
         self.config = dict(config)
 
-    def load(self) -> JsonDict:
+    # LSP note (typed 2026-07-26): this class has two masters. It INHERITS
+    # Gemma4QuantizedLoader, whose `load()` returns bool, and it must also satisfy this
+    # module's `EmbeddingBackend` Protocol, whose `load()` returns the loader RECEIPT dict
+    # that the artifact records as its GPU-offload evidence. The two signatures cannot both
+    # be honoured by one method, so the Protocol wins (the receipt is load-bearing for
+    # fabrication detection -- an artifact claiming live GGUF inference has to carry the
+    # observed device assignment) and the base-class widening is suppressed narrowly here
+    # rather than by loosening Gemma4QuantizedLoader's own contract, which many other call
+    # sites depend on. Behaviourally benign: a non-empty dict is truthy, so any caller that
+    # treated the result as the base class's success bool still reads success correctly.
+    def load(self) -> JsonDict:  # type: ignore[override]
         from llama_cpp import LLAMA_POOLING_TYPE_LAST, Llama, __version__ as llama_cpp_version
 
         before = _gpu_devices()

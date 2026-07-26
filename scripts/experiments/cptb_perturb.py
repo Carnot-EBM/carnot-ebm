@@ -89,6 +89,7 @@ def _roll_k_of_code(code: int) -> int | None:
         return c - REFLECT_DIAG_ROLL_K_BASE
     return None
 
+
 _N_COLORS = 16
 _SALIENT = frozenset(range(6, 16))  # must match arc_graph_explore._TIER_SALIENT_COLORS
 

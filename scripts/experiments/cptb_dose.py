@@ -32,7 +32,7 @@ sys.path.insert(0, str(REPO / "python"))
 sys.path.insert(0, str(REPO / "scripts"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import cptb_perturb as P  # noqa: E402
+import cptb_perturb as P  # noqa: E402, N812
 
 
 def _tiers(grid):
@@ -112,7 +112,8 @@ def main() -> int:
         # winnable", which the single-magnitude design conflated.
         c3 = {
             f"C3_roll_k{k}": vg.transform_frame_grid(
-                base, g, P.VARIANT_IDENTITY_COLOR, reflect=P.reflect_code_for_roll_k(k))
+                base, g, P.VARIANT_IDENTITY_COLOR, reflect=P.reflect_code_for_roll_k(k)
+            )
             for k in (1, 2)
         }
 
@@ -122,9 +123,7 @@ def main() -> int:
             "game": g,
             "palette": palettes[g],
             "salience_map_pairs": [
-                [int(a), int(P._MAPS[g][a])]
-                for a in palettes[g]
-                if int(P._MAPS[g][a]) != int(a)
+                [int(a), int(P._MAPS[g][a])] for a in palettes[g] if int(P._MAPS[g][a]) != int(a)
             ],
             "n_components": len(t0),
             "baseline_hud_mask_cells": (len(m0) if m0 is not None else None),

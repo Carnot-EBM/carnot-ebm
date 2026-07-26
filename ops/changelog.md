@@ -1,5 +1,97 @@
 # Carnot — Changelog
 
+## 2026-07-26 (adversarial-review repairs to the convention-perturbation transfer battery — one FATAL claim withdrawn)
+
+- User instruction: apply a 6-finding adversarial review of the convention-perturbation transfer
+  battery (the entry immediately below this one); fix real defects, say so with evidence where a
+  finding is wrong, and where a finding shows the measurement is uninformative either FIX the
+  measurement or state plainly that the result cannot support the claim. All six findings
+  reproduced exactly against the raw cells; **none was wrong**. The entry below is NOT edited (per
+  the never-prune rule) — the corrections are recorded here and in the rebuilt artifact.
+- **FATAL, and the claim is WITHDRAWN: the HUD lever's headline verdict was not a measurement.**
+  `cptb_analyze.py` computed the pass-region witness only at C0 and then attached it to every gate
+  for that contrast, including gates SCORED at C1/C2 — a witness for a different condition than
+  the one being judged. So `hud_given_frontier_on|C2_diag_roll` certified "my pass region is
+  non-empty" with 5 r11l cells measured at C0, while at C2 r11l and tn36 (the only two games the
+  HUD lever has ever moved) are won by **no arm on any seed**, leaving **zero** discriminating
+  games and an undefined sign test. `perturbed_median_gain = 0` was arithmetically FORCED. All
+  three preconditions read green and the gate reported `evaluable: true`,
+  `reason_if_not_evaluable: null`, while the confound was disclosed only three levels deep in
+  prose that `summarize_artifact.py` does not print. This is the exp5835 defect (a gate whose
+  verdict was predetermined) in a new location. FIXED: the witness is computed PER CONDITION; a
+  fourth precondition `anchor_support_still_live_under_perturbation` fails when every arm has lost
+  the anchor's games; the gate now reports `UNINTERPRETABLE_ANCHOR_SUPPORT_DEAD`; and the HUD
+  lever's headline is `NOT_DECIDABLE_BY_THIS_DESIGN`. The honest_verdict changed accordingly, from
+  `..._hud_gain_does_not_survive` to `..._hud_not_decidable_by_this_design`.
+- **THE REVIEW'S SUGGESTED REPAIR WAS BUILT, MEASURED, AND ANSWERS THE QUESTION NEGATIVELY.** The
+  review asked for a milder geometric condition so edge-adjacency could be attacked without razing
+  the corpus. `cptb_perturb` now takes a roll MAGNITUDE (sentinels 910+k) and a targeted 5-seed
+  dose-response probe was run on both HUD support games at k=1 and k=2. Result: **no magnitude of
+  this transform can decide the question.** The Stage-1 predicate is `y1 < EDGE_BAR_EDGE_TOLERANCE`
+  with tolerance 2, and r11l's mask is a single 64-cell row at index 0 — so at k=1 the convention
+  still HOLDS (y1: 0 -> 1 < 2), the detector still fires (mask resolves, on 160 cells rather than
+  64), and HUD-alone still wins r11l on 5/5 seeds. The first magnitude that violates the convention
+  is k=2, and at k=2 r11l is won by no arm. tn36's mask already fails at k=1, and tn36 is likewise
+  won by no arm at k=1. Convention-breakage and task-destruction are inseparable inside the roll
+  family. What a decidable perturbation needs is named in the artifact: move the bar >= tolerance
+  cells off its edge while preserving object contiguity — a row-strip SWAP, not a whole-grid wrap.
+  Not implemented; the HUD lever's convention-dependence stays OPEN.
+- **The headline retention number overstated its precision.** `+4 -> +3 games (retention 0.75)` was
+  presented as a measured degradation. It is a ratio of two 5-seed medians on a difference of one
+  game; the paired per-seed deltas are [-1, -1, -1, -2, +1] and the one-sided sign test for a
+  decline gives p = 0.1875 — fully consistent with NO degradation. The SURVIVAL claim is robust
+  (positive on 5/5 seeds, min +2, and 5 games to 0 against on the game unit, exact p = 0.031) and
+  stands. The degradation reading is withdrawn; every retention entry now carries its paired
+  deltas, its sign test, and an explicit "not resolved at this n" flag.
+- **The frontier lever's SHIPPED-configuration contrast was missing from the headline.** The
+  headline gate is the flip-time configuration (HUD off), which is legitimate and documented — but
+  the operator's decision is about what ships. In the shipped configuration (HUD on) the same
+  lever's marginal gain is median 3 -> 1 (retention 0.333), per-seed [1, 2, 1, 0, 2] — one seed at
+  zero, so per-seed dominance is NOT strict — and it loses r11l and tn36 on every seed. Both
+  contrasts are now surfaced at the same level (`acceptance_gate_shipped_configuration_marginal_per_lever`),
+  and the headline states both.
+- **Zero statistical inference anywhere in the artifact; the HUD anchor is indistinguishable from
+  zero on the correct unit.** The artifact's own jackknife principle names the GAME as the
+  replication unit (a hidden game is a fresh draw), so exact one-sided sign tests now run on games
+  for every contrast x condition: frontier|HUD-off at C0 is 5/0, p = 0.031 (clears); the SHIPPED
+  frontier contrast is 5/1, p = 0.109 (does not); HUD|frontier-off is 2/0, p = 0.25; and the
+  shipped HUD claim is 1 game to 0, p = 0.5 — a single-game support **cannot** clear 0.05 at any
+  seed count, which is now stamped `UNDERPOWERED_SINGLE_GAME_SUPPORT`. Separately, CTRL and HUDO
+  are MEASURED deterministic (0 of 75 game-condition cells vary across seeds), so
+  `hud_given_frontier_off`'s "strict dominance on 5 seeds" is one observation repeated five times;
+  contrasts now report `n_seed_replicates_effective` (1 for that pair, not 5). `cptb_arms.py`
+  already carried the `deterministic` flag and the gates were not using it.
+- **The design had a dose FLOOR but no dose CEILING.** Measured: the k=3 roll takes the pre-flip
+  control from 7 wins to 1 (86% of its capability) and the games no arm can win from 11/25 to
+  18/25, so any lever with a two-game support is auto-falsified there regardless of mechanism.
+  `dose_ceiling_witness` is now first-class per condition, `DOSE_SATURATED` is stamped when the
+  control loses more than half its C0 wins (and appended to the verdict token so it cannot read as
+  a clean statement), and the gained-set Jaccard against C0 sits next to every retention ratio —
+  the frontier lever's "retention 1.0" at C2 is on a gained set overlapping C0's by Jaccard 0.2
+  (only ft09 shared), i.e. a similarly-sized gain on DIFFERENT games. `cptb_perturb.roll_grid`'s
+  docstring claim that the roll is "a milder mechanic perturbation than reflection" is withdrawn in
+  place, with the measurement that contradicts it.
+- **The budget-sweep reclassification rested on ONE seed while the claim it overturned rested on
+  five — and it has now been re-run and HOLDS.** New measurement: tn36 at budget 8000 on all 5
+  seeds — the shipped config wins 5/5 (5337, 5327, 5405, 5528, 5843 actions) against HUD-alone's
+  1506 on 5/5, so the cost ratio is 3.54–3.88x (median 3.59), reported as a RANGE with its n
+  instead of the single-cell "~3.5x". r11l under salience inversion re-run on all 5 seeds at budgets
+  8000 and 16000: HUD-alone wins 5/5 at 1068 actions, the shipped config is 0/5 at both — so the
+  CAPABILITY loss now holds at 8x budget on 5 seeds, not 1-2. Every sweep bucket in the artifact is
+  now DERIVED from the rows with `n_seeds` attached, never hand-transcribed.
+- Also tightened: `SURVIVES_CONVENTION_VIOLATION` now requires strict per-seed dominance (it
+  previously admitted a seed at exactly zero); the headline CONDITION is selected by a rule stated
+  in advance (smallest-magnitude on-target EVALUABLE condition — selection on answerability, never
+  on the answer) and the rule plus its candidate list is recorded; provenance's dirty-file list is
+  derived from `git status` instead of hardcoded; `duration_s` now has a breakdown separating the
+  1500 battery cells from the sweep/probe cells.
+- NO flag was flipped; still a measurement task. Net effect on the two shipped levers: the FRONTIER
+  lever's convention-robustness claim survives review (with its degradation claim withdrawn and its
+  shipped-config contrast now disclosed); the HUD lever's is UNDECIDED and this battery cannot
+  decide it. Artifact: `results/outer_loop_cptb_shipped_lever_convention_transfer_20260726.json`
+  (adversarial_verify: 0 flagged; summarize_artifact: live re-check clean, exit 0). New raw rows:
+  5-seed budget sweeps + the roll-magnitude dose-response probe in `results/cptb_20260726_cells/`.
+
 ## 2026-07-26 (convention-perturbation transfer battery for the two levers flipped ON 2026-07-25)
 
 - User instruction: the two levers flipped ON 2026-07-25 (frontier tier discipline; HUD edge-bar

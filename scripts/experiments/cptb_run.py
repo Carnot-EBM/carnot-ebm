@@ -27,7 +27,7 @@ sys.path.insert(0, str(REPO / "python"))
 sys.path.insert(0, str(REPO / "scripts"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import cptb_perturb as P  # noqa: E402
+import cptb_perturb as P  # noqa: E402, N812
 from cptb_arms import CPTB_ARMS  # noqa: E402
 
 # (label, variant, reflect)
@@ -75,12 +75,10 @@ def main(argv=None) -> int:
     ap.add_argument("--conditions", default="")
     args = ap.parse_args(argv)
 
-    import carnot.experiment_5836_frontier_discipline_ab as H
+    import carnot.experiment_5836_frontier_discipline_ab as H  # noqa: N812
 
     games = (
-        tuple(g.strip() for g in args.games.split(",") if g.strip())
-        if args.games
-        else H.ALL_GAMES
+        tuple(g.strip() for g in args.games.split(",") if g.strip()) if args.games else H.ALL_GAMES
     )
     conds = [c for c in CONDITIONS if not args.conditions or c[0] in args.conditions.split(",")]
 
@@ -92,8 +90,11 @@ def main(argv=None) -> int:
     # ARMS[arm]["kwargs"], so this is how the new arms reach the constructor.  The existing
     # arms are left untouched so nothing already recorded changes meaning.
     for name, spec in CPTB_ARMS.items():
-        H.ARMS[name] = {"label": spec["label"], "kwargs": dict(spec["kwargs"]),
-                        "deterministic": spec["deterministic"]}
+        H.ARMS[name] = {
+            "label": spec["label"],
+            "kwargs": dict(spec["kwargs"]),
+            "deterministic": spec["deterministic"],
+        }
 
     seeds = [BASE_SEED + i for i in range(max(1, args.seeds))]
     out = Path(args.out)
@@ -109,13 +110,23 @@ def main(argv=None) -> int:
                         t0 = time.time()
                         try:
                             row = H.run_cell(
-                                arm, game, budget=args.budget, seed=seed,
-                                variant=variant, reflect=reflect,
+                                arm,
+                                game,
+                                budget=args.budget,
+                                seed=seed,
+                                variant=variant,
+                                reflect=reflect,
                             )
                         except Exception as exc:  # pragma: no cover - attributed to its arm
-                            row = {"arm": arm, "game": game, "seed": seed, "ran": False,
-                                   "reason": f"HARNESS:{type(exc).__name__}:{exc}", "errors": 1,
-                                   "states_expanded": None}
+                            row = {
+                                "arm": arm,
+                                "game": game,
+                                "seed": seed,
+                                "ran": False,
+                                "reason": f"HARNESS:{type(exc).__name__}:{exc}",
+                                "errors": 1,
+                                "states_expanded": None,
+                            }
                         row["condition"] = cond_label
                         row["variant"] = variant
                         row["reflect"] = reflect
