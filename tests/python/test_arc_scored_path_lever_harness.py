@@ -20,6 +20,8 @@ import importlib.util
 from pathlib import Path
 from types import ModuleType
 
+import pytest
+
 _HARNESS = Path(__file__).resolve().parents[2] / "scripts" / "arc_scored_path_lever_harness.py"
 
 
@@ -47,10 +49,21 @@ def test_every_harness_arm_pins_every_gated_flag():
         assert set(kwargs) == keys, f"arm {name} does not pin exactly the gated set"
 
 
+@pytest.mark.memory_watchdog_skip
 def test_the_control_arm_is_the_live_configuration():
     """Pinning keeps an ARM stable; only this check tells you whether the arm named "S" is still the
     LIVE config. If a SUBMITTED_* flag is flipped and nobody updates the harness, "S" silently stops
-    being the control -- and every delta measured against it becomes a two-lever delta."""
+    being the control -- and every delta measured against it becomes a two-lever delta.
+
+    MARKED `memory_watchdog_skip` because this is the only test here that imports
+    `carnot.agentic.arc_competition_agent` (via `assert_shipped_dict_matches_module_globals`, which
+    must read the LIVE `SUBMITTED_*` globals -- reading them from anywhere else would defeat the
+    check's entire purpose). That import allocates ~580MB one time, which trips the conftest's 500MB
+    per-test leak threshold at TEARDOWN. It is a module-import cost, not a leak, and the marker is
+    the project's established escape hatch for exactly this case (used by ~30 other agent-importing
+    tests). Without it this test reports an ERROR alongside its PASS, which is precisely the kind of
+    always-red signal that trains a reader to ignore the suite.
+    """
 
     m = _harness()
     parity = m.assert_shipped_dict_matches_module_globals()

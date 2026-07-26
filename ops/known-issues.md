@@ -4,6 +4,64 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-26 (outer-loop, OPEN): MAX_ACTIONS may be worth more than every lever under study combined — and the frontier lever's direction REVERSES with it
+
+**Status:** OPEN, and it is the largest single measured lever on the board. Raised by an adversarial
+review of the scored-path lever A/B and then MEASURED. Not a code defect; a scoping question the
+project has never asked.
+
+**The measurement (`results/outer_loop_scored_path_lever_ab_llm_on_20260726.json`, all 25 public
+games x 5 arms x 3 seeds, `E3AgentPolicy`, LLM off, budget 400 vs budget 2000, 750 cells total):**
+
+| condition | shipped wins / 25 | frontier removed | HUD removed | hazard added |
+|---|---|---|---|---|
+| budget 400  | 3-4 (varies by seed) | 5 | 3-4 | 3-4 |
+| budget 2000 | **11** (identical on 3/3 seeds) | 9 | 9 | 11 |
+
+Raising the per-game action budget from 400 to 2000 is worth roughly **+7 games**. Every lever under
+study is worth 0-2. `MAX_ACTIONS = 400` in `arc_competition_agent.py` is a **self-imposed loop
+guard**, not an eval-imposed bound — the comment directly above it says the real bound is the eval's
+<=12h wall clock across all games and that the constant is an INTENDED OVERRIDE POINT (Playback
+already sets it to 1e6). The measured LLM-off cost is 11.1s/cell median at budget 2000 (vs 3.7s at
+budget 400; 375 cells in 7998s wall), so a 25-game LLM-off sweep is minutes,
+not hours; the binding constraint on the SCORED path is the LLM (median 227s/cell at budget 400,
+~7.9h projected for 25 games x 1 seed x 5 arms serial), not the action count.
+
+**Why this is filed as a priority rather than acted on:** raising `MAX_ACTIONS` trades wall clock for
+levels, and the eval's 12h budget is shared across all games — so the correct value is a
+*wall-clock-constrained optimisation*, and nobody has measured the LLM-on wall clock at budget 2000.
+That is the concrete next experiment: the scored path (LLM ON) at budget 2000 on the games where
+budget-2000 LLM-off gains a win (dc22, ft09, s5i5, su15, lf52, r11l, cd82), to find out whether the
+per-game wall clock still fits 25 games inside 12h. Until that is measured, do NOT raise the flag.
+
+**The second, immediately actionable consequence: the frontier lever's direction REVERSES with the
+budget, so no single-budget result may recommend a flag change.** At budget 400 removing the shipped
+frontier trio gains lp85+tn36 and loses cd82 (2 for / 1 against, exact one-sided sign test p=0.5, and
+the support's p-FLOOR is 0.125 so it could not have cleared 0.05). At budget 2000 removing it gains
+sc25+tn36 and loses **cd82, dc22, ft09, s5i5** — 2 for / 4 against, the mirror test giving p=0.344.
+An earlier draft of that artifact recommended UN-FLIPPING the shipped trio on the budget-400 result
+alone. **That recommendation is WITHDRAWN** (see ops/changelog.md 2026-07-26): it is contradicted at
+the larger budget, it never cleared p<=0.05 on the game unit at either, and CPTB had independently
+measured the frontier lever's main effect as POSITIVE at 5 games to 0, p=0.031. The analyser now
+computes `budget_direction_agreement_per_lever` and refuses any flag advice from a single budget.
+
+**Also newly measurable, and it moves the HUD question forward slightly:** at budget 400 the HUD
+edge-bar trio was `UNINTERPRETABLE_EMPTY_PASS_REGION` — no game it moved was won by either arm, so its
+contribution was arithmetically forced. At budget 2000 removing it **loses r11l and tu93 and gains
+nothing, on 3/3 seeds**: directionally net-positive in the shipped configuration. This does NOT
+resolve the entry below it — a 2-game support has an exact sign-test p-floor of 0.25 and cannot clear
+0.05 at any seed count, exactly as that entry states — but tu93 is a SECOND game the HUD lever now
+demonstrably moves, where previously only r11l was known. The standing requirement is unchanged:
+deciding the HUD lever's value needs MORE GAMES that it move, not more seeds.
+
+**A third gap this measurement exposes and does not close: the scored (LLM-ON) design is one seed.**
+`noise_floor_control_across_seeds` is therefore `not_measurable` there, so no LLM-ON win delta may be
+called larger than the seed-to-seed movement it generalises over. The LLM-ON plan channel also opened
+in exactly **1 of 30 rows** (arm `S_minus_frontier_llmon`, lp85, seed 20260724, `level_up_reinduction`)
+and that cell's matched control is the one row excluded as generator-invalid — so the run's
+LLM-inertness claim has a positive control of size one, unpaired. Re-running that single cell with a
+healthy generator is cheap and is the named next step.
+
 ### 2026-07-26 (outer-loop, OPEN): the HUD lever's convention-dependence is UNDECIDED, and the roll-family perturbation provably cannot decide it
 
 **Status:** OPEN, and it is a measurement gap, not a code defect. The convention-perturbation

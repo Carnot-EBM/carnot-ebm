@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (65 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT — `OUTER_LOOP_RE` (and independently `DUPLICATE`); zero new live self-discovery capability.**
+**TL;DR: DUPLICATE — zero new live-agent capability; the artifact is also heavily outer-loop-contaminated.**
 
-### `results/arc_loop_solve_tu93.json`
+`results/arc_loop_solve_tu93.json`
 
-- **Verdict:** `OUTER_LOOP_RE`
-- **Evidence:** The artifact declares `development_proxy`, `standing_arc_loop_offline_no_quota`, and `hand_verifier_cold_start_no_spatial_checkpoint`. The reachable entrypoint selects the hand-registered `_tu93` adapter, whose human-authored model hardcodes `PLAYER=9`, `GOAL=14`, Manhattan goal distance, action semantics, state key, depth caps, and `fresh_env` search behavior. It then performs 4,346 offline best-first expansions and replay-gates the result. There is no live attempt/induction trace and no learned checkpoint. The “selected generic operators” list is metadata, not evidence those operators discovered the solution. Worse, the registry already records `tu93` fully cleared through level 9; this level-4 result is also a `DUPLICATE`.
-- **Recommended action:** Do not bank or report this as an ARC solve advance. Mark it explicitly `honest_verdict: outer_loop_re_duplicate` and declare the hand adapter/verifier as outer-loop inputs. Retain only as a regression/positive-control artifact. Any self-discovery claim must start without the `tu93` adapter or known trajectory and show the live agent deriving its model from its own runtime attempts.
+- **Verdict:** `DUPLICATE`
+- **Evidence:** Claims only level 4, while the registry already records `tu93` through level 9/full clear. Provenance is `development_proxy`; mode is offline; it uses `hand_verifier_cold_start_no_spatial_checkpoint`, expands 4,346 offline states, and provides no live attempt/induction trace or `honest_verdict`. The registry identifies the solver as per-game `GameAdapter _tu93` plus `OfflineSolver`.
+- **Recommended action:** Give no solve credit. Set `honest_verdict=DUPLICATE` and `arc_solve_credited=false`; add a registry precheck preventing emission of ≤L9 as advancement. Retain only as an offline regression fixture.
 
-**Pattern watch:** “Reachable from a live entrypoint” is being used to launder an offline, hand-modeled solver into the live closure. The standing loop explicitly defaults adaptered games to hand verifiers—and even instructs developers to reverse-engineer unadaptered games and register adapters. That is systematic drift toward outer-loop game solving, not hidden-game autonomy.
+**Pattern watch:** Strong drift toward laundering hand-verifier/offline-search output through a live-reachable entrypoint. Reachability is irrelevant when the actual result comes from a per-game adapter and offline exploration. Require agent-owned runtime evidence from first contact before labeling anything self-discovery.
 
