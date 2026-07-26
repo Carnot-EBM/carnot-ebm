@@ -657,8 +657,28 @@ def test_harness_declares_all_six_arms_including_the_uniform_draw_and_the_contro
     # G2 applies a bad mask first and retracts it only after nodes exist under it). Still asserted
     # as an EXACT set for the reason stated above -- a silently-dropped arm is how a control goes
     # missing.
-    assert set(m.ARMS) == {"A", "B", "B2", "B2_nofix", "C", "D", "E", "F", "F1", "G", "G2", "G3"}
+    # H added 2026-07-26 (REQ-ARC-WMTE-5970): the NAV-side hazard move-pruner arm. Unlike every arm
+    # above it sits on G3's flags -- the configuration that actually ships TODAY -- because B2 pins
+    # the HUD trio OFF and has therefore not been the live config since the 2026-07-25 flip. H - G3
+    # isolates the pruner; H - B2 would silently bundle a HUD delta into the pruner's verdict.
+    assert set(m.ARMS) == {
+        "A",
+        "B",
+        "B2",
+        "B2_nofix",
+        "C",
+        "D",
+        "E",
+        "F",
+        "F1",
+        "G",
+        "G2",
+        "G3",
+        "H",
+    }
     assert m.HUD_MASK_FLIP_CANDIDATE_ARMS == ("G3",)
+    assert m.ARMS["H"]["kwargs"]["hazard_move_pruner"] is True
+    assert m.ARMS["G3"]["kwargs"]["hazard_move_pruner"] is False
     assert m.ARMS["G"]["kwargs"]["hud_mask_stage2_confirm"] is False
     assert m.ARMS["G3"]["kwargs"]["hud_mask_stage2_confirm"] is True
     assert m.ARMS["F"]["kwargs"]["click_pixel_sampling"] is True
@@ -1162,7 +1182,7 @@ def test_barrier_never_livelocks_the_decision_loop():
     assert exp._tier_deferrals == 0, "the defensive fail-open path must never have been needed"
 
 
-def test_every_explorer_arm_pins_all_seven_gated_flags():
+def test_every_explorer_arm_pins_all_gated_flags():
     """REQ-ARC-WMTE-5836 / SCENARIO: arm-definition drift cannot silently recontaminate a control.
 
     WHY THIS EXISTS (2026-07-25). An arm that pins only a SUBSET of the gated flags inherits module
@@ -1174,15 +1194,32 @@ def test_every_explorer_arm_pins_all_seven_gated_flags():
     quietly: adding a new gated flag, or a new arm, fails here until every arm pins it explicitly.
 
     Arm E is exempt: it is the just-explore reference shim and constructs no StepwiseExplorer.
+
+    2026-07-26: the gated set grew from 7 to 8 when `hazard_move_pruner` (REQ-ARC-WMTE-5970) was
+    wired into the scored path. This test FAILED on that change, which is the drift guard working as
+    designed -- a new gated flag must be pinned by every arm before the suite goes green again. The
+    count assertion is kept (rather than dropped) so adding a flag can never be done silently; it is
+    now derived from the tuple's own length so the failure message names the drift instead of an
+    off-by-one.
     """
     m = _harness()
-    seven = set(m.GATED_FLAGS)
-    assert len(seven) == 7
+    gated = set(m.GATED_FLAGS)
+    assert len(gated) == len(m.GATED_FLAGS), "GATED_FLAGS must not contain duplicates"
+    assert gated == {
+        "tier_exhaustion",
+        "tier_uniform_random",
+        "tier_click_vocab_only",
+        "frontier_gradient",
+        "edge_bar_hud_mask",
+        "hud_mask_collapse_guard",
+        "hud_mask_stage2_confirm",
+        "hazard_move_pruner",
+    }, "the gated set changed -- every arm below must pin the new flag before this passes"
     for name, arm in m.ARMS.items():
         if name == "E":
             assert arm["kwargs"] == {}, "the reference shim must take no explorer kwargs"
             continue
-        missing = seven - set(arm["kwargs"])
+        missing = gated - set(arm["kwargs"])
         assert not missing, f"arm {name} inherits defaults for {sorted(missing)}"
 
 
@@ -1203,3 +1240,36 @@ def test_pinning_preserved_each_arms_measured_semantics():
     g3 = m.ARMS["G3"]["kwargs"]
     assert g3["edge_bar_hud_mask"] is True
     assert g3["hud_mask_collapse_guard"] is True and g3["hud_mask_stage2_confirm"] is True
+    # No pre-existing arm may have silently acquired the nav pruner (REQ-ARC-WMTE-5970, wired
+    # 2026-07-26 DEFAULT-OFF). This is the concrete recurrence of the drift that made arm B2 the HUD
+    # TREATMENT after the 2026-07-25 flip: a candidate-SET mutator leaking into a control is worse
+    # than a re-orderer leaking in, because it changes what the search can reach at all.
+    for name, arm in m.ARMS.items():
+        if name in ("E", "H"):
+            continue
+        assert arm["kwargs"]["hazard_move_pruner"] is False, (
+            f"arm {name} must pin the nav pruner OFF -- only arm H is the pruner treatment"
+        )
+
+
+def test_hazard_move_pruner_arm_is_the_live_config_plus_the_pruner():
+    """REQ-ARC-WMTE-5970: arm H must differ from its control G3 in EXACTLY one gated flag.
+
+    Why this is asserted rather than eyeballed: the project has already published a lever verdict
+    measured against a control that differed in more than the lever (arm B2 vs the post-flip live
+    config). Computing the diff here means H - G3 cannot silently become "the pruner PLUS a HUD or
+    frontier delta".
+    """
+    m = _harness()
+    h, g3 = m.ARMS["H"]["kwargs"], m.ARMS["G3"]["kwargs"]
+    differing = {k for k in m.GATED_FLAGS if h.get(k) != g3.get(k)}
+    assert differing == {"hazard_move_pruner"}, (
+        f"arm H must isolate the nav pruner against the live config; it also differs in "
+        f"{sorted(differing - {'hazard_move_pruner'})}"
+    )
+    assert h["hazard_move_pruner"] is True and g3["hazard_move_pruner"] is False
+    # And H must pin the live configuration itself, not the pre-flip one.
+    assert h["tier_exhaustion"] is True and h["tier_uniform_random"] is True
+    assert h["tier_click_vocab_only"] is True and h["frontier_gradient"] is False
+    assert h["edge_bar_hud_mask"] is True and h["hud_mask_collapse_guard"] is True
+    assert h["hud_mask_stage2_confirm"] is True

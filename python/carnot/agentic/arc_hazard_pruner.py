@@ -41,9 +41,30 @@ import numpy as np
 from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel, InducedNavWorldModel
 
 
+CLICK_ACTION_ID = 6  # ARC-AGI-3's pointer action; its label carries {"data": {"x": .., "y": ..}}
+
+
 def _default_action_of_label(label: Any) -> Optional[int]:
     """Decode a keyboard-nav action label ('{"action": N}' or a bare int/dict) to its action int.
-    Returns None for non-nav labels (click/paint games) so the pruner cleanly no-ops on them."""
+    Returns None for a label with no action id at all (e.g. a bare '{"x": 1, "y": 2}' coordinate).
+
+    CAVEAT, MEASURED 2026-07-26 -- this does NOT filter clicks. This docstring previously claimed it
+    "returns None for non-nav labels (click/paint games) so the pruner cleanly no-ops on them". That
+    is true only for a coordinate-ONLY label. The label shape both live consumers actually pass is
+    ``{"action": 6, "data": {"x": .., "y": ..}}`` (see ``StepwiseExplorer._ingest`` and
+    ``arc_solver_kit.OfflineSolver``'s ``_call_action_labels``), which decodes to the int 6 and is
+    therefore buffered as if it were a keyboard-nav action. Consequence: on a click-heavy game the
+    transition buffer that ``InducedNavWorldModel.fit`` sees is dominated by pointer rows, and the
+    fitter is asked to learn a spatial DISPLACEMENT for action 6. That can only degrade the avatar /
+    displacement fit the death predicate depends on. The prune side is unaffected (action 6 is absent
+    from any fitted displacement map, so ``is_lethal`` returns False for it), so this is a
+    fit-pollution defect, not a false-prune defect.
+
+    The behaviour is left UNCHANGED here on purpose: this function is shared with the offline dev
+    twin, whose one published measurement (``results/arc_hazard_prune_ab_tu93.json``) must stay
+    bit-reproducible. ``HazardMovePruner(nav_actions_only=True)`` is the opt-in filter, and it is
+    what the scored-path coercion below uses.
+    """
     d: Any = label
     if isinstance(label, str):
         try:
@@ -56,6 +77,33 @@ def _default_action_of_label(label: Any) -> Optional[int]:
         return int(d)
     except (ValueError, TypeError):
         return None
+
+
+def _label_is_click(label: Any) -> bool:
+    """True when a label denotes the POINTER action rather than a keyboard-nav move.
+
+    Two independent signals, because the live label shapes are not uniform: the action id is 6, or
+    the label carries pointer coordinates (``data.x``/``data.y``, or a bare ``{"x":..,"y":..}``).
+    Either alone is sufficient -- a row that has coordinates is a click regardless of how its action
+    id is spelled, and action 6 is a click even if its coordinates are elsewhere.
+    """
+    d: Any = label
+    if isinstance(label, str):
+        try:
+            d = json.loads(label)
+        except (ValueError, TypeError):
+            return False
+    if not isinstance(d, dict):
+        return False
+    if "x" in d or "y" in d:
+        return True
+    data = d.get("data")
+    if isinstance(data, dict) and ("x" in data or "y" in data):
+        return True
+    try:
+        return int(d.get("action")) == CLICK_ACTION_ID
+    except (TypeError, ValueError):
+        return False
 
 
 class HazardMovePruner:
@@ -76,9 +124,17 @@ class HazardMovePruner:
         refit_every: int = 50,
         min_trust: float = 0.9,
         min_specificity: float = 0.98,
+        nav_actions_only: bool = False,
     ) -> None:
         self._grid_of = grid_of
         self._action_of = action_of_label or _default_action_of_label
+        # DEFAULT FALSE so the offline dev twin's published tu93 A/B stays bit-reproducible; the
+        # scored-path coercion opts IN. See `_default_action_of_label`'s CAVEAT for the measured
+        # defect this filters: a live click label is `{"action": 6, "data": {...}}`, which decodes
+        # to the int 6 and would otherwise be buffered as a keyboard-nav transition and pollute the
+        # nav displacement fit the death predicate depends on.
+        self.nav_actions_only = bool(nav_actions_only)
+        self.clicks_skipped = 0
         self.min_deaths = min_deaths  # need this many observed deaths before trusting a fit
         self.refit_every = refit_every  # re-fit cadence (transitions) as more data arrives
         self.min_trust = min_trust  # balanced-accuracy bar to enable pruning
@@ -109,6 +165,9 @@ class HazardMovePruner:
     def observe(
         self, frame_before: Any, label: Any, frame_after: Any, leveled_up: bool = False
     ) -> None:
+        if self.nav_actions_only and _label_is_click(label):
+            self.clicks_skipped += 1
+            return
         a = self._action_of(label)
         if a is None:
             return
@@ -179,6 +238,8 @@ class HazardMovePruner:
     def should_prune(self, frame: Any, label: Any) -> bool:
         if self._model is None:
             return False
+        if self.nav_actions_only and _label_is_click(label):
+            return False
         a = self._action_of(label)
         if a is None:
             return False
@@ -202,4 +263,43 @@ class HazardMovePruner:
             "trust": round(self.trust, 4),
             "specificity": round(self.specificity, 4),
             "model_fitted": self._model is not None,
+            "transitions_buffered": len(self._trans),
+            "nav_actions_only": self.nav_actions_only,
+            "clicks_skipped": self.clicks_skipped,
+            "min_deaths": self.min_deaths,
+            "min_trust": self.min_trust,
+            "min_specificity": self.min_specificity,
+            "verifier_is_oracle": False,
         }
+
+
+def coerce_hazard_move_pruner(value: Any) -> Optional[HazardMovePruner]:
+    """``StepwiseExplorer``/``E3AgentPolicy``/``CarnotAgentPolicy`` constructor coercion, a verbatim
+    mirror of ``arc_inert_click_pruner.coerce_inert_click_pruner``'s shape:
+    ``None``/``False`` -> no pruner; an already-constructed instance -> passthrough;
+    ``True`` -> build the default instance with the standard live ``grid_of``.
+
+    WHY A COERCION HELPER RATHER THAN A DIRECT CONSTRUCTOR CALL. The scored agent's flags are
+    booleans resolved through ``_fd_gate`` (explicit kwarg > env override > ``SUBMITTED_*``
+    default), but a test or an A/B arm sometimes needs to inject a PRE-BUILT pruner (e.g. one with
+    ``refit_every`` widened, or a stub that always prunes, to exercise the never-empty guard).
+    Accepting both shapes in one place is what lets the flag ladder stay purely boolean while the
+    injection path stays available -- exactly the pattern every sibling optional component in
+    ``arc_competition_agent`` already uses.
+    """
+
+    if value is None or value is False:
+        return None
+    if isinstance(value, HazardMovePruner):
+        return value
+    if value is True:
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        # nav_actions_only=True: the scored path's own click labels are
+        # `{"action": 6, "data": {"x": .., "y": ..}}`, which `_default_action_of_label` decodes to
+        # the int 6 and would otherwise buffer as a keyboard-nav transition. This is a DELIBERATE
+        # divergence from the offline dev twin's default construction (which keeps the unfiltered
+        # behaviour so its published tu93 A/B stays bit-reproducible); `stats()["nav_actions_only"]`
+        # and `["clicks_skipped"]` make it visible in any artifact row.
+        return HazardMovePruner(grid_of, nav_actions_only=True)
+    return None
