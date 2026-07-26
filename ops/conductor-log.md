@@ -14305,3 +14305,6 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-26 00:42 UTC | Gated on Exp5924 ready: adaptive-state ABI v2 Pyth | OK | 200 passed, 1 warning in 14.34s |
 | 2026-07-26 01:06 UTC | Powered multi-game coordinate-router progress qual | OK | 135 passed, 1 warning in 11.35s |
 | 2026-07-26 01:22 UTC | Actual parent-issued live-runner execution binding | OK | 110 passed, 1 warning in 14.23s |
+| 2026-07-26 01:41 UTC | Gated on Exp5928 ready: adapter-disabled held stru | OK | 88 passed, 1 warning in 8.62s |
+| 2026-07-26 03:04 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:    )
++    live |
