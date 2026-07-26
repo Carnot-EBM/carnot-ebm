@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (62 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (65 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (62 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT — 0 self-discovery advances. The sole artifact is OUTER_LOOP_RE and also duplicates an already-recorded level.**
+**TL;DR: REJECT — `OUTER_LOOP_RE` (and independently `DUPLICATE`); zero new live self-discovery capability.**
 
 ### `results/arc_loop_solve_tu93.json`
 
-- **Verdict:** `OUTER_LOOP_RE` *(additionally duplicate)*
-- **Evidence:** The artifact declares `development_proxy`, `standing_arc_loop_offline_no_quota`, an offline reproduction gate, and `hand_verifier_cold_start_no_spatial_checkpoint`. The reachable entrypoint explicitly says this path uses a hand-registered per-game adapter and is **not** live-agent self-discovery. The `tu93` adapter hard-codes the player/goal colors, Manhattan verifier, depth caps, and game-specific reset behavior. Registry already records `tu93` level 4, so this adds no capability.
-- **Recommended action:** Do not count or promote it as an ARC solve. Retain only as an offline regression fixture and mark it `OUTER_LOOP_RE`/duplicate. A valid replacement must show the live agent discovering the mechanics and advancing beyond registered L4 from runtime observations, without a `tu93` adapter, hand verifier, or offline search.
+- **Verdict:** `OUTER_LOOP_RE`
+- **Evidence:** The artifact declares `development_proxy`, `standing_arc_loop_offline_no_quota`, and `hand_verifier_cold_start_no_spatial_checkpoint`. The reachable entrypoint selects the hand-registered `_tu93` adapter, whose human-authored model hardcodes `PLAYER=9`, `GOAL=14`, Manhattan goal distance, action semantics, state key, depth caps, and `fresh_env` search behavior. It then performs 4,346 offline best-first expansions and replay-gates the result. There is no live attempt/induction trace and no learned checkpoint. The “selected generic operators” list is metadata, not evidence those operators discovered the solution. Worse, the registry already records `tu93` fully cleared through level 9; this level-4 result is also a `DUPLICATE`.
+- **Recommended action:** Do not bank or report this as an ARC solve advance. Mark it explicitly `honest_verdict: outer_loop_re_duplicate` and declare the hand adapter/verifier as outer-loop inputs. Retain only as a regression/positive-control artifact. Any self-discovery claim must start without the `tu93` adapter or known trajectory and show the live agent deriving its model from its own runtime attempts.
 
-**Pattern watch:** Severe semantic laundering risk: placing a hand-built per-game offline solver inside a reachable entrypoint proves wiring, not autonomy. The long “generic operators” list does not change the actual causal path. Reachability checks must not allow `development_proxy` artifacts to masquerade as live self-discovery.
+**Pattern watch:** “Reachable from a live entrypoint” is being used to launder an offline, hand-modeled solver into the live closure. The standing loop explicitly defaults adaptered games to hand verifiers—and even instructs developers to reverse-engineer unadaptered games and register adapters. That is systematic drift toward outer-loop game solving, not hidden-game autonomy.
 

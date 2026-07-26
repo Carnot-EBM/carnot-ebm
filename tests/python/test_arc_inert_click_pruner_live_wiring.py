@@ -173,6 +173,59 @@ def test_scenario_arc_fcp_5595_ingest_feeds_inert_click_pruner_observe() -> None
     assert leveled_up is False
 
 
+def test_scenario_arc_fcp_5595_observe_channel_survives_a_bare_explorer() -> None:
+    """REGRESSION (2026-07-26): the observe channel must NOT depend on any OTHER component.
+
+    The sibling test above hand-injects `awaiting["previous_frame"]`, i.e. it supplies the one
+    field a real bare run never populates, and therefore cannot catch the defect it looks like
+    it covers. `_serve` builds `awaiting` as
+        "grid":           self._grid_for_hash(origin)     -> reads graph[origin]["frame"]
+        "previous_frame": graph[origin]["frame"]
+    and node frames are RETAINED only when one of nine unrelated optional components
+    (goal_bias, dense_curiosity, action_effect_expansion_prior, qd_generator,
+    controllable_novelty_policy, object_centric_proposal_policy, go_explore_archive,
+    similarity_retrieval, click_pixel_sampling) is attached. `inert_click_pruner` is not among
+    them, so on a bare explorer BOTH fields are None and the hook used to be skipped on every
+    transition -- measured 0 of 397 on sc25, a permanent no-op indistinguishable from a real
+    lever null. This test reproduces `_serve`'s construction faithfully (both fields resolved
+    from the graph, hence None) and asserts the pruner still observes the transition.
+    """
+
+    spy = _SpyObservePruner()
+    explorer = StepwiseExplorer()  # bare: no frame-retaining component whatsoever
+    explorer.inert_click_pruner = spy
+    grid0 = np.zeros((3, 3), dtype=int)
+    explorer._ingest(_FakeFrame(grid0.copy()))
+    origin = explorer.cur
+
+    # A bare explorer retains no node frame, so `_serve` resolves BOTH fields to None. Assert
+    # that precondition rather than assuming it -- if node retention ever changes, this test
+    # should stop claiming to cover the bare case instead of silently passing for a new reason.
+    assert explorer.graph[origin].get("frame") is None
+    assert explorer._grid_for_hash(origin) is None
+    explorer.awaiting = {
+        "origin": origin,
+        "action": 6,
+        "data": {"x": 1, "y": 1},
+        "grid": explorer._grid_for_hash(origin),
+        "level_before": int(explorer.best_level),
+        "previous_frame": explorer.graph.get(origin, {}).get("frame"),
+    }
+
+    grid1 = grid0.copy()
+    grid1[1, 1] = 5
+    explorer._ingest(_FakeFrame(grid1))
+
+    assert len(spy.calls) == 1, "observe channel is dead on a bare explorer"
+    frame_before, label, frame_after, leveled_up = spy.calls[0]
+    # The antecedent must be the RAW GRID of the previous _ingest (self._last_grid), which the
+    # explorer maintains unconditionally -- not a retained node frame.
+    assert np.array_equal(np.asarray(frame_before), grid0)
+    assert label == {"action": 6, "data": {"x": 1, "y": 1}}
+    assert np.array_equal(frame_after.frame, grid1)
+    assert leveled_up is False
+
+
 def test_scenario_arc_fcp_5595_ingest_skips_observe_when_pruner_none() -> None:
     """No pruner configured -> _ingest still runs cleanly (no crash, no-op)."""
 
