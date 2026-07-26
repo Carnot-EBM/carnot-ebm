@@ -177,9 +177,42 @@ there. sp80 and tu93 are UNMEASURED in that scan due to a defect in the probe, n
    its version OVER-masks elsewhere, up to 88x hash COLLAPSE on lf52/tu93/su15, which is the cause
    of its own livelock). Ship DEFAULT-OFF behind a `SUBMITTED_*` flag. Gate on a per-seed
    full-corpus regression, with r11l 0 -> 1 and inflation 44.9x -> 1.0x as the pre-registered signal.
-2. Turn on inert-click detection (`SUBMITTED_INERT_CLICK_PRUNER_ENABLED` is currently False) as an
+2. ~~Turn on inert-click detection (`SUBMITTED_INERT_CLICK_PRUNER_ENABLED` is currently False) as an
    INDEPENDENT guard: with correct node identity the inert click is learned once, and without it the
-   pruner is what would have stopped 70% of the budget going to one wall-blocked click.
+   pruner is what would have stopped 70% of the budget going to one wall-blocked click.~~
+   **FALSIFIED AND CLOSED 2026-07-26** (results/outer_loop_inert_click_pruner_shipped_config_ab_20260726.json,
+   25 games x 3 seeds, budget 2000, control = the SHIPPED configuration). The struck sentence above was
+   wrong on its central claim, and the correction matters because it would have sent the next session
+   after the wrong mechanism:
+   * **The pruner could NEVER have fixed r11l.** Measured directly: it OBSERVED ~1890 r11l click
+     transitions per seed and tracked 81-94 signatures, yet pruned EXACTLY 0, with a trajectory
+     identical to control (1892/1892 actions, 584/584 states). The reason is structural -- its
+     inertness predicate computes `changed` on the RAW grid
+     (python/carnot/agentic/arc_inert_click_pruner.py:217), and r11l renders a monotone step counter,
+     so EVERY action is raw-frame "changed" and nothing can ever look inert. Only the HUD /
+     node-identity repair could have fixed r11l, and it did.
+   * **As a general lever it is a null with a cost:** zero new wins on any seed, ft09 LOST on 2 of 3
+     seeds (a replicated safety regression the prior attempt never saw), states_expanded +12.0%
+     (concentrated 93% in 3 games), wall clock 1013s -> 1325s.
+   * **Both quantitative axes were UNINTERPRETABLE, not merely failed.** Capability: the anchor games
+     are won by no arm at this budget, so "new wins on anchors" was arithmetically forced to 0.
+     Efficiency: of 31 both-win cells, 20 are structurally frozen, so a negative median needed >=16
+     strictly-negative cells when at most 11 could move -- the pass region was EMPTY A PRIORI. Same
+     defect class that voided exp5835.
+   * **This was the FOURTH attempt** (exp5595, exp5602, exp5756, this one), returning exp5756's verdict
+     verbatim. exp5756 carried `retire_if_same_verdict`, whose condition is now met, so per the
+     Failed-Experiment Rerun Discipline the correct disposition is RETIREMENT to
+     ops/exclusion_manifest.yaml -- OPERATOR'S CALL, not taken here.
+   * A genuinely NEW mechanism would clear exp5756's bar: a MASK-AWARE inertness predicate (compute
+     `changed` on the HUD-masked grid, not the raw one). Its anchors must be games the ALREADY-SHIPPED
+     auto_hud_mask unblocks, so the result is attributable to the predicate fix rather than to the
+     2026-07-25 edge-bar repair, and r11l must NOT be among them.
+   * Do NOT cite exp5766's `add:inert_click_pruner` macro_delta 0.0 about this or any component: its
+     own fields say `effect_basis: exact_trace_replay_no_counterfactual_environment_delta` and
+     `causal_claimed: false`. It is a non-measurement.
+   * LARGER UNTAPPED TARGET measured en route: 17 of 25 games' modal repeated action is NAV, and 6
+     games issue ZERO clicks in 2000 actions -- yet `HazardMovePruner` is not wired into the scored
+     agent at all (one comment reference). Click-side pruning was never where the mass was.
 3. Lower priority: the salience order ranks a WALL blob at position 0 while the winning goal-outline
    clicks sit at 22/34 and 25/26. Worth revisiting, but demonstrably NOT what blocks r11l — with a
    correct node identity the SAME order wins.
