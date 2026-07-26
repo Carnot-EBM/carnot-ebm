@@ -1,8 +1,20 @@
 """The FOCUSED ARC-AGI-3 LOOP — the measurement engine for rapid leaderboard progress.
 
 Scores the CarnotAgent on the public games FROM SCRATCH (force-explore: the unseen-game
-proxy, since the real eval is hidden games) using the LEADERBOARD METRIC: per game,
-levels_completed and efficiency = sum over solved levels of min(baseline/agent_actions,1)^2.
+proxy, since the real eval is hidden games) using the AUTHORITATIVE LEADERBOARD METRIC: per
+game, levels_completed plus `efficiency`, which is the score returned by the INSTALLED
+`arc_agi.scorecard.EnvironmentScoreCalculator` when driven exactly as the gateway drives it
+(see the long comment at run_game, ~line 285). Concretely: each solved level scores
+`min((baseline_actions / agent_actions_on_that_level)**2 * 100, 115)`, unsolved levels score
+0, and the per-game score is the INDEX-WEIGHTED mean over the game's FULL level list, clamped
+by `max_score` = the index-weighted fraction of levels solved x 100.
+NOTE (docstring corrected 2026-07-26): this paragraph previously read
+"efficiency = sum over solved levels of min(baseline/agent_actions,1)^2", which is the
+paraphrased formula a 2026-06-20 adversarial review had ALREADY retracted in the code below
+while this header kept advertising it. That stale line was then read as the definition by a
+downstream analyser, which built a "pessimistic total-action charge" model on it and inverted
+its own recommendation. Do not reintroduce a paraphrase here; the installed scorer is the
+definition.
 Writes a leaderboard-style scorecard AND a per-game GAP LOG (which games fail + the
 failure signature) so the next iteration targets the worst gap, not a random change.
 
@@ -17,6 +29,7 @@ The loop cadence (one turn each, gated):
 
 Usage: arc_leaderboard_eval.py [--budget N] [--mode explore|replay]
 """
+
 from __future__ import annotations
 
 import json
@@ -33,17 +46,26 @@ sys.path.insert(0, str(REPO / "python"))
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic.arc_competition_agent import (
-    CLAIMED, CarnotAgentPolicy, E3AgentPolicy, load_cross_game_value_head, load_solutions, _level_of,
+    CLAIMED,
+    CarnotAgentPolicy,
+    E3AgentPolicy,
+    load_cross_game_value_head,
+    load_solutions,
+    _level_of,
 )
 
-_VALUE_HEAD = None      # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
-_DISC_ROUTER = None     # Exp4556: cross-game DiscriminativeVerifier candidate router, loaded once
-_RANDOM_ROUTER = None   # Exp4556 positive-control router
-_PROPOSER = None        # E3: a stronger world-model proposer (a bigger GGUF), loaded once + reused
-_PROPOSER_REPO = ""     # repo substr for the E3 proposer (e.g. "Qwen3.6-35B-A3B"); "" = E3 default 12B
-_VALUE_WEIGHT = 0.0     # A* blend weight for explorer_vh; 0 = depth-primary tiebreak (neutral, safe).
-                        # weight 5 REGRESSED the live explorer (6/32 vs 8/32) -- the value head misroutes
-                        # the depth-first-ride structure. Set via --value-weight for sweeps.
+_VALUE_HEAD = None  # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
+_DISC_ROUTER = None  # Exp4556: cross-game DiscriminativeVerifier candidate router, loaded once
+_RANDOM_ROUTER = None  # Exp4556 positive-control router
+_PROPOSER = None  # E3: a stronger world-model proposer (a bigger GGUF), loaded once + reused
+_PROPOSER_REPO = ""  # repo substr for the E3 proposer (e.g. "Qwen3.6-35B-A3B"); "" = E3 default 12B
+# _VALUE_WEIGHT: A* blend weight for explorer_vh; 0 = depth-primary tiebreak (neutral, safe).
+# weight 5 REGRESSED the live explorer (6/32 vs 8/32) -- the value head misroutes
+# the depth-first-ride structure. Set via --value-weight for sweeps.
+# (This was an aligned trailing comment until 2026-07-26; `ruff format` dedents such continuations
+# to column 0, where they read as annotating the NEXT statement instead. Written as a leading block
+# so the note stays attached to the name it describes.)
+_VALUE_WEIGHT = 0.0
 
 
 def _oracle_levels() -> dict:
@@ -51,9 +73,13 @@ def _oracle_levels() -> dict:
     ops/arc_solve_registry.yaml. This is the upper bound the FRAME-ONLY LIVE path is measured against:
     the honest 'live gap' = oracle_levels - live_frame_only_levels, per game and in total."""
     import yaml
+
     d = yaml.safe_load((REPO / "ops" / "arc_solve_registry.yaml").read_text())
-    return {g["game"]: int(g.get("levels_reproduced", 0)) for g in d.get("games", [])
-            if g.get("reproducibility") == "reproduced" and int(g.get("levels_reproduced", 0)) > 0}
+    return {
+        g["game"]: int(g.get("levels_reproduced", 0))
+        for g in d.get("games", [])
+        if g.get("reproducibility") == "reproduced" and int(g.get("levels_reproduced", 0)) > 0
+    }
 
 
 def _build_policy(kind: str, game: str):
@@ -66,44 +92,67 @@ def _build_policy(kind: str, game: str):
         global _PROPOSER
         if _PROPOSER_REPO and _PROPOSER is None:
             from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
             # port 8920 (NOT the conductor's E3 default 8919): LocalGGUFProposer reuses any server on its
             # port WITHOUT a model check, so a shared port silently runs the wrong model (a stale gemma
             # server made an earlier "Qwen" run actually use gemma-12B). A distinct port isolates this
             # test from the conductor's E3 work and guarantees the requested model loads.
             _PROPOSER = LocalGGUFProposer(repo_substr=_PROPOSER_REPO, port=8920)
         return E3AgentPolicy(game, proposer=_PROPOSER)
-    if kind in ("explorer_vh", "explorer_bf"):              # BRIDGE: value-head-routed explorer
+    if kind in ("explorer_vh", "explorer_bf"):  # BRIDGE: value-head-routed explorer
         global _VALUE_HEAD
         if _VALUE_HEAD is None:
             _VALUE_HEAD = load_cross_game_value_head()
         # explorer_bf = BEST-FIRST search (the graph_explore form where the value head's routing helped,
         # unlocking cn04); explorer_vh = the default depth-first-ride with an A*-frontier nudge.
         mode = "best_first" if kind == "explorer_bf" else "depth_first_ride"
-        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD,
-                                 value_weight=_VALUE_WEIGHT, search_mode=mode)
-    if kind in ("explorer_goalbias", "goalbias"):           # zero-shot order-prior goal-biased explorer
+        return CarnotAgentPolicy(
+            game,
+            {},
+            force_explore=True,
+            value_head=_VALUE_HEAD,
+            value_weight=_VALUE_WEIGHT,
+            search_mode=mode,
+        )
+    if kind in ("explorer_goalbias", "goalbias"):  # zero-shot order-prior goal-biased explorer
         from carnot.agentic.arc_goal_bias import GoalBiasValueHead
+
         # best_first A* frontier nudged toward more-ordered (plausibly-winning) states by a hand-crafted
         # distance-to-win prior (NO trained weights). value_weight defaults to 3.0 here (the global
         # --value-weight default is 0, which would disable the nudge); override with --value-weight.
         # REFUTED 2026-06-21 (fixed direction misroutes); use explorer_confirm instead.
         _w = _VALUE_WEIGHT if _VALUE_WEIGHT > 0 else 3.0
-        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=GoalBiasValueHead(),
-                                 value_weight=_w, search_mode="best_first")
-    if kind in ("explorer_confirm", "confirm"):             # direction-AGNOSTIC, online-confirming goal-bias
+        return CarnotAgentPolicy(
+            game,
+            {},
+            force_explore=True,
+            value_head=GoalBiasValueHead(),
+            value_weight=_w,
+            search_mode="best_first",
+        )
+    if kind in ("explorer_confirm", "confirm"):  # direction-AGNOSTIC, online-confirming goal-bias
         from carnot.agentic.arc_goal_bias import ConfirmingGoalBiasValueHead
+
         # depth_first_ride (NOT best_first): best_first's priority is PURE value (no depth term -> value_weight
         # ignored), which ballooned paths (lp85 20->437) and tanked the efficiency score. depth_first_ride is
         # depth-PRIMARY (priority = depth + value_weight*value) -- it preserves the action-efficient ride that
         # earns the deep wins, while the value head nudges the frontier toward extremal (plausibly-winning)
         # states. Stateful head -> fresh PER GAME (correct: _build_policy is per game). --value-weight overrides.
         _w = _VALUE_WEIGHT if _VALUE_WEIGHT > 0 else 3.0
-        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=ConfirmingGoalBiasValueHead(),
-                                 value_weight=_w, search_mode="depth_first_ride")
+        return CarnotAgentPolicy(
+            game,
+            {},
+            force_explore=True,
+            value_head=ConfirmingGoalBiasValueHead(),
+            value_weight=_w,
+            search_mode="depth_first_ride",
+        )
     if kind in ("explorer_dv", "verifier_router"):
         global _DISC_ROUTER
         if _DISC_ROUTER is None:
-            from carnot.agentic.arc_discriminative_router import load_cross_game_discriminative_router
+            from carnot.agentic.arc_discriminative_router import (
+                load_cross_game_discriminative_router,
+            )
 
             _DISC_ROUTER = load_cross_game_discriminative_router(root=REPO)
         return CarnotAgentPolicy(game, {}, force_explore=True, candidate_router=_DISC_ROUTER)
@@ -114,7 +163,9 @@ def _build_policy(kind: str, game: str):
 
             _RANDOM_ROUTER = RandomCandidateRouter(seed=4556)
         return CarnotAgentPolicy(game, {}, force_explore=True, candidate_router=_RANDOM_ROUTER)
-    return CarnotAgentPolicy(game, {}, force_explore=True)   # force_explore -> ignores any banked plan
+    return CarnotAgentPolicy(
+        game, {}, force_explore=True
+    )  # force_explore -> ignores any banked plan
 
 
 def _baseline_actions(env, game: str) -> dict:
@@ -247,7 +298,9 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     frames, latest, actions = [], None, 0
     start = None
     best = None
-    level_up_actions: list[int] = []  # cumulative `actions` count at each level-up (for per-level cost)
+    level_up_actions: list[
+        int
+    ] = []  # cumulative `actions` count at each level-up (for per-level cost)
     frame_sequence = []
     for step_index in range(budget):
         if policy.is_done(frames, latest):
@@ -265,7 +318,9 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             best = start
         lvl = _level_of(latest)
         if best is not None and lvl > best:
-            for _lv in range(best, lvl):  # record the action count for each new level (handles jumps)
+            for _lv in range(
+                best, lvl
+            ):  # record the action count for each new level (handles jumps)
                 level_up_actions.append(actions)
             best = lvl
         frames.append(latest)
@@ -310,29 +365,50 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                     done = False
                     lvl_actions = actions - prev
                     prev = actions
-                calc.add_level(level_index=li + 1, completed=done,
-                               actions_taken=lvl_actions, baseline_actions=baseline_list[li])
-                per_level.append({"level": li, "agent_actions": lvl_actions,
-                                  "human_actions": baseline_list[li], "completed": done})
+                calc.add_level(
+                    level_index=li + 1,
+                    completed=done,
+                    actions_taken=lvl_actions,
+                    baseline_actions=baseline_list[li],
+                )
+                per_level.append(
+                    {
+                        "level": li,
+                        "agent_actions": lvl_actions,
+                        "human_actions": baseline_list[li],
+                        "completed": done,
+                    }
+                )
             eff = round(float(calc.to_score(include_levels=False).score), 4)
     except Exception:
         eff = 0.0  # no baselines / scorer unavailable -> 0.0 (matches the real scorer; NEVER 1.0)
     gap = None
     if reached <= (start or 0):
-        gap = {"game": game, "stuck_at_level": reached, "actions_spent": actions,
-               "signature": "no_level_up_within_budget",
-               "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"}
+        gap = {
+            "game": game,
+            "stuck_at_level": reached,
+            "actions_spent": actions,
+            "signature": "no_level_up_within_budget",
+            "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction",
+        }
     nav = _navigation_diagnostics(policy)
-    return {"game": game, "levels": levels, "reached": reached, "actions": actions,
-            "efficiency": eff, "per_level_efficiency": eff, "per_level": per_level,
-            "deepest_level_reached": reached,
-            "navigation_diagnostics": nav,
-            "frame_sequence": frame_sequence,
-            "policy_diagnostics": _policy_diagnostics(policy),
-            "reset_replay_steps": nav["reset_replay_steps"],
-            "forward_walk_hit_rate": nav["forward_walk_hit_rate"],
-            "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
-            "gap": gap}
+    return {
+        "game": game,
+        "levels": levels,
+        "reached": reached,
+        "actions": actions,
+        "efficiency": eff,
+        "per_level_efficiency": eff,
+        "per_level": per_level,
+        "deepest_level_reached": reached,
+        "navigation_diagnostics": nav,
+        "frame_sequence": frame_sequence,
+        "policy_diagnostics": _policy_diagnostics(policy),
+        "reset_replay_steps": nav["reset_replay_steps"],
+        "forward_walk_hit_rate": nav["forward_walk_hit_rate"],
+        "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
+        "gap": gap,
+    }
 
 
 def _arg(argv, flag, default):
@@ -358,24 +434,35 @@ def main() -> int:
     policy_kind = _arg(argv, "--policy", "explorer")
     budget = int(_arg(argv, "--budget", "20000"))
     global _VALUE_WEIGHT, _PROPOSER_REPO
-    _VALUE_WEIGHT = float(_arg(argv, "--value-weight", "0"))   # explorer_vh A* blend weight (0 = neutral)
-    _PROPOSER_REPO = _arg(argv, "--proposer", "")             # e3 stronger proposer repo substr ("" = 12B)
+    _VALUE_WEIGHT = float(
+        _arg(argv, "--value-weight", "0")
+    )  # explorer_vh A* blend weight (0 = neutral)
+    _PROPOSER_REPO = _arg(argv, "--proposer", "")  # e3 stronger proposer repo substr ("" = 12B)
     oracle = _oracle_levels()
     games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
-    only = _arg(argv, "--only", "")          # --only g1,g2 : target a subset (e.g. the worst gaps)
-    variant = int(_arg(argv, "--variant", "0"))  # 0 = real game; N>0 = manufactured held-out variant N
-    reflect_arg = _arg(argv, "--reflect", "")     # "" none; "0"/"1" = reflect axis (vertical/horizontal)
+    only = _arg(argv, "--only", "")  # --only g1,g2 : target a subset (e.g. the worst gaps)
+    variant = int(
+        _arg(argv, "--variant", "0")
+    )  # 0 = real game; N>0 = manufactured held-out variant N
+    reflect_arg = _arg(
+        argv, "--reflect", ""
+    )  # "" none; "0"/"1" = reflect axis (vertical/horizontal)
     reflect = int(reflect_arg) if reflect_arg != "" else None
     if only:
         keep = set(only.split(","))
         games = [g for g in games if g in keep]
-    print(f"== ARC LIVE-loop eval — games={games_mode} policy={policy_kind} budget={budget} "
-          f"(frame-only, no banked plan, no GameAdapter) ==", flush=True)
+    print(
+        f"== ARC LIVE-loop eval — games={games_mode} policy={policy_kind} budget={budget} "
+        f"(frame-only, no banked plan, no GameAdapter) ==",
+        flush=True,
+    )
     rows, total_levels, total_eff, gaps = [], 0, 0.0, []
     live_levels_sum, oracle_sum, gap_sum = 0, 0, 0
     for game in games:
         t0 = time.time()
-        r = run_game(game, _build_policy(policy_kind, game), budget=budget, variant=variant, reflect=reflect)
+        r = run_game(
+            game, _build_policy(policy_kind, game), budget=budget, variant=variant, reflect=reflect
+        )
         if games_mode == "oracle":
             r["oracle_levels"] = oracle.get(game, 0)
             r["gap_vs_oracle"] = max(0, oracle.get(game, 0) - r["levels"])
@@ -387,31 +474,62 @@ def main() -> int:
         total_eff += r["efficiency"]
         if r["gap"]:
             gaps.append(r["gap"])
-        extra = (f" vs oracle L{r['oracle_levels']} (gap {r['gap_vs_oracle']})" if games_mode == "oracle" else "")
-        print(f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5} "
-              f"eff={r['efficiency']:.4f} nav_reset={r['reset_replay_steps']} "
-              f"nav_fwhr={r['forward_walk_hit_rate']:.4f}{extra}  [{time.time()-t0:.0f}s]", flush=True)
+        extra = (
+            f" vs oracle L{r['oracle_levels']} (gap {r['gap_vs_oracle']})"
+            if games_mode == "oracle"
+            else ""
+        )
+        print(
+            f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5} "
+            f"eff={r['efficiency']:.4f} nav_reset={r['reset_replay_steps']} "
+            f"nav_fwhr={r['forward_walk_hit_rate']:.4f}{extra}  [{time.time() - t0:.0f}s]",
+            flush=True,
+        )
     if games_mode == "oracle":
-        print(f"\n  LIVE-vs-ORACLE GAP: frame-only live path reaches {live_levels_sum}/{oracle_sum} "
-              f"oracle levels (gap {gap_sum}). Closed: "
-              f"{sorted(g for g in games if oracle.get(g, 0) and rows[games.index(g)]['levels'] >= oracle[g])}", flush=True)
+        print(
+            f"\n  LIVE-vs-ORACLE GAP: frame-only live path reaches {live_levels_sum}/{oracle_sum} "
+            f"oracle levels (gap {gap_sum}). Closed: "
+            f"{sorted(g for g in games if oracle.get(g, 0) and rows[games.index(g)]['levels'] >= oracle[g])}",
+            flush=True,
+        )
     else:
-        print(f"\n  LEADERBOARD SCORE: {total_levels} levels, efficiency-sum {total_eff:.3f}; "
-              f"{len(gaps)} open gaps", flush=True)
-    verdict = (f"complete_live_oracle_gap_{live_levels_sum}_of_{oracle_sum}_levels_gap_{gap_sum}"
-               if games_mode == "oracle" else
-               f"complete_leaderboard_eval_{total_levels}_levels_{len(gaps)}_gaps")
-    out = REPO / "results" / ("arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json")
-    out.write_text(json.dumps({
-        "experiment": "arc_live_oracle_gap" if games_mode == "oracle" else "arc_leaderboard_eval",
-        "games_mode": games_mode, "policy": policy_kind, "budget": budget,
-        "random_seed": seed,
-        "live_levels": live_levels_sum if games_mode == "oracle" else total_levels,
-        "oracle_levels": oracle_sum, "gap": gap_sum,
-        "efficiency_sum": round(total_eff, 4), "open_gaps": gaps, "per_game": rows,
-        "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
-        "honest_verdict": verdict,
-    }, indent=2))
+        print(
+            f"\n  LEADERBOARD SCORE: {total_levels} levels, efficiency-sum {total_eff:.3f}; "
+            f"{len(gaps)} open gaps",
+            flush=True,
+        )
+    verdict = (
+        f"complete_live_oracle_gap_{live_levels_sum}_of_{oracle_sum}_levels_gap_{gap_sum}"
+        if games_mode == "oracle"
+        else f"complete_leaderboard_eval_{total_levels}_levels_{len(gaps)}_gaps"
+    )
+    out = (
+        REPO
+        / "results"
+        / ("arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json")
+    )
+    out.write_text(
+        json.dumps(
+            {
+                "experiment": "arc_live_oracle_gap"
+                if games_mode == "oracle"
+                else "arc_leaderboard_eval",
+                "games_mode": games_mode,
+                "policy": policy_kind,
+                "budget": budget,
+                "random_seed": seed,
+                "live_levels": live_levels_sum if games_mode == "oracle" else total_levels,
+                "oracle_levels": oracle_sum,
+                "gap": gap_sum,
+                "efficiency_sum": round(total_eff, 4),
+                "open_gaps": gaps,
+                "per_game": rows,
+                "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+                "honest_verdict": verdict,
+            },
+            indent=2,
+        )
+    )
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
     return 0
 

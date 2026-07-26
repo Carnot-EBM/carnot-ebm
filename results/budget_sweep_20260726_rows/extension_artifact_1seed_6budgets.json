@@ -1,22 +1,22 @@
 {
  "experiment": "arc_scored_path_budget_sweep_v528",
- "honest_verdict": "complete_budget_sweep_measured_wins_median_1_at_b200_to_12_at_b4000_over_25_games_1_seeds_per_seed_matched_llm_off_saturates_at_b4000_wall_clock_never_binding_but_scored_efficiency_term_degrades_quadratically_time_axis_recorded_no_flag_changed",
+ "honest_verdict": "complete_budget_sweep_measured_wins_median_1_at_b200_to_12_at_b4000_over_25_games_1_seeds_per_seed_matched_llm_off_saturates_at_b4000_authoritative_score_sum_ROSE_2.1547_to_2.2038_llm_off_wall_never_binding_but_llm_on_model_binds_above_b400_under_the_8h_envelope_and_memory_binds_first_largest_worst_case_safe_budget_b1000_time_and_memory_axes_recorded_no_flag_changed",
  "honest_verdict_principle": "Terminal 'complete_' prefix so the conductor's reconciler classifies this as a finished experiment; without a prefix, words like 'saturates' risk a false-positive partial classification. The verdict string is COMPUTED from the curve so it cannot disagree with the artifact's own numbers.",
  "title": "MAX_ACTIONS budget sweep on the scored path: (budget -> wins, TIME) over the 25 public games, shipped flag configuration, LLM-off",
- "run_date": "2026-07-26T15:40:42Z",
+ "run_date": "2026-07-26T16:17:11Z",
  "schema": "carnot.arc_budget_sweep.v1",
  "duration_s": 2285.9,
  "total_cell_compute_s": 4076.4,
- "analysis_pass_duration_s": 0.013,
- "git_head": "db46988d744fb475df47a4bf993b32254781e9d6",
+ "analysis_pass_duration_s": 0.416,
+ "git_head": "084c15a06a398900ad49c9134501a9649b224f70",
  "random_seed": 20260724,
  "random_seeds_used": [
   20260724
  ],
  "reproducibility_checksum": "a717827cc049185292e039c49201097a28962dc8291c9a1dbc38abd0749dac0a",
  "rows_source": [
-  "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rows_20260724.json",
-  "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rows_b8000_20260724.json"
+  "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rebuild_rows_20260724.json",
+  "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rebuild_rows_b8000_20260724.json"
  ],
  "rows_source_checksums": [
   "2abd1b03cf49fd546f6eaf1a90c3c929135806a9d585f653766e88f8bcfcc37c",
@@ -759,7 +759,12 @@
     "nonempty": true,
     "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
    },
-   "sign_test_on_cells_both_tails": {
+   "games_gained": [
+    "sp80",
+    "tu93"
+   ],
+   "games_lost": [],
+   "HEADLINE_sign_test_on_GAMES_both_tails": {
     "n_discordant": 2,
     "n_pos": 2,
     "n_neg": 0,
@@ -770,6 +775,18 @@
     "min_reachable_two_sided_p_at_this_support": 0.5,
     "interpretable": true
    },
+   "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent": {
+    "n_discordant": 2,
+    "n_pos": 2,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.25,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 0.5,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 0.5,
+    "interpretable": true
+   },
+   "clustering_note": "The cell-level p is inflated relative to the game-level p because the 3 seeds of a game are replicates of one game, not 3 draws from the game distribution. Quote the game-level p. The EFFECT SIZE (median wins, zero regressions) is unaffected by which unit the test uses.",
    "interpretable": true
   },
   {
@@ -804,7 +821,16 @@
     "nonempty": true,
     "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
    },
-   "sign_test_on_cells_both_tails": {
+   "games_gained": [
+    "cd82",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "su15"
+   ],
+   "games_lost": [],
+   "HEADLINE_sign_test_on_GAMES_both_tails": {
     "n_discordant": 6,
     "n_pos": 6,
     "n_neg": 0,
@@ -815,6 +841,18 @@
     "min_reachable_two_sided_p_at_this_support": 0.03125,
     "interpretable": true
    },
+   "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent": {
+    "n_discordant": 6,
+    "n_pos": 6,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.015625,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 0.03125,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 0.03125,
+    "interpretable": true
+   },
+   "clustering_note": "The cell-level p is inflated relative to the game-level p because the 3 seeds of a game are replicates of one game, not 3 draws from the game distribution. Quote the game-level p. The EFFECT SIZE (median wins, zero regressions) is unaffected by which unit the test uses.",
    "interpretable": true
   },
   {
@@ -845,7 +883,12 @@
     "nonempty": true,
     "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
    },
-   "sign_test_on_cells_both_tails": {
+   "games_gained": [
+    "dc22",
+    "ft09"
+   ],
+   "games_lost": [],
+   "HEADLINE_sign_test_on_GAMES_both_tails": {
     "n_discordant": 2,
     "n_pos": 2,
     "n_neg": 0,
@@ -856,6 +899,18 @@
     "min_reachable_two_sided_p_at_this_support": 0.5,
     "interpretable": true
    },
+   "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent": {
+    "n_discordant": 2,
+    "n_pos": 2,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.25,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 0.5,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 0.5,
+    "interpretable": true
+   },
+   "clustering_note": "The cell-level p is inflated relative to the game-level p because the 3 seeds of a game are replicates of one game, not 3 draws from the game distribution. Quote the game-level p. The EFFECT SIZE (median wins, zero regressions) is unaffected by which unit the test uses.",
    "interpretable": true
   },
   {
@@ -885,7 +940,11 @@
     "nonempty": true,
     "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
    },
-   "sign_test_on_cells_both_tails": {
+   "games_gained": [
+    "m0r0"
+   ],
+   "games_lost": [],
+   "HEADLINE_sign_test_on_GAMES_both_tails": {
     "n_discordant": 1,
     "n_pos": 1,
     "n_neg": 0,
@@ -896,6 +955,18 @@
     "min_reachable_two_sided_p_at_this_support": 1.0,
     "interpretable": true
    },
+   "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent": {
+    "n_discordant": 1,
+    "n_pos": 1,
+    "n_neg": 0,
+    "p_one_sided_pos": 0.5,
+    "p_one_sided_neg": 1.0,
+    "p_two_sided": 1.0,
+    "direction_favoured": "higher_budget",
+    "min_reachable_two_sided_p_at_this_support": 1.0,
+    "interpretable": true
+   },
+   "clustering_note": "The cell-level p is inflated relative to the game-level p because the 3 seeds of a game are replicates of one game, not 3 draws from the game distribution. Quote the game-level p. The EFFECT SIZE (median wins, zero regressions) is unaffected by which unit the test uses.",
    "interpretable": true
   },
   {
@@ -927,7 +998,13 @@
     "nonempty": true,
     "principle": "A budget step can only be interpreted if some cell was structurally able to move. If every cell were already won at the lower budget, a zero delta would be ARITHMETICALLY FORCED, not evidence of saturation."
    },
-   "sign_test_on_cells_both_tails": {
+   "games_gained": [
+    "tn36"
+   ],
+   "games_lost": [
+    "tu93"
+   ],
+   "HEADLINE_sign_test_on_GAMES_both_tails": {
     "n_discordant": 2,
     "n_pos": 1,
     "n_neg": 1,
@@ -938,6 +1015,18 @@
     "min_reachable_two_sided_p_at_this_support": 0.5,
     "interpretable": true
    },
+   "sign_test_on_cells_WITHIN_GAME_REPLICATES_not_independent": {
+    "n_discordant": 2,
+    "n_pos": 1,
+    "n_neg": 1,
+    "p_one_sided_pos": 0.75,
+    "p_one_sided_neg": 0.75,
+    "p_two_sided": 1.0,
+    "direction_favoured": "tie",
+    "min_reachable_two_sided_p_at_this_support": 0.5,
+    "interpretable": true
+   },
+   "clustering_note": "The cell-level p is inflated relative to the game-level p because the 3 seeds of a game are replicates of one game, not 3 draws from the game distribution. Quote the game-level p. The EFFECT SIZE (median wins, zero regressions) is unaffected by which unit the test uses.",
    "interpretable": true
   }
  ],
@@ -1259,146 +1348,337 @@
    },
    "measured_llm_off_at_budget_400_this_sweep_s_per_game": 6.402,
    "llm_on_over_llm_off_factor_at_budget_400": 35.5,
-   "why_a_band_not_a_number": "Every LLM-ON scored row on file is budget 400, so the per-ACTION component of the LLM-on cost is NOT IDENTIFIED (OLS over those rows gives a NEGATIVE per-action slope at R^2=0.208 because actions span only 346-396). The LLM-on crossing point is therefore reported as a BAND between two attributions, not as a number.",
-   "attribution_lower_bound": "the ~60.2 s/game non-generator remainder is FIXED per game; extra actions cost only the LLM-off marginal",
-   "attribution_upper_bound": "that remainder scales PER-ACTION with the budget",
+   "model": "cost_per_game(b) = llm_off_s_per_game(b) + inductions_per_game(b) * s_per_induction",
+   "model_calibration_factor": 1.2488,
+   "model_calibration_note": "applied multiplicatively at every budget so the model reproduces the MEASURED LLM-on 227.3 s/game at b400 (raw model there: 182.0 s/game)",
+   "measured_inductions_per_game_by_budget": {
+    "200": 1.04,
+    "400": 1.12,
+    "1000": 1.36,
+    "2000": 1.52,
+    "4000": 1.64,
+    "8000": 1.68
+   },
+   "inductions_growth_over_the_measured_budget_range": 1.615,
+   "why_the_previous_band_was_wrong": "The retired band's LOWER bound held LLM cost fixed (1.0x) and its UPPER bound scaled it with the budget (~10x at b4000). Measured induction growth across that same range is 1.62x, so the truth is neither bound and the band spanned a factor of ~10 for no reason: the identifying variable was recorded on every row.",
+   "residuals": [
+    "s_per_induction measured only at budget 400",
+    "calibration factor applied multiplicatively across budgets",
+    "induction_attempts on LLM-off rows counts PLANNED inductions, not executed ones",
+    "one LLM-on run at b1000/b2000 would replace this model with a direct anchor"
+   ],
+   "projected_s_per_game_by_budget": {
+    "200": 210.7,
+    "400": 227.3,
+    "1000": 277.5,
+    "2000": 316.4,
+    "4000": 356.8,
+    "8000": 398.1
+   },
    "A_25games_12h": {
     "200": {
-     "projected_total_s_lower_attribution": 5682.5,
-     "projected_total_s_upper_attribution": 2841.2,
-     "fraction_of_usable_lower": 0.135,
-     "fraction_of_usable_upper": 0.067,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 5268.3,
+     "fraction_of_usable": 0.125,
+     "verdict": "FITS"
     },
     "400": {
-     "projected_total_s_lower_attribution": 5682.5,
-     "projected_total_s_upper_attribution": 5682.5,
-     "fraction_of_usable_lower": 0.135,
-     "fraction_of_usable_upper": 0.135,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 5682.5,
+     "fraction_of_usable": 0.135,
+     "verdict": "FITS"
     },
     "1000": {
-     "projected_total_s_lower_attribution": 5758.4,
-     "projected_total_s_upper_attribution": 14206.2,
-     "fraction_of_usable_lower": 0.136,
-     "fraction_of_usable_upper": 0.336,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 6938.2,
+     "fraction_of_usable": 0.164,
+     "verdict": "FITS"
     },
     "2000": {
-     "projected_total_s_lower_attribution": 5884.9,
-     "projected_total_s_upper_attribution": 28412.5,
-     "fraction_of_usable_lower": 0.139,
-     "fraction_of_usable_upper": 0.673,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 7911.1,
+     "fraction_of_usable": 0.187,
+     "verdict": "FITS"
     },
     "4000": {
-     "projected_total_s_lower_attribution": 6137.8,
-     "projected_total_s_upper_attribution": 56825.0,
-     "fraction_of_usable_lower": 0.145,
-     "fraction_of_usable_upper": 1.346,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 8919.1,
+     "fraction_of_usable": 0.211,
+     "verdict": "FITS"
     },
     "8000": {
-     "projected_total_s_lower_attribution": 6643.8,
-     "projected_total_s_upper_attribution": 113650.0,
-     "fraction_of_usable_lower": 0.157,
-     "fraction_of_usable_upper": 2.692,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
-    }
+     "projected_total_s": 9952.1,
+     "fraction_of_usable": 0.236,
+     "verdict": "FITS"
+    },
+    "largest_budget_that_fits": 8000
    },
    "B_110games_8h": {
     "200": {
-     "projected_total_s_lower_attribution": 25003.0,
-     "projected_total_s_upper_attribution": 12501.5,
-     "fraction_of_usable_lower": 0.899,
-     "fraction_of_usable_upper": 0.449,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 23180.7,
+     "fraction_of_usable": 0.833,
+     "verdict": "FITS"
     },
     "400": {
-     "projected_total_s_lower_attribution": 25003.0,
-     "projected_total_s_upper_attribution": 25003.0,
-     "fraction_of_usable_lower": 0.899,
-     "fraction_of_usable_upper": 0.899,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 25003.0,
+     "fraction_of_usable": 0.899,
+     "verdict": "FITS"
     },
     "1000": {
-     "projected_total_s_lower_attribution": 25336.9,
-     "projected_total_s_upper_attribution": 62507.5,
-     "fraction_of_usable_lower": 0.911,
-     "fraction_of_usable_upper": 2.247,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 30528.1,
+     "fraction_of_usable": 1.097,
+     "verdict": "OVER"
     },
     "2000": {
-     "projected_total_s_lower_attribution": 25893.5,
-     "projected_total_s_upper_attribution": 125015.0,
-     "fraction_of_usable_lower": 0.931,
-     "fraction_of_usable_upper": 4.494,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 34808.8,
+     "fraction_of_usable": 1.251,
+     "verdict": "OVER"
     },
     "4000": {
-     "projected_total_s_lower_attribution": 27006.5,
-     "projected_total_s_upper_attribution": 250030.0,
-     "fraction_of_usable_lower": 0.971,
-     "fraction_of_usable_upper": 8.987,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 39244.2,
+     "fraction_of_usable": 1.411,
+     "verdict": "OVER"
     },
     "8000": {
-     "projected_total_s_lower_attribution": 29232.7,
-     "projected_total_s_upper_attribution": 500060.0,
-     "fraction_of_usable_lower": 1.051,
-     "fraction_of_usable_upper": 17.975,
-     "verdict": "OVER under both attributions"
-    }
+     "projected_total_s": 43789.4,
+     "fraction_of_usable": 1.574,
+     "verdict": "OVER"
+    },
+    "largest_budget_that_fits": 400
    },
    "C_110games_12h": {
     "200": {
-     "projected_total_s_lower_attribution": 25003.0,
-     "projected_total_s_upper_attribution": 12501.5,
-     "fraction_of_usable_lower": 0.592,
-     "fraction_of_usable_upper": 0.296,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 23180.7,
+     "fraction_of_usable": 0.549,
+     "verdict": "FITS"
     },
     "400": {
-     "projected_total_s_lower_attribution": 25003.0,
-     "projected_total_s_upper_attribution": 25003.0,
-     "fraction_of_usable_lower": 0.592,
-     "fraction_of_usable_upper": 0.592,
-     "verdict": "FITS under both attributions"
+     "projected_total_s": 25003.0,
+     "fraction_of_usable": 0.592,
+     "verdict": "FITS"
     },
     "1000": {
-     "projected_total_s_lower_attribution": 25336.9,
-     "projected_total_s_upper_attribution": 62507.5,
-     "fraction_of_usable_lower": 0.6,
-     "fraction_of_usable_upper": 1.481,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 30528.1,
+     "fraction_of_usable": 0.723,
+     "verdict": "FITS"
     },
     "2000": {
-     "projected_total_s_lower_attribution": 25893.5,
-     "projected_total_s_upper_attribution": 125015.0,
-     "fraction_of_usable_lower": 0.613,
-     "fraction_of_usable_upper": 2.961,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 34808.8,
+     "fraction_of_usable": 0.824,
+     "verdict": "FITS"
     },
     "4000": {
-     "projected_total_s_lower_attribution": 27006.5,
-     "projected_total_s_upper_attribution": 250030.0,
-     "fraction_of_usable_lower": 0.64,
-     "fraction_of_usable_upper": 5.922,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 39244.2,
+     "fraction_of_usable": 0.93,
+     "verdict": "FITS"
     },
     "8000": {
-     "projected_total_s_lower_attribution": 29232.7,
-     "projected_total_s_upper_attribution": 500060.0,
-     "fraction_of_usable_lower": 0.692,
-     "fraction_of_usable_upper": 11.844,
-     "verdict": "STRADDLES: fits under the lower attribution, over under the upper"
+     "projected_total_s": 43789.4,
+     "fraction_of_usable": 1.037,
+     "verdict": "OVER"
+    },
+    "largest_budget_that_fits": 4000
+   },
+   "conclusion_is_CONDITIONAL_on_the_envelope": {
+    "largest_budget_that_fits_per_envelope": {
+     "A_25games_12h": 8000,
+     "B_110games_8h": 400,
+     "C_110games_12h": 4000
+    },
+    "statement": "Under the only envelope VERIFIED in code (C_110games_12h -- the Kaggle kernel's own subprocess timeout=43200), the model fits to budget 4000 at 1.037 of usable wall at the largest measured budget, i.e. ~10% headroom. Under the TIGHTEST documented-but-unconfirmed envelope (B_110games_8h) the model is already OVER above budget 400. So LLM-on wall clock is NOT unconditionally non-binding: it is comfortable only under the 12h reading, and it binds under the 8h reading."
+   }
+  }
+ },
+ "memory_envelope": {
+  "measured": true,
+  "method": "one clean process per (game, budget); every module run_cell imports lazily is imported EAGERLY before the baseline snapshot, so the baseline is the SHARED term and the delta is the PER-THREAD term (env + policy + retained graph)",
+  "probe_script": "scripts/arc_budget_memory_probe.py",
+  "n_probe_cells": 24,
+  "shared_libs_rss_mib_median": 813.0,
+  "host_ram_gib_assumed": 16.0,
+  "host_ram_is_UNCONFIRMED": "The 16 GiB figure in the requirements note refers to VRAM, not host RAM. The real host RAM of the ARC-AGI-3 instance pool is NOT confirmed, and it is what decides whether the marginal budgets below are safe. Confirm before acting on this.",
+  "per_budget": {
+   "400": {
+    "n_games_probed": 6,
+    "per_game_delta_mib_worst": 55.8,
+    "per_game_delta_mib_median": 50.3,
+    "games_probed": [
+     "ar25",
+     "cn04",
+     "dc22",
+     "sp80",
+     "tu93",
+     "vc33"
+    ],
+    "A_25games_12h": {
+     "n_games": 25,
+     "projected_peak_gib_if_every_game_is_worst_case": 2.16,
+     "projected_peak_gib_at_median_per_game": 2.02,
+     "fraction_of_host_ram_worst": 0.135,
+     "fraction_of_host_ram_median": 0.126,
+     "verdict": "FITS at worst case"
+    },
+    "B_110games_8h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 6.79,
+     "projected_peak_gib_at_median_per_game": 6.2,
+     "fraction_of_host_ram_worst": 0.424,
+     "fraction_of_host_ram_median": 0.387,
+     "verdict": "FITS at worst case"
+    },
+    "C_110games_12h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 6.79,
+     "projected_peak_gib_at_median_per_game": 6.2,
+     "fraction_of_host_ram_worst": 0.424,
+     "fraction_of_host_ram_median": 0.387,
+     "verdict": "FITS at worst case"
     }
+   },
+   "1000": {
+    "n_games_probed": 6,
+    "per_game_delta_mib_worst": 87.0,
+    "per_game_delta_mib_median": 73.0,
+    "games_probed": [
+     "ar25",
+     "cn04",
+     "dc22",
+     "sp80",
+     "tu93",
+     "vc33"
+    ],
+    "A_25games_12h": {
+     "n_games": 25,
+     "projected_peak_gib_if_every_game_is_worst_case": 2.92,
+     "projected_peak_gib_at_median_per_game": 2.58,
+     "fraction_of_host_ram_worst": 0.182,
+     "fraction_of_host_ram_median": 0.161,
+     "verdict": "FITS at worst case"
+    },
+    "B_110games_8h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 10.14,
+     "projected_peak_gib_at_median_per_game": 8.64,
+     "fraction_of_host_ram_worst": 0.634,
+     "fraction_of_host_ram_median": 0.54,
+     "verdict": "FITS at worst case"
+    },
+    "C_110games_12h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 10.14,
+     "projected_peak_gib_at_median_per_game": 8.64,
+     "fraction_of_host_ram_worst": 0.634,
+     "fraction_of_host_ram_median": 0.54,
+     "verdict": "FITS at worst case"
+    }
+   },
+   "2000": {
+    "n_games_probed": 6,
+    "per_game_delta_mib_worst": 144.3,
+    "per_game_delta_mib_median": 109.0,
+    "games_probed": [
+     "ar25",
+     "cn04",
+     "dc22",
+     "sp80",
+     "tu93",
+     "vc33"
+    ],
+    "A_25games_12h": {
+     "n_games": 25,
+     "projected_peak_gib_if_every_game_is_worst_case": 4.32,
+     "projected_peak_gib_at_median_per_game": 3.46,
+     "fraction_of_host_ram_worst": 0.27,
+     "fraction_of_host_ram_median": 0.216,
+     "verdict": "FITS at worst case"
+    },
+    "B_110games_8h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 16.29,
+     "projected_peak_gib_at_median_per_game": 12.5,
+     "fraction_of_host_ram_worst": 1.018,
+     "fraction_of_host_ram_median": 0.781,
+     "verdict": "MARGINAL: fits at the median per-game cost, over at worst case"
+    },
+    "C_110games_12h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 16.29,
+     "projected_peak_gib_at_median_per_game": 12.5,
+     "fraction_of_host_ram_worst": 1.018,
+     "fraction_of_host_ram_median": 0.781,
+     "verdict": "MARGINAL: fits at the median per-game cost, over at worst case"
+    }
+   },
+   "4000": {
+    "n_games_probed": 6,
+    "per_game_delta_mib_worst": 259.2,
+    "per_game_delta_mib_median": 178.4,
+    "games_probed": [
+     "ar25",
+     "cn04",
+     "dc22",
+     "sp80",
+     "tu93",
+     "vc33"
+    ],
+    "A_25games_12h": {
+     "n_games": 25,
+     "projected_peak_gib_if_every_game_is_worst_case": 7.12,
+     "projected_peak_gib_at_median_per_game": 5.15,
+     "fraction_of_host_ram_worst": 0.445,
+     "fraction_of_host_ram_median": 0.322,
+     "verdict": "FITS at worst case"
+    },
+    "B_110games_8h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 28.64,
+     "projected_peak_gib_at_median_per_game": 19.95,
+     "fraction_of_host_ram_worst": 1.79,
+     "fraction_of_host_ram_median": 1.247,
+     "verdict": "OVER even at the median per-game cost"
+    },
+    "C_110games_12h": {
+     "n_games": 110,
+     "projected_peak_gib_if_every_game_is_worst_case": 28.64,
+     "projected_peak_gib_at_median_per_game": 19.95,
+     "fraction_of_host_ram_worst": 1.79,
+     "fraction_of_host_ram_median": 1.247,
+     "verdict": "OVER even at the median per-game cost"
+    }
+   }
+  },
+  "largest_budget_that_FITS_at_worst_case_per_envelope": {
+   "A_25games_12h": 4000,
+   "B_110games_8h": 1000,
+   "C_110games_12h": 1000
+  },
+  "why_it_binds_first": "Swarm.main() starts one thread per game before joining any, so retained per-game search graphs are concurrent, not sequential. Exceeding host RAM is a hard failure, whereas exceeding a wall-clock budget degrades gracefully into fewer games played.",
+  "measurement_defect_this_replaces": "A prior version reported memory as 'NOT measured here' with a cited ESTIMATE near 6.6 GiB, while recommending the largest measured budget. The estimate turns out to have been for the SHIPPED budget; at the largest measured budget the projection is several times larger.",
+  "nodes_with_frame_by_budget_for_extrapolation": {
+   "200": {
+    "median": 62,
+    "max": 187
+   },
+   "400": {
+    "median": 102,
+    "max": 318
+   },
+   "1000": {
+    "median": 192,
+    "max": 763
+   },
+   "2000": {
+    "median": 455,
+    "max": 1521
+   },
+   "4000": {
+    "median": 1018,
+    "max": 2954
+   },
+   "8000": {
+    "median": 1929,
+    "max": 5871
    }
   }
  },
  "efficiency_axis": {
-  "why": "SUBMITTED_EARLY_STOP_GRACE is None (disabled) and SUBMITTED_TARGET_LEVELS is 3, so a game that wins L1 and then stalls keeps stepping to the budget. The scored metric is quadratic in actions, so a 5x budget raise can cost up to 25x on the efficiency term of a game it ALREADY WINS.",
-  "harness_metric_caveat": "arc_leaderboard_eval charges the post-solve tail to the trailing INCOMPLETE level, which scores 0 either way -- so THIS harness's `efficiency` is structurally blind to the tail. That is why a pessimistic bound is computed below rather than trusting it.",
+  "why": "A win count is not the scored quantity. The scored quantity is the authoritative per-game score from arc_agi.scorecard, which `arc_leaderboard_eval.run_game` already computes into every row's `efficiency` field by driving the installed calculator. This block reports how that score moves with budget, and separates the two levers inside it (per-level action efficiency, and the max_score clamp set by how many levels are solved).",
+  "harness_metric_is_authoritative": "`efficiency` is NOT a harness-local approximation. arc_leaderboard_eval.py:296-317 drives arc_agi.scorecard.EnvironmentScoreCalculator with the same level-differencing as scorecard.py:474-491 and returns `calc.to_score().score`, so the field IS the leaderboard's own per-game score for that run. It is reported here without a competing model.",
   "per_budget": {
    "200": {
     "efficiency_sum_over_cells": 2.0897,
@@ -1451,186 +1731,238 @@
   },
   "regressions_vs_400": {
    "200": {
-    "MATCHED_pessimistic_ratio_median": null,
-    "MATCHED_pessimistic_ratio_min": null,
-    "MATCHED_pessimistic_ratio_n_cells": 0,
-    "MATCHED_pessimistic_fold_loss_median": null,
     "n_cells_won_at_both": 1,
-    "harness_metric_worse": [],
-    "harness_metric_better": [],
-    "harness_metric_unchanged": [
+    "authoritative_score_worse": [],
+    "authoritative_score_better": [],
+    "authoritative_score_unchanged": [
      "vc33/s20260724"
     ],
-    "harness_metric_n_worse": 0,
-    "PESSIMISTIC_total_action_charge_worse": [],
-    "PESSIMISTIC_n_worse": 0,
-    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+    "authoritative_score_n_worse": 0,
+    "actions_to_first_levelup_identical_cells": 1,
+    "actions_to_first_levelup_later_cells": 0,
+    "actions_to_first_levelup_earlier_cells": 0,
+    "principle": "The scorer charges a completed level the actions BETWEEN level-ups, so the only way a raised budget can cost score on a game it already won is by reaching that level-up later. Counting cells where it happens is the direct measurement; a modelled bound is not needed and the one previously reported here was unsound."
    },
    "1000": {
-    "MATCHED_pessimistic_ratio_median": 0.1619,
-    "MATCHED_pessimistic_ratio_min": 0.15787,
-    "MATCHED_pessimistic_ratio_n_cells": 2,
-    "MATCHED_pessimistic_fold_loss_median": 6.2,
     "n_cells_won_at_both": 3,
-    "harness_metric_worse": [],
-    "harness_metric_better": [],
-    "harness_metric_unchanged": [
+    "authoritative_score_worse": [],
+    "authoritative_score_better": [],
+    "authoritative_score_unchanged": [
      "sp80/s20260724",
      "tu93/s20260724",
      "vc33/s20260724"
     ],
-    "harness_metric_n_worse": 0,
-    "PESSIMISTIC_total_action_charge_worse": [
-     {
-      "cell": "sp80/s20260724",
-      "pessimistic_eff_b400": 0.04836291,
-      "pessimistic_eff_b1000": 0.00763513,
-      "ratio": 0.15787
-     },
-     {
-      "cell": "tu93/s20260724",
-      "pessimistic_eff_b400": 0.00530794,
-      "pessimistic_eff_b1000": 0.00088068,
-      "ratio": 0.16592
-     }
-    ],
-    "PESSIMISTIC_n_worse": 2,
-    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+    "authoritative_score_n_worse": 0,
+    "actions_to_first_levelup_identical_cells": 3,
+    "actions_to_first_levelup_later_cells": 0,
+    "actions_to_first_levelup_earlier_cells": 0,
+    "principle": "The scorer charges a completed level the actions BETWEEN level-ups, so the only way a raised budget can cost score on a game it already won is by reaching that level-up later. Counting cells where it happens is the direct measurement; a modelled bound is not needed and the one previously reported here was unsound."
    },
    "2000": {
-    "MATCHED_pessimistic_ratio_median": 0.03939,
-    "MATCHED_pessimistic_ratio_min": 0.03939,
-    "MATCHED_pessimistic_ratio_n_cells": 1,
-    "MATCHED_pessimistic_fold_loss_median": 25.4,
     "n_cells_won_at_both": 3,
-    "harness_metric_worse": [],
-    "harness_metric_better": [
+    "authoritative_score_worse": [],
+    "authoritative_score_better": [
      "tu93/s20260724"
     ],
-    "harness_metric_unchanged": [
+    "authoritative_score_unchanged": [
      "sp80/s20260724",
      "vc33/s20260724"
     ],
-    "harness_metric_n_worse": 0,
-    "PESSIMISTIC_total_action_charge_worse": [
-     {
-      "cell": "sp80/s20260724",
-      "pessimistic_eff_b400": 0.04836291,
-      "pessimistic_eff_b2000": 0.00190487,
-      "ratio": 0.03939
-     }
-    ],
-    "PESSIMISTIC_n_worse": 1,
-    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+    "authoritative_score_n_worse": 0,
+    "actions_to_first_levelup_identical_cells": 3,
+    "actions_to_first_levelup_later_cells": 0,
+    "actions_to_first_levelup_earlier_cells": 0,
+    "principle": "The scorer charges a completed level the actions BETWEEN level-ups, so the only way a raised budget can cost score on a game it already won is by reaching that level-up later. Counting cells where it happens is the direct measurement; a modelled bound is not needed and the one previously reported here was unsound."
    },
    "4000": {
-    "MATCHED_pessimistic_ratio_median": 0.00983,
-    "MATCHED_pessimistic_ratio_min": 0.00983,
-    "MATCHED_pessimistic_ratio_n_cells": 1,
-    "MATCHED_pessimistic_fold_loss_median": 101.7,
     "n_cells_won_at_both": 3,
-    "harness_metric_worse": [],
-    "harness_metric_better": [
+    "authoritative_score_worse": [],
+    "authoritative_score_better": [
      "tu93/s20260724"
     ],
-    "harness_metric_unchanged": [
+    "authoritative_score_unchanged": [
      "sp80/s20260724",
      "vc33/s20260724"
     ],
-    "harness_metric_n_worse": 0,
-    "PESSIMISTIC_total_action_charge_worse": [
-     {
-      "cell": "sp80/s20260724",
-      "pessimistic_eff_b400": 0.04836291,
-      "pessimistic_eff_b4000": 0.00047524,
-      "ratio": 0.00983
-     }
-    ],
-    "PESSIMISTIC_n_worse": 1,
-    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+    "authoritative_score_n_worse": 0,
+    "actions_to_first_levelup_identical_cells": 3,
+    "actions_to_first_levelup_later_cells": 0,
+    "actions_to_first_levelup_earlier_cells": 0,
+    "principle": "The scorer charges a completed level the actions BETWEEN level-ups, so the only way a raised budget can cost score on a game it already won is by reaching that level-up later. Counting cells where it happens is the direct measurement; a modelled bound is not needed and the one previously reported here was unsound."
    },
    "8000": {
-    "MATCHED_pessimistic_ratio_median": 0.00245,
-    "MATCHED_pessimistic_ratio_min": 0.00245,
-    "MATCHED_pessimistic_ratio_n_cells": 1,
-    "MATCHED_pessimistic_fold_loss_median": 408.2,
     "n_cells_won_at_both": 2,
-    "harness_metric_worse": [],
-    "harness_metric_better": [],
-    "harness_metric_unchanged": [
+    "authoritative_score_worse": [],
+    "authoritative_score_better": [],
+    "authoritative_score_unchanged": [
      "sp80/s20260724",
      "vc33/s20260724"
     ],
-    "harness_metric_n_worse": 0,
-    "PESSIMISTIC_total_action_charge_worse": [
-     {
-      "cell": "sp80/s20260724",
-      "pessimistic_eff_b400": 0.04836291,
-      "pessimistic_eff_b8000": 0.00011857,
-      "ratio": 0.00245
-     }
-    ],
-    "PESSIMISTIC_n_worse": 1,
-    "pessimistic_derivation": "human_actions is recovered as sqrt(eff)*actions_to_first_levelup, then the term is recomputed against TOTAL actions: eff*(atfl/actions)^2. Exact only for single-completed-level cells; those are the ones reported."
+    "authoritative_score_n_worse": 0,
+    "actions_to_first_levelup_identical_cells": 2,
+    "actions_to_first_levelup_later_cells": 0,
+    "actions_to_first_levelup_earlier_cells": 0,
+    "principle": "The scorer charges a completed level the actions BETWEEN level-ups, so the only way a raised budget can cost score on a game it already won is by reaching that level-up later. Counting cells where it happens is the direct measurement; a modelled bound is not needed and the one previously reported here was unsound."
    }
   },
-  "scored_sum_under_both_charge_models": {
+  "authoritative_scorer_resolution": {
+   "resolvable_locally": true,
+   "scorer_module_path": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/arc_agi/scorecard.py",
+   "authoritative_path": "arc_agi/scorecard.py:474-491 (_calculate_score) -> add_level:166-183",
+   "per_level_score_formula": "min((baseline_actions / actions_taken)**2 * 100, 115.0)",
+   "per_game_aggregation": "index-weighted mean over the game's FULL level list: sum(level_score[i]*(i+1)) / sum(i+1), then clamped by max_score",
+   "tail_probe_same_solve_varying_tail": {
+    "15": 2.7778,
+    "100": 2.7778,
+    "400": 2.7778,
+    "2000": 2.7778,
+    "4000": 2.7778,
+    "100000": 2.7778
+   },
+   "tail_is_score_relevant": false,
+   "conclusion": "The tail is score-IRRELEVANT. A level the agent did NOT complete scores 0.0 no matter how many actions were charged to it, and the differencing means those actions are never charged to a COMPLETED level. So a post-solve tail costs exactly nothing, and the 'total-action charge' model that a prior version of this analyser reported as an equally-live reading contradicts the installed implementation.",
+   "retracted_formula_note": "min(human/agent,1)^2 is the formula a 2026-06-20 adversarial review already retracted. For human=20/agent=15 it returns 1.0 where the authoritative scorer returns 2.7778 on an 8-level game -- a different quantity on a different scale, so any model that recovers a baseline by inverting it is unsound."
+  },
+  "max_score_clamp": {
+   "formula": "max_score = sum(weights of levels with score>0) / sum(all weights) * 100",
+   "source": "arc_agi/scorecard.py:192-206 (to_score)",
+   "probe_on_an_8_level_game": {
+    "1": {
+     "levels_solved_of_8": 1,
+     "score_with_superhuman_speed_on_every_solved_level": 2.7778,
+     "clamp_index_weighted_fraction_times_100": 2.7778
+    },
+    "2": {
+     "levels_solved_of_8": 2,
+     "score_with_superhuman_speed_on_every_solved_level": 8.3333,
+     "clamp_index_weighted_fraction_times_100": 8.3333
+    },
+    "3": {
+     "levels_solved_of_8": 3,
+     "score_with_superhuman_speed_on_every_solved_level": 16.6667,
+     "clamp_index_weighted_fraction_times_100": 16.6667
+    },
+    "4": {
+     "levels_solved_of_8": 4,
+     "score_with_superhuman_speed_on_every_solved_level": 27.7778,
+     "clamp_index_weighted_fraction_times_100": 27.7778
+    },
+    "6": {
+     "levels_solved_of_8": 6,
+     "score_with_superhuman_speed_on_every_solved_level": 58.3333,
+     "clamp_index_weighted_fraction_times_100": 58.3333
+    },
+    "8": {
+     "levels_solved_of_8": 8,
+     "score_with_superhuman_speed_on_every_solved_level": 100.0,
+     "clamp_index_weighted_fraction_times_100": 100.0
+    }
+   },
+   "consequence": "DEPTH dominates SPEED. An agent that is superhuman on level 1 and solves nothing else is clamped to 2.78/100; one that solves 4 of 8 levels is clamped to 27.78. So the score lever that matters is levels solved, and the per-level action efficiency only matters within the ceiling those levels set."
+  },
+  "premise_coverage_budget_exhaustion": {
    "200": {
-    "optimistic_sum_actions_to_level": 2.0897,
-    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.01199,
-    "n_won_cells": 1,
-    "n_single_level_cells_exact": 0,
-    "n_multi_level_cells_lower_bound_only": 1,
-    "optimistic_vs_b400_ratio": 0.9698,
-    "pessimistic_vs_b400_ratio": 0.2111
+    "n_cells": 25,
+    "n_cells_at_or_above_95pct_of_budget": 23,
+    "n_cells_below_90pct_of_budget": 1,
+    "fraction_of_budget_used_median": 0.985,
+    "fraction_of_budget_used_min": 0.875
    },
    "400": {
-    "optimistic_sum_actions_to_level": 2.1547,
-    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.05681,
-    "n_won_cells": 3,
-    "n_single_level_cells_exact": 2,
-    "n_multi_level_cells_lower_bound_only": 1,
-    "optimistic_vs_b400_ratio": 1.0,
-    "pessimistic_vs_b400_ratio": 1.0
+    "n_cells": 25,
+    "n_cells_at_or_above_95pct_of_budget": 23,
+    "n_cells_below_90pct_of_budget": 1,
+    "fraction_of_budget_used_median": 0.98,
+    "fraction_of_budget_used_min": 0.865
    },
    "1000": {
-    "optimistic_sum_actions_to_level": 2.1999,
-    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.0322,
-    "n_won_cells": 9,
-    "n_single_level_cells_exact": 8,
-    "n_multi_level_cells_lower_bound_only": 1,
-    "optimistic_vs_b400_ratio": 1.021,
-    "pessimistic_vs_b400_ratio": 0.5668
+    "n_cells": 25,
+    "n_cells_at_or_above_95pct_of_budget": 22,
+    "n_cells_below_90pct_of_budget": 1,
+    "fraction_of_budget_used_median": 0.978,
+    "fraction_of_budget_used_min": 0.801
    },
    "2000": {
-    "optimistic_sum_actions_to_level": 2.2088,
-    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.01458,
-    "n_won_cells": 11,
-    "n_single_level_cells_exact": 8,
-    "n_multi_level_cells_lower_bound_only": 3,
-    "optimistic_vs_b400_ratio": 1.0251,
-    "pessimistic_vs_b400_ratio": 0.2566
+    "n_cells": 25,
+    "n_cells_at_or_above_95pct_of_budget": 22,
+    "n_cells_below_90pct_of_budget": 1,
+    "fraction_of_budget_used_median": 0.977,
+    "fraction_of_budget_used_min": 0.838
    },
    "4000": {
-    "optimistic_sum_actions_to_level": 2.2117,
-    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.00421,
-    "n_won_cells": 12,
-    "n_single_level_cells_exact": 7,
-    "n_multi_level_cells_lower_bound_only": 5,
-    "optimistic_vs_b400_ratio": 1.0265,
-    "pessimistic_vs_b400_ratio": 0.0741
+    "n_cells": 25,
+    "n_cells_at_or_above_95pct_of_budget": 22,
+    "n_cells_below_90pct_of_budget": 2,
+    "fraction_of_budget_used_median": 0.9758,
+    "fraction_of_budget_used_min": 0.5182
    },
    "8000": {
-    "optimistic_sum_actions_to_level": 2.2038,
-    "pessimistic_sum_total_action_charge_LOWER_BOUND": 0.0011,
+    "n_cells": 25,
+    "n_cells_at_or_above_95pct_of_budget": 20,
+    "n_cells_below_90pct_of_budget": 2,
+    "fraction_of_budget_used_median": 0.9762,
+    "fraction_of_budget_used_min": 0.2591
+   },
+   "principle": "SUBMITTED_EARLY_STOP_GRACE is None, so nothing cuts a run after a solve and essentially every cell runs to the cap. That premise is what made the retired 'total-action charge' model's arithmetic reduce to the identity (b_ref/b)^2 -- the model carried no information beyond the budget ratio. The premise itself is real and measured here; the model built on it was not."
+  },
+  "scored_sum_authoritative": {
+   "200": {
+    "authoritative_score_sum_over_won_cells": 2.0897,
+    "n_won_cells": 1,
+    "n_single_level_cells": 0,
+    "n_multi_level_cells": 1,
+    "vs_b400_ratio": 0.9698
+   },
+   "400": {
+    "authoritative_score_sum_over_won_cells": 2.1547,
+    "n_won_cells": 3,
+    "n_single_level_cells": 2,
+    "n_multi_level_cells": 1,
+    "vs_b400_ratio": 1.0
+   },
+   "1000": {
+    "authoritative_score_sum_over_won_cells": 2.1999,
+    "n_won_cells": 9,
+    "n_single_level_cells": 8,
+    "n_multi_level_cells": 1,
+    "vs_b400_ratio": 1.021
+   },
+   "2000": {
+    "authoritative_score_sum_over_won_cells": 2.2088,
+    "n_won_cells": 11,
+    "n_single_level_cells": 8,
+    "n_multi_level_cells": 3,
+    "vs_b400_ratio": 1.0251
+   },
+   "4000": {
+    "authoritative_score_sum_over_won_cells": 2.2117,
     "n_won_cells": 12,
-    "n_single_level_cells_exact": 8,
-    "n_multi_level_cells_lower_bound_only": 4,
-    "optimistic_vs_b400_ratio": 1.0228,
-    "pessimistic_vs_b400_ratio": 0.0194
+    "n_single_level_cells": 7,
+    "n_multi_level_cells": 5,
+    "vs_b400_ratio": 1.0265
+   },
+   "8000": {
+    "authoritative_score_sum_over_won_cells": 2.2038,
+    "n_won_cells": 12,
+    "n_single_level_cells": 8,
+    "n_multi_level_cells": 4,
+    "vs_b400_ratio": 1.0228
    }
   },
-  "scored_sum_verdict": "The two charge models DISAGREE IN SIGN about whether raising the budget helps the SCORE, even though they agree that it raises the WIN COUNT. Under the actions-to-level charge the sum rises; under the total-action charge it falls, because already-won games keep stepping to the new budget (SUBMITTED_EARLY_STOP_GRACE is None, so nothing cuts the post-solve tail) and the term is quadratic. Which model the gateway uses is NOT resolvable locally, so a budget raise MUST NOT be recommended on the win count alone. Enabling the early-stop grace removes the disagreement, because it removes the tail."
+  "newly_won_cells_score_contribution": {
+   "reference_budget": 400,
+   "compared_budget": 8000,
+   "n_newly_won_cells": 10,
+   "summed_authoritative_score_of_newly_won_cells": 0.0563,
+   "mean_authoritative_score_per_newly_won_cell": 0.00563,
+   "actions_to_first_levelup_of_newly_won_cells": {
+    "min": 455,
+    "median": 774.0,
+    "max": 5758
+   },
+   "principle": "A newly-won cell contributes its own per-level score, and that score is tiny because the win arrives hundreds-to-thousands of actions in against human baselines of tens. The win COUNT and the SCORE therefore move by very different factors, and only the score is on the leaderboard."
+  },
+  "scored_sum_verdict": "Raising the budget is score-POSITIVE, monotonically, on the authoritative metric -- there is no sign disagreement to adjudicate, because the 'total-action charge' the prior version of this analysis weighed against it contradicts the installed scorer (see authoritative_scorer_resolution). But the gain is SMALL where the win count's gain is large: the score sum rises 2.1547 -> 2.2038 (1.0228x) while won cells go 3 -> 12. Reporting the win count as the benefit would overstate the leaderboard effect by roughly two orders of magnitude. This is a PUBLIC-set figure: the public corpus already contains fast wins that dilute the ratio, and the hidden set (where the shipped budget wins little) has no such dilution, so the RELATIVE gain there is unmeasured and could be larger while the absolute per-win contribution stays this small."
  },
  "wall_clock_contention_control": {
   "why": "Three seeds ran as three concurrent processes on a 24-core box (~3.5 cores each). A contended wall clock presented as the cost would overstate the time and therefore UNDERSTATE the affordable budget -- so the inflation is measured against an uncontended serial run of the same cells, not assumed away.",
@@ -1752,11 +2084,11 @@
   }
  },
  "what_this_sweep_does_NOT_measure": {
-  "the_scored_LLM_ON_condition_at_raised_budget": "UNMEASURED. Every LLM-on scored row in the record is budget 400, so the per-action component of LLM-on cost is unidentified. The llm_on_band section reports a BAND between two attributions rather than a number. ONE LLM-on run at a raised budget resolves it and is the cheapest decisive next measurement.",
+  "the_scored_LLM_ON_condition_at_raised_budget": "NOT DIRECTLY MEASURED. Every LLM-on scored row in the record is budget 400. It is now MODELLED rather than bracketed by a factor-of-10 band: llm_on_band fits cost = llm_off(b) + inductions(b) * s_per_induction using the induction_attempts already recorded on every row, calibrated to the measured b400 anchor. ONE LLM-on run at b1000 or b2000 would replace the model with a direct anchor and remains the cheapest decisive next measurement.",
   "hidden_game_cost_and_difficulty": "These are the 25 PUBLIC games with their per-game GameAdapters available. The hidden set is ~110 games with no adapters. Projecting the per-game wall clock to N=110 assumes hidden games cost like public ones -- an assumption, not a measurement, and it is the single largest source of error in the crossing point.",
-  "whether_the_gateway_scores_actions_to_level_or_total_actions": "UNRESOLVED and it decides whether a raise HELPS or HURTS. This harness's efficiency metric charges the post-solve tail to the trailing INCOMPLETE level, which scores 0 either way, so it is structurally blind to the tail. The 2026-06-21 audit asserts the opposite -- that the tail 'quadratically erodes' the score. The efficiency_axis section reports BOTH the harness metric and a pessimistic total-action-charge bound so the disagreement is visible rather than resolved by assumption.",
+  "whether_the_gateway_scores_actions_to_level_or_total_actions": "RESOLVED, and a prior version of this artifact wrongly listed it here as unresolvable. arc_agi.scorecard is INSTALLED in the analysis venv; its card->score path differences successive level checkpoints and assigns the tail to the first INCOMPLETE level, which scores 0. Driving it directly (see efficiency_axis.authoritative_scorer_resolution) shows the same solve scores identically with a 10-action tail and a 100,000-action tail. The 2026-06-21 audit's 'tail quadratically erodes the score' claim does not survive contact with the shipped implementation and should be corrected wherever it is cited.",
   "the_10_steps_per_second_gateway_rate": "UNVERIFIED. It appears only in this project's own requirements note and is marked UNCONFIRMED for 2026. No client-side limiter exists in the framework (the only time.sleep is in the Playback subclass), so if it is real it is enforced server-side and EVERY offline measurement here omits it. At 10 steps/sec a 2000-action game has a 200-second pure-latency floor before any agent compute.",
-  "memory_at_110_concurrent_games": "NOT measured here (this sweep runs one game per process at a time). The framework materialises every retained frame as a Python list-of-lists and Swarm starts one thread per game, so retained-frame memory scales with budget x games on a 16GB Kaggle instance. A prior estimate put it near 6.6 GiB at 110 threads at the node counts a 2000-action budget produces.",
+  "memory_at_110_concurrent_games": "NOW MEASURED, not estimated -- see the memory_envelope section, which is the constraint that binds FIRST. What remains unmeasured is (a) the target instance's real HOST RAM (the 16 GiB in the requirements note is a VRAM figure) and (b) whether hidden games retain graphs like public ones. Both are needed before the memory ceiling can be treated as exact.",
   "the_competition_s_own_framework_copy": "The framework proven against is the local clone at /home/ianblenke/arc3_agents. The Kaggle kernel copies the COMPETITION's own ARC-AGI-3-Agents from the eval mount, which exists only in the sandbox. If its Agent.main() added a deadline or resolved the cap differently, the permission finding would not transfer."
  },
  "headline": {
@@ -1769,6 +2101,44 @@
    "8000": 12
   },
   "best_measured_budget": 4000,
+  "authoritative_score_sum_by_budget": {
+   "200": 2.0897,
+   "400": 2.1547,
+   "1000": 2.1999,
+   "2000": 2.2088,
+   "4000": 2.2117,
+   "8000": 2.2038
+  },
+  "won_cells_by_budget": {
+   "200": 1,
+   "400": 3,
+   "1000": 9,
+   "2000": 11,
+   "4000": 12,
+   "8000": 12
+  },
+  "win_count_vs_score_divergence": "won cells x4.0 but authoritative score x1.0228",
+  "HEADLINE_game_level_sign_test_p_two_sided_by_step": {
+   "200->400": 0.5,
+   "400->1000": 0.03125,
+   "1000->2000": 0.5,
+   "2000->4000": 1.0,
+   "4000->8000": 1.0
+  },
+  "cell_level_sign_test_p_NOT_INDEPENDENT_by_step": {
+   "200->400": 0.5,
+   "400->1000": 0.03125,
+   "1000->2000": 0.5,
+   "2000->4000": 1.0,
+   "4000->8000": 1.0
+  },
+  "n_distinct_games_that_moved_by_step": {
+   "200->400": 2,
+   "400->1000": 6,
+   "1000->2000": 2,
+   "2000->4000": 1,
+   "4000->8000": 2
+  },
   "wall_total_s_25_games_by_budget": {
    "200": 144.13,
    "400": 166.0,
@@ -1792,9 +2162,10 @@
    "4000->8000": null
   },
   "BINDING_CONSTRAINT": {
-   "not_wall_clock": "The wall-clock curve does NOT cross ANY envelope model inside the measured grid. At the tightest model (110 games / 8h) the largest measured budget costs 21.9% of the usable loop wall. The analytic crossing sits in the tens of thousands of actions per game, an order of magnitude above anything worth running.",
-   "the_actual_binding_bound": "the DOCUMENTED-BUT-UNCONFIRMED gateway step rate: 10 steps/sec over an 8h play cap = ~288,000 global real steps = 2,618 actions/game at ~110 hidden games. That, not compute, is what caps the budget -- and it is a figure this project's own requirements doc marks unconfirmed for 2026 and that cannot be checked locally.",
-   "and_the_scoring_bound": "Independently of both: the SCORED metric is quadratic in actions and the post-solve tail-cutter is disabled, so the budget that maximises WINS is not the budget that maximises SCORE under one of the two live interpretations of how the gateway charges actions. See efficiency_axis."
+   "1_memory_binds_FIRST": "MEASURED. Every game is a concurrent thread in one process, so retained search graphs multiply by the game count. Largest budget that fits at worst case, 110 games, 16.0 GiB host: b1000. The host-RAM figure itself is UNCONFIRMED, so this ceiling is the number most worth pinning down before acting.",
+   "2_llm_on_wall_clock_binds_CONDITIONALLY": "LLM-OFF wall never crosses any envelope inside the measured grid (at the tightest model the largest measured budget costs 21.9% of usable wall). But the scored submission runs the LLM, and the mechanistic LLM-on model fits only to b400 under the 8h envelope versus b4000 under the code-verified 12h envelope. So 'wall clock never binds' is TRUE only of the LLM-off condition, which is not the scored one.",
+   "3_the_gateway_step_rate_if_it_is_real": "the DOCUMENTED-BUT-UNCONFIRMED gateway step rate: 10 steps/sec over an 8h play cap = ~288,000 global real steps = 2,618 actions/game at ~110 hidden games. A figure this project's own requirements doc marks unconfirmed for 2026 and that cannot be checked locally.",
+   "4_the_scoring_axis_is_NOT_a_constraint": "CORRECTED. A prior version listed a quadratic scoring penalty here. The authoritative scorer charges a completed level only the actions BETWEEN level-ups, so the post-solve tail is free, and the measured authoritative score sum RISES 2.1547 -> 2.2038 across the budget range with zero cells regressing. The score axis therefore does not oppose a raise -- it just gains far less than the win count implies (see efficiency_axis.newly_won_cells_score_contribution)."
   }
  }
 }
