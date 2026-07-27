@@ -251,12 +251,89 @@ is present in the pre-task baseline and no new node id appears. This rule SHALL
 NOT suppress, deselect, relabel, or rewrite unrelated failures, and it SHALL
 NOT reopen a retired experiment scope.
 
+### REQ-HARNESS-5940: Gateway-Charged Action Accounting For ARC Score Claims
+
+The offline ARC harness (`scripts/arc_leaderboard_eval.py:run_game`) charges an
+action ONLY on a non-RESET move, while the live competition gateway charges a
+RESET an action as well (`arc_agi/scorecard.py:701-704` `inc_reset_count`
+increments both `resets` and `actions`, reached from `update_scorecard`).
+Because the scorer's per-level cost is a DIFFERENCE of cumulative CHARGED
+counts (`:479`) and the per-level score is
+`min((baseline_actions / level_actions)**2 * 100, 115)`, a reset taken BEFORE a
+level-up lands inside that level's denominator and is squared.
+
+Any harness or analyser that reports an ARC efficiency or per-game score SHALL:
+
+1. Distinguish three units explicitly and never conflate them: OFFLINE ACTIONS
+   (excludes resets), FRAMES (loop iterations, includes resets), and
+   GATEWAY-CHARGED (non-RESET moves plus resets — the only unit the competition
+   score is a function of). The identity
+   `gateway_charged == frames == offline_actions + n_resets` SHALL hold.
+2. Record PER-LEVEL reset attribution (`resets_before_levelups`,
+   `level_up_charged`), not merely a whole-run `n_resets`. A whole-run count is
+   insufficient to recover the correction, because the scorer differences
+   cumulative counts.
+3. Compute any score through the INSTALLED scorer objects
+   (`arc_agi.scorecard.EnvironmentScoreCalculator`, or a `Scorecard`/`Card`
+   driven through its real mutators and scored via
+   `EnvironmentScorecard.from_scorecard`) and NEVER through a paraphrase of the
+   scoring formula.
+4. Read per-level human baselines through `env.info` (the
+   `_baseline_actions` helper), and assert them non-zero. A dead baseline
+   channel makes both charge models sum to 0.0, which reads as a clean null.
+5. Report a bound honestly as uninformative when per-level attribution is
+   absent, rather than presenting a bound whose best case is zero by
+   construction as though it answered the magnitude question.
+
 ### REQ-HARNESS-SAMPLER-NO-SPECANN: Phase 3 SpecAnn Ban
 
 Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
 DT-COMPOSITION 2026-05-08).
 
 ## Scenarios
+
+### SCENARIO-HARNESS-5940-1: A Reset Before A Level-Up Costs Score
+
+**Given** a level completed in 10 charged actions against a human baseline of 10
+**And** 5 RESETs were taken before that level-up
+**When** the score is computed through the installed scorer chain
+**Then** the level is charged 15, not 10
+**And** its score falls from `(10/10)^2*100 = 100` to `(10/15)^2*100 = 44.44`
+
+### SCENARIO-HARNESS-5940-2: The Post-Solve Tail Is Free
+
+**Given** a run that completes a level and then spends 530 further frames,
+30 of them RESETs, without completing another level
+**When** the score is computed through the installed scorer chain
+**Then** the score is identical to the same run truncated at the level-up,
+because an incomplete level scores 0.0 regardless of what it is charged
+
+### SCENARIO-HARNESS-5940-3: A Whole-Run Reset Count Cannot Determine The Correction
+
+**Given** a recorded row carrying only `n_resets` and `level_up_actions`
+**When** the gateway-charged score is bounded from that row alone
+**Then** the bound's best case equals the offline score exactly, because every
+reset may legally have landed in the free post-solve tail
+**And** the analyser MUST report the bound as uninformative about magnitude
+rather than presenting either endpoint as the answer
+
+### SCENARIO-HARNESS-5940-4: Greedy Allocation Understates The Worst Case At The Cap
+
+**Given** a level solved SUPERHUMANLY (27 charged actions against a human
+baseline of 39), whose raw score `(39/27)^2*100 = 208.6` is capped at 115
+**When** a worst-case reset allocation is searched by greedy marginal gain
+**Then** greedy allocates nothing, because the cap's flat region has zero
+marginal, and returns the UNCORRECTED score
+**And** an exact allocation search MUST be used instead
+
+### SCENARIO-HARNESS-5940-5: A Zeroed Baseline Channel Is Refused, Not Scored
+
+**Given** a row whose per-level `human_actions` are all zero, because the
+baselines were read off the wrong attribute rather than through `env.info`
+**When** the row is re-scored
+**Then** the row is reported UNRESCORABLE with an explicit reason
+**And** it is NOT scored as 0.0 under both charge models, which would read as
+"the two charge models agree"
 
 ### SCENARIO-HARNESS-001: Bootstrap Skeleton Is Not Complete
 
@@ -412,4 +489,5 @@ applies.
 | REQ-HARNESS-014 | Implemented (`scripts/audit_orphan_test_imports.py`) | Implemented (`tests/python/test_audit_orphan_test_imports.py`) |
 | REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`; planned `python/carnot/reporting/prd_gap_agent_failure_table_v495_5452.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`); planned (`results/experiment_5452_prd_gap_agent_failure_table_v495.json`) |
 | REQ-HARNESS-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
+| REQ-HARNESS-5940 | Implemented (`scripts/arc_gateway_rescore.py`, `scripts/arc_gateway_exact_attribution.py`, `scripts/arc_leaderboard_eval.py` per-level reset instrumentation) | Implemented (`tests/python/test_arc_gateway_rescore.py`, `results/outer_loop_arc_gateway_rescore_20260726.json`) |
 | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
