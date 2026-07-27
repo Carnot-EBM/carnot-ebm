@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_arc_gateway_rescore_20260726",
  "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
- "run_date": "2026-07-27T00:04:14Z",
+ "run_date": "2026-07-27T01:19:15Z",
  "schema": "carnot.arc_gateway_rescore.v1",
  "defect_under_measurement": {
   "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
@@ -965,9 +965,9 @@
    "available": true
   }
  ],
- "git_head": "c62968c0624ba05bf0d8bbafd8605ea0cab3e184",
+ "git_head": "412fd8fbbf9f3725c2e754e4aa2fc17a1290d3c5",
  "provenance": {
-  "git_head": "c62968c0624ba05bf0d8bbafd8605ea0cab3e184",
+  "git_head": "412fd8fbbf9f3725c2e754e4aa2fc17a1290d3c5",
   "code": [
    {
     "path": "scripts/arc_gateway_rescore.py",
@@ -989,9 +989,9 @@
    },
    {
     "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "bfe3b2d6f1b607bf09c86feed6770dac446c06e10168f38c59884214c89c1c31",
-    "bytes": 27948,
-    "mtime_utc": "2026-07-26T23:57:36Z"
+    "sha256": "92dc57bb968310e9770b67050dfcaa75a430aa99b188db81dea8aa6db8e39b02",
+    "bytes": 41306,
+    "mtime_utc": "2026-07-27T01:08:17Z"
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
@@ -1051,9 +1051,9 @@
    ]
   }
  },
- "duration_s": 1.126,
+ "duration_s": 1.022,
  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
- "reproducibility_checksum": "d49fcc95b61fc9985b9a60111e1b20666698b25d987c334115c037a06cb01d2d"
+ "reproducibility_checksum": "9cf56fda4702d3dac4ee05c7b3450138597b50af35d73770ccb1e573c002c760"
 }

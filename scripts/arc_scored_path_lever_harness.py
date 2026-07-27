@@ -844,6 +844,57 @@ def run_cell(
     )
     row["n_resets"] = _n_resets
     row["n_frames"] = len(r.get("frame_sequence") or [])
+    # ---- PER-LEVEL RESET ATTRIBUTION (2026-07-26) --------------------------------------------
+    # `n_resets` above is a WHOLE-RUN total and cannot be apportioned across levels after the
+    # fact, but the scorer's per-level denominator is the SPAN between consecutive level-ups
+    # (arc_agi/scorecard.py:479 differences cumulative CHARGED counts). run_game now records
+    # each span in all three units; project it here so a per-level efficiency claim is auditable
+    # from the row alone. `n_resets` / `n_frames` are left byte-identical (never-prune).
+    _attr = r.get("level_reset_attribution") or {}
+    row["level_reset_attribution"] = _attr
+    for _k in (
+        "segment_offline_actions",
+        "segment_resets",
+        "segment_frames",
+        "segment_gateway_charged",
+        "tail_offline_actions",
+        "tail_resets",
+        "tail_frames",
+        "tail_gateway_charged",
+        "resets_in_completed_segments",
+        "resets_in_tail",
+    ):
+        # A MISSING key must not read as a measured zero: absent attribution -> None.
+        row[_k] = _attr.get(_k)
+    row["level_reset_attribution_reconciles"] = _attr.get("reconciles")
+    row["efficiency_gateway_charged"] = r.get("efficiency_gateway_charged")
+    row["efficiency_gateway_charged_error"] = r.get("efficiency_gateway_charged_error")
+    row["efficiency_optimism_vs_gateway"] = r.get("efficiency_optimism_vs_gateway")
+    row["level_up_charged"] = r.get("level_up_charged")
+    row["resets_before_levelups"] = r.get("resets_before_levelups")
+    # ---- NAVIGATION diagnostics, which the row previously dropped ENTIRELY -------------------
+    # run_game computes the explorer's full navigation diagnostics and the row copied NONE of
+    # them, which is why the reset-composition analysis had to re-run the agent live. NAMING
+    # HAZARD, deliberately avoided: the row already has `n_nav_actions` / `nav_fraction` and
+    # those mean NON-CLICK ACTIONS, not navigation-replay -- a vc33 row shows `n_nav_actions: 0`
+    # while carrying 115 resets. Everything below therefore carries a `navdiag_` prefix so the
+    # two families can never be conflated by the next reader.
+    _nav = r.get("navigation_diagnostics") or {}
+    row["navdiag_instrumented"] = _nav.get("instrumented")
+    row["navdiag_uninstrumented_reason"] = _nav.get("uninstrumented_reason")
+    for _src, _dst in (
+        ("navigation_attempts", "navdiag_attempts"),
+        ("reset_replay_fallbacks", "navdiag_reset_replay_fallbacks"),
+        ("exact_shortest_path_hits", "navdiag_exact_hits"),
+        ("partial_forward_walk_hits", "navdiag_partial_hits"),
+        ("similarity_forward_walk_hits", "navdiag_similarity_hits"),
+        ("forward_walk_hits", "navdiag_forward_walk_hits"),
+        ("forward_walk_hit_rate", "navdiag_forward_walk_hit_rate"),
+        ("forward_edges_recorded", "navdiag_forward_edges_recorded"),
+        ("forward_navigation_steps", "navdiag_forward_navigation_steps"),
+        ("reset_replay_steps", "navdiag_reset_replay_steps"),
+    ):
+        row[_dst] = _nav.get(_src)  # None when the channel is absent, never a stand-in 0
     hist = collections.Counter(rc["key"] for rc in recs)
     top = hist.most_common(5)
     n_click = sum(1 for rc in recs if rc["is_click"])

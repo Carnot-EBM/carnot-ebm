@@ -18463,3 +18463,158 @@ concurrency mechanism; its cause remains UNKNOWN, and diagnosis is obstructed be
 every cell — inductions routinely stop on `n_predict` rather than finishing — and whether that
 truncates usable engine code is unmeasured. (7) The 980s kernel-overhead term is inherited as an
 ASSUMPTION. (8) The hidden-game count (~110) is itself an estimate and the totals scale linearly in it.
+
+---
+
+## REQ-ARC-WMTE-5985: Reset Cost Is Attributed PER LEVEL, In All Three Named Units, With Two Reconciling Accountings
+
+The live gateway CHARGES a RESET one action (`arc_agi/scorecard.py:701-704` `inc_reset_count` does
+`resets += 1` AND `actions += 1`, reached from `update_scorecard`:839-843), the per-level score is
+`min((baseline / charged)**2 * 100, 115)` (:166-173), and the per-level denominator is a DIFFERENCE of
+cumulative charged counts (:479). Two consequences follow, and this requirement exists because the
+harness satisfied neither. First, the optimism in any per-level efficiency number is QUADRATIC in the
+resets charged before that level-up. Second — the load-bearing point — a whole-run `n_resets` CANNOT
+be apportioned across levels after the fact, so recording only the total leaves every per-level
+number individually unknowable while still appearing instrumented. The prior lane's bound over 485 won
+cells spanned a median 11.4% / max 95.7% relative score loss, and exact attribution on 4 cells landed
+anywhere from 0.29 to 1.00 of that bound — a 6.3x range on one cell — which is why the bound cannot
+substitute for attribution.
+
+1. **`run_game` records each inter-level-up SPAN, not just cumulative checkpoints.**
+   `scripts/arc_leaderboard_eval.py:run_game` accumulates an open span and seals it at each level-up,
+   emitting `level_reset_attribution` alongside the pre-existing cumulative `level_up_actions` /
+   `resets_before_levelups` / `level_up_charged`, which keep their values and meanings unchanged.
+
+2. **Every span carries ALL THREE units, each NAMED.** `offline_actions` (excludes resets — the unit
+   every historical number is in), `frames` (loop iterations, includes resets — the unit the
+   early-stop grace window counts in), and `gateway_charged` (`offline_actions + resets` — the only
+   unit the competition score is a function of). A single number in an unnamed unit is the defect: a
+   2775-action gap on one r11l cell is ~2936 frames, and that difference has already flipped a
+   conclusion in this project.
+
+3. **A multi-level JUMP closes one span PER LEVEL**, the first carrying the whole span's cost and the
+   rest zero, mirroring the gateway's `actions_by_level` (`set_levels_completed` appends ONE entry per
+   observed change, so the scorer charges the jumped levels off the tail).
+
+4. **The instrumentation is a PURE ADDITION, proven not asserted.** No branch predicate reads any
+   added name; `actions` is never written or read differently. The proof is a byte-identical
+   trajectory fingerprint (ordered move sequence + observed level sequence, SHA-256) for the same
+   seed before and after the diff, plus a rebuild of every registered artifact that declares the
+   edited files as dependencies, reporting exactly which numbers moved.
+
+5. **Two independent accountings must RECONCILE.** The in-loop accumulators are cross-checked against
+   an independent `frame_sequence`-derived re-derivation AND against the whole-run counters.
+   `reconciles` is computed from a `discrepancies` list that is an empty LIST when clean, never None,
+   and each discrepancy NAMES the failing check. Two accountings that must agree is the only way an
+   off-by-one in a counting loop announces itself.
+
+6. **Attribution POPULATES on the crash path**, including a run that dies mid-episode or never levels
+   up at all — the open span becomes the tail. A missing key that a reader takes for a measured zero,
+   or a None where a zero is meant, is the failure this clause forbids.
+
+7. **The nav projection keeps the reset CLASSIFIERS.** `_navigation_diagnostics` previously narrowed
+   the explorer's 24-key dict (`arc_competition_agent.py:1634-1662`) to two keys, discarding
+   `navigation_attempts`, `reset_replay_fallbacks`, and the exact / partial-forward-walk / similarity
+   split — the exact fields that separate an irreducible navigation reset from a fixable one. It now
+   passes the full dict through, retaining the two legacy keys, and the lever-harness row projects
+   them under a distinct `navdiag_` prefix (the row's pre-existing `n_nav_actions` / `nav_fraction`
+   mean NON-CLICK ACTIONS, not navigation-replay — one vc33 row reads `n_nav_actions: 0` while
+   carrying 115 resets).
+
+8. **An ABSENT channel is flagged, never reported as a measured zero.** All three nav failure paths
+   (no explorer, no method, diagnostics raised) return `instrumented: False` plus a machine-readable
+   `uninstrumented_reason`, while KEEPING the legacy zeros so no consumer breaks. Likewise
+   `efficiency_gateway_charged` defaults to `None` with an explicit
+   `efficiency_gateway_charged_error`, not to `0.0` — because
+   `efficiency_optimism_vs_gateway = eff - eff_gateway` with a `0.0` default silently reported the
+   FULL value of `eff` as optimism ("offline accounting is 100% optimistic", the most alarming reading
+   available) precisely when nothing had been measured. This is the sibling of the dead
+   `getattr(env, "baseline_actions")` read against a field that lives on `env.info`.
+
+#### SCENARIO-ARC-WMTE-5985-ATTRIBUTION-IS-PER-SEGMENT-NOT-WHOLE-RUN
+
+A run levels up twice with resets UNEVENLY distributed — 2 before the first level-up, 3 more before
+the second. `segment_resets` MUST be `[2, 3]`. A harness reporting the whole-run total (5) per level
+cannot produce that asymmetric pair. Measured witness: vc33 at three seeds carries 13 / 9 / 12 total
+resets but 1 / 6 / 12 that actually cost score — the total spans 1.44x while the costly share spans
+12x, and the cell with the MOST total resets has the FEWEST costly ones, so ordering by the total
+MIS-RANKS the quantity that matters.
+
+#### SCENARIO-ARC-WMTE-5985-EVERY-SPAN-CARRIES-ALL-THREE-UNITS
+
+For any span containing at least one reset, `gateway_charged == offline_actions + resets` and
+`gateway_charged > offline_actions`. A mutation setting `gateway_charged = offline_actions` collapses
+the distinction the three units exist to preserve and MUST fail.
+
+#### SCENARIO-ARC-WMTE-5985-SPANS-RECONCILE-AGAINST-THE-RUN-TOTAL
+
+`sum(spans) + tail == run_total` in every unit, and the channel-2 re-derivation agrees span-for-span
+and unit-for-unit. Feeding deliberately inconsistent totals MUST yield `reconciles: False` with a
+NAMED discrepancy; a `reconciles` that cannot go false is a forced gate, not a gate.
+
+#### SCENARIO-ARC-WMTE-5985-A-LEVEL-JUMP-CLOSES-ONE-SPAN-PER-LEVEL
+
+A jump from level 0 to level 2 in a single frame MUST close TWO spans with charged costs
+`[whole_span, 0]`, not one span.
+
+#### SCENARIO-ARC-WMTE-5985-ATTRIBUTION-POPULATES-ON-THE-CRASH-PATH
+
+A run whose env returns `None` mid-episode MUST still emit a real attribution dict with the work done
+so far in the tail. A run that never levels up MUST emit present integer zeros and empty lists — never
+None, never a missing key.
+
+#### SCENARIO-ARC-WMTE-5985-AN-ABSENT-CHANNEL-IS-NOT-A-MEASURED-ZERO
+
+A policy with no explorer, an explorer with no `navigation_diagnostics`, and an explorer whose
+diagnostics raise MUST all report `instrumented: False` with a reason string. A genuine all-zero
+measurement MUST report `instrumented: True`, or the flag carries no information. A game exposing no
+human baselines MUST report `efficiency_gateway_charged: None` and
+`efficiency_optimism_vs_gateway: None`, not `eff` worth of spurious optimism.
+
+#### SCENARIO-ARC-WMTE-5985-THE-NAV-PROJECTION-KEEPS-THE-RESET-CLASSIFIERS
+
+`_navigation_diagnostics` MUST return `navigation_attempts`, `reset_replay_fallbacks`, and the
+exact / partial-forward-walk / similarity hit counts, in addition to the two legacy keys, which MUST
+retain their `int` / `float` types because `run_game` reads them positionally. A mutation narrowing
+the return to the two legacy keys MUST fail: without the classifiers a reset cannot be separated into
+irreducible versus fixable, which is why a prior analysis had to re-run the agent live rather than
+read persisted rows.
+
+#### SCENARIO-ARC-WMTE-5985-A-BROKEN-GATEWAY-SCORE-IS-NONE-NOT-MAXIMAL-OPTIMISM
+
+With baselines present, `efficiency_gateway_charged` MUST be a float, MUST be `<=` the reset-free
+`efficiency` (resets are charged, so the gateway score can only be lower), and
+`efficiency_optimism_vs_gateway` MUST be `>= 0`. With baselines absent, both MUST be `None` and
+`efficiency_gateway_charged_error` MUST state the reason. Restoring the `0.0` default MUST fail the
+test — it turns "never measured" into the maximal possible optimism claim.
+
+#### SCENARIO-ARC-WMTE-5985-THE-INSTRUMENTATION-IS-A-PROVEN-PURE-ADDITION
+
+The trajectory fingerprint for a fixed seed MUST be byte-identical before and after the diff, and
+every registered artifact declaring the edited files as a dependency MUST be rebuilt with its
+number-bearing diff reported. Measured: 2 cells byte-identical (vc33, lp85 at seed 20260724), and 5
+artifacts rebuilt with 0 number-bearing diffs — including the analyser over the 1401-cell /
+2.54-hour sweep.
+
+## Implementation Status (REQ-ARC-WMTE-5985)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5985 | Implemented (`scripts/arc_leaderboard_eval.py` — `_new_segment` / `_close_segment` / `segment_attribution_from_frame_sequence` / `_build_level_reset_attribution`, in-loop span accumulators in `run_game` with jump handling, `level_reset_attribution` in the return dict, full-dict `_navigation_diagnostics` with `_nav_uninstrumented` flagging, `efficiency_gateway_charged` None-default + `efficiency_gateway_charged_error`; `scripts/arc_scored_path_lever_harness.py` — row projection of the per-span lists and the `navdiag_`-prefixed nav counters, `n_resets` / `n_frames` left byte-identical; `scripts/arc_per_level_reset_attribution_capture.py` — live corpus capture, seed-outer/game-inner, per-seed matched, computed proxy-failure witness, provenance + freshness registration) | Implemented (`tests/python/test_arc_per_level_reset_attribution.py`, 10 tests; 10 mutations proved caught: whole-run total substituted for per-span, gateway_charged dropping the reset charge, cumulative-instead-of-differenced spans, forced `reconciles` gate, a multi-level jump closing one span instead of k, attribution guarded behind a level-up so the crash path nulls, the channel-2 cross-check made vacuous, nav diagnostics narrowed to 2 keys, a dead nav channel emitting bare zeros without the flag, and `eff_gateway` defaulting to 0.0 so a dead channel reads as maximal optimism) |
+
+**Known limitations (stated, not assumed away).** (1) 18 cells / 6 games / 3 seeds at ONE budget (400)
+with the LLM OFF — the per-cell attribution is EXACT for the cells measured, but the reset SHARES are
+single measurements per (game, seed) and must NOT be read as corpus point estimates. (2) Only 7 of 18
+cells won a level, and attribution only exists where a level-up exists; 3 of the 6 games (sc25, dc22,
+r11l) never levelled up at budget 400 and contribute no attribution at all. (3) The proxy-failure
+witness rests on ONE game (vc33) with 3 seeds — a 3-point support cannot reach p<0.05, so the claim is
+EXISTENTIAL ("a cell with more total resets can have fewer costly ones"), settled by one
+counterexample, and is not a correlation estimate. (4) tu93 is seed-INVARIANT here (11 resets, 8
+costly, identical spans at all three seeds), so its three cells are one measurement, not three. (5)
+The plan-execution reset source (`arc_competition_agent.py:5314`) fires only with induction ON and
+remains UNMEASURED — it has never fired anywhere in the persisted corpus. (6) The charge model is read
+from the INSTALLED LOCAL `arc_agi` package; the hidden competition gateway is a remote service whose
+implementation was not inspected, so gateway parity is an assumption stated rather than verified. (7)
+The bootstrap reset may be FREE (`full_reset=True` routes to `new_play` -> `inc_play_count`, which
+charges nothing), which would make `gateway_charged` here an UPPER BOUND tight to within the number of
+full resets; that correction is not applied to these numbers.
