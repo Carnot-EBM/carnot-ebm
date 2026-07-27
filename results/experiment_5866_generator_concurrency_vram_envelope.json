@@ -1,0 +1,610 @@
+{
+  "experiment": 5866,
+  "experiment_id": 5866,
+  "experiment_name": "generator_concurrency_vram_envelope_and_fault_taxonomy",
+  "title": "Generator concurrency: the measured VRAM envelope, the real fault taxonomy at the shipped -c 16384, and the smallest fix the envelope supports",
+  "milestone": "2026.07.527",
+  "run_date": "2026-07-27T09:35:15Z",
+  "random_seed": 5850,
+  "inference_substrate": {
+    "value": "live_llm_inference",
+    "principle": "Real Qwen3.5-9B-MTP Q4_K_M GGUF weights were loaded onto a real CUDA device and real autoregressive generations were run (11 server launches, full 4096-token completions observed). This is not an aggregation over prior artifacts: the rows in results/generator_concurrency_5866/ were produced BY this measurement. The 60s live-inference duration floor therefore applies and is met by a wide margin."
+  },
+  "measurement_wall_s": 1037.0,
+  "duration_s": 1179.8,
+  "measurement_wall_s_provenance": {
+    "principle": "Summed from each raw row file's OWN measurement_wall_s, not from summed per-cell wall_s (which undercounts by excluding server load/teardown).",
+    "per_run": {
+      "raw.json": 459.9,
+      "boundary_c16384.json": 197.3,
+      "fixprice.json": 379.8
+    },
+    "distinct_from_duration_s": "measurement_wall_s=1037.0 is active measuring time (servers up, requests in flight). duration_s=1179.8 is the full session span from the first run's start to the last run's end, so it additionally contains 142.8s of inter-run teardown/VRAM-settle gaps. The first build of this artifact set both to the same value and adversarial_verify.py correctly flagged it CRITICAL TAUTOLOGY; the fix was to report the two distinct quantities, not to suppress the check."
+  },
+  "model_specs": {
+    "generator": "unsloth/Qwen3.5-9B-MTP-GGUF (Qwen3.5-9B-Q4_K_M.gguf)",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "llama_server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "llama_cpp_build": "b9606 (9b4dae81f)",
+    "backend": "CUDA (libggml-cuda.so.0, libcudart.so.13, libcublas.so.13)",
+    "launch_shape": "EXACT shipped shape per arc_executable_world_model.py:1709-1727 -- -ngl 999, --spec-type draft-mtp --model-draft <same gguf>, --cache-type-k q8_0 --cache-type-v q8_0",
+    "note": "The SCORED path bundles a CUDA llama-server binary via CARNOT_LLAMA_SERVER, so the CUDA build measured here is the scored-path build. The currently-running DEV server (pid 2105253, port 8919) is the HIP/iGPU build; this measurement did NOT fire concurrent load at it."
+  },
+  "gpu_discipline": {
+    "policy": "conductor owns GPU 0; outer loop may use GPU 1 only",
+    "requested_device": 1,
+    "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+    "evidence_principle": "An env var being SET proves nothing -- a prior lane found the resolver would have silently launched the iGPU HIP build while CUDA_VISIBLE_DEVICES looked correct. The verdict below is from nvidia-smi --query-compute-apps per-PID rows matched against GPU 1's UUID, for EVERY launched server.",
+    "gpu1_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "per_config_device_verdicts": {
+      "shipped_c16384": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "c32768_auto": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "c49152_auto": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "c65536_auto": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "c16384_p1": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "c16384_p8": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "c65536_p1": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "fix_c81920": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "nc1_c8192": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "nc2_c32768_k4": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY"
+    },
+    "gpu0_memory_used_mib_at_start": 4,
+    "gpu0_memory_used_mib_at_end": 4,
+    "gpu0_untouched": true,
+    "teardown_method": "explicit PID terminate/kill on the Popen handle; NEVER pkill -f <pattern> (the pattern matches this harness's own cmdline)"
+  },
+  "preconditions_checked": [
+    {
+      "resource": "CUDA llama-server binary (build/bin)",
+      "available": true,
+      "evidence": "ldd shows libggml-cuda.so.0 + libcudart.so.13 + libcublas.so.13"
+    },
+    {
+      "resource": "Qwen3.5-9B-MTP Q4_K_M GGUF cached",
+      "available": true,
+      "evidence": "symlink into hub blobs resolved; 11/11 servers loaded it"
+    },
+    {
+      "resource": "GPU 1 free VRAM",
+      "available": true,
+      "evidence": "server-reported CUDA0 = 23556 MiB free at launch; GPU0 held 4 MiB throughout"
+    },
+    {
+      "resource": "measurement ports 8931/8932/8933 free",
+      "available": true,
+      "evidence": "harness refuses to proceed if the port already answers /health"
+    }
+  ],
+  "finding_1_fault_taxonomy": {
+    "claim": "At the SHIPPED -c 16384 there are THREE distinct concurrency failure modes, not one. Which mode fires depends on the induce-prompt size relative to the shared pool. All three are invisible to a K=1 probe.",
+    "mode_A_clean_refusal_server_survives": {
+      "trigger": "prompt large relative to pool; K>=2",
+      "http": 500,
+      "server_survives": true,
+      "server_message": "Context size has been exceeded.",
+      "measured_cells": [
+        {
+          "prompt_tokens": 15754,
+          "K": 1,
+          "n_http_200": 1,
+          "n_http_500": 0,
+          "n_transport_dead": 0,
+          "healthy_after": true,
+          "observed": "PASS"
+        },
+        {
+          "prompt_tokens": 15754,
+          "K": 2,
+          "n_http_200": 0,
+          "n_http_500": 2,
+          "n_transport_dead": 0,
+          "healthy_after": true,
+          "observed": "FAIL"
+        },
+        {
+          "prompt_tokens": 15754,
+          "K": 3,
+          "n_http_200": 0,
+          "n_http_500": 3,
+          "n_transport_dead": 0,
+          "healthy_after": true,
+          "observed": "FAIL"
+        },
+        {
+          "prompt_tokens": 15754,
+          "K": 4,
+          "n_http_200": 0,
+          "n_http_500": 4,
+          "n_transport_dead": 0,
+          "healthy_after": true,
+          "observed": "FAIL"
+        }
+      ],
+      "threshold": "K=2. The prior lane's K=2 threshold is CONFIRMED and the parent prompt's K=4 claim is REFUTED: at a 15754-token prompt, K=1 passes and K=2 already returns 2/2 HTTP 500."
+    },
+    "mode_B_server_death_ggml_abort": {
+      "trigger": "prompts individually SMALL enough to be admitted, whose GENERATIONS collectively overrun the shared pool",
+      "http": 0,
+      "server_survives": false,
+      "transport_error": "RemoteDisconnected: Remote end closed connection without response",
+      "measured_cell": {
+        "prompt_tokens": 1411,
+        "K": 4,
+        "n_200": 0,
+        "n_500": 0,
+        "n_dead": 4,
+        "healthy_after": false,
+        "K_times_prompt_plus_maxtok": 22028
+      },
+      "crash_site": "/home/ianblenke/.cache/llama.cpp-master/common/sampling.cpp:154: GGML_ASSERT(logits != nullptr) failed -> ggml_abort",
+      "backtrace_frames": [
+        "ggml_abort",
+        "common_sampler::set_logits(llama_context*, int)",
+        "common_sampler_sample",
+        "common_sampler_sample_and_accept_n",
+        "server_context_impl::update_slots()",
+        "server_queue::start_loop(long)"
+      ],
+      "permanence": "the process aborts; every subsequent cell in that run returned RemoteDisconnected with healthy_after=False (4 consecutive cells)",
+      "reconciles": "This is the 'server died' the parent prompt reported and the investigation refuted. BOTH are right about different modes: the investigation probed with a LARGE prompt (mode A, survives); the original probe hit mode B (dies). Conflating them would have produced a fix for the wrong fault."
+    },
+    "mode_C_silent_truncation_http_200": {
+      "trigger": "prompt nearly fills the pool; generation room is whatever is left over",
+      "http": 200,
+      "server_survives": true,
+      "measured_cell": {
+        "n_ctx": 16384,
+        "prompt_tokens": 15754,
+        "K": 1,
+        "http_status": 200,
+        "content_chars": 2133,
+        "stop_type": "limit",
+        "generation_room_cells": 630
+      },
+      "why_it_is_the_worst_mode": "HTTP 200 + a short, truncated world-model induction. Nothing in the agent's record distinguishes this from a healthy-but-unhelpful LLM. It is the K=1 case, so it is present in the CURRENT shipped config on any game whose logical grid is large."
+    },
+    "scope_and_power": {
+      "prompt_sizes_probed_tokens": [
+        1411,
+        3047,
+        5424,
+        10050,
+        15734
+      ],
+      "K_values_probed": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "n_server_launches": 11,
+      "prompt_size_is_a_DISTRIBUTION_not_a_point": "ops/arc_solve_registry.yaml records logical grids from 2x2 to 64x64. The prior lane calibrated to a single 5968-token point; the real induce prompt spans at least 1411 to 15754 tokens (server-measured), so the failing K varies per game and no single-prompt calibration characterises the fault.",
+      "limitations": [
+        "One generator model (the frozen live Qwen3.5-9B-MTP). Not swept over models.",
+        "Grids are synthetic-but-realistic digit-dense arrays fed through the REAL shipped induce_prompt() builder; token counts are read from the server's own /tokenize, not estimated. Semantics do not affect pool arithmetic.",
+        "CUDA build only (which IS the scored-path build); the HIP/iGPU dev build was not load-tested.",
+        "Single seed (5850) per cell; the boundary is a hard resource limit, not a stochastic effect, so per-seed replication was not the binding uncertainty."
+      ]
+    }
+  },
+  "finding_2_vram_envelope": {
+    "claim": "n_ctx is the CHEAP axis and slots are the expensive one, confirming the prior lane's DIRECTION. But the prior formula's per-ctx coefficient is ~19% too small and it UNDER-predicts VRAM at high n_ctx -- the unsafe direction for a headroom decision.",
+    "measured_by": "nvidia-smi --query-compute-apps per-PID used_memory for the launched server's own PID, 3s after /health first answered",
+    "refit_formula": {
+      "expression": "VRAM_MiB = a + b*n_ctx + c*slots",
+      "a_base_mib": 10547.0,
+      "b_per_ctx_cell_mib": 0.02519,
+      "c_per_slot_mib": 206.83,
+      "max_abs_err_pct": 0.19,
+      "n_configs": 9
+    },
+    "prior_formula_as_pre_registered": {
+      "base_mib": 10644.0,
+      "per_ctx_mib": 0.0205,
+      "per_slot_mib": 201.0
+    },
+    "prior_formula_agreement": {
+      "max_abs_err_pct": 2.41,
+      "prior_claimed_max_err_pct": 0.46,
+      "verdict": "The prior claim of <=0.46% HOLDS only for n_ctx <= 32768 (the range it was evidently fit on) and degrades monotonically to 2.41% at n_ctx=81920, always UNDER-predicting.",
+      "principle": "Reported because a formula alone is a MODEL. The agreement figure is the only thing that makes it evidence, and the sign of its error is what determines whether trusting it is safe."
+    },
+    "per_slot_term_corroborated_by_the_server_itself": {
+      "read_from": "llama-server's own allocator error during negative control NC3",
+      "message": "0.06.153.584 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 19296.00 MiB on device 0: cudaMalloc failed: out of memory",
+      "arithmetic": "19296.00 MiB requested for --parallel 96 == 201.0 MiB/slot EXACTLY, and the buffer is named 'rs cache' (recurrent state). This is an independent read of the prior formula's 201 MiB/slot term from the server's own mouth, not from a fit.",
+      "refit_c_includes": "206.75 MiB/slot = the 201 MiB rs cache + ~5.8 MiB/slot of other per-slot buffers"
+    },
+    "table": [
+      {
+        "n_ctx": 8192,
+        "slots": 4,
+        "measured_resident_mib": 11600,
+        "refit_pred_mib": 11581.0,
+        "refit_err_pct": -0.17,
+        "prior_formula_pred_mib": 11616.0,
+        "prior_formula_err_pct": 0.14
+      },
+      {
+        "n_ctx": 16384,
+        "slots": 1,
+        "measured_resident_mib": 11166,
+        "refit_pred_mib": 11167.0,
+        "refit_err_pct": 0.0,
+        "prior_formula_pred_mib": 11181.0,
+        "prior_formula_err_pct": 0.13
+      },
+      {
+        "n_ctx": 16384,
+        "slots": 4,
+        "measured_resident_mib": 11784,
+        "refit_pred_mib": 11787.0,
+        "refit_err_pct": 0.03,
+        "prior_formula_pred_mib": 11784.0,
+        "prior_formula_err_pct": -0.0
+      },
+      {
+        "n_ctx": 16384,
+        "slots": 8,
+        "measured_resident_mib": 12624,
+        "refit_pred_mib": 12614.0,
+        "refit_err_pct": -0.08,
+        "prior_formula_pred_mib": 12588.0,
+        "prior_formula_err_pct": -0.29
+      },
+      {
+        "n_ctx": 32768,
+        "slots": 4,
+        "measured_resident_mib": 12176,
+        "refit_pred_mib": 12200.0,
+        "refit_err_pct": 0.19,
+        "prior_formula_pred_mib": 12120.0,
+        "prior_formula_err_pct": -0.46
+      },
+      {
+        "n_ctx": 49152,
+        "slots": 4,
+        "measured_resident_mib": 12588,
+        "refit_pred_mib": 12612.0,
+        "refit_err_pct": 0.19,
+        "prior_formula_pred_mib": 12456.0,
+        "prior_formula_err_pct": -1.05
+      },
+      {
+        "n_ctx": 65536,
+        "slots": 1,
+        "measured_resident_mib": 12418,
+        "refit_pred_mib": 12405.0,
+        "refit_err_pct": -0.11,
+        "prior_formula_pred_mib": 12188.0,
+        "prior_formula_err_pct": -1.85
+      },
+      {
+        "n_ctx": 65536,
+        "slots": 4,
+        "measured_resident_mib": 13020,
+        "refit_pred_mib": 13025.0,
+        "refit_err_pct": 0.04,
+        "prior_formula_pred_mib": 12791.0,
+        "prior_formula_err_pct": -1.76
+      },
+      {
+        "n_ctx": 81920,
+        "slots": 4,
+        "measured_resident_mib": 13452,
+        "refit_pred_mib": 13438.0,
+        "refit_err_pct": -0.11,
+        "prior_formula_pred_mib": 13127.0,
+        "prior_formula_err_pct": -2.41
+      }
+    ],
+    "cost_of_the_fix": {
+      "shipped_16384_slots4_mib": 11784,
+      "fix_81920_slots4_mib": 13452,
+      "delta_mib": 1668
+    },
+    "kv_unified_confirmed_from_props": {
+      "auto_no_parallel_flag": {
+        "total_slots": 4,
+        "per_slot_n_ctx": 16384,
+        "server_log": "0.00.272.301 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true"
+      },
+      "explicit_parallel_8": {
+        "total_slots": 8,
+        "per_slot_n_ctx": 2048
+      },
+      "reading": "With --parallel UNSET (what ships) llama.cpp sets n_parallel=4 AND kv_unified=true, so all 4 slots report the FULL n_ctx and share ONE pool. Passing --parallel explicitly DIVIDES the context (8 slots -> 2048 each). This confirms the prior lane's kv_unified finding from the /props endpoint and refutes the parent prompt's 'n_ctx/total_slots per slot' arithmetic."
+    }
+  },
+  "finding_3_smallest_fix_the_envelope_supports": {
+    "sizing_rule": {
+      "expression": "n_ctx >= K_cap * (worst_case_prompt_tokens + max_tokens)",
+      "K_cap": 4,
+      "K_cap_source": "llama.cpp's OWN default -- server.cpp:106-110 sets n_parallel=4 when --parallel is unset, and requests 5..N QUEUE. Measured: at K=6, 4 requests ran concurrently and 2 queued, all 6 returned 200.",
+      "worst_case_prompt_tokens": 15734,
+      "worst_case_source": "the real induce_prompt() for a 64x64 logical grid -- the largest in ops/arc_solve_registry.yaml -- measured by the server's own /tokenize",
+      "max_tokens": 4096,
+      "cells_needed": 79320,
+      "n_ctx_required_4096_aligned": 81920,
+      "why_worst_case_and_not_typical": "The generated length is NOT knowable in advance. Measured at prompt=1411, K=3: requests finished at 388 / 4096 / 1640 tokens (eos, limit, eos). A pool sized for the typical case fails whenever the generations happen to run long -- which is precisely when the induction is doing useful work."
+    },
+    "candidate_A_raise_n_ctx_RECOMMENDED": {
+      "change": "n_ctx 16384 -> 81920; do NOT pass --parallel",
+      "n_ctx": 81920,
+      "measured_resident_mib": 13452,
+      "vram_cost_vs_shipped_mib": 1668,
+      "cells": [
+        {
+          "K": 4,
+          "observed": "PASS",
+          "n_200": 4,
+          "n_500": 0,
+          "n_dead": 0,
+          "healthy_after": true,
+          "wall_s": 150.0,
+          "sum_generated_tokens": 16384,
+          "stop_taxonomy": {
+            "intended_budget_limit": 4,
+            "pool_exhaustion_limit": 0,
+            "natural_eos": 0
+          }
+        },
+        {
+          "K": 6,
+          "observed": "PASS",
+          "n_200": 6,
+          "n_500": 0,
+          "n_dead": 0,
+          "healthy_after": true,
+          "wall_s": 159.5,
+          "sum_generated_tokens": 18159,
+          "stop_taxonomy": {
+            "intended_budget_limit": 4,
+            "pool_exhaustion_limit": 0,
+            "natural_eos": 2
+          }
+        }
+      ],
+      "verdict": "PASS at K=4 AND at K=6 (queueing safe). Every request got its FULL 4096-token budget (stop=limit at gen==max_tokens = the intended n_predict budget, NOT pool exhaustion). No 500s, no deaths.",
+      "also_validated_independently": [
+        {
+          "n_ctx": 81920,
+          "K": 2,
+          "observed": "PASS",
+          "n_http_200": 2
+        },
+        {
+          "n_ctx": 81920,
+          "K": 4,
+          "observed": "PASS",
+          "n_http_200": 4
+        }
+      ],
+      "legality": "n_ctx_train = 262144 (read from the server's own log), so 81920 is well within the model's trained context. 262144 would cover K<=13."
+    },
+    "candidate_B_parallel_1_REJECTED": {
+      "change": "--parallel 1 at the shipped n_ctx (queue instead of contend)",
+      "n_ctx": 16384,
+      "measured_resident_mib": 11166,
+      "vram_cost_vs_shipped_mib": -618,
+      "cells": [
+        {
+          "K": 4,
+          "observed": "PASS",
+          "n_200": 4,
+          "n_500": 0,
+          "n_dead": 0,
+          "healthy_after": true,
+          "wall_s": 20.2,
+          "sum_generated_tokens": 2130,
+          "stop_taxonomy": {
+            "intended_budget_limit": 0,
+            "pool_exhaustion_limit": 3,
+            "natural_eos": 1
+          }
+        }
+      ],
+      "why_rejected": "It PASSES the HTTP gate (4/4 = 200, server healthy) and costs LESS VRAM -- and it is still the wrong fix. Measured generated lengths were 648 / 650 / 184 / 648 tokens against a 4096 budget, three of them stop_type='limit'. With a 15734-token prompt in a 16384 pool only ~650 cells remain, so it converts the LOUD 500 into mode C: a silently truncated induction that reports HTTP 200. That is the defect this whole investigation is about, not a fix for it. Had the gate been HTTP-status-only, B would have passed and shipped.",
+      "principle": "A gate must fail on the thing it is supposed to protect. An HTTP-status gate does not distinguish 'worked' from 'returned 200 while degraded', so the gate carries an explicit stop_taxonomy witness that separates intended-budget from pool-exhaustion limits."
+    },
+    "not_a_candidate_explicit_parallel_4": "REFUTED as a fix by the /props reading above: passing --parallel explicitly DIVIDES the context, so --parallel 4 gives 4096 cells per slot and makes matters strictly worse. Confirms the prior lane.",
+    "not_a_candidate_harness_side_concurrency_cap": "The competition framework creates one Thread per game with no pool (swarm.py:91), so there is no harness-side cap to turn down. But llama.cpp's own 4-slot cap means generator load does NOT scale with game count -- it is bounded at 4 concurrent + a queue, which is why an 81920 pool suffices for a ~110-game eval."
+  },
+  "finding_4_the_record_loses_the_one_informative_string": {
+    "claim": "The shipped swallow discards llama.cpp's diagnostic body, so today's record cannot distinguish a context-pool overflow from any other 500. This is a record fix, NOT a control-flow change.",
+    "site": "python/carnot/agentic/arc_executable_world_model.py:1814 -- `except Exception as e: return False, f\"local gguf (GPU server) failed: {e!r}\"[:200]`",
+    "measured_repr": "local gguf (GPU server) failed: <HTTPError 500: 'Internal Server Error'>",
+    "what_is_lost": {
+      "mode_A_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}",
+      "single_request_too_big_body": "{\"error\": {\"code\": 400, \"message\": \"request (15754 tokens) exceeds the available context size (8192 tokens), try increasing it\", \"type\": \"exceed_context_size_error\", \"n_prompt_tokens\": 15754, \"n_ctx\": 8192}}"
+    },
+    "note": "llama.cpp already distinguishes the two: a SINGLE request that cannot fit gets HTTP 400 with an explicitly actionable message naming both token counts and saying 'try increasing it'; only the CONCURRENT pool-exhaustion path gets the opaque 500. Both bodies are read and discarded by the shipped handler.",
+    "retry_bug_confirmed_at_the_line": "the `except` sits INSIDE `for attempt in range(tries)` but RETURNS, so an HTTP 500 consumes ZERO of the 3 retries; only CONTENT failures retry",
+    "do_not_make_generate_raise": "Out of scope and counter-indicated: the outermost handler (arc_competition_agent.py:5985) is a bare `except Exception` that discards type/message/traceback, so raising today would be strictly LESS informative than the current return."
+  },
+  "gates": [
+    {
+      "gate": "G1_fault_reproduced_at_shipped_config",
+      "principle": "A fix envelope claimed without first reproducing the fault is a fix for an imagined defect. If the fault had NOT reproduced, that is the headline finding and this artifact says so loudly.",
+      "condition": "at -c 16384, some K<=4 must fail with the real shipped request shape",
+      "witness_at_gate_aggregation_level": {
+        "K_pass_set": [
+          1
+        ],
+        "K_fail_set": [
+          2,
+          3,
+          4
+        ],
+        "pass_region_nonempty": true,
+        "fail_region_nonempty": true
+      },
+      "result": "PASS",
+      "forced": false,
+      "could_have_failed_evidence": "K=1 PASSED at the same config in the same run, so the harness was not rigged to report failure"
+    },
+    {
+      "gate": "G2_negative_controls_fired",
+      "principle": "A sweep in which nothing could fail is a vacuous pass. Each control is a config PREDICTED to fail before it was run; a PASS here would stamp the whole measurement UNFALSIFIABLE.",
+      "controls": [
+        {
+          "control": "NC1_single_request_exceeds_pool",
+          "predicted": "FAIL",
+          "observed": "FAIL"
+        },
+        {
+          "control": "NC2_intermediate_ctx_still_overflows_at_K4",
+          "predicted": "FAIL",
+          "observed": "FAIL"
+        },
+        {
+          "control": "NC3_formula_predicted_VRAM_exceeded",
+          "predicted": "FAIL",
+          "observed": "FAIL"
+        }
+      ],
+      "all_fired": true,
+      "result": "PASS",
+      "notes": "NC1 fired with a DIFFERENT http code (400, not 500) and NC3 fired with a real cudaMalloc OOM + SIGSEGV (exit -11) whose allocator message independently corroborated the per-slot VRAM term. Controls that fire in an unexpected way are more informative than controls that fire as scripted."
+    },
+    {
+      "gate": "G3_fix_validated_at_and_above_the_slot_cap",
+      "principle": "A fix that works at K=K_cap but breaks above it is not a fix for a ~110-game eval, where the queue is the normal operating regime.",
+      "condition": "candidate A must PASS at K=4 AND K=6 with the worst-case prompt",
+      "witness_at_gate_aggregation_level": {
+        "cells": [
+          {
+            "K": 4,
+            "observed": "PASS",
+            "n_200": 4,
+            "healthy_after": true,
+            "stop_taxonomy": {
+              "intended_budget_limit": 4,
+              "pool_exhaustion_limit": 0,
+              "natural_eos": 0
+            }
+          },
+          {
+            "K": 6,
+            "observed": "PASS",
+            "n_200": 6,
+            "healthy_after": true,
+            "stop_taxonomy": {
+              "intended_budget_limit": 4,
+              "pool_exhaustion_limit": 0,
+              "natural_eos": 2
+            }
+          }
+        ],
+        "pool_exhaustion_limits_across_all_cells": 0
+      },
+      "result": "PASS",
+      "forced": false,
+      "could_have_failed_evidence": "candidate B, run in the SAME harness with the SAME prompt, produced 3 pool-exhaustion truncations and is recorded as REJECTED -- the gate discriminates"
+    },
+    {
+      "gate": "G4_vram_envelope_measured_not_modelled",
+      "principle": "Two independent reconstructions of the same wrong shape agreed 44/44 with each other on a prior question and were both wrong. Agreement between models is not evidence about the system; agreement between a model and a per-PID nvidia-smi reading is.",
+      "condition": "every VRAM number traces to a per-PID residency read, and the formula's agreement with those reads is published with its sign",
+      "witness": {
+        "n_configs_measured": 9,
+        "n_ctx_range": [
+          8192,
+          81920
+        ],
+        "slots_range": [
+          1,
+          8
+        ],
+        "refit_max_abs_err_pct": 0.19,
+        "prior_formula_max_abs_err_pct": 2.41,
+        "prior_formula_error_sign": "systematically UNDER-predicts as n_ctx grows"
+      },
+      "result": "PASS"
+    }
+  ],
+  "eval_hardware_vram_feasibility": {
+    "status": "UNVERIFIED_EXTRAPOLATION",
+    "principle": "Labelled as an extrapolation because we hold ZERO direct measurement of what our scored run's GPU is. Stating it as fact would repeat exactly the error that put 'RTX PRO 6000 96GB' into the parent prompt.",
+    "what_is_known": "our scored kernel requests machine_shape NvidiaL4 (scripts/kaggle/submission_kernel/kernel-metadata.json); the 96GB RTX PRO 6000 is a COMPETITOR's request; the only nvidia-smi read this project holds (results/kaggle_env_probe.json -> P100 16GB) is from a different kernel with no machine_shape",
+    "if_16gb_class": "fix at 13452 MiB + the measured 1.45GB live CNN dynamics fit ~= 14.9 GiB of 16 GiB -- fits, ~1.1 GiB margin",
+    "if_24gb_l4": "fits with ~9 GiB margin",
+    "recommendation": "the fix is affordable under BOTH hypotheses, so the unverified hardware does NOT block it; but a direct nvidia-smi read from a scored-shape kernel is still owed"
+  },
+  "what_this_does_NOT_answer": {
+    "first_win_rate": "This artifact does NOT re-measure first_win_rate_integrated (0.04, CI [0,0]). Whether the concurrency fault explains it is UNFALSIFIABLE from the existing record because nothing logged it. That re-measurement is the next step and must run with a working generator BEFORE any strategic reallocation is considered.",
+    "strategic_pivot": "Deliberately NOT recommended here, per the operator's sequencing: fix the concurrency fault first, then produce the number that lets the operator decide.",
+    "hip_build": "the HIP/iGPU dev build was not load-tested under concurrency"
+  },
+  "shipped_behaviour_change_authorised": {
+    "scope": "the generator concurrency fix ONLY, smallest variant the envelope supports",
+    "proposed": "LocalGGUFProposer.n_ctx default 16384 -> 81920 (no --parallel flag added)",
+    "applied_in_this_artifact": false,
+    "principle": "This artifact is the MEASUREMENT. The code change is a separate, reviewable edit; MAX_ACTIONS and SUBMITTED_EARLY_STOP_GRACE are untouched."
+  },
+  "raw_rows": {
+    "raw.json": {
+      "path": "results/generator_concurrency_5866/raw.json",
+      "sha256": "ca643ff923ebb9ba54637ebe739b65885c2971a4f55eb1a88d9d2bd5a5782299"
+    },
+    "boundary_c16384.json": {
+      "path": "results/generator_concurrency_5866/boundary_c16384.json",
+      "sha256": "8f6cb05ddee24ab5ecfe2bc569caa6e14959334274328e9c88445c1c59695cb1"
+    },
+    "fixprice.json": {
+      "path": "results/generator_concurrency_5866/fixprice.json",
+      "sha256": "2cabfbcaf3fda30f3c474da2f07570f04bb6c13637518d2259488ae0fd1558c7"
+    }
+  },
+  "harness_scripts": {
+    "harness.py": {
+      "sha256": "38b85fe140119ef565a4b8287b4cbda8f4bdfa0e69dcd98ba21c3690b4ac34dd",
+      "path": "results/generator_concurrency_5866/harness.py"
+    },
+    "boundary.py": {
+      "sha256": "ea7925fe9d98cd788fa7b7348ddac649a5c3107b3289dea0b166a1871bd1a19e",
+      "path": "results/generator_concurrency_5866/boundary.py"
+    },
+    "fixprice.py": {
+      "sha256": "36d2b28e05fd723722e781a5d18ba4985b2ae9bb498ec87aa198f2c72b3cb71a",
+      "path": "results/generator_concurrency_5866/fixprice.py"
+    },
+    "_note": "harness copied into the repo alongside the rows it produced, so a third party can re-run the exact measurement; sha256 unchanged by the copy"
+  },
+  "honest_verdict": "complete_generator_concurrency_fault_reproduced_at_K2_three_distinct_failure_modes_measured_vram_envelope_refit_n_ctx_is_cheap_smallest_supported_fix_is_n_ctx_81920",
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Real compute takes wall-clock time; 11 real GGUF loads plus full 4096-token generations cannot be fast.",
+      "satisfied_by": "session span 1179.8s; active measuring 1037.0s"
+    },
+    "random_seed": {
+      "principle": "Determinism is the precondition for reproducibility; the prompt corpus is generated from this seed so a third party can rebuild the exact prompts.",
+      "satisfied_by": "numpy default_rng(5850) in all three runs"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the measured rows AND the harness that produced them, so a later reader can detect drift in either.",
+      "satisfied_by": "sha256 over the 3 row files + 3 scripts"
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix `complete_` so the conductor reconciler classifies this as terminal; without it the embedded words 'fault' and 'failure' risk a false-positive partial classification.",
+      "satisfied_by": "leading complete_ prefix"
+    },
+    "preconditions_checked": {
+      "principle": "Records WHICH resources were verified before measuring, pre-empting the fabrication mode where an agent silently lacked the GPU and synthesised a passing artifact.",
+      "satisfied_by": "4 checks with per-check evidence strings"
+    },
+    "inference_substrate": {
+      "principle": "Resolves the vestigial-vs-load-bearing GGUF-marker ambiguity so the duration floor applied is the right one.",
+      "satisfied_by": "live_llm_inference, 60s floor, met"
+    }
+  },
+  "acceptance_gate_g1_fault_reproduced": true,
+  "acceptance_gate_g2_negative_controls_fired": true,
+  "acceptance_gate_g3_fix_validated_at_and_above_slot_cap": true,
+  "acceptance_gate_g4_vram_measured_not_modelled": true,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_falsifiable_not_forced": true,
+  "acceptance_gate_principle": "Four conjuncts, each with a witness computed at ITS OWN aggregation level. G1 and G3 additionally publish could_have_failed_evidence: G1 because K=1 PASSED at the same config in the same run, G3 because candidate B ran in the SAME harness with the SAME prompt and was REJECTED. No conjunct encodes an assumption about another arm.",
+  "reproducibility_checksum": "635c74b3bc9b08282f78a44d6b1e4c02c5a9dd3c19fad4548883d4d70fc61e52"
+}

@@ -1,0 +1,121 @@
+{
+ "baseline_returncode": 0,
+ "baseline_failures": [],
+ "mutations": [
+  {
+   "mutation": "M1_emitter_stops_counting_server_failures",
+   "file": "python/carnot/agentic/arc_executable_world_model.py",
+   "neuters": "the dead channel goes dead again: real swallowed failures stop being counted",
+   "returncode": 1,
+   "tests_killed": [
+    "test_dead_generator_witness_is_refused_by_the_gate"
+   ],
+   "n_killed": 1,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M2_emitter_stops_counting_calls",
+   "file": "python/carnot/agentic/arc_executable_world_model.py",
+   "neuters": "generate() reverts to the pre-change swallow with no counters at all",
+   "returncode": 1,
+   "tests_killed": [
+    "test_dead_generator_witness_is_refused_by_the_gate",
+    "test_witness_keeps_the_server_diagnostic_string"
+   ],
+   "n_killed": 2,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M3_lint_drops_DEAD_GENERATOR",
+   "file": "scripts/arc_llm_on_liveness_lint.py",
+   "neuters": "the primary liveness check",
+   "returncode": 1,
+   "tests_killed": [
+    "test_cleanup_writes_a_lintable_row_and_a_stderr_line",
+    "test_dead_generator_witness_is_refused_by_the_gate",
+    "test_does_not_trust_the_derived_stamp",
+    "test_fires_on_every_recorded_k4_dead_cell",
+    "test_mutation_dead_generator",
+    "test_self_test_entrypoint_passes",
+    "test_the_eight_recorded_dead_cells_still_fail_in_the_new_witness_shape",
+    "test_walker_reaches_a_row_nested_under_cells_index_row"
+   ],
+   "n_killed": 8,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M4_lint_treats_absent_calls_as_never_engaged",
+   "file": "scripts/arc_llm_on_liveness_lint.py",
+   "neuters": "the plausible-but-wrong None-is-zero reading, which would EXEMPT every pre-existing row (including the 8 origin cells) from NO_COMPLETIONS",
+   "returncode": 1,
+   "tests_killed": [
+    "test_mutation_no_completions",
+    "test_self_test_entrypoint_passes",
+    "test_walker_reaches_a_row_nested_under_cells_index_row"
+   ],
+   "n_killed": 3,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M5_lint_drops_the_never_engaged_exemption",
+   "file": "scripts/arc_llm_on_liveness_lint.py",
+   "neuters": "the over-fire guard: a game that never stalled would hard-FAIL",
+   "returncode": 1,
+   "tests_killed": [
+    "test_never_engaged_row_is_warn_not_fail",
+    "test_self_test_entrypoint_passes"
+   ],
+   "n_killed": 2,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M6_lint_drops_WITNESS_SELF_CONTRADICTORY",
+   "file": "scripts/arc_llm_on_liveness_lint.py",
+   "neuters": "the anti-gaming branch: zeroing calls would silently earn the WARN",
+   "returncode": 1,
+   "tests_killed": [
+    "test_self_test_entrypoint_passes",
+    "test_zeroing_calls_cannot_dodge_the_gate"
+   ],
+   "n_killed": 2,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M7_cleanup_stops_emitting",
+   "file": "python/carnot/agentic/arc_competition_agent.py",
+   "neuters": "the scored-path witness emission entirely",
+   "returncode": 1,
+   "tests_killed": [
+    "test_cleanup_survives_an_unwritable_output_dir",
+    "test_cleanup_writes_a_lintable_row_and_a_stderr_line"
+   ],
+   "n_killed": 2,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M8_pool_truncation_message_collapses_into_the_budget_message",
+   "file": "python/carnot/agentic/arc_executable_world_model.py",
+   "neuters": "the mode-C/mode-budget distinction (both would read as 'HIT n_predict')",
+   "returncode": 1,
+   "tests_killed": [
+    "test_pool_truncation_is_named_differently_from_the_budget_limit"
+   ],
+   "n_killed": 1,
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M9_describer_drops_the_response_body",
+   "file": "python/carnot/agentic/arc_executable_world_model.py",
+   "neuters": "the one informative string in the failure (the 500/400 response body)",
+   "returncode": 1,
+   "tests_killed": [
+    "test_http_failure_description_includes_the_response_body"
+   ],
+   "n_killed": 1,
+   "status": "LOAD_BEARING"
+  }
+ ],
+ "post_restore_returncode": 0,
+ "post_restore_failures": [],
+ "all_branches_load_bearing": true
+}

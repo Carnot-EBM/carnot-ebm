@@ -1,0 +1,282 @@
+{
+  "started_utc": "2026-07-27T09:48:35Z",
+  "random_seed": 5850,
+  "port": 8933,
+  "max_tokens": 4096,
+  "gpu_uuids": {
+    "0": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "1": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+  },
+  "candidates": [
+    {
+      "candidate": "A_raise_nctx",
+      "n_ctx": 81920,
+      "parallel_arg": null,
+      "server_pid": 2222859,
+      "worst_prompt_tokens": 15734,
+      "cells": [
+        {
+          "K": 4,
+          "observed": "PASS",
+          "n_200": 4,
+          "n_500": 0,
+          "n_dead": 0,
+          "healthy_after": true,
+          "wall_s": 150.0,
+          "max_request_elapsed_s": 150.05,
+          "sum_generated_tokens": 16384,
+          "n_truncated_by_limit": 4,
+          "requests": [
+            {
+              "req": 0,
+              "http_status": 200,
+              "elapsed_s": 150.05,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 1,
+              "http_status": 200,
+              "elapsed_s": 147.94,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 2,
+              "http_status": 200,
+              "elapsed_s": 147.21,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 3,
+              "http_status": 200,
+              "elapsed_s": 145.46,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            }
+          ]
+        },
+        {
+          "K": 6,
+          "observed": "PASS",
+          "n_200": 6,
+          "n_500": 0,
+          "n_dead": 0,
+          "healthy_after": true,
+          "wall_s": 159.5,
+          "max_request_elapsed_s": 159.53,
+          "sum_generated_tokens": 18159,
+          "n_truncated_by_limit": 4,
+          "requests": [
+            {
+              "req": 0,
+              "http_status": 200,
+              "elapsed_s": 140.56,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 1,
+              "http_status": 200,
+              "elapsed_s": 147.13,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 2,
+              "http_status": 200,
+              "elapsed_s": 159.53,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 3,
+              "http_status": 200,
+              "elapsed_s": 135.03,
+              "generated_tokens": 4096,
+              "stop_type": "limit",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 4,
+              "http_status": 200,
+              "elapsed_s": 42.33,
+              "generated_tokens": 898,
+              "stop_type": "eos",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 5,
+              "http_status": 200,
+              "elapsed_s": 70.9,
+              "generated_tokens": 877,
+              "stop_type": "eos",
+              "truncated": false,
+              "error": ""
+            }
+          ]
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2222859,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 13452
+        }
+      ],
+      "resident_mib": 13452,
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 81920,
+      "gpu_totals": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 13763,
+          "free_mib": 10361
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.455.683 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.887.191 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.992.455 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 81920",
+          "0.08.992.462 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 81920",
+          "0.08.992.462 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 81920",
+          "0.08.992.462 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 81920"
+        ],
+        "n_parallel_line": "0.00.327.182 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "candidate": "B_parallel1_shipped_ctx",
+      "n_ctx": 16384,
+      "parallel_arg": 1,
+      "server_pid": 2223492,
+      "worst_prompt_tokens": 15734,
+      "cells": [
+        {
+          "K": 4,
+          "observed": "PASS",
+          "n_200": 4,
+          "n_500": 0,
+          "n_dead": 0,
+          "healthy_after": true,
+          "wall_s": 20.2,
+          "max_request_elapsed_s": 20.22,
+          "sum_generated_tokens": 2130,
+          "n_truncated_by_limit": 3,
+          "requests": [
+            {
+              "req": 0,
+              "http_status": 200,
+              "elapsed_s": 9.4,
+              "generated_tokens": 648,
+              "stop_type": "limit",
+              "truncated": true,
+              "error": ""
+            },
+            {
+              "req": 1,
+              "http_status": 200,
+              "elapsed_s": 14.53,
+              "generated_tokens": 650,
+              "stop_type": "limit",
+              "truncated": true,
+              "error": ""
+            },
+            {
+              "req": 2,
+              "http_status": 200,
+              "elapsed_s": 20.22,
+              "generated_tokens": 184,
+              "stop_type": "eos",
+              "truncated": false,
+              "error": ""
+            },
+            {
+              "req": 3,
+              "http_status": 200,
+              "elapsed_s": 18.88,
+              "generated_tokens": 648,
+              "stop_type": "limit",
+              "truncated": true,
+              "error": ""
+            }
+          ]
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2223492,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11166
+        }
+      ],
+      "resident_mib": 11166,
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 1,
+      "props_slot_n_ctx": 16384,
+      "gpu_totals": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 11477,
+          "free_mib": 12647
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.263.931 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.699.591 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.787.877 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 16384"
+        ],
+        "n_parallel_line": "",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    }
+  ],
+  "worst_prompt_tokens": 15734,
+  "sizing": {
+    "worst_prompt_tokens": 15734,
+    "max_tokens": 4096,
+    "K_cap": 4,
+    "cells_needed": 79320,
+    "n_ctx_required": 81920
+  },
+  "measurement_wall_s": 379.8
+}

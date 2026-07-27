@@ -5982,9 +5982,81 @@ class E3AgentPolicy:
                     self.plan = list(factored_result.plan)
                     attempt["planned"] = True
                     attempt["plan_length"] = len(self.plan)
-        except Exception:
+        except Exception as induce_exc:
+            # RECORD THE EXCEPTION (2026-07-27). This handler used to write the bare string
+            # "exception" and discard the type, message and traceback entirely -- which is
+            # why making generate() RAISE would have been strictly LESS informative than its
+            # current (False, msg) return: the raise would have landed here and been erased.
+            # Its own siblings in this method already do exactly this (see
+            # program_synthesis_filter_error above), so this is bringing the outermost
+            # handler up to the standard the inner ones already meet. Control flow is
+            # unchanged: still swallow, still return, still no crash on the live path.
             attempt["skipped"] = "exception"
+            attempt["exception"] = repr(induce_exc)[:300]
             return
+
+    def generator_liveness_witness(self) -> dict:
+        """The per-game GENERATOR-LIVENESS row for THIS policy instance.
+
+        WHY THIS EXISTS. The scored (Kaggle) path emitted NO liveness witness of any kind:
+        this file had zero print and zero logging calls, and `induction_attempts` died with
+        the game's thread. So when a generator failed under eval concurrency, the agent
+        finished all 400 actions, exited 0, and there was nothing anywhere -- not a log
+        line, not a field -- that could distinguish "the LLM tier ran and did not help"
+        from "the LLM tier was dead the whole time". The 0.12 -> 0.08 regression closed as
+        "genuinely unexplained" partly for this reason, and the 0.04 first-win rate is
+        currently UNFALSIFIABLE against this hypothesis for the same reason.
+
+        SHAPE. Deliberately the SAME primitive names `scripts/arc_llm_on_liveness_lint.py`
+        already recomputes from (`llm.responses`, `generator_healthy_after`,
+        `server_storm_suspected`), so scored rows are audited by the SAME gate as harness
+        rows -- one checker, not two that can disagree. `llm.calls` is new and lets the
+        gate tell "produced nothing because never asked" (a game that never stalled into
+        induction) apart from "produced nothing though asked" (a dead generator), which a
+        responses-only witness cannot do.
+
+        Never raises: every field degrades to None/0 rather than breaking cleanup()."""
+        import os
+
+        enabled = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") != "1"
+        row: dict[str, Any] = {
+            "game": self.short,
+            "llm_enabled": bool(enabled),
+            "induction_attempts_n": len(self.induction_attempts),
+            "induction_attempts_planned": sum(
+                1 for a in self.induction_attempts if a.get("planned")
+            ),
+            "induction_attempts_skipped": [
+                a.get("skipped") for a in self.induction_attempts if a.get("skipped")
+            ],
+        }
+        proposer = self.proposer
+        if proposer is None:
+            # The proposer is built lazily on the first induction, so None means the LLM
+            # tier was never reached. Say so explicitly rather than leaving the liveness
+            # fields absent -- an absent witness reads as a clean null (the exact
+            # dead-channel failure mode this row exists to close).
+            row["llm"] = {"calls": 0, "responses": 0, "errors": 0, "content_failures": 0}
+            row["generator_healthy_after"] = None
+            row["generator_constructed"] = False
+            row["llm_on_row_valid"] = False
+            return row
+        row["generator_constructed"] = True
+        try:
+            row.update(proposer.liveness_witness())
+        except Exception as exc:  # pragma: no cover - defensive; must never break cleanup
+            row["liveness_witness_error"] = repr(exc)[:200]
+            row["llm"] = {"calls": -1, "responses": -1, "errors": -1}
+            row["generator_healthy_after"] = None
+        llm = row.get("llm") or {}
+        row["llm_on_row_valid"] = bool(
+            enabled
+            and row.get("generator_healthy_after") is True
+            and int(llm.get("calls") or 0) > 0
+            and int(llm.get("responses") or 0) > 0
+            and int(llm.get("errors") or 0) == 0
+        )
+        return row
 
     def is_done(self, frames, latest):
         return self.explorer.is_done(frames, latest) and self.phase == "explore"
@@ -6268,6 +6340,86 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
 
         def is_done(self, frames, latest_frame) -> bool:
             return self._policy.is_done(frames, latest_frame)
+
+        def cleanup(self, scorecard=None) -> None:
+            """Emit the per-game GENERATOR-LIVENESS WITNESS, then defer to the framework.
+
+            WHY HERE. `Agent.cleanup()` is the framework's once-per-game end-of-run hook
+            (called from `Agent.main()`), and swarm.py runs one Agent per game in its own
+            thread -- so this is the only place a per-game record can be written that is
+            guaranteed to run exactly once, in that game's own thread, after the last
+            action.
+
+            WHY IT MUST EXIST AT ALL. Before this, a scored run whose generator died
+            produced NO evidence of the fact: the agent completed its 400 actions, exited
+            0, and the scorecard recorded a legitimate-looking low score. That is the
+            project's dead-channel-reads-as-a-clean-null failure mode in its purest form,
+            and it is why "was the 0.04 first-win rate measured with a live generator?"
+            cannot be answered from the existing record at all.
+
+            TWO CHANNELS, deliberately. (1) A single stderr line, because stderr survives
+            even when the filesystem does not and is greppable in the Kaggle eval log --
+            this is the channel the kernel author flagged as missing at
+            submission_kernel/main.py:68. (2) A JSON row, because a line cannot be audited
+            mechanically and `scripts/arc_llm_on_liveness_lint.py` needs a row to police.
+
+            EVERYTHING IS GUARDED. A witness that could crash the agent would trade a
+            silent degradation for a zeroed game, which is strictly worse: an unsolved
+            level scores 0 either way, so aborting can never GAIN score, and swarm.py runs
+            every game in ONE process, so one exception escaping here could take down the
+            whole eval. `super().cleanup()` is therefore called in a `finally`."""
+            try:
+                self._emit_generator_liveness_witness()
+            except Exception:  # pragma: no cover - the witness must never break the run
+                pass
+            finally:
+                super().cleanup(scorecard)
+
+        def _emit_generator_liveness_witness(self) -> None:
+            import json as _json
+            import os as _os
+            import sys as _sys
+            from pathlib import Path as _Path
+
+            row = self._policy.generator_liveness_witness()
+            row["actions"] = int(getattr(self, "action_counter", -1) or 0)
+            try:
+                row["levels"] = int(self.levels_completed)
+            except Exception:
+                row["levels"] = None
+            row["agent_name"] = str(getattr(self, "name", "") or "")
+            row["max_actions"] = int(getattr(self, "MAX_ACTIONS", -1))
+            llm = row.get("llm") or {}
+            # ONE greppable line. Prefixed LLM LIVENESS so an operator can grep the eval log
+            # for it exactly the way they grep the kernel's existing "LLM GENERATOR HEALTHY".
+            print(
+                f"LLM LIVENESS game={row.get('game')} llm_enabled={row.get('llm_enabled')} "
+                f"calls={llm.get('calls')} responses={llm.get('responses')} "
+                f"errors={llm.get('errors')} content_failures={llm.get('content_failures')} "
+                f"healthy_after={row.get('generator_healthy_after')} "
+                f"llm_on_row_valid={row.get('llm_on_row_valid')} "
+                f"actions={row.get('actions')} levels={row.get('levels')}",
+                file=_sys.stderr,
+                flush=True,
+            )
+            for diag in (row.get("generator_server_failure_diagnostics") or [])[:5]:
+                print(
+                    f"LLM LIVENESS game={row.get('game')} server_failure: {diag}",
+                    file=_sys.stderr,
+                    flush=True,
+                )
+            # The auditable row. Default dir prefers /kaggle/working (the eval's writable
+            # mount); falls back to cwd so a local run also produces a lintable row.
+            base = _os.environ.get("CARNOT_ARC_LIVENESS_DIR")
+            if not base:
+                kaggle = _Path("/kaggle/working")
+                base = str(kaggle if kaggle.is_dir() else _Path.cwd() / "arc_liveness")
+            out = _Path(base)
+            out.mkdir(parents=True, exist_ok=True)
+            gid = str(row.get("game") or "unknown")
+            (out / f"llm_liveness_{gid}_{_os.getpid()}.json").write_text(
+                _json.dumps(row, indent=1, default=str)
+            )
 
         def choose_action(self, frames, latest_frame):
             from arcengine import GameAction

@@ -35,8 +35,18 @@ COMP = "/kaggle/input/competitions/arc-prize-2026-arc-agi-3"
 
 # 1) competition-provided wheels, offline (mirrors the canonical control notebook)
 subprocess.run(
-    [sys.executable, "-m", "pip", "install", "--no-index",
-     "--find-links", f"{COMP}/arc_agi_3_wheels", "arc-agi", "python-dotenv", "--quiet"],
+    [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--find-links",
+        f"{COMP}/arc_agi_3_wheels",
+        "arc-agi",
+        "python-dotenv",
+        "--quiet",
+    ],
     check=False,
 )
 
@@ -44,7 +54,7 @@ subprocess.run(
 #    The carnot import (jax + the agentic stack) is validated to import offline on the
 #    Kaggle image (agent dry-run: 3.6s). The bundled llama-server is copied to a writable
 #    path (/kaggle/input is read-only) and pointed at via CARNOT_LLAMA_SERVER / GGUF env.
-AGENT_SRC = r'''
+AGENT_SRC = r"""
 import os, shutil, sys, time, subprocess, urllib.request
 from pathlib import Path
 
@@ -91,9 +101,18 @@ if server and gguf:
     # unchanged. (The frozen stack's MTP speedup was validated on the iGPU, not the P100.)
     os.environ["CARNOT_ARC_MTP"] = "0"
     _mtp = os.environ.get("CARNOT_ARC_MTP", "1") != "0"
-    print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx=16384 kv=q8_0", flush=True)
+    # READ the context-pool size and completion budget from the SHIPPED defaults instead of
+    # repeating literals here. The old code printed "ctx=16384" and probed with -c 16384 as
+    # hardcoded strings; if the agent's own default had moved, the probe would have validated
+    # a configuration the agent never used -- and validated it as HEALTHY. That is the
+    # measure-one-thing-ship-another shape of the 0.08 incident, in the diagnostic itself.
+    from carnot.agentic.arc_executable_world_model import _default_induce_n_ctx
+    _ctx = str(_default_induce_n_ctx())
+    _maxtok = int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096"))
+    print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx={_ctx} "
+          f"max_tokens={_maxtok} kv=q8_0", flush=True)
     # one-shot health probe: spawn the generator with the SAME args the agent uses and confirm it
-    # actually LOADS on this 16GB GPU (stderr CAPTURED, not swallowed like the agent's DEVNULL launch),
+    # actually LOADS on this GPU (stderr CAPTURED, not swallowed like the agent's DEVNULL launch),
     # then free the port. Wrapped so a probe failure can NEVER crash the agent / zero the submission.
     try:
         _pp = 8945
@@ -101,7 +120,7 @@ if server and gguf:
         # CARNOT_ARC_NGL (default 999=all-GPU): the prefill-to-RAM lever. Lower it to spill weight layers
         # into system RAM, freeing VRAM for KV + the coexisting live CNN fit. Probe the SAME ngl the agent uses.
         _ngl = os.environ.get("CARNOT_ARC_NGL", "999")
-        _args = [str(run_server), "-m", str(gguf), "-ngl", _ngl, "-c", "16384",
+        _args = [str(run_server), "-m", str(gguf), "-ngl", _ngl, "-c", _ctx,
                  "--port", str(_pp), "--host", "127.0.0.1", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0"]
         if _mtp:
             _args += ["--spec-type", "draft-mtp", "--model-draft", str(gguf)]
@@ -116,6 +135,58 @@ if server and gguf:
                         _ok = True; break
             except Exception:
                 time.sleep(2)
+        # CONCURRENCY PROBE (2026-07-27). The old probe only checked /health, i.e. concurrency 1
+        # -- the exact blind spot that hid the context-pool-exhaustion fault for the whole life
+        # of this submission. swarm.py starts ONE THREAD PER GAME with no pool, so induce
+        # requests arrive together; measured, the fault fires at K=2 (not 4), returning HTTP 500
+        # "Context size has been exceeded." within ~5s -- and in one shape it aborts the server
+        # outright. So probe with TWO CONCURRENT requests at the REAL shipped shape: a
+        # worst-case-sized prompt plus n_predict = the agent's own max_tokens, because it is
+        # (prompt + n_predict) x K that has to fit in the shared pool. A `stop` on a newline
+        # keeps the PASSING case fast without touching the admission arithmetic (llama.cpp
+        # admits or refuses on the reserved budget, before generating -- which is why the
+        # FAILING case returns in seconds).
+        _conc = "not_probed"
+        if _ok:
+            try:
+                import json as _json
+                from concurrent.futures import ThreadPoolExecutor as _TPE
+                # ~15.7k tokens of digit-dense grid text: the measured worst case for the real
+                # induce prompt (a 64x64 logical grid, the largest in the solve registry).
+                _big = ("Row: " + " ".join("1234567890" for _ in range(60)) + "\n") * 26
+                _body = _json.dumps({"prompt": _big, "n_predict": _maxtok,
+                                     "temperature": 0.3, "cache_prompt": True,
+                                     "stop": ["\n"]}).encode()
+
+                def _one(_i):
+                    _r = urllib.request.Request(f"http://127.0.0.1:{_pp}/completion", data=_body,
+                                                headers={"Content-Type": "application/json"})
+                    try:
+                        with urllib.request.urlopen(_r, timeout=420) as _resp:
+                            return _resp.status
+                    except Exception as _ex:
+                        return f"{type(_ex).__name__}:{getattr(_ex, 'code', '')}"
+
+                with _TPE(max_workers=2) as _ex2:
+                    _codes = list(_ex2.map(_one, range(2)))
+                _alive = False
+                try:
+                    with urllib.request.urlopen(f"http://127.0.0.1:{_pp}/health", timeout=5) as r:
+                        _alive = r.status == 200
+                except Exception:
+                    _alive = False
+                _conc = f"K2_codes={_codes} server_alive_after={_alive}"
+                if all(c == 200 for c in _codes) and _alive:
+                    print(f"LLM CONCURRENCY OK -- 2 simultaneous full-budget requests both "
+                          f"succeeded at ctx={_ctx} ({_conc})", flush=True)
+                else:
+                    print(f"LLM CONCURRENCY FAILED at ctx={_ctx}/max_tokens={_maxtok} ({_conc}). "
+                          f"The eval runs one thread per game, so induction WILL degrade "
+                          f"silently. Operator: raise CARNOT_ARC_INDUCE_N_CTX (needs >= "
+                          f"4 x (prompt + {_maxtok})).", flush=True)
+            except Exception as _ce:
+                _conc = f"probe_error:{_ce!r}"
+                print(f"LLM CONCURRENCY PROBE ERROR (non-fatal): {_ce!r}", flush=True)
         _proc.terminate()
         try:
             _proc.wait(timeout=15)
@@ -123,11 +194,13 @@ if server and gguf:
             _proc.kill()
         _err.close()
         if _ok:
-            print("LLM GENERATOR HEALTHY -- loaded on GPU, /health ok (generator tier ENGAGED)", flush=True)
+            print(f"LLM GENERATOR HEALTHY -- loaded on GPU, /health ok (generator tier ENGAGED); "
+                  f"concurrency: {_conc}", flush=True)
         else:
             _tail = Path("/kaggle/working/llm_probe.err").read_text()[-1000:]
-            print(f"LLM GENERATOR FAILED TO LOAD (likely OOM at mtp={_mtp}/ctx=16384 on 16GB) -- agent will "
-                  f"run CPU graph-explore ONLY. Operator: consider CARNOT_ARC_MTP=0. stderr tail:\n{_tail}",
+            print(f"LLM GENERATOR FAILED TO LOAD (likely OOM at mtp={_mtp}/ctx={_ctx}) -- agent will "
+                  f"run CPU graph-explore ONLY. Operator: consider CARNOT_ARC_MTP=0 or a lower "
+                  f"CARNOT_ARC_INDUCE_N_CTX. stderr tail:\n{_tail}",
                   flush=True)
     except Exception as _e:
         print(f"LLM PROBE ERROR (non-fatal, agent continues with LLM env set): {_e!r}", flush=True)
@@ -142,7 +215,7 @@ from carnot.agentic.arc_competition_agent import make_carnot_agent
 # the verifier-routed cascade (graph-explore -> E3 induction via the bundled Qwen).
 # registered under "carnotagent" in the rewritten agents/__init__.py below.
 CarnotAgent = make_carnot_agent(Agent)
-'''
+"""
 Path("/kaggle/working/my_agent.py").write_text(AGENT_SRC)
 
 if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
@@ -150,7 +223,8 @@ if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
     subprocess.run(
         "curl --fail --retry 999 --retry-all-errors --retry-delay 5 "
         "--retry-max-time 600 http://gateway:8001/api/games",
-        shell=True, check=False,
+        shell=True,
+        check=False,
     )
     # 4) copy the COMPETITION-PROVIDED framework to a writable location
     fw = "/kaggle/working/ARC-AGI-3-Agents"
@@ -167,7 +241,7 @@ if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
         "from .templates.random_agent import Random\n"
         "from .templates.my_agent import CarnotAgent\n"
         "load_dotenv()\n"
-        'AVAILABLE_AGENTS: dict[str, Type[Agent]] = '
+        "AVAILABLE_AGENTS: dict[str, Type[Agent]] = "
         '{"random": Random, "carnotagent": CarnotAgent}\n'
     )
     # 6) CRITICAL: point main.py at the gateway. main.py builds its game-API URL from
@@ -190,7 +264,10 @@ if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
     run_env["MPLBACKEND"] = "agg"  # headless matplotlib (canonical nb sets this)
     subprocess.run(
         [sys.executable, "main.py", "--agent", "carnotagent"],
-        cwd=fw, env=run_env, timeout=43200, check=False,
+        cwd=fw,
+        env=run_env,
+        timeout=43200,
+        check=False,
     )
 else:
     # NON-rerun: write the placeholder submission so Save & Run produces a valid entry.

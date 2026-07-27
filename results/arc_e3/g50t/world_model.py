@@ -1,5 +1,7 @@
 import numpy as np
 
+import numpy as np
+
 def engine(grid, action, data):
     if action == 1:
         return grid
@@ -15,7 +17,15 @@ def engine(grid, action, data):
         return grid
     elif action == 7:
         return grid
-    return grid
+    else:
+        return grid
 
 def is_level_complete(grid):
     return False
+
+def is_level_complete(grid):
+    import numpy as np
+    g = np.array(grid)
+    if g.shape[0] == 0 or g.shape[1] == 0:
+        return False
+    return np.all(g == 0)

@@ -1,0 +1,345 @@
+{
+ "harness": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/fixverify.py",
+ "run_date": "2026-07-27T10:19:02Z",
+ "random_seed": 5866,
+ "shipped_max_tokens": 4096,
+ "K_values": [
+  2,
+  4
+ ],
+ "configs": [
+  {
+   "label": "CONTROL_shipped_before_16384",
+   "port": 8941,
+   "device": {
+    "requested_n_ctx": 16384,
+    "proposer_n_ctx_attr": 16384,
+    "launched_pid": 2229410,
+    "server_healthy": true,
+    "load_s": 10.0,
+    "per_pid_rows": [
+     {
+      "pid": 2229410,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "used_mib": 11784
+     }
+    ],
+    "gpu1_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "gpu0_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "resident_on_gpu1": true,
+    "resident_on_gpu0": false,
+    "gpu1_used_before_mib": 306,
+    "gpu1_used_after_mib": 12095,
+    "gpu0_used_before_mib": 4,
+    "gpu0_used_after_mib": 4,
+    "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY"
+   },
+   "props": {
+    "total_slots": 4,
+    "n_ctx_default_generation_settings": 16384,
+    "per_slot_n_ctx": null,
+    "n_ctx_train": null
+   },
+   "prompt": {
+    "tokens": 15776,
+    "transitions_k": 8,
+    "grid_shape": [
+     64,
+     64
+    ],
+    "builder": "arc_executable_world_model.induce_prompt",
+    "token_count_source": "server /tokenize (real tokenizer)"
+   },
+   "vram_resident_mib": 12095,
+   "cells": [
+    {
+     "K": 2,
+     "requests": [
+      {
+       "i": 0,
+       "http": 500,
+       "elapsed_s": 5.05,
+       "content_chars": 0,
+       "stop_type": null,
+       "truncated": null,
+       "predicted_n": null,
+       "prompt_n": null,
+       "error_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+      },
+      {
+       "i": 1,
+       "http": 500,
+       "elapsed_s": 5.04,
+       "content_chars": 0,
+       "stop_type": null,
+       "truncated": null,
+       "predicted_n": null,
+       "prompt_n": null,
+       "error_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+      }
+     ],
+     "n_http_200": 0,
+     "n_http_500": 2,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 0,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [
+      0,
+      1
+     ],
+     "silently_truncated_request_ids": [],
+     "observed": "FAIL"
+    },
+    {
+     "K": 4,
+     "requests": [
+      {
+       "i": 0,
+       "http": 500,
+       "elapsed_s": 4.98,
+       "content_chars": 0,
+       "stop_type": null,
+       "truncated": null,
+       "predicted_n": null,
+       "prompt_n": null,
+       "error_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+      },
+      {
+       "i": 1,
+       "http": 500,
+       "elapsed_s": 4.98,
+       "content_chars": 0,
+       "stop_type": null,
+       "truncated": null,
+       "predicted_n": null,
+       "prompt_n": null,
+       "error_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+      },
+      {
+       "i": 2,
+       "http": 500,
+       "elapsed_s": 4.98,
+       "content_chars": 0,
+       "stop_type": null,
+       "truncated": null,
+       "predicted_n": null,
+       "prompt_n": null,
+       "error_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+      },
+      {
+       "i": 3,
+       "http": 500,
+       "elapsed_s": 4.98,
+       "content_chars": 0,
+       "stop_type": null,
+       "truncated": null,
+       "predicted_n": null,
+       "prompt_n": null,
+       "error_body": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+      }
+     ],
+     "n_http_200": 0,
+     "n_http_500": 4,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 0,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "silently_truncated_request_ids": [],
+     "observed": "FAIL"
+    }
+   ],
+   "teardown": {
+    "pid": 2229410,
+    "needed_sigkill": true,
+    "gone": true
+   }
+  },
+  {
+   "label": "FIX_shipped_default",
+   "port": 8942,
+   "device": {
+    "requested_n_ctx": null,
+    "proposer_n_ctx_attr": 81920,
+    "launched_pid": 2229545,
+    "server_healthy": true,
+    "load_s": 10.0,
+    "per_pid_rows": [
+     {
+      "pid": 2229545,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "used_mib": 13452
+     }
+    ],
+    "gpu1_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "gpu0_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "resident_on_gpu1": true,
+    "resident_on_gpu0": false,
+    "gpu1_used_before_mib": 306,
+    "gpu1_used_after_mib": 13763,
+    "gpu0_used_before_mib": 4,
+    "gpu0_used_after_mib": 4,
+    "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY"
+   },
+   "props": {
+    "total_slots": 4,
+    "n_ctx_default_generation_settings": 81920,
+    "per_slot_n_ctx": null,
+    "n_ctx_train": null
+   },
+   "prompt": {
+    "tokens": 15776,
+    "transitions_k": 8,
+    "grid_shape": [
+     64,
+     64
+    ],
+    "builder": "arc_executable_world_model.induce_prompt",
+    "token_count_source": "server /tokenize (real tokenizer)"
+   },
+   "vram_resident_mib": 13763,
+   "cells": [
+    {
+     "K": 2,
+     "requests": [
+      {
+       "i": 0,
+       "http": 200,
+       "elapsed_s": 65.29,
+       "content_chars": 13071,
+       "stop_type": "limit",
+       "truncated": false,
+       "predicted_n": 4096,
+       "prompt_n": 15776
+      },
+      {
+       "i": 1,
+       "http": 200,
+       "elapsed_s": 65.14,
+       "content_chars": 6968,
+       "stop_type": "limit",
+       "truncated": false,
+       "predicted_n": 4096,
+       "prompt_n": 15776
+      }
+     ],
+     "n_http_200": 2,
+     "n_http_500": 0,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 2,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [],
+     "silently_truncated_request_ids": [],
+     "observed": "PASS"
+    },
+    {
+     "K": 4,
+     "requests": [
+      {
+       "i": 0,
+       "http": 200,
+       "elapsed_s": 141.08,
+       "content_chars": 13254,
+       "stop_type": "limit",
+       "truncated": false,
+       "predicted_n": 4096,
+       "prompt_n": 4
+      },
+      {
+       "i": 1,
+       "http": 200,
+       "elapsed_s": 144.29,
+       "content_chars": 9447,
+       "stop_type": "limit",
+       "truncated": false,
+       "predicted_n": 4096,
+       "prompt_n": 4
+      },
+      {
+       "i": 2,
+       "http": 200,
+       "elapsed_s": 138.09,
+       "content_chars": 7223,
+       "stop_type": "limit",
+       "truncated": false,
+       "predicted_n": 4096,
+       "prompt_n": 15776
+      },
+      {
+       "i": 3,
+       "http": 200,
+       "elapsed_s": 138.96,
+       "content_chars": 15276,
+       "stop_type": "limit",
+       "truncated": false,
+       "predicted_n": 4096,
+       "prompt_n": 15776
+      }
+     ],
+     "n_http_200": 4,
+     "n_http_500": 0,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 4,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [],
+     "silently_truncated_request_ids": [],
+     "observed": "PASS"
+    }
+   ],
+   "teardown": {
+    "pid": 2229545,
+    "needed_sigkill": true,
+    "gone": true
+   }
+  }
+ ],
+ "failure_set_control": [
+  "CONTROL_shipped_before_16384/K2/req0/http_fail",
+  "CONTROL_shipped_before_16384/K2/req1/http_fail",
+  "CONTROL_shipped_before_16384/K4/req0/http_fail",
+  "CONTROL_shipped_before_16384/K4/req1/http_fail",
+  "CONTROL_shipped_before_16384/K4/req2/http_fail",
+  "CONTROL_shipped_before_16384/K4/req3/http_fail"
+ ],
+ "failure_set_fix": [],
+ "failure_set_comparison": {
+  "control_n": 6,
+  "fix_n": 0,
+  "resolved_by_fix": [
+   "K2/req0/http_fail",
+   "K2/req1/http_fail",
+   "K4/req0/http_fail",
+   "K4/req1/http_fail",
+   "K4/req2/http_fail",
+   "K4/req3/http_fail"
+  ],
+  "still_failing_under_fix": [],
+  "new_failures_introduced_by_fix": []
+ },
+ "vram_cost_mib": 1668,
+ "elapsed_s": 304.5
+}

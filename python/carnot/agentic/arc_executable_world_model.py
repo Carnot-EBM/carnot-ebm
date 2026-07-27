@@ -1124,7 +1124,9 @@ def objects_block(
         hashes = topo.get("object_hashes", {})
         n = len(blobs)
         # Show the largest-by-pixel objects first; keep ORIGINAL ids so containment/adjacency stay valid.
-        order = sorted(range(n), key=lambda i: -int(getattr(blobs[i], "pixel_count", 0)))[:max_objects]
+        order = sorted(range(n), key=lambda i: -int(getattr(blobs[i], "pixel_count", 0)))[
+            :max_objects
+        ]
         shown = set(order)
         header = (
             f"{title} OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> "
@@ -1141,7 +1143,9 @@ def objects_block(
                 f"px={int(b.pixel_count)} centroid=({float(cy):.1f},{float(cx):.1f}) shape={hashes.get(i)}"
             )
         children = {p: cs for p, cs in topo.get("children", {}).items() if cs and p in shown}
-        adjacency = [pair for pair in topo.get("adjacency_list", []) if all(j in shown for j in pair)]
+        adjacency = [
+            pair for pair in topo.get("adjacency_list", []) if all(j in shown for j in pair)
+        ]
         rows.append(f"  containment (parent->children): {children}")
         rows.append(f"  adjacency (touching id pairs): {adjacency}")
         rows.append(
@@ -1540,6 +1544,95 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
     return (hip if hip.exists() else cuda), None
 
 
+def _describe_http_failure(exc: BaseException) -> str:
+    """Render a completion-request exception INCLUDING the server's own response body.
+
+    WHY (exp5866 finding 4). The old code did `f"...failed: {exc!r}"`, and for a
+    urllib HTTPError that repr is just `<HTTPError 500: 'Internal Server Error'>` --
+    the generic reason phrase. The ONE informative string in the whole failure was
+    thrown away unread:
+
+      * the 500 body says `Context size has been exceeded.` (the concurrency fault)
+      * the 400 body says `request (15754 tokens) exceeds the available context size
+        (8192 tokens), try increasing it` -- literally the fix, in the message
+
+    Two independent sessions spent effort re-deriving what these bodies already said,
+    because nothing ever printed them. This is a RECORD change only: same exception
+    handling, same (False, msg) return, same control flow -- just a message that
+    contains the evidence. Never raises: a body that cannot be read degrades to the
+    plain repr rather than replacing one silent failure with another.
+    """
+    base = repr(exc)[:200]
+    body = ""
+    try:  # urllib.error.HTTPError is a file-like object over the response body
+        reader = getattr(exc, "read", None)
+        if callable(reader):
+            raw = reader()
+            if isinstance(raw, bytes):
+                raw = raw.decode(errors="replace")
+            body = str(raw or "")[:400]
+    except Exception:
+        body = ""
+    return f"{base} body={body!r}" if body else base
+
+
+def _default_induce_n_ctx() -> int:
+    """The generator server's SHARED context-pool size, in tokens (llama-server `-c`).
+
+    WHY 81920 AND NOT 16384 (the concurrency fault, measured 2026-07-27, exp5866).
+    llama-server with no explicit `--parallel` sets `n_parallel=4` AND `kv_unified=true`
+    (its own default, server.cpp:106-110). kv_unified means the 4 slots share ONE pool of
+    `-c` cells -- they do NOT each get `-c` cells, and they do NOT get `-c / 4` either
+    (that is the DIVIDED-context branch, which only happens when you pass `--parallel`
+    explicitly). So the real admission requirement is:
+
+        n_ctx  >=  K_concurrent * (prompt_tokens + max_tokens)
+
+    The eval framework starts ONE THREAD PER GAME with no pool (swarm.py:91), so induce
+    requests arrive together; llama.cpp caps concurrency at its own 4 slots and QUEUES the
+    rest, which is why K=4 -- not the ~110 game count -- is the number that has to fit.
+
+    At the previous 16384 with max_tokens=4096, the fault fired at K=2 (2 * (5968+4096) =
+    20128 > 16384), and it had THREE distinct shapes, all invisible to the concurrency-1
+    probing every prior measurement used:
+      A. HTTP 500 "Context size has been exceeded." -- server survives (large prompts).
+      B. server DEATH: `GGML_ASSERT(logits != nullptr)` -> `ggml_abort` inside
+         `update_slots()` -- permanent, every later request gets RemoteDisconnected
+         (small prompts admitted, generations collectively overrun the pool).
+      C. WORST: HTTP **200** with a silently truncated completion, when the prompt nearly
+         fills the pool and only the leftover cells remain for generation.
+    Because `generate()` returns `(False, msg)` instead of raising, A and B degrade the
+    agent to LLM-OFF while it still reports itself as the LLM-on scored path, and C is not
+    even visible as a failure. Sizing the pool is what removes all three.
+
+    81920 = 4 * (15734 + 4096) rounded up to a 4096 multiple, where 15734 tokens is the
+    real `induce_prompt()` for the largest logical grid in `ops/arc_solve_registry.yaml`
+    (64x64), measured through the server's own `/tokenize` -- not estimated. Worst case,
+    not typical, because the GENERATED length is unknowable in advance.
+
+    WHY THIS AXIS AND NOT ANOTHER. Measured VRAM envelope (9 configs, refit max error
+    0.19%): `MiB = 10547 + 0.02519*n_ctx + 206.8*slots`. Context is the CHEAP axis --
+    16384 -> 81920 costs +1668 MiB, while a slot costs ~207 MiB regardless of n_ctx. The
+    alternatives were measured and rejected: an explicit `--parallel 4` DIVIDES the pool
+    (4096/slot) and is strictly worse; `--parallel 1` passes an HTTP gate and costs LESS
+    VRAM but generated 648/650/184/648 tokens against a 4096 budget -- i.e. it converts
+    the loud 500 into silent mode C, the exact defect under investigation. `n_ctx_train`
+    is 262144, so 81920 is well inside the model's trained context.
+
+    OVERRIDE with CARNOT_ARC_INDUCE_N_CTX for a tight-VRAM box or a model with a fatter
+    per-token KV than the frozen 9B live generator (this default is sized for that model;
+    a ~3x-larger model's KV would cost ~3x the 1668 MiB). Read via default_factory so the
+    literal lives in exactly ONE place -- both construction sites in
+    arc_competition_agent.py (`_proposer()` and `_load_sge_candidate_router()`) omit n_ctx
+    and therefore cannot silently diverge from each other, which is the failure the
+    REQ-ARC-FCP-5699-35 comment at that second site records having already happened once
+    for max_tokens.
+    """
+    import os
+
+    return int(os.environ.get("CARNOT_ARC_INDUCE_N_CTX", "81920"))
+
+
 @dataclass
 class LocalGGUFProposer:
     """OFFLINE-LEGAL, DECENTRALIZED, GPU-ENFORCED proposer (CLAUDE.md decentralization
@@ -1555,7 +1648,9 @@ class LocalGGUFProposer:
     other local engine)."""
 
     repo_substr: str = "gemma-4-12B-it"  # lightweight SOTA: fast on GPU for per-game induction
-    n_ctx: int = 16384  # digit-dense grids tokenize ~1 char/token; 8192 overflowed
+    # SHARED context pool (llama-server -c). 81920 by measurement, env-overridable --
+    # see _default_induce_n_ctx() above for the full derivation and the rejected alternatives.
+    n_ctx: int = field(default_factory=_default_induce_n_ctx)
     max_tokens: int = 4096  # a full world-model engine needs >2048 (it truncated mid-code)
     timeout: int = 300
     port: int = 8919
@@ -1621,14 +1716,95 @@ class LocalGGUFProposer:
     # failed. Closes the diagnostic gap REQ-ARC-FCP-5699-23 through -29 all ran into without ever
     # inspecting.
     last_raw_completion: str = ""
+    # LIVENESS WITNESS (2026-07-27, exp5866 finding 4). The scored ARC path had NO channel
+    # at all for "did the generator actually answer": generate()/complete_text() return
+    # (False, msg) on a dead or refusing server, every caller treats that as "no induction
+    # this stall" and continues, and the message string is discarded by 4 of the 11 call
+    # sites outright. So a run whose generator died at action 3 completed all 400 actions,
+    # exited 0, and was recorded as an LLM-on measurement. The census
+    # (results/outer_loop_arc_generator_failure_swallow_census_20260727.json) found the
+    # harness-side `errors` counter is STRUCTURALLY dead -- 877 stat blocks, zero non-zero,
+    # including all 8 cells where the generator provably died -- because it only counts
+    # exceptions that PROPAGATE, and none do.
+    #
+    # These counters live on the PROPOSER because it is the single choke point all 11 call
+    # sites funnel through; instrumenting the call sites individually would have to be
+    # redone for every new caller and would miss exactly the ones that discard the message.
+    # SERVER failures (unreachable / HTTP error / transport death) are counted separately
+    # from CONTENT failures (the server answered, the answer was unusable) because only the
+    # first is a liveness fact -- conflating them would let a healthy-but-unhelpful model
+    # read as a dead generator and vice versa.
+    n_completion_calls: int = 0
+    n_completion_ok: int = 0
+    n_server_failures: int = 0
+    n_content_failures: int = 0
+    server_failure_diagnostics: list = field(default_factory=list)
+    last_generated_tokens: int = -1
 
     def _url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
+
+    def _note_server_failure(self, diagnostic: str) -> None:
+        """Count + KEEP a server-side failure diagnostic (bounded, so a storm cannot grow
+        without limit). This is the record the scored path never had."""
+        self.n_server_failures += 1
+        if len(self.server_failure_diagnostics) < 24:
+            self.server_failure_diagnostics.append(diagnostic[:400])
+
+    def liveness_witness(self) -> dict:
+        """The generator-liveness primitives, in the SHAPE `scripts/arc_llm_on_liveness_lint.py`
+        already recomputes from (`llm.responses`, `generator_healthy_after`), so a scored-path
+        row can be audited by the SAME gate as a harness row rather than needing a second,
+        differently-buggy checker."""
+        return {
+            "llm": {
+                "calls": int(self.n_completion_calls),
+                "responses": int(self.n_completion_ok),
+                "errors": int(self.n_server_failures),
+                "content_failures": int(self.n_content_failures),
+            },
+            "generator_healthy_after": bool(self._healthy()),
+            "generator_server_failure_diagnostics": list(self.server_failure_diagnostics),
+            "generator_port": int(self.port),
+            "generator_n_ctx": int(self.n_ctx),
+            "generator_max_tokens": int(self.max_tokens),
+        }
 
     def _record_completion_diagnostics(self, response: dict) -> None:
         self.last_stop_type = str(response.get("stop_type") or "")
         self.last_prompt_truncated = bool(response.get("truncated"))
         self.last_raw_completion = str(response.get("content") or "")
+        # How many tokens the server ACTUALLY generated. Load-bearing for telling the two
+        # "stop_type == limit" cases apart -- see _limit_diagnostic().
+        timings = response.get("timings")
+        got = (timings or {}).get("predicted_n") if isinstance(timings, dict) else None
+        self.last_generated_tokens = int(got) if isinstance(got, int) else -1
+
+    def _limit_diagnostic(self) -> str:
+        """Distinguish the TWO different faults that both report stop_type == 'limit'.
+
+        The old message said "HIT n_predict=<max_tokens> OUTPUT LIMIT" for both, which is
+        actively misleading in the second case and is why exp5866's mode C went unnoticed:
+
+          * INTENDED BUDGET LIMIT -- the model generated the full max_tokens we asked for
+            and was still going. The fix is a bigger max_tokens.
+          * SHARED-POOL TRUNCATION -- the model was cut off FAR short of max_tokens because
+            the prompt had already consumed most of the server's shared context pool, so
+            only the leftover cells were available to generate into. The fix is a bigger
+            -c / CARNOT_ARC_INDUCE_N_CTX, and a bigger max_tokens would make it WORSE.
+            Measured shape: a 15754-token prompt in a 16384 pool left 630 cells, produced
+            2133 characters, and returned HTTP 200 -- indistinguishable, before this
+            change, from a healthy-but-terse model.
+        """
+        got = self.last_generated_tokens
+        if isinstance(got, int) and 0 <= got < self.max_tokens - 8:
+            return (
+                f" [TRUNCATED BY SHARED CONTEXT POOL: generated only {got} of the "
+                f"{self.max_tokens}-token budget in an n_ctx={self.n_ctx} pool -- the prompt "
+                f"consumed the rest. RAISE -c / CARNOT_ARC_INDUCE_N_CTX; raising max_tokens "
+                f"would make this worse]"
+            )
+        return f" [HIT n_predict={self.max_tokens} OUTPUT LIMIT before completing]"
 
     def _chat_complete_request(
         self,
@@ -1759,11 +1935,14 @@ class LocalGGUFProposer:
         import os
         import urllib.request
 
+        self.n_completion_calls += 1
         if not self._ensure_server():
-            return False, (
+            msg = (
                 f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
+            self._note_server_failure(msg)
+            return False, msg
         # L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the INDUCE
         # call ONLY (codeonly_eligible, set True solely by induce->_gen_to_file). refactor() also
         # routes through _gen_to_file with the same `required` tuple, but it is a REASONING task
@@ -1812,7 +1991,9 @@ class LocalGGUFProposer:
                         _response = _json.load(r)
                     text = _response.get("content", "")
             except Exception as e:
-                return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+                msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
+                self._note_server_failure(msg)
+                return False, msg
             self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
             code = _extract_python(text)
             if not code and _codeonly:
@@ -1822,7 +2003,7 @@ class LocalGGUFProposer:
             if not code or any(f"def {fn}" not in code for fn in required):
                 _diag = ""
                 if self.last_stop_type == "limit":
-                    _diag += f" [HIT n_predict={self.max_tokens} OUTPUT LIMIT before completing]"
+                    _diag += self._limit_diagnostic()
                 if self.last_prompt_truncated:
                     _diag += " [PROMPT TRUNCATED -- exceeded server context window]"
                 last = f"missing {required} in output{_diag}"
@@ -1840,7 +2021,12 @@ class LocalGGUFProposer:
                 except Exception as ve:
                     last = f"runtime check raised: {ve!r}"[:120]
                     continue
+            self.n_completion_ok += 1
             return True, code
+        # CONTENT failure, not a liveness failure: the server answered every try, the
+        # answers were unusable. Counted separately so a terse-but-alive model can never
+        # read as a dead generator (and vice versa) in the liveness witness.
+        self.n_content_failures += 1
         return False, f"local model code unusable after {tries} tries ({last})"
 
     def complete_text(
@@ -1868,11 +2054,14 @@ class LocalGGUFProposer:
         import json as _json
         import urllib.request
 
+        self.n_completion_calls += 1
         if not self._ensure_server():
-            return False, (
+            msg = (
                 f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
+            self._note_server_failure(msg)
+            return False, msg
         full_prompt = (self.no_think_prefix + prompt) if self.no_think_prefix else prompt
         payload = {
             "prompt": full_prompt,
@@ -1902,9 +2091,12 @@ class LocalGGUFProposer:
                 )
                 with urllib.request.urlopen(req, timeout=self.timeout) as r:
                     _response = _json.load(r)
-        except Exception as e:  # pragma: no cover - network boundary
-            return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+        except Exception as e:
+            msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
+            self._note_server_failure(msg)
+            return False, msg
         self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
+        self.n_completion_ok += 1
         return True, str(_response.get("content", ""))
 
     def _gen_to_file(

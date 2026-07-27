@@ -1,0 +1,94 @@
+{
+ "arm": "llm_on_16k_probe",
+ "k_concurrency": 4,
+ "n_ctx": 16384,
+ "games": [
+  "lp85",
+  "sp80",
+  "vc33"
+ ],
+ "variant_ids": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "budget": 200,
+ "n_cells": 12,
+ "started_utc": "2026-07-27T13:19:11Z",
+ "git_head": "c4c60dfacbcc23ad4eb0ab7d72b85e2a270f4a39",
+ "submitted_target_levels": 3,
+ "submitted_value_weight": 1e-12,
+ "deepen_enabled": true,
+ "server": {
+  "requested_n_ctx": 16384,
+  "port": 8963,
+  "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "server_binary_is_cuda_build": true,
+  "launch_ok": true,
+  "launch_s": 10.01,
+  "pid": 2299948,
+  "props": {
+   "total_slots": 4,
+   "n_ctx_reported": 16384,
+   "n_ctx_per_seq": null,
+   "model_path": "6a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+  },
+  "device": {
+   "pid": 2299948,
+   "intended_gpu": 1,
+   "compute_apps": [
+    {
+     "pid": 12188,
+     "used_mib": 296,
+     "gpu_index": 1
+    },
+    {
+     "pid": 2299948,
+     "used_mib": 11784,
+     "gpu_index": 1
+    }
+   ],
+   "my_rows": [
+    {
+     "pid": 2299948,
+     "used_mib": 11784,
+     "gpu_index": 1
+    }
+   ],
+   "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+   "my_vram_mib": 11784,
+   "gpu_totals": [
+    "0, 4 MiB",
+    "1, 12095 MiB"
+   ]
+  }
+ },
+ "wall_s": 951.75,
+ "measurement_wall_s_from_rows": 2943.34,
+ "finished_utc": "2026-07-27T13:35:14Z",
+ "server_healthy_after": true,
+ "props_after": {
+  "total_slots": 4,
+  "n_ctx_reported": 16384,
+  "n_ctx_per_seq": null,
+  "model_path": "6a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+ },
+ "teardown": {
+  "recorded_pid": 2299948,
+  "port": 8963,
+  "recorded_pid_outcome": "absent(3)",
+  "port_owner_strays_found": [
+   2301786
+  ],
+  "port_owner_outcomes": {
+   "2301786": "SIGKILL"
+  },
+  "killed": true,
+  "port_clear_after": true
+ },
+ "gpu_after_teardown": [
+  "0, 4 MiB",
+  "1, 1071 MiB"
+ ]
+}

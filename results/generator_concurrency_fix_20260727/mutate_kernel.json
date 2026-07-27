@@ -1,0 +1,22 @@
+{
+ "baseline_failures": [],
+ "mutations": [
+  {
+   "mutation": "M10_kernel_reverts_to_a_hardcoded_ctx_literal",
+   "neuters": "the ORIGIN shape: probe a literal instead of the shipped default",
+   "tests_killed": [
+    "test_kernel_probe_reads_the_shipped_context_size_instead_of_a_literal"
+   ],
+   "status": "LOAD_BEARING"
+  },
+  {
+   "mutation": "M11_kernel_reverts_to_a_K1_only_health_probe",
+   "neuters": "the ORIGIN blind spot: concurrency 1, where the fault is invisible",
+   "tests_killed": [
+    "test_kernel_probe_exercises_concurrency_not_just_health"
+   ],
+   "status": "LOAD_BEARING"
+  }
+ ],
+ "post_restore_returncode": 0
+}
