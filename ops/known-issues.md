@@ -4685,6 +4685,40 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-07-27 — RUNNING THE FULL PYTHON TEST SUITE MUTATES 45 TRACKED ARTIFACTS AND STRIPS FABRICATION-GATE STAMPS (pre-existing; found, reported, NOT fixed)
+
+**Symptom.** `pytest tests/python` rewrites tracked files under `results/` while it runs. Observed
+directly: `results/experiment_1938_nrgpt_loss_probe.json` and 44 others changed mtime between
+17:20:36 and 17:29:16 during a suite run, and each lost its `flagged_adversarial` /
+`corrigendum_pending` / `corrigendum_note` fields.
+
+**Why it matters more than an ordinary test smell.** Per CLAUDE.md's fabrication gate, capstone /
+evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying
+`flagged_adversarial: true`. The gate keys off the field being PRESENT, so silently dropping it
+**re-admits a quarantined artifact to headline aggregation**. `scripts/determination_preservation_lint.py`
+caught it (that guard working as designed), and the affected files were restored from HEAD.
+
+**It recurs.** One of the stripped files already carried a
+`flagged_adversarial_restoration_note` written EARLIER THE SAME DAY, recording that a *conductor* re-run
+had stripped the same stamps and that the outer loop had restored them. So there are at least two
+independent writers doing this: the conductor, and the test suite.
+
+**Root cause (diagnosed, not fixed).** Tests import/execute experiment modules that write their output
+to the tracked `results/<name>.json` path they normally write to in production. A test has no business
+writing there. The structural fix is the same one REQ-ARC-WMTE-6016 applied to the engine store: make
+the output root redirectable (env var / fixture) and point tests at `tmp_path`.
+
+**Operational consequence until fixed.** Running the full suite is DESTRUCTIVE to the working tree. Do
+not report a full-suite green without also running
+`python3 scripts/determination_preservation_lint.py` and restoring anything it flags. The affected set
+is discoverable with `git status --porcelain results/` compared against the pre-run state.
+
+**Affected files (45, restored 2026-07-27):** checkpoints/experiment_631, 1035, 1038, 1081, 1089, 1103,
+1717, 1747, 1750, 1796, 1822 (a .log), 1861, 1869, 1911, 1938, 1970, 2085, 2090, 2097, 2427, 2510,
+2521, 2538, 2721, 2736, 2754, 2758, 2824, 307, 3343, 3350, 3351, 3386, 3394, 3395, 339, 3734, 3946,
+4162, 4170, 542, 5861, 833, 885, 911.
+
+
 ### RESOLVED 2026-07-14 (MANDATORY — outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY
 
 **Origin:** operational retrospectives for milestones .469, .473 (three separate generation

@@ -1,5 +1,318 @@
 # Carnot — Changelog
 
+## 2026-07-27 (outer-loop: SECOND adversarial review of the same day's mask/gate work — 4 fatal + 9 serious + 6 minor findings applied, 2 further defects found that no finding named)
+
+CONTEXT. An adversarial review of the REQ-6010/-6011/-6013 lane returned 19 findings. Verifying each
+against the real objects (not against a reconstruction) confirmed most, corrected two, and surfaced
+**two defects the review did not name**. **Nothing was flipped. Every `SUBMITTED_*` flag remains at its
+shipped default; the flip is the operator's call.** Default-off parity vs git HEAD was VERIFIED, not
+asserted: byte-identical across 6 games x 15 fields including the induce-prompt sha256, measured in a
+clean HEAD worktree against the working tree. (The first attempt at that check compared Python
+`hash()` values and reported six spurious divergences — `hash()` on `str` is per-process randomised —
+so the instrument was fixed before any conclusion was drawn.)
+
+### STOPPED A RUNNING MEASUREMENT THAT WAS CORRUPTING ITSELF AND DESTROYING PUBLISHED INPUTS
+
+The live four-arm run (PID 2538900) had **no engine isolation**. `LocalGGUFProposer._gen_to_file` and
+the refactor path write `results/arc_e3/<game>/world_model.py` unconditionally on every successful
+induction, and `grep` of the runner for `arc_e3` / `snapshot` / `restore` returned ZERO hits. Its FIRST
+arm had already rewritten 11 engines — ar25 16:19:14, dc22 16:21:18, ft09 16:25:49, lp85 16:28:27 and
+again 16:30:03, r11l 16:30:46, timestamps tracking its per-game progression exactly. Arms A1-A3 would
+have started from A0's leftovers, so **no cross-arm delta from that run is usable**. It also destroyed
+the inputs of three artifacts published from that store 90 minutes earlier: re-running exp6011's
+`mask=0|gate=1|ondisk` cell reproduced 60 of 75 rows and DIVERGED on 15, all on rewritten games, with
+ft09's `legacy_accuracy` going 1.0000 -> 0.0000 because its 12-bare-`return grid` identity engine had
+been replaced in place. Stopped by explicit PID; engines restored from HEAD; 27 engines frozen to
+`results/arc_e3_origin_fixtures/` (REQ-ARC-WMTE-6016) so the GAP-WM-TRUST-GATE origin incident stays
+checkable regardless of what induces next.
+
+### TWO DEFECTS NO FINDING NAMED
+
+1. **exp6013's mask arm never masked, because SUPPLYING a mask is not ENABLING one.**
+   `WorldModelVerifier` discarded a mask unless the module flag was also set, while
+   `score_change_weighted_consistency` applied one unconditionally — two comparators with two meanings
+   of "the same state" inside a single `select_trusted_world_model` decision, whose own docstring
+   promises they "must move TOGETHER". Measured over the original run's 162 paired arms:
+   `change_fidelity` differed between the mask arms on **0 of 162** (`hud_mask_status` was `"disabled"`
+   on every mask=1 arm) while `incumbent_consistency` differed on 9 of 162. The experiment measured
+   mask-off twice and reported it as "both mask settings". Fixed by one resolver
+   (`resolve_hud_mask_enabled`) for every comparator, plus `TrustSelection.hud_mask_silently_dropped`
+   so a harness can assert the arm it ran. After the fix: mask applies on 111/162 arms, moves fidelity
+   on 29.
+
+2. **On two games the HUD mask deletes the game, not the chrome** (REQ-ARC-WMTE-6015). Measured
+   changed-cell overlap with the mask: **lf52 1.0000 (60 changing transitions -> 0)**, su15 0.7568
+   (28 -> 1), every other game 0.0000-0.2219. On lf52 masking makes the corpus dynamics-free, under
+   which the IDENTITY engine is optimal — this is the concrete mechanism behind the review's aggregate
+   laundering signature. A swallow guard now refuses such a mask and grades unmasked (the conservative
+   direction: over-masking destroys correctness, under-masking only costs efficiency). It fires on
+   exactly lf52 + su15 and on NONE of the other 15 games with a resolvable mask. The mask is judged
+   ONCE on the whole corpus, because judging per-slice falsely refuses an honest mask on any held-out
+   tail that happens to contain no state change.
+
+### TWO FINDINGS CORRECTED RATHER THAN COMPLIED WITH
+
+- **"ft09 contributes nothing / its rejection is vacuous" is wrong at the LIVE threshold.** The review
+  reasoned from the documented `accuracy >= 0.5`; the agent ships `min_heldout_accuracy=1.0`. At 1.0
+  ft09's identity engine scores a **perfect 1.0** and is ADMITTED, making it the sharpest origin case,
+  while lp85 (0.725) fails 1.0. At 0.5 both are origin cases. The threshold ambiguity moved this
+  conclusion, which is exactly why both thresholds are now emitted with the threshold named in the key.
+- **"MAX_ACTIONS is 200, not 400" is half right.** `arc_competition_agent.py:117` is `MAX_ACTIONS = 200`
+  (module scope) AND `:6501` is `MAX_ACTIONS = 400` (the `CarnotAgent` class attribute, which is the
+  one the operator settled and which overrides the framework's default of 80). Both exist; neither was
+  touched by this work, and `SUBMITTED_EARLY_STOP_GRACE` is `None` as stated and untouched.
+
+### THE FINDINGS THAT WERE RIGHT, NOW QUANTIFIED IN THE ARTIFACT
+
+- **The mask launders a zero-knowledge engine.** Over the 45 mask-resolved rows it raises the IDENTITY
+  engine's legacy accuracy by mean **+0.323** versus **+0.160** for the real on-disk engines — 2.0x
+  more help to an engine that knows nothing. Arm A1 (mask-only) is a WEAKER-TEST arm, not a
+  better-measurement arm.
+- **THE GATE MUST NOT SHIP WITHOUT THE MASK.** The must-not-fire control, measured through the
+  production path on the whole dc22 corpus: `change_fidelity` 0.4694/0.4083/0.4103 mask-OFF (REJECTED
+  3/3) and 0.8148/0.7609/0.7358 mask-ON (admitted 3/3). The gate-only arm rejects the one engine known
+  to be genuinely good. exp6013's acceptance gate had read `len(hw_admitted_mask_on) > 0` — mask-ON
+  only (where the control cannot fail) AND an any-seed union; both are fixed, and the mask-off
+  rejection is recorded as a finding rather than tuned away.
+- **The new gate admits 0 of 75 real on-disk engines** while the incumbent admits 3 (at the live
+  threshold). The measured effect is "removes false admits, adds no true ones" — a precision
+  improvement that CANNOT by itself move `induction_attempts_planned` off 0. Stated plainly in the
+  artifact rather than reported as "62 of 68 arms closed".
+- **The mask arm is inert on 40% of the matrix** (24 `unresolved` + 6 `refused` of 75), and the
+  published mean pooled those rows in as zeros. Mask-resolved-only on-disk delta is 0.160 vs 0.096
+  pooled — the pooled figure understated the treatable population by ~40%. Both now emitted.
+- **The two flags are near-orthogonal at the decision level:** the mask moves legacy accuracy by mean
+  +0.096 (30/75 non-zero) but `change_fidelity` — the quantity the gate tests — by mean +0.0031 (13/75).
+- **The prompt and the verifier disagreed about "inert".** `_transitions_block` classified transitions
+  on RAW grids while the verifier graded MASKED ones; at n=120 lf52 has 0 raw no-ops and 120 masked
+  ones, bp35/sp80 have 0 raw and 59/53 masked. The mask now threads into `_transitions_block` /
+  `induce_prompt`; it changes the prompt on 5 of 6 spot-checked games and bp35/sp80/tu93 go from 6 to 8
+  examples by recovering no-op examples they had none of. Delta RENDERING stays on raw grids — only the
+  changing-vs-inert CLASSIFICATION is masked.
+- **`why_never_negative` was a structural invariant among the acceptance gates** (masking can only
+  delete cells, so an exact-match count can only rise). Relabelled a bug-detector, moved out of the
+  gate set.
+- **The three artifacts were invisible to the freshness lint** that would have caught their inputs
+  being rewritten: it listed 8 drifted artifacts and none of these, and their freshness had been
+  inferred from that silence. All three now emit `provenance.code` with per-file sha256 and report
+  `[fresh] — 4 dependencies verified`; the pre-commit `files:` pattern was regenerated as the lint
+  instructs.
+- **n=3 gives a minimum two-sided sign-test p of 0.25**, so no significance claim is reachable on the
+  control arms; recorded in the artifact as illustrative direction, not an established rate.
+- **The "monotone step counter" rationale covers a minority of the games it is applied to.** P(masked
+  region moves | play area still): 6 free-running counters, 7 mixed, **2 game-COUPLED at p=0.0 (ar25,
+  ft09)**, 2 unmeasurable. On the coupled games the masked row moves only when the game state does, so
+  the unattainable-by-construction argument does not cover them.
+
+### A PRE-EXISTING DEFECT FOUND WHILE RUNNING THE SUITE (not caused by this work, reported not fixed)
+
+Running the full `tests/python` suite **mutates 45 tracked result artifacts and strips their
+fabrication-gate determinations** — tests execute experiment scripts that write to tracked `results/`
+paths. `scripts/determination_preservation_lint.py` caught it (this is that guard working). One of the
+stripped files already carried a `flagged_adversarial_restoration_note` from EARLIER THE SAME DAY
+saying a conductor re-run had done the same thing, so this recurs. All 45 were restored from HEAD and
+the lint is clean. **Consequence for anyone re-running the suite: it is destructive to the working
+tree, and a full-suite green cannot be reported without also restoring those files.**
+
+### TESTS
+
+`tests/python/test_arc_hud_mask_coherence_and_swallow_guard.py` (12 tests, 0 skips) locks all four
+defect classes, each mutation-verified: reverting the split-convention fix fails
+`test_score_change_weighted_consistency_honours_the_flag_not_just_the_argument`; replacing the swallow
+guard branch with a constant fails the must-fire test. An earlier version of two of these tests passed
+against the mutation because a higher-level fix masked the one being tested — they were rewritten to
+target the function where the bug actually lived.
+
+`tests/python/test_arc_world_model_change_gate.py`'s fixture was RE-CALIBRATED: it redrew an entire
+8-cell HUD row against a 2-cell avatar and justified that shape by citing su15 and lf52 — the two games
+now known to be the pathological case, not the typical one. It now uses the shape the other 15 games
+actually have, and the su15/lf52 shape is tested explicitly as a case that must be REFUSED. Raising the
+guard threshold to keep the old fixture passing was rejected as the accommodate-the-drift anti-pattern.
+
+Related suites: 62 passed across the 5 mask/gate suites; 872 of 876 passed across all 88 tests that
+import the two changed modules. The 4 failures (`4801`, `4821`, `4865`, `4350_ka59`) were proved
+PRE-EXISTING by running the same 4 at git HEAD in a clean worktree, where they fail identically.
+
+
+## 2026-07-27 (outer-loop: REQ-ARC-WMTE-6013 — the change gate was wired into ONE of two admission branches, and the branch it missed was every 0.08-wall game)
+
+CONTEXT. REQ-6011 (below) shipped the symmetric change gate correctly, but wired it into exactly ONE
+of `E3AgentPolicy._induce_and_plan`'s two admission branches — the `else`/non-hidden-state arm. The
+OTHER arm, taken for the 11 `HIDDEN_STATE_GAME_IDS`, admitted on `trust_pass` and never called the
+gate at all. That arm covers cn04/ar25/sc25/sk48/wa30 — **every one of the 0.08-wall games**. No unit
+test could have caught it: a gate can be arithmetically perfect and still never be consulted, so the
+defect is only visible at the level of *which branches call it*. **Nothing was flipped. Both flags,
+and the new third one, remain default-off; the flip is the operator's call.**
+
+- **THE HOLE, MEASURED FIRST** (`results/experiment_6012_hidden_state_trust_gate_hole.json`): an
+  engine correct on every real change that ALSO writes cells reality never wrote is admitted by the
+  live hidden-state gate on 31/33 rows — the SAME 31 where it admits the honest engine — and scores
+  EXACTLY (not approximately) the honest engine's `consistency`. The incumbent
+  `score_change_weighted_consistency` masks to truly-changed cells, so an invented write is
+  arithmetically invisible to it. It is recall, not fidelity.
+
+- **THE REPAIR** (`CARNOT_ARC_WM_CHANGE_GATE_HIDDEN_STATE`, default-off). The hidden-state branch now
+  routes its admit/reject through the same symmetric union-fidelity `change_gate_decision` the plain
+  branch uses. It REPLACES `trust_pass` rather than AND-ing with it, because the incumbent is wrong in
+  BOTH directions — blind to a spurious writer on 31/33 rows AND rejecting the hand-written honest
+  dc22 engine on 2/3 seeds — so keeping it as a conjunct would import the false-reject and make a null
+  unattributable. Candidate RANKING by trust energy is untouched: ranking and admission are separable,
+  and changing both at once would make a per-arm delta unattributable. The flag DEFAULTS TO FOLLOWING
+  REQ-6011's flag (so the gate arm is not a silent no-op on the 11 wall games) and is explicitly
+  overridable in both directions (so a follow-up can isolate the branches without a code edit).
+
+- **MEASURED** (`results/experiment_6013_hidden_state_change_gate_closure.json`, 39 rows / 324 decision
+  arms / 10 acceptance gates / adversarial_verify CLEAN). Every number comes from the PRODUCTION
+  `select_trusted_world_model`, not a harness reconstruction. 62 of the 68 rows where the incumbent
+  admits the spurious writer are now rejected.
+
+- **IT FIRES ON THE ORIGIN INCIDENT — AND ONE HALF OF THAT IS DISCLOSED AS VACUOUS.** The real on-disk
+  lp85 engine is rejected on 6/6 arms over a real population of 7–9 changing transitions
+  (`degenerate_engine_no_correct_changed_cells`, `correct_changed_cells == 0`). ft09's rejection is
+  classified **VACUOUS and explicitly does NOT support the claim**: its held-out split has 0 of 40
+  changing transitions, so every engine including a perfect one is rejected there. Counting that as a
+  catch would have been a pass that could not have failed.
+
+- **MUST-NOT-FIRE CONTROL**: the hand-written dc22 navigation engine is ADMITTED 3/3 seeds at both
+  mask settings. A gate that rejects everything is not an improvement over one that admits identity
+  engines.
+
+- **THE RESIDUAL IS EXPLAINED, NOT COUNTED.** All 6 escaping rows are re86, and all 6 are exactly the
+  rows where `n_noop == 0`. Two reasons coincide: the no-op channel — which is what actually catches
+  the spurious writer on the rows that ARE closed — cannot fire, and union fidelity is an ABSOLUTE
+  threshold that one invented cell moves only 0.08–0.12 when the true change set is ~1700 cells
+  (measured 0.881–0.919, above the 0.5 threshold). The acceptance gate FAILS if any escape lacks this
+  computed witness, so an unexplained residual cannot be shipped as a closed one.
+
+- **TWO NEW DIAGNOSTICS, RECORDED BUT DELIBERATELY NOT GATED ON.** `noop_channel_measurable` /
+  `noop_ok_is_vacuous` separate "clean" from "not measurable" (previously the same 0.0 — the value
+  meaning the engine invents nothing was also the value meaning nothing could be measured).
+  `invented_changed_cells` (`wrote & ~truly_changed`) isolates invention from the ordinary prediction
+  error that `spurious_changed_cells` (`wrote & ~correct`) conflates it with. It separates 72/72
+  paired rows (honest ≤ 0.0714, attack ≥ 0.7778) and is STILL not thresholded: that separation is
+  against an engine built to invent on every transition, and a threshold fitted to it would reject a
+  realistically imperfect induced engine. Recalibration against an imperfect engine is the
+  prerequisite.
+
+- **MUTATION PROOFS: 10/10 caught**, baseline green and post-restore green. Two were NOT caught on the
+  first pass and both revealed real weaknesses rather than being written to pass:
+  (1) replacing the branch guard with `if False:` left the gate present-but-dead while every test
+  stayed green — the structural test now rejects a constant guard, not just a missing one;
+  (2) reverting `union = m | wrote` to recall-only was invisible because the attack engine also
+  tripped the no-op channel, so the test asserting "the symmetric gate rejects the invented write"
+  was passing for a reason other than its name. Two tests on a no-op-FREE corpus (the real re86
+  shape) now isolate the union metric, one proving it catches a heavy invented writer unaided and one
+  PINNING the known limitation that it does not catch a light one.
+
+- **FAILURE-SET COMPARISON — and the first control was INVALID, which is reported rather than
+  buried.** The plan was to reverse-patch REQ-6013 out of the same tree (leaving the parallel lane's
+  REQ-6010/6011 work intact, since reverting to HEAD answers a different question). That control
+  produced **139** failures against the treatment's 53 — not a clean baseline but a BROKEN tree: the
+  reverse patch removed `CandidateScore.change_gate` while other code still referenced it, so whole
+  test modules collection-ERRORed and their per-test node ids vanished from the failure set, which
+  made 8 pre-existing failures look "introduced". A set-diff against a broken control is worthless,
+  so it was discarded rather than reported.
+  The ARC suite is **also flaky** — three identical runs of the same tree gave 45 / 46 / 53 failures
+  — so a raw set-diff would have manufactured false regressions even with a valid control.
+  **The decisive test instead: restore `arc_competition_agent.py` to its git-HEAD content (zero
+  uncommitted work, mine or the parallel lane's) and run the 8 candidates. All 8 fail IDENTICALLY.**
+  They are pre-existing salience/perception failures (`action_prior` is `None` at construction), and
+  REQ-6013's diff does not contain the string `action_prior` or `salience` anywhere. **Introduced by
+  REQ-6013: none.** The agent file was restored byte-identically (`diff -q` clean) and the suite
+  re-verified green afterward.
+
+- **KNOWN BLOCKER, NOT MINE TO CLEAR.** `artifact_freshness_lint.py` refuses the commit for 8
+  artifacts drifted against `arc_competition_agent.py` / `arc_executable_world_model.py`. Every one of
+  them drifts against files the parallel REQ-6010/6011 lane had ALREADY modified before REQ-6013
+  began (confirmed by the session-start `git status`), so REQ-6013 newly stales nothing — and
+  `results/experiment_6013_*.json` is itself fresh (0 hits in the lint). The rebuilds were NOT run:
+  one is an expensive live capture (`arc_per_level_reset_attribution_capture.py --budget 400`), they
+  belong to the lane that edited those modules, and a same-module concurrent rebuild has already
+  corrupted an artifact once in this session.
+
+FILES: `python/carnot/agentic/arc_executable_world_model.py`,
+`python/carnot/agentic/arc_world_model_trust_energy.py`,
+`python/carnot/agentic/arc_competition_agent.py`,
+`scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py`,
+`results/experiment_6013_hidden_state_change_gate_closure.json`,
+`tests/python/test_arc_hidden_state_change_gate_closure.py` (17 tests, 0 skips),
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` (REQ-ARC-WMTE-6013 + 7 scenarios),
+`ops/verifier_gaps.md` (GAP-WM-TRUST-GATE extended with the coverage hole and its closure).
+
+## 2026-07-27 (outer-loop: the world-model trust score was measuring the HUD — two DEFAULT-OFF repairs, and the second one was strictly worse than what it replaced until it was attacked)
+
+CONTEXT. ARC first wins are gated by INDUCED WORLD-MODEL QUALITY: generator healthy (103 calls / 94
+responses / 0 errors) -> world-model trust score MEDIAN 0.0 against a 0.5 gate ->
+`induction_attempts_planned == 0` on 174/174 rows -> every LLM-on arm BIT-IDENTICAL to its matched
+LLM-off control. No threshold rescued it (0.5/0.25/0.1 admit 0/25; 0.05 admits 2/25). Two defects
+were named; both are now fixed behind their OWN default-off flags. **Nothing was flipped. The flip
+is the operator's call.**
+
+- **REQ-ARC-WMTE-6010 — the HUD was INSIDE the exact-match comparison.** A HUD mask has been live in
+  the explorer for months, but `grep hud_mask` returned ZERO hits in `arc_executable_world_model.py`,
+  `arc_llm_reinduction.py`, and `arc_world_model_trust_energy.py`. On any game with a monotone step
+  counter, full-grid exact match is unattainable BY CONSTRUCTION. Masking is now applied at COMPARE
+  time (the recorded `Transition` keeps its raw grids — never-prune) and threaded to every comparator
+  the candidate ranking reads, because masking only some of them would rank candidates on a mixture
+  of two different notions of "the same state".
+  **MEASURED, 25 real games x 3 seeds: the mask materially changes the measurement on 12 of 25.**
+  su15 changing-transition count 51 -> 2 (49 of 51 "changes" were HUD-only) and exact accuracy
+  0.4333 -> 0.9833; lf52 120 -> 0 and 0.0000 -> 0.6750; ka59 92 -> 49 and 0.2250 -> 0.5917, which
+  CROSSES the legacy 0.5 gate — the shipped gate's own verdict flips on a real game; tu93 96 -> 22
+  and 0.0083 -> 0.4083. So a real part of the median-0.0 was a MEASUREMENT ARTIFACT, not a capability
+  wall. A mask that fails to resolve is now NAMED (`disabled`/`unresolved`/`shape_mismatch`/
+  `no_transitions`/`applied`), never a silent no-op.
+
+- **REQ-ARC-WMTE-6011 — GAP-WM-TRUST-GATE: the trust gate was gameable by doing nothing.** THE GUARD
+  WAS RUN AGAINST ITS OWN ORIGIN INCIDENT, which this project has twice failed to do. The REAL
+  on-disk `results/arc_e3/lp85/world_model.py` is REJECTED (0 correct changed cells over 33 changing
+  transitions) while the legacy gate passes it at 0.725; the REAL on-disk
+  `results/arc_e3/ft09/world_model.py` is REJECTED while the legacy gate passes it at **1.0** — a
+  do-nothing engine scoring PERFECT because seed-0 exploration produced 120 transitions and ZERO of
+  them changed the grid.
+  **MUST-NOT-FIRE CONTROL (equally load-bearing):** a hand-written dc22 navigation engine — a 20-line
+  general rule, no per-transition constants, derived on seed 0 and scored on seeds it never saw — is
+  ADMITTED, reaching change accuracy 1.0000 on the directional sub-corpus on 3/3 seeds.
+  **THE JOINT WITNESS:** that same correct engine flips REJECTED -> ADMITTED on the whole corpus
+  (fidelity 0.41-0.47 -> 0.74-0.82) purely because the HUD left the comparison, per-seed matched,
+  3/3 seeds.
+  **HONEST LIMIT: all 25 shipped on-disk world models are rejected (75/75 rows).** The two named in
+  the gap entry are representative, not exceptional.
+
+- **THE GATE WAS STRICTLY WORSE THAN THE ONE IT REPLACES UNTIL IT WAS ATTACKED.** `change_fidelity`
+  scores grid-CHANGING transitions only, so an engine that models every real change correctly AND
+  invents one on every NO-OP was invisible to it: measured 0.7243 on real dc22 transitions and
+  PASSING, while its full-grid exact accuracy was **0.0000** — wrong about every single transition in
+  the corpus, and `plan_in_model` walks the engine forward, so it would hallucinate a transition at
+  every step of every plan. **The LEGACY gate caught that engine (0.0 < 0.5).** A third condition
+  (`noop_hallucination_rate`) closes it; measured separation honest 0.0000 vs attack 1.0000, 3/3
+  seeds, with the honest engine still admitted. This was found by ATTACKING the gate, not by testing
+  it, and the attack is kept as a standing arm.
+
+- **REDUNDANCY DISCLOSED RATHER THAN HIDDEN.** At the default `k=1` the non-degeneracy floor cannot
+  fire independently of the fidelity threshold — proved analytically and confirmed over 924 real
+  measured arms (the `nondegenerate=False, fidelity_ok=True` quadrant is empty). It is kept for its
+  more diagnostic reason string and becomes independent at `k>1`; both halves are asserted so it
+  cannot become a dead channel.
+
+- **WHY TWO FLAGS AND NOT ONE.** The repairs push in OPPOSITE directions — masking RAISES measured
+  fidelity, the gate LOWERS the pass rate. Behind one flag a null is uninterpretable ("both worked
+  and cancelled" and "neither did" give the same number), so each has its own flag and the
+  measurement is a four-arm matrix (control / mask-only / gate-only / both) over the same
+  transitions, per-seed matched.
+
+- **DEFAULT-OFF PROVED, NOT ASSERTED.** The freshness lint refused the commit (it working). Seven
+  dependent artifacts were rebuilt and diffed. `arc_per_level_reset_attribution` and
+  `arc_gateway_card_ground_truth` RUN THE AGENT end-to-end (6 games x 3 seeds x 400 budget; 48
+  game/seed/budget cells): **zero substantive differences — every diff is wall-clock timing or a hash
+  of a re-timed file.** ARC test failure-SET vs a HEAD worktree control: **zero new failures** (44
+  pre-existing in both). `MAX_ACTIONS` and `SUBMITTED_EARLY_STOP_GRACE` untouched; no `SUBMITTED_*`
+  flipped to True.
+
+- Evidence: `results/experiment_6011_world_model_change_gate_four_arm.json` (75 rows, 25 games x 3
+  seeds, 0 errors). Tests: `tests/python/test_arc_world_model_change_gate.py` (18 tests, no skips, 6
+  mutations proved caught). Spec: REQ-ARC-WMTE-6010 / REQ-ARC-WMTE-6011.
+
 ## 2026-07-27 (outer-loop: the concurrency fix REVIEWED post-hoc — 23 findings applied — and the operator's "wouldn't a 500 be an exception?" exposes why the fault hid for months)
 
 - The generator concurrency fix (776161963) SHIPPED WITHOUT AN ADVERSARIAL REVIEW: the workflow that

@@ -1,14 +1,14 @@
 {
  "experiment": "outer_loop_arc_first_win_llm_on_eval_concurrency_20260727",
  "schema": "carnot.outer_loop.arc_first_win_llm_on_eval_concurrency.v1",
- "run_date": "2026-07-27T17:28:34Z",
+ "run_date": "2026-07-27T22:27:50Z",
  "git_head": "dd5fc7a2c0bfc9b822c298f31f77877e39d9f4ca",
  "inference_substrate": "live_llm_inference",
  "duration_s": 53486.71,
  "duration_s_provenance": "THE MEASUREMENT CLOCK: summed from each per-cell row file's own elapsed_s (results/first_win_llm_on_20260727/cells/*.json). NOT a per-arm wall clock (K=4 workers overlap, so a wall sum undercounts by roughly the concurrency factor) and NOT the analyser's or this builder's clock -- the builder's cost is published separately as artifact_build_s. NOTE (2026-07-27): because it sums per-cell clocks across K=4 overlapping workers, it is roughly 4x the elapsed wall time of the session -- see wall_span_s_approx for the elapsed figure. Reporting both under one name is what would make this misleading; they are named differently and mean different things.",
  "wall_span_s_approx": 13371.7,
  "wall_span_s_approx_provenance": "duration_s divided by the K=4 worker concurrency -- an APPROXIMATION of elapsed session time, published so duration_s (a summed compute clock, ~9.25h) is not misread as elapsed time (~2.3h). Not a measurement: the harness did not record a session start/stop timestamp, and one is not being invented here. The exact quantity duration_s reports is defined in duration_s_provenance above.",
- "artifact_build_s": 0.42,
+ "artifact_build_s": 0.419,
  "verifier_is_oracle": false,
  "solve_provenance": "development_proxy",
  "submitted_to_leaderboard": false,
@@ -2299,7 +2299,7 @@
  "false_negative_risk_checked": true,
  "provenance": {
   "analyzer": "results/first_win_llm_on_20260727/build_artifact.py",
-  "built_at_utc": "2026-07-27T17:28:34Z",
+  "built_at_utc": "2026-07-27T22:27:50Z",
   "code": [
    {
     "path": "results/first_win_llm_on_20260727/firstwin.py",
@@ -2327,11 +2327,11 @@
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256": "62b2ab51b6aca53504975c0d893fb6842e1de19d21090850b72fb387d2fab9b0"
+    "sha256": "f1b51e27774b3ef8600fb68e2ff4334599008f3a97a9b19550a47a4e731e7ca7"
    },
    {
     "path": "python/carnot/agentic/arc_executable_world_model.py",
-    "sha256": "eb1492451df7a3a4dae1e770a368d0c3b31674db65fa546ab28dbece3463e750"
+    "sha256": "ec6b5120024d38c8bc8b70f80bf757b66218068f41a0773e2689988d1b5898c6"
    }
   ],
   "rows_sources": [
@@ -3233,5 +3233,5 @@
    }
   ]
  },
- "reproducibility_checksum": "sha256:b911a52346f622fa2bf6715ee18a03c9bf20f7c72a4eae27111c973be6c5b6a9"
+ "reproducibility_checksum": "sha256:3ea22efae3647a22860cd0392c48f19dbec8f94d7f905e9b1e2641723d6daaec"
 }

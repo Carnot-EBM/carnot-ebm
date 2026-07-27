@@ -8,13 +8,17 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 
-from carnot.agentic.arc_executable_world_model import Transition, WorldModelVerifier
+from carnot.agentic.arc_executable_world_model import (
+    Transition,
+    WorldModelVerifier,
+    change_gate_decision,
+)
 
 
 INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
@@ -74,6 +78,23 @@ class CandidateScore:
     nondegenerate: bool = False
     trust_pass: bool = False
     binary_gate_pass: bool = False
+    # REQ-ARC-WMTE-6013: the SYMMETRIC union-fidelity decision for this candidate, computed
+    # on the SAME held-out split `trust_pass` is computed on. Populated unconditionally --
+    # a control arm records it without acting on it, so the four-arm matrix compares like
+    # with like and the disagreement between the two verdicts is visible in every artifact
+    # row without a re-run. Empty dict only if the gate could not be computed at all.
+    change_gate: dict = field(default_factory=dict)
+
+    @property
+    def change_gate_pass(self) -> bool:
+        """REQ-ARC-WMTE-6013 admit/reject under the symmetric metric.
+
+        Defaults to False on a missing record rather than True: a decision that could not be
+        computed is not evidence that the engine is trustworthy, and defaulting the other way
+        would make a plumbing failure look like a pass.
+        """
+
+        return bool(self.change_gate.get("passed", False))
 
 
 @dataclass(frozen=True)
@@ -293,10 +314,33 @@ class TrustSelection:
     baseline_candidate_name: str | None
     rows: tuple[CandidateScore, ...]
     verifier_is_oracle: bool
+    # ---- REQ-ARC-WMTE-6010 CORRIGENDUM (2026-07-27): THE ARM WITNESS -----------------
+    # What masking ACTUALLY happened, as resolved by `resolve_hud_mask_enabled`, so a
+    # harness can assert that the arm it asked for is the arm it got. exp6013 could not:
+    # it passed `hud_mask=<a real mask>` without setting CARNOT_ARC_WM_HUD_MASK, every
+    # comparator silently ran unmasked, and its "admitted under both mask settings" claim
+    # was measured on mask-off twice. `hud_mask_supplied` is deliberately separate from
+    # `hud_mask_enabled`: (supplied=True, enabled=False) is exactly that silent-no-op
+    # state, and it is the one combination a mask-arm harness must refuse to accept.
+    hud_mask_enabled: bool = False
+    hud_mask_supplied: bool = False
+
+    @property
+    def hud_mask_silently_dropped(self) -> bool:
+        """True iff a caller supplied a mask that the flag then discarded.
+
+        This is the exp6013 failure state, named so a harness can assert `not
+        selection.hud_mask_silently_dropped` instead of discovering months later that its
+        treatment arm was byte-identical to its control.
+        """
+
+        return bool(self.hud_mask_supplied and not self.hud_mask_enabled)
 
     @property
     def trust_energy_beats_baseline(self) -> bool:
-        return self.selected.name != self.baseline_candidate_name and self.selected_score.heldout_best
+        return (
+            self.selected.name != self.baseline_candidate_name and self.selected_score.heldout_best
+        )
 
 
 @dataclass(frozen=True)
@@ -334,14 +378,77 @@ def _split_prefix_heldout(
     return rows[:-n_heldout], rows[-n_heldout:]
 
 
-def _score_accuracy(transitions: Sequence[Transition], engine: Engine) -> float:
+def resolve_hud_mask_enabled(explicit: Optional[bool] = None) -> bool:
+    """REQ-ARC-WMTE-6010 CORRIGENDUM (2026-07-27): the ONE place that decides "is masking on".
+
+    THE BUG THIS EXISTS TO KILL. Before this function, two comparators inside a single
+    `select_trusted_world_model` decision disagreed about what "the same state" means:
+
+      * `WorldModelVerifier(..., hud_mask=m)` gates on the module flag and sets
+        `self.hud_mask = m if enabled else None` -- so a caller that SUPPLIED a mask but did
+        not also set `CARNOT_ARC_WM_HUD_MASK=1` silently got NO masking, status "disabled".
+      * `score_change_weighted_consistency` called `apply_hud_mask(...)` UNCONDITIONALLY --
+        so the same caller's incumbent consistency WAS masked.
+
+    `select_trusted_world_model`'s own docstring promises the comparators "must move
+    TOGETHER: masking only some of them would rank candidates on a mixture of two different
+    notions of 'the same state', which is worse than masking none of them." That promise was
+    false in code. Measured on results/experiment_6013_hidden_state_change_gate_closure.json
+    (162 paired mask=0/mask=1 arms): `change_fidelity` -- the quantity the new gate tests --
+    differed on 0 of 162 arms (the gate was NEVER masked, `hud_mask_status` was "disabled" on
+    every single mask=1 arm), while `incumbent_consistency` differed on 9 of 162 (that path
+    WAS masked). exp6013's entire mask factor was therefore a silent no-op for the gate: it
+    measured mask-off twice and reported it as "both mask settings".
+
+    Resolution order, most specific first: an explicit True/False from the caller, then
+    `world_model_hud_mask_enabled()` (env `CARNOT_ARC_WM_HUD_MASK`, else the shipped
+    SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED default). Flag off means NO masking ANYWHERE,
+    which is what keeps the default-off discipline byte-honest: before REQ-6010 nothing
+    masked, so with the flag off nothing may mask, no matter what a caller passes in.
+    """
+
+    if explicit is not None:
+        return bool(explicit)
+    from carnot.agentic.arc_executable_world_model import world_model_hud_mask_enabled
+
+    return bool(world_model_hud_mask_enabled())
+
+
+def _effective_mask(hud_mask: Any, enabled: bool) -> Any:
+    """Collapse (mask, enabled) to the single value every comparator must be handed.
+
+    Returning None when disabled -- rather than letting each comparator re-decide -- is what
+    makes "they move together" a property of the code instead of a promise in a docstring.
+    """
+
+    return hud_mask if enabled else None
+
+
+def _score_accuracy(
+    transitions: Sequence[Transition],
+    engine: Engine,
+    *,
+    hud_mask: Any = None,
+    hud_mask_enabled: Optional[bool] = None,
+) -> float:
     # HIDDEN-STATE-branch verify metric (the gap-1 0.08-wall games -- cn04/ar25/sc25/sk48/wa30 -- are all
     # hidden-state and gate HERE). CARNOT_ARC_TRUST_METRIC=cell_recall scores by GRADED changed-cell recall
     # instead of exact-full-grid match, the same coordinated-redesign lever wired into the non-hidden gate.
     # Default (unset) -> exact accuracy: submitted behavior + the parity test unchanged.
+    # REQ-ARC-WMTE-6010: `hud_mask` (LOGICAL coordinates) collapses status-bar cells before the
+    # comparison. This module grepped ZERO for `hud_mask` until 2026-07-27, so every hidden-state
+    # game with a monotone counter was being graded on a comparison it could not win.
     import os
-    vr = WorldModelVerifier(list(transitions)).score(engine)
-    return float(vr.cell_recall if os.environ.get("CARNOT_ARC_TRUST_METRIC") == "cell_recall" else vr.accuracy)
+
+    on = resolve_hud_mask_enabled(hud_mask_enabled)
+    vr = WorldModelVerifier(
+        list(transitions), hud_mask=_effective_mask(hud_mask, on), hud_mask_enabled=on
+    ).score(engine)
+    return float(
+        vr.cell_recall
+        if os.environ.get("CARNOT_ARC_TRUST_METRIC") == "cell_recall"
+        else vr.accuracy
+    )
 
 
 def score_change_weighted_consistency(
@@ -350,9 +457,36 @@ def score_change_weighted_consistency(
     *,
     threshold: float = 0.5,
     min_correct_changed_cells: int = 1,
+    hud_mask: Any = None,
+    hud_mask_enabled: Optional[bool] = None,
 ) -> ChangeWeightedConsistency:
-    """REQ-ARC-WMTE-4604: held-out consistency over grid-changing cells only."""
+    """REQ-ARC-WMTE-4604: held-out consistency over grid-changing cells only.
 
+    REQ-ARC-WMTE-6010 adds the optional `hud_mask` (LOGICAL coordinates); see
+    `arc_executable_world_model.apply_hud_mask`.
+
+    REQ-ARC-WMTE-6010 CORRIGENDUM (2026-07-27): this function used to call `apply_hud_mask`
+    UNCONDITIONALLY on whatever mask it was handed, while `WorldModelVerifier` gated the same
+    mask on the module flag. Two comparators inside one selection decision therefore used two
+    different notions of "the same state" -- see `resolve_hud_mask_enabled` for the measured
+    incident (0 of 162 gate arms masked vs 9 of 162 incumbent arms masked, in exp6013).
+    `hud_mask_enabled` now routes through the single resolver, so the flag decides for every
+    comparator at once.
+
+    HONEST LIMIT of this function, recorded 2026-07-27 and NOT fixed here: `consistency`
+    scores `pred[changed] == next_grid[changed]` -- it masks to TRUE changes only, so it
+    cannot see a cell the engine wrote that reality did not change. It is recall, not
+    fidelity, and an engine that writes garbage everywhere while covering the real changes
+    scores 1.0. The symmetric replacement is `VerifyResult.change_fidelity` (union of
+    truly-changed and engine-written cells) in arc_executable_world_model.py. This function
+    is left on its existing metric deliberately: it is the SHIPPED hidden-state gate and
+    changing its meaning here would silently move a live gate, which is a separate decision
+    from adding a new default-off one.
+    """
+
+    from carnot.agentic.arc_executable_world_model import apply_hud_mask
+
+    hud_mask = _effective_mask(hud_mask, resolve_hud_mask_enabled(hud_mask_enabled))
     exact_correct = 0
     n_changing = 0
     true_changed_cells = 0
@@ -362,17 +496,25 @@ def score_change_weighted_consistency(
             pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
         except Exception:
             continue
-        if pred.shape == t.next_grid.shape and np.array_equal(pred, t.next_grid):
+        t_grid = apply_hud_mask(np.asarray(t.grid), hud_mask)
+        t_next = apply_hud_mask(np.asarray(t.next_grid), hud_mask)
+        if pred.shape == t_next.shape:
+            pred = apply_hud_mask(pred, hud_mask)
+        if pred.shape == t_next.shape and np.array_equal(pred, t_next):
             exact_correct += 1
-        if pred.shape != t.next_grid.shape:
+        if pred.shape != t_next.shape:
             continue
-        changed = np.asarray(t.grid) != np.asarray(t.next_grid)
+        changed = t_grid != t_next
         n_changed_cells = int(changed.sum())
         if n_changed_cells <= 0:
             continue
         n_changing += 1
         true_changed_cells += n_changed_cells
-        correct_changed_cells += int((pred[changed] == t.next_grid[changed]).sum())
+        # `t_next`, NOT `t.next_grid`: with a mask applied these differ, and reading the
+        # unmasked original here would grade the prediction's HUD cells against real HUD
+        # values while `changed` was computed on the masked pair -- an inconsistency that
+        # would make the mask look like it did nothing.
+        correct_changed_cells += int((pred[changed] == t_next[changed]).sum())
 
     consistency = correct_changed_cells / max(1, true_changed_cells)
     exact_accuracy = exact_correct / max(1, len(transitions))
@@ -394,10 +536,23 @@ def binary_exact_gate_pass(
     engine: Engine,
     *,
     threshold: float = 0.5,
+    hud_mask: Any = None,
+    hud_mask_enabled: Optional[bool] = None,
 ) -> bool:
-    """Legacy matched control: full-grid exact-match accuracy threshold."""
+    """Legacy matched control: full-grid exact-match accuracy threshold.
 
-    return bool(_score_accuracy(transitions, engine) >= float(threshold))
+    NOTE ON `threshold`, recorded 2026-07-27 after an adversarial review found the ambiguity
+    was changing a headline by an order of magnitude: the DEFAULT here is 0.5, but the LIVE
+    admission threshold the agent actually ships is `min_heldout_accuracy=1.0`
+    (arc_competition_agent.py:5593 and :5719, both verified on disk). Any artifact making an
+    admission claim must state WHICH threshold it used -- see
+    `change_gate_decision`'s `legacy_accuracy_would_pass_at_live_threshold`.
+    """
+
+    return bool(
+        _score_accuracy(transitions, engine, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled)
+        >= float(threshold)
+    )
 
 
 def select_trusted_world_model(
@@ -407,15 +562,66 @@ def select_trusted_world_model(
     hidden_state: bool,
     baseline_threshold: float = 0.5,
     offpath_energy_scorer: Any | None = None,
+    hud_mask: Any = None,
+    hud_mask_enabled: Optional[bool] = None,
 ) -> TrustSelection:
-    """REQ-ARC-WMTE-4791: rank by off-path structural energy, not a binary cutoff."""
+    """REQ-ARC-WMTE-4791: rank by off-path structural energy, not a binary cutoff.
+
+    REQ-ARC-WMTE-6010: `hud_mask` (LOGICAL coordinates) threads to EVERY comparator this
+    function ranks on -- the two accuracy scores, the two change-weighted consistencies, and
+    the off-path verifier. They must move TOGETHER: masking only some of them would rank
+    candidates on a mixture of two different notions of "the same state", which is worse
+    than masking none of them.
+
+    REQ-ARC-WMTE-6010 CORRIGENDUM (2026-07-27): the paragraph above was TRUE OF THE INTENT
+    AND FALSE OF THE CODE until this date -- `WorldModelVerifier` dropped an unflagged mask
+    while `score_change_weighted_consistency` applied it unconditionally, so the comparators
+    moved apart exactly as the paragraph says they must not. `hud_mask_enabled` is now
+    resolved ONCE here and handed to every comparator, so "together" is enforced rather than
+    asserted. `None` keeps the shipped default-off behaviour; True/False is the per-arm
+    override an A/B needs. The resolved value and the resulting mask status are recorded on
+    the returned selection so a harness can ASSERT that the arm it asked for is the arm it
+    got -- exp6013 could not, and silently measured mask-off twice.
+    """
 
     if not candidates:
         raise ValueError("at least one world-model candidate is required")
 
+    mask_on = resolve_hud_mask_enabled(hud_mask_enabled)
+    # Kept before the collapse so the returned selection can report the SILENT-DROP state
+    # (a mask was supplied and the flag then discarded it) rather than only the outcome.
+    supplied_mask = hud_mask
+    hud_mask = _effective_mask(hud_mask, mask_on)
     prefix, heldout = _split_prefix_heldout(transitions)
+    # REQ-ARC-WMTE-6015: judge the mask ONCE, on the WHOLE corpus, and hand the verdict to
+    # every sub-corpus verifier. Judging per-slice would refuse an honest mask on any
+    # held-out tail that happens to contain no genuine state change -- see
+    # `WorldModelVerifier.__init__` for why a tail cannot distinguish that case.
+    from carnot.agentic.arc_executable_world_model import hud_mask_swallow_check
+
+    swallow = hud_mask_swallow_check(list(transitions), hud_mask)
+    if swallow.get("swallows"):
+        # Refuse ONCE, here, for every comparator at the same time. Letting each verifier
+        # re-decide would reintroduce exactly the split-convention bug this corrigendum is
+        # fixing, and `_score_accuracy` / `score_change_weighted_consistency` build their own
+        # verifiers on their own slices where the verdict is not even computable.
+        hud_mask = None
+        mask_on = False
     energy_scorer = offpath_energy_scorer or default_s1_offpath_energy_scorer()
-    offpath_verifier = WorldModelVerifier(list(heldout))
+    offpath_verifier = WorldModelVerifier(
+        list(heldout), hud_mask=hud_mask, hud_mask_enabled=mask_on, hud_mask_swallow=swallow
+    )
+    # REQ-ARC-WMTE-6013: the symmetric change gate is scored on `heldout` -- THE SAME SPLIT
+    # `trust_pass` uses -- and it is computed HERE, inside the function that owns the split,
+    # rather than by a caller. A caller cannot do this correctly: `select_trusted_world_model`
+    # splits internally, so a caller that pre-split and passed the tail in would have it split
+    # AGAIN and would end up scoring the last ~1/9 of the corpus. That is not hypothetical --
+    # it is the first of the four harness errors recorded in
+    # results/experiment_6012_hidden_state_trust_gate_hole.json, where it rejected even a
+    # perfect engine. Owning the split here makes the mistake unavailable to callers.
+    change_gate_verifier = WorldModelVerifier(
+        list(heldout), hud_mask=hud_mask, hud_mask_enabled=mask_on, hud_mask_swallow=swallow
+    )
     raw_rows: list[
         tuple[
             WorldModelCandidate,
@@ -427,13 +633,22 @@ def select_trusted_world_model(
             bool,
             _CalibrationRow,
             float,
+            dict,
         ]
     ] = []
     for candidate in candidates:
-        prefix_accuracy = _score_accuracy(prefix, candidate.engine)
-        heldout_accuracy = _score_accuracy(heldout, candidate.engine)
-        prefix_change = score_change_weighted_consistency(prefix, candidate.engine)
-        heldout_change = score_change_weighted_consistency(heldout, candidate.engine)
+        prefix_accuracy = _score_accuracy(
+            prefix, candidate.engine, hud_mask=hud_mask, hud_mask_enabled=mask_on
+        )
+        heldout_accuracy = _score_accuracy(
+            heldout, candidate.engine, hud_mask=hud_mask, hud_mask_enabled=mask_on
+        )
+        prefix_change = score_change_weighted_consistency(
+            prefix, candidate.engine, hud_mask=hud_mask, hud_mask_enabled=mask_on
+        )
+        heldout_change = score_change_weighted_consistency(
+            heldout, candidate.engine, hud_mask=hud_mask, hud_mask_enabled=mask_on
+        )
         calibration_row = _CalibrationRow(
             prefix_change_miss=1.0 - prefix_change.consistency,
             prefix_exact_miss=1.0 - prefix_accuracy,
@@ -446,12 +661,34 @@ def select_trusted_world_model(
                 heldout_accuracy,
                 prefix_change,
                 heldout_change,
-                binary_exact_gate_pass(transitions, candidate.engine, threshold=baseline_threshold),
-                binary_exact_gate_pass(transitions, candidate.engine, threshold=baseline_threshold),
+                binary_exact_gate_pass(
+                    transitions,
+                    candidate.engine,
+                    threshold=baseline_threshold,
+                    hud_mask=hud_mask,
+                    hud_mask_enabled=mask_on,
+                ),
+                binary_exact_gate_pass(
+                    transitions,
+                    candidate.engine,
+                    threshold=baseline_threshold,
+                    hud_mask=hud_mask,
+                    hud_mask_enabled=mask_on,
+                ),
                 calibration_row,
                 offpath_verifier.offpath_structural_energy(
                     candidate.engine,
                     energy_scorer=energy_scorer,
+                ),
+                # REQ-ARC-WMTE-6013. `enabled=True` here is NOT a flip: it asks
+                # change_gate_decision for the decision it WOULD make, so the record is
+                # populated identically in every arm. Whether that decision is ACTED ON is
+                # the caller's business and is what the flag controls -- see
+                # E3AgentPolicy's hidden-state branch. Computing it only when the flag is on
+                # would leave the control arm with an empty field and nothing to compare.
+                change_gate_decision(
+                    change_gate_verifier.score(candidate.engine),
+                    enabled=True,
                 ),
             )
         )
@@ -471,6 +708,7 @@ def select_trusted_world_model(
             calibration_row=calibration_row,
             calibrator=calibrator,
             offpath_structural_energy=offpath_structural_energy,
+            change_gate=change_gate,
         )
         for (
             candidate,
@@ -482,6 +720,7 @@ def select_trusted_world_model(
             binary_gate_pass,
             calibration_row,
             offpath_structural_energy,
+            change_gate,
         ) in raw_rows
     )
     baseline = next((row for row in rows if row.binary_gate_pass), None)
@@ -498,6 +737,8 @@ def select_trusted_world_model(
         baseline_candidate_name=baseline.candidate.name if baseline else None,
         rows=rows,
         verifier_is_oracle=not bool(hidden_state),
+        hud_mask_enabled=bool(mask_on),
+        hud_mask_supplied=bool(supplied_mask is not None),
     )
 
 
@@ -514,6 +755,7 @@ def _candidate_score(
     calibration_row: _CalibrationRow,
     calibrator: TrustEnergyCalibrator,
     offpath_structural_energy: float | None = None,
+    change_gate: dict | None = None,
 ) -> CandidateScore:
     heldout_miss = 1.0 - heldout_change.consistency
     calibrated_miss = calibrator.predicted_heldout_miss(calibration_row)
@@ -540,6 +782,7 @@ def _candidate_score(
         nondegenerate=heldout_change.nondegenerate,
         trust_pass=heldout_change.trust_pass,
         binary_gate_pass=binary_gate_pass,
+        change_gate=dict(change_gate or {}),
     )
 
 
@@ -665,7 +908,9 @@ def run_experiment_4491(
         _fixture_scorecard(game, seed=i + 1, verifier_is_oracle=False)
         for i, game in enumerate(HIDDEN_STATE_GAME_IDS)
     ]
-    positive_control = _fixture_scorecard("markov_positive_control", seed=99, verifier_is_oracle=True)
+    positive_control = _fixture_scorecard(
+        "markov_positive_control", seed=99, verifier_is_oracle=True
+    )
     artifact = build_experiment_artifact(
         hidden_scorecards=hidden_scorecards,
         positive_control=positive_control,
@@ -678,7 +923,9 @@ def run_experiment_4491(
     return artifact
 
 
-def check_preconditions() -> dict[str, Any]:  # pragma: no cover - tested by required terminal smoke.
+def check_preconditions() -> dict[
+    str, Any
+]:  # pragma: no cover - tested by required terminal smoke.
     from carnot.agentic import arc_solver_kit as kit
 
     kit.offline_arcade()
