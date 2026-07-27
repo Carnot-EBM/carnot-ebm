@@ -18740,3 +18740,119 @@ measured: under `competition_mode` a RESET at `_action_count == 0` is charged wh
 stepped (`arc_agi/api.py:316-334`), so a back-to-back RESET diverges between the gateway and our
 offline env, which really does reset. (6) For rows without per-span attribution only the
 structurally-uninformative bound exists; no per-cell estimate is available for them.
+
+### REQ-ARC-WMTE-5990: The MAX_ACTIONS Answer Is A Throughput Number With Uncertainty, Priced In The Gateway-Charged Unit
+
+**Origin.** By 2026-07-26 the MAX_ACTIONS question had three published answers in three units, none
+comparable: "budget 4000 fits" (offline actions, against a 12h cap that is our own
+`subprocess(timeout=43200)`), "only 400 fits conservatively" (per-game wall clock measured
+UNCONTENDED, then multiplied by a contention factor measured on LLM-OFF cells), and "every per-level
+efficiency number is optimistic by a median 3.7%" (the gateway charges a RESET an action; our harness
+charges it zero). This requirement closes the question in ONE unit chain with the uncertainty
+attached, and changes no flag.
+
+**Why each clause exists.** Each is a specific defect in a published number, not a general principle.
+
+1. **THE CONTENTION LEVEL IS MEASURED WITH THE LLM ON, NOT IMPORTED FROM LLM-OFF CELLS.** The prior
+   conservative reading scaled uncontended LLM-ON per-game cost by 1.72x, a factor measured on cells
+   whose contended resource is CPU. An LLM-ON cell contends for ONE llama-server with FOUR slots
+   (read off `/props`, not inferred from a flag). Different queue, different shape.
+2. **THE CAP DIVIDES THROUGHPUT, NOT LATENCY.** When the bottleneck is a GPU already saturated by one
+   game, K concurrent games multiply each game's LATENCY by ~K while leaving games-per-hour flat.
+   Multiplying an uncontended per-game latency by a contention factor and then by the game count
+   DOUBLE-COUNTS. The probe therefore reports batch throughput (games/hour) per K alongside per-game
+   latency, and the GPU utilisation trace during each batch says whether the card was saturated.
+3. **CONCURRENCY MUST BE WITNESSED, NOT LABELLED.** A "K=4" arm whose cells did not overlap in time is
+   an uninstrumented arm that reads as a clean null. Each worker records its own start/end epochs and
+   the analyser publishes the batch's strict INTERSECTION.
+4. **THE DEVICE IS REPORTED, NOT ASSUMED — AND THE GUARD ITSELF CAN FALSE-BLOCK.** The generator
+   resolver falls through to the AMD iGPU HIP build silently when its headroom guard (>=13000 MiB
+   free) trips. Setting `CARNOT_ARC_GENERATOR_CUDA_GPU=1` is not evidence the env var took. Observed
+   2026-07-26: a healthy CUDA-GPU1 server from a previous run was ITSELF holding 12.1 GiB, so the
+   resolver reported the iGPU fallback for a launch that would never happen (`_ensure_server` reuses a
+   healthy server without consulting the resolver) and the probe correctly emitted
+   `blocked_generator_resolves_to_cuda_gpu1_not_igpu`. The fix is a REUSE clause that may pass only on
+   a per-PID VRAM witness: the process bound to this port must hold multi-GiB on PHYSICAL card 1
+   (matched by GPU UUID, not by `CUDA_VISIBLE_DEVICES`, which renumbers). A few hundred MiB means the
+   weights are not on the card -- a wedged server in exactly that state exists on the default port.
+5. **THE BUDGET->SCORE CURVE IS RE-PRICED IN THE GATEWAY-CHARGED UNIT.** Wins are not scored;
+   efficiency-squared is, and resets are charged. Each budget's corpus score is recomputed under M0
+   (offline), M1 (all resets charged) and M2 (bootstrap-free: the opening RESET routes to `new_play`
+   -> `inc_play_count`, which charges nothing), through the INSTALLED scorer.
+6. **A CORPUS-WIDE ATTRIBUTION ESTIMATE MUST CARRY ITS MEASURED ERROR.** Per-level reset attribution
+   exists on 48 cells; the rest of the corpus has only whole-run `n_resets`, for which the prior lane
+   could offer only a structurally-uninformative bound (its own limitation (6)). A uniform-rate
+   estimator closes that gap ONLY if its error is measured against those 48 cells and published, per
+   cell and in aggregate, so no corpus number can be read as exact.
+7. **THE EARLY-STOP LEVER IS PRICED ON ITS BENEFIT SIDE.** The grace sweep measured SAFETY and found
+   a FIXED window saves 0.072% of actions at b400 -- a statement about fixed windows, not about the
+   mechanism. The ORACLE CEILING (all actions after the last level-up are score-free by the settled
+   charge model, as is every action in a cell that never levels up) and the smallest adaptive window
+   multiplier that preserves every level-up the corpus actually produced are both computed.
+
+#### SCENARIO-ARC-WMTE-5990-THROUGHPUT-NOT-LATENCY
+
+GIVEN a concurrency ladder in which per-game latency rises with K
+WHEN the GPU utilisation trace shows the card was already saturated at K=1
+THEN the artifact reports games-per-hour as the cap-relevant quantity and states that scaling
+uncontended latency by a contention factor would double-count.
+
+#### SCENARIO-ARC-WMTE-5990-OVERLAP-WITNESS
+
+GIVEN a batch labelled K>1
+WHEN the strict intersection of its cells' start/end epochs is not a majority of the longest cell
+THEN the arm is stamped as not having achieved concurrency rather than reported as a K-way result.
+
+#### SCENARIO-ARC-WMTE-5990-DEVICE-REUSE-WITNESS
+
+GIVEN a llama-server already bound to the probe's port
+WHEN per-PID VRAM shows multi-GiB resident on physical card 1
+THEN the device precondition passes on that witness; and WHEN the resident amount is a few hundred
+MiB, or the VRAM is on card 0, the precondition REFUSES.
+
+#### SCENARIO-ARC-WMTE-5990-ESTIMATOR-CARRIES-ITS-ERROR
+
+GIVEN a corpus row with no per-level reset attribution
+WHEN its gateway-charged score is estimated by the uniform-rate estimator
+THEN the estimator's signed and absolute relative error, measured against the 48 exact cells, is
+published alongside, and the hard [worst-case, offline] bounds are reported unchanged.
+
+#### SCENARIO-ARC-WMTE-5990-BOTH-TAILS-AND-FLOOR
+
+GIVEN a paired comparison over a small game set
+WHEN the sign test is reported
+THEN both tails, the favoured direction, and the minimum reachable two-sided p at that support are
+published, and a support that cannot reach 0.05 is stamped UNDERPOWERED rather than quoted as a null.
+
+#### SCENARIO-ARC-WMTE-5990-NO-FLAG-FLIP
+
+GIVEN a measured feasible budget that differs from the shipped MAX_ACTIONS
+WHEN the artifact is emitted
+THEN MAX_ACTIONS and every `SUBMITTED_*` global are unchanged in the tree, nothing is submitted, and
+the artifact states so explicitly.
+
+## Implementation Status (REQ-ARC-WMTE-5990)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5990 | Implemented (`scripts/arc_llm_on_contention_probe.py` -- LLM-ON concurrency ladder with per-worker start/end epochs, strict-intersection overlap witness, background GPU utilisation sampler, `/props` slot+context read, and the per-PID VRAM reuse witness that fixes the false iGPU block; `scripts/analyze_arc_max_actions_answer.py` -- throughput-vs-latency decomposition, four named cost levels with a bootstrap CI over games, per-seed matched paired ratios with both tails and the reachable p-floor, three-charge-model budget->score curve through the INSTALLED scorer, a uniform-rate reset-attribution estimator VALIDATED against the 48 exact cells, the early-stop oracle ceiling plus the adaptive-window multiplier, and eight gates each with a computed non-vacuity witness; reuses `scripts/arc_gateway_rescore.py` for the scorer drive rather than re-deriving it) | Implemented (`tests/python/test_arc_max_actions_answer.py`) |
+
+**Known limitations (stated, not assumed away).** (1) The ladder is 4 games x 1 budget at 2 seeds and
+K in {1,2,4}; the minimum reachable two-sided p at that support is published and the corpus-direction
+verdicts are stamped UNDERPOWERED where it cannot reach 0.05. (2) The games are the 4 with complete
+budget coverage in the sibling uncontended probe, themselves chosen because budget 2000 GAINS A WIN on
+them -- deliberately adverse for a cost question, so the per-game cost is an OVER-estimate and the
+affordable budget an UNDER-estimate. (3) Workers are PROCESSES; the real eval is
+single-process/multi-thread, so this probe measures server-side contention exactly and UNDERSTATES the
+GIL-serialised non-LLM component, whose floor is bounded separately by the sibling artifact's
+`unbatchable_floor_s_per_game`. (4) `n_games=110` is inherited from a prior artifact's assumption, not
+measured; the answer is reported for 110 / 60 / 25 separately. (5) The budget->wall scaling ratios come
+from the sibling uncontended probe, whose own adjacent-step tests are UNDERPOWERED, and no LLM-ON
+anchor exists above budget 2000 -- so budget 4000 is outside the measured grid and is not answered.
+(6) The budget->score curve is measured on LLM-OFF cells (the only corpus with 3 seeds x 25 games x
+reset counts); the LLM-ON path can change WHICH levels are reached, so the curve is a proxy for the
+scored path rather than the scored path itself. (7) Budget 4000's score row exists only for a 13-game
+level-reaching subset and is therefore excluded from the score-maximising-budget comparison. (8) The
+corpus-wide M1/M2 numbers are ESTIMATES carrying the published estimator error; only the 48 exact
+cells are exact. (9) Every cell is a PUBLIC game played OFFLINE -- nothing here forecasts the hidden
+set. (10) The kernel-overhead term (980 s) is inherited as an ASSUMPTION, not measured here.
