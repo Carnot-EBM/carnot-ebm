@@ -1,0 +1,1059 @@
+{
+ "experiment": "outer_loop_arc_gateway_rescore_20260726",
+ "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
+ "run_date": "2026-07-27T00:04:14Z",
+ "schema": "carnot.arc_gateway_rescore.v1",
+ "defect_under_measurement": {
+  "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
+  "our_harness_charged_zero": "scripts/arc_leaderboard_eval.py -- `actions += 1` lived ONLY in the non-RESET branch (fixed additively 2026-07-26; the pre-existing `actions` semantics are unchanged, new fields were added alongside)",
+  "why_it_is_squared": "per-level charge is a DIFFERENCE of cumulative CHARGED counts (scorecard.py:479 `level_actions = actions_at_level - prev_actions`), and the per-level score is min((baseline/level_actions)**2 * 100, 115) (:168-171) -- so a reset taken BEFORE a level-up lands in that level's denominator and is squared",
+  "reset_replay_is_not_a_rare_path": "arc_competition_agent.py:969-970 -- RESET + replay is described as 'the ONLY navigation'; :3339 records 'every backtrack RESET-replayed from root'",
+  "a_LARGER_defect_ruled_out_from_source": {
+   "the_risk": "the gateway consumes `actions_by_level` POSITIONALLY -- `level, actions_at_level = actions_by_level[level_idx]` (scorecard.py:477) IGNORES the stored level number. `Card.set_levels_completed` (:706-713) appends an entry whenever levels_completed CHANGES, in either direction. So if a RESET dropped levels_completed back toward 0, it would insert a spurious entry and shift every subsequent level's charge by one slot -- corrupting the per-level attribution far more than the one-action charge does.",
+   "verdict": "DOES NOT MATERIALIZE, verified from the installed engine source",
+   "evidence": "arcengine/base_game.py:308-328 -- `reset()` dispatches to `full_reset()` only when `_action_count == 0` or the state is WIN; otherwise it calls `level_reset()`, which re-clones the CURRENT level and does NOT touch `_score` (:325-328). `levels_completed` is `_score` (:244,:255). Therefore every MID-RUN reset preserves levels_completed, appends no entry, and the positional consumption stays aligned.",
+   "residual_edge_case_stated_not_hidden": "a reset at `_action_count == 0` IS a full_reset (`_score = 0`), and on the gateway side `update_scorecard`:836-839 routes a full_reset to `new_play()` -- a NEW card index whose action count starts at 0 -- rather than to `inc_reset_count()`. That path is the run's opening reset, before any level-up, so it cannot corrupt an attribution; but a policy that contrived a mid-run full_reset would score as a separate play, and this analysis does not cover that."
+  },
+  "three_units_never_conflated": {
+   "offline_actions": "our harness `actions`; EXCLUDES resets. The unit every recorded `efficiency` is in.",
+   "frames": "loop iterations; INCLUDES resets.",
+   "gateway_charged": "non-RESET moves PLUS resets. The ONLY unit the competition score is a function of.",
+   "identity_asserted": "gateway_charged == frames == offline_actions + n_resets"
+  }
+ },
+ "corpora_that_cannot_be_rescored_at_all": [
+  {
+   "glob": "results/cptb_20260726_cells/*.jsonl.gz",
+   "n_files": 32,
+   "n_cells": 1713,
+   "reason": "declares `action_count_convention: resets_excluded_run_game_native` but records NO reset count and NO level_up_actions -- the quantity the correction needs was never persisted, so these cells CANNOT be gateway-re-scored at any width. Reported as a coverage hole."
+  }
+ ],
+ "headline": {
+  "question": "By how much are our ARC score estimates optimistic because the offline harness did not charge RESETs, and is the answer materially different from zero?",
+  "answer_from_bounds_alone": "THE BOUND IS TOO WIDE TO ANSWER THE HEADLINE QUESTION. Per cell the worst case erases between 0% and 95.7% of the offline score (median 11.4%), and its best case is 0% BY CONSTRUCTION -- so bounds alone can establish neither that the optimism is material nor that it is negligible. This is a real answer, and it is exactly what justifies the per-level instrumentation in Part B.",
+  "answer_from_exact_measurement": "MATERIALLY DIFFERENT FROM ZERO BUT SMALL. On 44 matched live cells spanning 11 games and 2 budgets, the optimism is 4.62% of the per-game score at the median and at most 16.80%; 42/44 cells are non-zero, and the only two zeros are structural (the 115 cap absorbing a single reset), not rounding. On the GAME as the replication unit (n=11) the median is 4.92%, range 1.81%-16.66% -- the same answer, so it does not rest on which games were repeated. In absolute terms the correction is 0.0004 score points at the median (max 0.0955), which is small only because most of these games score near zero to begin with.",
+  "why_reality_sits_at_the_optimistic_end_of_the_bound": "level-ups happen EARLY and the resets concentrate in the POST-SOLVE TAIL, which is free. Measured across both budgets: whole-run reset counts of 3-110, but only a fraction land before a level-up (vc33 b2000: 1 of 88; ft09: 4 of 110), and those that do land on an already-large denominator. The worst-case bound assumed ALL resets precede a level-up, which is not how this agent behaves. The counter-example matters too: r11l charges 72-74 of its ~109 resets BEFORE its single level-up and is correspondingly the worst-hit game at 15.4-17.5%.",
+  "dose_response_the_correction_tracks_resets_before_the_levelup": "not the whole-run reset count. r11l (109 resets, 72 before) is hit 4x harder than ft09/seed-20260725 (110 resets, 4 before). Any future estimate of this correction must use the per-level attribution, not `n_resets` -- which is exactly why the bound over `n_resets` alone was uninformative.",
+  "no_conclusion_reordered": "a single-digit-percent haircut on the efficiency term does not change the settled structural facts: DEPTH dominates (1/2/4/8 of 8 levels -> 2.78/8.33/27.78/100), a per-game score can never exceed 100, and the post-solve tail is free. It does mean every per-level efficiency figure this project quotes should be read as an upper estimate, with the size of the overstatement now measured rather than unknown."
+ },
+ "cross_check_against_the_actual_hidden_score": {
+  "actual_hidden_score": 0.08,
+  "actual_hidden_score_ref": "public leaderboard 0.08, 2026-06-19 23:40Z, ref 53862349, 'carnot v1.1', kernel v3 (flat v3->v5); recorded ops/known-issues.md:3275",
+  "offline_public_set_mean_per_game": {
+   "n": 57,
+   "min": 0.03899,
+   "p25": 0.086189,
+   "median": 0.088299,
+   "p75": 0.228819,
+   "max": 0.445457,
+   "mean": 0.141893
+  },
+  "worst_case_public_set_mean_per_game": {
+   "n": 57,
+   "min": 0.016519,
+   "p25": 0.03459,
+   "median": 0.056849,
+   "p75": 0.082244,
+   "max": 0.389471,
+   "mean": 0.083445
+  },
+  "does_the_correction_narrow_the_gap": false,
+  "verdict": "NO -- AND THE HONEST READING IS THAT THIS TEST HAS ALMOST NO POWER, SO ITS NON-CORROBORATION IS NOT EVIDENCE AGAINST THE CORRECTION EITHER. The offline PUBLIC-set mean-per-game score is 0.0883 at the median, which is already near-identical to the actual HIDDEN score of 0.08. Applying the worst-case reset correction moves it DOWN to 0.0568 -- AWAY from the observed value, not toward it. So on this evidence the correction does not explain any offline-vs-hidden gap.",
+  "why_the_test_has_almost_no_power": [
+   "DIFFERENT GAME SETS. The offline corpus is the 25 PUBLIC games; 0.08 was scored on HIDDEN OOD games. The two numbers landing near each other is a coincidence of very different mechanisms, not a calibration.",
+   "DIFFERENT DOMINANT TERM. The hidden score is dominated by whether the agent wins ANY level at all (held-out proxy first_win_rate_integrated = 0.04, CI [0,0], ops/known-issues.md:3275-3279), whereas 11 of 25 public games reach a level. The reset correction only touches the efficiency of levels that WERE solved, so it cannot move a score whose limiting factor is winning nothing.",
+   "DIFFERENT AGENT CONFIGURATION. Every recorded row is the LLM-OFF arm; the submitted kernel ran with the generator enabled.",
+   "A ONE-POINT COMPARISON. One hidden submission is a single observation with no interval; nothing about it can distinguish a 5% efficiency correction."
+  ],
+  "what_would_make_this_test_informative": "gateway-charged re-scoring of a HIDDEN-set run's own per-level reset attribution, which requires the instrumentation to be present in a submitted kernel -- an operator decision, not measurable from here."
+ },
+ "scope_and_power": {
+  "part_a_scope": "485 of 1401 recorded rows carry both a level-up and a reset count",
+  "part_b_scope": "44 matched live cells with a level-up, across 11 games ['cd82', 'dc22', 'ft09', 'lf52', 'lp85', 'r11l', 's5i5', 'sp80', 'su15', 'tu93', 'vc33'], budgets [400, 2000], seeds [20260724, 20260725, 20260726]",
+  "single_game_concentration_warning": "the Part A corpus score is heavily concentrated: vc33 alone carries the large per-game scores (median offline 2.09 vs <0.03 for most games), so a corpus-level relative delta is a statement about vc33 more than about the corpus. Part B's per-cell numbers are reported individually for exactly this reason -- read the per-cell table, not only the median.",
+  "what_this_does_NOT_measure": [
+   "the hidden set. Every number here is the 25 public games via the offline arcade.",
+   "the LLM-ON configuration.",
+   "whether a policy could actually have produced the worst-case reset placement -- the Part A bound is accounting-only and therefore conservative (a true lower bound on the score).",
+   "the 1713 cptb cells and 375 budget-sweep rows, which record no reset count at all."
+  ]
+ },
+ "what_was_NOT_changed": [
+  "no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports; the flag decision is the operator's",
+  "the pre-existing `efficiency` field keeps its offline (reset-free) semantics; the gateway number is a NEW field `efficiency_gateway_charged` alongside it",
+  "no historical artifact's recorded numbers were rewritten; results/outer_loop_arc_early_stop_grace_sweep_20260726.json was REBUILT because the freshness lint correctly flagged the arc_leaderboard_eval.py edit, and the deep diff moved ZERO measured numbers (only run_date/git_head/provenance/checksum)",
+  "nothing was submitted to ARC or Kaggle"
+ ],
+ "independent_implementation_crosscheck": {
+  "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+  "available": true,
+  "peer_sha256": "4f0fe1b4455d3808bcee97850f3b0f29238bae0bc1e2b67a857e29de86dc6b3f",
+  "field_by_field_peer_vs_mine": {
+   "n_rows_total": {
+    "peer": 1401,
+    "mine": 1401,
+    "agree": true
+   },
+   "n_cells_bounded": {
+    "peer": 485,
+    "mine": 485,
+    "agree": true
+   },
+   "upstream_measurement_wall_s": {
+    "peer": 9126.0,
+    "mine": 9126.0,
+    "agree": true
+   },
+   "worst_case_rel_loss_median": {
+    "peer": 0.113725,
+    "mine": 0.113725,
+    "agree": true
+   },
+   "worst_case_rel_loss_max": {
+    "peer": 0.956551,
+    "mine": 0.956551,
+    "agree": true
+   },
+   "worst_case_abs_width_max": {
+    "peer": 4.290855,
+    "mine": 4.290855,
+    "agree": true
+   },
+   "frames_identity_holds_on_all_rows": {
+    "peer": true,
+    "mine": true,
+    "agree": true
+   }
+  },
+  "n_agreeing": 7,
+  "n_compared": 7,
+  "verdict": "TWO INDEPENDENT IMPLEMENTATIONS AGREE on the corpus size, the bounded-cell count, the frames identity, the upstream measurement clock, and the worst-case relative-loss distribution -- despite different worst-case search methods (exact DP here; exhaustive-for-2-levels + coordinate-descent there) and separately written scorer drivers.",
+  "peer_qualifier_adopted": {
+   "finding": "the peer identified a SECOND clamp this analysis had not isolated: the game-level `min(., max_weights/total_weights*100)` clamp (scorecard.py:204-206). A cell sitting on it has its score set by DEPTH, so extra charged actions cost it NOTHING until a completed level's own (baseline/charged)^2*100 term falls below 100. The peer counts 17 such cells.",
+   "why_it_matters_here": "it is a second, independent reason the exact correction lands near the optimistic end of the bound -- alongside the per-level 115 cap isolated here (the sp80 true-zero cell) and the free post-solve tail."
+  },
+  "where_the_two_differ_in_coverage": "the peer's exact-vs-bound part has 4 cells; this artifact's has 44 across 11 games and 2 budgets, so the distributional statements here are better powered. Conversely the peer measures reset COMPOSITION (where resets come from and which are avoidable), which this artifact does not."
+ },
+ "scorer_fidelity_crosschecks": {
+  "reset_charge_through_full_chain": {
+   "no_resets_score": 33.333333,
+   "five_resets_before_levelup_score": 14.814815,
+   "reset_is_charged": true,
+   "note": "5 resets before the level-up inflate level 1 from 10 to 15 charged actions"
+  },
+  "post_solve_tail_is_free_through_full_chain": {
+   "tail_0_score": 33.333333,
+   "tail_530_frames_incl_30_resets_score": 33.333333,
+   "tail_is_free": true
+  },
+  "calculator_vs_full_chain_per_signature": {
+   "n_distinct_signatures": 87,
+   "n_agree": 87,
+   "failures": [],
+   "agreement": 1.0,
+   "principle": "Path 1 drives EnvironmentScoreCalculator as _calculate_score does; path 2 builds a real Scorecard/Card through the REAL mutators and scores via from_scorecard. Both are the installed scorer, neither is a paraphrase of the formula. Cell-by-cell agreement is what makes any downstream sensitivity claim mean anything."
+  }
+ },
+ "part_a_bounds_over_recorded_rows": {
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "measurement_wall_s": 9126.0,
+  "measurement_wall_s_principle": "the SUM of each upstream row FILE's own elapsed_s -- the clock of the runs being re-scored. NOT this analyser's runtime (that is duration_s) and NOT the sum of per-cell wall_s (which undercounts ~25%).",
+  "row_sources": [
+   {
+    "path": "results/early_stop_sweep_20260726/rows_b2000.json",
+    "elapsed_s": 4067.4,
+    "n_rows": 450,
+    "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_b400.json",
+    "elapsed_s": 1686.0,
+    "n_rows": 450,
+    "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+    "elapsed_s": 1984.4,
+    "n_rows": 156,
+    "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
+    "elapsed_s": 276.4,
+    "n_rows": 75,
+    "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
+    "elapsed_s": 152.1,
+    "n_rows": 30,
+    "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
+    "elapsed_s": 153.2,
+    "n_rows": 30,
+    "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
+    "elapsed_s": 150.1,
+    "n_rows": 30,
+    "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
+    "elapsed_s": 95.8,
+    "n_rows": 30,
+    "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
+    "elapsed_s": 560.6,
+    "n_rows": 150,
+    "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
+   }
+  ],
+  "n_rows_total": 1401,
+  "n_rows_with_a_levelup_and_reset_count": 485,
+  "n_rows_no_levelup_score_zero_either_way": 916,
+  "n_rows_unrescorable": 0,
+  "why_only_a_bound": "the persisted rows record a WHOLE-RUN `n_resets` only. The correction needs the resets attributed PER LEVEL, because the scorer differences cumulative counts. BEST case = every reset lands after the last level-up, where it costs EXACTLY nothing (an incomplete level scores 0.0 whatever it is charged, scorecard.py:178-183) -> the score is unchanged. WORST case = an exact DP allocation of all n_resets across the completed levels.",
+  "worst_case_method": "exact dynamic programming over (level, resets-used). A greedy-on-marginals allocation is computed independently as a cross-check and DISAGREES on 7/485 cells -- always by finding a HIGHER (less pessimal) score, because the 115 cap creates a flat region with zero marginal that greedy refuses to spend into. The DP is therefore the reported bound; greedy is reported as a witness that the naive method is wrong here, not averaged with it.",
+  "greedy_vs_dp_disagreements": 7,
+  "greedy_never_beat_dp": true,
+  "abs_delta_offline_minus_worst_score_points": {
+   "n": 485,
+   "min": 0.0,
+   "p25": 0.000404,
+   "median": 0.000928,
+   "p75": 0.020519,
+   "max": 4.290855,
+   "mean": 0.14421
+  },
+  "rel_delta_fraction_of_offline_score_erased": {
+   "n": 485,
+   "min": 0.0,
+   "p25": 0.062752,
+   "median": 0.113725,
+   "p75": 0.258557,
+   "max": 0.956551,
+   "mean": 0.204208
+  },
+  "verdict": "THE BOUND IS TOO WIDE TO ANSWER THE HEADLINE QUESTION. Per cell the worst case erases between 0% and 95.7% of the offline score (median 11.4%), and its best case is 0% BY CONSTRUCTION -- so bounds alone can establish neither that the optimism is material nor that it is negligible. This is a real answer, and it is exactly what justifies the per-level instrumentation in Part B.",
+  "mechanism_note_cap_region": {
+   "n_cells_whose_first_level_is_at_the_115_cap": 17,
+   "note": "a level solved FASTER than the human baseline by >7.2% sits at the 115 cap, so its score has the most headroom to lose -- and conversely the cap ABSORBS a small reset charge with zero score change. Both effects are visible in Part B."
+  }
+ },
+ "part_b_exact_attribution_live": {
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "part_b_measurement_wall_s": 523.526,
+  "sources": [
+   {
+    "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+    "measurement_wall_s": 79.684,
+    "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
+   },
+   {
+    "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+    "measurement_wall_s": 443.842,
+    "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
+   }
+  ],
+  "n_cells_run": 48,
+  "n_cells_with_a_levelup": 44,
+  "matched_reproduction_witness": {
+   "n_cells_matching_a_recorded_row": 48,
+   "n_fully_matched_on_efficiency_AND_reset_count": 48,
+   "mismatches": [],
+   "principle": "an UNMATCHED re-run would compare two different agents and confound the reset delta with the configuration difference. Reproducing each recorded row's own `efficiency` AND `n_resets` exactly is the witness that the exact gateway numbers attach to the recorded corpus."
+  },
+  "identity_violations": 0,
+  "baselines_nonzero_on_every_cell": true,
+  "baselines_channel_note": "baselines are read via arc_leaderboard_eval._baseline_actions, which goes through `getattr(env, 'info', env)`. A prior agent read `getattr(env, 'baseline_actions')` directly -- a DEAD CHANNEL that summed to 0.0 and made both charge models agree, reading as a clean null. Asserted non-zero per cell here so that cannot recur.",
+  "resets_before_levelups_observed": [
+   {
+    "game": "vc33",
+    "seed": 20260724,
+    "budget": 400,
+    "n_resets_whole_run": 13,
+    "resets_before_each_levelup": [
+     1,
+     1
+    ],
+    "offline_efficiency_unrounded": 2.08973113,
+    "gateway_efficiency_unrounded": 1.9955471,
+    "abs_optimism": 0.09418403,
+    "rel_optimism": 0.04506993
+   },
+   {
+    "game": "vc33",
+    "seed": 20260725,
+    "budget": 400,
+    "n_resets_whole_run": 9,
+    "resets_before_each_levelup": [
+     1,
+     6
+    ],
+    "offline_efficiency_unrounded": 0.62199344,
+    "gateway_efficiency_unrounded": 0.5658871,
+    "abs_optimism": 0.05610634,
+    "rel_optimism": 0.09020406
+   },
+   {
+    "game": "vc33",
+    "seed": 20260726,
+    "budget": 400,
+    "n_resets_whole_run": 12,
+    "resets_before_each_levelup": [
+     1,
+     12
+    ],
+    "offline_efficiency_unrounded": 0.79902925,
+    "gateway_efficiency_unrounded": 0.70349628,
+    "abs_optimism": 0.09553298,
+    "rel_optimism": 0.1195613
+   },
+   {
+    "game": "sp80",
+    "seed": 20260724,
+    "budget": 400,
+    "n_resets_whole_run": 13,
+    "resets_before_each_levelup": [
+     12
+    ],
+    "offline_efficiency_unrounded": 0.05779675,
+    "gateway_efficiency_unrounded": 0.05406893,
+    "abs_optimism": 0.00372782,
+    "rel_optimism": 0.06449879
+   },
+   {
+    "game": "sp80",
+    "seed": 20260725,
+    "budget": 400,
+    "n_resets_whole_run": 11,
+    "resets_before_each_levelup": [
+     8
+    ],
+    "offline_efficiency_unrounded": 0.1267985,
+    "gateway_efficiency_unrounded": 0.11871785,
+    "abs_optimism": 0.00808065,
+    "rel_optimism": 0.0637283
+   },
+   {
+    "game": "sp80",
+    "seed": 20260726,
+    "budget": 400,
+    "n_resets_whole_run": 10,
+    "resets_before_each_levelup": [
+     1
+    ],
+    "offline_efficiency_unrounded": 4.76190476,
+    "gateway_efficiency_unrounded": 4.76190476,
+    "abs_optimism": 0.0,
+    "rel_optimism": 0.0
+   },
+   {
+    "game": "tu93",
+    "seed": 20260724,
+    "budget": 400,
+    "n_resets_whole_run": 11,
+    "resets_before_each_levelup": [
+     8
+    ],
+    "offline_efficiency_unrounded": 0.00719121,
+    "gateway_efficiency_unrounded": 0.00685871,
+    "abs_optimism": 0.0003325,
+    "rel_optimism": 0.04623645
+   },
+   {
+    "game": "tu93",
+    "seed": 20260725,
+    "budget": 400,
+    "n_resets_whole_run": 11,
+    "resets_before_each_levelup": [
+     8
+    ],
+    "offline_efficiency_unrounded": 0.00719121,
+    "gateway_efficiency_unrounded": 0.00685871,
+    "abs_optimism": 0.0003325,
+    "rel_optimism": 0.04623645
+   },
+   {
+    "game": "tu93",
+    "seed": 20260726,
+    "budget": 400,
+    "n_resets_whole_run": 11,
+    "resets_before_each_levelup": [
+     8
+    ],
+    "offline_efficiency_unrounded": 0.00719121,
+    "gateway_efficiency_unrounded": 0.00685871,
+    "abs_optimism": 0.0003325,
+    "rel_optimism": 0.04623645
+   },
+   {
+    "game": "lp85",
+    "seed": 20260726,
+    "budget": 400,
+    "n_resets_whole_run": 3,
+    "resets_before_each_levelup": [
+     1
+    ],
+    "offline_efficiency_unrounded": 0.17361111,
+    "gateway_efficiency_unrounded": 0.16861537,
+    "abs_optimism": 0.00499574,
+    "rel_optimism": 0.02877547
+   },
+   {
+    "game": "cd82",
+    "seed": 20260725,
+    "budget": 400,
+    "n_resets_whole_run": 14,
+    "resets_before_each_levelup": [
+     5
+    ],
+    "offline_efficiency_unrounded": 0.40325752,
+    "gateway_efficiency_unrounded": 0.38273892,
+    "abs_optimism": 0.0205186,
+    "rel_optimism": 0.05088213
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 47,
+    "resets_before_each_levelup": [
+     30,
+     46
+    ],
+    "offline_efficiency_unrounded": 0.02680002,
+    "gateway_efficiency_unrounded": 0.02478112,
+    "abs_optimism": 0.00201891,
+    "rel_optimism": 0.07533225
+   },
+   {
+    "game": "cd82",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 49,
+    "resets_before_each_levelup": [
+     5
+    ],
+    "offline_efficiency_unrounded": 0.40325752,
+    "gateway_efficiency_unrounded": 0.38273892,
+    "abs_optimism": 0.0205186,
+    "rel_optimism": 0.05088213
+   },
+   {
+    "game": "cd82",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 51,
+    "resets_before_each_levelup": [
+     33
+    ],
+    "offline_efficiency_unrounded": 0.01806355,
+    "gateway_efficiency_unrounded": 0.01679903,
+    "abs_optimism": 0.00126453,
+    "rel_optimism": 0.07000429
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 33,
+    "resets_before_each_levelup": [
+     32
+    ],
+    "offline_efficiency_unrounded": 0.00521999,
+    "gateway_efficiency_unrounded": 0.00503744,
+    "abs_optimism": 0.00018254,
+    "rel_optimism": 0.03496996
+   },
+   {
+    "game": "dc22",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 35,
+    "resets_before_each_levelup": [
+     34
+    ],
+    "offline_efficiency_unrounded": 0.00552572,
+    "gateway_efficiency_unrounded": 0.005315,
+    "abs_optimism": 0.00021072,
+    "rel_optimism": 0.03813444
+   },
+   {
+    "game": "dc22",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 34,
+    "resets_before_each_levelup": [
+     33
+    ],
+    "offline_efficiency_unrounded": 0.00513892,
+    "gateway_efficiency_unrounded": 0.00495516,
+    "abs_optimism": 0.00018377,
+    "rel_optimism": 0.03575976
+   },
+   {
+    "game": "ft09",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 18,
+    "resets_before_each_levelup": [
+     18
+    ],
+    "offline_efficiency_unrounded": 0.00229898,
+    "gateway_efficiency_unrounded": 0.00225727,
+    "abs_optimism": 4.171e-05,
+    "rel_optimism": 0.01814478
+   },
+   {
+    "game": "ft09",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 110,
+    "resets_before_each_levelup": [
+     4
+    ],
+    "offline_efficiency_unrounded": 0.0511236,
+    "gateway_efficiency_unrounded": 0.05015215,
+    "abs_optimism": 0.00097145,
+    "rel_optimism": 0.01900194
+   },
+   {
+    "game": "ft09",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 29,
+    "resets_before_each_levelup": [
+     11
+    ],
+    "offline_efficiency_unrounded": 0.00546757,
+    "gateway_efficiency_unrounded": 0.005374,
+    "abs_optimism": 9.357e-05,
+    "rel_optimism": 0.01711365
+   },
+   {
+    "game": "lf52",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 51,
+    "resets_before_each_levelup": [
+     9
+    ],
+    "offline_efficiency_unrounded": 0.00300599,
+    "gateway_efficiency_unrounded": 0.0029384,
+    "abs_optimism": 6.759e-05,
+    "rel_optimism": 0.02248523
+   },
+   {
+    "game": "lf52",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 54,
+    "resets_before_each_levelup": [
+     10
+    ],
+    "offline_efficiency_unrounded": 0.00299077,
+    "gateway_efficiency_unrounded": 0.00291638,
+    "abs_optimism": 7.439e-05,
+    "rel_optimism": 0.02487465
+   },
+   {
+    "game": "lf52",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 76,
+    "resets_before_each_levelup": [
+     8
+    ],
+    "offline_efficiency_unrounded": 0.00365208,
+    "gateway_efficiency_unrounded": 0.0035716,
+    "abs_optimism": 8.048e-05,
+    "rel_optimism": 0.02203789
+   },
+   {
+    "game": "lp85",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 59,
+    "resets_before_each_levelup": [
+     7
+    ],
+    "offline_efficiency_unrounded": 0.00387769,
+    "gateway_efficiency_unrounded": 0.00376107,
+    "abs_optimism": 0.00011662,
+    "rel_optimism": 0.03007346
+   },
+   {
+    "game": "lp85",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 58,
+    "resets_before_each_levelup": [
+     7
+    ],
+    "offline_efficiency_unrounded": 0.00389479,
+    "gateway_efficiency_unrounded": 0.0037774,
+    "abs_optimism": 0.00011738,
+    "rel_optimism": 0.0301382
+   },
+   {
+    "game": "lp85",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 63,
+    "resets_before_each_levelup": [
+     1
+    ],
+    "offline_efficiency_unrounded": 0.17361111,
+    "gateway_efficiency_unrounded": 0.16861537,
+    "abs_optimism": 0.00499574,
+    "rel_optimism": 0.02877547
+   },
+   {
+    "game": "r11l",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 108,
+    "resets_before_each_levelup": [
+     72
+    ],
+    "offline_efficiency_unrounded": 0.00397976,
+    "gateway_efficiency_unrounded": 0.00332151,
+    "abs_optimism": 0.00065824,
+    "rel_optimism": 0.16539821
+   },
+   {
+    "game": "r11l",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 109,
+    "resets_before_each_levelup": [
+     73
+    ],
+    "offline_efficiency_unrounded": 0.00393825,
+    "gateway_efficiency_unrounded": 0.003282,
+    "abs_optimism": 0.00065625,
+    "rel_optimism": 0.16663581
+   },
+   {
+    "game": "r11l",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 110,
+    "resets_before_each_levelup": [
+     74
+    ],
+    "offline_efficiency_unrounded": 0.00390754,
+    "gateway_efficiency_unrounded": 0.00325089,
+    "abs_optimism": 0.00065665,
+    "rel_optimism": 0.16804803
+   },
+   {
+    "game": "s5i5",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 102,
+    "resets_before_each_levelup": [
+     12
+    ],
+    "offline_efficiency_unrounded": 0.00313851,
+    "gateway_efficiency_unrounded": 0.00301564,
+    "abs_optimism": 0.00012287,
+    "rel_optimism": 0.03914789
+   },
+   {
+    "game": "s5i5",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 54,
+    "resets_before_each_levelup": [
+     23
+    ],
+    "offline_efficiency_unrounded": 0.00085197,
+    "gateway_efficiency_unrounded": 0.00081866,
+    "abs_optimism": 3.331e-05,
+    "rel_optimism": 0.03909521
+   },
+   {
+    "game": "s5i5",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 68,
+    "resets_before_each_levelup": [
+     21
+    ],
+    "offline_efficiency_unrounded": 0.00099263,
+    "gateway_efficiency_unrounded": 0.00095437,
+    "abs_optimism": 3.826e-05,
+    "rel_optimism": 0.03854614
+   },
+   {
+    "game": "sp80",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 50,
+    "resets_before_each_levelup": [
+     12
+    ],
+    "offline_efficiency_unrounded": 0.05779675,
+    "gateway_efficiency_unrounded": 0.05406893,
+    "abs_optimism": 0.00372782,
+    "rel_optimism": 0.06449879
+   },
+   {
+    "game": "sp80",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 48,
+    "resets_before_each_levelup": [
+     8
+    ],
+    "offline_efficiency_unrounded": 0.1267985,
+    "gateway_efficiency_unrounded": 0.11871785,
+    "abs_optimism": 0.00808065,
+    "rel_optimism": 0.0637283
+   },
+   {
+    "game": "sp80",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 50,
+    "resets_before_each_levelup": [
+     1
+    ],
+    "offline_efficiency_unrounded": 4.76190476,
+    "gateway_efficiency_unrounded": 4.76190476,
+    "abs_optimism": 0.0,
+    "rel_optimism": 0.0
+   },
+   {
+    "game": "su15",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 43,
+    "resets_before_each_levelup": [
+     14
+    ],
+    "offline_efficiency_unrounded": 0.00499571,
+    "gateway_efficiency_unrounded": 0.00470736,
+    "abs_optimism": 0.00028835,
+    "rel_optimism": 0.05771958
+   },
+   {
+    "game": "su15",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 47,
+    "resets_before_each_levelup": [
+     16
+    ],
+    "offline_efficiency_unrounded": 0.00344199,
+    "gateway_efficiency_unrounded": 0.0032531,
+    "abs_optimism": 0.00018889,
+    "rel_optimism": 0.05487788
+   },
+   {
+    "game": "su15",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 40,
+    "resets_before_each_levelup": [
+     13
+    ],
+    "offline_efficiency_unrounded": 0.00535891,
+    "gateway_efficiency_unrounded": 0.00506094,
+    "abs_optimism": 0.00029798,
+    "rel_optimism": 0.05560392
+   },
+   {
+    "game": "tu93",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 90,
+    "resets_before_each_levelup": [
+     8,
+     78
+    ],
+    "offline_efficiency_unrounded": 0.00797609,
+    "gateway_efficiency_unrounded": 0.00755971,
+    "abs_optimism": 0.00041638,
+    "rel_optimism": 0.05220317
+   },
+   {
+    "game": "tu93",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 90,
+    "resets_before_each_levelup": [
+     8,
+     78
+    ],
+    "offline_efficiency_unrounded": 0.00797609,
+    "gateway_efficiency_unrounded": 0.00755971,
+    "abs_optimism": 0.00041638,
+    "rel_optimism": 0.05220317
+   },
+   {
+    "game": "tu93",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 90,
+    "resets_before_each_levelup": [
+     8,
+     78
+    ],
+    "offline_efficiency_unrounded": 0.00797609,
+    "gateway_efficiency_unrounded": 0.00755971,
+    "abs_optimism": 0.00041638,
+    "rel_optimism": 0.05220317
+   },
+   {
+    "game": "vc33",
+    "seed": 20260724,
+    "budget": 2000,
+    "n_resets_whole_run": 88,
+    "resets_before_each_levelup": [
+     1,
+     1
+    ],
+    "offline_efficiency_unrounded": 2.08973113,
+    "gateway_efficiency_unrounded": 1.9955471,
+    "abs_optimism": 0.09418403,
+    "rel_optimism": 0.04506993
+   },
+   {
+    "game": "vc33",
+    "seed": 20260725,
+    "budget": 2000,
+    "n_resets_whole_run": 73,
+    "resets_before_each_levelup": [
+     1,
+     6
+    ],
+    "offline_efficiency_unrounded": 0.62199344,
+    "gateway_efficiency_unrounded": 0.5658871,
+    "abs_optimism": 0.05610634,
+    "rel_optimism": 0.09020406
+   },
+   {
+    "game": "vc33",
+    "seed": 20260726,
+    "budget": 2000,
+    "n_resets_whole_run": 66,
+    "resets_before_each_levelup": [
+     1,
+     12
+    ],
+    "offline_efficiency_unrounded": 0.79902925,
+    "gateway_efficiency_unrounded": 0.70349628,
+    "abs_optimism": 0.09553298,
+    "rel_optimism": 0.1195613
+   }
+  ],
+  "abs_optimism_score_points": {
+   "n": 44,
+   "min": 0.0,
+   "p25": 0.000121,
+   "median": 0.000416,
+   "p75": 0.004996,
+   "max": 0.095533,
+   "mean": 0.013111
+  },
+  "rel_optimism_fraction_of_offline_score": {
+   "n": 44,
+   "min": 0.0,
+   "p25": 0.030122,
+   "median": 0.046236,
+   "p75": 0.063921,
+   "max": 0.168048,
+   "mean": 0.055543
+  },
+  "rel_optimism_PER_GAME_the_replication_unit": {
+   "n": 11,
+   "min": 0.018145,
+   "p25": 0.032592,
+   "median": 0.04922,
+   "p75": 0.062086,
+   "max": 0.166636,
+   "mean": 0.05734,
+   "n_games": 11,
+   "per_game_median": {
+    "cd82": 0.060443,
+    "dc22": 0.03576,
+    "ft09": 0.018145,
+    "lf52": 0.022485,
+    "lp85": 0.029424,
+    "r11l": 0.166636,
+    "s5i5": 0.039095,
+    "sp80": 0.063728,
+    "su15": 0.055604,
+    "tu93": 0.04922,
+    "vc33": 0.090204
+   },
+   "agrees_with_the_per_cell_median": true,
+   "principle": "if the per-game and per-cell medians diverged, the per-cell number would be an artifact of which games got repeated. They agree here (4.92% vs 4.62%), so the conclusion survives the unit change -- but the per-game n is 11, not 44, and any interval should be computed on 11.",
+   "n_distinct_values_per_game": {
+    "cd82": 3,
+    "dc22": 3,
+    "ft09": 3,
+    "lf52": 3,
+    "lp85": 3,
+    "r11l": 3,
+    "s5i5": 3,
+    "sp80": 3,
+    "su15": 3,
+    "tu93": 2,
+    "vc33": 3
+   },
+   "seed_degeneracy_note": "tu93 yields only 2 distinct optimism values across 6 cells (identical across all three seeds at each budget) -- its explorer is effectively deterministic on this game, so its 3 seeds are 1 observation, not 3."
+  },
+  "n_cells_with_zero_optimism": 2,
+  "n_cells_with_nonzero_optimism": 42,
+  "precision_hazard_found_and_corrected": {
+   "n_cells_whose_delta_the_4dp_rounding_erased": 2,
+   "cells": [
+    {
+     "game": "ft09",
+     "seed": 20260724,
+     "budget": 2000,
+     "rounded_rel_optimism": 0.0,
+     "unrounded_rel_optimism": 0.01814478
+    },
+    {
+     "game": "s5i5",
+     "seed": 20260726,
+     "budget": 2000,
+     "rounded_rel_optimism": 0.0,
+     "unrounded_rel_optimism": 0.03854614
+    }
+   ],
+   "principle": "`run_game` rounds both efficiency fields to 4 decimals. On small-score cells that rounding turns a real optimism into an exact 0.0000, which reads as a clean null -- the same failure class as a dead diagnostic channel. Every statistic above is recomputed UNROUNDED from the cell's own per-level charge vectors; the rounded fields are retained in the row files but not used here.",
+   "the_only_STRUCTURAL_zeros": "sp80 seed 20260726 at both b400 and b2000: exactly 1 reset preceded its level-up, and that level is a SUPERHUMAN solve (27 agent vs 39 human actions) sitting at the 115 cap, which absorbs the extra charge with no score change. This is a genuine zero, not a rounding one."
+  }
+ },
+ "honest_verdict": "complete_gateway_rescore_reset_charge_optimism_measured_bound_too_wide_to_conclude_0_to_95pct_but_exact_matched_measurement_puts_it_at_median_0.0462_max_0.1680_of_per_game_score_42_of_44_cells_nonzero_material_but_small_no_conclusion_reordered_hidden_score_crosscheck_underpowered_does_NOT_corroborate",
+ "honest_verdict_principle": "terminal `complete_` prefix per the Verdict Terminal-Prefix Discipline; the verdict states BOTH that the bound could not answer the question and what the exact measurement found, and states plainly that the reality cross-check did not corroborate.",
+ "verifier_is_oracle": true,
+ "verifier_is_oracle_principle": "the 'verifier' here IS the installed competition scorer -- the executable oracle that defines the score. This is execution-grounded measurement, NOT an oracle-distinct verifier-moat claim, and it must never be headlined as one.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_principle": "Part B re-runs the offline dev twin on PUBLIC games to measure accounting, not to claim a solve. No new level is claimed; no registry entry is added.",
+ "arc_solve_claim": false,
+ "random_seed": 20260726,
+ "random_seeds_used": [
+  20260724,
+  20260725,
+  20260726
+ ],
+ "preconditions_checked": [
+  {
+   "resource": "installed arc_agi scorer importable",
+   "available": true
+  },
+  {
+   "resource": "recorded early-stop row corpora present",
+   "available": true
+  },
+  {
+   "resource": "per-level human baselines non-zero",
+   "available": true
+  }
+ ],
+ "git_head": "c62968c0624ba05bf0d8bbafd8605ea0cab3e184",
+ "provenance": {
+  "git_head": "c62968c0624ba05bf0d8bbafd8605ea0cab3e184",
+  "code": [
+   {
+    "path": "scripts/arc_gateway_rescore.py",
+    "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
+    "bytes": 21859,
+    "mtime_utc": "2026-07-27T00:04:02Z"
+   },
+   {
+    "path": "scripts/arc_gateway_exact_attribution.py",
+    "sha256": "b401b6367c794c47b1719bf360bed37150ddd30d1435034619bb881fc08a8348",
+    "bytes": 6977,
+    "mtime_utc": "2026-07-26T23:28:49Z"
+   },
+   {
+    "path": "scripts/analyze_arc_gateway_rescore.py",
+    "sha256": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
+    "bytes": 45412,
+    "mtime_utc": "2026-07-27T00:04:02Z"
+   },
+   {
+    "path": "scripts/arc_leaderboard_eval.py",
+    "sha256": "bfe3b2d6f1b607bf09c86feed6770dac446c06e10168f38c59884214c89c1c31",
+    "bytes": 27948,
+    "mtime_utc": "2026-07-26T23:57:36Z"
+   },
+   {
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "sha256": "e5c9163aba0658ea4f5b22238f8a0e9f88f9f43ad43bd8137277968f8a90cbb2",
+    "bytes": 337883,
+    "mtime_utc": "2026-07-26T21:21:36Z"
+   }
+  ],
+  "rows_sources": {
+   "recorded_rows": [
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b2000.json",
+     "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b400.json",
+     "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+     "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
+     "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
+     "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
+     "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
+     "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
+     "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
+     "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
+    }
+   ],
+   "exact_attribution_rows": [
+    {
+     "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+     "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+     "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
+    }
+   ]
+  }
+ },
+ "duration_s": 1.126,
+ "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
+ "reproducibility_checksum": "d49fcc95b61fc9985b9a60111e1b20666698b25d987c334115c037a06cb01d2d"
+}

@@ -301,6 +301,23 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     level_up_actions: list[
         int
     ] = []  # cumulative `actions` count at each level-up (for per-level cost)
+    # GATEWAY-CHARGE INSTRUMENTATION (2026-07-26). `actions` above EXCLUDES
+    # RESETs, but the LIVE gateway CHARGES a reset an action
+    # (arc_agi/scorecard.py:701-704 `inc_reset_count` does `resets += 1` AND
+    # `actions += 1`, reached from `update_scorecard`:839-843). Because the
+    # scorer's per-level cost is a DIFFERENCE of cumulative CHARGED actions
+    # (:479 `level_actions = actions_at_level - prev_actions`) and the per-level
+    # score is min((baseline/level_actions)**2 * 100, 115), every per-level
+    # efficiency number recorded before this instrumentation is OPTIMISTIC in
+    # the SQUARED term by exactly the resets charged before that level-up.
+    # Whole-run `n_resets` alone cannot recover that -- attribution has to be
+    # PER LEVEL, which is what these two lists record. `resets_before_levelups`
+    # is the cumulative reset count at each level-up; `level_up_charged` is the
+    # gateway-charged count at each level-up (actions + resets so far), i.e.
+    # exactly what the gateway's `actions_by_level` would hold.
+    resets = 0
+    resets_before_levelups: list[int] = []
+    level_up_charged: list[int] = []
     frame_sequence = []
     for step_index in range(budget):
         if policy.is_done(frames, latest):
@@ -308,6 +325,7 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         kind, data = policy.next_move(frames, latest)
         if kind == "RESET":
             latest = env.reset()
+            resets += 1
         elif kind is None:
             break
         else:
@@ -322,6 +340,8 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                 best, lvl
             ):  # record the action count for each new level (handles jumps)
                 level_up_actions.append(actions)
+                resets_before_levelups.append(resets)
+                level_up_charged.append(actions + resets)
             best = lvl
         frames.append(latest)
         if latest is not None:
@@ -392,6 +412,48 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction",
         }
     nav = _navigation_diagnostics(policy)
+    # GATEWAY-ACCURATE efficiency (2026-07-26). Identical driving of the SAME
+    # installed scorer, but fed the CHARGED per-level counts (which include the
+    # resets the gateway bills) instead of the reset-free `level_up_actions`.
+    # `efficiency` above is retained UNCHANGED so no historical comparison
+    # silently shifts unit; this is an ADDITIONAL field.
+    eff_gateway = 0.0
+    per_level_gateway = []
+    try:
+        from arc_agi.scorecard import EnvironmentScoreCalculator
+
+        baseline_list = [base[i] for i in sorted(base)] if base else []
+        if baseline_list:
+            calc_g = EnvironmentScoreCalculator()
+            prev_g = 0
+            charged_total = actions + resets
+            for li in range(len(baseline_list)):
+                if li < len(level_up_charged):
+                    at_g = level_up_charged[li]
+                    lvl_charged = at_g - prev_g
+                    done_g = True
+                    prev_g = at_g
+                else:
+                    done_g = False
+                    lvl_charged = charged_total - prev_g
+                    prev_g = charged_total
+                calc_g.add_level(
+                    level_index=li + 1,
+                    completed=done_g,
+                    actions_taken=lvl_charged,
+                    baseline_actions=baseline_list[li],
+                )
+                per_level_gateway.append(
+                    {
+                        "level": li,
+                        "agent_charged_actions": lvl_charged,
+                        "human_actions": baseline_list[li],
+                        "completed": done_g,
+                    }
+                )
+            eff_gateway = round(float(calc_g.to_score(include_levels=False).score), 4)
+    except Exception:
+        eff_gateway = 0.0
     return {
         "game": game,
         "levels": levels,
@@ -400,6 +462,15 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         "efficiency": eff,
         "per_level_efficiency": eff,
         "per_level": per_level,
+        # --- gateway-charge accounting (resets charged, as the live gateway does)
+        "action_count_convention": "resets_excluded_run_game_native",
+        "n_resets_run_game": resets,
+        "charged_actions": actions + resets,
+        "resets_before_levelups": resets_before_levelups,
+        "level_up_charged": level_up_charged,
+        "efficiency_gateway_charged": eff_gateway,
+        "per_level_gateway": per_level_gateway,
+        "efficiency_optimism_vs_gateway": round(float(eff) - float(eff_gateway), 6),
         "deepest_level_reached": reached,
         "navigation_diagnostics": nav,
         "frame_sequence": frame_sequence,

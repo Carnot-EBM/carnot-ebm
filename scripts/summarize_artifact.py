@@ -227,8 +227,25 @@ def _staleness_banner(path: Path, d: dict[str, Any]) -> tuple[str, int]:
         # results with no separate analyser step and nothing to go stale against.
         return ("", 0)
     recorded: list[dict[str, Any]] = list(prov.get("code") or [])
-    for group in (prov.get("rows_sources") or {}).values():
-        recorded.extend(group or [])
+    # SHAPE TOLERANCE (2026-07-26). The convention is
+    # `rows_sources: {group_name: [{path, sha256}, ...]}`, but this reader used to call
+    # `.values()` unconditionally and CRASHED with AttributeError on an artifact that
+    # emitted a flat list instead -- taking down the whole summary, which is the tool
+    # the Reading-Results Discipline makes MANDATORY before citing any number. A
+    # reader of results must never be the thing that breaks; an unexpected shape is a
+    # reason to report less, not to raise. Non-dict, non-list shapes are ignored rather
+    # than guessed at.
+    rows_sources = prov.get("rows_sources")
+    groups: list[Any] = []
+    if isinstance(rows_sources, dict):
+        groups = list(rows_sources.values())
+    elif isinstance(rows_sources, list):
+        groups = [rows_sources]
+    for group in groups:
+        if isinstance(group, list):
+            # A group of bare path strings carries no sha256, so it cannot be checked;
+            # keep only the dict entries rather than crashing on `entry.get`.
+            recorded.extend(e for e in group if isinstance(e, dict))
     if not recorded:
         return ("", 0)
     drift, unreadable = [], []

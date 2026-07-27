@@ -249,6 +249,17 @@ omit = [
 [tool.ruff]
 target-version = "py311"
 line-length = 100
+# results/arc_e3/ holds LLM-GENERATED executable world models, rewritten from
+# scratch by the live conductor's E3 induction on every cycle. Linting them is
+# both meaningless (the next induction overwrites whatever ruff fixes) and
+# actively harmful: on 2026-07-26 it made outer-loop commits UNLANDABLE, because
+# `ruff --fix` would reformat results/arc_e3/cd82/world_model.py, the conductor
+# would immediately regenerate it un-formatted, and pre-commit would see a
+# modified file and roll the whole commit back -- five consecutive attempts, an
+# unwinnable race for as long as induction is running. Scoped to arc_e3/ ONLY:
+# the other ~370 .py files under results/ are archived experiment scripts that
+# are NOT regenerated, so they stay linted.
+extend-exclude = ["results/arc_e3"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]
