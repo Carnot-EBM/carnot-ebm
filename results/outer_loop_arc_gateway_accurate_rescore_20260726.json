@@ -1,0 +1,2867 @@
+{
+ "experiment": "outer_loop_arc_gateway_accurate_rescore_20260726",
+ "title": "GATEWAY-ACCURATE re-score: the opening RESET is FREE, so the published uncharged-RESET optimism was itself overstated",
+ "run_date": "2026-07-27T01:53:35Z",
+ "schema": "carnot.arc_gateway_accurate_rescore.v1",
+ "charge_model_settled_from_installed_source": {
+  "source_spans": {
+   "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 `inc_reset_count` -> `self.resets[i] += 1` AND `self.actions[i] += 1`",
+   "but_only_when_full_reset_is_FALSE": "arc_agi/scorecard.py:834-843 `update_scorecard` -- a RESET frame routes to `new_play()` when `full_reset` else to `reset()`; only `reset()` reaches `inc_reset_count`",
+   "new_play_charges_nothing": "arc_agi/scorecard.py:692-699 `inc_play_count` APPENDS actions=0/resets=0 for a new play; it never increments an existing counter",
+   "full_reset_is_true_only_on_env_creation": "arc_agi/api.py:405-437 `_get_or_create_environment` -- a cached guid returns `(game, False)`; only the `arcade.make` path returns `(game, True)`",
+   "the_opening_action_is_always_that_creation": "the reference agent harness opens with `self.guid = ''` (ARC-AGI-3-Agents/agents/agent.py:55) and a RESET, so the first RESET has no guid -> cache miss -> make -> full_reset=True. One free reset per play.",
+   "per_level_charge_is_a_DIFFERENCE": "arc_agi/scorecard.py:479 `level_actions = actions_at_level - prev_actions`, so a charge added before a level-up inflates that level's denominator only",
+   "per_level_score_is_squared_and_capped": "arc_agi/scorecard.py:166-173 `min((baseline/actions_taken)**2 * 100, 115)`",
+   "incomplete_level_scores_zero_so_the_tail_is_free": "arc_agi/scorecard.py:178-183",
+   "game_aggregation_has_a_second_clamp": "arc_agi/scorecard.py:192-206 index-weighted mean with a further `min(., max_weights/total_weights*100)` clamp -- a per-game score can never exceed 100"
+  },
+  "three_models_scored_side_by_side": {
+   "M0_offline_recorded": "resets charged 0 -- what our rows recorded",
+   "M1_all_resets_charged": "every reset charged 1 -- the model behind the published 4.62% figure",
+   "M2_bootstrap_free_GATEWAY_ACCURATE": "every reset EXCEPT the opening full_reset charged 1 -- what the installed gateway does"
+  },
+  "charged_total_formula": {
+   "M1": "actions + resets",
+   "M2": "actions + resets - n_full_resets, and n_full_resets == 1 per play"
+  },
+  "three_units_never_conflated": {
+   "offline_actions": "our harness `actions`; EXCLUDES resets",
+   "frames": "loop iterations; INCLUDES resets",
+   "gateway_charged": "non-RESET moves PLUS charged resets -- the only unit the score sees"
+  },
+  "why_only_the_first_span_moves": "the scorer's per-level cost is a DIFFERENCE of cumulative charged counts, so removing one charge from every cumulative total cancels in every span except the first",
+  "assumption_stated_not_verified": "the `full_reset` semantics were read from the INSTALLED LOCAL `arc_agi`/`arcengine`. The hidden competition gateway is a remote service whose implementation was not inspected. If the remote scorer differs, M2 is wrong in the same direction M1 is -- this is an assumption, not a measurement.",
+  "residual_divergence_not_quantified": "under `competition_mode`, a RESET issued at `_action_count == 0` is CHARGED but the game is NOT stepped (arc_agi/api.py:316-334), so a back-to-back RESET diverges behaviourally between the gateway and our offline env, which really does reset. Only reachable when the agent resets with no moves since its last reset. Named, not measured."
+ },
+ "witness_opening_reset_is_free_driven_through_the_installed_chain": {
+  "fixture": {
+   "baselines": [
+    7,
+    18,
+    44,
+    61,
+    131,
+    34,
+    152
+   ],
+   "seg_offline": [
+    15,
+    42
+   ],
+   "seg_resets": [
+    1,
+    0
+   ],
+   "tail_offline": 330,
+   "tail_resets": 12,
+   "note": "the vc33/seed-20260724/b400 shape, chosen because its ONLY pre-level-up reset IS the opening one"
+  },
+  "M2_bootstrap_free": {
+   "score": 2.089731130547457,
+   "card_actions": [
+    399
+   ],
+   "card_resets": [
+    12
+   ],
+   "actions_by_level": [
+    [
+     [
+      1,
+      15
+     ],
+     [
+      2,
+      57
+     ]
+    ]
+   ]
+  },
+  "M1_all_resets_charged": {
+   "score": 1.9955471027696792,
+   "card_actions": [
+    400
+   ],
+   "card_resets": [
+    13
+   ],
+   "actions_by_level": [
+    [
+     [
+      1,
+      16
+     ],
+     [
+      2,
+      58
+     ]
+    ]
+   ],
+   "required_phantom_new_play": true
+  },
+  "charged_actions_M2_equals_offline_plus_resets_minus_one": true,
+  "charged_actions_M1_equals_offline_plus_resets": true,
+  "resets_counter_M2_is_one_lower": true,
+  "M2_score_is_strictly_higher_than_M1": true,
+  "M1_is_unreachable_without_a_phantom_new_play": {
+   "what_was_tried": "update_scorecard(RESET, full_reset=False) as the run's FIRST call",
+   "result": "KeyError: 'wit02'",
+   "verdict": "M1 CANNOT be produced by the installed chain. The opening RESET is the call that CREATES the play, so there is no counter for it to increment. Charging it is a modelling choice, not gateway behaviour."
+  }
+ },
+ "cited_originals_never_rewritten": {
+  "artifacts": [
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "exists": true,
+    "sha256": "98fa60eddd776d21945789ca48db8537bd784984d60a1a1b4138b868a492f16a",
+    "bytes": 41629,
+    "committed_at_time_of_writing": true,
+    "what_it_reported": "published the uncharged-RESET optimism as median 4.62% / max 16.80% over 44 live cells, computed under M1",
+    "NOT_MODIFIED": true
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "exists": true,
+    "sha256": "af62747608b5f1a71fcaf827b71a8e8a55c8c8ee26792e7c52f583b3a25e38a1",
+    "bytes": 31924,
+    "committed_at_time_of_writing": true,
+    "what_it_reported": "published relative score loss from charged resets as median 4.5% / max 12.0% over 7 won cells, computed under M1",
+    "NOT_MODIFIED": true
+   },
+   {
+    "path": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+    "exists": true,
+    "sha256": "bd4c551d518df4022f7dd6f870cdc6e6cce98af1b15dce1fcce433e24e0ab67c",
+    "bytes": 461352,
+    "committed_at_time_of_writing": false,
+    "what_it_reported": "independent bound over the same rows (median 11.4% / max 95.7% worst case) plus the first statement that the opening reset is free",
+    "NOT_MODIFIED": true
+   }
+  ],
+  "principle": "CLAUDE.md never-prune: a re-score emits a NEW artifact that states the correction and cites the originals by path + sha256. No historical artifact's recorded numbers were edited, and the numbers here are published BESIDE the M1 numbers, not on top of them."
+ },
+ "part_b_exact_44_live_cells": {
+  "independent_reproduction_of_the_prior_artifacts_M1_number": {
+   "prior_artifact": "results/outer_loop_arc_gateway_rescore_20260726.json",
+   "prior_unrounded_M1_median": 0.046236,
+   "recomputed_here_M1_median": 0.046236,
+   "agrees": true,
+   "why_this_matters": "two independently written analysers, driving the installed scorer through different code, land on the same M1 figure. That is what licenses reading the M2-vs-M1 difference as a CHARGE-MODEL change rather than as one of the two pipelines being wrong."
+  },
+  "cells_that_become_exactly_zero_under_M2": {
+   "n": 6,
+   "n_under_M1": 2,
+   "detail": [
+    {
+     "cell": "vc33/20260724/b400",
+     "resets_in_completed_spans": 1,
+     "chargeable_after_the_free_opening_reset": 0,
+     "rel_optimism_M1": 0.04507,
+     "why_zero_under_M2": "NEWLY zero under M2: the opening RESET was the ONLY reset before any level-up, so with it free there is nothing left to charge -- a TRUE zero under the gateway model"
+    },
+    {
+     "cell": "sp80/20260726/b400",
+     "resets_in_completed_spans": 1,
+     "chargeable_after_the_free_opening_reset": 0,
+     "rel_optimism_M1": 0.0,
+     "why_zero_under_M2": "ALREADY zero under M1 -- M2 adds nothing here. The prior artifact identified these as cap-absorbed: a superhuman level sitting at the 115 cap swallows the extra charge with no score change. (This cell ALSO has only the opening reset before its level-up, so the zero is now doubly determined.)"
+    },
+    {
+     "cell": "lp85/20260726/b400",
+     "resets_in_completed_spans": 1,
+     "chargeable_after_the_free_opening_reset": 0,
+     "rel_optimism_M1": 0.028775,
+     "why_zero_under_M2": "NEWLY zero under M2: the opening RESET was the ONLY reset before any level-up, so with it free there is nothing left to charge -- a TRUE zero under the gateway model"
+    },
+    {
+     "cell": "lp85/20260726/b2000",
+     "resets_in_completed_spans": 1,
+     "chargeable_after_the_free_opening_reset": 0,
+     "rel_optimism_M1": 0.028775,
+     "why_zero_under_M2": "NEWLY zero under M2: the opening RESET was the ONLY reset before any level-up, so with it free there is nothing left to charge -- a TRUE zero under the gateway model"
+    },
+    {
+     "cell": "sp80/20260726/b2000",
+     "resets_in_completed_spans": 1,
+     "chargeable_after_the_free_opening_reset": 0,
+     "rel_optimism_M1": 0.0,
+     "why_zero_under_M2": "ALREADY zero under M1 -- M2 adds nothing here. The prior artifact identified these as cap-absorbed: a superhuman level sitting at the 115 cap swallows the extra charge with no score change. (This cell ALSO has only the opening reset before its level-up, so the zero is now doubly determined.)"
+    },
+    {
+     "cell": "vc33/20260724/b2000",
+     "resets_in_completed_spans": 1,
+     "chargeable_after_the_free_opening_reset": 0,
+     "rel_optimism_M1": 0.04507,
+     "why_zero_under_M2": "NEWLY zero under M2: the opening RESET was the ONLY reset before any level-up, so with it free there is nothing left to charge -- a TRUE zero under the gateway model"
+    }
+   ]
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_note": "this part re-scores rows that a LIVE offline-arcade agent produced; the live substrate belongs to those row files, whose own clock is reported below. Nothing here steps an env.",
+  "measurement_wall_s": {
+   "total_s": 523.5,
+   "total_h": 0.145,
+   "n_rows": 48,
+   "per_file": [
+    {
+     "file": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+     "n_rows": 15,
+     "elapsed_s": 79.7,
+     "basis": "file_measurement_wall_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+     "n_rows": 33,
+     "elapsed_s": 443.8,
+     "basis": "file_measurement_wall_s"
+    }
+   ],
+   "files_using_fallback_basis": [],
+   "all_files_report_their_own_clock": true,
+   "principle": "the clock of the LIVE runs being re-scored, NOT this analyser's runtime. Conflating them published an 8-second duration for a 2.54-hour measurement once already."
+  },
+  "n_cells_read": 48,
+  "n_cells_with_a_levelup": 44,
+  "n_cells_usable": 44,
+  "n_cells_unusable": [],
+  "cumulative_identity_holds_on_every_cell": true,
+  "opening_reset_in_first_span_on_every_cell": true,
+  "rel_optimism_M1_the_PUBLISHED_model": {
+   "n": 44,
+   "min": 0.0,
+   "p25": 0.030073,
+   "median": 0.046236,
+   "p75": 0.063728,
+   "max": 0.168048,
+   "mean": 0.055543
+  },
+  "rel_optimism_M2_GATEWAY_ACCURATE": {
+   "n": 44,
+   "min": 0.0,
+   "p25": 0.01715,
+   "median": 0.036903,
+   "p75": 0.051493,
+   "max": 0.166068,
+   "mean": 0.040856
+  },
+  "abs_optimism_score_points_M1": {
+   "n": 44,
+   "min": 0.0,
+   "p25": 0.000118,
+   "median": 0.000416,
+   "p75": 0.004996,
+   "max": 0.095533,
+   "mean": 0.013112
+  },
+  "abs_optimism_score_points_M2_GATEWAY_ACCURATE": {
+   "n": 44,
+   "min": 0.0,
+   "p25": 6.7e-05,
+   "median": 0.000284,
+   "p75": 0.001229,
+   "max": 0.016543,
+   "mean": 0.002218
+  },
+  "abs_vs_rel_reading_note": "the ABSOLUTE correction is tiny mostly because these games score near zero to begin with; the RELATIVE figure is the one that says how wrong a per-level efficiency claim was. Neither substitutes for the other, and the score-heavy game in this corpus (vc33, ~2.09 offline against <0.02 for most others) is precisely the game whose gateway optimism nearly vanishes under M2 -- so an absolute-score-weighted reading of the correction is smaller still than the per-cell median suggests.",
+  "n_cells_with_zero_optimism_M1": 2,
+  "n_cells_with_zero_optimism_M2": 6,
+  "M2_never_exceeds_M1": true,
+  "n_cells_where_M2_is_strictly_lower": 42,
+  "per_game_median_M1": {
+   "cd82": 0.060443,
+   "dc22": 0.03576,
+   "ft09": 0.018145,
+   "lf52": 0.022485,
+   "lp85": 0.029424,
+   "r11l": 0.166636,
+   "s5i5": 0.039095,
+   "sp80": 0.063728,
+   "su15": 0.055604,
+   "tu93": 0.049219,
+   "vc33": 0.090204
+  },
+  "per_game_median_M2_GATEWAY_ACCURATE": {
+   "cd82": 0.054506,
+   "dc22": 0.034704,
+   "ft09": 0.015576,
+   "lf52": 0.020025,
+   "lp85": 0.01293,
+   "r11l": 0.164643,
+   "s5i5": 0.036762,
+   "sp80": 0.056101,
+   "su15": 0.051582,
+   "tu93": 0.043893,
+   "vc33": 0.001688
+  },
+  "per_game_median_of_medians_M2": 0.036762,
+  "recomputation_reproduces_the_rows_own_M1_numbers": {
+   "n_compared": 44,
+   "n_agree": 44,
+   "disagreements": []
+  },
+  "recomputation_reproduces_the_rows_own_OFFLINE_numbers": {
+   "n_compared": 44,
+   "n_agree": 44,
+   "disagreements": []
+  },
+  "cells": [
+   {
+    "game": "vc33",
+    "seed": 20260724,
+    "budget": 400,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 387,
+    "n_resets": 13,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 1,
+    "resets_in_free_tail": 12,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     15,
+     42
+    ],
+    "seg_charged_M1": [
+     16,
+     42
+    ],
+    "seg_charged_M2": [
+     15,
+     42
+    ],
+    "score_M0_offline_recorded": 2.089731,
+    "score_M1_all_resets_charged": 1.995547,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 2.089731,
+    "recorded_efficiency_in_row": 2.0897,
+    "recorded_gateway_charged_in_row_M1": 1.9955,
+    "rel_optimism_M1": 0.04507,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "chain_M1_score": 1.9955471027696792,
+    "chain_M2_score": 2.089731130547457,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "vc33",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 391,
+    "n_resets": 9,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 6,
+    "resets_in_free_tail": 3,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     20,
+     112
+    ],
+    "seg_charged_M1": [
+     21,
+     117
+    ],
+    "seg_charged_M2": [
+     20,
+     117
+    ],
+    "score_M0_offline_recorded": 0.621993,
+    "score_M1_all_resets_charged": 0.565887,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.606562,
+    "recorded_efficiency_in_row": 0.622,
+    "recorded_gateway_charged_in_row_M1": 0.5659,
+    "rel_optimism_M1": 0.090204,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.02481,
+    "chain_M1_score": 0.5658871043486428,
+    "chain_M2_score": 0.606561707523246,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "vc33",
+    "seed": 20260726,
+    "budget": 400,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 388,
+    "n_resets": 12,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 12,
+    "resets_in_free_tail": 0,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     15,
+     330
+    ],
+    "seg_charged_M1": [
+     16,
+     341
+    ],
+    "seg_charged_M2": [
+     15,
+     341
+    ],
+    "score_M0_offline_recorded": 0.799029,
+    "score_M1_all_resets_charged": 0.703496,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.79768,
+    "recorded_efficiency_in_row": 0.799,
+    "recorded_gateway_charged_in_row_M1": 0.7035,
+    "rel_optimism_M1": 0.119561,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.001688,
+    "chain_M1_score": 0.703496276760913,
+    "chain_M2_score": 0.7976803045386908,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "sp80",
+    "seed": 20260724,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 387,
+    "n_resets": 13,
+    "resets_before_first_span": 12,
+    "resets_in_completed_spans": 12,
+    "resets_in_free_tail": 1,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     354
+    ],
+    "seg_charged_M1": [
+     366
+    ],
+    "seg_charged_M2": [
+     365
+    ],
+    "score_M0_offline_recorded": 0.057797,
+    "score_M1_all_resets_charged": 0.054069,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.054366,
+    "recorded_efficiency_in_row": 0.0578,
+    "recorded_gateway_charged_in_row_M1": 0.0541,
+    "rel_optimism_M1": 0.064499,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.059366,
+    "chain_M1_score": 0.05406892668381515,
+    "chain_M2_score": 0.0543656006219339,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "sp80",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 389,
+    "n_resets": 11,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 8,
+    "resets_in_free_tail": 3,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     239
+    ],
+    "seg_charged_M1": [
+     247
+    ],
+    "seg_charged_M2": [
+     246
+    ],
+    "score_M0_offline_recorded": 0.126799,
+    "score_M1_all_resets_charged": 0.118718,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.119685,
+    "recorded_efficiency_in_row": 0.1268,
+    "recorded_gateway_charged_in_row_M1": 0.1187,
+    "rel_optimism_M1": 0.063728,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.056101,
+    "chain_M1_score": 0.11871784724970319,
+    "chain_M2_score": 0.11968499475935526,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "sp80",
+    "seed": 20260726,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 390,
+    "n_resets": 10,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 1,
+    "resets_in_free_tail": 9,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     27
+    ],
+    "seg_charged_M1": [
+     28
+    ],
+    "seg_charged_M2": [
+     27
+    ],
+    "score_M0_offline_recorded": 4.761905,
+    "score_M1_all_resets_charged": 4.761905,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 4.761905,
+    "recorded_efficiency_in_row": 4.7619,
+    "recorded_gateway_charged_in_row_M1": 4.7619,
+    "rel_optimism_M1": 0.0,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "chain_M1_score": 4.761904761904762,
+    "chain_M2_score": 4.761904761904762,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "tu93",
+    "seed": 20260724,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 389,
+    "n_resets": 11,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 8,
+    "resets_in_free_tail": 3,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     334
+    ],
+    "seg_charged_M1": [
+     342
+    ],
+    "seg_charged_M2": [
+     341
+    ],
+    "score_M0_offline_recorded": 0.007191,
+    "score_M1_all_resets_charged": 0.006859,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.006899,
+    "recorded_efficiency_in_row": 0.0072,
+    "recorded_gateway_charged_in_row_M1": 0.0069,
+    "rel_optimism_M1": 0.046236,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.040634,
+    "chain_M1_score": 0.006858710562414266,
+    "chain_M2_score": 0.006898996587767754,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "tu93",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 389,
+    "n_resets": 11,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 8,
+    "resets_in_free_tail": 3,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     334
+    ],
+    "seg_charged_M1": [
+     342
+    ],
+    "seg_charged_M2": [
+     341
+    ],
+    "score_M0_offline_recorded": 0.007191,
+    "score_M1_all_resets_charged": 0.006859,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.006899,
+    "recorded_efficiency_in_row": 0.0072,
+    "recorded_gateway_charged_in_row_M1": 0.0069,
+    "rel_optimism_M1": 0.046236,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.040634,
+    "chain_M1_score": 0.006858710562414266,
+    "chain_M2_score": 0.006898996587767754,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "tu93",
+    "seed": 20260726,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 389,
+    "n_resets": 11,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 8,
+    "resets_in_free_tail": 3,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     334
+    ],
+    "seg_charged_M1": [
+     342
+    ],
+    "seg_charged_M2": [
+     341
+    ],
+    "score_M0_offline_recorded": 0.007191,
+    "score_M1_all_resets_charged": 0.006859,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.006899,
+    "recorded_efficiency_in_row": 0.0072,
+    "recorded_gateway_charged_in_row_M1": 0.0069,
+    "rel_optimism_M1": 0.046236,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.040634,
+    "chain_M1_score": 0.006858710562414266,
+    "chain_M2_score": 0.006898996587767754,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lp85",
+    "seed": 20260726,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 397,
+    "n_resets": 3,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 1,
+    "resets_in_free_tail": 2,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     68
+    ],
+    "seg_charged_M1": [
+     69
+    ],
+    "seg_charged_M2": [
+     68
+    ],
+    "score_M0_offline_recorded": 0.173611,
+    "score_M1_all_resets_charged": 0.168615,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.173611,
+    "recorded_efficiency_in_row": 0.1736,
+    "recorded_gateway_charged_in_row_M1": 0.1686,
+    "rel_optimism_M1": 0.028775,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "chain_M1_score": 0.16861537025368156,
+    "chain_M2_score": 0.1736111111111111,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 386,
+    "n_resets": 14,
+    "resets_before_first_span": 5,
+    "resets_in_completed_spans": 5,
+    "resets_in_free_tail": 9,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     189
+    ],
+    "seg_charged_M1": [
+     194
+    ],
+    "seg_charged_M2": [
+     193
+    ],
+    "score_M0_offline_recorded": 0.403258,
+    "score_M1_all_resets_charged": 0.382739,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.386715,
+    "recorded_efficiency_in_row": 0.4033,
+    "recorded_gateway_charged_in_row_M1": 0.3827,
+    "rel_optimism_M1": 0.050882,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.041021,
+    "chain_M1_score": 0.3827389176522984,
+    "chain_M2_score": 0.3867153991989558,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1953,
+    "n_resets": 47,
+    "resets_before_first_span": 30,
+    "resets_in_completed_spans": 46,
+    "resets_in_free_tail": 1,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     741,
+     1038
+    ],
+    "seg_charged_M1": [
+     771,
+     1054
+    ],
+    "seg_charged_M2": [
+     770,
+     1054
+    ],
+    "score_M0_offline_recorded": 0.0268,
+    "score_M1_all_resets_charged": 0.024781,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.024844,
+    "recorded_efficiency_in_row": 0.0268,
+    "recorded_gateway_charged_in_row_M1": 0.0248,
+    "rel_optimism_M1": 0.075332,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.072982,
+    "chain_M1_score": 0.024781117933289108,
+    "chain_M2_score": 0.02484410023333042,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1951,
+    "n_resets": 49,
+    "resets_before_first_span": 5,
+    "resets_in_completed_spans": 5,
+    "resets_in_free_tail": 44,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     189
+    ],
+    "seg_charged_M1": [
+     194
+    ],
+    "seg_charged_M2": [
+     193
+    ],
+    "score_M0_offline_recorded": 0.403258,
+    "score_M1_all_resets_charged": 0.382739,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.386715,
+    "recorded_efficiency_in_row": 0.4033,
+    "recorded_gateway_charged_in_row_M1": 0.3827,
+    "rel_optimism_M1": 0.050882,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.041021,
+    "chain_M1_score": 0.3827389176522984,
+    "chain_M2_score": 0.3867153991989558,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1949,
+    "n_resets": 51,
+    "resets_before_first_span": 33,
+    "resets_in_completed_spans": 33,
+    "resets_in_free_tail": 18,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     893
+    ],
+    "seg_charged_M1": [
+     926
+    ],
+    "seg_charged_M2": [
+     925
+    ],
+    "score_M0_offline_recorded": 0.018064,
+    "score_M1_all_resets_charged": 0.016799,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.016835,
+    "recorded_efficiency_in_row": 0.0181,
+    "recorded_gateway_charged_in_row_M1": 0.0168,
+    "rel_optimism_M1": 0.070004,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.067992,
+    "chain_M1_score": 0.01679902633398708,
+    "chain_M2_score": 0.01683536818671954,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1967,
+    "n_resets": 33,
+    "resets_before_first_span": 32,
+    "resets_in_completed_spans": 32,
+    "resets_in_free_tail": 1,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1782
+    ],
+    "seg_charged_M1": [
+     1814
+    ],
+    "seg_charged_M2": [
+     1813
+    ],
+    "score_M0_offline_recorded": 0.00522,
+    "score_M1_all_resets_charged": 0.005037,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.005043,
+    "recorded_efficiency_in_row": 0.0052,
+    "recorded_gateway_charged_in_row_M1": 0.005,
+    "rel_optimism_M1": 0.03497,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.033905,
+    "chain_M1_score": 0.005037443209737834,
+    "chain_M2_score": 0.005043001767339601,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1965,
+    "n_resets": 35,
+    "resets_before_first_span": 34,
+    "resets_in_completed_spans": 34,
+    "resets_in_free_tail": 1,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1732
+    ],
+    "seg_charged_M1": [
+     1766
+    ],
+    "seg_charged_M2": [
+     1765
+    ],
+    "score_M0_offline_recorded": 0.005526,
+    "score_M1_all_resets_charged": 0.005315,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.005321,
+    "recorded_efficiency_in_row": 0.0055,
+    "recorded_gateway_charged_in_row_M1": 0.0053,
+    "rel_optimism_M1": 0.038134,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.037044,
+    "chain_M1_score": 0.005315000749077669,
+    "chain_M2_score": 0.005321025118953039,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1966,
+    "n_resets": 34,
+    "resets_before_first_span": 33,
+    "resets_in_completed_spans": 33,
+    "resets_in_free_tail": 1,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1796
+    ],
+    "seg_charged_M1": [
+     1829
+    ],
+    "seg_charged_M2": [
+     1828
+    ],
+    "score_M0_offline_recorded": 0.005139,
+    "score_M1_all_resets_charged": 0.004955,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.004961,
+    "recorded_efficiency_in_row": 0.0051,
+    "recorded_gateway_charged_in_row_M1": 0.005,
+    "rel_optimism_M1": 0.03576,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.034704,
+    "chain_M1_score": 0.004955155839651156,
+    "chain_M2_score": 0.004960578718413326,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "ft09",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1982,
+    "n_resets": 18,
+    "resets_before_first_span": 18,
+    "resets_in_completed_spans": 18,
+    "resets_in_free_tail": 0,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1957
+    ],
+    "seg_charged_M1": [
+     1975
+    ],
+    "seg_charged_M2": [
+     1974
+    ],
+    "score_M0_offline_recorded": 0.002299,
+    "score_M1_all_resets_charged": 0.002257,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.00226,
+    "recorded_efficiency_in_row": 0.0023,
+    "recorded_gateway_charged_in_row_M1": 0.0023,
+    "rel_optimism_M1": 0.018145,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.01715,
+    "chain_M1_score": 0.002257269515721687,
+    "chain_M2_score": 0.002259557095524982,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "ft09",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1890,
+    "n_resets": 110,
+    "resets_before_first_span": 4,
+    "resets_in_completed_spans": 4,
+    "resets_in_free_tail": 106,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     415
+    ],
+    "seg_charged_M1": [
+     419
+    ],
+    "seg_charged_M2": [
+     418
+    ],
+    "score_M0_offline_recorded": 0.051124,
+    "score_M1_all_resets_charged": 0.050152,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.050392,
+    "recorded_efficiency_in_row": 0.0511,
+    "recorded_gateway_charged_in_row_M1": 0.0502,
+    "rel_optimism_M1": 0.019002,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.014303,
+    "chain_M1_score": 0.05015215170090113,
+    "chain_M2_score": 0.05039240118565226,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "ft09",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1971,
+    "n_resets": 29,
+    "resets_before_first_span": 11,
+    "resets_in_completed_spans": 11,
+    "resets_in_free_tail": 18,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1269
+    ],
+    "seg_charged_M1": [
+     1280
+    ],
+    "seg_charged_M2": [
+     1279
+    ],
+    "score_M0_offline_recorded": 0.005468,
+    "score_M1_all_resets_charged": 0.005374,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.005382,
+    "recorded_efficiency_in_row": 0.0055,
+    "recorded_gateway_charged_in_row_M1": 0.0054,
+    "rel_optimism_M1": 0.017114,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.015576,
+    "chain_M1_score": 0.005374000186011904,
+    "chain_M2_score": 0.00538240691165089,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lf52",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1949,
+    "n_resets": 51,
+    "resets_before_first_span": 9,
+    "resets_in_completed_spans": 9,
+    "resets_in_free_tail": 42,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     787
+    ],
+    "seg_charged_M1": [
+     796
+    ],
+    "seg_charged_M2": [
+     795
+    ],
+    "score_M0_offline_recorded": 0.003006,
+    "score_M1_all_resets_charged": 0.002938,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.002946,
+    "recorded_efficiency_in_row": 0.003,
+    "recorded_gateway_charged_in_row_M1": 0.0029,
+    "rel_optimism_M1": 0.022485,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.020025,
+    "chain_M1_score": 0.002938401463691229,
+    "chain_M2_score": 0.002945798317816829,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lf52",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1946,
+    "n_resets": 54,
+    "resets_before_first_span": 10,
+    "resets_in_completed_spans": 10,
+    "resets_in_free_tail": 44,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     789
+    ],
+    "seg_charged_M1": [
+     799
+    ],
+    "seg_charged_M2": [
+     798
+    ],
+    "score_M0_offline_recorded": 0.002991,
+    "score_M1_all_resets_charged": 0.002916,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.002924,
+    "recorded_efficiency_in_row": 0.003,
+    "recorded_gateway_charged_in_row_M1": 0.0029,
+    "rel_optimism_M1": 0.024875,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.022429,
+    "chain_M1_score": 0.0029163772954901098,
+    "chain_M2_score": 0.002923691091478982,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lf52",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1924,
+    "n_resets": 76,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 8,
+    "resets_in_free_tail": 68,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     714
+    ],
+    "seg_charged_M1": [
+     722
+    ],
+    "seg_charged_M2": [
+     721
+    ],
+    "score_M0_offline_recorded": 0.003652,
+    "score_M1_all_resets_charged": 0.003572,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.003582,
+    "recorded_efficiency_in_row": 0.0037,
+    "recorded_gateway_charged_in_row_M1": 0.0036,
+    "rel_optimism_M1": 0.022038,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.019323,
+    "chain_M1_score": 0.0035716004746322192,
+    "chain_M2_score": 0.0035815146974135974,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lp85",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1941,
+    "n_resets": 59,
+    "resets_before_first_span": 7,
+    "resets_in_completed_spans": 7,
+    "resets_in_free_tail": 52,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     455
+    ],
+    "seg_charged_M1": [
+     462
+    ],
+    "seg_charged_M2": [
+     461
+    ],
+    "score_M0_offline_recorded": 0.003878,
+    "score_M1_all_resets_charged": 0.003761,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.003777,
+    "recorded_efficiency_in_row": 0.0039,
+    "recorded_gateway_charged_in_row_M1": 0.0038,
+    "rel_optimism_M1": 0.030073,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.025861,
+    "chain_M1_score": 0.003761069778385797,
+    "chain_M2_score": 0.003777404481334916,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lp85",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1942,
+    "n_resets": 58,
+    "resets_before_first_span": 7,
+    "resets_in_completed_spans": 7,
+    "resets_in_free_tail": 51,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     454
+    ],
+    "seg_charged_M1": [
+     461
+    ],
+    "seg_charged_M2": [
+     460
+    ],
+    "score_M0_offline_recorded": 0.003895,
+    "score_M1_all_resets_charged": 0.003777,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.003794,
+    "recorded_efficiency_in_row": 0.0039,
+    "recorded_gateway_charged_in_row_M1": 0.0038,
+    "rel_optimism_M1": 0.030138,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.025917,
+    "chain_M1_score": 0.003777404481334916,
+    "chain_M2_score": 0.003793845830707835,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "lp85",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1937,
+    "n_resets": 63,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 1,
+    "resets_in_free_tail": 62,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     68
+    ],
+    "seg_charged_M1": [
+     69
+    ],
+    "seg_charged_M2": [
+     68
+    ],
+    "score_M0_offline_recorded": 0.173611,
+    "score_M1_all_resets_charged": 0.168615,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.173611,
+    "recorded_efficiency_in_row": 0.1736,
+    "recorded_gateway_charged_in_row_M1": 0.1686,
+    "rel_optimism_M1": 0.028775,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "chain_M1_score": 0.16861537025368156,
+    "chain_M2_score": 0.1736111111111111,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "r11l",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1892,
+    "n_resets": 108,
+    "resets_before_first_span": 72,
+    "resets_in_completed_spans": 72,
+    "resets_in_free_tail": 36,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     761
+    ],
+    "seg_charged_M1": [
+     833
+    ],
+    "seg_charged_M2": [
+     832
+    ],
+    "score_M0_offline_recorded": 0.00398,
+    "score_M1_all_resets_charged": 0.003322,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.00333,
+    "recorded_efficiency_in_row": 0.004,
+    "recorded_gateway_charged_in_row_M1": 0.0033,
+    "rel_optimism_M1": 0.165398,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.163391,
+    "chain_M1_score": 0.0033215138224729096,
+    "chain_M2_score": 0.0033295030290222596,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "r11l",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1891,
+    "n_resets": 109,
+    "resets_before_first_span": 73,
+    "resets_in_completed_spans": 73,
+    "resets_in_free_tail": 36,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     765
+    ],
+    "seg_charged_M1": [
+     838
+    ],
+    "seg_charged_M2": [
+     837
+    ],
+    "score_M0_offline_recorded": 0.003938,
+    "score_M1_all_resets_charged": 0.003282,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.00329,
+    "recorded_efficiency_in_row": 0.0039,
+    "recorded_gateway_charged_in_row_M1": 0.0033,
+    "rel_optimism_M1": 0.166636,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.164643,
+    "chain_M1_score": 0.0032819958657701663,
+    "chain_M2_score": 0.0032898428345557755,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "r11l",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1890,
+    "n_resets": 110,
+    "resets_before_first_span": 74,
+    "resets_in_completed_spans": 74,
+    "resets_in_free_tail": 36,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     768
+    ],
+    "seg_charged_M1": [
+     842
+    ],
+    "seg_charged_M2": [
+     841
+    ],
+    "score_M0_offline_recorded": 0.003908,
+    "score_M1_all_resets_charged": 0.003251,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.003259,
+    "recorded_efficiency_in_row": 0.0039,
+    "recorded_gateway_charged_in_row_M1": 0.0033,
+    "rel_optimism_M1": 0.168048,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.166068,
+    "chain_M1_score": 0.0032508870757357285,
+    "chain_M2_score": 0.003258622675799158,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "s5i5",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1898,
+    "n_resets": 102,
+    "resets_before_first_span": 12,
+    "resets_in_completed_spans": 12,
+    "resets_in_free_tail": 90,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     595
+    ],
+    "seg_charged_M1": [
+     607
+    ],
+    "seg_charged_M2": [
+     606
+    ],
+    "score_M0_offline_recorded": 0.003139,
+    "score_M1_all_resets_charged": 0.003016,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.003026,
+    "recorded_efficiency_in_row": 0.0031,
+    "recorded_gateway_charged_in_row_M1": 0.003,
+    "rel_optimism_M1": 0.039148,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.035974,
+    "chain_M1_score": 0.003015644257715752,
+    "chain_M2_score": 0.0030256050907621007,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "s5i5",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1946,
+    "n_resets": 54,
+    "resets_before_first_span": 23,
+    "resets_in_completed_spans": 23,
+    "resets_in_free_tail": 31,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1142
+    ],
+    "seg_charged_M1": [
+     1165
+    ],
+    "seg_charged_M2": [
+     1164
+    ],
+    "score_M0_offline_recorded": 0.000852,
+    "score_M1_all_resets_charged": 0.000819,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.00082,
+    "recorded_efficiency_in_row": 0.0009,
+    "recorded_gateway_charged_in_row_M1": 0.0008,
+    "rel_optimism_M1": 0.039095,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.037443,
+    "chain_M1_score": 0.0008186638995826861,
+    "chain_M2_score": 0.0008200711428117814,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "s5i5",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1932,
+    "n_resets": 68,
+    "resets_before_first_span": 21,
+    "resets_in_completed_spans": 21,
+    "resets_in_free_tail": 47,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     1058
+    ],
+    "seg_charged_M1": [
+     1079
+    ],
+    "seg_charged_M2": [
+     1078
+    ],
+    "score_M0_offline_recorded": 0.000993,
+    "score_M1_all_resets_charged": 0.000954,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.000956,
+    "recorded_efficiency_in_row": 0.001,
+    "recorded_gateway_charged_in_row_M1": 0.001,
+    "rel_optimism_M1": 0.038546,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.036762,
+    "chain_M1_score": 0.0009543652139987433,
+    "chain_M2_score": 0.0009561366571703174,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "sp80",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1950,
+    "n_resets": 50,
+    "resets_before_first_span": 12,
+    "resets_in_completed_spans": 12,
+    "resets_in_free_tail": 38,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     354
+    ],
+    "seg_charged_M1": [
+     366
+    ],
+    "seg_charged_M2": [
+     365
+    ],
+    "score_M0_offline_recorded": 0.057797,
+    "score_M1_all_resets_charged": 0.054069,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.054366,
+    "recorded_efficiency_in_row": 0.0578,
+    "recorded_gateway_charged_in_row_M1": 0.0541,
+    "rel_optimism_M1": 0.064499,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.059366,
+    "chain_M1_score": 0.05406892668381515,
+    "chain_M2_score": 0.0543656006219339,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "sp80",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1952,
+    "n_resets": 48,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 8,
+    "resets_in_free_tail": 40,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     239
+    ],
+    "seg_charged_M1": [
+     247
+    ],
+    "seg_charged_M2": [
+     246
+    ],
+    "score_M0_offline_recorded": 0.126799,
+    "score_M1_all_resets_charged": 0.118718,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.119685,
+    "recorded_efficiency_in_row": 0.1268,
+    "recorded_gateway_charged_in_row_M1": 0.1187,
+    "rel_optimism_M1": 0.063728,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.056101,
+    "chain_M1_score": 0.11871784724970319,
+    "chain_M2_score": 0.11968499475935526,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "sp80",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1950,
+    "n_resets": 50,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 1,
+    "resets_in_free_tail": 49,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     27
+    ],
+    "seg_charged_M1": [
+     28
+    ],
+    "seg_charged_M2": [
+     27
+    ],
+    "score_M0_offline_recorded": 4.761905,
+    "score_M1_all_resets_charged": 4.761905,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 4.761905,
+    "recorded_efficiency_in_row": 4.7619,
+    "recorded_gateway_charged_in_row_M1": 4.7619,
+    "rel_optimism_M1": 0.0,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "chain_M1_score": 4.761904761904762,
+    "chain_M2_score": 4.761904761904762,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "su15",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1957,
+    "n_resets": 43,
+    "resets_before_first_span": 14,
+    "resets_in_completed_spans": 14,
+    "resets_in_free_tail": 29,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     464
+    ],
+    "seg_charged_M1": [
+     478
+    ],
+    "seg_charged_M2": [
+     477
+    ],
+    "score_M0_offline_recorded": 0.004996,
+    "score_M1_all_resets_charged": 0.004707,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.004727,
+    "recorded_efficiency_in_row": 0.005,
+    "recorded_gateway_charged_in_row_M1": 0.0047,
+    "rel_optimism_M1": 0.05772,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.053765,
+    "chain_M1_score": 0.0047073561192711765,
+    "chain_M2_score": 0.004727114150528309,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "su15",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1953,
+    "n_resets": 47,
+    "resets_before_first_span": 16,
+    "resets_in_completed_spans": 16,
+    "resets_in_free_tail": 31,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     559
+    ],
+    "seg_charged_M1": [
+     575
+    ],
+    "seg_charged_M2": [
+     574
+    ],
+    "score_M0_offline_recorded": 0.003442,
+    "score_M1_all_resets_charged": 0.003253,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.003264,
+    "recorded_efficiency_in_row": 0.0034,
+    "recorded_gateway_charged_in_row_M1": 0.0033,
+    "rel_optimism_M1": 0.054878,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.051582,
+    "chain_M1_score": 0.003253098088636841,
+    "chain_M2_score": 0.003264442798733612,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "su15",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 1,
+    "offline_actions": 1960,
+    "n_resets": 40,
+    "resets_before_first_span": 13,
+    "resets_in_completed_spans": 13,
+    "resets_in_free_tail": 27,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     448
+    ],
+    "seg_charged_M1": [
+     461
+    ],
+    "seg_charged_M2": [
+     460
+    ],
+    "score_M0_offline_recorded": 0.005359,
+    "score_M1_all_resets_charged": 0.005061,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.005083,
+    "recorded_efficiency_in_row": 0.0054,
+    "recorded_gateway_charged_in_row_M1": 0.0051,
+    "rel_optimism_M1": 0.055604,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.051493,
+    "chain_M1_score": 0.005060937768764289,
+    "chain_M2_score": 0.005082965763495064,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "tu93",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1910,
+    "n_resets": 90,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 78,
+    "resets_in_free_tail": 12,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     334,
+     1204
+    ],
+    "seg_charged_M1": [
+     342,
+     1274
+    ],
+    "seg_charged_M2": [
+     341,
+     1274
+    ],
+    "score_M0_offline_recorded": 0.007976,
+    "score_M1_all_resets_charged": 0.00756,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.0076,
+    "recorded_efficiency_in_row": 0.008,
+    "recorded_gateway_charged_in_row_M1": 0.0076,
+    "rel_optimism_M1": 0.052203,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.047152,
+    "chain_M1_score": 0.0075597114876807215,
+    "chain_M2_score": 0.0075999975130342096,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "tu93",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1910,
+    "n_resets": 90,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 78,
+    "resets_in_free_tail": 12,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     334,
+     1204
+    ],
+    "seg_charged_M1": [
+     342,
+     1274
+    ],
+    "seg_charged_M2": [
+     341,
+     1274
+    ],
+    "score_M0_offline_recorded": 0.007976,
+    "score_M1_all_resets_charged": 0.00756,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.0076,
+    "recorded_efficiency_in_row": 0.008,
+    "recorded_gateway_charged_in_row_M1": 0.0076,
+    "rel_optimism_M1": 0.052203,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.047152,
+    "chain_M1_score": 0.0075597114876807215,
+    "chain_M2_score": 0.0075999975130342096,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "tu93",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1910,
+    "n_resets": 90,
+    "resets_before_first_span": 8,
+    "resets_in_completed_spans": 78,
+    "resets_in_free_tail": 12,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     334,
+     1204
+    ],
+    "seg_charged_M1": [
+     342,
+     1274
+    ],
+    "seg_charged_M2": [
+     341,
+     1274
+    ],
+    "score_M0_offline_recorded": 0.007976,
+    "score_M1_all_resets_charged": 0.00756,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.0076,
+    "recorded_efficiency_in_row": 0.008,
+    "recorded_gateway_charged_in_row_M1": 0.0076,
+    "rel_optimism_M1": 0.052203,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.047152,
+    "chain_M1_score": 0.0075597114876807215,
+    "chain_M2_score": 0.0075999975130342096,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "vc33",
+    "seed": 20260724,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1912,
+    "n_resets": 88,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 1,
+    "resets_in_free_tail": 87,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     15,
+     42
+    ],
+    "seg_charged_M1": [
+     16,
+     42
+    ],
+    "seg_charged_M2": [
+     15,
+     42
+    ],
+    "score_M0_offline_recorded": 2.089731,
+    "score_M1_all_resets_charged": 1.995547,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 2.089731,
+    "recorded_efficiency_in_row": 2.0897,
+    "recorded_gateway_charged_in_row_M1": 1.9955,
+    "rel_optimism_M1": 0.04507,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "chain_M1_score": 1.9955471027696792,
+    "chain_M2_score": 2.089731130547457,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "vc33",
+    "seed": 20260725,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1927,
+    "n_resets": 73,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 6,
+    "resets_in_free_tail": 67,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     20,
+     112
+    ],
+    "seg_charged_M1": [
+     21,
+     117
+    ],
+    "seg_charged_M2": [
+     20,
+     117
+    ],
+    "score_M0_offline_recorded": 0.621993,
+    "score_M1_all_resets_charged": 0.565887,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.606562,
+    "recorded_efficiency_in_row": 0.622,
+    "recorded_gateway_charged_in_row_M1": 0.5659,
+    "rel_optimism_M1": 0.090204,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.02481,
+    "chain_M1_score": 0.5658871043486428,
+    "chain_M2_score": 0.606561707523246,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   },
+   {
+    "game": "vc33",
+    "seed": 20260726,
+    "budget": 2000,
+    "usable": true,
+    "levels": 2,
+    "offline_actions": 1934,
+    "n_resets": 66,
+    "resets_before_first_span": 1,
+    "resets_in_completed_spans": 12,
+    "resets_in_free_tail": 54,
+    "cumulative_identity_holds": true,
+    "opening_reset_in_first_span": true,
+    "seg_offline": [
+     15,
+     330
+    ],
+    "seg_charged_M1": [
+     16,
+     341
+    ],
+    "seg_charged_M2": [
+     15,
+     341
+    ],
+    "score_M0_offline_recorded": 0.799029,
+    "score_M1_all_resets_charged": 0.703496,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.79768,
+    "recorded_efficiency_in_row": 0.799,
+    "recorded_gateway_charged_in_row_M1": 0.7035,
+    "rel_optimism_M1": 0.119561,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.001688,
+    "chain_M1_score": 0.703496276760913,
+    "chain_M2_score": 0.7976803045386908,
+    "chain_agrees_M1": true,
+    "chain_agrees_M2": true,
+    "baselines_nonzero": true
+   }
+  ]
+ },
+ "part_c_exact_per_span_capture_second_channel": {
+  "precision_hazard_in_the_published_M1_baseline": {
+   "per_cell": [
+    {
+     "cell": "vc33@20260724",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.045078,
+     "recomputed_unrounded_M1": 0.04507,
+     "rounding_error_in_the_published_M1": -8e-06,
+     "gateway_accurate_M2": 0.0
+    },
+    {
+     "cell": "tu93@20260724",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.041667,
+     "recomputed_unrounded_M1": 0.046236,
+     "rounding_error_in_the_published_M1": 0.004569,
+     "gateway_accurate_M2": 0.040634
+    },
+    {
+     "cell": "vc33@20260725",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.090193,
+     "recomputed_unrounded_M1": 0.090204,
+     "rounding_error_in_the_published_M1": 1.1e-05,
+     "gateway_accurate_M2": 0.02481
+    },
+    {
+     "cell": "tu93@20260725",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.041667,
+     "recomputed_unrounded_M1": 0.046236,
+     "rounding_error_in_the_published_M1": 0.004569,
+     "gateway_accurate_M2": 0.040634
+    },
+    {
+     "cell": "cd82@20260725",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.051079,
+     "recomputed_unrounded_M1": 0.050882,
+     "rounding_error_in_the_published_M1": -0.000197,
+     "gateway_accurate_M2": 0.041021
+    },
+    {
+     "cell": "vc33@20260726",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.119524,
+     "recomputed_unrounded_M1": 0.119561,
+     "rounding_error_in_the_published_M1": 3.7e-05,
+     "gateway_accurate_M2": 0.001688
+    },
+    {
+     "cell": "tu93@20260726",
+     "published_rel_loss_from_4dp_rounded_fields_M1": 0.041667,
+     "recomputed_unrounded_M1": 0.046236,
+     "rounding_error_in_the_published_M1": 0.004569,
+     "gateway_accurate_M2": 0.040634
+    }
+   ],
+   "what_happened": "`run_game` rounds both efficiency fields to 4 decimals before they reach a row. tu93's published loss of 0.041667 is literally 0.0003/0.0072 -- a ratio of two rounded numbers. Its unrounded M1 loss is 0.046236, so roughly a tenth of that published figure was rounding, not charge model.",
+   "how_it_is_handled_here": "every statistic in this artifact is recomputed UNROUNDED from each cell's own per-span charge vectors. The rounded row fields are retained for reference and never differenced.",
+   "note_this_is_not_a_new_finding": "the prior gateway-rescore artifact independently found and corrected the same hazard for its own Part B (2 cells whose optimism the rounding erased to exactly 0.0). It is re-stated here because the per-span capture did NOT apply that correction, so its published headline carries the hazard."
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "source": "results/arc_per_level_reset_attribution_20260726.json",
+  "available": true,
+  "measurement_wall_s_of_that_capture": 61.206,
+  "measurement_wall_s_basis_note": "that capture is a LIVE run whose analyser clock IS its measurement clock (it declares `measurement_clock_is_the_analyser_clock_because_this_is_a_live_capture: true`), so its `duration_s` is the right number to carry forward here.",
+  "n_cells_with_a_levelup": 7,
+  "n_cells_usable": 7,
+  "rel_optimism_M1": {
+   "n": 7,
+   "min": 0.04507,
+   "p25": 0.046236,
+   "median": 0.046236,
+   "p75": 0.050882,
+   "max": 0.119561,
+   "mean": 0.063489
+  },
+  "rel_optimism_M2_GATEWAY_ACCURATE": {
+   "n": 7,
+   "min": 0.0,
+   "p25": 0.001688,
+   "median": 0.040634,
+   "p75": 0.040634,
+   "max": 0.041021,
+   "mean": 0.02706
+  },
+  "published_in_that_artifact_M1_median": 0.045078,
+  "published_in_that_artifact_M1_max": 0.119524,
+  "cells": [
+   {
+    "game": "vc33",
+    "seed": 20260724,
+    "budget": 400,
+    "usable": true,
+    "levels": 2,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 1,
+    "resets_that_cost_score_M2": 0,
+    "resets_in_free_tail": 12,
+    "score_M0_offline_recorded": 2.089731,
+    "score_M1_all_resets_charged": 1.995547,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 2.089731,
+    "rel_optimism_M1": 0.04507,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.0,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   },
+   {
+    "game": "tu93",
+    "seed": 20260724,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 8,
+    "resets_that_cost_score_M2": 7,
+    "resets_in_free_tail": 3,
+    "score_M0_offline_recorded": 0.007191,
+    "score_M1_all_resets_charged": 0.006859,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.006899,
+    "rel_optimism_M1": 0.046236,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.040634,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   },
+   {
+    "game": "vc33",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 2,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 6,
+    "resets_that_cost_score_M2": 5,
+    "resets_in_free_tail": 3,
+    "score_M0_offline_recorded": 0.621993,
+    "score_M1_all_resets_charged": 0.565887,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.606562,
+    "rel_optimism_M1": 0.090204,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.02481,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   },
+   {
+    "game": "tu93",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 8,
+    "resets_that_cost_score_M2": 7,
+    "resets_in_free_tail": 3,
+    "score_M0_offline_recorded": 0.007191,
+    "score_M1_all_resets_charged": 0.006859,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.006899,
+    "rel_optimism_M1": 0.046236,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.040634,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   },
+   {
+    "game": "cd82",
+    "seed": 20260725,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 5,
+    "resets_that_cost_score_M2": 4,
+    "resets_in_free_tail": 9,
+    "score_M0_offline_recorded": 0.403258,
+    "score_M1_all_resets_charged": 0.382739,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.386715,
+    "rel_optimism_M1": 0.050882,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.041021,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   },
+   {
+    "game": "vc33",
+    "seed": 20260726,
+    "budget": 400,
+    "usable": true,
+    "levels": 2,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 12,
+    "resets_that_cost_score_M2": 11,
+    "resets_in_free_tail": 0,
+    "score_M0_offline_recorded": 0.799029,
+    "score_M1_all_resets_charged": 0.703496,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.79768,
+    "rel_optimism_M1": 0.119561,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.001688,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   },
+   {
+    "game": "tu93",
+    "seed": 20260726,
+    "budget": 400,
+    "usable": true,
+    "levels": 1,
+    "opening_reset_in_first_span": true,
+    "resets_that_cost_score_M1": 8,
+    "resets_that_cost_score_M2": 7,
+    "resets_in_free_tail": 3,
+    "score_M0_offline_recorded": 0.007191,
+    "score_M1_all_resets_charged": 0.006859,
+    "score_M2_bootstrap_free_GATEWAY_ACCURATE": 0.006899,
+    "rel_optimism_M1": 0.046236,
+    "rel_optimism_M2_GATEWAY_ACCURATE": 0.040634,
+    "recorded_rel_loss_in_that_artifact_M1": null
+   }
+  ],
+  "why_this_is_a_second_channel_not_a_duplicate": "that capture records per-SPAN offline / resets directly and never publishes a cumulative; Part B derives spans from a CUMULATIVE `level_up_charged`. Two different code paths reaching the same per-span costs is worth more than one path run twice."
+ },
+ "part_d_two_channels_agree": {
+  "n_overlapping_cells": 7,
+  "n_agree": 7,
+  "disagreements": [],
+  "comparison": [
+   {
+    "cell": "vc33/20260724/b400",
+    "M2_from_cumulative_channel": 2.089731,
+    "M2_from_per_span_channel": 2.089731,
+    "agrees": true
+   },
+   {
+    "cell": "tu93/20260724/b400",
+    "M2_from_cumulative_channel": 0.006899,
+    "M2_from_per_span_channel": 0.006899,
+    "agrees": true
+   },
+   {
+    "cell": "vc33/20260725/b400",
+    "M2_from_cumulative_channel": 0.606562,
+    "M2_from_per_span_channel": 0.606562,
+    "agrees": true
+   },
+   {
+    "cell": "tu93/20260725/b400",
+    "M2_from_cumulative_channel": 0.006899,
+    "M2_from_per_span_channel": 0.006899,
+    "agrees": true
+   },
+   {
+    "cell": "cd82/20260725/b400",
+    "M2_from_cumulative_channel": 0.386715,
+    "M2_from_per_span_channel": 0.386715,
+    "agrees": true
+   },
+   {
+    "cell": "vc33/20260726/b400",
+    "M2_from_cumulative_channel": 0.79768,
+    "M2_from_per_span_channel": 0.79768,
+    "agrees": true
+   },
+   {
+    "cell": "tu93/20260726/b400",
+    "M2_from_cumulative_channel": 0.006899,
+    "M2_from_per_span_channel": 0.006899,
+    "agrees": true
+   }
+  ],
+  "UNINTERPRETABLE_IF_EMPTY": null
+ },
+ "part_a_bounds_over_recorded_rows_NOT_POINT_ESTIMATES": {
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "measurement_wall_s": {
+   "total_s": 9126.0,
+   "total_h": 2.535,
+   "n_rows": 1401,
+   "per_file": [
+    {
+     "file": "results/early_stop_sweep_20260726/rows_b2000.json",
+     "n_rows": 450,
+     "elapsed_s": 4067.4,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_b400.json",
+     "n_rows": 450,
+     "elapsed_s": 1686.0,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+     "n_rows": 156,
+     "elapsed_s": 1984.4,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_b400_g350.json",
+     "n_rows": 75,
+     "elapsed_s": 276.4,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
+     "n_rows": 30,
+     "elapsed_s": 152.1,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
+     "n_rows": 30,
+     "elapsed_s": 153.2,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
+     "n_rows": 30,
+     "elapsed_s": 150.1,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_contention_serial.json",
+     "n_rows": 30,
+     "elapsed_s": 95.8,
+     "basis": "file_elapsed_s"
+    },
+    {
+     "file": "results/early_stop_sweep_20260726/rows_reproduction.json",
+     "n_rows": 150,
+     "elapsed_s": 560.6,
+     "basis": "file_elapsed_s"
+    }
+   ],
+   "files_using_fallback_basis": [],
+   "all_files_report_their_own_clock": true,
+   "principle": "the clock of the LIVE runs being re-scored, NOT this analyser's runtime. Conflating them published an 8-second duration for a 2.54-hour measurement once already."
+  },
+  "n_rows_total": 1401,
+  "n_rows_bounded": 485,
+  "n_rows_no_levelup_or_zero_score_either_way": 916,
+  "why_only_a_bound": "a recorded row carries a WHOLE-RUN `n_resets` only. The correction needs resets attributed PER SPAN, because a reset before a level-up is charged into that level's squared denominator while a reset in the post-solve tail costs nothing.",
+  "rel_worst_case_M1": {
+   "n": 485,
+   "min": 0.0,
+   "p25": 0.062752,
+   "median": 0.113725,
+   "p75": 0.258557,
+   "max": 0.956551,
+   "mean": 0.204208
+  },
+  "rel_worst_case_M2_GATEWAY_ACCURATE": {
+   "n": 485,
+   "min": 0.0,
+   "p25": 0.057294,
+   "median": 0.111088,
+   "p75": 0.256174,
+   "max": 0.956251,
+   "mean": 0.197129
+  },
+  "best_case_is_zero_by_construction_on_every_row": true,
+  "UNINFORMATIVE_STAMP": "THIS BOUND CANNOT ANSWER THE HEADLINE QUESTION IN EITHER DIRECTION. Its lower end is 0 by construction, so it can never establish that the correction is material; its upper end reaches 95%+, so it can never establish that the correction is small. It is reported because it is the honest width available from a whole-run reset count, and because it is exactly what justified instrumenting per span. Do NOT quote either end as an estimate.",
+  "greedy_vs_exact_dp": {
+   "n_rows": 485,
+   "n_rows_where_greedy_disagrees_with_the_DP": 7,
+   "greedy_never_beat_the_DP": true,
+   "how_to_read_a_disagreement": "a greedy-on-marginals allocation is computed independently as a cross-check on the exact DP. Disagreements are EXPECTED and harmless: greedy is an upper bound on the worst case (it can fail to find the minimising allocation), so the DP is the number reported. A greedy result BELOW the DP would indicate a DP bug, and none occur."
+  },
+  "independent_reproduction_of_the_prior_artifacts_M1_bound": {
+   "prior_artifact": "results/outer_loop_arc_gateway_rescore_20260726.json",
+   "prior": {
+    "n": 485,
+    "min": 0.0,
+    "p25": 0.062752,
+    "median": 0.113725,
+    "p75": 0.258557,
+    "max": 0.956551,
+    "mean": 0.204208
+   },
+   "recomputed_here_M1": {
+    "n": 485,
+    "min": 0.0,
+    "p25": 0.062752,
+    "median": 0.113725,
+    "p75": 0.258557,
+    "max": 0.956551,
+    "mean": 0.204208
+   },
+   "note": "reproduced independently, which is why the M2 bound beside it can be read as a charge-model change rather than a pipeline difference"
+  },
+  "M2_bound_is_strictly_inside_M1_bound": true,
+  "worst_case_bound_rows_sample": [
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_gnone",
+    "n_resets": 47,
+    "score_M0_offline_recorded": 0.0268,
+    "worst_case_M1": 0.023764,
+    "worst_case_M2": 0.023823,
+    "rel_worst_M1": 0.113289,
+    "rel_worst_M2": 0.111088,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     47,
+     0
+    ],
+    "dp_alloc_M2": [
+     46,
+     0
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g200",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.026234,
+    "worst_case_M1": 0.024045,
+    "worst_case_M2": 0.024107,
+    "rel_worst_M1": 0.083454,
+    "rel_worst_M2": 0.081081,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g400",
+    "n_resets": 37,
+    "score_M0_offline_recorded": 0.026234,
+    "worst_case_M1": 0.023798,
+    "worst_case_M2": 0.02386,
+    "rel_worst_M1": 0.092854,
+    "rel_worst_M2": 0.090517,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     37
+    ],
+    "dp_alloc_M2": [
+     36
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g800",
+    "n_resets": 42,
+    "score_M0_offline_recorded": 0.026234,
+    "worst_case_M1": 0.023495,
+    "worst_case_M2": 0.023556,
+    "rel_worst_M1": 0.104402,
+    "rel_worst_M2": 0.10211,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     42
+    ],
+    "dp_alloc_M2": [
+     41
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g1300",
+    "n_resets": 47,
+    "score_M0_offline_recorded": 0.0268,
+    "worst_case_M1": 0.023764,
+    "worst_case_M2": 0.023823,
+    "rel_worst_M1": 0.113289,
+    "rel_worst_M2": 0.111088,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     47,
+     0
+    ],
+    "dp_alloc_M2": [
+     46,
+     0
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "cd82",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g2800",
+    "n_resets": 47,
+    "score_M0_offline_recorded": 0.0268,
+    "worst_case_M1": 0.023764,
+    "worst_case_M2": 0.023823,
+    "rel_worst_M1": 0.113289,
+    "rel_worst_M2": 0.111088,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     47,
+     0
+    ],
+    "dp_alloc_M2": [
+     46,
+     0
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_gnone",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.00522,
+    "worst_case_M1": 0.005032,
+    "worst_case_M2": 0.005037,
+    "rel_worst_M1": 0.036033,
+    "rel_worst_M2": 0.03497,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g200",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.00522,
+    "worst_case_M1": 0.005032,
+    "worst_case_M2": 0.005037,
+    "rel_worst_M1": 0.036033,
+    "rel_worst_M2": 0.03497,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g400",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.00522,
+    "worst_case_M1": 0.005032,
+    "worst_case_M2": 0.005037,
+    "rel_worst_M1": 0.036033,
+    "rel_worst_M2": 0.03497,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g800",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.00522,
+    "worst_case_M1": 0.005032,
+    "worst_case_M2": 0.005037,
+    "rel_worst_M1": 0.036033,
+    "rel_worst_M2": 0.03497,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g1300",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.00522,
+    "worst_case_M1": 0.005032,
+    "worst_case_M2": 0.005037,
+    "rel_worst_M1": 0.036033,
+    "rel_worst_M2": 0.03497,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   },
+   {
+    "game": "dc22",
+    "seed": 20260724,
+    "budget": 2000,
+    "arm": "S_llmoff_b2000_g2800",
+    "n_resets": 33,
+    "score_M0_offline_recorded": 0.00522,
+    "worst_case_M1": 0.005032,
+    "worst_case_M2": 0.005037,
+    "rel_worst_M1": 0.036033,
+    "rel_worst_M2": 0.03497,
+    "best_case_is_zero_by_construction": true,
+    "dp_alloc_M1": [
+     33
+    ],
+    "dp_alloc_M2": [
+     32
+    ],
+    "greedy_matches_dp": true
+   }
+  ]
+ },
+ "scorer_fidelity_two_independent_paths": {
+  "path_1": "arc_agi.scorecard.EnvironmentScoreCalculator, driven exactly as EnvironmentScorecard._calculate_score drives it",
+  "path_2": "the REAL Scorecard.update_scorecard chain -- synthetic FrameDataRaw per frame with the real `full_reset` flag, then EnvironmentScorecard.from_scorecard. This is the function where the free-opening-reset behaviour lives; the prior artifact's path 2 bypassed it by calling the Card mutators directly, which is why the free reset was invisible to it.",
+  "n_cells_compared": 44,
+  "n_agree_M1": 44,
+  "n_agree_M2": 44,
+  "disagreements": [],
+  "non_vacuity_witness_the_two_models_actually_differ": {
+   "n_cells_where_M1_and_M2_scores_differ": 42,
+   "why_this_matters": "if M1 and M2 scored identically everywhere, a path1-vs-path2 agreement would be consistent with the analyser ignoring the charge model entirely. A non-zero count here shows the comparison has content."
+  },
+  "baselines_nonzero_on_every_cell": true,
+  "baseline_channel_note": "baselines come from each row's `per_level[*].human_actions`, produced upstream by `arc_leaderboard_eval._baseline_actions` reading through `env.info`. A prior agent read `getattr(env, 'baseline_actions')` directly -- a DEAD CHANNEL that summed to 0.0 and made every charge model agree at score 0, reading as a clean 'no optimism' null. Asserted non-zero per cell, and cross-source consistency asserted below.",
+  "baseline_cross_source_conflicts": [],
+  "n_games_with_baselines": 25
+ },
+ "peer_bound_crosscheck": {
+  "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+  "available": true,
+  "peer_sha256": "bd4c551d518df4022f7dd6f870cdc6e6cce98af1b15dce1fcce433e24e0ab67c",
+  "peer_is_uncommitted_at_time_of_writing": true,
+  "peer_first_stated_the_opening_reset_is_free": true,
+  "what_agrees": "the peer's independent reading of the same installed source reached the same conclusion -- gateway-charged == actions + resets - n_full_resets, n_full_resets >= 1 -- and its three hand-recomputed cells (vc33 4.51%->0.00%, r11l 16.66%->16.46%, tu93 4.62%->4.06%) are reproduced independently here over 44 cells.",
+  "how_to_read_the_dependency": "the peer artifact is NOT a provenance dependency of this one: it is a corroborating read, present-or-absent flagged, so this artifact does not go stale if the peer's commit lands or does not."
+ },
+ "CORRECTION_OWED": {
+  "read_this_first": "A number this session reported to the operator MOVES. It moves in the direction that makes our estimates better, and it is named here rather than buried.",
+  "claim_1": {
+   "where_it_was_stated": "commit fd23b8b1f subject line -- 'the uncharged-RESET optimism is 4.6% (measured)' -- and `headline.answer_from_exact_measurement` in results/outer_loop_arc_gateway_rescore_20260726.json",
+   "as_published_M1": {
+    "median": 0.046236,
+    "max": 0.168048,
+    "n_cells_nonzero": 42,
+    "n_cells": 44
+   },
+   "gateway_accurate_M2": {
+    "median": 0.036903,
+    "max": 0.166068,
+    "n_cells_nonzero": 38,
+    "n_cells": 44
+   },
+   "why_it_moved": "M1 charged the run's opening RESET. The installed gateway routes that RESET to `new_play()`, which charges nothing. One charge was removed from the first span of every cell, and the first span is the only span a uniform -1 can move.",
+   "direction": "the published figure OVERSTATED the optimism"
+  },
+  "claim_2": {
+   "where_it_was_stated": "`score_loss_from_charged_resets` in results/arc_per_level_reset_attribution_20260726.json (median 0.045078, max 0.119524) and commit a1d8360eb",
+   "as_published_M1_from_4dp_rounded_fields": {
+    "median": 0.045078,
+    "max": 0.119524
+   },
+   "the_same_cells_unrounded_M1": {
+    "median": 0.046236,
+    "max": 0.119561
+   },
+   "gateway_accurate_M2": {
+    "median": 0.040634,
+    "max": 0.041021
+   },
+   "TWO_separate_errors_in_that_published_figure": "(1) it charged the opening reset, and (2) it differenced two 4-decimal-ROUNDED scores, which on a ~0.007 score is a large fraction of the difference. Both are shown separately above so neither is credited with the other's movement.",
+   "direction": "the published figure OVERSTATED the optimism"
+  },
+  "claim_3_a_CODE_correction_not_just_a_number": {
+   "what_is_wrong": "`scripts/arc_leaderboard_eval.py` computes `level_up_charged.append(actions + resets)` and `charged_actions = actions + resets`, charging the opening reset. So EVERY row this harness writes from now on carries an `efficiency_gateway_charged` that is too low and an `efficiency_optimism_vs_gateway` that is too high, by one charged action in the first span.",
+   "the_minimal_fix": "subtract the run's full_reset count (1) from the cumulative charged totals: `level_up_charged.append(actions + resets - n_full_resets)` and `charged_actions = actions + resets - n_full_resets`, with `n_full_resets` counted as 1 for the opening RESET (assert the first recorded move IS a RESET, and stamp rather than subtract if it is not).",
+   "deliberately_NOT_applied_here_and_why": "that file is a freshness-tracked provenance dependency of at least five committed artifacts plus one uncommitted peer artifact. Editing it would mark all of them stale in the same commit that publishes this correction, forcing a rebuild cascade across another lane's just-landed work. The brief for this task is measure and report; the fix is specified precisely and queued as the top follow-up.",
+   "severity": "HIGHER than the number correction. A wrong number in one artifact is citable and correctable; a wrong measurement channel silently mis-stamps every future row."
+  },
+  "what_does_NOT_change": "no settled structural conclusion is reordered. DEPTH still dominates (1/2/4/8 of 8 levels -> 2.78/8.33/27.78/100), a per-game score still cannot exceed 100, the post-solve tail is still free, and the correction still tracks resets-BEFORE-a-level-up rather than the whole-run reset count. The optimism is still real and still non-zero on most cells -- it is smaller than published."
+ },
+ "headline": {
+  "question": "What is our ARC score under the gateway's own charge model, and by how much were the published corrections wrong?",
+  "answer": "The gateway-accurate optimism over 44 matched live cells is 0.036903 at the median and 0.166068 at most, against the published 0.046236 / 0.168048. The published figure was too PESSIMISTIC because it charged the run's opening RESET, which the installed gateway gives away free. The correction is still non-zero on 38 of 44 cells, so the defect is real; it is simply smaller than reported.",
+  "from_bounds_alone": "STILL UNANSWERABLE, and stamped as such. Over the recorded rows the worst case erases a median 0.111088 of a cell's score and the best case is 0 BY CONSTRUCTION. A bound with a structural zero at one end cannot establish either that the correction matters or that it does not.",
+  "the_structural_finding": "M1 -- charging every reset -- is not a conservative reading of the gateway, it is an UNREACHABLE one. Producing it through the installed chain requires injecting a phantom `new_play()` the gateway never performs; without it the chain raises because the opening RESET is the call that creates the play.",
+  "what_this_does_not_touch": "the actual hidden-set score (0.08) is unexplained by anything here. This correction moves a per-game efficiency term by single-digit percent on public games; it is not a candidate explanation for the hidden-set result, and is not offered as one."
+ },
+ "acceptance_gates": {
+  "gates": [
+   {
+    "name": "G1_two_scorer_paths_agree_under_both_charge_models",
+    "passed": true,
+    "witness": {
+     "n_cells": 44,
+     "n_agree_M1": 44,
+     "n_agree_M2": 44,
+     "non_vacuity_n_cells_where_the_models_differ": 42,
+     "pass_region_nonempty_because": "the two models produce DIFFERENT scores on 42 of 44 cells, so agreement between paths is not obtainable by ignoring the model"
+    }
+   },
+   {
+    "name": "G2_recomputation_reproduces_the_rows_own_numbers",
+    "passed": true,
+    "witness": {
+     "n_M1_compared": 44,
+     "n_M1_agree": 44,
+     "n_M0_compared": 44,
+     "n_M0_agree": 44,
+     "why_this_is_a_real_check": "these are numbers the LIVE harness wrote independently of this analyser; reproducing both the offline and the M1 figure means the pipeline is wired to the same quantities, so the M2 figure is a model change and not a plumbing bug"
+    }
+   },
+   {
+    "name": "G3_baseline_channel_is_alive_and_consistent",
+    "passed": true,
+    "witness": {
+     "n_games_with_baselines": 25,
+     "n_cross_source_conflicts": 0,
+     "min_baseline_seen": 6,
+     "why": "a zero baseline makes every charge model agree at score 0, so a dead baseline channel reads as a clean 'no optimism' null -- the exact failure a prior agent hit"
+    }
+   },
+   {
+    "name": "G4_the_correction_is_directional_and_non_vacuous",
+    "passed": true,
+    "witness": {
+     "M2_never_exceeds_M1": true,
+     "n_cells_strictly_lower_under_M2": 42,
+     "n_cells": 44,
+     "why_both_conjuncts": "monotonicity alone would be satisfied by M2 == M1 everywhere (a no-op correction); the strict count proves the correction actually bites"
+    }
+   },
+   {
+    "name": "G5_the_opening_reset_is_inside_the_first_span_on_every_cell",
+    "passed": true,
+    "witness": {
+     "n_cells": 44,
+     "n_with_a_reset_in_the_first_span": 44,
+     "min_resets_in_first_span": 1,
+     "why_this_must_be_checked_not_assumed": "the -1 is applied to the FIRST span. If a cell's first span carried zero resets the opening reset would sit elsewhere and the subtraction would be wrong; the code stamps rather than subtracts in that case"
+    }
+   },
+   {
+    "name": "G6_both_attribution_channels_agree_where_they_overlap",
+    "passed": true,
+    "witness": {
+     "n_overlapping_cells": 7,
+     "n_agree": 7,
+     "channels": "cumulative level_up_charged vs per-span segment_offline/segment_resets"
+    }
+   }
+  ],
+  "n_gates": 6,
+  "n_passed": 6,
+  "all_passed": true,
+  "n_uninterpretable": 0,
+  "principle": "every gate carries a COMPUTED witness that its pass region is non-empty at the gate's own aggregation level. A gate whose region is empty or forced is stamped UNINTERPRETABLE rather than counted as a pass."
+ },
+ "scope_and_power_READ_BESIDE_THE_VERDICT": {
+  "part_b": {
+   "n_cells": 44,
+   "games": [
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
+   ],
+   "seeds": [
+    20260724,
+    20260725,
+    20260726
+   ],
+   "budgets": [
+    400,
+    2000
+   ],
+   "llm": "OFF on every cell"
+  },
+  "part_c": {
+   "n_cells": 7,
+   "games": [
+    "cd82",
+    "tu93",
+    "vc33"
+   ],
+   "seeds": [
+    20260724,
+    20260725,
+    20260726
+   ]
+  },
+  "part_a": {
+   "n_rows_bounded": 485,
+   "n_rows_total": 1401
+  },
+  "single_game_concentration_warning": "the per-game SCORES are dominated by vc33, which is the only game in this corpus with a large offline score (~2.09 vs <0.02 for most others). The RELATIVE optimism is reported per game and as a median-of-medians precisely so the corpus answer does not rest on that one game's magnitude.",
+  "what_this_measurement_CANNOT_support": [
+   "any claim about the HIDDEN set. Every cell is a PUBLIC game played offline.",
+   "any claim about the LLM-on scored path. The LLM is off on every cell.",
+   "any claim that the remote gateway matches the installed local scorer. That is an assumption read from source, not a measurement against the live service.",
+   "a per-cell optimism estimate for any cell NOT in Parts B or C -- for those, only the structurally-uninformative bound exists."
+  ],
+  "why_no_p_value_is_reported": "this is an ARITHMETIC re-score of a deterministic scoring function, not a sample from a distribution. The per-cell correction is exact given the cell's recorded attribution; there is nothing to test. The only sampling question -- how the corpus median would move on other games -- is answered by reporting the per-game spread, not by a test."
+ },
+ "honest_verdict": "complete_gateway_accurate_rescore_opening_reset_is_free_published_optimism_overstated_median_0p046236_to_0p036903_correction_owed_named",
+ "honest_verdict_principle": "terminal-prefixed so the conductor's reconciler classifies it as terminal; the underscore form is used deliberately over `complete:` because a ': ' inside a verdict has poisoned research-complete.yaml before.",
+ "verifier_is_oracle": true,
+ "verifier_is_oracle_principle": "the 'verifier' here IS the installed competition scorer -- the executable oracle that defines the score. Execution-grounded measurement, NOT an oracle-distinct verifier-moat claim, and it must never be headlined as one.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_principle": "no ARC level is claimed, no agent was run, no registry entry added. This is an accounting re-score over already-recorded PUBLIC-game rows.",
+ "arc_solve_claim": false,
+ "random_seed": 20260726,
+ "random_seeds_used": [
+  20260724,
+  20260725,
+  20260726
+ ],
+ "preconditions_checked": [
+  {
+   "resource": "installed arc_agi scorer importable",
+   "available": true
+  },
+  {
+   "resource": "installed arcengine FrameDataRaw/ActionInput importable",
+   "available": true
+  },
+  {
+   "resource": "exact-attribution row files present",
+   "available": true
+  },
+  {
+   "resource": "recorded early-stop row corpora present",
+   "available": true
+  },
+  {
+   "resource": "per-level human baselines non-zero",
+   "available": true
+  },
+  {
+   "resource": "prior artifact readable for the correction",
+   "available": true
+  },
+  {
+   "resource": "per-span capture readable (second channel)",
+   "available": true
+  }
+ ],
+ "tests_and_mutation_proofs": {
+  "test_file": "tests/python/test_arc_gateway_accurate_rescore.py",
+  "n_tests": 19,
+  "spec": "REQ-ARC-WMTE-5986 + 5 SCENARIOs",
+  "mutations_applied_and_proved_caught": [
+   "the level-drop defect reintroduced (non-final span frames report level 0) -> 4 tests fail",
+   "M2 never subtracts the free opening reset (a no-op correction) -> 2 tests fail",
+   "the -1 applied to EVERY span instead of only the first -> 2 tests fail",
+   "the opening-reset-in-first-span stamp forced True -> 1 test fails",
+   "the cumulative-identity check forced True -> 1 test fails",
+   "the dead-baseline guard removed so a zero-baseline cell scores instead of stamping -> 1 test fails",
+   "`_dist([])` returns median 0.0 instead of stamping EMPTY -> 1 test fails",
+   "`_bound_row` bounds a row that never recorded a reset count -> 1 test fails",
+   "the phantom-new_play disclosure suppressed -> 1 test fails",
+   "path 2 driven with the wrong charge model -> 1 test fails",
+   "the chain-agreement FLAG hardcoded True -> 1 test fails (only after the test was strengthened; the first two versions of that test SURVIVED this mutation, which is recorded here because a flag asserted True is not evidence the flag is derived)"
+  ],
+  "a_mutation_that_initially_ESCAPED": "hardcoding `chain_agrees_M1: True` survived a test asserting the flag was True and that the two path scores matched -- the scores genuinely did match, so nothing failed. Caught only by a third test that monkeypatches path 2 to return a wrong score and requires the flag to notice. This is the forced-gate failure mode arriving inside the test suite rather than inside the artifact.",
+  "a_defect_this_analyser_shipped_and_caught_in_itself": "the path-2 frame builder hardcoded `levels_completed=0` on the non-final frames of each span. Because `Card.set_levels_completed` appends an entry on any CHANGE and the scorer consumes `actions_by_level` POSITIONALLY, that inserted a spurious `(0, 16)` entry and turned a 2.09 score into 21.31. Visible only because the real chain reports `actions_by_level`; a calculator-only path would have hidden it, and the wrong number was large enough to look like a finding."
+ },
+ "what_was_NOT_changed": [
+  "nothing was submitted to ARC or Kaggle -- no code path here can submit",
+  "MAX_ACTIONS and every SUBMITTED_* flag untouched",
+  "no historical artifact's recorded numbers rewritten; the M1 figures are published beside the M2 figures, not over them",
+  "scripts/arc_leaderboard_eval.py NOT edited -- the fix is specified in CORRECTION_OWED claim_3 with the reason it was not applied here"
+ ],
+ "git_head": "a1d8360eb528a818d536c9599aec08270fbf7443",
+ "provenance": {
+  "git_head": "a1d8360eb528a818d536c9599aec08270fbf7443",
+  "code": [
+   {
+    "path": "scripts/analyze_arc_gateway_accurate_rescore.py",
+    "sha256": "0cf54be28a53f78a385adf873fa1d959514a12d434b1111a43524f0a280a0e8e",
+    "bytes": 82832,
+    "mtime_utc": "2026-07-27T01:52:42Z"
+   },
+   {
+    "path": "scripts/arc_gateway_rescore.py",
+    "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
+    "bytes": 21859,
+    "mtime_utc": "2026-07-27T00:04:02Z"
+   },
+   {
+    "path": "scripts/arc_leaderboard_eval.py",
+    "sha256": "92dc57bb968310e9770b67050dfcaa75a430aa99b188db81dea8aa6db8e39b02",
+    "bytes": 41306,
+    "mtime_utc": "2026-07-27T01:08:17Z"
+   }
+  ],
+  "rows_sources": {
+   "exact_attribution_rows": [
+    {
+     "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+     "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+     "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
+    }
+   ],
+   "recorded_rows": [
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b2000.json",
+     "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b400.json",
+     "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+     "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
+     "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
+     "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
+     "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
+     "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
+     "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
+    },
+    {
+     "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
+     "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
+    }
+   ],
+   "cited_artifacts": [
+    {
+     "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+     "sha256": "98fa60eddd776d21945789ca48db8537bd784984d60a1a1b4138b868a492f16a"
+    },
+    {
+     "path": "results/arc_per_level_reset_attribution_20260726.json",
+     "sha256": "af62747608b5f1a71fcaf827b71a8e8a55c8c8ee26792e7c52f583b3a25e38a1"
+    }
+   ]
+  },
+  "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_gateway_accurate_rescore.py",
+  "peer_artifact_deliberately_NOT_a_dependency": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+  "submitted_nothing": true,
+  "max_actions_untouched": true
+ },
+ "duration_s": 10.086,
+ "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock: each part publishes its own `measurement_wall_s`, summed from the upstream row FILES' own elapsed clocks. Conflating the two published an 8-second duration for a 2.54-hour measurement once already.",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_principle": "this artifact steps no environment and loads no model. It re-reads persisted rows and re-drives the INSTALLED scorer. Declaring a live substrate here would borrow credibility the pass does not have.",
+ "reproducibility_checksum": "sha256:352da0eb3a69b572cdb2d533ac1f3a6f59926ae137b13845bf395eb0630a5d85"
+}

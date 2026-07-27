@@ -18618,3 +18618,125 @@ implementation was not inspected, so gateway parity is an assumption stated rath
 The bootstrap reset may be FREE (`full_reset=True` routes to `new_play` -> `inc_play_count`, which
 charges nothing), which would make `gateway_charged` here an UPPER BOUND tight to within the number of
 full resets; that correction is not applied to these numbers.
+
+## REQ-ARC-WMTE-5986: The Gateway-Accurate Re-Score Charges The OPENING Reset As FREE, Publishes Both Models Side By Side, And Names The Correction Owed
+
+`REQ-ARC-WMTE-5985` limitation (7) recorded an open question — "the bootstrap reset may be FREE
+(`full_reset=True` routes to `new_play` -> `inc_play_count`, which charges nothing), which would make
+`gateway_charged` here an UPPER BOUND ... that correction is not applied to these numbers." This
+requirement closes it, and in closing it corrects a number this project has already reported.
+
+The installed source settles the charge model without inference. `update_scorecard`
+(`arc_agi/scorecard.py:834-843`) routes a RESET frame to `new_play()` when `full_reset` is true and to
+`reset()` otherwise; only `reset()` reaches `inc_reset_count` (:701-704). `new_play` -> `inc_play_count`
+(:692-699) APPENDS a fresh zeroed counter row and increments nothing. `full_reset` is true exactly when
+the environment is being CREATED (`arc_agi/api.py:405-437`: a cached guid returns `(game, False)`; only
+the `arcade.make` path returns `(game, True)`), and the reference agent opens with an empty guid and a
+RESET. Therefore exactly ONE reset per play is free: the opening one.
+
+1. **Three charge models are scored side by side, never one replacing another.** `M0` offline-recorded
+   (resets charged 0), `M1` all-resets-charged (the published model), `M2` bootstrap-free (the
+   gateway's own model: `actions + resets - n_full_resets`, `n_full_resets == 1`). `M1` is retained
+   because it is the claim being corrected and a reader must see both numbers adjacent.
+
+2. **`M1` is shown to be UNREACHABLE, not merely pessimistic.** Producing it through the installed
+   chain requires injecting a phantom `new_play()` the gateway never performs; driving
+   `update_scorecard` with a first RESET at `full_reset=False` raises, because that RESET is the call
+   that creates the play. This is emitted as a computed witness (the exception text), not asserted.
+
+3. **Only the FIRST span moves.** The scorer's per-level cost is a DIFFERENCE of cumulative charged
+   counts, so removing one charge from every cumulative total cancels in every span but the first.
+   The `-1` is applied to span 1 only after asserting per cell that span 1 actually contains a reset;
+   a cell whose first span carried none is STAMPED rather than silently adjusted.
+
+4. **Two independent scorer paths, and the comparison is proved non-vacuous.** Path 1 drives
+   `EnvironmentScoreCalculator` as `_calculate_score` does; path 2 drives the REAL
+   `Scorecard.update_scorecard` chain with per-frame `FrameDataRaw` and the real `full_reset` flag —
+   the function where the free-opening-reset behaviour actually lives. Agreement is only meaningful if
+   the two models differ somewhere, so the count of cells where `M1 != M2` is published as the gate's
+   non-vacuity witness.
+
+5. **Every frame reports the `levels_completed` the gateway would observe AT THAT FRAME.**
+   `Card.set_levels_completed` appends an entry whenever the value CHANGES in EITHER direction and the
+   scorer consumes `actions_by_level` POSITIONALLY, so a frame that under-reports the level inserts a
+   spurious entry and shifts every later level's charge by one slot. This is not hypothetical: an
+   earlier draft of the path-2 driver hardcoded level 0 on non-final span frames and turned a 2.09
+   score into 21.31, caught only because the real chain reports `actions_by_level`.
+
+6. **Bounds are stamped UNINFORMATIVE rather than quoted as estimates.** For rows carrying only a
+   whole-run `n_resets`, the two-sided bound's lower end is 0 BY CONSTRUCTION and its upper end reaches
+   95%+, so it can establish neither materiality nor negligibility. Both models' bounds are published
+   with that stamp attached.
+
+7. **The distribution is recomputed UNROUNDED.** `run_game` rounds both efficiency fields to 4
+   decimals; on a cell whose score is ~0.007 a difference of two rounded scores is dominated by the
+   rounding (tu93's published loss of 0.041667 is literally `0.0003/0.0072`). Every statistic is
+   recomputed from each cell's own per-span charge vectors, and the rounding component is reported
+   separately from the charge-model component so neither is credited with the other's movement.
+
+8. **The correction OWED is named at the top of the artifact, not buried.** Each moved claim cites
+   where it was stated, its published value, its gateway-accurate value, and the direction of the
+   error. The CODE correction (`scripts/arc_leaderboard_eval.py` charges the opening reset, so every
+   future row's `efficiency_gateway_charged` is too low) is named as higher-severity than the number
+   correction and specified precisely, with the reason it was not applied in the same change.
+
+9. **No historical artifact is rewritten.** The originals are cited by path + sha256 and left
+   byte-identical; the correction lives only in the new artifact.
+
+### SCENARIO-ARC-WMTE-5986-FREE-OPENING-RESET
+
+GIVEN a trajectory whose first frame is a RESET, driven through the installed
+`Scorecard.update_scorecard` chain
+WHEN the first RESET is flagged `full_reset=True` and every later RESET `full_reset=False`
+THEN the card's charged `actions` equals `offline_actions + resets - 1`, its `resets` counter equals
+`resets - 1`, and the resulting score is strictly higher than the same trajectory scored with every
+reset charged.
+
+### SCENARIO-ARC-WMTE-5986-M1-UNREACHABLE
+
+GIVEN a fresh `Scorecard`
+WHEN `update_scorecard` is called with a RESET frame and `full_reset=False` as the first call
+THEN no card is created and the all-resets-charged model is reachable only by injecting a phantom
+`new_play()`, which is recorded in the artifact rather than hidden.
+
+### SCENARIO-ARC-WMTE-5986-POSITIONAL-CORRUPTION
+
+GIVEN a multi-span trajectory
+WHEN any non-final frame of a span reports a `levels_completed` lower than the level already reached
+THEN `actions_by_level` gains a spurious entry and the positionally-consumed per-level charges shift,
+so the driver asserts one `actions_by_level` entry per completed level.
+
+### SCENARIO-ARC-WMTE-5986-DEAD-BASELINE
+
+GIVEN a cell whose per-level human baselines are absent or zero
+WHEN the cell is re-scored
+THEN it is marked unusable with an explicit reason rather than scored 0 under every charge model,
+because a zero baseline makes all models agree and reads as a clean "no optimism" null.
+
+### SCENARIO-ARC-WMTE-5986-ROUNDING-SEPARATED
+
+GIVEN a published relative loss computed by differencing two 4-decimal-rounded scores
+WHEN the same cell is recomputed unrounded
+THEN both values and their difference are published per cell, so the rounding component and the
+charge-model component are attributable separately.
+
+## Implementation Status (REQ-ARC-WMTE-5986)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5986 | Implemented (`scripts/analyze_arc_gateway_accurate_rescore.py` — `score_via_update_scorecard` real-chain path-2 driver with correct `full_reset` semantics and per-frame level reporting, `witness_opening_reset_is_free` computed witness including the unreachability probe, `_exact_cell` / `_perlevel_cell` three-model re-score with the span-1 assertion and the dead-baseline guard, `_bound_row` two-sided bounds under both models with the UNINFORMATIVE stamp, `CORRECTION_OWED` block naming the two number corrections plus the higher-severity code correction, six gates each with a computed non-vacuity witness; reuses `scripts/arc_gateway_rescore.py` rather than re-deriving the scorer drive) | Implemented (`tests/python/test_arc_gateway_accurate_rescore.py`) |
+
+**Known limitations (stated, not assumed away).** (1) The `full_reset` semantics are read from the
+INSTALLED LOCAL `arc_agi` / `arcengine` packages; the hidden competition gateway is a remote service
+whose implementation was not inspected, so gateway parity is an assumption stated rather than verified.
+If the remote scorer charges the opening reset, `M2` is wrong in the same direction `M1` is. (2) Every
+cell is a PUBLIC game played OFFLINE with the LLM OFF, so nothing here supports a claim about the
+hidden set or about the LLM-on scored path. (3) 44 cells over 11 games at 2 budgets for the exact
+half; the per-game spread is published because the corpus median would otherwise rest on which games
+repeated, and one game (vc33) carries almost all of the absolute score. (4) No p-value is reported and
+none is meaningful: this is an arithmetic re-score of a deterministic scoring function, exact per cell
+given that cell's recorded attribution. (5) A residual behavioural divergence is named but not
+measured: under `competition_mode` a RESET at `_action_count == 0` is charged while the game is NOT
+stepped (`arc_agi/api.py:316-334`), so a back-to-back RESET diverges between the gateway and our
+offline env, which really does reset. (6) For rows without per-span attribution only the
+structurally-uninformative bound exists; no per-cell estimate is available for them.
