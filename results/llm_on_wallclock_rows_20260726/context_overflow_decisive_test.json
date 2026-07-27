@@ -1,0 +1,209 @@
+{
+ "probe": "arc_generator_context_overflow",
+ "run_date": "2026-07-26",
+ "gpu_used": "1",
+ "gpu0_never_targeted": true,
+ "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+ "n_predict_the_agent_really_requests": 4096,
+ "results": [
+  {
+   "n_ctx": 16384,
+   "prompt_tokens": 6000,
+   "concurrency": 1,
+   "why": "comfortably inside at concurrency 1 -- the control.",
+   "port": 8941,
+   "server_came_up": true,
+   "per_slot_ctx_if_4_slots": 4096,
+   "requests": [
+    {
+     "ok": true,
+     "wall_s": 27.67,
+     "tokens_evaluated": 12016,
+     "tokens_predicted": 4096,
+     "truncated": false,
+     "stop_type": "limit"
+    }
+   ],
+   "n_ok": 1,
+   "n_issued": 1,
+   "server_alive_after": true,
+   "outcome": "ALL_OK_SERVER_ALIVE"
+  },
+  {
+   "n_ctx": 16384,
+   "prompt_tokens": 16189,
+   "concurrency": 1,
+   "why": "a prompt that genuinely EXCEEDS the window, alone. Establishes what an honest over-context rejection looks like.",
+   "port": 8942,
+   "server_came_up": true,
+   "per_slot_ctx_if_4_slots": 4096,
+   "requests": [
+    {
+     "ok": false,
+     "wall_s": 0.01,
+     "http_status": 400,
+     "error_body": "{\"error\":{\"code\":400,\"message\":\"request (32394 tokens) exceeds the available context size (16384 tokens), try increasing it\",\"type\":\"exceed_context_size_error\",\"n_prompt_tokens\":32394,\"n_ctx\":16384}}"
+    }
+   ],
+   "n_ok": 0,
+   "n_issued": 1,
+   "server_alive_after": true,
+   "outcome": "REQUESTS_REJECTED_SERVER_ALIVE"
+  },
+  {
+   "n_ctx": 32768,
+   "prompt_tokens": 16189,
+   "concurrency": 1,
+   "why": "identical prompt, doubled window -- shows the rejection was about capacity.",
+   "port": 8943,
+   "server_came_up": true,
+   "per_slot_ctx_if_4_slots": 8192,
+   "requests": [
+    {
+     "ok": true,
+     "wall_s": 13.61,
+     "tokens_evaluated": 32394,
+     "tokens_predicted": 372,
+     "truncated": true,
+     "stop_type": "limit"
+    }
+   ],
+   "n_ok": 1,
+   "n_issued": 1,
+   "server_alive_after": true,
+   "outcome": "ALL_OK_SERVER_ALIVE"
+  },
+  {
+   "n_ctx": 16384,
+   "prompt_tokens": 3000,
+   "concurrency": 4,
+   "why": "THE EVAL'S ARRIVAL PATTERN: ~6k tokens each, FOUR AT ONCE, against a 4-slot server -- a prompt size that is fine alone. Isolates concurrency.",
+   "port": 8944,
+   "server_came_up": true,
+   "per_slot_ctx_if_4_slots": 4096,
+   "requests": [
+    {
+     "ok": false,
+     "wall_s": 9.18,
+     "error": "RemoteDisconnected:Remote end closed connection without response"
+    },
+    {
+     "ok": false,
+     "wall_s": 9.18,
+     "error": "RemoteDisconnected:Remote end closed connection without response"
+    },
+    {
+     "ok": false,
+     "wall_s": 9.18,
+     "error": "RemoteDisconnected:Remote end closed connection without response"
+    },
+    {
+     "ok": false,
+     "wall_s": 9.18,
+     "error": "RemoteDisconnected:Remote end closed connection without response"
+    }
+   ],
+   "n_ok": 0,
+   "n_issued": 4,
+   "server_alive_after": false,
+   "outcome": "SERVER_DIED"
+  },
+  {
+   "n_ctx": 16384,
+   "prompt_tokens": 3000,
+   "concurrency": 1,
+   "why": "the matched CONTROL for the row above: same prompt size, arriving alone.",
+   "port": 8945,
+   "server_came_up": true,
+   "per_slot_ctx_if_4_slots": 4096,
+   "requests": [
+    {
+     "ok": true,
+     "wall_s": 25.31,
+     "tokens_evaluated": 6016,
+     "tokens_predicted": 4096,
+     "truncated": false,
+     "stop_type": "limit"
+    }
+   ],
+   "n_ok": 1,
+   "n_issued": 1,
+   "server_alive_after": true,
+   "outcome": "ALL_OK_SERVER_ALIVE"
+  },
+  {
+   "n_ctx": 65536,
+   "prompt_tokens": 3000,
+   "concurrency": 4,
+   "why": "does a window big enough that 4 slots each get >=16k rescue the concurrent case? If yes, per-slot capacity is the mechanism and -c is the lever.",
+   "port": 8946,
+   "server_came_up": true,
+   "per_slot_ctx_if_4_slots": 16384,
+   "requests": [
+    {
+     "ok": true,
+     "wall_s": 70.37,
+     "tokens_evaluated": 6016,
+     "tokens_predicted": 4096,
+     "truncated": false,
+     "stop_type": "limit"
+    },
+    {
+     "ok": true,
+     "wall_s": 8.68,
+     "tokens_evaluated": 6016,
+     "tokens_predicted": 1,
+     "truncated": false,
+     "stop_type": "eos"
+    },
+    {
+     "ok": true,
+     "wall_s": 5.42,
+     "tokens_evaluated": 6016,
+     "tokens_predicted": 1,
+     "truncated": false,
+     "stop_type": "eos"
+    },
+    {
+     "ok": true,
+     "wall_s": 58.95,
+     "tokens_evaluated": 6016,
+     "tokens_predicted": 4096,
+     "truncated": false,
+     "stop_type": "limit"
+    }
+   ],
+   "n_ok": 4,
+   "n_issued": 4,
+   "server_alive_after": true,
+   "outcome": "ALL_OK_SERVER_ALIVE"
+  }
+ ],
+ "CONCURRENCY_FINDING": {
+  "single_threaded_over_context_outcome": "REQUESTS_REJECTED_SERVER_ALIVE",
+  "concurrent_same_prompt_outcome": "SERVER_DIED",
+  "concurrent_same_prompt_FAILED": true,
+  "concurrent_same_prompt_also_killed_the_server": true,
+  "matched_single_threaded_control_succeeded": true,
+  "larger_window_rescues_the_concurrent_case": true,
+  "three_way_isolation": {
+   "same_prompt_alone_at_c16384": "ALL_OK_SERVER_ALIVE",
+   "same_prompt_4_at_once_at_c16384": "SERVER_DIED",
+   "same_prompt_4_at_once_at_c65536": "ALL_OK_SERVER_ALIVE",
+   "reading": "Failing in the middle row while BOTH neighbours succeed pins the cause to PER-SLOT capacity: 16384/4 = 4096 tokens per slot is not enough for a ~6000-token prompt, while 65536/4 = 16384 is."
+  },
+  "VERDICT": "CONCURRENT_PER_SLOT_OVERFLOW_BREAKS_INDUCTION_AND_SOMETIMES_KILLS_THE_SERVER",
+  "per_slot_capacity_is_the_mechanism_and_minus_c_is_the_lever": true,
+  "server_death_is_INTERMITTENT": "Across this session the same concurrent-overflow condition killed the server 3 times and returned a clean 500 once. The REJECTION is reproducible; the CRASH is not. Do not report the crash as deterministic.",
+  "why_this_is_the_important_half": "A single oversized request is REJECTED cleanly and the server survives. The SAME prompt size arriving 4-at-once against a 4-slot server is FATAL -- and 4-at-once is exactly what the eval's thread-per-game Swarm produces. Every LLM-on measurement this project has taken was at concurrency 1, so this regime had never been exercised.",
+  "the_arithmetic": "total_slots=4 with -c 16384 leaves roughly 4096 tokens per slot. The agent asks for max_tokens=4096, which alone equals an entire slot's budget, leaving nothing for the prompt."
+ },
+ "VERDICT": "NO_CRASH_REPRODUCED_in_this_isolated_setting",
+ "interpretation_if_context_is_the_mechanism": "Then MAX_ACTIONS cannot be raised by editing one constant. The induction prompt grows with the search graph (~47 tokens per expanded state, measured), the graph grows with the budget, and the prompt is sent UNCLAMPED. A raise needs one of: a larger -c (VRAM cost, and the server reports 4 slots so the per-slot share matters), a prompt that summarises the graph rather than enumerating it, or a hard clamp that degrades gracefully instead of killing the server.",
+ "interpretation_if_NOT_context": "Then the cd82-at-2000 crash has another cause and the window is a red herring; do not ship a window change on the strength of it. Investigate the server's own stderr, which the proposer currently sends to DEVNULL -- that alone is worth fixing, because it is why this crash had to be diagnosed by correlation in the first place.",
+ "scope_limits": [
+  "SYNTHETIC digit-dense filler, not a real induction prompt. Token COUNT is matched; content is not. If the crash depended on prompt CONTENT rather than length this would not reproduce it.",
+  "Concurrency 1. The eval runs ~110 agent threads against a server reporting 4 slots, where the window is shared -- that regime is strictly HARSHER than this and is not measured here.",
+  "This box's RTX 3090, not Kaggle's L4 / RTX 6000."
+ ]
+}

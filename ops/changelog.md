@@ -1,5 +1,114 @@
 # Carnot — Changelog
 
+## 2026-07-26 (outer-loop: the LLM-ON wall-clock envelope for the MAX_ACTIONS call — and the unguarded prompt that kills the generator before wall clock ever binds)
+
+- Instructed work: measure the LLM-on wall-clock envelope that decides the `MAX_ACTIONS` budget call.
+  Shipped is 400 (4 median wins); 4000 buys 12. Every prior budget measurement was **LLM-OFF**, and the
+  fitted LLM-on model's own `residuals` said so: *"one LLM-on run at b1000/b2000 would replace this
+  model with a direct anchor"* and *"THE BUDGET-400 ROW IS ARITHMETICALLY FORCED, NOT A TEST."* This
+  produced that anchor. **No flag was changed — `MAX_ACTIONS` is still 400 in the tree.**
+- **I FORMED A HYPOTHESIS, TESTED IT, AND IT WAS FALSE — that is the main result of this entry.**
+  Mid-session I claimed a "context ceiling": `cd82`/b2000 shows `tokens_prompt == 16189` against a
+  `-c 16384` server, so the induction prompt was said to have overflowed and killed it, blocking any
+  `MAX_ACTIONS` raise. It was **wrong on its central number and on its mechanism**:
+  - `llm.tokens_prompt` is a **CUMULATIVE SUM** (`+= prompt_n` per response,
+    `arc_scored_path_lever_harness.py:267`). That cell made 11 responses, so its real per-request
+    prompt averages **~1,472 tokens**; across all cells per-request means are **338–1,472** — an order
+    of magnitude clear of the window. A summed counter read as a single-request size.
+  - **`prompt_truncated == 0` on every row.** The harness counts truncation directly. Nothing was
+    near the limit.
+  - The decisive isolated test (`scripts/arc_generator_context_overflow_probe.py`) showed an
+    over-context request is **rejected with a clean `HTTP 400 exceed_context_size_error` while the
+    server SURVIVES**, and that doubling `-c` makes the identical request succeed. Over-context
+    requests do not kill servers, so the mechanism was impossible as described.
+  Retracted in the artifact, `ops/known-issues.md` and `ops/status.md` rather than deleted, per
+  never-prune. The lesson worth keeping: the decisive test was cheap and was run *before* this shipped
+  as fact.
+- **THEN THE SAME TEST FOUND THE REAL FAULT, AND IT IS THE MOST CONSEQUENTIAL THING IN THIS ENTRY.**
+  Over-context *does* break the generator — **under CONCURRENCY**, which no measurement this project
+  has ever taken used:
+  - The server reports **`total_slots: 4`** (live off `/props`; my *other* wrong inference — that it
+    had ONE slot because no `--parallel` flag is passed — died here too). With `-c 16384` that is
+    ~**4,096 tokens per slot**, and the agent asks for **`max_tokens=4096`**, which alone consumes a
+    whole slot's budget.
+  - A **~6,000-token prompt succeeds at concurrency 1**; the **same prompt 4-at-once returns
+    `HTTP 500 "Context size has been exceeded"` on every request**, with the matched single-request
+    control succeeding. Concurrency is the only variable.
+  - The server **sometimes dies from it and sometimes returns a clean 500** (3 deaths, 1 survival).
+    The rejection is deterministic; **the crash is intermittent and is not claimed otherwise.**
+  - **Why it was invisible:** every LLM-on number this project holds was taken at concurrency 1. The
+    eval starts **one thread per game** (`ARC-AGI-3-Agents/agents/swarm.py:76-99`), so with ~110
+    hidden games requests arrive together — a regime never exercised.
+  - **It is independent of the action budget** and applies to the submission as shipped (same window,
+    same `max_tokens`, no clamp). A candidate contributor to the live score.
+  - **Still NOT established:** that this explains the `cd82`/b2000 crash, which ran single-threaded.
+    Two separate faults may be in play; only one is now understood.
+- **A second degenerate metric of my own, caught by its own output.** The concurrency probe first
+  computed `speedup = sequential_wall / parallel_wall` unconditionally and reported
+  **"3.041x — CONCURRENCY HELPS"** for a parallel batch in which **all four requests FAILED**. They
+  failed fast, so the wall clock fell and the ratio rose. The speedup is now gated on every request in
+  both arms succeeding, and the ungated ratio is still emitted but labelled
+  `raw_wall_ratio_DO_NOT_READ_AS_SPEEDUP_IF_INCOMPLETE`.
+- **What survives about the generator.** It really did die — `cd82`/b2000, `generator_healthy_after`
+  True → False, in **two independent runs on two ports**, plus a third time on that cell's replicate
+  where the self-heal spawned a mid-cell replacement and the storm guard caught it. That cell has the
+  **most LLM responses (11), largest graph (411 states) and longest wall clock** in the sample — most
+  total work, not biggest prompt. **Cause UNKNOWN**, and hard to get because
+  `_ensure_server` spawns with `stdout=DEVNULL, stderr=DEVNULL`, discarding whatever it printed as it
+  died. Also **proven**: any failed request makes `generate()` return `(False, msg)` instead of
+  raising, so the agent finishes as an LLM-off agent while still reporting itself as the LLM-on scored
+  path. And `stop_type_limit` is **2–9 on every cell** — inductions routinely hit `n_predict`.
+- **The wall-clock answer, and it does bind.** At the most likely cap (9h) and ~110 games the
+  conservative reading admits **only budget 400 — the shipped value, no headroom**; under the tightest
+  candidate (6h) nothing in the measured grid fits at 110 games. The answer depends on which per-game
+  level is right: my uncontended single-process cost (80–147 s/game) is far below the prior contended
+  anchor, and the eval is the *harsher* case (its `Swarm` runs ~110 concurrent threads in one process),
+  so the conservative reading is the decision-relevant one.
+- **And even if the clock were free, the prize is ~nothing.** Per-level score is
+  `min((human/agent_actions)^2*100, 115)`. `dc22`'s b2000 level-up took **1,782 agent actions against a
+  59-action human baseline → 0.11 out of a possible 100.** That is why the prior sweep's own numbers
+  show won cells ×3.27 while authoritative score moves ×1.02.
+- **The headline is now COMPUTED from the envelope table, not asserted.** A first draft hard-coded
+  "wall clock does not bind at any measured budget" and it contradicted the table printed directly
+  beneath it. A headline that can disagree with its own evidence is worse than none.
+- **CORRECTED: the cap the prior artifact leaned on is the wrong cap.** Its envelope "C" called 12h
+  *"the only bound VERIFIED in code"* and concluded b4000 fits. But the thing verified in code is **our
+  own `subprocess(timeout=43200)`** — self-imposed, and incapable of binding the platform; and the
+  external 12h figure is from **arcprize.org/policy, which scopes it to ARC Prize VERIFIED submissions,
+  explicitly NOT the Community Leaderboard** (fetched 2026-07-26). The project's own automated
+  news-watch records Kaggle's max notebook runtime moving **6h → 9h**. The analyser now reports the
+  answer against **four** candidate caps ranked by provenance strength, never one.
+- **CORRECTED my own reasoning mid-session, twice.** (a) I inferred the server had ONE slot from the
+  absence of a `--parallel` flag; `/props` reports **`total_slots: 4`**, so LLM work partly
+  parallelises and a flat serial sum is an upper bound. The envelope is now a **two-component** model
+  (GIL-serialised Python + batchable LLM seconds) with the speedup `S` an explicit parameter, not an
+  assumption. (b) Run 1 set `forbid_spawn()` to avoid a server storm; when the generator died that
+  made the death unrecoverable. Replaced with **heal-between-cells** so a reload's cost lands outside
+  any measured wall clock (recorded per row).
+- **The noise floor was measured, and it is larger than the effect.** A byte-identical `S_replicate`
+  cell moved `dc22`'s b2000 wall **147.0s → 240.3s (1.63x)** with **identical behaviour** — same
+  actions, resets, levels and states expanded — while `tokens_predicted` nearly doubled. So per-cell
+  wall clock is LLM sampling variance, not budget; pooled same-config fold change is ~1.9x against a
+  modelled b400→b2000 budget effect of 1.34x. Reported as two separate verdicts: per-cell
+  resolvability vs corpus-level direction, because collapsing them would throw away the stronger
+  paired evidence.
+- **The three action units are kept apart, and one identity fell out.** `frames == budget` exactly,
+  and `offline_actions == budget − resets`. Since the gateway charges 1 per non-RESET move **and** 1
+  per reset, **gateway-charged == frames == the budget itself** when the loop exhausts — so our
+  offline action count understates the gateway's charge by exactly the reset count. Reset traffic does
+  grow with budget (`dc22` 5 → 23 → 33), but the reset *share* of frames stays ~1–2%, bounding the
+  squared-efficiency optimism at **≤1.04x** on these cells. Exact per-level attribution is another
+  lane's deliverable; this reports a rigorous two-sided bound instead of guessing.
+- Also observed and recorded: the frozen live generator **died twice** under sustained load
+  (~10 min / 5 inductions), each death costing a ~12s reload; and its **stderr goes to `DEVNULL`**,
+  which is why the crash had to be diagnosed by correlation rather than read off a log.
+- New: `scripts/arc_llm_on_wallclock_budget_probe.py` (budget as the **innermost** loop, order
+  alternated by game, same-config replicate, GPU-1 pinning *verified* against per-PID VRAM because the
+  resolver falls through to the AMD iGPU silently),
+  `scripts/analyze_arc_llm_on_wallclock_envelope.py`,
+  `scripts/arc_generator_context_overflow_probe.py`,
+  `scripts/arc_generator_slot_concurrency_probe.py`. GPU 0 was never targeted.
+
 ## 2026-07-26 (outer-loop: the two MINOR review findings that never reached the fix agent — the analyser's 8s clock was published as a 2.54-hour live run's cost)
 
 - Agent-initiated follow-up (no user instruction): the review workflow forwarded only

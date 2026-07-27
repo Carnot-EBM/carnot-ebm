@@ -1,0 +1,96 @@
+{
+ "probe": "arc_generator_slot_concurrency",
+ "run_date": "2026-07-26",
+ "server_props": {
+  "total_slots": 4,
+  "slot_n_ctx": 16384,
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+ },
+ "concurrency": 4,
+ "approx_prompt_tokens_requested": 3000,
+ "n_predict": 400,
+ "sequential_total_wall_s": 16.15,
+ "parallel_total_wall_s": 5.31,
+ "parallel_speedup_factor_S": 3.041,
+ "sequential_requests": [
+  {
+   "ok": true,
+   "wall_s": 4.55,
+   "tokens_predicted": 302,
+   "tokens_evaluated": 6016,
+   "truncated": false,
+   "stop_type": "eos",
+   "predicted_per_second": 113.72738491410004,
+   "prompt_per_second": 3184.8330794890076
+  },
+  {
+   "ok": true,
+   "wall_s": 5.44,
+   "tokens_predicted": 400,
+   "tokens_evaluated": 6016,
+   "truncated": false,
+   "stop_type": "limit",
+   "predicted_per_second": 110.15172022564579,
+   "prompt_per_second": 3339.6618148308517
+  },
+  {
+   "ok": true,
+   "wall_s": 4.35,
+   "tokens_predicted": 400,
+   "tokens_evaluated": 6016,
+   "truncated": false,
+   "stop_type": "limit",
+   "predicted_per_second": 157.98749213024806,
+   "prompt_per_second": 3320.628910335844
+  },
+  {
+   "ok": true,
+   "wall_s": 1.82,
+   "tokens_predicted": 1,
+   "tokens_evaluated": 6016,
+   "truncated": false,
+   "stop_type": "eos",
+   "predicted_per_second": 1000000.0,
+   "prompt_per_second": 3306.559144867523
+  }
+ ],
+ "parallel_requests": [
+  {
+   "ok": false,
+   "wall_s": 5.31,
+   "http_status": 500,
+   "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}"
+  },
+  {
+   "ok": false,
+   "wall_s": 5.31,
+   "http_status": 500,
+   "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}"
+  },
+  {
+   "ok": false,
+   "wall_s": 5.31,
+   "http_status": 500,
+   "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}"
+  },
+  {
+   "ok": false,
+   "wall_s": 5.31,
+   "http_status": 500,
+   "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}"
+  }
+ ],
+ "sequential_ok": 4,
+ "parallel_ok": 0,
+ "any_parallel_request_failed": true,
+ "any_parallel_request_truncated": false,
+ "any_sequential_request_truncated": false,
+ "verdict_A_speedup": "CONCURRENCY_HELPS_envelope_projections_assuming_serial_sum_are_PESSIMISTIC",
+ "verdict_B_context_hazard": "FAILURES_OR_TRUNCATION_UNDER_CONCURRENCY_ONLY",
+ "scope_limits": [
+  "ONE prompt size and ONE n_predict. A larger induction prompt (real cells reached 11937 prompt tokens) could still overflow a slot where 6000 does not.",
+  "Concurrency equal to the slot count, not to the ~110 threads the eval creates. Beyond the slot count requests QUEUE, which is a different regime this does not measure.",
+  "This box's GPU (RTX 3090, 24GB), not Kaggle's (L4 24GB / RTX 6000). Batching efficiency is hardware-dependent.",
+  "A speedup measured on synthetic uniform requests is an UPPER bound on what heterogeneous real induction traffic would achieve."
+ ]
+}
