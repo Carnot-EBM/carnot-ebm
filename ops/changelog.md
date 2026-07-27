@@ -1,5 +1,84 @@
 # Carnot — Changelog
 
+## 2026-07-27 (outer-loop: the concurrency fix REVIEWED post-hoc — 23 findings applied — and the operator's "wouldn't a 500 be an exception?" exposes why the fault hid for months)
+
+- The generator concurrency fix (776161963) SHIPPED WITHOUT AN ADVERSARIAL REVIEW: the workflow that
+  produced it lost its Review and Apply phases to an API 529 storm (12 agents started, 3 returned).
+  Every review in this session found real defects, so a post-hoc review was run. Verdict: **the fix
+  stands; several claims made ABOUT it did not.** 23 findings, all applied.
+- **OPERATOR QUESTION THAT PAID FOR ITSELF: "wouldn't a 500 error mean an exception of some kind?"**
+  The answer is NO, and chasing it found the reason the fault stayed invisible. llama.cpp has TWO
+  failure sites. The graceful one (`server-context.cpp:2704-2712`) is a PER-REQUEST admission check
+  before decoding -> clean HTTP 400 ("try increasing it"). The 500 (`:3200-3211`) does not throw at
+  all: it checks the RETURN CODE of `llama_decode()` and maps `n_batch == 1 && ret == 1` to
+  "Context size has been exceeded." Because the admission check is per-request, it CANNOT catch K
+  requests that each fit individually but jointly exhaust the shared `kv_unified` pool -- that only
+  fails later, inside `llama_decode`. **Concurrency escapes the graceful path by construction.** The
+  500 handler then errors EVERY processing slot (`for (auto & slot : slots) ... send_error`, above a
+  `// TODO: terminate only the largest active slot`), which is why the measured failures are 2/2 at
+  K=2 and 4/4 at K=4 rather than a single victim.
+- **THE CONSEQUENCE, FIXED: the server's stderr was going to DEVNULL.** That same site logs
+  `SRV_ERR("%s i = %d, n_batch = %d, ret = %d")`, and that `ret` is the ONLY discriminator between
+  mode A (`ret == 1`, survivable) and mode B (a `GGML_ASSERT` abort that KILLS the server; `ret == 2`
+  is explicitly unhandled upstream). We were discarding it, so from the client the two modes are
+  indistinguishable -- which is exactly the state the review left open ("Mode B is UNRESOLVED at
+  81920; needs the server's stderr captured"). Now captured to a FILE (not a pipe: a pipe with no
+  reader deadlocks the server once the ~64KB buffer fills, and that hang would look exactly like the
+  fault being diagnosed), path recorded, best-effort with a DEVNULL fallback so losing diagnostics
+  can never cost us the generator. Verified live: 1393 bytes of real server stderr captured.
+- **Three of my own errors while writing that fix, each caught by the next check:** (1) `os` and
+  `tempfile` are not module-level imports here -- the first version would have `NameError`d at launch
+  and **ruff passed anyway**; (2) the first test had all four cases SKIP, which CLAUDE.md forbids
+  because a skip is an invisible failure; (3) removing the skip exposed that
+  `test_stderr_is_not_devnull` PASSED VACUOUSLY -- the `_healthy` stub short-circuited
+  `_ensure_server` at its `if self._healthy(): return True` reuse branch, so `Popen` never ran and
+  `None is not DEVNULL` was trivially true. Three sibling tests failing is what exposed it. Every
+  assertion now carries an explicit "Popen actually ran" guard, and both mutations (DEVNULL, PIPE)
+  are proved to break the suite.
+- **Two live defects the review found in the shipped fix**, both applied: `_GENERATOR_CUDA_MIN_FREE_MB`
+  stayed at 13000 while the footprint rose to 13452 -- **the guard would have blocked its own launch**
+  on the conductor path (now derived, 14937, test-pinned); and `cleanup()` is called **3x per agent**
+  (agent.py:89, swarm.py:133, main.py SIGINT), not once as the docstring claimed.
+- **The hardware risk shipped-on resolves FAVOURABLY, by measurement.** The scored kernel forces
+  `CARNOT_ARC_MTP=0`, so the real footprint at 81920 is **7382 MiB**, not ~13.4 GiB -- ~7.3 GiB of
+  margin against the project's own P100 16GB probe. The published envelope was fit with
+  `--spec-type draft-mtp` and over-predicts by ~6 GB; "loads the weights TWICE" is false for the
+  scored path. The original call was right for the wrong reason.
+- **Claims narrowed:** mode A eliminated (36->0) and mode C eliminated, but **mode B is NOT fixed**
+  (27->16, with 2 cells `healthy_after=False` at 81920). The new pre-flight probe was ALSO
+  HTTP-status-only at K=2 defending a K=4 requirement -- and its own 17238-token synthetic prompt
+  needs 85336 > 81920, so it **passed a configuration that fails**; rewritten to K=4 with body +
+  stop-taxonomy reading and validated 4/4 HTTP 200 with `generated == 4096`.
+- **Corrections owed and recorded:** `vram_resident_mib` was a DEVICE TOTAL presented as per-PID
+  residency (it included a foreign 296 MiB process); all VRAM figures are IDLE residency read before
+  any request; and the claim that the 0.04 baseline "does not reproduce in-tree" is **REFUTED** --
+  the completed LLM-off arm is 7/100 = 0.07, CP95 [0.0286, 0.1389] which CONTAINS 0.04, Fisher exact
+  two-sided p=0.537. `CI [0,0]` remains an interval on the paired DELTA, not on the rate.
+- **THE THRESHOLD QUESTION, answered from banked data at ZERO GPU cost** (operator: "redirect the GPU
+  time to the threshold question"). The gate is `< 0.5`. Measured margins across 25 attempts:
+  `verify_cell_recall` median **0.0000**, max 0.0476; `heldout_accuracy` median **0.0000**, max
+  0.0643; `heldout_change_consistency` median **0.0000**, max 0.0769. **No threshold rescues this**:
+  0.5 -> 0/25 admitted, 0.25 -> 0/25, 0.1 -> 0/25, 0.05 -> 2/25, 0.01 -> 6/25. So this is NOT a
+  threshold-calibration problem -- the induced world models are an order of magnitude from the bar and
+  admitting them would install garbage plans. The gate is doing its job.
+- **The `cell_recall` positive control did not merely fail, it was ACTIVELY WORSE.** `lp85` scored
+  `verify_accuracy = 0.92` -- the single good model in the corpus -- but `verify_cell_recall = 0.0`,
+  so the metric the control switched to gated out the one case that would have passed under `exact`.
+- **Where first wins are actually gated, now measured end to end:** generator healthy (103 calls, 94
+  responses, 0 errors) -> **induced world-model quality, median 0.0** -> trust gate correctly
+  rejecting -> `induction_attempts_planned == 0` on 174/174 rows, and every LLM-on arm therefore
+  **bit-identical to its matched LLM-off control**. Neither the concurrency fix nor the
+  action-efficiency programme can reach that constraint.
+- The variant-expansion run (150 cells) was CANCELLED on this evidence rather than spending ~90 GPU
+  minutes widening a null whose cause is upstream.
+- Verify: `arc_orphan_solver_lint` OK (65 modules) · `determination_preservation_lint` OK ·
+  `artifact_freshness_lint` OK · `arc_llm_on_liveness_lint --self-test` OK (8/8 origin cells, 16
+  mutation proofs) · new stderr-capture suite 4 passed, 2 mutations proved caught · 3 artifacts
+  rebuilt with **0 measurement-bearing moves** (only additive fields + clocks) · ruff clean on every
+  changed file.
+- **No `SUBMITTED_*` flag moved; `MAX_ACTIONS` (400) and `SUBMITTED_EARLY_STOP_GRACE` (None)
+  untouched; nothing submitted to ARC or Kaggle.**
+
 ## 2026-07-27 (outer-loop: FIX THE GENERATOR CONCURRENCY FAULT — n_ctx 16384 -> 81920, and the scored path finally gets a liveness witness)
 
 - **User instruction: "fix the concurrency fault."** Preceded by two operator decisions: "measure
@@ -88,15 +167,172 @@
   n_gpu_layers=999)` for playbook-query embedding. Both its gates ship FALSE
   (`SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED`, `SUBMITTED_PLAYBOOK_RETRIEVAL_ENABLED`), so it is NOT
   loaded on the scored path and the envelope's omission of it is correct TODAY. But flipping either
-  flag would add a full second copy of the model IN-PROCESS on top of the server's (which itself
-  loads the weights TWICE, ~5.0 GB each, for MTP self-draft). Anyone enabling a playbook flag must
-  re-price the envelope first.
-- **WHAT THIS DOES NOT DO: it does not re-measure `first_win_rate_integrated` (0.04, CI [0,0]).**
-  Whether this fault depressed it is UNFALSIFIABLE from the existing record -- nothing logged
-  liveness. The liveness witness fixes that going FORWARD, not backwards. **No pivot is
-  recommended.**
+  flag would add a full second copy of the model IN-PROCESS on top of the server's. Anyone enabling
+  a playbook flag must re-price the envelope first. *(Corrected 2026-07-27: this originally added
+  "which itself loads the weights TWICE, ~5.0 GB each, for MTP self-draft" -- true of the LOCAL dev
+  launch, false of the scored path, which forces `CARNOT_ARC_MTP=0` and loads them once. Re-verified
+  that both gates do ship FALSE, so the hazard remains latent-not-live, and that the scored server's
+  measured footprint is 7382 MiB, not ~13.4 GiB.)*
+- **WHAT THIS DOES NOT DO: it does not re-measure `first_win_rate_integrated` (0.04, Clopper-Pearson
+  95% [0.011, 0.099]).** Whether this fault depressed it is UNFALSIFIABLE from the existing record
+  -- nothing logged liveness. The liveness witness fixes that going FORWARD, not backwards. **No
+  pivot is recommended.** *(CI corrected 2026-07-27: this line originally read "CI [0,0]", which
+  reads as zero-width precision on a rate measured from 4 wins. The recorded `[0,0]` is exp4605's
+  `paired_percentile_bootstrap` CI on the integrated-minus-bare DELTA -- exactly zero because the
+  two arms' `first_win` vectors are identical (both 0.04) so every resample of the paired difference
+  is 0. It was never an interval on the rate.)*
 - Untouched per operator decision: `MAX_ACTIONS` (400) and `SUBMITTED_EARLY_STOP_GRACE` (None).
   Nothing submitted to ARC or Kaggle.
+- **This commit also sweeps 67 pre-existing `results/*.json` artifacts** that the message does not
+  itemise. Audited: they are conductor re-runs overwriting their own files (`run_date` 20260726 ->
+  20260727, `duration_s`/`latency_ms` churn), which commit-first sanctions. Verified by
+  `determination_preservation_lint.py` plus a field-level scan that the ONLY determination-bearing
+  change to any pre-existing artifact (`honest_verdict` / `inference_substrate` /
+  `flagged_adversarial` / `acceptance_gate_passed`) is the disclosed exp3946 substrate relabel.
+
+### ADVERSARIAL REVIEW OF THIS COMMIT (2026-07-27, same day)
+
+Commit `776161963` shipped with NO adversarial review -- the workflow that produced it lost its
+Review and Apply phases to an API 529 storm. This section records what a review then found and what
+was applied. **The fix itself stands: it fits the hardware, and the fault it targets is really
+gone. Several of the claims made ABOUT it did not stand.**
+
+**THE HARDWARE QUESTION IS RESOLVED, BY DIRECT MEASUREMENT.** It shipped unresolved and was the
+biggest open risk. Measured on an RTX 3090 in the SCORED shape (`CARNOT_ARC_MTP=0`, which the kernel
+forces), per-PID `nvidia-smi --query-compute-apps` residency: **5950 MiB at n_ctx=16384, 7382 MiB at
+81920** -- the fix costs **~1432 MiB**, and the total is 7382 MiB, not the ~13.4 GiB the record
+implied. Against the project's own Kaggle probe (P100 16GB, 16270 MiB free) that leaves ~7.3 GiB of
+margin even alongside the 1.45 GB live CNN fit. **The fix does not trade a silent degradation for a
+hard OOM.** The published envelope over-predicted the scored footprint by ~6.1 GB because every row
+of it was fit with `--spec-type draft-mtp` ON, a shape the scored path never runs; the "server loads
+the weights TWICE for MTP self-draft" premise is false for the scored path. Over-prediction is the
+safe direction, so the original "it fits" call was right for the wrong reason.
+
+**THE PRE-FLIGHT PROBE PASSED A CONFIGURATION THAT FAILS.** The hardened kernel probe fired K=2
+against a K=4 requirement, and its own synthetic prompt measures **17238 tokens** through the model's
+tokenizer. So it needed 2*(17238+4096) = 42668 cells (passes at 81920) while the eval needs
+4*(17238+4096) = 85336 (fails). Measured directly: **4/4 HTTP 500 "Context size has been exceeded",
+per-slot `n_tokens` 20469..20493 at release == exactly 81920/4.** The probe would have printed "LLM
+CONCURRENCY OK" for a configuration that fails at the K the eval produces -- a pass that could not
+have failed, in the gate itself. It was also HTTP-status-only, the exact shape this commit's own
+load-bearing result says would have shipped the bug, and its `stop: ["\n"]` halted generation after
+~1 token so it could not have seen truncation even if it had looked. Now: probes at
+`_LLAMA_SERVER_DEFAULT_SLOTS`, reads `/props` (`total_slots`, `n_ctx`) and fails loudly on a
+mismatch, trims its prompt to the measured worst case via the server's own `/tokenize`, reads the
+response body and the stop taxonomy, and prints the actual GPU name/`memory.total`. Verified
+end-to-end on real hardware: 4/4 HTTP 200, `generated == 4096 == max_tokens`,
+`pool_exhaustion_truncations=0`, `/props total_slots=4 n_ctx=81920`.
+
+**THE FIX RAISED THE FOOTPRINT BUT NOT THE GUARD THAT ADMITS THE LAUNCH.**
+`_GENERATOR_CUDA_MIN_FREE_MB = 13000` was untouched, its comment still reading "loads ~11.5GB", while
+the mtp-on footprint moved to ~13.4-13.5 GiB. On the live conductor path that guard would ADMIT a
+card with 13000-13452 MiB free, then cudaMalloc-fail -- a NEW silent-LLM-off path created by the fix.
+Replaced with `_generator_cuda_min_free_mb()`, DERIVED from `_default_induce_n_ctx()` and the
+measured envelope (14937 MiB at the shipped default), and pinned by
+`tests/python/test_arc_generator_vram_guard.py` so the two cannot drift apart again.
+
+**`_default_induce_n_ctx()` HARDCODED 81920 WHILE `max_tokens` WAS READ FROM THE ENVIRONMENT** at
+both construction sites, so `CARNOT_ARC_INDUCE_MAX_TOKENS=8192` would have silently re-broken K=4
+against an unchanged pool. Both halves of the admission inequality now come from the same
+arithmetic. The default is unchanged at exactly 81920.
+
+**MODE B IS NOT DEMONSTRATED FIXED, and the docstring claimed all three.** 6 of the 12
+`llm_on_fix_probe` cells carry `RemoteDisconnected` at `generator_n_ctx=81920` (16 diagnostics, 2
+cells ending `generator_healthy_after=False`, `lp85_color04` fully LLM-off at calls=4/responses=0/
+errors=4). The requantification set these aside as "a DIFFERENT failure ... (the server SURVIVES the
+overflow)" -- but that is mode **A**'s property; exp5866 records mode B as exactly
+`RemoteDisconnected` with `server_survives: false`. The discriminating evidence was never captured
+(grep for `ggml_abort` across the whole run directory: zero hits). Scope now reported honestly: **A
+eliminated (36 -> 0), C eliminated on the worst measured prompt, B REDUCED 27 -> 16, not
+eliminated.** The argument that actually supports a separate-mechanism reading -- at 81920/K=4 the
+four generation budgets reserve 16384 of 81920 cells and cannot exhaust the pool -- is now the one
+made, and it is labelled as a reason to doubt, not a measurement.
+
+**THE NEW GUARD WAS WIRED TO NOTHING** -- reproducing, one level up, the exact defect its own
+docstring is about ("NOTHING REFUSES on it. It is a field, not a gate"). It is now a pre-commit hook
+scoped to `results/*.json` and an advisory call in the conductor's post-task path. Enforcement is
+FORWARD-ONLY via `ops/arc_llm_on_liveness_baseline.json`: the 55 pre-existing FAIL findings across
+25 files are real recordings of the fault and cannot be deleted (never-prune), so they are exempted
+and anything NEW refuses. Verified the gate can refuse: a synthetic new dead row exits 1.
+
+**THE GUARD ALSO DROPPED THE DISTINCTION IT WAS BUILT ON.** `content_failures` -- the whole point of
+splitting server failures from content failures -- appeared nowhere in the lint, its only consumer.
+An alive server answering unusably reported `NO_COMPLETIONS` ("the model produced nothing"), blaming
+liveness for a content problem. And a mid-game death another thread self-healed (calls=20,
+responses=2, errors=18, `healthy_after=True`) produced only a WARN, so the gate exited 0 on a row
+that spent 90% of its life LLM-off. Added `CONTENT_ONLY_FAILURE`, `MOSTLY_FAILED_CALLS`,
+`STAMP_FALSE_UNEXPLAINED` (the harness and the lint disagreeing is itself a finding), and
+`WITNESS_UNAVAILABLE` (a not-measured `-1` sentinel is not a measurement -- this one was caught by
+the self-test over-firing on 100 honest LLM-OFF control cells). 16 mutation proofs, self-test green.
+
+**THE `cleanup()` HOOK IS NOT CALLED ONCE**, though its docstring said "guaranteed to run exactly
+once". Read from the bundled framework: `Agent.main()` (agent.py:89), `Swarm.cleanup()`
+(swarm.py:133), and again from `main.py:cleanup` on the SIGINT path. The framework body is
+idempotent; this override's was not, so the witness was re-emitted from the main thread at swarm
+teardown and OVERWROTE the game's own row -- and since every game shares ONE server in ONE process,
+the persisted `generator_healthy_after` was a global fact sampled at teardown, stamped per game.
+Guarded with a once-only flag.
+
+**THE MODE-C DETECTOR WAS STRUCTURALLY DEAD ON THE CHAT-TEMPLATE PATH** -- the same dead-channel
+class the commit set out to fix. `_chat_complete_request` normalised away `timings`, so
+`last_generated_tokens` was always -1 and the pool-truncation branch could never fire when
+`use_chat_template=True`; it always fell through to "HIT n_predict OUTPUT LIMIT", whose prescription
+is the OPPOSITE of the correct one. Now passes `predicted_n` through from `timings` or
+`usage.completion_tokens`. Relatedly `complete_text()` counted any HTTP 200 as a success including
+empty content; an empty body now also counts as a content failure.
+
+**exp3946's RELABEL IS HONEST BUT WAS NOT DURABLE.** Confirmed by reading the script: it constructs
+`Arcade(operation_mode=OFFLINE, environments_dir=ENVDIR)` and imports no llama/gguf/torch/cuda, so
+no LLM ran and nothing was laundered past a stricter floor. But only the ARTIFACT was corrected --
+line 128 of the script still wrote the illegal value, so a re-run recreated it. Fixed at the source.
+Also disclosed: the relabel made the artifact auditable **for the first time** (`adversarial_verify`
+returns 0 flags on a reconstructed pre-relabel copy, 1 WARN `METHODOLOGY_MISSING` after) -- the
+illegal string matched no classifier and escaped every check. The missing `reproducibility_checksum`
+is real, cannot be back-computed, and is NOT being fabricated. `solve_provenance:
+development_proxy` now declared, since the script reads engine internals for ground truth.
+
+**CORRECTIONS OWED, APPLIED.**
+  - `vram_resident_mib` in the fix artifact was a DEVICE TOTAL (`--query-gpu=memory.used`, including
+    a constant foreign 311 MiB), published under a name that means per-PID residency -- which let
+    the artifact call exp5866's per-PID 13452 and this run's 13763 "the same to the MiB" when they
+    are 311 MiB apart. Recovered the per-PID rows the harness had already captured: **12095 -> 11784
+    (control), 13763 -> 13452 (fix)**, now matching exp5866 exactly. Only the DELTA ever replicated,
+    trivially, because the offset cancels.
+  - `reproduces_baseline_rate: false` came from point-estimate `==` on two rates from 100 Bernoulli
+    trials each. **The baseline reproduces.** llm_off 7/100 = 0.07, CP95 [0.0286, 0.1389] contains
+    0.04; the baseline's own CP95 [0.0110, 0.0993] contains 0.07; Fisher exact two-sided p = 0.537.
+    It was never supportable even from the 63-cell partial (1/63, CP95 [0.0004, 0.0853], p = 0.650).
+    Now an interval test, with both intervals and the raw counts published. The WINNER SET genuinely
+    differs and that field stays false, correctly -- differing in which variants win is a different
+    claim from differing in the rate.
+  - **G1's non-forcing witness was the cell the artifact elsewhere condemns.** `K_pass_set: [1]` was
+    offered as proof the harness could report PASS -- but that K=1 cell IS the mode-C silent
+    truncation (2133 chars, `stop_type: limit`, 630 cells of generation room against a 4096 budget),
+    which under this artifact's own stop taxonomy is a FAIL. At the worst prompt in a 16384 pool the
+    pass region is EMPTY: K=1 by truncation, K>=2 by refusal. Restated on the small-prompt boundary
+    run (prompt 1411: K=1,2,3 PASS, K=4 FAIL), which does demonstrate the harness reports PASS when
+    the configuration works. The substantive G1 result was independently recomputed and is unchanged.
+  - Every VRAM figure was IDLE residency, read after `/health` and before any request, and no
+    limitations list said so. Now disclosed -- and measured: peak per-PID residency sampled while 4
+    concurrent full-budget requests were in flight equals idle **to the MiB**, because llama.cpp
+    preallocates the whole `-c` pool at load. The numbers were not understated; the quantity was
+    unnamed. The `if_16gb_class` line also mixed units (13452+1450 = 14902 MiB = 14.55 GiB, not
+    "14.9 GiB"); superseded by the measured mtp-off figure.
+  - The requantification's verdict `complete_fault_had_no_measurable_effect_on_first_win_rate` rested
+    on a channel that is structurally empty: `n_cells_where_llm_output_reached_the_policy = 0` (every
+    induced world model is rejected by a post-generation gate, so the LLM's output never reaches
+    action selection in EITHER arm) and `min_reachable_p = 1.0` (no outcome on this corpus could have
+    been significant). That is the FALSE_NEGATIVE_RISK shape CLAUDE.md names. A vacuous-test guard
+    now downgrades it to
+    `complete_fault_effect_UNRESOLVED_degenerate_test_...`, with the positive control that is missing
+    named explicitly. What does NOT depend on the delta -- that the 0.04 baseline was itself an
+    LLM-OFF measurement, and that mode A really is gone -- is stated separately and stands.
+  - The three artifacts of this commit were outside the freshness lint's index, so edits to their
+    analysers would have silently invalidated them. All three registered; `provenance` blocks added
+    to the two builders that lacked them. Rebuilt every dependent artifact: **only provenance
+    hashes, `git_head`, `run_date` and builder/wall clocks moved -- no substantive figure changed**
+    in `outer_loop_arc_reset_charge_attribution`, `outer_loop_arc_early_stop_grace_sweep`,
+    `outer_loop_arc_gateway_rescore`, or `outer_loop_arc_llm_on_wallclock_envelope`.
 
 ## 2026-07-27 (outer-loop: the STRUCTURAL fix for the stripped determinations — a commit-time guard, mutation-proved, that first failed to fire on its own origin incident)
 

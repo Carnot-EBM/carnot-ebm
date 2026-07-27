@@ -6021,6 +6021,16 @@ class E3AgentPolicy:
         enabled = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") != "1"
         row: dict[str, Any] = {
             "game": self.short,
+            # POLICY INTENT, not a fact about the generator. `llm_enabled` reads one env var;
+            # it is True for a row whose installed proposer is a stub with no model behind it
+            # at all. That is deliberate for a REAL-but-dead generator (the row must still
+            # CLAIM the tier so the gate can refuse it -- see
+            # test_dead_generator_witness_is_refused_by_the_gate), but it misclassifies a
+            # STUB arm: the 2026-07-27 first-win measurement's 100 LLM-OFF control rows, run
+            # with `_NoOpProposer`, all carry `llm_enabled: True`. A consumer keying on this
+            # field alone reads an LLM-off arm as an LLM-on arm -- the same silent
+            # misclassification the witness exists to prevent. `llm_tier_operational` below
+            # is the structural fact to key on instead.
             "llm_enabled": bool(enabled),
             "induction_attempts_n": len(self.induction_attempts),
             "induction_attempts_planned": sum(
@@ -6028,6 +6038,37 @@ class E3AgentPolicy:
             ),
             "induction_attempts_skipped": [
                 a.get("skipped") for a in self.induction_attempts if a.get("skipped")
+            ],
+            # THE MARGIN, not just the verdict (2026-07-27 review, FATAL finding). The
+            # 2026-07-27 first-win measurement found `induction_attempts_planned == 0` on
+            # 174/174 rows: the generator answered on essentially every call and the induced
+            # world model was then rejected by a POST-generation trust gate, so no plan was
+            # ever installed and every LLM-on arm came out BIT-IDENTICAL to its LLM-off
+            # control. That made the whole comparison an identity rather than a measurement.
+            # The artifact could name the skip REASON but not by HOW MUCH each gate failed,
+            # because the shipped code records those numbers onto its own per-attempt dict
+            # and the witness never read them -- so "would a different threshold or metric
+            # unblock this?" was unanswerable from the record and had to be re-measured.
+            # Diagnostics only: read-only projection of fields the gates already wrote, on a
+            # bounded prefix so a stall-loop game cannot grow the row without limit.
+            "induction_attempt_gate_diagnostics": [
+                {
+                    k: a.get(k)
+                    for k in (
+                        "planned",
+                        "skipped",
+                        "trust_metric",
+                        "verify_accuracy",
+                        "verify_cell_recall",
+                        "trust_energy",
+                        "heldout_accuracy",
+                        "heldout_change_consistency",
+                        "correct_changed_cells",
+                        "binary_gate_pass",
+                    )
+                    if k in a
+                }
+                for a in self.induction_attempts[:8]
             ],
         }
         proposer = self.proposer
@@ -6039,18 +6080,39 @@ class E3AgentPolicy:
             row["llm"] = {"calls": 0, "responses": 0, "errors": 0, "content_failures": 0}
             row["generator_healthy_after"] = None
             row["generator_constructed"] = False
+            row["generator_is_stub"] = None  # never built -> unknown, not "a stub"
+            # STILL True: the tier was intended and simply never reached (the game never
+            # stalled into induction). Marking it False here would make `_claims_llm_on`
+            # treat the row as LLM-OFF and SILENCE the lint's LLM_TIER_NEVER_ENGAGED warning
+            # -- turning a fix for a stub mislabel into a hole in the gate. Pinned by
+            # test_never_engaged_row_is_warn_not_fail.
+            row["llm_tier_operational"] = bool(enabled)
             row["llm_on_row_valid"] = False
             return row
         row["generator_constructed"] = True
+        # A STUB proposer (`_NoOpProposer` and friends) has no liveness channel at all. That
+        # is the structural signature that distinguishes "no model was ever behind this row"
+        # from "a real generator was installed and died", which `llm_enabled` cannot express.
+        is_stub = not callable(getattr(proposer, "liveness_witness", None))
         try:
             row.update(proposer.liveness_witness())
         except Exception as exc:  # pragma: no cover - defensive; must never break cleanup
             row["liveness_witness_error"] = repr(exc)[:200]
             row["llm"] = {"calls": -1, "responses": -1, "errors": -1}
             row["generator_healthy_after"] = None
+            is_stub = True  # it advertised the channel and could not serve it -> not a real tier
+        row["generator_is_stub"] = bool(is_stub)
+        # THE FIELD DOWNSTREAM CONSUMERS SHOULD KEY ON. "Was a real, instrumented LLM tier in
+        # place for this row?" -- distinct from `llm_enabled` (policy intent) and from
+        # `llm_on_row_valid` (did that tier actually answer cleanly). A dead-but-real
+        # generator is operational=True + row_valid=False, so the gate still refuses it; a
+        # stub arm is operational=False, so it is correctly read as LLM-OFF rather than as a
+        # silently-degraded LLM-on row.
+        row["llm_tier_operational"] = bool(enabled and not is_stub)
         llm = row.get("llm") or {}
         row["llm_on_row_valid"] = bool(
             enabled
+            and not is_stub
             and row.get("generator_healthy_after") is True
             and int(llm.get("calls") or 0) > 0
             and int(llm.get("responses") or 0) > 0
@@ -6344,11 +6406,27 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
         def cleanup(self, scorecard=None) -> None:
             """Emit the per-game GENERATOR-LIVENESS WITNESS, then defer to the framework.
 
-            WHY HERE. `Agent.cleanup()` is the framework's once-per-game end-of-run hook
-            (called from `Agent.main()`), and swarm.py runs one Agent per game in its own
-            thread -- so this is the only place a per-game record can be written that is
-            guaranteed to run exactly once, in that game's own thread, after the last
-            action.
+            WHY HERE. `Agent.cleanup()` is the framework's end-of-run hook and swarm.py runs
+            one Agent per game in its own thread, so this is the only place a per-game record
+            can be written in that game's own thread, after the last action.
+
+            IT IS NOT CALLED ONCE. An earlier version of this docstring claimed the hook was
+            "guaranteed to run exactly once"; that was WRONG (found 2026-07-27, adversarial
+            review, by reading the bundled framework). It is called 2-3 times per agent:
+              1. `Agent.main()` (agents/agent.py:89), at the end of the game's own thread;
+              2. `Swarm.main()` (agents/swarm.py:118) -> `Swarm.cleanup()` -> `a.cleanup(
+                 scorecard)` (swarm.py:133), at swarm teardown, from the MAIN thread;
+              3. `main.py:cleanup` -> `swarm.cleanup(scorecard)` again, on the SIGINT path
+                 that `run_agent` deliberately triggers via `os.kill(os.getpid(), SIGINT)`.
+            The FRAMEWORK's body is idempotent (`agent.py:171-172` flips `self._cleanup`), so
+            nothing upstream noticed. This override's body was NOT, so the witness was
+            re-emitted from a different thread at teardown and OVERWROTE the game's own row.
+            That is worse than a duplicate: `generator_healthy_after` is a live `/health`
+            probe, and every game in the eval shares ONE server in ONE process, so the
+            persisted value was a global fact sampled at swarm teardown, stamped per game --
+            a game whose generator died at action 3 could be stamped healthy because some
+            other thread's self-heal had restarted the server by teardown time.
+            `_witness_emitted` mirrors the framework's own once-only flag to fix this.
 
             WHY IT MUST EXIST AT ALL. Before this, a scored run whose generator died
             produced NO evidence of the fact: the agent completed its 400 actions, exited
@@ -6368,12 +6446,17 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
             level scores 0 either way, so aborting can never GAIN score, and swarm.py runs
             every game in ONE process, so one exception escaping here could take down the
             whole eval. `super().cleanup()` is therefore called in a `finally`."""
-            try:
-                self._emit_generator_liveness_witness()
-            except Exception:  # pragma: no cover - the witness must never break the run
-                pass
-            finally:
-                super().cleanup(scorecard)
+            # ONCE-ONLY, mirroring the framework's own `self._cleanup` flag. The first call is
+            # the one from the game's own thread (Agent.main), which is the only call whose
+            # /health probe is contemporaneous with that game ending. getattr-with-default so a
+            # subclass that skips __init__ cannot turn a missing attribute into a crash here.
+            if not getattr(self, "_witness_emitted", False):
+                self._witness_emitted = True
+                try:
+                    self._emit_generator_liveness_witness()
+                except Exception:  # pragma: no cover - the witness must never break the run
+                    pass
+            super().cleanup(scorecard)
 
         def _emit_generator_liveness_witness(self) -> None:
             import json as _json

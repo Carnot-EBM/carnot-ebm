@@ -1458,10 +1458,64 @@ def _resolve_llama_server() -> Path:
 
 LLAMA_SERVER = _resolve_llama_server()
 
-# Qwen3.5-9B-MTP loads ~11.5GB on a 3090 (weights + MTP self-draft + q8 KV, validated 2026-06-19).
-# Require headroom above that so the opt-in 3090 path NEVER binds a card a conductor training job is
-# using -- this is the "yield-if-the-conductor-needs-it" guard.
-_GENERATOR_CUDA_MIN_FREE_MB = 13000
+# ---------------------------------------------------------------------------------------------
+# THE MEASURED VRAM ENVELOPE for the local 3090 generator launch (exp5866, 9 configs, refit max
+# error 0.19%). Named constants rather than a magic literal because TWO things depend on the same
+# arithmetic and MUST NOT drift apart: the context-pool size (_default_induce_n_ctx) and the
+# free-VRAM guard that decides whether the card can hold the resulting server.
+#
+# SCOPE (2026-07-27 adversarial review, finding "envelope scoped to a shape the scored path never
+# runs"): this fit was taken with `--spec-type draft-mtp` ON, i.e. the LOCAL/dev launch shape, where
+# the MTP self-draft loads a second copy of the weights. It over-predicts the SCORED Kaggle shape by
+# ~6.1 GB, because scripts/kaggle/submission_kernel/main.py forces CARNOT_ARC_MTP=0 there. The
+# mtp-OFF pair is recorded separately below and is the one to reason about for the 16GB-class card.
+# Over-prediction is the safe direction for a guard, so this constant is deliberately the mtp-ON fit.
+_VRAM_MTP_ON_INTERCEPT_MIB = 10547.0  # weights + MTP self-draft copy + fixed overhead
+_VRAM_MTP_ON_PER_CTX_MIB = 0.02519  # q8_0 KV per shared-pool cell
+_VRAM_PER_SLOT_MIB = 206.83  # per llama.cpp slot, independent of n_ctx
+# llama-server with no explicit --parallel: n_parallel=4 AND kv_unified=true (server.cpp:106-110).
+# READ from the source of the local build and CONFIRMED from a running server's own /props
+# (`total_slots: 4`, 2026-07-27). It is the K the shared-pool admission arithmetic has to survive,
+# because the eval framework starts one thread per game with no pool (swarm.py:91) and llama.cpp
+# queues everything past its own slot count.
+_LLAMA_SERVER_DEFAULT_SLOTS = 4
+# The real `induce_prompt()` for the largest logical grid in ops/arc_solve_registry.yaml (64x64),
+# measured through the server's own /tokenize rather than estimated. The WORST case, not the
+# typical one, because the generated length is unknowable in advance.
+_INDUCE_WORST_CASE_PROMPT_TOKENS = 15734
+# Mirrors LocalGGUFProposer.max_tokens and the CARNOT_ARC_INDUCE_MAX_TOKENS default read at both
+# construction sites in arc_competition_agent.py. Named here so the context-pool derivation and
+# the completion budget cannot drift apart -- see _default_induce_n_ctx().
+_INDUCE_DEFAULT_MAX_TOKENS = 4096
+# Yield-if-the-conductor-needs-it margin. Must cover measurement scatter (the same 81920/mtp-on
+# launch measured 13452 and 13518 MiB per-PID on two occasions), the driver/context overhead
+# nvidia-smi attributes outside the fit, and enough slack that we do not admit a card we will then
+# cudaMalloc-fail on. A failed bind costs 180s in _ensure_server() and returns the agent to a
+# SILENT LLM-off state -- exactly the class of fault this file's n_ctx fix exists to remove, so the
+# guard must be conservative in the direction of declining the card.
+_GENERATOR_CUDA_GUARD_MARGIN_MIB = 1500
+
+
+def _generator_cuda_min_free_mb() -> int:
+    """Free VRAM (MiB) the opt-in 3090 generator path requires before it will bind a card.
+
+    DERIVED, never a hand-typed literal. It was a literal (13000, commented "loads ~11.5GB") and
+    the 2026-07-27 n_ctx 16384 -> 81920 fix raised the real footprint to ~13.4-13.5 GiB WITHOUT
+    touching it, so the guard would have admitted a card with 13000-13452 MiB free and then
+    cudaMalloc-failed: server exits, `_ensure_server()` burns its full retry budget, `generate()`
+    returns `(False, msg)`, and the agent runs LLM-off while still reporting itself as the LLM-on
+    scored path. That is a NEW silent-degradation path of exactly the shape the fix was removing.
+
+    Computing it from the SAME `_default_induce_n_ctx()` the server is actually launched with means
+    an operator raising CARNOT_ARC_INDUCE_N_CTX automatically raises the guard too. Pinned by
+    `tests/python/test_arc_generator_vram_guard.py`.
+    """
+    predicted = (
+        _VRAM_MTP_ON_INTERCEPT_MIB
+        + _VRAM_MTP_ON_PER_CTX_MIB * float(_default_induce_n_ctx())
+        + _VRAM_PER_SLOT_MIB * float(_LLAMA_SERVER_DEFAULT_SLOTS)
+    )
+    return int(predicted + _GENERATOR_CUDA_GUARD_MARGIN_MIB)
 
 
 def _cuda_gpu_free_mb(idx: int) -> int:
@@ -1508,6 +1562,19 @@ def _cuda_gpu_has_headroom(idx: int, min_free_mb: int) -> bool:
     return False
 
 
+def _free_port() -> int:
+    """An OS-assigned free localhost port, for the case where the port we wanted is already
+    held by a server whose context pool is too small for us (see `_reusable`). Binding to 0
+    and reading the assignment back is the only race-free way to pick one; the tiny window
+    between close() and llama-server's bind() is accepted because the alternative -- reusing
+    a mismatched server -- is the silent-degradation fault this whole path exists to remove."""
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        return int(s.getsockname()[1])
+
+
 def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
     """Resolve the llama-server binary + launch env for the generator, evaluated at LAUNCH time so the
     3090 guard sees current GPU state.
@@ -1515,7 +1582,7 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
     Priority:
       1. CARNOT_LLAMA_SERVER (Kaggle/live bundled CUDA binary) -- unchanged; inherits ambient env.
       2. OPT-IN CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> the local CUDA build pinned to that 3090 via
-         CUDA_VISIBLE_DEVICES, but ONLY if the card has >=_GENERATOR_CUDA_MIN_FREE_MB free (checked
+         CUDA_VISIBLE_DEVICES, but ONLY if the card has >=_generator_cuda_min_free_mb() free (checked
          via _cuda_gpu_has_headroom, which retries briefly to survive a just-crashed process's VRAM
          not yet being reclaimed -- see that function's docstring). This is the operator-approved
          (2026-06-19) use of one idle 3090 for generator throughput now that the TRM run is retired;
@@ -1537,7 +1604,7 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
             idx = int(gpu)
         except ValueError:
             idx = -1
-        if idx >= 0 and _cuda_gpu_has_headroom(idx, _GENERATOR_CUDA_MIN_FREE_MB):
+        if idx >= 0 and _cuda_gpu_has_headroom(idx, _generator_cuda_min_free_mb()):
             return cuda, dict(os.environ, CUDA_VISIBLE_DEVICES=str(idx))
         # guard tripped (card busy / unavailable / bad idx) -> fall through to the iGPU path,
         # never fight the conductor for the 3090.
@@ -1603,12 +1670,59 @@ def _default_induce_n_ctx() -> int:
          fills the pool and only the leftover cells remain for generation.
     Because `generate()` returns `(False, msg)` instead of raising, A and B degrade the
     agent to LLM-OFF while it still reports itself as the LLM-on scored path, and C is not
-    even visible as a failure. Sizing the pool is what removes all three.
+    even visible as a failure.
+
+    WHAT SIZING THE POOL ACTUALLY REMOVED -- narrowed 2026-07-27 after an adversarial review
+    of the shipping commit found this docstring claiming all three, contradicted by that
+    commit's own end-to-end evidence.
+
+      A. REMOVED, measured. `n_context_exceeded` went 36 -> 0 across all pre-fix (16384) vs
+         all post-fix (81920) cells; the direct back-to-back control at the same prompt in
+         the same tree went control 2/2 and 4/4 HTTP 500, fix 2/2 and 4/4 HTTP 200.
+      C. REMOVED for the worst measured prompt: every fix request reported
+         `predicted_n == 4096 == max_tokens`, i.e. `pool_exhaustion_limit == 0` in every
+         cell, where the pre-fix K=1 cell at the same prompt truncated to 2133 chars with
+         630 cells of generation room.
+      B. **NOT DEMONSTRATED REMOVED.** 6 of the 12 `llm_on_fix_probe__*` cells still carry
+         `RemoteDisconnected` server-failure diagnostics at `generator_n_ctx=81920` -- 16
+         diagnostics in total, 2 cells ending `generator_healthy_after=False`, and
+         `lp85_color04` fully LLM-off at calls=4 / responses=0 / errors=4. The
+         requantification records this as `n_remote_disconnected_post_fix: 16` and sets it
+         aside as confounded with an external process killer, which may well be right --
+         but the discriminating evidence (the server's own `ggml_abort` line in its log)
+         was never captured, and `RemoteDisconnected` with the server gone is exactly mode
+         B's recorded signature. The 6-cell HTTP gate that reported "fix 0 failures" cannot
+         see mode B at all: it fires ONE worst-case prompt shape at K in {2,4}, and mode B's
+         trigger is the opposite shape (many SMALL prompts, individually admitted, whose
+         GENERATIONS collectively overrun the pool over a long horizon).
+    So: treat A and C as fixed, and B as open. Before claiming B is fixed, run a
+    mode-B-specific arm (many small concurrent prompts, long horizon, external killers
+    excluded) and capture the server's stderr so `ggml_abort` can be told apart from SIGTERM.
 
     81920 = 4 * (15734 + 4096) rounded up to a 4096 multiple, where 15734 tokens is the
     real `induce_prompt()` for the largest logical grid in `ops/arc_solve_registry.yaml`
     (64x64), measured through the server's own `/tokenize` -- not estimated. Worst case,
     not typical, because the GENERATED length is unknowable in advance.
+
+    COMPUTED, NOT HARDCODED (2026-07-27 review). The first version of this function returned
+    a literal `81920` while `max_tokens` was independently read from
+    `CARNOT_ARC_INDUCE_MAX_TOKENS` at BOTH construction sites in arc_competition_agent.py
+    (:889 and :5014). So the two halves of the admission inequality could diverge exactly the
+    way this docstring warns the construction sites once did: `CARNOT_ARC_INDUCE_MAX_TOKENS
+    =8192` needs 4*(15734+8192) = 95704 cells and would have silently re-broken K=4 against
+    an unchanged 81920. Both halves now come from the same arithmetic, so an operator raising
+    the completion budget raises the pool with it. At the default 4096 this returns exactly
+    the 81920 that was measured and shipped -- the change is a derivation, not a re-sizing.
+
+    HOW LITTLE SLACK THERE IS. 81920/4 - 4096 = 16384 tokens is the largest prompt this pool
+    admits at K=4, versus the 15734-token worst case it is sized for: 650 tokens of margin per
+    slot. That is not much, and it is why the pre-flight probe must use a prompt of the SAME
+    measured worst-case size rather than an eyeballed synthetic one -- the kernel's original
+    synthetic probe string measured 17238 tokens through the model's own tokenizer, i.e.
+    854 tokens OVER what the pool admits, and at K=4 it returns 4/4 HTTP 500 "Context size
+    has been exceeded" (measured directly, 2026-07-27, RTX 3090, mtp-off, per-slot n_tokens
+    20469..20493 at release == 81920/4 exactly). It passed the shipped probe only because
+    that probe ran K=2.
 
     WHY THIS AXIS AND NOT ANOTHER. Measured VRAM envelope (9 configs, refit max error
     0.19%): `MiB = 10547 + 0.02519*n_ctx + 206.8*slots`. Context is the CHEAP axis --
@@ -1630,7 +1744,16 @@ def _default_induce_n_ctx() -> int:
     """
     import os
 
-    return int(os.environ.get("CARNOT_ARC_INDUCE_N_CTX", "81920"))
+    override = os.environ.get("CARNOT_ARC_INDUCE_N_CTX")
+    if override:
+        return int(override)
+    max_tokens = int(
+        os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", str(_INDUCE_DEFAULT_MAX_TOKENS))
+    )
+    need = _LLAMA_SERVER_DEFAULT_SLOTS * (_INDUCE_WORST_CASE_PROMPT_TOKENS + max_tokens)
+    # Round UP to a 4096 multiple: llama.cpp allocates in blocks and a round pool is easier to
+    # reason about against the published VRAM envelope, whose n_ctx samples are all multiples.
+    return int(-(-need // 4096) * 4096)
 
 
 @dataclass
@@ -1740,6 +1863,13 @@ class LocalGGUFProposer:
     n_content_failures: int = 0
     server_failure_diagnostics: list = field(default_factory=list)
     last_generated_tokens: int = -1
+    # DECLARED-VS-ACTUAL (2026-07-27 review finding 1). `n_ctx` above is what we INTEND to
+    # launch with. These two record what a RUNNING server on our port actually reports, so
+    # the liveness witness can publish an OBSERVED value instead of re-publishing our own
+    # intent -- the exact gap that let the n_ctx fix be a silent no-op against a stale server.
+    observed_server_n_ctx: Optional[int] = None
+    reuse_n_ctx_check: str = "not_checked"
+    reuse_refusals: list = field(default_factory=list)
 
     def _url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
@@ -1756,6 +1886,11 @@ class LocalGGUFProposer:
         already recomputes from (`llm.responses`, `generator_healthy_after`), so a scored-path
         row can be audited by the SAME gate as a harness row rather than needing a second,
         differently-buggy checker."""
+        healthy = self._healthy()
+        # Only ask the server what it is if it is actually up; on a dead server /props costs
+        # a 3s timeout per witness call and returns nothing useful anyway.
+        observed_n_ctx = self.observed_n_ctx() if healthy else None
+        observed_slots = self.observed_total_slots() if healthy else None
         return {
             "llm": {
                 "calls": int(self.n_completion_calls),
@@ -1763,10 +1898,24 @@ class LocalGGUFProposer:
                 "errors": int(self.n_server_failures),
                 "content_failures": int(self.n_content_failures),
             },
-            "generator_healthy_after": bool(self._healthy()),
+            "generator_healthy_after": bool(healthy),
             "generator_server_failure_diagnostics": list(self.server_failure_diagnostics),
             "generator_port": int(self.port),
-            "generator_n_ctx": int(self.n_ctx),
+            # OBSERVED, not declared (2026-07-27 review finding 1). This used to publish
+            # `int(self.n_ctx)` -- our own INTENT -- so a run that reused a stale server with a
+            # smaller pool reported the pool it wished it had. Reading /props makes the witness
+            # a measurement of the server rather than an echo of the caller, which is the whole
+            # point of a liveness witness. `generator_n_ctx_source` is published alongside so a
+            # reader can tell an observation from the declared fallback rather than having to
+            # assume; `declared_only` is exactly the state in which the number is NOT evidence.
+            "generator_n_ctx": int(observed_n_ctx if observed_n_ctx is not None else self.n_ctx),
+            "generator_n_ctx_declared": int(self.n_ctx),
+            "generator_n_ctx_source": (
+                "server_props_observed" if observed_n_ctx is not None else "declared_only"
+            ),
+            "generator_total_slots_observed": observed_slots,
+            "generator_reuse_n_ctx_check": str(self.reuse_n_ctx_check),
+            "generator_reuse_refusals": list(self.reuse_refusals),
             "generator_max_tokens": int(self.max_tokens),
         }
 
@@ -1855,11 +2004,30 @@ class LocalGGUFProposer:
         # OpenAI finish_reason 'length' == hit max_tokens == llama.cpp stop_type 'limit' (overran).
         stop_type = "limit" if choice.get("finish_reason") == "length" else "eos"
         full = f"<think>\n{reasoning}\n</think>\n{final}" if reasoning else final
-        normalized = {
+        # HOW MANY TOKENS THE SERVER ACTUALLY GENERATED -- normalized into llama.cpp's native
+        # `timings.predicted_n` shape. WITHOUT THIS the mode-C detector is STRUCTURALLY DEAD on
+        # this endpoint (found 2026-07-27, adversarial review): the normalized dict carried no
+        # `timings` key at all, so `_record_completion_diagnostics` set `last_generated_tokens =
+        # -1`, and `_limit_diagnostic()`'s pool-truncation branch (`0 <= got < max_tokens - 8`)
+        # could NEVER be true when use_chat_template=True -- it always fell through to the
+        # actively-misleading "HIT n_predict OUTPUT LIMIT" message, whose prescription (raise
+        # max_tokens) is the OPPOSITE of the correct one (raise n_ctx). That is the same
+        # dead-channel class the diagnostic was added to fix, reintroduced on the sibling
+        # endpoint. Two sources because llama.cpp builds differ: newer ones attach a native
+        # top-level `timings`, all of them fill OpenAI `usage.completion_tokens`.
+        timings = raw.get("timings") if isinstance(raw.get("timings"), dict) else None
+        predicted_n = (timings or {}).get("predicted_n")
+        if not isinstance(predicted_n, int):
+            usage = raw.get("usage") if isinstance(raw.get("usage"), dict) else {}
+            ct = usage.get("completion_tokens")
+            predicted_n = ct if isinstance(ct, int) else None
+        normalized: dict[str, Any] = {
             "content": full,
             "stop_type": stop_type,
             "truncated": bool(raw.get("truncated")),
         }
+        if isinstance(predicted_n, int):
+            normalized["timings"] = {"predicted_n": predicted_n}
         return normalized, final
 
     def _healthy(self) -> bool:
@@ -1871,9 +2039,97 @@ class LocalGGUFProposer:
         except Exception:
             return False
 
+    def server_props(self) -> dict:
+        """Read the RUNNING server's own /props. This is the only channel that reports what
+        the server was actually LAUNCHED with; every other field on this object reports what
+        we INTENDED. Returns {} when /props is unreachable or unparseable (never raises)."""
+        import json as _json
+        import urllib.request
+
+        try:
+            with urllib.request.urlopen(self._url() + "/props", timeout=3) as r:
+                raw = _json.load(r)
+        except Exception:
+            return {}
+        if not isinstance(raw, dict):
+            return {}
+        return raw
+
+    def observed_n_ctx(self) -> Optional[int]:
+        """The n_ctx the RUNNING server reports, or None if /props is unreachable.
+
+        llama.cpp reports the context pool under default_generation_settings.n_ctx; some
+        builds also surface a bare top-level n_ctx. Both are read so a build difference
+        cannot silently degrade this into 'unobservable' (which would re-open exactly the
+        declared-vs-actual gap this method exists to close)."""
+        props = self.server_props()
+        if not props:
+            return None
+        gen = props.get("default_generation_settings")
+        for candidate in (
+            (gen or {}).get("n_ctx") if isinstance(gen, dict) else None,
+            props.get("n_ctx"),
+        ):
+            if isinstance(candidate, int) and candidate > 0:
+                return int(candidate)
+        return None
+
+    def observed_total_slots(self) -> Optional[int]:
+        props = self.server_props()
+        slots = props.get("total_slots") if props else None
+        return int(slots) if isinstance(slots, int) and slots > 0 else None
+
+    def _reusable(self) -> bool:
+        """Is an ALREADY-RUNNING server on our port usable as OUR configured generator?
+
+        THE HOLE THIS CLOSES (2026-07-27 review finding 1). `_ensure_server` used to return
+        True on a bare /health check. /health only says "a llama-server is listening"; it
+        says NOTHING about the context pool that server was launched with. So the 2026-07-27
+        n_ctx 16384 -> 81920 fix was a SILENT NO-OP against any long-lived server already on
+        the port: verified live on the dev box, port 8919 (this class's DEFAULT port) was
+        serving n_ctx=16384 from a launch the previous evening, `_ensure_server()` returned
+        True without launching anything, and `liveness_witness()` reported 81920 -- the
+        INTENDED value read off `self.n_ctx`. A run in that state self-certifies as fixed
+        while running on the faulty pool, which is the same declared-vs-actual silent
+        degradation the fix was chartered to eliminate, one layer up.
+
+        Refusing to reuse (rather than adopting the observed value) is deliberate: adopting
+        would make the process quietly run a configuration nobody asked for, and the
+        admission arithmetic (K_concurrent * (prompt + max_tokens) <= n_ctx) that the
+        shipped default was sized against would no longer hold.
+
+        A server whose /props cannot be read is reused with a WARNING record rather than
+        refused, so a llama.cpp build that does not serve /props does not brick the path."""
+        observed = self.observed_n_ctx()
+        if observed is None:
+            self.reuse_n_ctx_check = "unobserved_props_unreachable"
+            return True
+        self.observed_server_n_ctx = observed
+        if observed >= int(self.n_ctx):
+            # >= not ==: a LARGER pool than we asked for still satisfies our admission
+            # arithmetic. Only a SMALLER pool can silently truncate/500 under concurrency.
+            self.reuse_n_ctx_check = "match" if observed == int(self.n_ctx) else "larger_ok"
+            return True
+        self.reuse_n_ctx_check = f"refused_smaller_pool observed={observed} want={self.n_ctx}"
+        return False
+
     def _ensure_server(self) -> bool:
         if self._healthy():
-            return True  # reuse an already-running server (loaded model)
+            if self._reusable():
+                return True  # reuse an already-running server (loaded model)
+            # A live server on our port has a SMALLER context pool than this proposer needs.
+            # Do not adopt it and do not fight it for the port -- move to a fresh port and
+            # launch our own, so a stale/foreign server cannot silently degrade this run.
+            # Recorded on its OWN channel, NOT via _note_server_failure. A port relaunch is a
+            # configuration event, not a generator failure: routing it into n_server_failures
+            # would flip llm_on_row_valid to False for a run whose generator then worked
+            # perfectly, i.e. over-firing the very gate that has to stay trustworthy.
+            self.reuse_refusals.append(
+                f"port {self.port} already serves n_ctx={self.observed_server_n_ctx} "
+                f"< required {self.n_ctx}; relaunched on a fresh port "
+                "(reusing it would silently restore the concurrency fault)"
+            )
+            self.port = _free_port()
         path = self.model_path or _resolve_gguf(
             self.repo_substr
         )  # explicit path (Kaggle bundle) else cache
@@ -1904,8 +2160,60 @@ class LocalGGUFProposer:
         if self.extra_server_args:  # e.g. ("-fit", "off") -- see field docstring
             args += list(self.extra_server_args)
         # env=launch_env: None inherits the ambient env (legacy iGPU path); a dict pins CUDA_VISIBLE_DEVICES.
+        #
+        # STDERR IS CAPTURED TO A FILE, NOT DISCARDED (2026-07-27). It used to go to DEVNULL, and
+        # that single choice is why the K>=2 concurrency fault stayed invisible for months: the
+        # server DIAGNOSES itself on stderr and we threw the diagnosis away.
+        #
+        # WHAT WE WERE DISCARDING, concretely. llama.cpp's decode-failure handler
+        # (tools/server/server-context.cpp:3200-3230) does NOT raise -- it checks the RETURN CODE of
+        # llama_decode() and logs `SRV_ERR("%s i = %d, n_batch = %d, ret = %d")`. That `ret` is the
+        # discriminator between our failure modes and nothing else distinguishes them:
+        #     ret == 1  -> "Context size has been exceeded."  (mode A: pool exhaustion, survivable)
+        #     ret == -1 -> "Invalid input batch."
+        #     ret <  -1 -> "Compute error."
+        #     ret == 2  -> explicitly UNHANDLED upstream (`// TODO: handle ret == 2 (abort)`)
+        # A hard GGML_ASSERT abort (mode B, the server DIES) also prints only to stderr. So with
+        # DEVNULL, mode A and mode B are indistinguishable from the client -- which is exactly the
+        # state the 2026-07-27 review left open ("Mode B is UNRESOLVED at 81920; needs the server's
+        # stderr captured").
+        #
+        # Note also that the graceful path is a DIFFERENT site: the per-request admission check at
+        # :2704-2712 sends a 400 ("try increasing it") BEFORE decoding. It is per-request, so it
+        # cannot catch the aggregate case where K requests each fit but jointly exhaust the shared
+        # kv_unified pool -- that only fails later inside llama_decode, as a 500. Concurrency
+        # escapes the graceful path by construction, and the 500 handler then errors EVERY
+        # processing slot (`for (auto & slot : slots) ... send_error`), which is why we measure
+        # 2/2 at K=2 and 4/4 at K=4 rather than a single victim.
+        #
+        # A FILE, NOT A PIPE, DELIBERATELY. subprocess.PIPE with no reader deadlocks the server the
+        # moment the OS pipe buffer fills (~64KB) -- llama-server is chatty enough to hit that
+        # during a long run, and the hang would look exactly like the fault we are diagnosing.
+        # Writing to a file has no such backpressure. Best-effort: if the log cannot be opened we
+        # fall back to DEVNULL rather than failing the launch, because losing diagnostics must
+        # never cost us the generator itself.
+        # Local imports: this module has NO module-level `import os` (every user imports it inside
+        # its own function) and no `tempfile` at all. Ruff passed on the module-attribute version
+        # anyway -- a green lint is not evidence the code runs, so this is imported where it is used
+        # and the path below is exercised by a real test rather than trusted.
+        import os
+        import tempfile
+
+        self._stderr_log_path = None
+        _err_sink = subprocess.DEVNULL
+        try:
+            log_dir = (
+                Path(os.environ.get("CARNOT_ARC_SERVER_LOG_DIR", tempfile.gettempdir()))
+                / "carnot_llama_server_logs"
+            )
+            log_dir.mkdir(parents=True, exist_ok=True)
+            self._stderr_log_path = log_dir / f"llama_server_p{self.port}_{int(time.time())}.log"
+            _err_sink = open(self._stderr_log_path, "ab", buffering=0)  # noqa: SIM115
+        except OSError:
+            self._stderr_log_path = None
+            _err_sink = subprocess.DEVNULL
         self._proc = subprocess.Popen(
-            args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=launch_env
+            args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
         )
         load_wait_attempts = max(90, int(self.timeout / 2))  # large full-precision models (e.g.
         # a 62GB BF16 GGUF) can take far longer than the 180s the fixed 90-attempt budget allows
@@ -2097,7 +2405,18 @@ class LocalGGUFProposer:
             return False, msg
         self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
         self.n_completion_ok += 1
-        return True, str(_response.get("content", ""))
+        _content = str(_response.get("content", ""))
+        if not _content.strip():
+            # HTTP 200 WITH NOTHING IN IT. `n_completion_ok` deliberately still counts this --
+            # it is a liveness fact (the server answered), and conflating "answered emptily" with
+            # "did not answer" is the exact confusion the server/content split exists to prevent.
+            # But counting it ONLY as a success would make `responses > 0` read as evidence of
+            # usable output when there was none, so it is ALSO recorded as a content failure.
+            # Found 2026-07-27 (adversarial review): before this, an alive server returning empty
+            # strings for every call produced calls=N / responses=N / errors=0 / content_failures=0
+            # -- a perfectly healthy-looking witness for a run that induced nothing.
+            self.n_content_failures += 1
+        return True, _content
 
     def _gen_to_file(
         self, game: str, prompt: str, *, codeonly_eligible: bool = False

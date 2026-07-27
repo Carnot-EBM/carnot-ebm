@@ -240,6 +240,31 @@ def arm_summary(cells: dict[str, dict]) -> dict:
         for d in w.get("generator_server_failure_diagnostics") or []:
             diags.append(str(d)[:300])
     missing_witness = [s for s in sigs if not cells[s].get("liveness_witness")]
+
+    # ERROR CLASS MATTERS, and a bare error COUNT hides it. Two distinct failures appear in
+    # these arms and they have opposite readings:
+    #   CONTEXT_EXCEEDED   -- the server's own body "Context size has been exceeded.": THE
+    #                         concurrency fault under test (pool exhaustion at K x (prompt +
+    #                         max_tokens) > n_ctx). Eliminating this is what the fix is for.
+    #   REMOTE_DISCONNECTED -- the server closed the connection, i.e. the process went away.
+    #                         A SEPARATE fault (the investigation explicitly separated "the
+    #                         server survives the overflow" from whatever kills it), and in
+    #                         this session it is confounded with an external killer that also
+    #                         SIGTERMed two of my own harness processes. Raising n_ctx is not
+    #                         expected to remove it and did not.
+    # Reporting only the sum would let "the fixed arm still had 16 errors" read as "the fix
+    # did not work", when none of those 16 was the fault the fix targets.
+    err_classes: dict[str, int] = {}
+    for text in diags:
+        if "Context size has been exceeded" in text:
+            key = "CONTEXT_EXCEEDED"
+        elif "RemoteDisconnected" in text:
+            key = "REMOTE_DISCONNECTED"
+        elif "timed out" in text.lower():
+            key = "TIMEOUT"
+        else:
+            key = "OTHER"
+        err_classes[key] = err_classes.get(key, 0) + 1
     return {
         "n_cells": len(sigs),
         "n_first_win": len(wins),
@@ -320,6 +345,9 @@ def arm_summary(cells: dict[str, dict]) -> dict:
             "response_rate": round(resp / calls, 6) if calls else None,
             "generator_n_ctx_observed": n_ctx_vals,
             "n_server_failure_diagnostics": len(diags),
+            "server_failure_classes": err_classes,
+            "n_context_exceeded_THE_FAULT": err_classes.get("CONTEXT_EXCEEDED", 0),
+            "n_remote_disconnected_SEPARATE_FAULT": err_classes.get("REMOTE_DISCONNECTED", 0),
             "server_failure_diagnostics_sample": diags[:6],
             "induction_attempts_total": sum(int(w.get("induction_attempts_n") or 0) for w in lw),
             "induction_attempts_planned_total": sum(
@@ -456,8 +484,51 @@ def main() -> int:
                 "n_lost": sum(1 for s in shared if not merged[s].get("first_win")),
                 "held_cells": [s for s in shared if merged[s].get("first_win")],
                 "lost_cells": [s for s in shared if not merged[s].get("first_win")],
+                # PER-HELD-CELL LIVENESS (review finding 9). One of the 7 "held" cells in the
+                # fixed condition ran with generator_healthy_after=False. Citing a held cell
+                # as evidence about the generator, when that cell's own witness says the
+                # generator was dead, is the dead-channel reading this measurement exists to
+                # refuse -- so the health of each cited cell travels WITH the citation rather
+                # than living in a separate arm-level roll-up a reader has to go and find.
+                "held_cells_liveness": {
+                    s: {
+                        "generator_healthy_after": (merged[s].get("liveness_witness") or {}).get(
+                            "generator_healthy_after"
+                        ),
+                        "llm_on_row_valid": (merged[s].get("liveness_witness") or {}).get(
+                            "llm_on_row_valid"
+                        ),
+                        "llm": (merged[s].get("liveness_witness") or {}).get("llm"),
+                        "induction_attempts_planned": (merged[s].get("liveness_witness") or {}).get(
+                            "induction_attempts_planned"
+                        ),
+                    }
+                    for s in shared
+                    if merged[s].get("first_win")
+                },
+                "n_held_cells_with_unhealthy_generator": sum(
+                    1
+                    for s in shared
+                    if merged[s].get("first_win")
+                    and (merged[s].get("liveness_witness") or {}).get("generator_healthy_after")
+                    is False
+                ),
                 "control_won_cells_not_measured_in_this_condition": sorted(winners - set(merged)),
             }
+        probe["_what_this_probe_IS"] = (
+            "A NEGATIVE CONTROL FOR HARNESS STABILITY -- not a directional check on the "
+            "generator. Corrected 2026-07-27 (adversarial review finding 10). It was reported "
+            "as the falsifiable complement to the underpowered slice: 'fixed 7/7 held, faulty "
+            "7/7 held, with identical actions_to_first_levelup'. But that identity of action "
+            "counts is the SIGNATURE OF THE SEVERED PATH -- induction_attempts_planned is 0 on "
+            "every cell, so both LLM arms ARE the control agent and 7/7 could not have failed "
+            "for any generator-related reason. A check that cannot fail on the variable under "
+            "test is not a check on that variable. What it DOES validly show: running the "
+            "agent under a live generator at K=4 does not perturb the trajectories the control "
+            "produced -- real, and worth having, but a statement about the harness. Its "
+            "falsifiability as a generator check is restorable only once "
+            "treatment_application[...].treatment_was_applied is True."
+        )
         probe["_selection_bias_note"] = (
             "Cells here were selected BECAUSE the control won them. That biases any rate "
             "computed on them toward showing a loss, so no rate or p-value is reported for "
@@ -465,6 +536,192 @@ def main() -> int:
             "comparison is the pre-specified variant-1 slice in `comparisons`."
         )
         probe["_control_win_set"] = sorted(winners)
+
+    # ------------------------------------------------------------------ TREATMENT WITNESS
+    # THE FATAL FINDING of the 2026-07-27 adversarial review, computed rather than asserted.
+    #
+    # Every LLM-on arm turned out to be BIT-IDENTICAL to its matched llm_off control on
+    # first_win, actions, reached_level AND actions_to_first_levelup. The cause is one field:
+    # `induction_attempts_planned` is 0 in every row, i.e. the generator answered and its
+    # induced world model was then rejected by a POST-generation trust gate before any plan
+    # could be installed. With the generator's output discarded on every cell, the LLM arms
+    # ARE the control -- so delta=0, p=1.0 and CI [0,0] are arithmetic identities, not
+    # measurements, and no generator state (fixed, faulty or absent) could have moved them.
+    #
+    # This block is the OUTCOME-LEVEL sensitivity witness the review asked for: it states, at
+    # the aggregation level the headline is computed on, whether the pass region for a
+    # non-zero delta was reachable at all. `treatment_was_applied` False means the comparison
+    # is UNFALSIFIABLE, not underpowered -- more cells would give exactly 0 forever.
+    treatment = {}
+    ctrl_cells = by_arm.get("llm_off") or {}
+    for arm, cells in sorted(by_arm.items()):
+        if arm == "llm_off":
+            continue
+        lw = [c.get("liveness_witness") or {} for c in cells.values()]
+        planned = sum(int(w.get("induction_attempts_planned") or 0) for w in lw)
+        matched = sorted(set(cells) & set(ctrl_cells))
+        fields = ("first_win", "actions", "reached_level", "actions_to_first_levelup")
+        diffs = {
+            f: sum(1 for s in matched if cells[s].get(f) != ctrl_cells[s].get(f)) for f in fields
+        }
+        # The gate margins, when the row carries them (added to the witness 2026-07-27). This
+        # answers "how far below threshold was it" -- the difference between a gate that a
+        # threshold tweak could unblock and one that no tweak could.
+        margins = []
+        for w in lw:
+            for a in w.get("induction_attempt_gate_diagnostics") or []:
+                margins.append(a)
+
+        # `rows=margins` binds the loop variable at definition time. Without it ruff's B023
+        # fires and, worse, every arm's closure would read whatever `margins` happened to
+        # hold when the dict was finally evaluated -- a real late-binding bug, not a style
+        # nit, since this closure is called inside the per-arm dict literal below.
+        def _vals(key, rows=margins):
+            v = [
+                a[key]
+                for a in rows
+                if isinstance(a.get(key), (int, float)) and not isinstance(a.get(key), bool)
+            ]
+            return {"n": len(v), "min": min(v), "max": max(v)} if v else {"n": 0}
+
+        treatment[arm] = {
+            "n_cells": len(cells),
+            "induction_attempts_planned_total": planned,
+            "treatment_was_applied": planned > 0,
+            "n_matched_against_control": len(matched),
+            "n_cells_differing_from_matched_control": diffs,
+            "arm_is_bit_identical_to_control": all(v == 0 for v in diffs.values()),
+            "gate_margins_recorded": len(margins),
+            # BOTH GATE BRANCHES. The non-hidden-state branch records verify_accuracy /
+            # verify_cell_recall; the HIDDEN_STATE_GAME_IDS branch records trust_energy /
+            # heldout_accuracy and IGNORES CARNOT_ARC_TRUST_METRIC entirely. Reporting only
+            # the first would leave the 11 hidden-state cells looking uninstrumented -- a
+            # dead channel reading as a clean null.
+            "verify_accuracy_over_attempts": _vals("verify_accuracy"),
+            "verify_cell_recall_over_attempts": _vals("verify_cell_recall"),
+            "trust_energy_over_attempts": _vals("trust_energy"),
+            "heldout_accuracy_over_attempts": _vals("heldout_accuracy"),
+            "heldout_change_consistency_over_attempts": _vals("heldout_change_consistency"),
+            "n_attempts_with_no_recorded_margin": sum(
+                1
+                for a in margins
+                if not any(
+                    isinstance(a.get(k), (int, float))
+                    for k in (
+                        "verify_accuracy",
+                        "verify_cell_recall",
+                        "trust_energy",
+                        "heldout_accuracy",
+                    )
+                )
+            ),
+            "trust_metric_values": sorted(
+                {str(a.get("trust_metric")) for a in margins if a.get("trust_metric")}
+            ),
+        }
+    # THE CROSS-METRIC WITNESS. The trust gate compares ONE of two numbers to 0.5 depending
+    # on CARNOT_ARC_TRUST_METRIC. Recording both per attempt makes visible a case the skip
+    # REASON string cannot express: an attempt whose accuracy CLEARS the threshold but whose
+    # cell_recall does not (lp85: accuracy 0.92, cell_recall 0.0). Under the shipped 'exact'
+    # default that attempt passes; under the 'cell_recall' lever it is gated out. So the
+    # lever documented as loosening the gate is STRICTER on this corpus, and any claim that
+    # "no configuration reaches planned > 0" must be scoped to the configurations actually
+    # run rather than generalised.
+    disagreements = []
+    for arm, cells in sorted(by_arm.items()):
+        for sig, c in sorted(cells.items()):
+            for a in (c.get("liveness_witness") or {}).get(
+                "induction_attempt_gate_diagnostics"
+            ) or []:
+                acc, cr = a.get("verify_accuracy"), a.get("verify_cell_recall")
+                if not (isinstance(acc, (int, float)) and isinstance(cr, (int, float))):
+                    continue
+                if (acc >= 0.5) != (cr >= 0.5):
+                    disagreements.append(
+                        {
+                            "arm": arm,
+                            "cell": sig,
+                            "verify_accuracy": acc,
+                            "verify_cell_recall": cr,
+                            "gating_metric_used": a.get("trust_metric"),
+                            "skipped": a.get("skipped"),
+                            "planned": a.get("planned"),
+                            "would_pass_under_exact": acc >= 0.5,
+                            "would_pass_under_cell_recall": cr >= 0.5,
+                        }
+                    )
+    treatment["_metric_disagreements_at_the_0_5_threshold"] = disagreements
+    # WHERE ALONG THE PIPELINE DID EACH ATTEMPT DIE? The skip-reason histogram alone reads as
+    # "the trust gate rejects everything", but the gate margins show that is not uniformly
+    # true: on the shipped 'exact' metric, attempts with verify_accuracy of 0.92-0.96 CLEAR
+    # the 0.5 trust threshold and then die further downstream at
+    # `no_reachable_plan_after_refinement`. Naming the STAGE matters because the fix differs:
+    # a trust-gate rejection is an induction-quality problem, while a
+    # no-reachable-plan rejection is a goal/planning problem on a world model the system
+    # already trusted.
+    stages = {
+        "proposer_failed": "1_generation",
+        "proposer_failed_or_missing_root": "1_generation",
+        "exception": "1_generation",
+        "world_model_accuracy_below_threshold": "2_dynamics_trust_gate",
+        "hidden_state_trust_below_threshold": "2_dynamics_trust_gate_hidden_state",
+        "no_reachable_plan_after_refinement": "3_goal_reachability_AFTER_trust_passed",
+        "goal_predicate_unsatisfiable": "3_goal_reachability_AFTER_trust_passed",
+    }
+    stage_hist: dict = {}
+    cleared_trust: list = []
+    for arm, cells in sorted(by_arm.items()):
+        for sig, c in sorted(cells.items()):
+            for a in (c.get("liveness_witness") or {}).get(
+                "induction_attempt_gate_diagnostics"
+            ) or []:
+                stage = stages.get(str(a.get("skipped")), "0_unclassified_or_not_skipped")
+                stage_hist.setdefault(arm, {}).setdefault(stage, 0)
+                stage_hist[arm][stage] += 1
+                if stage.startswith("3_"):
+                    cleared_trust.append(
+                        {
+                            "arm": arm,
+                            "cell": sig,
+                            "verify_accuracy": a.get("verify_accuracy"),
+                            "verify_cell_recall": a.get("verify_cell_recall"),
+                            "trust_metric": a.get("trust_metric"),
+                            "died_at": a.get("skipped"),
+                        }
+                    )
+    treatment["_where_each_attempt_died_by_stage"] = stage_hist
+    treatment["_attempts_that_CLEARED_the_trust_gate_and_died_later"] = cleared_trust
+    treatment["_gate_threshold"] = 0.5
+    treatment["_what_this_means"] = (
+        "treatment_was_applied is False for every arm whose induction_attempts_planned_total "
+        "is 0: the LLM tier answered but its output never reached the policy, so that arm is "
+        "the control agent under a different label. Any delta, p-value or CI computed between "
+        "two such arms is an identity. The correct stamp is UNFALSIFIABLE (the pass region for "
+        "a non-zero delta is EMPTY), not 'underpowered' (which invites running more cells, and "
+        "more cells of an identity give exactly 0 forever)."
+    )
+
+    # ---------------------------------------------------- FIXED-CONDITION LIVENESS ROLL-UP
+    # Review finding 9: `n_server_errors_fix == 0` was computed over the 25-cell llm_on_fix
+    # arm ALONE while the report's directional claim leans on llm_on_fix_probe, which carries
+    # 16 server errors and 2 generator_healthy_after=False cells. A witness must sit at the
+    # aggregation level of the claim it supports, so the fixed condition is rolled up across
+    # EVERY arm that ran at n_ctx=81920, not just the slice.
+    fixed_arms = [a for a in by_arm if a.startswith("llm_on_fix")]
+    fx_lw = [c.get("liveness_witness") or {} for a in fixed_arms for c in by_arm[a].values()]
+    fixed_rollup = {
+        "arms_included": sorted(fixed_arms),
+        "n_cells": len(fx_lw),
+        "n_server_errors": sum(int((w.get("llm") or {}).get("errors") or 0) for w in fx_lw),
+        "n_dead_generator_cells": sum(
+            1 for w in fx_lw if w.get("generator_healthy_after") is False
+        ),
+        "n_rows_llm_on_row_valid": sum(1 for w in fx_lw if w.get("llm_on_row_valid")),
+        "scope_note": (
+            "THE HONEST SCOPE of 'the fixed arm was server-error free'. It is true of the "
+            "25-cell llm_on_fix slice and FALSE of the fixed condition as a whole."
+        ),
+    }
 
     runs = {}
     for f in sorted(OUT.glob("run_*.json")):
@@ -481,6 +738,8 @@ def main() -> int:
         "arms": arms,
         "comparisons": comparisons,
         "control_winner_probe": probe,
+        "treatment_application": treatment,
+        "fixed_condition_liveness_rollup": fixed_rollup,
         "runs": runs,
         "measurement_wall_s": round(
             sum(a["measurement_wall_s_from_rows"] for a in arms.values()), 2

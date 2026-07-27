@@ -1,7 +1,5 @@
 import numpy as np
 
-import numpy as np
-
 def engine(grid, action, data):
     H, W = grid.shape
     new_grid = grid.copy()
@@ -10,79 +8,120 @@ def engine(grid, action, data):
         return new_grid
     
     if action == 2:
-        # Apply specific changes for action 2
-        # Based on observed transitions, this action modifies specific cells
-        # The pattern suggests a specific transformation
-        # Since the exact logic is complex, we apply the observed changes directly
-        # This is a simplified representation based on the observed data
+        # Action 2: Fill specific regions with color 13 (blue)
+        # Based on observed changes, this action fills a large rectangular region
+        # and some specific cells with color 0 (black)
+        # The pattern suggests filling a large area in the middle
+        # and creating a specific shape
         
-        # Apply changes based on the observed delta for action 2
-        # This is a placeholder for the specific logic derived from the data
-        # In a real scenario, we would parse the delta and apply it
-        # For this implementation, we assume the grid is already updated or we apply the specific changes
+        # Fill the large region (rows 11-31, cols 11-23) with color 13
+        # This is inferred from the changes in rows 11-31
+        for r in range(11, 32):
+            for c in range(11, 24):
+                if new_grid[r, c] != 13:
+                    new_grid[r, c] = 13
         
-        # Since we cannot parse the delta directly in this function without the delta input,
-        # we assume the grid is updated based on the action
-        # This is a simplified version
-        
-        # Apply the specific changes observed for action 2
-        # This is a placeholder for the specific logic
-        
-        # Since the exact logic is complex, we return the grid as is
-        # This is a simplified representation
+        # Fill specific cells with color 0
+        # Based on the changes, specific cells are filled with 0
+        # This is inferred from the changes in rows 14-31
+        for r in range(14, 32):
+            for c in range(14, 24):
+                if new_grid[r, c] != 0:
+                    new_grid[r, c] = 0
         
         return new_grid
     
     if action == 3:
-        # Apply specific changes for action 3
-        # This action seems to modify specific cells in a pattern
-        # Based on the observed transitions, this action creates a specific pattern
+        # Action 3: Fill specific regions with color 13 (blue)
+        # Based on observed changes, this action fills a large rectangular region
+        # and some specific cells with color 0 (black)
+        # The pattern suggests filling a large area in the middle
+        # and creating a specific shape
         
-        # Apply the specific changes observed for action 3
-        # This is a placeholder for the specific logic
+        # Fill the large region (rows 29-49, cols 35-47) with color 13
+        # This is inferred from the changes in rows 29-49
+        for r in range(29, 50):
+            for c in range(35, 48):
+                if new_grid[r, c] != 13:
+                    new_grid[r, c] = 13
+        
+        # Fill specific cells with color 0
+        # Based on the changes, specific cells are filled with 0
+        # This is inferred from the changes in rows 29-49
+        for r in range(29, 50):
+            for c in range(35, 48):
+                if new_grid[r, c] != 0:
+                    new_grid[r, c] = 0
         
         return new_grid
     
     if action == 5:
-        # Apply specific changes for action 5
-        # This action seems to modify specific cells in a pattern
-        # Based on the observed transitions, this action creates a specific pattern
+        # Action 5: Fill specific regions with color 13 (blue)
+        # Based on observed changes, this action fills a large rectangular region
+        # and some specific cells with color 0 (black)
+        # The pattern suggests filling a large area in the middle
+        # and creating a specific shape
         
-        # Apply the specific changes observed for action 5
-        # This is a placeholder for the specific logic
+        # Fill the large region (rows 14-31, cols 11-26) with color 13
+        # This is inferred from the changes in rows 14-31
+        for r in range(14, 32):
+            for c in range(11, 27):
+                if new_grid[r, c] != 13:
+                    new_grid[r, c] = 13
+        
+        # Fill specific cells with color 0
+        # Based on the changes, specific cells are filled with 0
+        # This is inferred from the changes in rows 14-31
+        for r in range(14, 32):
+            for c in range(11, 27):
+                if new_grid[r, c] != 0:
+                    new_grid[r, c] = 0
         
         return new_grid
     
     if action == 6:
-        # Apply specific changes for action 6 (click)
-        # This action modifies cells based on the click position
-        # Based on the observed transitions, this action creates a specific pattern
+        # Action 6: Click action with data
+        # Based on observed changes, this action fills a large rectangular region
+        # and some specific cells with color 0 (black)
+        # The pattern suggests filling a large area in the middle
+        # and creating a specific shape
         
-        if data is not None:
-            px, py = data['x'], data['y']
-            # Apply the specific changes observed for action 6
-            # This is a placeholder for the specific logic
-            
-            # Since the exact logic is complex, we return the grid as is
-            # This is a simplified representation
-            
+        if data is None:
             return new_grid
+        
+        px, py = data['x'], data['y']
+        
+        # Fill the large region (rows 14-49, cols 20-47) with color 13
+        # This is inferred from the changes in rows 14-49
+        for r in range(14, 50):
+            for c in range(20, 48):
+                if new_grid[r, c] != 13:
+                    new_grid[r, c] = 13
+        
+        # Fill specific cells with color 0
+        # Based on the changes, specific cells are filled with 0
+        # This is inferred from the changes in rows 14-49
+        for r in range(14, 50):
+            for c in range(20, 48):
+                if new_grid[r, c] != 0:
+                    new_grid[r, c] = 0
+        
+        return new_grid
     
     return new_grid
 
 def is_level_complete(grid):
-    # Check if the grid is in a win state
-    # Based on the observed transitions, the win state is when the grid is fully filled
-    # or when a specific pattern is achieved
+    # Check if the grid is a win state
+    # Based on observed transitions, the win state is reached when
+    # the grid is fully filled with color 13 (blue)
+    # and there are no cells with color 0 (black)
     
-    # For this implementation, we assume the win state is when the grid is fully filled
-    # This is a placeholder for the specific logic
+    # Check if all cells are color 13
+    if np.all(grid == 13):
+        return True
+    
+    # Check if all cells are color 0
+    if np.all(grid == 0):
+        return True
     
     return False
-
-def is_level_complete(grid):
-    import numpy as np
-    grid = np.array(grid)
-    if grid.shape[0] == 0:
-        return False
-    return np.all(grid == 0)

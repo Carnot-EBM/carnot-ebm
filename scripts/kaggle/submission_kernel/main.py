@@ -79,7 +79,11 @@ os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = "1"
 # silently degraded to the CPU graph-explore cascade (env vars were set inside `if server and gguf:`
 # with no else, and the agent launches llama-server with stderr=DEVNULL). Make it self-reporting in the
 # eval log so the operator can grep "LLM GENERATOR HEALTHY/FAILED" on the next run. We do NOT change the
-# operator-frozen stack (MTP stays on); the probe tests the REAL config and only RECOMMENDS MTP=0 on OOM.
+# operator-frozen stack; the probe tests the REAL config the agent will run.
+# (STALE COMMENT CORRECTED 2026-07-27: this said "MTP stays on ... only RECOMMENDS MTP=0 on OOM",
+# but the line ~20 below unconditionally sets CARNOT_ARC_MTP=0, and has since 2026-06-21. The probe
+# reads `_mtp` from that env var, so it does test the real config -- the comment describing the
+# config was simply describing the wrong one, directly above the line that sets it.)
 server = next(iter(inp.rglob("llama-server")), None)
 # match the Qwen GGUF by name so an order-undefined rglob can't bind a stale/second .gguf
 _ggufs = [g for g in inp.rglob("*.gguf") if ("Qwen3.5-9B" in g.name or "Q4_K_M" in g.name)] or list(inp.rglob("*.gguf"))
@@ -99,6 +103,15 @@ if server and gguf:
     # throughput gain on this GPU (probe: 27.5 vs 25.3 tok/s, MTP-off slightly FASTER). Disable it to
     # free ~5.8GB of VRAM for KV headroom. Speculative decoding is exact, so output quality is
     # unchanged. (The frozen stack's MTP speedup was validated on the iGPU, not the P100.)
+    #
+    # NOTE FOR ANYONE READING THE VRAM ENVELOPE: because MTP is OFF here, the published envelope
+    # (`MiB = 10547 + 0.02519*n_ctx + 206.83*slots`, exp5866) does NOT describe this launch -- it
+    # was fit with `--spec-type draft-mtp` ON and over-predicts the scored footprint by ~6.1 GB.
+    # Directly measured mtp-OFF per-PID residency on an RTX 3090 (2026-07-27): 5950 MiB at
+    # n_ctx=16384, 7380 MiB at n_ctx=81920, i.e. the n_ctx fix costs ~1430 MiB here, not the
+    # ~1668 MiB the mtp-on envelope predicts. Peak residency with 4 concurrent full-budget
+    # requests in flight equalled idle residency to the MiB, because llama.cpp preallocates the
+    # whole `-c` pool at load.
     os.environ["CARNOT_ARC_MTP"] = "0"
     _mtp = os.environ.get("CARNOT_ARC_MTP", "1") != "0"
     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
@@ -106,11 +119,27 @@ if server and gguf:
     # hardcoded strings; if the agent's own default had moved, the probe would have validated
     # a configuration the agent never used -- and validated it as HEALTHY. That is the
     # measure-one-thing-ship-another shape of the 0.08 incident, in the diagnostic itself.
-    from carnot.agentic.arc_executable_world_model import _default_induce_n_ctx
+    from carnot.agentic.arc_executable_world_model import (
+        _INDUCE_WORST_CASE_PROMPT_TOKENS,
+        _LLAMA_SERVER_DEFAULT_SLOTS,
+        _default_induce_n_ctx,
+    )
     _ctx = str(_default_induce_n_ctx())
     _maxtok = int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096"))
+    # WHAT THE SCORED RUN ACTUALLY GETS. machine_shape in kernel-metadata.json is a free-form
+    # string kagglesdk cannot validate locally (kaggle_api_extended.py:4648 says the allowed
+    # names live in an enum not shipped with the SDK), and the only nvidia-smi read this project
+    # holds is a P100 16GB from a DIFFERENT kernel. So print it: one line here finally settles
+    # what "NvidiaL4" delivers, instead of another round of inferring it.
+    try:
+        _smi = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total,memory.free",
+                               "--format=csv,noheader"], capture_output=True, text=True, timeout=20)
+        print(f"LLM GPU HARDWARE: {_smi.stdout.strip() or _smi.stderr.strip()!r}", flush=True)
+    except Exception as _se:
+        print(f"LLM GPU HARDWARE: unavailable ({_se!r})", flush=True)
     print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx={_ctx} "
-          f"max_tokens={_maxtok} kv=q8_0", flush=True)
+          f"max_tokens={_maxtok} slots_expected={_LLAMA_SERVER_DEFAULT_SLOTS} "
+          f"worst_prompt_tokens={_INDUCE_WORST_CASE_PROMPT_TOKENS} kv=q8_0", flush=True)
     # one-shot health probe: spawn the generator with the SAME args the agent uses and confirm it
     # actually LOADS on this GPU (stderr CAPTURED, not swallowed like the agent's DEVNULL launch),
     # then free the port. Wrapped so a probe failure can NEVER crash the agent / zero the submission.
@@ -135,55 +164,145 @@ if server and gguf:
                         _ok = True; break
             except Exception:
                 time.sleep(2)
-        # CONCURRENCY PROBE (2026-07-27). The old probe only checked /health, i.e. concurrency 1
-        # -- the exact blind spot that hid the context-pool-exhaustion fault for the whole life
-        # of this submission. swarm.py starts ONE THREAD PER GAME with no pool, so induce
-        # requests arrive together; measured, the fault fires at K=2 (not 4), returning HTTP 500
-        # "Context size has been exceeded." within ~5s -- and in one shape it aborts the server
-        # outright. So probe with TWO CONCURRENT requests at the REAL shipped shape: a
-        # worst-case-sized prompt plus n_predict = the agent's own max_tokens, because it is
-        # (prompt + n_predict) x K that has to fit in the shared pool. A `stop` on a newline
-        # keeps the PASSING case fast without touching the admission arithmetic (llama.cpp
-        # admits or refuses on the reserved budget, before generating -- which is why the
-        # FAILING case returns in seconds).
+        # CONCURRENCY PROBE (2026-07-27, HARDENED after adversarial review the same day).
+        # The pre-2026-07-27 probe only checked /health, i.e. concurrency 1 -- the exact blind
+        # spot that hid the context-pool-exhaustion fault for the whole life of this submission.
+        # swarm.py starts ONE THREAD PER GAME with no pool, so induce requests arrive together
+        # and llama.cpp serves its own slot count concurrently, queueing the rest.
+        #
+        # THE FIRST HARDENED VERSION WAS STILL WRONG IN TWO WAYS, both measured:
+        #   1. IT PROBED K=2 WHILE DEFENDING K=4. Admission needs n_ctx >= K*(prompt+n_predict).
+        #      Its own synthetic prompt measures 17238 tokens through the model's tokenizer, so
+        #      K=2 needs 42668 cells (passes at 81920) but K=4 needs 85336 (FAILS at 81920).
+        #      Directly measured on an RTX 3090: 4/4 HTTP 500 "Context size has been exceeded",
+        #      per-slot n_tokens 20469..20493 at release == exactly 81920/4. The probe would
+        #      have printed "LLM CONCURRENCY OK" for a configuration that fails at the K the
+        #      eval actually produces. Probe at the SLOT COUNT, read from the module that sizes
+        #      the pool, so the two cannot disagree.
+        #   2. IT WAS HTTP-STATUS-ONLY. That is exactly the gate shape the fix investigation's
+        #      own load-bearing result says would have shipped the bug: `--parallel 1` passes an
+        #      HTTP gate 4/4 at LOWER VRAM while generating 648/650/184/648 tokens against a
+        #      4096 budget -- mode C, silent truncation, the defect under investigation. A
+        #      `stop` on a newline made this strictly worse by halting generation after ~1
+        #      token, so the probe could not have observed truncation even if it had looked.
+        #      So: no stop sequence, READ the body, and compare tokens_predicted to n_predict.
+        # The prompt is built to the SAME measured worst-case token count the pool is sized for
+        # (_INDUCE_WORST_CASE_PROMPT_TOKENS), trimmed against the server's OWN /tokenize rather
+        # than eyeballed -- a probe prompt bigger than the pool admits tests the wrong thing.
         _conc = "not_probed"
         if _ok:
             try:
                 import json as _json
                 from concurrent.futures import ThreadPoolExecutor as _TPE
-                # ~15.7k tokens of digit-dense grid text: the measured worst case for the real
-                # induce prompt (a 64x64 logical grid, the largest in the solve registry).
-                _big = ("Row: " + " ".join("1234567890" for _ in range(60)) + "\n") * 26
+
+                _K = int(_LLAMA_SERVER_DEFAULT_SLOTS)
+
+                def _ntok(_text):
+                    _r = urllib.request.Request(
+                        f"http://127.0.0.1:{_pp}/tokenize",
+                        data=_json.dumps({"content": _text}).encode(),
+                        headers={"Content-Type": "application/json"})
+                    with urllib.request.urlopen(_r, timeout=120) as _resp:
+                        return len(_json.load(_resp).get("tokens") or [])
+
+                # READ total_slots + the pool size from the server itself. The scored run uses a
+                # DIFFERENT bundled binary from this repo's local build; if its no---parallel
+                # default is not 4, the pool is mis-sized and every number above is wrong.
+                _slots = _props_ctx = None
+                try:
+                    with urllib.request.urlopen(f"http://127.0.0.1:{_pp}/props", timeout=30) as _r:
+                        _props = _json.load(_r)
+                    _slots = _props.get("total_slots")
+                    _props_ctx = (_props.get("default_generation_settings") or {}).get("n_ctx")
+                except Exception as _pe:
+                    print(f"LLM PROPS READ FAILED (non-fatal): {_pe!r}", flush=True)
+                print(f"LLM SERVER PROPS: total_slots={_slots} n_ctx={_props_ctx} "
+                      f"(expected slots={_K} n_ctx={_ctx})", flush=True)
+                if _slots is not None and int(_slots) != _K:
+                    print(f"LLM SLOT COUNT MISMATCH: server reports total_slots={_slots} but the "
+                          f"pool was sized for {_K}. The admission arithmetic "
+                          f"n_ctx >= K*(prompt+n_predict) is sized for the WRONG K -- induction "
+                          f"will refuse or silently truncate. Operator: set CARNOT_ARC_INDUCE_N_CTX "
+                          f">= {_slots} x ({_INDUCE_WORST_CASE_PROMPT_TOKENS} + {_maxtok}).",
+                          flush=True)
+                    _K = int(_slots)  # probe what this binary will ACTUALLY run concurrently
+
+                # Build a prompt at the measured worst-case size, verified by /tokenize.
+                _row = "Row: " + " ".join("1234567890" for _ in range(60)) + "\n"
+                _big = _row * 26
+                try:
+                    _t = _ntok(_big)
+                    while _t > _INDUCE_WORST_CASE_PROMPT_TOKENS and len(_big) > len(_row):
+                        _big = _big[: -len(_row)]
+                        _t = _ntok(_big)
+                    _ptok = _t
+                except Exception as _te:
+                    _ptok = None
+                    print(f"LLM TOKENIZE READ FAILED (non-fatal, probing untrimmed prompt): "
+                          f"{_te!r}", flush=True)
                 _body = _json.dumps({"prompt": _big, "n_predict": _maxtok,
-                                     "temperature": 0.3, "cache_prompt": True,
-                                     "stop": ["\n"]}).encode()
+                                     "temperature": 0.3, "cache_prompt": True}).encode()
 
                 def _one(_i):
                     _r = urllib.request.Request(f"http://127.0.0.1:{_pp}/completion", data=_body,
                                                 headers={"Content-Type": "application/json"})
                     try:
-                        with urllib.request.urlopen(_r, timeout=420) as _resp:
-                            return _resp.status
+                        with urllib.request.urlopen(_r, timeout=900) as _resp:
+                            _payload = _json.load(_resp)
+                        _tim = _payload.get("timings") or {}
+                        _gen = _tim.get("predicted_n")
+                        if not isinstance(_gen, int):
+                            _u = _payload.get("usage") or {}
+                            _gen = _u.get("completion_tokens")
+                        return {"status": _resp.status, "stop_type": _payload.get("stop_type"),
+                                "generated": _gen,
+                                "chars": len(_payload.get("content") or "")}
                     except Exception as _ex:
-                        return f"{type(_ex).__name__}:{getattr(_ex, 'code', '')}"
+                        # READ the body: the 500 says "Context size has been exceeded." and the
+                        # 400 says "...try increasing it" -- literally the fix, thrown away
+                        # unread twice before _describe_http_failure started printing it.
+                        _detail = ""
+                        try:
+                            _detail = _ex.read().decode("utf-8", "replace")[:200]
+                        except Exception:
+                            _detail = str(_ex)[:200]
+                        return {"status": f"{type(_ex).__name__}:{getattr(_ex, 'code', '')}",
+                                "body": _detail}
 
-                with _TPE(max_workers=2) as _ex2:
-                    _codes = list(_ex2.map(_one, range(2)))
+                with _TPE(max_workers=_K) as _ex2:
+                    _res = list(_ex2.map(_one, range(_K)))
+                _codes = [_r.get("status") for _r in _res]
+                # MODE C: HTTP 200 that stopped on `limit` far short of the budget we asked for.
+                # This is the failure a status-only gate cannot see, and the one that silently
+                # degrades induction quality instead of loudly refusing.
+                _trunc = [_r for _r in _res
+                          if _r.get("status") == 200 and _r.get("stop_type") == "limit"
+                          and isinstance(_r.get("generated"), int)
+                          and _r["generated"] < _maxtok - 8]
                 _alive = False
                 try:
                     with urllib.request.urlopen(f"http://127.0.0.1:{_pp}/health", timeout=5) as r:
                         _alive = r.status == 200
                 except Exception:
                     _alive = False
-                _conc = f"K2_codes={_codes} server_alive_after={_alive}"
-                if all(c == 200 for c in _codes) and _alive:
-                    print(f"LLM CONCURRENCY OK -- 2 simultaneous full-budget requests both "
-                          f"succeeded at ctx={_ctx} ({_conc})", flush=True)
+                _conc = (f"K{_K}_prompt_tokens={_ptok} results={_res} "
+                         f"pool_exhaustion_truncations={len(_trunc)} server_alive_after={_alive}")
+                if all(c == 200 for c in _codes) and _alive and not _trunc:
+                    print(f"LLM CONCURRENCY OK -- {_K} simultaneous full-budget requests all "
+                          f"succeeded at ctx={_ctx} with no pool truncation ({_conc})", flush=True)
+                elif _trunc:
+                    print(f"LLM CONCURRENCY SILENTLY TRUNCATED at ctx={_ctx}/max_tokens={_maxtok}: "
+                          f"{len(_trunc)} of {_K} requests returned HTTP 200 but stopped on "
+                          f"'limit' far short of the budget -- the prompt consumed the shared "
+                          f"pool and induction will be quietly degraded, NOT refused. This is the "
+                          f"failure an HTTP-status gate cannot see. Operator: raise "
+                          f"CARNOT_ARC_INDUCE_N_CTX (needs >= {_K} x (prompt + {_maxtok})); "
+                          f"raising max_tokens would make it WORSE. ({_conc})", flush=True)
                 else:
                     print(f"LLM CONCURRENCY FAILED at ctx={_ctx}/max_tokens={_maxtok} ({_conc}). "
                           f"The eval runs one thread per game, so induction WILL degrade "
                           f"silently. Operator: raise CARNOT_ARC_INDUCE_N_CTX (needs >= "
-                          f"4 x (prompt + {_maxtok})).", flush=True)
+                          f"{_K} x (prompt + {_maxtok})).", flush=True)
             except Exception as _ce:
                 _conc = f"probe_error:{_ce!r}"
                 print(f"LLM CONCURRENCY PROBE ERROR (non-fatal): {_ce!r}", flush=True)

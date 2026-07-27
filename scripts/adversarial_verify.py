@@ -4293,6 +4293,71 @@ def _real_field_values(value: Any, wanted_key: str) -> list[Any]:
     return values
 
 
+def _typed_field_values(value: Any, wanted_key: str, kind: str) -> list[Any]:
+    """`_real_field_values` FILTERED TO VALUES OF THE ASKED-FOR TYPE.
+
+    WHY THIS EXISTS (2026-07-27 review finding 6; QA-Layer Authenticity Discipline).
+    `_real_field_values` collects ANY value stored under the wanted key, and several callers
+    then only tested it for NON-EMPTINESS:
+
+        cost_values = _real_field_values(d, "per_node_feature_cost_ms")
+        if not cost_values: omitted.append("per_node_feature_cost_ms")
+
+    So a PROSE SENTENCE stored under that key satisfied a check that is asking for a finite
+    cost in milliseconds, and a prose sentence under `sim_timed_out` satisfied a check asking
+    for a boolean. This was found the hard way: a first draft of the 2026-07-27 first-win
+    artifact wrote exactly those two key names with explanatory prose as their values, and
+    the WARN CLEARED -- adversarial_verify went from 1 flagged to 0 -- for no reason other
+    than that a string is truthy. That is a general way to clear this class of check with
+    prose, on the layer that decides whether every OTHER result counts as clean.
+
+    A wrapped value (`{"principle": ..., "value": 3.2}`) is unwrapped before typing, per the
+    Principle-Annotated Artifact Fields discipline, so honest annotated fields still satisfy
+    the check -- the point is to reject the WRONG TYPE, not to reject annotation.
+    """
+    out: list[Any] = []
+    for raw in _real_field_values(value, wanted_key):
+        candidates = [raw]
+        if isinstance(raw, dict) and "value" in raw:
+            candidates.append(raw["value"])
+        for candidate in candidates:
+            # LEAF RECOVERY, not a top-level type test. Corrected 2026-07-27 after a first
+            # draft demanding a BARE bool over-fired on the real per-game shape these fields
+            # actually use -- `goal_predicate_satisfiable: {"lp85": true}` is a dict, and
+            # `_harness_break_at_first_win` has always read these via `_bool_leaf_values`.
+            # Requiring the top value to be the scalar would have flagged an HONEST artifact,
+            # which is the mirror-image of the defect under repair and strictly worse (a
+            # false positive here quarantines real work and teaches the operator to ignore
+            # the gate). Leaf recovery still rejects the actual defect: `_bool_leaf_values`
+            # and `_numeric_leaf_values` both return [] for a bare string.
+            #
+            # RETURN THE LEAVES, not the container. Callers type-test the returned items
+            # directly -- check_value_routing_cost_control_overclaim's CRITICAL branch does
+            # `any(_is_finite_number(v) for v in cost_values)` and
+            # `all(v is False for v in timeout_values)`. Returning the wrapper dict would
+            # make both False on an HONEST principle-annotated artifact and fire a CRITICAL,
+            # which is a worse failure than the WARN this whole change is repairing.
+            if kind == "number":
+                leaves = _numeric_leaf_values(candidate)
+                if leaves:
+                    out.extend(leaves)
+                    break
+            if kind == "bool":
+                leaves = _bool_leaf_values(candidate)
+                if leaves:
+                    out.extend(leaves)
+                    break
+            # "structured" is the weaker filter for keys whose legitimate shape is a
+            # CONTAINER of sub-fields rather than a scalar -- `metric_harness_fixed` is a
+            # bool in exp4669 and a {target_levels, break_at_first_win, port} dict in
+            # exp4664, so demanding a bool there would over-fire on an honest artifact.
+            # It still rejects the actual defect: a bare prose string.
+            if kind == "structured" and candidate is not None and not isinstance(candidate, str):
+                out.append(candidate)
+                break
+    return out
+
+
 def _iter_real_fields(value: Any, path: tuple[str, ...] = ()) -> list[tuple[tuple[str, ...], Any]]:
     """Walk artifact fields while skipping metadata principle prose."""
     rows: list[tuple[tuple[str, ...], Any]] = []
@@ -4698,7 +4763,9 @@ def check_qd_random_mutation_ablation_overclaim(d: dict[str, Any], flags: list[F
     """Flag QD generation wins that do not beat random-mutation ablation."""
     if not _claims_qd_energy_fitness_claim(d):
         return
-    ablation_values = _real_field_values(d, "random_mutation_ablation_passed")
+    # TYPED (2026-07-27 review finding 6): this gate asks "did the ablation PASS", a
+    # boolean. Prose under the key used to satisfy it by being truthy.
+    ablation_values = _typed_field_values(d, "random_mutation_ablation_passed", "bool")
     ablation_omitted = not ablation_values
     if ablation_omitted:
         flags.append(
@@ -4760,8 +4827,10 @@ def check_value_routing_cost_control_overclaim(d: dict[str, Any], flags: list[Fl
     """Flag value-routing wins that do not report feature cost and no-timeout."""
     if not _claims_value_routing_live_claim(d):
         return
-    cost_values = _real_field_values(d, "per_node_feature_cost_ms")
-    timeout_values = _real_field_values(d, "sim_timed_out")
+    # TYPED, not merely present (2026-07-27 review finding 6). A prose sentence stored under
+    # either key used to clear this WARN outright -- see _typed_field_values' docstring.
+    cost_values = _typed_field_values(d, "per_node_feature_cost_ms", "number")
+    timeout_values = _typed_field_values(d, "sim_timed_out", "bool")
     omitted: list[str] = []
     if not cost_values:
         omitted.append("per_node_feature_cost_ms")
@@ -4883,8 +4952,10 @@ def check_l2_goal_induction_satisfiability_overclaim(d: dict[str, Any], flags: l
     """Flag L2 induction wins missing satisfiable-goal and reachable-plan controls."""
     if not _claims_l2_goal_induction_win(d):
         return
-    goal_values = _real_field_values(d, "goal_predicate_satisfiable")
-    plan_values = _real_field_values(d, "l2_plan_reaches_goal")
+    # TYPED (2026-07-27 review finding 6): both are yes/no controls, so a string under
+    # either key must NOT count as having reported the control.
+    goal_values = _typed_field_values(d, "goal_predicate_satisfiable", "bool")
+    plan_values = _typed_field_values(d, "l2_plan_reaches_goal", "bool")
     omitted = []
     if not goal_values:
         omitted.append("goal_predicate_satisfiable")
@@ -4971,9 +5042,12 @@ def check_multilevel_nondegenerate_metric_overclaim(d: dict[str, Any], flags: li
         return
     if not _has_positive_multilevel_solve_rate(d):
         return
-    harness_values = _real_field_values(d, "metric_harness_fixed")
+    # TYPED (2026-07-27 review finding 6): metric_harness_fixed and break_at_first_win are
+    # booleans and target_levels is a count; prose under any of them is not the control.
+    harness_values = _typed_field_values(d, "metric_harness_fixed", "structured")
     has_equivalent_top_level = bool(
-        _real_field_values(d, "target_levels") and _real_field_values(d, "break_at_first_win")
+        _typed_field_values(d, "target_levels", "number")
+        and _typed_field_values(d, "break_at_first_win", "bool")
     )
     if not harness_values and not has_equivalent_top_level:
         flags.append(

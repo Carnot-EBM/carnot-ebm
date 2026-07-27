@@ -459,10 +459,9 @@ def test_kernel_probe_reads_the_shipped_context_size_instead_of_a_literal() -> N
 
 def test_kernel_probe_exercises_concurrency_not_just_health() -> None:
     """A /health check is a concurrency-1 probe, and concurrency 1 is exactly where this fault
-    is invisible. The probe must issue >= 2 SIMULTANEOUS full-budget requests."""
+    is invisible. The probe must issue SIMULTANEOUS full-budget requests."""
     agent_src = _kernel_agent_src()
     assert "ThreadPoolExecutor" in agent_src, "the probe is still single-threaded"
-    assert "max_workers=2" in agent_src
     assert "LLM CONCURRENCY" in agent_src, "the probe result must be greppable in the eval log"
     assert "CARNOT_ARC_INDUCE_N_CTX" in agent_src, (
         "a failed concurrency probe must name the lever that fixes it"
@@ -472,6 +471,82 @@ def test_kernel_probe_exercises_concurrency_not_just_health() -> None:
     # agent fails.
     assert "CARNOT_ARC_INDUCE_MAX_TOKENS" in agent_src
     assert '"n_predict": _maxtok' in agent_src
+
+
+def test_kernel_probe_uses_the_slot_count_not_a_smaller_k() -> None:
+    """K=2 IS A PASSING REGION FOR A K=4 REQUIREMENT -- measured, not argued.
+
+    Admission needs n_ctx >= K*(prompt + n_predict). The probe's own synthetic prompt measures
+    17238 tokens through the model's tokenizer, so at the shipped n_ctx=81920/max_tokens=4096:
+      K=2 -> 2*(17238+4096) = 42668 <= 81920  PASS
+      K=4 -> 4*(17238+4096) = 85336 >  81920  FAIL
+    Directly measured on an RTX 3090 (2026-07-27, mtp-off): 4/4 HTTP 500 "Context size has been
+    exceeded", per-slot n_tokens 20469..20493 at release == exactly 81920/4. So the first
+    hardened probe would have printed "LLM CONCURRENCY OK" for a configuration that fails at the
+    K the eval actually produces -- a pass that could not have failed, in the gate itself.
+
+    The probe must therefore derive K from the same module that sizes the pool."""
+    agent_src = _kernel_agent_src()
+    assert "max_workers=2" not in agent_src, (
+        "the probe is pinned at K=2 again; that is a passing region for the K=4 requirement"
+    )
+    assert "_LLAMA_SERVER_DEFAULT_SLOTS" in agent_src, (
+        "the probe must read the slot count from the module that sizes the pool, so the two "
+        "cannot disagree"
+    )
+    assert "max_workers=_K" in agent_src
+
+
+def test_kernel_probe_reads_the_body_and_the_stop_taxonomy_not_just_http_status() -> None:
+    """The fix investigation's own load-bearing result: an HTTP-status-only gate PASSES
+    `--parallel 1` 4/4 at lower VRAM while it generates 648/650/184/648 tokens against a 4096
+    budget -- mode C, silent truncation, the exact defect under investigation. So a status-only
+    gate would have shipped the bug. The probe must compare generated tokens to the budget."""
+    agent_src = _kernel_agent_src()
+    assert '"stop": ["\\n"]' not in agent_src, (
+        "the newline stop halts generation after ~1 token, so the probe cannot observe "
+        "truncation even in principle"
+    )
+    assert "predicted_n" in agent_src, "the probe must read how many tokens were generated"
+    assert "pool_exhaustion_truncations" in agent_src
+    assert "LLM CONCURRENCY SILENTLY TRUNCATED" in agent_src, (
+        "mode C must have its own greppable verdict; folding it into the generic FAIL message "
+        "loses the distinction whose prescriptions are OPPOSITE (raise n_ctx vs raise max_tokens)"
+    )
+    # the 500 body says "Context size has been exceeded." and the 400 body says "try increasing
+    # it" -- the informative string that was thrown away unread twice.
+    assert "_ex.read()" in agent_src, "the probe must read the server's own error body"
+
+
+def test_kernel_probe_reads_props_to_validate_the_slot_assumption_on_the_real_binary() -> None:
+    """The sizing rests on llama.cpp defaulting to 4 slots when --parallel is absent. That was
+    read from THIS repo's local build's source; the scored run uses a different bundled binary.
+    One GET on /props settles it on the binary that actually runs."""
+    agent_src = _kernel_agent_src()
+    assert "/props" in agent_src
+    assert "total_slots" in agent_src
+    assert "LLM SLOT COUNT MISMATCH" in agent_src, (
+        "a slot count other than the one the pool was sized for must be loud, not silent"
+    )
+
+
+def test_kernel_probe_prompt_is_sized_to_the_pool_it_validates() -> None:
+    """A probe prompt LARGER than the pool admits tests the wrong thing: it fails for a reason
+    the eval will never hit and would push an operator to raise n_ctx needlessly. The prompt is
+    trimmed against the server's own /tokenize to the same measured worst case the pool is
+    sized for -- read, not eyeballed."""
+    agent_src = _kernel_agent_src()
+    assert "_INDUCE_WORST_CASE_PROMPT_TOKENS" in agent_src
+    assert "/tokenize" in agent_src, "the prompt size must be READ from the server, not assumed"
+
+
+def test_kernel_preflight_prints_the_actual_gpu() -> None:
+    """machine_shape 'NvidiaL4' is an unvalidated free-form string (kagglesdk ships no enum for
+    it), and the only Kaggle nvidia-smi read this project holds is a P100 16GB from a DIFFERENT
+    kernel. One line in the scored log finally replaces the inference with a measurement."""
+    agent_src = _kernel_agent_src()
+    assert "LLM GPU HARDWARE" in agent_src
+    assert "memory.total" in agent_src
 
 
 def test_kernel_probe_cannot_crash_the_submission() -> None:
@@ -513,3 +588,180 @@ def test_induction_exception_is_recorded_with_its_repr(monkeypatch) -> None:
     )
     assert "induction blew up inside the try" in attempt["exception"], attempt
     assert sys.exc_info()[0] is None, "the exception must not propagate"
+
+
+# --- 2026-07-27 ADVERSARIAL REVIEW: the witness must MEASURE, not echo -------------------
+# Findings 1 and 11 of the review of commit 776161963. Both are the SAME defect class the
+# witness was built to remove, re-appearing one layer up: a field that reports what the
+# caller INTENDED rather than what was actually the case. Each test below replays the
+# finding's own reproduction, so a regression fires on the real incident and not on a
+# stylised version of it.
+
+
+class _PropsServerProposer:
+    """Test double for a RUNNING llama-server whose /props reports `served`.
+
+    Subclasses the real LocalGGUFProposer so every method under test is the production one;
+    only the two network reads are replaced. Using the real class matters because the whole
+    finding is that a method returned self-state instead of reading the wire -- a hand-built
+    stub would pass whether or not the production code was fixed."""
+
+    @staticmethod
+    def make(served: int, *, declared: int, port: int = 65500):
+        from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
+        p = LocalGGUFProposer(port=port, n_ctx=declared)
+        p._healthy = lambda: True  # type: ignore[method-assign]
+        p.server_props = lambda: {  # type: ignore[method-assign]
+            "default_generation_settings": {"n_ctx": served},
+            "total_slots": 4,
+        }
+        return p
+
+
+def test_witness_publishes_the_OBSERVED_n_ctx_not_the_declared_one() -> None:
+    """FINDING 1, origin replay. On the dev box, port 8919 (this class's DEFAULT port) was
+    serving n_ctx=16384 from the previous evening's launch while `LocalGGUFProposer().n_ctx`
+    was 81920. The witness published `int(self.n_ctx)` -- 81920 -- so a run reusing the
+    faulty server SELF-CERTIFIED AS FIXED. The witness must report 16384."""
+    p = _PropsServerProposer.make(16384, declared=81920)
+    row = p.liveness_witness()
+    assert row["generator_n_ctx"] == 16384, (
+        "the witness is still echoing the DECLARED n_ctx; a stale faulty server would "
+        f"report itself as fixed: {row}"
+    )
+    assert row["generator_n_ctx_declared"] == 81920, row
+    assert row["generator_n_ctx_source"] == "server_props_observed", row
+    assert row["generator_total_slots_observed"] == 4, row
+
+
+def test_witness_marks_an_unobservable_n_ctx_as_declared_only() -> None:
+    """The fallback must be LABELLED, not silently indistinguishable from a measurement --
+    otherwise a build that does not serve /props re-opens the same gap invisibly."""
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
+    p = LocalGGUFProposer(port=65501, n_ctx=81920)
+    p._healthy = lambda: True  # type: ignore[method-assign]
+    p.server_props = lambda: {}  # type: ignore[method-assign]
+    row = p.liveness_witness()
+    assert row["generator_n_ctx"] == 81920, row
+    assert row["generator_n_ctx_source"] == "declared_only", (
+        f"an unobserved value must say so; unlabelled it reads as evidence: {row}"
+    )
+
+
+def test_ensure_server_refuses_to_reuse_a_smaller_pool() -> None:
+    """FINDING 1, the behavioural half. `_ensure_server()` returned True on a bare /health
+    check, so the n_ctx fix was a silent NO-OP against any server already on the port."""
+    p = _PropsServerProposer.make(16384, declared=81920)
+    assert p._reusable() is False, (
+        "a 16384 server is being reused by a proposer that needs 81920 -- this is the "
+        f"silent no-op: {p.reuse_n_ctx_check}"
+    )
+    assert "refused_smaller_pool" in p.reuse_n_ctx_check
+    assert p.observed_server_n_ctx == 16384
+
+
+def test_ensure_server_does_reuse_an_equal_or_larger_pool() -> None:
+    """The no-over-fire control. Refusing a pool that is big enough would relaunch a server
+    on every call -- a 180s stall per game and a new way to end up LLM-off."""
+    assert _PropsServerProposer.make(81920, declared=81920)._reusable() is True
+    bigger = _PropsServerProposer.make(131072, declared=81920)
+    assert bigger._reusable() is True
+    assert bigger.reuse_n_ctx_check == "larger_ok"
+
+
+def test_stub_proposer_row_is_not_an_llm_on_claim() -> None:
+    """FINDING 11, origin replay. The 2026-07-27 first-win measurement's 100 LLM-OFF control
+    cells ran `_NoOpProposer` and every row carried `llm_enabled: True`, so the lint reported
+    "174 rows, 174 claiming llm_enabled=True" over a corpus where 100 had no generator at
+    all. A consumer keying on `llm_enabled` alone reads a NoOp arm as an LLM-on arm."""
+
+    class _NoOpProposer:  # the shape experiment_4605 installs: no liveness channel at all
+        def induce(self, *a, **k):
+            return False, "disabled_exp4605_parity"
+
+    policy = _policy()
+    policy.proposer = _NoOpProposer()
+    row = policy.generator_liveness_witness()
+
+    assert row["generator_is_stub"] is True, row
+    assert row["llm_tier_operational"] is False, (
+        "a stub arm still reports an operational LLM tier -- the silent misclassification "
+        f"is live: {row}"
+    )
+    assert row["llm_on_row_valid"] is False, row
+    assert lint.check_row(row) == [], (
+        "an honest LLM-OFF control row must make no LLM-on claim for the gate to judge; "
+        f"got {lint.check_row(row)}"
+    )
+
+
+def test_a_REAL_but_dead_generator_is_still_operational_and_still_refused() -> None:
+    """The mutation proof for finding 11's fix. If `llm_tier_operational` were computed from
+    'did the generator answer' instead of 'was a real generator installed', a dead generator
+    would mark itself non-operational and the lint would stop refusing it -- turning a fix
+    for a control-arm mislabel into a hole in the gate that matters."""
+    policy = _policy()
+    policy.proposer = _dead_proposer()
+    policy.proposer.generate("x")
+    row = policy.generator_liveness_witness()
+
+    assert row["generator_is_stub"] is False, row
+    assert row["llm_tier_operational"] is True, (
+        f"a REAL generator that died must still claim the tier, or the gate cannot refuse it: {row}"
+    )
+    codes = {f["code"] for f in lint.check_row(row)}
+    assert {"DEAD_GENERATOR", "NO_COMPLETIONS"} <= codes, codes
+
+
+def test_a_port_relaunch_does_not_poison_the_liveness_gate() -> None:
+    """The mutation proof for finding 1's fix. The refusal-to-reuse path has to record
+    ITSELF somewhere, and the obvious place -- `_note_server_failure` -- would increment
+    `n_server_failures`, flipping `llm_on_row_valid` to False for a run whose generator
+    then worked perfectly. That would over-fire the one gate that has to stay trustworthy,
+    trading a silent false-negative for a noisy false-positive. The refusal belongs on its
+    own channel."""
+    p = _PropsServerProposer.make(16384, declared=81920, port=65502)
+    assert p._reusable() is False
+    # Simulate exactly what _ensure_server does on the refusal branch.
+    p.reuse_refusals.append("port 65502 already serves n_ctx=16384 < required 81920")
+    p.n_completion_calls, p.n_completion_ok = 5, 5
+
+    row = p.liveness_witness()
+    assert row["llm"]["errors"] == 0, (
+        "the port relaunch was counted as a GENERATOR failure; a healthy run would now fail "
+        f"llm_on_row_valid for a configuration event: {row['llm']}"
+    )
+    assert row["generator_reuse_refusals"], "the refusal must still be recorded somewhere"
+    assert "refused_smaller_pool" in row["generator_reuse_n_ctx_check"], row
+
+
+def test_a_false_operational_stamp_cannot_hide_a_row_with_real_generator_traffic() -> None:
+    """The escape-hatch check for finding 11's fix. Honouring `llm_tier_operational: false`
+    unconditionally would let any row opt out of the gate with one field -- which is the
+    trust-a-derived-value failure this lint's own design note warns about. A row that
+    disclaims the tier while its counters record real calls is judged by the primitives."""
+    lying = {
+        "game": "zz00",
+        "llm_enabled": True,
+        "llm_tier_operational": False,  # the stamp says "no LLM tier here"
+        "llm": {"calls": 6, "responses": 0, "errors": 6},  # ...the counters disagree
+        "generator_healthy_after": False,
+        "llm_on_row_valid": False,
+    }
+    codes = {f["code"] for f in lint.check_row(lying)}
+    assert "DEAD_GENERATOR" in codes, (
+        f"a false llm_tier_operational stamp silenced the gate on a dead generator: {codes}"
+    )
+
+    honest_stub = {
+        "game": "zz00",
+        "llm_enabled": True,
+        "llm_tier_operational": False,
+        "generator_is_stub": True,
+        "llm": {"calls": -1, "responses": -1, "errors": -1},
+        "generator_healthy_after": None,
+        "llm_on_row_valid": False,
+    }
+    assert lint.check_row(honest_stub) == [], lint.check_row(honest_stub)

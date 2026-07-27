@@ -18924,3 +18924,81 @@ than no guard, because it converts an open problem into a false sense of coverag
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-5995 | Implemented (`scripts/determination_preservation_lint.py` — diff-vs-HEAD check over `results/*.json`, `--ref` for auditing a landed commit, `--all` for a tree sweep; `.pre-commit-config.yaml:determination-preservation-lint`; the 7 restorations landed in `d90f51aeb`) | Implemented (`tests/python/test_determination_preservation_lint.py`, 9 tests driving REAL git plumbing rather than a mocked git — the origin bug was in WHICH git command the lint chose, so a mocked git would have reproduced it rather than caught it; 3 mutations proved caught: reverting to `--cached`, accepting a note-less clearing, and skipping the corrigendum check; plus a live-tree assertion so a future strip fails in CI even if the hook is bypassed) |
+
+## REQ-ARC-WMTE-5996: The Generator's Shared Context Pool Is Sized For Concurrent Induction, And Its Failures Are Recorded Rather Than Swallowed
+
+The live ARC agent's induction generator is a `llama-server` whose context pool is SHARED across
+slots. With no explicit `--parallel`, llama.cpp sets `n_parallel = 4` AND `kv_unified = true`
+(`server.cpp:106-110`), so the four slots draw from ONE pool of `-c` cells rather than each
+receiving `-c` (and rather than each receiving `-c / 4`, which is the DIVIDED-context branch that
+only applies when `--parallel` is passed explicitly). Admission therefore requires
+`n_ctx >= K_concurrent * (prompt_tokens + max_tokens)`.
+
+The eval framework starts ONE THREAD PER GAME with no pool (`swarm.py:91`), so induce requests
+arrive together; llama.cpp caps concurrency at its own 4 slots and QUEUES the rest, which is why
+K=4 — not the game count — is the number that must fit.
+
+**The system SHALL size `n_ctx` from that inequality**, SHALL raise the free-VRAM admission guard in
+step with the resulting footprint, and SHALL record generator failures on a channel that survives
+the game's thread.
+
+**Why this is a requirement and not a tuning note.** At the previous `n_ctx = 16384` with
+`max_tokens = 4096` the fault fired at **K=2** (`2 * (5968+4096) = 20128 > 16384`), and keeping
+16384 is arithmetically impossible: `16384/4 - 15734` is negative, so NO `max_tokens` fits the worst
+real prompt (grids span 2x2..64x64, so the induce prompt spans 1411..15754 tokens and the failing K
+is per-game). Every LLM-ON measurement this project held had been taken at concurrency 1, so the
+fault was invisible to all of them.
+
+#### SCENARIO-ARC-WMTE-5996-THE-POOL-ADMITS-THE-CONCURRENT-WORST-CASE
+
+**Given** a generator serving K concurrent induce requests from one shared `kv_unified` pool
+**When** `n_ctx < K * (worst_prompt + max_tokens)`
+**Then** the configuration SHALL be refused. `n_ctx` SHALL be DERIVED from `max_tokens` rather than
+hardcoded beside it, so raising one cannot silently invalidate the other.
+
+#### SCENARIO-ARC-WMTE-5996-THE-VRAM-GUARD-TRACKS-THE-POOL
+
+**Given** a free-VRAM admission guard on the opt-in CUDA generator path
+**When** `n_ctx` rises and with it the server's resident footprint
+**Then** the guard SHALL be derived from the same `n_ctx` and SHALL exceed the measured footprint
+with margin. A hand-typed constant that no longer covers the footprint creates a NEW silent-LLM-off
+path *created by the fix itself*: on a card with free VRAM between the stale guard and the true
+footprint, the guard refuses the launch and the agent runs LLM-off while reporting itself LLM-on.
+
+#### SCENARIO-ARC-WMTE-5996-A-500-IS-A-RETURN-CODE-NOT-AN-EXCEPTION-AND-ITS-DISCRIMINATOR-IS-KEPT
+
+**Given** llama.cpp's two distinct failure sites — a PER-REQUEST admission check before decoding
+(`server-context.cpp:2704-2712`) that returns a clean **400**, and a decode-failure handler
+(`:3200-3211`) that does not throw but checks the RETURN CODE of `llama_decode()` and returns a
+**500**
+**When** K requests each fit individually but jointly exhaust the shared pool
+**Then** the per-request check CANNOT catch it — concurrency escapes the graceful path by
+construction — and the 500 handler errors EVERY processing slot
+(`for (auto & slot : slots) ... send_error`), which is why observed failures are all-or-nothing
+(2/2 at K=2, 4/4 at K=4) rather than a single victim.
+
+**Therefore the generator's stderr SHALL be captured, not discarded.** That handler logs
+`SRV_ERR("%s i = %d, n_batch = %d, ret = %d")`, and that `ret` is the ONLY discriminator between
+mode A (`ret == 1`, "Context size has been exceeded", server SURVIVES) and mode B (a `GGML_ASSERT`
+abort that KILLS the server; `ret == 2` is explicitly unhandled upstream). Launching with
+`stderr=subprocess.DEVNULL` makes the two modes indistinguishable from the client, which is why the
+fault went undiagnosed. Capture SHALL be to a FILE and never a pipe — a pipe with no reader
+deadlocks the server once the OS buffer fills, and that hang would present exactly like the fault
+being diagnosed — and SHALL fall back to DEVNULL on failure, because losing diagnostics must never
+cost the generator itself.
+
+#### SCENARIO-ARC-WMTE-5996-A-PRE-FLIGHT-PROBE-TESTS-THE-K-THAT-SHIPS
+
+**Given** a pre-flight probe intended to prove the generator survives eval concurrency
+**When** it probes at a lower K than the eval produces, or asserts only on HTTP status
+**Then** it SHALL be treated as no evidence. A status-only probe passes the `--parallel 1`
+configuration that silently truncates generation (mode C: HTTP 200, `stop_type=limit`, generated far
+below `max_tokens`) — the very defect under investigation. The probe SHALL read the response body and
+assert the stop taxonomy, distinguishing `intended_budget_limit` (generated == `max_tokens`) from
+`pool_exhaustion_limit`.
+
+## Implementation Status (REQ-ARC-WMTE-5996)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5996 | Implemented (`python/carnot/agentic/arc_executable_world_model.py` — `_default_induce_n_ctx()` derived from `max_tokens`, `_generator_cuda_min_free_mb()` derived from `n_ctx`, stderr captured to a file with a DEVNULL fallback; `python/carnot/agentic/arc_competition_agent.py` — `generator_liveness_witness()` + a once-guarded `CarnotAgent.cleanup()`, `repr(exc)` at the outermost induce handler, response-body reading in `_describe_http_failure()`, pool-vs-budget split in `_limit_diagnostic()`; `scripts/kaggle/submission_kernel/main.py` — K=4 body-reading pre-flight; `scripts/arc_llm_on_liveness_lint.py` + its pre-commit hook) | Implemented (`tests/python/test_arc_generator_vram_guard.py` — the guard tracks the derived pool and the stale comment is gone; `tests/python/test_arc_generator_stderr_capture.py` — 4 tests, 2 mutations proved caught (DEVNULL, PIPE), each assertion guarded against the vacuous pass that occurred while writing it; `tests/python/test_arc_scored_path_liveness_witness.py`; `tests/python/test_arc_llm_on_liveness_lint.py`) |
