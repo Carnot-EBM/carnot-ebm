@@ -1,5 +1,89 @@
 # Carnot — Changelog
 
+## 2026-07-26 (outer-loop: the GATEWAY-ACCURATE re-score — the opening RESET is FREE, so the correction I reported this session was itself overstated)
+
+- Instructed work: produce the gateway-accurate re-score as a NEW artifact, with exact attribution
+  where the new instrumentation covers it and BOUNDS where it does not, driving the INSTALLED
+  `arc_agi` scorer, and naming plainly any forward-facing claim that needs correcting.
+- **A NUMBER I REPORTED THIS SESSION MOVES, AND IT IS NAMED FIRST IN THE ARTIFACT.** Commit
+  `fd23b8b1f` shipped with the subject line *"the uncharged-RESET optimism is 4.6% (measured)"*.
+  That measurement charged EVERY reset, including the run's opening one. The installed gateway
+  gives the opening one away free: `update_scorecard` (`arc_agi/scorecard.py:834-843`) routes a
+  RESET to `new_play()` when `full_reset` is true and to `reset()` otherwise, and only `reset()`
+  reaches `inc_reset_count`; `new_play` -> `inc_play_count` (:692-699) **appends a zeroed counter row
+  and increments nothing**. `full_reset` is true exactly when the env is being CREATED
+  (`arc_agi/api.py:405-437`), and the reference agent opens with an empty guid and a RESET. So one
+  reset per play is free — the opening one. Corrected over the same **44 matched live cells**:
+  **median 4.62% -> 3.69%, max 16.80% -> 16.61%, non-zero cells 42/44 -> 38/44.** On the game as
+  the replication unit the median-of-medians moves **4.92% -> 3.68%**. The defect is still real;
+  **the published figure was too PESSIMISTIC.**
+- **The all-resets-charged model is not conservative, it is UNREACHABLE — and that is a computed
+  witness, not an argument.** Driving the real `Scorecard` with a first `update_scorecard(RESET,
+  full_reset=False)` raises `KeyError`: there is no card yet, because that RESET is the call that
+  CREATES the play. Reproducing the published model at all requires injecting a phantom
+  `new_play()` the gateway never performs, and the artifact says so in the field where it does it.
+- **A second, independent error in the per-span artifact's published figure.**
+  `results/arc_per_level_reset_attribution_20260726.json` reported a median loss of 0.045078 / max
+  0.119524 by differencing the row's **4-decimal-rounded** efficiency fields. tu93's published
+  0.041667 is literally `0.0003 / 0.0072`; its unrounded loss is 0.046236, so roughly a tenth of
+  that figure was rounding rather than charge model. Both components are now published **per cell
+  and separately**, so neither is credited with the other's movement. (The prior gateway-rescore
+  artifact had independently found and fixed the same hazard for its own Part B — the per-span
+  capture simply never applied it.)
+- **THE HIGHER-SEVERITY CORRECTION IS IN CODE, NOT IN A NUMBER, AND IT IS DELIBERATELY NOT APPLIED
+  HERE.** `scripts/arc_leaderboard_eval.py` computes `level_up_charged.append(actions + resets)`
+  and `charged_actions = actions + resets`, charging the opening reset — so **every row that
+  harness writes from now on** carries an `efficiency_gateway_charged` that is too low and an
+  `efficiency_optimism_vs_gateway` that is too high. A wrong number in one artifact is citable and
+  correctable; a wrong measurement channel silently mis-stamps every future row. The minimal fix is
+  specified field-by-field in the artifact's `CORRECTION_OWED.claim_3`. It was not landed in this
+  commit because that file is a freshness-tracked provenance dependency of five committed artifacts
+  plus one uncommitted peer artifact, and editing it would mark all of them stale in the same
+  commit that publishes this correction. It is the top follow-up.
+- **Three independent reproductions of the prior lane's numbers, which is what licenses reading the
+  difference as a charge-model change rather than a pipeline difference.** The Part A bound
+  distribution reproduces **bit-identically at all seven quantiles** (n=485, median 0.113725, max
+  0.956551, mean 0.204208); the Part B unrounded M1 median reproduces exactly (0.046236); and the
+  two attribution channels — cumulative `level_up_charged` vs the per-span
+  `segment_offline_actions`/`segment_resets` — agree on **7/7** overlapping cells.
+- **The bound is stamped UNINFORMATIVE rather than quoted.** Over the 485 bounded rows the worst
+  case still erases a median 11.1% (M2) and its **best case is 0 BY CONSTRUCTION**, so it can
+  establish neither materiality nor negligibility. It is published because it is the honest width
+  available from a whole-run reset count — and because that uselessness is exactly what justified
+  instrumenting per span.
+- **I shipped a defect in this analyser and caught it with the real chain.** The path-2 frame
+  builder hardcoded `levels_completed=0` on the non-final frames of each span. Because
+  `Card.set_levels_completed` appends an entry on any CHANGE **in either direction** and the scorer
+  consumes `actions_by_level` **positionally**, that inserted a spurious `(0, 16)` entry and turned
+  a 2.09 score into **21.31**. Visible only because the real `update_scorecard` chain reports
+  `actions_by_level` — a calculator-only path would have hidden it, and 21.31 was large enough to
+  look like a finding. Both the invariant and the fact that violating it really does corrupt the
+  score are now regression-tested.
+- **A mutation ESCAPED my own test suite and is recorded rather than quietly fixed.** Hardcoding
+  `chain_agrees_M1: True` survived a test that asserted the flag was True *and* that the two path
+  scores matched — the scores genuinely did match, so nothing failed. Caught only by a third test
+  that monkeypatches path 2 to return a wrong score and requires the flag to notice. That is the
+  forced-gate failure mode arriving inside the test suite instead of inside the artifact. 10 of 10
+  mutations are now proved caught; the escape is documented in
+  `tests_and_mutation_proofs.a_mutation_that_initially_ESCAPED`.
+- **What does NOT change.** No settled structural conclusion is reordered: DEPTH still dominates
+  (1/2/4/8 of 8 levels -> 2.78/8.33/27.78/100), a per-game score still cannot exceed 100, the
+  post-solve tail is still free, and the correction still tracks resets-BEFORE-a-level-up rather
+  than the whole-run count. The hidden-set score (0.08) is **not** explained by anything here and
+  is not offered as such.
+- Stated assumptions, not measured: the `full_reset` semantics were read from the **INSTALLED LOCAL**
+  `arc_agi`/`arcengine`; the hidden competition gateway is a remote service whose implementation was
+  not inspected, so if it charges the opening reset then M2 is wrong in the same direction M1 is.
+  A residual behavioural divergence is also named but unquantified — under `competition_mode` a RESET
+  at `_action_count == 0` is charged while the game is NOT stepped (`arc_agi/api.py:316-334`).
+- New: `scripts/analyze_arc_gateway_accurate_rescore.py` (reuses `scripts/arc_gateway_rescore.py`
+  rather than re-deriving the scorer drive), `results/outer_loop_arc_gateway_accurate_rescore_20260726.json`,
+  `tests/python/test_arc_gateway_accurate_rescore.py` (19 tests), spec `REQ-ARC-WMTE-5986` + 5
+  SCENARIOs — which closes `REQ-ARC-WMTE-5985` limitation (7), the open question that named this
+  correction. Nothing was submitted; `MAX_ACTIONS` and every `SUBMITTED_*` flag untouched; no
+  historical artifact's recorded numbers rewritten (the originals are cited by path + sha256 and the
+  M1 figures are published beside the M2 figures, never over them).
+
 ## 2026-07-26 (outer-loop: the LLM-ON wall-clock envelope for the MAX_ACTIONS call — and the unguarded prompt that kills the generator before wall clock ever binds)
 
 - Instructed work: measure the LLM-on wall-clock envelope that decides the `MAX_ACTIONS` budget call.

@@ -1,6 +1,66 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-26 (LLM-ON wall-clock envelope for MAX_ACTIONS: wall clock DOES bind at ~110 games — and a context-overflow hypothesis was formed, tested, and REFUTED in the same session)
+**Last Updated:** 2026-07-26 (GATEWAY-ACCURATE re-score: the opening RESET is FREE, so the uncharged-RESET correction reported earlier the same session was itself overstated — 4.62% -> 3.69% median)
+
+## Session 2026-07-26 (latest) - The gateway-accurate re-score, and a correction owed on my own number
+
+### What's Working
+
+- **The charge model is now settled all the way down, including the edge the prior lane flagged and
+  did not close.** `REQ-ARC-WMTE-5985` limitation (7) recorded the open question — "the bootstrap
+  reset may be FREE ... that correction is not applied to these numbers." It is free, from the
+  installed source with no inference: `update_scorecard` routes a RESET to `new_play()` when
+  `full_reset` is true and to `reset()` otherwise, only `reset()` charges, `new_play` appends a
+  zeroed row, and `full_reset` is true exactly when the env is CREATED. One free reset per play.
+- **The correction owed, named rather than buried.** Commit `fd23b8b1f` reported "the uncharged-RESET
+  optimism is 4.6% (measured)". Over the same 44 matched live cells the gateway-accurate figure is
+  **median 3.69% (was 4.62%), max 16.61% (was 16.80%), non-zero on 38/44 (was 42/44)**; per-game
+  median-of-medians **3.68% (was 4.92%)**. The published figure was too PESSIMISTIC. A second,
+  independent error was found in the per-span artifact's figure: it differenced two 4-decimal-ROUNDED
+  scores, which on a ~0.007 score dominates the difference (tu93's published 0.041667 is literally
+  `0.0003/0.0072`). Both components are now reported separately per cell.
+- **The published model is UNREACHABLE, not merely pessimistic** — driving the real `Scorecard` with
+  a first `update_scorecard(RESET, full_reset=False)` raises `KeyError`, because that RESET is the
+  call that creates the play. Reproducing it needs a phantom `new_play()` the gateway never performs.
+- **Three independent reproductions of the prior lane's numbers** (Part A's bound distribution
+  bit-identical at all seven quantiles, n=485; Part B's unrounded M1 median exactly 0.046236; the two
+  attribution channels agreeing 7/7 on overlapping cells) — which is what licenses reading the
+  M2-vs-M1 difference as a charge-model change rather than a pipeline difference.
+- 19 tests, 10 of 10 mutations proved caught, all three project verifiers clean
+  (`adversarial_verify` 0 flagged, `summarize_artifact` clean with a terminal-prefixed verdict,
+  `artifact_freshness_lint` fresh with 16 dependencies verified), rebuild bit-identical across two
+  runs excluding `run_date`/`duration_s`.
+
+### What's Next
+
+- **HIGHEST: land the code fix.** `scripts/arc_leaderboard_eval.py` charges the opening reset
+  (`level_up_charged.append(actions + resets)`, `charged_actions = actions + resets`), so every row it
+  writes from now on carries an `efficiency_gateway_charged` that is too low. The minimal fix is
+  specified field-by-field in `CORRECTION_OWED.claim_3` of
+  `results/outer_loop_arc_gateway_accurate_rescore_20260726.json`. Deliberately NOT applied in that
+  commit: the file is a freshness-tracked dependency of five committed artifacts plus one uncommitted
+  peer artifact, so editing it would mark them all stale in the same commit that publishes the
+  correction. Landing it requires a rebuild pass over those artifacts.
+- Confirm the remote gateway matches the installed local `arc_agi`. Everything above rests on reading
+  the INSTALLED package; the hidden competition gateway was not inspected. If it charges the opening
+  reset, M2 is wrong in the same direction M1 was.
+- Quantify the named-but-unmeasured behavioural divergence: under `competition_mode` a RESET at
+  `_action_count == 0` is charged while the game is NOT stepped (`arc_agi/api.py:316-334`), so a
+  back-to-back RESET diverges between the gateway and our offline env.
+- Re-run the per-span capture with induction ON to reach the plan-execution reset source
+  (`arc_competition_agent.py:5314`), which is in the SUBMITTED config and has never fired anywhere in
+  the persisted corpus.
+
+### Known Constraints (this session)
+
+- Every cell is a PUBLIC game played OFFLINE with the LLM OFF; nothing here supports a claim about the
+  hidden set or the LLM-on scored path. The hidden-set score (0.08) is not explained by this work.
+- For rows without per-span attribution only a bound exists, and that bound is stamped UNINFORMATIVE:
+  its lower end is 0 BY CONSTRUCTION and its upper end reaches 95%+, so it can establish neither
+  materiality nor negligibility. Do not quote either end as an estimate.
+- One game (vc33) carries almost all of the corpus's absolute score, and it is precisely the game
+  whose gateway optimism nearly vanishes under the corrected model — so an absolute-score-weighted
+  reading of the correction is smaller still than the per-cell median.
 
 ## Session 2026-07-26 (latest) - The MAX_ACTIONS wall-clock envelope, LLM ON
 
