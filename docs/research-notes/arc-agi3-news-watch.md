@@ -67,3 +67,7 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-07-27 13:11 UTC -- NEW
+
+- The Kaggle Public Leaderboard is now led by **YUTO KOJIMA at 1.86%**, ahead of Tecnod8.AI at 1.61%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

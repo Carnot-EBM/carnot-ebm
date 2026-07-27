@@ -1,5 +1,103 @@
 # Carnot — Changelog
 
+## 2026-07-27 (outer-loop: FIX THE GENERATOR CONCURRENCY FAULT — n_ctx 16384 -> 81920, and the scored path finally gets a liveness witness)
+
+- **User instruction: "fix the concurrency fault."** Preceded by two operator decisions: "measure
+  per-slot VRAM first, then fix", and "fix the concurrency fault first, then decide" the strategic
+  pivot. Both honoured: the envelope was measured before anything shipped, and no pivot is
+  recommended here.
+- **THE FAULT.** llama-server with no explicit `--parallel` sets `n_parallel=4` AND `kv_unified=true`
+  (server.cpp:106-110), so the 4 slots share ONE pool of `-c` cells. Admission therefore requires
+  `n_ctx >= K_concurrent * (prompt + max_tokens)`. At the shipped 16384 with `max_tokens=4096` the
+  fault fired at **K=2** (2 x (5968+4096) = 20128 > 16384), and keeping 16384 is ARITHMETICALLY
+  IMPOSSIBLE: `16384/4 - 15734` is negative, so NO `max_tokens` fits the worst real prompt.
+- **THREE DISTINCT MODES, and conflating them would have fixed the wrong one.** (A) large prompt,
+  K>=2 -> HTTP 500 "Context size has been exceeded", server SURVIVES. (B) small prompts admitted,
+  generations overrun the pool -> `RemoteDisconnected`, server DIES PERMANENTLY at
+  `common/sampling.cpp:154 GGML_ASSERT(logits != nullptr)` -> `ggml_abort` inside `update_slots()`.
+  (C) prompt nearly fills the pool -> **HTTP 200 with silent truncation** (630 cells of generation
+  room). The 2026-07-26 probe hit B and reported "the server died"; the investigation probed with a
+  large prompt, hit A, and refuted that. BOTH were right about different modes.
+- **THE FIX: `LocalGGUFProposer.n_ctx` 16384 -> 81920**, via
+  `field(default_factory=_default_induce_n_ctx)` so the literal lives in ONE place and is overridable
+  with `CARNOT_ARC_INDUCE_N_CTX`. No `--parallel`. From `4 x (15734+4096) = 79320`. Costs
+  **+1668 MiB** (13763 vs 12095), `n_ctx_train=262144` so it is well inside the trained context.
+  Both `LocalGGUFProposer` construction sites omit `n_ctx` and so cannot diverge -- the
+  `REQ-ARC-FCP-5699-35` comment records that those two ALREADY diverged once, for `max_tokens`.
+- **THE LOAD-BEARING RESULT: the cheaper fix would have shipped the bug.** `--parallel 1` passes an
+  HTTP gate 4/4 AT LOWER VRAM, but generated **648/650/184/648** tokens against a 4096 budget -- it
+  converts the loud 500 into mode C, the exact defect under investigation. Had the gate been
+  HTTP-status-only it would have PASSED AND SHIPPED. The gate therefore carries a `stop_taxonomy`
+  witness separating `intended_budget_limit` (gen == max_tokens) from `pool_exhaustion_limit`
+  (gen << max_tokens with stop=limit) -- a distinction the shipped agent conflated. Every fix
+  request reported `predicted_n == 4096 == max_tokens`; `pool_exhaustion_limit == 0` in every cell.
+- **Verified through the SHIPPED LAUNCH PATH, not a hand-built command line.** exp5866 priced the
+  envelope with its own `llama-server` invocation, which CANNOT verify a change to
+  `LocalGGUFProposer` because it never executes it. The fix arm launches via `_ensure_server()`.
+  Control in the same tree, same prompt, same binary, back-to-back: **control 2/2 and 4/4 HTTP 500;
+  fix 2/2 and 4/4 HTTP 200.** Failure SET: control 6 cells, fix 0, `new_failures_introduced_by_fix:
+  []`. Gate non-forced (the control failed 6/6). The +1668 MiB price replicated to the MiB across
+  two independent launch paths.
+- **THE SILENT DEGRADATION IS FIXED IN THE RECORD, NOT THE CONTROL FLOW.** `generate()` still does
+  not raise -- deliberately. Raising today would be strictly LESS informative (the outermost induce
+  handler at :5985 was a bare `except Exception` discarding type/message/traceback), aborting cannot
+  GAIN score (an unsolved level scores 0 regardless of actions charged), and `swarm.py:91` runs one
+  Thread per game in ONE process, so one dead server would zero EVERY game. Instead: proposer
+  counters at the choke point all 11 call sites funnel through; `repr(exc)` at :5985;
+  `_describe_http_failure()` now reads the response BODY (the 400's `try increasing it` was
+  LITERALLY the fix, read and discarded twice); `_limit_diagnostic()` separates pool truncation from
+  budget limit (the old message said `HIT n_predict` for both, and **the prescriptions are
+  opposite**).
+- **A STRUCTURALLY DEAD CHANNEL, which is worse than an empty one.** The census found **877 stat
+  blocks carrying an `errors` key and NOT ONE non-zero value** -- including all 8 provably-dead
+  cells. The field existed, was read, and could never report anything. After the fix a dead
+  generator yields `errors=2` for 2 calls, with server-vs-content failures kept separate so an
+  answering-but-terse server still counts as alive.
+- **The scored path had NO observability at all**: zero print and zero logging in 6290 lines, and
+  `induction_attempts` died with the game's thread. Added `E3AgentPolicy.generator_liveness_witness()`
+  + a `CarnotAgent.cleanup()` override (the framework's once-per-game hook, `super().cleanup()` in a
+  `finally`): one greppable `LLM LIVENESS ...` stderr line that survives a read-only filesystem, plus
+  a JSON row under `CARNOT_ARC_LIVENESS_DIR`. This is the gap the kernel author named at
+  `submission_kernel/main.py:68` and left open.
+- **Kernel pre-flight fixed**: it imported a hardcoded `-c "16384"` and probed with `/health`, which
+  IS a K=1 probe -- the exact blind spot that hid this for months. It now imports
+  `_default_induce_n_ctx()` and probes **2 concurrent full-budget requests**.
+- **GUARD PROVEN ON ITS ORIGIN INCIDENT** (the failure mode this project shipped before):
+  `scripts/arc_llm_on_liveness_lint.py --self-test` fires on **8/8 recorded dead cells** in BOTH
+  witness shapes, is clean on 4 matched-config controls and 8 K=1 cells, and **11/11 mutations are
+  LOAD_BEARING**. The most important, M4, replaces `never_engaged = calls == 0` with
+  `calls is None or calls == 0` -- the plausible-but-wrong None-is-zero reading that would exempt
+  EVERY pre-existing row including all 8 origin cells, killing the origin self-test.
+- **All three negative controls fired**, so the envelope gate is not vacuous: NC1 (`-c 8192, K=1`)
+  failed via a DIFFERENT code (HTTP 400 `try increasing it`); NC2 (`-c 32768, K=4`) failed and sits
+  BETWEEN shipped and fix, making the fix gate non-forced; NC3 hit a real
+  `cudaMalloc failed: out of memory`.
+- **VRAM envelope refit and the prior formula corrected**: `MiB = 10547.0 + 0.02519*n_ctx +
+  206.83*slots`, max err **0.19%**. The pre-registered version held only to `n_ctx <= 32768`,
+  degraded to 2.41%, and always UNDER-predicted -- the unsafe direction for a headroom call; its
+  per-ctx coefficient was ~19% low. Its 201 MiB/slot term was right, and it was right because it was
+  READ off the server's own allocator (`allocating 19296.00 MiB` for `--parallel 96` = 201.0
+  MiB/slot, `rs cache`) rather than derived.
+- **Failure SET vs a control in the same tree** (120 ARC suites): BEFORE 2 failed / 1270 passed ->
+  AFTER 2 failed / 1289 passed, **set IDENTICAL** (both pre-existing conductor drift:
+  `test_arc_object_history_salience_live_wiring::test_scenario_5591_2_default_off_parity`,
+  `test_arc_structured_memory_causal_audit::test_req_arc_wmte_5901_repository_artifact_is_current`).
+  +19 = the new tests. 7 dependent artifacts rebuilt; **0 measurement-bearing moves.**
+- **LATENT HAZARD FOUND WHILE VERIFYING, not fixed (correctly): an uncounted second in-process 9B
+  copy.** `arc_competition_agent.py:5044` constructs `llama_cpp.Llama(..., n_ctx=2048,
+  n_gpu_layers=999)` for playbook-query embedding. Both its gates ship FALSE
+  (`SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED`, `SUBMITTED_PLAYBOOK_RETRIEVAL_ENABLED`), so it is NOT
+  loaded on the scored path and the envelope's omission of it is correct TODAY. But flipping either
+  flag would add a full second copy of the model IN-PROCESS on top of the server's (which itself
+  loads the weights TWICE, ~5.0 GB each, for MTP self-draft). Anyone enabling a playbook flag must
+  re-price the envelope first.
+- **WHAT THIS DOES NOT DO: it does not re-measure `first_win_rate_integrated` (0.04, CI [0,0]).**
+  Whether this fault depressed it is UNFALSIFIABLE from the existing record -- nothing logged
+  liveness. The liveness witness fixes that going FORWARD, not backwards. **No pivot is
+  recommended.**
+- Untouched per operator decision: `MAX_ACTIONS` (400) and `SUBMITTED_EARLY_STOP_GRACE` (None).
+  Nothing submitted to ARC or Kaggle.
+
 ## 2026-07-27 (outer-loop: the STRUCTURAL fix for the stripped determinations — a commit-time guard, mutation-proved, that first failed to fire on its own origin incident)
 
 - Agent-initiated, closing the item the previous entry filed as "STRUCTURAL FIX NOT DONE". This is

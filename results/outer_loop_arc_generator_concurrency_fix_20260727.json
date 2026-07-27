@@ -1,0 +1,819 @@
+{
+ "experiment": "outer_loop_arc_generator_concurrency_fix_20260727",
+ "title": "Generator concurrency fault: the fix applied and verified through the SHIPPED launch path, plus a scored-path liveness witness so a dead generator can no longer produce a row that claims llm_enabled=True",
+ "run_date": "2026-07-27T11:00:00Z",
+ "git_head": "c4c60dfacbcc23ad4eb0ab7d72b85e2a270f4a39",
+ "random_seed": 5866,
+ "random_seed_note": "The fault is a hard resource limit (shared-pool admission), not a stochastic effect, so the seed fixes the synthetic grid content used to size the prompt -- it is not a replication axis. Per-seed replication was not the binding uncertainty; the CONTROL arm in the same tree is.",
+ "inference_substrate": "live_llm_inference",
+ "inference_substrate_note": "The headline verification LAUNCHED two real llama-server processes on GPU 1 (the frozen Qwen3.5-9B-MTP Q4_K_M GGUF, -ngl 999, q8 KV) via LocalGGUFProposer._ensure_server() and issued real /completion requests that really generated 4096 tokens each. 304.5s of live GPU wall clock, well above the 60s live_llm_inference floor. The LLM-OFF re-capture (substrate offline_arcade_live_agent_runtime_self_discovery_no_llm) and the pytest runs are SUPPORTING measurements, itemised in measurement_wall_s_itemised.",
+ "duration_s": 304.5,
+ "duration_s_note": "The LIVE-GENERATOR verification's own full span (both LocalGGUFProposer._ensure_server() launches, the /tokenize prompt-sizing sweep, all six concurrency cells, both teardowns), read from the harness's own clock. NOT this JSON builder's runtime -- the builder is pure assembly and its 0.06s says nothing about whether a model ran. artifact_build_s below records that separately so neither figure can stand in for the other.",
+ "artifact_build_s": 0.06,
+ "measurement_wall_s": 219.6,
+ "measurement_wall_s_itemised": {
+  "live_generator_verification_full_span_s": 304.5,
+  "of_which_requests_in_flight_s": 219.6,
+  "supporting_measurements_on_other_substrates": {
+   "llm_off_recapture_18_cells_s": 60.573,
+   "pytest_arc_suite_BEFORE_s": 382.19,
+   "pytest_arc_suite_AFTER_s": 382.73
+  }
+ },
+ "measurement_wall_s_provenance": "The strictly requests-in-flight subset of duration_s: per cell, the SLOWEST of its concurrent requests (concurrent requests overlap, so summing them double-counts). Excludes model load, prompt sizing and teardown -- which is exactly why it is SMALLER than duration_s rather than equal to it. Supporting measurements on other substrates (the LLM-OFF re-capture, the two pytest sweeps) are itemised separately, never folded in.",
+ "model_specs": {
+  "generator": "unsloth/Qwen3.5-9B-MTP-GGUF -> Qwen3.5-9B-Q4_K_M.gguf",
+  "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+  "server_flags": "-ngl 999, --spec-type draft-mtp, --cache-type-k/v q8_0, no --parallel",
+  "role": "the FROZEN live-submission generator (project_arc_live_generator)",
+  "note": "This is the model the scored path uses. The fix is sized for ITS per-token KV; a ~3x-larger model would cost ~3x the measured 1668 MiB."
+ },
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "No verifier-value, moat, or efficiency claim is made anywhere in this artifact. It reports a configuration fix and an observability fix. The field is declared only so the circularity check has an explicit answer rather than an absent one.",
+ "claims_new_solve": false,
+ "solve_provenance": null,
+ "solve_provenance_note": "No solve is claimed; no game was played to a level-up here.",
+ "preconditions_checked": [
+  {
+   "resource": "CUDA GPU 1 free VRAM",
+   "available": true,
+   "evidence": "306 MiB used of 24576 before launch"
+  },
+  {
+   "resource": "GPU 0 untouched (conductor-owned)",
+   "available": true,
+   "evidence": "GPU 0 held 4 MiB before and 4 MiB after both launches"
+  },
+  {
+   "resource": "llama-server CUDA build",
+   "available": true,
+   "evidence": "~/.cache/llama.cpp-master/build/bin/llama-server, selected by _generator_server_and_env() under CARNOT_ARC_GENERATOR_CUDA_GPU=1"
+  },
+  {
+   "resource": "frozen Qwen3.5-9B-MTP GGUF cached",
+   "available": true,
+   "evidence": "resolved by _resolve_gguf(); both servers loaded in 10.0s / 10.0s"
+  },
+  {
+   "resource": "dedicated ports (never the live 8919/8924 servers)",
+   "available": true,
+   "evidence": "control=8941 fix=8942"
+  }
+ ],
+ "gpu_discipline": {
+  "rule": "The conductor owns GPU 0. The outer loop may use GPU 1.",
+  "device_verdict_per_launch": [
+   {
+    "config": "CONTROL_shipped_before_16384",
+    "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+    "launched_pid": 2229410,
+    "per_pid_residency": [
+     {
+      "pid": 2229410,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "used_mib": 11784
+     }
+    ],
+    "gpu1_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+   },
+   {
+    "config": "FIX_shipped_default",
+    "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+    "launched_pid": 2229545,
+    "per_pid_residency": [
+     {
+      "pid": 2229545,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "used_mib": 13452
+     }
+    ],
+    "gpu1_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+   }
+  ],
+  "evidence_is_per_pid_not_the_env_var": "Each launched PID was matched against GPU 1's UUID in `nvidia-smi --query-compute-apps`. Setting CUDA_VISIBLE_DEVICES is NOT evidence of which device was used -- a prior lane found the resolver would have silently fallen back to the iGPU HIP build because a healthy CUDA-GPU1 server was itself holding the headroom its own guard wanted.",
+  "gpu0_untouched": {
+   "before_mib": 4,
+   "after_mib": 4
+  },
+  "teardown": "kill on the explicit Popen PID (LocalGGUFProposer.stop(), then an explicit kill -9 by PID if still alive). Never `pkill -f`.",
+  "teardown_per_launch": [
+   {
+    "pid": 2229410,
+    "needed_sigkill": true,
+    "gone": true
+   },
+   {
+    "pid": 2229545,
+    "needed_sigkill": true,
+    "gone": true
+   }
+  ]
+ },
+ "change_1_the_concurrency_fix": {
+  "what_changed": "python/carnot/agentic/arc_executable_world_model.py: LocalGGUFProposer.n_ctx default 16384 -> 81920, read through field(default_factory=_default_induce_n_ctx) so the literal lives in exactly ONE place and is overridable with CARNOT_ARC_INDUCE_N_CTX.",
+  "why_this_lever_and_not_another": {
+   "sizing_rule": "n_ctx >= K_cap x (worst_case_prompt + max_tokens)",
+   "K_cap": 4,
+   "K_cap_source": "llama.cpp's OWN default: with --parallel unset, server.cpp:106-110 sets n_parallel=4 AND kv_unified=true, and requests 5..N QUEUE. So generator load does NOT scale with the ~110 games, even though swarm.py:91 starts one thread per game with no pool.",
+   "worst_case_prompt_tokens": 15734,
+   "max_tokens": 4096,
+   "arithmetic": "4 x (15734 + 4096) = 79320 -> 81920 (4096-aligned)",
+   "measured_vram_cost_mib": 1668,
+   "why_context_is_the_cheap_axis": "exp5866's refit envelope: MiB = 10547 + 0.02519*n_ctx + 206.8*slots. A slot costs ~207 MiB regardless of n_ctx; 65536 extra context cells cost 1668 MiB. Context is ~8000x cheaper per unit than a slot.",
+   "rejected_lower_n_ctx_with_a_smaller_max_tokens": "Keeping 16384 is arithmetically impossible: 16384/4 - 15734 is negative, so no max_tokens fits. Even max_tokens=1024 needs n_ctx>=67072 -- barely cheaper than 81920 (a ~370 MiB saving) while cutting the induction's output budget 4x, which is a REAL capability loss (the budget was raised 2560->4096 under REQ-ARC-FCP-5699-35 on live evidence of genuine truncation). Worse trade.",
+   "rejected_explicit_parallel_4": "Passing --parallel explicitly switches llama.cpp to the DIVIDED-context branch: 4096 cells per slot, and the same request 400s instantly. Strictly worse.",
+   "rejected_parallel_1": "exp5866 measured it PASSING an HTTP-status gate 4/4 at LOWER VRAM while generating 648/650/184/648 tokens against a 4096 budget -- it converts the loud 500 into a silently truncated HTTP 200. That is the defect under investigation, not a fix.",
+   "rejected_harness_side_cap": "swarm.py:91 has one Thread per game and no pool/semaphore, so there is no harness-side concurrency knob to turn down."
+  },
+  "second_construction_site_moves_in_lockstep": {
+   "sites": [
+    "arc_competition_agent.py:_proposer()",
+    "arc_competition_agent.py:_load_sge_candidate_router()"
+   ],
+   "both_omit_n_ctx_so_both_inherit_the_default": true,
+   "verified_identical_n_ctx": 81920,
+   "why_it_matters": "The REQ-ARC-FCP-5699-35 comment at the second site records that these two silently diverged once already, for max_tokens. A single default_factory makes that divergence unrepresentable for n_ctx."
+  }
+ },
+ "change_1_verification_control_vs_fix_same_tree": {
+  "method": "Both servers launched by calling LocalGGUFProposer._ensure_server() -- the SHIPPED code path, not a hand-built command line. exp5866 priced the envelope with a hand-built launch, which is right for pricing but cannot verify a change to LocalGGUFProposer, because it never executes LocalGGUFProposer.",
+  "prompt": {
+   "tokens": 15776,
+   "transitions_k": 8,
+   "grid_shape": [
+    64,
+    64
+   ],
+   "builder": "arc_executable_world_model.induce_prompt",
+   "token_count_source": "server /tokenize (real tokenizer)"
+  },
+  "control_arm": {
+   "label": "CONTROL_shipped_before_16384",
+   "n_ctx": 16384,
+   "props": {
+    "total_slots": 4,
+    "n_ctx_default_generation_settings": 16384,
+    "per_slot_n_ctx": null,
+    "n_ctx_train": null
+   },
+   "vram_resident_mib": 12095,
+   "cells": [
+    {
+     "K": 2,
+     "n_http_200": 0,
+     "n_http_500": 2,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 0,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [
+      0,
+      1
+     ],
+     "silently_truncated_request_ids": [],
+     "observed": "FAIL"
+    },
+    {
+     "K": 4,
+     "n_http_200": 0,
+     "n_http_500": 4,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 0,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "silently_truncated_request_ids": [],
+     "observed": "FAIL"
+    }
+   ],
+   "server_error_body_verbatim": "Context size has been exceeded."
+  },
+  "fix_arm": {
+   "label": "FIX_shipped_default",
+   "n_ctx": 81920,
+   "props": {
+    "total_slots": 4,
+    "n_ctx_default_generation_settings": 81920,
+    "per_slot_n_ctx": null,
+    "n_ctx_train": null
+   },
+   "vram_resident_mib": 13763,
+   "cells": [
+    {
+     "K": 2,
+     "n_http_200": 2,
+     "n_http_500": 0,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 2,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [],
+     "silently_truncated_request_ids": [],
+     "observed": "PASS"
+    },
+    {
+     "K": 4,
+     "n_http_200": 4,
+     "n_http_500": 0,
+     "n_http_400": 0,
+     "n_transport_dead": 0,
+     "healthy_after": true,
+     "stop_taxonomy": {
+      "intended_budget_limit": 4,
+      "pool_exhaustion_limit": 0,
+      "natural_eos": 0
+     },
+     "failed_request_ids": [],
+     "silently_truncated_request_ids": [],
+     "observed": "PASS"
+    }
+   ],
+   "every_request_got_its_full_budget": true,
+   "full_budget_evidence": "all 6 successful requests reported predicted_n == 4096 == max_tokens, i.e. stop_taxonomy.intended_budget_limit, with pool_exhaustion_limit == 0 in every cell"
+  },
+  "failure_SET_not_a_total": {
+   "control": [
+    "CONTROL_shipped_before_16384/K2/req0/http_fail",
+    "CONTROL_shipped_before_16384/K2/req1/http_fail",
+    "CONTROL_shipped_before_16384/K4/req0/http_fail",
+    "CONTROL_shipped_before_16384/K4/req1/http_fail",
+    "CONTROL_shipped_before_16384/K4/req2/http_fail",
+    "CONTROL_shipped_before_16384/K4/req3/http_fail"
+   ],
+   "fix": [],
+   "comparison": {
+    "control_n": 6,
+    "fix_n": 0,
+    "resolved_by_fix": [
+     "K2/req0/http_fail",
+     "K2/req1/http_fail",
+     "K4/req0/http_fail",
+     "K4/req1/http_fail",
+     "K4/req2/http_fail",
+     "K4/req3/http_fail"
+    ],
+    "still_failing_under_fix": [],
+    "new_failures_introduced_by_fix": []
+   }
+  },
+  "gate_is_not_forced": "The CONTROL arm, run back-to-back in the SAME tree with the SAME prompt and binary, FAILED 6/6. A pass region that could not have failed is unfalsifiable; this one demonstrably could, and did, at the shipped value.",
+  "gate_is_not_http_status_only": "Each cell also carries a stop taxonomy separating intended_budget_limit (generated == n_predict) from pool_exhaustion_limit (stop==limit but generated << n_predict). Had the gate been HTTP-status-only, the --parallel 1 candidate would have passed it and shipped a silent truncation.",
+  "independent_replication_of_the_price": "exp5866 predicted 13452 MiB resident at n_ctx=81920 and a +1668 MiB delta; this session's independent launch measured 13763 MiB and +1668 MiB. Same to the MiB, from a different launch path."
+ },
+ "change_2_the_silent_degradation_fix": {
+  "constraint_honoured": "generate() was NOT made to raise. Per the investigation: the outermost induce handler was a bare `except Exception` that discarded type/message/traceback, so raising TODAY would have been strictly LESS informative than the current (False, msg) return; and aborting cannot GAIN score (an unsolved level scores 0 regardless) while swarm.py runs every game in ONE process, so one dead server could zero EVERY game. The fix is to the RECORD, not the control flow. All four sub-changes below are additive: same branches, same returns, same swallow.",
+  "sub_change_a_proposer_counters": {
+   "what": "LocalGGUFProposer now counts n_completion_calls / n_completion_ok / n_server_failures / n_content_failures and keeps up to 24 server-failure diagnostic strings, exposed as liveness_witness().",
+   "why_on_the_proposer": "It is the single choke point all 11 call sites funnel through. Instrumenting call sites individually would have to be redone for every new caller and would miss exactly the four that discard the message.",
+   "closes_a_structurally_dead_channel": "The census found 877 LLM stat blocks carrying an `errors` key and ZERO with errors > 0 -- including all 8 cells where the generator provably died -- because the only incrementing branch required an exception to PROPAGATE and none does. Measured after the fix: a dead generator now yields errors=2 for 2 calls.",
+   "server_vs_content_failures_kept_separate": "A server that answers with unusable code is ALIVE. Conflating the two would make a terse model read as a dead generator and vice versa, defeating the gate."
+  },
+  "sub_change_b_scored_path_witness": {
+   "what": "E3AgentPolicy.generator_liveness_witness() + CarnotAgent.cleanup() override. cleanup() is the framework's once-per-game hook (Agent.main() calls it), so it runs exactly once per game in that game's own thread.",
+   "two_channels_deliberately": [
+    "one greppable stderr line (`LLM LIVENESS game=... healthy_after=...`), because stderr survives a read-only filesystem and is what an operator greps in the eval log -- the gap the kernel author names at submission_kernel/main.py:68",
+    "a JSON row under CARNOT_ARC_LIVENESS_DIR (default /kaggle/working), because a log line cannot be audited mechanically"
+   ],
+   "same_primitive_names_as_the_existing_gate": "llm.responses / generator_healthy_after / llm_on_row_valid, so scored rows are policed by the SAME lint as harness rows -- one checker, not two that can disagree.",
+   "never_crashes": "super().cleanup() is called in a finally; the emitter's own body is wrapped. Verified against an exploding policy and an unwritable output dir."
+  },
+  "sub_change_c_the_record_keeps_the_evidence": {
+   "exception_repr_at_the_outermost_induce_handler": "attempt['exception'] = repr(exc)[:300], matching the standard its own sibling handlers (program_synthesis_filter_error) already met.",
+   "http_failure_body_now_read": "_describe_http_failure(): repr(HTTPError) is only the generic reason phrase; the BODY carries the diagnosis. Measured verbatim: the 500 body says 'Context size has been exceeded.' and a 400 body says 'request (15754 tokens) exceeds the available context size (8192 tokens), try increasing it' -- literally the fix, read and discarded. Two sessions re-derived what these strings already said.",
+   "pool_truncation_no_longer_masquerades_as_a_budget_limit": "_limit_diagnostic() separates 'generated the full max_tokens' from 'cut off far short because the prompt ate the shared pool'. The old message said 'HIT n_predict=<max> OUTPUT LIMIT' for both, which is why mode C went unnoticed -- and the prescriptions are OPPOSITE (mode C needs a bigger -c; a bigger max_tokens makes it worse)."
+  },
+  "sub_change_d_kernel_preflight": {
+   "reads_the_shipped_config": "the probe now imports _default_induce_n_ctx() instead of launching with a hardcoded -c '16384' and printing 'ctx=16384'. A probe that validates a config the agent does not use, and reports it HEALTHY, is the measure-one-thing-ship-another shape of the 0.08 incident reproduced inside the diagnostic.",
+   "probes_concurrency_not_just_health": "2 SIMULTANEOUS requests at the real shipped shape (worst-case prompt + n_predict = the agent's own max_tokens), because it is (prompt + n_predict) x K that must fit. A /health check is a concurrency-1 probe, and concurrency 1 is where this fault is invisible.",
+   "failure_message_names_the_lever": "CARNOT_ARC_INDUCE_N_CTX",
+   "cannot_crash_the_submission": "every branch inside a try; both non-fatal paths tested."
+  }
+ },
+ "change_2_guard_proof": {
+  "fires_on_the_recorded_origin_incident": {
+   "cells": 8,
+   "source": "results/llm_on_contention_rows_20260726/cells/cell_K4_*_b400.json",
+   "read_from_real_files_not_fixtures": true,
+   "verdict": "8/8 produce a DEAD_GENERATOR FAIL, unchanged by this session's extension",
+   "and_in_the_new_witness_shape": "re-expressed with the new llm.calls field, all 8 still FAIL -- a new field that accidentally exempted the origin incident would be worse than no field"
+  },
+  "end_to_end_not_two_plausible_halves": "test_dead_generator_witness_is_refused_by_the_gate drives a REAL LocalGGUFProposer through the REAL swallow path, takes the witness off a REAL E3AgentPolicy, and asserts the lint REFUSES it. A hand-built {'errors': 2} row would have passed even if the production code never incremented anything -- which is precisely the state the corpus was in before this change.",
+  "over_fire_controls_clean": [
+   "the 4 matched-config K=4/n_ctx=32768 control cells: 0 findings",
+   "the 8 K=1 cells (the arm every prior LLM-on number came from): 0 findings",
+   "a healthy witness (7 calls, 7 responses, alive): 0 findings",
+   "a game that never stalled into induction (calls=0): WARN LLM_TIER_NEVER_ENGAGED, NOT a FAIL -- 'never asked' is not the same defect as 'asked and got nothing'"
+  ],
+  "anti_gaming": "zeroing llm.calls to earn the WARN while recording server errors now trips WITNESS_SELF_CONTRADICTORY (FAIL).",
+  "strict_extension_proven_on_the_real_files": "the lint's output on the recorded contention corpus is byte-identical before and after the extension: 17 FAIL / 0 WARN, 8 DEAD_GENERATOR, exit 1.",
+  "mutation_proofs": {
+   "method": "each new branch neutered by a unique text substitution, suites re-run, originals restored in a finally; a mutation whose anchor does not apply uniquely is reported as PATCH_DID_NOT_APPLY and proves nothing",
+   "n_mutations": 11,
+   "all_load_bearing": true,
+   "detail": [
+    {
+     "mutation": "M1_emitter_stops_counting_server_failures",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 1,
+     "tests_killed": [
+      "test_dead_generator_witness_is_refused_by_the_gate"
+     ]
+    },
+    {
+     "mutation": "M2_emitter_stops_counting_calls",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 2,
+     "tests_killed": [
+      "test_dead_generator_witness_is_refused_by_the_gate",
+      "test_witness_keeps_the_server_diagnostic_string"
+     ]
+    },
+    {
+     "mutation": "M3_lint_drops_DEAD_GENERATOR",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 8,
+     "tests_killed": [
+      "test_cleanup_writes_a_lintable_row_and_a_stderr_line",
+      "test_dead_generator_witness_is_refused_by_the_gate",
+      "test_does_not_trust_the_derived_stamp",
+      "test_fires_on_every_recorded_k4_dead_cell",
+      "test_mutation_dead_generator",
+      "test_self_test_entrypoint_passes",
+      "test_the_eight_recorded_dead_cells_still_fail_in_the_new_witness_shape",
+      "test_walker_reaches_a_row_nested_under_cells_index_row"
+     ]
+    },
+    {
+     "mutation": "M4_lint_treats_absent_calls_as_never_engaged",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 3,
+     "tests_killed": [
+      "test_mutation_no_completions",
+      "test_self_test_entrypoint_passes",
+      "test_walker_reaches_a_row_nested_under_cells_index_row"
+     ]
+    },
+    {
+     "mutation": "M5_lint_drops_the_never_engaged_exemption",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 2,
+     "tests_killed": [
+      "test_never_engaged_row_is_warn_not_fail",
+      "test_self_test_entrypoint_passes"
+     ]
+    },
+    {
+     "mutation": "M6_lint_drops_WITNESS_SELF_CONTRADICTORY",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 2,
+     "tests_killed": [
+      "test_self_test_entrypoint_passes",
+      "test_zeroing_calls_cannot_dodge_the_gate"
+     ]
+    },
+    {
+     "mutation": "M7_cleanup_stops_emitting",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 2,
+     "tests_killed": [
+      "test_cleanup_survives_an_unwritable_output_dir",
+      "test_cleanup_writes_a_lintable_row_and_a_stderr_line"
+     ]
+    },
+    {
+     "mutation": "M8_pool_truncation_message_collapses_into_the_budget_message",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 1,
+     "tests_killed": [
+      "test_pool_truncation_is_named_differently_from_the_budget_limit"
+     ]
+    },
+    {
+     "mutation": "M9_describer_drops_the_response_body",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 1,
+     "tests_killed": [
+      "test_http_failure_description_includes_the_response_body"
+     ]
+    },
+    {
+     "mutation": "M10_kernel_reverts_to_a_hardcoded_ctx_literal",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 1,
+     "tests_killed": [
+      "test_kernel_probe_reads_the_shipped_context_size_instead_of_a_literal"
+     ]
+    },
+    {
+     "mutation": "M11_kernel_reverts_to_a_K1_only_health_probe",
+     "status": "LOAD_BEARING",
+     "n_tests_killed": 1,
+     "tests_killed": [
+      "test_kernel_probe_exercises_concurrency_not_just_health"
+     ]
+    }
+   ],
+   "the_one_that_matters_most": "M4 replaces `never_engaged = calls == 0` with `calls is None or calls == 0` -- the plausible-but-wrong None-is-zero reading, which would EXEMPT every pre-existing row (including all 8 origin cells) from NO_COMPLETIONS. It kills the origin self-test. That is the shape of the guard-that-does-not-fire-on-its-own-origin failure this project has shipped before.",
+   "post_restore_suite_green": true
+  }
+ },
+ "verification": {
+  "failure_SET_comparison_against_a_control_in_the_same_tree": {
+   "suites": "tests/python/test_arc*.py + tests/python/test_e3_*.py (120 files)",
+   "BEFORE": {
+    "failed": 2,
+    "passed": 1270,
+    "wall_s": 382.19,
+    "failure_set": [
+     "test_arc_object_history_salience_live_wiring.py::test_scenario_5591_2_default_off_parity",
+     "test_arc_structured_memory_causal_audit.py::test_req_arc_wmte_5901_repository_artifact_is_current"
+    ]
+   },
+   "AFTER": {
+    "failed": 2,
+    "passed": 1289,
+    "wall_s": 382.73,
+    "failure_set": [
+     "test_arc_object_history_salience_live_wiring.py::test_scenario_5591_2_default_off_parity",
+     "test_arc_structured_memory_causal_audit.py::test_req_arc_wmte_5901_repository_artifact_is_current"
+    ]
+   },
+   "new_failures": [],
+   "fixed_failures": [],
+   "net_passing_delta": 19,
+   "reading": "The failure SET is IDENTICAL, not merely the same size. Both members are pre-existing in this tree (the conductor is mid-flight with many modified tracked artifacts) and neither touches the generator or the agent's cleanup path. +19 passing = the new tests."
+  },
+  "targeted_suites": {
+   "test_arc_scored_path_liveness_witness.py + test_arc_llm_on_liveness_lint.py + test_arc_competition_agent_adapter.py + test_arc_submitted_agent_parity.py": "58 passed",
+   "arc_llm_on_liveness_lint.py --self-test": "OK (8 origin cells in BOTH shapes, 4 controls clean, 12 mutation proofs)"
+  },
+  "lints": {
+   "scripts/arc_orphan_solver_lint.py": "OK -- 65 modules in the live closure",
+   "scripts/determination_preservation_lint.py": "OK",
+   "scripts/artifact_freshness_lint.py": "OK (after the rebuilds below)",
+   "ruff check": "All checks passed (5 files)",
+   "ruff format --check": "clean on the 4 files this change touches that were clean at HEAD; submission_kernel/main.py was ALREADY format-dirty at HEAD and is left as it was rather than reformatted in a behaviour commit",
+   "mypy": "Success: no issues found in 2 source files"
+  },
+  "dependent_artifact_rebuilds": {
+   "why": "artifact_freshness_lint flagged 6 artifacts whose provenance.code includes the two modules this change edits. Its own instruction: rebuild, then diff, then report exactly which numbers moved.",
+   "rebuilt": [
+    {
+     "artifact": "results/arc_gateway_card_ground_truth_20260727.json",
+     "status": "REBUILT",
+     "cmd": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/arc_gateway_card_ground_truth.py --rows results/early_stop_sweep_20260726/rows_exact_attribution.json,results/early_stop_sweep",
+     "n_changed": 53,
+     "n_benign": 52,
+     "n_substantive": 1,
+     "substantive": {
+      "/provenance/code[2]/bytes": [
+       346506,
+       346563
+      ]
+     },
+     "benign_keys": [
+      "/cells[0]/wall_s",
+      "/cells[10]/wall_s",
+      "/cells[11]/wall_s",
+      "/cells[12]/wall_s",
+      "/cells[13]/wall_s",
+      "/cells[14]/wall_s",
+      "/cells[15]/wall_s",
+      "/cells[16]/wall_s",
+      "/cells[17]/wall_s",
+      "/cells[18]/wall_s",
+      "/cells[1]/wall_s",
+      "/cells[20]/wall_s",
+      "/cells[21]/wall_s",
+      "/cells[22]/wall_s",
+      "/cells[23]/wall_s",
+      "/cells[24]/wall_s",
+      "/cells[25]/wall_s",
+      "/cells[26]/wall_s",
+      "/cells[27]/wall_s",
+      "/cells[28]/wall_s",
+      "/cells[29]/wall_s",
+      "/cells[2]/wall_s",
+      "/cells[30]/wall_s",
+      "/cells[31]/wall_s",
+      "/cells[32]/wall_s",
+      "/cells[33]/wall_s",
+      "/cells[34]/wall_s",
+      "/cells[35]/wall_s",
+      "/cells[36]/wall_s",
+      "/cells[37]/wall_s",
+      "/cells[38]/wall_s",
+      "/cells[39]/wall_s",
+      "/cells[3]/wall_s",
+      "/cells[40]/wall_s",
+      "/cells[41]/wall_s",
+      "/cells[42]/wall_s",
+      "/cells[43]/wall_s",
+      "/cells[44]/wall_s",
+      "/cells[45]/wall_s",
+      "/cells[46]/wall_s"
+     ]
+    },
+    {
+     "artifact": "results/outer_loop_arc_early_stop_grace_sweep_20260726.json",
+     "status": "REBUILT",
+     "cmd": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_early_stop_sweep.py --rows results/early_stop_sweep_20260726/rows_b400.json results/early_stop_sweep_20260726/rows",
+     "n_changed": 6,
+     "n_benign": 4,
+     "n_substantive": 2,
+     "substantive": {
+      "/provenance/code[4]/bytes": [
+       346506,
+       346563
+      ],
+      "/provenance/code[4]/mtime_utc": [
+       "2026-07-27T10:33:11Z",
+       "2026-07-27T10:58:39Z"
+      ]
+     },
+     "benign_keys": [
+      "/duration_s",
+      "/provenance/code[4]/sha256",
+      "/reproducibility_checksum",
+      "/run_date"
+     ]
+    },
+    {
+     "artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+     "status": "REBUILT",
+     "cmd": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_reset_charge_attribution.py",
+     "n_changed": 23,
+     "n_benign": 21,
+     "n_substantive": 2,
+     "substantive": {
+      "/provenance/code[3]/bytes": [
+       346506,
+       346563
+      ],
+      "/provenance/code[3]/mtime_utc": [
+       "2026-07-27T10:33:11Z",
+       "2026-07-27T10:58:39Z"
+      ]
+     },
+     "benign_keys": [
+      "/analyser_duration_s",
+      "/part_b_live_reset_composition/cells[0]/wall_s",
+      "/part_b_live_reset_composition/cells[1]/wall_s",
+      "/part_b_live_reset_composition/cells[2]/wall_s",
+      "/part_b_live_reset_composition/cells[3]/wall_s",
+      "/part_b_live_reset_composition/cells[4]/wall_s",
+      "/part_b_live_reset_composition/cells[5]/wall_s",
+      "/part_b_live_reset_composition/cells[6]/wall_s",
+      "/part_b_live_reset_composition/cells[7]/wall_s",
+      "/part_b_live_reset_composition/part_b_measurement_wall_s",
+      "/part_c_offline_twin_reset_count/cells[1]/wall_s",
+      "/part_c_offline_twin_reset_count/cells[2]/wall_s",
+      "/part_d_why_the_cheap_path_fails/cells[0]/wall_s",
+      "/part_d_why_the_cheap_path_fails/cells[1]/wall_s",
+      "/part_d_why_the_cheap_path_fails/cells[2]/wall_s",
+      "/part_d_why_the_cheap_path_fails/cells[3]/wall_s",
+      "/part_d_why_the_cheap_path_fails/cells[4]/wall_s",
+      "/part_d_why_the_cheap_path_fails/cells[5]/wall_s",
+      "/provenance/code[3]/sha256",
+      "/reproducibility_checksum",
+      "/run_date"
+     ]
+    },
+    {
+     "artifact": "results/outer_loop_arc_gateway_rescore_20260726.json",
+     "status": "REBUILT",
+     "cmd": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_gateway_rescore.py",
+     "n_changed": 7,
+     "n_benign": 5,
+     "n_substantive": 2,
+     "substantive": {
+      "/provenance/code[4]/bytes": [
+       346506,
+       346563
+      ],
+      "/provenance/code[4]/mtime_utc": [
+       "2026-07-27T10:33:11Z",
+       "2026-07-27T10:58:39Z"
+      ]
+     },
+     "benign_keys": [
+      "/duration_s",
+      "/independent_implementation_crosscheck/peer_sha256",
+      "/provenance/code[4]/sha256",
+      "/reproducibility_checksum",
+      "/run_date"
+     ]
+    },
+    {
+     "artifact": "results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json",
+     "status": "REBUILD_FAILED",
+     "returncode": 2,
+     "cmd": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_llm_on_wallclock_envelope.py",
+     "stderr_tail": "usage: analyze_arc_llm_on_wallclock_envelope.py [-h] --rows ROWS\n                                                [--prior-sweep PRIOR_SWEEP]\n                                                [--prior-llm-on PRIOR_LLM_ON]\n                                                --out OUT\nanalyze_arc_llm_on_wallclock_envelope.py: error: the following arguments are required: --rows, --out\n",
+     "restored_from_backup": true
+    }
+   ],
+   "TWO_PASSES_and_why": "The rebuilds were run TWICE. The first pass happened BEFORE `ruff format` reformatted the two edited modules, so the format pass changed their sha256 and the freshness lint correctly flagged all six as stale AGAIN. That is the lint working, and it is recorded here rather than quietly re-run: the ordering lesson is format-then-rebuild, never rebuild-then-format.",
+   "final_post_format_diff_per_artifact": {
+    "arc_gateway_card_ground_truth_20260727": {
+     "n_changed": 53,
+     "n_metadata_only": 1,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    },
+    "outer_loop_arc_early_stop_grace_sweep_20260726": {
+     "n_changed": 6,
+     "n_metadata_only": 2,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    },
+    "outer_loop_arc_reset_charge_attribution_20260726": {
+     "n_changed": 23,
+     "n_metadata_only": 2,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    },
+    "outer_loop_arc_gateway_rescore_20260726": {
+     "n_changed": 7,
+     "n_metadata_only": 2,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    },
+    "outer_loop_arc_llm_on_wallclock_envelope_20260726": {
+     "n_changed": 7,
+     "n_metadata_only": 4,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    },
+    "arc_per_level_reset_attribution_20260726": {
+     "n_changed": 24,
+     "n_metadata_only": 1,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    },
+    "outer_loop_arc_gateway_accurate_rescore_20260726": {
+     "n_changed": 11,
+     "n_metadata_only": 1,
+     "n_real_measurement_moves": 0,
+     "detail": {}
+    }
+   },
+   "total_real_measurement_moves_across_all_7_rebuilt_artifacts": 0,
+   "measurement_numbers_that_moved": "NONE in any rebuilt artifact.",
+   "what_did_move": "provenance metadata only -- the recorded bytes/mtime/sha256 of the two edited modules, git_head (which advanced because of the CONDUCTOR's commits 692bedfa -> c4c60dfa, not this change), and analyser duration_s.",
+   "the_one_apparent_exception_fully_attributed": {
+    "artifact": "results/outer_loop_arc_gateway_accurate_rescore_20260726.json",
+    "moved": "precision_hazard_in_the_published_M1_baseline per-cell values, e.g. median 0.045078 -> 0.046236449 and tu93 0.041667 (= exactly 1/24) -> 0.046236449",
+    "cause": "NOT this change. analyze_arc_gateway_accurate_rescore.py reads its 'as-published' baseline with `git show HEAD:results/arc_per_level_reset_attribution_20260726.json`. That file DIFFERS between 692bedfa and c4c60dfa (verified by direct git show + cmp), so rebuilding at the newer HEAD compares against a newer, unrounded baseline.",
+    "already_self_documented_upstream": "the artifact's own STATUS_2026_07_27 field states these exact two numbers as a CLOSED upstream precision fix"
+   },
+   "llm_off_recapture_is_the_strong_behaviour_neutrality_evidence": {
+    "artifact": "results/arc_per_level_reset_attribution_20260726.json",
+    "why_re_running_it_is_a_rebuild_and_not_a_new_measurement": "the capture sets CARNOT_ARC_DISABLE_INDUCTION=1, so no proposer is ever constructed and the n_ctx change cannot reach it",
+    "result": "18/18 cells re-captured, 60.573s",
+    "replicated_twice": "re-captured once before and once after the format pass; both times every measured value was identical to the original -- two independent exact replications, not one",
+    "diff_vs_the_previous_capture": "EVERY measured value bit-identical across all 18 cells (levels, resets, charged, spans, reconciliation, nav channel). The only movement is per-cell wall_s / duration_s, provenance metadata, and the capture's own pure_addition_vs_prior_artifact.n_fields_ADDED 14 -> 0 (correct: the prior artifact already has those 14 fields now).",
+    "reading": "This is an 18/18 exact replication showing the agent-module edit is behaviour-neutral off the generator path -- stronger than asserting it."
+   }
+  }
+ },
+ "what_this_does_NOT_establish": [
+  "It does NOT re-measure first_win_rate_integrated. Whether this fault caused the 0.04 rate is UNFALSIFIABLE from the existing record, because nothing logged generator liveness on the scored path -- that is the gap change 2 closes going forward, not backwards.",
+  "No strategic pivot is recommended or implied. Per the operator's sequencing, the fault is fixed first and the re-measurement that would inform a pivot is a separate task.",
+  "Eval-hardware VRAM feasibility remains an UNVERIFIED EXTRAPOLATION. Our kernel requests machine_shape NvidiaL4 and we hold ZERO direct nvidia-smi read from a scored run. The fix fits under both hypotheses (~1.1 GiB margin on a 16GB-class card, ~9 GiB on a 24GB L4), so it is not blocked -- but a scored-shape VRAM read is still owed.",
+  "Only the CUDA build was load-tested (which IS the scored-path build). The HIP/iGPU dev build was not.",
+  "Mode B (the ggml_abort server death exp5866 traced to common/sampling.cpp:154 GGML_ASSERT(logits != nullptr)) is addressed by REMOVING ITS TRIGGER, not by fixing the assert. A different overrun path could still reach it.",
+  "The retry bug is REPORTED, NOT FIXED: the `except` in generate() sits inside `for attempt in range(tries)` but RETURNS, so an HTTP 500 consumes zero of the 3 retries. Fixing it is a control-flow change outside the one authorised shipped change, and its value is now low (the 500 it would retry should no longer occur) while its risk is not zero (3x the wait on a genuinely dead server).",
+  "Grid content in the concurrency verification is synthetic-but-realistic, fed through the REAL induce_prompt() builder, with token counts read from the server's own /tokenize. Semantics do not affect shared-pool admission arithmetic."
+ ],
+ "cited_upstream_artifacts_never_rewritten": [
+  {
+   "experiment_id": "exp5866",
+   "path": "results/experiment_5866_generator_concurrency_vram_envelope.json",
+   "sha256": "sha256:0274ac9bec0a94eaa04c61ac4616a123fa6f82216a6e11bf83ebaffd231afe6d",
+   "fields_imported": [
+    "sizing_rule",
+    "VRAM envelope coefficients",
+    "mode A/B/C taxonomy",
+    "the rejected candidate_B measurement"
+   ]
+  },
+  {
+   "experiment_id": "generator_failure_swallow_census_20260727",
+   "path": "results/outer_loop_arc_generator_failure_swallow_census_20260727.json",
+   "sha256": "sha256:dfc95e12fcd5f34ee6fa24db5335bd1561826b1102b39f364be8738e518a69c5",
+   "fields_imported": [
+    "the 877-blocks-zero-errors dead-channel proof",
+    "the 11-call-site swallow census"
+   ]
+  },
+  {
+   "experiment_id": "llm_on_contention_rows_20260726/cells (the 8 origin cells)",
+   "path": "results/llm_on_contention_rows_20260726/cells/cell_K4_dc22_20260724_b400.json",
+   "sha256": "sha256:214b0cbc8d40517c2d725258c1f8582604523f721f84d78572fcf77f44188779",
+   "fields_imported": [
+    "generator_healthy_after",
+    "llm.responses",
+    "actions"
+   ],
+   "note": "one of 8; all 8 are read directly by the guard's tests"
+  }
+ ],
+ "harness_scripts": {
+  "location": "results/generator_concurrency_fix_20260727/",
+  "files": {
+   "build_fix_artifact.py": "sha256:f472341aedbce3f59965074caf140f921bf400b8524b9bd662a72a04da7dd8eb",
+   "fixverify.json": "sha256:e3a7948ee5de8970280dffe232d424bf403c726398195bc7405f83fe45c95428",
+   "fixverify.py": "sha256:400d9cdb7aa9c73ad9ebbaede801b91a9f6a259f5be9254d65b8379337ca4a20",
+   "mutate.json": "sha256:3f400c50b28c42796a2b9035f68a73a2b36d62d3fa5089787659fe903daf2fe6",
+   "mutate.py": "sha256:875c6ed74989e8799ec9fec2b95b0c4509fd538ec06f06f9602c9b001b079be0",
+   "mutate_kernel.json": "sha256:e470cb562459052a54f5be8cb16503b7d33b20b47a98d7c0a7bc4e6549efe191",
+   "refresh.json": "sha256:7fa2865be7140b288d566b948b895c27210d86be4cc1a3139ff501bd1d1b51a3",
+   "refresh.py": "sha256:9d7b6a4fe465f8becd4232e6f452582ea9b37f99c76649e85fa12f91e2c51c06",
+   "refresh_postformat_diff.json": "sha256:20548f25d9a23373c47e40e8c6a8dd459863ede401127c6d10baec9aa031b949"
+  },
+  "roles": {
+   "fixverify.py": "control(16384)-vs-fix(81920) concurrency verification through the SHIPPED LocalGGUFProposer._ensure_server() launch path; emits fixverify.json",
+   "mutate.py": "mutation proof for the 9 code branches; restores originals in a finally; emits mutate.json",
+   "mutate_kernel.json": "mutation proof for the 2 submission-kernel pre-flight guards (revert to the hardcoded ctx literal / the K=1-only probe)",
+   "refresh.py": "dependent-artifact rebuild + flattened deep diff; emits refresh.json",
+   "refresh_postformat_diff.json": "the FINAL post-ruff-format rebuild diff for all 7 dependent artifacts (0 real measurement moves)",
+   "build_fix_artifact.py": "deterministic assembly of this artifact from the JSONs above"
+  }
+ },
+ "shipped_behaviour_change_authorised": {
+  "authorised": "the generator concurrency fix only, smallest variant the envelope supports",
+  "applied": "LocalGGUFProposer.n_ctx 16384 -> 81920 (env-overridable)",
+  "MAX_ACTIONS": "UNCHANGED (400)",
+  "SUBMITTED_EARLY_STOP_GRACE": "UNCHANGED (None)",
+  "no_submission_performed": "Nothing was submitted to ARC or Kaggle. Operator-only."
+ },
+ "honest_verdict": "complete_generator_concurrency_fix_applied_n_ctx_81920_verified_through_the_shipped_launch_path_control_6of6_fail_vs_fix_0of6_at_1668MiB_and_scored_path_liveness_witness_shipped_fires_on_all_8_recorded_dead_cells_11of11_mutations_load_bearing_llm_off_recapture_bit_identical_18of18",
+ "field_provenance": {
+  "duration_s": {
+   "principle": "Real compute takes wall-clock time, and a missing or implausibly-short duration is the load-bearing fabrication signal. It therefore reports the LIVE measurement's span, not the JSON builder's runtime (kept as artifact_build_s)."
+  },
+  "measurement_wall_s": {
+   "principle": "The measurement clock is not the analyser clock. Summed from each run's own elapsed, itemised."
+  },
+  "inference_substrate": {
+   "principle": "Declares which duration floor applies, so a fast artifact cannot be mistaken for a fabricated one nor an honest one falsely flagged."
+  },
+  "random_seed": {
+   "principle": "Determinism is the precondition for reproducibility."
+  },
+  "reproducibility_checksum": {
+   "principle": "Content-addressed hash of the run inputs catches silent corpus or code drift before replication."
+  },
+  "preconditions_checked": {
+   "principle": "Records WHICH resources were verified before measuring, pre-empting the fabrication mode where a missing resource is papered over."
+  },
+  "failure_SET_comparison_against_a_control_in_the_same_tree": {
+   "principle": "Failure SETS, not totals: an unchanged count can hide a changed identity."
+  },
+  "gate_is_not_forced": {
+   "principle": "A PASS is only evidence if the same measurement could have FAILED; the control arm is that witness."
+  },
+  "verifier_is_oracle": {
+   "principle": "Declared explicitly so the circularity check has an answer; no moat/efficiency claim is made here."
+  },
+  "what_this_does_NOT_establish": {
+   "principle": "Scope and power beside the verdict, so a narrow witness is never read as a corpus property."
+  }
+ },
+ "acceptance_gate_g1_fault_reproduced_at_the_shipped_value": true,
+ "acceptance_gate_g2_fix_passes_at_and_above_the_slot_cap": true,
+ "acceptance_gate_g3_no_silent_truncation_under_the_fix": true,
+ "acceptance_gate_g4_guard_fires_on_all_eight_recorded_dead_cells": true,
+ "acceptance_gate_g5_every_new_branch_is_load_bearing": true,
+ "acceptance_gate_g6_no_new_test_failures_vs_the_same_tree_control": true,
+ "acceptance_gate_passed": true,
+ "acceptance_gate_falsifiable_not_forced": {
+  "g1": "the control arm at n_ctx=16384 FAILED 6/6 in the same tree -- it could have passed",
+  "g2": "the same cells at the same K FAILED under the control, so the pass region is not vacuous",
+  "g3": "exp5866 measured a config (--parallel 1) that PASSES an HTTP gate while violating this conjunct 3/4, so g3 discriminates",
+  "g4": "M3 (drop DEAD_GENERATOR) turns this gate red, killing 8 tests",
+  "g5": "each of the 11 mutations is reported with the tests it killed; a decorative branch would have reported DECORATIVE_BRANCH_NO_TEST_DIED",
+  "g6": "the BEFORE run of the same suites in the same tree produced a non-empty failure set, so 'no NEW failures' is a comparison against a live control, not against an assumed-green baseline",
+  "witness_that_the_pass_region_is_non_empty_at_the_gate's_own_level": "the FIX arm's own cells: K=4 -> 4/4 HTTP 200 with 4/4 intended_budget_limit, and K=6 (4 concurrent + 2 queued) -> 6/6 in exp5866. No conjunct encodes an assumption about another arm."
+ },
+ "acceptance_gate_principle": "Each conjunct guards a distinct failure mode: g1 that the fault is real at the shipped value (not modelled), g2 that the fix holds at llama.cpp's own concurrency cap, g3 that the fix did not convert a loud failure into a silent one, g4 that the guard fires on the recorded incident, g5 that every guard branch is load-bearing, g6 that nothing else regressed.",
+ "reproducibility_checksum": "sha256:e8fa3d3dfa6f96640a96bb84d79cd0dfe9adca9bee27fa177c1bbaa4f5252e04"
+}

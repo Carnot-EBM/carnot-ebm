@@ -1,0 +1,1199 @@
+{
+  "started_utc": "2026-07-27T09:35:15Z",
+  "target_gpu": 1,
+  "port": 8931,
+  "random_seed": 5850,
+  "llama_server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+  "shipped_max_tokens": 4096,
+  "pre_registered_formula": {
+    "base_mib": 10644.0,
+    "per_ctx_mib": 0.0205,
+    "per_slot_mib": 201.0
+  },
+  "gpu_uuids": {
+    "0": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "1": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+  },
+  "gpu_totals_at_start": {
+    "0": {
+      "total_mib": 24576,
+      "used_mib": 4,
+      "free_mib": 24120
+    },
+    "1": {
+      "total_mib": 24576,
+      "used_mib": 306,
+      "free_mib": 23819
+    }
+  },
+  "configs": [
+    {
+      "tag": "shipped_c16384",
+      "n_ctx_requested": 16384,
+      "parallel_arg": null,
+      "server_pid": 2219457,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2219457,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11784
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2219457,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11784
+        }
+      ],
+      "resident_mib": 11784,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 16384,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 12095,
+          "free_mib": 12029
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.214.485 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.628.810 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.697.226 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 16384",
+          "0.08.697.233 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 16384",
+          "0.08.697.233 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 16384",
+          "0.08.697.233 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 16384"
+        ],
+        "n_parallel_line": "0.00.272.301 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      },
+      "server_log_after_fault": {
+        "kv_lines": [
+          "0.23.338.991 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 1024, ret = 1",
+          "0.23.339.245 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 512, ret = 1",
+          "0.23.339.453 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 256, ret = 1",
+          "0.23.339.624 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 128, ret = 1",
+          "0.23.339.784 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 64, ret = 1",
+          "0.23.339.963 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 32, ret = 1",
+          "0.23.340.128 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 16, ret = 1",
+          "0.23.340.279 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 8, ret = 1",
+          "0.23.340.428 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 4, ret = 1",
+          "0.23.340.577 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 2, ret = 1",
+          "0.23.340.727 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 1, ret = 1",
+          "0.23.353.331 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 1024, ret = 1",
+          "0.23.353.569 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 512, ret = 1",
+          "0.23.353.761 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 256, ret = 1",
+          "0.23.353.937 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 128, ret = 1",
+          "0.23.354.111 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 64, ret = 1",
+          "0.23.354.265 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 32, ret = 1",
+          "0.23.354.417 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 16, ret = 1",
+          "0.23.354.566 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 8, ret = 1",
+          "0.23.354.728 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 4, ret = 1",
+          "0.23.354.891 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 2, ret = 1",
+          "0.23.355.040 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 1, n_batch = 1, ret = 1",
+          "0.28.358.359 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 1024, ret = 1",
+          "0.28.358.591 W srv  update_slots: failed to find free space in the KV cache, retrying with smaller batch size, i = 0, n_batch = 512, ret = 1"
+        ],
+        "ctx_lines": [
+          "0.06.214.485 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.628.810 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.697.226 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 16384",
+          "0.08.697.233 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 16384",
+          "0.08.697.233 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 16384",
+          "0.08.697.233 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 16384"
+        ],
+        "n_parallel_line": "0.00.272.301 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": [
+          "0.23.355.203 E srv  update_slots: Context size has been exceeded. i = 1, n_batch = 1, ret = 1",
+          "0.23.355.206 E srv    send_error: task id = 224, error: Context size has been exceeded.",
+          "0.23.355.236 E srv    send_error: task id = 223, error: Context size has been exceeded.",
+          "0.28.360.116 E srv  update_slots: Context size has been exceeded. i = 0, n_batch = 1, ret = 1",
+          "0.28.360.118 E srv    send_error: task id = 228, error: Context size has been exceeded.",
+          "0.28.361.992 E srv    send_error: task id = 229, error: Context size has been exceeded.",
+          "0.28.362.141 E srv    send_error: task id = 230, error: Context size has been exceeded.",
+          "0.33.355.223 E srv  update_slots: Context size has been exceeded. i = 0, n_batch = 1, ret = 1",
+          "0.33.355.223 E srv    send_error: task id = 244, error: Context size has been exceeded.",
+          "0.33.357.117 E srv    send_error: task id = 246, error: Context size has been exceeded.",
+          "0.33.357.274 E srv    send_error: task id = 243, error: Context size has been exceeded.",
+          "0.33.357.289 E srv    send_error: task id = 245, error: Context size has been exceeded."
+        ]
+      }
+    },
+    {
+      "tag": "c32768_auto",
+      "n_ctx_requested": 32768,
+      "parallel_arg": null,
+      "server_pid": 2219604,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2219604,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12176
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2219604,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12176
+        }
+      ],
+      "resident_mib": 12176,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 32768,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 12487,
+          "free_mib": 11637
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.133.517 W llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.563.233 W llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.690.047 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 32768",
+          "0.08.690.053 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 32768",
+          "0.08.690.054 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 32768",
+          "0.08.690.054 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 32768"
+        ],
+        "n_parallel_line": "0.00.285.819 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "c49152_auto",
+      "n_ctx_requested": 49152,
+      "parallel_arg": null,
+      "server_pid": 2219700,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2219700,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12588
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2219700,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12588
+        }
+      ],
+      "resident_mib": 12588,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 49152,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 12899,
+          "free_mib": 11225
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.250.327 W llama_context: n_ctx_seq (49152) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.678.687 W llama_context: n_ctx_seq (49152) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.766.995 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 49152",
+          "0.08.767.002 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 49152",
+          "0.08.767.002 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 49152",
+          "0.08.767.002 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 49152"
+        ],
+        "n_parallel_line": "0.00.274.540 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "c65536_auto",
+      "n_ctx_requested": 65536,
+      "parallel_arg": null,
+      "server_pid": 2219795,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2219795,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 13020
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2219795,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 13020
+        }
+      ],
+      "resident_mib": 13020,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 65536,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 13331,
+          "free_mib": 10793
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.227.487 W llama_context: n_ctx_seq (65536) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.649.247 W llama_context: n_ctx_seq (65536) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.760.826 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 65536",
+          "0.08.760.832 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 65536",
+          "0.08.760.832 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 65536",
+          "0.08.760.832 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 65536"
+        ],
+        "n_parallel_line": "0.00.305.313 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "c16384_p1",
+      "n_ctx_requested": 16384,
+      "parallel_arg": 1,
+      "server_pid": 2219897,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2219897,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11166
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2219897,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11166
+        }
+      ],
+      "resident_mib": 11166,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 1,
+      "props_slot_n_ctx": 16384,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 11477,
+          "free_mib": 12647
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.365.730 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.782.740 W llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.847.021 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 16384"
+        ],
+        "n_parallel_line": "",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "c16384_p8",
+      "n_ctx_requested": 16384,
+      "parallel_arg": 8,
+      "server_pid": 2220042,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2220042,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12624
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2220042,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12624
+        }
+      ],
+      "resident_mib": 12624,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 8,
+      "props_slot_n_ctx": 2048,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 12935,
+          "free_mib": 11189
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.316.108 W llama_context: n_ctx_seq (2048) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.745.481 W llama_context: n_ctx_seq (2048) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.808.587 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.592 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.593 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.593 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.594 I slot   load_model: id  4 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.594 I slot   load_model: id  5 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.594 I slot   load_model: id  6 | task -1 | new slot, n_ctx = 2048",
+          "0.08.808.594 I slot   load_model: id  7 | task -1 | new slot, n_ctx = 2048"
+        ],
+        "n_parallel_line": "",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "c65536_p1",
+      "n_ctx_requested": 65536,
+      "parallel_arg": 1,
+      "server_pid": 2220182,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2220182,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12418
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2220182,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12418
+        }
+      ],
+      "resident_mib": 12418,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 1,
+      "props_slot_n_ctx": 65536,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 12729,
+          "free_mib": 11395
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.308.064 W llama_context: n_ctx_seq (65536) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.740.932 W llama_context: n_ctx_seq (65536) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.828.065 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 65536"
+        ],
+        "n_parallel_line": "",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "fix_c81920",
+      "n_ctx_requested": 81920,
+      "parallel_arg": null,
+      "server_pid": 2220277,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2220277,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 13452
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2220277,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 13452
+        }
+      ],
+      "resident_mib": 13452,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 81920,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 13763,
+          "free_mib": 10361
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.244.081 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.687.361 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.827.943 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 81920",
+          "0.08.827.949 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 81920",
+          "0.08.827.949 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 81920",
+          "0.08.827.950 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 81920"
+        ],
+        "n_parallel_line": "0.00.360.916 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      },
+      "server_log_after_fault": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.244.081 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.687.361 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.827.943 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 81920",
+          "0.08.827.949 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 81920",
+          "0.08.827.949 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 81920",
+          "0.08.827.950 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 81920"
+        ],
+        "n_parallel_line": "0.00.360.916 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "nc1_c8192",
+      "n_ctx_requested": 8192,
+      "parallel_arg": null,
+      "server_pid": 2220673,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2220673,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11600
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2220673,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 11600
+        }
+      ],
+      "resident_mib": 11600,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 8192,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 11911,
+          "free_mib": 12213
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.292.983 W llama_context: n_ctx_seq (8192) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.713.777 W llama_context: n_ctx_seq (8192) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.770.600 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 8192",
+          "0.08.770.606 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 8192",
+          "0.08.770.606 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 8192",
+          "0.08.770.606 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 8192"
+        ],
+        "n_parallel_line": "0.00.296.595 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "nc2_c32768_k4",
+      "n_ctx_requested": 32768,
+      "parallel_arg": null,
+      "server_pid": 2220773,
+      "loaded": true,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "load_wait_s": 10.0,
+      "per_pid_residency_all": [
+        {
+          "pid": 12188,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 296
+        },
+        {
+          "pid": 2220773,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12176
+        }
+      ],
+      "per_pid_mine": [
+        {
+          "pid": 2220773,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "used_mib": 12176
+        }
+      ],
+      "resident_mib": 12176,
+      "resident_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resident_gpu_index": 1,
+      "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+      "props_total_slots": 4,
+      "props_slot_n_ctx": 32768,
+      "gpu_after": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 12487,
+          "free_mib": 11637
+        }
+      },
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.355.567 W llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.781.508 W llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.854.352 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 32768",
+          "0.08.854.357 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 32768",
+          "0.08.854.358 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 32768",
+          "0.08.854.358 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 32768"
+        ],
+        "n_parallel_line": "0.00.313.178 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": []
+      }
+    },
+    {
+      "tag": "nc3_oom",
+      "n_ctx_requested": 262144,
+      "parallel_arg": 96,
+      "server_pid": 2220895,
+      "loaded": false,
+      "gpu_before": {
+        "0": {
+          "total_mib": 24576,
+          "used_mib": 4,
+          "free_mib": 24120
+        },
+        "1": {
+          "total_mib": 24576,
+          "used_mib": 306,
+          "free_mib": 23819
+        }
+      },
+      "exit_code": -11,
+      "load_wait_s": 10.2,
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.131.023 W llama_context: n_ctx is not divisible by n_seq_max - rounding down to 270336",
+          "0.06.131.034 W llama_context: n_ctx_seq (2816) < n_ctx_train (262144) -- the full capacity of the model will not be utilized"
+        ],
+        "n_parallel_line": "",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": [
+          "0.06.153.584 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 19296.00 MiB on device 0: cudaMalloc failed: out of memory",
+          "0.06.153.588 E alloc_tensor_range: failed to allocate CUDA0 buffer of size 20233322496",
+          "0.06.187.351 E llama_init_from_model: failed to initialize the context: failed to allocate buffer for rs cache"
+        ]
+      }
+    }
+  ],
+  "fault_repro": [
+    {
+      "n_ctx": 16384,
+      "K": 1,
+      "cells_needed_total": 19850,
+      "pool_cells": 16384,
+      "predicted": "FAIL",
+      "healthy_before": true,
+      "healthy_after": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 200,
+          "elapsed_s": 9.79,
+          "content_chars": 2133,
+          "stop_type": "limit",
+          "error": ""
+        }
+      ],
+      "n_http_200": 1,
+      "n_http_500": 0,
+      "n_transport_dead": 0,
+      "observed": "PASS"
+    },
+    {
+      "n_ctx": 16384,
+      "K": 2,
+      "cells_needed_total": 39700,
+      "pool_cells": 16384,
+      "predicted": "FAIL",
+      "healthy_before": true,
+      "healthy_after": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 500,
+          "elapsed_s": 0.02,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 1,
+          "http_status": 500,
+          "elapsed_s": 0.02,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        }
+      ],
+      "n_http_200": 0,
+      "n_http_500": 2,
+      "n_transport_dead": 0,
+      "observed": "FAIL"
+    },
+    {
+      "n_ctx": 16384,
+      "K": 3,
+      "cells_needed_total": 59550,
+      "pool_cells": 16384,
+      "predicted": "FAIL",
+      "healthy_before": true,
+      "healthy_after": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 500,
+          "elapsed_s": 5.0,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 1,
+          "http_status": 500,
+          "elapsed_s": 5.0,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 2,
+          "http_status": 500,
+          "elapsed_s": 5.0,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        }
+      ],
+      "n_http_200": 0,
+      "n_http_500": 3,
+      "n_transport_dead": 0,
+      "observed": "FAIL"
+    },
+    {
+      "n_ctx": 16384,
+      "K": 4,
+      "cells_needed_total": 79400,
+      "pool_cells": 16384,
+      "predicted": "FAIL",
+      "healthy_before": true,
+      "healthy_after": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 500,
+          "elapsed_s": 4.99,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 1,
+          "http_status": 500,
+          "elapsed_s": 4.99,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 2,
+          "http_status": 500,
+          "elapsed_s": 4.99,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 3,
+          "http_status": 500,
+          "elapsed_s": 4.99,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        }
+      ],
+      "n_http_200": 0,
+      "n_http_500": 4,
+      "n_transport_dead": 0,
+      "observed": "FAIL"
+    },
+    {
+      "n_ctx": 81920,
+      "K": 2,
+      "cells_needed_total": 39700,
+      "pool_cells": 81920,
+      "predicted": "PASS",
+      "healthy_after": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 200,
+          "elapsed_s": 69.92,
+          "content_chars": 8873,
+          "stop_type": "limit",
+          "error": ""
+        },
+        {
+          "req": 1,
+          "http_status": 200,
+          "elapsed_s": 67.29,
+          "content_chars": 11259,
+          "stop_type": "limit",
+          "error": ""
+        }
+      ],
+      "n_http_200": 2,
+      "n_http_500": 0,
+      "n_transport_dead": 0,
+      "observed": "PASS"
+    },
+    {
+      "n_ctx": 81920,
+      "K": 4,
+      "cells_needed_total": 79400,
+      "pool_cells": 81920,
+      "predicted": "PASS",
+      "healthy_after": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 200,
+          "elapsed_s": 147.69,
+          "content_chars": 14499,
+          "stop_type": "limit",
+          "error": ""
+        },
+        {
+          "req": 1,
+          "http_status": 200,
+          "elapsed_s": 148.55,
+          "content_chars": 17020,
+          "stop_type": "limit",
+          "error": ""
+        },
+        {
+          "req": 2,
+          "http_status": 200,
+          "elapsed_s": 151.31,
+          "content_chars": 11629,
+          "stop_type": "limit",
+          "error": ""
+        },
+        {
+          "req": 3,
+          "http_status": 200,
+          "elapsed_s": 144.15,
+          "content_chars": 6945,
+          "stop_type": "limit",
+          "error": ""
+        }
+      ],
+      "n_http_200": 4,
+      "n_http_500": 0,
+      "n_transport_dead": 0,
+      "observed": "PASS"
+    }
+  ],
+  "negative_controls": [
+    {
+      "control": "NC1_single_request_exceeds_pool",
+      "n_ctx": 8192,
+      "K": 1,
+      "predicted": "FAIL",
+      "loaded": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 400,
+          "elapsed_s": 0.01,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 400, \"message\": \"request (15754 tokens) exceeds the available context size (8192 tokens), try increasing it\", \"type\": \"exceed_context_size_error\", \"n_prompt_tokens\": 15754, \"n_ctx\": 8192}}"
+        }
+      ],
+      "healthy_after": true,
+      "observed": "FAIL",
+      "server_log": {
+        "kv_lines": [],
+        "ctx_lines": [
+          "0.06.292.983 W llama_context: n_ctx_seq (8192) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.713.777 W llama_context: n_ctx_seq (8192) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+          "0.08.770.600 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 8192",
+          "0.08.770.606 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 8192",
+          "0.08.770.606 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 8192",
+          "0.08.770.606 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 8192"
+        ],
+        "n_parallel_line": "0.00.296.595 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true",
+        "n_ctx_train": null,
+        "cuda_buffer_lines": [],
+        "error_lines": [
+          "0.13.049.950 E srv    send_error: task id = 0, error: request (15754 tokens) exceeds the available context size (8192 tokens), try increasing it"
+        ]
+      }
+    },
+    {
+      "control": "NC2_intermediate_ctx_still_overflows_at_K4",
+      "n_ctx": 32768,
+      "K": 4,
+      "cells_needed_total": 79400,
+      "predicted": "FAIL",
+      "loaded": true,
+      "requests": [
+        {
+          "req": 0,
+          "http_status": 500,
+          "elapsed_s": 11.44,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 1,
+          "http_status": 500,
+          "elapsed_s": 11.44,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 2,
+          "http_status": 500,
+          "elapsed_s": 11.44,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        },
+        {
+          "req": 3,
+          "http_status": 500,
+          "elapsed_s": 11.44,
+          "content_chars": 0,
+          "stop_type": "",
+          "error": "{\"error\": {\"code\": 500, \"message\": \"Context size has been exceeded.\", \"type\": \"server_error\"}}"
+        }
+      ],
+      "healthy_after": true,
+      "observed": "FAIL"
+    },
+    {
+      "control": "NC3_formula_predicted_VRAM_exceeded",
+      "n_ctx": 262144,
+      "parallel": 96,
+      "formula_predicted_mib": 35314.0,
+      "gpu_free_mib_before": 23819,
+      "predicted": "FAIL",
+      "loaded": false,
+      "observed": "FAIL",
+      "exit_code": -11,
+      "server_log_errors": [
+        "0.06.153.584 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 19296.00 MiB on device 0: cudaMalloc failed: out of memory",
+        "0.06.153.588 E alloc_tensor_range: failed to allocate CUDA0 buffer of size 20233322496",
+        "0.06.187.351 E llama_init_from_model: failed to initialize the context: failed to allocate buffer for rs cache"
+      ]
+    }
+  ],
+  "prompt": {
+    "tokens_measured": 15754,
+    "transitions_k": 8,
+    "grid_shape": [
+      64,
+      64
+    ],
+    "builder": "arc_executable_world_model.induce_prompt",
+    "token_count_source": "server /tokenize (real tokenizer)",
+    "cells_per_request": 19850
+  },
+  "fix_candidate": {
+    "cells_needed_at_K4": 79400,
+    "n_ctx": 81920,
+    "rule": "n_ctx >= K_cap * (prompt_tokens + max_tokens), 4096-aligned"
+  },
+  "measurement_wall_s": 459.9,
+  "gpu_totals_at_end": {
+    "0": {
+      "total_mib": 24576,
+      "used_mib": 4,
+      "free_mib": 24120
+    },
+    "1": {
+      "total_mib": 24576,
+      "used_mib": 306,
+      "free_mib": 23819
+    }
+  }
+}

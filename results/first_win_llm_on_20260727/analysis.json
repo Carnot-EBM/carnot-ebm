@@ -1,0 +1,269 @@
+{
+ "analysis": "arc_first_win_rate_llm_on_at_eval_concurrency",
+ "generated_utc": "2026-07-27T12:01:54Z",
+ "git_head": "c4c60dfacbcc23ad4eb0ab7d72b85e2a270f4a39",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "baseline": {
+  "path": "results/experiment_4605_live_integration_scored_agent.json",
+  "sha256": "sha256:060b81338e9800132dde89fba547eb74906c902a04b7eef9b623f769d35a14bf",
+  "first_win_rate_integrated": 0.04,
+  "first_win_rate_bare": 0.04,
+  "first_win_ci_reported": {
+   "bootstrap_resamples": 1000,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "method": "paired_percentile_bootstrap",
+   "point": 0.0,
+   "random_seed": 4605
+  },
+  "n_variant_attempts": 100,
+  "winning_variants": [
+   "lp85~color01",
+   "lp85~color02",
+   "lp85~color03",
+   "lp85~color04"
+  ],
+  "llm_arm_declared": "disabled_noop_proposer_for_matched_offline_measurement",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline scored-agent measurement over cached variants (1s floor), no live_llm_inference",
+  "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+  "definition": "first_win_rate = (# variant attempts whose reproduction_gate REPRODUCED a level-up) / (# variant attempts), over the color-permuted held-out variants of the 25 public games, budget 200 actions, agent = SUBMITTED_AGENT_CONFIG (E3AgentPolicy, target_levels=SUBMITTED_TARGET_LEVELS, value_weight=SUBMITTED_VALUE_WEIGHT). Source: experiment_4605_live_integration_scored_agent.run_variant_attempt -- first_win == solved == gate.reproduced and reached_level >= claimed >= 1.",
+  "baseline_arms_were_llm_off": "experiment_4605._policy_for_mode installs _NoOpProposer for BOTH arms (line 722), whose induce() returns (False, 'disabled_exp4605_no_live_llm'); preconditions_checked.live_llm_inference is False. So the 0.04 baseline is an LLM-OFF measurement taken at concurrency 1."
+ },
+ "arms": {
+  "llm_off": {
+   "n_cells": 63,
+   "n_first_win": 1,
+   "first_win_rate": 0.015873,
+   "first_win_rate_ci95_clopper_pearson": [
+    0.000402,
+    0.085296
+   ],
+   "winning_variants": [
+    "lp85~color02"
+   ],
+   "n_raw_levelups_claimed": 1,
+   "raw_levelup_variants": [
+    "lp85~color02"
+   ],
+   "n_levelups_rejected_by_reproduction_gate": 0,
+   "levelups_rejected_by_reproduction_gate": [],
+   "n_cell_errors": 0,
+   "cell_errors": [],
+   "actions_to_first_levelup_over_winners": [
+    187
+   ],
+   "median_actions_to_first_levelup": 187,
+   "median_actions_used_all_cells": 197.0,
+   "measurement_wall_s_from_rows": 5920.93,
+   "median_cell_elapsed_s": 103.69,
+   "liveness": {
+    "n_cells_with_witness": 63,
+    "n_cells_missing_witness": 0,
+    "cells_missing_witness": [],
+    "llm_enabled_cells": 63,
+    "generator_constructed_cells": 63,
+    "llm_on_row_valid_cells": 0,
+    "dead_generator_cells": 0,
+    "n_cells_llm_counters_undetermined": 63,
+    "llm_counters_undetermined_reasons": [
+     "AttributeError(\"'_NoOpProposer' object has no attribute 'liveness_witness'\")"
+    ],
+    "generator_healthy_after_true_cells": 0,
+    "generator_healthy_after_false_cells": 0,
+    "total_llm_calls": 0,
+    "total_llm_responses": 0,
+    "total_llm_server_errors": 0,
+    "total_llm_content_failures": 0,
+    "response_rate": null,
+    "generator_n_ctx_observed": [],
+    "n_server_failure_diagnostics": 0,
+    "server_failure_diagnostics_sample": [],
+    "induction_attempts_total": 64,
+    "induction_attempts_planned_total": 0,
+    "n_cells_llm_output_reached_the_policy": 0,
+    "induction_skip_reason_histogram": {
+     "proposer_failed": 1,
+     "proposer_failed_or_missing_root": 63
+    }
+   }
+  },
+  "llm_on_fix": {
+   "n_cells": 4,
+   "n_first_win": 0,
+   "first_win_rate": 0.0,
+   "first_win_rate_ci95_clopper_pearson": [
+    0.0,
+    0.602524
+   ],
+   "winning_variants": [],
+   "n_raw_levelups_claimed": 0,
+   "raw_levelup_variants": [],
+   "n_levelups_rejected_by_reproduction_gate": 0,
+   "levelups_rejected_by_reproduction_gate": [],
+   "n_cell_errors": 0,
+   "cell_errors": [],
+   "actions_to_first_levelup_over_winners": [],
+   "median_actions_to_first_levelup": null,
+   "median_actions_used_all_cells": 196.0,
+   "measurement_wall_s_from_rows": 2239.52,
+   "median_cell_elapsed_s": 663.0,
+   "liveness": {
+    "n_cells_with_witness": 4,
+    "n_cells_missing_witness": 0,
+    "cells_missing_witness": [],
+    "llm_enabled_cells": 4,
+    "generator_constructed_cells": 4,
+    "llm_on_row_valid_cells": 4,
+    "dead_generator_cells": 0,
+    "n_cells_llm_counters_undetermined": 0,
+    "llm_counters_undetermined_reasons": [],
+    "generator_healthy_after_true_cells": 4,
+    "generator_healthy_after_false_cells": 0,
+    "total_llm_calls": 16,
+    "total_llm_responses": 15,
+    "total_llm_server_errors": 0,
+    "total_llm_content_failures": 1,
+    "response_rate": 0.9375,
+    "generator_n_ctx_observed": [
+     81920
+    ],
+    "n_server_failure_diagnostics": 0,
+    "server_failure_diagnostics_sample": [],
+    "induction_attempts_total": 4,
+    "induction_attempts_planned_total": 0,
+    "n_cells_llm_output_reached_the_policy": 0,
+    "induction_skip_reason_histogram": {
+     "hidden_state_trust_below_threshold": 3,
+     "world_model_accuracy_below_threshold": 1
+    }
+   }
+  }
+ },
+ "comparisons": [
+  {
+   "comparison": "llm_on_fix_vs_llm_off",
+   "n_matched_pairs": 4,
+   "unmatched_treatment_only": [],
+   "unmatched_control_only": [
+    "ar25~color02",
+    "ar25~color03",
+    "ar25~color04",
+    "bp35~color02",
+    "bp35~color03",
+    "bp35~color04",
+    "cd82~color02",
+    "cd82~color03",
+    "cd82~color04",
+    "cn04~color02",
+    "cn04~color03",
+    "cn04~color04",
+    "dc22~color01",
+    "dc22~color02",
+    "dc22~color03",
+    "dc22~color04",
+    "ft09~color01",
+    "ft09~color02",
+    "ft09~color03",
+    "ft09~color04",
+    "g50t~color01",
+    "g50t~color02",
+    "g50t~color03",
+    "g50t~color04",
+    "ka59~color01",
+    "ka59~color02",
+    "ka59~color03",
+    "ka59~color04",
+    "lf52~color01",
+    "lf52~color02",
+    "lf52~color03",
+    "lf52~color04",
+    "lp85~color01",
+    "lp85~color02",
+    "lp85~color03",
+    "lp85~color04",
+    "ls20~color01",
+    "ls20~color02",
+    "ls20~color03",
+    "ls20~color04",
+    "m0r0~color01",
+    "m0r0~color02",
+    "m0r0~color03",
+    "m0r0~color04",
+    "r11l~color01",
+    "r11l~color02",
+    "r11l~color03",
+    "r11l~color04",
+    "re86~color01",
+    "re86~color02",
+    "re86~color03",
+    "re86~color04",
+    "s5i5~color01",
+    "s5i5~color02",
+    "s5i5~color03",
+    "s5i5~color04",
+    "sb26~color01",
+    "sb26~color02",
+    "sb26~color03"
+   ],
+   "treatment_first_win_rate": 0.0,
+   "control_first_win_rate": 0.0,
+   "delta": 0.0,
+   "flipped_to_win_variants": [],
+   "flipped_to_loss_variants": [],
+   "mcnemar_exact": {
+    "discordant_b_treatment_only": 0,
+    "discordant_c_control_only": 0,
+    "n_discordant": 0,
+    "p_two_sided": 1.0,
+    "p_one_sided_treatment_better": 1.0,
+    "p_one_sided_control_better": 1.0,
+    "min_reachable_p_two_sided_at_this_support": 1.0,
+    "significant_at_0_05": false,
+    "power_note": "ZERO discordant pairs: every variant agreed between arms. No paired test can reach any p below 1.0 on zero discordant pairs, so this is an exact statement of NO OBSERVED per-variant disagreement, not a powered null."
+   },
+   "paired_bootstrap_delta": {
+    "method": "paired_percentile_bootstrap",
+    "bootstrap_resamples": 1000,
+    "random_seed": 4605,
+    "point": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  }
+ ],
+ "control_winner_probe": {
+  "llm_on_fix": {
+   "cells": [],
+   "n_cells": 0,
+   "n_held": 0,
+   "n_lost": 0,
+   "held_cells": [],
+   "lost_cells": [],
+   "control_won_cells_not_measured_in_this_condition": [
+    "lp85~color02"
+   ]
+  },
+  "llm_on_16k": {
+   "cells": [],
+   "n_cells": 0,
+   "n_held": 0,
+   "n_lost": 0,
+   "held_cells": [],
+   "lost_cells": [],
+   "control_won_cells_not_measured_in_this_condition": [
+    "lp85~color02"
+   ]
+  },
+  "_selection_bias_note": "Cells here were selected BECAUSE the control won them. That biases any rate computed on them toward showing a loss, so no rate or p-value is reported for this probe -- only the held/lost counts, as a directional check. The unbiased comparison is the pre-specified variant-1 slice in `comparisons`.",
+  "_control_win_set": [
+   "lp85~color02"
+  ]
+ },
+ "runs": {},
+ "measurement_wall_s": 8160.45,
+ "analyser_wall_s": 1.51
+}
