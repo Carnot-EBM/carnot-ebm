@@ -18,8 +18,16 @@ build/
 .pytest_cache/
 
 # Virtual environments
+# The trailing-slash forms match DIRECTORIES ONLY. On 2026-07-26 a git worktree
+# was given a `.venv` SYMLINK pointing at the real venv (so the pre-commit
+# torch-CUDA guard could find torch), `git add -A` did NOT ignore it -- a symlink
+# is not a directory, so `.venv/` never matched -- and a machine-specific
+# absolute-path symlink got committed as a mode-120000 blob. The slash-less forms
+# below close that hole for symlinks and plain files of the same name.
 .venv/
+.venv
 venv/
+venv
 env/
 
 # IDE
