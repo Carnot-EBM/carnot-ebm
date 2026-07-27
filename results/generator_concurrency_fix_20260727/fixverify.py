@@ -335,7 +335,24 @@ def run_config(label: str, n_ctx, port: int) -> dict:
     rec["props"] = props(port)
     prompt, ptok, meta = build_real_shape_prompt(port, 15600)
     rec["prompt"] = {"tokens": ptok, **meta}
-    rec["vram_resident_mib"] = device["gpu1_used_after_mib"]
+    # PER-PID, not the device total (corrected 2026-07-27, adversarial review). This was
+    # `device["gpu1_used_after_mib"]`, i.e. `nvidia-smi --id=1 --query-gpu=memory.used`, which
+    # includes every OTHER process on the card -- here a constant foreign 311 MiB. Publishing a
+    # device total under the name `vram_resident_mib` made the artifact claim exp5866's per-PID
+    # 13452 MiB and this run's 13763 MiB were "the same to the MiB" when they are 311 MiB apart
+    # and are different quantities. The per-PID rows were already collected (`mine`) and used
+    # for the device verdict; they just were not the number published. The DELTA was unaffected
+    # because the foreign offset cancels, which is exactly why the error survived review.
+    _rows = device.get("per_pid_rows") or []
+    _mine_mib = sum(int(a.get("used_mib") or 0) for a in _rows) or None
+    rec["vram_resident_mib"] = _mine_mib if _mine_mib else device["gpu1_used_after_mib"]
+    rec["vram_resident_mib_source"] = (
+        "per_pid" if _mine_mib else "device_total_fallback_no_per_pid_row"
+    )
+    rec["gpu1_device_total_used_mib"] = device["gpu1_used_after_mib"]
+    rec["foreign_vram_on_card_mib"] = (
+        device["gpu1_used_after_mib"] - _mine_mib if _mine_mib else None
+    )
     rec["cells"] = []
     for k in K_VALUES:
         if not healthy(port):

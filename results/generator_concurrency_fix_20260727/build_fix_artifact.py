@@ -32,6 +32,46 @@ recap = json.loads((REPO / "results" / "arc_per_level_reset_attribution_20260726
 
 ctrl, fix = fixv["configs"][0], fixv["configs"][1]
 
+
+def _per_pid_mib(cfg: dict) -> dict:
+    """PER-PID residency for one arm, recovered from the rows the harness already recorded.
+
+    CORRECTION 2026-07-27 (adversarial review). `cfg["vram_resident_mib"]` was written by the
+    harness as `device["gpu1_used_after_mib"]` -- a DEVICE TOTAL from
+    `nvidia-smi --id=1 --query-gpu=memory.used`, which includes every other process on the card.
+    Publishing it under the name `vram_resident_mib` let the artifact compare it directly with
+    exp5866's PER-PID 13452 MiB and call them "the same to the MiB" when they are a constant
+    311 MiB apart and are different quantities.
+
+    fixverify.py is fixed for future runs, but re-running it would replace this session's
+    measurement with a different one, so the numbers are recovered from `device.per_pid_rows`,
+    which that same run already captured and used for its GPU-residency verdict. No
+    re-measurement, no new server launch, no fabricated value -- the right field, read from the
+    record that was always there.
+    """
+    dev = cfg.get("device") or {}
+    rows = dev.get("per_pid_rows") or []
+    mine = sum(int(r.get("used_mib") or 0) for r in rows) or None
+    total = dev.get("gpu1_used_after_mib")
+    return {
+        "per_pid_mib": mine,
+        "device_total_mib": total,
+        "foreign_mib": (total - mine) if (mine and isinstance(total, int)) else None,
+        "source": "per_pid_rows" if mine else "device_total_fallback",
+    }
+
+
+ctrl_vram = _per_pid_mib(ctrl)
+fix_vram = _per_pid_mib(fix)
+# The delta is identical either way -- the constant foreign offset cancels -- which is exactly
+# why publishing the wrong quantity survived review. Recompute it from the per-PID figures so
+# the published cost and the published residency are the same arithmetic.
+vram_cost_per_pid_mib = (
+    fix_vram["per_pid_mib"] - ctrl_vram["per_pid_mib"]
+    if (fix_vram["per_pid_mib"] and ctrl_vram["per_pid_mib"])
+    else fixv["vram_cost_mib"]
+)
+
 # --- the two clocks, kept genuinely distinct (a first build that set them equal was
 # correctly flagged TAUTOLOGY on exp5866; the fix is to report the two different things,
 # never to suppress the check).
@@ -268,7 +308,8 @@ art: dict = {
             "label": ctrl["label"],
             "n_ctx": ctrl["device"]["proposer_n_ctx_attr"],
             "props": ctrl["props"],
-            "vram_resident_mib": ctrl["vram_resident_mib"],
+            "vram_resident_mib": ctrl_vram["per_pid_mib"],
+            "vram_measurement": ctrl_vram,
             "cells": [{k: v for k, v in c.items() if k != "requests"} for c in ctrl["cells"]],
             "server_error_body_verbatim": "Context size has been exceeded.",
         },
@@ -276,7 +317,8 @@ art: dict = {
             "label": fix["label"],
             "n_ctx": fix["device"]["proposer_n_ctx_attr"],
             "props": fix["props"],
-            "vram_resident_mib": fix["vram_resident_mib"],
+            "vram_resident_mib": fix_vram["per_pid_mib"],
+            "vram_measurement": fix_vram,
             "cells": [{k: v for k, v in c.items() if k != "requests"} for c in fix["cells"]],
             "every_request_got_its_full_budget": True,
             "full_budget_evidence": (
@@ -302,9 +344,34 @@ art: dict = {
             "shipped a silent truncation."
         ),
         "independent_replication_of_the_price": (
-            f"exp5866 predicted 13452 MiB resident at n_ctx=81920 and a +1668 MiB delta; this "
-            f"session's independent launch measured {fix['vram_resident_mib']} MiB and "
-            f"+{fixv['vram_cost_mib']} MiB. Same to the MiB, from a different launch path."
+            f"CORRECTED 2026-07-27 (adversarial review). The original text read 'exp5866 "
+            f"PREDICTED 13452 MiB resident at n_ctx=81920 ... this session MEASURED 13763 MiB "
+            f"... Same to the MiB', which was wrong three ways: 13452 was exp5866's per-PID "
+            f"MEASUREMENT, not a prediction; 13763 was a DEVICE TOTAL (nvidia-smi --id=1 "
+            f"--query-gpu=memory.used, including a constant foreign 311 MiB process), not "
+            f"residency; and the two therefore differ by 311 MiB rather than agreeing 'to the "
+            f"MiB'. WHAT ACTUALLY REPLICATES IS THE DELTA, and it replicates trivially, because "
+            f"the constant foreign offset cancels in a difference. "
+            f"Restated from the per-PID rows this harness already collected: exp5866 measured "
+            f"13452 MiB per-PID at 81920 and 11784 MiB at 16384 (delta +1668); this session's "
+            f"independent launch through the SHIPPED _ensure_server() path measured "
+            f"{fix_vram['per_pid_mib']} MiB and {ctrl_vram['per_pid_mib']} MiB per-PID "
+            f"(delta +{vram_cost_per_pid_mib}). The per-PID figures agree exactly and the delta "
+            f"agrees exactly, across two different launch paths."
+        ),
+        "vram_units_note": (
+            "vram_resident_mib is now PER-PID (nvidia-smi --query-compute-apps used_memory for "
+            "the launched server's own pid), matching exp5866's stated method and G4 condition. "
+            "The device total is published separately as gpu1_device_total_used_mib with the "
+            "foreign residency broken out, so the two quantities can never again be compared as "
+            "if they were the same one."
+        ),
+        "mtp_scope_note": (
+            "These figures are the LOCAL dev shape, --spec-type draft-mtp ON. The SCORED Kaggle "
+            "launch runs CARNOT_ARC_MTP=0 and is much smaller: directly measured per-PID on an "
+            "RTX 3090, 5950 MiB at n_ctx=16384 and 7382 MiB at 81920, so the fix costs ~1432 "
+            "MiB there rather than 1668. Do not use the mtp-on numbers to reason about eval "
+            "hardware headroom."
         ),
     },
     # ---------------------------------------------------------------------------------
@@ -759,6 +826,43 @@ art["acceptance_gate_principle"] = (
     "not convert a loud failure into a silent one, g4 that the guard fires on the recorded "
     "incident, g5 that every guard branch is load-bearing, g6 that nothing else regressed."
 )
+
+# FRESHNESS PROVENANCE (added 2026-07-27, adversarial review). The artifact-freshness lint is
+# index-driven and reads `provenance.code` fingerprints; without this block it could not see this
+# artifact at all, so editing build_fix_artifact.py or fixverify.py -- or, worse, the shipped
+# agent code whose behaviour this artifact certifies -- would silently invalidate every number
+# here with nothing to notice. Registered in ops/analyzer_artifact_index.json alongside this.
+import datetime as _dt  # noqa: E402
+
+_prov_code = [
+    "results/generator_concurrency_fix_20260727/build_fix_artifact.py",
+    "results/generator_concurrency_fix_20260727/fixverify.py",
+    "results/generator_concurrency_fix_20260727/mutate.py",
+    "python/carnot/agentic/arc_executable_world_model.py",
+    "python/carnot/agentic/arc_competition_agent.py",
+    "scripts/kaggle/submission_kernel/main.py",
+    "scripts/arc_llm_on_liveness_lint.py",
+]
+art["provenance"] = {
+    "analyzer": "results/generator_concurrency_fix_20260727/build_fix_artifact.py",
+    "built_at_utc": _dt.datetime.now(_dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "code": [
+        {"path": p, "sha256": hashlib.sha256((REPO / p).read_bytes()).hexdigest()}
+        for p in _prov_code
+        if (REPO / p).exists()
+    ],
+    # BARE hexdigest, not this module's `sha()` helper -- that one prefixes "sha256:", and the
+    # freshness lint compares against a bare digest, so using it here made every row read as
+    # permanently drifted. (Caught by running the lint, which is the point of running it.)
+    "rows_sources": [
+        {
+            "path": f"results/generator_concurrency_fix_20260727/{f}",
+            "sha256": hashlib.sha256((SCRATCH / f).read_bytes()).hexdigest(),
+        }
+        for f in ("fixverify.json", "mutate.json", "mutate_kernel.json", "refresh.json")
+        if (SCRATCH / f).exists()
+    ],
+}
 
 payload = json.dumps(art, sort_keys=True).encode()
 art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(payload).hexdigest()

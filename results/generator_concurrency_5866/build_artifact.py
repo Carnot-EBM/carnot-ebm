@@ -18,6 +18,7 @@ OUT = Path(
     "/home/ianblenke/github.com/ianblenke/carnot/results/"
     "experiment_5866_generator_concurrency_vram_envelope.json"
 )
+REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
 SRC = Path(
     "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/"
     "87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/genconc"
@@ -355,6 +356,15 @@ artifact = {
                 "not load-tested.",
                 "Single seed (5850) per cell; the boundary is a hard resource limit, not a "
                 "stochastic effect, so per-seed replication was not the binding uncertainty.",
+                "ADDED 2026-07-27: every VRAM figure is IDLE per-PID residency, read after "
+                "/health and before any request. Peak-under-load was measured separately "
+                "(4 concurrent full-budget requests, 0.5s sampling) and equalled idle to the "
+                "MiB, because llama.cpp preallocates the whole -c pool at load -- so the "
+                "numbers are not understated, but the original artifact never said which "
+                "quantity they were.",
+                "ADDED 2026-07-27: the VRAM envelope is MTP-ON ONLY and does NOT describe the "
+                "scored Kaggle launch, which runs CARNOT_ARC_MTP=0. See "
+                "finding_2_vram_envelope.scope_MTP_ON_ONLY.",
             ],
         },
     },
@@ -369,6 +379,26 @@ artifact = {
         "measured_by": (
             "nvidia-smi --query-compute-apps per-PID used_memory for the launched "
             "server's own PID, 3s after /health first answered"
+        ),
+        "scope_MTP_ON_ONLY": (
+            "ADDED 2026-07-27 (adversarial review). EVERY row of this fit was taken with "
+            "--spec-type draft-mtp ON (harness.py:167, boundary.py:60, fixprice.py:63 all pass "
+            "it unconditionally), i.e. the LOCAL/dev launch shape in which the MTP self-draft "
+            "loads a SECOND copy of the weights. The SCORED Kaggle path does not run this "
+            "shape: scripts/kaggle/submission_kernel/main.py sets CARNOT_ARC_MTP=0. So this "
+            "envelope must NOT be used to reason about the scored footprint -- it "
+            "over-predicts it by ~6.1 GB (13438 predicted vs 7382 measured at n_ctx=81920). "
+            "The measured mtp-OFF pair is 5950 MiB at 16384 and 7382 MiB at 81920, so the fix "
+            "costs ~1432 MiB on the scored path, not the ~1668 MiB this fit implies. Use this "
+            "envelope for the local 3090 generator guard (where over-prediction is the safe "
+            "direction) and the measured pair for anything about the eval hardware."
+        ),
+        "measurement_is_idle_residency": (
+            "Read after /health and BEFORE any request. Disclosed 2026-07-27 because it was "
+            "not stated anywhere and no limitations list mentioned it. It is NOT an "
+            "understatement: peak per-PID residency sampled continuously while 4 concurrent "
+            "full-budget requests were in flight equalled idle to the MiB, because llama.cpp "
+            "preallocates the entire -c pool at load."
         ),
         "refit_formula": {
             "expression": "VRAM_MiB = a + b*n_ctx + c*slots",
@@ -630,8 +660,26 @@ artifact = {
             "result": "PASS",
             "forced": False,
             "could_have_failed_evidence": (
-                "K=1 PASSED at the same config in the same run, so the "
-                "harness was not rigged to report failure"
+                "CORRECTED 2026-07-27 (adversarial review). The original witness here was "
+                "'K=1 PASSED at the same config in the same run', which does not hold: that "
+                "K=1 cell IS the cell finding_1.mode_C_silent_truncation_http_200 records as "
+                "content_chars=2133 / stop_type=limit / generation_room_cells=630 against a "
+                "4096 budget, and calls 'the worst mode'. Under this artifact's OWN "
+                "stop_taxonomy (pool_exhaustion_limit == stop_type 'limit' with generated << "
+                "max_tokens -- the taxonomy invented specifically to REJECT candidate B) that "
+                "cell is a FAIL. So at -c 16384 with the WORST prompt the pass region is "
+                "EMPTY: K=1 by silent truncation, K>=2 by refusal. "
+                "THE NON-FORCING WITNESS THAT DOES HOLD is the small-prompt boundary run "
+                "(prompt 1411 tokens): K=1, K=2 and K=3 PASS and only K=4 FAILS, in the same "
+                "harness, same binary, same session. The harness demonstrably reports PASS "
+                "when the configuration works. The substantive G1 result is unchanged and was "
+                "independently recomputed from raw.json: at prompt 15754, K=1 returns HTTP 200 "
+                "and K=2/3/4 all return HTTP 500 'Context size has been exceeded.'"
+            ),
+            "pass_region_at_worst_prompt_is_empty": (
+                "At the 15754-token prompt in a 16384 pool, no K works: K=1 truncates "
+                "silently (mode C), K>=2 refuses (mode A). The K_pass_set=[1] above is "
+                "HTTP-status-only and does not encode the mode-C failure of that same cell."
             ),
         },
         {
@@ -725,23 +773,79 @@ artifact = {
             "different kernel with no machine_shape"
         ),
         "if_16gb_class": (
-            "fix at 13452 MiB + the measured 1.45GB live CNN dynamics fit "
-            "~= 14.9 GiB of 16 GiB -- fits, ~1.1 GiB margin"
+            "SUPERSEDED 2026-07-27 by a direct measurement of the SCORED shape -- see "
+            "scored_path_mtp_off_measurement below. The original text read 'fix at 13452 MiB "
+            "+ the measured 1.45GB live CNN dynamics fit ~= 14.9 GiB of 16 GiB -- fits, ~1.1 "
+            "GiB margin'. It was wrong twice over: the arithmetic mixed units (13452 MiB + "
+            "1450 MiB = 14902 MiB = 14.55 GiB, not 14.9 GiB, leaving 1368 MiB = 1.34 GiB "
+            "against the project's own P100 probe total of 16270 MiB free), and more "
+            "importantly 13452 MiB is the mtp-ON footprint, which the scored path never runs."
         ),
-        "if_24gb_l4": "fits with ~9 GiB margin",
+        "scored_path_mtp_off_measurement": {
+            "why_this_supersedes_the_envelope": (
+                "The published envelope (10547 + 0.02519*n_ctx + 206.83*slots) was fit with "
+                "--spec-type draft-mtp ON -- every harness in results/generator_concurrency_"
+                "5866/ passes it unconditionally. But scripts/kaggle/submission_kernel/main.py "
+                "sets CARNOT_ARC_MTP=0, so the scored run loads the weights ONCE, not twice. "
+                "The envelope therefore over-predicts the scored footprint by ~6.1 GB (+83%). "
+                "Over-prediction is the SAFE direction for a headroom call, so the original "
+                "'it fits' conclusion was right -- but for the wrong reason, and off by 6 GB."
+            ),
+            "measured_2026_07_27_rtx3090_mtp_off": {
+                "n_ctx_16384_mib": 5950,
+                "n_ctx_81920_mib": 7382,
+                "fix_cost_mib": 1432,
+                "mtp_on_envelope_prediction_at_81920_mib": 13438,
+                "over_prediction_pct": 82.0,
+                "method": (
+                    "per-PID nvidia-smi --query-compute-apps used_memory for the server's OWN "
+                    "pid (never a device total, which would include the 296 MiB foreign "
+                    "process resident on this card), CUDA_VISIBLE_DEVICES=1, same launch flags "
+                    "the kernel uses minus --spec-type draft-mtp"
+                ),
+            },
+            "peak_under_load_equals_idle": (
+                "Every VRAM number in the original artifact is IDLE residency, read after "
+                "/health and BEFORE any request, and none of the limitations lists said so. "
+                "That gap is real and is now disclosed -- but the number is NOT understated: "
+                "residency was sampled continuously (0.5s) while 4 concurrent full-budget "
+                "requests were in flight and the peak equalled idle TO THE MiB (7382 both), "
+                "because llama.cpp preallocates the whole -c pool at load rather than growing "
+                "it per request. Verified with the prompts genuinely resident (the server's "
+                "own log shows per-slot n_tokens 20469..20493 at release)."
+            ),
+        },
+        "if_16gb_class_corrected": (
+            "7382 MiB (measured, mtp-off, n_ctx=81920) + the measured 1.45GB live CNN "
+            "dynamics fit = 8832 MiB of the 16270 MiB free the project's own Kaggle probe "
+            "recorded on a P100 16GB -- fits with ~7.3 GiB margin, not ~1.1 GiB. The fix does "
+            "NOT trade a silent degradation for a hard OOM on the worst plausible card."
+        ),
+        "if_24gb_l4": "fits with ~16.5 GiB margin at the measured mtp-off footprint",
         "recommendation": (
-            "the fix is affordable under BOTH hypotheses, so the unverified "
-            "hardware does NOT block it; but a direct nvidia-smi read from a "
-            "scored-shape kernel is still owed"
+            "the fix is affordable under BOTH hypotheses BY DIRECT MEASUREMENT of the scored "
+            "(mtp-off) shape, not by extrapolation from the mtp-on envelope. A direct "
+            "nvidia-smi read from a scored-shape kernel is still owed and is now WIRED: the "
+            "kernel pre-flight prints an 'LLM GPU HARDWARE:' line with name/memory.total, so "
+            "the next scored run settles what machine_shape NvidiaL4 actually delivers "
+            "instead of another round of inferring it"
         ),
     },
     "what_this_does_NOT_answer": {
         "first_win_rate": (
-            "This artifact does NOT re-measure first_win_rate_integrated (0.04, "
-            "CI [0,0]). Whether the concurrency fault explains it is UNFALSIFIABLE "
-            "from the existing record because nothing logged it. That re-measurement "
-            "is the next step and must run with a working generator BEFORE any "
-            "strategic reallocation is considered."
+            "This artifact does NOT re-measure first_win_rate_integrated. Whether the "
+            "concurrency fault explains it is UNFALSIFIABLE from the existing record because "
+            "nothing logged it. That re-measurement is the next step and must run with a "
+            "working generator BEFORE any strategic reallocation is considered. "
+            "CI CORRECTED 2026-07-27: this text originally read '0.04, CI [0,0]', which reads "
+            "as zero-width precision on a rate measured from 4 wins. It is not a CI on the "
+            "RATE. exp4605's own field_principles say first_win_ci is a "
+            "'bootstrap CI on the first-win DELTA', and the recorded object is "
+            "{method: paired_percentile_bootstrap, point: 0.0, ci95: [0.0, 0.0]} with "
+            "first_win_delta = 0.0 -- exactly zero because the integrated and bare arms' "
+            "first_win vectors are identical (both 0.04), so every resample of the paired "
+            "difference is exactly 0. The Clopper-Pearson 95% interval on the RATE itself "
+            "(4 of 100) is [0.011, 0.099]."
         ),
         "strategic_pivot": (
             "Deliberately NOT recommended here, per the operator's sequencing: "
@@ -857,6 +961,36 @@ artifact["acceptance_gate_principle"] = (
     "config in the same run, G3 because candidate B ran in the SAME harness with the SAME "
     "prompt and was REJECTED. No conjunct encodes an assumption about another arm."
 )
+
+# FRESHNESS PROVENANCE (added 2026-07-27, adversarial review). Without this block the
+# artifact-freshness lint cannot see this artifact at all: it is index-driven, and an artifact
+# with no `provenance.code` fingerprints contributes nothing to the union of commit triggers.
+# So editing build_artifact.py, harness.py, boundary.py or fixprice.py would silently invalidate
+# every number here and no check would notice -- exactly the staleness class that lint exists for.
+# Registered in ops/analyzer_artifact_index.json alongside this.
+_prov_code = [
+    "results/generator_concurrency_5866/build_artifact.py",
+    "results/generator_concurrency_5866/harness.py",
+    "results/generator_concurrency_5866/boundary.py",
+    "results/generator_concurrency_5866/fixprice.py",
+]
+artifact["provenance"] = {
+    "analyzer": "results/generator_concurrency_5866/build_artifact.py",
+    "built_at_utc": _dt.datetime.now(_dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "code": [
+        {"path": p, "sha256": hashlib.sha256((REPO_ROOT / p).read_bytes()).hexdigest()}
+        for p in _prov_code
+        if (REPO_ROOT / p).exists()
+    ],
+    "rows_sources": [
+        {
+            "path": f"results/generator_concurrency_5866/{f}",
+            "sha256": hashlib.sha256((RAW / f).read_bytes()).hexdigest(),
+        }
+        for f in ("raw.json", "boundary_c16384.json", "fixprice.json")
+        if (RAW / f).exists()
+    ],
+}
 
 checksum_src = "".join(sha(RAW / f) for f in ("raw.json", "boundary_c16384.json", "fixprice.json"))
 checksum_src += "".join(sha(SRC / f) for f in ("harness.py", "boundary.py", "fixprice.py"))

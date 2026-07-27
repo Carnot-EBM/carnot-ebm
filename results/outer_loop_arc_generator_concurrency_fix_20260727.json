@@ -2,7 +2,7 @@
  "experiment": "outer_loop_arc_generator_concurrency_fix_20260727",
  "title": "Generator concurrency fault: the fix applied and verified through the SHIPPED launch path, plus a scored-path liveness witness so a dead generator can no longer produce a row that claims llm_enabled=True",
  "run_date": "2026-07-27T11:00:00Z",
- "git_head": "c4c60dfacbcc23ad4eb0ab7d72b85e2a270f4a39",
+ "git_head": "7761619631669ed38bcf1467b99e750a25599b8a",
  "random_seed": 5866,
  "random_seed_note": "The fault is a hard resource limit (shared-pool admission), not a stochastic effect, so the seed fixes the synthetic grid content used to size the prompt -- it is not a replication axis. Per-seed replication was not the binding uncertainty; the CONTROL arm in the same tree is.",
  "inference_substrate": "live_llm_inference",
@@ -15,7 +15,7 @@
   "live_generator_verification_full_span_s": 304.5,
   "of_which_requests_in_flight_s": 219.6,
   "supporting_measurements_on_other_substrates": {
-   "llm_off_recapture_18_cells_s": 60.573,
+   "llm_off_recapture_18_cells_s": 106.649,
    "pytest_arc_suite_BEFORE_s": 382.19,
    "pytest_arc_suite_AFTER_s": 382.73
   }
@@ -156,7 +156,13 @@
     "per_slot_n_ctx": null,
     "n_ctx_train": null
    },
-   "vram_resident_mib": 12095,
+   "vram_resident_mib": 11784,
+   "vram_measurement": {
+    "per_pid_mib": 11784,
+    "device_total_mib": 12095,
+    "foreign_mib": 311,
+    "source": "per_pid_rows"
+   },
    "cells": [
     {
      "K": 2,
@@ -210,7 +216,13 @@
     "per_slot_n_ctx": null,
     "n_ctx_train": null
    },
-   "vram_resident_mib": 13763,
+   "vram_resident_mib": 13452,
+   "vram_measurement": {
+    "per_pid_mib": 13452,
+    "device_total_mib": 13763,
+    "foreign_mib": 311,
+    "source": "per_pid_rows"
+   },
    "cells": [
     {
      "K": 2,
@@ -275,7 +287,9 @@
   },
   "gate_is_not_forced": "The CONTROL arm, run back-to-back in the SAME tree with the SAME prompt and binary, FAILED 6/6. A pass region that could not have failed is unfalsifiable; this one demonstrably could, and did, at the shipped value.",
   "gate_is_not_http_status_only": "Each cell also carries a stop taxonomy separating intended_budget_limit (generated == n_predict) from pool_exhaustion_limit (stop==limit but generated << n_predict). Had the gate been HTTP-status-only, the --parallel 1 candidate would have passed it and shipped a silent truncation.",
-  "independent_replication_of_the_price": "exp5866 predicted 13452 MiB resident at n_ctx=81920 and a +1668 MiB delta; this session's independent launch measured 13763 MiB and +1668 MiB. Same to the MiB, from a different launch path."
+  "independent_replication_of_the_price": "CORRECTED 2026-07-27 (adversarial review). The original text read 'exp5866 PREDICTED 13452 MiB resident at n_ctx=81920 ... this session MEASURED 13763 MiB ... Same to the MiB', which was wrong three ways: 13452 was exp5866's per-PID MEASUREMENT, not a prediction; 13763 was a DEVICE TOTAL (nvidia-smi --id=1 --query-gpu=memory.used, including a constant foreign 311 MiB process), not residency; and the two therefore differ by 311 MiB rather than agreeing 'to the MiB'. WHAT ACTUALLY REPLICATES IS THE DELTA, and it replicates trivially, because the constant foreign offset cancels in a difference. Restated from the per-PID rows this harness already collected: exp5866 measured 13452 MiB per-PID at 81920 and 11784 MiB at 16384 (delta +1668); this session's independent launch through the SHIPPED _ensure_server() path measured 13452 MiB and 11784 MiB per-PID (delta +1668). The per-PID figures agree exactly and the delta agrees exactly, across two different launch paths.",
+  "vram_units_note": "vram_resident_mib is now PER-PID (nvidia-smi --query-compute-apps used_memory for the launched server's own pid), matching exp5866's stated method and G4 condition. The device total is published separately as gpu1_device_total_used_mib with the foreign residency broken out, so the two quantities can never again be compared as if they were the same one.",
+  "mtp_scope_note": "These figures are the LOCAL dev shape, --spec-type draft-mtp ON. The SCORED Kaggle launch runs CARNOT_ARC_MTP=0 and is much smaller: directly measured per-PID on an RTX 3090, 5950 MiB at n_ctx=16384 and 7382 MiB at 81920, so the fix costs ~1432 MiB there rather than 1668. Do not use the mtp-on numbers to reason about eval hardware headroom."
  },
  "change_2_the_silent_degradation_fix": {
   "constraint_honoured": "generate() was NOT made to raise. Per the investigation: the outermost induce handler was a bare `except Exception` that discarded type/message/traceback, so raising TODAY would have been strictly LESS informative than the current (False, msg) return; and aborting cannot GAIN score (an unsolved level scores 0 regardless) while swarm.py runs every game in ONE process, so one dead server could zero EVERY game. The fix is to the RECORD, not the control flow. All four sub-changes below are additive: same branches, same returns, same swallow.",
@@ -687,7 +701,7 @@
    "llm_off_recapture_is_the_strong_behaviour_neutrality_evidence": {
     "artifact": "results/arc_per_level_reset_attribution_20260726.json",
     "why_re_running_it_is_a_rebuild_and_not_a_new_measurement": "the capture sets CARNOT_ARC_DISABLE_INDUCTION=1, so no proposer is ever constructed and the n_ctx change cannot reach it",
-    "result": "18/18 cells re-captured, 60.573s",
+    "result": "18/18 cells re-captured, 106.649s",
     "replicated_twice": "re-captured once before and once after the format pass; both times every measured value was identical to the original -- two independent exact replications, not one",
     "diff_vs_the_previous_capture": "EVERY measured value bit-identical across all 18 cells (levels, resets, charged, spans, reconciliation, nav channel). The only movement is per-cell wall_s / duration_s, provenance metadata, and the capture's own pure_addition_vs_prior_artifact.n_fields_ADDED 14 -> 0 (correct: the prior artifact already has those 14 fields now).",
     "reading": "This is an 18/18 exact replication showing the agent-module edit is behaviour-neutral off the generator path -- stronger than asserting it."
@@ -707,7 +721,7 @@
   {
    "experiment_id": "exp5866",
    "path": "results/experiment_5866_generator_concurrency_vram_envelope.json",
-   "sha256": "sha256:0274ac9bec0a94eaa04c61ac4616a123fa6f82216a6e11bf83ebaffd231afe6d",
+   "sha256": "sha256:939e5fe14d1b5c7725ad531016649211271515cf1acf41ae8461f243a8c86835",
    "fields_imported": [
     "sizing_rule",
     "VRAM envelope coefficients",
@@ -737,26 +751,11 @@
   }
  ],
  "harness_scripts": {
-  "location": "results/generator_concurrency_fix_20260727/",
-  "files": {
-   "build_fix_artifact.py": "sha256:f472341aedbce3f59965074caf140f921bf400b8524b9bd662a72a04da7dd8eb",
-   "fixverify.json": "sha256:e3a7948ee5de8970280dffe232d424bf403c726398195bc7405f83fe45c95428",
-   "fixverify.py": "sha256:400d9cdb7aa9c73ad9ebbaede801b91a9f6a259f5be9254d65b8379337ca4a20",
-   "mutate.json": "sha256:3f400c50b28c42796a2b9035f68a73a2b36d62d3fa5089787659fe903daf2fe6",
-   "mutate.py": "sha256:875c6ed74989e8799ec9fec2b95b0c4509fd538ec06f06f9602c9b001b079be0",
-   "mutate_kernel.json": "sha256:e470cb562459052a54f5be8cb16503b7d33b20b47a98d7c0a7bc4e6549efe191",
-   "refresh.json": "sha256:7fa2865be7140b288d566b948b895c27210d86be4cc1a3139ff501bd1d1b51a3",
-   "refresh.py": "sha256:9d7b6a4fe465f8becd4232e6f452582ea9b37f99c76649e85fa12f91e2c51c06",
-   "refresh_postformat_diff.json": "sha256:20548f25d9a23373c47e40e8c6a8dd459863ede401127c6d10baec9aa031b949"
-  },
-  "roles": {
-   "fixverify.py": "control(16384)-vs-fix(81920) concurrency verification through the SHIPPED LocalGGUFProposer._ensure_server() launch path; emits fixverify.json",
-   "mutate.py": "mutation proof for the 9 code branches; restores originals in a finally; emits mutate.json",
-   "mutate_kernel.json": "mutation proof for the 2 submission-kernel pre-flight guards (revert to the hardcoded ctx literal / the K=1-only probe)",
-   "refresh.py": "dependent-artifact rebuild + flattened deep diff; emits refresh.json",
-   "refresh_postformat_diff.json": "the FINAL post-ruff-format rebuild diff for all 7 dependent artifacts (0 real measurement moves)",
-   "build_fix_artifact.py": "deterministic assembly of this artifact from the JSONs above"
-  }
+  "fixverify.py": "control-vs-fix concurrency verification through the SHIPPED launch path",
+  "mutate.py": "mutation proof for the 9 code branches",
+  "mutate_kernel.json": "mutation proof for the 2 kernel pre-flight guards",
+  "refresh.py": "dependent-artifact rebuild + deep diff",
+  "location": "session scratchpad; contents reproduced under harness_source below"
  },
  "shipped_behaviour_change_authorised": {
   "authorised": "the generator concurrency fix only, smallest variant the envelope supports",
@@ -815,5 +814,57 @@
   "witness_that_the_pass_region_is_non_empty_at_the_gate's_own_level": "the FIX arm's own cells: K=4 -> 4/4 HTTP 200 with 4/4 intended_budget_limit, and K=6 (4 concurrent + 2 queued) -> 6/6 in exp5866. No conjunct encodes an assumption about another arm."
  },
  "acceptance_gate_principle": "Each conjunct guards a distinct failure mode: g1 that the fault is real at the shipped value (not modelled), g2 that the fix holds at llama.cpp's own concurrency cap, g3 that the fix did not convert a loud failure into a silent one, g4 that the guard fires on the recorded incident, g5 that every guard branch is load-bearing, g6 that nothing else regressed.",
- "reproducibility_checksum": "sha256:e8fa3d3dfa6f96640a96bb84d79cd0dfe9adca9bee27fa177c1bbaa4f5252e04"
+ "provenance": {
+  "analyzer": "results/generator_concurrency_fix_20260727/build_fix_artifact.py",
+  "built_at_utc": "2026-07-27T17:15:08Z",
+  "code": [
+   {
+    "path": "results/generator_concurrency_fix_20260727/build_fix_artifact.py",
+    "sha256": "c506320fe57f8f72af052865f3d386133e654eb6192c9320047739c60d2558c5"
+   },
+   {
+    "path": "results/generator_concurrency_fix_20260727/fixverify.py",
+    "sha256": "0a284b0c71814001c46feb3bd6a6576da51ef0ec88735470e1a4ebf201d3d30a"
+   },
+   {
+    "path": "results/generator_concurrency_fix_20260727/mutate.py",
+    "sha256": "0f7d3b789f257379f6a6145d1f4698385c8eaff10aa4414a617c216aaf555eba"
+   },
+   {
+    "path": "python/carnot/agentic/arc_executable_world_model.py",
+    "sha256": "eb1492451df7a3a4dae1e770a368d0c3b31674db65fa546ab28dbece3463e750"
+   },
+   {
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "sha256": "62b2ab51b6aca53504975c0d893fb6842e1de19d21090850b72fb387d2fab9b0"
+   },
+   {
+    "path": "scripts/kaggle/submission_kernel/main.py",
+    "sha256": "b62cb401aaa27df84b74421fec84749d8ee8d97cc1b91b13b9ffb880b3077e0e"
+   },
+   {
+    "path": "scripts/arc_llm_on_liveness_lint.py",
+    "sha256": "4744d43966104acb2fa56261a4cfba01a10b3009a18506ccd11f8bdb495e7612"
+   }
+  ],
+  "rows_sources": [
+   {
+    "path": "results/generator_concurrency_fix_20260727/fixverify.json",
+    "sha256": "e3a7948ee5de8970280dffe232d424bf403c726398195bc7405f83fe45c95428"
+   },
+   {
+    "path": "results/generator_concurrency_fix_20260727/mutate.json",
+    "sha256": "3f400c50b28c42796a2b9035f68a73a2b36d62d3fa5089787659fe903daf2fe6"
+   },
+   {
+    "path": "results/generator_concurrency_fix_20260727/mutate_kernel.json",
+    "sha256": "e470cb562459052a54f5be8cb16503b7d33b20b47a98d7c0a7bc4e6549efe191"
+   },
+   {
+    "path": "results/generator_concurrency_fix_20260727/refresh.json",
+    "sha256": "7fa2865be7140b288d566b948b895c27210d86be4cc1a3139ff501bd1d1b51a3"
+   }
+  ]
+ },
+ "reproducibility_checksum": "sha256:aba2d4d9f1a8b1a05134073cea00cc059f987f300e9f942b62c90095ab89867a"
 }

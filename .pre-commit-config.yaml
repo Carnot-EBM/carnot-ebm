@@ -317,7 +317,7 @@ repos:
         language: system
         # GENERATED, do not hand-edit: python3 scripts/artifact_freshness_lint.py --emit-hook-pattern
         # (the lint itself refuses the commit if this drifts from the registered dependency union)
-        files: ^(python/carnot/agentic/arc_competition_agent\.py|python/carnot/agentic/arc_executable_world_model\.py|python/carnot/agentic/arc_hud_row_schema\.py|python/carnot/agentic/arc_solver_kit\.py|scripts/analyze_arc_early_stop_sweep\.py|scripts/analyze_arc_gateway_accurate_rescore\.py|scripts/analyze_arc_gateway_rescore\.py|scripts/analyze_arc_llm_on_wallclock_envelope\.py|scripts/analyze_arc_max_actions_answer\.py|scripts/analyze_arc_reset_charge_attribution\.py|scripts/analyze_scored_path_lever_ab\.py|scripts/arc_gateway_card_ground_truth\.py|scripts/arc_gateway_exact_attribution\.py|scripts/arc_gateway_rescore\.py|scripts/arc_leaderboard_eval\.py|scripts/arc_llm_on_contention_probe\.py|scripts/arc_llm_on_wallclock_budget_probe\.py|scripts/arc_per_level_reset_attribution_capture\.py|scripts/arc_scored_path_early_stop_sweep\.py|scripts/arc_scored_path_lever_harness\.py|scripts/analyze_.*\.py|ops/analyzer_artifact_index\.json|results/.*\.json)$
+        files: ^(python/carnot/agentic/arc_competition_agent\.py|python/carnot/agentic/arc_executable_world_model\.py|python/carnot/agentic/arc_hud_row_schema\.py|python/carnot/agentic/arc_solver_kit\.py|python/carnot/experiment_4605_live_integration_scored_agent\.py|results/first_win_llm_on_20260727/analyse\.py|results/first_win_llm_on_20260727/build_artifact\.py|results/first_win_llm_on_20260727/firstwin\.py|results/first_win_llm_on_20260727/guardtest\.py|results/first_win_llm_on_20260727/recheck_after_commit\.py|results/generator_concurrency_5866/boundary\.py|results/generator_concurrency_5866/build_artifact\.py|results/generator_concurrency_5866/fixprice\.py|results/generator_concurrency_5866/harness\.py|results/generator_concurrency_fix_20260727/build_fix_artifact\.py|results/generator_concurrency_fix_20260727/fixverify\.py|results/generator_concurrency_fix_20260727/mutate\.py|scripts/analyze_arc_early_stop_sweep\.py|scripts/analyze_arc_gateway_accurate_rescore\.py|scripts/analyze_arc_gateway_rescore\.py|scripts/analyze_arc_llm_on_wallclock_envelope\.py|scripts/analyze_arc_max_actions_answer\.py|scripts/analyze_arc_reset_charge_attribution\.py|scripts/analyze_scored_path_lever_ab\.py|scripts/arc_gateway_card_ground_truth\.py|scripts/arc_gateway_exact_attribution\.py|scripts/arc_gateway_rescore\.py|scripts/arc_leaderboard_eval\.py|scripts/arc_llm_on_contention_probe\.py|scripts/arc_llm_on_liveness_lint\.py|scripts/arc_llm_on_wallclock_budget_probe\.py|scripts/arc_per_level_reset_attribution_capture\.py|scripts/arc_scored_path_early_stop_sweep\.py|scripts/arc_scored_path_lever_harness\.py|scripts/kaggle/submission_kernel/main\.py|scripts/analyze_.*\.py|ops/analyzer_artifact_index\.json|results/.*\.json)$
         pass_filenames: false
 
       - id: determination-preservation-lint
@@ -333,6 +333,28 @@ repos:
         # being PRESENT). pass_filenames is false because the check is a git diff against HEAD,
         # not a per-file scan -- see the lint's docstring for why `--cached` was wrong.
         files: ^results/.*\.json$
+        pass_filenames: false
+
+      - id: arc-llm-on-liveness-lint
+        name: An ARC row claiming the LLM tier must have had a live generator
+        entry: python3 scripts/arc_llm_on_liveness_lint.py --baseline
+        language: system
+        # WHY THIS IS WIRED (2026-07-27). The lint was shipped the same day as the generator
+        # concurrency fix with NO caller at all -- not in this file, not in
+        # research_conductor.py -- which reproduced, one level up, the exact defect its own
+        # docstring was written about: "NOTHING REFUSES on it. It is a field, not a gate."
+        #
+        # FORWARD-ONLY via --baseline. The existing corpus carries 55 real FAIL findings across
+        # 25 files: recordings of the 2026-07-26 fault and its probe arms, which are the
+        # evidence the fix rests on and cannot be deleted (never-prune). They are exempted by
+        # ops/arc_llm_on_liveness_baseline.json, keyed on (file, json_path, code) so a recorded
+        # dead cell staying dead is fine but that same row acquiring a NEW failure class is not.
+        # A missing baseline file does NOT open the gate -- every FAIL blocks in that case,
+        # because an exemption list that vanished must make the gate refuse, not admit.
+        #
+        # Scoped to results/*.json for the same reason as determination-preservation-lint above:
+        # the claim lives in the artifact, and the writer is an arbitrary experiment script.
+        files: ^(results/.*\.json|ops/arc_llm_on_liveness_baseline\.json)$
         pass_filenames: false
 
       # NOTE: the blog publish guard runs as a STANDALONE git pre-push hook

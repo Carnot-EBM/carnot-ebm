@@ -1,16 +1,16 @@
 import numpy as np
 
 def engine(grid, action, data):
-    H, W = grid.shape
     if action == 6:
+        if data is None:
+            return grid
         px, py = data['x'], data['y']
+        if not (0 <= py < grid.shape[0] and 0 <= px < grid.shape[1]):
+            return grid
+        grid = grid.copy()
         grid[py, px] = 10
         return grid
-    elif action == 1:
-        grid[0, 1] = 10
-        return grid
-    else:
-        return grid
+    return grid
 
 def is_level_complete(grid):
     return False

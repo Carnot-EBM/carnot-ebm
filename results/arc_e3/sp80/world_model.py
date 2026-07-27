@@ -7,72 +7,56 @@ def engine(grid, action, data):
     if action == 1:
         # Move Up
         for c in range(W):
-            for r in range(H - 1, 0, -1):
-                if grid[r, c] == 1:
-                    if r - 1 >= 0 and grid[r - 1, c] == 0:
-                        new_grid[r, c] = 0
-                        new_grid[r - 1, c] = 1
-                    elif r - 1 >= 0 and grid[r - 1, c] == 1:
-                        new_grid[r, c] = 0
-                        new_grid[r - 1, c] = 1
+            for r in range(H - 1, -1, -1):
+                if grid[r, c] == 15:
+                    new_grid[r, c] = 0
+                    break
+        return new_grid
+    
     elif action == 2:
         # Move Down
         for c in range(W):
-            for r in range(H - 1):
-                if grid[r, c] == 1:
-                    if r + 1 < H and grid[r + 1, c] == 0:
-                        new_grid[r, c] = 0
-                        new_grid[r + 1, c] = 1
-                    elif r + 1 < H and grid[r + 1, c] == 1:
-                        new_grid[r, c] = 0
-                        new_grid[r + 1, c] = 1
+            for r in range(H):
+                if grid[r, c] == 15:
+                    new_grid[r, c] = 0
+                    break
+        return new_grid
+        
     elif action == 3:
         # Move Left
         for r in range(H):
-            for c in range(W - 1, 0, -1):
-                if grid[r, c] == 1:
-                    if c - 1 >= 0 and grid[r, c - 1] == 0:
-                        new_grid[r, c] = 0
-                        new_grid[r, c - 1] = 1
-                    elif c - 1 >= 0 and grid[r, c - 1] == 1:
-                        new_grid[r, c] = 0
-                        new_grid[r, c - 1] = 1
+            for c in range(W - 1, -1, -1):
+                if grid[r, c] == 15:
+                    new_grid[r, c] = 0
+                    break
+        return new_grid
+        
     elif action == 4:
         # Move Right
         for r in range(H):
             for c in range(W):
-                if grid[r, c] == 1:
-                    if c + 1 < W and grid[r, c + 1] == 0:
-                        new_grid[r, c] = 0
-                        new_grid[r, c + 1] = 1
-                    elif c + 1 < W and grid[r, c + 1] == 1:
-                        new_grid[r, c] = 0
-                        new_grid[r, c + 1] = 1
+                if grid[r, c] == 15:
+                    new_grid[r, c] = 0
+                    break
+        return new_grid
+        
     elif action == 5:
-        # Toggle specific cell
-        if data and 'x' in data and 'y' in data:
-            px, py = data['x'], data['y']
-            if 0 <= py < H and 0 <= px < W:
-                if new_grid[py, px] == 0:
-                    new_grid[py, px] = 1
-                else:
-                    new_grid[py, px] = 0
+        # Toggle 0/15 at (0, 60)
+        new_grid[0, 60] = 1 - new_grid[0, 60]
+        return new_grid
+        
     elif action == 6:
-        # Click with data
-        if data and 'x' in data and 'y' in data:
-            px, py = data['x'], data['y']
-            if 0 <= py < H and 0 <= px < W:
-                if new_grid[py, px] == 0:
-                    new_grid[py, px] = 1
-                else:
-                    new_grid[py, px] = 0
+        # Toggle 0/15 at (0, 58)
+        new_grid[0, 58] = 1 - new_grid[0, 58]
+        return new_grid
+        
     elif action == 7:
-        # Toggle all
-        new_grid[:] = 1 - new_grid
-    
+        # Toggle 0/15 at (0, 55)
+        new_grid[0, 55] = 1 - new_grid[0, 55]
+        return new_grid
+        
     return new_grid
 
 def is_level_complete(grid):
-    H, W = grid.shape
-    # Check if all cells are filled with 1
+    # Check if all 15s are collected (only 1s remain)
     return np.all(grid == 1)

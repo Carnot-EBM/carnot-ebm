@@ -5886,6 +5886,48 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                         pass
     except Exception as exc:
         logger.warning("Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc)
+    # ARC LLM-ON LIVENESS pass (2026-07-27). Sibling of the adversarial-verify pass above, for
+    # a failure class adversarial_verify.py cannot see: an ARC row that CLAIMS the LLM
+    # induction tier ran while its own instrumentation records the generator as dead. Such a
+    # row is not fabricated -- every number in it is real -- it is MISLABELLED, an LLM-OFF run
+    # filed as LLM-on evidence, which is why the fabrication detector reads it as clean.
+    #
+    # WHY HERE. scripts/arc_llm_on_liveness_lint.py shipped with no caller, reproducing the
+    # very defect it documents ("NOTHING REFUSES on it. It is a field, not a gate"). The
+    # pre-commit hook catches rows that reach a commit; this catches them at the moment the
+    # task lands, so the conductor log names the task rather than a later commit naming a file.
+    # Advisory here BY DESIGN (a warning, not a status downgrade): the liveness verdict is a
+    # property of a per-game ROW, and a deliverable can legitimately contain a mix of live and
+    # dead rows. The pre-commit gate is where it refuses.
+    try:
+        _deliv = task.get("deliverable", "")
+        if _deliv and str(_deliv).endswith(".json"):
+            _dp = PROJECT_ROOT / _deliv
+            if _dp.exists():
+                sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+                from arc_llm_on_liveness_lint import scan_paths as _scan_liveness
+
+                _rep = _scan_liveness([str(_dp)])
+                if _rep.get("n_fail"):
+                    _codes = sorted(
+                        {
+                            str(f.get("code"))
+                            for f in _rep["findings"]
+                            if f.get("severity") == "FAIL"
+                        }
+                    )
+                    logger.warning(
+                        "ARC LLM-on liveness lint flagged %s: %d FAIL finding(s) over %d "
+                        "llm-on row(s) [%s] -- this deliverable claims the LLM tier on rows "
+                        "whose own witness says the generator was not live. Do NOT aggregate "
+                        "those rows as LLM-on evidence.",
+                        task.get("id", "?"),
+                        _rep["n_fail"],
+                        _rep.get("rows_llm_on", 0),
+                        ", ".join(_codes),
+                    )
+    except Exception as exc:
+        logger.warning("ARC liveness lint failed for %s: %s", task.get("id", "?"), exc)
     # Fabrication gate (2026-05-30 operator directive). A CRITICAL adversarial
     # flag (DURATION_TOO_SHORT / IMPLAUSIBLE_PERFECT / TAUTOLOGY /
     # GATE_PASSED_WITHOUT_DATA / SAMPLE_SIZE_BELOW_CLAIM) means the result is

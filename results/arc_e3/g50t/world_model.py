@@ -1,31 +1,46 @@
 import numpy as np
 
-import numpy as np
-
 def engine(grid, action, data):
+    H, W = grid.shape
+    new_grid = grid.copy()
+    
     if action == 1:
-        return grid
+        # Move Right
+        for r in range(H):
+            for c in range(W - 1):
+                if new_grid[r, c] != 0 and new_grid[r, c + 1] == 0:
+                    new_grid[r, c + 1] = new_grid[r, c]
+                    new_grid[r, c] = 0
     elif action == 2:
-        return grid
+        # Move Down
+        for r in range(H - 1):
+            for c in range(W):
+                if new_grid[r, c] != 0 and new_grid[r + 1, c] == 0:
+                    new_grid[r + 1, c] = new_grid[r, c]
+                    new_grid[r, c] = 0
     elif action == 3:
-        return grid
+        # Move Left
+        for r in range(H):
+            for c in range(1, W):
+                if new_grid[r, c] != 0 and new_grid[r, c - 1] == 0:
+                    new_grid[r, c - 1] = new_grid[r, c]
+                    new_grid[r, c] = 0
     elif action == 4:
-        return grid
-    elif action == 5:
-        return grid
+        # Move Up
+        for r in range(1, H):
+            for c in range(W):
+                if new_grid[r, c] != 0 and new_grid[r - 1, c] == 0:
+                    new_grid[r - 1, c] = new_grid[r, c]
+                    new_grid[r, c] = 0
     elif action == 6:
-        return grid
+        # Click (no-op in this model)
+        pass
     elif action == 7:
-        return grid
-    else:
-        return grid
+        # Toggle (no-op in this model)
+        pass
+        
+    return new_grid
 
 def is_level_complete(grid):
-    return False
-
-def is_level_complete(grid):
-    import numpy as np
-    g = np.array(grid)
-    if g.shape[0] == 0 or g.shape[1] == 0:
-        return False
-    return np.all(g == 0)
+    # Check if the grid is full of 15s (win state)
+    return np.all(grid == 15)

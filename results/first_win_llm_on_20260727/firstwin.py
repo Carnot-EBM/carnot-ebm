@@ -85,6 +85,44 @@ ARMS = {
     # into the headline. See analyse.py's control_winner_probe for how they are read.
     "llm_on_16k_probe": 16384,
     "llm_on_fix_probe": 81920,
+    # ADDED 2026-07-27 (adversarial review, FATAL finding: "the treatment was never
+    # applied"). Every LLM-on arm above turned out to be BIT-IDENTICAL to its matched
+    # llm_off control -- first_win, actions, reached_level and actions_to_first_levelup all
+    # equal on 74/74 cells -- because `induction_attempts_planned` was 0 in 174/174 rows:
+    # the generator answered (327 calls, 234 responses) and every induced world model was
+    # then REJECTED by a POST-generation trust gate, so no plan was ever installed. With the
+    # generator's output discarded on every cell, no generator state could move first_win,
+    # and p=1.0 / CI [0,0] were arithmetic identities rather than measurements.
+    #
+    # This arm is the ONLY configuration in which the operator's question is answerable: it
+    # is the fixed 81920 generator PLUS CARNOT_ARC_TRUST_METRIC=cell_recall, the project's
+    # own named lever for that gate (arc_competition_agent.py:5869-5872 describes exact-match
+    # as reading ~0 for an imperfect-but-useful induced model, making induce->plan a no-op).
+    # SCOPE LIMIT, measured not assumed: the metric switch only reaches the `else` branch,
+    # so it can affect at most the 13 of 25 cells whose skip reason was
+    # `world_model_accuracy_below_threshold`. The 11 `hidden_state_trust_below_threshold`
+    # cells take the HIDDEN_STATE_GAME_IDS branch, which ignores CARNOT_ARC_TRUST_METRIC
+    # entirely, and lp85 failed at `proposer_failed`.
+    "llm_on_fix_cellrecall": 81920,
+    # ADDED 2026-07-27, second pass. The cell_recall arm above produced a result that
+    # CONTRADICTS the lever's own documentation: on lp85 the induced model scored
+    # verify_accuracy=0.92 -- comfortably ABOVE the 0.5 trust threshold -- and was gated out
+    # anyway because verify_cell_recall was 0.0. So on this corpus cell_recall is STRICTER
+    # than the shipped `exact` default, not looser, and it gated out the ONE attempt that
+    # would have cleared the default. That makes "planned is 0 under every configuration" an
+    # unsupported generalisation from a single arm run with the wrong lever.
+    #
+    # This arm is the SHIPPED DEFAULT metric (`exact`) at the fixed n_ctx, with the new
+    # per-attempt gate diagnostics recording. It is the direct test of whether the treatment
+    # is reachable on the path that actually ships. NO env lever: not in ARM_ENV.
+    "llm_on_fix_diag": 81920,
+}
+
+# Arms that additionally flip an env lever. Kept as a separate table (rather than baked into
+# install_arm) so the five ORIGINAL arms are byte-identical in behaviour to the run that
+# produced the committed cells -- an arm not listed here sets nothing.
+ARM_ENV = {
+    "llm_on_fix_cellrecall": {"CARNOT_ARC_TRUST_METRIC": "cell_recall"},
 }
 
 _LOCAL = threading.local()
@@ -413,6 +451,14 @@ def main() -> int:
     os.environ["CARNOT_ARC_GATE_DEEPEN"] = "1"
     os.environ["CARNOT_ARC_GATE_VARIANT_IDS"] = args.variants
     os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
+    # Per-arm env levers (see ARM_ENV). Explicitly CLEARED for every other arm so a stale
+    # ambient value cannot silently change what an arm measures -- the declared-vs-actual
+    # failure class this whole measurement exists to close.
+    for _var in {k for env in ARM_ENV.values() for k in env}:
+        os.environ.pop(_var, None)
+    for _var, _val in ARM_ENV.get(args.arm, {}).items():
+        os.environ[_var] = _val
+        print(f"[arm-env] {_var}={_val}", flush=True)
 
     import carnot.experiment_4605_live_integration_scored_agent as exp4605
 
