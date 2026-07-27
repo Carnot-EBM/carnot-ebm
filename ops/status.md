@@ -1,8 +1,65 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-26 (GATEWAY-ACCURATE re-score: the opening RESET is FREE, so the uncharged-RESET correction reported earlier the same session was itself overstated — 4.62% -> 3.69% median)
+**Last Updated:** 2026-07-26 (THE MAX_ACTIONS ANSWER: LLM-ON contention MEASURED — per-game latency rises 1.81x under concurrency while total THROUGHPUT does not, so the cap admits budget 2000 at the 9h reading; and the generator DIED at K=4 in both seeds, a concurrency ceiling reached before any wall-clock ceiling)
 
-## Session 2026-07-26 (latest) - The gateway-accurate re-score, and a correction owed on my own number
+## Session 2026-07-26 (latest) - MAX_ACTIONS: the answer, in the unit the competition pays on (outer-loop, REQ-ARC-WMTE-5990)
+
+**What is now measured (was: extrapolated from a single budget under an imported contention factor).**
+
+- **LLM-ON contention is measured directly**, not imported from LLM-OFF cells:
+  `scripts/arc_llm_on_contention_probe.py` runs a K = 1 / 2 / 4 ladder on matched games + seed +
+  budget, sharing one llama-server, with a strict-intersection overlap witness per batch and a
+  background GPU-utilisation trace.
+- **The decomposition that decides the answer:** per-game LATENCY nearly doubles at K=2 while total
+  THROUGHPUT (games/hour) stays flat. A wall-clock cap divides throughput, not latency, so the prior
+  conservative reading (uncontended per-game latency x 1.72 x game count) DOUBLE-COUNTS. GPU 1 is
+  already ~75-85% busy with a single game running, which is the mechanism.
+- **The previously fitted LLM-ON cost model is tested and its extrapolated crossing point VOIDED.**
+  Its mechanism was already falsified by the sibling artifact (cost grows at constant induction count);
+  at the LEVEL its projections run 1.68-2.11x above the throughput-based cost measured here (227.3 vs
+  107.8 s/game at b400) because it projects a CONTENDED per-game LATENCY and then multiplies by the
+  game count. The crossing point is replaced by a critical-N table derived from measured throughput.
+  This does not impugn either measurement -- the K=1 arm reproduces the published UNCONTENDED anchor
+  within its noise floor -- the disagreement is about which quantity a cap divides.
+- **A concurrency CEILING was hit before any wall-clock ceiling.** At K=4 the frozen generator DIED
+  (server count 2 -> 1, `generator_healthy_after` False on all 4 cells, responses collapsed to 0-1,
+  every cell still exiting 0 with a complete 400-action run). This reproduces the sibling lane's
+  isolated three-way context/concurrency finding INSIDE the live agent path. Those cells are excluded
+  from every cost number: a dead-generator cell is FASTER, not noisier, so averaging it in would have
+  reported concurrency as a large throughput win.
+- **The K=4 death is CONTEXT-DRIVEN, and the cheapest sufficient fix is identified.** A matched
+  configuration test (same games/seed/budget/K; only the server's `-c` differs) at n_ctx=32768 --
+  8192 tokens/slot at 4 slots, i.e. room for the prompt *and* the agent's 4096-token `max_tokens`
+  request -- produced 4/4 VALID cells with the generator healthy throughout, against 0/4 under the
+  shipped 16384. `/props` read the override back as a witness. Under that window K=4 throughput is
+  flat too (116.2 s/game vs K=1's 100.7) while per-game latency scaled 2.9-5.7x. This is reported as
+  a MECHANISM, not a recommendation: per-slot VRAM at eval scale is unmeasured, `--parallel 1` is a
+  cheaper alternative if throughput can be traded, and the `-c` decision is the operator's.
+- **The budget -> score curve is re-priced in the GATEWAY-CHARGED unit** (M0 offline / M1 all-resets-
+  charged / M2 bootstrap-free) through the installed scorer, per-seed matched. The offline-unit gain
+  from a raise is exact and positive but tiny; the paid-unit gain on the full corpus is SMALLER THAN
+  the attribution estimator's own error, so its sign is not resolvable there -- only on the 44-cell
+  exactly-attributed subset.
+- **A validated corpus-wide reset-attribution estimator** closes limitation (6) of REQ-ARC-WMTE-5986
+  (rows without per-span attribution previously had only a structurally-uninformative bound), at a
+  published accuracy: 44 exact cells, |relative error| median ~1.9%, p90 ~7.3%, max ~13.4%.
+- **The early-stop lever is priced on its BENEFIT side** for the first time, as two trade curves
+  (start-window and continuation-window) rather than a single multiplier. Most score-free work sits in
+  games that never level up, and no start window separates "never" from "late".
+
+**What was NOT done:** `MAX_ACTIONS` is unchanged (the live scored cap is
+`CarnotAgent.MAX_ACTIONS = 400` at `arc_competition_agent.py:6244`; the module-level `MAX_ACTIONS = 200`
+at :117 is a DIFFERENT budget, read only by `scripts/arc_competition_validate.py`). No `SUBMITTED_*`
+flag was touched. Nothing was submitted. No historical artifact's numbers were rewritten.
+
+**Open, and named:** the hidden-set game count is an assumption (110 / 60 / 25 reported separately);
+budgets above 2000 have no LLM-ON cost anchor and are extrapolated; the score curve is measured on
+LLM-OFF cells; the probe's workers are processes while the real eval is one process with one thread per
+game, so the GIL-serialised component is understated; and the K=4 generator death means the whole
+wall-clock model assumes an LLM tier that may not survive eval-scale concurrency.
+
+
+## Session 2026-07-26 (earlier) - The gateway-accurate re-score, and a correction owed on my own number
 
 ### What's Working
 
