@@ -1,5 +1,47 @@
 # Carnot — Changelog
 
+## 2026-07-27 (outer-loop: the STRUCTURAL fix for the stripped determinations — a commit-time guard, mutation-proved, that first failed to fire on its own origin incident)
+
+- Agent-initiated, closing the item the previous entry filed as "STRUCTURAL FIX NOT DONE". This is
+  outer-loop self-healing of the conductor, which is standing remit — not new scope.
+- **The obvious fix does not work, and knowing why picked the layer.** "Make the conductor stop
+  overwriting" is unimplementable at that layer: the conductor does NOT write these files. The
+  experiment SCRIPT does, and there are thousands of them, written by many agents over many months,
+  each choosing its own output path. Any guard in the conductor's write path would miss every one.
+  So the enforcement is commit-time and keyed to the ARTIFACT, not to any writer — the same
+  reasoning that puts `canonical_url_lint` and `verifier_authenticity_lint` at Layer 1.
+- **Shipped `scripts/determination_preservation_lint.py`** + `.pre-commit-config.yaml:
+  determination-preservation-lint` (scoped `^results/.*\.json$`). Refuses any commit that drops
+  `flagged_adversarial` or a `corrigendum*` record from a `results/*.json`. Supports `--ref` to
+  audit a landed commit and `--all` to sweep the tree.
+- **THE GUARD DID NOT FIRE ON ITS FIRST DRAFT, against a faithful replay of its own origin
+  incident.** It listed filenames from `git diff --cached` while reading the NEW side from the
+  working tree, so an UNSTAGED strip produced an empty file list and it printed `OK` on a tree that
+  had just lost a determination. Fixed to diff against `HEAD` (correct in both contexts: pre-commit
+  stashes unstaged changes, so the tree it sees IS the staged content). A guard that cannot detect
+  the thing it was written for is worse than no guard — it converts an open problem into a false
+  sense of coverage. That regression is pinned by `test_guard_fires_on_an_unstaged_strip`.
+- **Must-NOT-fire controls are as load-bearing as the catch.** Fail-forward is standing operator
+  directive, so a re-run that legitimately changes MEASUREMENTS passes untouched; a lint that
+  refuses normal work gets disabled and then protects nothing. A determination CAN be retracted —
+  set it `false` AND add a `*_cleared_note` — but a silent transition to absent/None is refused,
+  because that is indistinguishable from the accident.
+- **3 mutations proved caught:** reverting to `--cached` (4 tests fail), accepting a note-less
+  clearing (1 fails), skipping the corrigendum check (1 fails). Tests drive REAL git plumbing, not
+  a mocked git: the origin bug was in WHICH git command the lint chose, so a mocked git would have
+  reproduced the bug rather than caught it.
+- **HISTORY SWEEP — this was a first occurrence, not months of erosion.** Compared every artifact
+  carrying `flagged_adversarial: true` (637 at HEAD) against five sampled commits since
+  2026-06-01: **0 earlier instances**. Sampled, not exhaustive, and stated as such. A live-tree
+  assertion (`test_the_real_repo_is_currently_clean`) now guards the 7 restorations so a future
+  strip fails in CI even if the commit hook is bypassed.
+- Verify (real output): `pytest` 14 passed (9 new + docs); `ruff check` + `ruff format` clean;
+  `mypy` clean; `check_spec_coverage.py` — new tests traced; `pre-commit run
+  determination-preservation-lint --all-files` Passed, and it correctly REFUSED a deliberately
+  stripped `experiment_696` before restoration.
+- Spec: `REQ-ARC-WMTE-5995` + 4 SCENARIOs.
+- **No `SUBMITTED_*` flag moved; `MAX_ACTIONS` untouched; nothing submitted.**
+
 ## 2026-07-27 (outer-loop: 7 artifacts had their FABRICATION-GATE stamp stripped by a conductor in-place overwrite — restored; plus the modelled-charge comment corrected)
 
 - Agent-initiated (no user instruction), following up two items the review workflow filed OPEN.
