@@ -18856,3 +18856,71 @@ level-reaching subset and is therefore excluded from the score-maximising-budget
 corpus-wide M1/M2 numbers are ESTIMATES carrying the published estimator error; only the 48 exact
 cells are exact. (9) Every cell is a PUBLIC game played OFFLINE -- nothing here forecasts the hidden
 set. (10) The kernel-overhead term (980 s) is inherited as an ASSUMPTION, not measured here.
+
+## REQ-ARC-WMTE-5995: A Fabrication-Gate Determination Survives Every Re-Run That Overwrites Its Artifact
+
+Experiment scripts write their artifacts to FIXED paths, so a conductor re-run OVERWRITES the
+previous artifact in place. The system SHALL refuse, at commit time, any change that drops a
+fabrication-gate determination (`flagged_adversarial`, or any `corrigendum*` record) from a
+`results/*.json` artifact.
+
+**Why this outranks an ordinary never-prune violation.** CLAUDE.md's fabrication gate requires
+capstone / evidence-table / paper-v6 / any headline-aggregation task to SKIP artifacts carrying
+`flagged_adversarial: true`. Every consumer of that rule keys off the FIELD BEING PRESENT. So an
+overwrite that strips the field does not merely lose history — it RE-ADMITS a quarantined artifact
+to headline aggregation, silently, with no human-read diff anywhere in the loop. The quarantine is
+undone by the very act of re-running the experiment, which is the one thing the loop does
+constantly.
+
+**Origin (2026-07-27).** A conductor re-run dropped `flagged_adversarial: True` from SEVEN
+artifacts (exp1861, exp1938, exp2085, exp3734, exp4162, exp4170, exp696); six also lost
+`corrigendum_pending` + `corrigendum_note`. All seven were re-verified AFTER the overwrite and
+`adversarial_verify.py` still reported `1 flagged` on every one — the determinations were LIVE, not
+stale relics of an older verifier. A history sweep over 637 flagged artifacts across five sampled
+commits since 2026-06-01 found NO earlier instance, so this was a first occurrence rather than
+months of silent erosion; the sweep was sampled, not exhaustive.
+
+**The enforcement layer is commit-time, deliberately NOT conductor-side.** The conductor does not
+write these files; the experiment SCRIPT does, and there are thousands of them written by many
+agents over many months, each choosing its own output path. Any guard in the conductor's own write
+path would miss every one. Same reasoning that puts `canonical_url_lint` and
+`verifier_authenticity_lint` at Layer 1.
+
+#### SCENARIO-ARC-WMTE-5995-A-DROPPED-DETERMINATION-IS-REFUSED
+
+**Given** a `results/*.json` artifact carrying `flagged_adversarial: true` at HEAD
+**When** a change removes that field, or sets it to a non-true value with no accompanying
+`*_cleared_note`, or removes any `corrigendum*` record
+**Then** the commit SHALL be refused, naming the artifact and the specific field lost, and stating
+that the fabrication gate keys off the field's presence.
+
+#### SCENARIO-ARC-WMTE-5995-FAIL-FORWARD-MEASUREMENTS-ARE-UNTOUCHED
+
+**Given** a re-run that legitimately produces different measurement values
+**When** the determination fields are preserved
+**Then** the commit SHALL pass. Fail-forward is the operator's standing directive; a lint that
+refuses normal re-runs gets disabled and then protects nothing.
+
+#### SCENARIO-ARC-WMTE-5995-DELIBERATE-CLEARING-IS-AUDITABLE
+
+**Given** a determination that genuinely no longer applies
+**When** the artifact sets it to `false` AND carries a `*_cleared_note` stating what was
+re-verified
+**Then** the commit SHALL pass. A silent transition to absent/None SHALL NOT be accepted, because
+it is indistinguishable from the accident this requirement exists to catch.
+
+#### SCENARIO-ARC-WMTE-5995-THE-GUARD-DOES-NOT-DEPEND-ON-STAGING
+
+**Given** a strip written to the working tree but not staged
+**When** the lint runs
+**Then** it SHALL still fire. The first draft listed filenames from `git diff --cached` while
+reading the new side from the working tree, so an unstaged strip produced an empty file list and
+the lint printed OK on a tree that had just lost a determination — it failed to fire on a faithful
+replay of its own origin incident. A guard that cannot detect the thing it was written for is worse
+than no guard, because it converts an open problem into a false sense of coverage.
+
+## Implementation Status (REQ-ARC-WMTE-5995)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5995 | Implemented (`scripts/determination_preservation_lint.py` — diff-vs-HEAD check over `results/*.json`, `--ref` for auditing a landed commit, `--all` for a tree sweep; `.pre-commit-config.yaml:determination-preservation-lint`; the 7 restorations landed in `d90f51aeb`) | Implemented (`tests/python/test_determination_preservation_lint.py`, 9 tests driving REAL git plumbing rather than a mocked git — the origin bug was in WHICH git command the lint chose, so a mocked git would have reproduced it rather than caught it; 3 mutations proved caught: reverting to `--cached`, accepting a note-less clearing, and skipping the corrigendum check; plus a live-tree assertion so a future strip fails in CI even if the hook is bypassed) |

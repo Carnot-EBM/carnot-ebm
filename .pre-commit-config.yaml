@@ -320,6 +320,21 @@ repos:
         files: ^(python/carnot/agentic/arc_competition_agent\.py|python/carnot/agentic/arc_executable_world_model\.py|python/carnot/agentic/arc_hud_row_schema\.py|python/carnot/agentic/arc_solver_kit\.py|scripts/analyze_arc_early_stop_sweep\.py|scripts/analyze_arc_gateway_accurate_rescore\.py|scripts/analyze_arc_gateway_rescore\.py|scripts/analyze_arc_llm_on_wallclock_envelope\.py|scripts/analyze_arc_max_actions_answer\.py|scripts/analyze_arc_reset_charge_attribution\.py|scripts/analyze_scored_path_lever_ab\.py|scripts/arc_gateway_card_ground_truth\.py|scripts/arc_gateway_exact_attribution\.py|scripts/arc_gateway_rescore\.py|scripts/arc_leaderboard_eval\.py|scripts/arc_llm_on_contention_probe\.py|scripts/arc_llm_on_wallclock_budget_probe\.py|scripts/arc_per_level_reset_attribution_capture\.py|scripts/arc_scored_path_early_stop_sweep\.py|scripts/arc_scored_path_lever_harness\.py|scripts/analyze_.*\.py|ops/analyzer_artifact_index\.json|results/.*\.json)$
         pass_filenames: false
 
+      - id: determination-preservation-lint
+        name: Fabrication-gate determinations are not silently dropped
+        entry: python3 scripts/determination_preservation_lint.py
+        language: system
+        # Scoped to results/*.json ONLY -- the determination lives in the artifact, and the
+        # writer that strips it is an arbitrary experiment script, not one auditable code path.
+        # Deliberately NOT keyed to the writers: there are thousands of experiment scripts and
+        # any writer-side allow-list would miss the next one. Origin: 2026-07-27, when a
+        # conductor re-run dropped `flagged_adversarial: True` from 7 artifacts, silently
+        # re-admitting them to headline aggregation (the fabrication gate keys off the field
+        # being PRESENT). pass_filenames is false because the check is a git diff against HEAD,
+        # not a per-file scan -- see the lint's docstring for why `--cached` was wrong.
+        files: ^results/.*\.json$
+        pass_filenames: false
+
       # NOTE: the blog publish guard runs as a STANDALONE git pre-push hook
       # (scripts/git-hooks/pre-push, installed via scripts/install-git-hooks.sh),
       # NOT as a pre-commit hook. pre-commit's pre-push dispatcher stashes
