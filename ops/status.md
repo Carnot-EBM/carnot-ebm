@@ -1,6 +1,82 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-26 (adversarial-review repairs to the early-stop grace sweep: the "no safe firing value" headline was a GRID ARTIFACT — grace 350 IS safe at b400 and buys 0.072% of actions)
+**Last Updated:** 2026-07-26 (LLM-ON wall-clock envelope for MAX_ACTIONS: wall clock DOES bind at ~110 games — and a context-overflow hypothesis was formed, tested, and REFUTED in the same session)
+
+## Session 2026-07-26 (latest) - The MAX_ACTIONS wall-clock envelope, LLM ON
+
+### What's Working
+
+- **The missing anchor exists now.** Every prior budget measurement was LLM-OFF and the fitted LLM-on
+  model had zero data above budget 400 (its own residuals said so, and its b400 row was arithmetically
+  forced by its own calibration). Direct LLM-on anchors at budgets 400 / 1000 / 2000 are measured on
+  the scored `E3AgentPolicy` path with the frozen live generator, budget as the **innermost** loop,
+  order alternated by game, and a same-config replicate arm.
+- **The wall-clock answer, and it does bind.** At the most likely cap (9h) and ~110 games the
+  conservative reading admits **only budget 400 — the shipped value, with no headroom**; under the
+  tightest candidate cap (6h) nothing in the measured grid fits at 110 games. This agrees with the
+  prior artifact's own 8h envelope and contradicts its headline "budget 4000 fits", which rested on
+  the weakest of four candidate caps.
+- **And even if the clock were free, the prize is ~nothing.** Per-level score is
+  `min((human/agent_actions)^2*100, 115)` and the agent needs ~30x the human action count: `dc22`'s
+  budget-2000 level-up took 1,782 actions against a 59-action human baseline → **0.11 out of a
+  possible 100**. That is why the prior sweep's own numbers show won cells ×3.27 while authoritative
+  score moves ×1.02.
+- **A hypothesis was formed, tested, REFUTED — and the same test then found a worse, real fault.**
+  I claimed a "context ceiling" (a 16,189-token prompt against a 16,384 window killing the server).
+  Wrong: `tokens_prompt` is a cumulative sum (per-request means are 338–1,472 tokens),
+  `prompt_truncated` is 0 on every row, and an over-context request alone is cleanly **rejected with
+  the server surviving**. Retracted rather than deleted.
+- **THE REAL FAULT, and the most consequential finding of the session: CONCURRENT per-slot context
+  overflow.** The server reports **`total_slots: 4`** (so my *other* inference — one slot, because no
+  `--parallel` flag — was also wrong). `-c 16384` gives ~**4,096 tokens per slot**, and the agent asks
+  for **`max_tokens=4096`**, which alone fills a slot. A **~6,000-token prompt succeeds alone but the
+  same prompt 4-at-once returns `HTTP 500 "Context size has been exceeded"` on every request**, with
+  the matched single-request control succeeding. The server sometimes dies from it, sometimes returns
+  a clean 500 (3 deaths, 1 survival — **the rejection is deterministic, the crash is not**).
+  **Invisible until now because every LLM-on measurement this project has taken was at concurrency 1**,
+  while the eval starts one thread per game (~110 concurrent). **Independent of the action budget** and
+  live in the submission as shipped. Not yet established that it explains the `cd82`/b2000 crash,
+  which ran single-threaded — two faults may be in play.
+- **The headline is computed from the envelope table, not asserted.** A first draft hard-coded a
+  conclusion that contradicted the table printed beneath it.
+- **GPU discipline held and was verified, not assumed.** GPU 1 only, confirmed by resolving the
+  proposer's own binary/env AND reading per-PID VRAM attribution back off `nvidia-smi` (11,784 MiB
+  resident). This matters because the resolver falls through to the AMD iGPU **silently** when its
+  CUDA headroom guard trips, and that build exists on this box. GPU 0 was never targeted.
+
+### What's Next (blocking, in order)
+
+1. **Capture the generator's stderr and reproduce `cd82`/b2000 to read the actual death message.**
+   `LocalGGUFProposer._ensure_server` spawns with `stdout=DEVNULL, stderr=DEVNULL`, so the crash
+   reason was printed and discarded. This is the cheapest item and it is what let a wrong mechanism
+   look plausible.
+2. **Fix the silent degradation.** Any failed request makes `generate()` return `(False, msg)` instead
+   of raising, so the agent finishes the eval as an LLM-off agent while still reporting itself as the
+   LLM-on scored path. Independent of (1); worth doing either way.
+3. **Measure the 4-slot regime** — `scripts/arc_generator_slot_concurrency_probe.py`. The eval's
+   `Swarm` runs one thread per game against a server reporting `total_slots: 4`; every measurement
+   this project has ever taken was at concurrency 1, and that regime is strictly harsher. It would
+   also pin the batching speedup `S`, which is currently an explicit parameter of the envelope rather
+   than a measured number — and `S` is the cheapest way to buy real budget headroom if it is > 1.
+
+### Known Constraints (new this session)
+
+- **The generator dies reproducibly on the longest cell, cause UNKNOWN.** `cd82` at budget 2000 →
+  `generator_healthy_after` True → False in two independent runs on two ports, plus a third time on
+  that cell's replicate. That cell has the most LLM responses (11), largest graph (411 states) and
+  longest wall clock in the sample — most total work, **not** the biggest prompt (the context
+  explanation was tested and refuted). Full entry at the top of `ops/known-issues.md`. A reliability
+  risk that grows with the budget, but with no known mechanism no threshold can be quoted.
+- **`stop_type_limit` is 2–9 on every cell** — induction generations routinely stop because they hit
+  `n_predict`, not because they finished. Whether that truncates usable engine code is unmeasured.
+- **Per-cell LLM-on wall clock is dominated by sampling noise, not by the budget.** A byte-identical
+  replicate moved one cell 147.0s → 240.3s (1.63x) with *identical* behaviour. Pooled same-config fold
+  change ~1.9x vs a modelled budget effect of 1.34x — so no single-cell before/after can carry a
+  budget claim; only paired-across-games evidence can.
+- **The 12h cap this project has been quoting is not the Kaggle leaderboard's.** It is our own
+  self-imposed `subprocess(timeout=43200)`, and the external 12h figure belongs to ARC Prize
+  **Verified**, explicitly not the Community Leaderboard. Four candidate caps (6h/8h/9h/12h) are now
+  reported side by side, ranked by provenance.
 
 ## Session 2026-07-26 (later) - Adversarial-review repairs to the early-stop grace sweep
 

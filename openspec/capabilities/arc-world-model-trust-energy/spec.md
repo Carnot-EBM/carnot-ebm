@@ -18354,3 +18354,112 @@ strongest under LLM-ON, where per-cell cost is roughly 61x, and that condition w
 across 1056 cells. (6) `E3AgentPolicy.__init__` still does not forward `early_stop_grace`, so
 `SUBMITTED_EARLY_STOP_GRACE` remains dead code: the flag cannot ship as written even if the operator
 wanted it, and wiring it is a separate change this measurement deliberately did not make.
+
+## REQ-ARC-WMTE-5984: The Action-Budget Wall-Clock Envelope Is Measured LLM-ON, Reported Per Candidate Cap, And Separated From Both Score Value And Generator Reliability
+
+**Origin.** The `MAX_ACTIONS` decision (shipped 400; the LLM-off sweep showed 4000 buying 12 median
+wins against 4) turned entirely on wall clock, and **every prior budget measurement was LLM-OFF**.
+The fitted LLM-on model in `results/outer_loop_scored_path_budget_sweep_20260726.json` said so in
+its own `residuals`: *"one LLM-on run at b1000/b2000 would replace this model with a direct anchor"*
+and *"THE BUDGET-400 ROW IS ARITHMETICALLY FORCED, NOT A TEST ... Only the b1000+ rows are model
+OUTPUT."* So every LLM-on figure above budget 400 that the project held was extrapolation from a
+single calibrated point, and the headline "budget 4000 fits" rested on the most permissive of several
+circulating wall-clock caps.
+
+**The requirement.** Any evaluation of the per-game action budget MUST:
+
+1. **Measure LLM-ON with the swept parameter INNERMOST.** The budget is a `run_game` parameter, never
+   a flag edit. All budgets for a given (game, seed) run back-to-back in ONE process against ONE
+   already-warm generator, and the budget ORDER alternates across games so a warm-up or KV-cache
+   effect cannot be read as a budget effect. A design that runs one budget per process invocation
+   makes the budget the OUTERMOST loop and confounds it with machine-condition drift.
+
+2. **Carry a SAME-CONFIG replicate.** Under the LLM the run is not a deterministic function of the
+   seed. Measured: a byte-identical replicate moved one cell's wall clock 147.0s -> 240.3s (1.63x)
+   with **identical behaviour** — same actions, resets, levels and states expanded — while
+   `tokens_predicted` nearly doubled. Pooled same-config fold change (~1.9x) EXCEEDS the modelled
+   budget effect (1.34x), so a per-cell before/after cannot carry a budget claim. Per-cell
+   resolvability and corpus-level paired direction MUST be reported as SEPARATE verdicts; collapsing
+   them discards the stronger paired evidence.
+
+3. **Report the answer PER CANDIDATE CAP, ranked by provenance.** 6h / 8h / 9h / 12h all circulate in
+   this project's documents. The 12h figure is **our own self-imposed** `subprocess(timeout=43200)`
+   — which cannot bind the platform — and the external 12h figure belongs to the ARC Prize
+   **Verified** policy, explicitly NOT the Kaggle Community Leaderboard. A single-cap verdict resting
+   on the loosest reading is forbidden. The verdict MUST also be reported per plausible hidden-game
+   count, since the total scales linearly in it.
+
+4. **Model cost in TWO COMPONENTS, not one.** LLM seconds are served by a server whose slot count is
+   READ OFF `/props` (measured: `total_slots: 4`, NOT inferred from the absence of a `--parallel`
+   flag), so they partly batch; the agent's own Python search runs under one GIL across the eval's
+   ~110 threads and does not batch at all. The unbatchable half is the FASTER-GROWING one (measured
+   2.54x across the budget range against 1.58x), so a batching speedup measured at the shipped budget
+   MUST NOT be applied as a flat discount at a larger one. The unbatchable floor MUST be published.
+
+5. **Price the levels a raise buys, in SCORE.** Wins are not the scored quantity. Per-level score is
+   `min((baseline_actions / actions_taken)**2 * 100, 115)`, and the agent runs at tens of times the
+   human action count — `dc22`'s budget-2000 level-up took 1782 actions against a 59-action baseline,
+   scoring **0.11 of a possible 100**. A budget report that quotes win counts without pricing them
+   misrepresents the trade by orders of magnitude.
+
+6. **Keep the three action units apart, and quote the gateway unit.** `actions` (offline, EXCLUDES
+   resets), `n_frames` (loop iterations, INCLUDES resets), and GATEWAY-CHARGED (non-RESET moves PLUS
+   resets). Measured identity: `frames == budget` exactly and `offline_actions == budget - resets`,
+   so **gateway-charged == frames == the budget itself** when the loop exhausts. Where exact
+   per-level reset attribution is unavailable, a RIGOROUS TWO-SIDED BOUND MUST be reported rather
+   than the optimistic figure alone.
+
+7. **Declare the clocks separately.** An analyser pass over persisted rows is
+   `aggregation_from_upstream_artifacts` and MUST publish `measurement_wall_s` summed from each row
+   file's own `elapsed_s` — never its own runtime, and never a sum of per-cell `wall_s` (which
+   undercounts by excluding construction and inter-cell overhead).
+
+8. **Verify the GPU actually obtained.** `_generator_server_and_env` falls through to the AMD iGPU
+   HIP build SILENTLY when its CUDA headroom guard trips, and that build exists on the dev box. The
+   resolved binary + env MUST be recorded AND cross-checked against per-PID VRAM attribution. GPU 0
+   belongs to the conductor and MUST NOT be targeted.
+
+9. **Hoist scope and power beside the verdict.** Complete-game count, seed count, the MINIMUM
+   REACHABLE two-sided p at the available support, whether the game selection was random, and
+   whether the measurement was contended.
+
+**SCENARIO-ARC-WMTE-5984-1: concurrent per-slot context overflow breaks induction.** A server with
+`total_slots: 4` and `-c 16384` allots roughly 4096 tokens per slot while the agent requests
+`max_tokens=4096` — a whole slot by itself. Three-way isolation with the SAME prompt: alone at
+`-c 16384` succeeds; **4-at-once at `-c 16384` FAILS** (`HTTP 500 "Context size has been exceeded"`,
+and killed the server in 4 of 5 observations); 4-at-once at `-c 65536` succeeds. Per-slot capacity is
+therefore the mechanism and `-c` is the lever. The rejection is deterministic; **the crash is
+INTERMITTENT and MUST NOT be reported as deterministic.** This regime had never been exercised
+because every LLM-on measurement was taken at concurrency 1, while the eval's `Swarm` starts one
+thread per game (`ARC-AGI-3-Agents/agents/swarm.py:76-99`). Because
+`LocalGGUFProposer.generate()` returns `(False, msg)` rather than raising, a failure leaves the agent
+running as an LLM-off agent while still reporting itself as the LLM-on scored path — so any fix MUST
+also make a failed induction LOUD.
+
+**SCENARIO-ARC-WMTE-5984-2: a wrong mechanism must be retracted in place, not deleted.** This
+measurement first reported a "context ceiling" (a 16,189-token prompt against a 16,384 window). It
+was wrong on its central number — `llm.tokens_prompt` is a CUMULATIVE SUM over responses
+(`scripts/arc_scored_path_lever_harness.py:267`), giving per-request means of 338–1472 tokens — and
+wrong on its mechanism, since `prompt_truncated == 0` on every row and a lone over-context request is
+cleanly REJECTED with the server alive. The retraction, its refuting evidence, and the superseding
+finding MUST all remain in the artifact.
+
+## Implementation Status (REQ-ARC-WMTE-5984)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-5984 | Implemented (`scripts/arc_llm_on_wallclock_budget_probe.py` — budget innermost, alternating order via `--order-offset`, same-config replicate, heal-between-cells so a generator reload never lands inside a measured wall clock, GPU-1 pinning resolved through the proposer's own resolver AND cross-checked against `nvidia-smi --query-compute-apps`; `scripts/analyze_arc_llm_on_wallclock_envelope.py` — four-cap envelope, two-component decomposition + unbatchable floor + batchability trend, paired both-tails sign test with reachable floor, pairwise-complete game sets, level score pricing, gateway-charge two-sided bounds, uncontended-vs-contended cross-check against the independently measured contention factor, computed headline, retraction block; `scripts/arc_generator_context_overflow_probe.py` — fresh server per condition, concurrency dimension, three-way isolation; `scripts/arc_generator_slot_concurrency_probe.py` — speedup gated on both arms completing) | Implemented (`tests/python/test_arc_llm_on_wallclock_envelope.py`, 11 tests covering the p-floor arithmetic at the exact supports that decided the design, two-tailedness against reversal, unanimity attaining its own floor, monotonicity of p in disagreement, and bootstrap-CI degradation at n=0/n=1 plus mean-not-median on a skewed sample) |
+
+**Known limitations (stated, not assumed away).** (1) 4 complete games, 1 seed — p-floor 0.125, which
+CANNOT reach 0.05; both adjacent-budget steps are stamped UNDERPOWERED. (2) Games were chosen because
+budget 2000 gains a win on them, so the sample is deliberately adverse for a cost question and is NOT
+random; the hidden set is out-of-distribution relative to all of them. (3) The probe is an
+UNCONTENDED single process while the eval runs ~110 concurrent threads, so its per-game costs are a
+FLOOR. (4) The batching speedup `S` remains an explicit PARAMETER of the envelope, not a measured
+number — the concurrency probe that would pin it was blocked by the very overflow it found. (5) The
+`cd82` budget-2000 generator crash ran single-threaded and is therefore NOT explained by the
+concurrency mechanism; its cause remains UNKNOWN, and diagnosis is obstructed because
+`_ensure_server` sends the server's stdout and stderr to `DEVNULL`. (6) `stop_type_limit` is 2–9 on
+every cell — inductions routinely stop on `n_predict` rather than finishing — and whether that
+truncates usable engine code is unmeasured. (7) The 980s kernel-overhead term is inherited as an
+ASSUMPTION. (8) The hidden-game count (~110) is itself an estimate and the totals scale linearly in it.

@@ -4,6 +4,105 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-26 (outer-loop, OPEN): the generator DIES reproducibly on the longest cell — cause UNKNOWN, its stderr is discarded, and the failure degrades the scored agent SILENTLY
+
+**Status:** OPEN. Found while measuring the LLM-on wall-clock envelope for the `MAX_ACTIONS`
+decision (entry below). **This entry was rewritten after its own first version was refuted — see
+"RETRACTED" below. Read that part first; it is the more useful half.**
+
+**RETRACTED (2026-07-26, same session): the "context overflow" explanation is WRONG.** The first
+version of this entry claimed the induction prompt reached 16,189 tokens against a `-c 16384` server
+and that this overflow killed it, and called it a hard blocker on raising `MAX_ACTIONS`. Three checks
+killed that:
+
+1. **`llm.tokens_prompt` is a CUMULATIVE SUM, not a single prompt.** The harness does
+   `s["tokens_prompt"] += prompt_n` per response
+   (`scripts/arc_scored_path_lever_harness.py:267`). The `cd82`/b2000 cell made 11 responses, so its
+   real per-request prompt averages **~1,472 tokens**. Across every cell measured, per-request means
+   run **338–1,472 tokens** — an order of magnitude clear of the window. Reading a summed counter as
+   a single request size is a units error of exactly the class this project keeps making.
+2. **`prompt_truncated == 0` on every single row.** The harness counts truncation directly (`:274`).
+   Nothing was truncated, so nothing was near the limit.
+3. **An over-context request does not kill a server at all.** Isolated test
+   (`scripts/arc_generator_context_overflow_probe.py`): a genuinely oversized request is rejected
+   with a clean `HTTP 400 exceed_context_size_error` and **the server stays alive**; doubling `-c`
+   makes the identical request succeed. So the mechanism was impossible as described.
+
+Preserved rather than deleted, per never-prune — and because the lesson is the durable part: the
+decisive test was cheap, and it was run *before* the mechanism shipped as fact.
+
+**THEN THE SAME TEST FOUND THE REAL ONE, AND IT IS WORSE. Over-context *does* break the generator —
+under CONCURRENCY, which no measurement this project has ever taken used.**
+
+- The server reports **`total_slots: 4`** (read live off `/props`; an earlier inference that it had
+  ONE slot because no `--parallel` flag is passed was also wrong — the build's default is not 1).
+  With `-c 16384` that is roughly **4,096 tokens per slot**.
+- A **~6,000-token prompt succeeds cleanly at concurrency 1**, repeatedly.
+- The **same prompt issued 4-at-once returns `HTTP 500 "Context size has been exceeded"` on every
+  request.** Reproduced on fresh servers across separate runs. **The matched single-request control
+  succeeds**, so concurrency is the only variable.
+- The agent asks for **`max_tokens=4096` — which alone equals an entire slot's budget**, leaving
+  nothing for the prompt.
+- **The server sometimes DIES from this and sometimes returns a clean 500** (3 deaths, 1 survival
+  observed). The *rejection* is deterministic; **the crash is intermittent — do not claim otherwise.**
+- **Why no earlier measurement could have caught it:** every LLM-on number this project holds was
+  taken at concurrency 1 (one dev process, one request at a time). The eval's framework starts **one
+  thread per game** and joins them all (`ARC-AGI-3-Agents/agents/swarm.py:76-99`), so with ~110 hidden
+  games requests arrive together. That regime had never been exercised.
+- **Consequence for the scored submission:** the shipped path uses the same 16384 window, the same
+  4096 `max_tokens`, and no prompt clamp. Under eval concurrency, induction requests are expected to
+  fail — **silently**, per the degradation path below. This is **independent of the action budget**
+  and is a candidate contributor to the live score being what it is.
+- **Candidate fixes (operator decision, none applied):** raise `-c` so `n_ctx/total_slots`
+  comfortably exceeds prompt + `max_tokens`; or pin `--parallel 1` so one slot owns the whole window
+  (throughput for correctness); or lower `max_tokens`; or clamp/summarise the prompt. In all cases,
+  **make a failed induction loud.**
+- **Still NOT established:** that this explains the `cd82`/b2000 crash. That cell ran
+  single-threaded, so unless something in the induction path issues concurrent requests, the
+  concurrency mechanism does not cover it. **Two separate faults may be in play and only one is now
+  understood.**
+
+**WHAT SURVIVES, and still matters.**
+
+1. **The server really did die, reproducibly, on one cell.** `cd82` at budget 2000:
+   `generator_healthy_after` True → False in **two independent runs on two different ports**
+   (8951, 8952), then a **third** time on that cell's same-config replicate, where the proposer's own
+   self-heal spawned a replacement mid-cell and the storm guard caught it. **The cause is UNKNOWN.**
+   And any *size*-based explanation is refuted too, not just the context one: **`su15` at budget 2000
+   expanded 501 states — a strictly LARGER search graph than the 411 of the cell that crashed — and
+   completed cleanly.** So neither graph size nor the prompt size that scales with it is sufficient to
+   explain the crash. The analyser computes this counterexample automatically rather than leaving it
+   to be eyeballed, precisely because a size-based story is the tempting one.
+2. **Diagnosis is needlessly hard because the server's output is thrown away.**
+   `LocalGGUFProposer._ensure_server` spawns with `stdout=DEVNULL, stderr=DEVNULL`. Whatever the
+   server printed as it died was discarded — which is why this had to be chased by correlation and
+   why a wrong mechanism looked plausible for as long as it did. **Capturing that output is a
+   prerequisite for finding the real cause, and is the cheapest item here.**
+3. **The silent-degradation path is real and is now PROVEN** (just not via context). When a request
+   fails for *any* reason — rejected, timed out, or server gone — `LocalGGUFProposer.generate()`
+   returns `(False, msg)` instead of raising, so the agent logs `skipped: proposer_failed` and
+   CONTINUES, finishing as an LLM-off agent while still reporting itself as the LLM-on scored path.
+   At eval scale this presents as induction simply not helping, not as a fault.
+4. **A reliability risk that grows with the budget.** The crash landed on the longest,
+   largest-graph cell, and a bigger budget produces exactly longer, larger-graph cells. This is a
+   reason for caution about a raise, but since the mechanism is unknown **no threshold can be quoted
+   and no fix can be specified.**
+5. **Separate, unexamined:** `stop_type_limit` is **2–9 on every cell** — induction generations
+   routinely stop because they hit `n_predict`, not because they finished. Whether that truncates
+   usable engine code is not measured.
+
+**Next steps, in order.** (a) Capture the generator's stderr and reproduce `cd82`/b2000 to read the
+actual death message. (b) Fix the silent `(False, msg)` degradation so an LLM-off fallback is loud.
+(c) Only then decide whether the crash constrains a budget raise.
+
+**Cross-references:** `scripts/arc_llm_on_wallclock_budget_probe.py` (the measurement),
+`results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json`
+(`generator_reliability_and_a_retracted_hypothesis` — the field that holds both the crash record and
+the refutation; it was called `context_ceiling_hard_blocker` in the draft that was wrong),
+`scripts/arc_generator_context_overflow_probe.py` (the decisive test),
+`scripts/arc_generator_slot_concurrency_probe.py` (the 4-slot regime, strictly harsher than anything
+measured at concurrency 1).
+
 ### 2026-07-26 (outer-loop, OPEN): MAX_ACTIONS may be worth more than every lever under study combined — and the frontier lever's direction REVERSES with it
 
 **Status:** OPEN, and it is the largest single measured lever on the board. Raised by an adversarial
