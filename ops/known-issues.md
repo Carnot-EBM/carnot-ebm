@@ -4,6 +4,112 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-27 (outer-loop, RESOLVED-BY-MEASUREMENT): the "GATEWAY-ACCURATE" charge was a MODEL, wrong ~2x at the median and SIGN-FLIPPED on 6 cells
+
+**Status:** RESOLVED for the local/offline path. The fix is shipped and the corrected number is
+measured; two residuals below are OPEN.
+
+`results/outer_loop_arc_gateway_accurate_rescore_20260726.json` published a median relative optimism
+of **0.036903** under a key named `score_M2_bootstrap_free_GATEWAY_ACCURATE`. That was not a
+measurement of the gateway's charge — it was a MODEL of it
+(`charged = offline_actions + resets - 1`). Read off the gateway's own `Card` over the same 48
+cells, the REAL figure is **0.018097** at the median (mean 0.028887, min **-0.018209**):
+
+* the model reproduces the real per-level charged vector on only **27 of 44** usable cells;
+* on **6** cells (tu93, 3 seeds x 2 budgets) the true sign is **NEGATIVE** — the recorded offline
+  number was PESSIMISTIC, not optimistic;
+* the model NEVER understates (max signed error +0.058843), so every disagreement inflates.
+
+**Mechanism, confirmed pointwise on all 48 cells** (`uncharged == empty_frame_actions`, 48/48): a
+non-RESET action taken while the game is already `GAME_OVER`/`WIN` returns `frame=[]`
+(`arcengine/base_game.py:204-216`), and the scorecard update is gated on `len(resp.frame) > 0`
+(`arc_agi/wrapper.py:187`) — so **post-death actions are FREE at the gateway** while our harness
+counts them. 17 of 44 cells carry such actions across 5 games (max 32 on tu93@b2000). The same gate
+is on the HTTP path (`arc_agi/api.py:336`), so this is server behaviour, not an offline artifact.
+
+**Why no gate caught it:** the fidelity gate compared *two reconstructions of the same assumption*.
+Both "independent scorer paths" derived the charge from `offline + resets - k`; neither consulted the
+`Card`. The `witness_opening_reset_is_free` section synthesises a `FrameDataRaw` sequence and calls
+`Card` mutators directly — a path that structurally cannot exhibit the empty-frame short-circuit.
+
+**Also corrected:** the cited span for the free-reset mechanism was
+`arc_agi/api.py:405-437 _get_or_create_environment` (the REMOTE guid-cache path). On the local chain
+the predicate is `_action_count == 0 or state == WIN`
+(`arcengine/base_game.py:305-316 handle_reset`), so a free reset can fire more than once. The prior
+fix spec hard-coded `n_full_resets = 1`, which would silently under-charge any trajectory that
+RESETs twice in a row or RESETs after a win. Measured on this corpus: 0 consecutive-RESET pairs,
+exactly 1 full reset per run — the assumption held, but it is no longer relied on.
+
+**Shipped:** `arc_leaderboard_eval._read_gateway_card` (pure addition) records
+`gateway_card_actions` / `gateway_card_resets` / `gateway_card_actions_by_level` /
+`efficiency_gateway_card` / `empty_frame_actions` / `observed_full_resets` /
+`consecutive_reset_pairs` on every row; `scripts/arc_gateway_card_ground_truth.py` +
+`results/arc_gateway_card_ground_truth_20260727.json` are the measurement; a new gate `G7` in the
+rescore analyser asserts agreement with the live `Card`.
+
+**OPEN residual 1 — competition_mode is an ADDITIONAL charge source, unmeasured.**
+`arc_agi/api.py:316-334`: when a RESET arrives with `full_reset=False` on a
+`LocalEnvironmentWrapper` and `scorecard.competition_mode and g._game._action_count == 0`, the code
+calls `update_scorecard` WITHOUT stepping the game, which routes to `inc_reset_count` -> `resets +=
+1` AND `actions += 1`. A competition-mode RESET at action-count 0 is therefore BILLED while doing
+nothing. **Every figure above is a LOWER BOUND under competition_mode.**
+
+**OPEN residual 2 — the REMOTE hidden gateway has never been confirmed to match the INSTALLED local
+`arc_agi` package.** Read from source, never measured against the live service. No figure here may
+be carried into a scored-path claim without that confirmation.
+
+### 2026-07-27 (outer-loop, OPEN, NEVER-PRUNE VIOLATION): the conductor REWRITES historical `results/` artifacts in place
+
+**Status:** OPEN, needs an owner. Not caused by any outer-loop lane; found in the working tree.
+
+75 pre-existing `results/*.json` artifacts are modified in the working tree by the concurrently
+running conductor (pid observed 1187494), with ORIGINAL RECORDED NUMBERS DESTROYED rather than
+superseded. Example — `results/experiment_911_drift_probe_tier0i.json`:
+
+```
+-  "ood_auc_drift": 0.91          -> +  "ood_auc_drift": 0.5625
+-  "honest_verdict": "tier0i_viable" -> + "tier0i_marginal"
+-  "inference_mode": "synthetic_runner" -> + "real_model"
+```
+
+This is a direct never-prune violation (CLAUDE.md "Documentation Update Rules" / "no historical
+artifact's recorded numbers rewritten"): a re-run of a historical experiment id must emit a NEW
+artifact that states the correction and cites the original, exactly as the gateway-card lane above
+did. As written, the next `git add -A` sweeps the destruction into history.
+
+**Action needed:** identify which conductor task re-runs historical experiment ids and make it write
+a new artifact (or a `_v2` suffix) instead of overwriting. Until then, the overwrites should be
+committed as a preserve-transient-state commit so the pre-overwrite bytes stay recoverable from git.
+
+### 2026-07-27 (outer-loop, OPEN): a full-suite pytest failure SET is not obtainable — an xdist worker dies on `test_experiment_5838_v520_source_delta_ingestion.py`
+
+**Status:** OPEN, NOT root-caused. Reported so the limit on every tree-scope regression proof is on
+the record.
+
+A full-tree run (259 failed / 29616 passed / 73 skipped / 1 error) ends in an xdist
+`INTERNALERROR: assert not crashitem` with `WorkerController gw10` dying on
+`tests/python/test_experiment_5838_v520_source_delta_ingestion.py::test_scenario_report_5838_schema_helpers_and_cli`.
+Until that is fixed, no complete tree-wide failure set — and therefore no tree-scope failure-SET
+comparison — is obtainable.
+
+**Reproduction attempts (2026-07-27), all NEGATIVE:**
+
+* the file alone, `-n0 --no-cov`: 7 passed, 0.93s, peak RSS 198 MB;
+* the file alone, `-n 4` WITH coverage (the full-suite config): 7 passed, 81.5s.
+
+So the crash needs the full-suite load, not this file in isolation. The leading hypothesis is the
+already-documented JAX/absl double-init-under-coverage abort: the test calls
+`runpy.run_module("carnot.experiment_5838_v520_source_delta_ingestion", run_name="__main__")` on a
+module already in `sys.modules` (pytest emits exactly that `RuntimeWarning`), which re-executes
+package import machinery inside a coverage-instrumented worker. Unconfirmed.
+
+**Deliberately NOT done:** no `--ignore` / deselect was added to `pyproject.toml`. CLAUDE.md forbids
+skipping tests ("skipped tests are invisible failures"), and a permanent skip would trade a visible
+crash for an invisible gap. Obtain a failure set with an explicit one-off
+`--deselect tests/python/test_experiment_5838_v520_source_delta_ingestion.py::test_scenario_report_5838_schema_helpers_and_cli`
+on the command line, and record that the deselect was used.
+
+
 ### 2026-07-26 (outer-loop, OPEN): the generator DIES reproducibly on the longest cell — cause UNKNOWN, its stderr is discarded, and the failure degrades the scored agent SILENTLY
 
 **Status:** OPEN. Found while measuring the LLM-on wall-clock envelope for the `MAX_ACTIONS`

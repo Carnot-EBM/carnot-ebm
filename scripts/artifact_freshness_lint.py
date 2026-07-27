@@ -89,6 +89,30 @@ def _sha256(path: Path) -> str | None:
         return None
 
 
+def _rows_source_entries(prov: dict) -> list[dict[str, Any]]:
+    """Every {path, sha256} entry under `rows_sources`, for BOTH shapes the corpus uses.
+
+    FIELD-SHAPE ROBUSTNESS (2026-07-27). `rows_sources` is a dict-of-named-groups in most artifacts
+    and a FLAT LIST in others. Two call sites here did `.values()` unconditionally, so the list shape
+    raised AttributeError and took the entire lint down -- blocking every commit while reporting
+    nothing about staleness, which is strictly worse than a miss. Same bug class as the QA-Layer
+    Authenticity Discipline's origin incident: a checker assuming one shape of a field the project's
+    own conventions allow to vary.
+    """
+    rs = prov.get("rows_sources")
+    groups: list[Any] = []
+    if isinstance(rs, dict):
+        groups = list(rs.values())
+    elif isinstance(rs, list):
+        groups = [rs]
+    out: list[dict[str, Any]] = []
+    for group in groups:
+        if not isinstance(group, list):
+            continue
+        out.extend(e for e in group if isinstance(e, dict))
+    return out
+
+
 def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
     """Return (status, detail_lines, rebuild_command).
 
@@ -102,8 +126,7 @@ def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
     if not isinstance(prov, dict) or not prov:
         return ("no_provenance", [], None)
     recorded: list[dict[str, Any]] = list(prov.get("code") or [])
-    for group in (prov.get("rows_sources") or {}).values():
-        recorded.extend(group or [])
+    recorded.extend(_rows_source_entries(prov))
     if not recorded:
         return ("no_provenance", [], None)
     drift, unreadable = [], []
@@ -167,11 +190,18 @@ def registered_dependency_paths(index_path: Path = DEFAULT_INDEX) -> dict[str, l
             r = _repo_relative(str(entry.get("path", "")))
             if r and r not in out["code"]:
                 out["code"].append(r)
-        for group in (prov.get("rows_sources") or {}).values():
-            for entry in group or []:
-                r = _repo_relative(str(entry.get("path", "")))
-                if r and r not in out["rows"]:
-                    out["rows"].append(r)
+        # FIELD-SHAPE ROBUSTNESS (2026-07-27). `rows_sources` is a dict-of-named-groups in most
+        # artifacts but a FLAT LIST of {path, sha256} in others -- both shapes are in the corpus, and
+        # `.values()` on the list shape raised AttributeError and took the whole lint down with it.
+        # A crash in the freshness layer is worse than a miss: it blocks every commit while telling
+        # the author nothing about staleness. Both shapes are now walked, and an unexpected shape is
+        # skipped rather than fatal. (This is the same field-shape-assumption bug class the
+        # QA-Layer Authenticity Discipline was written for -- the checker assumed one shape of a
+        # field the project's own conventions allow to vary.)
+        for entry in _rows_source_entries(prov):
+            r = _repo_relative(str(entry.get("path", "")))
+            if r and r not in out["rows"]:
+                out["rows"].append(r)
         # The analyser named in the index is a code dependency even if a (buggy) artifact forgot to
         # fingerprint it -- belt and braces, because the index entry is the thing that always exists.
         an = _repo_relative(str((index.get(rel) or {}).get("analyzer") or ""))

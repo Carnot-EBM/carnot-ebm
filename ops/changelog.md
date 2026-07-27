@@ -1,5 +1,174 @@
 # Carnot — Changelog
 
+## 2026-07-27 (outer-loop: 7 artifacts had their FABRICATION-GATE stamp stripped by a conductor in-place overwrite — restored; plus the modelled-charge comment corrected)
+
+- Agent-initiated (no user instruction), following up two items the review workflow filed OPEN.
+- **A LIVE FABRICATION-GATE HOLE, not a hypothetical one.** The conductor re-runs experiments and
+  overwrites their `results/*.json` IN PLACE. On this pass it silently dropped
+  `flagged_adversarial: True` from **7 artifacts** (True -> None), and 6 of the 7 also lost their
+  `corrigendum_pending` + `corrigendum_note` records: `experiment_1861_equivalence`,
+  `experiment_1938_nrgpt_loss_probe`, `experiment_2085_pem_sudoku_eval`,
+  `experiment_3734_fix_harness_and_bounded_train_chunk1`,
+  `experiment_4162_sota_ingestion_verifier_moat_guidance`,
+  `experiment_4170_sota_ingestion_verifier_moat_guidance`, `experiment_696_icalm_abstention`.
+  **Why this is worse than an ordinary never-prune violation:** CLAUDE.md's fabrication gate requires
+  capstone / evidence-table / paper-v6 / any headline-aggregation task to SKIP artifacts carrying
+  `flagged_adversarial: true`. An overwrite that strips the stamp therefore RE-ADMITS a quarantined
+  artifact to headline aggregation, silently, with no diff anyone reads.
+- **The stamps were re-verified against the CURRENT contents before restoring, not assumed.**
+  `scripts/adversarial_verify.py` reports `1 flagged` on all 7 of the NEW versions — so each
+  determination is live, not merely historical. Restored `flagged_adversarial` + the corrigendum
+  records; **kept every re-run MEASUREMENT number** (fail-forward, never revert). Each file now carries
+  `flagged_adversarial_restoration_note` + `flagged_adversarial_restored_fields` so the restoration is
+  auditable and cannot be mistaken for the original stamp.
+- **STRUCTURAL FIX NOT DONE — filed.** The conductor should not overwrite artifacts in place. Until it
+  stops, this recurs on every re-run and the next occurrence will again be invisible. 81 `results/`
+  artifacts were modified in this window; the 7 above are the ones that lost a determination.
+- **Corrected a third stale on-disk claim** (after the early-stop comment and the score formula):
+  `scripts/arc_leaderboard_eval.py`'s comment asserted `level_up_charged` is "exactly what the
+  gateway's `actions_by_level` would hold". Refuted by reading the arcade's own Card
+  (`results/arc_gateway_card_ground_truth_20260727.json`): the model disagrees on 17 of 44 cells, 6
+  SIGN-FLIPPED, and it never understates. **The cause is NOT the free opening reset** (the wrong
+  intermediate answer published earlier this session): a non-RESET action taken while the game is
+  already GAME_OVER or WIN returns `frame=[]` (`arcengine/base_game.py:204-216`) and the scorecard
+  update is gated on `len(resp.frame) > 0` (`arc_agi/wrapper.py:187`), so **post-death actions are FREE
+  at the gateway** — `uncharged == empty_frame_actions` on 48/48 cells. Same gate on the HTTP path
+  (`arc_agi/api.py:336`), so it is server behaviour, not an offline artifact. The comment now names the
+  Card fields as ground truth and warns that two reimplementations of `actions + resets - k` agreed
+  44/44 with each other and were BOTH wrong — agreement between reconstructions is not evidence about
+  the gateway.
+- That comment edit drifted 4 artifacts (the cost the rescore lane declined to pay). All rebuilt: 3
+  analyser passes and the LIVE 48-cell capture, **0 non-clock diffs each, verdicts identical**, REAL
+  median optimism 0.018097 reproduced exactly — a determinism witness, not just a freshness stamp.
+- Two rebuild-ergonomics gaps: `outer_loop_arc_gateway_rescore` and
+  `outer_loop_arc_llm_on_wallclock_envelope` record NO `rebuild_command` in provenance, so the freshness
+  guard says "rebuild" without saying how; and the latter's `--rows` is `action="append"` (repeatable),
+  not variadic or comma-separated, which the refusal message does not reveal.
+- **No `SUBMITTED_*` flag moved; `MAX_ACTIONS` untouched; nothing submitted to ARC or Kaggle.**
+
+## 2026-07-27 (outer-loop: STOP MODELLING THE CHARGE, READ IT — the "gateway-accurate" 3.69% was a model, wrong ~2x at the median and sign-flipped on 6 cells)
+
+- Instructed work: apply every finding of the adversarial review of the three 2026-07-26 lanes
+  (gateway-accurate re-score, per-level reset attribution, MAX_ACTIONS answer), rebuild, re-run the
+  lints, and report plainly what is fixed and what is not. No flag flipped, nothing committed,
+  nothing submitted.
+
+**THE HEADLINE CORRECTION.** `results/outer_loop_arc_gateway_accurate_rescore_20260726.json`
+published a median relative optimism of **0.036903** under a key literally named
+`score_M2_bootstrap_free_GATEWAY_ACCURATE`. It was not gateway-accurate; it was a MODEL of the
+charge (`offline_actions + resets - 1`). The gateway's own bookkeeping is READABLE — `run_game`
+already builds its arcade with `scorecard_id=arc.open_scorecard()` and `LocalEnvironmentWrapper`
+gets the arcade's `scorecard_manager` — so the fix is to read `card.actions`, `card.resets` and
+`card.actions_by_level` rather than reconstruct them. Read over the same 48 cells:
+
+| accounting | median | mean | min |
+|---|---|---|---|
+| MODELLED (published) | 0.036903 | 0.040856 | 0.0 |
+| **REAL (Card)** | **0.018097** | **0.028887** | **-0.018209** |
+
+The model reproduces the real per-level charged vector on only **27 of 44** usable cells, never
+understates (max signed error +0.058843), and on **6** cells (tu93, 3 seeds x 2 budgets) the TRUE
+SIGN IS NEGATIVE — the recorded offline number there was PESSIMISTIC, not optimistic.
+
+**MECHANISM, confirmed pointwise on 48/48 cells.** A non-RESET action taken while the game is
+already `GAME_OVER`/`WIN` returns `frame=[]` (`arcengine/base_game.py:204-216`) and the scorecard
+update is gated on `len(resp.frame) > 0` (`arc_agi/wrapper.py:187`), so **post-death actions are
+FREE at the gateway** while our harness counts them. The prediction
+`uncharged == empty_frame_actions` holds on every cell; 17 of 44 carry such actions across 5 games
+(max 32). The same gate is on the HTTP path (`arc_agi/api.py:336`), so this is server behaviour,
+not an offline-harness artifact.
+
+**WHY NO GATE CAUGHT IT.** The fidelity gate compared two reconstructions of the SAME assumption:
+both "independent scorer paths" derived the charge from `offline + resets - k`, and neither consulted
+the Card. The `witness_opening_reset_is_free` section synthesises a `FrameDataRaw` sequence and calls
+Card mutators directly — a path that structurally cannot exhibit the empty-frame short-circuit. A new
+gate `G7` now asserts agreement with the LIVE Card, and is stamped UNINTERPRETABLE (never passed
+vacuously) when no Card read is available for a cell.
+
+### Shipped
+
+- `scripts/arc_leaderboard_eval.py` — `_read_gateway_card()` plus three mechanism counters
+  (`empty_frame_actions`, `observed_full_resets`, `consecutive_reset_pairs`) and unrounded
+  `efficiency_*_precise` companions. **PURE ADDITION, PROVEN not asserted:** the per-level capture
+  compares every cell field against `git show HEAD:<artifact>` and reports
+  `n_number_bearing_diffs: 0`, `n_fields_ADDED: 14`, `n_live_clock_moves_EXPECTED: 18`.
+- `scripts/arc_gateway_card_ground_truth.py` + `results/arc_gateway_card_ground_truth_20260727.json`
+  — the measurement (48/48 cells reproduce their persisted trajectories exactly; 4 gates, each with a
+  computed witness, all pass). Re-run twice end-to-end: **0 non-clock diffs.**
+- `scripts/artifact_rebuild_diff.py` — mechanises the freshness lint's closing instruction, bucketing
+  every leaf as EXPECTED_ON_ANY_REBUILD / MEASUREMENT_BEARING / ADDED / REMOVED. Written because a
+  rebuild-cleanliness claim of "only `git_head` moved" was wrong in detail (clocks, provenance hashes
+  and the derived checksum had moved too) while being right in substance.
+- `scripts/artifact_freshness_lint.py` — `rows_sources` is a dict-of-groups in most artifacts and a
+  flat LIST in others; `.values()` on the list shape raised `AttributeError` and took the whole lint
+  down, blocking every commit while reporting nothing about staleness. Both shapes now walk through
+  one shared helper. Same field-shape bug class as the QA-Layer Authenticity Discipline's origin.
+- `tests/python/test_arc_gateway_card_ground_truth.py` — 12 tests covering the Card reader's shape
+  handling, the mutation proofs, both `rows_sources` shapes, the rebuild differ's bucketing, and the
+  derived p-floor walker.
+
+### Corrections to the three reviewed lanes
+
+- **RE-SCORE lane:** `GATEWAY_ACCURATE` -> `MODELLED` (32 keys), `part_b_exact_44_live_cells` ->
+  `part_b_exact_reset_ATTRIBUTION_44_cells` (the reset attribution is exact; the charge derived from
+  it is not). Corrected the free-reset source span from `arc_agi/api.py:405-437` (the REMOTE
+  guid-cache path) to `arcengine/base_game.py:305-316 handle_reset` + `arc_agi/wrapper.py:187-195`,
+  and restated the predicate as `_action_count == 0 or state == WIN` — so a free reset can fire more
+  than once, which the prior fix spec's hard-coded `n_full_resets = 1` would have under-charged.
+  Added a top-level `measurement_wall_s` (the per-part clocks were right but invisible to
+  `summarize_artifact.py`, which reported only `duration_s: 10.086` for a 2.6-hour measurement), a
+  `COMPETITION_MODE_RESIDUAL` block (`arc_agi/api.py:316-334` bills a competition-mode RESET at
+  action-count 0 while doing nothing, so every figure is a LOWER BOUND there), and a
+  `THE_M2_NUMBERS_HERE_ARE_A_MODEL_SUPERSEDED_BY` pointer. Nothing was rewritten.
+- **PER-LEVEL lane:** `rel_loss` now divides UNROUNDED scores — tu93's was literally 0.0003/0.0072 =
+  1/24 = 0.041667, a six-decimal number carrying one significant figure; unrounded it is 0.046236449.
+  The per-cell median moves 0.045078 -> 0.046236449, and the **distinct-trajectory** median (5
+  distinct measurements, not 7 cells — tu93 is seed-invariant and was triple-counted) is 0.050882134.
+  Both are published side by side with the effective support. The `tests_and_mutation_proofs` block
+  the prior report described but never shipped now exists: 10 mutations, 10 caught, 0 escaped, plus
+  trajectory SHA-256 fingerprints and the pure-addition proof. Gates 1-3 gained computed witnesses,
+  gate_3 publishes its threshold (`>= 4`), and a new gate_4 requires the Card to have been READ.
+  **New number worth reading:** against the REAL Card charge the per-level optimism at b400 on this
+  corpus is ~0 at the median (6.2e-08) — the 4.6% figure is the MODELLED charge.
+- **BUDGET (MAX_ACTIONS) lane:** the accumulator named `wins` incremented on `levels > 0` while the
+  real game-complete predicate `won = lv >= len(baselines)` lived two lines away, so "+7 median wins"
+  meant "+7 cells reaching a FIRST level-up". Renamed throughout to
+  `cells_with_at_least_one_levelup*`, cross-seed sums suffixed `_summed_across_seeds`, and a
+  `unit_of_every_count_here` block added beside `unit_of_every_score_here`. Cost level C was
+  BIT-IDENTICAL to level B by construction (`worst_ratio = max()` over a ONE-element set), so
+  "survives all three cost levels" was a claim about two; it is now stamped
+  `UNFALSIFIABLE_AS_CONSTRUCTED__single_element_ratio_set` with the adverse-concurrency point
+  published as a labelled, confounded SENSITIVITY row instead (b2000 fails the 0.80 margin at 0.8546
+  there). The budget-scaling ratio is no longer treated as exact: bootstrapped over its 4 per-game
+  values, with a `margin_crossing_ratio_at_level_B` of 1.8264 against an observed max of 1.827 — the
+  headline budget's fit flips INSIDE the ratio's own observed range. The throughput arm's
+  UNDERPOWERED verdict (2 usable seeds, p-floor 0.5, one seed matching only 2 games) is now stamped
+  inline wherever the latency-vs-throughput decomposition is asserted. `scope_and_power` no longer
+  hardcodes `n_seeds: 1` / a game-count-derived p-floor of 0.125 (which read as reporting
+  significance below its own floor against the artifact's own p=0.0312); both are derived, and a new
+  `scope_and_power_self_consistency` block checks the claim artifact-wide (degenerate 0.0 floors from
+  empty-support sign tests are excluded and counted). The measurement-clock accumulator no longer adds
+  BOTH candidate fields per row file — a latent double-count that would have inflated silently the
+  first time an upstream file grew the second field.
+- Renamed `resolver_verdict` -> `device_verdict_from_vram_residency` in G1's witness: the resolver
+  itself reports `false`; the verdict comes from per-PID VRAM residency.
+- The `wins` rename was caught mid-flight by the artifact's OWN gate G8, which read the stale
+  `n_won_cells` key, silently got 0, and failed. Recorded here because that is the gate working.
+
+### Not fixed (on the record)
+
+- **A conductor task is REWRITING historical `results/` artifacts in place** — 75 files in the
+  working tree, e.g. `experiment_911_drift_probe_tier0i.json` `ood_auc_drift` 0.91 -> 0.5625 and
+  `honest_verdict` `tier0i_viable` -> `tier0i_marginal`. Never-prune violation, not caused by any
+  outer-loop lane, filed in `ops/known-issues.md`. Left uncommitted per the brief.
+- **A full-suite pytest failure SET is still not obtainable**: an xdist worker dies on
+  `test_experiment_5838_v520_source_delta_ingestion.py`. Both reproduction attempts were NEGATIVE
+  (the file alone passes `-n0 --no-cov` in 0.93s at 198 MB peak RSS, and passes `-n 4` WITH coverage
+  in 81.5s), so the crash needs full-suite load. NOT root-caused; deliberately NOT silenced with a
+  deselect, because CLAUDE.md forbids skipping tests.
+- **The REMOTE hidden gateway is still unconfirmed** against the installed local `arc_agi`, and
+  `competition_mode` charging is still unmeasured. Both are labelled on every figure.
+
 ## 2026-07-26 (outer-loop: the GATEWAY-ACCURATE re-score — the opening RESET is FREE, so the correction I reported this session was itself overstated)
 
 - Instructed work: produce the gateway-accurate re-score as a NEW artifact, with exact attribution

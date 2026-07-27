@@ -72,5 +72,11 @@
       "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
     }
   ],
-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+  "flagged_adversarial_restored_fields": [
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "corrigendum_note"
+  ]
 }

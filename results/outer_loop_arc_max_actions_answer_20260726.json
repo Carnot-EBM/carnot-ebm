@@ -3,7 +3,7 @@
  "title": "The MAX_ACTIONS answer: LLM-ON contention measured (not imported), the budget->score curve re-priced in the GATEWAY-CHARGED unit, and the early-stop lever priced on its benefit side",
  "run_date": "2026-07-26",
  "run_date_convention": "session-local (America/New_York); see build_timestamp_utc",
- "build_timestamp_utc": "2026-07-27T03:10:23Z",
+ "build_timestamp_utc": "2026-07-27T05:05:38Z",
  "schema": "carnot.arc_max_actions_answer.v1",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "An analyser pass inherits its methodology from the artifacts it cites; declaring it as live inference would borrow credibility this file has not earned, and declaring it as a dict makes the classifier unable to read it at all.",
@@ -19,7 +19,50 @@
   "note": "Named because the ladder rows this file aggregates DID load it; this analyser did not. Recorded rather than omitted so the methodology chain is followable."
  },
  "measurement_wall_s": 10978.0,
- "duration_s": 0.527,
+ "measurement_wall_s_composition": [
+  {
+   "path": "results/llm_on_contention_rows_20260726/k4_nctx32768_seed20260724.json",
+   "field_used": "elapsed_s",
+   "value_s": 466.2
+  },
+  {
+   "path": "results/llm_on_contention_rows_20260726/ladder_b400_seed20260724.json",
+   "field_used": "elapsed_s",
+   "value_s": 927.8
+  },
+  {
+   "path": "results/llm_on_contention_rows_20260726/ladder_b400_seed20260725.json",
+   "field_used": "elapsed_s",
+   "value_s": 1322.7
+  },
+  {
+   "path": "results/early_stop_sweep_20260726/rows_b2000.json",
+   "field_used": "elapsed_s",
+   "value_s": 4067.4
+  },
+  {
+   "path": "results/early_stop_sweep_20260726/rows_b400.json",
+   "field_used": "elapsed_s",
+   "value_s": 1686.0
+  },
+  {
+   "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+   "field_used": "elapsed_s",
+   "value_s": 1984.4
+  },
+  {
+   "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+   "field_used": "measurement_wall_s",
+   "value_s": 79.684
+  },
+  {
+   "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+   "field_used": "measurement_wall_s",
+   "value_s": 443.842
+  }
+ ],
+ "measurement_wall_s_basis": "one value per ROW FILE with explicit precedence (`elapsed_s` before `measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup.",
+ "duration_s": 0.594,
  "random_seed": 20260724,
  "verifier_is_oracle": false,
  "verifier_is_oracle_principle": "No verifier-value or moat claim is made here; this measures WALL CLOCK and re-prices a score. Recorded because the circularity discipline requires the field on any artifact that could be read as a verifier claim.",
@@ -42,7 +85,7 @@
   "gateway_accurate_rescore": {
    "path": "results/outer_loop_arc_gateway_accurate_rescore_20260726.json",
    "used_for": "the M2 bootstrap-free charge model this file re-uses",
-   "honest_verdict": "complete_gateway_accurate_rescore_opening_reset_is_free_published_optimism_overstated_median_0p046236_to_0p036903_correction_owed_named"
+   "honest_verdict": "complete_gateway_accurate_rescore_opening_reset_is_free_published_optimism_overstated_median_0p046236_to_0p036903_correction_owed_named_AND_this_M2_is_itself_a_MODEL_that_disagrees_with_the_live_card_on_17_cells_see_arc_gateway_card_ground_truth_20260727"
   }
  },
  "known_caveats_about_this_files_own_construction": {
@@ -3166,12 +3209,12 @@
     "n_games_per_seed": [
      25
     ],
-    "wins_per_seed": {
+    "cells_with_at_least_one_levelup_per_seed": {
      "20260724": 3,
      "20260725": 4,
      "20260726": 4
     },
-    "wins_median": 4.0,
+    "cells_with_at_least_one_levelup_median_per_seed": 4.0,
     "levels_total_median": 5.0,
     "resets_total_median": 272.0,
     "offline_actions_total_median": 9728.0,
@@ -3189,7 +3232,7 @@
     },
     "m0_vs_recorded_max_abs_diff": 4.247908059951122e-05,
     "n_cells_m0_matches_recorded": 11,
-    "n_won_cells": 11,
+    "n_levelup_cells_summed_across_seeds": 11,
     "score_M0_offline_median": 2.154719083923519,
     "score_M1_all_resets_charged_median": 1.996123267170906,
     "score_M2_bootstrap_free_median": 2.0906439030701383,
@@ -3216,12 +3259,12 @@
     "n_games_per_seed": [
      25
     ],
-    "wins_per_seed": {
+    "cells_with_at_least_one_levelup_per_seed": {
      "20260724": 11,
      "20260725": 11,
      "20260726": 11
     },
-    "wins_median": 11.0,
+    "cells_with_at_least_one_levelup_median_per_seed": 11.0,
     "levels_total_median": 13.0,
     "resets_total_median": 1460.0,
     "offline_actions_total_median": 48540.0,
@@ -3239,7 +3282,7 @@
     },
     "m0_vs_recorded_max_abs_diff": 4.802807690511995e-05,
     "n_cells_m0_matches_recorded": 33,
-    "n_won_cells": 33,
+    "n_levelup_cells_summed_across_seeds": 33,
     "score_M0_offline_median": 2.2088206125426577,
     "score_M1_all_resets_charged_median": 1.9917513304414387,
     "score_M2_bootstrap_free_median": 2.0864117963467943,
@@ -3266,12 +3309,12 @@
     "n_games_per_seed": [
      13
     ],
-    "wins_per_seed": {
+    "cells_with_at_least_one_levelup_per_seed": {
      "20260724": 12,
      "20260725": 12,
      "20260726": 12
     },
-    "wins_median": 12.0,
+    "cells_with_at_least_one_levelup_median_per_seed": 12.0,
     "levels_total_median": 16.0,
     "resets_total_median": 1561.0,
     "offline_actions_total_median": 50439.0,
@@ -3289,7 +3332,7 @@
     },
     "m0_vs_recorded_max_abs_diff": 4.802807690511995e-05,
     "n_cells_m0_matches_recorded": 36,
-    "n_won_cells": 36,
+    "n_levelup_cells_summed_across_seeds": 36,
     "score_M0_offline_median": 2.21179809247667,
     "score_M1_all_resets_charged_median": 2.0890300007960514,
     "score_M2_bootstrap_free_median": 2.0895092145571983,
@@ -3313,9 +3356,9 @@
     "pairs": [
      {
       "seed": 20260724,
-      "wins_lo": 3,
-      "wins_hi": 11,
-      "d_wins": 8,
+      "levelup_cells_lo": 3,
+      "levelup_cells_hi": 11,
+      "d_levelup_cells": 8,
       "M0_lo": 2.1547,
       "M0_hi": 2.2088,
       "d_M0": 0.0541,
@@ -3327,9 +3370,9 @@
      },
      {
       "seed": 20260725,
-      "wins_lo": 4,
-      "wins_hi": 11,
-      "d_wins": 7,
+      "levelup_cells_lo": 4,
+      "levelup_cells_hi": 11,
+      "d_levelup_cells": 7,
       "M0_lo": 1.1592,
       "M0_hi": 1.2318,
       "d_M0": 0.0726,
@@ -3341,9 +3384,9 @@
      },
      {
       "seed": 20260726,
-      "wins_lo": 4,
-      "wins_hi": 11,
-      "d_wins": 7,
+      "levelup_cells_lo": 4,
+      "levelup_cells_hi": 11,
+      "d_levelup_cells": 7,
       "M0_lo": 5.7417,
       "M0_hi": 5.7851,
       "d_M0": 0.0434,
@@ -3354,7 +3397,7 @@
       "resets_hi": 1442
      }
     ],
-    "d_wins_median": 7.0,
+    "d_levelup_cells_median": 7.0,
     "d_M0_median": 0.0541,
     "d_M0_sign_test": {
      "n_nonzero_pairs": 3,
@@ -3579,7 +3622,7 @@
     "budget": 400,
     "seed": 20260724,
     "n_games": 25,
-    "wins": 3,
+    "cells_with_at_least_one_levelup": 3,
     "levels_total": 4,
     "m0": 2.154719083923519,
     "m1_est": 1.996123267170906,
@@ -3624,7 +3667,7 @@
     "budget": 400,
     "seed": 20260725,
     "n_games": 25,
-    "wins": 4,
+    "cells_with_at_least_one_levelup": 4,
     "levels_total": 5,
     "m0": 1.1592406679885858,
     "m1_est": 1.113964791220796,
@@ -3669,7 +3712,7 @@
     "budget": 400,
     "seed": 20260726,
     "n_games": 25,
-    "wins": 4,
+    "cells_with_at_least_one_levelup": 4,
     "levels_total": 5,
     "m0": 5.741736333000117,
     "m1_est": 5.735019213076213,
@@ -3714,7 +3757,7 @@
     "budget": 2000,
     "seed": 20260724,
     "n_games": 25,
-    "wins": 11,
+    "cells_with_at_least_one_levelup": 11,
     "levels_total": 14,
     "m0": 2.2088206125426577,
     "m1_est": 1.9917513304414387,
@@ -3759,7 +3802,7 @@
     "budget": 2000,
     "seed": 20260725,
     "n_games": 25,
-    "wins": 11,
+    "cells_with_at_least_one_levelup": 11,
     "levels_total": 13,
     "m0": 1.2317926367795884,
     "m1_est": 1.1446134904815528,
@@ -3804,7 +3847,7 @@
     "budget": 2000,
     "seed": 20260726,
     "n_games": 25,
-    "wins": 11,
+    "cells_with_at_least_one_levelup": 11,
     "levels_total": 13,
     "m0": 5.785102428458333,
     "m1_est": 5.6768851346904325,
@@ -3849,7 +3892,7 @@
     "budget": 4000,
     "seed": 20260724,
     "n_games": 13,
-    "wins": 12,
+    "cells_with_at_least_one_levelup": 12,
     "levels_total": 17,
     "m0": 2.21179809247667,
     "m1_est": 2.0890300007960514,
@@ -3882,7 +3925,7 @@
     "budget": 4000,
     "seed": 20260725,
     "n_games": 13,
-    "wins": 12,
+    "cells_with_at_least_one_levelup": 12,
     "levels_total": 16,
     "m0": 1.2343385184027398,
     "m1_est": 1.153313909515566,
@@ -3915,7 +3958,7 @@
     "budget": 4000,
     "seed": 20260726,
     "n_games": 13,
-    "wins": 12,
+    "cells_with_at_least_one_levelup": 12,
     "levels_total": 16,
     "m0": 5.790944872776978,
     "m1_est": 5.771592090560848,
@@ -3946,7 +3989,23 @@
    }
   ],
   "unit_of_every_score_here": "GATEWAY-CHARGED for M1/M2; OFFLINE ACTIONS for M0",
-  "scope": "grace=None (SHIPPED) arm only, LLM-OFF cells. b400/b2000 are the full 25-game corpus x 3 seeds; b4000 is a 13-game LEVEL-REACHING SUBSET and is therefore biased UPWARD on wins and NOT comparable to the 25-game rows without saying so."
+  "unit_of_every_count_here": {
+   "cells_with_at_least_one_levelup": {
+    "predicate": "levels > 0",
+    "meaning": "a (game, seed, budget) CELL that banked at least ONE level-up. NOT a game won, NOT a level count.",
+    "aggregation": "PER SEED unless the key carries the _summed_across_seeds suffix"
+   },
+   "won": {
+    "predicate": "levels >= len(baselines)",
+    "meaning": "the game-COMPLETE predicate; used ONLY to decide scorer completion flags",
+    "note": "never emitted as a count; it is a per-cell boolean inside the scorer drive"
+   },
+   "n_levelup_cells_summed_across_seeds": {
+    "predicate": "levels > 0",
+    "aggregation": "SUMMED ACROSS SEEDS -- not comparable to the per-seed medians above"
+   }
+  },
+  "scope": "grace=None (SHIPPED) arm only, LLM-OFF cells. b400/b2000 are the full 25-game corpus x 3 seeds; b4000 is a 13-game LEVEL-REACHING SUBSET and is therefore biased UPWARD on level-up cells and NOT comparable to the 25-game rows without saying so."
  },
  "part_3_early_stop_lever_benefit_side": {
   "per_budget": {
@@ -4220,7 +4279,7 @@
       "share_of_all_offline_actions_saved": 0.6933,
       "first_levelups_that_would_be_LOST": 6,
       "first_levelups_observed": 11,
-      "share_of_wins_lost": 0.5455
+      "share_of_first_levelups_lost": 0.5455
      },
      {
       "W_actions": 200,
@@ -4229,7 +4288,7 @@
       "share_of_all_offline_actions_saved": 0.4472,
       "first_levelups_that_would_be_LOST": 5,
       "first_levelups_observed": 11,
-      "share_of_wins_lost": 0.4545
+      "share_of_first_levelups_lost": 0.4545
      },
      {
       "W_actions": 400,
@@ -4238,10 +4297,10 @@
       "share_of_all_offline_actions_saved": 0.0,
       "first_levelups_that_would_be_LOST": 0,
       "first_levelups_observed": 11,
-      "share_of_wins_lost": 0.0
+      "share_of_first_levelups_lost": 0.0
      }
     ],
-    "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
+    "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
    },
    "2000": {
     "n_cells": 75,
@@ -4256,7 +4315,7 @@
       "share_of_all_offline_actions_saved": 0.8856,
       "first_levelups_that_would_be_LOST": 28,
       "first_levelups_observed": 33,
-      "share_of_wins_lost": 0.8485
+      "share_of_first_levelups_lost": 0.8485
      },
      {
       "W_actions": 200,
@@ -4265,7 +4324,7 @@
       "share_of_all_offline_actions_saved": 0.8255,
       "first_levelups_that_would_be_LOST": 27,
       "first_levelups_observed": 33,
-      "share_of_wins_lost": 0.8182
+      "share_of_first_levelups_lost": 0.8182
      },
      {
       "W_actions": 400,
@@ -4274,7 +4333,7 @@
       "share_of_all_offline_actions_saved": 0.6783,
       "first_levelups_that_would_be_LOST": 22,
       "first_levelups_observed": 33,
-      "share_of_wins_lost": 0.6667
+      "share_of_first_levelups_lost": 0.6667
      },
      {
       "W_actions": 800,
@@ -4283,7 +4342,7 @@
       "share_of_all_offline_actions_saved": 0.3941,
       "first_levelups_that_would_be_LOST": 8,
       "first_levelups_observed": 33,
-      "share_of_wins_lost": 0.2424
+      "share_of_first_levelups_lost": 0.2424
      },
      {
       "W_actions": 1300,
@@ -4292,7 +4351,7 @@
       "share_of_all_offline_actions_saved": 0.2046,
       "first_levelups_that_would_be_LOST": 4,
       "first_levelups_observed": 33,
-      "share_of_wins_lost": 0.1212
+      "share_of_first_levelups_lost": 0.1212
      },
      {
       "W_actions": 2000,
@@ -4301,10 +4360,10 @@
       "share_of_all_offline_actions_saved": 0.0,
       "first_levelups_that_would_be_LOST": 0,
       "first_levelups_observed": 33,
-      "share_of_wins_lost": 0.0
+      "share_of_first_levelups_lost": 0.0
      }
     ],
-    "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
+    "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
    },
    "4000": {
     "n_cells": 39,
@@ -4319,7 +4378,7 @@
       "share_of_all_offline_actions_saved": 0.8493,
       "first_levelups_that_would_be_LOST": 31,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.8611
+      "share_of_first_levelups_lost": 0.8611
      },
      {
       "W_actions": 200,
@@ -4328,7 +4387,7 @@
       "share_of_all_offline_actions_saved": 0.8024,
       "first_levelups_that_would_be_LOST": 30,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.8333
+      "share_of_first_levelups_lost": 0.8333
      },
      {
       "W_actions": 400,
@@ -4337,7 +4396,7 @@
       "share_of_all_offline_actions_saved": 0.644,
       "first_levelups_that_would_be_LOST": 25,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.6944
+      "share_of_first_levelups_lost": 0.6944
      },
      {
       "W_actions": 800,
@@ -4346,7 +4405,7 @@
       "share_of_all_offline_actions_saved": 0.287,
       "first_levelups_that_would_be_LOST": 11,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.3056
+      "share_of_first_levelups_lost": 0.3056
      },
      {
       "W_actions": 1300,
@@ -4355,7 +4414,7 @@
       "share_of_all_offline_actions_saved": 0.1729,
       "first_levelups_that_would_be_LOST": 7,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.1944
+      "share_of_first_levelups_lost": 0.1944
      },
      {
       "W_actions": 2000,
@@ -4364,7 +4423,7 @@
       "share_of_all_offline_actions_saved": 0.0763,
       "first_levelups_that_would_be_LOST": 3,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.0833
+      "share_of_first_levelups_lost": 0.0833
      },
      {
       "W_actions": 4000,
@@ -4373,10 +4432,10 @@
       "share_of_all_offline_actions_saved": 0.0,
       "first_levelups_that_would_be_LOST": 0,
       "first_levelups_observed": 36,
-      "share_of_wins_lost": 0.0
+      "share_of_first_levelups_lost": 0.0
      }
     ],
-    "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
+    "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
    }
   },
   "continuation_window_trade_curve": [
@@ -4447,7 +4506,29 @@
     "4000": 1.678
    },
    "mechanism_verdict_from_the_sibling_artifact": "MECHANISM_FALSIFIED_cost_grows_at_constant_induction_count",
-   "level_verdict": "PRIOR_MODEL_IS_SYSTEMATICALLY_HIGH_AT_THE_LEVEL__it_projects_a_CONTENDED_per_game_LATENCY and then multiplies by the game count, which double-counts once throughput is measured to be flat under concurrency",
+   "level_verdict": "PRIOR_MODEL_IS_SYSTEMATICALLY_HIGH_AT_THE_LEVEL__it_projects_a_CONTENDED_per_game_LATENCY and then multiplies by the game count, which double-counts once throughput is measured to be flat under concurrency __ BUT_THE_THROUGHPUT_ARM_IS_UNDERPOWERED (see `throughput_arm_power_stamp` beside this field)",
+   "throughput_arm_power_stamp": {
+    "arm": "matched_set_throughput_ratio_K2_vs_K1",
+    "n_seeds_usable": 2,
+    "games_matched_per_seed": {
+     "20260724": [
+      "dc22",
+      "ft09",
+      "sc25",
+      "su15"
+     ],
+     "20260725": [
+      "dc22",
+      "ft09"
+     ]
+    },
+    "min_games_matched_on_any_usable_seed": 2,
+    "p_floor": 0.5,
+    "can_ever_reach_0_05": false,
+    "verdict": "UNDERPOWERED_p_floor_above_0.05",
+    "STAMP": "UNDERPOWERED__the_latency_vs_throughput_decomposition_that_voids_the_prior_cost_model_rests_on_this_arm_and_this_arm_cannot_reach_p_0.05_at_its_seed_support",
+    "what_this_does_NOT_invalidate": "the measured NUMBERS (K=1 and K=2 s/game) are real; what is underpowered is the significance of the RATIO being at/below 1.0. A reader should treat 'throughput is flat' as a 2-seed observation consistent with a saturated GPU, not as a powered result."
+   },
    "consequence_for_the_extrapolated_crossing_point": "The prior model's implied crossing point (where a budget stops fitting) is VOIDED in both directions: its mechanism is falsified and its level is ~2x high. It is replaced by the critical-N table in this artifact, which is derived from measured throughput and carries the bootstrap CI as its uncertainty.",
    "what_this_test_does_NOT_show": "It does not show the prior model was WRONG about its own measurement -- its b400 anchor was measured under real 3-way contention and this file's K=1 arm reproduces the published UNCONTENDED anchor within its noise floor. The disagreement is about which quantity a cap divides, not about either measurement's honesty."
   },
@@ -4455,6 +4536,144 @@
    "A_central_best_measured_throughput": 107.8,
    "B_ci_hi_best_measured_throughput": 125.1,
    "C_ci_hi_worst_measured_throughput": 125.1
+  },
+  "cost_level_falsifiability": {
+   "n_usable_throughput_ratios_measured": 1,
+   "n_distinct_throughput_ratios": 1,
+   "n_DISTINCT_cost_levels": 2,
+   "n_cost_levels_emitted": 3,
+   "level_C_is_distinct_from_level_B": false,
+   "level_C_stamp": "UNFALSIFIABLE_AS_CONSTRUCTED__single_element_ratio_set",
+   "why": "level C is CI-high x the WORST measured throughput ratio and level B is CI-high x the BEST. `measured` holds exactly one usable ratio (K=2 = 0.9735); K=4 died and is not a usable throughput point. min == max == that value, so C cannot differ from B and cannot fail when B passes. Any claim of the form 'survives all three cost levels' is therefore a claim about TWO distinct levels.",
+   "no_adverse_concurrency_level_is_measurable_from_this_ladder": true
+  },
+  "adverse_concurrency_sensitivity_NOT_a_cost_level": {
+   "adverse_ratio_measured": 1.1539,
+   "basis": "K=4 under the BIGGER server context (n_ctx=32768) s/game 116.2 against the SAME-SEED K=1 comparator 100.7 (seed 20260724)",
+   "CONFOUND": "there is no K=1 run at n_ctx=32768, so server context and concurrency move together in this contrast. It is NOT promoted to a cost level for that reason. It is published so a reader can see where the answer breaks rather than infer safety from a level that could not differ.",
+   "rows": [
+    {
+     "concurrency_ratio_label": "K1_arm_ratio_1.0_EXACT_by_definition",
+     "concurrency_ratio": 1.0,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 400,
+     "budget_scaling_ratio_vs_b400": 1.0,
+     "budget_ratio_is_EXTRAPOLATED": false,
+     "total_s_at_ci_hi": 14137.2,
+     "fraction_of_usable": 0.4499,
+     "fits_with_margin": true
+    },
+    {
+     "concurrency_ratio_label": "K1_arm_ratio_1.0_EXACT_by_definition",
+     "concurrency_ratio": 1.0,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 1000,
+     "budget_scaling_ratio_vs_b400": 1.305,
+     "budget_ratio_is_EXTRAPOLATED": false,
+     "total_s_at_ci_hi": 18449.0,
+     "fraction_of_usable": 0.5872,
+     "fits_with_margin": true
+    },
+    {
+     "concurrency_ratio_label": "K1_arm_ratio_1.0_EXACT_by_definition",
+     "concurrency_ratio": 1.0,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 2000,
+     "budget_scaling_ratio_vs_b400": 1.646,
+     "budget_ratio_is_EXTRAPOLATED": false,
+     "total_s_at_ci_hi": 23269.8,
+     "fraction_of_usable": 0.7406,
+     "fits_with_margin": true
+    },
+    {
+     "concurrency_ratio_label": "K1_arm_ratio_1.0_EXACT_by_definition",
+     "concurrency_ratio": 1.0,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 4000,
+     "budget_scaling_ratio_vs_b400": 1.898,
+     "budget_ratio_is_EXTRAPOLATED": true,
+     "total_s_at_ci_hi": 26832.4,
+     "fraction_of_usable": 0.854,
+     "fits_with_margin": false
+    },
+    {
+     "concurrency_ratio_label": "K1_arm_ratio_1.0_EXACT_by_definition",
+     "concurrency_ratio": 1.0,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 8000,
+     "budget_scaling_ratio_vs_b400": 2.174,
+     "budget_ratio_is_EXTRAPOLATED": true,
+     "total_s_at_ci_hi": 30734.3,
+     "fraction_of_usable": 0.9782,
+     "fits_with_margin": false
+    },
+    {
+     "concurrency_ratio_label": "adverse_K4_bigger_context_CONFOUNDED",
+     "concurrency_ratio": 1.1539,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 400,
+     "budget_scaling_ratio_vs_b400": 1.0,
+     "budget_ratio_is_EXTRAPOLATED": false,
+     "total_s_at_ci_hi": 16312.9,
+     "fraction_of_usable": 0.5192,
+     "fits_with_margin": true
+    },
+    {
+     "concurrency_ratio_label": "adverse_K4_bigger_context_CONFOUNDED",
+     "concurrency_ratio": 1.1539,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 1000,
+     "budget_scaling_ratio_vs_b400": 1.305,
+     "budget_ratio_is_EXTRAPOLATED": false,
+     "total_s_at_ci_hi": 21288.4,
+     "fraction_of_usable": 0.6775,
+     "fits_with_margin": true
+    },
+    {
+     "concurrency_ratio_label": "adverse_K4_bigger_context_CONFOUNDED",
+     "concurrency_ratio": 1.1539,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 2000,
+     "budget_scaling_ratio_vs_b400": 1.646,
+     "budget_ratio_is_EXTRAPOLATED": false,
+     "total_s_at_ci_hi": 26851.1,
+     "fraction_of_usable": 0.8546,
+     "fits_with_margin": false
+    },
+    {
+     "concurrency_ratio_label": "adverse_K4_bigger_context_CONFOUNDED",
+     "concurrency_ratio": 1.1539,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 4000,
+     "budget_scaling_ratio_vs_b400": 1.898,
+     "budget_ratio_is_EXTRAPOLATED": true,
+     "total_s_at_ci_hi": 30961.9,
+     "fraction_of_usable": 0.9854,
+     "fits_with_margin": false
+    },
+    {
+     "concurrency_ratio_label": "adverse_K4_bigger_context_CONFOUNDED",
+     "concurrency_ratio": 1.1539,
+     "cap": "kaggle_9h_max_notebook_runtime",
+     "n_games": 110,
+     "budget": 8000,
+     "budget_scaling_ratio_vs_b400": 2.174,
+     "budget_ratio_is_EXTRAPOLATED": true,
+     "total_s_at_ci_hi": 35464.3,
+     "fraction_of_usable": 1.1287,
+     "fits_with_margin": false
+    }
+   ],
+   "reading": "The cost ladder covers no ratio >= 1.0. The directly measured K=1 arm sits at ratio 1.0 by definition and is shown here for reference; the confounded adverse ratio is where the headline budget stops fitting the margin."
   },
   "cost_level_definitions": {
    "A_central_best_measured_throughput": "mean measured K=1 per-game wall x the most favourable measured throughput ratio",
@@ -4469,6 +4688,150 @@
    "n": 8,
    "note": "percentile bootstrap over the measured (game, seed) CELLS, 20k resamples. Not over games alone: with more than one seed the resampling unit is the cell, and saying 'over games' would overstate how independent the units are."
   },
+  "budget_scaling_ratio_uncertainty": {
+   "400": {
+    "n_games_behind_the_ratio": 4,
+    "observed_values": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "median": 1.0,
+    "bootstrap_mean_ci": {
+     "mean": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "n": 4,
+     "note": "percentile bootstrap over the measured (game, seed) CELLS, 20k resamples. Not over games alone: with more than one seed the resampling unit is the cell, and saying 'over games' would overstate how independent the units are."
+    },
+    "observed_min": 1.0,
+    "observed_max": 1.0,
+    "cap_rows_at_level_B": {
+     "ratio_lo_bootstrap": {
+      "ratio": 1.0,
+      "total_s": 13762.6,
+      "fraction_of_usable": 0.438,
+      "fits_with_margin": true
+     },
+     "ratio_median": {
+      "ratio": 1.0,
+      "total_s": 13762.6,
+      "fraction_of_usable": 0.438,
+      "fits_with_margin": true
+     },
+     "ratio_hi_bootstrap": {
+      "ratio": 1.0,
+      "total_s": 13762.6,
+      "fraction_of_usable": 0.438,
+      "fits_with_margin": true
+     },
+     "ratio_observed_max": {
+      "ratio": 1.0,
+      "total_s": 13762.6,
+      "fraction_of_usable": 0.438,
+      "fits_with_margin": true
+     }
+    },
+    "margin_crossing_ratio_at_level_B": 1.8264,
+    "reading": "the budget-scaling ratio is a 4-game median with a real spread; at its observed MAXIMUM this budget's fit can flip. `margin_crossing_ratio_at_level_B` is the ratio at which it does."
+   },
+   "1000": {
+    "n_games_behind_the_ratio": 4,
+    "observed_values": [
+     1.179,
+     1.288,
+     1.321,
+     1.489
+    ],
+    "median": 1.3045,
+    "bootstrap_mean_ci": {
+     "mean": 1.32,
+     "lo": 1.21,
+     "hi": 1.44,
+     "n": 4,
+     "note": "percentile bootstrap over the measured (game, seed) CELLS, 20k resamples. Not over games alone: with more than one seed the resampling unit is the cell, and saying 'over games' would overstate how independent the units are."
+    },
+    "observed_min": 1.179,
+    "observed_max": 1.489,
+    "cap_rows_at_level_B": {
+     "ratio_lo_bootstrap": {
+      "ratio": 1.21,
+      "total_s": 16652.7,
+      "fraction_of_usable": 0.53,
+      "fits_with_margin": true
+     },
+     "ratio_median": {
+      "ratio": 1.3045,
+      "total_s": 17953.3,
+      "fraction_of_usable": 0.5714,
+      "fits_with_margin": true
+     },
+     "ratio_hi_bootstrap": {
+      "ratio": 1.44,
+      "total_s": 19818.1,
+      "fraction_of_usable": 0.6307,
+      "fits_with_margin": true
+     },
+     "ratio_observed_max": {
+      "ratio": 1.489,
+      "total_s": 20492.5,
+      "fraction_of_usable": 0.6522,
+      "fits_with_margin": true
+     }
+    },
+    "margin_crossing_ratio_at_level_B": 1.8264,
+    "reading": "the budget-scaling ratio is a 4-game median with a real spread; at its observed MAXIMUM this budget's fit can flip. `margin_crossing_ratio_at_level_B` is the ratio at which it does."
+   },
+   "2000": {
+    "n_games_behind_the_ratio": 4,
+    "observed_values": [
+     1.044,
+     1.611,
+     1.68,
+     1.827
+    ],
+    "median": 1.6455,
+    "bootstrap_mean_ci": {
+     "mean": 1.54,
+     "lo": 1.2,
+     "hi": 1.77,
+     "n": 4,
+     "note": "percentile bootstrap over the measured (game, seed) CELLS, 20k resamples. Not over games alone: with more than one seed the resampling unit is the cell, and saying 'over games' would overstate how independent the units are."
+    },
+    "observed_min": 1.044,
+    "observed_max": 1.827,
+    "cap_rows_at_level_B": {
+     "ratio_lo_bootstrap": {
+      "ratio": 1.2,
+      "total_s": 16515.1,
+      "fraction_of_usable": 0.5256,
+      "fits_with_margin": true
+     },
+     "ratio_median": {
+      "ratio": 1.6455,
+      "total_s": 22646.3,
+      "fraction_of_usable": 0.7208,
+      "fits_with_margin": true
+     },
+     "ratio_hi_bootstrap": {
+      "ratio": 1.77,
+      "total_s": 24359.7,
+      "fraction_of_usable": 0.7753,
+      "fits_with_margin": true
+     },
+     "ratio_observed_max": {
+      "ratio": 1.827,
+      "total_s": 25144.2,
+      "fraction_of_usable": 0.8003,
+      "fits_with_margin": false
+     }
+    },
+    "margin_crossing_ratio_at_level_B": 1.8264,
+    "reading": "the budget-scaling ratio is a 4-game median with a real spread; at its observed MAXIMUM this budget's fit can flip. `margin_crossing_ratio_at_level_B` is the ratio at which it does."
+   }
+  },
+  "budget_scaling_ratio_uncertainty_why": "The cap table multiplies the bootstrapped per-game wall CI by `budget_ratio` as if that ratio were EXACT. It is a median over 4 games. Propagating one multiplicand's uncertainty and not the other's understates the interval, and for the headline budget the fit flips inside the ratio's own observed range -- so the boundary is published.",
   "throughput_ratio_by_K_vs_K1": {
    "2": 0.9735
   },
@@ -5850,8 +6213,8 @@
   "kernel_overhead_s_ASSUMED_not_measured": 980.0,
   "what_the_budget_buys": {
    "400": {
-    "wins_median_per_seed": 4.0,
-    "wins_per_seed": {
+    "cells_with_at_least_one_levelup_median_per_seed": 4.0,
+    "cells_with_at_least_one_levelup_per_seed": {
      "20260724": 3,
      "20260725": 4,
      "20260726": 4
@@ -5867,8 +6230,8 @@
     "resets_total_median": 272.0
    },
    "2000": {
-    "wins_median_per_seed": 11.0,
-    "wins_per_seed": {
+    "cells_with_at_least_one_levelup_median_per_seed": 11.0,
+    "cells_with_at_least_one_levelup_per_seed": {
      "20260724": 11,
      "20260725": 11,
      "20260726": 11
@@ -5884,8 +6247,8 @@
     "resets_total_median": 1460.0
    },
    "4000": {
-    "wins_median_per_seed": 12.0,
-    "wins_per_seed": {
+    "cells_with_at_least_one_levelup_median_per_seed": 12.0,
+    "cells_with_at_least_one_levelup_per_seed": {
      "20260724": 12,
      "20260725": 12,
      "20260726": 12
@@ -6110,7 +6473,8 @@
    "gate": "G1_generator_ran_on_cuda_physical_gpu1_with_weights_resident",
    "passed": true,
    "witness": {
-    "resolver_verdict": "CUDA_GPU1",
+    "device_verdict_from_vram_residency": "CUDA_GPU1",
+    "resolver_says_cuda_gpu1_RAW": false,
     "max_resident_mib_on_gpu1": 11850,
     "weights_are_resident_on_gpu1": true,
     "server_props": {
@@ -6221,7 +6585,7 @@
    "gate": "G8_my_scorer_drive_reproduces_the_rows_own_installed_scorer_output_per_cell",
    "passed": true,
    "witness": {
-    "n_won_cells": 80,
+    "n_levelup_cells_summed_across_seeds": 80,
     "n_cells_where_my_M0_matches_the_recorded_efficiency": 80,
     "max_abs_diff": 4.802807690511995e-05,
     "tolerance": 5e-05,
@@ -6289,7 +6653,7 @@
  "acceptance_gates_all_passed": true,
  "acceptance_gate_failures": [],
  "headline": {
-  "question": "What should MAX_ACTIONS be? Answer as a budget with uncertainty, the median wins it buys, and the GATEWAY-CHARGED score those wins are worth.",
+  "question": "What should MAX_ACTIONS be? Answer as a budget with uncertainty, the median CELLS-WITH-AT-LEAST-ONE-LEVEL-UP it buys, and the GATEWAY-CHARGED score those cells are worth.",
   "device_actually_used": {
    "verdict": "CUDA_GPU1",
    "verdict_basis": "per_PID_VRAM_residency_on_physical_card_1",
@@ -6613,7 +6977,29 @@
     "4000": 1.678
    },
    "mechanism_verdict_from_the_sibling_artifact": "MECHANISM_FALSIFIED_cost_grows_at_constant_induction_count",
-   "level_verdict": "PRIOR_MODEL_IS_SYSTEMATICALLY_HIGH_AT_THE_LEVEL__it_projects_a_CONTENDED_per_game_LATENCY and then multiplies by the game count, which double-counts once throughput is measured to be flat under concurrency",
+   "level_verdict": "PRIOR_MODEL_IS_SYSTEMATICALLY_HIGH_AT_THE_LEVEL__it_projects_a_CONTENDED_per_game_LATENCY and then multiplies by the game count, which double-counts once throughput is measured to be flat under concurrency __ BUT_THE_THROUGHPUT_ARM_IS_UNDERPOWERED (see `throughput_arm_power_stamp` beside this field)",
+   "throughput_arm_power_stamp": {
+    "arm": "matched_set_throughput_ratio_K2_vs_K1",
+    "n_seeds_usable": 2,
+    "games_matched_per_seed": {
+     "20260724": [
+      "dc22",
+      "ft09",
+      "sc25",
+      "su15"
+     ],
+     "20260725": [
+      "dc22",
+      "ft09"
+     ]
+    },
+    "min_games_matched_on_any_usable_seed": 2,
+    "p_floor": 0.5,
+    "can_ever_reach_0_05": false,
+    "verdict": "UNDERPOWERED_p_floor_above_0.05",
+    "STAMP": "UNDERPOWERED__the_latency_vs_throughput_decomposition_that_voids_the_prior_cost_model_rests_on_this_arm_and_this_arm_cannot_reach_p_0.05_at_its_seed_support",
+    "what_this_does_NOT_invalidate": "the measured NUMBERS (K=1 and K=2 s/game) are real; what is underpowered is the significance of the RATIO being at/below 1.0. A reader should treat 'throughput is flat' as a 2-seed observation consistent with a saturated GPU, not as a powered result."
+   },
    "consequence_for_the_extrapolated_crossing_point": "The prior model's implied crossing point (where a budget stops fitting) is VOIDED in both directions: its mechanism is falsified and its level is ~2x high. It is replaced by the critical-N table in this artifact, which is derived from measured throughput and carries the bootstrap CI as its uncertainty.",
    "what_this_test_does_NOT_show": "It does not show the prior model was WRONG about its own measurement -- its b400 anchor was measured under real 3-way contention and this file's K=1 arm reproduces the published UNCONTENDED anchor within its noise floor. The disagreement is about which quantity a cap divides, not about either measurement's honesty."
   },
@@ -6626,7 +7012,7 @@
   },
   "what_the_answer_buys": {
    "budget": 4000,
-   "wins_median_per_seed": 12.0,
+   "cells_with_at_least_one_levelup_median_per_seed": 12.0,
    "gateway_score_M2_median": 2.0895,
    "out_of": 1300
   },
@@ -6634,7 +7020,7 @@
   "score_maximising_budget_in_the_PAID_unit_M2": "UNRESOLVABLE_ON_THE_FULL_CORPUS__the_M2_delta_between_budgets_is_smaller_than_the_estimators_own_median_error",
   "what_the_score_maximising_budget_would_buy": {
    "budget": 2000,
-   "wins_median_per_seed": 11.0,
+   "cells_with_at_least_one_levelup_median_per_seed": 11.0,
    "gateway_score_M2_median": 2.0864
   },
   "the_raise_400_to_score_max_priced_in_both_units": {
@@ -6644,9 +7030,9 @@
      "pairs": [
       {
        "seed": 20260724,
-       "wins_lo": 3,
-       "wins_hi": 11,
-       "d_wins": 8,
+       "levelup_cells_lo": 3,
+       "levelup_cells_hi": 11,
+       "d_levelup_cells": 8,
        "M0_lo": 2.1547,
        "M0_hi": 2.2088,
        "d_M0": 0.0541,
@@ -6658,9 +7044,9 @@
       },
       {
        "seed": 20260725,
-       "wins_lo": 4,
-       "wins_hi": 11,
-       "d_wins": 7,
+       "levelup_cells_lo": 4,
+       "levelup_cells_hi": 11,
+       "d_levelup_cells": 7,
        "M0_lo": 1.1592,
        "M0_hi": 1.2318,
        "d_M0": 0.0726,
@@ -6672,9 +7058,9 @@
       },
       {
        "seed": 20260726,
-       "wins_lo": 4,
-       "wins_hi": 11,
-       "d_wins": 7,
+       "levelup_cells_lo": 4,
+       "levelup_cells_hi": 11,
+       "d_levelup_cells": 7,
        "M0_lo": 5.7417,
        "M0_hi": 5.7851,
        "d_M0": 0.0434,
@@ -6685,7 +7071,7 @@
        "resets_hi": 1442
       }
      ],
-     "d_wins_median": 7.0,
+     "d_levelup_cells_median": 7.0,
      "d_M0_median": 0.0541,
      "d_M0_sign_test": {
       "n_nonzero_pairs": 3,
@@ -6931,7 +7317,7 @@
        "share_of_all_offline_actions_saved": 0.6933,
        "first_levelups_that_would_be_LOST": 6,
        "first_levelups_observed": 11,
-       "share_of_wins_lost": 0.5455
+       "share_of_first_levelups_lost": 0.5455
       },
       {
        "W_actions": 200,
@@ -6940,7 +7326,7 @@
        "share_of_all_offline_actions_saved": 0.4472,
        "first_levelups_that_would_be_LOST": 5,
        "first_levelups_observed": 11,
-       "share_of_wins_lost": 0.4545
+       "share_of_first_levelups_lost": 0.4545
       },
       {
        "W_actions": 400,
@@ -6949,10 +7335,10 @@
        "share_of_all_offline_actions_saved": 0.0,
        "first_levelups_that_would_be_LOST": 0,
        "first_levelups_observed": 11,
-       "share_of_wins_lost": 0.0
+       "share_of_first_levelups_lost": 0.0
       }
      ],
-     "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
+     "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
     },
     "2000": {
      "n_cells": 75,
@@ -6967,7 +7353,7 @@
        "share_of_all_offline_actions_saved": 0.8856,
        "first_levelups_that_would_be_LOST": 28,
        "first_levelups_observed": 33,
-       "share_of_wins_lost": 0.8485
+       "share_of_first_levelups_lost": 0.8485
       },
       {
        "W_actions": 200,
@@ -6976,7 +7362,7 @@
        "share_of_all_offline_actions_saved": 0.8255,
        "first_levelups_that_would_be_LOST": 27,
        "first_levelups_observed": 33,
-       "share_of_wins_lost": 0.8182
+       "share_of_first_levelups_lost": 0.8182
       },
       {
        "W_actions": 400,
@@ -6985,7 +7371,7 @@
        "share_of_all_offline_actions_saved": 0.6783,
        "first_levelups_that_would_be_LOST": 22,
        "first_levelups_observed": 33,
-       "share_of_wins_lost": 0.6667
+       "share_of_first_levelups_lost": 0.6667
       },
       {
        "W_actions": 800,
@@ -6994,7 +7380,7 @@
        "share_of_all_offline_actions_saved": 0.3941,
        "first_levelups_that_would_be_LOST": 8,
        "first_levelups_observed": 33,
-       "share_of_wins_lost": 0.2424
+       "share_of_first_levelups_lost": 0.2424
       },
       {
        "W_actions": 1300,
@@ -7003,7 +7389,7 @@
        "share_of_all_offline_actions_saved": 0.2046,
        "first_levelups_that_would_be_LOST": 4,
        "first_levelups_observed": 33,
-       "share_of_wins_lost": 0.1212
+       "share_of_first_levelups_lost": 0.1212
       },
       {
        "W_actions": 2000,
@@ -7012,10 +7398,10 @@
        "share_of_all_offline_actions_saved": 0.0,
        "first_levelups_that_would_be_LOST": 0,
        "first_levelups_observed": 33,
-       "share_of_wins_lost": 0.0
+       "share_of_first_levelups_lost": 0.0
       }
      ],
-     "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
+     "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
     },
     "4000": {
      "n_cells": 39,
@@ -7030,7 +7416,7 @@
        "share_of_all_offline_actions_saved": 0.8493,
        "first_levelups_that_would_be_LOST": 31,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.8611
+       "share_of_first_levelups_lost": 0.8611
       },
       {
        "W_actions": 200,
@@ -7039,7 +7425,7 @@
        "share_of_all_offline_actions_saved": 0.8024,
        "first_levelups_that_would_be_LOST": 30,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.8333
+       "share_of_first_levelups_lost": 0.8333
       },
       {
        "W_actions": 400,
@@ -7048,7 +7434,7 @@
        "share_of_all_offline_actions_saved": 0.644,
        "first_levelups_that_would_be_LOST": 25,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.6944
+       "share_of_first_levelups_lost": 0.6944
       },
       {
        "W_actions": 800,
@@ -7057,7 +7443,7 @@
        "share_of_all_offline_actions_saved": 0.287,
        "first_levelups_that_would_be_LOST": 11,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.3056
+       "share_of_first_levelups_lost": 0.3056
       },
       {
        "W_actions": 1300,
@@ -7066,7 +7452,7 @@
        "share_of_all_offline_actions_saved": 0.1729,
        "first_levelups_that_would_be_LOST": 7,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.1944
+       "share_of_first_levelups_lost": 0.1944
       },
       {
        "W_actions": 2000,
@@ -7075,7 +7461,7 @@
        "share_of_all_offline_actions_saved": 0.0763,
        "first_levelups_that_would_be_LOST": 3,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.0833
+       "share_of_first_levelups_lost": 0.0833
       },
       {
        "W_actions": 4000,
@@ -7084,10 +7470,10 @@
        "share_of_all_offline_actions_saved": 0.0,
        "first_levelups_that_would_be_LOST": 0,
        "first_levelups_observed": 36,
-       "share_of_wins_lost": 0.0
+       "share_of_first_levelups_lost": 0.0
       }
      ],
-     "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
+     "reading": "A start-window W stops a game that has not levelled up within W actions. Saving comes from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond W. Both are counted from the same rows, so the trade is measured, not modelled."
     }
    },
    "continuation_window_trade_curve": [
@@ -7134,7 +7520,7 @@
      "share_lost": 0.0
     }
    ],
-   "why_the_ceiling_is_not_the_prize": "The oracle ceiling is large (most of the corpus's actions earn no score) but it is an ORACLE: the bulk of it sits in cells that NEVER level up, which a real rule can only cut by giving up after W actions -- and the first-level-up cost distribution says what that costs in lost wins. The continuation window has the same problem from the other end: preserving EVERY observed subsequent level-up needs c=22x the game's own first level-up cost, so a tight window is not safe and a safe window barely fires. Both trade curves are published instead of a single multiplier.",
+   "why_the_ceiling_is_not_the_prize": "The oracle ceiling is large (most of the corpus's actions earn no score) but it is an ORACLE: the bulk of it sits in cells that NEVER level up, which a real rule can only cut by giving up after W actions -- and the first-level-up cost distribution says what that costs in lost first-level-ups. The continuation window has the same problem from the other end: preserving EVERY observed subsequent level-up needs c=22x the game's own first level-up cost, so a tight window is not safe and a safe window barely fires. Both trade curves are published instead of a single multiplier.",
    "reading": "The grace sweep's 0.072%-of-actions saving at b400 is a fact about a FIXED window, not about the mechanism. The oracle ceiling is what an ADAPTIVE window is competing for, and it is score-free by construction: an incomplete level scores 0.0 whatever it is charged."
   },
   "a_concurrency_CEILING_was_hit_before_any_wall_clock_ceiling": {
@@ -7168,35 +7554,53 @@
     "sc25",
     "su15"
    ],
-   "n_seeds": 1,
-   "seed": 20260724,
+   "n_seeds": 2,
+   "seeds": [
+    20260724,
+    20260725
+   ],
+   "n_valid_cells": 14,
    "budget": 400,
    "Ks": [
     1,
     2,
     4
    ],
-   "min_reachable_two_sided_p_at_this_support": 0.125,
+   "min_reachable_two_sided_p_at_this_support": 0.0078,
+   "min_reachable_two_sided_p_at_this_support_basis": "MINIMUM over the `min_reachable_two_sided_p_at_this_support` of every sign test this part actually emits (each computed from that test's own matched-pair count), NOT 2/2**n_games. See the top-level `scope_and_power_self_consistency` block for the artifact-wide check that no emitted test reports a p below the floor its own scope block claims.",
    "game_selection_is_NOT_random": "the 4 games with complete budget coverage in the sibling uncontended probe, themselves chosen because budget 2000 GAINS A WIN on them -- deliberately adverse for a cost question, so the per-game cost is an OVER-estimate and the affordable budget an UNDER-estimate",
    "processes_not_threads": "the real eval is single-process/multi-thread (swarm.py:76-99), so it ALSO pays GIL serialisation on the non-LLM component that separate processes do not. This probe measures SERVER-side contention exactly and UNDERSTATES the GIL side.",
    "hidden_set_size_is_unknown": "n_games=110 is inherited from the prior artifact's assumption, not measured. The answer is therefore reported for 110 / 60 / 25 separately."
   },
   "score_curve": {
-   "scope": "grace=None (SHIPPED) arm only, LLM-OFF cells. b400/b2000 are the full 25-game corpus x 3 seeds; b4000 is a 13-game LEVEL-REACHING SUBSET and is therefore biased UPWARD on wins and NOT comparable to the 25-game rows without saying so.",
+   "scope": "grace=None (SHIPPED) arm only, LLM-OFF cells. b400/b2000 are the full 25-game corpus x 3 seeds; b4000 is a 13-game LEVEL-REACHING SUBSET and is therefore biased UPWARD on level-up cells and NOT comparable to the 25-game rows without saying so.",
    "n_rows_grace_none": 189,
    "llm_off": true,
    "llm_off_caveat": "the score curve is measured on LLM-OFF cells (the only corpus with 3 seeds x 25 games x reset counts). The LLM-ON path can change WHICH levels are reached, so the score curve is a proxy for the scored path, not the scored path itself.",
-   "b4000_is_a_subset": "b4000 exists only for a 13-game LEVEL-REACHING subset, so it is biased UPWARD on wins and is excluded from the score-maximising-budget comparison, which is restricted to budgets with the full 25-game corpus."
+   "b4000_is_a_subset": "b4000 exists only for a 13-game LEVEL-REACHING subset, so it is biased UPWARD on level-up cells and is excluded from the score-maximising-budget comparison, which is restricted to budgets with the full 25-game corpus."
   },
   "public_games_are_not_the_hidden_set": "Every cell is a PUBLIC game played OFFLINE. The hidden competition set is out-of-distribution relative to all of them; nothing here is a hidden-set forecast."
  },
+ "scope_and_power_self_consistency": {
+  "n_tests_with_both_a_p_and_a_floor": 14,
+  "min_p_reported_anywhere": 0.0312,
+  "min_POSITIVE_floor_emitted_anywhere": 0.0078,
+  "n_degenerate_zero_floors_excluded": 2,
+  "why_zero_floors_are_excluded": "a floor of 0.0 is what a sign test emits on EMPTY support, not a reachable p. Including it drags the minimum to zero and makes this check meaningless.",
+  "scope_block_claimed_floor": 0.0078,
+  "scope_block_floor_is_LE_every_emitted_floor": true,
+  "n_tests_reporting_p_below_their_own_floor": 0,
+  "violations": [],
+  "passed": true,
+  "principle": "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an internal contradiction that reads as a methodology violation; deriving the floor and checking it makes the drift fail the build instead of misleading a reader."
+ },
  "provenance": {
-  "git_head": "ea3c83e8ef8898b6d7bf7ecc548f4a22c46b8dcd",
+  "git_head": "692bedfa8c8b9bfc95dd26b95631f01cfad9b996",
   "code": [
    {
     "path": "scripts/analyze_arc_max_actions_answer.py",
-    "sha256": "e100c484989ede0a6cea9bac74292edddbfb2879dcdb2e3d6e08be06adc90ffe",
-    "bytes": 129668
+    "sha256": "a2a216baf430bf2d5c5ee429ed0ebaadfed130e83aa54072460bde1ecdb80d96",
+    "bytes": 153877
    },
    {
     "path": "scripts/arc_gateway_rescore.py",
@@ -7215,8 +7619,8 @@
    },
    {
     "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "92dc57bb968310e9770b67050dfcaa75a430aa99b188db81dea8aa6db8e39b02",
-    "bytes": 41306
+    "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
+    "bytes": 53382
    }
   ],
   "rows_sources": {
@@ -7279,7 +7683,7 @@
    "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json"
   ]
  },
- "reproducibility_checksum": "1f91202434279587",
+ "reproducibility_checksum": "99470a30a8dd1b46",
  "reproducibility_checksum_note": "sha256 over the artifact MINUS every clock field (run_date, duration_s, build_timestamp_utc) and provenance, so a rebuild that changes no NUMBER reproduces the checksum exactly. Verified by rebuilding twice and diffing.",
  "honest_verdict": "complete_max_actions_answer_largest_measured_budget_fitting_9h_110games=2000_conservative_all_levels=2000_throughput_ratio_K2_vs_K1=0.9735_latency_nearly_doubles_but_throughput_does_not_wall_clock_binds_at_score_max=False_generator_died_at_K=[4]_gates_passed=True",
  "honest_verdict_principle": "A terminal-prefixed self-declared state lets the conductor's reconciler classify this without re-running it; the prefix is required because substrings like 'binds' and 'died' would otherwise trip the partial/blocked token matcher.",

@@ -277,9 +277,9 @@ def test_the_two_scorer_paths_agree_on_a_real_cell_under_both_models() -> None:
     # checked too.
     assert got["chain_M1_score"] is not None and got["chain_M2_score"] is not None
     assert abs(got["chain_M1_score"] - got["score_M1_all_resets_charged"]) < 1e-6
-    assert abs(got["chain_M2_score"] - got["score_M2_bootstrap_free_GATEWAY_ACCURATE"]) < 1e-6
+    assert abs(got["chain_M2_score"] - got["score_M2_bootstrap_free_MODELLED"]) < 1e-6
     # And the two models must actually differ on this cell, or the agreement above is vacuous.
-    assert got["score_M1_all_resets_charged"] != got["score_M2_bootstrap_free_GATEWAY_ACCURATE"]
+    assert got["score_M1_all_resets_charged"] != got["score_M2_bootstrap_free_MODELLED"]
 
 
 def test_the_chain_agreement_flag_is_DERIVED_and_goes_False_when_the_paths_disagree(

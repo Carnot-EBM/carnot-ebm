@@ -53,6 +53,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+from itertools import accumulate
 import statistics
 import subprocess
 import sys
@@ -79,6 +81,13 @@ from arc_gateway_rescore import (  # noqa: E402
 PRIOR_ARTIFACT = "results/outer_loop_arc_gateway_rescore_20260726.json"
 PERLEVEL_ARTIFACT = "results/arc_per_level_reset_attribution_20260726.json"
 PEER_ARTIFACT = "results/outer_loop_arc_reset_charge_attribution_20260726.json"
+
+# The MEASURED gateway charge, read off the arcade's own scorecard Card (2026-07-27). Added because
+# every "gateway-charged" number in this artifact is a MODEL of the charge, and the model was found
+# wrong on 17 of 44 cells. G7 below joins on (game, seed, budget) and asserts agreement with THIS
+# file, which is the only authority a fidelity gate can appeal to.
+CARD_GROUND_TRUTH_ROWS = "results/card_ground_truth_rows_20260727/rows_card_ground_truth.json"
+CARD_GROUND_TRUTH_ARTIFACT = "results/arc_gateway_card_ground_truth_20260727.json"
 
 EXACT_ROW_FILES = [
     "results/early_stop_sweep_20260726/rows_exact_attribution.json",
@@ -109,14 +118,32 @@ SOURCE_SPANS = {
         "arc_agi/scorecard.py:692-699 `inc_play_count` APPENDS actions=0/resets=0 for a new play; "
         "it never increments an existing counter"
     ),
-    "full_reset_is_true_only_on_env_creation": (
-        "arc_agi/api.py:405-437 `_get_or_create_environment` -- a cached guid returns "
-        "`(game, False)`; only the `arcade.make` path returns `(game, True)`"
+    # SPAN CORRECTED 2026-07-27. The original citation here was
+    # `arc_agi/api.py:405-437 _get_or_create_environment`, which is the wrong code path for the
+    # LOCAL chain these measurements run on. On that chain the scorecard sees `resp.full_reset`
+    # (`arc_agi/wrapper.py:194`), which is set by `arcengine/base_game.py:305-316 handle_reset`:
+    # `full_reset` holds whenever `_action_count == 0` OR `state == WIN`. So the free-reset condition
+    # is a GAME-STATE predicate, not "the first reset of the run", and it can fire more than once
+    # (env construction, a RESET with no intervening action, a RESET immediately after a win) --
+    # each appending a new zeroed play row and charging nothing.
+    "full_reset_predicate_is_action_count_0_or_state_WIN": (
+        "arcengine/base_game.py:305-316 `handle_reset` sets `_full_reset` when `_action_count == 0` "
+        "or `state == WIN`; `arc_agi/wrapper.py:187-195` gates the scorecard update on a non-empty "
+        "frame and passes `resp.full_reset` through to `update_scorecard`"
     ),
-    "the_opening_action_is_always_that_creation": (
+    "the_api_path_is_a_DIFFERENT_mechanism_not_this_one": (
+        "arc_agi/api.py:405-437 `_get_or_create_environment` returns True only on a fresh "
+        "`arcade.make`; that is the REMOTE/HTTP guid-cache path and is NOT what sets `full_reset` on "
+        "the local chain. Citing it for the local measurement was an error, corrected 2026-07-27."
+    ),
+    "one_free_reset_per_play_is_a_TRAJECTORY_PROPERTY_not_a_law": (
         "the reference agent harness opens with `self.guid = ''` (ARC-AGI-3-Agents/agents/"
-        "agent.py:55) and a RESET, so the first RESET has no guid -> cache miss -> make -> "
-        "full_reset=True. One free reset per play."
+        "agent.py:55) and a RESET, so a run's first RESET is free. But that is a property of THESE "
+        "trajectories, not a guarantee: a trajectory that RESETs twice in a row, or RESETs after a "
+        "win, gets more than one free reset. `arc_leaderboard_eval.run_game` now OBSERVES the count "
+        "(`observed_full_resets`, `consecutive_reset_pairs`) instead of assuming 1, and "
+        "`arc_gateway_card_ground_truth.py` removes the need for the assumption entirely by reading "
+        "the Card. Measured on this corpus: 0 consecutive-RESET pairs, exactly 1 full reset per run."
     ),
     "per_level_charge_is_a_DIFFERENCE": (
         "arc_agi/scorecard.py:479 `level_actions = actions_at_level - prev_actions`, so a charge "
@@ -526,11 +553,11 @@ def _exact_cell(cell: dict, baselines_by_game: dict[str, list[int]]) -> dict[str
         "seg_charged_M2": seg_charged_m2,
         "score_M0_offline_recorded": round(s0, 6),
         "score_M1_all_resets_charged": round(s1, 6),
-        "score_M2_bootstrap_free_GATEWAY_ACCURATE": round(s2, 6),
+        "score_M2_bootstrap_free_MODELLED": round(s2, 6),
         "recorded_efficiency_in_row": cell.get("efficiency_offline"),
         "recorded_gateway_charged_in_row_M1": cell.get("efficiency_gateway_charged"),
         "rel_optimism_M1": _rel(s0, s1),
-        "rel_optimism_M2_GATEWAY_ACCURATE": _rel(s0, s2),
+        "rel_optimism_M2_MODELLED": _rel(s0, s2),
         "chain_M1_score": chain1["score"],
         "chain_M2_score": chain2["score"],
         "chain_agrees_M1": (chain1["score"] is not None and abs(chain1["score"] - s1) < 1e-9),
@@ -587,9 +614,9 @@ def _perlevel_cell(cell: dict, baselines_by_game: dict[str, list[int]]) -> dict[
         "resets_in_free_tail": tail_resets,
         "score_M0_offline_recorded": round(s0, 6),
         "score_M1_all_resets_charged": round(s1, 6),
-        "score_M2_bootstrap_free_GATEWAY_ACCURATE": round(s2, 6),
+        "score_M2_bootstrap_free_MODELLED": round(s2, 6),
         "rel_optimism_M1": _rel(s0, s1),
-        "rel_optimism_M2_GATEWAY_ACCURATE": _rel(s0, s2),
+        "rel_optimism_M2_MODELLED": _rel(s0, s2),
         "recorded_rel_loss_in_that_artifact_M1": None,
     }
 
@@ -680,7 +707,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
             "M1_all_resets_charged": (
                 "every reset charged 1 -- the model behind the published 4.62% figure"
             ),
-            "M2_bootstrap_free_GATEWAY_ACCURATE": (
+            "M2_bootstrap_free_MODELLED": (
                 "every reset EXCEPT the opening full_reset charged 1 -- what the installed "
                 "gateway does"
             ),
@@ -798,17 +825,15 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
 
     relm1 = [c["rel_optimism_M1"] for c in usable_b if c["rel_optimism_M1"] is not None]
     relm2 = [
-        c["rel_optimism_M2_GATEWAY_ACCURATE"]
-        for c in usable_b
-        if c["rel_optimism_M2_GATEWAY_ACCURATE"] is not None
+        c["rel_optimism_M2_MODELLED"] for c in usable_b if c["rel_optimism_M2_MODELLED"] is not None
     ]
     per_game_m2: dict[str, float] = {}
     per_game_m1: dict[str, float] = {}
     for g in sorted({c["game"] for c in usable_b}):
         vs2 = [
-            c["rel_optimism_M2_GATEWAY_ACCURATE"]
+            c["rel_optimism_M2_MODELLED"]
             for c in usable_b
-            if c["game"] == g and c["rel_optimism_M2_GATEWAY_ACCURATE"] is not None
+            if c["game"] == g and c["rel_optimism_M2_MODELLED"] is not None
         ]
         vs1 = [
             c["rel_optimism_M1"]
@@ -823,16 +848,16 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
     n_zero_m2 = sum(1 for v in relm2 if v <= 1e-12)
     n_zero_m1 = sum(1 for v in relm1 if v <= 1e-12)
     m2_le_m1 = all(
-        c["rel_optimism_M2_GATEWAY_ACCURATE"] <= c["rel_optimism_M1"] + 1e-12
+        c["rel_optimism_M2_MODELLED"] <= c["rel_optimism_M1"] + 1e-12
         for c in usable_b
-        if c["rel_optimism_M1"] is not None and c["rel_optimism_M2_GATEWAY_ACCURATE"] is not None
+        if c["rel_optimism_M1"] is not None and c["rel_optimism_M2_MODELLED"] is not None
     )
     n_strictly_lower = sum(
         1
         for c in usable_b
         if c["rel_optimism_M1"] is not None
-        and c["rel_optimism_M2_GATEWAY_ACCURATE"] is not None
-        and c["rel_optimism_M2_GATEWAY_ACCURATE"] < c["rel_optimism_M1"] - 1e-12
+        and c["rel_optimism_M2_MODELLED"] is not None
+        and c["rel_optimism_M2_MODELLED"] < c["rel_optimism_M1"] - 1e-12
     )
 
     # agreement of my recomputed M1 with the numbers the ROWS already carry (a check on this
@@ -868,7 +893,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
     # this artifact, so each one is classified rather than counted.
     zeros_m2: list[dict[str, Any]] = []
     for c in usable_b:
-        v = c["rel_optimism_M2_GATEWAY_ACCURATE"]
+        v = c["rel_optimism_M2_MODELLED"]
         if v is None or v > 1e-12:
             continue
         chargeable_after_bootstrap = c["resets_in_completed_spans"] - 1
@@ -903,7 +928,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
     prior_b = (prior or {}).get("part_b_exact_attribution_live", {})
     prior_m1_median = (prior_b.get("rel_optimism_fraction_of_offline_score") or {}).get("median")
 
-    art["part_b_exact_44_live_cells"] = {
+    art["part_b_exact_reset_ATTRIBUTION_44_cells"] = {
         "independent_reproduction_of_the_prior_artifacts_M1_number": {
             "prior_artifact": PRIOR_ARTIFACT,
             "prior_unrounded_M1_median": prior_m1_median,
@@ -942,13 +967,13 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
             c["opening_reset_in_first_span"] for c in usable_b
         ),
         "rel_optimism_M1_the_PUBLISHED_model": _dist(relm1),
-        "rel_optimism_M2_GATEWAY_ACCURATE": _dist(relm2),
+        "rel_optimism_M2_MODELLED": _dist(relm2),
         "abs_optimism_score_points_M1": _dist(
             [c["score_M0_offline_recorded"] - c["score_M1_all_resets_charged"] for c in usable_b]
         ),
-        "abs_optimism_score_points_M2_GATEWAY_ACCURATE": _dist(
+        "abs_optimism_score_points_M2_MODELLED": _dist(
             [
-                c["score_M0_offline_recorded"] - c["score_M2_bootstrap_free_GATEWAY_ACCURATE"]
+                c["score_M0_offline_recorded"] - c["score_M2_bootstrap_free_MODELLED"]
                 for c in usable_b
             ]
         ),
@@ -965,7 +990,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         "M2_never_exceeds_M1": m2_le_m1,
         "n_cells_where_M2_is_strictly_lower": n_strictly_lower,
         "per_game_median_M1": per_game_m1,
-        "per_game_median_M2_GATEWAY_ACCURATE": per_game_m2,
+        "per_game_median_M2_MODELLED": per_game_m2,
         "per_game_median_of_medians_M2": (
             round(statistics.median(list(per_game_m2.values())), 6) if per_game_m2 else None
         ),
@@ -991,20 +1016,64 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
                 part_c.append(got)
     usable_c = [c for c in part_c if c.get("usable")]
     relc2 = [
-        c["rel_optimism_M2_GATEWAY_ACCURATE"]
-        for c in usable_c
-        if c["rel_optimism_M2_GATEWAY_ACCURATE"] is not None
+        c["rel_optimism_M2_MODELLED"] for c in usable_c if c["rel_optimism_M2_MODELLED"] is not None
     ]
     relc1 = [c["rel_optimism_M1"] for c in usable_c if c["rel_optimism_M1"] is not None]
+
     # The per-span artifact computed its published `rel_loss` from the row's 4-DECIMAL-ROUNDED
     # efficiency fields. On a cell whose score is ~0.007 that rounding is a large fraction of the
     # quantity being differenced, so its published numbers are not a clean M1 baseline. Both are
     # reported per cell so the reader can see which part of the movement is the charge model and
     # which part is rounding.
-    published_rel = {
-        str(x.get("cell") or ""): x.get("rel_loss")
-        for x in ((perlevel or {}).get("score_loss_from_charged_resets", {}).get("per_cell") or [])
-    }
+    # HISTORICAL BASELINE, READ FROM GIT (2026-07-27). This block's entire purpose is to compare the
+    # per-level lane's PUBLISHED (4-dp-rounded) rel_loss against an unrounded recomputation. The
+    # per-level lane has since been FIXED to divide unrounded scores, so reading its CURRENT
+    # working-tree values would compare unrounded against unrounded and report a rounding error of
+    # exactly 0.0 -- silently erasing the hazard this block documents. The committed version at git
+    # HEAD is the historical record, so that is what is read.
+    def _perlevel_published_rel() -> tuple[dict, str]:
+        raw = os.popen(f"git show HEAD:{PERLEVEL_ARTIFACT} 2>/dev/null").read()
+        if raw.strip():
+            try:
+                d = json.loads(raw)
+                return (
+                    {
+                        str(x.get("cell") or ""): x.get("rel_loss")
+                        for x in (
+                            (d.get("score_loss_from_charged_resets") or {}).get("per_cell") or []
+                        )
+                    },
+                    f"git show HEAD:{PERLEVEL_ARTIFACT} (the PUBLISHED, pre-fix values)",
+                )
+            except Exception:
+                pass
+        return (
+            {
+                str(x.get("cell") or ""): x.get("rel_loss")
+                for x in (
+                    (perlevel or {}).get("score_loss_from_charged_resets", {}).get("per_cell") or []
+                )
+            },
+            f"working tree {PERLEVEL_ARTIFACT} (git HEAD unavailable -- may already be FIXED, in "
+            "which case the reported rounding error is 0 by construction, not by measurement)",
+        )
+
+    published_rel, published_rel_source = _perlevel_published_rel()
+
+    # The whole PUBLISHED per-level artifact at git HEAD. Same reason as above: three more fields
+    # below quote "as published" figures from that lane, and the working-tree copy has since been
+    # FIXED to divide unrounded scores -- so reading it would relabel the corrected numbers as the
+    # rounded ones they replaced.
+    def _perlevel_at_head() -> tuple[dict, str]:
+        raw = os.popen(f"git show HEAD:{PERLEVEL_ARTIFACT} 2>/dev/null").read()
+        if raw.strip():
+            try:
+                return json.loads(raw), f"git show HEAD:{PERLEVEL_ARTIFACT}"
+            except Exception:
+                pass
+        return (perlevel or {}), f"working tree {PERLEVEL_ARTIFACT} (git HEAD unavailable)"
+
+    perlevel_published, perlevel_published_source = _perlevel_at_head()
     part_c_precision: list[dict[str, Any]] = []
     for c in usable_c:
         key = f"{c['game']}@{c['seed']}"
@@ -1019,13 +1088,22 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
                 "rounding_error_in_the_published_M1": (
                     None if pub is None else round(float(c["rel_optimism_M1"]) - float(pub), 6)
                 ),
-                "gateway_accurate_M2": c["rel_optimism_M2_GATEWAY_ACCURATE"],
+                "MODELLED_M2": c["rel_optimism_M2_MODELLED"],
             }
         )
 
     art["part_c_exact_per_span_capture_second_channel"] = {
         "precision_hazard_in_the_published_M1_baseline": {
             "per_cell": part_c_precision,
+            "published_baseline_source": published_rel_source,
+            "STATUS_2026_07_27": (
+                "CLOSED UPSTREAM. `arc_per_level_reset_attribution_capture.py` now divides the "
+                "UNROUNDED scorer outputs (`efficiency_*_precise`, added to run_game as pure "
+                "addition), so its per-cell median moved 0.045078 -> 0.046236449 and tu93's cell "
+                "moved 0.041667 (= exactly 1/24) -> 0.046236449. The per-cell values compared here "
+                "are read from git HEAD so this block keeps documenting the historical hazard "
+                "instead of comparing the fixed values against themselves."
+            ),
             "what_happened": (
                 "`run_game` rounds both efficiency fields to 4 decimals before they reach a row. "
                 "tu93's published loss of 0.041667 is literally 0.0003/0.0072 -- a ratio of two "
@@ -1058,12 +1136,13 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         "n_cells_with_a_levelup": len(part_c),
         "n_cells_usable": len(usable_c),
         "rel_optimism_M1": _dist(relc1),
-        "rel_optimism_M2_GATEWAY_ACCURATE": _dist(relc2),
+        "rel_optimism_M2_MODELLED": _dist(relc2),
+        "published_in_that_artifact_M1_median_source": perlevel_published_source,
         "published_in_that_artifact_M1_median": (
-            (perlevel or {}).get("score_loss_from_charged_resets", {}).get("median")
+            (perlevel_published or {}).get("score_loss_from_charged_resets", {}).get("median")
         ),
         "published_in_that_artifact_M1_max": (
-            (perlevel or {}).get("score_loss_from_charged_resets", {}).get("max")
+            (perlevel_published or {}).get("score_loss_from_charged_resets", {}).get("max")
         ),
         "cells": usable_c,
         "why_this_is_a_second_channel_not_a_duplicate": (
@@ -1084,11 +1163,10 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         overlap.append(
             {
                 "cell": f"{k[0]}/{k[1]}/b{k[2]}",
-                "M2_from_cumulative_channel": b["score_M2_bootstrap_free_GATEWAY_ACCURATE"],
-                "M2_from_per_span_channel": c["score_M2_bootstrap_free_GATEWAY_ACCURATE"],
+                "M2_from_cumulative_channel": b["score_M2_bootstrap_free_MODELLED"],
+                "M2_from_per_span_channel": c["score_M2_bootstrap_free_MODELLED"],
                 "agrees": abs(
-                    b["score_M2_bootstrap_free_GATEWAY_ACCURATE"]
-                    - c["score_M2_bootstrap_free_GATEWAY_ACCURATE"]
+                    b["score_M2_bootstrap_free_MODELLED"] - c["score_M2_bootstrap_free_MODELLED"]
                 )
                 < 1e-6,
             }
@@ -1127,7 +1205,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
             "squared denominator while a reset in the post-solve tail costs nothing."
         ),
         "rel_worst_case_M1": _dist([b["rel_worst_M1"] for b in bounds]),
-        "rel_worst_case_M2_GATEWAY_ACCURATE": _dist([b["rel_worst_M2"] for b in bounds]),
+        "rel_worst_case_M2_MODELLED": _dist([b["rel_worst_M2"] for b in bounds]),
         "best_case_is_zero_by_construction_on_every_row": all(
             b["best_case_is_zero_by_construction"] for b in bounds
         ),
@@ -1179,8 +1257,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
     models_differ = sum(
         1
         for c in usable_b
-        if abs(c["score_M1_all_resets_charged"] - c["score_M2_bootstrap_free_GATEWAY_ACCURATE"])
-        > 1e-9
+        if abs(c["score_M1_all_resets_charged"] - c["score_M2_bootstrap_free_MODELLED"]) > 1e-9
     )
     art["scorer_fidelity_two_independent_paths"] = {
         "path_1": (
@@ -1201,7 +1278,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
                 "cell": f"{c['game']}/{c['seed']}/b{c['budget']}",
                 "path1_M1": c["score_M1_all_resets_charged"],
                 "path2_M1": c["chain_M1_score"],
-                "path1_M2": c["score_M2_bootstrap_free_GATEWAY_ACCURATE"],
+                "path1_M2": c["score_M2_bootstrap_free_MODELLED"],
                 "path2_M2": c["chain_M2_score"],
             }
             for c in usable_b
@@ -1248,10 +1325,16 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
     }
 
     # ---------------------------------------------------------------- correction owed (PROMINENT)
-    m1_med = art["part_b_exact_44_live_cells"]["rel_optimism_M1_the_PUBLISHED_model"].get("median")
-    m1_max = art["part_b_exact_44_live_cells"]["rel_optimism_M1_the_PUBLISHED_model"].get("max")
-    m2_med = art["part_b_exact_44_live_cells"]["rel_optimism_M2_GATEWAY_ACCURATE"].get("median")
-    m2_max = art["part_b_exact_44_live_cells"]["rel_optimism_M2_GATEWAY_ACCURATE"].get("max")
+    m1_med = art["part_b_exact_reset_ATTRIBUTION_44_cells"][
+        "rel_optimism_M1_the_PUBLISHED_model"
+    ].get("median")
+    m1_max = art["part_b_exact_reset_ATTRIBUTION_44_cells"][
+        "rel_optimism_M1_the_PUBLISHED_model"
+    ].get("max")
+    m2_med = art["part_b_exact_reset_ATTRIBUTION_44_cells"]["rel_optimism_M2_MODELLED"].get(
+        "median"
+    )
+    m2_max = art["part_b_exact_reset_ATTRIBUTION_44_cells"]["rel_optimism_M2_MODELLED"].get("max")
     art["CORRECTION_OWED"] = {
         "read_this_first": (
             "A number this session reported to the operator MOVES. It moves in the direction that "
@@ -1269,7 +1352,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
                 "n_cells_nonzero": len(relm1) - n_zero_m1,
                 "n_cells": len(relm1),
             },
-            "gateway_accurate_M2": {
+            "MODELLED_M2": {
                 "median": m2_med,
                 "max": m2_max,
                 "n_cells_nonzero": len(relm2) - n_zero_m2,
@@ -1288,14 +1371,24 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
                 "0.119524) and commit a1d8360eb"
             ),
             "as_published_M1_from_4dp_rounded_fields": {
-                "median": (perlevel or {}).get("score_loss_from_charged_resets", {}).get("median"),
-                "max": (perlevel or {}).get("score_loss_from_charged_resets", {}).get("max"),
+                "median": (perlevel_published or {})
+                .get("score_loss_from_charged_resets", {})
+                .get("median"),
+                "max": (perlevel_published or {})
+                .get("score_loss_from_charged_resets", {})
+                .get("max"),
+                "source": perlevel_published_source,
+                "note": (
+                    "read from git HEAD on purpose. The working-tree per-level artifact has since "
+                    "been FIXED to divide UNROUNDED scores, so reading it here would label the "
+                    "corrected figures as the rounded ones they replaced."
+                ),
             },
             "the_same_cells_unrounded_M1": {
                 "median": _dist(relc1).get("median"),
                 "max": _dist(relc1).get("max"),
             },
-            "gateway_accurate_M2": {
+            "MODELLED_M2": {
                 "median": _dist(relc2).get("median"),
                 "max": _dist(relc2).get("max"),
             },
@@ -1314,19 +1407,36 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
                 "that is too low and an `efficiency_optimism_vs_gateway` that is too high, by one "
                 "charged action in the first span."
             ),
-            "the_minimal_fix": (
-                "subtract the run's full_reset count (1) from the cumulative charged totals: "
-                "`level_up_charged.append(actions + resets - n_full_resets)` and "
-                "`charged_actions = actions + resets - n_full_resets`, with `n_full_resets` "
-                "counted as 1 for the opening RESET (assert the first recorded move IS a RESET, "
-                "and stamp rather than subtract if it is not)."
+            "the_minimal_fix_AS_ORIGINALLY_SPECIFIED_and_why_it_was_WRONG": (
+                "the original spec here was `charged_actions = actions + resets - n_full_resets` "
+                "with `n_full_resets` HARD-CODED to 1. That is wrong twice over. (a) The free-reset "
+                "predicate is `_action_count == 0 or state == WIN` "
+                "(`arcengine/base_game.py:305-316`), so a trajectory that RESETs twice in a row, or "
+                "RESETs after a win, earns more than one free reset and the formula would "
+                "under-charge it silently. (b) More importantly the whole approach is a MODEL, and "
+                "the model is wrong for an unrelated reason: a non-RESET action taken while the game "
+                "is GAME_OVER/WIN returns `frame=[]` (`arcengine/base_game.py:204-216`) and the "
+                "scorecard update is gated on `len(resp.frame) > 0` (`arc_agi/wrapper.py:187`), so "
+                "POST-DEATH actions are FREE at the gateway while this harness counts them."
             ),
-            "deliberately_NOT_applied_here_and_why": (
+            "the_fix_ACTUALLY_APPLIED_2026_07_27": (
+                "stop modelling the charge and READ it. `arc_leaderboard_eval._read_gateway_card` "
+                "reads `card.actions[idx]`, `card.resets[idx]` and `card.actions_by_level[idx]` off "
+                "the arcade's own scorecard Card -- the exact object the leaderboard scorer consumes "
+                "-- and every row now carries them plus `efficiency_gateway_card`, "
+                "`empty_frame_actions`, `observed_full_resets` and `consecutive_reset_pairs`. The "
+                "modelled fields are RETAINED unchanged so no historical comparison shifts unit, and "
+                "`gateway_card_vs_model_charged_delta` records the disagreement per row. Measured "
+                "consequence: the M2 numbers in THIS artifact overstate the real optimism on 17 of "
+                "44 cells and have the WRONG SIGN on 6 -- see "
+                "results/arc_gateway_card_ground_truth_20260727.json."
+            ),
+            "why_it_was_deferred_at_the_time": (
                 "that file is a freshness-tracked provenance dependency of at least five committed "
-                "artifacts plus one uncommitted peer artifact. Editing it would mark all of them "
-                "stale in the same commit that publishes this correction, forcing a rebuild cascade "
-                "across another lane's just-landed work. The brief for this task is measure and "
-                "report; the fix is specified precisely and queued as the top follow-up."
+                "artifacts plus one uncommitted peer artifact, so editing it marks all of them stale "
+                "in the same commit. That was the right call for a measure-and-report brief; the "
+                "edit has since been made as a PURE ADDITION (no pre-existing field's value moves), "
+                "with the dependent artifacts rebuilt in the same change."
             ),
             "severity": (
                 "HIGHER than the number correction. A wrong number in one artifact is citable and "
@@ -1342,6 +1452,55 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         ),
     }
 
+    # ---------------------------------------------------------------- superseded-by + residual
+    art["THE_M2_NUMBERS_HERE_ARE_A_MODEL_SUPERSEDED_BY"] = {
+        "artifact": CARD_GROUND_TRUTH_ARTIFACT,
+        "what_it_measures": (
+            "the same 48 cells re-run with the gateway's own scorecard Card READ rather than the "
+            "charge modelled as offline_actions + resets - 1"
+        ),
+        "why_the_model_here_is_wrong": (
+            "a non-RESET action taken while the game is GAME_OVER/WIN returns frame=[] "
+            "(arcengine/base_game.py:204-216) and the scorecard update is gated on "
+            "len(resp.frame) > 0 (arc_agi/wrapper.py:187), so post-death actions are FREE at the "
+            "gateway while this harness counts them. The model has no term for that."
+        ),
+        "measured_consequence": (
+            "the M2 figures below reproduce the real per-level charged vector on only 27 of 44 "
+            "cells; on 6 (tu93, 3 seeds x 2 budgets) the TRUE sign is NEGATIVE -- the recorded "
+            "offline number was PESSIMISTIC, not optimistic. The model never understates."
+        ),
+        "which_number_to_cite": (
+            "cite the REAL median from the superseding artifact. The M2 median here is retained "
+            "verbatim per never-prune and must be labelled MODELLED wherever it is quoted."
+        ),
+        "nothing_here_was_rewritten": True,
+    }
+    art["COMPETITION_MODE_RESIDUAL"] = {
+        "claim": (
+            "every figure in this artifact is gateway-accurate-at-best for the OFFLINE/LOCAL charge "
+            "path, and a LOWER BOUND under competition_mode"
+        ),
+        "source": "arc_agi/api.py:316-334",
+        "mechanism": (
+            "when a RESET arrives with full_reset=False on a LocalEnvironmentWrapper and "
+            "scorecard.competition_mode and g._game._action_count == 0, the code calls "
+            "update_scorecard WITHOUT stepping the game -- which routes to reset() -> "
+            "inc_reset_count -> resets += 1 AND actions += 1 (scorecard.py:701-704). A "
+            "competition-mode RESET at action-count 0 is therefore BILLED while doing nothing."
+        ),
+        "status": "UNMEASURED -- no run here sets competition_mode",
+        "the_free_opening_reset_itself_is_confirmed": (
+            "_get_or_create_environment returns True only on a fresh arcade.make; a cached guid "
+            "returns False, and inc_play_count increments no counter"
+        ),
+        "also_unconfirmed": (
+            "that the REMOTE hidden gateway matches the INSTALLED local arc_agi package. Read from "
+            "source, never measured against the live service. No figure here may be carried into a "
+            "scored-path claim without that confirmation."
+        ),
+    }
+
     # ---------------------------------------------------------------- headline
     art["headline"] = {
         "question": (
@@ -1349,7 +1508,8 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
             "published corrections wrong?"
         ),
         "answer": (
-            f"The gateway-accurate optimism over {len(relm2)} matched live cells is "
+            f"[MODELLED CHARGE -- superseded, see THE_M2_NUMBERS_HERE_ARE_A_MODEL_SUPERSEDED_BY] "
+            f"The modelled optimism over {len(relm2)} matched live cells is "
             f"{m2_med} at the median and {m2_max} at most, against the published "
             f"{m1_med} / {m1_max}. The published figure was too PESSIMISTIC because it charged the "
             "run's opening RESET, which the installed gateway gives away free. The correction is "
@@ -1358,7 +1518,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         ),
         "from_bounds_alone": (
             "STILL UNANSWERABLE, and stamped as such. Over the recorded rows the worst case erases "
-            f"a median {art['part_a_bounds_over_recorded_rows_NOT_POINT_ESTIMATES']['rel_worst_case_M2_GATEWAY_ACCURATE'].get('median')} "
+            f"a median {art['part_a_bounds_over_recorded_rows_NOT_POINT_ESTIMATES']['rel_worst_case_M2_MODELLED'].get('median')} "
             "of a cell's score and the best case is 0 BY CONSTRUCTION. A bound with a structural "
             "zero at one end cannot establish either that the correction matters or that it does not."
         ),
@@ -1482,11 +1642,117 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
             interpretable=len(overlap) > 0,
         ),
     ]
+    # ---- G7: AGREEMENT WITH THE LIVE CARD, not agreement between two reconstructions ----------
+    # ADDED 2026-07-27. G1 ("both scorer paths agree under both models, 44/44") and part_d ("two
+    # channels agree 7/7") compare two implementations of the SAME unverified assumption: both
+    # reconstruct the charge as `offline_actions + resets - k` and neither consults the gateway's own
+    # bookkeeping. So the fidelity gate could not detect the error it missed. The witness_opening_
+    # reset_is_free section has the same structural blind spot: it SYNTHESISES a FrameDataRaw
+    # sequence and calls Card mutators directly, a path that cannot exhibit the empty-frame
+    # short-circuit that turned out to be the defect. This gate's pass condition is that the
+    # RECORDED charge equals the LIVE Card's `actions` / `actions_by_level`.
+    # The Card numbers live in the ground-truth capture's rows file (the rows THIS artifact reads
+    # were captured before `_read_gateway_card` existed). Joined on (game, seed, budget). If that
+    # file is absent the gate is stamped UNINTERPRETABLE rather than passed vacuously.
+    card_by_cell: dict[tuple, dict] = {}
+    try:
+        _cg = json.loads((REPO / CARD_GROUND_TRUTH_ROWS).read_text())
+        for _c in _cg.get("cells") or []:
+            card_by_cell[
+                (str(_c.get("game")), int(_c.get("seed") or 0), int(_c.get("budget") or 0))
+            ] = _c
+    except Exception:
+        card_by_cell = {}
+    card_rows = []
+    for c in usable_b:
+        src = card_by_cell.get(
+            (str(c.get("game")), int(c.get("seed") or 0), int(c.get("budget") or 0))
+        )
+        if not src:
+            continue
+        ca, abl = src.get("card_actions"), src.get("card_actions_by_level")
+        if ca is None:
+            continue
+        # The MODELLED charge this artifact published, in the Card's own shape: a CUMULATIVE
+        # per-level vector plus a total.
+        seg_m2 = [int(x) for x in (c.get("seg_charged_M2") or [])]
+        model_vec = list(accumulate(seg_m2)) if seg_m2 else None
+        model_total = int(c.get("offline_actions") or 0) + max(int(c.get("n_resets") or 0) - 1, 0)
+        card_vec = [int(b) for _lv, b in (abl or [])]
+        card_rows.append(
+            {
+                "cell": f"{c['game']}@{c.get('seed')}@b{c.get('budget')}",
+                "card_actions": int(ca),
+                "recorded_model_total": model_total,
+                "card_actions_by_level": card_vec,
+                "recorded_model_by_level": model_vec,
+                "totals_agree": (model_total is not None and int(model_total) == int(ca)),
+                "vectors_agree": (model_vec is not None and list(model_vec) == card_vec),
+            }
+        )
+    gates.append(
+        gate(
+            "G7_the_recorded_charge_agrees_with_the_LIVE_CARD_not_with_a_second_model",
+            bool(card_rows) and all(r["vectors_agree"] and r["totals_agree"] for r in card_rows),
+            {
+                "n_cells_with_a_card_read": len(card_rows),
+                "n_cells_totals_agree": sum(1 for r in card_rows if r["totals_agree"]),
+                "n_cells_vectors_agree": sum(1 for r in card_rows if r["vectors_agree"]),
+                "n_cells_DISAGREE": sum(
+                    1 for r in card_rows if not (r["vectors_agree"] and r["totals_agree"])
+                ),
+                "disagreeing_cells": [
+                    r for r in card_rows if not (r["vectors_agree"] and r["totals_agree"])
+                ][:20],
+                "why_this_gate_exists": (
+                    "two reconstructions of the same assumption agreeing is not independence. The "
+                    "Card is the object the leaderboard scorer consumes, so it is the only "
+                    "authority a fidelity gate can appeal to."
+                ),
+                "if_this_gate_FAILS_the_M2_numbers_in_this_artifact_are_the_model_not_the_charge": True,
+                "measured_elsewhere": "results/arc_gateway_card_ground_truth_20260727.json",
+                "card_rows_source": CARD_GROUND_TRUTH_ROWS,
+                "note_on_the_extra_play_row": (
+                    "the arcade's construction reset creates play 0 (zero actions) and the agent's "
+                    "opening RESET creates play 1, so the Card row read is the LAST play. The scorer "
+                    "takes a max over plays, so a zero-action play 0 is harmless."
+                ),
+            },
+            # UNINTERPRETABLE when the rows predate the Card instrumentation: an empty pass region
+            # must never be counted as a pass. The rows this artifact reads were captured BEFORE
+            # `_read_gateway_card` existed, so this is the expected state until they are re-captured.
+            interpretable=bool(card_rows),
+        )
+    )
+    # G7 is EXPECTED TO FAIL on this artifact, and that failure IS the artifact's headline
+    # correction (2026-07-27). The M2 numbers here are a MODEL of the charge; read against the live
+    # Card they are wrong on 17 of 44 cells. Marking the failure "expected" is NOT excusing it -- the
+    # gate stays FAILED, the count stays honest, and the reason is named so a reader does not conclude
+    # the artifact is malformed or fabricated. An UNEXPECTED failure of any other gate is still a real
+    # problem.
+    EXPECTED_FAILURES = {
+        "G7_the_recorded_charge_agrees_with_the_LIVE_CARD_not_with_a_second_model": (
+            "EXPECTED. This artifact's M2 charge is a MODEL; the Card disagrees with it on the cells "
+            "carrying post-death (empty-frame) actions. The failure is the correction this artifact "
+            "now documents, measured in results/arc_gateway_card_ground_truth_20260727.json. It is "
+            "NOT a defect in this analyser's arithmetic and NOT a fabrication signal."
+        )
+    }
+    _unexpected = [
+        g["name"] for g in gates if not g["passed"] and g["name"] not in EXPECTED_FAILURES
+    ]
     art["acceptance_gates"] = {
         "gates": gates,
         "n_gates": len(gates),
         "n_passed": sum(1 for g in gates if g["passed"]),
         "all_passed": all(g["passed"] for g in gates),
+        "EXPECTED_FAILURES": EXPECTED_FAILURES,
+        "n_failed_and_EXPECTED": sum(
+            1 for g in gates if not g["passed"] and g["name"] in EXPECTED_FAILURES
+        ),
+        "n_failed_and_UNEXPECTED": len(_unexpected),
+        "unexpected_failures": _unexpected,
+        "all_passed_EXCLUDING_expected_failures": not _unexpected,
         "n_uninterpretable": sum(1 for g in gates if "UNINTERPRETABLE" in g),
         "principle": (
             "every gate carries a COMPUTED witness that its pass region is non-empty at the gate's "
@@ -1533,9 +1799,15 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
     }
 
     # ---------------------------------------------------------------- standard fields
+    _g7_disagree = 0
+    for _g in gates:
+        if _g["name"].startswith("G7_") and isinstance(_g.get("witness"), dict):
+            _g7_disagree = int(_g["witness"].get("n_cells_DISAGREE") or 0)
     art["honest_verdict"] = (
         "complete_gateway_accurate_rescore_opening_reset_is_free_published_optimism_overstated_"
         f"median_{str(m1_med).replace('.', 'p')}_to_{str(m2_med).replace('.', 'p')}_correction_owed_named"
+        f"_AND_this_M2_is_itself_a_MODEL_that_disagrees_with_the_live_card_on_{_g7_disagree}_cells"
+        "_see_arc_gateway_card_ground_truth_20260727"
     )
     art["honest_verdict_principle"] = (
         "terminal-prefixed so the conductor's reconciler classifies it as terminal; the underscore "
@@ -1608,8 +1880,9 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         "MAX_ACTIONS and every SUBMITTED_* flag untouched",
         "no historical artifact's recorded numbers rewritten; the M1 figures are published beside "
         "the M2 figures, not over them",
-        "scripts/arc_leaderboard_eval.py NOT edited -- the fix is specified in CORRECTION_OWED "
-        "claim_3 with the reason it was not applied here",
+        "no pre-existing field of scripts/arc_leaderboard_eval.py's row shape changed value; the "
+        "2026-07-27 Card-read instrumentation is PURE ADDITION and the fix history is recorded in "
+        "CORRECTION_OWED.claim_3_a_CODE_correction_not_just_a_number",
     ]
 
     # ---------------------------------------------------------------- provenance
@@ -1672,6 +1945,43 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
         art["provenance"] = {"error": f"{type(exc).__name__}:{exc}"}
 
     art["duration_s"] = round(time.time() - t0, 3)
+
+    # TOP-LEVEL MEASUREMENT CLOCK (2026-07-27). The per-part clocks were correct and correctly based
+    # on each row FILE's own `elapsed_s`, but there was no top-level field -- so
+    # `scripts/summarize_artifact.py` reported only `duration_s: 10.086` for a 2.6-hour measurement.
+    # The parts remain the authority; this is their sum, with the decomposition named.
+    # `measurement_wall_s` on each PART is a BLOCK, not a float ({total_s, total_h, n_rows,
+    # per_file:[...]}). Assuming a bare float here raised TypeError -- the same field-shape assumption
+    # this session fixed twice elsewhere. Read `total_s` out of the block, and tolerate a bare number
+    # in case a future part emits one.
+    def _clock_total_s(block) -> float:
+        if isinstance(block, dict):
+            v = block.get("total_s")
+            return float(v) if isinstance(v, (int, float)) else 0.0
+        return float(block) if isinstance(block, (int, float)) else 0.0
+
+    _part_blocks = {
+        "part_a": (art.get("part_a_bounds_over_recorded_rows_NOT_POINT_ESTIMATES") or {}).get(
+            "measurement_wall_s"
+        ),
+        "part_b": (art.get("part_b_exact_reset_ATTRIBUTION_44_cells") or {}).get(
+            "measurement_wall_s"
+        ),
+    }
+    _part_clocks = {k: _clock_total_s(v) for k, v in _part_blocks.items()}
+    art["measurement_wall_s"] = round(sum(_part_clocks.values()), 1)
+    art["measurement_wall_s_basis"] = {
+        "per_part": _part_clocks,
+        "basis": (
+            "sum of each PART's `measurement_wall_s`, each of which is summed from the upstream row "
+            "FILES' own `elapsed_s` / `measurement_wall_s` -- NOT from summed per-cell `wall_s`, "
+            "which undercounts ~25% because per-cell timing excludes policy construction."
+        ),
+        "why_a_top_level_field": (
+            "summarize_artifact.py reads the top level; without this field an aggregation artifact "
+            "reports its analyser's seconds as the only visible cost of a multi-hour measurement."
+        ),
+    }
     art["duration_s_principle"] = (
         "THIS ANALYSER'S runtime only. It is NOT the measurement clock: each part publishes its own "
         "`measurement_wall_s`, summed from the upstream row FILES' own elapsed clocks. Conflating "
