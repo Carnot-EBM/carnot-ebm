@@ -178,20 +178,56 @@ def _baseline_actions(env, game: str) -> dict:
     return {}
 
 
+def _nav_uninstrumented(reason: str) -> dict:
+    """The nav-diagnostics channel is UNAVAILABLE -- say so, don't imply a measured zero.
+
+    The two legacy keys keep their zero values so no existing consumer breaks, but
+    `instrumented: False` + `uninstrumented_reason` let a reader distinguish "measured,
+    the agent never reset-replayed" from "this channel was never wired up". Emitting a
+    bare 0.0 for an unmeasured quantity is how a DEAD CHANNEL reads as a clean null --
+    the same defect this project already shipped once as a
+    `getattr(env, "baseline_actions")` against a field that lives on `env.info`.
+    """
+
+    return {
+        "instrumented": False,
+        "uninstrumented_reason": str(reason),
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0,
+    }
+
+
 def _navigation_diagnostics(policy) -> dict:
-    """Expose the live explorer replay tax without making it a score metric."""
+    """Expose the live explorer replay tax without making it a score metric.
+
+    2026-07-26 (per-level reset attribution, Change 3): this function used to narrow the
+    explorer's 24-key diagnostics dict (arc_competition_agent.py:1634-1662) down to TWO
+    keys, discarding precisely the fields that CLASSIFY a reset -- `navigation_attempts`,
+    `reset_replay_fallbacks`, and the exact / partial-forward-walk / similarity hit split.
+    That projection loss is why the reset-composition analysis had to re-run the agent LIVE
+    instead of reading persisted rows: the numbers were computed at :394 and then thrown
+    away at :406-407. The full dict is already flat ints/floats/bools, so it is now passed
+    through whole, with the two legacy keys retained (and coerced) for compatibility.
+    """
 
     explorer = getattr(policy, "explorer", None)
-    if explorer is None or not hasattr(explorer, "navigation_diagnostics"):
-        return {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0}
+    if explorer is None:
+        return _nav_uninstrumented("policy_has_no_explorer_attribute")
+    if not hasattr(explorer, "navigation_diagnostics"):
+        return _nav_uninstrumented("explorer_lacks_navigation_diagnostics")
     try:
         diagnostics = explorer.navigation_diagnostics()
-    except Exception:
-        return {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0}
-    return {
-        "reset_replay_steps": int(diagnostics.get("reset_replay_steps") or 0),
-        "forward_walk_hit_rate": float(diagnostics.get("forward_walk_hit_rate") or 0.0),
-    }
+    except Exception as exc:  # a diagnostics bug must not take the measurement down
+        return _nav_uninstrumented(f"navigation_diagnostics_raised:{type(exc).__name__}")
+    if not isinstance(diagnostics, dict):
+        return _nav_uninstrumented(f"navigation_diagnostics_returned:{type(diagnostics).__name__}")
+    out = {str(k): _json_safe(v) for k, v in diagnostics.items()}
+    # The two legacy keys are read positionally by run_game's return dict; keep their types.
+    out["reset_replay_steps"] = int(out.get("reset_replay_steps") or 0)
+    out["forward_walk_hit_rate"] = float(out.get("forward_walk_hit_rate") or 0.0)
+    out["instrumented"] = True
+    out["uninstrumented_reason"] = None
+    return out
 
 
 def _json_safe(value):
@@ -283,6 +319,182 @@ def _policy_diagnostics(policy) -> dict:
     return _json_safe(diagnostics)
 
 
+# =========================================================================================
+# PER-LEVEL (per-SEGMENT) RESET ATTRIBUTION -- three units, two independent accountings.
+#
+# WHY SEGMENTS AND NOT TOTALS. The authoritative scorer charges each COMPLETED level
+# `actions_at_level - prev_actions` (arc_agi/scorecard.py:479) and scores it
+# `min((baseline / charged)**2 * 100, 115)` (:166-173). It therefore DIFFERENCES a vector of
+# cumulative checkpoints -- so the quantity that sets a level's score is the SPAN between two
+# consecutive level-ups, and a whole-run `n_resets` cannot be apportioned across those spans
+# after the fact. Attribution has to be recorded per span, while the run is happening.
+#
+# WHY THREE UNITS, NAMED. This project has already flipped a conclusion by conflating them:
+#   offline_actions  -- this harness's `actions`. EXCLUDES resets (:355-361 increments it only
+#                       in the non-RESET branch). What `level_up_actions` has always been in.
+#   frames           -- loop iterations, resets INCLUDED. The unit the early-stop grace window
+#                       counts in, so a grace of G frames buys fewer than G actions.
+#   gateway_charged  -- offline_actions + resets. The ONLY unit the competition score is a
+#                       function of, because `inc_reset_count` (scorecard.py:701-704, reached
+#                       from update_scorecard:839-843) does `resets += 1` AND `actions += 1`.
+# A single number in an unnamed unit is the defect, so every segment carries all three.
+# =========================================================================================
+
+_SEGMENT_UNIT_KEYS = ("offline_actions", "resets", "frames")
+
+
+def _new_segment() -> dict:
+    """A fresh open span. Zeros here are MEASURED zeros -- the span has just begun."""
+
+    return {"offline_actions": 0, "resets": 0, "frames": 0}
+
+
+def _close_segment(seg: dict, level_completed) -> dict:
+    """Seal an open span and derive its gateway-charged length."""
+
+    out = {k: int(seg.get(k) or 0) for k in _SEGMENT_UNIT_KEYS}
+    out["gateway_charged"] = out["offline_actions"] + out["resets"]
+    out["level_completed"] = None if level_completed is None else int(level_completed)
+    return out
+
+
+def segment_attribution_from_frame_sequence(frame_sequence) -> dict:
+    """INDEPENDENT (channel 2) derivation of the same spans, from the recorded frames alone.
+
+    This deliberately re-derives what run_game's in-loop accumulators already produce, from a
+    different source (the persisted `frame_sequence` rows rather than the live counters), so the
+    two can be cross-checked against each other. Two accountings that must agree is the only
+    way an off-by-one in a counting loop announces itself; one accounting just looks plausible.
+
+    Level JUMPS: a jump of k levels in one frame closes k spans, the FIRST carrying the whole
+    cost and the rest zero -- because that is what the gateway's `actions_by_level` list does
+    (`set_levels_completed` appends ONE entry per observed change, so a jump appends one entry
+    and the scorer charges the remaining levels off the tail).
+    """
+
+    segments: list[dict] = []
+    cur = _new_segment()
+    prev_level = None
+    for fr in frame_sequence or []:
+        kind = ((fr or {}).get("move") or {}).get("kind")
+        cur["frames"] += 1
+        if kind == "RESET":
+            cur["resets"] += 1
+        elif kind is not None:
+            cur["offline_actions"] += 1
+        lvl = (fr or {}).get("levels_completed")
+        if lvl is None:
+            continue
+        lvl = int(lvl)
+        if prev_level is None:  # first observed level only SEEDS -- matches run_game's `start`
+            prev_level = lvl
+            continue
+        if lvl > prev_level:
+            for j in range(lvl - prev_level):
+                closed = cur if j == 0 else _new_segment()
+                segments.append(_close_segment(closed, prev_level + j + 1))
+            cur = _new_segment()
+        prev_level = lvl
+    return {
+        "segments": segments,
+        "tail": _close_segment(cur, None),
+        "n_segments": len(segments),
+        "resets_in_completed_segments": sum(int(s["resets"]) for s in segments),
+        "resets_in_tail": int(cur["resets"]),
+    }
+
+
+def _build_level_reset_attribution(
+    *,
+    segments: list[dict],
+    open_tail: dict,
+    frame_sequence,
+    total_offline_actions: int,
+    total_resets: int,
+) -> dict:
+    """Assemble the attribution + PROVE it against the whole-run counters and channel 2.
+
+    Every field here POPULATES unconditionally, including on a crash/early-break path: the
+    accumulators are plain ints that exist from the first line of run_game, so a run that dies
+    on frame 1 still emits real (small) spans rather than a null that a reader will silently
+    read as zero. `discrepancies` is an empty LIST when clean, never None.
+    """
+
+    segs = [_close_segment(s, s.get("level_completed")) for s in segments]
+    tail = _close_segment(open_tail, None)
+    charged_total = int(total_offline_actions) + int(total_resets)
+
+    def _tot(unit: str) -> int:
+        return sum(int(s[unit]) for s in segs) + int(tail[unit])
+
+    discrepancies: list[dict] = []
+    for unit, expected in (
+        ("offline_actions", int(total_offline_actions)),
+        ("resets", int(total_resets)),
+        ("gateway_charged", charged_total),
+    ):
+        got = _tot(unit)
+        if got != expected:
+            discrepancies.append(
+                {"check": f"segments_plus_tail_eq_run_total[{unit}]", "got": got, "want": expected}
+            )
+
+    # Channel 2: the frame_sequence-derived spans. NOTE a KNOWN, benign divergence class --
+    # `frame_sequence` only receives a row when `latest is not None` (run_game skips the append
+    # and breaks on a None frame), while the in-loop accumulators count that terminal move. So a
+    # run that ends on a None frame legitimately shows channel 2 short by exactly one move. That
+    # is recorded as a discrepancy rather than smoothed over, because "which channel is short,
+    # and by how much" is information; silently reconciling it is how a real off-by-one hides.
+    derived = segment_attribution_from_frame_sequence(frame_sequence)
+    if derived["n_segments"] != len(segs):
+        discrepancies.append(
+            {
+                "check": "channel2_n_segments",
+                "got": derived["n_segments"],
+                "want": len(segs),
+            }
+        )
+    else:
+        for i, (a, b) in enumerate(zip(segs, derived["segments"])):
+            for unit in (*_SEGMENT_UNIT_KEYS, "gateway_charged"):
+                if int(a[unit]) != int(b[unit]):
+                    discrepancies.append(
+                        {
+                            "check": f"channel2_segment[{i}][{unit}]",
+                            "got": int(b[unit]),
+                            "want": int(a[unit]),
+                        }
+                    )
+
+    return {
+        "unit_definitions": {
+            "offline_actions": "this harness's `actions`; EXCLUDES resets",
+            "frames": "loop iterations; INCLUDES resets",
+            "gateway_charged": "offline_actions + resets; the unit the scorer bills",
+        },
+        "segments": segs,
+        "tail": tail,
+        "n_segments": len(segs),
+        # Flat per-unit projections -- the shape a downstream analyser wants without walking dicts.
+        "segment_offline_actions": [int(s["offline_actions"]) for s in segs],
+        "segment_resets": [int(s["resets"]) for s in segs],
+        "segment_frames": [int(s["frames"]) for s in segs],
+        "segment_gateway_charged": [int(s["gateway_charged"]) for s in segs],
+        "tail_offline_actions": int(tail["offline_actions"]),
+        "tail_resets": int(tail["resets"]),
+        "tail_frames": int(tail["frames"]),
+        "tail_gateway_charged": int(tail["gateway_charged"]),
+        "resets_in_completed_segments": sum(int(s["resets"]) for s in segs),
+        "resets_in_tail": int(tail["resets"]),
+        "run_total_offline_actions": int(total_offline_actions),
+        "run_total_resets": int(total_resets),
+        "run_total_gateway_charged": charged_total,
+        "reconciles": not discrepancies,
+        "discrepancies": discrepancies,
+        "channel2_frame_sequence_derived": derived,
+    }
+
+
 def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -318,6 +530,13 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     resets = 0
     resets_before_levelups: list[int] = []
     level_up_charged: list[int] = []
+    # PER-SEGMENT accumulators (2026-07-26). `resets_before_levelups` / `level_up_charged` above
+    # are CUMULATIVE checkpoints; the scorer's per-level denominator is the DIFFERENCE between
+    # consecutive checkpoints, and it needs each span in all three units (see the block comment
+    # above `_new_segment`). `_seg` is the currently-open span; `level_segments` holds the sealed
+    # ones. Pure accumulation: nothing here is ever read by a branch predicate.
+    _seg = _new_segment()
+    level_segments: list[dict] = []
     frame_sequence = []
     for step_index in range(budget):
         if policy.is_done(frames, latest):
@@ -326,11 +545,14 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         if kind == "RESET":
             latest = env.reset()
             resets += 1
+            _seg["resets"] += 1
         elif kind is None:
             break
         else:
             latest = env.step(getattr(GameAction, f"ACTION{kind}"), data=data)
             actions += 1
+            _seg["offline_actions"] += 1
+        _seg["frames"] += 1
         if start is None:
             start = _level_of(latest)
             best = start
@@ -342,6 +564,15 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                 level_up_actions.append(actions)
                 resets_before_levelups.append(resets)
                 level_up_charged.append(actions + resets)
+                # SEAL the span. A multi-level JUMP closes the first level with the whole
+                # span's cost and the rest at zero, mirroring the gateway's actions_by_level
+                # (one appended entry per observed change, remaining levels charged off the
+                # tail). `_lv == best` is true only on the first iteration -- `best` is not
+                # reassigned until after this loop -- so the open span is consumed once.
+                level_segments.append(
+                    _close_segment(_seg if _lv == best else _new_segment(), _lv + 1)
+                )
+            _seg = _new_segment()
             best = lvl
         frames.append(latest)
         if latest is not None:
@@ -417,12 +648,25 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     # resets the gateway bills) instead of the reset-free `level_up_actions`.
     # `efficiency` above is retained UNCHANGED so no historical comparison
     # silently shifts unit; this is an ADDITIONAL field.
-    eff_gateway = 0.0
+    #
+    # DEAD-CHANNEL FIX (2026-07-26). `eff_gateway` used to default to 0.0 both at init and on
+    # the exception path, while `efficiency_optimism_vs_gateway` is computed as
+    # `eff - eff_gateway`. So a scorer import failure -- or merely an empty baseline dict
+    # (`base == {}` -> `baseline_list == []`, which is the NORMAL case for a game whose env
+    # exposes no human baselines) -- silently reported the FULL value of `eff` as optimism,
+    # i.e. "offline accounting is 100% optimistic": the most alarming finding the field can
+    # express, emitted precisely when nothing was measured. It now defaults to None with an
+    # explicit error/reason string, so "measured, no optimism" and "never measured" are
+    # distinguishable by a consumer.
+    eff_gateway = None
+    eff_gateway_error = None
     per_level_gateway = []
     try:
         from arc_agi.scorecard import EnvironmentScoreCalculator
 
         baseline_list = [base[i] for i in sorted(base)] if base else []
+        if not baseline_list:
+            eff_gateway_error = "no_baseline_actions_exposed_by_env"
         if baseline_list:
             calc_g = EnvironmentScoreCalculator()
             prev_g = 0
@@ -452,8 +696,16 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                     }
                 )
             eff_gateway = round(float(calc_g.to_score(include_levels=False).score), 4)
-    except Exception:
-        eff_gateway = 0.0
+    except Exception as exc:
+        eff_gateway = None
+        eff_gateway_error = f"{type(exc).__name__}: {str(exc)[:120]}"
+    level_reset_attribution = _build_level_reset_attribution(
+        segments=level_segments,
+        open_tail=_seg,
+        frame_sequence=frame_sequence,
+        total_offline_actions=actions,
+        total_resets=resets,
+    )
     return {
         "game": game,
         "levels": levels,
@@ -469,8 +721,16 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         "resets_before_levelups": resets_before_levelups,
         "level_up_charged": level_up_charged,
         "efficiency_gateway_charged": eff_gateway,
+        "efficiency_gateway_charged_error": eff_gateway_error,
         "per_level_gateway": per_level_gateway,
-        "efficiency_optimism_vs_gateway": round(float(eff) - float(eff_gateway), 6),
+        "efficiency_optimism_vs_gateway": (
+            None if eff_gateway is None else round(float(eff) - float(eff_gateway), 6)
+        ),
+        # PER-LEVEL RESET ATTRIBUTION: every inter-level-up span in all three units, plus the
+        # post-solve tail and a reconciliation against both the run totals and an independent
+        # frame_sequence-derived re-derivation. This is the field that makes a per-level
+        # efficiency claim auditable from a persisted row without re-running the agent.
+        "level_reset_attribution": level_reset_attribution,
         "deepest_level_reached": reached,
         "navigation_diagnostics": nav,
         "frame_sequence": frame_sequence,
