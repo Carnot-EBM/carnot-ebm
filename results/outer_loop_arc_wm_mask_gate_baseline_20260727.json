@@ -1,0 +1,2529 @@
+{
+ "experiment": "outer_loop_arc_wm_mask_gate_baseline_20260727",
+ "title": "PRE-CHANGE BASELINE for the REQ-ARC-WMTE-6010 (HUD mask) / -6011 (change gate) four-arm A/B: trust distribution, skip census, mask-invalidation surface, power ceiling",
+ "run_date": "2026-07-27T18:48:35Z",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "verifier_is_oracle": false,
+ "solve_provenance": "development_proxy",
+ "submitted_to_leaderboard": false,
+ "random_seed": 0,
+ "model_specs": {
+  "note": "no model invoked; this reads row files written by earlier live runs plus one offline verifier-scoring artifact"
+ },
+ "duration_s": 6.9866,
+ "duration_s_provenance": "analyser wall time; NOT the measurement clock",
+ "measurement_wall_s": 53486.693,
+ "measurement_wall_s_provenance": "sum of each cited row file's OWN elapsed_s over all 224 cells in results/first_win_llm_on_20260727/cells/",
+ "n_cells_read": 224,
+ "arm_summary": {
+  "llm_off": {
+   "n_cells": 100,
+   "measurement_wall_s_rows": 9203.305,
+   "per_cell_elapsed_s": {
+    "median": 104.4,
+    "max": 160.6,
+    "min": 11.3
+   },
+   "first_win_cells": [
+    "lp85~color02",
+    "sp80~color02",
+    "sp80~color03",
+    "vc33~color01",
+    "vc33~color02",
+    "vc33~color03",
+    "vc33~color04"
+   ],
+   "n_first_win": 7,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 104
+  },
+  "llm_on_16k": {
+   "n_cells": 25,
+   "measurement_wall_s_rows": 5209.226,
+   "per_cell_elapsed_s": {
+    "median": 192.9,
+    "max": 481.3,
+    "min": 63.8
+   },
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_first_win": 1,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 26
+  },
+  "llm_on_16k_probe": {
+   "n_cells": 12,
+   "measurement_wall_s_rows": 2943.337,
+   "per_cell_elapsed_s": {
+    "median": 233.3,
+    "max": 485.2,
+    "min": 81.8
+   },
+   "first_win_cells": [
+    "lp85~color02",
+    "sp80~color02",
+    "sp80~color03",
+    "vc33~color01",
+    "vc33~color02",
+    "vc33~color03",
+    "vc33~color04"
+   ],
+   "n_first_win": 7,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 16
+  },
+  "llm_on_fix": {
+   "n_cells": 25,
+   "measurement_wall_s_rows": 11575.605,
+   "per_cell_elapsed_s": {
+    "median": 437.6,
+    "max": 793.3,
+    "min": 158.3
+   },
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_first_win": 1,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 26
+  },
+  "llm_on_fix_cellrecall": {
+   "n_cells": 25,
+   "measurement_wall_s_rows": 9892.037,
+   "per_cell_elapsed_s": {
+    "median": 393.0,
+    "max": 761.4,
+    "min": 152.3
+   },
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_first_win": 1,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 26
+  },
+  "llm_on_fix_diag": {
+   "n_cells": 25,
+   "measurement_wall_s_rows": 10290.536,
+   "per_cell_elapsed_s": {
+    "median": 395.6,
+    "max": 776.2,
+    "min": 149.9
+   },
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_first_win": 1,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 26
+  },
+  "llm_on_fix_probe": {
+   "n_cells": 12,
+   "measurement_wall_s_rows": 4372.647,
+   "per_cell_elapsed_s": {
+    "median": 234.6,
+    "max": 884.4,
+    "min": 81.4
+   },
+   "first_win_cells": [
+    "lp85~color02",
+    "sp80~color02",
+    "sp80~color03",
+    "vc33~color01",
+    "vc33~color02",
+    "vc33~color03",
+    "vc33~color04"
+   ],
+   "n_first_win": 7,
+   "cells_with_induction_attempts_planned_gt_0": [],
+   "n_cells_with_planned_gt_0": 0,
+   "induction_attempts_n_total": 16
+  }
+ },
+ "skip_reason_census_from_induction_attempts_skipped": {
+  "proposer_failed_or_missing_root": 103,
+  "proposer_failed": 20,
+  "hidden_state_trust_below_threshold": 43,
+  "world_model_accuracy_below_threshold": 63,
+  "degenerate_goal_predicate": 1,
+  "no_reachable_plan_after_refinement": 10
+ },
+ "skip_reason_census_from_gate_diagnostics": {
+  "hidden_state_trust_below_threshold": 22,
+  "world_model_accuracy_below_threshold": 26,
+  "no_reachable_plan_after_refinement": 3,
+  "proposer_failed": 1
+ },
+ "n_gate_diagnostic_attempts": 52,
+ "baseline_trust_distribution": {
+  "llm_on_fix_diag": {
+   "trust_metric_declared": [
+    "exact"
+   ],
+   "n_attempts": 26,
+   "plain_branch": {
+    "n": 15,
+    "verify_accuracy": {
+     "n": 14,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.04,
+     "max": 0.96,
+     "mean": 0.15079285714285715,
+     "n_exactly_zero": 8,
+     "n_at_or_above_0p5": 2,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.04,
+      0.04,
+      0.04,
+      0.1111,
+      0.92,
+      0.96
+     ]
+    },
+    "verify_cell_recall": {
+     "n": 14,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.0036,
+     "max": 0.2474,
+     "mean": 0.04787857142857143,
+     "n_exactly_zero": 10,
+     "n_at_or_above_0p5": 0,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0036,
+      0.1985,
+      0.2208,
+      0.2474
+     ]
+    },
+    "per_game": {
+     "bp35": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "ft09": {
+      "verify_accuracy": 0.96,
+      "verify_cell_recall": 0.0,
+      "skipped": "no_reachable_plan_after_refinement"
+     },
+     "lf52": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "lp85": {
+      "verify_accuracy": 0.92,
+      "verify_cell_recall": 0.0,
+      "skipped": "no_reachable_plan_after_refinement"
+     },
+     "ls20": {
+      "verify_accuracy": 0.04,
+      "verify_cell_recall": 0.2208,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "r11l": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "s5i5": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0036,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "sb26": {
+      "verify_accuracy": 0.04,
+      "verify_cell_recall": 0.1985,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "sp80": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "su15": {
+      "verify_accuracy": 0.1111,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "tn36": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "tr87": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "tu93": {
+      "verify_accuracy": 0.04,
+      "verify_cell_recall": 0.2474,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "vc33": {
+      "verify_accuracy": null,
+      "verify_cell_recall": null,
+      "skipped": "proposer_failed"
+     }
+    }
+   },
+   "hidden_state_branch": {
+    "n": 11,
+    "heldout_change_consistency": {
+     "n": 11,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.0,
+     "max": 0.17806,
+     "mean": 0.026094000000000003,
+     "n_exactly_zero": 9,
+     "n_at_or_above_0p5": 0,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.108974,
+      0.17806
+     ]
+    },
+    "heldout_accuracy": {
+     "n": 11,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.125,
+     "p75": 0.375,
+     "max": 0.875,
+     "mean": 0.22138045454545455,
+     "n_exactly_zero": 4,
+     "n_at_or_above_0p5": 2,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.037037,
+      0.125,
+      0.148148,
+      0.25,
+      0.375,
+      0.625,
+      0.875
+     ]
+    },
+    "trust_energy": {
+     "n": 11,
+     "empty": false,
+     "min": -2.055849,
+     "p25": 152.150034,
+     "median": 317.905261,
+     "p75": 497.152176,
+     "max": 497.799497,
+     "mean": 297.7523004545455,
+     "n_exactly_zero": 0,
+     "n_at_or_above_0p5": 10,
+     "all_values_sorted": [
+      -2.055849,
+      71.747228,
+      152.150034,
+      185.330868,
+      186.562953,
+      317.905261,
+      435.313935,
+      435.758194,
+      497.152176,
+      497.611008,
+      497.799497
+     ]
+    },
+    "per_game": {
+     "ar25": {
+      "trust_energy": 497.799497,
+      "heldout_accuracy": 0.25,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "cd82": {
+      "trust_energy": 185.330868,
+      "heldout_accuracy": 0.125,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "cn04": {
+      "trust_energy": 186.562953,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.17806,
+      "correct_changed_cells": 672,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "dc22": {
+      "trust_energy": -2.055849,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "g50t": {
+      "trust_energy": 71.747228,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "ka59": {
+      "trust_energy": 435.313935,
+      "heldout_accuracy": 0.375,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "m0r0": {
+      "trust_energy": 152.150034,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "re86": {
+      "trust_energy": 497.152176,
+      "heldout_accuracy": 0.037037,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "sc25": {
+      "trust_energy": 435.758194,
+      "heldout_accuracy": 0.875,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": true,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "sk48": {
+      "trust_energy": 317.905261,
+      "heldout_accuracy": 0.625,
+      "heldout_change_consistency": 0.108974,
+      "correct_changed_cells": 17,
+      "binary_gate_pass": true,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "wa30": {
+      "trust_energy": 497.611008,
+      "heldout_accuracy": 0.148148,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     }
+    }
+   }
+  },
+  "llm_on_fix_cellrecall": {
+   "trust_metric_declared": [
+    "cell_recall"
+   ],
+   "n_attempts": 26,
+   "plain_branch": {
+    "n": 15,
+    "verify_accuracy": {
+     "n": 14,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.0,
+     "max": 0.92,
+     "mean": 0.0703357142857143,
+     "n_exactly_zero": 11,
+     "n_at_or_above_0p5": 1,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0247,
+      0.04,
+      0.92
+     ]
+    },
+    "verify_cell_recall": {
+     "n": 14,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.0,
+     "max": 0.0476,
+     "mean": 0.004692857142857144,
+     "n_exactly_zero": 12,
+     "n_at_or_above_0p5": 0,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0181,
+      0.0476
+     ]
+    },
+    "per_game": {
+     "bp35": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0181,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "ft09": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "lf52": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "lp85": {
+      "verify_accuracy": 0.92,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "ls20": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "r11l": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "s5i5": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "sb26": {
+      "verify_accuracy": 0.04,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "sp80": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0476,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "su15": {
+      "verify_accuracy": 0.0247,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "tn36": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "tr87": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "tu93": {
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0,
+      "skipped": "world_model_accuracy_below_threshold"
+     },
+     "vc33": {
+      "verify_accuracy": null,
+      "verify_cell_recall": null,
+      "skipped": "no_reachable_plan_after_refinement"
+     }
+    }
+   },
+   "hidden_state_branch": {
+    "n": 11,
+    "heldout_change_consistency": {
+     "n": 11,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.027778,
+     "max": 0.076923,
+     "mean": 0.017139727272727275,
+     "n_exactly_zero": 7,
+     "n_at_or_above_0p5": 0,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.027397,
+      0.027778,
+      0.056439,
+      0.076923
+     ]
+    },
+    "heldout_accuracy": {
+     "n": 11,
+     "empty": false,
+     "min": 0.0,
+     "p25": 0.0,
+     "median": 0.0,
+     "p75": 0.027778,
+     "max": 0.064312,
+     "mean": 0.015090454545454546,
+     "n_exactly_zero": 7,
+     "n_at_or_above_0p5": 0,
+     "all_values_sorted": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.018349,
+      0.027778,
+      0.055556,
+      0.064312
+     ]
+    },
+    "trust_energy": {
+     "n": 11,
+     "empty": false,
+     "min": -1.99198,
+     "p25": 79.690155,
+     "median": 186.760702,
+     "p75": 497.152176,
+     "max": 497.756429,
+     "mean": 251.05108736363636,
+     "n_exactly_zero": 0,
+     "n_at_or_above_0p5": 10,
+     "all_values_sorted": [
+      -1.99198,
+      60.431754,
+      79.690155,
+      123.415862,
+      129.346718,
+      186.760702,
+      256.075202,
+      435.313935,
+      497.152176,
+      497.611008,
+      497.756429
+     ]
+    },
+    "per_game": {
+     "ar25": {
+      "trust_energy": 256.075202,
+      "heldout_accuracy": 0.018349,
+      "heldout_change_consistency": 0.027397,
+      "correct_changed_cells": 12,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "cd82": {
+      "trust_energy": 497.756429,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "cn04": {
+      "trust_energy": 129.346718,
+      "heldout_accuracy": 0.064312,
+      "heldout_change_consistency": 0.056439,
+      "correct_changed_cells": 213,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "dc22": {
+      "trust_energy": 60.431754,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "g50t": {
+      "trust_energy": 79.690155,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "ka59": {
+      "trust_energy": 435.313935,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "m0r0": {
+      "trust_energy": 186.760702,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "re86": {
+      "trust_energy": 497.152176,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "sc25": {
+      "trust_energy": -1.99198,
+      "heldout_accuracy": 0.027778,
+      "heldout_change_consistency": 0.027778,
+      "correct_changed_cells": 1,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "sk48": {
+      "trust_energy": 123.415862,
+      "heldout_accuracy": 0.055556,
+      "heldout_change_consistency": 0.076923,
+      "correct_changed_cells": 12,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     },
+     "wa30": {
+      "trust_energy": 497.611008,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false,
+      "skipped": "hidden_state_trust_below_threshold"
+     }
+    }
+   }
+  }
+ },
+ "threshold_sweep": {
+  "llm_on_fix_diag": {
+   "gated_quantity_distribution": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.04,
+    "max": 0.96,
+    "mean": 0.09592536000000002,
+    "n_exactly_zero": 17,
+    "n_at_or_above_0p5": 2,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.04,
+     0.04,
+     0.04,
+     0.108974,
+     0.1111,
+     0.17806,
+     0.92,
+     0.96
+    ]
+   },
+   "admits_at_threshold": {
+    "0.5": 2,
+    "0.25": 2,
+    "0.1": 5,
+    "0.05": 5,
+    "0.01": 8
+   },
+   "n_scored": 25
+  },
+  "llm_on_fix_cellrecall": {
+   "gated_quantity_distribution": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "max": 0.076923,
+    "mean": 0.01016948,
+    "n_exactly_zero": 19,
+    "n_at_or_above_0p5": 0,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0181,
+     0.027397,
+     0.027778,
+     0.0476,
+     0.056439,
+     0.076923
+    ]
+   },
+   "admits_at_threshold": {
+    "0.5": 0,
+    "0.25": 0,
+    "0.1": 0,
+    "0.05": 2,
+    "0.01": 6
+   },
+   "n_scored": 25
+  }
+ },
+ "offline_mask_gate_prior": {
+  "source": "results/experiment_6011_world_model_change_gate_four_arm.json (on-disk engines, 25 games x 3 seeds)",
+  "caveat": "these are the PREVIOUSLY-INDUCED on-disk engines, not fresh live inductions, so they are a PRIOR that bounds the design -- not a prediction of the live arms",
+  "hud_mask_available_per_game": {
+   "ar25": true,
+   "bp35": true,
+   "cd82": true,
+   "cn04": false,
+   "dc22": true,
+   "ft09": true,
+   "g50t": true,
+   "ka59": true,
+   "lf52": true,
+   "lp85": false,
+   "ls20": false,
+   "m0r0": true,
+   "r11l": false,
+   "re86": true,
+   "s5i5": true,
+   "sb26": false,
+   "sc25": false,
+   "sk48": false,
+   "sp80": true,
+   "su15": true,
+   "tn36": false,
+   "tr87": true,
+   "tu93": true,
+   "vc33": true,
+   "wa30": true
+  },
+  "logical_hud_mask_cells_per_game": {
+   "ar25": 63,
+   "bp35": 64,
+   "cd82": 64,
+   "cn04": 0,
+   "dc22": 64,
+   "ft09": 64,
+   "g50t": 64,
+   "ka59": 64,
+   "lf52": 64,
+   "lp85": 0,
+   "ls20": 0,
+   "m0r0": 128,
+   "r11l": 0,
+   "re86": 64,
+   "s5i5": 64,
+   "sb26": 0,
+   "sc25": 0,
+   "sk48": 0,
+   "sp80": 64,
+   "su15": 64,
+   "tn36": 0,
+   "tr87": 64,
+   "tu93": 64,
+   "vc33": 64,
+   "wa30": 64
+  },
+  "n_games_with_mask": 17,
+  "n_games_without_mask": 8,
+  "legacy_accuracy_delta_mask_on_minus_off": {
+   "n_rows": 75,
+   "n_rows_changed": 36,
+   "mean": 0.145222,
+   "max": 0.675,
+   "min": 0.0,
+   "n_rows_negative": 0,
+   "why_never_negative": "masking can only DELETE cells from the comparison, so an exact-match count can only rise; a negative delta would be a bug and its absence is the witness"
+  },
+  "per_row": [
+   {
+    "game": "ar25",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.2,
+    "legacy_accuracy_mask_on": 0.2,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ar25",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.333333,
+    "legacy_accuracy_mask_on": 0.333333,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ar25",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.216667,
+    "legacy_accuracy_mask_on": 0.216667,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "bp35",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.2,
+    "delta": 0.2,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "bp35",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.233333,
+    "delta": 0.233333,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "bp35",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.308333,
+    "delta": 0.308333,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "cd82",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.183333,
+    "legacy_accuracy_mask_on": 0.408333,
+    "delta": 0.225,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "cd82",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.133333,
+    "legacy_accuracy_mask_on": 0.325,
+    "delta": 0.191667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "cd82",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.091667,
+    "legacy_accuracy_mask_on": 0.341667,
+    "delta": 0.25,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "cn04",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "cn04",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.025,
+    "legacy_accuracy_mask_on": 0.025,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "cn04",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.041667,
+    "legacy_accuracy_mask_on": 0.041667,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "dc22",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.091667,
+    "legacy_accuracy_mask_on": 0.166667,
+    "delta": 0.075,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "dc22",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.066667,
+    "legacy_accuracy_mask_on": 0.191667,
+    "delta": 0.125,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "dc22",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.075,
+    "legacy_accuracy_mask_on": 0.183333,
+    "delta": 0.108333,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ft09",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 1.0,
+    "legacy_accuracy_mask_on": 1.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ft09",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 1.0,
+    "legacy_accuracy_mask_on": 1.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ft09",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 1.0,
+    "legacy_accuracy_mask_on": 1.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "g50t",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.041667,
+    "legacy_accuracy_mask_on": 0.066667,
+    "delta": 0.025,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "g50t",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.033333,
+    "legacy_accuracy_mask_on": 0.066667,
+    "delta": 0.033334,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "g50t",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.058333,
+    "legacy_accuracy_mask_on": 0.125,
+    "delta": 0.066667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ka59",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.225,
+    "legacy_accuracy_mask_on": 0.591667,
+    "delta": 0.366667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ka59",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.191667,
+    "legacy_accuracy_mask_on": 0.608333,
+    "delta": 0.416666,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ka59",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.175,
+    "legacy_accuracy_mask_on": 0.575,
+    "delta": 0.4,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "lf52",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.675,
+    "delta": 0.675,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "lf52",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.608333,
+    "delta": 0.608333,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "lf52",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.625,
+    "delta": 0.625,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "lp85",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.725,
+    "legacy_accuracy_mask_on": 0.725,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "lp85",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.766667,
+    "legacy_accuracy_mask_on": 0.766667,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "lp85",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.758333,
+    "legacy_accuracy_mask_on": 0.758333,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ls20",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.008333,
+    "legacy_accuracy_mask_on": 0.008333,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ls20",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "ls20",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.016667,
+    "legacy_accuracy_mask_on": 0.016667,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "m0r0",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.266667,
+    "legacy_accuracy_mask_on": 0.441667,
+    "delta": 0.175,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "m0r0",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.25,
+    "legacy_accuracy_mask_on": 0.5,
+    "delta": 0.25,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "m0r0",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.283333,
+    "legacy_accuracy_mask_on": 0.491667,
+    "delta": 0.208334,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "r11l",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "r11l",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "r11l",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "re86",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "re86",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "re86",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "s5i5",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.166667,
+    "delta": 0.166667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "s5i5",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.191667,
+    "delta": 0.191667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "s5i5",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.25,
+    "delta": 0.25,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sb26",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.2,
+    "legacy_accuracy_mask_on": 0.2,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sb26",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.108333,
+    "legacy_accuracy_mask_on": 0.108333,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sb26",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.083333,
+    "legacy_accuracy_mask_on": 0.083333,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sc25",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.325,
+    "legacy_accuracy_mask_on": 0.325,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sc25",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.4,
+    "legacy_accuracy_mask_on": 0.4,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sc25",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.375,
+    "legacy_accuracy_mask_on": 0.375,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sk48",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.325,
+    "legacy_accuracy_mask_on": 0.325,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sk48",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.4,
+    "legacy_accuracy_mask_on": 0.4,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sk48",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.375,
+    "legacy_accuracy_mask_on": 0.375,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sp80",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.441667,
+    "delta": 0.441667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sp80",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.541667,
+    "delta": 0.541667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "sp80",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.6,
+    "delta": 0.6,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "su15",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.433333,
+    "legacy_accuracy_mask_on": 0.983333,
+    "delta": 0.55,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "su15",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.366667,
+    "legacy_accuracy_mask_on": 0.983333,
+    "delta": 0.616666,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "su15",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.375,
+    "legacy_accuracy_mask_on": 0.975,
+    "delta": 0.6,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tn36",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tn36",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tn36",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": false,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tr87",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tr87",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tr87",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tu93",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.008333,
+    "legacy_accuracy_mask_on": 0.408333,
+    "delta": 0.4,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tu93",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.283333,
+    "delta": 0.283333,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "tu93",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.375,
+    "delta": 0.375,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "vc33",
+    "seed": 0,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "vc33",
+    "seed": 1,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "vc33",
+    "seed": 2,
+    "branch": "plain",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.0,
+    "legacy_accuracy_mask_on": 0.0,
+    "delta": 0.0,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "wa30",
+    "seed": 0,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.158333,
+    "legacy_accuracy_mask_on": 0.241667,
+    "delta": 0.083334,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "wa30",
+    "seed": 1,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.133333,
+    "legacy_accuracy_mask_on": 0.266667,
+    "delta": 0.133334,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   },
+   {
+    "game": "wa30",
+    "seed": 2,
+    "branch": "hidden_state",
+    "hud_mask_available": true,
+    "legacy_accuracy_mask_off": 0.175,
+    "legacy_accuracy_mask_on": 0.266667,
+    "delta": 0.091667,
+    "change_gate_passed_mask_off": false,
+    "change_gate_passed_mask_on": false
+   }
+  ],
+  "plain_branch_admission_sets": {
+   "control": [
+    "ft09~seed0",
+    "ft09~seed1",
+    "ft09~seed2",
+    "lp85~seed0",
+    "lp85~seed1",
+    "lp85~seed2"
+   ],
+   "mask_only": [
+    "ft09~seed0",
+    "ft09~seed1",
+    "ft09~seed2",
+    "lf52~seed0",
+    "lf52~seed1",
+    "lf52~seed2",
+    "lp85~seed0",
+    "lp85~seed1",
+    "lp85~seed2",
+    "sp80~seed1",
+    "sp80~seed2",
+    "su15~seed0",
+    "su15~seed1",
+    "su15~seed2"
+   ],
+   "gate_only": [],
+   "both": []
+  },
+  "plain_branch_admission_counts": {
+   "control": 6,
+   "mask_only": 14,
+   "gate_only": 0,
+   "both": 0
+  },
+  "confound_witness": "over the same 42 plain-branch rows the mask arm ADDS 8 admissions and the gate arm REMOVES 6; shipped together the counts nearly cancel, which is exactly why the two flags must be measured on independent axes rather than as one change"
+ },
+ "power": {
+  "test": "exact paired sign / McNemar on discordant (game,variant) pairs, per arm vs its matched control",
+  "min_reachable_two_sided_p_by_n_discordant": {
+   "1": 1.0,
+   "2": 0.5,
+   "3": 0.25,
+   "4": 0.125,
+   "5": 0.0625,
+   "6": 0.03125,
+   "7": 0.015625,
+   "8": 0.007812,
+   "9": 0.003906,
+   "10": 0.001953,
+   "11": 0.000977,
+   "12": 0.000488
+  },
+  "smallest_n_discordant_reaching_p_lt_0p05": 6,
+  "arm_support": {
+   "mask_only": {
+    "games_where_the_arm_CAN_differ_from_control": [
+     "ar25",
+     "bp35",
+     "cd82",
+     "dc22",
+     "ft09",
+     "g50t",
+     "ka59",
+     "lf52",
+     "m0r0",
+     "re86",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tr87",
+     "tu93",
+     "vc33",
+     "wa30"
+    ],
+    "n_games": 17,
+    "games_structurally_inert_no_mask_resolves": [
+     "cn04",
+     "lp85",
+     "ls20",
+     "r11l",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tn36"
+    ],
+    "why_inert": "_world_model_hud_mask() returns (None,'explorer_mask_unresolved') for these, so WorldModelVerifier sees hud_mask=None and the arm is byte-identical to control",
+    "offline_prior_games_whose_score_actually_moved": [
+     "bp35",
+     "cd82",
+     "dc22",
+     "g50t",
+     "ka59",
+     "lf52",
+     "m0r0",
+     "s5i5",
+     "sp80",
+     "su15",
+     "tu93",
+     "wa30"
+    ],
+    "offline_prior_plain_branch_gate_crossings": [
+     "lf52",
+     "sp80",
+     "su15"
+    ],
+    "CAVEAT_the_inert_set_is_an_UPPER_BOUND_not_a_fact": "exp6011 measured mask availability with `_compute_hud_mask_from_frame(frame)` at its DEFAULT `edge_bar_detector=False`, on the first frame only. The LIVE explorer (StepwiseExplorer._ingest) computes the WIDER repaired-detector candidate when SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED is True (it is), applies the shipped mask as the Stage-2 fallback, and may LATER widen `self.hud_mask` when Stage 2 admits the repair-added cells. Per exp5960's hud_mask_delta_table the repaired detector resolves a mask for cn04 (0->32 cells) and lp85 (0->64) where the shipped one resolves none. So cn04 and lp85 -- and only those two of the eight -- may become mask-AVAILABLE mid-episode on the live path. The live run must therefore read hud_mask_status / hud_mask_cells PER ATTEMPT from the artifact and must NOT assume this offline table; the eight below is where the offline classifier found nothing, not a proof of live inertness.",
+    "games_the_repaired_detector_could_still_rescue": [
+     "cn04",
+     "lp85"
+    ]
+   },
+   "gate_only": {
+    "games_where_the_arm_CAN_differ_from_control": [
+     "bp35",
+     "ft09",
+     "lf52",
+     "lp85",
+     "ls20",
+     "r11l",
+     "s5i5",
+     "sb26",
+     "sp80",
+     "su15",
+     "tn36",
+     "tr87",
+     "tu93",
+     "vc33"
+    ],
+    "n_games": 14,
+    "games_structurally_inert_hidden_state_branch": [
+     "ar25",
+     "cd82",
+     "cn04",
+     "dc22",
+     "g50t",
+     "ka59",
+     "m0r0",
+     "re86",
+     "sc25",
+     "sk48",
+     "wa30"
+    ],
+    "why_inert": "change_gate_decision is wired ONLY into _induce_and_plan's non-hidden-state branch; the 11 HIDDEN_STATE_GAME_IDS never reach it (see exp6012, which measures that hole and reports acceptance_gate_passed=false)",
+    "offline_prior_engines_the_gate_removes": [
+     "ft09",
+     "lp85"
+    ]
+   }
+  }
+ },
+ "artifacts_a_mask_flip_invalidates": {
+  "principle": "masking removes cells from the comparison, so every previously-published world-model verification number is computed on a different quantity after the flip; naming the affected artifacts up front is what stops a silent re-baselining",
+  "mask_sensitive_fields_searched": [
+   "accuracy_threshold",
+   "binary_gate_pass",
+   "correct_changed_cells",
+   "heldout_accuracy",
+   "heldout_change_consistency",
+   "trust_energy",
+   "trust_pass",
+   "verify_accuracy",
+   "verify_cell_recall"
+  ],
+  "mask_sensitive_verdicts_searched": [
+   "hidden_state_trust_below_threshold",
+   "world_model_accuracy_below_threshold"
+  ],
+  "n_json_artifacts_scanned": 14696,
+  "n_artifacts_affected": 97,
+  "affected": {
+   "results/arc_larger_model_g50t_ab.json": [
+    "heldout_accuracy",
+    "trust_energy"
+   ],
+   "results/arc_live_oracle_gap.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/arc_loop_solve_wa30.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/arc_sge_live_path_ab_cd82.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/arc_sge_live_path_ab_g50t.json": [
+    "heldout_accuracy",
+    "trust_energy"
+   ],
+   "results/arc_sge_live_path_ab_sp80.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/arc_stall_loop_goal_bias_check_sc25.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json": [
+    "accuracy_threshold"
+   ],
+   "results/experiment_4357_capstone_v402.json": [
+    "accuracy_threshold"
+   ],
+   "results/experiment_4557_executable_world_model_proposer.json": [
+    "heldout_accuracy",
+    "trust_energy"
+   ],
+   "results/experiment_4604_world_model_trust_energy.json": [
+    "binary_gate_pass",
+    "correct_changed_cells"
+   ],
+   "results/experiment_4608_primitive_persist_transfer.json": [
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy",
+    "trust_pass"
+   ],
+   "results/experiment_4676_hierarchical_subgoal_search_live.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json": [
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency"
+   ],
+   "results/experiment_4792_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json": [
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency"
+   ],
+   "results/experiment_4802_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json": [
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency"
+   ],
+   "results/experiment_4812_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4822_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4832_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4842_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4852_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4862_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/cd82.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/cn04.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/ls20.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/m0r0.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/r11l.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/sk48.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/sp80.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/su15.json": [
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/experiment_4871_generation_wall_fork_probe_gpu_fixed_checkpoints/wa30.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_4873_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4884_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4894_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4905_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4915_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4925_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4926_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4936_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4937_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4947_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4948_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4958_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4959_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4969_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4970_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4980_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4981_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4991_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_4992_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_5012_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_5026_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_5040_levelup_attempt.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_5157_deepen_warmstart_replay_ablation_v473.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5241_arc_gated_live_patch_attempt_v479.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_5585_arc_levelup_attempt_v505.json": [
+    "binary_gate_pass",
+    "trust_pass"
+   ],
+   "results/experiment_5588_tier3_induction_live_path_sanity_check.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_5589_tier3_induction_normal_budget_capability_check.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/experiment_5594_think_mode_induction_quality_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5596_generator_size_ab_gemma31b_vs_current.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5597_generator_size_ab_qwen35b_moe_vs_current.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5598_generator_size_multiseed_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5599_reinduction_ab_lp85_levelup.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5700_goal_predicate_veto_live_integration.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5704_dynamics_gate_relaxed_threshold_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5705_full_precision_27b_vs_4bit_quant_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5709_ternary_bonsai_cuda_reinduction_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5714_think_mode_rescoped_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5720_actions_to_progress_reason_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5721_actions_to_progress_retrieval_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5722_generator_swap_gemma31_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5723_generator_swap_gemma12_ab.buggy_prefix_20260718.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5723_generator_swap_gemma12_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5724_thinkingcap_token_efficient_reason_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5725_thinkingcap_chat_template_reason_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5831_object_perception_induction_ab.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_5833_generator_effectiveness_igpu.json": [
+    "heldout_accuracy"
+   ],
+   "results/experiment_6011_world_model_change_gate_four_arm.json": [
+    "correct_changed_cells"
+   ],
+   "results/experiment_6012_hidden_state_trust_gate_hole.json": [
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_pass"
+   ],
+   "results/first_win_llm_on_20260727/analysis.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/graded_goal_check_focused.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold"
+   ],
+   "results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/outer_loop_sge_smoke_test_cd82_induction.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/outer_loop_sge_smoke_test_g50t_induction.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/outer_loop_sge_smoke_test_sk48_induction.json": [
+    "SKIP_REASON:hidden_state_trust_below_threshold",
+    "binary_gate_pass",
+    "correct_changed_cells",
+    "heldout_accuracy",
+    "heldout_change_consistency",
+    "trust_energy"
+   ],
+   "results/outer_loop_sge_smoke_test_sp80_budget250_induction.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/outer_loop_sge_smoke_test_sp80_induction.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy",
+    "verify_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/proto_graded_goal_bias_ab.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold"
+   ],
+   "results/proto_l2_measure_fixstack.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy"
+   ],
+   "results/proto_l2_measure_fixstack_v2_with_split.json": [
+    "SKIP_REASON:world_model_accuracy_below_threshold",
+    "heldout_accuracy"
+   ],
+   "results/proto_multilevel_diag_real_K1gate05.json": [
+    "heldout_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/proto_multilevel_diag_real_K25gate05.json": [
+    "heldout_accuracy",
+    "verify_cell_recall"
+   ],
+   "results/proto_multilevel_diag_real_baseline.json": [
+    "heldout_accuracy",
+    "verify_cell_recall"
+   ]
+  },
+  "action_taken": "NONE -- enumerated only; no banked artifact is edited (never-prune)",
+  "how_a_correction_should_land": "a NEW artifact that recomputes the affected figure with the mask on and cites the original by path + sha256, per this repo's corrigendum pattern",
+  "direction_of_the_change": "every affected accuracy-like figure can only RISE (masking deletes disagreeing cells), so a post-flip number is NOT evidence of a capability improvement over a pre-flip number -- the two measure different quantities"
+ },
+ "four_arm_design": {
+  "why_four_arms": "the mask can only RAISE the measured score and the gate can only LOWER the admission rate, so a two-arm before/after cannot distinguish 'both worked and cancelled' from 'neither did'; the offline prior already shows the cancellation is near-exact (+8 vs -6 admissions over the same 42 plain-branch rows)",
+  "arms": {
+   "A0_control": {
+    "CARNOT_ARC_WM_HUD_MASK": "0",
+    "CARNOT_ARC_WM_CHANGE_GATE": "0"
+   },
+   "A1_mask_only": {
+    "CARNOT_ARC_WM_HUD_MASK": "1",
+    "CARNOT_ARC_WM_CHANGE_GATE": "0"
+   },
+   "A2_gate_only": {
+    "CARNOT_ARC_WM_HUD_MASK": "0",
+    "CARNOT_ARC_WM_CHANGE_GATE": "1"
+   },
+   "A3_both": {
+    "CARNOT_ARC_WM_HUD_MASK": "1",
+    "CARNOT_ARC_WM_CHANGE_GATE": "1"
+   }
+  },
+  "arm_selection_is_env_only": "both flags read through arc_executable_world_model._flag_env, so an arm is selected without editing a shipped constant -- an arm selected by editing a constant could not be reproduced from an artifact's recorded command line",
+  "unit_of_pairing": "(game, variant) cell, matched across all four arms",
+  "stage_1_corpus": {
+   "games": 25,
+   "variants": [
+    1
+   ],
+   "cells_per_arm": 25,
+   "total_cells": 100,
+   "purpose": "corpus statement + skip-reason census shift + the flag-inertness regression"
+  },
+  "stage_2_focused": {
+   "games": [
+    "ft09",
+    "lf52",
+    "lp85",
+    "sp80",
+    "su15",
+    "vc33"
+   ],
+   "why_these": "the only games the offline prior says either flag can move, PLUS every game that currently wins: ['lf52', 'sp80', 'su15'] cross the legacy 0.5 gate when the mask is on; ['ft09', 'lp85'] are the real on-disk degenerates the change gate removes; ['lp85', 'sp80', 'vc33'] carry every win in the LLM-off control and are the only cells on which the regression clause has any support at all",
+   "regression_sentinel_games": [
+    "lp85",
+    "sp80",
+    "vc33"
+   ],
+   "control_winner_cells": [
+    "lp85~color02",
+    "sp80~color02",
+    "sp80~color03",
+    "vc33~color01",
+    "vc33~color02",
+    "vc33~color03",
+    "vc33~color04"
+   ],
+   "variants": [
+    2,
+    3,
+    4
+   ],
+   "total_cells": 72,
+   "purpose": "buy discordant pairs on the only cells that can supply them"
+  },
+  "acceptance_conditions_are_DIFFERENT_per_arm": {
+   "A1_mask_only": {
+    "primary": "the paired per-cell gated-quantity (verify_accuracy on the plain branch, heldout_change_consistency on the hidden-state branch) is STRICTLY GREATER than A0's on the mask-available games and EQUAL on the 8 mask-unavailable games -- the equality half is the load-bearing control, because a difference there would mean the arm is changing something other than the mask",
+    "computed_witness_required": "per-cell (A0_value, A1_value, hud_mask_status, hud_mask_cells); a cell reported as masked MUST carry hud_mask_status=='applied' and hud_mask_cells>0",
+    "secondary": "n_cells_with_induction_attempts_planned_gt_0 rises above the baseline 0",
+    "regression_clause": "no first_win present in A0 may be absent in A1 -- newly admitting an engine can install a goal bias and a plan that LOSES a win the explorer would have taken; sp80 both wins (at variants 2,3) and is a mask-crossing game, so this is a live risk, not a theoretical one"
+   },
+   "A2_gate_only": {
+    "primary": "the two real on-disk degenerates are REJECTED where A0 admitted them: A0 must record skipped=='' or a post-trust skip for ft09/lp85 while A2 records skipped starting 'world_model_change_gate_'",
+    "must_not_fire_control": "no cell that produced a plan in A0 may be rejected by the gate for a reason other than degeneracy; the offline must-not-fire control (the hand-written dc22 navigation engine, admitted on 3/3 seeds in exp6011) is the standing proof the gate is not 'reject everything', and its live analogue is that A2's win set must equal A0's",
+    "power_disclosure": "A2 CANNOT produce a new win by construction -- it only removes admissions, and the baseline's two admissions both terminated at 'no_reachable_plan_after_refinement' with zero plans. Its endpoint is correctness of rejection plus non-regression, NOT win rate."
+   },
+   "A3_both": {
+    "primary": "attributes the interaction: if A1 gains admissions and A2 removes them, A3 tells us whether the mask's new admissions survive the gate. The offline prior says they do not (change-gate passes on 0/75 rows at mask=0 AND mask=1), so a null A3-vs-A0 is the PREDICTED outcome and must not be read as 'nothing worked'"
+   }
+  },
+  "stated_before_the_run_so_a_null_cannot_be_spun": [
+   "A2 cannot reach significance on wins at any N -- it removes admissions only.",
+   "A3-vs-A0 is predicted null by the offline prior; that is attribution, not failure.",
+   "A1 is the only arm that can move the win rate, and only on 3 candidate games."
+  ]
+ },
+ "wall_clock_estimate": {
+  "estimator": "llm_on_fix_diag -- the one LLM-on arm that ran single-pass to completion (attempt 1, exit 0, 25/25, no resume). Its row-clock/K and its observed first-to-last cell-write span agree to ~2%, so K=4 parallel efficiency is ~1.0 on this workload.",
+  "clean_arm_row_clock_s": 10290.5,
+  "clean_arm_observed_span_min": 42.0,
+  "clean_arm_median_cell_s": 395.6,
+  "k_workers": 4,
+  "per_arm_wall_min_25_cells": 42.9,
+  "stage_1_wall_h": 2.86,
+  "stage_2_wall_h": 1.98,
+  "total_wall_h": 4.84,
+  "total_dominates_each_stage": true,
+  "add_for_server_spawn_and_teardown_min": 5,
+  "gpu": "GPU 1 only (conductor owns GPU 0); one 81920-context llama-server ~13.5 GiB",
+  "concurrency_constraint": "arms run SEQUENTIALLY on one card -- two 13.5 GiB servers do not fit in 24 GiB, and the RUN_LOG records exactly that failure (a leaked server on port 8953 blocked the next arm for 600 s). One server for the whole matrix, reaped BY PORT at the end."
+ },
+ "acceptance_gate_baseline_is_nonempty": true,
+ "acceptance_gate_every_reported_field_has_a_nonzero_instance": true,
+ "honest_verdict": "complete_prechange_baseline_established_from_banked_rows_no_gpu",
+ "channel_liveness": {
+  "llm_on_fix_diag.plain_branch.verify_accuracy": true,
+  "llm_on_fix_diag.plain_branch.verify_cell_recall": true,
+  "llm_on_fix_diag.hidden_state_branch.heldout_change_consistency": true,
+  "llm_on_fix_diag.hidden_state_branch.heldout_accuracy": true,
+  "llm_on_fix_diag.hidden_state_branch.trust_energy": true,
+  "llm_on_fix_cellrecall.plain_branch.verify_accuracy": true,
+  "llm_on_fix_cellrecall.plain_branch.verify_cell_recall": true,
+  "llm_on_fix_cellrecall.hidden_state_branch.heldout_change_consistency": true,
+  "llm_on_fix_cellrecall.hidden_state_branch.heldout_accuracy": true,
+  "llm_on_fix_cellrecall.hidden_state_branch.trust_energy": true
+ },
+ "dead_channels": [],
+ "cited_upstream_artifacts": [
+  {
+   "experiment_id": "experiment_6011_world_model_change_gate_four_arm",
+   "path": "results/experiment_6011_world_model_change_gate_four_arm.json",
+   "sha256": "98580f3bfedead13379421b9f1dd03f3d350eda055eee27bdb7e61a5c430fa77"
+  },
+  {
+   "experiment_id": "experiment_6012_hidden_state_trust_gate_hole",
+   "path": "results/experiment_6012_hidden_state_trust_gate_hole.json",
+   "sha256": "c451fbaac358c64319a5cddaf5db3a216d6cb818298c086bb84005590903b8aa"
+  }
+ ],
+ "row_files_dir": "results/first_win_llm_on_20260727/cells",
+ "acceptance_gate_passed": true,
+ "reproducibility_checksum": "dc09cba25109d73fa0687d6d08611642366edeb5f98f2b72f931a77b9cc77de2"
+}

@@ -675,6 +675,9 @@ def execute_bounded_llm_reinduction(
     factored_trust_threshold: float = 0.75,
     structural_goal_provider: Callable[[np.ndarray], Any] | None = None,
     goal_exemplar_grading: bool = False,
+    # REQ-ARC-WMTE-6010: LOGICAL-coordinate HUD mask, threaded from the caller's explorer.
+    # Default None keeps every existing caller byte-identical.
+    hud_mask: Any = None,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -803,7 +806,13 @@ def execute_bounded_llm_reinduction(
                 # the full transitions list (not just the held-out split) is deliberate: every
                 # mismatch returned is still a genuinely observed transition the engine gets
                 # wrong, which is what CEGIS refinement needs.
-                real_verify = WorldModelVerifier(list(transitions)).score(selected.engine)
+                # REQ-ARC-WMTE-6010: grade the counterexample evidence on the SAME
+                # HUD-collapsed comparison the gate used. Feeding the LLM mismatches that are
+                # only HUD-counter deltas is worse than useless -- it teaches the proposer to
+                # model the step counter instead of the mechanic.
+                real_verify = WorldModelVerifier(list(transitions), hud_mask=hud_mask).score(
+                    selected.engine
+                )
                 last_counterexample = {
                     "kind": "heldout_transition_verification_failed",
                     "selected_candidate_name": selected.name,
@@ -890,8 +899,12 @@ def execute_bounded_llm_reinduction(
                     _exemplar = np.asarray(previous_level_complete_grid)
                     consistency_window = [
                         Transition(
-                            grid=_exemplar, action=0, data=None, next_grid=_exemplar,
-                            level_before=0, level_after=1,
+                            grid=_exemplar,
+                            action=0,
+                            data=None,
+                            next_grid=_exemplar,
+                            level_before=0,
+                            level_after=1,
                         ),
                         *consistency_window,
                     ]

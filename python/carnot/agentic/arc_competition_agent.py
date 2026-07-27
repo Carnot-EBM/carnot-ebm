@@ -5321,6 +5321,39 @@ class E3AgentPolicy:
         self.phase = "explore"
         return self.explorer.next_move(frames, latest)
 
+    def _world_model_hud_mask(self):
+        """REQ-ARC-WMTE-6010: the explorer's live HUD mask, in LOGICAL-grid coordinates.
+
+        The explorer resolves its mask in FRAME coordinates on the first observed frame and
+        may WIDEN it later when the Stage-2 confirmation admits the repair-added cells, so
+        this reads `explorer.hud_mask` at verification time rather than caching -- reading it
+        once at construction would pin the pre-Stage-2 mask forever.
+
+        Returns (logical_mask_or_None, reason). The reason is recorded on the attempt row
+        whether or not a mask came back, because a mask that silently failed to resolve is
+        indistinguishable in the artifact from a mask that was never asked for -- which is
+        the exact blindness this repair exists to remove.
+        """
+
+        from carnot.agentic.arc_executable_world_model import world_model_hud_mask_enabled
+
+        if not world_model_hud_mask_enabled():
+            return None, "flag_disabled"
+        explorer = getattr(self, "explorer", None)
+        if explorer is None:
+            return None, "no_explorer"
+        frame_mask = getattr(explorer, "hud_mask", None)
+        if frame_mask is None:
+            # The classifier ran and found nothing status-bar-like (or auto_hud_mask is off).
+            # A real, common, and legitimate outcome -- recorded, not silently swallowed.
+            return None, "explorer_mask_unresolved"
+        from carnot.agentic.arc_executable_world_model import logical_hud_mask
+
+        mask = logical_hud_mask(frame_mask, self.cell)
+        if mask is None:
+            return None, "logical_downsample_empty"
+        return mask, "resolved"
+
     def _induce_and_plan(self):
         import os
 
@@ -5421,9 +5454,21 @@ class E3AgentPolicy:
                         # false-negative wall the 2026-07-20 diagnosis §3 named). Gate instead on nav-game-fit
                         # + plan_found; the real level counter on execution is the oracle (a wrong plan simply
                         # fails to level up, at bounded action cost, same as any engine path).
-                        nav_vr = e3.WorldModelVerifier(active_transitions).score(nav_eng)
+                        # REQ-ARC-WMTE-6010: the comment above names one half of this defect from
+                        # the inside -- "it models the avatar's move, not the co-moving key /
+                        # STEP-COUNTER HUD / rails". The step-counter half is a MEASUREMENT
+                        # artifact, not a model limitation, and masking it is what this flag does.
+                        _nav_mask, _nav_mask_reason = self._world_model_hud_mask()
+                        nav_vr = e3.WorldModelVerifier(
+                            active_transitions, hud_mask=_nav_mask
+                        ).score(nav_eng)
                         attempt["structured_nav_heldout"] = round(float(nav_vr.accuracy), 4)
                         attempt["structured_nav_cell_recall"] = round(float(nav_vr.cell_recall), 4)
+                        attempt["structured_nav_change_fidelity"] = round(
+                            float(nav_vr.change_fidelity), 4
+                        )
+                        attempt["structured_nav_hud_mask_reason"] = _nav_mask_reason
+                        attempt["structured_nav_hud_mask_status"] = nav_vr.hud_mask_status
                         _nav_diag: dict = {}
                         nav_plan = self._call_plan_in_model(
                             e3.plan_in_model,
@@ -5841,10 +5886,15 @@ class E3AgentPolicy:
                 except Exception as probe_exc:
                     attempt["active_probe_error"] = repr(probe_exc)[:160]
             if self.short in HIDDEN_STATE_GAME_IDS:
+                # REQ-ARC-WMTE-6010: the hidden-state branch gates the 0.08-wall games
+                # (cn04/ar25/sc25/sk48/wa30) and grepped ZERO for `hud_mask` until 2026-07-27.
+                _hs_mask, _hs_mask_reason = self._world_model_hud_mask()
+                attempt["hud_mask_reason"] = _hs_mask_reason
                 self.world_model_trust_selection = select_trusted_world_model(
                     active_transitions,
                     candidate_pool,
                     hidden_state=True,
+                    hud_mask=_hs_mask,
                 )
                 trust_score = self.world_model_trust_selection.selected_score
                 attempt["trust_energy"] = round(float(trust_score.trust_energy), 6)
@@ -5854,7 +5904,32 @@ class E3AgentPolicy:
                 attempt["heldout_accuracy"] = round(float(trust_score.heldout_accuracy), 6)
                 attempt["correct_changed_cells"] = int(trust_score.correct_changed_cells)
                 attempt["binary_gate_pass"] = bool(trust_score.binary_gate_pass)
-                if not trust_score.trust_pass:
+                # REQ-ARC-WMTE-6013: the symmetric union-fidelity decision, computed by
+                # select_trusted_world_model on the SAME held-out split `trust_pass` uses.
+                # Recorded UNCONDITIONALLY so a control arm's row carries it too; it only
+                # DECIDES when the flag is on. Until 2026-07-27 this branch never called the
+                # change gate at all, which left the 11 hidden-state games -- every one of the
+                # 0.08-wall games -- with zero coverage.
+                _hs_change_gate = dict(trust_score.change_gate)
+                attempt["change_gate"] = _hs_change_gate
+                attempt["verify_change_fidelity"] = _hs_change_gate.get("change_fidelity")
+                attempt["verify_spurious_changed_cells"] = _hs_change_gate.get(
+                    "spurious_changed_cells"
+                )
+                _hs_gate_on = e3.world_model_change_gate_hidden_state_enabled()
+                attempt["change_gate_hidden_state_enabled"] = bool(_hs_gate_on)
+                if _hs_gate_on:
+                    # REPLACES `trust_pass` rather than AND-ing with it. exp6012 measured the
+                    # incumbent to be wrong in BOTH directions -- blind to a spurious writer on
+                    # 31/33 rows, and rejecting the hand-written honest engine on 2/3 -- so
+                    # keeping it as a conjunct would import the false-reject into the arm and
+                    # make a null unattributable.
+                    if not trust_score.change_gate_pass:
+                        attempt["skipped"] = "hidden_state_change_gate_" + str(
+                            _hs_change_gate.get("reason", "unavailable")
+                        )
+                        return
+                elif not trust_score.trust_pass:
                     attempt["skipped"] = "hidden_state_trust_below_threshold"
                     return
                 engine = self.world_model_trust_selection.selected.engine
@@ -5862,7 +5937,11 @@ class E3AgentPolicy:
             else:
                 import os
 
-                vr = e3.WorldModelVerifier(active_transitions).score(engine)
+                # REQ-ARC-WMTE-6010: grade against HUD-collapsed grids when the mask flag is on.
+                # `_hud_reason` is recorded UNCONDITIONALLY -- an unresolved mask must be
+                # distinguishable in the artifact from a mask that was never requested.
+                _hud_mask, _hud_reason = self._world_model_hud_mask()
+                vr = e3.WorldModelVerifier(active_transitions, hud_mask=_hud_mask).score(engine)
                 # CARNOT_ARC_TRUST_METRIC=cell_recall gates on GRADED changed-cell recall instead of the
                 # exact-FULL-GRID match (the coordinated-redesign lever for the 0.08 wall: exact-match reads
                 # ~0 for an imperfect-but-useful induced model and gates it out -> the induce->plan path is a
@@ -5873,7 +5952,24 @@ class E3AgentPolicy:
                 attempt["verify_accuracy"] = round(vr.accuracy, 4)
                 attempt["verify_cell_recall"] = round(vr.cell_recall, 4)
                 attempt["trust_metric"] = _metric
-                if _gate_value < 0.5:  # too weak to trust for execution-grounded planning
+                attempt["hud_mask_reason"] = _hud_reason
+                attempt["hud_mask_status"] = vr.hud_mask_status
+                attempt["hud_mask_cells"] = int(vr.hud_mask_cells)
+                # REQ-ARC-WMTE-6011 (GAP-WM-TRUST-GATE): the change-weighted decision is
+                # COMPUTED and RECORDED on every attempt regardless of the flag, so a control
+                # arm's artifact carries the same diagnostics as a treatment arm's and the two
+                # can be compared without a re-run. It only DECIDES when the flag is on.
+                _change_gate = e3.change_gate_decision(vr)
+                attempt["change_gate"] = _change_gate
+                attempt["verify_change_fidelity"] = _change_gate["change_fidelity"]
+                attempt["verify_change_accuracy"] = _change_gate["change_accuracy"]
+                attempt["verify_correct_changed_cells"] = _change_gate["correct_changed_cells"]
+                attempt["verify_spurious_changed_cells"] = _change_gate["spurious_changed_cells"]
+                if _change_gate["gate_enabled"]:
+                    if not _change_gate["passed"]:
+                        attempt["skipped"] = "world_model_change_gate_" + _change_gate["reason"]
+                        return
+                elif _gate_value < 0.5:  # too weak to trust for execution-grounded planning
                     attempt["skipped"] = "world_model_accuracy_below_threshold"
                     return
             # REQ-ARC-FCP-5699-38 (plain single-shot path): found via the same post-submission
@@ -6065,6 +6161,33 @@ class E3AgentPolicy:
                         "heldout_change_consistency",
                         "correct_changed_cells",
                         "binary_gate_pass",
+                        # REQ-ARC-WMTE-6014 (2026-07-27). The four-arm mask/gate matrix has
+                        # to prove PER CELL that the arm it declares is the arm that ran.
+                        # The projection above could name the skip reason and the margin but
+                        # NOT whether a mask was actually applied, so a mask-arm cell that
+                        # silently fell back to no-mask was indistinguishable from one that
+                        # masked and made no difference -- i.e. the arm's own null was
+                        # unattributable. These six are the witnesses that close that:
+                        #   hud_mask_status/_cells -- "applied" + a positive cell count is
+                        #     the only proof the treatment reached this cell; an unresolved
+                        #     mask reports its own reason instead of reading as a no-op.
+                        #   verify_change_fidelity / _spurious_changed_cells -- the symmetric
+                        #     union-fidelity quantity the REQ-6011/-6013 gate actually
+                        #     decides on, so a rejection can be checked against its own
+                        #     aggregation level rather than inferred from the reason string.
+                        #   change_gate_hidden_state_enabled -- REQ-6013 resolves this by
+                        #     FOLLOWING the -6011 flag, which is a default, not a guarantee;
+                        #     recording it is what makes the follow observed rather than
+                        #     assumed on the 11 hidden-state games (every 0.08-wall game).
+                        # All six are read-only reads of keys the gates already write onto
+                        # the attempt dict, guarded by `if k in a`, so a branch that does not
+                        # write one is absent rather than null-valued.
+                        "hud_mask_status",
+                        "hud_mask_cells",
+                        "hud_mask_reason",
+                        "verify_change_fidelity",
+                        "verify_spurious_changed_cells",
+                        "change_gate_hidden_state_enabled",
                     )
                     if k in a
                 }

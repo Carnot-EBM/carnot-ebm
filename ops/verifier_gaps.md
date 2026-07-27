@@ -3188,7 +3188,181 @@ EXACTLY the 21 measured misses, all clicks on color-5 cells.
 ## GAP-WM-TRUST-GATE: world-model trust gate gameable by identity on no-op-heavy corpora (2026-06-21)
 
 ### GAP-WM-TRUST-GATE: change-weighted world-model verification
+- status: building (MECHANISM SHIPPED DEFAULT-OFF 2026-07-27, REQ-ARC-WMTE-6011; the flip is
+  the operator's call and the gap stays open until it is flipped). The gate is
+  `arc_executable_world_model.change_gate_decision` behind
+  `SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED` / `CARNOT_ARC_WM_CHANGE_GATE=1`, wired into
+  `arc_competition_agent._induce_and_plan`'s non-hidden-state branch. Evidence:
+  `results/experiment_6011_world_model_change_gate_four_arm.json` (25 real games x 3 seeds).
+  - FIRES ON ITS OWN ORIGIN INCIDENT (the thing this project has twice shipped a guard without
+    doing): the REAL on-disk `results/arc_e3/lp85/world_model.py` is rejected
+    (`degenerate_engine_no_correct_changed_cells`, correct_changed_cells=0 over 33 changing
+    transitions) while the legacy gate passes it at accuracy 0.725; the REAL on-disk
+    `results/arc_e3/ft09/world_model.py` is rejected (`no_changing_transitions`) while the
+    legacy gate passes it at accuracy **1.0** -- a do-nothing engine scoring PERFECT because
+    seed-0 exploration produced 120 transitions and ZERO of them changed the grid.
+  - MUST-NOT-FIRE CONTROL: a hand-written dc22 navigation engine (2x2 avatar, 2-cell step,
+    blocked unless the destination is free -- a general rule, no per-transition constants,
+    derived on seed 0 and scored on seeds it never saw) is ADMITTED, and reaches change
+    accuracy 1.0000 on the directional sub-corpus on 3/3 seeds. The gate is not "reject
+    everything".
+  - HONEST LIMIT: all 25 shipped on-disk world models are rejected (75/75 game-seed rows).
+    The two named in this gap entry are representative, not exceptional.
+  - REVISION vs the candidate design below: the gate quantity is NOT `change_accuracy`
+    (exact-full-grid match over changing transitions) but a SYMMETRIC union fidelity --
+    correct cells over (truly-changed UNION engine-written). `change_accuracy` and
+    `n_changes_correct` are still computed and reported. Reason: `cell_recall` AND the
+    existing `arc_world_model_trust_energy.score_change_weighted_consistency` both mask to
+    TRUE changes only, so neither can see a cell the engine wrote that reality never changed
+    -- they are recall, not fidelity, and are blind to a spurious-writer in exactly the way
+    `accuracy` is blind to the identity engine. Measured witness in the artifact: an engine
+    that is correct everywhere plus ONE spurious write has cell_recall IDENTICAL to the
+    correct engine on 3/3 seeds, while its union fidelity is strictly lower on 3/3.
+  - REDUNDANCY DISCLOSED: at the default `min_correct_changed_cells=1` the non-degeneracy
+    floor cannot fire independently of the fidelity threshold (proof in
+    `change_gate_decision`'s comment; confirmed over 924 real measured arms). It is retained
+    for its more diagnostic reason string and becomes independent at k>1.
+  - COVERAGE HOLE FOUND AND CLOSED (2026-07-27, REQ-ARC-WMTE-6013). The wiring above reached
+    exactly ONE of `_induce_and_plan`'s two admission branches. The other -- taken for the 11
+    `HIDDEN_STATE_GAME_IDS`, i.e. EVERY 0.08-wall game (cn04/ar25/sc25/sk48/wa30) -- admitted
+    on `trust_pass` and never called the gate. No unit test could have caught this: a gate can
+    be arithmetically perfect and still never be consulted, so the defect is only visible at
+    the level of "which branches call it".
+    - THE HOLE, MEASURED: `results/experiment_6012_hidden_state_trust_gate_hole.json` -- an
+      engine correct on every real change that ALSO writes cells reality never wrote is
+      admitted by the live hidden-state gate on 31/33 rows, the SAME 31 where it admits the
+      honest engine, and scores EXACTLY (not approximately) the honest engine's `consistency`.
+    - THE REPAIR, MEASURED: `results/experiment_6013_hidden_state_change_gate_closure.json`
+      (39 rows / 324 decision arms / 10 acceptance gates / adversarial_verify CLEAN). The
+      hidden-state branch now routes through the same symmetric gate behind
+      `CARNOT_ARC_WM_CHANGE_GATE_HIDDEN_STATE` (default-off, defaulting to FOLLOW REQ-6011's
+      flag so the gate arm is not a silent no-op on the wall games). 62 of the 68 rows where
+      the incumbent admits the spurious writer are now rejected.
+    - FIRES ON THE ORIGIN INCIDENT, DISCRIMINATINGLY: the real on-disk lp85 engine is rejected
+      through the PRODUCTION `select_trusted_world_model` on 6/6 arms over a real population
+      of 7-9 changing transitions. ft09's rejection is classified VACUOUS and explicitly does
+      NOT support the claim -- its held-out split has 0 of 40 changing transitions, so every
+      engine including a perfect one is rejected there.
+    - MUST-NOT-FIRE CONTROL: the hand-written dc22 engine is ADMITTED 3/3 seeds at both mask
+      settings.
+    - RESIDUAL, EXPLAINED NOT COUNTED: the 6 escaping rows are all re86, and all 6 are exactly
+      the rows where `n_noop == 0`. Two independent reasons coincide there: the no-op channel
+      (which is what actually catches the spurious writer on the rows that ARE closed) cannot
+      fire, and union fidelity is an ABSOLUTE threshold that one invented cell moves only
+      0.08-0.12 when the true change set is ~1700 cells. A unit-scale reproduction is pinned
+      in `test_union_metric_alone_does_NOT_catch_a_light_invented_writer_known_limitation`.
+    - NEW DIAGNOSTICS, RECORDED BUT NOT GATED ON: `noop_channel_measurable` /
+      `noop_ok_is_vacuous` separate "clean" from "not measurable" (previously the same 0.0),
+      and `invented_changed_cells` (`wrote & ~truly_changed`) isolates invention from the
+      ordinary prediction error that `spurious_changed_cells` (`wrote & ~correct`) conflates
+      it with. The invented-write rate separates 72/72 paired rows (honest <= 0.0714, attack
+      >= 0.7778) but is deliberately NOT thresholded: that separation is against an engine
+      built to invent on every transition, and a threshold fitted to it would reject a
+      realistically imperfect induced engine. Recalibration against an imperfect engine is
+      the prerequisite for gating on it.
+  - CORRIGENDA (2026-07-27, second adversarial review of the SAME day's work). Five
+    corrections and one new sub-gap. Recorded here rather than by editing the claims above,
+    per never-prune -- the superseded statements stay visible with their correction.
+    1. **"MUST-NOT-FIRE CONTROL: admitted 3/3 seeds at both mask settings" is WRONG on the
+       whole corpus.** Measured directly through the production path on all 120 dc22
+       transitions, the hand-written correct engine scores change_fidelity 0.4694 / 0.4083 /
+       0.4103 with the mask OFF -- below the 0.5 threshold, REJECTED 3/3 -- and 0.8148 /
+       0.7609 / 0.7358 with it ON, admitted 3/3. The "both settings" claim came from
+       exp6013, whose mask arm never actually masked (corrigendum 2 below), and from the
+       held-out split where the control sits within 0.035 of the threshold. **CONSEQUENCE:
+       the change gate MUST NOT be flipped without the HUD mask** -- the gate-only arm
+       rejects the one engine known to be genuinely good.
+    2. **exp6013's mask arm was a silent no-op.** It passed a real mask but never set
+       `CARNOT_ARC_WM_HUD_MASK`, and `WorldModelVerifier` discarded an unflagged mask, so
+       every `mask=1` row recorded `hud_mask_status="disabled"` and `change_fidelity`
+       differed between the mask arms on 0 of 162 paired arms. Root cause was a SPLIT
+       CONVENTION in the library: `WorldModelVerifier` gated the mask on the flag while
+       `score_change_weighted_consistency` applied it unconditionally -- two comparators,
+       two meanings of "the same state", inside one `select_trusted_world_model` decision
+       whose own docstring promised they "must move TOGETHER". Fixed by
+       `arc_world_model_trust_energy.resolve_hud_mask_enabled` (one resolver, one decision)
+       plus `TrustSelection.hud_mask_silently_dropped` so a harness can assert its arm ran.
+       After the fix the mask applies on 111 of 162 arms and moves fidelity on 29.
+    3. **THRESHOLD AMBIGUITY.** This entry's `accuracy >= 0.5` is the DOCUMENTED threshold;
+       the threshold the agent actually ships is `min_heldout_accuracy=1.0`
+       (arc_competition_agent.py:5593 and :5719). The two give different headlines: over
+       exp6011's 75 rows the incumbent admits the identity engine on 12 rows at 0.5 but 3 at
+       1.0, and the real on-disk engines on 6 at 0.5 but 3 at 1.0. `change_gate_decision`
+       now emits BOTH with the threshold named in the key. **The origin incident survives at
+       the LIVE threshold**: ft09's identity engine scores a PERFECT 1.0 and is admitted.
+    4. **THE MASK LAUNDERS A ZERO-KNOWLEDGE ENGINE, and this must be reported beside any
+       mask claim.** Over the 45 mask-resolved rows the mask raises the IDENTITY engine's
+       legacy accuracy by mean +0.323 versus +0.160 for the real on-disk engines -- 2.0x
+       more help to an engine that knows nothing. Arm A1 (mask-only) is therefore a
+       WEAKER-TEST arm, not a better-measurement arm, and must be labelled "admits more,
+       INCLUDING degenerates".
+    5. **POOLING.** The published mask delta averaged in rows where no mask could be
+       resolved (delta 0 by construction). Restricted to the 45 rows where a mask actually
+       applied the on-disk delta is 0.160 versus 0.096 pooled over all 75 -- the pooled
+       figure understates the treatable population by ~40%. Both are now reported, with the
+       mask-resolved figure as the headline.
+    6. **NEAR-ORTHOGONALITY.** The mask moves legacy full-grid accuracy a lot (mean +0.096
+       over 75 rows, 30 non-zero) and the GATE quantity almost not at all (mean +0.0031, 13
+       non-zero). The mask repairs the metric REQ-6010 diagnosed and the gate then stops
+       using it. The four-arm design is justified by the CONTROL's mask-sensitivity, not by
+       a confound the real-engine population exhibits.
+
+### GAP-WM-HUD-MASK-SWALLOW: the HUD mask deletes the game on some games (2026-07-27)
+- status: building (GUARD SHIPPED 2026-07-27, REQ-ARC-WMTE-6015;
+  `arc_executable_world_model.hud_mask_swallow_check`, active whenever the mask is)
+- discovered by: measuring mask coverage per game instead of accepting the "it is only a
+  monotone step counter" rationale. That rationale is not uniformly true.
+- failure mode: on some games the explorer's `_compute_hud_mask_from_frame` classifier
+  selects cells where the GAME STATE lives, not chrome. Measured over the 25 offline games
+  (fraction of truly-changed cells falling INSIDE the mask; changing transitions raw ->
+  masked, n=60, seed 0):
+
+  | game | changed-cell overlap | changing transitions |
+  |---|---|---|
+  | lf52 | 1.0000 | 60 -> 0 |
+  | su15 | 0.7568 | 28 -> 1 |
+  | s5i5 | 0.2219 | 60 -> 27 |
+  | tu93 | 0.1762 | 60 -> 20 |
+  | every other masked game | 0.0000 .. 0.0955 | moderate reduction |
+
+  On lf52 masking makes the corpus DYNAMICS-FREE, under which the IDENTITY engine is an
+  optimal model and is admitted. That is the concrete mechanism behind the laundering in
+  corrigendum 4 above.
+- guard: refuse the mask (fall back to unmasked grading) when it overlaps >= 0.5 of truly
+  changed cells, or when it removes every changing transition. 0.5 is the midpoint of the
+  only wide gap in the measured distribution (0.2219 -> 0.7568), not a round number. The
+  refusal is deliberately conservative in the direction `apply_hud_mask`'s docstring names:
+  over-masking destroys correctness, under-masking only costs efficiency.
+- fires on its own origin incident: refuses lf52 and su15, and refuses NOTHING on the other
+  15 games with a resolvable mask. Locked by
+  `tests/python/test_arc_hud_mask_coherence_and_swallow_guard.py`.
+- KNOWN LIMIT, recorded not hidden: when EVERY changed cell in a corpus lies inside the
+  mask, "the mask covers the game" and "this corpus has no state change so only the counter
+  moved" are indistinguishable from that corpus. Both are refused, under DIFFERENT reasons
+  (`mask_removes_all_dynamics` vs `no_changed_cells_outside_mask_cannot_distinguish`), so an
+  operator can see which case they are looking at.
+- still open: whether the right fix is to refuse these masks or to REPAIR the upstream
+  `_compute_hud_mask_from_frame` classifier on lf52/su15. Refusing restores the
+  pre-REQ-6010 (measurably worse) behaviour on those two games; repairing the classifier
+  would recover the benefit. The guard is the safe stopgap, not the answer.
+
+### GAP-WM-LIGHT-INVENTOR: union fidelity has no defence against a light inventor on a no-op-free corpus (2026-07-27)
 - status: open
+- failure mode: `change_fidelity` is an ABSOLUTE threshold over the union of truly-changed
+  and engine-written cells, so an engine that invents ONE cell per transition moves it by
+  only ~0.08-0.12 when the true change set is ~1700 cells, and clears the gate at 0.88-0.92.
+  The no-op hallucination channel is what actually catches such an engine -- and on a corpus
+  where `n_noop == 0` that channel CANNOT FIRE (`noop_ok_is_vacuous` is True). All 6 residual
+  escapes in exp6013 are exactly this: re86, `n_noop == 0`, `invented_change_rate` 1.0.
+- the discriminator EXISTS and is measured but is not gated on: `invented_change_rate`
+  separates perfectly on the corpus measured so far (honest <= 0.0714, attacker >= 0.7778,
+  total separation on 72/72 paired rows). It is not thresholded because that separation is
+  against an engine CONSTRUCTED to invent on every transition, which says nothing about
+  where a realistically imperfect induced engine sits.
+- prerequisite for closing: calibrate `invented_change_rate` against a realistically
+  IMPERFECT induced engine (not a constructed attacker), then gate on it for the
+  no-op-free case only.
+- status_history: open (2026-06-21 -> 2026-07-27)
 - evidence: outer-loop induction-quality investigation 2026-06-21
   (docs/research-notes/arc-l1-l2-barrier-diagnosis-2026-06-20.md UPDATE). lp85 L1 exploration via
   `collect_transitions("lp85", n=120, seed=0)` yields 120 transitions, ALL ACTION6 clicks, 87 no-ops /
@@ -3213,6 +3387,83 @@ EXACTLY the 21 measured misses, all clicks on color-5 cells.
 - priority: medium (does not by itself unlock L2 — induction quality (GAP not here) is the binding
   constraint — but it removes a false-trust hole that would let a degenerate identity engine through, and
   it gives the induction loop an honest non-degeneracy signal to optimize against)
+
+### GAP-WM-TRUST-GATE-HIDDEN-STATE: the OTHER admission branch was never covered (2026-07-27)
+
+- status: open (measured, mechanism NOT shipped — this is the adversarial review the parent gap
+  entry asked for under "needs adversarial review before landing", and it found the repair
+  incomplete rather than wrong)
+- evidence: `results/experiment_6012_hidden_state_trust_gate_hole.json` — 11 hidden-state games
+  x 3 seeds x 2 mask settings = 33 matched rows, `adversarial_verify` clean, 15/15 acceptance
+  gates. Script: `scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py`.
+  Hermetic regression: `tests/python/test_arc_hidden_state_trust_gate_hole.py` (10 tests).
+- **The coverage gap.** REQ-ARC-WMTE-6011's `change_gate_decision` is wired into ONLY the
+  `else` (non-hidden-state) branch of `arc_competition_agent._induce_and_plan`. The other
+  branch — taken for the 11 `HIDDEN_STATE_GAME_IDS`, which include EVERY 0.08-wall game
+  (cn04/ar25/sc25/sk48/wa30) — never calls it. It admits on `trust_pass` from
+  `score_change_weighted_consistency`, whose `consistency` masks to TRUE changes only and is
+  therefore recall, not fidelity. exp6011's artifact, its four-arm script and its 25-test suite
+  call `select_trusted_world_model` ZERO times, so this branch was entirely unmeasured.
+- **Measured hole.** An engine correct on every real change that ALSO writes cells reality never
+  wrote is ADMITTED by the live hidden-state gate on **31/33 rows** — the same 31 rows on which
+  it admits the honest engine, i.e. it cannot tell them apart at all. Both attack arms score
+  EXACTLY the honest engine's `consistency` (not approximately — identically). REQ-6011 rejects
+  24 of those 31.
+- **Where REQ-6011 itself runs out — 7 rows escape BOTH gates** (cd82@2, ka59@0-2, re86@0-2).
+  Root cause is structural, not a tuning miss: union `change_fidelity` is an ABSOLUTE threshold
+  while a spurious write is a small RELATIVE decrement. On re86 all 40 held-out transitions
+  change the grid (1296–1742 changed cells), so one spurious write per transition costs ~0.08–0.12
+  and an honest-plus-spurious engine lands near 0.9, clearing 0.5 comfortably. The gate catches
+  this attack on dc22 ONLY because dc22's honest engine already sits at ~0.5 with no headroom —
+  i.e. fidelity's sensitivity to spurious writes is proportional to how BAD the engine already is,
+  which is backwards. Separately, re86 has `n_noop == 0`, so `noop_hallucination_rate` returns
+  its `if n_noop else 0.0` fallback: the value meaning "perfectly clean" is also the value meaning
+  "not measurable", and that channel cannot fire there at all.
+- missing discriminator (CALIBRATED, not proposed on taste): **spurious cells per changing
+  transition** = `spurious_changed_cells / n_changing`. Already computed and already in the
+  witness dict — it is simply not a gate condition. Scale-free in the change density that defeats
+  union fidelity. Measured over the 33 rows: honest engines max **0.1875**, spurious attack min
+  **1.0000** — no overlap. Any threshold strictly between separates every row; **0.25** is
+  proposed for being well clear of both, the same reasoning already used for
+  `WORLD_MODEL_MAX_NOOP_HALLUCINATION_RATE`. It catches all 7 rows that escape both gates.
+- **CAVEAT ON THAT CALIBRATION — do NOT ship the 0.25 threshold on this evidence alone.**
+  `spurious_changed_cells` is `(wrote & ~correct)` over changing transitions: cells the engine
+  CHANGED and got WRONG. That conflates (a) writing where reality did not change — a genuinely
+  invented transition — with (b) writing where reality DID change but predicting the wrong value,
+  which is ordinary prediction error. Proof, not assertion:
+  `test_spurious_changed_cells_conflates_invented_writes_with_ordinary_error` builds an engine
+  that invents nothing (`noop_hallucination_rate == 0.0`) and is wrong only on genuinely-changed
+  cells, and it still accrues spurious cells. Consequence: every engine on the honest side of the
+  measured separation is a near-perfect lookup table (honest max 0.1875 comes from sk48's
+  visible-state collisions), so the calibration barely exercises (b), while a genuinely IMPERFECT
+  induced model — the actual deployment population — accrues (b) in normal operation and could
+  exceed 0.25 while inventing nothing. **Next step before landing:** compute the purer
+  `(wrote & ~truly_changed)` (which the verifier does not currently compute), and re-calibrate
+  against a realistically imperfect engine, not only against near-perfect ones.
+- **Also found, operator-facing:**
+  - The two repairs are NOT independent on the positive control. REQ-6011 admits the hand-written
+    dc22 engine on 3/3 rows WITH the HUD mask and 0/3 WITHOUT it (fidelities 0.814815 / 0.760870 /
+    0.735849 — matching exp6011's own mask-on numbers to 6 dp, an independent cross-check).
+    **Flipping the change gate without also flipping the HUD mask would reject the one engine
+    known to be genuinely good**; the gate-only arm is not a safe partial ship.
+  - The live hidden-state gate REJECTS that same honest engine on 2/3 rows while REQ-6011 admits
+    it on 3/3. So that gate is simultaneously too STRICT on an honest partial model and BLIND to
+    a spurious writer.
+  - exp6011's must-not-fire control is a **dc22** engine, and dc22 is itself a hidden-state game —
+    so the only positive control for the new gate was measured on a game whose live path takes the
+    branch the new gate is not wired into.
+  - The hidden-state gate does NOT have the identity hole (identity rejected 33/33 by both gates).
+    An honest negative that bounds the defect: this branch is blind to spurious writes, not to
+    inaction.
+- **Downstream cost of rejecting the on-disk engines: none — verified, and the brief's stated
+  reason was incomplete.** All 33 rows' `is_level_complete` are CONSTANT on the observed corpus:
+  27 constant-False, and 6 (ar25, m0r0 — all seeds) constant-TRUE, firing on 120/120 grids. Zero
+  are state-discriminating. A goal that is never reachable and a goal already satisfied everywhere
+  are both non-steering. Independently, every on-disk engine is rejected on its DYNAMICS anyway
+  (0/33 admitted by REQ-6011), so the two justifications do not lean on each other.
+- priority: medium-high (the hidden-state branch gates the 0.08-wall games, so a false-trust hole
+  there is on the critical path; but per the parent gap, induction QUALITY remains the binding
+  constraint and closing this does not by itself unlock a level)
 
 ## GAP-ARC-4713-SURFACING-r11l
 

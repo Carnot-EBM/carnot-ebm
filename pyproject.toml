@@ -259,7 +259,25 @@ line-length = 100
 # unwinnable race for as long as induction is running. Scoped to arc_e3/ ONLY:
 # the other ~370 .py files under results/ are archived experiment scripts that
 # are NOT regenerated, so they stay linted.
-extend-exclude = ["results/arc_e3"]
+#
+# results/arc_e3_origin_fixtures ADDED 2026-07-27, for a DIFFERENT and stronger reason
+# than the race above: these are FROZEN, BYTE-PRESERVED SNAPSHOTS of LLM-generated
+# world models, kept as the EVIDENCE that REQ-ARC-WMTE-6011/6013's trust gate rejects
+# real degenerate engines rather than synthetic stand-ins. exp6011/6012/6013 assert
+# `engine_store_is_frozen_fixtures: true` against this exact directory.
+#
+# The pattern above does NOT cover it -- `results/arc_e3` and
+# `results/arc_e3_origin_fixtures` are distinct directories -- so ruff linted the
+# fixtures, and a blanket `ruff check --fix` + `ruff format` over "every changed .py"
+# MUTATED ALL 27 of them: it stripped `import numpy as np` from ft09's engine and
+# renamed/removed unused locals in cn04, lp85 and vc33. That silently rewrites the
+# artifact these experiments cite. Recovered from the git index (they were staged
+# pre-format), but the correct fix is to make them unlintable, because "reformat the
+# frozen evidence" is never the right answer and the next agent running a repo-wide
+# format would repeat it. Linting them is also meaningless on its own terms: F841 on
+# an unused local inside a model the LLM wrote is a finding about the LLM, not about
+# our code, and the whole point of the snapshot is that it is NOT edited.
+extend-exclude = ["results/arc_e3", "results/arc_e3_origin_fixtures"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]

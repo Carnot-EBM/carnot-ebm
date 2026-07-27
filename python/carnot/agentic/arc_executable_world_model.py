@@ -28,6 +28,7 @@ about game cells, not pixels.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -38,7 +39,33 @@ from typing import Any, Callable, Mapping, Optional, Sequence
 import numpy as np
 
 REPO = Path(__file__).resolve().parents[3]
-E3_DIR = REPO / "results" / "arc_e3"
+# THE INDUCED-ENGINE STORE. `load_engine` READS from here and `LocalGGUFProposer._gen_to_file`
+# / the refactor path WRITE here, unconditionally, on every successful induction.
+#
+# REQ-ARC-WMTE-6016 (2026-07-27): `CARNOT_ARC_E3_DIR` makes it redirectable WITHOUT a
+# monkeypatch. An A/B that runs several arms against the same store is not running an A/B:
+# arm A's inductions overwrite the engines arm B then starts from, so a cross-arm delta
+# confounds the flag with starting-engine drift. That is not hypothetical -- a four-arm run
+# on 2026-07-27 had rewritten 11 engines from its FIRST arm before it was stopped, including
+# both engines named as the origin incident for GAP-WM-TRUST-GATE, and 15 of 75 rows of an
+# already-published artifact stopped reproducing as a result (ft09's legacy_accuracy went
+# 1.0000 -> 0.0000 because its 12-bare-`return grid` engine had been replaced in place).
+#
+# Module-global by design so the existing `e3.E3_DIR = ...` monkeypatch (see
+# scripts/experiments/arc3_local_scaffold_induction_ab.py and
+# tests/python/test_induce_split_fallback.py) keeps working: both readers and writers resolve
+# it at CALL time, not at import time. The env var is the same override for a subprocess that
+# cannot patch the module.
+E3_DIR = (
+    Path(os.environ["CARNOT_ARC_E3_DIR"])
+    if os.environ.get("CARNOT_ARC_E3_DIR")
+    else (REPO / "results" / "arc_e3")
+)
+# Pristine, READ-ONLY copies of the engines as they stood at the commit that named them the
+# GAP-WM-TRUST-GATE origin incident. The mutable store above is rewritten by any induction
+# run, so a test that asserts "the new gate rejects the real degenerate engines" must read
+# from HERE or it silently becomes a test of whatever ran most recently.
+E3_ORIGIN_FIXTURES_DIR = REPO / "results" / "arc_e3_origin_fixtures"
 
 # ---------------------------------------------------------------------------
 # logical-resolution helpers (the "settled ASCII frame")
@@ -683,6 +710,372 @@ def collect_transitions(
 # THE CARNOT VERIFIER — grounds the LLM-induced model against reality
 # ---------------------------------------------------------------------------
 
+# ===========================================================================
+# REQ-ARC-WMTE-6010 / REQ-ARC-WMTE-6011 -- the two INDEPENDENT, DEFAULT-OFF
+# repairs to world-model verification, measured today (2026-07-27) as the two
+# reasons `induction_attempts_planned == 0` on 174/174 rows of the first-win
+# measurement while the generator itself was healthy (103 calls / 94 responses
+# / 0 errors).
+#
+# THEY PUSH IN OPPOSITE DIRECTIONS, WHICH IS WHY THEY ARE TWO FLAGS AND NOT ONE.
+#   * Masking the HUD REMOVES cells that were unattainable by construction, and
+#     should therefore RAISE every measured fidelity number.
+#   * Closing the trust gate REJECTS degenerate engines that today pass, and
+#     should therefore LOWER the pass rate.
+# Shipped together behind a single flag and measured together, a null result is
+# uninterpretable -- "both worked and cancelled" and "neither did" produce the
+# same number. Two independent flags make the four-arm matrix (control /
+# mask-only / gate-only / both) possible, which is the only design that can
+# attribute the effect. Neither flag is flipped here; the flip is the operator's
+# call on the strength of that matrix.
+# ===========================================================================
+
+# ---- REQ-ARC-WMTE-6010: the HUD is inside the exact-match comparison --------
+# Transitions are recorded as FULL logical grids (arc_competition_agent.py's
+# E3AgentPolicy.next_move, via `to_logical(grid_of(latest), self.cell)`). A HUD
+# mask EXISTS and is live in the explorer (`_compute_hud_mask_from_frame`, the
+# SUBMITTED_EDGE_BAR_HUD_MASK_ENABLED / _COLLAPSE_GUARD / _STAGE2_CONFIRM trio),
+# but as of 2026-07-27 `grep hud_mask` returned ZERO hits in this module, in
+# arc_llm_reinduction.py, and in arc_world_model_trust_energy.py -- verified
+# directly. So on any game with a monotone step counter EVERY frame differs in
+# the HUD, full-grid exact match is UNATTAINABLE BY CONSTRUCTION, and
+#
+# QUALIFICATION (measured 2026-07-27, second review): "a monotone step counter"
+# describes a MINORITY of the games this mask is applied to. Measuring
+# P(masked region changes | play area unchanged) over real transitions
+# (n=60, seed 0) across the 17 games with a resolvable mask:
+#     free-running counter (p >= 0.95):  6  -- bp35 lf52 s5i5 sp80 tu93 vc33
+#     mixed (0.05 < p < 0.95):           7  -- ka59 cd82 dc22 su15 wa30 m0r0 g50t
+#     game-COUPLED chrome (p <= 0.05):   2  -- ar25 ft09
+#     unmeasurable (no still frames):    2  -- re86 tr87
+# A free-running tick would sit at p = 1.0 everywhere. On the coupled games the
+# masked row moves only when the game state also moves -- it is a score or
+# progress readout, not an action-independent clock -- so the
+# "unattainable by construction" argument does NOT cover them, and masking
+# there is discarding real signal rather than removing noise. This does not
+# make the mask dishonest; it means the justification is narrower than the
+# application, which is why REQ-ARC-WMTE-6015's swallow guard exists.
+#
+# `cell_recall`'s change mask is dominated by counter cells rather than by game
+# state. Part of the measured median-0.0 trust score is therefore a MEASUREMENT
+# ARTIFACT, not purely a capability wall.
+#
+# The repair masks at COMPARE time, never at RECORD time: `Transition` keeps the
+# full-fidelity grids it always kept (never-prune; a historical transitions dump
+# stays byte-comparable), and only the comparison collapses HUD cells. The mask
+# is supplied in LOGICAL coordinates -- see `logical_hud_mask`, which downsamples
+# the explorer's FRAME-coordinate mask by the same `grid[::cell, ::cell]` stride
+# `to_logical` uses, so the two are aligned by construction rather than by luck.
+SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED = False
+SUBMITTED_WORLD_MODEL_HUD_MASK_MODE = "compare_time_logical_mask_from_explorer_frame_mask"
+
+# ---- REQ-ARC-WMTE-6011: GAP-WM-TRUST-GATE (ops/verifier_gaps.md) -----------
+# An IDENTITY engine (`return grid`) scores 0.725 on `WorldModelVerifier.score`
+# and PASSES the `accuracy >= 0.5` gate -- 0.5 being the threshold recorded in
+# ops/verifier_gaps.md's GAP-WM-TRUST-GATE entry and used by
+# `binary_exact_gate_pass`'s default. THRESHOLD CORRIGENDUM (2026-07-27): the
+# threshold the AGENT ACTUALLY SHIPS is `min_heldout_accuracy=1.0`
+# (arc_competition_agent.py:5593 and :5719). The two are not interchangeable --
+# admission-flip counts differ by ~10x between them (see
+# `change_gate_decision`'s legacy_accuracy_* keys) -- so every claim below is
+# tagged with the threshold it was measured at, and any statement about LIVE
+# behaviour uses 1.0. The 0.725-passes-0.5 framing is the DOCUMENTED gap, which
+# is what this requirement was written against; it remains true at 0.5, and at
+# 1.0 the identity engine is rejected by the incumbent gate for a different
+# reason (it is not exact) while STILL being ranked and trusted through the
+# hidden-state `trust_pass` branch, which is what REQ-6013 addresses.
+# `accuracy` is full-grid exact
+# match DENOMINATED OVER ALL TRANSITIONS INCLUDING NO-OPS and lp85's corpus is
+# ~87 no-ops to 33 changing. Confirmed on disk 2026-07-27:
+# results/arc_e3/ft09/world_model.py is 12 bare `return grid` branches and
+# `is_level_complete -> False`; results/arc_e3/lp85/world_model.py mutates only
+# on `action == 6 and grid[py, px] == 9`. Both were reported to the operator as
+# "the good model" and are in fact degenerate.
+#
+# WHY NOT `cell_recall`, AND WHY NOT THE EXISTING `score_change_weighted_
+# consistency`: both mask to TRUE changes only
+# (`pred[changed] == next_grid[changed]`), so neither can see a cell the engine
+# wrote that reality did NOT change. They punish misses and ignore spurious
+# writes -- they are recall, not fidelity. A "write garbage everywhere" engine
+# is invisible to them in exactly the way the identity engine is invisible to
+# `accuracy`. So the gate quantity here is SYMMETRIC by construction: it scores
+# over the UNION of the truly-changed cells and the engine-written cells, which
+# makes a spurious write cost exactly what a missed change costs.
+SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED = False
+SUBMITTED_WORLD_MODEL_CHANGE_GATE_MODE = "symmetric_union_change_fidelity_plus_nondegeneracy_floor"
+# Calibrated from the measured separation between the real on-disk degenerates
+# and a hand-written correct engine -- see the REQ-ARC-WMTE-6011 witness in
+# tests/python/test_arc_world_model_change_gate.py, which asserts the separation
+# rather than the constants, so a re-tune cannot silently empty the pass region.
+WORLD_MODEL_CHANGE_FIDELITY_THRESHOLD = 0.5
+WORLD_MODEL_MIN_CORRECT_CHANGED_CELLS = 1
+# Ceiling on the fraction of TRULY-UNCHANGED transitions the engine changes anyway. 0.25 is
+# calibrated from the measured separation, not picked round: the honest hand-written dc22
+# navigation engine hallucinates on 0.0000 of its no-ops, while the adversarial
+# "correct-but-invents-a-change-on-every-no-op" engine that defeated the fidelity-only gate
+# sits at 1.0000. Anything in between is a real judgement call, so the threshold is set well
+# clear of the honest engine rather than tight against the attack.
+WORLD_MODEL_MAX_NOOP_HALLUCINATION_RATE = 0.25
+
+# ---- REQ-ARC-WMTE-6013: the change gate's HIDDEN-STATE branch coverage hole ----
+# REQ-6011 above shipped `change_gate_decision` wired into exactly ONE of the agent's two
+# admission branches -- the `else` (non-hidden-state) one. The OTHER branch, taken for the
+# 11 HIDDEN_STATE_GAME_IDS, admits on `trust_pass` from `select_trusted_world_model` and
+# never calls the change gate. That branch covers EVERY one of the 0.08-wall games
+# (cn04/ar25/sc25/sk48/wa30), so the gate had zero coverage on precisely the games the
+# whole programme exists to move.
+#
+# THE HOLE, MEASURED (results/experiment_6012_hidden_state_trust_gate_hole.json, 33 matched
+# rows = 11 games x 3 seeds): an engine that is correct on every real change AND ALSO writes
+# cells reality never wrote is ADMITTED by the live hidden-state gate on 31/33 rows -- the
+# SAME 31 rows on which it admits the honest engine. Both attack arms score EXACTLY (not
+# approximately) the honest engine's `consistency`. The cause is structural and is the same
+# one REQ-6011 names for `cell_recall`: `score_change_weighted_consistency` masks to TRUE
+# changes only (`pred[changed] == next[changed]`), so a cell the engine invented outside that
+# mask is arithmetically invisible to it. It is recall, not fidelity.
+#
+# The repair routes the hidden-state branch's ADMIT/REJECT decision through the SAME
+# symmetric union-fidelity `change_gate_decision` the plain branch uses -- REPLACING
+# `trust_pass`, exactly as the plain branch replaces its `accuracy >= 0.5`, not AND-ing with
+# it. AND-ing was considered and rejected on measurement: exp6012 found the live gate is not
+# merely blind, it is ALSO too strict in the other direction -- it rejects the hand-written
+# honest dc22 engine on 2/3 seeds where REQ-6011 admits it 3/3. Keeping `trust_pass` as a
+# conjunct would import that false-reject wholesale, so the arm would confound "the symmetric
+# metric helps" with "the old metric still vetoes".
+#
+# The CANDIDATE RANKING is deliberately NOT touched: `select_trusted_world_model` still picks
+# by trust energy. Only the final admit/reject changes. Ranking and admission are separable
+# concerns, and changing both at once would make a per-arm delta unattributable.
+#
+# WHY A THIRD FLAG RATHER THAN FOLDING INTO REQ-6011'S. The two branches gate DISJOINT game
+# sets, so per-game attribution is automatic and a shared flag would not confound. But the
+# branches replace DIFFERENT incumbent metrics (`trust_pass` from held-out recall here vs
+# `accuracy` there) with different measured risk profiles, so an experimenter must be able
+# to isolate them. The default is therefore "follow REQ-6011's flag" -- which keeps the
+# four-arm matrix at four arms and stops the gate arm from being a silent no-op on the 11
+# wall games -- with an explicit env override that separates them when a measurement needs it.
+# None means follow; True/False pin it.
+SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED: Optional[bool] = None
+
+
+def _flag_env(name: str, default: bool) -> bool:
+    """Read a per-arm override, falling back to the shipped SUBMITTED_* default.
+
+    The four-arm matrix (control / mask-only / gate-only / both) needs to select an arm
+    WITHOUT editing the shipped constants, because an arm selected by editing a constant
+    cannot be run concurrently with its own control and cannot be reproduced from a command
+    line in an artifact. Unset env -> the shipped default, so the submitted path is
+    unaffected by the existence of this knob.
+    """
+
+    import os
+
+    raw = os.environ.get(name)
+    if raw is None or raw == "":
+        return bool(default)
+    return raw.strip().lower() in ("1", "true", "yes", "on")
+
+
+def world_model_hud_mask_enabled() -> bool:
+    """REQ-ARC-WMTE-6010 arm selector. CARNOT_ARC_WM_HUD_MASK=1 turns compare-time masking on."""
+
+    return _flag_env("CARNOT_ARC_WM_HUD_MASK", SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED)
+
+
+def world_model_change_gate_enabled() -> bool:
+    """REQ-ARC-WMTE-6011 arm selector. CARNOT_ARC_WM_CHANGE_GATE=1 turns the change gate on."""
+
+    return _flag_env("CARNOT_ARC_WM_CHANGE_GATE", SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED)
+
+
+def world_model_change_gate_hidden_state_enabled() -> bool:
+    """REQ-ARC-WMTE-6013 arm selector for the hidden-state branch.
+
+    Resolution order, most specific first:
+      1. CARNOT_ARC_WM_CHANGE_GATE_HIDDEN_STATE -- the explicit isolation override.
+      2. SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED, when pinned to True/False.
+      3. Otherwise FOLLOW REQ-6011's flag, so turning the change gate on covers BOTH
+         admission branches instead of silently skipping the 11 hidden-state games.
+
+    Step 3 is what keeps the four-arm matrix at four arms. Step 1 is what lets a follow-up
+    measurement separate the two branches without a code edit.
+    """
+
+    import os
+
+    raw = os.environ.get("CARNOT_ARC_WM_CHANGE_GATE_HIDDEN_STATE")
+    if raw is not None and raw != "":
+        return raw.strip().lower() in ("1", "true", "yes", "on")
+    if SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED is not None:
+        return bool(SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED)
+    return world_model_change_gate_enabled()
+
+
+def logical_hud_mask(frame_mask: Any, cell: int) -> Optional[np.ndarray]:
+    """Downsample a FRAME-coordinate HUD mask to LOGICAL-grid coordinates.
+
+    `to_logical` is a plain stride `grid[::cell, ::cell]`, so the logical grid's
+    (r, c) is the frame's (r*cell, c*cell) and the mask must be taken with the
+    IDENTICAL stride. Doing anything cleverer (e.g. "any HUD pixel in the block")
+    would silently mask cells `to_logical` never sampled, which is the
+    over-masking direction -- and over-masking destroys CORRECTNESS while
+    under-masking only costs efficiency, the same asymmetry that keeps the
+    explorer's own edge-bar detector behind a Stage-2 confirmation gate.
+
+    Returns None when there is nothing to align (no mask, malformed mask, bad
+    cell size). None is NEVER a silent no-op at the call sites: every caller
+    records an explicit `hud_mask_status` saying WHY no mask was applied.
+    """
+
+    if frame_mask is None:
+        return None
+    try:
+        mask = np.asarray(frame_mask, dtype=bool)
+    except Exception:
+        return None
+    if mask.ndim != 2:
+        return None
+    c = int(cell) if cell else 1
+    if c < 1:
+        return None
+    out = mask[::c, ::c] if c > 1 else mask
+    return out if bool(out.any()) else None
+
+
+# ---- REQ-ARC-WMTE-6015: THE SWALLOW GUARD ---------------------------------
+# Found 2026-07-27 by measuring mask coverage per game rather than trusting the "it is only
+# a monotone step counter" story. On two of the 17 games with a resolvable mask, the
+# explorer's HUD classifier selects a row where the GAME STATE lives, not chrome:
+#
+#     game   changed-cells-inside-mask   changing transitions, raw -> masked
+#     lf52          1.0000                       60 -> 0     (the entire game is deleted)
+#     su15          0.7568                       28 -> 1
+#     ...  every other game               0.0000 .. 0.2219   (s5i5 0.2219 is the highest)
+#
+# On lf52 the mask makes the corpus DYNAMICS-FREE: nothing changes, so the IDENTITY engine
+# is a perfect model of a game with no mechanics, and it is admitted. That is exactly the
+# laundering an adversarial review flagged in the aggregate ("the mask helps a zero-knowledge
+# engine ~1.7x more than a real one"), here located in a specific mechanism on specific games
+# rather than left as a statistical worry.
+#
+# `apply_hud_mask`'s own docstring already names the asymmetry that decides the fix:
+# "over-masking destroys CORRECTNESS while under-masking only costs efficiency". So the guard
+# is REFUSE-ON-DOUBT: a mask that swallows the dynamics is not applied at all, and the reason
+# is recorded. Refusing degrades that game to the pre-REQ-6010 behaviour (measurably worse,
+# per the very artifact this repair is built on) -- which is the correct direction, because
+# the alternative is a metric that scores an engine on a game it has deleted.
+#
+# THRESHOLD PROVENANCE. 0.5 is not picked round; it is the midpoint of the only wide gap in
+# the measured distribution above (0.2219 -> 0.7568), so it is well clear of the worst honest
+# game AND of the least-bad swallowing one. The zero-dynamics case is checked SEPARATELY and
+# unconditionally, because "the corpus has changes and the mask leaves none" is a swallow at
+# any threshold and must not depend on a tunable.
+HUD_MASK_MAX_CHANGED_CELL_OVERLAP = 0.5
+
+
+def hud_mask_swallow_check(transitions: Sequence["Transition"], mask: Optional[np.ndarray]) -> dict:
+    """Does this mask delete the game rather than the chrome? Returns an auditable record.
+
+    A dict, not a bool, for the same reason `change_gate_decision` returns one: a caller must
+    be able to show WHY a mask was refused, and a reviewer must be able to see the measured
+    quantity next to the threshold that judged it. `swallows=False` with
+    `n_changed_cells_total == 0` is reported as `no_dynamics_to_swallow` -- an unmeasurable
+    verdict, NOT a clean one, so a consumer cannot read "we checked and it is fine" off a
+    corpus where the check could not fire.
+    """
+
+    rec = {
+        "checked": False,
+        "swallows": False,
+        "reason": "no_mask",
+        "changed_cell_overlap": 0.0,
+        "overlap_threshold": float(HUD_MASK_MAX_CHANGED_CELL_OVERLAP),
+        "raw_changing_transitions": 0,
+        "masked_changing_transitions": 0,
+        "n_changed_cells_total": 0,
+        "n_changed_cells_inside_mask": 0,
+    }
+    if mask is None:
+        return rec
+    rows = list(transitions)
+    if not rows:
+        rec["reason"] = "no_transitions"
+        return rec
+    m = np.asarray(mask, dtype=bool)
+    total = inside = raw_changing = masked_changing = 0
+    for t in rows:
+        g0 = np.asarray(t.grid)
+        g1 = np.asarray(t.next_grid)
+        if g0.shape != g1.shape or g0.shape != m.shape:
+            continue
+        ch = g0 != g1
+        if not ch.any():
+            continue
+        raw_changing += 1
+        total += int(ch.sum())
+        inside += int((ch & m).sum())
+        if not np.array_equal(apply_hud_mask(g0, m), apply_hud_mask(g1, m)):
+            masked_changing += 1
+    rec.update(
+        {
+            "checked": True,
+            "raw_changing_transitions": raw_changing,
+            "masked_changing_transitions": masked_changing,
+            "n_changed_cells_total": total,
+            "n_changed_cells_inside_mask": inside,
+            "changed_cell_overlap": round(float(inside / total), 6) if total else 0.0,
+        }
+    )
+    if total == 0:
+        rec["reason"] = "no_dynamics_to_swallow"
+        return rec
+    if raw_changing > 0 and masked_changing == 0:
+        # The corpus has changes and the mask leaves none. TWO different situations produce
+        # this, and they are NOT distinguishable from inside this corpus:
+        #   (a) the mask really does cover the game (lf52: overlap 1.0, 60 -> 0);
+        #   (b) the mask is honest chrome and this corpus genuinely contains no state
+        #       change, so the only cells that moved were the counter's.
+        # Both are refused -- `apply_hud_mask`'s stated asymmetry (over-masking destroys
+        # correctness, under-masking only costs efficiency) makes refusing the safe
+        # direction -- but they are given DIFFERENT reasons, because (b) is a statement
+        # about the corpus and (a) is a defect in the mask, and an operator reading a
+        # refusal needs to know which one they are looking at. Collapsing them would be the
+        # same clean-vs-unmeasurable conflation `noop_ok_is_vacuous` exists to prevent.
+        rec["swallows"] = True
+        rec["reason"] = (
+            "mask_removes_all_dynamics"
+            if inside < total
+            else "no_changed_cells_outside_mask_cannot_distinguish"
+        )
+        return rec
+    if rec["changed_cell_overlap"] >= float(HUD_MASK_MAX_CHANGED_CELL_OVERLAP):
+        rec["swallows"] = True
+        rec["reason"] = "mask_overlaps_majority_of_changed_cells"
+        return rec
+    rec["reason"] = "ok"
+    return rec
+
+
+def apply_hud_mask(grid: np.ndarray, mask: Optional[np.ndarray]) -> np.ndarray:
+    """Collapse HUD cells to a constant so they cannot decide an exact-match test.
+
+    Mirrors `StepwiseExplorer._hash`, which already zeroes `hud_mask` cells before
+    hashing a frame for node identity -- same collapse convention, same constant,
+    so a state that dedups to one node in the search also compares as one state in
+    the world model. Shape-mismatched masks are IGNORED here and reported by the
+    caller as `shape_mismatch`; silently applying a wrong-shaped mask (or letting
+    numpy broadcast one) is precisely the failure this repair is fixing.
+    """
+
+    if mask is None:
+        return grid
+    g = np.asarray(grid)
+    if getattr(mask, "shape", None) != g.shape:
+        return grid
+    out = g.copy()
+    out[mask] = 0
+    return out
+
 
 @dataclass
 class VerifyResult:
@@ -698,6 +1091,90 @@ class VerifyResult:
     # cell_recall is the granularity-matched gate the coordinated redesign turns on via CARNOT_ARC_TRUST_METRIC.
     cell_recall: float = 0.0
 
+    # ---- REQ-ARC-WMTE-6011 change-weighted fields (GAP-WM-TRUST-GATE) -------
+    # Number of recorded transitions that actually changed the (masked) grid. This is
+    # the denominator `accuracy` should have had: on lp85 it is 33 of 120, so an
+    # engine can be wrong about every single mechanic and still read 0.725.
+    n_changing: int = 0
+    # Transitions among `n_changing` the engine reproduced EXACTLY. The gap file's
+    # literal `n_changes_correct`; reported, and the strictest available witness.
+    n_changes_correct: int = 0
+    # `n_changes_correct / n_changing` -- the gap file's literal `change_accuracy`.
+    # Reported for continuity with the gap entry; NOT the gate quantity, because
+    # exact-full-grid match over changing transitions is the same all-or-nothing
+    # measure that REQ-6010 shows is unattainable while the HUD is in the compare.
+    change_accuracy: float = 0.0
+    # THE GATE QUANTITY. Per changing transition, the fraction of the UNION of
+    # (cells reality changed) and (cells the engine wrote) that the engine got
+    # right, averaged over changing transitions. Symmetric: a miss and a spurious
+    # write cost the same. Identity engines score 0.0 here by construction (they
+    # write nothing, so the union is exactly the true changes and none are right).
+    change_fidelity: float = 0.0
+    # Non-degeneracy floor, in CELLS not transitions: how many truly-changed cells
+    # the engine predicted correctly. Cell-denominated on purpose -- a
+    # transition-denominated floor would be unreachable on a HUD game whenever
+    # REQ-6010's mask is off, which would re-introduce exactly the cross-flag
+    # coupling the two-flag split exists to prevent.
+    correct_changed_cells: int = 0
+    # The ASYMMETRY WITNESS: cells the engine wrote that reality did not change to
+    # that value. `cell_recall` and `score_change_weighted_consistency` are both
+    # structurally blind to this number. Non-zero here with a high `cell_recall` is
+    # the "writes garbage everywhere but happens to cover the real changes" engine.
+    spurious_changed_cells: int = 0
+
+    # ---- THE NO-OP HALLUCINATION CHANNEL (found by adversarially attacking this gate) ----
+    # `change_fidelity` scores GRID-CHANGING transitions only, which leaves it structurally
+    # blind to an engine that models every real change correctly AND ALSO invents a change on
+    # every NO-OP. Measured on real dc22 transitions: such an engine scores change_fidelity
+    # 0.7243 and PASSES, while its full-grid exact accuracy is 0.0000 -- it is wrong about
+    # every single transition in the corpus. That engine is catastrophic for `plan_in_model`,
+    # which walks the engine forward and would see phantom transitions at every step. The
+    # LEGACY accuracy gate caught it (0.0 < 0.5), so without this channel the repair would be
+    # strictly WORSE than what it replaces on this failure mode.
+    #
+    # It is a SEPARATE gate condition rather than being folded into `change_fidelity`: adding
+    # no-ops into the same average would give a correctly-idle identity engine credit for
+    # every no-op it "predicts", which reproduces exactly the 0.725 blind spot this whole
+    # requirement exists to remove.
+    n_noop: int = 0
+    n_noop_hallucinated: int = 0  # truly-unchanged transitions the engine changed anyway
+    noop_hallucination_rate: float = 0.0
+    # ---- REQ-ARC-WMTE-6013 DIAGNOSTICS (recorded, deliberately NOT gated on) ----
+    # `noop_hallucination_rate` above returns 0.0 when `n_noop == 0`, so the value meaning
+    # "this engine invents nothing" is ALSO the value meaning "this could not be measured".
+    # That is a structurally dead channel wearing a passing score, and it is not
+    # hypothetical: on re86 all 40 held-out transitions change, n_noop is 0, and an engine
+    # that writes a cell reality never wrote clears the whole gate at fidelity 0.919 because
+    # the one channel that would have caught it cannot fire. This flag separates the two
+    # meanings so a consumer can tell "clean" from "unmeasurable".
+    noop_channel_measurable: bool = False
+    # The PURE invented-write count: cells the engine changed that reality did NOT change at
+    # all. Distinct from `spurious_changed_cells`, which is `wrote & ~correct` and therefore
+    # CONFLATES two different things -- a cell invented out of nothing, and a genuinely-
+    # changed cell predicted with the wrong value (ordinary prediction error, which every
+    # imperfect-but-useful engine has). Only this quantity isolates invention.
+    #
+    # IT IS NOT A GATE CONDITION, ON PURPOSE. It separates perfectly on the corpus measured
+    # so far (honest engines 0, the spurious writer one per changing transition), and that is
+    # exactly why it must not be thresholded here: a separation measured against an engine
+    # built to be caught tells you nothing about where a REALISTICALLY IMPERFECT engine sits,
+    # and a threshold fitted to the former would reject the latter. Recalibration against an
+    # imperfect engine is follow-up work with the operator, not a side effect of this change.
+    invented_changed_cells: int = 0
+    invented_change_rate: float = 0.0  # invented_changed_cells / n_changing
+    # Explicit provenance for REQ-6010 -- one of "disabled" (flag off, no mask
+    # requested), "unresolved" (flag on, caller had no mask to give), "shape_mismatch"
+    # (flag on, mask given, but it did not align with the graded grids), or "applied".
+    # NEVER a silent no-op: a caller that asked for masking and did not get it can
+    # tell which of the three failure reasons it hit.
+    hud_mask_status: str = "disabled"
+    # Number of logical cells the applied mask covers. 0 whenever status != "applied".
+    hud_mask_cells: int = 0
+    # REQ-ARC-WMTE-6015 swallow-guard record. Carried on every result, including the
+    # unmasked ones (where it reports `no_mask`), so an artifact row always shows whether
+    # the guard could have fired and what it measured -- never only when it did fire.
+    hud_mask_swallow: dict = field(default_factory=dict)
+
 
 class WorldModelVerifier:
     """Checks that an induced engine(grid, action, data) -> grid reproduces the real
@@ -705,8 +1182,63 @@ class WorldModelVerifier:
     proposed model only earns trust by predicting transitions it was NOT hand-fit to.
     Returns mismatch artifacts (the failing transitions) for the refactor step."""
 
-    def __init__(self, transitions: list[Transition]) -> None:
+    def __init__(
+        self,
+        transitions: list[Transition],
+        *,
+        hud_mask: Any = None,
+        hud_mask_enabled: Optional[bool] = None,
+        hud_mask_swallow: Optional[dict] = None,
+    ) -> None:
+        """`hud_mask` is in LOGICAL-grid coordinates (see `logical_hud_mask`).
+
+        `hud_mask_enabled` defaults to the module flag SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED
+        so the submitted path is byte-identical until the operator flips it; an explicit
+        True/False is the per-arm override the four-arm A/B needs.
+        """
+
         self.transitions = transitions
+        self.hud_mask_enabled = (
+            world_model_hud_mask_enabled() if hud_mask_enabled is None else bool(hud_mask_enabled)
+        )
+        self.hud_mask = hud_mask if self.hud_mask_enabled else None
+        # REQ-ARC-WMTE-6015: refuse a mask that deletes the game instead of the chrome.
+        # Run BEFORE the status is settled so a swallowing mask can never reach `_graded`.
+        #
+        # `hud_mask_swallow` may be PRE-COMPUTED by the caller, and callers that hold the
+        # whole corpus SHOULD pre-compute it. Whether a mask covers the game or the chrome
+        # is a property of the MASK AND THE WHOLE CORPUS, not of whatever slice this
+        # verifier happens to hold. Judging it per-slice produces a real false positive:
+        # `select_trusted_world_model` grades on a held-out TAIL, and a tail that happens to
+        # contain no genuine state change has ALL of its changed cells inside the HUD -- an
+        # honest mask then looks exactly like a swallowing one, and the guard disables the
+        # repair on precisely the no-op-heavy corpora the repair exists for (lp85 is ~87
+        # no-ops to 33 changing). The full corpus can tell the two apart; a tail cannot.
+        self.hud_mask_swallow = (
+            dict(hud_mask_swallow)
+            if hud_mask_swallow is not None
+            else hud_mask_swallow_check(self.transitions, self.hud_mask)
+        )
+        # Resolved once, here, so `score()` cannot drift between the status it reports and
+        # the grids it actually compared.
+        if not self.hud_mask_enabled:
+            self.hud_mask_status = "disabled"
+        elif self.hud_mask is None:
+            # The flag asked for masking and the caller had none to give. This is the
+            # explicit record the repair promises instead of a silent no-op.
+            self.hud_mask_status = "unresolved"
+        elif self.hud_mask_swallow.get("swallows"):
+            # THE SWALLOW GUARD FIRING. Drop the mask entirely and say so. Degrading this
+            # game to unmasked grading is the deliberate choice: an unmasked comparison is
+            # merely hard to win, while a swallowed one is scoring engines on a game whose
+            # dynamics have been deleted -- under which the IDENTITY engine is optimal.
+            self.hud_mask = None
+            self.hud_mask_status = "refused_swallows_dynamics"
+        else:
+            self.hud_mask_status = "requested"
+
+    def _graded(self, grid: np.ndarray) -> np.ndarray:
+        return apply_hud_mask(grid, self.hud_mask)
 
     def score(
         self, engine: Callable[[np.ndarray, int, Optional[dict]], np.ndarray], max_mismatch: int = 8
@@ -715,6 +1247,30 @@ class WorldModelVerifier:
         cell_recalls: list[
             float
         ] = []  # per-CHANGED-transition fraction of changed cells predicted right
+        # REQ-ARC-WMTE-6011 accumulators (see VerifyResult for what each one is for).
+        n_changing = 0
+        n_changes_correct = 0
+        fidelities: list[float] = []
+        correct_changed_cells = 0
+        spurious_changed_cells = 0
+        invented_changed_cells = 0
+        n_noop = 0
+        n_noop_hallucinated = 0
+        # REQ-ARC-WMTE-6010: resolve the mask's status from the TRANSITIONS ALONE, before the
+        # engine runs. Deriving it inside the loop (the first version of this code) made the
+        # status depend on ENGINE behaviour: an engine that raised on every transition, or an
+        # empty corpus, would `continue` past the alignment check and report `unresolved` even
+        # though a perfectly good mask had been supplied. The mask either fits these grids or
+        # it does not, and that is a fact about the mask and the corpus, not about the engine.
+        mask_status = self.hud_mask_status
+        if mask_status == "requested":
+            shapes = {np.asarray(t.grid).shape for t in self.transitions}
+            if not shapes:
+                mask_status = "no_transitions"
+            elif any(getattr(self.hud_mask, "shape", None) == s for s in shapes):
+                mask_status = "applied"
+            else:
+                mask_status = "shape_mismatch"
         for i, t in enumerate(self.transitions):
             try:
                 pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
@@ -722,18 +1278,50 @@ class WorldModelVerifier:
                 if len(mism) < max_mismatch:
                     mism.append({"i": i, "action": t.action, "error": repr(e)[:160]})
                 continue
+            # REQ-ARC-WMTE-6010: grade on HUD-collapsed copies. The recorded Transition is
+            # left untouched (never-prune: the raw grids stay exactly as observed).
+            g0 = self._graded(t.grid)
+            g1 = self._graded(t.next_grid)
+            pred_g = self._graded(pred) if pred.shape == np.asarray(t.next_grid).shape else pred
             # graded changed-cell recall (granularity-matched gate); only state-changing transitions count
-            changed = not np.array_equal(t.grid, t.next_grid)
+            changed = not np.array_equal(g0, g1)
             if changed:
-                if pred.shape == t.next_grid.shape:
-                    m = t.grid != t.next_grid
-                    cell_recalls.append(float((pred[m] == t.next_grid[m]).mean()))
+                n_changing += 1
+                if pred_g.shape == g1.shape:
+                    m = g0 != g1
+                    cell_recalls.append(float((pred_g[m] == g1[m]).mean()))
+                    # ---- symmetric union fidelity (THE GATE QUANTITY) ----------------
+                    # `m` is what reality changed; `wrote` is what the engine changed. Scoring
+                    # over their UNION is what makes a spurious write cost what a miss costs;
+                    # `cell_recall` above scores over `m` alone and therefore cannot see one.
+                    wrote = pred_g != g0
+                    union = m | wrote
+                    correct = pred_g == g1
+                    n_union = int(union.sum())
+                    fidelities.append(float((correct & union).sum() / n_union) if n_union else 1.0)
+                    correct_changed_cells += int((correct & m).sum())
+                    spurious_changed_cells += int((wrote & ~correct).sum())
+                    # REQ-ARC-WMTE-6013: `wrote & ~m` -- the engine changed a cell that
+                    # reality left alone. `~m` (reality did not change it) rather than
+                    # `~correct` (the prediction was wrong) is what makes this invention
+                    # rather than error.
+                    invented_changed_cells += int((wrote & ~m).sum())
                 else:
                     cell_recalls.append(0.0)
-            if pred.shape == t.next_grid.shape and np.array_equal(pred, t.next_grid):
+                    fidelities.append(0.0)
+            else:
+                # A TRUE no-op. The engine should leave it alone; if it did not, it invented
+                # a transition that reality does not contain. Counted separately from
+                # `change_fidelity` -- see VerifyResult's NO-OP HALLUCINATION CHANNEL note.
+                n_noop += 1
+                if pred_g.shape != g1.shape or not np.array_equal(pred_g, g1):
+                    n_noop_hallucinated += 1
+            if pred_g.shape == g1.shape and np.array_equal(pred_g, g1):
                 n_correct += 1
+                if changed:
+                    n_changes_correct += 1
             elif len(mism) < max_mismatch:
-                ok_shape = pred.shape == t.next_grid.shape
+                ok_shape = pred_g.shape == g1.shape
                 # COMPACT mismatch (deltas, not full grids — fits a local model's context):
                 # what the TRUE action did vs where the engine's prediction was wrong.
                 mism.append(
@@ -741,15 +1329,40 @@ class WorldModelVerifier:
                         "i": i,
                         "action": t.action,
                         "data": t.data,
-                        "true_change": _delta(t.grid, t.next_grid),
+                        "true_change": _delta(g0, g1),
                         "your_prediction_was_wrong_at": (
-                            _delta(pred, t.next_grid) if ok_shape else f"wrong shape {pred.shape}"
+                            _delta(pred_g, g1) if ok_shape else f"wrong shape {pred_g.shape}"
                         ),
                     }
                 )
         n = len(self.transitions)
         cell_recall = float(np.mean(cell_recalls)) if cell_recalls else 0.0
-        return VerifyResult(n, n_correct, n_correct / max(1, n), mism, cell_recall=cell_recall)
+        return VerifyResult(
+            n,
+            n_correct,
+            n_correct / max(1, n),
+            mism,
+            cell_recall=cell_recall,
+            n_changing=n_changing,
+            n_changes_correct=n_changes_correct,
+            change_accuracy=float(n_changes_correct / n_changing) if n_changing else 0.0,
+            change_fidelity=float(np.mean(fidelities)) if fidelities else 0.0,
+            correct_changed_cells=correct_changed_cells,
+            spurious_changed_cells=spurious_changed_cells,
+            n_noop=n_noop,
+            n_noop_hallucinated=n_noop_hallucinated,
+            noop_hallucination_rate=(float(n_noop_hallucinated / n_noop) if n_noop else 0.0),
+            noop_channel_measurable=bool(n_noop > 0),
+            invented_changed_cells=invented_changed_cells,
+            invented_change_rate=(
+                float(invented_changed_cells / n_changing) if n_changing else 0.0
+            ),
+            hud_mask_status=mask_status,
+            hud_mask_cells=(
+                int(np.asarray(self.hud_mask).sum()) if mask_status == "applied" else 0
+            ),
+            hud_mask_swallow=dict(self.hud_mask_swallow),
+        )
 
     def offpath_structural_energy(
         self,
@@ -818,6 +1431,148 @@ class WorldModelVerifier:
                 str(row["candidate_name"]),
             ),
         )
+
+
+def change_gate_decision(
+    vr: "VerifyResult",
+    *,
+    enabled: Optional[bool] = None,
+    fidelity_threshold: float = WORLD_MODEL_CHANGE_FIDELITY_THRESHOLD,
+    min_correct_changed_cells: int = WORLD_MODEL_MIN_CORRECT_CHANGED_CELLS,
+    max_noop_hallucination_rate: float = WORLD_MODEL_MAX_NOOP_HALLUCINATION_RATE,
+) -> dict:
+    """REQ-ARC-WMTE-6011: the change-weighted trust decision, as an auditable record.
+
+    Returns a dict rather than a bare bool ON PURPOSE. A bare bool cannot answer "could
+    this gate have failed?" -- and a pass that could not have failed is not evidence. The
+    returned record carries the COMPUTED WITNESS at the gate's own aggregation level: the
+    two sub-decisions, the two measured quantities, the two thresholds, and the size of
+    the population each quantity was computed over. `n_changing == 0` is reported as its
+    own reason (`no_changing_transitions`) because a corpus with no state-changing
+    transition cannot distinguish a good engine from the identity engine -- refusing there
+    is the honest answer, not a pass by default.
+
+    `enabled=False` (the shipped default via SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED)
+    still computes and returns every field; it just reports `passed=True` with reason
+    `gate_disabled`, so a control arm records the same diagnostics as a treatment arm and
+    the four-arm matrix compares like with like.
+    """
+
+    on = world_model_change_gate_enabled() if enabled is None else bool(enabled)
+    fidelity_ok = float(vr.change_fidelity) >= float(fidelity_threshold)
+    nondegenerate = int(vr.correct_changed_cells) >= int(min_correct_changed_cells)
+    has_population = int(vr.n_changing) > 0
+    noop_ok = float(vr.noop_hallucination_rate) <= float(max_noop_hallucination_rate)
+    if not on:
+        reason = "gate_disabled"
+        passed = True
+    elif not has_population:
+        reason = "no_changing_transitions"
+        passed = False
+    elif not nondegenerate:
+        # THE ORIGIN INCIDENT. ft09's identity engine and lp85's near-identity engine both
+        # land here: they never correctly predict a single changed cell, while `accuracy`
+        # reads 0.725 / 1.0 because the corpus is no-op-heavy.
+        #
+        # HONEST NOTE ON REDUNDANCY AT THE DEFAULT k=1. At `min_correct_changed_cells == 1`
+        # this branch cannot fire while `fidelity_ok` is True, and that is a THEOREM, not a
+        # coincidence: if no truly-changed cell is predicted correctly, then every cell in
+        # the (true-changes UNION engine-writes) set is wrong -- the true-changed ones by
+        # assumption, and each engine-written-but-unchanged one because "correct" there
+        # would require pred == next == prev, contradicting "the engine wrote it". So the
+        # union score is exactly 0 and the fidelity test has already failed. Confirmed
+        # empirically over 924 real arms in
+        # results/experiment_6011_world_model_change_gate_four_arm.json: the combination
+        # (nondegenerate=False, fidelity_ok=True) is never observed.
+        #
+        # It is kept, and ordered BEFORE the fidelity test, for two reasons. (1) It emits a
+        # strictly more diagnostic reason: "this engine never got a single real change
+        # right" is actionable where "fidelity 0.0 < 0.5" is not. (2) It becomes an
+        # INDEPENDENT gate condition the moment `min_correct_changed_cells > 1`, which is
+        # the knob for demanding a minimum evidence base rather than merely a non-zero one
+        # -- see test_nondegeneracy_floor_is_redundant_at_k1_and_independent_above_it, which
+        # asserts BOTH halves so this cannot quietly become a dead channel.
+        reason = "degenerate_engine_no_correct_changed_cells"
+        passed = False
+    elif not fidelity_ok:
+        reason = "change_fidelity_below_threshold"
+        passed = False
+    elif not noop_ok:
+        # Found by attacking this gate rather than by testing it: an engine correct on every
+        # real change that ALSO invents one on every no-op scores change_fidelity 0.7243 on
+        # real dc22 transitions while being wrong about 100% of them (exact accuracy 0.0000).
+        # `plan_in_model` walks the engine forward, so such an engine hallucinates a
+        # transition at every step of every plan.
+        reason = "engine_hallucinates_changes_on_noop_transitions"
+        passed = False
+    else:
+        reason = "passed"
+        passed = True
+    return {
+        "gate_enabled": on,
+        "passed": bool(passed),
+        "reason": reason,
+        # --- computed witness, at the gate's own aggregation level ---------------
+        "change_fidelity": round(float(vr.change_fidelity), 6),
+        "fidelity_threshold": float(fidelity_threshold),
+        "fidelity_ok": bool(fidelity_ok),
+        "correct_changed_cells": int(vr.correct_changed_cells),
+        "min_correct_changed_cells": int(min_correct_changed_cells),
+        "nondegenerate": bool(nondegenerate),
+        "spurious_changed_cells": int(vr.spurious_changed_cells),
+        "noop_hallucination_rate": round(float(vr.noop_hallucination_rate), 6),
+        "max_noop_hallucination_rate": float(max_noop_hallucination_rate),
+        "noop_ok": bool(noop_ok),
+        "n_noop": int(vr.n_noop),
+        "n_noop_hallucinated": int(vr.n_noop_hallucinated),
+        # REQ-ARC-WMTE-6013 diagnostics. Reported, NOT gated on -- see VerifyResult. When
+        # `noop_channel_measurable` is False the `noop_ok` verdict above is vacuous (it
+        # passed because there was nothing to test, not because the engine is clean), and a
+        # consumer that treats those two cases alike will read a false pass.
+        "noop_channel_measurable": bool(vr.noop_channel_measurable),
+        "noop_ok_is_vacuous": bool(not vr.noop_channel_measurable),
+        "invented_changed_cells": int(vr.invented_changed_cells),
+        "invented_change_rate": round(float(vr.invented_change_rate), 6),
+        "n_changing": int(vr.n_changing),
+        "n_transitions": int(vr.n),
+        # The legacy quantity this gate replaces, carried alongside so any artifact row
+        # shows BOTH verdicts and the disagreement is visible without a re-run.
+        "legacy_accuracy": round(float(vr.accuracy), 6),
+        # ---- THRESHOLD AMBIGUITY, RESOLVED EXPLICITLY (2026-07-27 corrigendum) --------
+        # `legacy_accuracy_would_pass` used to be reported ALONE against a hardcoded 0.5,
+        # and 0.5 is NOT the threshold the agent ships. The live admission is
+        # `min_heldout_accuracy=1.0` at BOTH call sites (arc_competition_agent.py:5593 and
+        # :5719, verified on disk 2026-07-27). The gap is not cosmetic: recomputed over
+        # exp6011's 75 rows, mask-induced admission flips for the IDENTITY engine are 29/75
+        # at 0.5 but only 3/75 at 1.0, and for the real on-disk engines 12/75 at 0.5 but
+        # 0/75 at 1.0 -- an order of magnitude, and a sign change in the headline. Reporting
+        # one number against an unnamed threshold made every admission claim unfalsifiable,
+        # so BOTH are now reported, each with its threshold named in the key.
+        #
+        # `legacy_accuracy_would_pass` is retained (not renamed) so already-written
+        # consumers keep reading the quantity they read before; it is the DOCUMENTARY
+        # threshold from ops/verifier_gaps.md's gap entry, not the live one. Any claim about
+        # LIVE behaviour must use `..._at_live_threshold`.
+        "legacy_accuracy_would_pass": bool(float(vr.accuracy) >= 0.5),
+        "legacy_accuracy_threshold_documented": 0.5,
+        "legacy_accuracy_would_pass_at_live_threshold": bool(float(vr.accuracy) >= 1.0),
+        "legacy_accuracy_live_threshold": 1.0,
+        "legacy_accuracy_live_threshold_source": (
+            "arc_competition_agent.py:5593,5719 min_heldout_accuracy=1.0"
+        ),
+        "change_accuracy": round(float(vr.change_accuracy), 6),
+        "n_changes_correct": int(vr.n_changes_correct),
+        "cell_recall": round(float(vr.cell_recall), 6),
+        "hud_mask_status": str(vr.hud_mask_status),
+        "hud_mask_cells": int(vr.hud_mask_cells),
+        # REQ-ARC-WMTE-6015. Present on EVERY gate record, fired or not, so a reader can
+        # tell "the guard checked and passed" from "the guard never ran" -- the same
+        # measurable-vs-clean distinction `noop_ok_is_vacuous` draws above.
+        "hud_mask_swallow": dict(vr.hud_mask_swallow),
+        "hud_mask_swallow_guard_fired": bool(
+            str(vr.hud_mask_status) == "refused_swallows_dynamics"
+        ),
+    }
 
 
 @dataclass
@@ -926,13 +1681,37 @@ def load_engine(game: str):
     is_level_complete). Re-imports fresh each call so a refactor is picked up."""
     import importlib.util
 
-    p = E3_DIR / game / "world_model.py"
+    return _load_engine_from(E3_DIR, game)
+
+
+def _load_engine_from(root: Path, game: str):
+    import importlib.util
+
+    p = Path(root) / game / "world_model.py"
     if not p.exists():
         raise FileNotFoundError(p)
     spec = importlib.util.spec_from_file_location(f"arc_wm_{game}", p)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)  # type: ignore
     return getattr(mod, "engine"), getattr(mod, "is_level_complete", None)
+
+
+def load_origin_fixture_engine(game: str):
+    """Load a GAP-WM-TRUST-GATE origin-incident engine from the FROZEN, never-written copy.
+
+    REQ-ARC-WMTE-6016. `load_engine` reads the MUTABLE store, which any induction run
+    rewrites in place. A guard asserted against the mutable store is therefore not asserted
+    against its own origin incident for long: on 2026-07-27 a live A/B replaced ft09's
+    12-bare-`return grid` identity engine with a 2-branch mutating one within hours of the
+    artifact that cited it, and the same run rewrote lp85 -- the ONE game whose degenerate
+    engine actually discriminates -- twice.
+
+    A guard that stops firing on the incident that motivated it is the failure mode this
+    project has shipped more than once. Reading from `E3_ORIGIN_FIXTURES_DIR` makes the
+    origin-incident assertion permanent by construction rather than by luck.
+    """
+
+    return _load_engine_from(E3_ORIGIN_FIXTURES_DIR, game)
 
 
 # ---------------------------------------------------------------------------
@@ -1056,6 +1835,8 @@ def _transitions_block(
     k: int = 8,
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
+    hud_mask: Optional[np.ndarray] = None,
+    hud_mask_enabled: Optional[bool] = None,
 ) -> str:
     """Compact transition encoding for the induce prompt: ONE full grid (the layout) +
     per-transition DELTAS (changed cells), + the full WIN state if observed. Prefers
@@ -1066,9 +1847,33 @@ def _transitions_block(
     full-grid renders below use the run-length encoding instead). Deltas use
     `_rle_delta_compact` (not `_rle_delta`) — on lp85's real transitions the raw comma-per-cell
     delta format became the new dominant cost once the full-grid fix landed (see
-    `_rle_delta_compact`'s docstring for the measured before/after)."""
-    changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
-    noop = [t for t in trans if np.array_equal(t.grid, t.next_grid)]
+    `_rle_delta_compact`'s docstring for the measured before/after).
+
+    REQ-ARC-WMTE-6010 PROMPT COHERENCE (added 2026-07-27 after an adversarial review found
+    the mask was half-applied). `changed` / `noop` below decide WHICH transitions the LLM is
+    shown, and until this date they were computed on RAW grids while the VERIFIER that
+    grades the induced engine compared MASKED grids. On a game with a monotone HUD counter
+    the two disagree completely: measured on real offline transitions, ft09 has 0 raw no-ops
+    and 32 masked no-ops, lf52 has 0 raw and 59 masked. So the prompt asserted "this game has
+    no inert actions" and showed six examples labelled as changes, while the grader had
+    already decided those same six transitions did not change anything. The model was being
+    asked to explain one world and marked against another. `_rle_delta_compact` renders on
+    the RAW grids deliberately -- the LLM must still see the true pixels, including the HUD;
+    only the CLASSIFICATION of a transition as changing-vs-inert is masked, which is the
+    thing the verifier also classifies.
+
+    Default `hud_mask_enabled=None` resolves through the same single flag resolver as every
+    other consumer, so with the flag off this function is byte-identical to before.
+    """
+    if hud_mask_enabled is None:
+        hud_mask_enabled = world_model_hud_mask_enabled()
+    mask = hud_mask if hud_mask_enabled else None
+
+    def _is_changed(t: Transition) -> bool:
+        return not np.array_equal(apply_hud_mask(t.grid, mask), apply_hud_mask(t.next_grid, mask))
+
+    changed = [t for t in trans if _is_changed(t)]
+    noop = [t for t in trans if not _is_changed(t)]
     sample = changed[: k - 2] + noop[:2]
     out = []
     if sample:
@@ -1243,7 +2048,13 @@ def induce_prompt(
     previous_level_complete_grid: Optional[np.ndarray] = None,
     k: int = 8,
     include_playbook_exemplars: bool | str = False,
+    hud_mask: Optional[np.ndarray] = None,
+    hud_mask_enabled: Optional[bool] = None,
 ) -> str:
+    # REQ-ARC-WMTE-6010 PROMPT COHERENCE: `hud_mask` reaches `_transitions_block` so the
+    # transitions the LLM is SHOWN are classified changing-vs-inert by the same rule the
+    # verifier uses to GRADE the resulting engine. See `_transitions_block`'s docstring for
+    # the measured incoherence this closes (ft09: prompt asserted 0 no-ops, grader saw 32).
     # REQ-ARC-FCP-5699-23: k defaults to _transitions_block's own default (8, unchanged
     # production behavior). REQ-ARC-FCP-5699-22 found the default shows the LLM only ~6
     # grid-changing transitions of the 25 collected -- roughly one per action type, a
@@ -1301,7 +2112,7 @@ Use only numpy + stdlib. Do not read files or network. Make engine() pure and
 deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
-{_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid)}
+{_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled)}
 {("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}"""
 
 

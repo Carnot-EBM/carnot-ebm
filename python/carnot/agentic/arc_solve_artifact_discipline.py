@@ -27,7 +27,32 @@ SUBSTRATE_DURATION_FLOORS = {
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
-TERMINAL_VERDICT_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
+# CLAUDE.md's "Verdict Terminal-Prefix Discipline" lists EIGHT accepted prefixes -- both the
+# colon and the UNDERSCORE form of each: `complete:` / `complete_` / `success:` / `success_` /
+# `passed:` / `passed_` / `shipped:` / `shipped_`. This tuple carried only the four colon forms,
+# so it REFUSED verdicts the project's own standard explicitly permits (found 2026-07-27, when it
+# blocked exp6011's `complete_four_arm_matrix_measured`).
+#
+# The underscore form is not merely permitted, it is often the SAFER choice: a literal ": " inside
+# a verdict string is what caused the `research-complete.yaml` colon-poison incident (an unquoted
+# colon-space broke the YAML and cascaded into a pretest SKIP of the whole milestone). So a lint
+# that forces the colon form pushes authors toward the riskier one.
+#
+# Fixed by widening the tuple rather than by editing the artifact: the artifact was already
+# compliant with CLAUDE.md, and rewriting a measurement's verdict to satisfy a stricter-than-spec
+# checker would be bending the evidence to fit the tool. The conductor's own
+# `_verdict_is_untrustworthy` classifier already accepts the underscore forms, so this also
+# removes a disagreement between two gates that are supposed to encode one rule.
+TERMINAL_VERDICT_PREFIXES = (
+    "complete:",
+    "complete_",
+    "success:",
+    "success_",
+    "passed:",
+    "passed_",
+    "shipped:",
+    "shipped_",
+)
 SPEC_REFS = ("REQ-VERIFY-4437", "SCENARIO-VERIFY-4437")
 
 FIELD_PRINCIPLES = {
