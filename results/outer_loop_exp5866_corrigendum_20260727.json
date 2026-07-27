@@ -1,9 +1,7 @@
 {
  "experiment": "outer_loop_exp5866_corrigendum_20260727",
  "schema": "carnot.outer_loop.corrigendum.exp5866_generator_concurrency_vram_envelope.v1",
- "run_date": "2026-07-27T16:34:15Z",
  "inference_substrate": "aggregation_from_upstream_artifacts",
- "duration_s": 0.001878,
  "duration_s_provenance": "MEASURED, not asserted: the wall time of results/exp5866_corrigendum_20260727/build.py, which re-reads exp5866's artifact, its raw fixprice.json rows, ops/known-issues.md, results/kaggle_env_probe.json and the submission kernel metadata, and RE-DERIVES both corrections from them. It is small because this is an aggregation pass over persisted objects, not a measurement -- but a hard 0.0 would mean the duration was never measured at all, which is why adversarial_verify.py correctly refused the hand-written first draft. The corrected claims' ORIGINAL measurement cost belongs to exp5866, not here.",
  "verifier_is_oracle": false,
  "solve_provenance": "development_proxy",
@@ -55,26 +53,6 @@
    }
   }
  ],
- "k6_forced_full_budget_recheck": {
-  "status": "MEASURED this session",
-  "path": "results/exp5866_corrigendum_20260727/k6_forced_full_budget.json",
-  "sha256": "sha256:98c0007be061dab92bdd76e6e4f1c7f1591a8acaca892a5e84899e61f71f7912",
-  "k": 6,
-  "ignore_eos": true,
-  "n_ctx_served_per_props": 81920,
-  "total_slots_per_props": 4,
-  "n_http_200": 6,
-  "n_at_full_budget": 6,
-  "n_truncated": 0,
-  "n_errors": 0,
-  "server_healthy_after": true,
-  "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
-  "gpu0_untouched": true,
-  "measurement_wall_s": 272.04,
-  "gate_passed": true,
-  "could_have_failed": "YES, and the same probe shape at n_ctx=16384 is the documented failure: at K=4, 4*4096 == 16384 == the entire pool, so any non-empty prompt overflows and the server 500s with 'Context size has been exceeded.' A forced-full-budget K=6 run reserves 6*4096 = 24576 tokens of generation, which at 16384 is unsatisfiable by arithmetic. This probe can fail.",
-  "verdict": "exp5866's K=6 'queueing safe' CLAIM IS TRUE. All six requests -- including the two that QUEUE behind the 4 slots -- reached the full 4096-token budget with ignore_eos forcing them to, none truncated, none errored, and the server survived. This is the evidence the original claim needed; the original rows were not it."
- },
  "field_principles": {
   "corrects.sha256": {
    "principle": "A corrigendum that does not pin the exact bytes it corrects cannot be checked later: the original could change and the correction would silently attach to a different claim."
@@ -102,10 +80,33 @@
    ]
   }
  ],
- "acceptance_gate_c1_rederived_from_raw_rows": true,
- "acceptance_gate_c2_rederived_from_the_record": true,
  "what_this_corrigendum_does_NOT_do": "It does not rewrite results/experiment_5866_generator_concurrency_vram_envelope.json, does not change any number in that artifact's VRAM fit, and does not retract its recommendation to raise n_ctx to 81920. It also does not settle whether exp5866's K=6 'queueing safe' CLAIM is true -- see k6_forced_full_budget_recheck, which is PENDING.",
  "falsifiability_witness_could_have_found_the_claims_correct": "YES -- and this is the falsifiability witness. Neither correction is forced. C1's builder counts stop_type=='limit' vs 'eos' in the raw K=6 rows: had all six been 'limit', n_finished_naturally_stop_type_eos would be 0 and C1 would have no subject. C2's builder regex-searches ops/known-issues.md for a POOL-level accelerator change: had the record instead described a competitor's machine choice, known_issues_records_a_POOL_level_change would be False and C2 would have no subject. Both conjuncts are computed from the objects, not asserted, so this corrigendum could have come back empty.",
+ "_this_is_a_TEMPLATE": "Hand-authored prose only. results/exp5866_corrigendum_20260727/build.py reads this, RE-DERIVES both corrections from the raw objects, computes the gate conjuncts, times itself, and writes results/outer_loop_exp5866_corrigendum_20260727.json. Editing the published artifact directly would break that chain -- edit this and rebuild.",
+ "acceptance_gate_c1_rederived_from_raw_rows": true,
+ "acceptance_gate_c2_rederived_from_the_record": true,
+ "k6_forced_full_budget_recheck": {
+  "status": "MEASURED this session",
+  "path": "results/exp5866_corrigendum_20260727/k6_forced_full_budget.json",
+  "sha256": "sha256:98c0007be061dab92bdd76e6e4f1c7f1591a8acaca892a5e84899e61f71f7912",
+  "k": 6,
+  "ignore_eos": true,
+  "n_ctx_served_per_props": 81920,
+  "total_slots_per_props": 4,
+  "n_http_200": 6,
+  "n_at_full_budget": 6,
+  "n_truncated": 0,
+  "n_errors": 0,
+  "server_healthy_after": true,
+  "device_verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+  "gpu0_untouched": true,
+  "measurement_wall_s": 272.04,
+  "gate_passed": true,
+  "could_have_failed": "YES, and the same probe shape at n_ctx=16384 is the documented failure: at K=4, 4*4096 == 16384 == the entire pool, so any non-empty prompt overflows and the server 500s with 'Context size has been exceeded.' A forced-full-budget K=6 run reserves 6*4096 = 24576 tokens of generation, which at 16384 is unsatisfiable by arithmetic. This probe can fail.",
+  "verdict": "exp5866's K=6 'queueing safe' CLAIM IS TRUE. All six requests -- including the two that QUEUE behind the 4 slots -- reached the full 4096-token budget with ignore_eos forcing them to, none truncated, none errored, and the server survived. This is the evidence the original claim needed; the original rows were not it."
+ },
+ "run_date": "2026-07-27T17:28:34Z",
+ "duration_s": 0.003195,
  "random_seed": 5866,
- "reproducibility_checksum": "sha256:3c3bb87073d5bf3bd731cd04bee30594d42d2ee2c193f64835fb3d137958f02e"
+ "reproducibility_checksum": "sha256:b8ae402dd52254569fb951bc4a7aa0d8648ee2d2f3354c932b584acf0d72c549"
 }

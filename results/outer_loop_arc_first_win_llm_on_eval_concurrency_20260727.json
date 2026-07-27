@@ -1,14 +1,14 @@
 {
  "experiment": "outer_loop_arc_first_win_llm_on_eval_concurrency_20260727",
  "schema": "carnot.outer_loop.arc_first_win_llm_on_eval_concurrency.v1",
- "run_date": "2026-07-27T17:21:19Z",
- "git_head": "7761619631669ed38bcf1467b99e750a25599b8a",
+ "run_date": "2026-07-27T17:28:34Z",
+ "git_head": "dd5fc7a2c0bfc9b822c298f31f77877e39d9f4ca",
  "inference_substrate": "live_llm_inference",
  "duration_s": 53486.71,
  "duration_s_provenance": "THE MEASUREMENT CLOCK: summed from each per-cell row file's own elapsed_s (results/first_win_llm_on_20260727/cells/*.json). NOT a per-arm wall clock (K=4 workers overlap, so a wall sum undercounts by roughly the concurrency factor) and NOT the analyser's or this builder's clock -- the builder's cost is published separately as artifact_build_s. NOTE (2026-07-27): because it sums per-cell clocks across K=4 overlapping workers, it is roughly 4x the elapsed wall time of the session -- see wall_span_s_approx for the elapsed figure. Reporting both under one name is what would make this misleading; they are named differently and mean different things.",
  "wall_span_s_approx": 13371.7,
  "wall_span_s_approx_provenance": "duration_s divided by the K=4 worker concurrency -- an APPROXIMATION of elapsed session time, published so duration_s (a summed compute clock, ~9.25h) is not misread as elapsed time (~2.3h). Not a measurement: the harness did not record a session start/stop timestamp, and one is not being invented here. The exact quantity duration_s reports is defined in duration_s_provenance above.",
- "artifact_build_s": 0.527,
+ "artifact_build_s": 0.42,
  "verifier_is_oracle": false,
  "solve_provenance": "development_proxy",
  "submitted_to_leaderboard": false,
@@ -2225,6 +2225,7 @@
  "acceptance_gate_declared_n_ctx_matches_server_props": true,
  "acceptance_gate_no_cell_errors": true,
  "acceptance_gate_treatment_was_applied": false,
+ "acceptance_gate_treatment_conjunct_saw_at_least_one_arm": true,
  "acceptance_gate_every_fixed_condition_arm_generator_alive": false,
  "acceptance_gate_measurement_valid": false,
  "measurement_validity_rationale": {
@@ -2235,6 +2236,7 @@
   "acceptance_gate_declared_n_ctx_matches_server_props": "the whole fault was a declared-versus-actual gap; two independent reads must agree",
   "acceptance_gate_no_cell_errors": "a crashed cell excluded silently would bias the rate; there must be none",
   "acceptance_gate_treatment_was_applied": "the LLM's induced world model must actually reach the policy on at least one cell; if it never does, both arms are the same agent and every delta, p-value and CI is an identity rather than a measurement",
+  "acceptance_gate_treatment_conjunct_saw_at_least_one_arm": "any([]) is False; without this the treatment conjunct could read False because nothing was checked, which is a different failure from nothing passing",
   "acceptance_gate_every_fixed_condition_arm_generator_alive": "a liveness gate scoped to one arm cannot certify a claim that leans on another; this spans every arm run at the fixed n_ctx, including the probe"
  },
  "headline": {
@@ -2275,7 +2277,9 @@
   "n_llm_on_cells_where_generator_output_reached_the_policy": 0,
   "n_llm_on_cells_total": 124,
   "TREATMENT_WAS_APPLIED": false,
-  "every_llm_on_arm_is_bit_identical_to_its_matched_control": false,
+  "every_llm_on_arm_is_bit_identical_to_its_matched_control": true,
+  "n_llm_on_arms_compared_for_bit_identity": 6,
+  "n_arms_checked_for_treatment_application": 6,
   "how_to_read_the_deltas_above": "If TREATMENT_WAS_APPLIED is False, every delta / p-value / CI in this block is an IDENTITY between an arm and itself, not a measurement of the fault's effect. The fault's first-win effect is then UNTESTED -- not absent, and not merely underpowered. See treatment_application_headline."
  },
  "honest_verdict": "complete_UNFALSIFIABLE_treatment_not_applied_llm_output_never_reached_policy",
@@ -2295,7 +2299,7 @@
  "false_negative_risk_checked": true,
  "provenance": {
   "analyzer": "results/first_win_llm_on_20260727/build_artifact.py",
-  "built_at_utc": "2026-07-27T17:21:19Z",
+  "built_at_utc": "2026-07-27T17:28:34Z",
   "code": [
    {
     "path": "results/first_win_llm_on_20260727/firstwin.py",
@@ -2307,7 +2311,7 @@
    },
    {
     "path": "results/first_win_llm_on_20260727/build_artifact.py",
-    "sha256": "bd51c5ce997e61b3e6ca7edaef0f9681d5072c59ada5be060d2e5744258d7287"
+    "sha256": "81d1ccd9409a8feaeb06dc1471e0d43a828536d2f8fa432e8b49e3189e32d79a"
    },
    {
     "path": "results/first_win_llm_on_20260727/guardtest.py",
@@ -3229,5 +3233,5 @@
    }
   ]
  },
- "reproducibility_checksum": "sha256:53a36484b63ad14bf4dc9f98a14e7b5fc06ee9eea13dce31b0c143662a2dc907"
+ "reproducibility_checksum": "sha256:b911a52346f622fa2bf6715ee18a03c9bf20f7c72a4eae27111c973be6c5b6a9"
 }

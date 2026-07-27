@@ -133,7 +133,18 @@ def main() -> int:
     # acceptance-gate dict that reads it, so `bool(applied_any)` raised UnboundLocalError and the
     # builder could not run at all. Same value, defined before its first use.
     ta = analysis.get("treatment_application") or {}
-    applied_any = any(v.get("treatment_was_applied") for k, v in ta.items() if isinstance(v, dict))
+    # Key-presence filter, same reason as the headline's bit-identity aggregate:
+    # `treatment_application` carries metadata entries alongside the per-arm ones. Here the
+    # old `.get()` form was harmless (any() of a None is still False) but it would silently
+    # start counting a metadata dict the moment one gained a same-named key.
+    applied_any = any(
+        v["treatment_was_applied"]
+        for v in ta.values()
+        if isinstance(v, dict) and "treatment_was_applied" in v
+    )
+    n_arms_checked_for_treatment = sum(
+        1 for v in ta.values() if isinstance(v, dict) and "treatment_was_applied" in v
+    )
 
     payload = {
         "experiment": "outer_loop_arc_first_win_llm_on_eval_concurrency_20260727",
@@ -1146,6 +1157,12 @@ def main() -> int:
         # while the thing being measured never actually happened. A gate set that can be
         # fully green on a comparison of an arm against itself is not gating the claim.
         "acceptance_gate_treatment_was_applied": bool(applied_any),
+        # WITNESS that the conjunct above is computed over a NON-EMPTY arm set. `any([])` is
+        # False, so a False gate could otherwise mean "no arm was checked" rather than "no
+        # arm applied the treatment" -- two very different states.
+        "acceptance_gate_treatment_conjunct_saw_at_least_one_arm": bool(
+            n_arms_checked_for_treatment > 0
+        ),
         # ADDED 2026-07-27 (review finding 9). The fix-arm liveness gate above was computed
         # over the 25-cell slice ONLY, so the 12-cell probe arm -- which carries the report's
         # directional claim, 16 server errors and 2 dead-generator cells -- was covered by NO
@@ -1188,6 +1205,10 @@ def main() -> int:
             "the LLM's induced world model must actually reach the policy on at least one "
             "cell; if it never does, both arms are the same agent and every delta, p-value "
             "and CI is an identity rather than a measurement"
+        ),
+        "acceptance_gate_treatment_conjunct_saw_at_least_one_arm": (
+            "any([]) is False; without this the treatment conjunct could read False because "
+            "nothing was checked, which is a different failure from nothing passing"
         ),
         "acceptance_gate_every_fixed_condition_arm_generator_alive": (
             "a liveness gate scoped to one arm cannot certify a claim that leans on another; "
@@ -1261,11 +1282,24 @@ def main() -> int:
         # in the headline block deliberately: a reader who takes delta / p / CI from here
         # without them will read an arithmetic identity as a measured null.
         "TREATMENT_WAS_APPLIED": bool(applied_any),
+        # KEY-PRESENCE, not dict-ness. A first version filtered on `isinstance(v, dict)`,
+        # which ALSO matched the metadata entries in this block
+        # (`_where_each_attempt_died_by_stage` is a dict of arms, not an arm), so `.get()`
+        # returned None on them and the `all()` came back False while every real arm was
+        # True. Caught by reading the rebuilt value back against the per-arm rows instead of
+        # trusting the aggregate -- the read-the-object discipline this artifact is about,
+        # applied to its own summary field.
         "every_llm_on_arm_is_bit_identical_to_its_matched_control": all(
-            v.get("arm_is_bit_identical_to_control")
-            for k, v in (analysis.get("treatment_application") or {}).items()
-            if isinstance(v, dict)
+            v["arm_is_bit_identical_to_control"]
+            for v in (analysis.get("treatment_application") or {}).values()
+            if isinstance(v, dict) and "arm_is_bit_identical_to_control" in v
         ),
+        "n_llm_on_arms_compared_for_bit_identity": sum(
+            1
+            for v in (analysis.get("treatment_application") or {}).values()
+            if isinstance(v, dict) and "arm_is_bit_identical_to_control" in v
+        ),
+        "n_arms_checked_for_treatment_application": n_arms_checked_for_treatment,
         "how_to_read_the_deltas_above": (
             "If TREATMENT_WAS_APPLIED is False, every delta / p-value / CI in this block is "
             "an IDENTITY between an arm and itself, not a measurement of the fault's effect. "

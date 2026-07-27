@@ -15101,3 +15101,7 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-27 17:16 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-27 17:18 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-27 17:21 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-27 17:23 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-27 17:25 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-27 17:27 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-27 17:29 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
