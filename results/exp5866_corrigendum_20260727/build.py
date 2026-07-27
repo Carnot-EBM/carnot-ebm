@@ -84,7 +84,7 @@ def main() -> int:
         ),
     }
 
-    template = REPO / "results" / "outer_loop_exp5866_corrigendum_TEMPLATE.json"
+    template = Path(__file__).with_name("template.json")
     payload = json.loads(template.read_text())
     payload["corrects"]["upstream_top_level_keys"] = len(exp)
     payload["corrects"]["sha256"] = sha(EXP5866)
