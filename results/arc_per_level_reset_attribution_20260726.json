@@ -2,16 +2,47 @@
  "acceptance_gates": {
   "gate_1_attribution_reconciles_on_every_cell": {
    "passed": true,
-   "principle": "Two independent accountings that must agree is the only way an off-by-one in a counting loop announces itself; a single accounting merely looks plausible."
+   "principle": "Two independent accountings that must agree is the only way an off-by-one in a counting loop announces itself; a single accounting merely looks plausible.",
+   "witness": {
+    "cells_not_reconciling": [],
+    "identity_frames_eq_actions_plus_resets_holds_all_cells": true,
+    "n_cells": 18,
+    "n_cells_NOT_reconciling": 0,
+    "n_cells_with_reconciling_attribution": 18
+   }
   },
   "gate_2_nav_channel_populated_not_dead": {
    "passed": true,
-   "principle": "An absent channel that reports 0 reads as a measured zero -- the defect that made a dead getattr(env,'baseline_actions') look like a clean null."
+   "principle": "An absent channel that reports 0 reads as a measured zero -- the defect that made a dead getattr(env,'baseline_actions') look like a clean null.",
+   "witness": {
+    "n_cells": 18,
+    "n_cells_carrying_a_gateway_charge_error": 0,
+    "n_cells_with_a_DEAD_nav_channel": 0,
+    "n_cells_with_instrumented_nav_channel": 18,
+    "uninstrumented_reasons": []
+   }
   },
   "gate_3_enough_won_cells_for_the_attribution_to_be_real": {
    "observed_won_cells": 7,
    "passed": true,
-   "principle": "Attribution only exists where a level-up exists. A capture with no won cell demonstrates plumbing, not attribution."
+   "principle": "Attribution only exists where a level-up exists. A capture with no won cell demonstrates plumbing, not attribution.",
+   "threshold": 4,
+   "witness": {
+    "n_distinct_won_trajectories": 5,
+    "n_won_cells": 7,
+    "passes_on_distinct_count_too": true,
+    "threshold": 4
+   }
+  },
+  "gate_4_the_card_was_read_not_modelled": {
+   "passed": true,
+   "principle": "A charge MODEL cannot detect the error it does not model. Two reconstructions of the same assumption agreeing is not independence.",
+   "witness": {
+    "n_cells": 18,
+    "n_cells_where_model_and_card_DISAGREE": 18,
+    "n_cells_with_a_card_read": 18,
+    "total_post_death_uncharged_actions": 30
+   }
   }
  },
  "cells": [
@@ -19,11 +50,31 @@
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [
+    [
+     1,
+     15
+    ],
+    [
+     2,
+     57
+    ]
+   ],
+   "card_resets": 12,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 2.089731,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 1.9955,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 1.9955471027696792,
+   "efficiency_offline_precise": 2.089731130547457,
    "efficiency_offline_recorded": 2.0897,
    "efficiency_optimism_vs_gateway": 0.0942,
+   "efficiency_optimism_vs_gateway_precise": 0.09418402777777768,
+   "empty_frame_actions": 0,
    "game": "vc33",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 2,
    "navdiag_attempts": 14,
@@ -35,6 +86,7 @@
    "navdiag_reset_replay_fallbacks": 12,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.066667,
     1.0
@@ -69,17 +121,35 @@
    "tail_gateway_charged": 342,
    "tail_offline_actions": 330,
    "tail_resets": 12,
-   "wall_s": 4.2
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:c8439453bd9b646e4169368360ff23eb3407578885c8cab6eea9e9330f15d829",
+   "wall_s": 4.128
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 389,
+   "card_actions_by_level": [
+    [
+     1,
+     331
+    ]
+   ],
+   "card_resets": 10,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.007322,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0069,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.006858710562414266,
+   "efficiency_offline_precise": 0.007191206409536217,
    "efficiency_offline_recorded": 0.0072,
    "efficiency_optimism_vs_gateway": 0.0003,
+   "efficiency_optimism_vs_gateway_precise": 0.00033249584712195107,
+   "empty_frame_actions": 10,
    "game": "tu93",
+   "gateway_card_vs_model_charged_delta": 11,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 1,
    "navdiag_attempts": 34,
@@ -91,6 +161,7 @@
    "navdiag_reset_replay_fallbacks": 10,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.023952
    ],
@@ -120,17 +191,30 @@
    "tail_gateway_charged": 58,
    "tail_offline_actions": 55,
    "tail_resets": 3,
-   "wall_s": 2.861
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7",
+   "wall_s": 2.927
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 3,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "sc25",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 4,
@@ -142,6 +226,7 @@
    "navdiag_reset_replay_fallbacks": 3,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -161,17 +246,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 396,
    "tail_resets": 4,
-   "wall_s": 3.825
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:342794123bfa9fc200e2ba76ed55c36a25e24a2c3352a817bdd7403ade54d12a",
+   "wall_s": 3.781
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 4,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "dc22",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 4,
@@ -183,6 +281,7 @@
    "navdiag_reset_replay_fallbacks": 4,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -202,17 +301,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 395,
    "tail_resets": 5,
-   "wall_s": 3.286
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:83bbc393cb97e751def0f9f572741b62d4110fb3feea71c486872da11193d62f",
+   "wall_s": 3.415
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 39,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "r11l",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 52,
@@ -224,6 +336,7 @@
    "navdiag_reset_replay_fallbacks": 39,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -243,17 +356,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 360,
    "tail_resets": 40,
-   "wall_s": 3.064
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:09edc86af9d5dd86497e58ba1071c50cfb212b1007e9fdea1af52ef2630dadb5",
+   "wall_s": 3.122
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 10,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "cd82",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 16,
@@ -265,6 +391,7 @@
    "navdiag_reset_replay_fallbacks": 10,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -284,17 +411,39 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 389,
    "tail_resets": 11,
-   "wall_s": 2.988
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:ceafec7da2c99697e9e509a0c784a060ab1711e7f4256a4dd79b3d2f74a3a26e",
+   "wall_s": 3.156
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [
+    [
+     1,
+     20
+    ],
+    [
+     2,
+     137
+    ]
+   ],
+   "card_resets": 8,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.606562,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.5659,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.5658871043486428,
+   "efficiency_offline_precise": 0.6219934402332361,
    "efficiency_offline_recorded": 0.622,
    "efficiency_optimism_vs_gateway": 0.0561,
+   "efficiency_optimism_vs_gateway_precise": 0.05610633588459335,
+   "empty_frame_actions": 0,
    "game": "vc33",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 2,
    "navdiag_attempts": 13,
@@ -306,6 +455,7 @@
    "navdiag_reset_replay_fallbacks": 8,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.05,
     1.044643
@@ -340,17 +490,35 @@
    "tail_gateway_charged": 262,
    "tail_offline_actions": 259,
    "tail_resets": 3,
-   "wall_s": 3.912
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:7d567a8787cea96d0abff65472446de2245b23021a0d3dc03c82cfc0a8799f9c",
+   "wall_s": 4.039
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 389,
+   "card_actions_by_level": [
+    [
+     1,
+     331
+    ]
+   ],
+   "card_resets": 10,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.007322,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0069,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.006858710562414266,
+   "efficiency_offline_precise": 0.007191206409536217,
    "efficiency_offline_recorded": 0.0072,
    "efficiency_optimism_vs_gateway": 0.0003,
+   "efficiency_optimism_vs_gateway_precise": 0.00033249584712195107,
+   "empty_frame_actions": 10,
    "game": "tu93",
+   "gateway_card_vs_model_charged_delta": 11,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 1,
    "navdiag_attempts": 34,
@@ -362,6 +530,7 @@
    "navdiag_reset_replay_fallbacks": 10,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.023952
    ],
@@ -391,17 +560,30 @@
    "tail_gateway_charged": 58,
    "tail_offline_actions": 55,
    "tail_resets": 3,
-   "wall_s": 2.896
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7",
+   "wall_s": 2.977
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 3,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "sc25",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 5,
@@ -413,6 +595,7 @@
    "navdiag_reset_replay_fallbacks": 3,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -432,17 +615,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 396,
    "tail_resets": 4,
-   "wall_s": 3.705
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:e8ea64af47b3ee8b6f65d8b47e1fb7c5edaf17ffd23bcf07b7afe5e20d446f8c",
+   "wall_s": 3.785
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 10,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "dc22",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 12,
@@ -454,6 +650,7 @@
    "navdiag_reset_replay_fallbacks": 10,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -473,17 +670,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 389,
    "tail_resets": 11,
-   "wall_s": 3.137
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:d983aa8d96f0c6232e03ff3cfe2e71371f6f4b3a928b51519f98caf3c8c5577c",
+   "wall_s": 3.381
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 40,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "r11l",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 52,
@@ -495,6 +705,7 @@
    "navdiag_reset_replay_fallbacks": 40,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -514,17 +725,35 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 359,
    "tail_resets": 41,
-   "wall_s": 3.032
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:7a737f9d79aeab1229e363133043feac27a4dbaa850bf628250b5791543b4392",
+   "wall_s": 3.061
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [
+    [
+     1,
+     193
+    ]
+   ],
+   "card_resets": 13,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.386715,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.3827,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.3827389176522984,
+   "efficiency_offline_precise": 0.4032575209194005,
    "efficiency_offline_recorded": 0.4033,
    "efficiency_optimism_vs_gateway": 0.0206,
+   "efficiency_optimism_vs_gateway_precise": 0.020518603267102087,
+   "empty_frame_actions": 0,
    "game": "cd82",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 1,
    "navdiag_attempts": 16,
@@ -536,6 +765,7 @@
    "navdiag_reset_replay_fallbacks": 13,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.026455
    ],
@@ -565,17 +795,39 @@
    "tail_gateway_charged": 206,
    "tail_offline_actions": 197,
    "tail_resets": 9,
-   "wall_s": 3.253
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:46d5cb88e99dd4500623fd278e054071ded42914a5e62d06c3afbff1225513a0",
+   "wall_s": 3.26
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [
+    [
+     1,
+     15
+    ],
+    [
+     2,
+     356
+    ]
+   ],
+   "card_resets": 11,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.79768,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.7035,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.703496276760913,
+   "efficiency_offline_precise": 0.7990292535747081,
    "efficiency_offline_recorded": 0.799,
    "efficiency_optimism_vs_gateway": 0.0955,
+   "efficiency_optimism_vs_gateway_precise": 0.09553297681379513,
+   "empty_frame_actions": 0,
    "game": "vc33",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 2,
    "navdiag_attempts": 36,
@@ -587,6 +839,7 @@
    "navdiag_reset_replay_fallbacks": 11,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.066667,
     1.033333
@@ -621,17 +874,35 @@
    "tail_gateway_charged": 43,
    "tail_offline_actions": 43,
    "tail_resets": 0,
-   "wall_s": 3.319
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:c85b53b810f746a5ce1690614dac1806d13940ff3d2ec6e853bdc78661b847de",
+   "wall_s": 3.357
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 389,
+   "card_actions_by_level": [
+    [
+     1,
+     331
+    ]
+   ],
+   "card_resets": 10,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.007322,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0069,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.006858710562414266,
+   "efficiency_offline_precise": 0.007191206409536217,
    "efficiency_offline_recorded": 0.0072,
    "efficiency_optimism_vs_gateway": 0.0003,
+   "efficiency_optimism_vs_gateway_precise": 0.00033249584712195107,
+   "empty_frame_actions": 10,
    "game": "tu93",
+   "gateway_card_vs_model_charged_delta": 11,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 1,
    "navdiag_attempts": 34,
@@ -643,6 +914,7 @@
    "navdiag_reset_replay_fallbacks": 10,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [
     1.023952
    ],
@@ -672,17 +944,30 @@
    "tail_gateway_charged": 58,
    "tail_offline_actions": 55,
    "tail_resets": 3,
-   "wall_s": 2.864
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7",
+   "wall_s": 2.932
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 3,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "sc25",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 3,
@@ -694,6 +979,7 @@
    "navdiag_reset_replay_fallbacks": 3,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -713,17 +999,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 396,
    "tail_resets": 4,
-   "wall_s": 3.752
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:c8ee518017a74270974d589888e377d2f932c27c7c9c88ca8fc936b5af7c49af",
+   "wall_s": 3.888
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 4,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "dc22",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 4,
@@ -735,6 +1034,7 @@
    "navdiag_reset_replay_fallbacks": 4,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -754,17 +1054,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 395,
    "tail_resets": 5,
-   "wall_s": 3.353
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:717aeb893f39aa2b560f87ac089687f6412ca4f6e9c494e7954ff76d8229183f",
+   "wall_s": 3.417
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 40,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "r11l",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 51,
@@ -776,6 +1089,7 @@
    "navdiag_reset_replay_fallbacks": 40,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -795,17 +1109,30 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 359,
    "tail_resets": 41,
-   "wall_s": 3.127
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:87ab61a0df03b4a70a71ac642b09796b323dd308e71103718a682a06b206f5c4",
+   "wall_s": 3.075
   },
   {
    "attribution_discrepancies": [],
    "attribution_reconciles": true,
    "budget": 400,
+   "card_actions": 399,
+   "card_actions_by_level": [],
+   "card_resets": 11,
+   "consecutive_reset_pairs": 0,
+   "efficiency_gateway_card": 0.0,
+   "efficiency_gateway_card_error": null,
    "efficiency_gateway_charged": 0.0,
    "efficiency_gateway_charged_error": null,
+   "efficiency_gateway_charged_precise": 0.0,
+   "efficiency_offline_precise": 0.0,
    "efficiency_offline_recorded": 0.0,
    "efficiency_optimism_vs_gateway": 0.0,
+   "efficiency_optimism_vs_gateway_precise": 0.0,
+   "empty_frame_actions": 0,
    "game": "cd82",
+   "gateway_card_vs_model_charged_delta": 1,
    "identity_frames_eq_actions_plus_resets": true,
    "levels": 0,
    "navdiag_attempts": 17,
@@ -817,6 +1144,7 @@
    "navdiag_reset_replay_fallbacks": 11,
    "navdiag_similarity_hits": 0,
    "navdiag_uninstrumented_reason": null,
+   "observed_full_resets": 1,
    "per_span_charge_inflation": [],
    "reached": 0,
    "resets_in_completed_segments": 0,
@@ -836,10 +1164,12 @@
    "tail_gateway_charged": 400,
    "tail_offline_actions": 388,
    "tail_resets": 12,
-   "wall_s": 3.265
+   "trajectory_level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+   "trajectory_move_sha256": "sha256:d3e6ef6b52a3e5dd07b1ab1bb5cbe567cf5735bffb2fd0076bd4c3334d17bb84",
+   "wall_s": 3.099
   }
  ],
- "duration_s": 61.206,
+ "duration_s": 62.084,
  "experiment": "arc_per_level_reset_attribution_capture",
  "honest_verdict": "complete_per_level_reset_attribution_captured_7_won_cells_reconciles_true_nav_channel_live_true",
  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
@@ -863,8 +1193,8 @@
     "tu93",
     "vc33"
    ],
-   "max_rel_score_loss": 0.045078,
-   "median_rel_score_loss": 0.043372,
+   "max_rel_score_loss": 0.046236,
+   "median_rel_score_loss": 0.045653,
    "n_cells": 6,
    "n_scored": 2,
    "n_won": 2
@@ -875,8 +1205,8 @@
     "tu93",
     "vc33"
    ],
-   "max_rel_score_loss": 0.090193,
-   "median_rel_score_loss": 0.051079,
+   "max_rel_score_loss": 0.090204,
+   "median_rel_score_loss": 0.050882,
    "n_cells": 6,
    "n_scored": 3,
    "n_won": 3
@@ -886,8 +1216,8 @@
     "tu93",
     "vc33"
    ],
-   "max_rel_score_loss": 0.119524,
-   "median_rel_score_loss": 0.080596,
+   "max_rel_score_loss": 0.119561,
+   "median_rel_score_loss": 0.082899,
    "n_cells": 6,
    "n_scored": 2,
    "n_won": 2
@@ -896,14 +1226,14 @@
  "provenance": {
   "code": [
    {
-    "bytes": 24734,
+    "bytes": 48865,
     "path": "scripts/arc_per_level_reset_attribution_capture.py",
-    "sha256": "6a447eec04950780a0a47049faad7f35d0d1cb26092ce631bc45c1bab715840a"
+    "sha256": "6f55d336cf25e167bd633019a559f2c9215adb6f6c3fa33f660dc98966764bb7"
    },
    {
-    "bytes": 41306,
+    "bytes": 53382,
     "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "92dc57bb968310e9770b67050dfcaa75a430aa99b188db81dea8aa6db8e39b02"
+    "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02"
    },
    {
     "bytes": 337883,
@@ -912,7 +1242,7 @@
    }
   ],
   "flags_unchanged": true,
-  "git_head": "412fd8fbbf9f3725c2e754e4aa2fc17a1290d3c5",
+  "git_head": "692bedfa8c8b9bfc95dd26b95631f01cfad9b996",
   "max_actions_untouched": true,
   "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/arc_per_level_reset_attribution_capture.py --games vc33,tu93,sc25,dc22,r11l,cd82 --seeds 20260724,20260725,20260726 --budget 400 --out results/arc_per_level_reset_attribution_20260726.json",
   "rebuild_is_a_re_measurement_not_a_re_analysis": true,
@@ -924,8 +1254,8 @@
   20260725,
   20260726
  ],
- "reproducibility_checksum": "sha256:0605d4f2165c6b7bca9e40629e9f6127e3939d31809218f193749eb9a05ca5a7",
- "run_date": "2026-07-27T01:24:01Z",
+ "reproducibility_checksum": "sha256:c79e864066c493fcac7b11998d30511c2cd62a74acef1c4316b9b773820dfdb6",
+ "run_date": "2026-07-27T05:06:54Z",
  "scope_and_power": {
   "budget": 400,
   "games": [
@@ -948,42 +1278,310 @@
   "what_this_cannot_support": "A small deliberately-chosen corpus at ONE budget with the LLM OFF. The per-cell attribution is exact for the cells measured; the reset SHARES are single measurements per (game, seed) and must NOT be read as corpus point estimates. The plan-execution reset source (arc_competition_agent.py:5314) fires only with induction ON and is therefore still UNMEASURED here."
  },
  "score_loss_from_charged_resets": {
-  "max": 0.119524,
-  "median": 0.045078,
+  "card_vs_model_note": "`median` above is the MODELLED charge (offline + resets). `median_from_the_CARD_measured_charge` is read off the gateway's own Card and is the number a forward claim should cite; the modelled one overstates wherever post-death (empty-frame) actions were taken.",
+  "distinct_measurements": {
+   "basis": "identical trajectory_move_sha256 (fallback: game + rel_loss)",
+   "duplicate_groups": [
+    {
+     "cells": [
+      "tu93@20260724",
+      "tu93@20260725",
+      "tu93@20260726"
+     ],
+     "n_cells": 3,
+     "rel_loss": 0.046236449
+    }
+   ],
+   "max_over_distinct_trajectories": 0.119561301,
+   "median_over_distinct_trajectories": 0.050882134,
+   "n_cells": 7,
+   "n_distinct": 5,
+   "why": "a per-cell median triple-counts a seed-invariant game. The distinct-trajectory median is the one whose support equals its measurement count."
+  },
+  "effective_support": {
+   "n_cells": 7,
+   "n_distinct_games": 3,
+   "n_distinct_trajectories": 5,
+   "reading": "quote the DISTINCT-trajectory median beside the per-cell one. Where they differ, the per-cell figure is weighting one trajectory by its seed count."
+  },
+  "max": 0.119561301,
+  "max_per_cell": 0.119561301,
+  "median": 0.046236449,
+  "median_from_the_CARD_measured_charge": 6.2e-08,
+  "median_per_cell": 0.046236449,
+  "n_cells_that_fell_back_to_the_rounded_fields": 0,
   "per_cell": [
    {
     "cell": "vc33@20260726",
-    "rel_loss": 0.119524
+    "game": "vc33",
+    "rel_loss": 0.119561301,
+    "rel_loss_from_card": 0.001688616,
+    "seed": 20260726,
+    "trajectory_move_sha256": "sha256:c85b53b810f746a5ce1690614dac1806d13940ff3d2ec6e853bdc78661b847de"
    },
    {
     "cell": "vc33@20260725",
-    "rel_loss": 0.090193
+    "game": "vc33",
+    "rel_loss": 0.090204064,
+    "rel_loss_from_card": 0.024809651,
+    "seed": 20260725,
+    "trajectory_move_sha256": "sha256:7d567a8787cea96d0abff65472446de2245b23021a0d3dc03c82cfc0a8799f9c"
    },
    {
     "cell": "cd82@20260725",
-    "rel_loss": 0.051079
-   },
-   {
-    "cell": "vc33@20260724",
-    "rel_loss": 0.045078
+    "game": "cd82",
+    "rel_loss": 0.050882134,
+    "rel_loss_from_card": 0.041022225,
+    "seed": 20260725,
+    "trajectory_move_sha256": "sha256:46d5cb88e99dd4500623fd278e054071ded42914a5e62d06c3afbff1225513a0"
    },
    {
     "cell": "tu93@20260724",
-    "rel_loss": 0.041667
+    "game": "tu93",
+    "rel_loss": 0.046236449,
+    "rel_loss_from_card": -0.01818799,
+    "seed": 20260724,
+    "trajectory_move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7"
    },
    {
     "cell": "tu93@20260725",
-    "rel_loss": 0.041667
+    "game": "tu93",
+    "rel_loss": 0.046236449,
+    "rel_loss_from_card": -0.01818799,
+    "seed": 20260725,
+    "trajectory_move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7"
    },
    {
     "cell": "tu93@20260726",
-    "rel_loss": 0.041667
+    "game": "tu93",
+    "rel_loss": 0.046236449,
+    "rel_loss_from_card": -0.01818799,
+    "seed": 20260726,
+    "trajectory_move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7"
+   },
+   {
+    "cell": "vc33@20260724",
+    "game": "vc33",
+    "rel_loss": 0.045069926,
+    "rel_loss_from_card": 6.2e-08,
+    "seed": 20260724,
+    "trajectory_move_sha256": "sha256:c8439453bd9b646e4169368360ff23eb3407578885c8cab6eea9e9330f15d829"
    }
   ],
-  "unit": "relative loss = (offline_recorded_score - gateway_charged_score)/offline"
+  "precision_note": "computed from the UNROUNDED scorer outputs (`efficiency_*_precise`). The 4-dp fields are preserved on every cell for continuity but must not be divided: a ratio of two 4-dp values quantises badly (tu93's was exactly 1/24).",
+  "unit": "relative loss = (offline_score - gateway_charged_score)/offline, FULL PRECISION"
  },
- "sum_per_cell_wall_s": 59.839,
+ "sum_per_cell_wall_s": 60.8,
  "sum_per_cell_wall_s_is_an_undercount_do_not_use_as_measurement_clock": true,
+ "tests_and_mutation_proofs": {
+  "independent_invariant_recheck": {
+   "n_cells_checked": 18,
+   "n_cells_clean": 18,
+   "note": "a SECOND implementation of every invariant, derived from the cell fields alone and never calling run_game's own reconciler -- two implementations that can disagree is the only way a counting bug announces itself",
+   "violations_by_cell": {}
+  },
+  "mutation_proofs": {
+   "baseline_violations_on_the_unmutated_cell": [],
+   "escaped": [],
+   "mutated_cell": "vc33@20260724",
+   "n_caught": 10,
+   "n_escaped": 0,
+   "n_mutations": 10,
+   "principle": "A safety claim that cannot be checked from the artifact is prose. Each mutation is applied to a deep copy of a real cell and the independent re-checker must produce a NEW violation; escapes are published, not hidden.",
+   "ran": true,
+   "results": [
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "frames_eq_offline_plus_resets",
+      "charged_eq_offline_plus_resets",
+      "resets_split_sums_to_run_resets"
+     ],
+     "mutation": "run_resets_plus_1"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "frames_eq_offline_plus_resets"
+     ],
+     "mutation": "run_frames_minus_1"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "charged_eq_offline_plus_resets"
+     ],
+     "mutation": "run_gateway_charged_plus_7"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "span_0_charged_eq_offline_plus_resets"
+     ],
+     "mutation": "segment_resets_0_plus_1"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "span_0_charged_eq_offline_plus_resets"
+     ],
+     "mutation": "segment_gateway_charged_0_minus_1"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "span_0_charged_eq_offline_plus_resets",
+      "span_offline_plus_tail_sums_to_run_offline"
+     ],
+     "mutation": "segment_offline_actions_0_plus_3"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "resets_split_sums_to_run_resets"
+     ],
+     "mutation": "tail_resets_plus_1"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "empty_frame_actions_is_negative"
+     ],
+     "mutation": "empty_frame_actions_negative"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "gateway_charged_score_exceeds_offline_score"
+     ],
+     "mutation": "gateway_score_beats_offline_score"
+    },
+    {
+     "applied": true,
+     "caught": true,
+     "caught_by_invariants": [
+      "card_charge_exceeds_offline_plus_resets"
+     ],
+     "mutation": "card_charge_exceeds_offline_plus_resets"
+    }
+   ]
+  },
+  "pure_addition_vs_prior_artifact": {
+   "diffs": [],
+   "fields_ADDED": [
+    "card_actions",
+    "card_actions_by_level",
+    "card_resets",
+    "consecutive_reset_pairs",
+    "efficiency_gateway_card",
+    "efficiency_gateway_card_error",
+    "efficiency_gateway_charged_precise",
+    "efficiency_offline_precise",
+    "efficiency_optimism_vs_gateway_precise",
+    "empty_frame_actions",
+    "gateway_card_vs_model_charged_delta",
+    "observed_full_resets",
+    "trajectory_level_sequence_sha256",
+    "trajectory_move_sha256"
+   ],
+   "live_clock_fields_excluded_from_the_boolean": [
+    "wall_s"
+   ],
+   "n_cells_matched": 18,
+   "n_fields_ADDED": 14,
+   "n_live_clock_moves_EXPECTED_on_a_re_measurement": 18,
+   "n_number_bearing_diffs": 0,
+   "n_prior_cells": 18,
+   "principle": "The prior artifact's own recorded values are the control. If any of them moved, this was not pure addition and the five dependent artifacts cannot be trusted to rebuild identically.",
+   "prior_artifact": "results/arc_per_level_reset_attribution_20260726.json",
+   "prior_artifact_source": "git show HEAD:results/arc_per_level_reset_attribution_20260726.json",
+   "pure_addition": true,
+   "ran": true
+  },
+  "trajectory_fingerprints": {
+   "cd82@20260724": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:ceafec7da2c99697e9e509a0c784a060ab1711e7f4256a4dd79b3d2f74a3a26e"
+   },
+   "cd82@20260725": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:46d5cb88e99dd4500623fd278e054071ded42914a5e62d06c3afbff1225513a0"
+   },
+   "cd82@20260726": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:d3e6ef6b52a3e5dd07b1ab1bb5cbe567cf5735bffb2fd0076bd4c3334d17bb84"
+   },
+   "dc22@20260724": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:83bbc393cb97e751def0f9f572741b62d4110fb3feea71c486872da11193d62f"
+   },
+   "dc22@20260725": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:d983aa8d96f0c6232e03ff3cfe2e71371f6f4b3a928b51519f98caf3c8c5577c"
+   },
+   "dc22@20260726": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:717aeb893f39aa2b560f87ac089687f6412ca4f6e9c494e7954ff76d8229183f"
+   },
+   "r11l@20260724": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:09edc86af9d5dd86497e58ba1071c50cfb212b1007e9fdea1af52ef2630dadb5"
+   },
+   "r11l@20260725": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:7a737f9d79aeab1229e363133043feac27a4dbaa850bf628250b5791543b4392"
+   },
+   "r11l@20260726": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:87ab61a0df03b4a70a71ac642b09796b323dd308e71103718a682a06b206f5c4"
+   },
+   "sc25@20260724": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:342794123bfa9fc200e2ba76ed55c36a25e24a2c3352a817bdd7403ade54d12a"
+   },
+   "sc25@20260725": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:e8ea64af47b3ee8b6f65d8b47e1fb7c5edaf17ffd23bcf07b7afe5e20d446f8c"
+   },
+   "sc25@20260726": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:c8ee518017a74270974d589888e377d2f932c27c7c9c88ca8fc936b5af7c49af"
+   },
+   "tu93@20260724": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7"
+   },
+   "tu93@20260725": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7"
+   },
+   "tu93@20260726": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:f04b3b62fb8f500bb318e576269697c6e978f05ce73ab816b332736d756e45a7"
+   },
+   "vc33@20260724": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:c8439453bd9b646e4169368360ff23eb3407578885c8cab6eea9e9330f15d829"
+   },
+   "vc33@20260725": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:7d567a8787cea96d0abff65472446de2245b23021a0d3dc03c82cfc0a8799f9c"
+   },
+   "vc33@20260726": {
+    "level_sequence_sha256": "sha256:aae4d49ead321b189cad4542c419de1d62f3d16f6b07a92a76181a1c979217ae",
+    "move_sha256": "sha256:c85b53b810f746a5ce1690614dac1806d13940ff3d2ec6e853bdc78661b847de"
+   }
+  }
+ },
  "the_split_a_whole_run_total_cannot_make": {
   "median_resets_that_cost_nothing": 3,
   "median_resets_that_cost_score": 8,

@@ -495,6 +495,72 @@ def _build_level_reset_attribution(
     }
 
 
+def _read_gateway_card(arc, game: str) -> dict:
+    """Read the GATEWAY'S OWN bookkeeping for `game` off the live `Card` object.
+
+    WHY THIS EXISTS (2026-07-27). Everything this project previously called a
+    "gateway-charged" number was a MODEL: it reconstructed the charge as
+    `offline_actions + resets` (optionally minus a free opening reset). An
+    adversarial review of that model found it wrong on 17 of 44 measured cells,
+    and SIGN-FLIPPED on 6 -- because a non-RESET action taken while the game is
+    already GAME_OVER or WIN returns `frame=[]`
+    (`arcengine/base_game.py:204-216`), and the scorecard update is gated on
+    `len(resp.frame) > 0` (`arc_agi/wrapper.py:187`). Those post-death actions
+    are FREE at the gateway and were being counted as charged by the model. The
+    same gate is on the HTTP path (`arc_agi/api.py:336` -> `g.step` ->
+    `_set_last_response`), so this is server behaviour, not an offline artifact.
+
+    The fix is to stop modelling and READ. `run_game` already constructs its
+    arcade with `scorecard_id=arc.open_scorecard()`, and
+    `LocalEnvironmentWrapper` is handed the arcade's `scorecard_manager`
+    (`arc_agi/base.py:789`), so `card.actions[idx]`, `card.resets[idx]` and
+    `card.actions_by_level[idx]` ARE the gateway's own numbers for this run --
+    the exact values the leaderboard scorer consumes.
+
+    READING THE RIGHT PLAY ROW. `inc_play_count` appends a fresh zeroed row per
+    play. The arcade's own construction reset creates play 0 (zero actions) and
+    the agent's opening RESET creates play 1, so the row we want is the LAST
+    one. (The scorer takes a max over plays, so a zero-action play 0 is
+    harmless -- but reading `idx = total_plays - 1` keeps the recorded numbers
+    aligned with the play the agent actually drove.)
+
+    Returns an empty dict when no card can be found, so a consumer can
+    distinguish "read, nothing charged" from "never read".
+    """
+    try:
+        mgr = getattr(arc, "scorecard_manager", None)
+        if mgr is None:
+            return {}
+        best = None
+        for scorecard in getattr(mgr, "scorecards", {}).values():
+            for gid, card in getattr(scorecard, "cards", {}).items():
+                if str(gid).startswith(game):
+                    best = card
+        if best is None:
+            return {}
+        dumped = best.model_dump() if hasattr(best, "model_dump") else dict(best)
+        plays = int(dumped.get("total_plays") or 0)
+        if plays <= 0:
+            return {"gateway_card_total_plays": 0}
+        idx = plays - 1
+        abl = dumped.get("actions_by_level") or []
+        row_abl = abl[idx] if idx < len(abl) else []
+        return {
+            "gateway_card_total_plays": plays,
+            "gateway_card_play_index_read": idx,
+            "gateway_card_actions": int((dumped.get("actions") or [0])[idx]),
+            "gateway_card_resets": int((dumped.get("resets") or [0])[idx]),
+            # [(levels_completed, charged_actions_at_that_moment), ...] -- the
+            # gateway's per-level cumulative charge vector, i.e. the exact input
+            # to `scorecard.py:479 level_actions = actions_at_level - prev`.
+            "gateway_card_actions_by_level": [[int(a), int(b)] for a, b in (row_abl or [])],
+            "gateway_card_actions_all_plays": [int(x) for x in (dumped.get("actions") or [])],
+            "gateway_card_resets_all_plays": [int(x) for x in (dumped.get("resets") or [])],
+        }
+    except Exception as exc:  # pragma: no cover - defensive; never fail a run on bookkeeping
+        return {"gateway_card_read_error": f"{type(exc).__name__}: {str(exc)[:120]}"}
+
+
 def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -524,9 +590,34 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     # the SQUARED term by exactly the resets charged before that level-up.
     # Whole-run `n_resets` alone cannot recover that -- attribution has to be
     # PER LEVEL, which is what these two lists record. `resets_before_levelups`
-    # is the cumulative reset count at each level-up; `level_up_charged` is the
-    # gateway-charged count at each level-up (actions + resets so far), i.e.
-    # exactly what the gateway's `actions_by_level` would hold.
+    # is the cumulative reset count at each level-up; `level_up_charged` is a
+    # MODEL of the gateway-charged count at each level-up (actions + resets so far).
+    #
+    # WARNING -- `level_up_charged` IS A MODEL AND IT IS MEASURABLY WRONG (2026-07-27).
+    # This comment previously claimed it was "exactly what the gateway's actions_by_level
+    # would hold". That claim was refuted by reading the arcade's OWN Card:
+    # results/arc_gateway_card_ground_truth_20260727.json finds the model disagrees with the
+    # real per-level charge vector on 17 of 44 cells, with 6 SIGN-FLIPPED, and it NEVER
+    # understates (max signed error 0.058843).
+    #
+    # THE CAUSE IS NOT THE RESET PREDICATE -- it is POST-DEATH ACTIONS. A non-RESET action
+    # taken while the game is already GAME_OVER or WIN returns `frame=[]`
+    # (arcengine/base_game.py:204-216), and the scorecard update is gated on
+    # `len(resp.frame) > 0` (arc_agi/wrapper.py:187), so those actions are FREE at the
+    # gateway while this model counts them as charged. Measured: the uncharged count equals
+    # the run's empty-frame action count on 48/48 cells. The same gate is on the HTTP path
+    # (arc_agi/api.py:336), so it is server behaviour, not an offline artifact. The free
+    # OPENING reset is a real but separate and much smaller effect; attributing the whole
+    # discrepancy to it was itself a wrong intermediate answer on the way here.
+    #
+    # THE GROUND TRUTH IS `gateway_card_actions` / `gateway_card_actions_by_level`, read off
+    # the live Card by `_read_gateway_card` below. Prefer those for any score claim. This
+    # modelled pair is retained (never-prune) because five committed artifacts cite it and
+    # because a model that never understates is a usable UPPER BOUND -- but it is a bound,
+    # not the charge. Do not reintroduce the "exactly what the gateway would hold" framing:
+    # two independent reimplementations of this same `actions + resets - k` shape agreed
+    # 44/44 with each other and were BOTH wrong, which is why agreement between
+    # reconstructions is not evidence about the gateway.
     resets = 0
     resets_before_levelups: list[int] = []
     level_up_charged: list[int] = []
@@ -538,6 +629,29 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     _seg = _new_segment()
     level_segments: list[dict] = []
     frame_sequence = []
+    # CHARGE-MECHANISM OBSERVATION (2026-07-27). Three counters that make the
+    # gateway's charge behaviour OBSERVED rather than assumed. Each was a bug in
+    # the prior modelled accounting:
+    #   * `observed_full_resets` -- a reset is FREE exactly when the game takes
+    #     the `full_reset()` branch, because `arc_agi/wrapper.py:187-195` gates
+    #     the scorecard update on a non-empty frame and passes `resp.full_reset`
+    #     through. The predicate is `_action_count == 0 or state == WIN`
+    #     (`arcengine/base_game.py:305-316 handle_reset`) -- NOT "the first
+    #     reset of the run". It can therefore fire more than once: on env
+    #     construction, on a RESET with no intervening action, and on a RESET
+    #     immediately after a win. The old model hard-coded 1.
+    #   * `empty_frame_actions` -- a non-RESET action taken while the state is
+    #     GAME_OVER/WIN returns `frame=[]` (`arcengine/base_game.py:204-216`),
+    #     so the scorecard update is skipped and the action is FREE. Our harness
+    #     counts it. This is the defect that made the modelled charge overstate.
+    #   * `consecutive_reset_pairs` -- the trajectory property the old model's
+    #     "one free reset" assumption silently depended on. Recording it means a
+    #     future violation announces itself instead of under-charging quietly.
+    # All three are pure accumulation: nothing here is read by a branch predicate.
+    observed_full_resets = 0
+    empty_frame_actions = 0
+    consecutive_reset_pairs = 0
+    prev_kind = None
     for step_index in range(budget):
         if policy.is_done(frames, latest):
             break
@@ -546,12 +660,19 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             latest = env.reset()
             resets += 1
             _seg["resets"] += 1
+            if bool(getattr(latest, "full_reset", False)):
+                observed_full_resets += 1
+            if prev_kind == "RESET":
+                consecutive_reset_pairs += 1
         elif kind is None:
             break
         else:
             latest = env.step(getattr(GameAction, f"ACTION{kind}"), data=data)
             actions += 1
             _seg["offline_actions"] += 1
+            if not (getattr(latest, "frame", None) or []):
+                empty_frame_actions += 1
+        prev_kind = kind if kind == "RESET" else "ACTION"
         _seg["frames"] += 1
         if start is None:
             start = _level_of(latest)
@@ -598,6 +719,7 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     # the installed scorer exactly as arc_agi/scorecard.py:474-491 does, so the gate cannot drift from the
     # leaderboard. lp85 (1 of 8 levels solved) -> ~2.007. Missing baselines -> 0.0 (matches the real scorer).
     eff = 0.0
+    eff_precise = None
     per_level = []
     try:
         from arc_agi.scorecard import EnvironmentScoreCalculator
@@ -630,7 +752,15 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                         "completed": done,
                     }
                 )
-            eff = round(float(calc.to_score(include_levels=False).score), 4)
+            _eff_raw = float(calc.to_score(include_levels=False).score)
+            eff = round(_eff_raw, 4)
+            # FULL-PRECISION COMPANION (2026-07-27). `eff` keeps its 4-dp rounding because a long
+            # history of recorded numbers is in that unit and changing it would move published
+            # values on rebuild. But a RATIO of two 4-dp values is badly quantised: a downstream
+            # lane computed `rel_loss = optimism / offline` and got 0.0003/0.0072 = exactly 1/24 --
+            # a six-decimal number carrying ONE significant figure. Consumers that divide must use
+            # the precise field.
+            eff_precise = _eff_raw
     except Exception:
         eff = 0.0  # no baselines / scorer unavailable -> 0.0 (matches the real scorer; NEVER 1.0)
     gap = None
@@ -659,6 +789,7 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     # explicit error/reason string, so "measured, no optimism" and "never measured" are
     # distinguishable by a consumer.
     eff_gateway = None
+    eff_gateway_precise = None
     eff_gateway_error = None
     per_level_gateway = []
     try:
@@ -695,9 +826,12 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                         "completed": done_g,
                     }
                 )
-            eff_gateway = round(float(calc_g.to_score(include_levels=False).score), 4)
+            _effg_raw = float(calc_g.to_score(include_levels=False).score)
+            eff_gateway = round(_effg_raw, 4)
+            eff_gateway_precise = _effg_raw
     except Exception as exc:
         eff_gateway = None
+        eff_gateway_precise = None
         eff_gateway_error = f"{type(exc).__name__}: {str(exc)[:120]}"
     level_reset_attribution = _build_level_reset_attribution(
         segments=level_segments,
@@ -706,6 +840,61 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         total_offline_actions=actions,
         total_resets=resets,
     )
+    # GATEWAY-CARD READ (2026-07-27) -- the MEASURED charge, not a model of it.
+    # `eff_gateway` above reconstructs the charge as `actions + resets`; this
+    # block instead drives the SAME installed scorer with the gateway's own
+    # `actions_by_level` / `actions` numbers. Where the two disagree, the CARD is
+    # authoritative by construction: it is literally the object the leaderboard
+    # scorer consumes. Both are retained so no historical comparison silently
+    # shifts unit, and so the disagreement itself is a first-class recorded
+    # number (`gateway_card_vs_model_charged_delta`).
+    card = _read_gateway_card(arc, game)
+    eff_card = None
+    eff_card_error = None
+    per_level_card = []
+    if not card or card.get("gateway_card_actions") is None:
+        eff_card_error = card.get("gateway_card_read_error") or "no_card_found"
+    else:
+        try:
+            from arc_agi.scorecard import EnvironmentScoreCalculator
+
+            baseline_list = [base[i] for i in sorted(base)] if base else []
+            if not baseline_list:
+                eff_card_error = "no_baseline_actions_exposed_by_env"
+            else:
+                card_total = int(card["gateway_card_actions"])
+                # actions_by_level is [(levels_completed, cumulative_charged), ...]
+                card_cum = [int(b) for _lv, b in card["gateway_card_actions_by_level"]]
+                calc_c = EnvironmentScoreCalculator()
+                prev_c = 0
+                for li in range(len(baseline_list)):
+                    if li < len(card_cum):
+                        at_c = card_cum[li]
+                        lvl_c = at_c - prev_c
+                        done_c = True
+                        prev_c = at_c
+                    else:
+                        done_c = False
+                        lvl_c = card_total - prev_c
+                        prev_c = card_total
+                    calc_c.add_level(
+                        level_index=li + 1,
+                        completed=done_c,
+                        actions_taken=lvl_c,
+                        baseline_actions=baseline_list[li],
+                    )
+                    per_level_card.append(
+                        {
+                            "level": li,
+                            "agent_card_charged_actions": lvl_c,
+                            "human_actions": baseline_list[li],
+                            "completed": done_c,
+                        }
+                    )
+                eff_card = round(float(calc_c.to_score(include_levels=False).score), 6)
+        except Exception as exc:
+            eff_card = None
+            eff_card_error = f"{type(exc).__name__}: {str(exc)[:120]}"
     return {
         "game": game,
         "levels": levels,
@@ -722,6 +911,15 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         "level_up_charged": level_up_charged,
         "efficiency_gateway_charged": eff_gateway,
         "efficiency_gateway_charged_error": eff_gateway_error,
+        # UNROUNDED companions. Any consumer taking a RATIO of these two must use these, not the
+        # 4-dp fields above (see the comment at `eff_precise`).
+        "efficiency_precise": eff_precise,
+        "efficiency_gateway_charged_precise": eff_gateway_precise,
+        "efficiency_optimism_vs_gateway_precise": (
+            None
+            if (eff_precise is None or eff_gateway_precise is None)
+            else float(eff_precise) - float(eff_gateway_precise)
+        ),
         "per_level_gateway": per_level_gateway,
         "efficiency_optimism_vs_gateway": (
             None if eff_gateway is None else round(float(eff) - float(eff_gateway), 6)
@@ -731,6 +929,20 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         # frame_sequence-derived re-derivation. This is the field that makes a per-level
         # efficiency claim auditable from a persisted row without re-running the agent.
         "level_reset_attribution": level_reset_attribution,
+        # --- MEASURED gateway charge (read off the live Card), plus the three
+        #     mechanism counters that explain where it differs from the model.
+        **card,
+        "efficiency_gateway_card": eff_card,
+        "efficiency_gateway_card_error": eff_card_error,
+        "per_level_gateway_card": per_level_card,
+        "gateway_card_vs_model_charged_delta": (
+            None
+            if card.get("gateway_card_actions") is None
+            else int(actions + resets) - int(card["gateway_card_actions"])
+        ),
+        "observed_full_resets": observed_full_resets,
+        "empty_frame_actions": empty_frame_actions,
+        "consecutive_reset_pairs": consecutive_reset_pairs,
         "deepest_level_reached": reached,
         "navigation_diagnostics": nav,
         "frame_sequence": frame_sequence,

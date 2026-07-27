@@ -9,7 +9,7 @@
  "inference_substrate_principle": "This file is an ANALYSER pass over rows persisted by a separate live-LLM measurement. Declaring live_llm_inference here would publish the analyser's runtime as the measurement's, which is how a 2.54-hour measurement once shipped claiming 7.884s.",
  "measurement_wall_s": 2490.7,
  "measurement_wall_s_principle": "Taken from the row file's own elapsed_s -- the measuring process's wall clock. NOT a sum of per-cell wall_s (that excludes construction + inter-cell overhead and undercounts) and NOT this analyser's duration.",
- "duration_s": 0.178,
+ "duration_s": 0.146,
  "duration_s_principle": "The analyser's OWN runtime. Small by construction -- it reads persisted JSON. It is NOT evidence about how long the measurement took; measurement_wall_s is.",
  "acceptance_gates": {
   "G1_every_llm_on_row_had_a_live_generator": {
@@ -38,7 +38,7 @@
   }
  },
  "provenance": {
-  "git_head": "412fd8fbbf9f3725c2e754e4aa2fc17a1290d3c5",
+  "git_head": "692bedfa8c8b9bfc95dd26b95631f01cfad9b996",
   "code": [
    {
     "path": "scripts/arc_llm_on_wallclock_budget_probe.py",
@@ -60,9 +60,9 @@
    },
    {
     "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "92dc57bb968310e9770b67050dfcaa75a430aa99b188db81dea8aa6db8e39b02",
-    "bytes": 41306,
-    "mtime_utc": "2026-07-27T01:08:17Z"
+    "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
+    "bytes": 53382,
+    "mtime_utc": "2026-07-27T05:03:34Z"
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
@@ -129,7 +129,7 @@
  },
  "upstream_artifacts_cited": {
   "results/outer_loop_scored_path_budget_sweep_20260726.json": "6bf36142afc3aa927fe0fcb1e5b1cad7f9b5c5c9be3c5a16142768b0d2d67ce6",
-  "results/outer_loop_scored_path_lever_ab_llm_on_20260726.json": "8c100402ff8b351a9720c1aae28064bad30f04843cb0b97a580b60a18add1ae1"
+  "results/outer_loop_scored_path_lever_ab_llm_on_20260726.json": "de63244105931419cac6c13636eca5a178e50db4b8e7ba07afbabc5e9e5c39e7"
  },
  "random_seed": 20260724,
  "reproducibility_checksum": "51910cab78b00c4d",

@@ -74,6 +74,34 @@ def _score_from_charged(spans: list[int], baselines: list[int], n_levels_total: 
     return round(float(calc.to_score(include_levels=False).score), 6)
 
 
+def _traj_sha(r: dict) -> str | None:
+    """SHA-256 of the ordered (kind, data) move sequence the run actually issued."""
+    seq = r.get("frame_sequence") or []
+    if not seq:
+        return None
+    blob = json.dumps(
+        [
+            [
+                f.get("loop_index"),
+                (f.get("move") or {}).get("kind"),
+                (f.get("move") or {}).get("data"),
+            ]
+            for f in seq
+        ],
+        sort_keys=True,
+    )
+    return "sha256:" + hashlib.sha256(blob.encode()).hexdigest()
+
+
+def _level_seq_sha(r: dict) -> str | None:
+    """SHA-256 of the ordered per-frame level sequence -- the outcome side of the trajectory."""
+    seq = r.get("frame_sequence") or []
+    if not seq:
+        return None
+    blob = json.dumps([f.get("level") for f in seq], sort_keys=True)
+    return "sha256:" + hashlib.sha256(blob.encode()).hexdigest()
+
+
 def run_cell(game: str, seed: int, budget: int) -> dict:
     """One SCORED-path cell: E3AgentPolicy -> StepwiseExplorer, offline arcade, LLM off."""
 
@@ -126,6 +154,30 @@ def run_cell(game: str, seed: int, budget: int) -> dict:
         "efficiency_gateway_charged": r.get("efficiency_gateway_charged"),
         "efficiency_gateway_charged_error": r.get("efficiency_gateway_charged_error"),
         "efficiency_optimism_vs_gateway": r.get("efficiency_optimism_vs_gateway"),
+        # UNROUNDED companions (2026-07-27). The two fields above are rounded to 4 dp, and this
+        # lane's headline divides one by the other: for tu93 that was literally 0.0003/0.0072 =
+        # 1/24 = 0.041667, a six-decimal number carrying ONE significant figure. Every ratio below
+        # is now computed from these.
+        "efficiency_offline_precise": r.get("efficiency_precise"),
+        "efficiency_gateway_charged_precise": r.get("efficiency_gateway_charged_precise"),
+        "efficiency_optimism_vs_gateway_precise": r.get("efficiency_optimism_vs_gateway_precise"),
+        # --- the MEASURED gateway charge, read off the arcade's own scorecard Card rather than
+        #     modelled as offline_actions + resets. A sibling lane found the model wrong on 17 of 44
+        #     cells because post-death actions return frame=[] and are never billed.
+        "card_actions": r.get("gateway_card_actions"),
+        "card_resets": r.get("gateway_card_resets"),
+        "card_actions_by_level": r.get("gateway_card_actions_by_level"),
+        "efficiency_gateway_card": r.get("efficiency_gateway_card"),
+        "efficiency_gateway_card_error": r.get("efficiency_gateway_card_error"),
+        "gateway_card_vs_model_charged_delta": r.get("gateway_card_vs_model_charged_delta"),
+        "empty_frame_actions": r.get("empty_frame_actions"),
+        "observed_full_resets": r.get("observed_full_resets"),
+        "consecutive_reset_pairs": r.get("consecutive_reset_pairs"),
+        # --- TRAJECTORY FINGERPRINTS. Two SHA-256s over what the agent actually did, so a claim of
+        #     "pure addition" (this capture changed no behaviour) is checkable by a third party
+        #     instead of asserted in prose.
+        "trajectory_move_sha256": _traj_sha(r),
+        "trajectory_level_sequence_sha256": _level_seq_sha(r),
         # --- navigation channel (previously dropped entirely by the row projection)
         "navdiag_instrumented": nav.get("instrumented"),
         "navdiag_uninstrumented_reason": nav.get("uninstrumented_reason"),
@@ -166,25 +218,61 @@ def summarize(cells: list[dict], *, games: list[str], seeds: list[int], budget: 
         if c.get("efficiency_gateway_charged") is not None
         and c.get("efficiency_offline_recorded") is not None
     ]
-    # Relative score loss per won+scored cell: (offline - gateway) / offline.
+
+    def _off_gw(c: dict) -> tuple[float | None, float | None]:
+        """Offline / gateway scores at FULL precision, falling back to the 4-dp fields.
+
+        The 4-dp fields exist for continuity with a long history of recorded numbers, but a RATIO
+        of two 4-dp values is badly quantised -- tu93's rel_loss was exactly 1/24 (0.0003/0.0072),
+        a six-decimal figure carrying one significant figure. The precise fields are used whenever
+        present, and whether the fallback fired is recorded so a reader knows which they are seeing.
+        """
+        off = c.get("efficiency_offline_precise")
+        gw = c.get("efficiency_gateway_charged_precise")
+        if off is None:
+            off = c.get("efficiency_offline_recorded")
+        if gw is None:
+            gw = c.get("efficiency_gateway_charged")
+        return (None if off is None else float(off)), (None if gw is None else float(gw))
+
+    # Relative score loss per won+scored cell: (offline - gateway) / offline, at FULL precision.
     rel_losses = []
+    n_fell_back_to_rounded = 0
     for c in scored:
-        off = float(c["efficiency_offline_recorded"] or 0.0)
-        gw = float(c["efficiency_gateway_charged"] or 0.0)
-        if off > 0:
+        off, gw = _off_gw(c)
+        if (
+            c.get("efficiency_offline_precise") is None
+            or c.get("efficiency_gateway_charged_precise") is None
+        ):
+            n_fell_back_to_rounded += 1
+        if off and off > 0 and gw is not None:
             rel_losses.append(
-                {"cell": f"{c['game']}@{c['seed']}", "rel_loss": round(1 - gw / off, 6)}
+                {
+                    "cell": f"{c['game']}@{c['seed']}",
+                    "game": c["game"],
+                    "seed": c["seed"],
+                    "rel_loss": round(1 - gw / off, 9),
+                    "trajectory_move_sha256": c.get("trajectory_move_sha256"),
+                    # The MEASURED-charge counterpart, for the cells where the Card was read: the
+                    # modelled charge (offline + resets) overstates wherever post-death actions were
+                    # taken, so this is the number a corpus claim should cite going forward.
+                    "rel_loss_from_card": (
+                        round(1 - float(c["efficiency_gateway_card"]) / off, 9)
+                        if (c.get("efficiency_gateway_card") is not None and off)
+                        else None
+                    ),
+                }
             )
 
     # PER-SEED matched: the verdict is computed within each seed, never pooled across seeds.
     per_seed = {}
     for s in seeds:
         s_cells = [c for c in scored if c["seed"] == s]
-        losses = [
-            1 - float(c["efficiency_gateway_charged"]) / float(c["efficiency_offline_recorded"])
-            for c in s_cells
-            if float(c["efficiency_offline_recorded"] or 0) > 0
-        ]
+        losses = []
+        for c in s_cells:
+            off, gw = _off_gw(c)
+            if off and off > 0 and gw is not None:
+                losses.append(1 - gw / off)
         per_seed[str(s)] = {
             "n_cells": len([c for c in cells if c["seed"] == s]),
             "n_won": len([c for c in cells if c["seed"] == s and c["levels"] > 0]),
@@ -213,6 +301,40 @@ def summarize(cells: list[dict], *, games: list[str], seeds: list[int], budget: 
     free = [
         s["resets_that_cost_nothing"] for s in split if s["resets_that_cost_nothing"] is not None
     ]
+
+    # DISTINCT-MEASUREMENT COLLAPSE (2026-07-27). Cells whose move-trajectory SHA is identical are
+    # the SAME measurement replicated by a seed that the agent's search never consumed. Collapsing
+    # them by trajectory (falling back to the (game, spans) signature when a fingerprint is absent)
+    # gives the effective support behind the median.
+    def _sig(d: dict) -> str:
+        return d.get("trajectory_move_sha256") or f"{d['game']}|{d['rel_loss']}"
+
+    groups: dict[str, list[dict]] = {}
+    for d in rel_losses:
+        groups.setdefault(_sig(d), []).append(d)
+    collapsed = [g[0]["rel_loss"] for g in groups.values()]
+    distinct_summary = {
+        "basis": "identical trajectory_move_sha256 (fallback: game + rel_loss)",
+        "n_cells": len(rel_losses),
+        "n_distinct": len(groups),
+        "duplicate_groups": [
+            {
+                "n_cells": len(g),
+                "cells": [x["cell"] for x in g],
+                "rel_loss": g[0]["rel_loss"],
+            }
+            for g in groups.values()
+            if len(g) > 1
+        ],
+        "median_over_distinct_trajectories": (
+            round(statistics.median(collapsed), 9) if collapsed else None
+        ),
+        "max_over_distinct_trajectories": round(max(collapsed), 9) if collapsed else None,
+        "why": (
+            "a per-cell median triple-counts a seed-invariant game. The distinct-trajectory median "
+            "is the one whose support equals its measurement count."
+        ),
+    }
 
     n_recon = sum(1 for c in cells if c.get("attribution_reconciles") is True)
     n_nav = sum(1 for c in cells if c.get("navdiag_instrumented") is True)
@@ -298,14 +420,64 @@ def summarize(cells: list[dict], *, games: list[str], seeds: list[int], budget: 
             "total_resets_that_cost_nothing": sum(free) if free else 0,
         },
         "score_loss_from_charged_resets": {
-            "unit": "relative loss = (offline_recorded_score - gateway_charged_score)/offline",
+            "unit": "relative loss = (offline_score - gateway_charged_score)/offline, FULL PRECISION",
+            "precision_note": (
+                "computed from the UNROUNDED scorer outputs (`efficiency_*_precise`). The 4-dp "
+                "fields are preserved on every cell for continuity but must not be divided: a ratio "
+                "of two 4-dp values quantises badly (tu93's was exactly 1/24)."
+            ),
+            "n_cells_that_fell_back_to_the_rounded_fields": n_fell_back_to_rounded,
             "per_cell": sorted(rel_losses, key=lambda d: -d["rel_loss"]),
-            "median": (
-                round(statistics.median([d["rel_loss"] for d in rel_losses]), 6)
+            # BOTH aggregations published side by side (2026-07-27). The per-CELL median
+            # triple-counts any game whose trajectory is seed-invariant -- this corpus has one
+            # (tu93: byte-identical spans at all three seeds, flagged by
+            # `whole_run_total_is_not_a_proxy_for_the_costly_share.per_game.<g>.seed_invariant_
+            # trajectory`), so 3 of 7 cells were ONE measurement. A reader must be able to see the
+            # effective support, not just the cell count.
+            "median_per_cell": (
+                round(statistics.median([d["rel_loss"] for d in rel_losses]), 9)
                 if rel_losses
                 else None
             ),
-            "max": round(max(d["rel_loss"] for d in rel_losses), 6) if rel_losses else None,
+            "max_per_cell": round(max(d["rel_loss"] for d in rel_losses), 9)
+            if rel_losses
+            else None,
+            "median": (
+                round(statistics.median([d["rel_loss"] for d in rel_losses]), 9)
+                if rel_losses
+                else None
+            ),
+            "max": round(max(d["rel_loss"] for d in rel_losses), 9) if rel_losses else None,
+            "distinct_measurements": distinct_summary,
+            "effective_support": {
+                "n_cells": len(rel_losses),
+                "n_distinct_trajectories": distinct_summary.get("n_distinct"),
+                "n_distinct_games": len({d["game"] for d in rel_losses}),
+                "reading": (
+                    "quote the DISTINCT-trajectory median beside the per-cell one. Where they "
+                    "differ, the per-cell figure is weighting one trajectory by its seed count."
+                ),
+            },
+            "median_from_the_CARD_measured_charge": (
+                round(
+                    statistics.median(
+                        [
+                            d["rel_loss_from_card"]
+                            for d in rel_losses
+                            if d["rel_loss_from_card"] is not None
+                        ]
+                    ),
+                    9,
+                )
+                if any(d["rel_loss_from_card"] is not None for d in rel_losses)
+                else None
+            ),
+            "card_vs_model_note": (
+                "`median` above is the MODELLED charge (offline + resets). "
+                "`median_from_the_CARD_measured_charge` is read off the gateway's own Card and is "
+                "the number a forward claim should cite; the modelled one overstates wherever "
+                "post-death (empty-frame) actions were taken."
+            ),
         },
         "whole_run_total_is_not_a_proxy_for_the_costly_share": {
             "per_game": proxy,
@@ -323,6 +495,213 @@ def summarize(cells: list[dict], *, games: list[str], seeds: list[int], budget: 
             ),
         },
         "per_seed_matched": per_seed,
+    }
+
+
+def _recheck_cell(c: dict) -> list[str]:
+    """INDEPENDENT re-derivation of every invariant a cell claims, from the cell's fields alone.
+
+    Deliberately does NOT call `run_game`'s own reconciler: the point is a second implementation
+    that can disagree. Returns the list of violated invariant names (empty == clean).
+    """
+    bad: list[str] = []
+    off = c.get("run_offline_actions")
+    res = c.get("run_resets")
+    frames = c.get("run_frames")
+    chg = c.get("run_gateway_charged")
+    if None not in (off, res, frames) and frames != off + res:
+        bad.append("frames_eq_offline_plus_resets")
+    if None not in (off, res, chg) and chg != off + res:
+        bad.append("charged_eq_offline_plus_resets")
+    seg_off = c.get("segment_offline_actions") or []
+    seg_res = c.get("segment_resets") or []
+    seg_chg = c.get("segment_gateway_charged") or []
+    if len(seg_off) == len(seg_chg) == len(seg_res):
+        for i, (o, r_, g) in enumerate(zip(seg_off, seg_res, seg_chg)):
+            if g != o + r_:
+                bad.append(f"span_{i}_charged_eq_offline_plus_resets")
+    else:
+        bad.append("span_vectors_have_different_lengths")
+    ric, rit = c.get("resets_in_completed_segments"), c.get("resets_in_tail")
+    if None not in (ric, rit, res) and int(ric) + int(rit) != int(res):
+        bad.append("resets_split_sums_to_run_resets")
+    if None not in (seg_off, off) and sum(seg_off) + int(c.get("tail_offline_actions") or 0) != off:
+        bad.append("span_offline_plus_tail_sums_to_run_offline")
+    for k in ("empty_frame_actions", "observed_full_resets", "consecutive_reset_pairs"):
+        v = c.get(k)
+        if v is not None and int(v) < 0:
+            bad.append(f"{k}_is_negative")
+    offp = c.get("efficiency_offline_precise")
+    gwp = c.get("efficiency_gateway_charged_precise")
+    if None not in (offp, gwp) and float(gwp) > float(offp) + 1e-9:
+        # charging MORE actions can never score HIGHER: the per-level score is
+        # min((baseline/charged)**2*100, 115), monotonically decreasing in `charged`.
+        bad.append("gateway_charged_score_exceeds_offline_score")
+    ca = c.get("card_actions")
+    if ca is not None and None not in (off, res):
+        # the card can only ever charge <= offline+resets (free full resets, free post-death actions)
+        if int(ca) > int(off) + int(res):
+            bad.append("card_charge_exceeds_offline_plus_resets")
+        if int(ca) < 0:
+            bad.append("card_charge_is_negative")
+    return bad
+
+
+def _mutation_proofs(cells: list[dict]) -> dict:
+    """Prove the invariant re-checker CATCHES a deliberately corrupted cell, mutation by mutation.
+
+    WHY (2026-07-27). This lane previously claimed in prose that "10 mutations were applied and
+    proved caught" while the shipped artifact contained no record of any of them -- the load-bearing
+    safety claim was the one an auditor could not check. Every mutation below is applied to a deep
+    COPY of a real cell, the independent re-checker is run, and what caught it is recorded. A
+    mutation that ESCAPES is recorded as an escape, not dropped.
+    """
+    import copy
+
+    base = None
+    for c in cells:
+        if c.get("levels", 0) > 0 and (c.get("segment_resets") or []):
+            base = c
+            break
+    if base is None:
+        return {"ran": False, "reason": "no won cell with span vectors to mutate"}
+
+    def _bump(field, delta=1, index=None):
+        def _f(d):
+            if index is None:
+                d[field] = (d.get(field) or 0) + delta
+            else:
+                d[field][index] = d[field][index] + delta
+
+        return _f
+
+    mutations = [
+        ("run_resets_plus_1", _bump("run_resets")),
+        ("run_frames_minus_1", _bump("run_frames", -1)),
+        ("run_gateway_charged_plus_7", _bump("run_gateway_charged", 7)),
+        ("segment_resets_0_plus_1", _bump("segment_resets", 1, 0)),
+        ("segment_gateway_charged_0_minus_1", _bump("segment_gateway_charged", -1, 0)),
+        ("segment_offline_actions_0_plus_3", _bump("segment_offline_actions", 3, 0)),
+        ("tail_resets_plus_1", _bump("resets_in_tail")),
+        ("empty_frame_actions_negative", lambda d: d.__setitem__("empty_frame_actions", -1)),
+        (
+            "gateway_score_beats_offline_score",
+            lambda d: d.__setitem__(
+                "efficiency_gateway_charged_precise",
+                float(d.get("efficiency_offline_precise") or 1.0) * 1.5,
+            ),
+        ),
+        (
+            "card_charge_exceeds_offline_plus_resets",
+            lambda d: d.__setitem__(
+                "card_actions",
+                int(d.get("run_offline_actions") or 0) + int(d.get("run_resets") or 0) + 100,
+            ),
+        ),
+    ]
+    clean = _recheck_cell(base)
+    results = []
+    for name, fn in mutations:
+        m = copy.deepcopy(base)
+        try:
+            fn(m)
+        except Exception as exc:
+            results.append(
+                {"mutation": name, "applied": False, "reason": f"{type(exc).__name__}: {exc}"}
+            )
+            continue
+        found = _recheck_cell(m)
+        new_violations = [v for v in found if v not in clean]
+        results.append(
+            {
+                "mutation": name,
+                "applied": True,
+                "caught": bool(new_violations),
+                "caught_by_invariants": new_violations,
+            }
+        )
+    escaped = [r["mutation"] for r in results if r.get("applied") and not r.get("caught")]
+    return {
+        "ran": True,
+        "mutated_cell": f"{base['game']}@{base['seed']}",
+        "baseline_violations_on_the_unmutated_cell": clean,
+        "n_mutations": len(mutations),
+        "n_caught": sum(1 for r in results if r.get("caught")),
+        "n_escaped": len(escaped),
+        "escaped": escaped,
+        "results": results,
+        "principle": (
+            "A safety claim that cannot be checked from the artifact is prose. Each mutation is "
+            "applied to a deep copy of a real cell and the independent re-checker must produce a "
+            "NEW violation; escapes are published, not hidden."
+        ),
+    }
+
+
+def _pure_addition_proof(cells: list[dict], prior_path: str | None) -> dict:
+    """Prove this capture ADDED fields and changed no recorded number, against the prior artifact.
+
+    This edits `scripts/arc_leaderboard_eval.py`, a freshness-tracked dependency of five committed
+    artifacts, so "pure addition" is the load-bearing claim. It is checked here rather than
+    asserted: every key the PRIOR artifact recorded on a cell must be present with an EQUAL value in
+    the newly measured cell of the same (game, seed).
+    """
+    if not prior_path:
+        return {"ran": False, "reason": "no prior artifact given"}
+    # Read the COMMITTED version from git, not the working-tree file. The working-tree file is
+    # OVERWRITTEN by this very rebuild, so comparing against it would make the proof vacuous on every
+    # run after the first (0 fields added, trivially "pure"). `git show HEAD:<path>` is the stable
+    # control: the last version anyone actually published.
+    source = f"git show HEAD:{prior_path}"
+    raw = os.popen(f"git show HEAD:{prior_path} 2>/dev/null").read()
+    if not raw.strip():
+        if not Path(prior_path).exists():
+            return {"ran": False, "reason": f"prior artifact not in git or on disk: {prior_path}"}
+        raw = Path(prior_path).read_text()
+        source = f"working tree {prior_path} (NOT in git at HEAD -- weaker control)"
+    try:
+        prior = json.loads(raw)
+    except Exception as exc:
+        return {"ran": False, "reason": f"prior artifact unreadable: {type(exc).__name__}: {exc}"}
+    pcells = {f"{c.get('game')}@{c.get('seed')}": c for c in (prior.get("cells") or [])}
+    new = {f"{c.get('game')}@{c.get('seed')}": c for c in cells}
+    # `wall_s` is this capture's own LIVE clock: a re-measurement necessarily lands on a different
+    # wall time, and counting that as a moved measurement number would make the boolean permanently
+    # False and therefore useless. It is bucketed separately and reported, not silently ignored.
+    LIVE_CLOCKS = {"wall_s"}
+    matched, diffs, clock_moves, added = [], [], [], set()
+    for key, pc in pcells.items():
+        nc = new.get(key)
+        if nc is None:
+            diffs.append({"cell": key, "field": "<cell missing in new capture>"})
+            continue
+        matched.append(key)
+        for f, pv in pc.items():
+            if f not in nc:
+                diffs.append({"cell": key, "field": f, "prior": pv, "new": "<ABSENT>"})
+            elif nc[f] != pv:
+                (clock_moves if f in LIVE_CLOCKS else diffs).append(
+                    {"cell": key, "field": f, "prior": pv, "new": nc[f]}
+                )
+        added |= set(nc) - set(pc)
+    return {
+        "ran": True,
+        "prior_artifact": prior_path,
+        "prior_artifact_source": source,
+        "n_cells_matched": len(matched),
+        "n_prior_cells": len(pcells),
+        "n_number_bearing_diffs": len(diffs),
+        "diffs": diffs[:40],
+        "n_live_clock_moves_EXPECTED_on_a_re_measurement": len(clock_moves),
+        "live_clock_fields_excluded_from_the_boolean": sorted(LIVE_CLOCKS),
+        "n_fields_ADDED": len(added),
+        "fields_ADDED": sorted(added),
+        "pure_addition": bool(not diffs),
+        "principle": (
+            "The prior artifact's own recorded values are the control. If any of them moved, this "
+            "was not pure addition and the five dependent artifacts cannot be trusted to rebuild "
+            "identically."
+        ),
     }
 
 
@@ -376,6 +755,14 @@ def main(argv=None) -> int:
     ap.add_argument("--seeds", default="20260724,20260725,20260726")
     ap.add_argument("--budget", type=int, default=400)
     ap.add_argument("--out", required=True)
+    ap.add_argument(
+        "--compare-prior",
+        default="results/arc_per_level_reset_attribution_20260726.json",
+        help=(
+            "prior artifact whose recorded cell values are the control for the PURE-ADDITION proof; "
+            "pass '' to skip"
+        ),
+    )
     a = ap.parse_args(argv)
 
     games = [g for g in a.games.split(",") if g]
@@ -449,6 +836,33 @@ def main(argv=None) -> int:
         "cells": cells,
         **summarize(ok, games=games, seeds=seeds, budget=a.budget),
         "honest_verdict": "",  # filled below
+        # PROOFS, not prose (2026-07-27). The prior run of this lane claimed byte-identical
+        # trajectory fingerprints, 10 caught mutations, and 0 number-bearing diffs on 5 rebuilt
+        # artifacts -- and shipped an artifact containing none of it. Both proofs are now computed
+        # and recorded here, including any mutation that escaped.
+        "tests_and_mutation_proofs": {
+            "independent_invariant_recheck": {
+                "n_cells_checked": len(ok),
+                "n_cells_clean": sum(1 for c in ok if not _recheck_cell(c)),
+                "violations_by_cell": {
+                    f"{c['game']}@{c['seed']}": _recheck_cell(c) for c in ok if _recheck_cell(c)
+                },
+                "note": (
+                    "a SECOND implementation of every invariant, derived from the cell fields alone "
+                    "and never calling run_game's own reconciler -- two implementations that can "
+                    "disagree is the only way a counting bug announces itself"
+                ),
+            },
+            "mutation_proofs": _mutation_proofs(ok),
+            "pure_addition_vs_prior_artifact": _pure_addition_proof(ok, a.compare_prior or None),
+            "trajectory_fingerprints": {
+                f"{c['game']}@{c['seed']}": {
+                    "move_sha256": c.get("trajectory_move_sha256"),
+                    "level_sequence_sha256": c.get("trajectory_level_sequence_sha256"),
+                }
+                for c in ok
+            },
+        },
         "provenance": _provenance(games, seeds, a.budget, a.out),
     }
     recon_ok = art["instrumentation_health"]["attribution_reconciles_everywhere"]
@@ -458,9 +872,33 @@ def main(argv=None) -> int:
         f"complete_per_level_reset_attribution_captured_{n_won}_won_cells_"
         f"reconciles_{str(recon_ok).lower()}_nav_channel_live_{str(nav_ok).lower()}"
     )
+    ih = art["instrumentation_health"]
+    # GATE_3's threshold, published (2026-07-27). It used to live only in the source, so a reader
+    # could see `observed_won_cells: 7` and had no way to know what it was compared against.
+    GATE3_MIN_WON_CELLS = 4
+    n_distinct_won = (
+        (art.get("score_loss_from_charged_resets") or {}).get("effective_support") or {}
+    ).get("n_distinct_trajectories")
     art["acceptance_gates"] = {
+        # Every gate now carries a COMPUTED witness at its own aggregation level. Previously gates 1
+        # and 2 published only `passed` + `principle`, so their pass regions could not be checked in
+        # place -- the counts existed but only under `instrumentation_health`, several keys away.
         "gate_1_attribution_reconciles_on_every_cell": {
             "passed": bool(recon_ok),
+            "witness": {
+                "n_cells": ih["cells_total"],
+                "n_cells_with_reconciling_attribution": ih["cells_with_reconciling_attribution"],
+                "n_cells_NOT_reconciling": ih["cells_total"]
+                - ih["cells_with_reconciling_attribution"],
+                "cells_not_reconciling": [
+                    f"{c['game']}@{c['seed']}"
+                    for c in cells
+                    if c.get("attribution_reconciles") is not True
+                ],
+                "identity_frames_eq_actions_plus_resets_holds_all_cells": ih[
+                    "identity_holds_all_cells"
+                ],
+            },
             "principle": (
                 "Two independent accountings that must agree is the only way an off-by-one in a "
                 "counting loop announces itself; a single accounting merely looks plausible."
@@ -468,17 +906,65 @@ def main(argv=None) -> int:
         },
         "gate_2_nav_channel_populated_not_dead": {
             "passed": bool(nav_ok),
+            "witness": {
+                "n_cells": ih["cells_total"],
+                "n_cells_with_instrumented_nav_channel": ih["cells_with_instrumented_nav_channel"],
+                "n_cells_with_a_DEAD_nav_channel": ih["cells_total"]
+                - ih["cells_with_instrumented_nav_channel"],
+                "uninstrumented_reasons": sorted(
+                    {
+                        str(c.get("navdiag_uninstrumented_reason"))
+                        for c in cells
+                        if c.get("navdiag_instrumented") is not True
+                    }
+                ),
+                "n_cells_carrying_a_gateway_charge_error": sum(
+                    1 for c in cells if c.get("efficiency_gateway_charged_error")
+                ),
+            },
             "principle": (
                 "An absent channel that reports 0 reads as a measured zero -- the defect that made "
                 "a dead getattr(env,'baseline_actions') look like a clean null."
             ),
         },
         "gate_3_enough_won_cells_for_the_attribution_to_be_real": {
-            "passed": bool(n_won >= 4),
+            "passed": bool(n_won >= GATE3_MIN_WON_CELLS),
             "observed_won_cells": n_won,
+            "threshold": GATE3_MIN_WON_CELLS,
+            "witness": {
+                "n_won_cells": n_won,
+                "threshold": GATE3_MIN_WON_CELLS,
+                # The threshold is evaluated against the CELL count for continuity, but the
+                # DISTINCT-trajectory count is the effective support and is published beside it: a
+                # seed-invariant game contributes one measurement, not three.
+                "n_distinct_won_trajectories": n_distinct_won,
+                "passes_on_distinct_count_too": (
+                    None if n_distinct_won is None else bool(n_distinct_won >= GATE3_MIN_WON_CELLS)
+                ),
+            },
             "principle": (
                 "Attribution only exists where a level-up exists. A capture with no won cell "
                 "demonstrates plumbing, not attribution."
+            ),
+        },
+        "gate_4_the_card_was_read_not_modelled": {
+            # NEW 2026-07-27. The modelled charge (offline + resets) was found wrong on 17 of 44
+            # cells in a sibling lane because post-death actions return frame=[] and are never
+            # billed. This gate requires the gateway's OWN bookkeeping to have been consulted.
+            "passed": bool(ok and all(c.get("card_actions") is not None for c in ok)),
+            "witness": {
+                "n_cells": len(ok),
+                "n_cells_with_a_card_read": sum(1 for c in ok if c.get("card_actions") is not None),
+                "n_cells_where_model_and_card_DISAGREE": sum(
+                    1 for c in ok if int(c.get("gateway_card_vs_model_charged_delta") or 0) != 0
+                ),
+                "total_post_death_uncharged_actions": sum(
+                    int(c.get("empty_frame_actions") or 0) for c in ok
+                ),
+            },
+            "principle": (
+                "A charge MODEL cannot detect the error it does not model. Two reconstructions of "
+                "the same assumption agreeing is not independence."
             ),
         },
     }

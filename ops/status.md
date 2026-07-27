@@ -1,5 +1,39 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-07-27 (STOP MODELLING THE GATEWAY CHARGE, READ IT: the "gateway-accurate"
+3.69% was a MODEL — the real figure read off the gateway's own scorecard Card is 0.018097 at the
+median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NEGATIVE)
+
+## Session 2026-07-27 (latest) — the charge is now READ, not reconstructed (outer-loop)
+
+**What is now measured.** `arc_leaderboard_eval._read_gateway_card()` reads `card.actions`,
+`card.resets` and `card.actions_by_level` off the arcade's own scorecard Card — the exact object the
+leaderboard scorer consumes — so no analyser has to model the charge any more.
+`results/arc_gateway_card_ground_truth_20260727.json` re-runs the same 48 cells the modelled artifact
+was built on: 48/48 reproduce their persisted trajectories, 4 gates with computed witnesses all pass,
+and the mechanism makes a pointwise prediction that holds on 48/48 cells.
+
+- **REAL relative optimism: median 0.018097, mean 0.028887, min -0.018209** (vs the published
+  MODELLED median 0.036903).
+- **Mechanism:** a non-RESET action taken while the game is `GAME_OVER`/`WIN` returns `frame=[]`
+  (`arcengine/base_game.py:204-216`) and the scorecard update is gated on `len(resp.frame) > 0`
+  (`arc_agi/wrapper.py:187`) — post-death actions are FREE at the gateway. Also on the HTTP path.
+- **The per-level b400 optimism against the REAL charge is ~0 at the median** (6.2e-08). The 4.6%
+  figure that lane published is the MODELLED charge.
+
+**What is still open (do not treat any of these as settled):**
+
+- `competition_mode` charges a RESET at action-count 0 while doing nothing
+  (`arc_agi/api.py:316-334`), so every figure above is a LOWER BOUND there. UNMEASURED.
+- the REMOTE hidden gateway has never been confirmed to match the installed local `arc_agi`.
+- a conductor task is REWRITING historical `results/` artifacts in place (75 files in the working
+  tree) — a never-prune violation with no owner yet. See `ops/known-issues.md`.
+- a full-suite pytest failure SET is still not obtainable (an xdist worker dies on
+  `test_experiment_5838_v520_source_delta_ingestion.py`; both reproduction attempts were negative).
+
+**Nothing was submitted. `MAX_ACTIONS` and every `SUBMITTED_*` flag are untouched. Nothing was
+committed. No historical artifact's recorded numbers were rewritten.**
+
 **Last Updated:** 2026-07-26 (THE MAX_ACTIONS ANSWER: LLM-ON contention MEASURED — per-game latency rises 1.81x under concurrency while total THROUGHPUT does not, so the cap admits budget 2000 at the 9h reading; and the generator DIED at K=4 in both seeds, a concurrency ceiling reached before any wall-clock ceiling)
 
 ## Session 2026-07-26 (latest) - MAX_ACTIONS: the answer, in the unit the competition pays on (outer-loop, REQ-ARC-WMTE-5990)

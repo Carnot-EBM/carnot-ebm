@@ -15,8 +15,16 @@ units, and no two of them are comparable:
     of the above rest on are OPTIMISTIC by a median 3.7% because the gateway charges a RESET an
     action and our harness charges it zero.
 
-This file gives ONE answer in ONE unit chain, with the uncertainty attached: a budget, the wins it
-buys, and the GATEWAY-CHARGED score those wins are worth. It changes no flag.
+This file gives ONE answer in ONE unit chain, with the uncertainty attached: a budget, the LEVEL-UP
+CELLS it buys, and the GATEWAY-CHARGED score those cells are worth. It changes no flag.
+
+THE WORD "WIN" IS NOT USED AS A COUNT ANYWHERE IN THIS FILE (2026-07-27 correction). It used to be:
+an accumulator named `wins` incremented on `levels > 0`, i.e. a cell that banked AT LEAST ONE level,
+while two lines away the same function computed the real game-complete predicate as a DIFFERENT
+variable (`won = lv >= len(baselines)`) and used that for scoring. So "median wins 3 -> 11" read as
+"games won" and meant "cells reaching a first level-up". Every count is now named for its predicate:
+`cells_with_at_least_one_levelup*` (levels > 0), and cross-seed sums carry the
+`_summed_across_seeds` suffix so a per-seed number can never be read as a corpus total.
 
 THE THREE UNITS, NEVER CONFLATED (stated on every number this file emits)
 ========================================================================
@@ -35,7 +43,7 @@ WHAT IS NEW HERE, AND WHY IT WAS NEEDED
    ladder K=1,2,4 on matched games/seed, and this analyser reads THROUGHPUT (games per hour) off it,
    because throughput -- not per-game latency -- is what a fixed wall-clock cap divides.
 
-2. THE SCORE CURVE IS RE-PRICED IN THE GATEWAY UNIT. Wins are not scored; efficiency-squared is,
+2. THE SCORE CURVE IS RE-PRICED IN THE GATEWAY UNIT. Level-up counts are not scored; efficiency-squared is,
    and resets are charged. Every budget's score is recomputed under three charge models (M0 offline,
    M1 all-resets-charged, M2 bootstrap-free -- the opening reset is FREE, per the installed
    `arc_agi/api.py` + `scorecard.py` chain), through the INSTALLED scorer, never a paraphrase.
@@ -1069,7 +1077,7 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
                 "budget": b,
                 "seed": s,
                 "n_games": 0,
-                "wins": 0,
+                "cells_with_at_least_one_levelup": 0,
                 "levels_total": 0,
                 "m0": 0.0,
                 "m1_est": 0.0,
@@ -1091,7 +1099,7 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
         lv = int(r.get("levels") or 0)
         acc["levels_total"] += lv
         if lv > 0:
-            acc["wins"] += 1
+            acc["cells_with_at_least_one_levelup"] += 1
             spans, tail, baselines = _spans_from_row(r)
             if not baselines or not all(baselines):
                 continue
@@ -1134,8 +1142,12 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
             "n_seeds": len(arms),
             "seeds": sorted(a["seed"] for a in arms),
             "n_games_per_seed": sorted({a["n_games"] for a in arms}),
-            "wins_per_seed": {str(a["seed"]): a["wins"] for a in arms},
-            "wins_median": _median([a["wins"] for a in arms]),
+            "cells_with_at_least_one_levelup_per_seed": {
+                str(a["seed"]): a["cells_with_at_least_one_levelup"] for a in arms
+            },
+            "cells_with_at_least_one_levelup_median_per_seed": _median(
+                [a["cells_with_at_least_one_levelup"] for a in arms]
+            ),
             "levels_total_median": _median([a["levels_total"] for a in arms]),
             "resets_total_median": _median([a["resets_total"] for a in arms]),
             "offline_actions_total_median": _median([a["offline_actions_total"] for a in arms]),
@@ -1151,7 +1163,9 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
             "n_cells_m0_matches_recorded": sum(
                 int(a.get("n_cells_m0_matches_recorded") or 0) for a in arms
             ),
-            "n_won_cells": sum(int(a["wins"]) for a in arms),
+            "n_levelup_cells_summed_across_seeds": sum(
+                int(a["cells_with_at_least_one_levelup"]) for a in arms
+            ),
             "score_M0_offline_median": _median([a["m0"] for a in arms]),
             "score_M1_all_resets_charged_median": _median([a["m1_est"] for a in arms]),
             "score_M2_bootstrap_free_median": _median([a["m2_est"] for a in arms]),
@@ -1188,9 +1202,11 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
             pairs.append(
                 {
                     "seed": sd,
-                    "wins_lo": a["wins"],
-                    "wins_hi": b_["wins"],
-                    "d_wins": b_["wins"] - a["wins"],
+                    "levelup_cells_lo": a["cells_with_at_least_one_levelup"],
+                    "levelup_cells_hi": b_["cells_with_at_least_one_levelup"],
+                    "d_levelup_cells": (
+                        b_["cells_with_at_least_one_levelup"] - a["cells_with_at_least_one_levelup"]
+                    ),
                     "M0_lo": round(a["m0"], 4),
                     "M0_hi": round(b_["m0"], 4),
                     "d_M0": round(b_["m0"] - a["m0"], 4),
@@ -1209,7 +1225,7 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
         matched[f"b{lo}_to_b{hi}"] = {
             "n_matched_seeds": len(pairs),
             "pairs": pairs,
-            "d_wins_median": _median([p["d_wins"] for p in pairs]),
+            "d_levelup_cells_median": _median([p["d_levelup_cells"] for p in pairs]),
             "d_M0_median": _median([p["d_M0"] for p in pairs]),
             "d_M0_sign_test": both_tails_sign_test([p["d_M0"] for p in pairs]),
             "d_M2_ESTIMATED_median": _median([p["d_M2_ESTIMATED"] for p in pairs]),
@@ -1292,10 +1308,32 @@ def part2_score_curve(sweep_files: list[str], exact_files: list[str]) -> dict[st
         "exact_subset_matched_budget_delta": exact_matched,
         "per_budget_seed_cells": [per_bs[k] for k in sorted(per_bs)],
         "unit_of_every_score_here": "GATEWAY-CHARGED for M1/M2; OFFLINE ACTIONS for M0",
+        # UNIT OF EVERY *COUNT* (2026-07-27). Added after a review found the old `wins` accumulator
+        # was read as "games won" when its predicate is `levels > 0`. Two DIFFERENT predicates
+        # coexist in this analyser and must never be conflated.
+        "unit_of_every_count_here": {
+            "cells_with_at_least_one_levelup": {
+                "predicate": "levels > 0",
+                "meaning": (
+                    "a (game, seed, budget) CELL that banked at least ONE level-up. NOT a game won, "
+                    "NOT a level count."
+                ),
+                "aggregation": "PER SEED unless the key carries the _summed_across_seeds suffix",
+            },
+            "won": {
+                "predicate": "levels >= len(baselines)",
+                "meaning": "the game-COMPLETE predicate; used ONLY to decide scorer completion flags",
+                "note": "never emitted as a count; it is a per-cell boolean inside the scorer drive",
+            },
+            "n_levelup_cells_summed_across_seeds": {
+                "predicate": "levels > 0",
+                "aggregation": "SUMMED ACROSS SEEDS -- not comparable to the per-seed medians above",
+            },
+        },
         "scope": (
             "grace=None (SHIPPED) arm only, LLM-OFF cells. b400/b2000 are the full 25-game corpus x "
             "3 seeds; b4000 is a 13-game LEVEL-REACHING SUBSET and is therefore biased UPWARD on "
-            "wins and NOT comparable to the 25-game rows without saying so."
+            "level-up cells and NOT comparable to the 25-game rows without saying so."
         ),
     }
 
@@ -1450,7 +1488,9 @@ def part3_early_stop_ceiling(sweep_files: list[str]) -> dict[str, Any]:
                     ),
                     "first_levelups_that_would_be_LOST": lost,
                     "first_levelups_observed": len(firsts),
-                    "share_of_wins_lost": round(lost / len(firsts), 4) if firsts else None,
+                    "share_of_first_levelups_lost": round(lost / len(firsts), 4)
+                    if firsts
+                    else None,
                 }
             )
         start_curve[str(b)] = {
@@ -1461,7 +1501,7 @@ def part3_early_stop_ceiling(sweep_files: list[str]) -> dict[str, Any]:
             "trade_points": pts,
             "reading": (
                 "A start-window W stops a game that has not levelled up within W actions. Saving comes "
-                "from the never-levelling cells; the cost is the wins whose FIRST level-up lands beyond "
+                "from the never-levelling cells; the cost is the cells whose FIRST level-up lands beyond "
                 "W. Both are counted from the same rows, so the trade is measured, not modelled."
             ),
         }
@@ -1526,6 +1566,89 @@ def _bootstrap_ci(values: Sequence[float], n_boot: int = 20000, seed: int = 2026
     }
 
 
+def _walk_p_floors(node) -> list:
+    """Collect every emitted POSITIVE `min_reachable_two_sided_p_at_this_support` in a subtree.
+
+    Non-positive values are excluded deliberately. A floor of 0.0 is not a reachable p -- it is what a
+    sign test emits when its support is EMPTY (2/2**0 style degeneracies and empty-list guards). Left
+    in, a single degenerate 0.0 anywhere in the artifact drags the minimum to zero and makes the
+    self-consistency check unfailable-in-one-direction and permanently false in the other.
+    """
+    out: list = []
+    if isinstance(node, dict):
+        v = node.get("min_reachable_two_sided_p_at_this_support")
+        if isinstance(v, (int, float)) and float(v) > 0.0:
+            out.append(float(v))
+        for x in node.values():
+            out.extend(_walk_p_floors(x))
+    elif isinstance(node, list):
+        for x in node:
+            out.extend(_walk_p_floors(x))
+    return out
+
+
+def _leaf_floor_values(node) -> list:
+    """Every `min_reachable_two_sided_p_at_this_support` value INCLUDING non-positive ones."""
+    out: list = []
+    if isinstance(node, dict):
+        v = node.get("min_reachable_two_sided_p_at_this_support")
+        if isinstance(v, (int, float)):
+            out.append(float(v))
+        for x in node.values():
+            out.extend(_leaf_floor_values(x))
+    elif isinstance(node, list):
+        for x in node:
+            out.extend(_leaf_floor_values(x))
+    return out
+
+
+def _min_emitted_p_floor(node) -> float | None:
+    floors = _walk_p_floors(node)
+    return round(min(floors), 4) if floors else None
+
+
+def _throughput_power_stamp(p1: dict) -> dict:
+    """The THROUGHPUT arm's power, extracted so it can be stamped wherever it is relied on.
+
+    WHY (2026-07-27). The latency-vs-throughput decomposition is what VOIDS the prior cost model,
+    and every downstream budget number inherits it. But the throughput arm has 2 usable seeds
+    (one of which matched only 2 games), a two-sided sign-test p-floor of 0.5, and therefore
+    `can_ever_reach_0_05: false`. The LATENCY arm is the powered one (p=0.0312) and it measures the
+    quantity the cap argument declares irrelevant. Reading the artifact previously required finding
+    the nested test to learn this; the stamp now travels with the claim.
+    """
+    mr = (p1.get("matched_set_throughput_ratio_by_K") or {}).get("2") or {}
+    test = mr.get("sign_test_ratio_gt_1") or {}
+    per_seed = mr.get("per_seed") or {}
+    return {
+        "arm": "matched_set_throughput_ratio_K2_vs_K1",
+        "n_seeds_usable": mr.get("n_seeds_usable"),
+        "games_matched_per_seed": {k: (v.get("games_matched") or []) for k, v in per_seed.items()},
+        "min_games_matched_on_any_usable_seed": min(
+            [
+                len(v.get("games_matched") or [])
+                for v in per_seed.values()
+                if v.get("ratio_KN_over_K1")
+            ]
+            or [0]
+        ),
+        "p_floor": mr.get("p_floor_for_a_test_at_this_seed_support"),
+        "can_ever_reach_0_05": test.get("can_ever_reach_0_05"),
+        "verdict": test.get("verdict"),
+        "STAMP": (
+            "UNDERPOWERED__the_latency_vs_throughput_decomposition_that_voids_the_prior_cost_model_"
+            "rests_on_this_arm_and_this_arm_cannot_reach_p_0.05_at_its_seed_support"
+        )
+        if test.get("can_ever_reach_0_05") is False
+        else "POWERED",
+        "what_this_does_NOT_invalidate": (
+            "the measured NUMBERS (K=1 and K=2 s/game) are real; what is underpowered is the "
+            "significance of the RATIO being at/below 1.0. A reader should treat 'throughput is flat' "
+            "as a 2-seed observation consistent with a saturated GPU, not as a powered result."
+        ),
+    }
+
+
 def part4_answer(
     p1: dict, p2: dict, p3: dict, sibling_envelope: dict, n_games_list: list[int]
 ) -> dict:
@@ -1550,6 +1673,35 @@ def part4_answer(
     measured = [r for r in ratios_by_K.values() if r]
     best_ratio = min(measured) if measured else 1.0  # most favourable concurrency measured
     worst_ratio = max(measured) if measured else 1.0  # least favourable concurrency measured
+    # LEVEL-C FALSIFIABILITY (2026-07-27). `worst_ratio` is a max over `measured`, and `measured`
+    # has exactly ONE usable element (K=2; K=4 died and is `is_a_usable_throughput_point: False`).
+    # So min == max == that single value, and cost level C (CI-high x WORST measured concurrency) is
+    # BIT-IDENTICAL to level B (CI-high x BEST measured concurrency) BY CONSTRUCTION. The prior
+    # headline "survives all three cost levels" therefore counted two distinct levels as three. Per
+    # this project's own uninterpretable-gate rule, that is stamped rather than quietly counted.
+    n_distinct_ratios = len({round(float(r), 6) for r in measured})
+    level_c_is_distinct = n_distinct_ratios >= 2
+    level_c_stamp = (
+        None if level_c_is_distinct else "UNFALSIFIABLE_AS_CONSTRUCTED__single_element_ratio_set"
+    )
+    # The ONE measured adverse-concurrency point that exists anywhere in this ladder: K=4 under the
+    # BIGGER server context (n_ctx=32768), s/game 116.2 against the K=1 SAME-SEED comparator 100.7.
+    # It is CONFOUNDED (there is no K=1 run at n_ctx=32768, so context and concurrency move
+    # together) and is therefore NOT promoted to a cost level -- it is published as a SENSITIVITY
+    # row so a reader can see where the answer breaks, instead of inferring from a level that could
+    # not differ.
+    cfg = p1.get("config_test_does_a_bigger_server_context_survive_the_same_concurrency") or {}
+    adverse_sep = (cfg.get("throughput_under_the_bigger_context_SEPARATE_CONFIG") or {}).get(
+        "s_per_game"
+    )
+    k1_by_seed = K1.get("s_per_game_throughput_per_seed") or {}
+    adverse_seeds = sorted({str(c.get("seed")) for c in (cfg.get("cells") or [])})
+    k1_same_seed = None
+    if len(adverse_seeds) == 1:
+        k1_same_seed = k1_by_seed.get(adverse_seeds[0])
+    adverse_ratio = (
+        round(float(adverse_sep) / float(k1_same_seed), 4) if adverse_sep and k1_same_seed else None
+    )
 
     budget_ratio: dict[str, float] = {}
     for b, v in (sibling_envelope.get("budget_curve") or {}).items():
@@ -1599,6 +1751,7 @@ def part4_answer(
         "B_ci_hi_best_measured_throughput": (k1_ci["hi"] or 0.0) * best_ratio,
         "C_ci_hi_worst_measured_throughput": (k1_ci["hi"] or 0.0) * worst_ratio,
     }
+    n_distinct_cost_levels = len({round(float(v), 6) for v in levels.values()})
 
     rows = []
     for cap_name, cap_s in CAPS.items():
@@ -1624,6 +1777,93 @@ def part4_answer(
                     )
                     row[f"fits_with_margin__{lname}"] = bool(total <= MARGIN_FRACTION * usable)
                 rows.append(row)
+
+    # ---- SENSITIVITY (2026-07-27): the two uncertainties the cap table treated as EXACT --------
+    # (i) the CONCURRENCY ratio. The ladder's cost levels cover no ratio >= 1.0 (see
+    #     `cost_level_falsifiability`). Rows at ratio 1.0 (the K=1 arm, exact by definition) and at
+    #     the confounded adverse 1.15x are published so the reader sees the boundary.
+    # (ii) the BUDGET-SCALING ratio. The cap table multiplies the bootstrapped per-game wall CI by
+    #     `budget_ratio` treated as a POINT value, although it is a median over 4 games with a real
+    #     spread (b2000: 1.044 / 1.611 / 1.680 / 1.827). Propagating only one of two multiplicands'
+    #     uncertainty understates the interval. Both are now bootstrapped and the FITTING BOUNDARY
+    #     is published, so "fits with margin" is a statement with a stated breaking point.
+    SENS_CAP = "kaggle_9h_max_notebook_runtime"
+    SENS_N = 110
+    sens_usable = CAPS[SENS_CAP] - KERNEL_OVERHEAD_S_ASSUMED
+    adverse_rows = []
+    for label, ratio_k in (
+        ("K1_arm_ratio_1.0_EXACT_by_definition", 1.0),
+        ("adverse_K4_bigger_context_CONFOUNDED", adverse_ratio),
+    ):
+        if ratio_k is None:
+            continue
+        for b, br in sorted(budget_ratio.items(), key=lambda kv: int(kv[0])):
+            if br is None:
+                continue
+            total = (k1_ci["hi"] or 0.0) * ratio_k * br * SENS_N
+            adverse_rows.append(
+                {
+                    "concurrency_ratio_label": label,
+                    "concurrency_ratio": ratio_k,
+                    "cap": SENS_CAP,
+                    "n_games": SENS_N,
+                    "budget": int(b),
+                    "budget_scaling_ratio_vs_b400": br,
+                    "budget_ratio_is_EXTRAPOLATED": bool(str(b) in extrapolated),
+                    "total_s_at_ci_hi": round(total, 1),
+                    "fraction_of_usable": round(total / sens_usable, 4)
+                    if sens_usable > 0
+                    else None,
+                    "fits_with_margin": bool(total <= MARGIN_FRACTION * sens_usable),
+                }
+            )
+    # budget-scaling-ratio uncertainty, bootstrapped over the per-GAME paired ratios the sibling
+    # envelope publishes (4 games per budget). Emits lo/median/hi cap rows plus the ratio at which
+    # each budget crosses the 0.80 margin at cost level B.
+    ratio_uncertainty: dict[str, Any] = {}
+    for b, v in (sibling_envelope.get("budget_curve") or {}).items():
+        vals = [float(x) for x in (v.get("paired_ratio_vs_b400_values") or []) if x]
+        if len(vals) < 2:
+            continue
+        boot = _bootstrap_ci(vals, seed=int(b))
+        per_game_at_b400 = (k1_ci["hi"] or 0.0) * best_ratio
+        denom = per_game_at_b400 * SENS_N
+        crossing = (MARGIN_FRACTION * sens_usable / denom) if denom else None
+        ratio_uncertainty[str(b)] = {
+            "n_games_behind_the_ratio": len(vals),
+            "observed_values": sorted(vals),
+            "median": round(st.median(vals), 4),
+            "bootstrap_mean_ci": boot,
+            "observed_min": round(min(vals), 4),
+            "observed_max": round(max(vals), 4),
+            "cap_rows_at_level_B": {
+                lbl: {
+                    "ratio": round(float(rv), 4),
+                    "total_s": round(per_game_at_b400 * float(rv) * SENS_N, 1),
+                    "fraction_of_usable": (
+                        round(per_game_at_b400 * float(rv) * SENS_N / sens_usable, 4)
+                        if sens_usable > 0
+                        else None
+                    ),
+                    "fits_with_margin": bool(
+                        per_game_at_b400 * float(rv) * SENS_N <= MARGIN_FRACTION * sens_usable
+                    ),
+                }
+                for lbl, rv in (
+                    ("ratio_lo_bootstrap", boot.get("lo")),
+                    ("ratio_median", st.median(vals)),
+                    ("ratio_hi_bootstrap", boot.get("hi")),
+                    ("ratio_observed_max", max(vals)),
+                )
+                if rv
+            },
+            "margin_crossing_ratio_at_level_B": round(crossing, 4) if crossing else None,
+            "reading": (
+                "the budget-scaling ratio is a 4-game median with a real spread; at its observed "
+                "MAXIMUM this budget's fit can flip. `margin_crossing_ratio_at_level_B` is the ratio "
+                "at which it does."
+            ),
+        }
 
     feasible: dict[str, Any] = {}
     for cap_name in CAPS:
@@ -1681,13 +1921,17 @@ def part4_answer(
                 "budget_ratio_is_EXTRAPOLATED": bool(str(b) in extrapolated),
             }
 
-    # ---- what the budget BUYS, in wins and in the paid unit ---------------------------------
+    # ---- what the budget BUYS, in LEVEL-UP CELLS and in the paid unit ------------------------
     pb = p2.get("per_budget") or {}
     buys = {}
     for b, v in pb.items():
         buys[b] = {
-            "wins_median_per_seed": v.get("wins_median"),
-            "wins_per_seed": v.get("wins_per_seed"),
+            "cells_with_at_least_one_levelup_median_per_seed": v.get(
+                "cells_with_at_least_one_levelup_median_per_seed"
+            ),
+            "cells_with_at_least_one_levelup_per_seed": v.get(
+                "cells_with_at_least_one_levelup_per_seed"
+            ),
             "n_games_per_seed": v.get("n_games_per_seed"),
             "score_M0_offline_median": (
                 round(v["score_M0_offline_median"], 4) if v.get("score_M0_offline_median") else None
@@ -1779,8 +2023,16 @@ def part4_answer(
         "level_verdict": (
             "PRIOR_MODEL_IS_SYSTEMATICALLY_HIGH_AT_THE_LEVEL__it_projects_a_CONTENDED_per_game_LATENCY "
             "and then multiplies by the game count, which double-counts once throughput is measured to "
-            "be flat under concurrency"
+            "be flat under concurrency __ BUT_THE_THROUGHPUT_ARM_IS_UNDERPOWERED (see "
+            "`throughput_arm_power_stamp` beside this field)"
         ),
+        # POWER STAMP CARRIED INLINE (2026-07-27). The whole reversal of the prior cost model rests
+        # on "a wall-clock CAP divides THROUGHPUT, not latency". The THROUGHPUT arm is the
+        # UNDERPOWERED one (2 usable seeds, p-floor 0.5, `can_ever_reach_0_05: false`), while the arm
+        # that IS adequately powered (LATENCY, p=0.0312) measures the quantity declared irrelevant to
+        # the cap. A review found the stamp existed but only in the nested test, so the conclusion
+        # built on it read as powered. It is now attached wherever the decomposition is asserted.
+        "throughput_arm_power_stamp": _throughput_power_stamp(p1),
         "consequence_for_the_extrapolated_crossing_point": (
             "The prior model's implied crossing point (where a budget stops fitting) is VOIDED in both "
             "directions: its mechanism is falsified and its level is ~2x high. It is replaced by the "
@@ -1797,6 +2049,48 @@ def part4_answer(
     return {
         "prior_cost_model_test": prior_test,
         "cost_levels_s_per_game_at_b400": {k: round(v, 1) for k, v in levels.items()},
+        # FALSIFIABILITY OF THE COST LADDER (2026-07-27). Emitted because a review found level C is
+        # identical to level B by construction: `worst_ratio` is a max over a ONE-ELEMENT set, so
+        # min == max. Two distinct levels were being counted as three in the headline.
+        "cost_level_falsifiability": {
+            "n_usable_throughput_ratios_measured": len(measured),
+            "n_distinct_throughput_ratios": n_distinct_ratios,
+            "n_DISTINCT_cost_levels": n_distinct_cost_levels,
+            "n_cost_levels_emitted": len(levels),
+            "level_C_is_distinct_from_level_B": bool(level_c_is_distinct),
+            "level_C_stamp": level_c_stamp,
+            "why": (
+                "level C is CI-high x the WORST measured throughput ratio and level B is CI-high x "
+                "the BEST. `measured` holds exactly one usable ratio (K=2 = "
+                f"{measured[0] if measured else None}); K=4 died and is not a usable throughput "
+                "point. min == max == that value, so C cannot differ from B and cannot fail when B "
+                "passes. Any claim of the form 'survives all three cost levels' is therefore a "
+                "claim about TWO distinct levels."
+            )
+            if not level_c_is_distinct
+            else "two or more distinct ratios were measured; C is a genuinely separate level",
+            "no_adverse_concurrency_level_is_measurable_from_this_ladder": not level_c_is_distinct,
+        },
+        "adverse_concurrency_sensitivity_NOT_a_cost_level": {
+            "adverse_ratio_measured": adverse_ratio,
+            "basis": (
+                "K=4 under the BIGGER server context (n_ctx=32768) s/game "
+                f"{adverse_sep} against the SAME-SEED K=1 comparator {k1_same_seed} "
+                f"(seed {adverse_seeds[0] if len(adverse_seeds) == 1 else adverse_seeds})"
+            ),
+            "CONFOUND": (
+                "there is no K=1 run at n_ctx=32768, so server context and concurrency move together "
+                "in this contrast. It is NOT promoted to a cost level for that reason. It is "
+                "published so a reader can see where the answer breaks rather than infer safety "
+                "from a level that could not differ."
+            ),
+            "rows": adverse_rows,
+            "reading": (
+                "The cost ladder covers no ratio >= 1.0. The directly measured K=1 arm sits at ratio "
+                "1.0 by definition and is shown here for reference; the confounded adverse ratio is "
+                "where the headline budget stops fitting the margin."
+            ),
+        },
         "cost_level_definitions": {
             "A_central_best_measured_throughput": (
                 "mean measured K=1 per-game wall x the most favourable measured throughput ratio"
@@ -1811,6 +2105,13 @@ def part4_answer(
             ),
         },
         "k1_per_game_wall_ci": k1_ci,
+        "budget_scaling_ratio_uncertainty": ratio_uncertainty,
+        "budget_scaling_ratio_uncertainty_why": (
+            "The cap table multiplies the bootstrapped per-game wall CI by `budget_ratio` as if that "
+            "ratio were EXACT. It is a median over 4 games. Propagating one multiplicand's "
+            "uncertainty and not the other's understates the interval, and for the headline budget "
+            "the fit flips inside the ratio's own observed range -- so the boundary is published."
+        ),
         "throughput_ratio_by_K_vs_K1": ratios_by_K,
         "cap_table": rows,
         "largest_budget_fitting_WITH_MARGIN": feasible,
@@ -1865,7 +2166,12 @@ def part5_headline_and_gates(
                 dev.get("verdict") == "CUDA_GPU1" or dev.get("weights_are_resident_on_gpu1")
             ),
             "witness": {
-                "resolver_verdict": dev.get("verdict"),
+                # RENAMED 2026-07-27: this field is NOT the resolver's own answer. The resolver
+                # reports `resolver_says_cuda_gpu1: false`; the verdict below is derived from
+                # per-PID VRAM residency on GPU1. Calling it `resolver_verdict` invited exactly the
+                # misreading the artifact elsewhere guards against.
+                "device_verdict_from_vram_residency": dev.get("verdict"),
+                "resolver_says_cuda_gpu1_RAW": dev.get("resolver_says_cuda_gpu1"),
                 "max_resident_mib_on_gpu1": dev.get("max_resident_mib_on_gpu1"),
                 "weights_are_resident_on_gpu1": dev.get("weights_are_resident_on_gpu1"),
                 "server_props": dev.get("server_props"),
@@ -1971,13 +2277,17 @@ def part5_headline_and_gates(
         [(v.get("m0_vs_recorded_max_abs_diff") or 0.0) for v in pb_all.values()] or [1.0]
     )
     matched = sum(int(v.get("n_cells_m0_matches_recorded") or 0) for v in pb_all.values())
-    won_cells = sum(int(v.get("n_won_cells") or 0) for v in pb_all.values())
+    # KEY RENAMED 2026-07-27 (`n_won_cells` -> `n_levelup_cells_summed_across_seeds`, because the
+    # predicate is `levels > 0`, not "game won"). This gate READS that key, and reading the stale name
+    # silently produced 0 and failed the gate -- which is the gate working. Kept as a single source of
+    # truth rather than a fallback chain, so a future rename fails loudly here too.
+    won_cells = sum(int(v.get("n_levelup_cells_summed_across_seeds") or 0) for v in pb_all.values())
     gates.append(
         {
             "gate": "G8_my_scorer_drive_reproduces_the_rows_own_installed_scorer_output_per_cell",
             "passed": bool(won_cells > 0 and matched == won_cells and worst_diff <= 5e-5),
             "witness": {
-                "n_won_cells": won_cells,
+                "n_levelup_cells_summed_across_seeds": won_cells,
                 "n_cells_where_my_M0_matches_the_recorded_efficiency": matched,
                 "max_abs_diff": worst_diff,
                 "tolerance": 5e-5,
@@ -2116,8 +2426,9 @@ def part5_headline_and_gates(
 
     headline = {
         "question": (
-            "What should MAX_ACTIONS be? Answer as a budget with uncertainty, the median wins it "
-            "buys, and the GATEWAY-CHARGED score those wins are worth."
+            "What should MAX_ACTIONS be? Answer as a budget with uncertainty, the median "
+            "CELLS-WITH-AT-LEAST-ONE-LEVEL-UP it buys, and the GATEWAY-CHARGED score those cells "
+            "are worth."
         ),
         "device_actually_used": {
             "verdict": dev.get("verdict"),
@@ -2162,7 +2473,9 @@ def part5_headline_and_gates(
         "throughput_ratio_by_K_vs_K1": ratios,
         "what_the_answer_buys": {
             "budget": ans_central,
-            "wins_median_per_seed": (buys.get(str(ans_central)) or {}).get("wins_median_per_seed"),
+            "cells_with_at_least_one_levelup_median_per_seed": (
+                buys.get(str(ans_central)) or {}
+            ).get("cells_with_at_least_one_levelup_median_per_seed"),
             "gateway_score_M2_median": _score_at(ans_central),
             "out_of": (buys.get(str(ans_central)) or {}).get(
                 "max_possible_score_for_this_game_count"
@@ -2174,7 +2487,9 @@ def part5_headline_and_gates(
         ),
         "what_the_score_maximising_budget_would_buy": {
             "budget": smax,
-            "wins_median_per_seed": (buys.get(str(smax)) or {}).get("wins_median_per_seed"),
+            "cells_with_at_least_one_levelup_median_per_seed": (buys.get(str(smax)) or {}).get(
+                "cells_with_at_least_one_levelup_median_per_seed"
+            ),
             "gateway_score_M2_median": _score_at(smax),
         },
         "the_raise_400_to_score_max_priced_in_both_units": {
@@ -2211,7 +2526,7 @@ def part5_headline_and_gates(
                 "The oracle ceiling is large (most of the corpus's actions earn no score) but it is an "
                 "ORACLE: the bulk of it sits in cells that NEVER level up, which a real rule can only "
                 "cut by giving up after W actions -- and the first-level-up cost distribution says what "
-                "that costs in lost wins. The continuation window has the same problem from the other "
+                "that costs in lost first-level-ups. The continuation window has the same problem from the other "
                 "end: preserving EVERY observed subsequent level-up needs c=22x the game's own first "
                 "level-up cost, so a tight window is not safe and a safe window barely fires. Both "
                 "trade curves are published instead of a single multiplier."
@@ -2318,11 +2633,30 @@ def main(argv=None) -> int:
     p5 = part5_headline_and_gates(p1, p2, p3, p4, "kaggle_9h_max_notebook_runtime", 110)
 
     # ---- measurement clock vs analyser clock (failure #8) ------------------------------------
+    # LATENT DOUBLE-COUNT FIXED 2026-07-27. This loop used to add BOTH candidate fields per file
+    # (`for k in ("elapsed_s","measurement_wall_s"): if f.get(k): meas += ...`). It happened to be
+    # correct because no row file currently carries both (6 have `elapsed_s`, 2 have
+    # `measurement_wall_s`, none both) -- but the first time an upstream row file grows the second
+    # field, the measurement clock silently INFLATES rather than failing. One value per file now,
+    # with explicit precedence, an assertion that no file carries both, and a per-file record of
+    # which field contributed so the composition is auditable.
     meas = 0.0
+    meas_composition = []
+    meas_files_with_both = []
     for f in (p1.get("row_files") or []) + (p2.get("row_files") or []):
-        for k in ("elapsed_s", "measurement_wall_s"):
-            if f.get(k):
-                meas += float(f[k])
+        has = [k for k in ("elapsed_s", "measurement_wall_s") if f.get(k)]
+        if len(has) > 1:
+            meas_files_with_both.append({"path": f.get("path"), "fields": has})
+        field = has[0] if has else None
+        v = float(f[field]) if field else 0.0
+        meas += v
+        meas_composition.append(
+            {"path": f.get("path"), "field_used": field, "value_s": round(v, 3)}
+        )
+    assert not meas_files_with_both, (
+        "a row file carries BOTH elapsed_s and measurement_wall_s; the precedence rule must be "
+        f"restated before this clock can be trusted: {meas_files_with_both}"
+    )
     art: dict[str, Any] = {
         "experiment": "outer_loop_arc_max_actions_answer_20260726",
         "title": (
@@ -2366,6 +2700,12 @@ def main(argv=None) -> int:
             ),
         },
         "measurement_wall_s": round(meas, 1),
+        "measurement_wall_s_composition": meas_composition,
+        "measurement_wall_s_basis": (
+            "one value per ROW FILE with explicit precedence (`elapsed_s` before "
+            "`measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of "
+            "per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup."
+        ),
         "duration_s": None,  # filled at the end
         "random_seed": 20260724,
         "verifier_is_oracle": False,
@@ -2427,12 +2767,28 @@ def main(argv=None) -> int:
             "contention_ladder": {
                 "n_games": len(p1.get("games") or []),
                 "games": p1.get("games"),
-                "n_seeds": 1,
-                "seed": 20260724,
+                # DERIVED, NOT LITERAL (2026-07-27). These two fields used to be hardcoded
+                # `n_seeds: 1, seed: 20260724`, and the p-floor was computed from the GAME count
+                # alone (2/2**n_games = 0.125), ignoring seeds entirely. The ladder actually spans
+                # TWO seeds and 24 valid cells, and the tests this artifact emits run over matched
+                # game-seed PAIRS with floors as low as 0.0312. A reader auditing the headline
+                # p=0.0312 against a stated floor of 0.125 would have concluded the artifact
+                # reported significance below its own floor -- a false violation manufactured by a
+                # stale literal. Both are now computed, and the block-level floor is the MINIMUM of
+                # the floors of the tests actually emitted (see the self-consistency assertion in
+                # `_scope_floor_is_consistent`).
+                "n_seeds": len(p1.get("seeds") or []),
+                "seeds": sorted(p1.get("seeds") or []),
+                "n_valid_cells": sum(1 for c in (p1.get("per_cell") or []) if c.get("row_valid")),
                 "budget": 400,
                 "Ks": p1.get("Ks_measured"),
-                "min_reachable_two_sided_p_at_this_support": round(
-                    2.0 / (2.0 ** max(1, len(p1.get("games") or []))), 4
+                "min_reachable_two_sided_p_at_this_support": _min_emitted_p_floor(p1),
+                "min_reachable_two_sided_p_at_this_support_basis": (
+                    "MINIMUM over the `min_reachable_two_sided_p_at_this_support` of every sign test "
+                    "this part actually emits (each computed from that test's own matched-pair "
+                    "count), NOT 2/2**n_games. See the top-level "
+                    "`scope_and_power_self_consistency` block for the artifact-wide check that no "
+                    "emitted test reports a p below the floor its own scope block claims."
                 ),
                 "game_selection_is_NOT_random": (
                     "the 4 games with complete budget coverage in the sibling uncontended probe, "
@@ -2461,7 +2817,7 @@ def main(argv=None) -> int:
                 ),
                 "b4000_is_a_subset": (
                     "b4000 exists only for a 13-game LEVEL-REACHING subset, so it is biased UPWARD on "
-                    "wins and is excluded from the score-maximising-budget comparison, which is "
+                    "level-up cells and is excluded from the score-maximising-budget comparison, which is "
                     "restricted to budgets with the full 25-game corpus."
                 ),
             },
@@ -2470,6 +2826,66 @@ def main(argv=None) -> int:
                 "out-of-distribution relative to all of them; nothing here is a hidden-set forecast."
             ),
         },
+    }
+    # ---- SELF-CONSISTENCY: no emitted test may report a p below its scope block's stated floor ---
+    # Added 2026-07-27 after a review found `scope_and_power.contention_ladder` published a
+    # hardcoded 1-seed scope and a p-floor of 0.125 derived from the game count alone, while the
+    # artifact's own headline reported p=0.0312. A reader checking one against the other would have
+    # concluded the artifact reported significance below its own floor. This check makes that class
+    # of drift a first-class recorded number instead of a latent contradiction.
+    _all_floors = _walk_p_floors(art)
+    _n_degenerate_zero_floors = sum(
+        1 for _f in _leaf_floor_values(art) if isinstance(_f, (int, float)) and float(_f) <= 0.0
+    )
+    _claimed = ((art.get("scope_and_power") or {}).get("contention_ladder") or {}).get(
+        "min_reachable_two_sided_p_at_this_support"
+    )
+    _min_p_reported = None
+
+    def _walk_ps(node, out):
+        if isinstance(node, dict):
+            for k in ("p_two_sided", "p", "p_value"):
+                v = node.get(k)
+                if (
+                    isinstance(v, (int, float))
+                    and node.get("min_reachable_two_sided_p_at_this_support") is not None
+                ):
+                    out.append((float(v), float(node["min_reachable_two_sided_p_at_this_support"])))
+            for x in node.values():
+                _walk_ps(x, out)
+        elif isinstance(node, list):
+            for x in node:
+                _walk_ps(x, out)
+
+    _pairs: list = []
+    _walk_ps(art, _pairs)
+    _violations = [{"p_reported": pv, "own_floor": fl} for pv, fl in _pairs if pv < fl - 1e-12]
+    if _pairs:
+        _min_p_reported = round(min(pv for pv, _ in _pairs), 6)
+    art["scope_and_power_self_consistency"] = {
+        "n_tests_with_both_a_p_and_a_floor": len(_pairs),
+        "min_p_reported_anywhere": _min_p_reported,
+        "min_POSITIVE_floor_emitted_anywhere": round(min(_all_floors), 6) if _all_floors else None,
+        "n_degenerate_zero_floors_excluded": _n_degenerate_zero_floors,
+        "why_zero_floors_are_excluded": (
+            "a floor of 0.0 is what a sign test emits on EMPTY support, not a reachable p. Including "
+            "it drags the minimum to zero and makes this check meaningless."
+        ),
+        "scope_block_claimed_floor": _claimed,
+        "scope_block_floor_is_LE_every_emitted_floor": (
+            None
+            if (_claimed is None or not _all_floors)
+            else bool(_claimed <= min(_all_floors) + 1e-12)
+        ),
+        "n_tests_reporting_p_below_their_own_floor": len(_violations),
+        "violations": _violations,
+        "passed": bool(not _violations)
+        and (_claimed is None or not _all_floors or _claimed <= min(_all_floors) + 1e-12),
+        "principle": (
+            "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an "
+            "internal contradiction that reads as a methodology violation; deriving the floor and "
+            "checking it makes the drift fail the build instead of misleading a reader."
+        ),
     }
     row_paths = [f["path"] for f in (p1.get("row_files") or []) + (p2.get("row_files") or [])]
     art["provenance"] = {
