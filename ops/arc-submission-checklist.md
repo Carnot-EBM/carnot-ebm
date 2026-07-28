@@ -1,5 +1,41 @@
 # ARC-AGI-3 submission checklist (operator handoff) — 2026-06-19
 
+> **GENERATOR SWITCH (2026-07-28) — TWO OPERATOR ACTIONS OUTSTANDING.** Per operator directive
+> ("We must use Gemma-4-31B and stop using Qwen-3.5-9B and Qwen-3.6-27B... the Kaggle hardware is
+> 96G since May, that is not a problem when we submit"), the live/scored ARC generator is now
+> **gemma-4-31B-it Q4_K_M (18.3 GB)**, not Qwen3.5-9B-MTP (5.9 GB). Every Qwen reference below is
+> **historical** — it accurately records what was measured and shipped at the time, and is kept per
+> the never-prune rule. It does **not** describe the current stack.
+>
+> Evidence for the switch: 13 games x 3 replicates, Q4_K_M both sides, n_ctx 32768 —
+> gemma-4-31B induced an importable world model on 38/39 attempts (fail-as-zero 0.3843) vs
+> Qwen3.6-27B's 21/39 (0.0627); matched per-game tally 11-0-2, two-sided sign p = 0.00098. The
+> dominant driver is **loadability**, not subtle induction quality.
+>
+> **Code changes are landed. These two are not, and only the operator can do them:**
+>
+> 1. **Upload the model dataset.** `scripts/kaggle/submission_kernel/kernel-metadata.json` now
+>    requests `iancblenke/carnot-gemma4-31b-it-gguf`, which **does not exist yet**. Create it from
+>    `~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/*/gemma-4-31B-it-Q4_K_M.gguf`
+>    (18.3 GB). Until then a push fails at dataset resolution — deliberately loud, rather than
+>    silently running the retired 9B.
+> 2. **Confirm `machine_shape` on the next submission log.** It changed `NvidiaL4` (24 GB — too
+>    small for 18.3 GB of weights plus an 81920-cell q8 KV pool) to **`NvidiaRtxPro6000`**. That
+>    identifier is **not verified by us**: it comes from the arcprize.org 2026 starter kit's
+>    `rtx6000` accelerator entry and from a real scored 3rd-place kernel in this competition
+>    (`external/arc-m1-3rd-forge/kernel-metadata.json`, server-assigned `id_no` 124697453, which
+>    also declares a `gemma-4-31b-it` model source). The local kagglesdk cannot validate it — it
+>    documents only T4/P100/TPU and omits even NvidiaL4, which we use successfully, so its silence
+>    is stale docs, not counter-evidence. The kernel prints an `LLM GPU HARDWARE:` nvidia-smi line;
+>    read the answer off the next real run. **Do not submit merely to test this.**
+>
+> **Local (non-Kaggle) note:** on a 24 GB RTX 3090 the 31B at the default n_ctx 81920 resides at
+> 23888 MiB, leaving 688 MiB — so the local free-VRAM guard correctly declines the CUDA card and
+> falls back to the iGPU build. The two levers are `CARNOT_ARC_INDUCE_N_CTX` (smaller pool) and the
+> new opt-in `CARNOT_ARC_FFN_CPU_LAYERS` (dense-FFN weights to system RAM, ~195 MiB freed per
+> layer). The offload is **not free**: 12 layers frees 2344 MiB but costs 58% of decode throughput
+> and 79% of prefill, and prefill is what the induce path is bound by.
+
 > **CONTRACT CORRECTION (2026-06-19, late).** A diff against the canonical arcprize control
 > notebook (Ronan McGovern's `arc3-random-control`, pulled via the kaggle CLI) showed the real
 > submission contract is a **code competition with an internal game GATEWAY**, NOT the

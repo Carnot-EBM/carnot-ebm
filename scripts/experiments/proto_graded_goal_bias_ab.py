@@ -48,11 +48,13 @@ _TARGET_LEVELS = 5  # same as proto_multilevel_diag
 # PRECONDITIONS (step 0)
 # ---------------------------------------------------------------------------
 
+
 def _check_preconditions() -> dict:
     """Return precondition results. Raises RuntimeError if GGUF not cached."""
     gguf_ok = os.path.isfile(_QWEN_GGUF_PATH)
     # Verify port 8920 is NOT already in use by another server
     import socket
+
     port_free = False
     try:
         s = socket.socket()
@@ -65,11 +67,14 @@ def _check_preconditions() -> dict:
     port_8919_model = "unknown"
     try:
         import urllib.request
+
         req = urllib.request.Request(f"http://127.0.0.1:8919/props", method="GET")
         with urllib.request.urlopen(req, timeout=3) as r:
             props = json.loads(r.read())
         # find model name in default_generation_settings -> model field or similar
-        model_info = str(props.get("model", props.get("default_generation_settings", {}).get("model", "?")))
+        model_info = str(
+            props.get("model", props.get("default_generation_settings", {}).get("model", "?"))
+        )
         port_8919_model = model_info
     except Exception as e:
         port_8919_model = f"probe_failed:{e}"
@@ -87,13 +92,24 @@ def _check_preconditions() -> dict:
 # Qwen proposer factory (reuse proto_multilevel_diag pattern)
 # ---------------------------------------------------------------------------
 
+
 def _make_qwen_proposer(port: int):
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
     return LocalGGUFProposer(
         repo_substr="Qwen3.5-9B-MTP",
         model_path=_QWEN_GGUF_PATH if os.path.isfile(_QWEN_GGUF_PATH) else None,
         port=port,
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=2560,
@@ -104,6 +120,7 @@ def _make_qwen_proposer(port: int):
 # ---------------------------------------------------------------------------
 # Core: run one arm of the A/B for a single game
 # ---------------------------------------------------------------------------
+
 
 def _run_arm(arc, short: str, graded: bool, port: int, budget: int) -> dict:
     """Run one game on one arm. Returns per-(game,arm) result dict.
@@ -190,8 +207,10 @@ def _run_arm(arc, short: str, graded: bool, port: int, budget: int) -> dict:
     for attempt in induction_attempts:
         exemplar_injected = bool(attempt.get("win_state_exemplar_injected"))
         gps = bool(attempt.get("goal_predicate_satisfiable"))
-        prg = bool(attempt.get("plan_reaches_goal") or
-                   any(r.get("plan_reaches_goal") for r in (attempt.get("refinement_rounds") or [])))
+        prg = bool(
+            attempt.get("plan_reaches_goal")
+            or any(r.get("plan_reaches_goal") for r in (attempt.get("refinement_rounds") or []))
+        )
         skipped = attempt.get("skipped") or ""
         planned = bool(attempt.get("planned"))
 
@@ -202,18 +221,21 @@ def _run_arm(arc, short: str, graded: bool, port: int, budget: int) -> dict:
         if prg:
             l2_plan_reaches_goal_any = True
 
-        induction_summary.append({
-            "reason": attempt.get("reason"),
-            "goal_level": attempt.get("goal_level"),
-            "skipped": skipped,
-            "planned": planned,
-            "goal_predicate_satisfiable": gps,
-            "plan_reaches_goal": prg,
-            "win_state_exemplar_injected": exemplar_injected,
-            "heldout_accuracy": attempt.get("heldout_accuracy") or attempt.get("verify_accuracy"),
-            "refinement_rounds_used": attempt.get("refinement_rounds_used"),
-            "n_goal_candidates": len(attempt.get("goal_candidate_names") or []),
-        })
+        induction_summary.append(
+            {
+                "reason": attempt.get("reason"),
+                "goal_level": attempt.get("goal_level"),
+                "skipped": skipped,
+                "planned": planned,
+                "goal_predicate_satisfiable": gps,
+                "plan_reaches_goal": prg,
+                "win_state_exemplar_injected": exemplar_injected,
+                "heldout_accuracy": attempt.get("heldout_accuracy")
+                or attempt.get("verify_accuracy"),
+                "refinement_rounds_used": attempt.get("refinement_rounds_used"),
+                "n_goal_candidates": len(attempt.get("goal_candidate_names") or []),
+            }
+        )
 
     # After all inductions, check the final goal_bias_label on the explorer.
     # Also scan induction events to see if graded label was ever set.
@@ -222,9 +244,13 @@ def _run_arm(arc, short: str, graded: bool, port: int, budget: int) -> dict:
     # by reading the level_induction_events (which record events but not labels).
     # The most reliable check: if graded=True and exemplar was present at any induction
     # AND the final label ends in _graded_distance -> graded path fired.
-    if graded and goal_bias_label_final.endswith("_induced_goal_graded_distance"):
-        graded_path_fired = True
-    elif graded and "graded_distance" in goal_bias_label_final:
+    # The two branches this used to be (endswith the full suffix, or merely contains
+    # "graded_distance") both set the same flag, so SIM114 flagged them. Combined verbatim -- the
+    # `endswith` arm is a strict subset of the `in` arm, so the disjunction is exactly equivalent.
+    if graded and (
+        goal_bias_label_final.endswith("_induced_goal_graded_distance")
+        or "graded_distance" in goal_bias_label_final
+    ):
         graded_path_fired = True
     # Also check if exemplar was present: if graded arm and exemplar was present at induction
     # the code WILL install graded (env is set). If it didn't fire, the exemplar was missing.
@@ -235,6 +261,7 @@ def _run_arm(arc, short: str, graded: bool, port: int, budget: int) -> dict:
     if reached >= 2 and solution_labels:
         try:
             import carnot.agentic.arc_solver_kit as kit2
+
             # We need the game's full game_id for reproduce
             l2_repro_result = kit2.reproduce(
                 gid,
@@ -295,6 +322,7 @@ def _skip_histogram(attempts):
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> int:
     t_total = time.time()
 
@@ -321,12 +349,17 @@ def main() -> int:
         # A busy port is FINE if a healthy Qwen server is already serving on it -- LocalGGUFProposer
         # ._ensure_server() reuses a healthy server. Only abort if the occupant is NOT a healthy Qwen.
         import urllib.request
+
         reuse_ok = False
         occupant = "unknown"
         try:
-            with urllib.request.urlopen(f"http://127.0.0.1:{preconds['port']}/health", timeout=4) as r:
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{preconds['port']}/health", timeout=4
+            ) as r:
                 healthy = json.loads(r.read()).get("status") == "ok"
-            with urllib.request.urlopen(f"http://127.0.0.1:{preconds['port']}/props", timeout=5) as r:
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{preconds['port']}/props", timeout=5
+            ) as r:
                 occupant = str(json.loads(r.read()).get("model_path", ""))
             reuse_ok = healthy and ("qwen" in occupant.lower())
         except Exception as e:
@@ -341,14 +374,19 @@ def main() -> int:
                 json.dump(artifact, f, indent=2)
             print(f"BLOCKED: port {preconds['port']} occupied by non-Qwen: {occupant}", flush=True)
             return 1
-        print(f"  Port {preconds['port']} busy but serving a healthy Qwen -> REUSING warm server.",
-              flush=True)
+        print(
+            f"  Port {preconds['port']} busy but serving a healthy Qwen -> REUSING warm server.",
+            flush=True,
+        )
 
-    print(f"\n=== STEP 1: SMOKE TEST - lp85 binary arm (confirm L1 reach + L2 induction fires) ===",
-          flush=True)
+    print(
+        f"\n=== STEP 1: SMOKE TEST - lp85 binary arm (confirm L1 reach + L2 induction fires) ===",
+        flush=True,
+    )
 
     # Import once after preconditions
     import carnot.agentic.arc_solver_kit as kit
+
     arc = kit.offline_arcade()
 
     # Smoke test: lp85 binary arm first
@@ -356,15 +394,23 @@ def main() -> int:
     smoke_ok = False
     try:
         smoke_result = _run_arm(arc, "lp85", graded=False, port=_DEFAULT_PORT, budget=_BUDGET)
-        smoke_ok = (smoke_result.get("max_depth_reached", 0) >= 1 and
-                    smoke_result.get("n_induction_attempts", 0) > 0)
-        print(f"  lp85 binary smoke: maxL={smoke_result['max_depth_reached']} "
-              f"n_induce={smoke_result['n_induction_attempts']} "
-              f"goal_satisfiable={smoke_result['goal_predicate_satisfiable_any']} "
-              f"({smoke_result['wall_s']}s)", flush=True)
+        smoke_ok = (
+            smoke_result.get("max_depth_reached", 0) >= 1
+            and smoke_result.get("n_induction_attempts", 0) > 0
+        )
+        print(
+            f"  lp85 binary smoke: maxL={smoke_result['max_depth_reached']} "
+            f"n_induce={smoke_result['n_induction_attempts']} "
+            f"goal_satisfiable={smoke_result['goal_predicate_satisfiable_any']} "
+            f"({smoke_result['wall_s']}s)",
+            flush=True,
+        )
         if not smoke_ok:
-            print(f"  WARNING: smoke failed (L1 not reached or no induction). "
-                  f"skips={smoke_result.get('induction_skip_reasons')}", flush=True)
+            print(
+                f"  WARNING: smoke failed (L1 not reached or no induction). "
+                f"skips={smoke_result.get('induction_skip_reasons')}",
+                flush=True,
+            )
     except Exception as e:
         smoke_result = {"error": traceback.format_exc()}
         print(f"  smoke ERROR: {e}", flush=True)
@@ -382,13 +428,16 @@ def main() -> int:
             except Exception as e:
                 r = {"game": short, "arm": arm, "error": traceback.format_exc()}
             results_by_game[short][arm] = r
-            print(f"    {short}/{arm}: maxL={r.get('max_depth_reached')} "
-                  f"l2={r.get('l2_reached')} l2_repro={r.get('l2_reached_offline_reproduced')} "
-                  f"graded_fired={r.get('graded_path_fired')} exemplar={r.get('win_state_exemplar_present')} "
-                  f"n_induce={r.get('n_induction_attempts')} "
-                  f"gps={r.get('goal_predicate_satisfiable_any')} "
-                  f"outcome_c={r.get('outcome_c_false_negative')} "
-                  f"({r.get('wall_s')}s)", flush=True)
+            print(
+                f"    {short}/{arm}: maxL={r.get('max_depth_reached')} "
+                f"l2={r.get('l2_reached')} l2_repro={r.get('l2_reached_offline_reproduced')} "
+                f"graded_fired={r.get('graded_path_fired')} exemplar={r.get('win_state_exemplar_present')} "
+                f"n_induce={r.get('n_induction_attempts')} "
+                f"gps={r.get('goal_predicate_satisfiable_any')} "
+                f"outcome_c={r.get('outcome_c_false_negative')} "
+                f"({r.get('wall_s')}s)",
+                flush=True,
+            )
 
     # ---------------------------------------------------------------------------
     # VERDICT
@@ -416,7 +465,9 @@ def main() -> int:
                 )
             if outcome != "A":
                 outcome = "C"
-        elif gr.get("l2_reached_offline_reproduced") and not br.get("l2_reached_offline_reproduced"):
+        elif gr.get("l2_reached_offline_reproduced") and not br.get(
+            "l2_reached_offline_reproduced"
+        ):
             verdict_parts.append(f"{short}: OUTCOME_A - graded L2 reproduced, binary did not")
             outcome = "A"
         elif not gr.get("l2_reached") and not br.get("l2_reached"):
@@ -484,7 +535,6 @@ def main() -> int:
             "B_goal_predicate_binding": outcome == "B",
             "C_false_negative": outcome == "C",
         },
-
         # Integrity fields
         "inference_substrate": "live_llm_inference",
         "random_seed": random_seed,
@@ -497,27 +547,22 @@ def main() -> int:
             "quantization": "Q4_K_M",
             "mtp": True,
         },
-
         # Preconditions
         "preconditions_checked": [
             {"resource": "qwen_gguf", "available": preconds["gguf_present"]},
             {"resource": f"port_{preconds['port']}_free", "available": preconds["port_free"]},
         ],
         "preconditions_detail": preconds,
-
         # Configuration
         "games": _GAMES,
         "budget": _BUDGET,
         "target_levels": _TARGET_LEVELS,
         "port_used": _DEFAULT_PORT,
-
         # Smoke test
         "smoke_test_lp85_binary": smoke_result,
         "smoke_ok": smoke_ok,
-
         # Per-game per-arm results
         "results": results_by_game,
-
         # Duration
         "duration_s": round(time.time() - t_total, 1),
         "duration_floor_met": round(time.time() - t_total, 1) >= 60.0,

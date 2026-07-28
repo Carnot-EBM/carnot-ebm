@@ -13,6 +13,17 @@ from typing import Any
 
 from carnot import experiment_4846_submission_package_harden as mod
 
+# The canonical generator pin, imported rather than re-typed. These names were introduced into
+# this file's assertions by the 2026-07-28 gemma migration but never imported, so every test
+# referencing them died with NameError -- a failure that looks like a broken gate rather than a
+# broken test.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 JsonDict = dict[str, Any]
 REPO = Path(__file__).resolve().parents[2]
@@ -27,9 +38,9 @@ def _submitted_agent_config_fixture(*, a1_enabled: bool = False) -> JsonDict:
         "amortized_first_contact_prior_enabled": a1_enabled,
         "go_explore_archive_enabled": a1_enabled,
         "frozen_generator": {
-            "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-            "repo_substr": "Qwen3.5-9B-MTP",
-            "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+            "model_id": "unsloth/gemma-4-31B-it-GGUF",
+            "repo_substr": "gemma-4-31B-it",
+            "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
             "model_path_env": "CARNOT_ARC_GGUF_PATH",
             "server_path_env": "CARNOT_LLAMA_SERVER",
             "llama_server_kind": "cuda-12.8-binary",
@@ -37,7 +48,7 @@ def _submitted_agent_config_fixture(*, a1_enabled: bool = False) -> JsonDict:
             "mtp": True,
             "spec_type": "draft-mtp",
             "kv_quant": "q8_0",
-            "no_think_prefix": "/no_think\n",
+            "no_think_prefix": "",
             "max_tokens": 2560,
             "n_predict_min": 2048,
             "wheel_fallback_allowed": False,
@@ -48,7 +59,7 @@ def _submitted_agent_config_fixture(*, a1_enabled: bool = False) -> JsonDict:
 def _requirements_doc_text() -> str:
     return """
 You submit an AGENT, not a scorecard or a file of answers. No internet access during evaluation.
-The GGUF is Qwen3.5-9B-Q4_K_M.gguf and the env path is CARNOT_ARC_GGUF_PATH.
+The GGUF is gemma-4-31B-it-Q4_K_M.gguf and the env path is CARNOT_ARC_GGUF_PATH.
 Bundle a CUDA llama.cpp BINARY (llama-server), NOT a Python wheel, and set CARNOT_LLAMA_SERVER.
 The validated deploy config uses draft-mtp plus q8_0 KV; CARNOT_ARC_MTP=0 may disable MTP on tight VRAM.
 The public entry is an operator-gated Kaggle submission, and this task never submits.
@@ -69,7 +80,16 @@ def _write_submission_kernel(root: Path) -> None:
                 "dataset_sources": [
                     "iancblenke/carnot-agent-code",
                     "iancblenke/carnot-llamacpp-mtp-binary",
-                    "iancblenke/carnot-qwen35-9b-mtp-gguf",
+                    # The gemma main-weights dataset. The Qwen one this replaced is retired
+                    # (2026-07-28 operator directive); `REQUIRED_DATASETS` was migrated with
+                    # the module and this fixture was not, so the gate under test was being
+                    # handed a manifest the real kernel-metadata.json no longer writes.
+                    "iancblenke/carnot-gemma4-31b-it-gguf",
+                    # The MTP draft head. Not in REQUIRED_DATASETS -- a missing head is a
+                    # degraded-but-valid scored run (no speculative decoding) rather than a
+                    # blocker -- but the real manifest attaches it, so the fixture should
+                    # look like the real manifest.
+                    "iancblenke/carnot-gemma4-31b-mtp-head",
                 ],
                 "competition_sources": ["arc-prize-2026-arc-agi-3"],
             }
@@ -147,9 +167,7 @@ def _package_builds(ok: bool = True) -> JsonDict:
 
 
 def _config_resolution(*, ok: bool = True, a1_enabled: bool = False) -> JsonDict:
-    config = mod.resolve_agent_config(
-        _submitted_agent_config_fixture(a1_enabled=a1_enabled)
-    )
+    config = mod.resolve_agent_config(_submitted_agent_config_fixture(a1_enabled=a1_enabled))
     if ok:
         return config
     return {
@@ -161,7 +179,7 @@ def _config_resolution(*, ok: bool = True, a1_enabled: bool = False) -> JsonDict
 
 
 def _model_resolution(tmp_path: Path, ok: bool = True) -> JsonDict:
-    gguf = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
+    gguf = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
     server = tmp_path / "llama-server"
     gguf.write_text("fixture\n", encoding="utf-8")
     server.write_text("server\n", encoding="utf-8")
@@ -427,7 +445,10 @@ def test_req_capstone_4846_schema_rejects_false_ready_submission_and_checksum(
 
     false_ready = dict(
         artifact,
-        packaging_requirements_crosscheck={**artifact["packaging_requirements_crosscheck"], "ok": False},
+        packaging_requirements_crosscheck={
+            **artifact["packaging_requirements_crosscheck"],
+            "ok": False,
+        },
     )
     false_ready["reproducibility_checksum"] = mod.payload_checksum(false_ready)
     assert "submission_package_ready_gate" in mod.artifact_schema_errors(false_ready)

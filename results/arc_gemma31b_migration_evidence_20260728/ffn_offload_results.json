@@ -1,0 +1,39 @@
+[
+ {
+  "arm": "cpu12_ctx81920",
+  "n_cpu_ffn_layers": 12,
+  "n_ctx": 81920,
+  "argv_has_ot": true,
+  "ot_regex": "blk\\.(0|1|2|3|4|5|6|7|8|9|10|11)\\.ffn_(gate|up|down)\\.weight=CPU",
+  "argv": [
+   "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+   "-m",
+   "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+   "-ngl",
+   "999",
+   "-c",
+   "81920",
+   "--port",
+   "8971",
+   "--host",
+   "127.0.0.1",
+   "--cache-type-k",
+   "q8_0",
+   "--cache-type-v",
+   "q8_0",
+   "-ot",
+   "blk\\.(0|1|2|3|4|5|6|7|8|9|10|11)\\.ffn_(gate|up|down)\\.weight=CPU"
+  ],
+  "load_s": 12.0,
+  "resident_mib": 21544,
+  "resident_card_index": "1",
+  "pid": 2761406,
+  "gen_wall_s": 18.22,
+  "predicted_n": 256,
+  "prompt_n": 238,
+  "decode_tok_s": 15.31,
+  "prefill_tok_s": 176.99,
+  "resident_mib_after": 21556,
+  "log_tensor_override_lines": 1
+ }
+]

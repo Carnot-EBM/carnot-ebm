@@ -16,6 +16,15 @@ from typing import Any
 from carnot import experiment_4766_submission_package_harden as package_core
 from carnot import experiment_4836_submission_package_harden as package_base
 
+# The canonical generator pin, imported rather than assumed. The 2026-07-28 gemma migration
+# introduced these names into this module's OPERATOR-CHECK strings without importing them, so
+# `build_artifact()` raised NameError on a real code path -- the readiness capstone could not run
+# at all. `ast.parse`/ruff-format are both blind to this; only executing it (or F821) finds it.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 JsonDict = dict[str, Any]
 PreconditionsChecker = Callable[[Path], Mapping[str, Any]]
@@ -131,14 +140,10 @@ def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
         "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
         or (root_path / "OPENCODE.md").exists(),
         "spec_has_req_4846": "REQ-CAPSTONE-4846" in spec_text,
-        "packaging_requirements_doc_present": (
-            root_path / REQUIREMENTS_RELATIVE_PATH
-        ).exists(),
+        "packaging_requirements_doc_present": (root_path / REQUIREMENTS_RELATIVE_PATH).exists(),
         "submission_kernel_present": (kernel_dir / package_core.KERNEL_MAIN).exists()
         and (kernel_dir / package_core.KERNEL_METADATA).exists(),
-        "arc_competition_agent_present": (
-            root_path / package_core.AGENT_RELATIVE_PATH
-        ).exists(),
+        "arc_competition_agent_present": (root_path / package_core.AGENT_RELATIVE_PATH).exists(),
     }
     required = (
         "agents_md_read",
@@ -193,9 +198,10 @@ def cross_check_packaging_requirements(
         "placeholder_non_rerun_submission": "submission.parquet" in kernel_lower,
         "agent_code_dataset_attached": any("carnot-agent-code" in item for item in datasets),
         "gguf_dataset_attached": bool(
-            "Qwen3.5-9B-Q4_K_M.gguf" in doc_text
-            and model_filename == "Qwen3.5-9B-Q4_K_M.gguf"
-            and any("carnot-qwen35-9b-mtp-gguf" in item for item in datasets)
+            # Canonical pin, 2026-07-28 (was the retired Qwen3.5-9B-MTP triple).
+            ARC_LIVE_GENERATOR_MODEL_FILENAME in doc_text
+            and model_filename == ARC_LIVE_GENERATOR_MODEL_FILENAME
+            and any("carnot-gemma4-31b-it-gguf" in item for item in datasets)
         ),
         "llama_server_binary_dataset_attached": bool(
             "llama-server" in doc_lower
@@ -223,8 +229,7 @@ def cross_check_packaging_requirements(
             and (root_path / "scripts" / "kaggle" / "build_verify_llamacpp_mtp.py").exists()
         ),
         "operator_only_external_publication": bool(
-            "operator" in doc_lower
-            and package_builds.get("submitted_to_leaderboard") is False
+            "operator" in doc_lower and package_builds.get("submitted_to_leaderboard") is False
         ),
     }
     ok = bool(doc_path.exists() and all(checks.values()))
@@ -330,7 +335,9 @@ def _operator_checklist(
 ) -> list[str]:
     readiness = "ready" if package_ready else "blocked until this JSON reports success_"
     a1_reason = str(a1_prior_inclusion.get("reason") or "not_checked")
-    requirements_state = "passed" if packaging_requirements_crosscheck.get("ok") is True else "blocked"
+    requirements_state = (
+        "passed" if packaging_requirements_crosscheck.get("ok") is True else "blocked"
+    )
     return [
         (
             "OPERATOR-CHECK: Confirm "
@@ -347,10 +354,10 @@ def _operator_checklist(
         ),
         (
             "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and "
-            "carnot-qwen35-9b-mtp-gguf before Save & Run."
+            "carnot-gemma4-31b-it-gguf before Save & Run."
         ),
         (
-            "OPERATOR-CHECK: Verify the rerun log resolves Qwen3.5-9B-MTP, draft-mtp or "
+            f"OPERATOR-CHECK: Verify the rerun log resolves {ARC_LIVE_GENERATOR_REPO_SUBSTR}, no draft-mtp or "
             "the tight-VRAM CARNOT_ARC_MTP=0 override, q8_0 KV, and CUDA llama-server."
         ),
         (

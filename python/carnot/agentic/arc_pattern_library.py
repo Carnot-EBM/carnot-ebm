@@ -1,7 +1,9 @@
 """Verified-pattern in-context library for the ARC-AGI-3 LLM proposer (operator-directed 2026-06-28).
 
 WHY THIS IS A GENUINELY-DIFFERENT LEVER (verified not-done-before 2026-06-28).
-The local generator (Qwen3.5-9B-MTP) is too small to carry useful pretrained ARC knowledge, and every
+The local generator (Qwen3.5-9B-MTP at the time this was written; gemma-4-31B-it since the 2026-07-28
+operator directive -- the "too small" premise is weaker for a 31B and this module's motivation has NOT
+been re-measured against it) is too small to carry useful pretrained ARC knowledge, and every
 WEIGHT-transfer attempt nulled (cross-game value/encoder transfer exp4318/4331/4342 RETIRED; imitation/BC
 exp4512 worse; CNN dynamics prior arc_pretrain_prior transferred only cell-recall, no first-win). But a
 small model that cannot PRETRAIN can still REASON IN-CONTEXT. This module gives the proposer a curated
@@ -48,7 +50,9 @@ class VerifiedPattern:
     mechanic: str  # mechanic-class / game-family tag used for retrieval
     text: str  # compact human/LLM-readable description (the few-shot exemplar body)
     source: str  # provenance: "solve_trajectory" | "registry_gotcha" | "source_code" | "dead_end"
-    features: frozenset = field(default_factory=frozenset)  # token features for similarity retrieval
+    features: frozenset = field(
+        default_factory=frozenset
+    )  # token features for similarity retrieval
 
     def to_prompt_line(self) -> str:
         tag = "WORKED" if self.kind == "worked" else "FAILED"
@@ -63,7 +67,9 @@ def _features(*texts: str) -> frozenset:
     for t in texts:
         toks.update(_WORD.findall(str(t).lower()))
     # drop ultra-common noise tokens that don't discriminate mechanic similarity
-    return frozenset(toks - {"the", "a", "an", "of", "to", "and", "is", "on", "in", "for", "game", "arc"})
+    return frozenset(
+        toks - {"the", "a", "an", "of", "to", "and", "is", "on", "in", "for", "game", "arc"}
+    )
 
 
 def _mechanic_of(reg_entry: Mapping[str, Any], game: str) -> str:
@@ -126,7 +132,9 @@ def build_pattern_library(
         acts = []
         for lab in labels[:40]:
             try:
-                acts.append(int(json.loads(lab).get("action")) if isinstance(lab, str) else int(lab))
+                acts.append(
+                    int(json.loads(lab).get("action")) if isinstance(lab, str) else int(lab)
+                )
             except Exception:
                 continue
         if not acts:
@@ -138,8 +146,11 @@ def build_pattern_library(
             f"reached L{int(d.get('reproduced_levels') or 0)} in {len(labels)} actions; "
             f"action-type pattern {sig}; solver={d.get('verifier_src') or d.get('mode') or 'offline'}."
         )
-        patterns.append(VerifiedPattern(game, "worked", game, text, "solve_trajectory",
-                                        _features(game, sig, text)))
+        patterns.append(
+            VerifiedPattern(
+                game, "worked", game, text, "solve_trajectory", _features(game, sig, text)
+            )
+        )
 
     # --- registry: per-game win-condition/action-model/gotchas (worked) + dead_ends (failed) ---
     reg = _load_registry(root / registry_relpath)
@@ -147,8 +158,11 @@ def build_pattern_library(
     if isinstance(general, (list, str)):
         gtxt = (" ".join(map(str, general)) if isinstance(general, list) else str(general))[:600]
         if gtxt.strip():
-            patterns.append(VerifiedPattern("general", "worked", "general", gtxt, "registry_gotcha",
-                                            _features(gtxt)))
+            patterns.append(
+                VerifiedPattern(
+                    "general", "worked", "general", gtxt, "registry_gotcha", _features(gtxt)
+                )
+            )
     games = reg.get("games")
     for entry in games if isinstance(games, list) else []:
         if not isinstance(entry, Mapping):
@@ -162,21 +176,42 @@ def build_pattern_library(
             v = entry.get(fk)
             t = (" ".join(map(str, v)) if isinstance(v, list) else str(v) if v else "")[:500]
             if t.strip():
-                patterns.append(VerifiedPattern(game, "worked", mech, f"{fk}: {t}", "registry_gotcha",
-                                                _features(game, mech, t)))
+                patterns.append(
+                    VerifiedPattern(
+                        game,
+                        "worked",
+                        mech,
+                        f"{fk}: {t}",
+                        "registry_gotcha",
+                        _features(game, mech, t),
+                    )
+                )
         # FAILED patterns from recorded dead-ends
         dv = entry.get("dead_ends")
-        for item in (dv if isinstance(dv, list) else [dv] if dv else []):
-            t = (str(item.get("residual_dead_end") or item) if isinstance(item, Mapping) else str(item))[:400]
+        for item in dv if isinstance(dv, list) else [dv] if dv else []:
+            t = (
+                str(item.get("residual_dead_end") or item)
+                if isinstance(item, Mapping)
+                else str(item)
+            )[:400]
             if t.strip():
-                patterns.append(VerifiedPattern(game, "failed", mech, t, "dead_end",
-                                                _features(game, mech, t)))
+                patterns.append(
+                    VerifiedPattern(game, "failed", mech, t, "dead_end", _features(game, mech, t))
+                )
         # WORKED win-condition from the public game SOURCE CODE (the genuinely-new input)
         if include_source_code:
             wc = _source_win_condition(game, root=root)
             if wc:
-                patterns.append(VerifiedPattern(game, "worked", mech, f"win-condition (source): {wc}",
-                                                "source_code", _features(game, mech, wc)))
+                patterns.append(
+                    VerifiedPattern(
+                        game,
+                        "worked",
+                        mech,
+                        f"win-condition (source): {wc}",
+                        "source_code",
+                        _features(game, mech, wc),
+                    )
+                )
     return patterns
 
 

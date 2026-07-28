@@ -331,7 +331,16 @@ def _make_qwen_proposer(port: int = DEFAULT_PORT):  # pragma: no cover - llama-s
     return LocalGGUFProposer(
         repo_substr="Qwen3.5-9B-MTP",
         port=int(port),
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=2560,

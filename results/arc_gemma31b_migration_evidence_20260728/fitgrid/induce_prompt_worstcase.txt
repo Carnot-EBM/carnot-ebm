@@ -1,0 +1,109 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'wc64'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/wc64/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:9x1,8x1,9x1,2x2,9x1,8x1,4x1,0x2,9x1,7x1,2x1,4x1,5x1,2x1,3x1,2x1,8x1,4x1,5x1,1x1,3x1,7x1,8x3,5x1,1x1,5x1,2x1,9x1,0x1,1x1,7x1,4x1,1x1,2x1,8x1,4x1,2x1,7x1,3x2,5x1,7x1,4x1,2x1,7x1,6x1,1x1,0x1,3x1,9x1,7x1,8x1,7x1,5x1,6x1,7x1,5x2,0x1,3x1
+r1:8x1,9x2,6x1,3x2,4x1,5x1,8x1,3x1,0x1,9x1,0x1,5x1,0x2,7x1,8x1,0x1,4x1,7x1,4x1,6x1,2x1,9x1,6x1,2x1,8x1,2x1,4x1,0x1,4x2,3x2,5x2,1x1,6x1,9x2,1x1,4x2,3x1,9x1,6x1,3x1,2x1,7x1,1x1,5x1,8x3,1x2,3x2,2x1,5x1,9x1,6x1,9x1
+r2:5x1,8x1,9x1,0x1,4x1,9x2,6x1,7x1,0x1,6x1,8x1,4x1,2x1,8x1,6x1,3x1,0x1,6x1,1x1,6x1,5x1,2x1,7x1,2x1,1x1,9x1,3x1,4x1,5x1,8x1,9x1,1x1,0x1,4x1,1x1,3x1,1x1,3x1,5x1,3x1,6x1,5x1,2x2,8x1,9x1,8x1,1x2,3x1,1x1,0x1,2x1,1x1,0x1,3x1,5x1,0x1,1x1,7x1,4x1,7x1,2x1
+r3:7x1,1x1,9x1,0x1,9x2,3x2,0x1,8x1,1x1,3x1,8x1,2x1,3x1,0x3,2x1,4x1,6x2,1x1,2x2,8x1,4x1,2x1,0x2,1x1,9x1,0x1,8x1,6x1,3x2,5x1,4x1,9x1,5x1,7x1,9x1,8x1,4x2,7x1,6x2,4x1,5x1,8x1,3x1,8x1,6x1,9x1,2x1,6x1,8x1,7x1,4x1,6x1,4x2
+r4:3x1,4x1,2x1,3x1,6x1,8x1,2x1,7x2,8x1,1x1,5x1,6x1,8x2,7x2,4x1,3x1,6x1,7x2,0x1,9x1,7x1,5x1,1x1,2x2,7x1,4x1,9x1,5x1,3x1,1x2,3x1,6x1,2x1,4x1,0x1,1x1,7x1,6x3,5x1,1x1,6x1,9x1,7x1,6x1,4x1,5x1,7x1,5x1,6x1,4x1,7x2,8x1,6x1,8x1,2x1
+r5:5x1,7x1,1x2,6x1,7x1,5x1,0x1,3x1,4x1,7x1,8x1,7x1,4x1,5x2,6x1,8x1,6x1,2x1,3x1,1x1,4x1,2x1,6x1,8x1,3x1,5x1,8x1,6x1,4x1,2x2,8x1,5x1,2x1,1x1,2x1,1x2,5x2,8x1,2x1,9x2,6x1,9x1,7x1,5x1,3x1,4x1,3x1,9x1,6x1,7x1,0x1,2x1,8x1,1x2,8x1,5x1,3x1
+r6:5x1,6x1,7x1,1x1,4x1,0x1,4x2,8x1,2x1,9x1,4x1,1x2,0x1,4x1,8x1,6x1,3x1,0x1,8x1,5x2,2x1,4x1,7x2,5x1,2x1,6x1,0x1,5x1,0x1,3x1,0x1,9x1,1x1,4x1,6x2,1x1,8x1,1x1,5x1,9x1,6x1,5x2,6x1,3x1,8x1,6x1,0x1,5x1,9x2,8x1,3x1,1x1,6x1,1x1,8x1,6x1,7x1
+r7:4x1,3x1,4x1,0x1,8x1,6x1,0x2,8x1,6x1,5x1,6x1,2x1,3x1,4x1,2x1,0x1,6x1,9x2,4x1,3x1,9x1,3x1,2x1,7x1,2x1,1x1,8x1,9x1,3x2,8x1,7x1,5x1,9x1,2x1,3x2,5x2,8x1,7x2,6x1,2x1,3x1,2x1,4x1,7x1,9x1,4x1,6x1,2x1,5x1,1x1,5x1,6x1,5x2,1x1,2x2,0x1
+r8:6x1,2x2,9x1,4x1,7x1,9x1,2x1,6x1,4x1,9x1,8x2,4x1,8x1,7x1,4x2,2x1,5x1,2x1,8x1,0x1,1x1,8x1,7x1,9x1,8x1,0x1,8x1,5x2,8x1,1x1,3x1,0x1,3x1,2x1,3x1,2x1,9x1,8x2,0x2,2x1,5x1,8x1,2x1,8x1,6x1,2x1,4x1,9x1,5x1,8x1,7x3,4x1,6x2,9x1,2x1
+r9:6x1,8x1,1x1,3x1,6x1,7x1,4x1,9x1,2x1,8x1,2x1,5x1,9x1,2x1,6x1,5x1,1x1,2x1,0x1,4x1,0x1,6x1,3x1,7x1,1x1,8x1,3x1,8x1,1x1,2x1,5x1,3x1,7x1,1x1,7x1,4x1,1x1,2x1,0x1,4x1,8x1,4x1,3x1,7x1,1x1,2x1,4x1,0x1,7x1,8x1,4x1,5x1,7x1,8x1,1x1,8x1,9x2,4x1,8x1,0x2,1x1,5x1
+r10:4x1,5x1,9x2,5x1,0x1,4x1,9x1,5x1,2x1,4x1,1x1,7x1,3x2,1x1,0x2,6x1,9x1,0x1,9x1,2x1,8x1,2x1,8x1,7x1,8x1,0x1,2x1,9x1,4x1,8x1,9x1,6x1,7x1,0x1,3x1,8x1,5x1,3x1,0x1,3x1,2x2,5x1,9x1,6x3,3x1,1x1,9x1,4x1,5x1,3x3,2x1,8x2,1x1,8x1,5x1
+r11:5x1,0x1,6x1,9x1,3x1,0x1,3x1,2x2,0x1,3x1,5x1,3x1,5x1,1x1,3x1,1x1,3x2,8x1,5x1,8x1,4x1,8x1,0x1,3x1,4x1,8x1,2x1,9x2,2x1,7x2,8x1,2x1,0x1,5x1,2x1,0x1,9x1,5x1,8x1,3x1,0x1,8x1,9x1,6x1,1x1,7x1,5x1,9x1,7x1,1x1,3x1,5x1,8x1,6x1,7x1,5x1,1x2,3x1,9x1
+r12:6x1,7x1,1x1,4x1,3x2,0x2,7x1,0x1,3x1,5x1,2x1,5x1,7x2,1x1,9x1,6x1,7x1,2x1,8x1,2x1,6x1,5x1,8x1,9x1,5x1,8x1,5x1,8x1,1x1,5x1,9x1,8x1,0x1,4x1,7x1,1x1,5x1,2x2,8x1,1x1,3x1,1x1,0x1,3x1,9x2,2x1,6x1,8x2,2x1,0x1,7x1,5x1,7x1,0x1,1x1,0x1,8x1,7x1
+r13:0x1,8x1,7x1,2x1,4x1,1x1,2x1,7x1,9x1,7x1,1x1,8x1,2x1,6x1,1x2,4x1,2x1,9x1,8x1,6x1,1x1,7x1,9x1,4x1,9x1,7x1,9x1,0x1,8x1,0x1,1x1,5x1,3x1,4x1,5x1,8x1,4x1,5x1,4x1,2x1,1x1,7x1,5x1,4x1,3x1,0x1,5x1,3x1,8x1,5x1,8x1,4x1,7x1,6x1,8x1,1x1,0x1,8x1,6x1,2x1,0x1,4x1,0x1
+r14:5x1,2x1,9x1,2x1,9x1,8x1,2x1,8x1,0x1,9x1,5x1,3x1,2x1,7x1,9x1,7x1,6x1,4x1,1x1,9x1,3x1,9x1,8x1,3x1,9x1,0x1,6x1,0x1,6x3,9x1,2x1,1x1,4x1,5x1,9x1,0x1,5x2,9x1,7x1,8x1,6x1,5x1,1x1,9x1,6x1,8x2,0x1,3x1,2x1,8x1,3x1,1x1,3x1,5x1,8x1,9x1,1x1,2x1,8x1,9x1
+r15:8x1,5x1,0x1,5x1,6x1,3x1,4x1,5x1,1x1,4x1,3x1,2x1,8x1,6x1,5x1,1x1,7x1,8x1,9x1,3x1,0x1,8x1,9x1,4x1,5x1,6x2,9x1,8x1,9x1,8x1,4x1,5x1,3x1,0x1,3x1,1x1,5x1,4x1,1x2,7x1,4x1,1x1,2x2,9x1,6x2,9x1,3x1,8x1,0x1,3x1,1x1,8x1,3x1,4x1,6x1,3x1,0x1,7x1,5x1,3x1
+r16:3x1,1x1,8x2,3x1,5x2,3x1,7x1,3x1,0x1,4x1,8x2,6x1,0x1,8x1,4x1,8x2,5x2,9x1,0x1,2x1,5x1,4x1,6x1,5x1,7x1,2x1,1x2,6x2,7x1,9x1,7x1,1x1,7x1,0x1,1x2,0x1,7x1,3x1,1x1,2x1,4x1,7x1,0x1,1x1,8x1,5x1,9x1,8x1,0x1,1x1,0x1,4x1,5x1,1x1,5x1,4x1
+r17:7x1,0x1,9x1,5x1,4x1,0x1,7x2,5x1,6x1,1x1,6x1,0x1,5x1,2x1,5x1,1x1,3x1,2x1,6x1,7x1,2x1,7x1,6x1,5x2,2x1,3x1,6x1,8x1,3x1,1x1,4x1,7x3,9x1,2x1,4x2,3x1,8x1,5x1,8x1,3x1,4x1,7x1,8x1,0x1,8x1,0x1,8x1,0x1,8x1,3x1,7x1,9x1,6x1,3x1,9x1,7x1,8x1,0x1,7x1
+r18:8x1,9x1,7x1,9x1,1x1,4x1,0x1,2x1,4x2,8x1,4x2,2x1,4x1,2x1,1x1,6x1,8x1,6x1,2x1,9x1,1x1,2x1,5x1,4x2,1x1,3x1,7x1,2x1,8x1,0x1,2x1,9x1,0x1,1x2,6x1,4x1,7x1,9x1,4x1,9x1,0x1,9x1,2x1,5x1,3x1,8x2,0x2,7x1,0x2,3x2,4x1,6x1,7x2,8x1,7x1
+r19:7x1,1x1,8x1,7x1,6x1,8x2,3x1,1x1,3x1,8x1,6x1,8x1,0x1,6x1,3x1,5x2,6x1,3x1,7x1,8x1,4x2,3x1,2x1,1x1,0x1,6x1,3x1,6x1,7x1,0x1,3x2,7x1,4x1,5x1,8x2,5x2,9x1,3x1,8x1,6x1,5x1,0x1,3x1,2x2,1x1,7x1,9x1,7x1,6x1,4x1,6x1,3x1,0x1,5x1,4x1,1x2
+r20:3x1,7x1,3x1,8x1,5x1,8x1,3x1,4x1,2x1,3x2,2x1,1x2,7x1,3x1,8x1,5x2,3x1,6x1,0x1,7x2,4x2,1x1,3x1,7x2,1x1,7x1,3x2,5x1,6x1,3x2,4x1,6x1,7x1,6x1,9x1,1x1,2x1,1x1,6x1,7x1,5x2,6x1,2x1,0x2,3x1,1x1,8x1,6x1,4x1,7x1,9x1,2x1,9x1,7x1
+r21:5x1,2x1,6x1,3x1,9x3,5x1,6x1,2x1,0x2,4x1,0x1,7x1,2x1,8x2,2x1,1x1,6x1,1x1,7x1,2x1,4x1,7x1,9x1,1x1,5x1,3x1,0x1,4x1,7x2,2x1,0x1,5x1,4x1,5x1,8x1,4x1,5x1,3x1,1x1,0x2,9x1,1x1,8x1,6x1,0x1,2x1,8x1,0x1,9x2,2x1,7x2,1x1,7x2,1x1,8x1
+r22:8x1,4x2,5x1,3x1,7x5,8x1,4x1,2x1,0x1,4x1,8x1,0x1,5x1,9x1,7x1,4x1,3x1,8x1,1x1,9x1,8x1,1x1,4x2,6x1,8x1,9x1,8x1,6x1,5x1,6x1,5x1,4x1,2x3,6x1,4x1,3x1,8x1,2x1,5x1,2x2,6x1,4x1,3x1,5x1,3x1,4x1,6x1,4x1,6x1,3x1,5x2,4x1,3x1,7x1
+r23:2x2,6x1,9x1,4x1,2x1,0x1,9x1,5x1,3x1,4x1,8x1,4x1,6x1,0x2,7x1,9x1,7x1,9x1,6x1,2x1,5x1,3x2,8x1,2x1,4x1,5x1,7x1,2x1,4x1,3x1,0x1,6x2,8x1,4x1,6x1,4x1,1x1,3x1,6x1,0x1,6x1,3x1,2x1,9x1,2x1,4x1,2x1,4x1,3x1,4x1,0x1,3x1,4x1,9x1,0x1,9x1,0x1,7x1,0x1,6x1
+r24:3x1,8x1,5x1,1x1,5x1,6x1,5x1,7x1,1x2,7x1,1x1,8x1,0x1,2x1,7x1,2x1,5x1,6x1,7x1,3x1,4x1,1x1,6x1,5x1,3x1,6x1,3x1,9x1,3x1,7x1,5x1,9x1,8x1,2x1,9x1,5x1,1x1,8x2,7x1,3x1,6x1,8x1,4x1,2x2,3x1,0x2,9x1,7x1,6x1,5x1,4x1,8x1,5x1,9x1,6x1,1x1,9x1,6x1,3x1,5x1
+r25:3x1,1x1,2x1,7x1,2x1,1x1,2x1,6x1,7x1,9x1,7x1,5x3,4x1,3x1,4x1,3x1,5x3,3x1,8x1,6x1,8x1,6x1,8x1,2x1,6x1,5x1,2x2,0x1,4x1,3x1,6x1,0x1,6x1,1x1,2x1,5x1,8x2,2x1,4x1,9x1,4x1,7x1,8x1,5x1,9x1,8x1,0x1,4x1,7x1,3x1,1x1,0x1,3x1,4x1,9x1,4x1,1x1,3x1
+r26:8x1,0x1,8x1,9x1,2x1,7x1,3x1,2x1,1x1,7x1,5x2,8x1,9x1,3x1,7x1,5x1,4x1,7x1,9x1,8x1,9x1,7x1,0x1,1x1,4x1,3x1,5x1,0x1,9x1,4x1,5x1,3x1,8x1,5x1,1x1,5x1,1x1,2x1,9x1,3x1,7x1,9x1,5x1,0x1,1x1,2x1,6x1,7x1,6x1,1x3,6x1,9x1,4x2,1x1,0x1,8x1,3x3,8x1
+r27:3x1,8x1,0x1,5x1,8x1,6x1,3x1,0x1,7x1,1x1,4x2,2x1,4x1,8x1,3x1,7x1,0x1,1x1,3x1,0x1,2x1,8x1,1x1,4x1,5x1,9x1,1x1,8x1,0x1,2x1,0x1,8x1,4x1,8x3,5x1,4x1,1x1,6x1,7x1,6x1,0x1,5x1,7x1,6x1,3x2,4x1,8x1,6x1,2x1,8x1,0x1,9x2,6x1,8x1,9x1,5x1,1x2,6x1
+r28:6x1,3x1,1x2,2x1,1x1,9x1,2x1,4x1,0x2,6x1,2x1,0x1,2x1,5x2,7x1,6x1,9x1,4x1,5x1,2x1,4x1,0x1,5x1,0x1,5x1,4x1,2x1,3x1,7x1,9x1,3x1,4x1,7x2,2x1,8x1,4x2,0x1,9x2,4x2,7x2,8x2,3x1,2x1,5x2,3x2,9x1,6x1,8x1,9x1,3x2,5x1,4x1
+r29:5x1,2x1,6x1,7x1,1x1,8x1,7x1,2x1,6x1,5x1,8x1,3x1,0x1,2x1,7x1,4x1,3x1,0x1,3x1,2x1,5x1,1x1,0x1,7x1,0x1,8x1,3x2,4x1,9x1,7x1,8x1,2x2,6x1,2x1,3x1,6x1,7x1,3x1,1x1,2x1,0x1,6x1,9x1,8x1,9x1,6x1,8x1,4x1,6x1,0x1,9x1,8x1,2x1,3x1,6x2,1x1,2x1,8x1,0x1,8x2
+r30:6x1,1x1,3x1,5x1,7x1,4x1,3x1,8x1,3x1,7x1,9x1,6x1,3x1,0x1,9x1,1x1,7x1,1x1,8x1,4x1,7x1,3x1,5x1,9x1,6x2,9x1,4x1,5x2,0x1,3x1,8x1,9x1,4x1,7x2,3x1,7x1,0x1,2x1,0x1,5x2,2x2,7x2,6x1,1x1,8x1,4x1,7x1,4x1,5x1,1x1,8x2,5x1,0x1,5x1,9x1,2x1,0x1
+r31:6x1,2x1,9x4,7x1,1x1,9x1,5x1,3x2,0x2,9x1,1x1,9x1,4x1,9x1,4x1,2x1,3x1,5x1,0x1,7x1,3x1,0x3,3x1,6x1,3x1,0x1,5x1,4x1,7x1,0x1,5x1,4x1,1x1,7x1,5x1,2x1,6x1,8x1,7x1,5x1,1x1,5x1,3x1,0x1,1x1,9x1,8x1,5x1,6x1,4x1,6x1,1x1,9x1,3x2,5x1,4x1
+r32:4x1,6x1,3x1,0x1,7x2,8x1,2x1,1x1,8x1,1x1,6x1,3x1,8x1,3x1,1x1,9x1,1x1,2x1,7x1,3x1,2x2,8x1,3x1,4x1,3x1,5x1,9x1,5x2,6x1,8x1,3x1,9x1,7x1,0x1,4x1,0x1,4x1,8x1,7x2,8x2,0x1,6x1,1x1,2x1,4x1,2x1,5x1,9x1,5x1,8x1,0x1,9x1,3x1,8x1,1x1,5x1,4x1,2x1,0x1
+r33:1x1,6x1,0x1,7x1,9x1,3x1,1x1,2x2,6x1,4x1,2x1,1x1,3x1,4x1,3x1,6x1,7x2,6x1,2x1,4x2,5x1,8x1,1x1,7x1,6x3,8x2,7x1,5x1,4x1,8x1,6x1,0x1,8x1,7x1,0x1,2x1,4x1,7x1,3x1,5x1,9x1,8x1,2x1,6x1,1x1,9x2,5x1,2x1,7x1,2x1,6x1,8x1,4x1,9x1,6x1,2x1,1x1
+r34:5x1,6x1,1x1,4x1,1x1,0x2,2x1,4x1,3x1,6x1,9x2,3x1,9x1,5x2,6x1,2x1,4x1,1x1,4x1,1x1,5x2,7x2,1x1,6x1,2x1,6x1,1x1,7x1,9x1,2x1,6x1,5x1,6x1,4x1,2x1,5x1,2x1,7x1,9x2,5x1,0x2,9x1,0x1,9x1,8x1,3x1,2x1,8x1,5x1,1x1,9x1,8x1,9x1,3x1,4x1,5x1,4x1
+r35:2x1,3x1,6x1,5x1,1x1,6x1,9x1,2x1,0x1,7x1,9x1,4x2,7x1,9x1,3x1,8x1,1x1,3x1,0x1,7x1,5x2,6x2,8x1,9x1,0x1,4x1,3x1,8x1,7x1,0x1,1x1,7x1,3x1,6x1,9x1,1x1,7x1,4x1,2x1,0x2,4x1,2x1,1x1,9x1,8x1,9x1,3x1,1x1,3x1,1x1,3x1,2x2,6x1,7x2,2x3,9x1
+r36:0x1,9x1,8x1,6x1,3x1,9x1,6x1,1x1,3x1,8x1,1x1,2x1,4x1,5x1,4x1,3x1,2x1,0x1,8x1,7x1,6x1,5x1,0x1,8x1,6x1,2x1,9x1,5x1,0x2,1x1,0x1,4x1,1x1,0x1,7x1,9x1,2x1,7x1,2x1,6x1,8x1,7x2,8x1,1x1,9x1,1x1,8x1,9x2,1x1,3x1,2x1,3x1,8x1,4x1,7x1,3x1,4x1,8x2,9x1,4x1
+r37:8x1,1x1,2x1,7x1,5x1,4x1,9x1,3x1,1x1,9x1,3x1,1x1,5x1,4x1,0x1,1x1,8x1,7x1,2x1,9x1,7x1,9x1,5x1,3x1,8x1,6x1,0x1,1x1,5x1,3x1,7x2,5x1,0x1,6x1,3x1,9x1,3x1,7x2,6x1,4x1,8x1,7x1,0x1,8x1,1x1,0x1,1x1,6x1,9x1,8x1,4x1,5x1,1x3,2x1,1x1,6x1,5x1,2x1,5x1,1x1
+r38:0x1,1x1,4x1,1x1,2x1,6x1,4x2,6x1,2x1,7x1,3x1,7x2,5x1,9x1,7x1,4x1,6x1,1x2,3x1,9x1,1x1,8x2,7x1,6x1,3x1,1x1,9x1,8x1,7x1,0x1,6x1,9x1,3x1,0x1,1x1,4x2,9x1,2x1,3x1,9x1,5x2,7x1,0x1,3x1,8x1,7x1,4x1,0x1,9x1,7x1,9x1,4x1,0x1,7x1,2x1,8x1,4x2
+r39:0x1,7x1,5x2,2x1,7x1,5x1,6x1,1x1,7x1,2x1,4x2,5x1,3x2,6x1,3x1,9x1,5x1,3x1,2x1,5x1,4x1,9x1,2x1,6x1,5x1,0x1,5x1,2x1,3x1,8x1,7x2,5x1,3x1,6x1,9x1,4x1,5x1,3x1,2x4,8x1,2x1,5x1,7x1,3x1,7x1,1x1,6x1,3x1,5x1,1x1,7x1,4x1,7x1,2x2,8x1,9x1
+r40:7x1,4x1,1x1,4x1,6x1,2x2,8x1,3x1,8x1,6x1,8x1,7x1,5x1,4x2,3x1,7x1,9x1,2x1,4x1,1x1,3x1,2x1,6x1,1x1,2x1,8x1,2x1,8x1,5x1,8x1,3x1,6x1,9x1,7x1,1x1,7x1,0x1,7x2,0x1,8x1,5x1,4x1,2x1,7x1,2x1,3x1,7x1,2x1,9x1,6x1,5x1,4x1,2x1,9x1,3x2,7x1,9x1,5x1,1x2
+r41:9x1,5x1,1x1,3x1,4x1,8x1,3x1,9x1,7x1,5x1,4x2,6x1,8x2,6x1,7x1,8x1,9x1,6x1,0x1,1x1,8x1,4x1,5x1,7x1,6x1,7x1,3x1,0x1,2x1,3x1,9x1,2x1,4x1,0x1,6x1,3x1,5x1,0x1,7x1,3x1,2x1,6x1,4x1,1x1,7x1,2x1,1x1,3x1,2x1,9x1,2x1,9x1,2x1,9x1,1x1,9x1,7x1,2x1,5x1,6x1,3x1,6x1
+r42:0x1,5x1,4x1,1x1,4x1,9x1,7x1,3x1,5x1,9x1,0x1,6x1,2x1,8x1,7x2,6x1,5x1,2x1,9x1,3x1,0x1,9x1,6x2,5x1,0x1,7x1,2x1,0x1,2x1,1x1,5x1,4x1,8x1,3x1,1x1,3x2,6x3,9x1,6x1,0x2,2x1,5x1,2x1,3x1,2x1,8x1,4x1,7x2,8x1,6x2,0x1,1x1,9x1,8x1,7x1,0x1
+r43:2x1,5x1,1x1,6x2,1x1,0x1,6x1,9x1,5x1,1x1,3x1,8x1,5x1,4x1,3x1,6x1,0x1,1x1,7x1,4x1,2x1,5x1,1x1,3x1,2x1,6x1,8x1,1x1,8x1,4x1,0x1,5x1,1x2,9x1,1x2,5x1,6x1,0x1,1x1,0x1,4x1,2x1,0x1,6x1,0x2,9x1,6x1,2x1,8x1,1x1,3x1,8x1,2x1,5x1,2x2,7x1,5x1,3x1,9x1
+r44:4x1,0x1,3x1,1x1,5x1,1x1,8x1,5x1,9x1,3x1,6x1,3x1,2x1,1x1,6x1,8x1,5x1,7x1,2x1,0x1,5x2,1x1,4x1,3x1,2x1,1x1,3x1,4x1,6x1,9x2,8x2,1x1,0x1,9x2,3x1,1x1,4x1,7x1,3x1,7x2,8x1,1x1,4x1,3x1,2x1,3x1,2x1,5x2,7x1,9x2,3x1,6x1,0x1,6x1,7x1,3x2
+r45:3x2,9x1,3x1,0x1,4x3,2x1,4x1,3x1,1x1,7x1,4x2,7x1,5x1,8x1,4x1,5x1,1x1,9x1,7x1,9x2,8x1,3x1,0x1,8x1,1x1,5x1,4x1,9x1,7x1,5x1,8x2,9x1,1x1,8x1,9x1,7x1,0x1,7x2,6x1,5x2,7x1,8x1,4x1,5x1,7x1,2x1,1x1,7x1,8x1,1x1,5x1,3x1,5x1,3x1,8x1,9x1
+r46:8x1,0x1,1x1,6x1,9x1,5x1,8x1,1x1,3x1,7x1,8x2,6x1,4x1,8x1,0x1,8x1,9x1,7x1,0x1,9x1,3x1,6x1,2x2,1x1,9x1,3x1,4x1,2x1,4x1,8x1,5x1,1x2,2x2,9x1,2x1,9x1,7x1,8x1,0x1,2x1,6x2,8x1,5x1,1x1,0x1,6x1,0x1,7x1,8x1,9x1,2x1,6x1,2x1,0x1,3x1,9x1,6x1,5x2
+r47:3x1,1x1,8x1,2x1,3x1,9x1,0x1,5x1,2x1,5x1,3x1,7x1,3x1,5x1,6x1,7x1,5x1,0x1,3x1,2x1,8x1,5x1,1x1,8x1,7x1,1x1,7x1,8x1,5x1,9x1,4x1,3x1,0x1,6x1,8x2,0x1,9x1,1x1,9x1,0x1,9x1,6x1,9x1,2x1,6x1,9x1,7x1,9x1,8x1,3x1,6x1,1x1,0x1,8x1,6x1,8x1,7x1,4x1,3x1,5x1,8x1,9x1,5x1
+r48:4x1,9x1,3x1,1x1,3x2,7x1,1x1,7x1,6x3,7x1,8x1,4x1,1x1,2x1,1x1,8x1,2x1,8x2,5x1,8x1,6x1,0x1,8x1,7x2,9x2,8x1,7x1,0x1,3x2,1x1,3x1,9x1,0x4,5x3,2x1,0x1,6x1,0x1,1x1,2x1,4x1,9x1,2x1,0x1,8x1,1x1,4x1,7x1,2x1,4x1,3x1,0x1
+r49:7x2,1x1,0x1,6x1,7x1,3x1,6x1,3x1,2x1,8x1,2x1,6x1,3x1,2x1,0x1,3x1,5x1,8x1,2x1,7x1,4x1,3x1,0x1,3x1,2x1,3x1,2x1,7x1,2x1,3x2,6x1,0x1,4x1,2x1,8x2,1x1,8x1,9x1,0x1,8x1,6x1,9x1,8x1,9x1,4x1,9x2,4x1,3x1,7x1,8x1,3x1,5x1,0x1,5x1,9x1,4x1,2x1,3x1,6x2
+r50:6x1,8x2,9x1,2x1,7x1,0x1,4x1,7x1,6x1,7x1,1x2,4x1,3x1,2x1,6x1,5x1,4x1,9x1,1x1,7x1,0x1,3x2,6x1,2x2,4x1,3x1,7x1,4x1,7x1,0x1,8x1,9x1,6x1,3x1,9x2,3x1,7x1,9x1,4x1,3x1,5x1,0x1,2x1,6x1,8x1,7x1,0x1,7x1,9x1,5x1,2x1,7x1,6x1,0x3,6x1,9x2
+r51:7x1,4x1,1x2,7x2,5x1,0x1,4x2,6x1,3x1,2x1,8x1,6x1,8x1,0x1,9x1,8x1,5x2,2x1,3x1,7x1,6x1,3x2,9x1,8x1,9x2,7x1,5x1,0x1,4x1,1x1,6x2,2x1,0x2,9x1,0x1,5x1,1x1,0x1,1x1,5x1,1x1,5x1,0x1,1x1,0x1,8x1,0x1,3x3,6x1,4x2,1x1,9x1,8x1
+r52:3x1,7x1,6x2,8x1,3x1,5x1,1x1,8x1,3x1,4x1,8x1,0x1,1x1,9x1,0x1,7x1,8x1,3x1,6x1,7x1,5x1,0x1,1x1,2x1,0x1,5x1,0x1,4x1,8x1,5x1,6x1,1x1,2x1,6x1,1x1,2x1,4x1,0x1,7x1,9x2,2x1,0x1,8x1,4x1,2x1,5x1,7x1,0x2,7x1,8x1,6x1,0x1,1x1,7x1,3x1,8x1,3x1,0x1,2x1,0x1,5x1
+r53:8x1,1x1,8x1,9x1,0x1,1x1,0x1,9x1,7x1,0x1,6x1,9x1,1x1,9x1,7x1,6x2,4x2,8x1,3x1,6x1,3x1,8x1,0x1,9x1,3x1,5x1,6x1,3x1,4x1,6x1,4x1,9x1,2x1,4x2,3x1,1x1,4x1,3x2,4x1,8x1,5x1,1x1,9x1,3x2,4x1,1x1,4x1,6x1,8x1,6x1,7x3,4x1,2x2,0x1,5x1,0x1
+r54:7x1,9x1,2x2,3x1,7x2,1x1,2x1,4x1,0x1,2x1,3x1,0x1,6x1,1x1,9x1,2x1,7x1,6x1,3x1,8x1,1x2,7x1,8x1,4x1,8x1,2x1,6x1,1x1,7x1,1x1,7x1,2x1,7x3,0x1,9x1,1x2,6x1,4x1,6x1,9x1,0x1,1x1,3x1,2x1,5x1,9x1,3x1,0x1,9x1,1x1,8x1,4x2,5x1,7x1,1x1,3x2
+r55:4x2,5x1,6x1,7x1,8x1,7x1,2x1,0x1,9x1,7x1,5x1,9x1,2x1,8x1,7x1,0x1,7x1,2x1,8x1,2x1,3x1,9x1,2x1,9x1,7x1,4x1,1x4,8x1,6x1,0x1,5x1,6x1,3x1,0x1,2x1,8x1,3x1,4x1,2x1,0x1,5x1,0x1,4x1,5x1,6x1,0x1,9x1,6x1,3x1,9x1,1x1,2x1,3x1,6x2,3x1,1x1,2x1,5x1,6x1
+r56:3x1,6x1,3x2,6x1,1x2,8x1,9x1,4x1,6x1,7x1,6x1,1x1,3x1,0x1,8x2,9x1,3x1,8x1,9x1,5x1,7x1,5x1,1x1,2x1,4x1,9x1,4x1,6x1,8x1,1x1,7x1,9x1,3x1,7x1,1x1,3x1,4x1,2x3,1x1,4x1,2x1,4x1,1x1,2x1,1x1,2x2,5x1,9x1,3x4,1x1,3x1,1x1,5x2,6x1
+r57:6x1,7x1,0x1,5x1,9x1,5x1,9x1,1x1,3x1,2x1,8x1,1x1,2x1,3x1,2x1,3x1,4x2,6x1,0x1,4x1,2x1,6x1,7x1,5x1,1x1,5x1,7x1,3x1,6x2,7x1,4x1,0x1,9x1,8x1,6x1,4x1,2x1,8x2,3x1,2x1,0x1,1x1,4x1,6x1,8x1,0x1,6x1,1x1,6x1,9x1,8x1,0x1,5x2,3x1,0x1,6x1,0x1,6x1,5x1,2x1
+r58:9x1,3x1,4x1,8x1,9x2,6x1,1x1,2x1,3x1,7x1,6x1,0x1,4x1,8x1,6x1,5x1,8x1,3x1,8x1,6x1,1x1,2x1,8x1,2x1,5x1,9x1,8x1,5x1,4x1,7x1,9x1,7x1,6x1,2x1,3x1,1x1,5x1,4x2,9x1,2x3,8x2,9x1,8x1,0x1,6x1,0x1,3x1,8x1,6x1,4x1,3x1,6x1,0x1,8x1,1x2,0x1,9x1,3x1
+r59:6x1,3x2,2x1,7x1,0x2,3x1,9x1,5x1,1x1,6x1,8x1,7x1,5x1,3x1,7x1,9x1,3x1,1x1,0x1,1x1,0x1,7x2,3x1,6x1,4x1,0x1,8x1,1x1,2x1,3x1,9x2,7x1,5x1,6x1,8x1,4x1,3x3,8x1,7x1,6x1,1x1,0x1,9x1,5x1,0x1,6x1,5x1,8x1,2x1,4x1,2x1,3x1,4x1,9x1,8x1,9x1,1x1,6x1
+r60:6x2,2x1,8x1,4x1,7x1,0x1,4x1,8x1,4x2,6x1,0x1,9x1,1x1,8x1,7x2,9x1,4x1,7x2,3x1,9x1,1x1,9x1,5x1,2x1,9x2,4x2,9x1,2x1,8x1,3x1,0x1,8x1,7x1,2x1,0x1,8x1,2x1,5x1,0x1,6x1,0x1,2x1,1x1,9x1,8x1,5x1,6x1,3x1,2x1,7x1,2x1,8x1,0x1,8x1,3x1,2x1,4x1,5x1
+r61:5x2,4x1,5x1,2x1,4x2,9x1,3x1,1x1,3x1,0x1,9x2,0x1,2x1,7x1,8x1,9x1,7x1,5x1,4x1,9x1,1x1,7x1,0x1,4x1,1x1,0x1,2x1,6x2,0x1,2x2,3x2,1x1,0x1,7x2,8x1,0x1,8x1,5x1,7x1,2x1,7x1,4x1,9x1,2x1,5x1,9x2,2x1,1x1,9x1,4x1,3x1,6x1,9x2,6x1,2x1
+r62:3x1,9x1,8x1,4x1,3x1,8x2,2x1,9x1,2x1,1x1,6x1,9x1,4x1,7x1,3x2,2x1,4x1,6x1,5x1,9x1,5x1,8x1,5x1,9x2,4x2,6x1,3x2,2x2,3x1,1x1,7x1,0x1,2x1,5x1,0x1,8x1,7x1,2x1,1x1,5x1,2x1,4x1,5x1,1x1,9x1,1x1,0x1,5x1,0x1,5x1,8x2,4x2,2x1,4x1,9x1,8x1
+r63:2x1,3x1,4x1,0x1,3x1,5x2,8x2,9x1,1x2,2x1,7x1,1x1,0x1,8x1,2x1,5x2,9x1,4x1,8x1,1x1,4x1,8x2,6x2,0x1,7x1,2x1,8x1,4x1,3x1,2x1,9x1,1x1,0x1,3x1,0x1,1x1,3x1,6x1,7x1,6x1,1x1,7x1,0x1,4x1,1x1,4x1,2x1,7x1,2x1,0x1,3x1,0x1,5x1,4x1,7x1,0x1,5x1,6x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r2c4:2x4 r5c28:7x3 r9c12:4x2 r26c22:9x7 r27c46:8x4 r31c32:7x2 r38c37:6x5 r45c33:5x1 r48c14:2x2 r48c17:2x2
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r1c1:2x6 r2c55:1x2 r3c37:2x6 r4c53:8x4 r20c40:0x7 r27c45:2x4 r30c40:8x7 r44c35:3x3 r44c39:3x3 r45c38:6x5 r51c11:6x3 r56c37:8x3 r59c30:6x7
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r4c40:8x5 r6c31:4x5 r12c45:5x3 r16c23:4x3 r16c27:4x2 r36c28:4x4 r36c33:4x1 r36c47:4x2 r42c5:7x1 r42c7:7x1 r53c29:6x2 r53c32:6x3 r55c34:6x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r3c30:3x2 r5c32:5x2 r5c35:5x2 r9c36:4x3 r9c40:4x1 r15c13:9x4 r34c48:0x1 r34c50:0x3 r38c22:6x5 r38c28:6x1 r39c44:0x7 r45c18:6x5 r50c29:4x1 r52c48:1x6
+--- ACTION5 (level 0->0): changed cells (FULL, run-length) = r4c36:7x4 r21c3:6x3 r23c11:7x5 r31c33:3x4 r34c32:3x3 r34c41:3x5 r39c46:9x5 r52c19:3x2 r56c0:6x1 r58c23:5x2 r59c32:7x7 r63c14:4x3
+--- ACTION6 (level 0->0): changed cells (FULL, run-length) = r8c9:6x1 r16c10:2x5 r17c45:0x2 r25c6:1x3 r28c3:4x5 r28c29:3x1 r28c31:3x2 r37c28:9x5 r43c45:7x7 r45c13:6x2 r45c31:8x4 r49c27:1x6

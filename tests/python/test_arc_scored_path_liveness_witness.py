@@ -607,15 +607,31 @@ class _PropsServerProposer:
     stub would pass whether or not the production code was fixed."""
 
     @staticmethod
-    def make(served: int, *, declared: int, port: int = 65500):
+    def make(
+        served: int,
+        *,
+        declared: int,
+        port: int = 65500,
+        served_model_path: str | None = None,
+        repo_substr: str | None = None,
+    ):
+        """`served_model_path` omitted -> /props carries no `model_path` key at all, which is the
+        pre-2026-07-28 shape and must still fail OPEN (reuse allowed, recorded as unobserved).
+        Pass it to exercise the model-identity reuse guard added with the generator switch."""
         from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
-        p = LocalGGUFProposer(port=port, n_ctx=declared)
-        p._healthy = lambda: True  # type: ignore[method-assign]
-        p.server_props = lambda: {  # type: ignore[method-assign]
+        kwargs = {"port": port, "n_ctx": declared}
+        if repo_substr is not None:
+            kwargs["repo_substr"] = repo_substr
+        p = LocalGGUFProposer(**kwargs)  # type: ignore[arg-type]
+        props: dict = {
             "default_generation_settings": {"n_ctx": served},
             "total_slots": 4,
         }
+        if served_model_path is not None:
+            props["model_path"] = served_model_path
+        p._healthy = lambda: True  # type: ignore[method-assign]
+        p.server_props = lambda: props  # type: ignore[method-assign]
         return p
 
 
@@ -669,6 +685,79 @@ def test_ensure_server_does_reuse_an_equal_or_larger_pool() -> None:
     bigger = _PropsServerProposer.make(131072, declared=81920)
     assert bigger._reusable() is True
     assert bigger.reuse_n_ctx_check == "larger_ok"
+
+
+def test_ensure_server_refuses_to_reuse_a_server_running_a_DIFFERENT_MODEL() -> None:
+    """FINDING 1's second dimension, surfaced by the 2026-07-28 generator switch.
+
+    The reuse check compared the context POOL and nothing else, so a running server was adopted
+    regardless of which model it had loaded. Near-harmless while exactly one model was ever served
+    on the default port -- and precisely wrong during a model transition, when a Qwen3.5-9B server
+    left over from a previous run, on port 8919, with n_ctx 81920, satisfies every other condition
+    and gets adopted. The run then induces on the RETIRED model while the witness faithfully
+    reports gemma, because `repo_substr` is our intent, not an observation.
+    """
+    p = _PropsServerProposer.make(
+        81920,
+        declared=81920,
+        repo_substr="gemma-4-31B-it",
+        served_model_path="/home/x/.cache/hf/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/a/Qwen3.5-9B-Q4_K_M.gguf",
+    )
+    assert p._reusable() is False, (
+        "a Qwen server is being reused by a proposer pinned to gemma-4-31B-it -- the run would "
+        f"induce on the retired model while reporting the new one: {p.reuse_model_check}"
+    )
+    assert "refused_wrong_model" in p.reuse_model_check
+    assert "Qwen3.5-9B" in (p.observed_server_model_path or "")
+
+
+def test_ensure_server_reuses_a_server_running_the_RIGHT_model() -> None:
+    """The no-over-fire control. Refusing a correct warm server would relaunch on every call --
+    a full 18.3 GB model load per game, which is strictly worse than the bug being fixed."""
+    p = _PropsServerProposer.make(
+        81920,
+        declared=81920,
+        repo_substr="gemma-4-31B-it",
+        served_model_path="/home/x/.cache/hf/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f/gemma-4-31B-it-Q4_K_M.gguf",
+    )
+    assert p._reusable() is True
+    assert p.reuse_model_check == "match"
+
+
+def test_model_reuse_check_fails_OPEN_when_props_does_not_report_a_model() -> None:
+    """Same policy as the n_ctx check: a llama.cpp build that does not surface the model must not
+    brick the generator path. It is reused, and the gap is RECORDED rather than hidden."""
+    p = _PropsServerProposer.make(81920, declared=81920, repo_substr="gemma-4-31B-it")
+    assert p._reusable() is True
+    assert p.reuse_model_check == "unobserved_model_path_unreadable"
+
+
+def test_explicit_model_path_is_compared_by_basename_not_full_path() -> None:
+    """The Kaggle bundle sets CARNOT_ARC_GGUF_PATH to a /kaggle/input/... path while the same
+    weights live under ~/.cache locally. Comparing absolute paths would refuse a perfectly good
+    warm server over a directory-layout difference."""
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
+    p = LocalGGUFProposer(model_path="/kaggle/input/ds/gemma-4-31B-it-Q4_K_M.gguf")
+    assert p._model_path_matches("/home/x/.cache/hf/snapshots/f/gemma-4-31B-it-Q4_K_M.gguf")
+    assert not p._model_path_matches("/kaggle/input/ds/Qwen3.5-9B-Q4_K_M.gguf")
+    assert not p._model_path_matches("")
+
+
+def test_witness_publishes_the_OBSERVED_model_alongside_the_declared_one() -> None:
+    """A witness that only echoes `repo_substr` is restating our configuration, not measuring it
+    -- the identical defect the n_ctx half of this file exists to document."""
+    p = _PropsServerProposer.make(
+        81920,
+        declared=81920,
+        repo_substr="gemma-4-31B-it",
+        served_model_path="/cache/gemma-4-31B-it-Q4_K_M.gguf",
+    )
+    p._reusable()
+    row = p.liveness_witness()
+    assert row["generator_model_declared"] == "gemma-4-31B-it", row
+    assert row["generator_model_observed"] == "/cache/gemma-4-31B-it-Q4_K_M.gguf", row
+    assert row["generator_reuse_model_check"] == "match", row
 
 
 def test_stub_proposer_row_is_not_an_llm_on_claim() -> None:

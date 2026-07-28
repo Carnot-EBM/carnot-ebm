@@ -1,0 +1,83 @@
+{
+  "purpose": "persist the n_ctx 81920 / 11-CPU-FFN-layer per-PID VRAM residency readings",
+  "binary_sha256": "f5db57be853688e3f392d5749ca2a7c6f5f2aca19300647f49ca2baa4daab23b",
+  "arms": [
+    {
+      "label": "f13_81920_11layer_mtp_off",
+      "mtp": false,
+      "n_ctx": 81920,
+      "ffn_cpu_layers": 11,
+      "argv": [
+        "/home/ianblenke/.cache/shipped_mtp_binary_probe/extracted/llama-server",
+        "--model",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "--ctx-size",
+        "81920",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8981",
+        "--no-warmup",
+        "-ot",
+        "blk\\.(0|1|2|3|4|5|6|7|8|9|10)\\.ffn_(gate|up|down)\\.weight=CPU"
+      ],
+      "residency": {
+        "pid": 2985998,
+        "used_mib": 21716,
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "gpu_index": 0
+      },
+      "mtp_positive_marker_seen": false,
+      "log": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/f13/f13_81920_11layer_mtp_off.log"
+    },
+    {
+      "label": "f13_81920_11layer_mtp_on",
+      "mtp": true,
+      "n_ctx": 81920,
+      "ffn_cpu_layers": 11,
+      "argv": [
+        "/home/ianblenke/.cache/shipped_mtp_binary_probe/extracted/llama-server",
+        "--model",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "--ctx-size",
+        "81920",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8982",
+        "--no-warmup",
+        "-ot",
+        "blk\\.(0|1|2|3|4|5|6|7|8|9|10)\\.ffn_(gate|up|down)\\.weight=CPU",
+        "--spec-type",
+        "draft-mtp",
+        "--model-draft",
+        "/home/ianblenke/.cache/kaggle_mtp_head_upload/mtp-gemma-4-31B-it-Q8_0.gguf"
+      ],
+      "residency": {
+        "pid": 2986070,
+        "used_mib": 23010,
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "gpu_index": 0
+      },
+      "mtp_positive_marker_seen": true,
+      "log": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/f13/f13_81920_11layer_mtp_on.log"
+    }
+  ],
+  "measured_mtp_off_mib": 21716,
+  "measured_mtp_on_mib": 23010,
+  "measured_head_surcharge_mib": 1294,
+  "source_constant_mtp_off_mib": 21730,
+  "source_constant_head_surcharge_mib": 1290
+}

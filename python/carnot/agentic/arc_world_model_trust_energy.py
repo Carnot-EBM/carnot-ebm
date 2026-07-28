@@ -597,10 +597,30 @@ def select_trusted_world_model(
     # every sub-corpus verifier. Judging per-slice would refuse an honest mask on any
     # held-out tail that happens to contain no genuine state change -- see
     # `WorldModelVerifier.__init__` for why a tail cannot distinguish that case.
-    from carnot.agentic.arc_executable_world_model import hud_mask_swallow_check
+    from carnot.agentic.arc_executable_world_model import (
+        hud_mask_swallow_check,
+        hud_mask_swallow_clean,
+    )
 
     swallow = hud_mask_swallow_check(list(transitions), hud_mask)
-    if swallow.get("swallows"):
+    # REQ-ARC-WMTE-6017: `swallow.get("swallows")` was plain truthiness, so an UNMEASURABLE
+    # verdict (`no_dynamics_to_swallow` -- the corpus has no changing transition, so the
+    # check could not fire; real instance ft09) read as clean and the mask was applied to
+    # every comparator. `hud_mask_swallow_clean` requires the affirmative `ok`. The
+    # `hud_mask is not None` guard keeps the mask-OFF path untouched: with no mask the reason
+    # is `no_mask`, which is not clean either, and refusing there would be a no-op that
+    # nonetheless overwrote `mask_on` for a mask that never existed.
+    mask_refused = hud_mask is not None and not hud_mask_swallow_clean(swallow)
+    # THE RECORD-BEARING PAIR keeps the supplied mask + flag so their `hud_mask_status` can
+    # NAME the refusal. REQ-ARC-WMTE-6017 second finding: nulling both before constructing
+    # them (what this function used to do unconditionally) made every refusal report
+    # `hud_mask_status == "disabled"` -- byte-indistinguishable from "the flag was off". The
+    # hidden-state branch grades exclusively through here, so on the 11 hidden-state games --
+    # every 0.08-wall game -- a swallow refusal was INVISIBLE in the record. Grading is
+    # unaffected: these verifiers run the same guard on the same pre-computed verdict and set
+    # their own `hud_mask` to None, which is exactly what the nulled pair compared.
+    gate_mask, gate_mask_on = hud_mask, mask_on
+    if mask_refused:
         # Refuse ONCE, here, for every comparator at the same time. Letting each verifier
         # re-decide would reintroduce exactly the split-convention bug this corrigendum is
         # fixing, and `_score_accuracy` / `score_change_weighted_consistency` build their own
@@ -609,7 +629,10 @@ def select_trusted_world_model(
         mask_on = False
     energy_scorer = offpath_energy_scorer or default_s1_offpath_energy_scorer()
     offpath_verifier = WorldModelVerifier(
-        list(heldout), hud_mask=hud_mask, hud_mask_enabled=mask_on, hud_mask_swallow=swallow
+        list(heldout),
+        hud_mask=gate_mask,
+        hud_mask_enabled=gate_mask_on,
+        hud_mask_swallow=swallow,
     )
     # REQ-ARC-WMTE-6013: the symmetric change gate is scored on `heldout` -- THE SAME SPLIT
     # `trust_pass` uses -- and it is computed HERE, inside the function that owns the split,
@@ -620,7 +643,10 @@ def select_trusted_world_model(
     # results/experiment_6012_hidden_state_trust_gate_hole.json, where it rejected even a
     # perfect engine. Owning the split here makes the mistake unavailable to callers.
     change_gate_verifier = WorldModelVerifier(
-        list(heldout), hud_mask=hud_mask, hud_mask_enabled=mask_on, hud_mask_swallow=swallow
+        list(heldout),
+        hud_mask=gate_mask,
+        hud_mask_enabled=gate_mask_on,
+        hud_mask_swallow=swallow,
     )
     raw_rows: list[
         tuple[

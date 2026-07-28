@@ -1,0 +1,75 @@
+0.00.173.752 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.173.755 I device_info:
+0.00.489.737 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
+0.00.489.751 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
+0.00.489.900 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.489.912 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true
+0.00.489.975 I srv          init: running without SSL
+0.00.490.030 I srv          init: using 23 threads for HTTP server
+0.00.490.185 I srv         start: binding port with default address family
+0.00.491.345 I srv  llama_server: loading model
+0.00.491.353 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'
+0.00.491.403 I common_init_result: fitting params to device memory ...
+0.00.491.404 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.02.386.411 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.03.252.683 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.03.253.240 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.03.260.838 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.03.290.481 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
+0.11.160.825 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.11.195.941 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.11.258.897 I srv    load_model: initializing slots, n_slots = 4
+0.11.308.599 W common_speculative_init: no implementations specified for speculative decoding
+0.11.308.607 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 81920
+0.11.308.613 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 81920
+0.11.308.614 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 81920
+0.11.308.614 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 81920
+0.11.308.681 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.11.308.683 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.11.308.684 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.11.308.685 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
+0.11.308.751 I srv          init: idle slots will be saved to prompt cache and cleared upon starting a new task
+0.11.313.937 I init: chat template, example_format: '<|turn>system
+<|think|>
+You are a helpful assistant<turn|>
+<|turn>user
+Hello<turn|>
+<|turn>model
+Hi there<turn|>
+<|turn>user
+How are you?<turn|>
+<|turn>model
+'
+0.11.314.422 I srv          init: init: chat template, thinking = 1
+0.11.314.457 I srv  llama_server: model loaded
+0.11.314.461 I srv  llama_server: server is listening on http://127.0.0.1:8973
+0.11.314.467 I srv  update_slots: all slots are idle
+0.19.975.905 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+0.19.975.910 I srv  get_availabl: updating prompt cache
+0.19.975.922 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+0.19.975.932 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 81920 tokens, 8589934592 est)
+0.19.975.934 I srv  get_availabl: prompt cache update took 0.02 ms
+0.19.975.998 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+0.19.976.001 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache
+0.19.976.003 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens
+0.19.976.089 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache
+0.19.976.091 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens
+0.19.976.171 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache
+0.19.976.172 I slot prompt_clear: id  2 | task -1 | clearing prompt with 0 tokens
+0.23.269.983 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   4096, progress = 0.25, t =   3.29 s / 1243.59 tokens per second
+0.25.241.775 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   6144, progress = 0.37, t =   5.27 s / 1166.84 tokens per second
+0.27.284.875 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   8192, progress = 0.50, t =   7.31 s / 1120.87 tokens per second
+0.29.399.067 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =  10240, progress = 0.62, t =   9.42 s / 1086.73 tokens per second
+0.31.586.259 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =  12288, progress = 0.75, t =  11.61 s / 1058.40 tokens per second
+0.33.844.726 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =  14336, progress = 0.87, t =  13.87 s / 1033.71 tokens per second
+0.35.923.033 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =  15951, progress = 0.97, t =  15.95 s / 1000.27 tokens per second
+0.36.149.567 I slot create_check: id  3 | task 0 | created context checkpoint 1 of 32 (pos_min = 11343, pos_max = 15950, n_tokens = 15951, size = 425.013 MiB)
+0.36.479.304 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =  16463, progress = 1.00, t =  16.50 s / 997.57 tokens per second
+0.36.903.772 I slot create_check: id  3 | task 0 | created context checkpoint 2 of 32 (pos_min = 11855, pos_max = 16462, n_tokens = 16463, size = 425.013 MiB)
+0.37.496.145 I slot print_timing: id  3 | task 0 | prompt eval time =   16989.91 ms / 16467 tokens (    1.03 ms per token,   969.22 tokens per second)
+0.37.496.150 I slot print_timing: id  3 | task 0 |        eval time =     529.94 ms /    16 tokens (   33.12 ms per token,    30.19 tokens per second)
+0.37.496.151 I slot print_timing: id  3 | task 0 |       total time =   17519.86 ms / 16483 tokens
+0.37.496.158 I slot print_timing: id  3 | task 0 |    graphs reused =         15
+0.37.496.448 I slot      release: id  3 | task 0 | stop processing: n_tokens = 16482, truncated = 0
+0.37.496.458 I srv  update_slots: all slots are idle
+0.41.497.809 I srv    operator(): operator(): cleaning up before exit...

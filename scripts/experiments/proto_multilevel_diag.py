@@ -68,7 +68,16 @@ def _clean_qwen_proposer():
         repo_substr="Qwen3.5-9B-MTP",
         model_path=_QWEN_GGUF if os.path.exists(_QWEN_GGUF) else None,
         port=_PORT,
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=2560,
@@ -84,29 +93,43 @@ def _slim_attempts(attempts):
         cxs = a.get("counterexamples") or []
         # per-round held-out accuracy: is the induced model CLOSE to the gate (gate-fixable) or garbage?
         rounds = a.get("refinement_rounds") or []
-        round_summ = [{
-            "round": r.get("round"), "action": r.get("action"), "proposer_ok": r.get("proposer_ok"),
-            "heldout_accuracy": r.get("heldout_accuracy"), "heldout_threshold": r.get("heldout_threshold"),
-            "accepted": r.get("accepted_by_heldout_verifier"), "plan_length": r.get("plan_length"),
-            "plan_reaches_goal": r.get("plan_reaches_goal"), "skipped": r.get("skipped"),
-            "cx_kind": (r.get("counterexample") or {}).get("kind"),
-        } for r in rounds if isinstance(r, dict)]
-        out.append({
-            "reason": a.get("reason"),
-            "goal_level": a.get("goal_level"),
-            "skipped": a.get("skipped") or ("" if a.get("planned") else "planned_false_no_skip"),
-            "planned": bool(a.get("planned")),
-            "plan_length": a.get("plan_length"),
-            "heldout_accuracy": a.get("heldout_accuracy") or a.get("verify_accuracy"),
-            "verify_cell_recall": a.get("verify_cell_recall"),
-            "refinement_rounds_used": a.get("refinement_rounds_used"),
-            "n_goal_candidates": len(a.get("goal_candidate_names") or []),
-            "n_dynamics_candidates": len(a.get("dynamics_candidate_names") or []),
-            "n_counterexamples": len(cxs),
-            "first_counterexample_kind": (cxs[0].get("kind") if cxs and isinstance(cxs[0], dict) else None),
-            "transition_count": a.get("transition_count"),
-            "rounds": round_summ,
-        })
+        round_summ = [
+            {
+                "round": r.get("round"),
+                "action": r.get("action"),
+                "proposer_ok": r.get("proposer_ok"),
+                "heldout_accuracy": r.get("heldout_accuracy"),
+                "heldout_threshold": r.get("heldout_threshold"),
+                "accepted": r.get("accepted_by_heldout_verifier"),
+                "plan_length": r.get("plan_length"),
+                "plan_reaches_goal": r.get("plan_reaches_goal"),
+                "skipped": r.get("skipped"),
+                "cx_kind": (r.get("counterexample") or {}).get("kind"),
+            }
+            for r in rounds
+            if isinstance(r, dict)
+        ]
+        out.append(
+            {
+                "reason": a.get("reason"),
+                "goal_level": a.get("goal_level"),
+                "skipped": a.get("skipped")
+                or ("" if a.get("planned") else "planned_false_no_skip"),
+                "planned": bool(a.get("planned")),
+                "plan_length": a.get("plan_length"),
+                "heldout_accuracy": a.get("heldout_accuracy") or a.get("verify_accuracy"),
+                "verify_cell_recall": a.get("verify_cell_recall"),
+                "refinement_rounds_used": a.get("refinement_rounds_used"),
+                "n_goal_candidates": len(a.get("goal_candidate_names") or []),
+                "n_dynamics_candidates": len(a.get("dynamics_candidate_names") or []),
+                "n_counterexamples": len(cxs),
+                "first_counterexample_kind": (
+                    cxs[0].get("kind") if cxs and isinstance(cxs[0], dict) else None
+                ),
+                "transition_count": a.get("transition_count"),
+                "rounds": round_summ,
+            }
+        )
     return out
 
 
@@ -183,14 +206,19 @@ def diagnose(arc, short, budget, target_levels=5):
 
 def main() -> int:
     # Multi-level-reachable games (repro_levels>=2 per registry): exploration-only deepening candidates.
-    games = sys.argv[1].split(",") if len(sys.argv) > 1 else \
-        ["vc33", "sc25", "tn36", "cd82", "sp80", "lp85", "su15", "tu93", "m0r0"]
+    games = (
+        sys.argv[1].split(",")
+        if len(sys.argv) > 1
+        else ["vc33", "sc25", "tn36", "cd82", "sp80", "lp85", "su15", "tu93", "m0r0"]
+    )
     budget = int(sys.argv[2]) if len(sys.argv) > 2 else 3000
     arc = kit.offline_arcade()
     out = {"budget": budget, "arm": _ARM, "games": {}}
     _outfile = f"results/proto_multilevel_diag_{_ARM}.json"
-    print(f"== multi-level deepening diag: LIVE E3 (arm={_ARM}, target_levels=5), budget={budget} ==",
-          flush=True)
+    print(
+        f"== multi-level deepening diag: LIVE E3 (arm={_ARM}, target_levels=5), budget={budget} ==",
+        flush=True,
+    )
     for short in games:
         try:
             r = diagnose(arc, short, budget)
@@ -199,21 +227,27 @@ def main() -> int:
             print(f"  {short:6} ERROR {type(e).__name__}: {e}", flush=True)
             continue
         out["games"][short] = r
-        print(f"  {short:6} maxL={r['max_rel_level']} at={r['levelup_at_action']} "
-              f"acts={r['actions_used']}/{budget} n_induce={r.get('n_induction_attempts')} "
-              f"skips={r.get('induction_skip_reasons')} plan={r['plan_len']} "
-              f"({r['wall_s']}s)", flush=True)
+        print(
+            f"  {short:6} maxL={r['max_rel_level']} at={r['levelup_at_action']} "
+            f"acts={r['actions_used']}/{budget} n_induce={r.get('n_induction_attempts')} "
+            f"skips={r.get('induction_skip_reasons')} plan={r['plan_len']} "
+            f"({r['wall_s']}s)",
+            flush=True,
+        )
     reached2 = sorted(g for g, v in out["games"].items() if v.get("reached_L2_plus"))
     stalled = sorted(g for g, v in out["games"].items() if v.get("stalled_at_L1"))
     out["reached_L2_plus"] = reached2
     out["stalled_at_L1"] = stalled
     out["VERDICT"] = (
-        "EXPLORATION_ALONE_DEEPENS_on_" + ",".join(reached2) if reached2
+        "EXPLORATION_ALONE_DEEPENS_on_" + ",".join(reached2)
+        if reached2
         else "EXPLORATION_NEVER_DEEPENS_2nd_win_needs_goal_induction_proposer"
     )
     json.dump(out, open(_outfile, "w"), indent=2)
-    print(f"\nreached_L2+={reached2}  stalled_at_L1={stalled}\nVERDICT={out['VERDICT']}\n-> {_outfile}",
-          flush=True)
+    print(
+        f"\nreached_L2+={reached2}  stalled_at_L1={stalled}\nVERDICT={out['VERDICT']}\n-> {_outfile}",
+        flush=True,
+    )
     return 0
 
 

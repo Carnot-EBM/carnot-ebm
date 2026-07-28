@@ -3346,6 +3346,155 @@ EXACTLY the 21 measured misses, all clicks on color-5 cells.
   pre-REQ-6010 (measurably worse) behaviour on those two games; repairing the classifier
   would recover the benefit. The guard is the safe stopgap, not the answer.
 
+- **CORRIGENDUM 2026-07-28 (REQ-ARC-WMTE-6017). Two corrections to the entry above, and one
+  new defect. Nothing above is deleted; read it with these.** Origin: the 2026-07-27 live
+  four-arm run recorded `hud_mask_status == "applied"` on lf52, which contradicted this
+  entry's table, so the live path was reproduced directly (the shipped
+  `experiment_4605.run_variant_attempt` scored path with a NoOp proposer, capturing
+  `_active_transitions()` and `explorer.hud_mask` at the real first induction attempt).
+
+  1. **The table's `lf52 | 1.0000 | 60 -> 0` row is CORPUS-SPECIFIC, and the sentence "on lf52
+     masking makes the corpus DYNAMICS-FREE" over-reads it.** It is measured on 60 random
+     actions from reset (`collect_transitions(n=60, seed=0)`, exactly as the table above
+     states). On lf52's LIVE episode corpus (25 rows), the SAME 64-cell mask leaves
+     **56 of 81 changed cells OUTSIDE** it and 2 of 25 changing transitions surviving --
+     overlap 0.3086, verdict `ok`. That is positive evidence the mask does NOT cover lf52's
+     game state; the random-action corpus simply never moved anything but the counter, which is
+     the KNOWN LIMIT case (b) above rather than a defective mask. **The live `applied` on lf52
+     was CORRECT, not a guard failure**, and the "still open" question above is answered in the
+     honest direction for lf52: no classifier repair is indicated by this evidence.
+  2. **Neither candidate transition-level discriminator separates, so none is gated.** Measured
+     on all 25 games offline (120 actions, seed 0, live edge-bar detector) plus the full 25-game
+     LIVE sweep: changing-transition survival puts an honest corpus (r11l offline 0.160) BELOW a
+     swallow-suspect one (su15 live 0.153), and the per-changing-transition mean overlap puts
+     lf52's honest LIVE corpus (0.9228) inside the offline gap (honest max vc33 0.7927 ->
+     swallowing min su15 0.9647). Both are now RECORDED
+     (`changing_transition_survival`, `changing_transitions_deleted`,
+     `mean_changed_cell_overlap_per_changing_transition`) and neither is a gate condition -- same
+     reasoning as `invented_changed_cells` below.
+  3. **NEW DEFECT, fixed: the unmeasurable verdict was read as CLEAN.**
+     `hud_mask_swallow_check`'s docstring already forbade this ("an unmeasurable verdict, NOT a
+     clean one"), but both consumers tested `rec.get("swallows")` for truthiness, so
+     `no_dynamics_to_swallow` fell through and the mask was APPLIED. On-disk instance: exp6011
+     ft09, all 3 seeds -- `no_dynamics_to_swallow` + `hud_mask_status: "applied"` + a 64-cell
+     mask + IDENTITY `legacy_accuracy == 1.0`, clearing BOTH the documented 0.5 and the live 1.0
+     threshold. Fix: `hud_mask_swallow_clean()` requires the affirmative `ok`, and the refusal
+     is named `refused_swallow_check_unmeasurable` (distinct from
+     `refused_swallows_dynamics` -- "could not check" is not "checked and it covers the game").
+     HONEST SCOPE: ft09's corpus is all no-ops, so identity scores 1.0 unmasked too -- the fix
+     flips **0 admissions** on the measured corpus (3 record corrections, no metric change). The
+     laundering it closes needs an engine that errs only inside the masked cells; that is
+     demonstrated on ft09's real transitions (1.0 -> 0.0) in the test below.
+  4. **NEW DEFECT, fixed: the guard's record was a DEAD CHANNEL, and its refusal was invisible
+     on the hidden-state path.** `hud_mask_swallow` was absent from all 100 cells of the
+     2026-07-27 four-arm run (the diagnostics projection dropped it), so lf52's `applied` could
+     be dated but not explained. Separately, `select_trusted_world_model` nulled the mask AND the
+     flag before building its record-bearing verifiers, so every refusal there reported
+     `hud_mask_status == "disabled"` -- indistinguishable from "the flag was off" -- on the 11
+     hidden-state games, i.e. every 0.08-wall game. Both fixed; grading unchanged.
+  - locked by `tests/python/test_arc_hud_mask_swallow_unmeasurable_and_scope.py` (14 tests, all
+    on REAL frozen transitions under `tests/fixtures/arc_hud_mask_swallow/` with a provenance
+    MANIFEST + sha256 per corpus) and the new projection test in
+    `tests/python/test_arc_gate_diagnostics_mask_witness.py`. MUST-FIRE: lf52+su15 offline and
+    tn36 live are refused. MUST-NOT-FIRE: lp85's no-op-heavy honest mask (33 of 33 changing
+    transitions survive) and lf52's live corpus are not.
+
+- **CORRIGENDUM-TO-THE-CORRIGENDUM 2026-07-28 (REQ-ARC-WMTE-6019). Three items: a corpus-scope
+  misstatement in the corrigendum above, the MUST-FIRE assertion scope, and one surviving
+  instance of the very bug item 3 fixed. Nothing above is deleted; read it with these.**
+
+  1. **The corrigendum above misstated the corpus of the table it was correcting.** Item 1 said
+     the `lf52 | 1.0000 | 60 -> 0` row "is measured on 120 random actions from reset" -- but the
+     table's own header says `n=60, seed 0`, and n=60 is what reproduces it. Re-derived two
+     independent ways that agree exactly (frozen fixtures sliced to 60, and a live
+     `collect_transitions` re-collect):
+
+     | n | lf52 overlap / raw -> surviving | su15 overlap / raw -> surviving |
+     |---|---|---|
+     | **60** (the table's corpus) | 1.0000, 60 -> 0 | **0.7568, 28 -> 1** (matches the table) |
+     | 120 (the fixture corpus) | 1.0000, 120 -> 0 | 0.7391, 51 -> 2 |
+
+     A corrigendum whose entire subject is corpus scope misstated the corpus it corrects, which
+     is the same class of error one level up. **The VERDICT is unaffected**: lf52 and su15 are
+     REFUSED at n=60 AND at n=120, under BOTH `edge_bar_detector` settings, and lp85's honest
+     mask is refused at neither (16/16 changing transitions survive at n=60, 33/33 at 120). So
+     this is a provenance correction, not a threshold or decision correction. It matters because
+     a threshold calibrated on an unstated corpus scope cannot be re-derived by a reader -- the
+     0.5 midpoint story is checkable only once you know which n produced the distribution.
+  2. **MUST-FIRE was asserted only on a RE-CAPTURE, not on the origin corpus.** The fixtures
+     under `tests/fixtures/arc_hud_mask_swallow/` are all `n=120` captures, so the guard's
+     "fires on its own origin incident" claim was locked at a corpus shape the origin table
+     never used. n=60 is a strict PREFIX of n=120 (same seed draws the same action sequence, and
+     the mask comes from the reset frame alone, so it is byte-identical) -- verified by the live
+     re-collect matching the fixture slice exactly. MUST-FIRE is now asserted at BOTH scopes
+     from the existing fixtures by slicing, so no new fixture file was needed.
+  3. **SURVIVING INSTANCE of "unmeasurable read as clean", named rather than left for the next
+     audit.** `change_gate_decision` computes `noop_ok = noop_hallucination_rate <=
+     max_noop_hallucination_rate`. When `n_noop == 0` the rate is its initialised `0.0`, so
+     `noop_ok` is True **vacuously** and the gate can reach `passed=True` on a channel that
+     could not fire. The code comment beside it already says a consumer treating those cases
+     alike "will read a false pass" -- and `_gate`'s own `elif not noop_ok:` IS that consumer.
+     **This is deliberately NOT changed to refuse-on-doubt, and the asymmetry is the reason.**
+     The swallow guard refuses when unmeasurable because over-masking destroys CORRECTNESS while
+     under-masking only costs efficiency (`apply_hud_mask`'s stated asymmetry) -- refusing is
+     the cheap direction there. For the no-op channel the asymmetry runs the other way:
+     refusing admission whenever a corpus happens to contain no no-op transitions would reject
+     honest engines on a corpus property that has nothing to do with engine quality, i.e. it
+     costs CAPABILITY to buy nothing. **That cost is MEASURED, not asserted**: over the rebuilt
+     exp6011's 936 gate records, 471 currently pass and **144 of them have
+     `noop_ok_is_vacuous == True`** (cross-tab: passed/vacuous 144, passed/measurable 327,
+     rejected/vacuous 144, rejected/measurable 321). Making `noop_channel_measurable` a gate
+     condition would therefore flip 144 passing records to REJECT -- 30.6% of all admissions --
+     on a property of the CORPUS, not of the engine. Compare the mask guard's own refusal,
+     which flipped 0 admissions. So the vacuity is DISCLOSED, not gated:
+     `noop_channel_measurable` and `noop_ok_is_vacuous` are emitted on every gate record, and
+     REQ-6019 lifts `noop_ok_is_vacuous` into the diagnostics projection so a cell record shows
+     it (it was computed and discarded -- absent from all 104 attempts of the 2026-07-27 run).
+     Anyone gating on `passed` alone should read `noop_ok_is_vacuous` beside it.
+  4. **Two more dead channels in the same projection, fixed.** `hud_mask_status` was ABSENT from
+     all 44 hidden-state attempts of the 2026-07-27 run (11 games x 4 arms; present on all 56
+     others) because that branch wrote `hud_mask_reason` and never `hud_mask_status` -- so item
+     3's refusal-naming fix could not be READ on any 0.08-wall game. And
+     `legacy_accuracy_would_pass_at_live_threshold`, the IN-ARM admission counterfactual, was
+     absent from all 104 attempts because `change_gate` is not projected, which forced the
+     four-arm artifact's admission reading to be a CROSS-ARM comparison against a different
+     engine (per-arm LLM response counts 93/91/94/89). Both lifted onto the attempt and added
+     to the projection tuple; the exp6015 artifact now labels its reading
+     `admission_counterfactual_scope: cross_arm_different_engine` rather than implying in-arm.
+  5. **CORRECTION OWED, found by REBUILDING exp6011 rather than reasoning about it. Item 3's
+     "3 record corrections, no metric change" is WRONG in one narrow but real way.** Rebuilding
+     `results/experiment_6011_world_model_change_gate_four_arm.json` from the fixed code
+     (`CARNOT_ARC_E3_DIR=$PWD/results/arc_e3_origin_fixtures`, sha256 `41936fd3d15f3d06...` ->
+     `459935b00aa6a521...`) changed 42 leaves and REMOVED none. All 42 are
+     `hud_mask_status`/`hud_mask_cells` on ft09's three seed rows (rows 15-17) --
+     `applied` -> `refused_swallow_check_unmeasurable`, `64` -> `0`. **Zero `passed` values
+     moved, so "0 admissions flipped" holds.** But the mask-applied POPULATION shrank, and the
+     mask-resolved figures published in corrigendum 4 above (line ~3300, "the 45 rows where a
+     mask actually applied ... 0.160") are computed over that population:
+
+     | figure | was | now |
+     |---|---|---|
+     | `n_mask_applied` | 45 | **42** |
+     | `ondisk_delta_mask_resolved_only.mean` | 0.16037 | **0.171825** |
+     | `identity_delta_mask_resolved_only.mean` | 0.323148 | **0.34623** |
+
+     Both means RISE, and the direction is the expected one rather than a surprise: ft09's
+     corpus is all no-ops, so identity scores 1.0 masked or unmasked and its delta is 0 by
+     construction. Dropping three zero-delta rows from the denominator raises the mean. The
+     pooled-over-75 figure (0.096) is unchanged -- it never conditioned on the mask applying.
+     The sentence at line ~3300 is left in place per never-prune; read it with this table. Note
+     also that `hud_mask_status_counts` now resolves four distinct statuses
+     (`applied` 42, `unresolved` 24, `refused_swallows_dynamics` 6,
+     `refused_swallow_check_unmeasurable` 3) where it previously collapsed the last two into
+     `applied`/`disabled` -- which is the diagnostic distinction item 3 shipped, now visible in
+     the aggregate. exp6013 rebuilt the same way (30 leaves, same two fields, ft09 rows 33-35,
+     no metric change); exp6012 rebuilt with 0 changed leaves.
+  - locked by the n=60 MUST-FIRE/MUST-NOT-FIRE cases in
+    `tests/python/test_arc_hud_mask_swallow_unmeasurable_and_scope.py` and the projection tests
+    in `tests/python/test_arc_gate_diagnostics_mask_witness.py`. No grading, threshold, or
+    shipped default changed; every flag stays DEFAULT-OFF. The one figure that DID move is
+    tabulated in item 5 above rather than left for a reader to discover.
+
 ### GAP-WM-LIGHT-INVENTOR: union fidelity has no defence against a light inventor on a no-op-free corpus (2026-07-27)
 - status: open
 - failure mode: `change_fidelity` is an ABSOLUTE threshold over the union of truly-changed
@@ -4360,3 +4509,94 @@ code default-off (byte-identical live path unless flagged); offline-gated; NEVER
   and never touches conductor descendants -- it cannot hit a seconds-old sweep, and SIGKILL is 137 not 143.
   The real terminator is the 120s pytest/bash time limit hitting the ~600s test above. So stopping the
   conductor was unnecessary and was not done.
+
+### LEVER #1 object-perception induction: MEASURED 2026-07-28 (exp6018) — the pre-registered primary
+### is at an INSTRUMENT FLOOR, the finer channels give an informative null, and the metric this
+### project calls "induction heldout_accuracy" is not held out on every game it was measured on
+- status: **measured, honest null on the movable channels + UNMEASURABLE on the pre-registered
+  primary** — `results/experiment_6018_object_perception_heldout_ab.json`,
+  `results/arc_object_perception_ab_20260728/` (240 cells + 28 positive-control cells, 7392s of
+  measured induce wall time, one warm Qwen3.5-9B-MTP server pinned to RTX 3090 #0). The 2026-07-24
+  attempt (exp5831) was INFRA-BLOCKED, not refuted: the shared Qwen server hung on /completion and a
+  dedicated gemma-4-31B server wedged with GPU 1 dropping 21GB -> 4MiB. Per operator directive
+  2026-07-28 this re-run used the **9B** (measured 13.49 GiB resident at n_ctx=81920, real headroom on
+  a 24 GiB card), never the 31B — a model-class change is operator-only and the 31B under induction
+  load is the documented cause of that wedge.
+- **design:** 14 games x 6 replicates x 2 arms (matched replicates only, 0 unmatched in the held-out
+  stratum), arms differing ONLY by `CARNOT_ARC_OBJECT_PERCEPTION`, within-pair arm order alternating
+  by replicate, one isolated `CARNOT_ARC_E3_DIR` per cell (240 distinct engine stores; the shared
+  `results/arc_e3` store and the frozen origin fixtures were never written). Pre-registration written
+  and sha256'd BEFORE the first LLM call (`preregistration.json`,
+  `sha256:e7230c683087ad643ac070aea5e22ad12493c9f45fcd88d7512dd1c47e25713f`), stating the minimum
+  reachable two-sided p at the planned support: **1.2207e-4** if all 14 games were discordant.
+- **PRIMARY (held-out exact-full-grid accuracy): 0.0 in BOTH arms on all 14 games / 168 cells.**
+  0 discordant pairs -> **no test was possible** (min reachable two-sided p at 0 discordance = 1.0).
+  This is reported as `unmeasurable_instrument_floor`, NOT as "no difference".
+- **THE POSITIVE CONTROL SAYS THAT FLOOR IS NOT ABOUT PERCEPTION.** A leak control re-induced the same
+  14 games with `CARNOT_ARC_INDUCE_TRANSITIONS_K` raised past the window size, so the prompt SHOWED the
+  withheld transitions, then graded on exactly those withheld indices: **exact accuracy stayed 0.0 on
+  28/28 cells** (`max_accuracy` 0.0). With the answers in the prompt the 9B still reproduces zero
+  held-out 64x64 transitions exactly. So the pre-registered primary is unreachable for this model class
+  and the primary comparison is an UNINFORMATIVE null about object perception — the binding constraint
+  is writing an engine that reproduces a transition exactly, not how the frames are serialized. The
+  control's `cell_recall` DID move (max 0.4425, 12/28 cells non-zero), which is why the finer channels
+  below are informative and the exact-match channel is not. exp6018's
+  `the_null_is_backed_by_a_positive_control_that_moves_the_metric` gate FAILS by design, and
+  `acceptance_gate_passed` is False as a result — that failing gate IS the finding.
+- **SECONDARIES (measurable, 14 matched per-game pairs, ON - OFF):** held-out `cell_recall`
+  +0.00046 (7 up / 5 down / 2 tie, exact two-sided sign p = 0.774, 95% bootstrap CI over games
+  [-0.0098, +0.0094]); `change_fidelity` +0.00136 (7/5/2, p = 0.774, CI [-0.0031, +0.0056]);
+  `correct_changed_cells` +12.46 cells (7/5/2, p = 0.774, CI [-2.99, +32.19]);
+  `spurious_changed_cells` -220.4 (7 up / 7 down, p = 1.0, CI [-1547, +823]);
+  `n_changes_correct` 0 in both arms (no held-out transition was EXACTLY reproduced by any engine in
+  either arm, ever). At 12 discordant pairs a p as low as 4.88e-4 was reachable, so this IS an
+  informative null on the channels that can move: **no effect, direction inconsistent.** Six channels
+  were tested; only `accuracy` was the pre-registered primary, so a secondary hit would need the
+  Bonferroni threshold 0.00833, not 0.05 — none came close.
+- **the object block is NOT free:** mean prompt 8465 -> 16739 chars (+98%), mean induce wall 24.8s ->
+  36.8s (+48%), mean generated tokens 1307 -> 1053 (-19%). A live agent under an action/latency budget
+  pays that on every re-induction, so a null on quality is a NET NEGATIVE at equal quality.
+  **Recommendation: keep `CARNOT_ARC_OBJECT_PERCEPTION` default-OFF.** Do NOT re-propose a bigger object
+  serialization at 9B without a NEW mechanism — the exact-match channel is floored regardless of
+  serialization, per the leak control.
+- **MEASUREMENT-VALIDITY DEFECT FOUND, and it is upstream of this A/B.** The quantity this project calls
+  induction `heldout_accuracy` is not held out on every game it has been measured on. exp5831 grades with
+  `WorldModelVerifier(list(window))` — the WHOLE window, including the transitions the prompt showed.
+  `_transitions_block` shows `changed[:k-2] + noop[:2]` = 6 transitions at the default k=8, so a window
+  with <= 6 transitions is shown ENTIRELY and its "heldout_accuracy" is TRAINING accuracy. Measured on
+  the real windows: **6 of the 20 buildable games (r11l, lp85, cd82, sp80, ft09, vc33) hold out
+  nothing**, and **4 of the 8 games in exp5831's own DEFAULT_ROSTER** either hold out nothing (r11l,
+  lp85, cd82, sp80) or fail to build (sc25). exp6018 therefore defines the held-out set as the PROMPT
+  COMPLEMENT — each transition's own line rendered with the same `_rle_delta_compact` the prompt uses and
+  tested for membership in the ACTUAL prompt string, never a reimplementation of the selection rule — and
+  reports the 6 all-shown games as a SEPARATE train-only stratum (all 6 tied at 0.0 training accuracy)
+  so a training number can never be read as a generalization number. For continuity, exp5831's own
+  full-window quantity was also computed: 13 ties + 1 negative, mean -0.00099, i.e. that quantity is
+  essentially all-zero too.
+- **5 of the 25 public games cannot build an offline induction window at all**, so the induction corpus
+  is 20 games, not 25: wa30 / sc25 / tn36 raise `AttributeError: 'NoneType' object has no attribute
+  'hand_verifier'`, ka59 raises `ValueError: invalid literal for int(): 'C:1'`, dc22 returns None.
+  Recorded, not fixed — fixing them mid-measurement would change the corpus.
+- **`objects_block`'s documented "any failure returns ''" defence covers only the `blob_topology`
+  import, not the body:** `objects_block([])` raises IndexError at `trans[0].grid`. NOT reachable from
+  the live path (`induce_prompt` dereferences `trans[0].grid.shape` before it ever calls objects_block),
+  so it is recorded as a docstring-scope inaccuracy, not fixed. Found because this harness's first
+  PRECONDITIONS probe passed `[]` and therefore measured the probe rather than the treatment; that
+  blocked artifact is preserved at
+  `results/arc_object_perception_ab_20260728/blocked_run_precondition_probe_bug.json`.
+- what makes this auditable rather than assertable: per-PID VRAM + /health sampled every 10s for the
+  whole run (737 samples, resident 13486-13488 MiB on GPU index 0 throughout, 0 collapse events, 0
+  health failures — so "the model fell off the card" would have been a timestamped fact, not a hang);
+  an on-disk engine re-derivation pass that re-loaded each cell's engine from its own directory and
+  re-scored it (239/240 rechecked, 0 mismatched; the 1 skip is cd82__r0__on, whose generated module
+  raised at import — recorded, and its replicate is dropped from the train-only pairing);
+  9 acceptance gates each with a witness at its own level, 12/12 defect mutations caught. Two of this
+  harness's own gates were found FORCED by that mutation pass and rewritten rather than kept: a field-
+  census gate whose expected-set was derived from its own input (now a reported finding plus a gate that
+  can fail — "did any channel vary at all"), and a floor gate that compared the verdict against the same
+  flag the verdict was derived from (now recounted from the raw cell rows).
+- priority: **closed for the 9B.** The open question this leaves is NOT "does object perception help" but
+  "is exact-full-grid held-out reproduction reachable by ANY locally-runnable inducer" — the leak control
+  says no at 9B. That is the same 96GB-hardware question the 2026-07-24 entry above already escalated to
+  the operator; a 27B/31B re-run of exp6018 on stable hardware would answer it, and until then a bigger
+  prompt is not the lever. The flag stays DEFAULT-OFF; graduation is operator-only.

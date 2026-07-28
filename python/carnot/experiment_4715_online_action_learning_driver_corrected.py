@@ -34,9 +34,13 @@ TERMINAL_PREFIXES = ("success:", "complete:", "blocked_")
 
 ARM_ARTIFACTS = {
     "frozen": Path("results/experiment_4710_online_action_learning_arms_frozen.json"),
-    "online-scratch": Path("results/experiment_4710_online_action_learning_arms_online_scratch.json"),
+    "online-scratch": Path(
+        "results/experiment_4710_online_action_learning_arms_online_scratch.json"
+    ),
     # The corrected warm driver includes coordinate-head ACTION6 proposals.
-    "online-warm": Path("results/experiment_4710_online_action_learning_arms_online_warm_propose.json"),
+    "online-warm": Path(
+        "results/experiment_4710_online_action_learning_arms_online_warm_propose.json"
+    ),
 }
 
 FIELD_PRINCIPLES: dict[str, str] = {
@@ -126,7 +130,9 @@ def _qwen_cache_present() -> bool:  # pragma: no cover - filesystem boundary
     return cache.is_dir() and any(cache.iterdir())
 
 
-def _verify_qwen_props(port: int = QWEN_PORT) -> dict[str, Any]:  # pragma: no cover - llama-server boundary
+def _verify_qwen_props(
+    port: int = QWEN_PORT,
+) -> dict[str, Any]:  # pragma: no cover - llama-server boundary
     import urllib.request
 
     def _props() -> dict[str, Any]:
@@ -141,7 +147,16 @@ def _verify_qwen_props(port: int = QWEN_PORT) -> dict[str, Any]:  # pragma: no c
         proposer = LocalGGUFProposer(
             repo_substr=QWEN_MODEL,
             port=int(port),
-            mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+            # mtp is DELIBERATELY NOT PASSED. This line used to read
+            # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+            # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+            # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+            # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+            # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+            # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+            # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+            # the SAME env var against the canonical constant -- identical override behaviour, correct
+            # default, and one place to change it.
             kv_quant="q8_0",
             no_think_prefix="/no_think\n",
             max_tokens=2560,
@@ -261,7 +276,9 @@ def measure_cpu_train_step_ms() -> float:
     return round(float(elapsed_ms), 6)
 
 
-def load_arm_metrics(root: Path | str = REPO_ROOT) -> tuple[dict[str, float], dict[str, str], dict[str, str]]:
+def load_arm_metrics(
+    root: Path | str = REPO_ROOT,
+) -> tuple[dict[str, float], dict[str, str], dict[str, str]]:
     """Load content-addressed corrected arm artifacts from Exp 4710."""
 
     root_path = Path(root)
@@ -342,12 +359,18 @@ def _run_check(command: list[str], root: Path, *, timeout_s: int = 180) -> dict[
         }
 
 
-def run_live_path_lint(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess
+def run_live_path_lint(
+    root: Path | str = REPO_ROOT,
+) -> dict[str, Any]:  # pragma: no cover - subprocess
     root_path = Path(root)
-    return _run_check([str(root_path / ".venv/bin/python"), "scripts/arc_orphan_solver_lint.py"], root_path)
+    return _run_check(
+        [str(root_path / ".venv/bin/python"), "scripts/arc_orphan_solver_lint.py"], root_path
+    )
 
 
-def run_parity_test(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess
+def run_parity_test(
+    root: Path | str = REPO_ROOT,
+) -> dict[str, Any]:  # pragma: no cover - subprocess
     root_path = Path(root)
     return _run_check(
         [
@@ -392,7 +415,9 @@ def build_artifact(
         verdict = f"success: online_warm_beats_frozen_{delta:+.4f}_l2_goal_free"
         solve_provenance = "live_agent_self_discovery"
     else:
-        cause = "cpu_latency_bound" if float(cpu_train_step_ms) > 200.0 else "online_signal_too_sparse"
+        cause = (
+            "cpu_latency_bound" if float(cpu_train_step_ms) > 200.0 else "online_signal_too_sparse"
+        )
         verdict = f"complete: online_action_learning_no_first_win_lift_residual_{cause}"
         solve_provenance = "development_proxy"
 

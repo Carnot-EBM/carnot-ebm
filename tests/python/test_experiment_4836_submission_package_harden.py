@@ -27,9 +27,9 @@ def _submitted_agent_config_fixture(*, a1_enabled: bool = False) -> JsonDict:
         "amortized_first_contact_prior_enabled": a1_enabled,
         "go_explore_archive_enabled": a1_enabled,
         "frozen_generator": {
-            "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-            "repo_substr": "Qwen3.5-9B-MTP",
-            "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+            "model_id": "unsloth/gemma-4-31B-it-GGUF",
+            "repo_substr": "gemma-4-31B-it",
+            "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
             "model_path_env": "CARNOT_ARC_GGUF_PATH",
             "server_path_env": "CARNOT_LLAMA_SERVER",
             "llama_server_kind": "cuda-12.8-binary",
@@ -37,7 +37,7 @@ def _submitted_agent_config_fixture(*, a1_enabled: bool = False) -> JsonDict:
             "mtp": True,
             "spec_type": "draft-mtp",
             "kv_quant": "q8_0",
-            "no_think_prefix": "/no_think\n",
+            "no_think_prefix": "",
             "max_tokens": 2560,
             "n_predict_min": 2048,
             "wheel_fallback_allowed": False,
@@ -131,9 +131,7 @@ def _package_builds(ok: bool = True) -> JsonDict:
 
 
 def _config_resolution(*, ok: bool = True, a1_enabled: bool = False) -> JsonDict:
-    config = mod.resolve_agent_config(
-        _submitted_agent_config_fixture(a1_enabled=a1_enabled)
-    )
+    config = mod.resolve_agent_config(_submitted_agent_config_fixture(a1_enabled=a1_enabled))
     if ok:
         return config
     return {
@@ -145,7 +143,7 @@ def _config_resolution(*, ok: bool = True, a1_enabled: bool = False) -> JsonDict
 
 
 def _model_resolution(tmp_path: Path, ok: bool = True) -> JsonDict:
-    gguf = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
+    gguf = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
     server = tmp_path / "llama-server"
     gguf.write_text("fixture\n", encoding="utf-8")
     server.write_text("server\n", encoding="utf-8")
@@ -219,13 +217,13 @@ def test_scenario_capstone_4836_frozen_stack_a1_decision_and_vram_gate(
     a1 = mod.resolve_a1_prior_inclusion(tmp_path, config)
 
     assert config["resolved"] is True
-    assert config["checks"]["model_is_qwen35_mtp"] is True
+    assert config["checks"]["model_is_pinned_generator"] is True
     assert config["checks"]["mtp_enabled"] is True
     assert config["checks"]["q8_kv"] is True
     assert config["checks"]["cuda_128_server"] is True
     assert config["amortized_first_contact_prior_enabled"] is False
     assert paths["resolved"] is True
-    assert paths["gguf"]["filename"] == "Qwen3.5-9B-Q4_K_M.gguf"
+    assert paths["gguf"]["filename"] == "gemma-4-31B-it-Q4_K_M.gguf"
     assert paths["llama_server"]["cuda_12_8_capable"] is True
     assert vram["fits_16gb"] is True
     assert vram["model_copies"] == 2

@@ -1,0 +1,363 @@
+{
+ "experiment": 5901,
+ "experiment_id": "exp5901",
+ "title": "gemma-4-31B-it Q4_K_M on ONE RTX 3090: speed and KV-quality on REAL ARC induce work (Phase 2 of the 2026-07-28 eGPU/FFN-offload/iGPU decision)",
+ "run_date": "2026-07-28T13:25:18Z",
+ "milestone": "outer-loop 2026-07-28",
+ "schema": "carnot.arc_generator_substrate_speed_quality.v2",
+ "duration_s": 1473.6,
+ "inference_substrate": {
+  "value": "live_llm_inference",
+  "principle": "Declares what compute actually ran so the fabrication linter applies the RIGHT duration floor. This is full autoregressive generation from a real 17 GiB GGUF load -- not embedding extraction, not aggregation -- so the strict 60s live_llm_inference floor is the correct one and this artifact clears it by orders of magnitude."
+ },
+ "honest_verdict": "complete_egpu_only_placement_confirmed_31b_fits_one_3090_at_n_ctx_81920_with_q8_0_kv_decode_dominates_97pct_fallbacks_not_needed_two_blocking_migration_hazards_found",
+ "honest_verdict_principle": "Terminal 'complete_' prefix per the Verdict Terminal-Prefix Discipline, so the reconciler classifies this as terminal rather than false-positive-matching on the word 'blocked' that appears in the per-arm records below.",
+ "random_seed": {
+  "value": 5900,
+  "principle": "Determinism is the precondition for reproducibility; the same seed drives BOTH the transition-collection RNG that built the prompt corpus and every /completion request, so a third party can rebuild the identical corpus and re-issue the identical requests."
+ },
+ "reproducibility_checksum": "8704a016893029fe978af7eada5fe4e5581111169ac9ca3199b4f9d513bf4d8d",
+ "reproducibility_checksum_principle": "Content-addressed hash over the prompt corpus sha, the model blob hash, every measured row, and the quality result -- so silent corpus or model-version drift between this artifact and any replication attempt is detectable rather than invisible.",
+ "preconditions_checked": [
+  {
+   "resource": "cached GGUF gemma-4-31B-it-Q4_K_M",
+   "available": true,
+   "how": "18,323,731,456-byte blob, sha256 of first 64 MiB recorded in model_specs"
+  },
+  {
+   "resource": "CUDA llama-server build",
+   "available": true,
+   "how": "~/.cache/llama.cpp-master/build/bin (b9606); libggml-cuda.so present"
+  },
+  {
+   "resource": "HIP/ROCm llama-server build (for the iGPU fallback)",
+   "available": true,
+   "how": "build-hip/bin exists with libggml-hip.so; --list-devices enumerates 'ROCm0: AMD Radeon 890M Graphics (108000 MiB, 98508 MiB free)'"
+  },
+  {
+   "resource": "render group membership (iGPU access)",
+   "available": true,
+   "how": "id -nG lists render and video, so `sg render -c` is unnecessary"
+  },
+  {
+   "resource": "a free RTX 3090 with enough headroom for the config under test",
+   "available": true,
+   "how": "config-aware most-free arbitration before every launch; card identity proven per-PID from nvidia-smi's pid->gpu_uuid map, never CUDA_VISIBLE_DEVICES"
+  },
+  {
+   "resource": "offline arcade over environment_files (for REAL transitions)",
+   "available": true,
+   "how": "6 of 8 games stepped successfully; 2 skipped and named"
+  }
+ ],
+ "preconditions_checked_principle": "Records WHICH resources were verified before measuring; pre-empts the fabrication mode where an agent silently lacks a resource and synthesises a passing artifact instead of emitting blocked_*. Two arms here ARE reported blocked rather than estimated.",
+ "model_specs": {
+  "model_id": "unsloth/gemma-4-31B-it-GGUF",
+  "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+  "quantization": "Q4_K_M",
+  "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+  "sha256_first_64mib": "5d02d39901f6a357327dabd850fc310e89be6b1cad7e02c0522240a5ef924122",
+  "bytes_hashed": 67108864,
+  "invoked": true,
+  "server_build_cuda": "~/.cache/llama.cpp-master/build/bin/llama-server (b9606, CUDA)",
+  "server_build_hip": "~/.cache/llama.cpp-master/build-hip/bin/llama-server (ROCm/HIP)"
+ },
+ "operator_question_answered": {
+  "directive": "2026-07-28: PREFERRED = gemma-4-31B entirely on ONE eGPU including KV cache at the n_ctx the ARC induction path actually uses. If that works, stop there. FALLBACK only if it does not fit: (a) eGPU + dense FFN offload, (b) iGPU.",
+  "answer": "PREFERRED OPTION CONFIRMED AVAILABLE -- no FFN offload and no iGPU needed",
+  "basis": "gemma-4-31B-it Q4_K_M runs entirely on ONE RTX 3090 -- all 60 layers plus the full q8_0 KV pool -- at the production n_ctx 81920, measured TWICE end-to-end on real ARC induce work (raw and chat endpoints, 6/6 inductions each), peaking at 23906 MiB with zero bus faults and zero wedges.",
+  "the_binding_caveat": "The margin is ~217 MiB against llama.cpp's reported 24123 MiB total, so the card is STRICTLY single-tenant at 81920. This is not theoretical: a 334 MiB co-tenant python process on GPU0 was by itself enough to make the config fail to load (cudaMalloc on an 810 MiB compute buffer), observed this session.",
+  "consequence_for_production": "_generator_cuda_min_free_mb() currently demands 23888 + 1500 margin = 25388 MiB, which EXCEEDS a 24576 MiB card, so the guard DECLINES the 3090 by default and _generator_server_and_env() falls through to the iGPU HIP build. Getting the operator's preferred placement therefore requires an explicit decision about that 1500 MiB margin -- the hardware is capable, the guard is what refuses it."
+ },
+ "results_by_config": [
+  {
+   "tag": "A_egpu_81920_q8",
+   "backend": "cuda",
+   "n_ctx": 81920,
+   "kv_cache": "q8_0",
+   "cpu_ffn_layers": 0,
+   "K_concurrent": 1,
+   "launched": true,
+   "failure": null,
+   "peak_resident_mib": 23906,
+   "peak_host_rss_mib": 17954,
+   "proven_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+   "load_seconds": 12.0,
+   "n_ok": 6,
+   "n_total": 6,
+   "mean_wall_s_per_induction": 122.2,
+   "mean_prefill_tps": 1000.0,
+   "mean_decode_tps": 30.713,
+   "mean_prefill_s": 3.21,
+   "mean_decode_s": 118.1,
+   "mean_generated_tokens": 3592.5,
+   "decode_share_of_wall": 0.9664,
+   "all_prompts_wall_s": null,
+   "bus_fault": false,
+   "wedge_detected": false,
+   "vram_jsonl": "p2_vram_A_egpu_81920_q8.jsonl",
+   "vram_samples": 362,
+   "health_200_at_end": true
+  },
+  {
+   "tag": "AC_egpu_81920_q8_chat",
+   "backend": "cuda",
+   "n_ctx": 81920,
+   "kv_cache": "q8_0",
+   "cpu_ffn_layers": 0,
+   "K_concurrent": 1,
+   "launched": true,
+   "failure": null,
+   "peak_resident_mib": 23906,
+   "peak_host_rss_mib": 17954,
+   "proven_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+   "load_seconds": 15.0,
+   "n_ok": 6,
+   "n_total": 6,
+   "mean_wall_s_per_induction": 134.1,
+   "mean_prefill_tps": 977.6,
+   "mean_decode_tps": 31.429,
+   "mean_prefill_s": 3.28,
+   "mean_decode_s": 130.3,
+   "mean_generated_tokens": 4096.0,
+   "decode_share_of_wall": 0.9717,
+   "all_prompts_wall_s": 804.6,
+   "bus_fault": false,
+   "wedge_detected": false,
+   "vram_jsonl": "p2_vram_AC_egpu_81920_q8_chat.jsonl",
+   "vram_samples": 398,
+   "health_200_at_end": true
+  },
+  {
+   "tag": "QC_egpu_24576_f16_chat",
+   "backend": "cuda",
+   "n_ctx": 24576,
+   "kv_cache": "f16",
+   "cpu_ffn_layers": 0,
+   "K_concurrent": 1,
+   "launched": true,
+   "failure": null,
+   "peak_resident_mib": 23506,
+   "peak_host_rss_mib": 17954,
+   "proven_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+   "load_seconds": 15.0,
+   "n_ok": 2,
+   "n_total": 2,
+   "mean_wall_s_per_induction": 18.9,
+   "mean_prefill_tps": 903.1,
+   "mean_decode_tps": 33.81,
+   "mean_prefill_s": 3.17,
+   "mean_decode_s": 15.1,
+   "mean_generated_tokens": 512.0,
+   "decode_share_of_wall": 0.7989,
+   "all_prompts_wall_s": 37.7,
+   "bus_fault": false,
+   "wedge_detected": false,
+   "vram_jsonl": "p2_vram_QC_egpu_24576_f16_chat.jsonl",
+   "vram_samples": 26,
+   "health_200_at_end": true
+  },
+  {
+   "tag": "QC_egpu_24576_q8_chat",
+   "backend": "cuda",
+   "n_ctx": 24576,
+   "kv_cache": "q8_0",
+   "cpu_ffn_layers": 0,
+   "K_concurrent": 1,
+   "launched": true,
+   "failure": null,
+   "peak_resident_mib": 21022,
+   "peak_host_rss_mib": 17955,
+   "proven_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+   "load_seconds": 15.0,
+   "n_ok": 2,
+   "n_total": 2,
+   "mean_wall_s_per_induction": 18.9,
+   "mean_prefill_tps": 986.9,
+   "mean_decode_tps": 32.682,
+   "mean_prefill_s": 2.9,
+   "mean_decode_s": 15.7,
+   "mean_generated_tokens": 512.0,
+   "decode_share_of_wall": 0.8307,
+   "all_prompts_wall_s": 37.7,
+   "bus_fault": false,
+   "wedge_detected": false,
+   "vram_jsonl": "p2_vram_QC_egpu_24576_q8_chat.jsonl",
+   "vram_samples": 26,
+   "health_200_at_end": true
+  },
+  {
+   "tag": "AC4_egpu_81920_q8_chat_K4",
+   "backend": "cuda",
+   "n_ctx": 81920,
+   "kv_cache": "q8_0",
+   "cpu_ffn_layers": 0,
+   "K_concurrent": 4,
+   "launched": true,
+   "failure": null,
+   "peak_resident_mib": 23906,
+   "peak_host_rss_mib": 17954,
+   "proven_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+   "load_seconds": 15.0,
+   "n_ok": 6,
+   "n_total": 6,
+   "mean_wall_s_per_induction": 264.4,
+   "mean_prefill_tps": 273.8,
+   "mean_decode_tps": 16.642,
+   "mean_prefill_s": 11.81,
+   "mean_decode_s": 251.1,
+   "mean_generated_tokens": 4096.0,
+   "decode_share_of_wall": 0.9497,
+   "all_prompts_wall_s": 503.6,
+   "bus_fault": false,
+   "wedge_detected": false,
+   "vram_jsonl": "p2_vram_AC4_egpu_81920_q8_chat_K4.jsonl",
+   "vram_samples": 251,
+   "health_200_at_end": true
+  },
+  {
+   "tag": "FC_egpu_81920_q8_ffn12_chat",
+   "backend": "cuda",
+   "n_ctx": 81920,
+   "kv_cache": "q8_0",
+   "cpu_ffn_layers": 12,
+   "K_concurrent": 1,
+   "launched": false,
+   "failure": "health_timeout_or_exit",
+   "peak_resident_mib": 21530,
+   "peak_host_rss_mib": 17954,
+   "proven_gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+   "load_seconds": 18.0,
+   "n_ok": null,
+   "n_total": null,
+   "mean_wall_s_per_induction": null,
+   "mean_prefill_tps": null,
+   "mean_decode_tps": null,
+   "mean_prefill_s": null,
+   "mean_decode_s": null,
+   "mean_generated_tokens": null,
+   "decode_share_of_wall": null,
+   "all_prompts_wall_s": null,
+   "bus_fault": false,
+   "wedge_detected": false,
+   "vram_jsonl": "p2_vram_FC_egpu_81920_q8_ffn12_chat.jsonl",
+   "vram_samples": 9,
+   "health_200_at_end": null
+  }
+ ],
+ "quality_f16_vs_q8_0_kv_divergence": {
+  "arms": {
+   "f16": "QC_egpu_24576_f16_chat",
+   "q8_0": "QC_egpu_24576_q8_chat"
+  },
+  "n_games": 2,
+  "n_byte_identical": 0,
+  "verdict": "q8_0 KV DIVERGES from f16 -- see per-game common_prefix_chars for the fidelity budget",
+  "per_game": [
+   {
+    "game": "ls20",
+    "f16_chars": 701,
+    "q8_chars": 692,
+    "identical": false,
+    "common_prefix_chars": 97,
+    "prefix_fraction_of_shorter": 0.140173,
+    "first_divergence_context": {
+     "f16": " Colors: [0, 1, 3, 4, 5, 8, 9, 11, 12].\n    *   Initial grid layout:\n        *   Rows 0-7: `5x4, 4x60` (Col 0-3: 5, Col ",
+     "q8": " Colors: [0, 1, 3, 4, 5, 8, 9, 11, 12].\n    *   Initial grid:\n        *   r0-r7: 5x4, 4x60 (Col 0-3: 5, Col 4-63: 4)\n   "
+    }
+   },
+   {
+    "game": "tu93",
+    "f16_chars": 966,
+    "q8_chars": 1010,
+    "identical": false,
+    "common_prefix_chars": 114,
+    "prefix_fraction_of_shorter": 0.118012,
+    "first_divergence_context": {
+     "f16": ", 5, 6, 9, 14].\n    *   Initial grid: A complex layout with mostly color 5 (background), and some structures made of 0, ",
+     "q8": ", 5, 6, 9, 14].\n    *   Initial grid: A complex layout with color 5 as the background.\n    *   Actions: 1-7. ACTION6 is "
+    }
+   }
+  ]
+ },
+ "quality_induce_ok_attempt": {},
+ "prompt_corpus": {
+  "principle": "Every config consumed the SAME frozen prompt set, so no config is ever compared against another on different inputs -- the single most likely way a throughput comparison silently becomes meaningless.",
+  "corpus_sha256": "d189d1a5e1a3991b63221a97ecae6f2b1c7227fdf67e877b3e8f7c9c898e5a41",
+  "n_prompts": 6,
+  "source": "REAL transitions stepped out of the REAL offline arcade (environment_files) through the REAL production primitives (grid_of -> detect_cell -> to_logical -> Transition), rendered by the REAL production induce_prompt(k=8).",
+  "games": [
+   "ls20",
+   "tu93",
+   "sc25",
+   "dc22",
+   "ft09",
+   "cn04"
+  ],
+  "chars_per_prompt": {
+   "ls20": 5050,
+   "tu93": 4887,
+   "sc25": 4939,
+   "dc22": 4456,
+   "ft09": 5679,
+   "cn04": 6854
+  }
+ },
+ "prefill_vs_decode": {
+  "principle": "Reported SEPARATELY because a blended tok/s hides which stage dominates, and the stage that dominates is what any fallback has to attack.",
+  "operator_prior": "prefill may dominate, because induce prompts are long (~10k+ chars)",
+  "verdict": "REFUTED -- decode dominates by roughly 30:1 on REAL induce prompts",
+  "detail": "Real induce prompts measured 2352-4627 tokens (not the 15767-token worst case the pool is SIZED for), so prefill is only ~3.2 s at ~1000 tok/s, while decode runs ~31 tok/s for up to 4096 tokens = ~130 s. Decode is 96.6-97.2% of wall.",
+  "consequence": "Dense FFN offload to system RAM attacks DECODE -- ~97% of the cost, and the bandwidth-bound part. Expect it to be very expensive, not marginal. Fortunately the preferred option removes the need for it."
+ },
+ "migration_hazards_found": [
+  {
+   "id": "H5_raw_completion_degenerates_on_gemma",
+   "severity": "blocking",
+   "status": "NEW this phase, measured not inferred",
+   "detail": "All THREE live construction sites (arc_competition_agent.py _proposer() and _load_sge_candidate_router(), plus arc_ige_cell_selector.py _get_proposer()) build LocalGGUFProposer WITHOUT use_chat_template, which defaults False -- the frozen Qwen3.5-9B raw-/completion path. gemma-4-31B-it is an INSTRUCT model: on the raw endpoint it never sees a turn start and DEGENERATES, emitting an endless run of '/' characters and burning the whole 4096-token budget. Directly observed on all 6 real prompts. The head-to-head that justified the 31B switch (exp5831/exp5833) set use_chat_template=True, so what was MEASURED is not what the live sites will RUN.",
+   "required_action": "set use_chat_template=True at the three live sites for gemma-4"
+  },
+  {
+   "id": "H6_max_tokens_4096_insufficient_for_a_reasoning_model",
+   "severity": "high",
+   "status": "NEW this phase",
+   "detail": "On the CORRECT (chat) endpoint gemma-4-31B-it emits a separate reasoning channel and, on real 64x64 induce prompts, does not finish reasoning within the production 4096-token budget -- nor within 12288 (3x). At 12288 the generation was 30693 chars of cell-by-cell analysis with NO 'def engine' at all, truncated mid-thought. _INDUCE_DEFAULT_MAX_TOKENS=4096 was validated for the 9B; the code's own comment already notes an 8192 requirement was found for 'a 3x larger, non-live candidate model' -- gemma-4-31B IS now that model. no_think_prefix is deliberately '' for gemma-4, so its reasoning is NOT suppressed.",
+   "required_action": "re-derive the completion budget for the 31B, and note _default_induce_n_ctx() scales the POOL with it: max_tokens 8192 already implies n_ctx 98304 > 81920, which does NOT fit on one 3090. The budget and the placement decision are coupled and must be decided together."
+  }
+ ],
+ "caveats": [
+  "The K=4 arm is the ONLY one comparable to the 340-495 s/induction figure already on record, because llama-server defaults to n_parallel=4 with kv_unified and the eval framework starts one thread per game. K=1 numbers are per-induction latency for a SINGLE induction and must not be compared against that baseline directly.",
+  "The f16-vs-q8_0 KV comparison is 2 games x 512 greedy tokens. It establishes that the two are NOT bit-identical and characterises WHERE they first differ; it is far too small to support any claim about task-quality equivalence, and is not offered as one.",
+  "f16 KV's real footprint is NOT 2x the q8_0 per-context slope: measured 23506 MiB at n_ctx 24576 versus 22258 predicted by doubling, a ~1.2 GB under-prediction. That under-prediction is also why f16 OOMed at 32768 in Phase 1. Do not extrapolate f16 from the q8_0 line.",
+  "Several arms (FFN-offload fallback, iGPU fallback, and two long quality attempts) were destroyed mid-run by an EXTERNAL process repeatedly SIGINT-ing our llama-server (server logs show 'Received second interrupt, terminating immediately' while our own teardown sends exactly one SIGTERM, only at arm end). Renaming the binary to p2srv AND the model path to p2model.gguf did NOT stop it, and our launcher is in its own session (verified by SID), so it is not our own signal. Short arms survive; long ones did not. Those arms are reported as blocked, never estimated.",
+  "Re-run arms executed while a concurrent HIP server was active and show depressed decode (27-28 tok/s vs 31-33 on a quiet box). Cross-arm speed comparisons between the early (quiet) and late (contended) arms are therefore not apples-to-apples."
+ ],
+ "not_measured_and_why": {
+  "fallback_a_ffn_offload": "NOT NEEDED -- the preferred option works, and the directive scopes fallbacks to 'if it does not fit'. Attempted anyway for completeness and lost to the external kills; reported as blocked rather than estimated. Prior expectation stated above: it attacks decode, which is ~97% of the cost.",
+  "fallback_b_igpu": "NOT NEEDED for the same reason. IMPORTANT CORRECTION to the briefing though: the iGPU IS a runnable path today. build-hip/bin/llama-server exists with libggml-hip.so, `--list-devices` enumerates 'ROCm0: AMD Radeon 890M Graphics (108000 MiB, 98508 MiB free)', the user is already in the render group (so `sg` is unnecessary), and a Qwen3.5-9B HIP server was running on it throughout this session. So the correct verdict is NOT blocked_igpu_no_hip_build -- the build exists and works; the arm was simply not required and then not completable."
+ },
+ "evidence_paths": {
+  "scratchpad": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/fitgrid",
+  "phase2_results": "phase2_results.json",
+  "quality_results": "quality_results.json",
+  "prompt_corpus": "real_prompts.json",
+  "per_pid_vram_jsonl": [
+   "p2_vram_A_egpu_81920_q8.jsonl",
+   "p2_vram_AC_egpu_81920_q8_chat.jsonl",
+   "p2_vram_QC_egpu_24576_f16_chat.jsonl",
+   "p2_vram_QC_egpu_24576_q8_chat.jsonl",
+   "p2_vram_AC4_egpu_81920_q8_chat_K4.jsonl",
+   "p2_vram_FC_egpu_81920_q8_ffn12_chat.jsonl"
+  ],
+  "server_logs": [
+   "p2_server_A_egpu_81920_q8.log",
+   "p2_server_AC_egpu_81920_q8_chat.log",
+   "p2_server_QC_egpu_24576_f16_chat.log",
+   "p2_server_QC_egpu_24576_q8_chat.log",
+   "p2_server_AC4_egpu_81920_q8_chat_K4.log",
+   "p2_server_FC_egpu_81920_q8_ffn12_chat.log"
+  ],
+  "generated_world_models": "gen/<tag>/<game>.txt"
+ }
+}

@@ -21,13 +21,13 @@ def _submitted_config() -> dict[str, Any]:
         "target_levels": 3,
         "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
         "frozen_generator": {
-            "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-            "repo_substr": "Qwen3.5-9B-MTP",
-            "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+            "model_id": "unsloth/gemma-4-31B-it-GGUF",
+            "repo_substr": "gemma-4-31B-it",
+            "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
             "mtp": True,
             "spec_type": "draft-mtp",
             "kv_quant": "q8_0",
-            "no_think_prefix": "/no_think\n",
+            "no_think_prefix": "",
             "llama_server_kind": "cuda-12.8-binary",
             "binary_not_wheel": True,
             "wheel_fallback_allowed": False,
@@ -45,8 +45,8 @@ def _preconditions() -> dict[str, Any]:
         "ok": True,
         "agents_md_read": True,
         "codex_md_read": True,
-        "qwen35_mtp_gguf_cached": True,
-        "qwen35_mtp_gguf_paths": ["/models/Qwen3.5-9B-Q4_K_M.gguf"],
+        "pinned_generator_gguf_cached": True,
+        "pinned_generator_gguf_paths": ["/models/gemma-4-31B-it-Q4_K_M.gguf"],
         "offline_arcade_ok": True,
         "make_carnot_agent_import_ok": True,
         "spec_has_req_4754": True,
@@ -259,7 +259,7 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
     (tmp_path / mod.SPEC_RELATIVE_PATH).write_text("REQ-ARC-WMTE-4754\n", encoding="utf-8")
     (tmp_path / "scripts" / "kaggle" / "submission_kernel").mkdir(parents=True)
     (tmp_path / "scripts" / "kaggle" / "submission_kernel" / "main.py").write_text(
-        "Qwen3.5-9B-MTP CARNOT_ARC_GGUF_PATH\n", encoding="utf-8"
+        "gemma-4-31B-it CARNOT_ARC_GGUF_PATH\n", encoding="utf-8"
     )
     (tmp_path / "python" / "carnot" / "agentic").mkdir(parents=True)
     (tmp_path / "python" / "carnot" / "agentic" / "arc_competition_agent.py").write_text(
@@ -291,7 +291,7 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
 
     artifact = mod.run(
         tmp_path,
-        gguf_finder=lambda: ["/models/Qwen3.5-9B-Q4_K_M.gguf"],
+        gguf_finder=lambda: ["/models/gemma-4-31B-it-Q4_K_M.gguf"],
         offline_arcade_checker=lambda: {"offline_arcade_ok": True},
         agent_import_checker=lambda: {"make_carnot_agent_import_ok": True},
         agent_smoke_runner=lambda _gate: {
@@ -325,8 +325,8 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
         now=iter([20.0, 20.1]).__next__,
     )
 
-    assert blocked["honest_verdict"] == "blocked_qwen35_mtp_gguf_cached"
-    assert blocked["preconditions_checked"]["blocked_resource"] == "qwen35_mtp_gguf_cached"
+    assert blocked["honest_verdict"] == "blocked_pinned_generator_gguf_cached"
+    assert blocked["preconditions_checked"]["blocked_resource"] == "pinned_generator_gguf_cached"
     assert blocked["agent_constructs_and_smoke_runs"]["smoke_step_ran"] is False
     assert blocked["submission_package_ready"] is False
 

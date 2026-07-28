@@ -23,7 +23,9 @@ def _launch_args_for(monkeypatch, proposer: LocalGGUFProposer) -> list[str]:
 
     monkeypatch.setattr(proposer, "_healthy", lambda: False)
     monkeypatch.setattr(
-        mod, "_generator_server_and_env", lambda: (Path("/fake/llama-server"), None)
+        mod,
+        "_generator_server_and_env",
+        lambda _ffn_cpu_layers=None, _mtp=None: (Path("/fake/llama-server"), None),
     )
     monkeypatch.setattr(mod.Path, "exists", lambda self: True)
 

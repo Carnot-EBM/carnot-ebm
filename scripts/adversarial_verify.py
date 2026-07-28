@@ -1671,6 +1671,31 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
     kl1, kl2 = k1.lower(), k2.lower()
     if any(m in kl1 for m in repro_markers) or any(m in kl2 for m in repro_markers):
         return True
+    # NESTED WALL CLOCKS. `duration_s` is the analyser PROCESS's total wall time;
+    # `measurement_wall_s` is the sum of the per-row measurement spans INSIDE that same
+    # process. One physically CONTAINS the other, so `duration_s >= measurement_wall_s`
+    # always and the gap is only the analyser's own bookkeeping overhead -- which on a
+    # ~30s numpy run is sub-millisecond, i.e. the two agree to 5+ significant figures BY
+    # CONSTRUCTION. That is structural nesting, not a coincidence between two independent
+    # measurements, which is the only thing TAUTOLOGY is meant to catch.
+    #
+    # Origin: 2026-07-28. exp6011/6012/6013 each report both fields deliberately (their
+    # own source comments say "THE MEASUREMENT CLOCK IS NOT THE ANALYSER CLOCK ...
+    # reporting one as the other is how an artifact ends up claiming a measurement it did
+    # not make"). Rebuilding them made the two clocks land within 0.0002s and TAUTOLOGY
+    # fired CRITICAL, which via the fabrication gate would have quarantined three honest
+    # artifacts and excluded them from capstone aggregation. Raising the emitted precision
+    # from 3dp to 6dp did NOT fix it and could not: the values genuinely agree to that many
+    # figures. Re-running until the timings happened to differ would be dodging the
+    # detector, not satisfying it. So the correct fix is here, and it is the same shape as
+    # the identifier/seed carve-out above (CLAUDE.md, "TAUTOLOGY excludes identifiers/seeds").
+    #
+    # Deliberately NOT a generic "any two *_s duration fields" rule: two UNRELATED
+    # durations coinciding to 5 sig figs would still be real evidence of a copy-paste bug,
+    # so this is anchored to the specific nested pair by name.
+    nested_clock_pair = {"duration_s", "measurement_wall_s"}
+    if {k1, k2} == nested_clock_pair:
+        return True
     return False
 
 

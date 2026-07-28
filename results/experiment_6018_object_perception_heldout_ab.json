@@ -1,0 +1,3944 @@
+{
+  "experiment": "experiment_6018_object_perception_heldout_ab",
+  "experiment_id": 6018,
+  "requirement": "REQ-ARC-WMTE-5830",
+  "run_date": "2026-07-28",
+  "title": "LEVER #1 object-perception induction A/B on held-out transitions: the measurement REQ-ARC-WMTE-5830 has had PENDING since 2026-07-24.",
+  "honest_verdict": "complete_object_perception_heldout_ab_unmeasurable_instrument_floor_primary_zero_both_arms_no_test_possible_zero_discordant_pairs_n_support_games_14",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": {
+    "value": false,
+    "principle": "the grader is exact-match / changed-cell overlap against RECORDED transitions, not the executable win oracle; the level counter is never consulted, so a win here cannot be circular"
+  },
+  "solve_provenance": {
+    "value": "development_proxy",
+    "principle": "an offline induction-quality measurement on the dev twin; it is NOT evidence that the live agent self-discovered anything, and no level is claimed"
+  },
+  "random_seed": 6018,
+  "measurement_wall_s": 7392.23,
+  "duration_s": 7640.662,
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP-GGUF",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "role": "induction_generator",
+      "server_pid": 2651326,
+      "port": 38883,
+      "declared_n_ctx": 81920,
+      "observed_n_ctx": 81920,
+      "mtp": true,
+      "kv_quant": "q8_0",
+      "why_9b_not_31b": "operator directive 2026-07-28: the 31B (21GB on a 24GB eGPU 3090) is the documented cause of the 2026-07-24 wedge that killed the prior attempt at this measurement; a model-class change is operator-only"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5-9b-mtp_gguf_cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    },
+    {
+      "resource": "conductor_inactive",
+      "available": true,
+      "detail": "systemctl is-active -> 'inactive'"
+    },
+    {
+      "resource": "generator_launchable_or_already_warm",
+      "available": true,
+      "detail": "warm_server_on_port_38883=True cuda_gpu_0_free=10629 need=14937"
+    },
+    {
+      "resource": "objects_block_importable",
+      "available": true
+    },
+    {
+      "resource": "object_perception_flag_default_off",
+      "available": true
+    }
+  ],
+  "preregistration": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_perception_ab_20260728/preregistration.json",
+    "sha256": "sha256:e7230c683087ad643ac070aea5e22ad12493c9f45fcd88d7512dd1c47e25713f",
+    "content": {
+      "experiment": "experiment_6018_object_perception_heldout_ab",
+      "requirement": "REQ-ARC-WMTE-5830",
+      "written_before_any_llm_call": true,
+      "arms": {
+        "control": "CARNOT_ARC_OBJECT_PERCEPTION unset/0",
+        "treatment": "CARNOT_ARC_OBJECT_PERCEPTION=1"
+      },
+      "generator": "Qwen3.5-9B-MTP GGUF (operator-directed: NOT the 31B, whose 21GB on a 24GB card is the documented cause of the 2026-07-24 wedge)",
+      "primary_metric": "held-out exact-full-grid accuracy (WorldModelVerifier.accuracy on the PROMPT-COMPLEMENT transitions), averaged per game over replicates",
+      "primary_support_games": [
+        "ls20",
+        "s5i5",
+        "tu93",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "tr87",
+        "g50t",
+        "re86",
+        "bp35",
+        "sb26",
+        "lf52",
+        "su15"
+      ],
+      "n_primary_support_games": 14,
+      "n_replicates_per_game_per_arm": 6,
+      "planned_induce_calls": 240,
+      "primary_test": "two-sided exact sign test on per-game paired deltas; ties dropped",
+      "secondary_test": "exact sign-flip permutation test on the same per-game deltas",
+      "min_reachable_two_sided_p_if_all_support_games_discordant": 0.0001220703,
+      "min_reachable_two_sided_p_formula": "2 * 0.5**n_discordant, capped at 1.0; 1.0 when n_discordant == 0 (no test possible)",
+      "secondary_metrics": [
+        "held-out cell_recall",
+        "held-out change_fidelity",
+        "held-out correct_changed_cells",
+        "held-out spurious_changed_cells",
+        "induce_ok rate",
+        "production tail-split (_split_prefix_heldout) accuracy",
+        "full-window accuracy (the exp5831 quantity, for continuity)",
+        "prompt chars",
+        "generated tokens",
+        "wall seconds"
+      ],
+      "train_only_stratum_games": [
+        "r11l",
+        "lp85",
+        "cd82",
+        "sp80",
+        "ft09",
+        "vc33"
+      ],
+      "train_only_stratum_reason": "window has <= 6 transitions so the prompt shows ALL of them; any accuracy on these games is TRAINING accuracy and is reported separately, never as heldout",
+      "excluded_games": {
+        "wa30": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+        "sc25": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+        "tn36": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+        "ka59": "build_progress_window raised ValueError: invalid literal for int(): 'C:1'",
+        "dc22": "build_progress_window returned None (no offline L1 window)"
+      },
+      "floor_rule": "if the primary metric is exactly 0.0 in BOTH arms on EVERY cell, the verdict is unmeasurable_instrument_floor -- an instrument that cannot vary has not measured a null",
+      "prior_data_point": "one Qwen-9B tu93 induce, heldout 0.000 for BOTH arms (ops/verifier_gaps.md 2026-07-24; explicitly not an A/B)",
+      "declared_outcome_policy": "an honest null is reported plainly as a null; the flag stays default-off either way (operator-only graduation)",
+      "random_seed": 6018
+    }
+  },
+  "treatment_witness_per_game": [
+    {
+      "game": "ls20",
+      "prompt_chars_off": 7620,
+      "prompt_chars_on": 12955,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 5335
+    },
+    {
+      "game": "s5i5",
+      "prompt_chars_off": 6731,
+      "prompt_chars_on": 15344,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 8613
+    },
+    {
+      "game": "tu93",
+      "prompt_chars_off": 6149,
+      "prompt_chars_on": 17044,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 10895
+    },
+    {
+      "game": "cn04",
+      "prompt_chars_off": 9112,
+      "prompt_chars_on": 12844,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 3732
+    },
+    {
+      "game": "m0r0",
+      "prompt_chars_off": 9567,
+      "prompt_chars_on": 17764,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 8197
+    },
+    {
+      "game": "sk48",
+      "prompt_chars_off": 6707,
+      "prompt_chars_on": 18852,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 12145
+    },
+    {
+      "game": "ar25",
+      "prompt_chars_off": 8367,
+      "prompt_chars_on": 14330,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 5963
+    },
+    {
+      "game": "tr87",
+      "prompt_chars_off": 9858,
+      "prompt_chars_on": 23576,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 13718
+    },
+    {
+      "game": "g50t",
+      "prompt_chars_off": 8230,
+      "prompt_chars_on": 12296,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 4066
+    },
+    {
+      "game": "re86",
+      "prompt_chars_off": 8223,
+      "prompt_chars_on": 17913,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 9690
+    },
+    {
+      "game": "bp35",
+      "prompt_chars_off": 10608,
+      "prompt_chars_on": 25146,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 14538
+    },
+    {
+      "game": "sb26",
+      "prompt_chars_off": 7367,
+      "prompt_chars_on": 15074,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 7707
+    },
+    {
+      "game": "lf52",
+      "prompt_chars_off": 9709,
+      "prompt_chars_on": 22724,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 13015
+    },
+    {
+      "game": "su15",
+      "prompt_chars_off": 5369,
+      "prompt_chars_on": 10734,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 5365
+    },
+    {
+      "game": "r11l",
+      "prompt_chars_off": 10481,
+      "prompt_chars_on": 21345,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 10864
+    },
+    {
+      "game": "lp85",
+      "prompt_chars_off": 13654,
+      "prompt_chars_on": 24740,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 11086
+    },
+    {
+      "game": "cd82",
+      "prompt_chars_off": 7666,
+      "prompt_chars_on": 11816,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 4150
+    },
+    {
+      "game": "sp80",
+      "prompt_chars_off": 6359,
+      "prompt_chars_on": 9063,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 2704
+    },
+    {
+      "game": "ft09",
+      "prompt_chars_off": 9767,
+      "prompt_chars_on": 19987,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 10220
+    },
+    {
+      "game": "vc33",
+      "prompt_chars_off": 7750,
+      "prompt_chars_on": 11234,
+      "object_header_in_off": false,
+      "object_header_in_on": true,
+      "off_is_prefix_of_on": true,
+      "object_block_chars": 3484
+    }
+  ],
+  "window_metadata": {
+    "ls20": {
+      "built": true,
+      "build_s": 1.71,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "s5i5": {
+      "built": true,
+      "build_s": 0.09,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "tu93": {
+      "built": true,
+      "build_s": 15.5,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "cn04": {
+      "built": true,
+      "build_s": 0.08,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "m0r0": {
+      "built": true,
+      "build_s": 0.18,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "sk48": {
+      "built": true,
+      "build_s": 0.25,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "ar25": {
+      "built": true,
+      "build_s": 0.36,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "tr87": {
+      "built": true,
+      "build_s": 192.65,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "g50t": {
+      "built": true,
+      "build_s": 0.28,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "re86": {
+      "built": true,
+      "build_s": 0.39,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "bp35": {
+      "built": true,
+      "build_s": 0.8,
+      "cell": 1,
+      "n_transitions": 12,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "n_heldout": 6,
+      "n_production_tail": 4,
+      "n_changing": 12
+    },
+    "sb26": {
+      "built": true,
+      "build_s": 0.36,
+      "cell": 1,
+      "n_transitions": 9,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7,
+        8
+      ],
+      "n_heldout": 3,
+      "n_production_tail": 3,
+      "n_changing": 9
+    },
+    "lf52": {
+      "built": true,
+      "build_s": 0.21,
+      "cell": 1,
+      "n_transitions": 8,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6,
+        7
+      ],
+      "n_heldout": 2,
+      "n_production_tail": 3,
+      "n_changing": 8
+    },
+    "su15": {
+      "built": true,
+      "build_s": 0.11,
+      "cell": 1,
+      "n_transitions": 7,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "heldout_indices": [
+        6
+      ],
+      "n_heldout": 1,
+      "n_production_tail": 2,
+      "n_changing": 7
+    },
+    "r11l": {
+      "built": true,
+      "build_s": 0.07,
+      "cell": 1,
+      "n_transitions": 3,
+      "shown_indices": [
+        0,
+        1,
+        2
+      ],
+      "heldout_indices": [],
+      "n_heldout": 0,
+      "n_production_tail": 1,
+      "n_changing": 3
+    },
+    "lp85": {
+      "built": true,
+      "build_s": 0.09,
+      "cell": 1,
+      "n_transitions": 5,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "heldout_indices": [],
+      "n_heldout": 0,
+      "n_production_tail": 2,
+      "n_changing": 5
+    },
+    "cd82": {
+      "built": true,
+      "build_s": 0.05,
+      "cell": 1,
+      "n_transitions": 5,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "heldout_indices": [],
+      "n_heldout": 0,
+      "n_production_tail": 2,
+      "n_changing": 5
+    },
+    "sp80": {
+      "built": true,
+      "build_s": 0.04,
+      "cell": 1,
+      "n_transitions": 4,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "heldout_indices": [],
+      "n_heldout": 0,
+      "n_production_tail": 1,
+      "n_changing": 4
+    },
+    "ft09": {
+      "built": true,
+      "build_s": 0.03,
+      "cell": 1,
+      "n_transitions": 4,
+      "shown_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "heldout_indices": [],
+      "n_heldout": 0,
+      "n_production_tail": 1,
+      "n_changing": 4
+    },
+    "vc33": {
+      "built": true,
+      "build_s": 0.04,
+      "cell": 1,
+      "n_transitions": 3,
+      "shown_indices": [
+        0,
+        1,
+        2
+      ],
+      "heldout_indices": [],
+      "n_heldout": 0,
+      "n_production_tail": 1,
+      "n_changing": 3
+    }
+  },
+  "excluded_games": {
+    "wa30": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+    "sc25": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+    "tn36": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+    "ka59": "build_progress_window raised ValueError: invalid literal for int(): 'C:1'",
+    "dc22": "build_progress_window returned None (no offline L1 window)"
+  },
+  "generator_liveness_witness": {
+    "llm": {
+      "calls": 298,
+      "responses": 269,
+      "errors": 0,
+      "content_failures": 29
+    },
+    "generator_healthy_after": true,
+    "generator_server_failure_diagnostics": [],
+    "generator_port": 38883,
+    "generator_n_ctx": 81920,
+    "generator_n_ctx_declared": 81920,
+    "generator_n_ctx_source": "server_props_observed",
+    "generator_total_slots_observed": 4,
+    "generator_reuse_n_ctx_check": "match",
+    "generator_reuse_refusals": [],
+    "generator_max_tokens": 4096
+  },
+  "vram_monitor": {
+    "server_pid": 2651326,
+    "n_samples": 737,
+    "interval_s": 10.0,
+    "gpu_indices_observed": [
+      0
+    ],
+    "pid_mib_min": 13486,
+    "pid_mib_max": 13488,
+    "pid_mib_last": 13488,
+    "baseline_mib": 13486,
+    "n_collapse_events": 0,
+    "collapse_events": [],
+    "n_health_failures": 0,
+    "health_failures": [],
+    "samples_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_perception_ab_20260728/vram_samples.jsonl"
+  },
+  "gpu_residency_at_start": [
+    {
+      "pid": 2651326,
+      "mib": 13486,
+      "gpu_index": 0
+    }
+  ],
+  "cells_not_run": [],
+  "run_was_wedged": false,
+  "n_cells": 240,
+  "analysis": {
+    "n_rows": 240,
+    "induce_ok_heldout": {
+      "off": {
+        "n_cells": 84,
+        "n_ok": 84,
+        "n_engine_loaded": 84
+      },
+      "on": {
+        "n_cells": 84,
+        "n_ok": 84,
+        "n_engine_loaded": 84
+      }
+    },
+    "induce_ok_train_only": {
+      "off": {
+        "n_cells": 36,
+        "n_ok": 36,
+        "n_engine_loaded": 36
+      },
+      "on": {
+        "n_cells": 36,
+        "n_ok": 36,
+        "n_engine_loaded": 35
+      }
+    },
+    "heldout_by_field": {
+      "accuracy": {
+        "per_game_means": {
+          "ar25": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bp35": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "cn04": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "g50t": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "lf52": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "ls20": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "m0r0": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "re86": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "s5i5": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sb26": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sk48": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "su15": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tr87": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tu93": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "games": [
+          "ar25",
+          "bp35",
+          "cn04",
+          "g50t",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "s5i5",
+          "sb26",
+          "sk48",
+          "su15",
+          "tr87",
+          "tu93"
+        ],
+        "mean_delta_over_games": 0.0,
+        "sign_test": {
+          "n_pairs": 14,
+          "n_positive": 0,
+          "n_negative": 0,
+          "n_ties": 14,
+          "n_discordant": 0,
+          "p_two_sided": 1.0,
+          "test_was_possible": false,
+          "min_reachable_two_sided_p_at_this_discordance": 1.0
+        },
+        "signflip_test": {
+          "n_nonzero": 0,
+          "p_two_sided": 1.0,
+          "test_was_possible": false,
+          "observed_mean": 0.0
+        },
+        "bootstrap_ci_over_games": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 14,
+          "n_resamples": 10000,
+          "alpha": 0.05
+        },
+        "all_cells_exactly_zero_both_arms": true,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 1
+      },
+      "cell_recall": {
+        "per_game_means": {
+          "ar25": {
+            "off": 0.045876,
+            "on": 0.033794,
+            "delta": -0.012082,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bp35": {
+            "off": 0.042681,
+            "on": 0.058639,
+            "delta": 0.015958,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "cn04": {
+            "off": 0.0,
+            "on": 0.016664,
+            "delta": 0.016664,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "g50t": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "lf52": {
+            "off": 5e-05,
+            "on": 0.000248,
+            "delta": 0.000199,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "ls20": {
+            "off": 0.010006,
+            "on": 0.04436,
+            "delta": 0.034353,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "m0r0": {
+            "off": 0.0,
+            "on": 0.000563,
+            "delta": 0.000563,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "re86": {
+            "off": 0.082466,
+            "on": 0.038726,
+            "delta": -0.04374,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "s5i5": {
+            "off": 3.2e-05,
+            "on": 0.0,
+            "delta": -3.2e-05,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sb26": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sk48": {
+            "off": 0.004043,
+            "on": 0.020845,
+            "delta": 0.016801,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "su15": {
+            "off": 0.009506,
+            "on": 0.000634,
+            "delta": -0.008872,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tr87": {
+            "off": 0.099829,
+            "on": 0.079165,
+            "delta": -0.020664,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tu93": {
+            "off": 0.0,
+            "on": 0.007314,
+            "delta": 0.007314,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "games": [
+          "ar25",
+          "bp35",
+          "cn04",
+          "g50t",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "s5i5",
+          "sb26",
+          "sk48",
+          "su15",
+          "tr87",
+          "tu93"
+        ],
+        "mean_delta_over_games": 0.00046154,
+        "sign_test": {
+          "n_pairs": 14,
+          "n_positive": 7,
+          "n_negative": 5,
+          "n_ties": 2,
+          "n_discordant": 12,
+          "p_two_sided": 0.77441406,
+          "test_was_possible": true,
+          "min_reachable_two_sided_p_at_this_discordance": 0.00048828
+        },
+        "signflip_test": {
+          "n_nonzero": 12,
+          "p_two_sided": 0.92822266,
+          "test_was_possible": true,
+          "observed_mean": 0.00053846,
+          "n_enumerated": 4096
+        },
+        "bootstrap_ci_over_games": {
+          "mean": 0.00046154,
+          "lo": -0.00976345,
+          "hi": 0.00938289,
+          "n": 14,
+          "n_resamples": 10000,
+          "alpha": 0.05
+        },
+        "all_cells_exactly_zero_both_arms": false,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 44
+      },
+      "change_fidelity": {
+        "per_game_means": {
+          "ar25": {
+            "off": 0.009897,
+            "on": 0.001844,
+            "delta": -0.008053,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bp35": {
+            "off": 0.007187,
+            "on": 0.023144,
+            "delta": 0.015957,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "cn04": {
+            "off": 0.0,
+            "on": 0.013897,
+            "delta": 0.013897,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "g50t": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "lf52": {
+            "off": 5e-05,
+            "on": 0.000248,
+            "delta": 0.000199,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "ls20": {
+            "off": 0.003733,
+            "on": 0.0143,
+            "delta": 0.010567,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "m0r0": {
+            "off": 0.0,
+            "on": 0.000558,
+            "delta": 0.000558,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "re86": {
+            "off": 0.029004,
+            "on": 0.014511,
+            "delta": -0.014493,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "s5i5": {
+            "off": 3.2e-05,
+            "on": 0.0,
+            "delta": -3.2e-05,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sb26": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sk48": {
+            "off": 0.002524,
+            "on": 0.008759,
+            "delta": 0.006235,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "su15": {
+            "off": 0.00947,
+            "on": 0.000634,
+            "delta": -0.008836,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tr87": {
+            "off": 0.00787,
+            "on": 0.005274,
+            "delta": -0.002596,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tu93": {
+            "off": 0.0,
+            "on": 0.005638,
+            "delta": 0.005638,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "games": [
+          "ar25",
+          "bp35",
+          "cn04",
+          "g50t",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "s5i5",
+          "sb26",
+          "sk48",
+          "su15",
+          "tr87",
+          "tu93"
+        ],
+        "mean_delta_over_games": 0.00136015,
+        "sign_test": {
+          "n_pairs": 14,
+          "n_positive": 7,
+          "n_negative": 5,
+          "n_ties": 2,
+          "n_discordant": 12,
+          "p_two_sided": 0.77441406,
+          "test_was_possible": true,
+          "min_reachable_two_sided_p_at_this_discordance": 0.00048828
+        },
+        "signflip_test": {
+          "n_nonzero": 12,
+          "p_two_sided": 0.57128906,
+          "test_was_possible": true,
+          "observed_mean": 0.00158685,
+          "n_enumerated": 4096
+        },
+        "bootstrap_ci_over_games": {
+          "mean": 0.00136015,
+          "lo": -0.00308196,
+          "hi": 0.00563764,
+          "n": 14,
+          "n_resamples": 10000,
+          "alpha": 0.05
+        },
+        "all_cells_exactly_zero_both_arms": false,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 44
+      },
+      "correct_changed_cells": {
+        "per_game_means": {
+          "ar25": {
+            "off": 39.166667,
+            "on": 32.833333,
+            "delta": -6.333333,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bp35": {
+            "off": 133.833333,
+            "on": 138.333333,
+            "delta": 4.5,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "cn04": {
+            "off": 0.0,
+            "on": 35.0,
+            "delta": 35.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "g50t": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "lf52": {
+            "off": 0.166667,
+            "on": 0.833333,
+            "delta": 0.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "ls20": {
+            "off": 42.166667,
+            "on": 158.333333,
+            "delta": 116.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "m0r0": {
+            "off": 0.0,
+            "on": 0.666667,
+            "delta": 0.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "re86": {
+            "off": 41.333333,
+            "on": 27.666667,
+            "delta": -13.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "s5i5": {
+            "off": 0.166667,
+            "on": 0.0,
+            "delta": -0.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sb26": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sk48": {
+            "off": 4.333333,
+            "on": 42.833333,
+            "delta": 38.5,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "su15": {
+            "off": 2.5,
+            "on": 0.166667,
+            "delta": -2.333333,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tr87": {
+            "off": 59.666667,
+            "on": 29.0,
+            "delta": -30.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tu93": {
+            "off": 0.0,
+            "on": 32.166667,
+            "delta": 32.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "games": [
+          "ar25",
+          "bp35",
+          "cn04",
+          "g50t",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "s5i5",
+          "sb26",
+          "sk48",
+          "su15",
+          "tr87",
+          "tu93"
+        ],
+        "mean_delta_over_games": 12.46428571,
+        "sign_test": {
+          "n_pairs": 14,
+          "n_positive": 7,
+          "n_negative": 5,
+          "n_ties": 2,
+          "n_discordant": 12,
+          "p_two_sided": 0.77441406,
+          "test_was_possible": true,
+          "min_reachable_two_sided_p_at_this_discordance": 0.00048828
+        },
+        "signflip_test": {
+          "n_nonzero": 12,
+          "p_two_sided": 0.23486328,
+          "test_was_possible": true,
+          "observed_mean": 14.54166667,
+          "n_enumerated": 4096
+        },
+        "bootstrap_ci_over_games": {
+          "mean": 12.46428571,
+          "lo": -2.98809524,
+          "hi": 32.19047619,
+          "n": 14,
+          "n_resamples": 10000,
+          "alpha": 0.05
+        },
+        "all_cells_exactly_zero_both_arms": false,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 31
+      },
+      "spurious_changed_cells": {
+        "per_game_means": {
+          "ar25": {
+            "off": 3886.833333,
+            "on": 3674.666667,
+            "delta": -212.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bp35": {
+            "off": 1758.166667,
+            "on": 1628.166667,
+            "delta": -130.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "cn04": {
+            "off": 0.0,
+            "on": 640.833333,
+            "delta": 640.833333,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "g50t": {
+            "off": 458.666667,
+            "on": 0.0,
+            "delta": -458.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "lf52": {
+            "off": 7.0,
+            "on": 11.166667,
+            "delta": 4.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "ls20": {
+            "off": 1131.0,
+            "on": 2610.666667,
+            "delta": 1479.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "m0r0": {
+            "off": 1.333333,
+            "on": 2.666667,
+            "delta": 1.333333,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "re86": {
+            "off": 7363.166667,
+            "on": 371.0,
+            "delta": -6992.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "s5i5": {
+            "off": 28.833333,
+            "on": 11.0,
+            "delta": -17.833333,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sb26": {
+            "off": 11.333333,
+            "on": 4.5,
+            "delta": -6.833333,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sk48": {
+            "off": 453.833333,
+            "on": 1453.5,
+            "delta": 999.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "su15": {
+            "off": 0.166667,
+            "on": 0.833333,
+            "delta": 0.666667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tr87": {
+            "off": 2853.666667,
+            "on": 749.5,
+            "delta": -2104.166667,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tu93": {
+            "off": 2.833333,
+            "on": 3712.833333,
+            "delta": 3710.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "games": [
+          "ar25",
+          "bp35",
+          "cn04",
+          "g50t",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "s5i5",
+          "sb26",
+          "sk48",
+          "su15",
+          "tr87",
+          "tu93"
+        ],
+        "mean_delta_over_games": -220.39285714,
+        "sign_test": {
+          "n_pairs": 14,
+          "n_positive": 7,
+          "n_negative": 7,
+          "n_ties": 0,
+          "n_discordant": 14,
+          "p_two_sided": 1.0,
+          "test_was_possible": true,
+          "min_reachable_two_sided_p_at_this_discordance": 0.00012207
+        },
+        "signflip_test": {
+          "n_nonzero": 14,
+          "p_two_sided": 0.76135254,
+          "test_was_possible": true,
+          "observed_mean": -220.39285714,
+          "n_enumerated": 16384
+        },
+        "bootstrap_ci_over_games": {
+          "mean": -220.39285714,
+          "lo": -1546.91666667,
+          "hi": 823.26190476,
+          "n": 14,
+          "n_resamples": 10000,
+          "alpha": 0.05
+        },
+        "all_cells_exactly_zero_both_arms": false,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 63
+      },
+      "n_changes_correct": {
+        "per_game_means": {
+          "ar25": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "bp35": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "cn04": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "g50t": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "lf52": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "ls20": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "m0r0": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "re86": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "s5i5": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sb26": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "sk48": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "su15": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tr87": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "tu93": {
+            "off": 0.0,
+            "on": 0.0,
+            "delta": 0.0,
+            "n_matched_replicates": 6,
+            "matched_replicates": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "games": [
+          "ar25",
+          "bp35",
+          "cn04",
+          "g50t",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "s5i5",
+          "sb26",
+          "sk48",
+          "su15",
+          "tr87",
+          "tu93"
+        ],
+        "mean_delta_over_games": 0.0,
+        "sign_test": {
+          "n_pairs": 14,
+          "n_positive": 0,
+          "n_negative": 0,
+          "n_ties": 14,
+          "n_discordant": 0,
+          "p_two_sided": 1.0,
+          "test_was_possible": false,
+          "min_reachable_two_sided_p_at_this_discordance": 1.0
+        },
+        "signflip_test": {
+          "n_nonzero": 0,
+          "p_two_sided": 1.0,
+          "test_was_possible": false,
+          "observed_mean": 0.0
+        },
+        "bootstrap_ci_over_games": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 14,
+          "n_resamples": 10000,
+          "alpha": 0.05
+        },
+        "all_cells_exactly_zero_both_arms": true,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 1
+      }
+    },
+    "multiplicity_note": "6 held-out channels are tested. Only `accuracy` is the PRE-REGISTERED primary; the other five are exploratory secondaries, and a p below 0.05 on one of them should be read against a Bonferroni threshold of 0.00833, not against 0.05. They are also strongly correlated with each other (all are functions of the same predicted grids), so Bonferroni is conservative and the honest reading of any secondary hit is 'worth one confirmatory run', not 'established'.",
+    "unmatched_cells_excluded_from_pairing": [],
+    "n_unmatched_cells": 0,
+    "unmatched_cells_train_only_stratum": [
+      "cd82__r0__off"
+    ],
+    "n_unmatched_cells_train_only_stratum": 1,
+    "cells_with_no_loadable_engine": [
+      "cd82__r0__on: ValueError: too many values to unpack (expected 2)"
+    ],
+    "primary": {
+      "metric": "held-out exact-full-grid accuracy (prompt-complement transitions)",
+      "games": [
+        "ar25",
+        "bp35",
+        "cn04",
+        "g50t",
+        "lf52",
+        "ls20",
+        "m0r0",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sk48",
+        "su15",
+        "tr87",
+        "tu93"
+      ],
+      "mean_delta_over_games": 0.0,
+      "sign_test": {
+        "n_pairs": 14,
+        "n_positive": 0,
+        "n_negative": 0,
+        "n_ties": 14,
+        "n_discordant": 0,
+        "p_two_sided": 1.0,
+        "test_was_possible": false,
+        "min_reachable_two_sided_p_at_this_discordance": 1.0
+      },
+      "signflip_test": {
+        "n_nonzero": 0,
+        "p_two_sided": 1.0,
+        "test_was_possible": false,
+        "observed_mean": 0.0
+      },
+      "bootstrap_ci_over_games": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 14,
+        "n_resamples": 10000,
+        "alpha": 0.05
+      },
+      "all_cells_exactly_zero_both_arms": true,
+      "n_cells_contributing": 168,
+      "n_distinct_cell_values": 1,
+      "per_game_means": {
+        "ar25": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "bp35": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "cn04": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "g50t": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "lf52": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "ls20": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "m0r0": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "re86": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "s5i5": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "sb26": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "sk48": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "su15": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "tr87": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "tu93": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0,
+          "n_matched_replicates": 6,
+          "matched_replicates": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      }
+    },
+    "production_tail_split_accuracy": {
+      "per_game_means": {
+        "ar25": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "bp35": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "cn04": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "g50t": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "lf52": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "ls20": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "m0r0": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "re86": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "s5i5": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "sb26": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "sk48": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "su15": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "tr87": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "tu93": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        }
+      },
+      "mean_delta_over_games": 0.0,
+      "sign_test": {
+        "n_pairs": 14,
+        "n_positive": 0,
+        "n_negative": 0,
+        "n_ties": 14,
+        "n_discordant": 0,
+        "p_two_sided": 1.0,
+        "test_was_possible": false,
+        "min_reachable_two_sided_p_at_this_discordance": 1.0
+      }
+    },
+    "full_window_accuracy_exp5831_quantity": {
+      "per_game_means": {
+        "ar25": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "bp35": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "cn04": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "g50t": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "lf52": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "ls20": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "m0r0": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "re86": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "s5i5": {
+          "off": 0.013889,
+          "on": 0.0,
+          "delta": -0.013889
+        },
+        "sb26": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "sk48": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "su15": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "tr87": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "tu93": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        }
+      },
+      "mean_delta_over_games": -0.00099206,
+      "sign_test": {
+        "n_pairs": 14,
+        "n_positive": 0,
+        "n_negative": 1,
+        "n_ties": 13,
+        "n_discordant": 1,
+        "p_two_sided": 1.0,
+        "test_was_possible": true,
+        "min_reachable_two_sided_p_at_this_discordance": 1.0
+      }
+    },
+    "train_only_training_accuracy": {
+      "note": "these games' prompts SHOW every transition in the window; this is TRAINING accuracy and is NOT evidence of generalization",
+      "per_game_means": {
+        "cd82": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "ft09": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "lp85": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "r11l": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "sp80": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        },
+        "vc33": {
+          "off": 0.0,
+          "on": 0.0,
+          "delta": 0.0
+        }
+      },
+      "mean_delta_over_games": 0.0,
+      "sign_test": {
+        "n_pairs": 6,
+        "n_positive": 0,
+        "n_negative": 0,
+        "n_ties": 6,
+        "n_discordant": 0,
+        "p_two_sided": 1.0,
+        "test_was_possible": false,
+        "min_reachable_two_sided_p_at_this_discordance": 1.0
+      }
+    },
+    "cost_prompt_chars": {
+      "off": 8464.7,
+      "on": 16739.05
+    },
+    "cost_elapsed_s": {
+      "off": 24.812,
+      "on": 36.79
+    },
+    "cost_generated_tokens": {
+      "off": 1307.15,
+      "on": 1052.767
+    },
+    "field_population_census": [
+      {
+        "field": "heldout.accuracy",
+        "n_cells": 168,
+        "n_distinct_values": 1,
+        "constant": true,
+        "all_zero": true
+      },
+      {
+        "field": "heldout.cell_recall",
+        "n_cells": 168,
+        "n_distinct_values": 44,
+        "constant": false,
+        "all_zero": false
+      },
+      {
+        "field": "heldout.change_fidelity",
+        "n_cells": 168,
+        "n_distinct_values": 44,
+        "constant": false,
+        "all_zero": false
+      },
+      {
+        "field": "heldout.correct_changed_cells",
+        "n_cells": 168,
+        "n_distinct_values": 31,
+        "constant": false,
+        "all_zero": false
+      },
+      {
+        "field": "heldout.spurious_changed_cells",
+        "n_cells": 168,
+        "n_distinct_values": 63,
+        "constant": false,
+        "all_zero": false
+      },
+      {
+        "field": "heldout.n_changes_correct",
+        "n_cells": 168,
+        "n_distinct_values": 1,
+        "constant": true,
+        "all_zero": true
+      }
+    ],
+    "floored_fields": [
+      "heldout.accuracy",
+      "heldout.n_changes_correct"
+    ],
+    "n_channels_that_varied": 4,
+    "why_the_census_is_a_finding_and_NOT_an_acceptance_gate": "`floored_fields` is DERIVED from `field_population_census` in this same function, so a gate asserting 'every constant field is declared floored' could never fail on real data -- it would compare a list against a list computed from its own input. That is the forced-gate shape this project shipped once already (a recount gated against a count derived from the same markers). The census is therefore REPORTED, and the gate that exists instead asks a question the data can actually answer NO to: did any channel vary at all (`n_channels_that_varied` > 0)? A run in which every recorded channel is constant has measured nothing, and must fail loudly rather than be reported as a null."
+  },
+  "reverification": {
+    "n_cells_rechecked": 239,
+    "n_mismatched": 0,
+    "n_skipped_no_engine_or_window": 0,
+    "mismatch_details": [],
+    "what_this_checks": "the row's recorded held-out numbers re-derive from the engine file still on disk in that cell's own isolated directory, at the sha256 the row recorded"
+  },
+  "positive_control": {
+    "ran": true,
+    "what_it_is": "every transition shown in the prompt (k raised past the window size), graded on the indices the production k=8 prompt withholds",
+    "n_cells": 28,
+    "duration_s": 778.45,
+    "max_accuracy": 0.0,
+    "mean_accuracy": 0.0,
+    "n_cells_with_nonzero_accuracy": 0,
+    "max_cell_recall": 0.442505,
+    "n_cells_with_nonzero_cell_recall": 12,
+    "metric_demonstrably_moves": false,
+    "rows": [
+      {
+        "game": "ls20",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 36.31,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 10303,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "ls20",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 23.4,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 10303,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 27,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "s5i5",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 4.02,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 9579,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "s5i5",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 26.29,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 9579,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.000191,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.000191,
+          "correct_changed_cells": 1,
+          "spurious_changed_cells": 5,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "tu93",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 5.96,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 8165,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.012278,
+          "n_changing": 3,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.011796,
+          "correct_changed_cells": 27,
+          "spurious_changed_cells": 233,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "tu93",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 2.93,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 8165,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0745,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.066566,
+          "correct_changed_cells": 292,
+          "spurious_changed_cells": 2142,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "cn04",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 29.09,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 14385,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.000714,
+          "n_changing": 5,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.000714,
+          "correct_changed_cells": 1,
+          "spurious_changed_cells": 4,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "cn04",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 44.41,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 14385,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "m0r0",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 6.47,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 15343,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "m0r0",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 1.9,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 15343,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "sk48",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 8.11,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 10332,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 0,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "sk48",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 31.78,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 10332,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "ar25",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 13.47,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 12257,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.087903,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.037688,
+          "correct_changed_cells": 123,
+          "spurious_changed_cells": 1365,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "ar25",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 26.15,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 12257,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "tr87",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 6.99,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 14335,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.012195,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.009113,
+          "correct_changed_cells": 114,
+          "spurious_changed_cells": 7482,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "tr87",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 6.09,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 14335,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 6076,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "g50t",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 4.53,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 12212,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.003856,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.001335,
+          "correct_changed_cells": 27,
+          "spurious_changed_cells": 17871,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "g50t",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 1.46,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 12212,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 17898,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "re86",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 27.68,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 11689,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.442505,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.098202,
+          "correct_changed_cells": 232,
+          "spurious_changed_cells": 1578,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "re86",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 22.78,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 11689,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "bp35",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 30.43,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 17057,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.23077,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.010974,
+          "correct_changed_cells": 94,
+          "spurious_changed_cells": 4748,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "bp35",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 6.74,
+        "n_production_heldout": 6,
+        "n_shown_in_leak_prompt": 12,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 17057,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 6,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.004017,
+          "n_changing": 6,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.003942,
+          "correct_changed_cells": 4,
+          "spurious_changed_cells": 6,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "sb26",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 4.62,
+        "n_production_heldout": 3,
+        "n_shown_in_leak_prompt": 9,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 10306,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 3,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 3,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "sb26",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 3.73,
+        "n_production_heldout": 3,
+        "n_shown_in_leak_prompt": 9,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 10306,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 3,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 2,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 5,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "lf52",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 4.11,
+        "n_production_heldout": 2,
+        "n_shown_in_leak_prompt": 8,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 13435,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 2,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.000298,
+          "n_changing": 2,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.000298,
+          "correct_changed_cells": 1,
+          "spurious_changed_cells": 1,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "lf52",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py (split induce: engine + focused goal)",
+        "elapsed_s": 82.5,
+        "n_production_heldout": 2,
+        "n_shown_in_leak_prompt": 8,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 13435,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 2,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.000298,
+          "n_changing": 2,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.000298,
+          "correct_changed_cells": 1,
+          "spurious_changed_cells": 1,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "su15",
+        "replicate": 0,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 25.44,
+        "n_production_heldout": 1,
+        "n_shown_in_leak_prompt": 7,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 6112,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 1,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 1,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      },
+      {
+        "game": "su15",
+        "replicate": 1,
+        "induce_ok": true,
+        "induce_msg": "local gguf (GPU server) wrote world_model.py",
+        "elapsed_s": 41.81,
+        "n_production_heldout": 1,
+        "n_shown_in_leak_prompt": 7,
+        "n_still_withheld_in_leak_prompt": 0,
+        "leak_prompt_chars": 6112,
+        "graded_on": "the production-withheld indices, which THIS prompt showed",
+        "scored": {
+          "measurable": true,
+          "n": 1,
+          "n_correct": 0,
+          "accuracy": 0.0,
+          "cell_recall": 0.0,
+          "n_changing": 1,
+          "n_changes_correct": 0,
+          "change_accuracy": 0.0,
+          "change_fidelity": 0.0,
+          "correct_changed_cells": 0,
+          "spurious_changed_cells": 0,
+          "n_noop": 0,
+          "n_noop_hallucinated": 0,
+          "noop_channel_measurable": false,
+          "error": null
+        }
+      }
+    ]
+  },
+  "findings": [
+    {
+      "finding": "the metric this project calls 'induction heldout_accuracy' is NOT held out on every game it was measured on",
+      "evidence": {
+        "games_with_zero_heldout_transitions": [
+          "cd82",
+          "ft09",
+          "lp85",
+          "r11l",
+          "sp80",
+          "vc33"
+        ],
+        "n_games_built": 20,
+        "exp5831_default_roster": [
+          "ls20",
+          "tu93",
+          "r11l",
+          "lp85",
+          "sc25",
+          "cd82",
+          "sk48",
+          "sp80"
+        ],
+        "exp5831_roster_games_that_could_not_contribute_a_heldout_number": [
+          "cd82",
+          "lp85",
+          "r11l",
+          "sc25",
+          "sp80"
+        ]
+      },
+      "why_it_matters": "exp5831 grades with WorldModelVerifier(list(window)) -- the WHOLE window, including the transitions the prompt showed. On a window with <= 6 transitions the prompt shows all of them, so the reported 'heldout_accuracy' is TRAINING accuracy. Half of exp5831's own roster is in that state (or does not build at all), which is why this run reports the two strata separately."
+    },
+    {
+      "finding": "5 of the 25 public games cannot build an offline induction window at all, so the induction corpus covers 20 games, not 25",
+      "evidence": {
+        "excluded": {
+          "wa30": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+          "sc25": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+          "tn36": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+          "ka59": "build_progress_window raised ValueError: invalid literal for int(): 'C:1'",
+          "dc22": "build_progress_window returned None (no offline L1 window)"
+        }
+      },
+      "why_it_matters": "two distinct pre-existing exceptions (a None adapter reaching .hand_verifier, and an int() parse of 'C:1'). Recorded, not fixed here -- fixing them would change the corpus mid-measurement."
+    },
+    {
+      "finding": "the object block is not free: it lengthens the prompt and the generation",
+      "evidence": {
+        "mean_prompt_chars_off": 8464.7,
+        "mean_prompt_chars_on": 16739.05,
+        "mean_elapsed_s_off": 24.812,
+        "mean_elapsed_s_on": 36.79,
+        "mean_generated_tokens_off": 1307.15,
+        "mean_generated_tokens_on": 1052.767
+      },
+      "why_it_matters": "a live agent under an action/latency budget pays this on every re-induction, so a null on quality is a NET NEGATIVE at equal quality, not a neutral result."
+    },
+    {
+      "finding": "objects_block's documented 'any failure returns \"\"' defence covers only the blob_topology import, not the body",
+      "evidence": {
+        "repro": "objects_block([]) raises IndexError at trans[0].grid",
+        "reachable_from_live_path": false,
+        "why_not_reachable": "induce_prompt dereferences trans[0].grid.shape before it ever calls objects_block, so an empty transition list fails upstream first"
+      },
+      "why_it_matters": "found while writing this harness's PRECONDITIONS probe, which initially probed with [] and therefore measured the probe rather than the treatment (the blocked artifact from that first attempt is preserved at results/arc_object_perception_ab_20260728/blocked_run_precondition_probe_bug.json). Not fixed here: it is a docstring-scope inaccuracy on an unreachable path, and this run must not change the code it is measuring."
+    }
+  ],
+  "verification_gates": [
+    {
+      "gate": "treatment_is_real_in_every_prompt",
+      "principle": "an A/B whose arms produce the same prompt measures the control twice; exp6013 did exactly that with the HUD mask and reported it as two arms",
+      "passed": true,
+      "witness": {
+        "n_games": 20,
+        "n_with_object_header_on": 20,
+        "n_with_object_header_off": 0,
+        "object_block_chars_min": 2704,
+        "object_block_chars_max": 14538
+      }
+    },
+    {
+      "gate": "every_cell_wrote_its_own_isolated_engine_store",
+      "principle": "arms sharing results/arc_e3/<game>/world_model.py overwrite each other's engines; a 2026-07-27 run had to be discarded for this",
+      "passed": true,
+      "witness": {
+        "n_rows": 240,
+        "n_distinct_e3_dirs": 240,
+        "n_distinct_engine_sha256": 238
+      }
+    },
+    {
+      "gate": "min_reachable_p_was_stated_before_the_run",
+      "principle": "a 0-discordance outcome must never be reported as 'no significant difference'; the reachable floor has to be fixed in advance",
+      "passed": true,
+      "witness": {
+        "preregistration_sha256": "sha256:e7230c683087ad643ac070aea5e22ad12493c9f45fcd88d7512dd1c47e25713f",
+        "preregistered_min_reachable_p": 0.0001220703,
+        "recomputed_min_reachable_p": 0.0001220703,
+        "observed_min_reachable_p_at_this_discordance": 1.0,
+        "observed_n_discordant": 0
+      }
+    },
+    {
+      "gate": "generator_stayed_resident_on_the_card_it_was_pinned_to",
+      "principle": "the 2026-07-24 attempt at this same A/B died when a model fell off the PCI bus; per-PID VRAM sampling makes that a recorded fact, not a hang",
+      "passed": true,
+      "witness": {
+        "server_pid": 2651326,
+        "residency_at_start": [
+          {
+            "pid": 2651326,
+            "mib": 13486,
+            "gpu_index": 0
+          }
+        ],
+        "pid_mib_min": 13486,
+        "pid_mib_max": 13488,
+        "pid_mib_last": 13488,
+        "gpu_indices_observed": [
+          0
+        ],
+        "n_vram_samples": 737,
+        "n_collapse_events": 0,
+        "n_health_failures": 0,
+        "wedged": false
+      }
+    },
+    {
+      "gate": "at_least_one_recorded_channel_actually_varied",
+      "principle": "a field that never varies is either a measured floor or a dead channel (a census found 877 stat blocks with an errors key and ZERO non-zero values). Asserting 'every constant field is declared floored' would be FORCED -- the declared list is derived from the census itself -- so the gate instead asks the one question this data can answer NO to: if EVERY channel is constant, the run measured nothing and must fail loudly instead of reporting a null.",
+      "passed": true,
+      "witness": {
+        "census": [
+          {
+            "field": "heldout.accuracy",
+            "n_cells": 168,
+            "n_distinct_values": 1,
+            "constant": true,
+            "all_zero": true
+          },
+          {
+            "field": "heldout.cell_recall",
+            "n_cells": 168,
+            "n_distinct_values": 44,
+            "constant": false,
+            "all_zero": false
+          },
+          {
+            "field": "heldout.change_fidelity",
+            "n_cells": 168,
+            "n_distinct_values": 44,
+            "constant": false,
+            "all_zero": false
+          },
+          {
+            "field": "heldout.correct_changed_cells",
+            "n_cells": 168,
+            "n_distinct_values": 31,
+            "constant": false,
+            "all_zero": false
+          },
+          {
+            "field": "heldout.spurious_changed_cells",
+            "n_cells": 168,
+            "n_distinct_values": 63,
+            "constant": false,
+            "all_zero": false
+          },
+          {
+            "field": "heldout.n_changes_correct",
+            "n_cells": 168,
+            "n_distinct_values": 1,
+            "constant": true,
+            "all_zero": true
+          }
+        ],
+        "n_channels_that_varied": 4,
+        "n_channels_total": 6,
+        "constant_fields_found": [
+          "heldout.accuracy",
+          "heldout.n_changes_correct"
+        ],
+        "declared_floored_fields": [
+          "heldout.accuracy",
+          "heldout.n_changes_correct"
+        ]
+      }
+    },
+    {
+      "gate": "floor_is_reported_as_unmeasurable_not_as_no_difference",
+      "principle": "an instrument that returns the same value on every cell has not measured a null; the prior single Qwen-9B data point was 0.000 on both arms and this run must not launder that into a negative result. The floor is RECOUNTED from the raw cell rows so this gate cannot be satisfied by the analysis agreeing with itself.",
+      "passed": true,
+      "witness": {
+        "floor_recounted_from_raw_rows": true,
+        "n_raw_heldout_accuracy_values": 168,
+        "n_raw_nonzero": 0,
+        "analysis_reported_floor": true,
+        "analysis_agrees_with_raw_recount": true,
+        "verdict_contains_floor_token": true,
+        "n_cells_contributing": 168,
+        "n_distinct_cell_values": 1
+      }
+    },
+    {
+      "gate": "the_null_is_backed_by_a_positive_control_that_moves_the_metric",
+      "principle": "FALSE_NEGATIVE_RISK: a null claim is not a finding unless a positive control shows the metric CAN move. Here the control shows the model the withheld transitions outright (k raised past the window size) and grades on exactly those. If accuracy stays 0.0 even then, this metric is unreachable for this model class and the main comparison says nothing about perception -- which is a materially different conclusion from 'the object block does not help'.",
+      "passed": false,
+      "witness": {
+        "ran": true,
+        "n_cells": 28,
+        "max_accuracy": 0.0,
+        "mean_accuracy": 0.0,
+        "n_cells_with_nonzero_accuracy": 0,
+        "max_cell_recall": 0.442505,
+        "n_cells_with_nonzero_cell_recall": 12
+      }
+    },
+    {
+      "gate": "no_cell_entered_a_comparison_without_its_matched_partner",
+      "principle": "comparing a 22-cell arm against a 25-cell control produced a phantom win difference in an earlier run of this project. Per-game means are taken over replicates where BOTH arms measured; any cell without a partner is dropped and NAMED here, and a run that had to drop cells (wall budget, wedged generator) fails this gate rather than reporting a clean paired result.",
+      "passed": true,
+      "witness": {
+        "scope": "the HELD-OUT stratum, which is what the paired primary claim rests on; the train-only stratum is counted separately below rather than omitted from the ledger",
+        "n_unmatched_cells": 0,
+        "unmatched_cells": [],
+        "n_unmatched_cells_train_only_stratum": 1,
+        "unmatched_cells_train_only_stratum": [
+          "cd82__r0__off"
+        ],
+        "cells_with_no_loadable_engine": [
+          "cd82__r0__on: ValueError: too many values to unpack (expected 2)"
+        ],
+        "per_game_matched_replicates": {
+          "ar25": 6,
+          "bp35": 6,
+          "cn04": 6,
+          "g50t": 6,
+          "lf52": 6,
+          "ls20": 6,
+          "m0r0": 6,
+          "re86": 6,
+          "s5i5": 6,
+          "sb26": 6,
+          "sk48": 6,
+          "su15": 6,
+          "tr87": 6,
+          "tu93": 6
+        }
+      }
+    },
+    {
+      "gate": "every_recorded_number_re_derives_from_the_engine_on_disk",
+      "principle": "the metric code being right does not make the BOOKKEEPING right; a row can record a number produced by a different engine or a different transition slice than it claims. Re-running the SAME production verifier against the SAME engine file on disk catches that class, which no amount of re-implementing the metric would.",
+      "passed": true,
+      "witness": {
+        "n_cells_rechecked": 239,
+        "n_mismatched": 0,
+        "n_skipped_no_engine_or_window": 0,
+        "mismatch_details": [],
+        "what_this_checks": "the row's recorded held-out numbers re-derive from the engine file still on disk in that cell's own isolated directory, at the sha256 the row recorded"
+      }
+    }
+  ],
+  "acceptance_gate_failed_names": [
+    "the_null_is_backed_by_a_positive_control_that_moves_the_metric"
+  ],
+  "acceptance_gate_passed": false,
+  "acceptance_gate_vacuous": [],
+  "acceptance_gate_passed_and_none_vacuous": false,
+  "REQUIRED_PHRASING": "The primary comparison is reported with the number of DISCORDANT per-game pairs and the minimum reachable two-sided p at that discordance. If discordance is 0 the correct statement is 'no test was possible', NOT 'no significant difference'. If every cell returned exactly 0.0 in both arms the correct statement is 'the instrument floored and could not discriminate', NOT 'the object block does not help'.",
+  "methodology_note": "Two arms toggle ONLY CARNOT_ARC_OBJECT_PERCEPTION around the real LocalGGUFProposer.induce -> induce_prompt path, against one warm Qwen3.5-9B-MTP server pinned to a single RTX 3090 (per-PID VRAM sampled throughout). Each cell writes its engine into its own CARNOT_ARC_E3_DIR so no cell can read another arm's engine. The held-out set is the PROMPT COMPLEMENT, identified by rendering each transition's own line with the same _rle_delta_compact the prompt uses and testing membership in the actual prompt string -- not by reimplementing _transitions_block's selection rule. Games whose window has <= 6 transitions show the model everything and are reported in a separate TRAINING-accuracy stratum. Within-pair arm order alternates by replicate. The sampler seed is NOT controlled: the shipped generate() path posts no 'seed' field to llama.cpp (arc_executable_world_model.py generate(), _payload), so replicates are independent draws at temperature 0.2+0.1*attempt and the pairing is by (game, replicate), not by a shared RNG stream. Replication, not seed matching, is what bounds that variance here.",
+  "not_submitted": {
+    "value": true,
+    "principle": "ARC/Kaggle submission is operator-only and the quota gate (an offline result beating both a TRM baseline and the best prior submitted run) is not met; nothing here is submitted and no SUBMITTED_* flag is touched"
+  },
+  "flag_remains_default_off": {
+    "value": true,
+    "principle": "CARNOT_ARC_OBJECT_PERCEPTION is a measurement lever, not a graduation; only the operator flips a default"
+  },
+  "reproducibility_checksum": "sha256:af466e7692f796834acd9a23cd637b63783bce3c221d919d4f599950435ce37e",
+  "rebuild_note": "The measurement process wrote a first artifact with the analyser as it stood at process start. This artifact is a REBUILD from the same recorded cell rows with two additions made while the run was in flight: (1) the field-population census stopped being an acceptance gate because its expected-set was derived from its own input, which made it a FORCED gate that could not fail on real data -- it is now a reported finding plus a gate that can genuinely fail (did any channel vary at all); (2) an on-disk engine re-derivation gate. No cell was re-measured and no recorded number was edited. The pre-rebuild artifact is preserved at artifact_pre_rebuild.json in this run's directory."
+}

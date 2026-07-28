@@ -23,10 +23,23 @@ and did, in the very commit that moved the footprint. These tests are that pin. 
 assert a RELATIONSHIP (guard >= measured footprint + margin, guard moves with n_ctx) rather than a
 magic number, so a future n_ctx change cannot satisfy them without also moving the guard.
 
-Measurement provenance for the numbers asserted below: per-PID `nvidia-smi --query-compute-apps`
-residency of the exact shipped launch (`-ngl 999 -c <ctx> --spec-type draft-mtp --model-draft
+Measurement provenance for the ORIGINAL numbers: per-PID `nvidia-smi --query-compute-apps`
+residency of the then-shipped launch (`-ngl 999 -c <ctx> --spec-type draft-mtp --model-draft
 <same gguf> --cache-type-k q8_0 --cache-type-v q8_0`, Qwen3.5-9B-MTP Q4_K_M, RTX 3090). Two
 independent observations of the 81920 config recorded 13452 MiB and 13518 MiB.
+
+UPDATED 2026-07-28 FOR THE GENERATOR SWITCH. The operator re-pinned the ARC generator from
+Qwen3.5-9B-MTP to gemma-4-31B-it. That is precisely the event this file was written to catch one
+level up: the footprint moved (~13.5 GB -> ~23.9 GB at the same n_ctx, because the 31B's per-token
+KV is ~2x and its weights ~3x) WITHOUT n_ctx changing at all. Left alone, the 9B-derived guard
+would have admitted any card with ~14 GB free and then cudaMalloc-failed on an 18.3 GB model --
+the same silent-LLM-off ending, reached by a model swap rather than a context change. So the
+assertions below now compare against the CURRENT generator's measured residency (mtp OFF, since
+gemma-4-31B declares no MTP heads); the 9B constants are preserved as historical provenance and
+are deliberately no longer what the guard is checked against. A new lever also enters the
+arithmetic: `CARNOT_ARC_FFN_CPU_LAYERS` moves the footprint by ~195 MiB per offloaded layer, and
+a guard blind to it would refuse a card the configured server fits on (covered in
+tests/python/test_arc_ffn_cpu_offload.py).
 """
 
 from __future__ import annotations
@@ -38,16 +51,33 @@ import pytest
 
 MOD = "carnot.agentic.arc_executable_world_model"
 
-# Per-PID measured residency of the shipped mtp-ON launch, in MiB. The larger of the two recorded
-# observations, so the assertion is against the worst measurement we actually hold.
+# HISTORICAL (Qwen3.5-9B-MTP era). Per-PID measured residency of the mtp-ON launch, in MiB; the
+# larger of the two recorded observations, so the assertion was against the worst measurement held.
+# Kept because these are the provenance of every pre-2026-07-28 VRAM number in this repo. They are
+# NO LONGER what the guard is built from -- see the gemma constants below.
 MEASURED_81920_MTP_ON_MIB = 13518
 MEASURED_16384_MTP_ON_MIB = 12095
+
+# CURRENT (gemma-4-31B-it Q4_K_M, the generator since the 2026-07-28 operator directive). Per-PID
+# resident VRAM measured on an RTX 3090, mtp OFF (this model has no MTP heads at all), q8_0 KV,
+# llama-server's default 4 slots, card index confirmed by joining PID -> GPU UUID -> index rather
+# than trusting CUDA_VISIBLE_DEVICES.
+MEASURED_81920_GEMMA31B_MIB = 23888
+MEASURED_32768_GEMMA31B_MIB = 21416
+# Freed VRAM per FFN layer pushed to system RAM via `-ot` (CARNOT_ARC_FFN_CPU_LAYERS). Measured at
+# n_ctx 32768 over 0/12/24/40 CPU layers: 21416 / 19072 / 16728 / 13580 MiB.
+MEASURED_FREED_PER_CPU_FFN_LAYER_MIB = 195.3
 
 
 @pytest.fixture()
 def wm(monkeypatch):
-    """Import the module fresh with a clean env so the n_ctx override cannot leak between tests."""
+    """Import the module fresh with a clean env so an override cannot leak between tests.
+
+    CARNOT_ARC_FFN_CPU_LAYERS is cleared too: since 2026-07-28 it is a second input to the guard,
+    and an ambient value would silently lower every threshold asserted here.
+    """
     monkeypatch.delenv("CARNOT_ARC_INDUCE_N_CTX", raising=False)
+    monkeypatch.delenv("CARNOT_ARC_FFN_CPU_LAYERS", raising=False)
     mod = importlib.import_module(MOD)
     return mod
 
@@ -62,10 +92,11 @@ def test_guard_exceeds_the_measured_footprint_at_the_shipped_n_ctx(wm) -> None:
         "do not just edit the constant"
     )
     guard = wm._generator_cuda_min_free_mb()
-    assert guard > MEASURED_81920_MTP_ON_MIB, (
-        f"free-VRAM guard {guard} MiB does not exceed the MEASURED {MEASURED_81920_MTP_ON_MIB} MiB "
-        "footprint of the launch it guards -- a card between the two passes the guard and then "
-        "cudaMalloc-fails, silently returning the agent to LLM-off"
+    assert guard > MEASURED_81920_GEMMA31B_MIB, (
+        f"free-VRAM guard {guard} MiB does not exceed the MEASURED "
+        f"{MEASURED_81920_GEMMA31B_MIB} MiB footprint of the launch it guards -- a card between "
+        "the two passes the guard and then cudaMalloc-fails, silently returning the agent to "
+        "LLM-off"
     )
 
 
@@ -73,10 +104,10 @@ def test_guard_carries_real_margin_over_the_measured_footprint(wm) -> None:
     """A guard that merely equals the footprint admits a card with zero slack for driver
     overhead, allocator fragmentation, or a second transient process. Require a real margin."""
     guard = wm._generator_cuda_min_free_mb()
-    margin = guard - MEASURED_81920_MTP_ON_MIB
+    margin = guard - MEASURED_81920_GEMMA31B_MIB
     assert margin >= 1000, (
         f"only {margin} MiB of margin between the guard ({guard}) and the measured footprint "
-        f"({MEASURED_81920_MTP_ON_MIB}); binding a card this tightly is how the 2026-07-21 "
+        f"({MEASURED_81920_GEMMA31B_MIB}); binding a card this tightly is how the 2026-07-21 "
         "self-heal-onto-a-full-card incident happened"
     )
 
@@ -86,12 +117,15 @@ def test_guard_tracks_the_env_override_rather_than_being_a_literal(wm, monkeypat
     would stay put while the footprint it guards moved -- in BOTH directions."""
     baseline = wm._generator_cuda_min_free_mb()
 
-    monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "16384")
+    # 32768, not 16384: 32768 is a point we have DIRECTLY MEASURED for the current generator.
+    # 16384 was only ever measured for the retired 9B, and asserting against a footprint from a
+    # different model is how a guard stops guarding while its tests stay green.
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "32768")
     lowered = wm._generator_cuda_min_free_mb()
     assert lowered < baseline, "guard did not fall when the operator lowered the context pool"
-    assert lowered > MEASURED_16384_MTP_ON_MIB, (
-        f"guard {lowered} MiB does not clear the measured {MEASURED_16384_MTP_ON_MIB} MiB "
-        "footprint of the 16384 configuration"
+    assert lowered > MEASURED_32768_GEMMA31B_MIB, (
+        f"guard {lowered} MiB does not clear the measured {MEASURED_32768_GEMMA31B_MIB} MiB "
+        "footprint of the 32768 configuration"
     )
 
     monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "163840")
@@ -106,18 +140,30 @@ def test_guard_is_derived_from_the_same_slot_count_the_fault_analysis_used(wm) -
     """
     assert wm._LLAMA_SERVER_DEFAULT_SLOTS == 4
     predicted = (
-        wm._VRAM_MTP_ON_INTERCEPT_MIB
-        + wm._VRAM_MTP_ON_PER_CTX_MIB * 81920
+        wm._VRAM_GEMMA31B_INTERCEPT_MIB
+        + wm._VRAM_GEMMA31B_PER_CTX_MIB * 81920
         + wm._VRAM_PER_SLOT_MIB * wm._LLAMA_SERVER_DEFAULT_SLOTS
     )
     # The published envelope's own prediction must land within a few percent of what was measured,
     # otherwise the envelope this guard is built on does not describe the shipped launch.
-    err = abs(predicted - MEASURED_81920_MTP_ON_MIB) / MEASURED_81920_MTP_ON_MIB
+    err = abs(predicted - MEASURED_81920_GEMMA31B_MIB) / MEASURED_81920_GEMMA31B_MIB
     assert err < 0.02, (
         f"envelope predicts {predicted:.0f} MiB but the shipped launch measured "
-        f"{MEASURED_81920_MTP_ON_MIB} MiB ({err:.1%} error) -- the envelope no longer describes "
+        f"{MEASURED_81920_GEMMA31B_MIB} MiB ({err:.1%} error) -- the envelope no longer describes "
         "the launch, so a guard derived from it is not trustworthy"
     )
+    # ...and it must ALSO describe the other measured point, which is the only thing that makes a
+    # two-point fit more than a restatement of one measurement.
+    predicted_32k = (
+        wm._VRAM_GEMMA31B_INTERCEPT_MIB
+        + wm._VRAM_GEMMA31B_PER_CTX_MIB * 32768
+        + wm._VRAM_PER_SLOT_MIB * wm._LLAMA_SERVER_DEFAULT_SLOTS
+    )
+    # The FFN-offload credit is a measurement too, and it belongs to the same envelope; pin it here
+    # so the module constant and this file's recorded measurement cannot drift apart.
+    assert wm._VRAM_PER_CPU_FFN_LAYER_MIB == MEASURED_FREED_PER_CPU_FFN_LAYER_MIB
+    err_32k = abs(predicted_32k - MEASURED_32768_GEMMA31B_MIB) / MEASURED_32768_GEMMA31B_MIB
+    assert err_32k < 0.02, (predicted_32k, MEASURED_32768_GEMMA31B_MIB)
 
 
 def test_the_stale_11_5gb_comment_is_gone(wm) -> None:

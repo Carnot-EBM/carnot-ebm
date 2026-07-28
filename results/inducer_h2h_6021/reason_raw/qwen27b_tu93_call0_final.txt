@@ -1,0 +1,43 @@
+```python
+import numpy as np
+
+def engine(grid, action, data):
+    grid = grid.copy()
+    # Locate the player (center is color 4)
+    pos = np.argwhere(grid == 4)
+    if len(pos) == 0:
+        return grid
+    r, c = pos[0]
+    
+    # Convert to macro-grid coordinates (rooms are 6x6 spaced, starting at 15,15)
+    mr = (r - 15) // 6
+    mc = (c - 15) // 6
+    
+    dr, dc = 0, 0
+    if action == 1: dr = -1
+    elif action == 2: dr = 1
+    elif action == 3: dc = -1
+    elif action == 4: dc = 1
+    else: return grid  # Actions 5-7 do not move the player
+    
+    nmr, nmc = mr + dr, mc + dc
+    
+    # Check bounds of the 6x5 room grid
+    if 0 <= nmr < 6 and 0 <= nmc < 5:
+        # Clear old player position
+        grid[r-1:r+2, c-1:c+2] = 0
+        
+        # Calculate new center position
+        nr = 15 + nmr * 6 + 1
+        nc = 15 + nmc * 6 + 1
+        
+        # Place new player block (3x3 of 9s with 4 in center)
+        grid[nr-1:nr+2, nc-1:nc+2] = 9
+        grid[nr, nc] = 4
+        
+    return grid
+
+def is_level_complete(grid):
+    # The win state is characterized by the bottom row being entirely color 6
+    return np.all(grid[63] == 6)
+```

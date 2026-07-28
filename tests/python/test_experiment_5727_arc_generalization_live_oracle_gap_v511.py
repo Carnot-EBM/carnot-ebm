@@ -177,7 +177,9 @@ def test_scenario_arc_wmte_5727_builds_gap_artifact_and_tiebreaks_provenance(
                     _live_row("small", levels=3, oracle=4),
                     _live_row("livetie", levels=1, oracle=9),
                     _live_row("devtie", levels=1, oracle=9),
-                    _live_row("big", levels=0, oracle=10, skipped="proposer_failed_or_missing_root"),
+                    _live_row(
+                        "big", levels=0, oracle=10, skipped="proposer_failed_or_missing_root"
+                    ),
                 ],
             }
         ),
@@ -282,9 +284,14 @@ def test_req_arc_wmte_5727_e3_proposer_port_env_override(monkeypatch) -> None:
     proposer = policy._proposer()
 
     assert isinstance(proposer, LocalGGUFProposer)
-    assert proposer.repo_substr == "Qwen3.5-9B-MTP"
+    # Re-pinned 2026-07-28 (operator directive): the live generator is gemma-4-31B-it, and mtp is
+    # OFF because that model declares no MTP heads -- leaving it on would emit
+    # `--spec-type draft-mtp --model-draft <the same 18.3GB file>` and load the weights twice.
+    # This assertion reads the REAL `_proposer()`, so it is one of the sites that would catch a
+    # partial revert; see tests/python/test_arc_live_generator_pin.py for the full set.
+    assert proposer.repo_substr == "gemma-4-31B-it"
     assert proposer.port == 8922
-    assert proposer.mtp is True
+    assert proposer.mtp is False
     assert proposer.kv_quant == "q8_0"
 
 
@@ -339,14 +346,22 @@ def test_req_arc_wmte_5727_defensive_branches_are_explicit(monkeypatch, tmp_path
     assert mod.verifier_gap_reference("SEARCH/BUDGET", "") == (
         "not_a_new_missing_discriminator_search_or_budget_gap"
     )
-    assert mod.verifier_gap_reference("PERCEPTION", "perception backlog") == "existing_perception_gap"
+    assert (
+        mod.verifier_gap_reference("PERCEPTION", "perception backlog") == "existing_perception_gap"
+    )
     assert mod.verifier_gap_reference("PERCEPTION", "") == "no_new_missing_discriminator_logged"
-    assert mod.inference_substrate_by_game(
-        [
-            {"game": "none"},
-            {"game": "attempt", "policy_diagnostics": {"induction_attempts": [{"planned": False}]}},
-        ]
-    )["attempt"]["tier3_qwen35_mtp_escalated"] is True
+    assert (
+        mod.inference_substrate_by_game(
+            [
+                {"game": "none"},
+                {
+                    "game": "attempt",
+                    "policy_diagnostics": {"induction_attempts": [{"planned": False}]},
+                },
+            ]
+        )["attempt"]["tier3_qwen35_mtp_escalated"]
+        is True
+    )
 
     bad = mod.blocked_artifact(
         "not_terminal",

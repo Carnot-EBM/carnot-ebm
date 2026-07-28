@@ -1,0 +1,35 @@
+{
+ "arms": {
+  "f16": "QC_egpu_24576_f16_chat",
+  "q8_0": "QC_egpu_24576_q8_chat"
+ },
+ "n_games": 2,
+ "n_byte_identical": 0,
+ "verdict": "q8_0 KV DIVERGES from f16 -- see per-game common_prefix_chars for the fidelity budget",
+ "per_game": [
+  {
+   "game": "ls20",
+   "f16_chars": 701,
+   "q8_chars": 692,
+   "identical": false,
+   "common_prefix_chars": 97,
+   "prefix_fraction_of_shorter": 0.140173,
+   "first_divergence_context": {
+    "f16": " Colors: [0, 1, 3, 4, 5, 8, 9, 11, 12].\n    *   Initial grid layout:\n        *   Rows 0-7: `5x4, 4x60` (Col 0-3: 5, Col ",
+    "q8": " Colors: [0, 1, 3, 4, 5, 8, 9, 11, 12].\n    *   Initial grid:\n        *   r0-r7: 5x4, 4x60 (Col 0-3: 5, Col 4-63: 4)\n   "
+   }
+  },
+  {
+   "game": "tu93",
+   "f16_chars": 966,
+   "q8_chars": 1010,
+   "identical": false,
+   "common_prefix_chars": 114,
+   "prefix_fraction_of_shorter": 0.118012,
+   "first_divergence_context": {
+    "f16": ", 5, 6, 9, 14].\n    *   Initial grid: A complex layout with mostly color 5 (background), and some structures made of 0, ",
+    "q8": ", 5, 6, 9, 14].\n    *   Initial grid: A complex layout with color 5 as the background.\n    *   Actions: 1-7. ACTION6 is "
+   }
+  }
+ ]
+}

@@ -64,6 +64,24 @@ emitted row file records `budget`, `scored_agent_max_actions` and `budget_matche
 reader can always tell which one they are holding.
 """
 
+# ---------------------------------------------------------------------------------------------
+# FROZEN PRE-2026-07-28 HARNESS -- MEASURES THE **RETIRED** GENERATOR.
+#
+# This script pins Qwen3.5-9B-MTP and describes itself as reproducing the scored/live path. That
+# was true when it was written and is NO LONGER TRUE: the operator directive of 2026-07-28
+# re-pinned the live ARC generator to gemma-4-31B-it (13 games x 3 replicates, fail-as-zero 0.3843
+# vs 0.0627, matched 11-0-2, sign p=0.00098), and the live sites now read
+# `ARC_LIVE_GENERATOR_REPO_SUBSTR` from `arc_executable_world_model`.
+#
+# The pin below is DELIBERATELY LEFT ALONE rather than migrated, because this harness's recorded
+# historical results were genuinely taken on the 9B and re-pointing it would silently change what
+# those results mean (never-prune). The cost of leaving it is that a NEW run through this file
+# measures the retired generator while its own prose claims to characterise the live one.
+#
+# THEREFORE: results produced by this script from 2026-07-28 onward are NOT citable as live-path
+# evidence. If you need a live-path A/B, read the canonical constants instead of this pin.
+# ---------------------------------------------------------------------------------------------
+
 from __future__ import annotations
 
 import argparse
@@ -393,7 +411,16 @@ def build_proposer(port: int):
     inner = LocalGGUFProposer(
         repo_substr="Qwen3.5-9B-MTP",
         model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),

@@ -187,7 +187,9 @@ def _normalise_measurement(
     levels = _levels_by_game(measurement)
     efficiency_by_game = _per_game_efficiency(measurement)
     if measurement.get("core_efficiency") is None and efficiency_by_game:
-        efficiency = _round_efficiency(sum(efficiency_by_game.get(game, 0.0) for game in CORE_GAMES))
+        efficiency = _round_efficiency(
+            sum(efficiency_by_game.get(game, 0.0) for game in CORE_GAMES)
+        )
     else:
         efficiency = _round_efficiency(measurement.get("core_efficiency"))
     return {
@@ -195,7 +197,9 @@ def _normalise_measurement(
         "measurement": str(measurement.get("measurement") or label),
         "core_efficiency": efficiency,
         "deepest_level_by_game": levels,
-        "efficiency_by_game": {game: float(efficiency_by_game.get(game, 0.0)) for game in CORE_GAMES},
+        "efficiency_by_game": {
+            game: float(efficiency_by_game.get(game, 0.0)) for game in CORE_GAMES
+        },
     }
 
 
@@ -278,7 +282,7 @@ def refinement_rounds_from_measurement(measurement: Mapping[str, Any]) -> dict[s
         if not isinstance(row, Mapping) or str(row.get("game")) not in rounds:
             continue
         game = str(row["game"])
-        for attempt in ((row.get("diagnostics") or {}).get("induction_attempts") or []):
+        for attempt in (row.get("diagnostics") or {}).get("induction_attempts") or []:
             if isinstance(attempt, Mapping) and attempt.get("refinement_rounds_used") is not None:
                 rounds[game].append(int(attempt.get("refinement_rounds_used") or 0))
     return rounds
@@ -315,11 +319,15 @@ def _default_barrier(
     if success:
         return "resolved: executable proposer reached a deeper CORE level and replayed offline."
     if not _positive_control_passed(positive_control):
-        reason = positive_control.get("skipped") or positive_control.get("message") or "unverified_plan"
+        reason = (
+            positive_control.get("skipped") or positive_control.get("message") or "unverified_plan"
+        )
         return f"positive_control_failed: executable proposer gate failed before CORE measurement ({reason})."
     attempts = _attempts(executable_proposer)
     if not attempts:
-        return "no_post_level_executable_reinduction_attempt_observed_after_positive_control_passed."
+        return (
+            "no_post_level_executable_reinduction_attempt_observed_after_positive_control_passed."
+        )
     skipped = sorted({str(attempt.get("skipped") or "attempted") for attempt in attempts})
     counters = [
         str(counter.get("kind"))
@@ -598,8 +606,12 @@ def _blocked_artifact(
     artifact = build_artifact(
         preconditions_checked={
             **dict(preconditions_checked),
-            "offline_arcade_import_smoke": bool(preconditions_checked.get("offline_arcade_import_smoke")),
-            "qwen3_5_9b_mtp_gguf_cached": bool(preconditions_checked.get("qwen3_5_9b_mtp_gguf_cached")),
+            "offline_arcade_import_smoke": bool(
+                preconditions_checked.get("offline_arcade_import_smoke")
+            ),
+            "qwen3_5_9b_mtp_gguf_cached": bool(
+                preconditions_checked.get("qwen3_5_9b_mtp_gguf_cached")
+            ),
             "llama_cpp_import": bool(preconditions_checked.get("llama_cpp_import")),
             "spec_has_req_4557": bool(preconditions_checked.get("spec_has_req_4557")),
         },
@@ -662,7 +674,16 @@ def live_positive_control_invocation(
     runner = proposer or LocalGGUFProposer(
         repo_substr=GENERATOR_REPO_SUBSTR,
         model_path=model_path,
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=DEFAULT_LLM_MAX_TOKENS,
@@ -746,16 +767,26 @@ def run(
     *,
     root: Path | str = REPO_ROOT,
     preconditions_checked: Mapping[str, Any] | None = None,
-    measurement_runner: Callable[[], tuple[Mapping[str, Any], Mapping[str, Any]]] = measure_conditions,
+    measurement_runner: Callable[
+        [], tuple[Mapping[str, Any], Mapping[str, Any]]
+    ] = measure_conditions,
     positive_control_runner: Callable[[], Mapping[str, Any]] | None = None,
-    offline_reproduction_runner: Callable[[Mapping[str, Any]], Mapping[str, Any]] = reproduce_best_l2,
-    live_invocation_runner: Callable[[Any | None, str | None], Mapping[str, Any]] = live_positive_control_invocation,
+    offline_reproduction_runner: Callable[
+        [Mapping[str, Any]], Mapping[str, Any]
+    ] = reproduce_best_l2,
+    live_invocation_runner: Callable[
+        [Any | None, str | None], Mapping[str, Any]
+    ] = live_positive_control_invocation,
     random_seed: int = RANDOM_SEED,
     now: Callable[[], float] = time.monotonic,
 ) -> dict[str, Any]:
     root_path = Path(root)
     started = float(now())
-    checks = dict(preconditions_checked) if preconditions_checked is not None else check_preconditions(root_path)
+    checks = (
+        dict(preconditions_checked)
+        if preconditions_checked is not None
+        else check_preconditions(root_path)
+    )
     model_path = checks.get("qwen3_5_9b_mtp_gguf_path")
     model_specs = f"{GENERATOR_REPO_SUBSTR} GGUF ({model_path})"
     if checks.get("ok") is not True:

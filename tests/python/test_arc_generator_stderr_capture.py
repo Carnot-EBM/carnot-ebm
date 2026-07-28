@@ -93,7 +93,15 @@ def launched(tmp_path, monkeypatch):
     fake_bin.chmod(0o755)
     fake_gguf = tmp_path / "model.gguf"
     fake_gguf.write_bytes(b"GGUF")
-    monkeypatch.setattr(m, "_generator_server_and_env", lambda: (fake_bin, None))
+    # Accepts the `ffn_cpu_layers` argument the real function gained on 2026-07-28:
+    # `_ensure_server()` threads the proposer's ACTUAL offload count through so the free-VRAM
+    # guard budgets for the offload the server will really launch with, rather than for whatever
+    # `_default_ffn_cpu_layers()` happens to return on a second, later read. A 0-arg stub here
+    # does not just fail -- it would, if written as `*_a, **_k`, silently stop exercising that
+    # wiring, so the parameter is named rather than swallowed.
+    monkeypatch.setattr(
+        m, "_generator_server_and_env", lambda _ffn_cpu_layers=None, _mtp=None: (fake_bin, None)
+    )
     p = m.LocalGGUFProposer()
     p.model_path = str(fake_gguf)
     p.port = 45001

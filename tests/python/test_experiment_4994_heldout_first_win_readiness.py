@@ -51,6 +51,16 @@ def _source(*, experiment_id: int = 4983) -> JsonDict:
         "heldout_variant_attempts": 100,
         "honest_verdict": "complete_heldout_first_win_0.04_full25_final_flag_resolved",
         "inference_substrate": "live_llm_inference",
+        # DELIBERATELY NOT MIGRATED TO gemma-4-31B-it (2026-07-28). This fixture stands in for the
+        # FROZEN historical artifacts exp4983 / exp4972, which were measured on Qwen3.5-9B-MTP and
+        # still carry `model_specs.name == "Qwen3.5-9B-MTP"` on disk. `_source_blocker()` in the
+        # module under test validates exactly that stamp, so this fixture must keep describing the
+        # generator those measurements actually ran on. The 2026-07-28 generator switch re-pinned
+        # the LIVE stack; it does not retroactively change what a past experiment ran on, and
+        # editing this to "gemma-4-31B-it" would make the test assert a falsehood about the
+        # historical record (it also fails outright). If a future generator switch sweeps
+        # Qwen->something across the tree, this site and its sibling in
+        # test_experiment_4939_heldout_first_win_readiness.py must be left alone.
         "model_specs": {
             "backend": "gpu0_cuda",
             "cuda_visible_devices": "0",
@@ -137,6 +147,8 @@ def test_scenario_capstone_4994_carries_clean_exp4983_and_exp4972(tmp_path: Path
     assert artifact["adversarial_verification"]["live_recheck"] == "warn"
     assert artifact["adversarial_verification"]["warn_count"] == 1
     assert artifact["positive_control_passed"] is True
+    # Stays Qwen3.5-9B-MTP: this asserts the methodology stamp carried from the FROZEN exp4983 /
+    # exp4972 artifacts, not the current live generator pin. See the note on `_source()` above.
     assert artifact["model_specs"]["name"] == "Qwen3.5-9B-MTP"
     assert artifact["inference_substrate"] == "live_llm_inference"
     assert artifact["solve_provenance"] == "development_proxy"

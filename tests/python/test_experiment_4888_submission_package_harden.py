@@ -53,9 +53,9 @@ def _config_resolution(ok: bool = True) -> JsonDict:
     return {
         "resolved": ok,
         "blocked_resource": "" if ok else "agent_config",
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -67,7 +67,7 @@ def _config_resolution(ok: bool = True) -> JsonDict:
         "checks": {
             "submitted_policy_e3": True,
             "submitted_cascade": True,
-            "model_is_qwen35_mtp": True,
+            "model_is_pinned_generator": True,
             "model_filename": True,
             "mtp_enabled": ok,
             "q8_kv": True,
@@ -85,7 +85,7 @@ def _model_resolution(ok: bool = True) -> JsonDict:
         "blocked_resource": "" if ok else "model_paths",
         "gguf": {
             "path": "/cache/Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
-            "filename": "Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
+            "filename": "gemma-4-31B-it-Q4_K_M.gguf" if ok else "",
             "present": ok,
             "size_bytes": MODEL_BYTES if ok else 0,
             "size_gb": 5.868827 if ok else 0.0,
@@ -232,7 +232,10 @@ def test_scenario_capstone_4888_ready_artifact_is_operator_only_final_checklist(
     assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
     assert any("6/30" in step for step in artifact["operator_submission_checklist"])
     assert any("experiment_4877" in step for step in artifact["operator_submission_checklist"])
-    assert any("this task never submits" in step.lower() for step in artifact["operator_submission_checklist"])
+    assert any(
+        "this task never submits" in step.lower()
+        for step in artifact["operator_submission_checklist"]
+    )
     assert artifact["blocked_resource"] == ""
     assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
     assert mod.artifact_schema_errors(artifact) == []
@@ -258,8 +261,9 @@ def test_scenario_capstone_4888_missing_model_path_blocks_without_submit_claim()
     assert artifact["operator_only"] is True
     assert artifact["blocked_resource"] == "model_paths"
     assert artifact["vram_breakdown"]["blocked_resource"] == "model_paths"
-    assert "blocked until this JSON reports success_submission_package_ready_final_pre_deadline" in (
-        artifact["operator_submission_checklist"][0]
+    assert (
+        "blocked until this JSON reports success_submission_package_ready_final_pre_deadline"
+        in (artifact["operator_submission_checklist"][0])
     )
     assert mod.artifact_schema_errors(artifact) == []
 
@@ -392,7 +396,9 @@ def test_scenario_capstone_4888_run_blocks_missing_model_paths(tmp_path: Path) -
 
     assert artifact["honest_verdict"] == "blocked_model_paths"
     assert artifact["vram_breakdown"] == mod.blocked_vram_payload("model_paths")
-    assert artifact["ready_package_regression_check"]["checks"]["model_paths_still_resolve"] is False
+    assert (
+        artifact["ready_package_regression_check"]["checks"]["model_paths_still_resolve"] is False
+    )
     assert artifact["duration_s"] == 0.25
 
 

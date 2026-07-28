@@ -53,9 +53,9 @@ def _config_resolution(ok: bool = True) -> JsonDict:
     return {
         "resolved": ok,
         "blocked_resource": "" if ok else "agent_config",
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -67,7 +67,7 @@ def _config_resolution(ok: bool = True) -> JsonDict:
         "checks": {
             "submitted_policy_e3": True,
             "submitted_cascade": True,
-            "model_is_qwen35_mtp": True,
+            "model_is_pinned_generator": True,
             "model_filename": True,
             "mtp_enabled": ok,
             "q8_kv": True,
@@ -85,7 +85,7 @@ def _model_resolution(ok: bool = True) -> JsonDict:
         "blocked_resource": "" if ok else "model_paths",
         "gguf": {
             "path": "/cache/Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
-            "filename": "Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
+            "filename": "gemma-4-31B-it-Q4_K_M.gguf" if ok else "",
             "present": ok,
             "size_bytes": MODEL_BYTES if ok else 0,
             "size_gb": 5.868827 if ok else 0.0,
@@ -236,7 +236,10 @@ def test_scenario_capstone_4898_ready_artifact_is_operator_only_final_checklist(
     assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
     assert any("6/30" in step for step in artifact["operator_submission_checklist"])
     assert any("experiment_4888" in step for step in artifact["operator_submission_checklist"])
-    assert any("this task never submits" in step.lower() for step in artifact["operator_submission_checklist"])
+    assert any(
+        "this task never submits" in step.lower()
+        for step in artifact["operator_submission_checklist"]
+    )
     assert artifact["blocked_resource"] == ""
     assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
     assert mod.artifact_schema_errors(artifact) == []
@@ -262,8 +265,9 @@ def test_scenario_capstone_4898_missing_model_path_blocks_without_submit_claim()
     assert artifact["operator_only"] is True
     assert artifact["blocked_resource"] == "model_paths"
     assert artifact["vram_breakdown"]["blocked_resource"] == "model_paths"
-    assert "blocked until this JSON reports success_submission_package_ready_final_pre_deadline" in (
-        artifact["operator_submission_checklist"][0]
+    assert (
+        "blocked until this JSON reports success_submission_package_ready_final_pre_deadline"
+        in (artifact["operator_submission_checklist"][0])
     )
     assert mod.artifact_schema_errors(artifact) == []
 
@@ -349,7 +353,10 @@ def test_scenario_capstone_4898_preconditions_check_required_files(tmp_path: Pat
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
 
-    assert mod.read_prior_ready_package(tmp_path)["experiment"] == "experiment_4888_submission_package_harden"
+    assert (
+        mod.read_prior_ready_package(tmp_path)["experiment"]
+        == "experiment_4888_submission_package_harden"
+    )
     ready = mod.check_preconditions(tmp_path)
     assert ready["ok"] is True
     assert ready["spec_has_req_4898"] is True
@@ -367,7 +374,9 @@ def test_scenario_capstone_4898_run_paths_write_or_block(tmp_path: Path) -> None
         now=lambda: next(blocked_ticks),
     )
     assert blocked["honest_verdict"] == "blocked_packaging_scripts_missing"
-    assert blocked["package_builds"] == mod.blocked_package_builds_payload("packaging_scripts_missing")
+    assert blocked["package_builds"] == mod.blocked_package_builds_payload(
+        "packaging_scripts_missing"
+    )
     assert blocked["packaging_requirements_crosscheck"] == mod.blocked_requirements_payload(
         "packaging_scripts_missing"
     )
@@ -392,7 +401,10 @@ def test_scenario_capstone_4898_run_paths_write_or_block(tmp_path: Path) -> None
     )
     assert missing_model["honest_verdict"] == "blocked_model_paths"
     assert missing_model["vram_breakdown"] == mod.blocked_vram_payload("model_paths")
-    assert missing_model["ready_package_regression_check"]["checks"]["model_paths_still_resolve"] is False
+    assert (
+        missing_model["ready_package_regression_check"]["checks"]["model_paths_still_resolve"]
+        is False
+    )
     assert missing_model["duration_s"] == 0.25
 
     ready_ticks = iter((100.0, 100.25))

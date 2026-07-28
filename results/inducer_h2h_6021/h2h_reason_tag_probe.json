@@ -1,0 +1,96 @@
+{
+  "gemma31b": {
+    "arm": "gemma31b",
+    "calls": [
+      {
+        "call_index": 0,
+        "content_len": 26005,
+        "final_head_240": "```python\nimport numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    Predicts the next grid state based on the action and the current grid.\n    The game involves a 3x3 block (center color 4, perimeter color 9) moving \n    on a 64x64 gr",
+        "final_len": 2874,
+        "harness_wrapped": true,
+        "reasoning_head_240": "*   Grid size: 64x64.\n    *   Colors: [0, 2, 4, 5, 6, 9, 14].\n    *   Initial Grid:\n        *   Rows 0-14: all 5.\n        *   Rows 15-17: 5x15, 0x3, 2x3, 0x3, 5x3, 0x3, 2x3, 0x3, 2x3, 0x3, 5x22.\n        *   Rows 18-20: 5x21, 2x3, 5x3, 2x3, ",
+        "reasoning_len": 23113,
+        "server_returned_reasoning_content": true,
+        "tag_source": "harness_wrapper",
+        "tags_matched_in_detector_input": [
+          "<think",
+          "</think"
+        ],
+        "tags_matched_in_model_bytes": []
+      }
+    ],
+    "cell_s": 393.14,
+    "game": "tu93",
+    "label": "gemma-4-31B-it",
+    "row": {
+      "heldout_accuracy": 0.0,
+      "induce_ok": true,
+      "last_stop_type": "eos",
+      "max_raw_completion_len": 26005,
+      "overran": false,
+      "reason_engaged": true
+    },
+    "server": {
+      "completion_probe": {
+        "alive": true,
+        "content": "4$\n<|channel>.g own own",
+        "s": 0.29
+      },
+      "gpu_uuid_proven": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "health_wait_s": 10.0,
+      "n_ctx_deployed": 32768,
+      "pid": 2771657,
+      "port": 8978,
+      "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "residency_mib_gpu1": 21416
+    },
+    "status": "ok"
+  },
+  "qwen27b": {
+    "arm": "qwen27b",
+    "calls": [
+      {
+        "call_index": 0,
+        "content_len": 26263,
+        "final_head_240": "```python\nimport numpy as np\n\ndef engine(grid, action, data):\n    grid = grid.copy()\n    # Locate the player (center is color 4)\n    pos = np.argwhere(grid == 4)\n    if len(pos) == 0:\n        return grid\n    r, c = pos[0]\n    \n    # Convert",
+        "final_len": 1158,
+        "harness_wrapped": true,
+        "reasoning_head_240": "The user wants me to induce a world model for an ARC-AGI-3 game called 'tu93'.\nLet's analyze the observed transitions.\n\nFirst, let's understand the grid layout.\nThe grid is 64x64.\nColors: 0 (black), 2 (red), 4 (yellow), 5 (gray), 6 (magenta",
+        "reasoning_len": 25087,
+        "server_returned_reasoning_content": true,
+        "tag_source": "harness_wrapper",
+        "tags_matched_in_detector_input": [
+          "<think",
+          "</think"
+        ],
+        "tags_matched_in_model_bytes": []
+      }
+    ],
+    "cell_s": 269.57,
+    "game": "tu93",
+    "label": "qwen3.6-27B-base",
+    "row": {
+      "heldout_accuracy": 0.0,
+      "induce_ok": true,
+      "last_stop_type": "eos",
+      "max_raw_completion_len": 26263,
+      "overran": false,
+      "reason_engaged": true
+    },
+    "server": {
+      "completion_probe": {
+        "alive": true,
+        "content": "4",
+        "s": 0.11
+      },
+      "gpu_uuid_proven": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "health_wait_s": 10.0,
+      "n_ctx_deployed": 32768,
+      "pid": 2766437,
+      "port": 8977,
+      "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+      "residency_mib_gpu1": 17856
+    },
+    "status": "ok"
+  }
+}

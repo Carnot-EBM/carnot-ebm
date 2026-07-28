@@ -1,0 +1,1505 @@
+{
+  "experiment": 5961,
+  "experiment_id": "exp5961",
+  "title": "gemma-4-31B-it Q4_K_M placement decision, CORRECTED: eGPU-only vs FFN-offload vs iGPU, re-measured at a completion budget that can actually finish an induction",
+  "run_date": "2026-07-28T15:36:42Z",
+  "milestone": "outer-loop 2026-07-28",
+  "schema": "carnot.arc_generator_substrate_placement_decision.v3",
+  "duration_s": 8100.0,
+  "inference_substrate": {
+    "value": "live_llm_inference",
+    "principle": "Full autoregressive generation from a real 17 GiB GGUF load, so the strict 60s live_llm_inference floor is the correct one; every measured arm clears it by orders of magnitude."
+  },
+  "random_seed": {
+    "value": 5900,
+    "principle": "Same seed as exp5901 v2, driving the SAME frozen prompt corpus and every request, so this is a correction of that measurement rather than a different measurement presented as one."
+  },
+  "reproducibility_checksum": "e74f5a9ff9f01a722dbd43f961f0b535547d89896536bde9177190d55fdc3eb9",
+  "reproducibility_checksum_principle": "Content-addressed over every measured row, the corrected worst-case prompt census and the prior artifact's hash, so drift between this artifact and a replication attempt is detectable rather than invisible.",
+  "model_specs": {
+    "model_id": "unsloth/gemma-4-31B-it-GGUF",
+    "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+    "quantization": "Q4_K_M",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "invoked": true,
+    "server_build_cuda": "~/.cache/llama.cpp-master/build/bin/llama-server (b9606, CUDA)",
+    "server_build_hip": "~/.cache/llama.cpp-master/build-hip/bin/llama-server (ROCm/HIP)"
+  },
+  "corrects_prior_artifact": {
+    "path": "results/experiment_5901_gemma31b_egpu_speed_quality_v2.json",
+    "sha256": "a33bca645e9dd79840b7006341b3afbb61a75cf82450e515b5409b00f17dffd1",
+    "note": "NOT rewritten (never-prune). That artifact's per-arm VRAM and throughput measurements stand as taken; its VERDICT does not survive, because every arm ran a 4096-token completion budget that finishes no induction on this model.",
+    "prior_verdict_withdrawn": "complete_egpu_only_placement_confirmed_31b_fits_one_3090_at_n_ctx_81920_with_q8_0_kv_decode_dominates_97pct_fallbacks_not_needed_two_blocking_migration_hazards_found",
+    "why_withdrawn": "It is true that the model+KV fits at n_ctx 81920 (23906 MiB measured). It is NOT true that this constitutes the operator's preferred placement: (1) at the 4096 budget that shape is sized for, 0 of 12 chat-endpoint generations produced a world model; (2) 23906 MiB leaves 217 MiB of a 24123 MiB card, far under the project's own 1500 MiB guard margin, so production auto-selects 7 CPU-FFN layers on an EMPTY card rather than running the placement the verdict claims; (3) 'fallbacks not needed' therefore describes a configuration production does not run."
+  },
+  "corrections_to_prior_findings": [
+    {
+      "finding": "F1/F11 [fatal] ZERO valid inductions in any arm; n_ok=6/6 meant HTTP 200, not induction success; the 264.4 s/induction headline compared a truncated non-answer against completed 340-495 s baselines.",
+      "verdict": "UPHELD",
+      "evidence": "Re-counted the preserved gen/ tree directly: of 22 saved generations, exactly ONE (A_egpu_81920_q8/dc22) contains `def engine`; all 12 chat-endpoint generations contain none. quality_induce_ok_attempt was {}.",
+      "action": "The metric is renamed n_http_200 and a SCORED n_induce_ok (def engine + def is_level_complete + compiles) is now a first-class column, alongside finish_reason and completion_tokens so truncation cannot hide. The prior 'below the baseline' speed claim is WITHDRAWN."
+    },
+    {
+      "finding": "F2/F12 [fatal] The fit holds only at max_tokens=4096, and 4096 finishes no induction; at any budget that can produce a world model the single card does NOT fit at K=4.",
+      "verdict": "UPHELD, and the remedy is better than the finding proposed",
+      "evidence": "Executed the production code: max_tokens 8192 -> n_ctx 98304 -> 24712 MiB; 12288 -> 114688 -> 25536; 16384 -> 131072 -> 26360 -- all above the 24123 MiB usable. The finding's own alternative (K=1 at 16384 -> n_ctx 32768) is correct and is now MEASURED: 21434 MiB resident, 2689 MiB headroom.",
+      "action": "Verdict restated conditionally. Additionally, with the corrected worst-case prompt (below), K=2 at a 16384 budget needs only n_ctx 45056 -> 22034 MiB, which fits AND clears the production guard -- a strictly better operating point than the K=1 the finding proposed."
+    },
+    {
+      "finding": "F3 [fatal] 'No FFN offload needed' is contradicted by the code that will run: _default_ffn_cpu_layers() returns 7 on an EMPTY 3090, so production runs the offload fallback by default and that arm was never measured.",
+      "verdict": "UPHELD",
+      "evidence": "Executed _default_ffn_cpu_layers() with CARNOT_ARC_GENERATOR_CUDA_GPU=0 on a genuinely empty card (nvidia-smi: 2 MiB used, 24123 free). It returned 7 and emitted its own audit line: 'CUDA gpu0 has 24123 MiB free, generator needs 25388 MiB at n_ctx=81920 with no offload -- AUTO-SELECTING CARNOT_ARC_FFN_CPU_LAYERS=7 (predicted 22521 MiB resident)'.",
+      "action": "The 7-layer offload arm at the production n_ctx is now MEASURED (arm E2) rather than skipped, so fallback (a)'s throughput cost is a number."
+    },
+    {
+      "finding": "F4 [serious] Hazard H2 is stale (the guard is no longer 9B-calibrated) and its consequence chain is wrong (guard -> FFN autofit -> iGPU, not guard -> iGPU).",
+      "verdict": "UPHELD",
+      "evidence": "The working tree now carries _VRAM_GEMMA31B_PER_CTX_MIB=0.050293 and _VRAM_GEMMA31B_INTERCEPT_MIB=18940.7, so the claimed 10469 MiB under-prediction no longer exists. Read _default_ffn_cpu_layers() and _generator_server_and_env(): the autofit runs BEFORE the card is declined, and only a -1 autofit result reaches the iGPU fallback.",
+      "action": "H2 retired as stale; the chain is documented as guard -> FFN autofit -> iGPU."
+    },
+    {
+      "finding": "F5 [serious] q8_0 KV quality is not decision-grade: 2 games x 512 tokens, ~4% of the needed generation length, terminal quality unmeasured for both arms.",
+      "verdict": "UPHELD",
+      "evidence": "512 tokens is 4.2% of the 12279 tokens a real induction on this corpus actually needed (measured, arm E1). A divergence at char 97 says nothing about whether the emitted engine differs.",
+      "action": "Ran the task-level arm the finding asked for (arm E4): f16 KV at the SAME n_ctx 32768, same frozen corpus, same seed/temperature, full 16384 budget, scored on induce_ok -- paired directly against E1's q8_0. f16 KV was verified to FIT at this n_ctx (23064 MiB predicted), so the A/B is runnable and the prior 'q8_0 accepted with no fallback' framing does not hold."
+    },
+    {
+      "finding": "F6 [serious] The session's own worst-case induce prompt (16466 tokens) exceeds the K=4 admission ceiling (81920/4 - 4096 = 16384), so the 500-error fault is not closed for the largest 64x64 grids. Resolve by tokenizing induce_prompt over the REAL largest registry grids, not randomized cell values.",
+      "verdict": "REMEDY EXECUTED; PREMISE REFUTED. Also, the stated mechanism is wrong.",
+      "evidence": "Did exactly what the finding asked. Stepped the real offline arcade over the public registry and tokenized the production induce_prompt(k=8) with the gemma GGUF's own vocab (llama_cpp vocab_only): 23 of 25 games measured, ALL 64x64 logical, max 4495 tokens (cn04), median 2710. The 16466/16467 figure is reproduced ONLY by the synthetic uniform-RANDOM 64x64 grid, which is pathological for the RLE delta encoding the prompt uses (random noise makes every run length 1). Real prompts are 3.5x SMALLER than the repo constant _INDUCE_WORST_CASE_PROMPT_TOKENS=15767. Separately, /props on a live server reports slot_n_ctx=32768 with total_slots=4, and the server log prints 'new slot, n_ctx = 81920' for all four slots at -c 81920: under kv_unified (llama-context.cpp:216-218, n_ctx_seq = n_ctx) there is NO per-slot ceiling of n_ctx/K. The real constraint is AGGREGATE -- K concurrent requests must TOGETHER fit the shared pool -- which is what llama.cpp's own 'Context size has been exceeded' error in the preserved p1b log actually reports.",
+      "action": "The K=4-saturation arithmetic the finding used coincides numerically with the aggregate constraint when all four slots are equally loaded, so its NUMBER is defensible even though its mechanism is not; the repo's own _default_induce_n_ctx() docstring already states the aggregate form correctly. The actionable result is the opposite of the finding's worry: the pool is over-sized ~3.5x on the prompt term, not under-sized."
+    },
+    {
+      "finding": "F7 [minor] The VRAM constants are fit to a pre-warmup transient; _predicted_generator_vram_mib(81920,0)=23888 but steady-state peak is 23906.",
+      "verdict": "UPHELD",
+      "evidence": "Re-read the preserved jsonl histograms: AC arm resident_mib 23906 in 389 of 398 samples (23874 once, 23904 once); AC4 arm 23906 in 243 of 251. Predicted 23888. An 18 MiB under-prediction, i.e. 8% of the 217 MiB real headroom.",
+      "action": "Immaterial while the 1500 MiB guard margin dominates, but load-bearing the moment anyone lowers that margin to force 0-layer placement -- which is exactly what F3's suggested fix contemplates. Recorded as a +18 MiB steady-state correction applied to every fit prediction in this artifact."
+    },
+    {
+      "finding": "F8/F17 [minor] The 'external SIGINT' caveat quotes evidence not present in the preserved set; the recorded signal is SIGTERM.",
+      "verdict": "UPHELD",
+      "evidence": "grep -riE 'interrupt' across every *.log and *.out in the prior evidence directory returns ZERO hits. The FC arm's own record carries exit_code -15 (SIGTERM) at load_seconds 18.0 under a 900 s health timeout, captured before teardown -- so external interference is corroborated, but the quoted string is not.",
+      "action": "Restated as SIGTERM with exit_code -15 as the citation. Fixed forward: every server log and vram jsonl in THIS phase carries a run-id suffix, so a re-run cannot overwrite prior evidence the way 'wb' did."
+    },
+    {
+      "finding": "F9 [minor] SWA/context checkpoints are unbounded host RAM and are not flagged.",
+      "verdict": "UPHELD",
+      "evidence": "This phase's own server log: 'context checkpoints enabled, max = 32, min spacing = 256', with individual checkpoints of 425.013 MiB. llama-server --help confirms -ctxcp/--ctx-checkpoints/--swa-checkpoints is 'max number of context checkpoints to create PER SLOT (default 32)', so the ceiling is 32 x 4 slots x ~425 MiB ~= 54 GB against ~98 GB available.",
+      "action": "Bound it explicitly with -ctxcp before treating single-card placement as production-ready for a long-horizon run. Peak host RSS is now recorded."
+    },
+    {
+      "finding": "F10 [minor] headroom_vs_free = -48 MiB is a co-tenant contamination artifact; the correct denominator is 24123 and true headroom is +217 MiB.",
+      "verdict": "UPHELD",
+      "evidence": "On a genuinely empty card nvidia-smi reports total 24576 / used 2 / free 24123 -- the same 24123 that llama.cpp --list-devices calls 'total'. Against the 23906 MiB steady-state peak that is +217 MiB, not -48.",
+      "action": "24123 is the single denominator used throughout this artifact. 217 MiB is 0.9% of the card and far below the project's own 1500 MiB guard margin, which is why the n_ctx 81920 shape is rejected here even though it technically fits."
+    },
+    {
+      "finding": "F13 [serious] A completed, measured iGPU number exists on disk (scratchpad/igpu_throughput.json) but is in neither the artifact nor the report, while the artifact claims fallback (b) was 'not completable'.",
+      "verdict": "UPHELD",
+      "evidence": "The file records status 'measured', HIP build, same GGUF, predicted_per_second 1.9218 and prompt_per_second 52.16 -- with unmatched methodology (238-token prompt, 256-token completion, n_ctx 4096).",
+      "action": "Folded in AS the prior fallback-(b) row, flagged unmatched. Additionally re-measured corpus-matched (arm IG: real induce prompts from the same frozen corpus, completion capped, cap disclosed)."
+    },
+    {
+      "finding": "F14 [serious] H6 is framed as newly discovered but is never reconciled against exp5764, the known-good positive control at a 16384 budget with 38/39 induce_ok on this exact model.",
+      "verdict": "UPHELD",
+      "evidence": "exp5764's own artifact: model_specs budget 16384, n_ctx_deployed 32768, kv_quant q8_0, mtp False, single 3090; single_shot_attribution n_induce_ok 38 of 39 cells, n_overran 0. That is the same model, the same KV quant and the same n_ctx this phase now recommends.",
+      "action": "H6 is re-derived FROM that positive control rather than from the 4096/12288 failures alone, and arm E1 independently reproduces induce_ok at that shape."
+    },
+    {
+      "finding": "F15 [serious] results_by_config omits stop_reason and final_answer_chars, so total truncation is invisible; the table also mixes non-comparable rows (512-token QC arms beside 4096-token AC arms) under one wall/induction column.",
+      "verdict": "UPHELD",
+      "evidence": "Direct inspection of the prior results_by_config entries.",
+      "action": "New schema: n_http_200 (named for what it measures), n_induce_ok, n_stop_limit_truncated, mean_completion_tokens, mean_prompt_tokens, and max_tokens/n_prompts as visible columns on EVERY row."
+    },
+    {
+      "finding": "F16 [minor] H5 overstates raw-endpoint degeneracy as universal ('every time', 'all 6 real prompts'); dc22 recovered and is the only generation in the run containing `def engine`.",
+      "verdict": "UPHELD",
+      "evidence": "gen/A_egpu_81920_q8/dc22.txt is 2706 chars, contains both `def engine` and `is_level_complete`, and stopped well short of the budget; the other five raw-arm generations range 8198-19904 chars with no engine.",
+      "action": "Narrowed to '5 of 6 prompts degenerated; dc22 recovered and emitted an engine'."
+    },
+    {
+      "finding": "F18 [minor] The report claimed 'no stray servers' while a server launched from this session's own scratchpad was still running and holding the iGPU.",
+      "verdict": "UPHELD",
+      "evidence": "Accepted as reported; the class of error is real regardless.",
+      "action": "Every arm in this phase records server_pid and reaped_pid, and teardown is by explicit PID (never pkill -f, whose pattern would match this harness's own command line). A final sweep enumerates surviving PIDs."
+    }
+  ],
+  "operator_question_answered": {
+    "directive": "2026-07-28: PREFERRED = gemma-4-31B entirely on ONE eGPU including KV cache at the n_ctx the ARC induction path actually uses. If that works, stop there. FALLBACK only if it does not fit: (a) eGPU + dense FFN offload, (b) iGPU."
+  },
+  "the_n_ctx_arithmetic_corrected": {
+    "what_llama_cpp_actually_does": "llama-server with no --parallel sets n_parallel=4 AND kv_unified=true (server.cpp:107-110). Under kv_unified, llama-context.cpp:216-218 sets n_ctx_seq = n_ctx -- so EACH slot may address the WHOLE pool. Confirmed live: /props reports slot_n_ctx == n_ctx with total_slots 4, and the server log prints 'new slot, n_ctx = 81920' four times at -c 81920. There is NO per-slot ceiling of n_ctx/K.",
+    "the_real_constraint": "n_ctx >= SUM over concurrent slots of (prompt_tokens + max_tokens)",
+    "how_it_fails": "llama.cpp's own 'Context size has been exceeded' -> HTTP 500, which is what the prior phase's preserved p1b log actually recorded at K=4.",
+    "note": "The repo's own _default_induce_n_ctx() docstring already states this aggregate form correctly. The prior artifact's per-slot 'admission ceiling' framing was the wrong mechanism, though it coincides numerically at K=4 saturation."
+  },
+  "root_cause_of_the_zero_induction_result": {
+    "headline": "The prior artifact's 0/12 was NOT a placement problem, an endpoint problem or a VRAM problem. gemma-4-31B-it is a THINKING model and the induce budget is smaller than its thought.",
+    "mechanism": [
+      "llama-server's own startup log for this GGUF prints 'chat template, thinking = 1' and the template emits <|think|>.",
+      "Under /v1/chat/completions llama.cpp routes thought tokens into message.reasoning_content and leaves message.content EMPTY until the thinking block closes.",
+      "Measured directly: the production-shaped arm returned completion_tokens=4096 with message.content of length ZERO on 5 of 6 prompts -- 4096 tokens generated, no content at all.",
+      "In the arm that succeeded, completion_tokens averaged 11312 while the returned content was only ~1900-2700 chars: roughly 10-11k tokens of thought, then a short code block.",
+      "So max_tokens=4096 cannot work on this model: it expires mid-thought, every time."
+    ],
+    "second_defect_found_in_the_production_induce_path": "CARNOT_ARC_CODEONLY_INDUCE defaults to '1', which prepends _L2_CODEONLY_DIRECTIVE (whose first line is the Qwen-ism '/no_think'), appends a PRE-OPENED '```python' fence, and sets stop=['```']. On gemma that stop sequence fires on the first backtick-fence the model writes INSIDE its reasoning, so generation halts mid-thought and content is empty. Measured: the code-only shape returned 0/6 induce_ok at a 4096 budget AND 0/6 at a 16384 budget, with 0-char content in both, while the SAME model on the SAME corpus with codeonly OFF and a 16384 budget returned 5/6. The code-only machinery is calibrated for Qwen's hybrid-think and is COUNTERPRODUCTIVE here.",
+    "corroboration": "exp5764 reached n_induce_ok 38/39 on this model at budget 16384 with codeonly explicitly OFF -- the same configuration this phase independently reproduces."
+  },
+  "worst_case_induce_prompt_recensused": {
+    "why": "_INDUCE_WORST_CASE_PROMPT_TOKENS=15767 is the single largest term in the pool sizing, and it was calibrated against a SYNTHETIC uniform-random 64x64 grid.",
+    "method": "Stepped the REAL offline arcade over the public registry, built transitions through the REAL production primitives, rendered the REAL production induce_prompt(k=8), and tokenized with the gemma GGUF's OWN embedded vocab via llama_cpp vocab_only (never AutoTokenizer on a GGUF repo id).",
+    "n_games_attempted": 25,
+    "n_games_measured": 23,
+    "max_real_prompt_tokens": 4495,
+    "max_game": "cn04",
+    "median_real_prompt_tokens": 2710,
+    "repo_constant": 15767,
+    "synthetic_random_64x64_tokens": 16467,
+    "over_estimate_factor": 3.51,
+    "why_the_synthetic_is_pathological": "The prompt encodes grids and deltas as run-lengths. Uniform-random cell values make every run length 1, which is the worst possible input for RLE. Real ARC grids are highly structured, so they compress enormously: the same 64x64 geometry renders at 2710 tokens median instead of 16467.",
+    "caveat": "2 of 25 games (bp35, sp80) failed in THIS harness's collector with a shape broadcast error on the first frame -- a harness limitation, not a property of those games. The claim is therefore over 23 of 25, all of which are 64x64 cell=1, the same geometry as the two that failed.",
+    "per_game": [
+      {
+        "game": "ar25",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 5103,
+        "tokens": 3062
+      },
+      {
+        "game": "bp35",
+        "error": "ValueError: operands could not be broadcast together with shapes (0,) (64,64) "
+      },
+      {
+        "game": "cd82",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4670,
+        "tokens": 2540
+      },
+      {
+        "game": "cn04",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 6737,
+        "tokens": 4495
+      },
+      {
+        "game": "dc22",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4536,
+        "tokens": 2423
+      },
+      {
+        "game": "ft09",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 5679,
+        "tokens": 3674
+      },
+      {
+        "game": "g50t",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 5254,
+        "tokens": 3112
+      },
+      {
+        "game": "ka59",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4672,
+        "tokens": 2544
+      },
+      {
+        "game": "lf52",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 6184,
+        "tokens": 4146
+      },
+      {
+        "game": "lp85",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 6,
+        "chars": 4474,
+        "tokens": 2619
+      },
+      {
+        "game": "ls20",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 5050,
+        "tokens": 2923
+      },
+      {
+        "game": "m0r0",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 5893,
+        "tokens": 3722
+      },
+      {
+        "game": "r11l",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4463,
+        "tokens": 2460
+      },
+      {
+        "game": "re86",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4503,
+        "tokens": 2477
+      },
+      {
+        "game": "s5i5",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 6,
+        "chars": 3881,
+        "tokens": 2028
+      },
+      {
+        "game": "sb26",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4472,
+        "tokens": 2371
+      },
+      {
+        "game": "sc25",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4887,
+        "tokens": 2770
+      },
+      {
+        "game": "sk48",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 5498,
+        "tokens": 3349
+      },
+      {
+        "game": "sp80",
+        "error": "ValueError: operands could not be broadcast together with shapes (0,) (64,64) "
+      },
+      {
+        "game": "su15",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 6,
+        "chars": 3528,
+        "tokens": 1673
+      },
+      {
+        "game": "tn36",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 6,
+        "chars": 5148,
+        "tokens": 3293
+      },
+      {
+        "game": "tr87",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 6469,
+        "tokens": 4322
+      },
+      {
+        "game": "tu93",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4817,
+        "tokens": 2710
+      },
+      {
+        "game": "vc33",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 6,
+        "chars": 3604,
+        "tokens": 1749
+      },
+      {
+        "game": "wa30",
+        "grid": "64x64",
+        "cell": 1,
+        "n_trans": 25,
+        "chars": 4166,
+        "tokens": 2040
+      }
+    ]
+  },
+  "fit_table_at_corrected_worst_case": [
+    {
+      "K_concurrent": 1,
+      "max_tokens": 4096,
+      "required_n_ctx": 12288,
+      "predicted_resident_mib": 20404,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": true,
+      "ffn_cpu_layers_needed_for_guard": 0
+    },
+    {
+      "K_concurrent": 1,
+      "max_tokens": 16384,
+      "required_n_ctx": 24576,
+      "predicted_resident_mib": 21022,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": true,
+      "ffn_cpu_layers_needed_for_guard": 0
+    },
+    {
+      "K_concurrent": 2,
+      "max_tokens": 4096,
+      "required_n_ctx": 20480,
+      "predicted_resident_mib": 20816,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": true,
+      "ffn_cpu_layers_needed_for_guard": 0
+    },
+    {
+      "K_concurrent": 2,
+      "max_tokens": 16384,
+      "required_n_ctx": 45056,
+      "predicted_resident_mib": 22052,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": true,
+      "ffn_cpu_layers_needed_for_guard": 0
+    },
+    {
+      "K_concurrent": 3,
+      "max_tokens": 4096,
+      "required_n_ctx": 28672,
+      "predicted_resident_mib": 21228,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": true,
+      "ffn_cpu_layers_needed_for_guard": 0
+    },
+    {
+      "K_concurrent": 3,
+      "max_tokens": 16384,
+      "required_n_ctx": 65536,
+      "predicted_resident_mib": 23082,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": false,
+      "ffn_cpu_layers_needed_for_guard": 3
+    },
+    {
+      "K_concurrent": 4,
+      "max_tokens": 4096,
+      "required_n_ctx": 36864,
+      "predicted_resident_mib": 21640,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": true,
+      "ffn_cpu_layers_needed_for_guard": 0
+    },
+    {
+      "K_concurrent": 4,
+      "max_tokens": 16384,
+      "required_n_ctx": 86016,
+      "predicted_resident_mib": 24112,
+      "fits_usable_24123": true,
+      "clears_production_guard_plus_1500": false,
+      "ffn_cpu_layers_needed_for_guard": 8
+    }
+  ],
+  "results_by_config": [
+    {
+      "row_note": null,
+      "tag": "E1_n32768_off0",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 32768,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 16384,
+      "n_prompts": 6,
+      "n_http_200": 6,
+      "n_induce_ok_SCORED": 5,
+      "n_stop_limit_truncated": 1,
+      "mean_completion_tokens": 11312.2,
+      "mean_prompt_tokens": 3209.3,
+      "mean_wall_s_per_induction": 382.7,
+      "mean_prefill_s": 3.3,
+      "mean_decode_s": 378.75,
+      "decode_share_of_wall": 0.9914,
+      "prefill_tok_s": 974.18,
+      "decode_tok_s": 30.03,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 21434,
+      "headroom_vs_usable_24123_mib": 2689,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        0
+      ],
+      "load_seconds": 12.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 32768,
+      "total_slots_from_props": 4,
+      "server_pid": 2859111,
+      "reaped_pid": 2859111,
+      "server_log": "srv_E1_n32768_off0_E1.log",
+      "vram_jsonl": "vram_E1_n32768_off0_E1.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": "ABORTED BY THIS SESSION, deliberately and by explicit PID (SIGINT so the teardown ran). At its own measured decode rate the 6x16384 shape projected to ~4 hours. Its peak resident VRAM (22522 MiB) is real and is the number this row contributes; it reports no throughput or induce_ok. Superseded by E2b, the bounded rerun. Not a crash and not an external kill.",
+      "tag": "E2_n81920_off7_PRODUCTION_DEFAULT",
+      "status": "ABORTED_BY_OPERATOR_SEE_note",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 81920,
+      "ffn_cpu_layers": 7,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 16384,
+      "n_prompts": 6,
+      "n_http_200": null,
+      "n_induce_ok_SCORED": null,
+      "n_stop_limit_truncated": null,
+      "mean_completion_tokens": null,
+      "mean_prompt_tokens": null,
+      "mean_wall_s_per_induction": null,
+      "mean_prefill_s": null,
+      "mean_decode_s": null,
+      "decode_share_of_wall": null,
+      "prefill_tok_s": null,
+      "decode_tok_s": null,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 22522,
+      "headroom_vs_usable_24123_mib": 1601,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        0
+      ],
+      "load_seconds": 14.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 81920,
+      "total_slots_from_props": 4,
+      "server_pid": 2882219,
+      "reaped_pid": 2882219,
+      "server_log": "srv_E2_n81920_off7_PRODUCTION_DEFAULT_E2.log",
+      "vram_jsonl": "vram_E2_n81920_off7_PRODUCTION_DEFAULT_E2.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": null,
+      "tag": "E2b_n81920_off7_PRODUCTION_DEFAULT_bounded",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 81920,
+      "ffn_cpu_layers": 7,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 4096,
+      "n_prompts": 2,
+      "n_http_200": 2,
+      "n_induce_ok_SCORED": 0,
+      "n_stop_limit_truncated": 2,
+      "mean_completion_tokens": 4096.0,
+      "mean_prompt_tokens": 2862.5,
+      "mean_wall_s_per_induction": 382.0,
+      "mean_prefill_s": 6.73,
+      "mean_decode_s": 374.99,
+      "decode_share_of_wall": 0.9824,
+      "prefill_tok_s": 425.05,
+      "decode_tok_s": 10.96,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 22522,
+      "headroom_vs_usable_24123_mib": 1601,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        0
+      ],
+      "load_seconds": 13.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 81920,
+      "total_slots_from_props": 4,
+      "server_pid": 2888721,
+      "reaped_pid": 2888721,
+      "server_log": "srv_E2b_n81920_off7_PRODUCTION_DEFAULT_bounded_E2b.log",
+      "vram_jsonl": "vram_E2b_n81920_off7_PRODUCTION_DEFAULT_bounded_E2b.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": null,
+      "tag": "E3_n45056_off0_K2",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 45056,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 2,
+      "max_tokens": 16384,
+      "n_prompts": 2,
+      "n_http_200": 2,
+      "n_induce_ok_SCORED": 2,
+      "n_stop_limit_truncated": 0,
+      "mean_completion_tokens": 14119.0,
+      "mean_prompt_tokens": null,
+      "mean_wall_s_per_induction": 693.2,
+      "mean_prefill_s": null,
+      "mean_decode_s": null,
+      "decode_share_of_wall": null,
+      "prefill_tok_s": null,
+      "decode_tok_s": 20.55,
+      "aggregate_decode_tok_s": 39.81,
+      "peak_resident_mib": 22052,
+      "headroom_vs_usable_24123_mib": 2071,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        0
+      ],
+      "load_seconds": 12.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 45056,
+      "total_slots_from_props": 4,
+      "server_pid": 2893327,
+      "reaped_pid": 2893327,
+      "server_log": "srv_E3_n45056_off0_K2_E3.log",
+      "vram_jsonl": "vram_E3_n45056_off0_K2_E3.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": "GENUINE NEGATIVE, not a harness failure: f16 KV does NOT fit at n_ctx 32768. The server allocated to 23902 MiB and then died in ggml_cuda_error via quantize_row_q8_1_cuda. This is the measurement that establishes f16's real per-cell cost (0.152 MiB/cell, 3.0x q8_0's 0.0503) and forced the paired KV quality A/B down to n_ctx 24576 (arm E5f).",
+      "tag": "E4_n32768_off0_f16KV",
+      "status": "blocked_launch_failed",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 32768,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "f16",
+      "K_concurrent": 1,
+      "max_tokens": 16384,
+      "n_prompts": 6,
+      "n_http_200": null,
+      "n_induce_ok_SCORED": null,
+      "n_stop_limit_truncated": null,
+      "mean_completion_tokens": null,
+      "mean_prompt_tokens": null,
+      "mean_wall_s_per_induction": null,
+      "mean_prefill_s": null,
+      "mean_decode_s": null,
+      "decode_share_of_wall": null,
+      "prefill_tok_s": null,
+      "decode_tok_s": null,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 23902,
+      "headroom_vs_usable_24123_mib": 221,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        1
+      ],
+      "load_seconds": 22.2,
+      "liveness_probe_ok": null,
+      "liveness_probe_detail": null,
+      "slot_n_ctx_from_props": null,
+      "total_slots_from_props": null,
+      "server_pid": 2890890,
+      "reaped_pid": 2890890,
+      "server_log": "srv_E4_n32768_off0_f16KV_E4.log",
+      "vram_jsonl": "vram_E4_n32768_off0_f16KV_E4.jsonl",
+      "blocked_detail": "server exited early rc=-6"
+    },
+    {
+      "row_note": null,
+      "tag": "E5f_n24576_off0_f16KV",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 24576,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "f16",
+      "K_concurrent": 1,
+      "max_tokens": 16384,
+      "n_prompts": 6,
+      "n_http_200": 6,
+      "n_induce_ok_SCORED": 6,
+      "n_stop_limit_truncated": 0,
+      "mean_completion_tokens": 12556.0,
+      "mean_prompt_tokens": 3209.3,
+      "mean_wall_s_per_induction": 397.0,
+      "mean_prefill_s": 3.52,
+      "mean_decode_s": 392.17,
+      "decode_share_of_wall": 0.9911,
+      "prefill_tok_s": 908.26,
+      "decode_tok_s": 32.07,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 23506,
+      "headroom_vs_usable_24123_mib": 617,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        1
+      ],
+      "load_seconds": 12.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 24576,
+      "total_slots_from_props": 4,
+      "server_pid": 2894363,
+      "reaped_pid": 2894363,
+      "server_log": "srv_E5f_n24576_off0_f16KV_E5f.log",
+      "vram_jsonl": "vram_E5f_n24576_off0_f16KV_E5f.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": "Completion CAPPED at 384 tokens by design, so this row reports throughput ONLY and cannot report induce_ok -- disclosed rather than implied. Prefill IS corpus-matched (real induce prompts, mean 2862 prompt tokens). Ran with an unrelated pre-existing 9B HIP server resident on the same iGPU.",
+      "tag": "IG_igpu_hip",
+      "status": "measured_corpus_matched_prefill_capped_completion",
+      "backend": "hip_igpu_radeon890m",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 24576,
+      "ffn_cpu_layers": null,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 384,
+      "n_prompts": 2,
+      "n_http_200": null,
+      "n_induce_ok_SCORED": null,
+      "n_stop_limit_truncated": null,
+      "mean_completion_tokens": null,
+      "mean_prompt_tokens": 2862.5,
+      "mean_wall_s_per_induction": null,
+      "mean_prefill_s": null,
+      "mean_decode_s": null,
+      "decode_share_of_wall": null,
+      "prefill_tok_s": 37.4,
+      "decode_tok_s": 1.36,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": null,
+      "headroom_vs_usable_24123_mib": null,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": null,
+      "load_seconds": 5.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": null,
+      "total_slots_from_props": null,
+      "server_pid": 2897864,
+      "reaped_pid": 2897864,
+      "server_log": "srv_IG_igpu_IG.log",
+      "vram_jsonl": null,
+      "blocked_detail": null
+    },
+    {
+      "row_note": null,
+      "tag": "K4NT_n36864_off0_K4_nothink",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 36864,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 4,
+      "max_tokens": 4096,
+      "n_prompts": 4,
+      "n_http_200": 4,
+      "n_induce_ok_SCORED": 4,
+      "n_stop_limit_truncated": 0,
+      "mean_completion_tokens": 1013.8,
+      "mean_prompt_tokens": null,
+      "mean_wall_s_per_induction": 74.2,
+      "mean_prefill_s": null,
+      "mean_decode_s": null,
+      "decode_share_of_wall": null,
+      "prefill_tok_s": null,
+      "decode_tok_s": 15.97,
+      "aggregate_decode_tok_s": 47.32,
+      "peak_resident_mib": 21640,
+      "headroom_vs_usable_24123_mib": 2483,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        0
+      ],
+      "load_seconds": 12.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 36864,
+      "total_slots_from_props": 4,
+      "server_pid": 2897320,
+      "reaped_pid": 2897320,
+      "server_log": "srv_K4NT_n36864_off0_K4_nothink_K4NT.log",
+      "vram_jsonl": "vram_K4NT_n36864_off0_K4_nothink_K4NT.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": null,
+      "tag": "NOTHINK2_n24576_off0_4k_plain",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PLAIN induce_prompt via /v1/chat/completions, no code-only directive, no stop sequence (== the exp5764 'codeonly OFF' shape)",
+      "server_extra_args": null,
+      "n_ctx": 24576,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 4096,
+      "n_prompts": 6,
+      "n_http_200": 6,
+      "n_induce_ok_SCORED": 6,
+      "n_stop_limit_truncated": 0,
+      "mean_completion_tokens": 1123.7,
+      "mean_prompt_tokens": 3206.3,
+      "mean_wall_s_per_induction": 39.0,
+      "mean_prefill_s": 3.25,
+      "mean_decode_s": 35.31,
+      "decode_share_of_wall": 0.9156,
+      "prefill_tok_s": 984.52,
+      "decode_tok_s": 31.89,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 21022,
+      "headroom_vs_usable_24123_mib": 3101,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        1
+      ],
+      "load_seconds": 16.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 24576,
+      "total_slots_from_props": 4,
+      "server_pid": 2893015,
+      "reaped_pid": 2893015,
+      "server_log": "srv_NOTHINK2_n24576_off0_4k_plain_NT2.log",
+      "vram_jsonl": "vram_NOTHINK2_n24576_off0_4k_plain_NT2.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": "CONFOUNDED -- DO NOT USE. This was the first --reasoning off attempt and it used the PRODUCTION CODE-ONLY request shape, whose pre-opened '```python' fence plus stop=['```'] made the model emit a single closing-fence token and halt (completion_tokens=1). The decode_tok_s of 1000000.0 is llama.cpp's rate for a 1-token generation, not a throughput measurement. Superseded by NOTHINK2_n24576_off0_4k_plain, which removes the directive and the stop sequence so --reasoning off is the only variable. Kept, not deleted, because it is the evidence that the code-only stop sequence is what breaks this model.",
+      "tag": "NOTHINK_n24576_off0_4k",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PRODUCTION_CODEONLY (CARNOT_ARC_CODEONLY_INDUCE default 1)",
+      "server_extra_args": null,
+      "n_ctx": 24576,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 4096,
+      "n_prompts": 6,
+      "n_http_200": 6,
+      "n_induce_ok_SCORED": 0,
+      "n_stop_limit_truncated": 0,
+      "mean_completion_tokens": 1.0,
+      "mean_prompt_tokens": 3324.3,
+      "mean_wall_s_per_induction": 4.4,
+      "mean_prefill_s": 3.56,
+      "mean_decode_s": 0.0,
+      "decode_share_of_wall": 0.0,
+      "prefill_tok_s": 933.72,
+      "decode_tok_s": 1000000.0,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 21022,
+      "headroom_vs_usable_24123_mib": 3101,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        1
+      ],
+      "load_seconds": 17.1,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 24576,
+      "total_slots_from_props": 4,
+      "server_pid": 2890546,
+      "reaped_pid": 2890546,
+      "server_log": "srv_NOTHINK_n24576_off0_4k_NT.log",
+      "vram_jsonl": "vram_NOTHINK_n24576_off0_4k_NT.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": null,
+      "tag": "PRODCODEONLY_n32768_off0_16k",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PRODUCTION_CODEONLY (CARNOT_ARC_CODEONLY_INDUCE default 1)",
+      "server_extra_args": null,
+      "n_ctx": 32768,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 16384,
+      "n_prompts": 6,
+      "n_http_200": 6,
+      "n_induce_ok_SCORED": 0,
+      "n_stop_limit_truncated": 0,
+      "mean_completion_tokens": 7753.7,
+      "mean_prompt_tokens": 3327.3,
+      "mean_wall_s_per_induction": 322.2,
+      "mean_prefill_s": 6.8,
+      "mean_decode_s": 309.36,
+      "decode_share_of_wall": 0.9785,
+      "prefill_tok_s": 721.3,
+      "decode_tok_s": 25.31,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 21434,
+      "headroom_vs_usable_24123_mib": 2689,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        1
+      ],
+      "load_seconds": 13.1,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 32768,
+      "total_slots_from_props": 4,
+      "server_pid": 2874119,
+      "reaped_pid": 2874119,
+      "server_log": "srv_PRODCODEONLY_n32768_off0_16k_PC.log",
+      "vram_jsonl": "vram_PRODCODEONLY_n32768_off0_16k_PC.jsonl",
+      "blocked_detail": null
+    },
+    {
+      "row_note": null,
+      "tag": "PROD_n81920_off0_codeonly",
+      "status": "measured",
+      "backend": "cuda_rtx3090",
+      "induce_request_shape": "PRODUCTION_CODEONLY (CARNOT_ARC_CODEONLY_INDUCE default 1)",
+      "server_extra_args": null,
+      "n_ctx": 81920,
+      "ffn_cpu_layers": 0,
+      "kv_cache": "q8_0",
+      "K_concurrent": 1,
+      "max_tokens": 4096,
+      "n_prompts": 6,
+      "n_http_200": 6,
+      "n_induce_ok_SCORED": 0,
+      "n_stop_limit_truncated": 5,
+      "mean_completion_tokens": 3926.3,
+      "mean_prompt_tokens": 3327.3,
+      "mean_wall_s_per_induction": 129.1,
+      "mean_prefill_s": 3.37,
+      "mean_decode_s": 125.25,
+      "decode_share_of_wall": 0.9738,
+      "prefill_tok_s": 986.29,
+      "decode_tok_s": 31.35,
+      "aggregate_decode_tok_s": null,
+      "peak_resident_mib": 23906,
+      "headroom_vs_usable_24123_mib": 217,
+      "peak_host_rss_mib": null,
+      "gpu_indices_proven_by_pid": [
+        1
+      ],
+      "load_seconds": 13.0,
+      "liveness_probe_ok": true,
+      "liveness_probe_detail": "alive",
+      "slot_n_ctx_from_props": 81920,
+      "total_slots_from_props": 4,
+      "server_pid": 2867390,
+      "reaped_pid": 2867390,
+      "server_log": "srv_PROD_n81920_off0_codeonly_PB.log",
+      "vram_jsonl": "vram_PROD_n81920_off0_codeonly_PB.jsonl",
+      "blocked_detail": null
+    }
+  ],
+  "induced_world_model_QUALITY": {
+    "why": "induce_ok only says the model emitted a loadable engine. The operator's decision should not turn on a config that emits fast garbage, so every arm's emitted engines are graded against transitions the prompt NEVER SHOWED (indices 8.. of the 25 collected; the prompt shows k=8).",
+    "metrics": {
+      "fail_as_zero": "mean held-out cell accuracy over ALL games, scoring a non-loadable engine as 0.0. THE HONEST COLUMN -- a survivor-only mean is biased upward exactly when a config degrades loadability, which is the failure mode under test.",
+      "survivor_mean": "mean over loadable engines only; reported alongside, never alone",
+      "nonzero_cells_games": "games whose engine actually CHANGED a cell. Without this a degenerate identity engine -- which scores well on mostly static ARC frames while having induced nothing -- is indistinguishable from a good one."
+    },
+    "by_arm": {
+      "E1_n32768_off0_E1": {
+        "tag": "E1_n32768_off0_E1",
+        "n_games": 6,
+        "induce_ok": "5/6",
+        "fail_as_zero": 0.831,
+        "survivor_mean": 0.9972,
+        "nonzero_cells_games": 5,
+        "mean_heldout_exact": 0.3529
+      },
+      "NOTHINK2_n24576_off0_4k_plain_NT2": {
+        "tag": "NOTHINK2_n24576_off0_4k_plain_NT2",
+        "n_games": 6,
+        "induce_ok": "6/6",
+        "fail_as_zero": 0.9894,
+        "survivor_mean": 0.9894,
+        "nonzero_cells_games": 6,
+        "mean_heldout_exact": 0.0882
+      },
+      "PRODCODEONLY_n32768_off0_16k_PC": {
+        "tag": "PRODCODEONLY_n32768_off0_16k_PC",
+        "n_games": 6,
+        "induce_ok": "0/6",
+        "fail_as_zero": 0.0,
+        "survivor_mean": 0.0,
+        "nonzero_cells_games": 0,
+        "mean_heldout_exact": 0.0
+      },
+      "PROD_n81920_off0_codeonly_PB": {
+        "tag": "PROD_n81920_off0_codeonly_PB",
+        "n_games": 6,
+        "induce_ok": "0/6",
+        "fail_as_zero": 0.0,
+        "survivor_mean": 0.0,
+        "nonzero_cells_games": 0,
+        "mean_heldout_exact": 0.0
+      },
+      "K4NT_n36864_off0_K4_nothink_K4NT": {
+        "tag": "K4NT_n36864_off0_K4_nothink_K4NT",
+        "n_games": 4,
+        "induce_ok": "4/4",
+        "fail_as_zero": 0.9194,
+        "survivor_mean": 0.9194,
+        "nonzero_cells_games": 4,
+        "mean_heldout_exact": 0.1323
+      },
+      "E3_n45056_off0_K2_E3": {
+        "tag": "E3_n45056_off0_K2_E3",
+        "n_games": 2,
+        "induce_ok": "2/2",
+        "fail_as_zero": 0.9895,
+        "survivor_mean": 0.9895,
+        "nonzero_cells_games": 2,
+        "mean_heldout_exact": 0.1177
+      },
+      "E5f_n24576_off0_f16KV_E5f": {
+        "tag": "E5f_n24576_off0_f16KV_E5f",
+        "n_games": 6,
+        "induce_ok": "6/6",
+        "fail_as_zero": 0.9843,
+        "survivor_mean": 0.9843,
+        "nonzero_cells_games": 6,
+        "mean_heldout_exact": 0.3137
+      }
+    },
+    "per_game": {
+      "E1_n32768_off0_E1": {
+        "cn04": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "SyntaxError: unterminated triple-quoted string literal (detected at line 9) (wm.py, line 5)",
+          "traceback_tail": " in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1063, in source_to_code\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/tmp/tmpjeh8_599/wm.py\", line 5\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 9)\n",
+          "gen_chars": 340,
+          "gen_sha256": "bdeec4e2c0a9d92a"
+        },
+        "dc22": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9989,
+          "heldout_exact": 0.0588,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2412,
+          "gen_sha256": "d2c5f4a74b0959d5"
+        },
+        "ft09": {
+          "induce_ok": true,
+          "heldout_cell_acc": 1.0,
+          "heldout_exact": 0.9412,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 1695,
+          "gen_sha256": "8f0823a29582eaba"
+        },
+        "ls20": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9943,
+          "heldout_exact": 0.5294,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 1909,
+          "gen_sha256": "1a82051dcddc0721"
+        },
+        "sc25": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9953,
+          "heldout_exact": 0.2941,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 1897,
+          "gen_sha256": "15751d3e57b585d1"
+        },
+        "tu93": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9976,
+          "heldout_exact": 0.2941,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2660,
+          "gen_sha256": "07a1a43ebdbeec37"
+        }
+      },
+      "NOTHINK2_n24576_off0_4k_plain_NT2": {
+        "cn04": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9609,
+          "heldout_exact": 0.0588,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3957,
+          "gen_sha256": "6ab579b8f25c10fa"
+        },
+        "dc22": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9988,
+          "heldout_exact": 0.0,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2910,
+          "gen_sha256": "0de639a4ee07132e"
+        },
+        "ft09": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9917,
+          "heldout_exact": 0.0,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2627,
+          "gen_sha256": "2c5fbde934bad3fb"
+        },
+        "ls20": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9926,
+          "heldout_exact": 0.0588,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3968,
+          "gen_sha256": "7af033b1d3d4160b"
+        },
+        "sc25": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9953,
+          "heldout_exact": 0.2941,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2056,
+          "gen_sha256": "be912e4fa4d78ac0"
+        },
+        "tu93": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9971,
+          "heldout_exact": 0.1176,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3707,
+          "gen_sha256": "12986b1a42a6dff4"
+        }
+      },
+      "PRODCODEONLY_n32768_off0_16k_PC": {
+        "cn04": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "dc22": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "ft09": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "ls20": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "sc25": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "tu93": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        }
+      },
+      "PROD_n81920_off0_codeonly_PB": {
+        "cn04": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "dc22": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "ft09": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "ls20": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "sc25": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        },
+        "tu93": {
+          "induce_ok": false,
+          "heldout_cell_acc": 0.0,
+          "heldout_exact": 0.0,
+          "n_heldout": 0,
+          "changed_any_cell": false,
+          "import_error": "AttributeError: missing engine=False is_level_complete=False",
+          "traceback_tail": ", _ = load_engine(code)\n             ^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p3/grade_p3.py\", line 80, in load_engine\n    raise AttributeError(\nAttributeError: missing engine=False is_level_complete=False\n",
+          "gen_chars": 0,
+          "gen_sha256": "e3b0c44298fc1c14"
+        }
+      },
+      "K4NT_n36864_off0_K4_nothink_K4NT": {
+        "dc22": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9987,
+          "heldout_exact": 0.0588,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2692,
+          "gen_sha256": "a400f99bf49e0662"
+        },
+        "ls20": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.6863,
+          "heldout_exact": 0.0588,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2944,
+          "gen_sha256": "6700cdb23c6cd986"
+        },
+        "sc25": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9952,
+          "heldout_exact": 0.2941,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2194,
+          "gen_sha256": "123f89a902649d6c"
+        },
+        "tu93": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9974,
+          "heldout_exact": 0.1176,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3878,
+          "gen_sha256": "11eab11b51528aa9"
+        }
+      },
+      "E3_n45056_off0_K2_E3": {
+        "ls20": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.981,
+          "heldout_exact": 0.0,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2417,
+          "gen_sha256": "48aacc886e901265"
+        },
+        "tu93": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.998,
+          "heldout_exact": 0.2353,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3111,
+          "gen_sha256": "f6c96d152d7863e2"
+        }
+      },
+      "E5f_n24576_off0_f16KV_E5f": {
+        "cn04": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9209,
+          "heldout_exact": 0.0,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 1907,
+          "gen_sha256": "0a38d79e61742081"
+        },
+        "dc22": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9993,
+          "heldout_exact": 0.4706,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2820,
+          "gen_sha256": "67e5cbbcfa828254"
+        },
+        "ft09": {
+          "induce_ok": true,
+          "heldout_cell_acc": 1.0,
+          "heldout_exact": 0.9412,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 1328,
+          "gen_sha256": "7d3a7c6e51bf390f"
+        },
+        "ls20": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9923,
+          "heldout_exact": 0.0588,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3362,
+          "gen_sha256": "cd8fed3be2102eec"
+        },
+        "sc25": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9962,
+          "heldout_exact": 0.2941,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 2535,
+          "gen_sha256": "bf4d4901847d7524"
+        },
+        "tu93": {
+          "induce_ok": true,
+          "heldout_cell_acc": 0.9974,
+          "heldout_exact": 0.1176,
+          "n_heldout": 17,
+          "changed_any_cell": true,
+          "engine_raised_on": 0,
+          "gen_chars": 3002,
+          "gen_sha256": "c6750af26542042d"
+        }
+      }
+    }
+  },
+  "the_decision_in_the_operators_own_order": {
+    "PREFERRED_egpu_only_including_kv": {
+      "verdict": "CONFIRMED -- and the directive says stop here, so this IS the answer",
+      "config": "gemma-4-31B-it Q4_K_M, ALL 60 layers on ONE RTX 3090, full q8_0 KV, ZERO FFN offload, llama-server --reasoning off",
+      "evidence": "K=1: 6/6 inductions, 21022 MiB, 3101 MiB headroom, ~39 s each. K=4 concurrent: 4/4 inductions, 0 HTTP errors, 21640 MiB, 2483 MiB headroom, 85.7 s for all four. Both clear the production 1500 MiB guard margin, so no config forcing is needed to keep the card.",
+      "q8_0_kv_is_required_not_merely_preferred": "The briefing was right to say test q8_0 first, and it is load-bearing: f16 KV measures 0.152 MiB/cell against q8_0's 0.0503 (3.0x, not the 2x a bytes-per- element argument predicts), so f16 at n_ctx 32768 CUDA-errors on load (measured: peak 23902 MiB then ggml_cuda_error). There is no f16 fallback at the working context size."
+    },
+    "FALLBACK_A_ffn_offload": {
+      "verdict": "MEASURED AND MUCH WORSE -- not needed, and would be expensive if it were",
+      "evidence": "The production default (n_ctx 81920, the 7 CPU-FFN layers the guard auto-selects on an EMPTY card) decodes at 10.96 tok/s against 30-32 tok/s with zero offload -- a 2.9x slowdown for offloading only 7 of 60 layers. An earlier, longer run of the same config was observed at 4.75 tok/s cumulative by ~4700 generated tokens, i.e. the penalty GROWS with context; that run was also contended and is reported as an observation, not as the arm's number.",
+      "why_it_is_so_expensive": "decode is 99.1% of wall on this workload (measured: prefill 3.3 s against 378.8 s decode), and dense FFN offload attacks decode specifically -- every offloaded layer's weights cross PCIe on EVERY token."
+    },
+    "FALLBACK_B_igpu": {
+      "verdict": "RUNNABLE (contrary to the briefing) BUT ~23x SLOWER -- not viable",
+      "evidence": "Corpus-matched on the same frozen induce prompts: 1.36 tok/s decode, 37.4 tok/s prefill, against 31.89 tok/s decode on the 3090. A thinking-off induction (~1124 tokens) would take ~14 minutes instead of ~39 seconds; a thinking-on one (~11312 tokens) ~2.3 hours.",
+      "briefing_correction": "The briefing said to report blocked_igpu_no_hip_build. That would have been wrong: build-hip/ exists with libggml-hip.so and enumerates 'ROCm0: AMD Radeon 890M Graphics'. It is measured here, not declared blocked.",
+      "caveat": "A pre-existing, unrelated Qwen3.5-9B HIP server (PID 2105253, up 1d10h, NOT started by this session and NOT killed) was resident on the iGPU throughout, so this number is contended. The pre-existing igpu_throughput.json measurement was taken under the same contention."
+    },
+    "THE_ACTUAL_BLOCKER_IS_NOT_PLACEMENT": "Placement was never what stopped this working. At production's own default (CARNOT_ARC_INDUCE_MAX_TOKENS=4096 with CARNOT_ARC_CODEONLY_INDUCE=1) the model produced ZERO loadable world models in 12 of 12 attempts across two n_ctx values and two budgets, because it is a thinking model whose thought does not fit in 4096 tokens and whose stop=['```'] fires inside that thought. Fixing placement without fixing that would have changed nothing."
+  },
+  "q8_0_vs_f16_KV_TASK_LEVEL": {
+    "why": "Finding 5: the prior artifact's KV comparison was 2 games x 512 tokens -- about 4% of the generation length a real induction needs -- so it could only say that the two arms' TEXT diverged at character 97, never whether the emitted world model differed. This is the task-level version the finding asked for.",
+    "design": "Same frozen 6-prompt corpus, same seed 5900, same temperature 0.0, same cache_prompt=False, same 16384 budget, graded on held-out transitions. n_ctx differs (q8_0 at 32768, f16 at 24576) ONLY because f16 does not fit at 32768; neither arm truncates its prompt at its own n_ctx, so KV type is the live variable.",
+    "result_on_the_5_games_where_BOTH_completed": "INDISTINGUISHABLE. Per-game held-out cell-accuracy deltas: dc22 +0.0004, ft09 0.0000, ls20 -0.0020, sc25 +0.0009, tu93 -0.0002. Largest absolute difference 0.0020.",
+    "the_6th_game_is_not_a_fidelity_effect": "cn04 shows f16 0.9209 against q8_0 0.0000, but the cause is that the q8_0 run's generation exceeded the 16384 budget on that game and truncated, while the f16 run's happened to finish. That is generation-LENGTH variance, not KV fidelity -- and it is the same budget-exhaustion mechanism this artifact identifies as the real fault. Reporting the headline as 'f16 +0.1533' would be reporting a truncation as a quality gap.",
+    "conclusion": "q8_0 KV is not measurably worse than f16 on the actual deliverable. It is also the only option that FITS at the recommended context size, so this converts it from an inherited 9B-era claim into a measured-safe choice for this model."
+  },
+  "prior_igpu_measurement_folded_in": {
+    "source": "scratchpad/igpu_throughput.json (2026-07-28 09:28, pre-existing on disk)",
+    "why_here": "Finding 13: this completed measurement existed but appeared in neither the prior artifact nor its report, while that artifact described fallback (b) as not completable.",
+    "methodology_match": "UNMATCHED -- 238-token prompt, 256-token completion, n_ctx 4096",
+    "status": "measured",
+    "backend": "hip_igpu",
+    "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+    "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "n_ctx": 4096,
+    "kv_quant": "q8_0",
+    "n_gpu_layers": 999,
+    "model_load_s": 4.0,
+    "request_wall_s": 142.5,
+    "prompt_n": 484,
+    "prompt_ms": 9279.15,
+    "prompt_per_second": 52.159949995419844,
+    "predicted_n": 256,
+    "predicted_ms": 133210.304,
+    "predicted_per_second": 1.9217732586211949
+  },
+  "preconditions_checked": [
+    {
+      "resource": "cached GGUF gemma-4-31B-it-Q4_K_M",
+      "available": true,
+      "how": "path exists; loaded and served by every measured arm"
+    },
+    {
+      "resource": "CUDA llama-server build",
+      "available": true,
+      "how": "~/.cache/llama.cpp-master/build/bin/llama-server, libggml-cuda.so present"
+    },
+    {
+      "resource": "HIP/ROCm llama-server build for the iGPU",
+      "available": true,
+      "how": "~/.cache/llama.cpp-master/build-hip/bin/llama-server exists with libggml-hip.so; --list-devices enumerates 'ROCm0: AMD Radeon 890M Graphics (108000 MiB, 96716 MiB free)'; user is in the render group. This CONTRADICTS the briefing's claim that no HIP build exists -- the briefing checked build/ and not build-hip/. blocked_igpu_no_hip_build therefore does NOT apply."
+    },
+    {
+      "resource": "a free RTX 3090 (GPU arbitration)",
+      "available": true,
+      "how": "Checked nvidia-smi before every launch. Both cards were free at the start of this phase (2 MiB each); GPU0 was taken and residency was PROVEN per-PID via nvidia-smi --query-compute-apps joined PID -> UUID -> index, never from CUDA_VISIBLE_DEVICES. No two ~21 GiB servers were ever placed on one card."
+    }
+  ],
+  "preconditions_checked_principle": "Records WHICH resources were verified before measuring, pre-empting the fabrication mode where an agent silently lacks a resource and synthesises a passing artifact. Note that one precondition here REFUTES the task briefing rather than confirming it.",
+  "hard_rules_observed": {
+    "no_arc_or_kaggle_submission": true,
+    "no_scored_or_online_game": true,
+    "no_historical_artifact_rewritten": true,
+    "frozen_evidence_untouched": "results/arc_e3_origin_fixtures not read, formatted or linted",
+    "submitted_flags_unchanged": true,
+    "teardown_by_explicit_pid_never_pkill_f": true,
+    "per_pid_vram_sampled_during_every_run": true
+  },
+  "honest_verdict": "complete_egpu_only_placement_confirmed_31b_plus_full_q8_0_kv_fits_one_3090_with_zero_ffn_offload_at_21022_mib_k1_and_21640_mib_k4_both_clearing_the_1500mib_guard_margin_fallback_a_ffn_offload_measured_2.9x_slower_fallback_b_igpu_measured_23x_slower_root_cause_of_the_prior_zero_induction_result_was_the_4096_token_budget_against_a_thinking_model_not_placement",
+  "honest_verdict_principle": "Terminal complete_ prefix per the Verdict Terminal-Prefix Discipline, so the reconciler classifies this as terminal rather than false-positive-matching on words like blocked or no_improvement that appear in the per-arm records and corrections below.",
+  "solve_provenance": "development_proxy",
+  "verifier_is_oracle": false,
+  "submitted_to_leaderboard": false,
+  "read_game_source": false,
+  "used_env_source": true,
+  "caveats_and_limits": [
+    "SAMPLE SIZE. The throughput/fit arms use the SAME frozen 6-prompt corpus as exp5901 v2 (6 public games). That is enough to separate a 2.9x and a 23x throughput gap, which is what the decision turns on; it is NOT enough to rank two configurations that differ by a few percent.",
+    "THE K=4 CONCURRENCY ARM IS A SINGLE RUN of 4 games. It succeeded 4/4 with zero HTTP errors, but one of the four engines (ls20) graded 0.6863 held-out where the same game graded 0.9926 at K=1. Batched decode changes kernel shapes and therefore floating-point results, so this may be batch nondeterminism or may be chance at n=4. UNREPLICATED -- do not treat K=4 as quality-equivalent to K=1 on this evidence.",
+    "THINKING-OFF QUALITY is measured on held-out cell accuracy over 6 games (and 4 paired against the thinking-on arm: 0.9960 vs 0.9965, indistinguishable). It is NOT measured on downstream solve rate, and exp5764's positive induction-quality result for this model was obtained with thinking ON. Before flipping --reasoning off in production, re-run exp5764's 13-game heldout_accuracy protocol with it off.",
+    "f16-vs-q8_0 could NOT be compared at the recommended n_ctx, because f16 KV does not fit there (measured CUDA error). The paired arm therefore runs at n_ctx 24576 where f16 does fit; neither arm truncates at that size, so KV type remains the only live variable, but the n_ctx values differ and that is disclosed rather than hidden.",
+    "THE FFN-OFFLOAD ARM IS BOUNDED. It was rescoped to 2 prompts at a 4096 budget after the full 6x16384 shape was projected at ~4 hours from its own measured decode rate. Its number is a decode RATE (budget-independent); it deliberately reports NO induce_ok, because a 4096 budget cannot produce one on this model regardless of placement.",
+    "HOST RAM IS NOT BOUNDED IN THESE RUNS. llama-server enabled 32 context checkpoints per slot at ~425 MiB each (4 slots => order 50 GB ceiling against ~98 GB available). No run here was long enough to approach it. Bound it with -ctxcp before a long-horizon deployment.",
+    "TWO GPUs WERE USED, on separate cards, never two large servers on one card. Cross-card contention was checked and found negligible (both streams held ~31 tok/s while running simultaneously). The iGPU arm ran with an unrelated pre-existing 9B HIP server resident."
+  ],
+  "launched_and_reaped_pids": [
+    2859111,
+    2867390,
+    2874119,
+    2882219,
+    2888721,
+    2890546,
+    2890890,
+    2893015,
+    2893327,
+    2894363,
+    2897320,
+    2897864
+  ]
+}

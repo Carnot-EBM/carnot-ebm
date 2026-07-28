@@ -1,0 +1,58 @@
+=== phase1b on GPU idx 0 GPU-b52387a2-c625-de87-8d34-e6f64e684bab (waited 0.0s) ===
+  [armA round 0] [{"status": 200, "seconds": 113.3, "predicted_n": 256}, {"status": 200, "seconds": 113.6, "predicted_n": 256}, {"status": 200, "seconds": 112.3, "predicted_n": 256}, {"status": 200, "seconds": 112.8, "predicted_n": 256}]
+  [armA round 1] [{"status": 200, "seconds": 142.1, "predicted_n": 256}, {"status": 200, "seconds": 141.6, "predicted_n": 256}, {"status": 200, "seconds": 142.6, "predicted_n": 256}, {"status": 200, "seconds": 143.0, "predicted_n": 256}]
+  [armA round 2] [{"status": 200, "seconds": 163.4, "predicted_n": 256}, {"status": 200, "seconds": 164.3, "predicted_n": 256}, {"status": 200, "seconds": 162.9, "predicted_n": 256}, {"status": 200, "seconds": 163.9, "predicted_n": 256}]
+  [armA overceiling] [{"i": 0, "status": 500, "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}", "predicted_n": null}, {"i": 1, "status": 500, "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}", "predicted_n": null}, {"i": 2, "status": 500, "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}", "predicted_n": null}, {"i": 3, "status": 500, "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}", "predicted_n": null}]
+{
+  "arm": "A_K4_concurrency_sustained",
+  "n_ctx": 81920,
+  "kv": "q8_0",
+  "K": 4,
+  "target_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+  "pid": 2768323,
+  "health_200": true,
+  "launched": true,
+  "observed_n_ctx": 81920,
+  "total_slots": 4,
+  "k4_admission_ceiling_tokens": 16384,
+  "worstcase_prompt_tokens": 16466,
+  "worstcase_exceeds_k4_ceiling_by": 82,
+  "k4_prompt_tokens": 16184,
+  "overceiling_k4": [
+    {
+      "i": 0,
+      "status": 500,
+      "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}",
+      "predicted_n": null
+    },
+    {
+      "i": 1,
+      "status": 500,
+      "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}",
+      "predicted_n": null
+    },
+    {
+      "i": 2,
+      "status": 500,
+      "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}",
+      "predicted_n": null
+    },
+    {
+      "i": 3,
+      "status": 500,
+      "error_body": "{\"error\":{\"code\":500,\"message\":\"Context size has been exceeded.\",\"type\":\"server_error\"}}",
+      "predicted_n": null
+    }
+  ],
+  "health_final": 200,
+  "peak_resident_mib": 23906,
+  "proven_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+  "vram_samples": 852,
+  "bus_fault": false,
+  "headroom_vs_free": -48,
+  "headroom_vs_total": 217
+}
+  [armB] {"n_ctx": 49152, "kv": "q8_0", "pid": 2784839, "health_200": true, "admit_status": 200, "peak_resident_mib": 22258, "proven_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab", "vram_samples": 43, "bus_fault": false, "headroom_vs_free": 1600, "headroom_vs_total": 1865}
+  [armB] {"n_ctx": 65536, "kv": "q8_0", "pid": 2785781, "health_200": true, "admit_status": 200, "peak_resident_mib": 23082, "proven_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab", "vram_samples": 41, "bus_fault": false, "headroom_vs_free": 776, "headroom_vs_total": 1041}
+  [armB] {"n_ctx": 73728, "kv": "q8_0", "pid": 2786433, "health_200": true, "admit_status": 200, "peak_resident_mib": 23494, "proven_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab", "vram_samples": 40, "bus_fault": false, "headroom_vs_free": 364, "headroom_vs_total": 629}
+WROTE /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/fitgrid/phase1b_results.json

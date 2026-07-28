@@ -1,0 +1,24 @@
+0.00.170.161 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.170.164 I device_info:
+0.00.485.572 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
+0.00.485.584 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
+0.00.485.694 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.485.702 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true
+0.00.485.751 I srv          init: running without SSL
+0.00.485.788 I srv          init: using 23 threads for HTTP server
+0.00.485.912 I srv         start: binding port with default address family
+0.00.487.067 I srv  llama_server: loading model
+0.00.487.073 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'
+0.00.487.116 I common_init_result: fitting params to device memory ...
+0.00.487.117 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.02.336.284 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.03.248.521 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.03.249.128 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.03.257.593 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.03.285.313 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
+0.11.251.599 W llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.11.279.062 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+/home/ianblenke/.cache/llama.cpp-master/ggml/src/ggml-cuda/ggml-cuda.cu:104: CUDA error
+0.11.286.995 E CUDA error: out of memory
+0.11.287.004 E   current device: 0, in function ggml_cuda_kernel_can_use_pdl at /home/ianblenke/.cache/llama.cpp-master/ggml/src/ggml-cuda/common.cuh:1602
+0.11.287.005 E   cudaFuncGetAttributes(&attr, kernel)

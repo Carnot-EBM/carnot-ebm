@@ -126,7 +126,12 @@ class IGECellSelector:
         proposer: Any = None,
         enabled: bool = True,
         max_cells_in_prompt: int = 12,
-        repo_substr: str = "Qwen3.5-9B-MTP",
+        # None -> the canonical live-generator pin (ARC_LIVE_GENERATOR_REPO_SUBSTR, resolved
+        # lazily in _get_proposer alongside the LocalGGUFProposer import). Deliberately NOT a
+        # string literal here: this default and the one in from_config() below were two separate
+        # copies of "Qwen3.5-9B-MTP", which is exactly the shape that lets a generator switch land
+        # in one and not the other. Now there is nothing here to forget to update.
+        repo_substr: Optional[str] = None,
         max_tokens: int = 16,
         temperature: float = 0.1,
     ) -> None:
@@ -134,7 +139,10 @@ class IGECellSelector:
         self._proposer = proposer  # may be None -> lazily built on first call
         self._proposer_injected = proposer is not None
         self.max_cells_in_prompt = max(2, int(max_cells_in_prompt))
-        self.repo_substr = str(repo_substr)
+        # "" means "not overridden" -- _get_proposer() substitutes the canonical live pin. Kept as
+        # a string rather than None so every existing reader (diagnostics, artifact dumps) that
+        # does str(selector.repo_substr) keeps working unchanged.
+        self.repo_substr = str(repo_substr) if repo_substr else ""
         self.max_tokens = int(max_tokens)
         self.temperature = float(temperature)
         # diagnostics: every outcome is counted so the A/B can prove the selector actually fired and
@@ -150,14 +158,24 @@ class IGECellSelector:
             return self._proposer
         # Lazy import keeps this module light and avoids an import cycle (arc_go_explore -> here ->
         # arc_executable_world_model would otherwise load at module import time).
-        from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+        from carnot.agentic.arc_executable_world_model import (
+            ARC_LIVE_GENERATOR_MTP_DEFAULT,
+            ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+            ARC_LIVE_GENERATOR_REPO_SUBSTR,
+            LocalGGUFProposer,
+        )
 
+        # This selector defaults to port 8919 -- the SAME port _proposer() uses -- and relies on
+        # LocalGGUFProposer's server reuse to share one warm model. That only works if the config
+        # matches; a stale model/mtp/prefix here would make the shared server get refused and
+        # relaunched on a fresh port, i.e. a second full model load. At 18.3 GB that is no longer
+        # merely wasteful, it is an OOM. So all three come from the canonical pin.
         self._proposer = LocalGGUFProposer(
-            repo_substr=self.repo_substr,
+            repo_substr=self.repo_substr or ARC_LIVE_GENERATOR_REPO_SUBSTR,
             model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
-            mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+            mtp=(os.environ.get("CARNOT_ARC_MTP", ARC_LIVE_GENERATOR_MTP_DEFAULT) != "0"),
             kv_quant="q8_0",
-            no_think_prefix="/no_think\n",
+            no_think_prefix=ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
             max_tokens=max(self.max_tokens, 16),
             n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             port=int(os.environ.get("CARNOT_IGE_LLM_PORT", "8919")),
@@ -234,7 +252,9 @@ def coerce_ige_cell_selector(value: Any, *, proposer: Any = None) -> Optional[IG
             proposer=proposer,
             enabled=True,
             max_cells_in_prompt=int(value.get("max_cells_in_prompt", 12)),
-            repo_substr=str(value.get("repo_substr", "Qwen3.5-9B-MTP")),
+            # No literal default: an absent/blank key means "use the canonical live pin", resolved
+            # in _get_proposer(). See the __init__ signature's comment.
+            repo_substr=value.get("repo_substr") or None,
             max_tokens=int(value.get("max_tokens", 16)),
             temperature=float(value.get("temperature", 0.1)),
         )

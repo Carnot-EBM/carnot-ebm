@@ -21,9 +21,9 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
     "policy": "E3AgentPolicy",
     "cascade": True,
     "frozen_generator": {
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -37,7 +37,7 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
         "mtp": True,
         "spec_type": "draft-mtp",
         "kv_quant": "q8_0",
-        "no_think_prefix": "/no_think\n",
+        "no_think_prefix": "",
         "max_tokens": 2560,
         "n_predict_min": 2048,
         "port_strategy": "free_non_8919",
@@ -96,7 +96,7 @@ def _parity(ok: bool = True) -> JsonDict:
 
 
 def _manifest(tmp_path: Path, *, complete: bool = True) -> JsonDict:
-    model = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
+    model = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
     server = tmp_path / "llama-server"
     if complete:
         shared = [
@@ -140,12 +140,12 @@ def test_scenario_capstone_4744_confirms_frozen_generator_from_submitted_config(
     config = mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE)
 
     assert config["confirmed"] is True
-    assert config["model_id"] == "unsloth/Qwen3.5-9B-MTP-GGUF"
-    assert config["repo_substr"] == "Qwen3.5-9B-MTP"
+    assert config["model_id"] == "unsloth/gemma-4-31B-it-GGUF"
+    assert config["repo_substr"] == "gemma-4-31B-it"
     assert config["mtp"] is True
     assert config["kv_quant"] == "q8_0"
     assert config["max_tokens"] >= 2048
-    assert config["no_think_prefix"] == "/no_think\n"
+    assert config["no_think_prefix"] == ""
     assert config["llama_server_kind"] == "cuda-12.8-binary"
     assert config["wheel_fallback_allowed"] is False
     assert config["port_strategy"] == "free_non_8919"
@@ -161,7 +161,9 @@ def test_scenario_capstone_4744_ready_artifact_has_pass_checklist(tmp_path: Path
     artifact = mod.build_artifact(
         preconditions_checked=_preconditions(True),
         entrypoint_validation=_entrypoint(True),
-        frozen_generator_config=mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE),
+        frozen_generator_config=mod.frozen_generator_config_from_submitted(
+            SUBMITTED_AGENT_CONFIG_FIXTURE
+        ),
         package_manifest=manifest,
         smoke_episode=_smoke(True),
         parity_test=_parity(True),
@@ -190,7 +192,9 @@ def test_scenario_capstone_4744_blocks_missing_manifest_resources(tmp_path: Path
     artifact = mod.build_artifact(
         preconditions_checked=_preconditions(True),
         entrypoint_validation=_entrypoint(True),
-        frozen_generator_config=mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE),
+        frozen_generator_config=mod.frozen_generator_config_from_submitted(
+            SUBMITTED_AGENT_CONFIG_FIXTURE
+        ),
         package_manifest=manifest,
         smoke_episode=_smoke(True),
         parity_test=_parity(True),
@@ -241,7 +245,9 @@ def test_req_capstone_4744_schema_rejects_false_ready_and_checksum_drift(tmp_pat
     artifact = mod.build_artifact(
         preconditions_checked=_preconditions(True),
         entrypoint_validation=_entrypoint(True),
-        frozen_generator_config=mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE),
+        frozen_generator_config=mod.frozen_generator_config_from_submitted(
+            SUBMITTED_AGENT_CONFIG_FIXTURE
+        ),
         package_manifest=_manifest(tmp_path, complete=False),
         smoke_episode=_smoke(True),
         parity_test=_parity(True),
@@ -296,7 +302,9 @@ def test_req_capstone_4744_schema_rejects_required_field_and_boolean_drift(
     artifact = mod.build_artifact(
         preconditions_checked=_preconditions(True),
         entrypoint_validation=_entrypoint(True),
-        frozen_generator_config=mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE),
+        frozen_generator_config=mod.frozen_generator_config_from_submitted(
+            SUBMITTED_AGENT_CONFIG_FIXTURE
+        ),
         package_manifest=_manifest(tmp_path, complete=True),
         smoke_episode=_smoke(True),
         parity_test=_parity(True),
@@ -333,7 +341,9 @@ def test_req_capstone_4744_schema_rejects_required_field_and_boolean_drift(
     blocked = mod.build_artifact(
         preconditions_checked=_preconditions(True),
         entrypoint_validation=_entrypoint(True),
-        frozen_generator_config=mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE),
+        frozen_generator_config=mod.frozen_generator_config_from_submitted(
+            SUBMITTED_AGENT_CONFIG_FIXTURE
+        ),
         package_manifest=_manifest(tmp_path / "missing", complete=False),
         smoke_episode=_smoke(True),
         parity_test=_parity(True),

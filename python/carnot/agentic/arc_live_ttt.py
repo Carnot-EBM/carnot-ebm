@@ -8,7 +8,14 @@ model and COMMIT only the short winning path -- the score min(human/agent_action
 committed real actions, and reaching more games raises the index-weighted mean.
 
 WHY LEARN, NOT INDUCE: the frozen Qwen3.5-9B is too weak to INDUCE a coherent world model (exp4557 scored
-0.0 held-out accuracy -- it failed its own single training transition). This module LEARNS the model from
+0.0 held-out accuracy -- it failed its own single training transition).
+  [2026-07-28 CORRECTION, not a rewrite: that measurement stands as a fact about the 9B, but the 9B is no
+  longer the generator. The live generator is now gemma-4-31B-it, which in a 13-game x 3-replicate
+  head-to-head produced an importable world model on 38/39 attempts at 0.3843 fail-as-zero. So the
+  premise of "the generator is too weak to induce" is NO LONGER ESTABLISHED for the current stack, and
+  this module's learn-don't-induce argument should be re-tested rather than assumed. Nothing below has
+  been re-measured against the 31B; treat the reasoning as provisional until it is.]
+This module LEARNS the model from
 played transitions using the EXISTING zero-LLM rule learner ``arc_world_model_dsl.ObjectDeltaModel`` --
 which already fits ARC dynamics (translate / object-translate / recolor / click-recolor rules, greedily
 composed; sub-second pure-numpy fit) from <100 transitions. That learner was ALREADY being fit every step

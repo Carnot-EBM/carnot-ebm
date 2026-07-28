@@ -151,6 +151,25 @@ SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
 SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = False  # 2026-07-16: re-validated -- see below
 SUBMITTED_COLOR_BLOB_SALIENCE_MODE = "single_color_connected_component_tiers"
+
+# THE LIVE ARC GENERATOR pin. CANONICAL DEFINITION lives in arc_executable_world_model.py (the
+# leaf module every generator consumer already depends on) so that this file, arc_ige_cell_selector
+# and arc_llm_guided_solve read ONE value instead of three copies that drift. Imported at module
+# level rather than lazily -- unlike the LocalGGUFProposer imports below, these are plain strings
+# and the pin must be readable by SUBMITTED_AGENT_CONFIG at import time. Re-exported here under the
+# same names because that is where callers and tests have always looked for the frozen-stack pin.
+from carnot.agentic.arc_executable_world_model import (  # noqa: E402
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_MTP_DEFAULT,
+    ARC_LIVE_GENERATOR_MTP_HEAD_ARCH,
+    ARC_LIVE_GENERATOR_MTP_HEAD_FILENAME,
+    ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT,
+    ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+    _default_induce_timeout_s,
+)
+
 # REQ-ARC-FCP-5699-11 (operator: "wire SGE into the live path", 2026-07-15): the LLM
 # Strategy-Guided Exploration router (arXiv:2603.02045, arc_llm_strategy_proposer.py) is
 # now genuinely REACHABLE from this live entrypoint via _load_submitted_candidate_router(),
@@ -876,18 +895,25 @@ def _load_sge_candidate_router(game_id: str) -> Any | None:
     from carnot.agentic.arc_llm_strategy_proposer import LLMStrategyProposer, SGECandidateRouter
 
     gguf = LocalGGUFProposer(
-        repo_substr="Qwen3.5-9B-MTP",
+        # 2026-07-28 generator switch -- see _proposer() for the full rationale + measurement.
+        # These four lines MUST stay byte-identical to _proposer()'s, which is what this
+        # function's own docstring means by "configured IDENTICALLY": a divergence here does not
+        # fail loudly, it quietly loads a SECOND model on a second port.
+        repo_substr=ARC_LIVE_GENERATOR_REPO_SUBSTR,
         model_path=_os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
-        mtp=(_os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        mtp=(_os.environ.get("CARNOT_ARC_MTP", ARC_LIVE_GENERATOR_MTP_DEFAULT) != "0"),
         kv_quant="q8_0",
-        no_think_prefix="/no_think\n",
+        no_think_prefix=ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
         # REQ-ARC-FCP-5699-35: read the SAME env-var-overridable defaults as _proposer()'s own
         # lazy default (4096/600, was a hardcoded max_tokens=2560 literal with no timeout
         # override at all -- caught by test_req_arc_fcp_5699_11_load_sge_candidate_router_
         # reuses_frozen_generator_config's own "configured IDENTICALLY" contract when the
         # _proposer() default graduated and this one silently didn't move with it).
         max_tokens=int(_os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
-        timeout=int(_os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
+        # DERIVED, not a 600 literal: the timeout now scales with the FFN offload that slows
+        # generation down (see `_default_induce_timeout_s`). The 600 was calibrated for the 9B and
+        # the 31B's slowest observed induce call was 572.0 s -- 4.7% inside it, before any offload.
+        timeout=int(_os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", str(_default_induce_timeout_s()))),
         n_gpu_layers=int(_os.environ.get("CARNOT_ARC_NGL", "999")),
     )
     return SGECandidateRouter(
@@ -4988,10 +5014,17 @@ class E3AgentPolicy:
             import os
             from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
-            # Live-submission generator (validated 2026-06-19): Qwen3.5-9B-MTP + MTP + 8-bit KV + /no_think,
-            # n_predict>=2048. 5.9GB Q4 fits 16GB; 62.5% Layer-B grounding (DeepSeek-Flash 25%, gemma verbose).
-            # Kaggle deploy: set CARNOT_ARC_GGUF_PATH to the bundled /kaggle/input/.../Qwen3.5-9B-Q4_K_M.gguf;
-            # CARNOT_ARC_MTP=0 disables MTP if a tight-VRAM box needs the ~4GB the self-draft costs.
+            # Live-submission generator. WAS Qwen3.5-9B-MTP + MTP + 8-bit KV + /no_think (validated
+            # 2026-06-19; 5.9GB Q4 chosen to fit an assumed 16GB Kaggle ceiling). SWITCHED
+            # 2026-07-28 by operator directive to gemma-4-31B-it: the 16GB ceiling is void (Kaggle
+            # is 96GB since May), and a 13-game x 3-replicate head-to-head measured the 31B at
+            # 0.3843 fail-as-zero vs 0.0627, 11-0-2 matched, sign p=0.00098. See the
+            # ARC_LIVE_GENERATOR_* block at the top of this module for the full evidence, for why
+            # MTP now defaults OFF (gemma-4-31B has no MTP heads -- leaving it on double-loads the
+            # weights and OOMs), and for why the /no_think prefix is gone (a Qwen3 token).
+            # Kaggle deploy: set CARNOT_ARC_GGUF_PATH to the bundled
+            # /kaggle/input/.../gemma-4-31B-it-Q4_K_M.gguf. CARNOT_ARC_MTP still overrides in both
+            # directions for anyone pointing that env var at a genuine MTP model.
             # CARNOT_ARC_NGL (default 999=all layers on GPU): the operator prefill-to-RAM lever. Lowering it
             # keeps that many of the top weight layers in system RAM (mmap'd, prefilled in page cache) instead
             # of VRAM, freeing GPU memory for the q8 KV-cache + the live CNN dynamics fit that coexists with
@@ -5006,13 +5039,19 @@ class E3AgentPolicy:
             # the 8192 requirement found in REQ-ARC-FCP-5699-34 was specific to a 3x larger,
             # non-live candidate model, not this one. Both env vars remain overridable.
             self.proposer = LocalGGUFProposer(
-                repo_substr="Qwen3.5-9B-MTP",
+                repo_substr=ARC_LIVE_GENERATOR_REPO_SUBSTR,
                 model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
-                mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+                mtp=(os.environ.get("CARNOT_ARC_MTP", ARC_LIVE_GENERATOR_MTP_DEFAULT) != "0"),
                 kv_quant="q8_0",
-                no_think_prefix="/no_think\n",
+                no_think_prefix=ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
                 max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
-                timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
+                # DERIVED -- see `_load_sge_candidate_router()` above and
+                # `_default_induce_timeout_s()`. Both live construction sites must read the same
+                # default or they diverge, which is the exact failure REQ-ARC-FCP-5699-35 records
+                # having already happened once for max_tokens.
+                timeout=int(
+                    os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", str(_default_induce_timeout_s()))
+                ),
                 port=int(os.environ.get("CARNOT_ARC_PROPOSER_PORT", "8919")),
                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
@@ -5024,7 +5063,11 @@ class E3AgentPolicy:
         space. Lazily creates + caches an embedding-mode llama_cpp.Llama; fully guarded so any
         failure (missing GGUF, OOM) returns None and the caller falls back -- never crashes the
         live path. NOTE: this is a second in-memory load of the same weights; on a tight live GPU
-        it must be VRAM-budgeted (the feature is dev-gated OFF, so the frozen submit is unaffected)."""
+        it must be VRAM-budgeted (the feature is dev-gated OFF, so the frozen submit is unaffected).
+        That budgeting note got THREE TIMES more expensive on 2026-07-28: the generator moved from
+        a 5.9 GB Qwen3.5-9B Q4 to an 18.3 GB gemma-4-31B Q4, so this second copy no longer fits
+        alongside the server on a 24 GB card at all. Do not enable this feature on a single local
+        3090 without either the FFN offload (CARNOT_ARC_FFN_CPU_LAYERS) or a smaller n_ctx."""
         import os
 
         embedder = getattr(self, "_playbook_embedder", None)
@@ -5037,7 +5080,14 @@ class E3AgentPolicy:
 
                 from carnot.agentic.arc_executable_world_model import _resolve_gguf
 
-                gguf = os.environ.get("CARNOT_ARC_GGUF_PATH") or _resolve_gguf("Qwen3.5-9B")
+                # Same weights the proposer uses, so the query vector lands in the offline index's
+                # space. Follows the 2026-07-28 generator switch: pointing this at the retired 9B
+                # while the proposer served gemma-4-31B would silently embed into a DIFFERENT
+                # vector space -- a mismatch that produces plausible-looking nonsense retrievals
+                # rather than an error.
+                gguf = os.environ.get("CARNOT_ARC_GGUF_PATH") or _resolve_gguf(
+                    ARC_LIVE_GENERATOR_REPO_SUBSTR
+                )
                 if not gguf:
                     self._playbook_embedder = False
                     return None
@@ -5912,10 +5962,53 @@ class E3AgentPolicy:
                 # 0.08-wall games -- with zero coverage.
                 _hs_change_gate = dict(trust_score.change_gate)
                 attempt["change_gate"] = _hs_change_gate
+                # REQ-ARC-WMTE-6017: LIFT the swallow record onto the attempt so the
+                # diagnostics projection can carry it. It was computed on every attempt and
+                # then discarded from the record: `hud_mask_swallow` was None in all 100
+                # cells of the 2026-07-27 four-arm run, so a mask refusal (or an unmeasurable
+                # non-refusal) could be DATED from the row but never EXPLAINED from it.
+                attempt["hud_mask_swallow"] = dict(_hs_change_gate.get("hud_mask_swallow") or {})
+                # REQ-ARC-WMTE-6019: THE REFUSAL NAME, on the hidden-state branch too. The
+                # 6017 fix made `select_trusted_world_model`'s refusals name themselves
+                # (`refused_swallows_dynamics` / `refused_swallow_check_unmeasurable` vs the
+                # old blanket `disabled`), but the name landed ONLY inside
+                # `trust_score.change_gate` -- and this branch wrote `hud_mask_reason` and
+                # never `hud_mask_status`, while the diagnostics projection carries
+                # `hud_mask_status` guarded by `if k in a`. Measured on the 2026-07-27
+                # four-arm run: `hud_mask_status` is ABSENT on all 44 hidden-state attempts
+                # (11 games x 4 arms) and present on all 56 others. So on every 0.08-wall
+                # game a named refusal still could not be read off a cell record -- the same
+                # dead-channel shape 6017 closed for `hud_mask_swallow`, one field over.
+                # Read from the gate dict (not a local `vr`) because this branch has no
+                # verifier of its own; `select_trusted_world_model` built it.
+                if "hud_mask_status" in _hs_change_gate:
+                    attempt["hud_mask_status"] = str(_hs_change_gate["hud_mask_status"])
+                if "hud_mask_cells" in _hs_change_gate:
+                    attempt["hud_mask_cells"] = int(_hs_change_gate["hud_mask_cells"] or 0)
                 attempt["verify_change_fidelity"] = _hs_change_gate.get("change_fidelity")
                 attempt["verify_spurious_changed_cells"] = _hs_change_gate.get(
                     "spurious_changed_cells"
                 )
+                # REQ-ARC-WMTE-6019: the two gate diagnostics that were computed and then
+                # discarded. `change_gate_decision` emits both on EVERY attempt, but
+                # `change_gate` is not in the diagnostics projection tuple, so both were
+                # absent from all 104 attempts of the 2026-07-27 run:
+                #   legacy_accuracy_would_pass_at_live_threshold -- the IN-ARM counterfactual
+                #     ("would this arm's own engine have been admitted by the legacy metric at
+                #     the threshold the agent actually ships, 1.0?"). Without it, an
+                #     admission-difference claim has to be read across arms, against a
+                #     DIFFERENT engine, which is a weaker statement than the data supports.
+                #   noop_ok_is_vacuous -- whether the no-op channel could fire at all, i.e.
+                #     whether `noop_ok`'s pass is a measurement or an empty pass region.
+                # Lifted individually rather than by projecting `change_gate` wholesale: that
+                # dict is large and per-arm, and the projection exists to keep a cell record
+                # readable.
+                for _k in (
+                    "legacy_accuracy_would_pass_at_live_threshold",
+                    "noop_ok_is_vacuous",
+                ):
+                    if _k in _hs_change_gate:
+                        attempt[_k] = bool(_hs_change_gate[_k])
                 _hs_gate_on = e3.world_model_change_gate_hidden_state_enabled()
                 attempt["change_gate_hidden_state_enabled"] = bool(_hs_gate_on)
                 if _hs_gate_on:
@@ -5955,6 +6048,12 @@ class E3AgentPolicy:
                 attempt["hud_mask_reason"] = _hud_reason
                 attempt["hud_mask_status"] = vr.hud_mask_status
                 attempt["hud_mask_cells"] = int(vr.hud_mask_cells)
+                # REQ-ARC-WMTE-6017: the swallow record, on the attempt so the diagnostics
+                # projection can carry it (it was computed and discarded -- None in all 100
+                # cells of the 2026-07-27 four-arm run). `hud_mask_status` alone cannot
+                # explain itself: "applied" is written both when the guard measured the mask
+                # and cleared it AND (before this fix) when the guard could not fire at all.
+                attempt["hud_mask_swallow"] = dict(vr.hud_mask_swallow)
                 # REQ-ARC-WMTE-6011 (GAP-WM-TRUST-GATE): the change-weighted decision is
                 # COMPUTED and RECORDED on every attempt regardless of the flag, so a control
                 # arm's artifact carries the same diagnostics as a treatment arm's and the two
@@ -5965,6 +6064,17 @@ class E3AgentPolicy:
                 attempt["verify_change_accuracy"] = _change_gate["change_accuracy"]
                 attempt["verify_correct_changed_cells"] = _change_gate["correct_changed_cells"]
                 attempt["verify_spurious_changed_cells"] = _change_gate["spurious_changed_cells"]
+                # REQ-ARC-WMTE-6019: same two computed-and-discarded diagnostics as the
+                # hidden-state branch above -- see that comment for why each one matters.
+                # Kept as a matching pair of lifts (not a shared helper) because the two
+                # branches build their gate dict from different objects; a helper would have
+                # to take the dict anyway and would hide which branch wrote what.
+                for _k in (
+                    "legacy_accuracy_would_pass_at_live_threshold",
+                    "noop_ok_is_vacuous",
+                ):
+                    if _k in _change_gate:
+                        attempt[_k] = bool(_change_gate[_k])
                 if _change_gate["gate_enabled"]:
                     if not _change_gate["passed"]:
                         attempt["skipped"] = "world_model_change_gate_" + _change_gate["reason"]
@@ -6185,9 +6295,29 @@ class E3AgentPolicy:
                         "hud_mask_status",
                         "hud_mask_cells",
                         "hud_mask_reason",
+                        # REQ-ARC-WMTE-6017 (2026-07-28). THE GUARD'S OWN EVIDENCE. Without
+                        # it `hud_mask_status` is a verdict with no measurement attached: on
+                        # the 2026-07-27 four-arm run every cell recorded a status and NO
+                        # cell recorded why, so lf52's "applied" could be dated but not
+                        # explained, and an unmeasurable non-refusal was indistinguishable
+                        # from a measured clearance. Carries reason, the cell-pooled overlap
+                        # and its threshold, the raw/masked changing-transition counts, and
+                        # the corpus-scope fields -- i.e. every input to the verdict.
+                        "hud_mask_swallow",
                         "verify_change_fidelity",
                         "verify_spurious_changed_cells",
                         "change_gate_hidden_state_enabled",
+                        # REQ-ARC-WMTE-6019. Two more fields `change_gate_decision` computed
+                        # and the projection discarded -- absent from all 104 attempts of the
+                        # 2026-07-27 four-arm run because `change_gate` itself is not
+                        # projected. The first is the IN-ARM admission counterfactual at the
+                        # threshold the agent ships (1.0), which is what an admission claim
+                        # should rest on instead of a cross-arm read against a different
+                        # engine. The second says whether the no-op channel could fire at
+                        # all, so `noop_ok`'s pass is distinguishable from an empty pass
+                        # region.
+                        "legacy_accuracy_would_pass_at_live_threshold",
+                        "noop_ok_is_vacuous",
                     )
                     if k in a
                 }
@@ -6367,10 +6497,15 @@ SUBMITTED_AGENT_CONFIG = {
     "dense_curiosity_discount": 0.5,
     "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
     "live_submit_source": "experiment_4643_refresh_submission_package",
+    # 2026-07-28: the "frozen" generator was UNFROZEN by operator directive and re-pinned to
+    # gemma-4-31B-it. The key name stays `frozen_generator` because
+    # experiment_4744_submission_package_readiness.py and several historical artifacts read it by
+    # that name; "frozen" now means "pinned, and only the operator moves it", which is what it
+    # always meant in practice. See the ARC_LIVE_GENERATOR_* block at the top of this module.
     "frozen_generator": {
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": ARC_LIVE_GENERATOR_MODEL_ID,
+        "repo_substr": ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        "model_filename": ARC_LIVE_GENERATOR_MODEL_FILENAME,
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -6381,18 +6516,52 @@ SUBMITTED_AGENT_CONFIG = {
             "libggml",
             "libggml-cuda",
         ],
-        "mtp": True,
-        "spec_type": "draft-mtp",
+        # SUPERSEDED 2026-07-28 (same day, measured) -- preserved per never-prune because its
+        # warning about `--model-draft <the main weights>` is still exactly right:
+        #   "gemma-4-31B-it is a DENSE, non-MTP model: its GGUF declares no nextn_predict_layers.
+        #    Leaving mtp True would emit `--spec-type draft-mtp --model-draft <same 18.3GB file>`,
+        #    i.e. load the weights twice (~36.6GB) and OOM anything under a 40GB card."
+        # The premise is wrong: gemma-4-31B-it DOES have MTP, via a SEPARATE 491 MiB head
+        # (`mtp-gemma-4-31B-it-Q8_0.gguf`, arch `gemma4-assistant`) rather than embedded heads --
+        # which is why no `nextn_predict_layers` was found in the main GGUF. The conclusion about
+        # the main file as draft stands and is now enforced in `_ensure_server()`.
+        # These two fields describe the SCORED launch, which is MTP-ON: the head costs +1290 MiB
+        # at n_ctx 81920 (not a second copy of the weights) and buys a measured 1.398x decode on
+        # the binary this submission bundles. The 96 GB scored card needs no FFN offload to hold
+        # it; a 24 GB dev card would, which is why the LOCAL default constant stays "0".
+        "mtp": ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT != "0",
+        "spec_type": "draft-mtp" if ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT != "0" else None,
+        "mtp_head_filename": ARC_LIVE_GENERATOR_MTP_HEAD_FILENAME,
+        "mtp_head_arch": ARC_LIVE_GENERATOR_MTP_HEAD_ARCH,
+        "mtp_head_path_env": "CARNOT_ARC_MTP_GGUF_PATH",
         "kv_quant": "q8_0",
-        "no_think_prefix": "/no_think\n",
+        "no_think_prefix": "",  # /no_think is a Qwen3 control token; gemma-4 has no equivalent
         "max_tokens": 2560,
         "n_predict_min": 2048,
         "port_strategy": "free_non_8919",
         "props_verify_endpoint": "/props",
         "wheel_fallback_allowed": False,
+        # HISTORICAL TOKEN, deliberately unchanged. "gemma-8919" does NOT mean "gemma models are
+        # forbidden" -- it names a specific past failure where a stray gemma llama-server squatting
+        # on port 8919 got adopted by the submission. It is read verbatim by
+        # experiment_4744_submission_package_readiness.py's `not_gemma_8919` check, so it stays.
         "forbidden_models": ["gemma-8919"],
         "forbidden_gpu_targets": ["3090"],
         "gpu_target": "kaggle_cuda_gpu_not_3090",
+        # OPERATOR ACTION REQUIRED before the next submission (2026-07-28). The Kaggle kernel
+        # attaches the model as a DATASET, and the dataset currently published is the 5.9GB Qwen
+        # one. `kernel-metadata.json` has been re-pointed at `iancblenke/carnot-gemma4-31b-it-gguf`,
+        # which DOES NOT EXIST YET and must be uploaded. This field records that dependency in the
+        # config the readiness experiment reads, so it cannot be forgotten silently.
+        "kaggle_dataset_slug": "iancblenke/carnot-gemma4-31b-it-gguf",
+        # Uploaded by the operator 2026-07-28 (17 GB, private). The flag above recorded the
+        # dependency precisely so this moment could not be missed; it has now happened.
+        "kaggle_dataset_uploaded": True,
+        # The MTP draft head is a SECOND dataset, because it is a second file. Uploaded the same
+        # day (491 MB, private). Recorded separately from the weights slug so the readiness gate
+        # can require both -- a missing head is a silent ~1.4x slowdown, not an error.
+        "kaggle_mtp_head_dataset_slug": "iancblenke/carnot-gemma4-31b-mtp-head",
+        "kaggle_mtp_head_dataset_uploaded": True,
     },
     "feature_router_enabled": False,
     "explore_diversity_default": False,

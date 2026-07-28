@@ -1,3 +1,20 @@
+# ---------------------------------------------------------------------------------------------
+# FROZEN PRE-2026-07-28 HARNESS -- MEASURES THE **RETIRED** GENERATOR.
+#
+# This script pins Qwen3.5-9B-MTP and describes itself as reproducing the scored/live path. That
+# was true when it was written and is NO LONGER TRUE: the operator directive of 2026-07-28
+# re-pinned the live ARC generator to gemma-4-31B-it (13 games x 3 replicates, fail-as-zero 0.3843
+# vs 0.0627, matched 11-0-2, sign p=0.00098), and the live sites now read
+# `ARC_LIVE_GENERATOR_REPO_SUBSTR` from `arc_executable_world_model`.
+#
+# The pin below is DELIBERATELY LEFT ALONE rather than migrated, because this harness's recorded
+# historical results were genuinely taken on the 9B and re-pointing it would silently change what
+# those results mean (never-prune). The cost of leaving it is that a NEW run through this file
+# measures the retired generator while its own prose claims to characterise the live one.
+#
+# THEREFORE: results produced by this script from 2026-07-28 onward are NOT citable as live-path
+# evidence. If you need a live-path A/B, read the canonical constants instead of this pin.
+# ---------------------------------------------------------------------------------------------
 #!/usr/bin/env python3
 """Scored-path A/B: does the structured nav inducer (CARNOT_ARC_STRUCTURED_NAV=1) improve the REAL
 E3AgentPolicy cascade on a navigation game? (REQ-ARC-WMTE-5842)
@@ -52,8 +69,14 @@ def _run(game: str, structured_nav: bool, proposer) -> dict:
     else:
         os.environ.pop("CARNOT_ARC_STRUCTURED_NAV", None)
     r = atp.run_bounded_progress(
-        game, "frozen", proposer=proposer, seed=SEED, budget=BUDGET,
-        max_inductions=MAX_INDUCTIONS, wall_s=WALL_S, explore_budget=EXPLORE_BUDGET,
+        game,
+        "frozen",
+        proposer=proposer,
+        seed=SEED,
+        budget=BUDGET,
+        max_inductions=MAX_INDUCTIONS,
+        wall_s=WALL_S,
+        explore_budget=EXPLORE_BUDGET,
     )
     return {
         "reached_level": r.reached_level,
@@ -73,8 +96,13 @@ def main() -> int:
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     prop = LocalGGUFProposer(
-        repo_substr="Qwen3.5-9B-MTP", port=int(os.environ.get("SNAV_PORT", "8961")),
-        mtp=True, kv_quant="q8_0", no_think_prefix="/no_think\n", max_tokens=4096, timeout=600,
+        repo_substr="Qwen3.5-9B-MTP",
+        port=int(os.environ.get("SNAV_PORT", "8961")),
+        mtp=True,
+        kv_quant="q8_0",
+        no_think_prefix="/no_think\n",
+        max_tokens=4096,
+        timeout=600,
     )
     t0 = time.time()
     per_game = []
@@ -86,15 +114,19 @@ def main() -> int:
         b, s = row["baseline_off"], row["structured_nav_on"]
         row["reached_delta"] = (s.get("reached_level") or 0) - (b.get("reached_level") or 0)
         per_game.append(row)
-        print(f"[{game}] baseline reached L{b.get('reached_level')} (heldout {b.get('mean_heldout_accuracy')}, "
-              f"plans {b.get('n_plans_found')}) | structured_nav reached L{s.get('reached_level')} "
-              f"(heldout {s.get('mean_heldout_accuracy')}, plans {s.get('n_plans_found')}) | delta {row['reached_delta']}")
+        print(
+            f"[{game}] baseline reached L{b.get('reached_level')} (heldout {b.get('mean_heldout_accuracy')}, "
+            f"plans {b.get('n_plans_found')}) | structured_nav reached L{s.get('reached_level')} "
+            f"(heldout {s.get('mean_heldout_accuracy')}, plans {s.get('n_plans_found')}) | delta {row['reached_delta']}"
+        )
 
     tu = next((r for r in per_game if r["game"] == "tu93"), {})
     tu_delta = tu.get("reached_delta", 0)
+
     # Aggregate gate metrics
     def _reached(row, arm):
         return int((row.get(arm, {}) or {}).get("reached_level", 0) or 0)
+
     total_off = sum(_reached(r, "baseline_off") for r in per_game)
     total_on = sum(_reached(r, "structured_nav_on") for r in per_game)
     nav_rows = [r for r in per_game if r["game"] in NAV_FIRE]
@@ -103,7 +135,9 @@ def main() -> int:
     nav_regressed = sum(1 for r in nav_rows if r["reached_delta"] < 0)
     ctrl_regressed = sum(1 for r in ctrl_rows if r["reached_delta"] < 0)
     ctrl_improved = sum(1 for r in ctrl_rows if r["reached_delta"] > 0)
-    gate_clears = total_on >= total_off and nav_improved >= 1 and ctrl_regressed == 0 and nav_regressed == 0
+    gate_clears = (
+        total_on >= total_off and nav_improved >= 1 and ctrl_regressed == 0 and nav_regressed == 0
+    )
     aggregate = {
         "n_games": len(per_game),
         "total_reached_off": total_off,
@@ -127,28 +161,40 @@ def main() -> int:
         "verifier_is_oracle": False,
         "solve_provenance": "development_proxy",
         "random_seed": SEED,
-        "model_specs": [{"name": "Qwen3.5-9B-MTP-GGUF", "gpu": 1, "role": "world_model_induction_proposer"}],
-        "config": {"budget": BUDGET, "max_inductions": MAX_INDUCTIONS, "explore_budget": EXPLORE_BUDGET, "wall_s": WALL_S},
+        "model_specs": [
+            {"name": "Qwen3.5-9B-MTP-GGUF", "gpu": 1, "role": "world_model_induction_proposer"}
+        ],
+        "config": {
+            "budget": BUDGET,
+            "max_inductions": MAX_INDUCTIONS,
+            "explore_budget": EXPLORE_BUDGET,
+            "wall_s": WALL_S,
+        },
         "methodology_note": "Same whole-loop scored cascade (run_bounded_progress -> E3AgentPolicy) as the Kaggle submission, same proposer/seed/budget; the ONLY change is CARNOT_ARC_STRUCTURED_NAV. tu93 = clean nav (decisive); ls20 = morph-win negative control (nav inducer should not help). Public-game frames for offline dev.",
         "per_game": per_game,
         "tu93_reached_delta": tu_delta,
         "aggregate": aggregate,
         "gate_evidence": (
             "GATE CLEARS: aggregate levels improved (or held) with nav gains and NO control/nav regression"
-            if gate_clears else
-            "GATE DOES NOT CLEAR -- see aggregate (regression or no net gain); do NOT submit on this basis"
+            if gate_clears
+            else "GATE DOES NOT CLEAR -- see aggregate (regression or no net gain); do NOT submit on this basis"
         ),
         "duration_s": round(time.time() - t0, 1),
     }
     art["honest_verdict"] = (
         f"complete_structured_nav_broader_ab_total_delta_{aggregate['total_delta']}_gate_clears_{gate_clears}"
     )
-    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(json.dumps(art, sort_keys=True, default=str).encode()).hexdigest()
+    art["reproducibility_checksum"] = (
+        "sha256:"
+        + hashlib.sha256(json.dumps(art, sort_keys=True, default=str).encode()).hexdigest()
+    )
     out = ROOT / "results" / "outer_loop_arc_structured_nav_broader_ab_20260724.json"
     out.write_text(json.dumps(art, indent=2, default=str))
-    print(f"AGGREGATE: total reached {total_off}->{total_on} (delta {aggregate['total_delta']}) | "
-          f"nav improved {nav_improved}/{len(nav_rows)} | control regressed {ctrl_regressed}/{len(ctrl_rows)} | "
-          f"GATE_CLEARS={gate_clears}")
+    print(
+        f"AGGREGATE: total reached {total_off}->{total_on} (delta {aggregate['total_delta']}) | "
+        f"nav improved {nav_improved}/{len(nav_rows)} | control regressed {ctrl_regressed}/{len(ctrl_rows)} | "
+        f"GATE_CLEARS={gate_clears}"
+    )
     print("wrote", out, f"({art['duration_s']}s)")
     return 0
 

@@ -22,6 +22,8 @@ import os
 import sys
 from pathlib import Path
 
+from unittest import mock
+
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -33,7 +35,29 @@ if str(_REPO_ROOT / "scripts") not in sys.path:
 os.environ.setdefault("CARNOT_IS_CI", "1")
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
-import scripts.experiment_638_tier1_fr11_relay as exp638  # noqa: E402
+# REDIRECT THE SIDE-EFFECTING IMPORT AWAY FROM results/.
+#
+# WHY THIS GUARD EXISTS: scripts/experiment_638_tier1_fr11_relay.py has NO
+# `if __name__ == "__main__":` guard -- the whole experiment runs at MODULE IMPORT
+# time and ends with
+#     AtomicResultWriter(str(_REPO_ROOT / _DELIVERABLE)).write(artifact)
+# So merely importing the module below (which this test must do, to exercise its
+# helper functions) RE-RAN the experiment and OVERWROTE the committed historical
+# artifact results/experiment_638_tier1_fr11_relay.json with a fresh run_date /
+# started_at / finished_at. On 2026-07-28 that silently restamped a 2026-07-27 run
+# as 2026-07-28 and the falsified date was staged for commit unnoticed. Running the
+# test suite is not running the experiment, and CLAUDE.md forbids rewriting a
+# historical artifact outside a sanctioned rebuild.
+#
+# HOW: no-op AtomicResultWriter.write for the duration of the import only. The
+# module still executes in full, so every helper the tests below exercise is
+# imported exactly as before -- only the WRITE is suppressed. The subsequent
+# `tmpl.assert_deliverable_written()` still passes because the committed artifact
+# is present on disk, which is precisely the file these tests then read.
+from carnot.pipeline.atomic_writer import AtomicResultWriter  # noqa: E402
+
+with mock.patch.object(AtomicResultWriter, "write", lambda self, artifact: None):
+    import scripts.experiment_638_tier1_fr11_relay as exp638  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
