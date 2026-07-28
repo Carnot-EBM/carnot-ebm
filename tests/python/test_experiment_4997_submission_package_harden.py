@@ -55,9 +55,9 @@ def _config_resolution(ok: bool = True) -> JsonDict:
     return {
         "resolved": ok,
         "blocked_resource": "" if ok else "agent_config",
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -66,7 +66,7 @@ def _config_resolution(ok: bool = True) -> JsonDict:
         "kv_quant": "q8_0",
         "max_tokens": 2560,
         "n_predict_min": 2048,
-        "checks": {"submitted_policy_e3": True, "model_is_qwen35_mtp": ok},
+        "checks": {"submitted_policy_e3": True, "model_is_pinned_generator": ok},
     }
 
 
@@ -76,7 +76,7 @@ def _model_resolution(ok: bool = True) -> JsonDict:
         "blocked_resource": "" if ok else "model_paths",
         "gguf": {
             "path": "/cache/Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
-            "filename": "Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
+            "filename": "gemma-4-31B-it-Q4_K_M.gguf" if ok else "",
             "present": ok,
             "size_bytes": MODEL_BYTES if ok else 0,
             "size_gb": 5.868827 if ok else 0.0,

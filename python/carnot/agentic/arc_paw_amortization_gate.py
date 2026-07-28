@@ -205,8 +205,12 @@ def build_artifact(
         "schema": RESULT_SCHEMA,
         "spec_refs": list(SPEC_REFS),
         "duration_s": round(float(duration_s), 6),
-        "paw_amortization_viable": _field(viable, "median and p75 must clear break-even with margin"),
-        "median_remaining_actions": _field(distribution.median, "empirical first-level-up checkpoint"),
+        "paw_amortization_viable": _field(
+            viable, "median and p75 must clear break-even with margin"
+        ),
+        "median_remaining_actions": _field(
+            distribution.median, "empirical first-level-up checkpoint"
+        ),
         "p75_remaining_actions": _field(distribution.p75, "empirical first-level-up checkpoint"),
         "compile_wall_clock_s": _field(
             round(float(timing.compile_wall_clock_s), 6),
@@ -214,15 +218,26 @@ def build_artifact(
         ),
         "current_step_wall_clock_s": _field(
             round(float(timing.current_step_wall_clock_s), 6),
-            "Qwen3.5-9B-MTP action-step estimate from local ARC generator timing logs",
+            # HISTORICAL LABEL, accurate for the number it describes. This estimate was derived
+            # from Qwen3.5-9B-MTP timing logs and the label must keep saying so. It is now STALE
+            # as a description of the live stack: the generator became gemma-4-31B-it on
+            # 2026-07-28 (~3.4x the parameters, and ~36 tok/s decode on a 3090 with no FFN
+            # offload), so any break-even conclusion computed from this field is about the old
+            # generator until someone re-measures per-step wall clock on the new one.
+            "Qwen3.5-9B-MTP action-step estimate from local ARC generator timing logs "
+            "(HISTORICAL: pre-2026-07-28 generator; not re-measured for gemma-4-31B-it)",
         ),
         "cheap_step_wall_clock_s": _field(
             round(float(timing.cheap_step_wall_clock_s), 6),
             "cheap interpreter action-step estimate from bounded local timing plus conservative floor",
         ),
         "break_even_remaining_actions": _field(break_even, "compile / per-step wall-clock savings"),
-        "arc_registry_modified": _field(False, "pure analysis gate; registry must remain unchanged"),
-        "inference_substrate": _field(INFERENCE_SUBSTRATE, "ARC log analysis plus bounded local timing"),
+        "arc_registry_modified": _field(
+            False, "pure analysis gate; registry must remain unchanged"
+        ),
+        "inference_substrate": _field(
+            INFERENCE_SUBSTRATE, "ARC log analysis plus bounded local timing"
+        ),
         "honest_verdict": {
             "value": verdict,
             "principle": (

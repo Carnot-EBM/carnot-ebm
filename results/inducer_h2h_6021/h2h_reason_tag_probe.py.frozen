@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+"""REQ-ARC-WMTE-6021 addendum: what does `reason_engaged` actually witness?
+
+WHY THIS EXISTS. exp6021's artifact carries the sentence "gemma emits reasoning tags on
+every cell too", and rests its FAIRNESS REFUTATION on it -- the argument that the shared
+`/think\\n` prefix is not inert on gemma, so Qwen's 18/39 budget overruns are a real
+efficiency deficit rather than a harness artifact that penalises only one model.
+
+An adversarial review found that claim UNVERIFIABLE from retained evidence:
+
+  * `reason_engaged` is True on 39/39 cells in BOTH arms (ndistinct = 1) -- the shape of a
+    detector that cannot discriminate.
+  * It is computed as `any(tag in c for tag in ("<think","</think","<thinking","<reasoning"))`
+    over the RAW completions, and the raw completions are DISCARDED. The shards keep only
+    `max_raw_completion_len`, and `grep '<think'` returns 0 hits in either 780 KB arm log.
+
+Worse, reading the code shows the tag can be HARNESS-INSERTED. In
+`arc_executable_world_model.LocalGGUFProposer._chat_complete_request`:
+
+    full = f"<think>\\n{reasoning}\\n</think>\\n{final}" if reasoning else final
+
+So when llama-server splits the model's reasoning into an OpenAI `reasoning_content` field,
+the harness re-wraps it in LITERAL `<think>` tags before the detector ever sees it. A True
+therefore means "the server returned a non-empty reasoning_content", NOT "the model wrote a
+`<think>` tag". Those are different claims, and the artifact asserts the second.
+
+WHAT THIS PROBE MEASURES. One real induction cell per arm, on the SAME game, through the
+SAME `run_reason_cell_budget` mechanism, server flags and budget as the arms -- but with
+`_chat_complete_request` wrapped so we keep BOTH halves the harness normally folds together:
+
+  * `content`         -- the folded full text the detector sees
+  * `extraction_text` -- the final answer only (what the server left in `message.content`)
+
+`reasoning = content` minus the wrapper and the final answer. From those two strings we can
+separate the two hypotheses without guessing:
+
+  tag_source = "harness_wrapper"  -> content opens with the synthesized wrapper and the tag
+                                     appears NOWHERE in the model's own bytes. The detector
+                                     is witnessing the server's reasoning split, which is
+                                     real reasoning, but the artifact's wording is wrong.
+  tag_source = "model_literal"    -> a tag appears in the model's own output text. The
+                                     artifact's wording is right as written.
+  tag_source = "none"             -> no tag at all; the fairness refutation is withdrawn.
+
+The full raw completion of each probed cell is PERSISTED (the gap the review named), so a
+third party can re-derive this rather than trust a boolean.
+
+SCOPE / HONESTY. This is n=1 cell per arm on ONE game, run AFTER the measured arms, so it
+establishes the MECHANISM the flag reflects -- it does not re-measure the 39-cell arms and
+must not be reported as if it did. It also cannot recover the discarded completions of the
+original run: those bytes are gone, and this file does not pretend otherwise.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+SCRATCH = Path(__file__).resolve().parent
+REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+sys.path.insert(0, str(SCRATCH))
+sys.path.insert(0, str(REPO / "python"))
+
+PROBE_GAME = "tu93"
+OUT = SCRATCH / "h2h_reason_tag_probe.json"
+RAW_DIR = SCRATCH / "h2h_reason_raw"
+
+
+def log(msg: str) -> None:
+    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+
+
+def main() -> int:
+    arm_name = sys.argv[1]
+    import h2h_arm_runner as R  # the SAME launcher/gates the measured arms used
+
+    arm = R.ARMS[arm_name]
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+
+    from carnot.agentic import arc_actions_to_progress as atp
+    from carnot.agentic.arc_executable_world_model import E3_DIR, LocalGGUFProposer
+    from carnot.experiment_5714_think_mode_rescoped_ab import REASONING_TAGS
+    from carnot.experiment_5726_thinkingcap_16k_dualgpu_reason_ab import (
+        LLAMA_SERVER,
+        run_reason_cell_budget,
+    )
+
+    want_e3 = os.environ.get("CARNOT_ARC_E3_DIR", "")
+    if not want_e3 or str(E3_DIR) != want_e3:
+        log("FATAL: CARNOT_ARC_E3_DIR not honoured -- refusing (contamination risk)")
+        return 3
+    log(f"arm={arm_name} E3_DIR={E3_DIR}")
+
+    window = atp.build_progress_window(PROBE_GAME)
+    if window is None:
+        log(f"FATAL: no offline window for {PROBE_GAME}")
+        return 3
+
+    proc = None
+    rec: dict[str, Any] = {"arm": arm_name, "game": PROBE_GAME, "label": arm["label"]}
+    try:
+        proc, srv = R.launch(arm, Path(LLAMA_SERVER))
+        rec["server"] = srv
+        prop = LocalGGUFProposer(
+            repo_substr=arm["repo_substr"],
+            port=arm["port"],
+            mtp=False,
+            kv_quant=R.KV_QUANT,
+            n_ctx=R.N_CTX,
+            max_tokens=R.BUDGET,
+            timeout=1800,
+            use_chat_template=True,
+            model_path=arm["gguf"],
+        )
+
+        # Keep BOTH halves the harness folds together. `content` is what the detector sees;
+        # `extraction_text` is the model's final answer with any server-split reasoning
+        # already removed. The difference between them IS the reasoning body.
+        calls: list[dict[str, Any]] = []
+        _orig = prop._chat_complete_request
+
+        def _wrapped(prompt: str, *, max_tokens: int, temperature: float, stop: Any):
+            resp, text = _orig(prompt, max_tokens=max_tokens, temperature=temperature, stop=stop)
+            calls.append({"content": str(resp.get("content") or ""), "extraction_text": str(text)})
+            return resp, text
+
+        prop._chat_complete_request = _wrapped  # type: ignore[method-assign]
+
+        t0 = time.time()
+        row = run_reason_cell_budget(
+            PROBE_GAME,
+            prop,
+            trial=0,
+            window=window[0],
+            full_traj=window[1],
+            cell=window[2],
+            budget=R.BUDGET,
+        )
+        rec["cell_s"] = round(time.time() - t0, 2)
+        rec["row"] = {
+            k: row.get(k)
+            for k in (
+                "induce_ok",
+                "reason_engaged",
+                "overran",
+                "max_raw_completion_len",
+                "last_stop_type",
+                "heldout_accuracy",
+            )
+        }
+
+        analysed = []
+        for i, c in enumerate(calls):
+            content, final = c["content"], c["extraction_text"]
+            wrapper_open, wrapper_close = "<think>\n", "\n</think>\n"
+            harness_wrapped = (
+                content.startswith(wrapper_open)
+                and wrapper_close in content
+                and content.endswith(final)
+            )
+            reasoning = ""
+            if harness_wrapped:
+                reasoning = content[len(wrapper_open) : content.rindex(wrapper_close)]
+            # Where does each tag actually occur? "model bytes" = the reasoning body plus the
+            # final answer, i.e. everything EXCEPT the wrapper the harness synthesised.
+            model_bytes = reasoning + "\n" + final
+            tags_in_content = [t for t in REASONING_TAGS if t in content]
+            tags_in_model_bytes = [t for t in REASONING_TAGS if t in model_bytes]
+            if tags_in_model_bytes:
+                source = "model_literal"
+            elif tags_in_content:
+                source = "harness_wrapper"
+            else:
+                source = "none"
+            (RAW_DIR / f"{arm_name}_{PROBE_GAME}_call{i}_content.txt").write_text(content)
+            (RAW_DIR / f"{arm_name}_{PROBE_GAME}_call{i}_final.txt").write_text(final)
+            analysed.append(
+                {
+                    "call_index": i,
+                    "content_len": len(content),
+                    "final_len": len(final),
+                    "reasoning_len": len(reasoning),
+                    "harness_wrapped": harness_wrapped,
+                    "server_returned_reasoning_content": bool(reasoning),
+                    "tags_matched_in_detector_input": tags_in_content,
+                    "tags_matched_in_model_bytes": tags_in_model_bytes,
+                    "tag_source": source,
+                    "reasoning_head_240": reasoning[:240],
+                    "final_head_240": final[:240],
+                }
+            )
+        rec["calls"] = analysed
+        rec["status"] = "ok"
+    except Exception as exc:
+        rec["status"] = "error"
+        rec["error"] = f"{type(exc).__name__}: {exc}"[:400]
+        log(f"ERROR {rec['error']}")
+    finally:
+        R.terminate(proc)
+
+    prior = json.loads(OUT.read_text()) if OUT.exists() else {}
+    prior[arm_name] = rec
+    OUT.write_text(json.dumps(prior, indent=2, sort_keys=True) + "\n")
+    log(f"wrote {OUT} [{arm_name}] status={rec.get('status')}")
+    return 0 if rec.get("status") == "ok" else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

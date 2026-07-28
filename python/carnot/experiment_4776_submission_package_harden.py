@@ -16,6 +16,15 @@ from typing import Any
 
 from carnot import experiment_4766_submission_package_harden as base
 
+# The canonical generator pin, imported rather than assumed. The 2026-07-28 gemma migration
+# introduced these names into this module's OPERATOR-CHECK strings without importing them, so
+# `build_artifact()` raised NameError on a real code path -- the readiness capstone could not run
+# at all. `ast.parse`/ruff-format are both blind to this; only executing it (or F821) finds it.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 JsonDict = dict[str, Any]
 PreconditionsChecker = Callable[[Path], Mapping[str, Any]]
@@ -41,18 +50,14 @@ SPEC_REFS = [
 TERMINAL_PREFIXES = ("success_", "complete_")
 
 FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
-    "honest_verdict": {
-        "principle": "terminal prefix; package builds is success_/complete_."
-    },
+    "honest_verdict": {"principle": "terminal prefix; package builds is success_/complete_."},
     "submission_package_ready": {
         "principle": "True iff ready for the OPERATOR to submit; the task itself NEVER submits."
     },
     "vram_estimate_gb": {
         "principle": "must fit ~16GB Kaggle with KV + headroom -- the deployment gate."
     },
-    "inference_substrate": {
-        "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
-    },
+    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts; 0.0001s floor."},
 }
 
 REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
@@ -171,10 +176,10 @@ def _operator_checklist(package_ready: bool, vram_estimate_gb: float) -> list[st
         ),
         (
             "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and "
-            "carnot-qwen35-9b-mtp-gguf before Save & Run."
+            "carnot-gemma4-31b-it-gguf before Save & Run."
         ),
         (
-            "OPERATOR-CHECK: Verify the rerun log resolves Qwen3.5-9B-MTP, draft-mtp, "
+            f"OPERATOR-CHECK: Verify the rerun log resolves {ARC_LIVE_GENERATOR_REPO_SUBSTR}, no draft-mtp, "
             "q8_0 KV, and the CUDA-12.8 llama-server."
         ),
         (

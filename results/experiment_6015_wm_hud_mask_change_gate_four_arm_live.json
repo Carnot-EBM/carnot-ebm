@@ -1,0 +1,3193 @@
+{
+ "experiment": 6015,
+ "experiment_id": "exp6015",
+ "title": "REQ-ARC-WMTE-6010/-6011/-6013 four-arm LIVE matrix: HUD-mask and change-gate on the scored induce->plan path -- a win-endpoint NULL, and the mask's one admission is a laundering hazard",
+ "run_date": "2026-07-28T04:59:11Z",
+ "milestone": "outer-loop 2026-07-27",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_note": "the ROWS were produced by live GPU inference (Qwen3.5-9B-MTP via a CUDA llama-server, one server per arm, per-PID VRAM residency recorded for the three arms that wrote rollups). THIS artifact is an analyser pass over those persisted rows: it loads no model and runs no inference, so duration_s is the analyser clock and measurement_wall_s comes from the rows' own elapsed_s.",
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "no moat, efficiency or headline capability claim is made. The quantity under test is a world-model verifier's agreement with OBSERVED env transitions used as an admission gate; this artifact reports that the treatments changed no decision that mattered. A null needs no oracle-distinctness claim to be honest, and none is made.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "public games through the shipped E3AgentPolicy via experiment_4605's real run_variant_attempt. NO solve is claimed by this artifact. One cell (vc33~color01) reached level 1 identically in all four arms; its own row records reproduction_gate.reproduced=true under mode `offline_reproduction_gate_no_quota`, which means the reproduction gate did NOT run -- so offline_reproduced is False and reproduced_levels is 0 here. That row field is itself another instance of the unmeasurable-read-as-clean shape and is reported, not relied on.",
+ "submitted_to_leaderboard": false,
+ "submitted_to_leaderboard_note": "no submission was made or prepared. The operator-only quota gate (an offline result beating BOTH a TRM baseline AND the best prior submitted run) is NOT met by a null.",
+ "offline_reproduced": false,
+ "reproduced_levels": 0,
+ "random_seed": 0,
+ "random_seeds_used": [
+  0
+ ],
+ "random_seed_note": "the pairing unit is the (game, variant) cell, not an RNG seed: all four arms ran the SAME 25 games at variant 1 and are compared PER CELL on the 25 signatures present in all four arms -- never an any-seed union, which would let an arm be scored on cells its control never ran. Note that the generator is stochastic, so the arms are matched on the cell and NOT on the induced engine; see generator_nondeterminism for what that costs.",
+ "model_specs": {
+  "generator": "unsloth/Qwen3.5-9B-MTP-GGUF (Qwen3.5-9B-Q4_K_M.gguf)",
+  "n_ctx": 81920,
+  "max_tokens": 4096,
+  "server": "~/.cache/llama.cpp-master/build/bin/llama-server (CUDA build)",
+  "device": "one server per arm, ~13.5 GiB resident; GPU 1 for A0/A1 and GPU 0 for A3 by per-PID residency. Never two servers on one card.",
+  "note": "the 9B, not the 31B: a 21GB gemma-4-31B on a 24GB card triggered the documented eGPU PCI-bus fault on 2026-07-24 (GPU 1 dropped 21GB -> 4MiB mid-run). A per-PID VRAM timeseries was sampled DURING each arm so a card falling off the bus would be recorded rather than surfacing as a hang."
+ },
+ "duration_s": 0.0245,
+ "duration_s_provenance": "analyser wall time only; NOT the measurement clock",
+ "measurement_wall_s": 40965.587,
+ "measurement_wall_s_provenance": "sum of every cited cell row file's OWN elapsed_s across all 100 cells; the arms ran with k=4 concurrency in two parallel chains, so this exceeds the wall-clock span (see measurement_wall_clock_span_s)",
+ "measurement_wall_clock_span_s": {
+  "wm_A0_control": 2669.27,
+  "wm_A1_mask": 2860.91,
+  "wm_A3_both": 2588.2
+ },
+ "measurement_wall_s_per_arm_from_rows": {
+  "wm_A0_control": 10222.0,
+  "wm_A1_mask": 10821.49,
+  "wm_A2_gate": 10244.912,
+  "wm_A3_both": 9677.185
+ },
+ "preconditions_checked": [
+  {
+   "resource": "100 cell row files present under cells/ (4 arms x 25 games)",
+   "available": true
+  },
+  {
+   "resource": "every signature matched across all four arms",
+   "available": true
+  },
+  {
+   "resource": "per-arm engine-store isolation (CARNOT_ARC_E3_DIR per arm)",
+   "available": true,
+   "evidence": "fourarm.py:573-592 sets and asserts a per-arm store; the pre-isolation cells are quarantined in cells_PRE_ISOLATION_FIX_DISCARDED/ and are NOT read by this analyser"
+  },
+  {
+   "resource": "per-arm run rollup (resolver read-back + device residency)",
+   "available": false,
+   "note": "MISSING for ['wm_A2_gate']; treatment established from per-cell evidence instead, and device residency is NOT claimed for that arm"
+  },
+  {
+   "resource": "frozen lf52 live-corpus fixture for the laundering arithmetic",
+   "available": true
+  }
+ ],
+ "four_arms": {
+  "wm_A0_control": {
+   "hud_mask": false,
+   "change_gate": false
+  },
+  "wm_A1_mask": {
+   "hud_mask": true,
+   "change_gate": false
+  },
+  "wm_A2_gate": {
+   "hud_mask": false,
+   "change_gate": true
+  },
+  "wm_A3_both": {
+   "hud_mask": true,
+   "change_gate": true
+  }
+ },
+ "headline": {
+  "result": "NULL at the win endpoint -- and no statistical test was possible",
+  "per_arm_summary": {
+   "wm_A0_control": {
+    "planned_admissions": 0,
+    "wins": 1,
+    "max_reached_level": 1
+   },
+   "wm_A1_mask": {
+    "planned_admissions": 1,
+    "wins": 1,
+    "max_reached_level": 1
+   },
+   "wm_A2_gate": {
+    "planned_admissions": 0,
+    "wins": 1,
+    "max_reached_level": 1
+   },
+   "wm_A3_both": {
+    "planned_admissions": 0,
+    "wins": 1,
+    "max_reached_level": 1
+   }
+  },
+  "the_one_win": {
+   "cell": "vc33~color01",
+   "won_in_all_four_arms": [
+    "wm_A0_control",
+    "wm_A1_mask",
+    "wm_A2_gate",
+    "wm_A3_both"
+   ],
+   "bit_identical_across_arms": true,
+   "produced_by_an_induced_world_model": false,
+   "reading": "one win, the same cell, in every arm, with identical actions and level, and with ZERO world-model admissions on that cell in any arm. The win came from exploration, not from the induce->plan path, so it carries no information about the treatments -- and no arm gained or lost a win anywhere."
+  },
+  "win_discordance_is_zero_in_every_arm": true,
+  "min_reachable_two_sided_p": {
+   "wm_A1_mask": 1.0,
+   "wm_A2_gate": 1.0,
+   "wm_A3_both": 1.0
+  },
+  "no_test_was_possible": true,
+  "REQUIRED_PHRASING": "With zero win-discordant pairs in every arm the minimum reachable two-sided p is 1.0, so NO significance is available at ANY outcome. This is NOT 'no significant difference between arms' -- no test was performed, because there was no discordance to test.",
+  "measurement_artifact_hypothesis": "REFUTED",
+  "measurement_artifact_hypothesis_detail": "the hypothesis was that the induced-world-model wall is an artifact of HUD contamination inflating the exact-match denominator, and that removing it would open the induce->plan path. Removing it did not: mask-only produced ONE admission of 25 (an engine with change_fidelity 0.0 that then yielded no reachable plan), zero additional plans that executed, zero additional levels and zero additional wins. The wall is induction CAPABILITY, not measurement.",
+  "what_the_mask_DID_do": "it raised the measured score. The gated quantity moved on 13 of 25 cells in the mask arm (11 up, 2 down) -- but the inert-equality control FAILS on cells the mask provably never touched, so that movement is confounded with generator nondeterminism and is NOT attributable to the mask. Either way it bought no decision: score inflation without capability is the laundering hazard, not a gain.",
+  "what_the_GATE_did": "it rejected 50 engine-attempts, none of which the incumbent gate would have admitted, so its live effect on the admission endpoint is nil -- EXCEPT that in the both-arm it rejected precisely the engine the mask had admitted (lf52). The gate is protecting against the mask.",
+  "both_stay_DEFAULT_OFF": "the mask and the change gate are GUARDS, not levers. This run measures them and does not flip them: SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED and SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED remain False."
+ },
+ "win_endpoint": {
+  "endpoint": "row.first_win (a real level-up in the live env), per matched cell",
+  "per_arm": {
+   "wm_A0_control": {
+    "n_wins": 1,
+    "win_cells": [
+     "vc33~color01"
+    ],
+    "max_reached_level": 1
+   },
+   "wm_A1_mask": {
+    "n_wins": 1,
+    "win_cells": [
+     "vc33~color01"
+    ],
+    "max_reached_level": 1
+   },
+   "wm_A2_gate": {
+    "n_wins": 1,
+    "win_cells": [
+     "vc33~color01"
+    ],
+    "max_reached_level": 1
+   },
+   "wm_A3_both": {
+    "n_wins": 1,
+    "win_cells": [
+     "vc33~color01"
+    ],
+    "max_reached_level": 1
+   }
+  },
+  "comparisons_vs_control": {
+   "wm_A1_mask": {
+    "n_wins_control": 1,
+    "n_wins_treatment": 1,
+    "won_only_by_treatment": [],
+    "won_only_by_control": [],
+    "n_win_discordant_pairs": 0,
+    "sign_test": {
+     "n_pairs_total": 0,
+     "n_discordant": 0,
+     "n_up": 0,
+     "n_down": 0,
+     "p_two_sided": null,
+     "p_one_sided_greater": null,
+     "p_one_sided_less": null,
+     "min_reachable_two_sided_p": null,
+     "note": "zero discordant pairs -- NO test is possible; this is not a null result"
+    },
+    "min_reachable_two_sided_p": 1.0,
+    "test_was_possible": false,
+    "correct_reading": "ZERO win-discordant pairs: the minimum reachable two-sided p is 1.0, so NO test is possible at any outcome. This is an absence of discordance, NOT a measured 'no significant difference'."
+   },
+   "wm_A2_gate": {
+    "n_wins_control": 1,
+    "n_wins_treatment": 1,
+    "won_only_by_treatment": [],
+    "won_only_by_control": [],
+    "n_win_discordant_pairs": 0,
+    "sign_test": {
+     "n_pairs_total": 0,
+     "n_discordant": 0,
+     "n_up": 0,
+     "n_down": 0,
+     "p_two_sided": null,
+     "p_one_sided_greater": null,
+     "p_one_sided_less": null,
+     "min_reachable_two_sided_p": null,
+     "note": "zero discordant pairs -- NO test is possible; this is not a null result"
+    },
+    "min_reachable_two_sided_p": 1.0,
+    "test_was_possible": false,
+    "correct_reading": "ZERO win-discordant pairs: the minimum reachable two-sided p is 1.0, so NO test is possible at any outcome. This is an absence of discordance, NOT a measured 'no significant difference'."
+   },
+   "wm_A3_both": {
+    "n_wins_control": 1,
+    "n_wins_treatment": 1,
+    "won_only_by_treatment": [],
+    "won_only_by_control": [],
+    "n_win_discordant_pairs": 0,
+    "sign_test": {
+     "n_pairs_total": 0,
+     "n_discordant": 0,
+     "n_up": 0,
+     "n_down": 0,
+     "p_two_sided": null,
+     "p_one_sided_greater": null,
+     "p_one_sided_less": null,
+     "min_reachable_two_sided_p": null,
+     "note": "zero discordant pairs -- NO test is possible; this is not a null result"
+    },
+    "min_reachable_two_sided_p": 1.0,
+    "test_was_possible": false,
+    "correct_reading": "ZERO win-discordant pairs: the minimum reachable two-sided p is 1.0, so NO test is possible at any outcome. This is an absence of discordance, NOT a measured 'no significant difference'."
+   }
+  },
+  "n_wins_identical_in_every_arm": true,
+  "win_provenance": [
+   {
+    "sig": "vc33~color01",
+    "game": "vc33",
+    "won_in_arms": [
+     "wm_A0_control",
+     "wm_A1_mask",
+     "wm_A2_gate",
+     "wm_A3_both"
+    ],
+    "planned_per_arm": {
+     "wm_A0_control": 0,
+     "wm_A1_mask": 0,
+     "wm_A2_gate": 0,
+     "wm_A3_both": 0
+    },
+    "actions_per_arm": {
+     "wm_A0_control": 191,
+     "wm_A1_mask": 191,
+     "wm_A2_gate": 191,
+     "wm_A3_both": 191
+    },
+    "reached_level_per_arm": {
+     "wm_A0_control": 1,
+     "wm_A1_mask": 1,
+     "wm_A2_gate": 1,
+     "wm_A3_both": 1
+    },
+    "identical_across_all_four_arms": true,
+    "produced_by_induced_world_model_in_any_arm": false
+   }
+  ],
+  "no_win_came_from_an_induced_world_model": true
+ },
+ "lf52_laundering_finding": {
+  "plan_discordant_cell": "lf52~color01",
+  "game": "lf52",
+  "four_arm_table": {
+   "wm_A0_control": {
+    "planned": 0,
+    "skipped": "world_model_accuracy_below_threshold",
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.0,
+    "verify_change_fidelity": 0.0,
+    "verify_spurious_changed_cells": 0,
+    "hud_mask_status": "disabled",
+    "hud_mask_cells": 0,
+    "hud_mask_reason": "flag_disabled",
+    "first_win": false,
+    "reached_level": 0,
+    "actions": 197
+   },
+   "wm_A1_mask": {
+    "planned": 1,
+    "skipped": "no_reachable_plan_after_refinement",
+    "verify_accuracy": 0.88,
+    "verify_cell_recall": 0.0,
+    "verify_change_fidelity": 0.0,
+    "verify_spurious_changed_cells": 2,
+    "hud_mask_status": "applied",
+    "hud_mask_cells": 64,
+    "hud_mask_reason": "resolved",
+    "first_win": false,
+    "reached_level": 0,
+    "actions": 196
+   },
+   "wm_A2_gate": {
+    "planned": 0,
+    "skipped": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.0,
+    "verify_change_fidelity": 0.0,
+    "verify_spurious_changed_cells": 3,
+    "hud_mask_status": "disabled",
+    "hud_mask_cells": 0,
+    "hud_mask_reason": "flag_disabled",
+    "first_win": false,
+    "reached_level": 0,
+    "actions": 197
+   },
+   "wm_A3_both": {
+    "planned": 0,
+    "skipped": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+    "verify_accuracy": 0.2,
+    "verify_cell_recall": 0.0,
+    "verify_change_fidelity": 0.0,
+    "verify_spurious_changed_cells": 2,
+    "hud_mask_status": "applied",
+    "hud_mask_cells": 64,
+    "hud_mask_reason": "resolved",
+    "first_win": false,
+    "reached_level": 0,
+    "actions": 197
+   }
+  },
+  "what_the_mask_did": "took an engine from verify_accuracy 0.0 (rejected) to 0.88 (ADMITTED) while its verify_cell_recall and verify_change_fidelity both stayed at 0.0 -- the engine got ZERO of the changed cells right in both arms. The score moved; the engine did not.",
+  "why_the_score_moved_noop_dominance": {
+   "frozen_live_corpus": {
+    "fixture": "tests/fixtures/arc_hud_mask_swallow/lf52_live_episode.npz",
+    "sha256": "351ff06c93e6180d0d706ef8969270634288983366601e36334839f688539c3e",
+    "corpus": "E3AgentPolicy._active_transitions() at the first induction attempt of experiment_4605.run_variant_attempt('integrated', game, variant 1, budget 200)",
+    "captured_by": "the guard-fix work in this same session, from the same experiment_4605.run_variant_attempt entrypoint this run used"
+   },
+   "n_transitions": 25,
+   "changing_transitions_raw": 25,
+   "changing_transitions_deleted_by_mask": 23,
+   "changing_transitions_surviving_mask": 2,
+   "changing_transition_survival": 0.08,
+   "noop_fraction_of_masked_corpus": 0.92,
+   "observed_verify_accuracy_in_mask_arm": 0.88,
+   "arithmetic": "a masked corpus that is 92% no-ops is passed at ~that rate by an engine predicting nothing changes; the observed verify_accuracy 0.88 sits just under that no-op fraction while change_fidelity is 0.0, so the score is no-op dominance, not dynamics learned"
+  },
+  "the_swallow_guard_was_RIGHT_here": {
+   "swallow_check_reason_at_capture": "ok",
+   "changed_cell_overlap": 0.308642,
+   "overlap_threshold": 0.5,
+   "verdict": "the guard measured overlap 0.3086 and cleared the mask (`ok`). On the LIVE corpus that is correct: 56 of 81 changed cells lie OUTSIDE the mask. The 1.0000-overlap figure recorded for lf52 elsewhere is from a different corpus (120 random offline actions) and does not describe this run.",
+   "so_the_defect_is_NOT_the_mask_or_the_guard": "it is the legacy full-grid `accuracy >= 0.5` admission gate, which is no-op dominated once the mask removes the only cells that were changing"
+  },
+  "the_change_gate_rejected_it": {
+   "arm": "wm_A3_both",
+   "skipped": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+   "gate_protected_against_the_mask": true,
+   "reading": "mask-only ADMITTED this engine; mask+gate REJECTED it. The gate is protecting against the mask -- the opposite sign from 'the gate cancels the mask's benefit'. There was no benefit to cancel."
+  },
+  "and_the_admission_bought_NOTHING": {
+   "skipped_after_admission": "no_reachable_plan_after_refinement",
+   "first_win": false,
+   "reached_level": 0,
+   "reading": "the admitted engine yielded `no_reachable_plan_after_refinement`: no plan was ever produced from it, no action was taken from it, and the cell did not win. So even the single admission is not a plan that did anything."
+  },
+  "NOT_AN_IMPROVEMENT": "1 admission of 25 cells, on an engine with change_fidelity 0.0, that produced no plan, no action, no level and no win, and which the change gate rejected. This must not be read as the mask working."
+ },
+ "arm_treatment_evidence": {
+  "wm_A0_control": {
+   "declared": {
+    "hud_mask": false,
+    "change_gate": false
+   },
+   "hud_mask_reason_census": {
+    "flag_disabled": 25,
+    "None": 1
+   },
+   "change_gate_hidden_state_enabled_census": {
+    "False": 11
+   },
+   "mask_evidenced_on": false,
+   "mask_evidenced_off": true,
+   "gate_evidenced_on": false,
+   "gate_evidenced_off": true,
+   "mask_evidence_unambiguous": true,
+   "gate_evidence_unambiguous": true,
+   "per_cell_evidence_matches_declaration": true
+  },
+  "wm_A1_mask": {
+   "declared": {
+    "hud_mask": true,
+    "change_gate": false
+   },
+   "hud_mask_reason_census": {
+    "resolved": 19,
+    "explorer_mask_unresolved": 6,
+    "None": 1
+   },
+   "change_gate_hidden_state_enabled_census": {
+    "False": 11
+   },
+   "mask_evidenced_on": true,
+   "mask_evidenced_off": false,
+   "gate_evidenced_on": false,
+   "gate_evidenced_off": true,
+   "mask_evidence_unambiguous": true,
+   "gate_evidence_unambiguous": true,
+   "per_cell_evidence_matches_declaration": true
+  },
+  "wm_A2_gate": {
+   "declared": {
+    "hud_mask": false,
+    "change_gate": true
+   },
+   "hud_mask_reason_census": {
+    "flag_disabled": 25,
+    "None": 1
+   },
+   "change_gate_hidden_state_enabled_census": {
+    "True": 11
+   },
+   "mask_evidenced_on": false,
+   "mask_evidenced_off": true,
+   "gate_evidenced_on": true,
+   "gate_evidenced_off": false,
+   "mask_evidence_unambiguous": true,
+   "gate_evidence_unambiguous": true,
+   "per_cell_evidence_matches_declaration": true
+  },
+  "wm_A3_both": {
+   "declared": {
+    "hud_mask": true,
+    "change_gate": true
+   },
+   "hud_mask_reason_census": {
+    "resolved": 19,
+    "explorer_mask_unresolved": 6,
+    "None": 1
+   },
+   "change_gate_hidden_state_enabled_census": {
+    "True": 11
+   },
+   "mask_evidenced_on": true,
+   "mask_evidenced_off": false,
+   "gate_evidenced_on": true,
+   "gate_evidenced_off": false,
+   "mask_evidence_unambiguous": true,
+   "gate_evidence_unambiguous": true,
+   "per_cell_evidence_matches_declaration": true
+  }
+ },
+ "rollup_availability": {
+  "per_arm": {
+   "wm_A0_control": {
+    "rollup_path": "results/arc_wm_four_arm_20260727/run_wm_A0_control.json",
+    "rollup_present": true,
+    "resolver_readback_available": true,
+    "device_residency_record_available": true
+   },
+   "wm_A1_mask": {
+    "rollup_path": "results/arc_wm_four_arm_20260727/run_wm_A1_mask.json",
+    "rollup_present": true,
+    "resolver_readback_available": true,
+    "device_residency_record_available": true
+   },
+   "wm_A2_gate": {
+    "rollup_path": "results/arc_wm_four_arm_20260727/run_wm_A2_gate.json",
+    "rollup_present": false,
+    "resolver_readback_available": false,
+    "device_residency_record_available": false
+   },
+   "wm_A3_both": {
+    "rollup_path": "results/arc_wm_four_arm_20260727/run_wm_A3_both.json",
+    "rollup_present": true,
+    "resolver_readback_available": true,
+    "device_residency_record_available": true
+   }
+  },
+  "arms_missing_rollup": [
+   "wm_A2_gate"
+  ],
+  "consequence": "for an arm with no rollup the resolver read-back and the per-PID VRAM residency record are UNAVAILABLE -- unmeasurable, not clean and not broken. That arm's treatment is established instead from per-cell evidence (see arm_treatment_evidence), and its device residency is NOT claimed.",
+  "corroborating_observation": "the two arms that DID write rollups while a sibling arm was loading recorded that sibling's server as a foreign PID on the other card (A0 saw pid 2617566 on GPU 0, A1 saw pid 2621885 on GPU 0), so the two-chains-one-card-each layout is corroborated by a third party's per-PID record even for the arm whose own rollup is missing -- but this is corroboration of LAYOUT, not a residency claim for that arm"
+ },
+ "mask_decision_record_coverage": {
+  "hud_mask_swallow_channel": {
+   "n_diagnostics": 104,
+   "n_with_hud_mask_swallow_populated": 0,
+   "channel_is_dead": true,
+   "what_is_lost": "the swallow guard's own auditable record -- swallows / changed_cell_overlap / raw vs masked changing-transition counts / reason. It is computed at decision time and discarded, so WHY a mask was applied or refused cannot be read off this run's record at all.",
+   "principle": "a field computed and discarded is a dead channel; the decision it documents becomes unauditable after the fact, which is how a guard failure can be dated but not explained"
+  },
+  "hud_mask_status_channel": {
+   "per_arm_branch": {
+    "wm_A0_control|plain": {
+     "n_diagnostics": 15,
+     "n_with_hud_mask_status": 14,
+     "n_mask_resolved_but_status_absent": 0
+    },
+    "wm_A0_control|hidden_state": {
+     "n_diagnostics": 11,
+     "n_with_hud_mask_status": 0,
+     "n_mask_resolved_but_status_absent": 0
+    },
+    "wm_A1_mask|plain": {
+     "n_diagnostics": 15,
+     "n_with_hud_mask_status": 14,
+     "n_mask_resolved_but_status_absent": 0
+    },
+    "wm_A1_mask|hidden_state": {
+     "n_diagnostics": 11,
+     "n_with_hud_mask_status": 0,
+     "n_mask_resolved_but_status_absent": 8
+    },
+    "wm_A2_gate|plain": {
+     "n_diagnostics": 15,
+     "n_with_hud_mask_status": 14,
+     "n_mask_resolved_but_status_absent": 0
+    },
+    "wm_A2_gate|hidden_state": {
+     "n_diagnostics": 11,
+     "n_with_hud_mask_status": 0,
+     "n_mask_resolved_but_status_absent": 0
+    },
+    "wm_A3_both|plain": {
+     "n_diagnostics": 15,
+     "n_with_hud_mask_status": 14,
+     "n_mask_resolved_but_status_absent": 0
+    },
+    "wm_A3_both|hidden_state": {
+     "n_diagnostics": 11,
+     "n_with_hud_mask_status": 0,
+     "n_mask_resolved_but_status_absent": 8
+    }
+   },
+   "n_mask_resolved_but_status_absent": 16,
+   "hidden_state_branch_records_no_status_in_any_arm": true,
+   "what_is_lost": "on the 11 hidden-state games -- the games that carry the live 0.08 wall -- the mask arms show hud_mask_reason=resolved on 8 cells with NO hud_mask_status, so whether the mask was APPLIED or REFUSED there is unrecoverable from the record"
+  },
+  "both_channels_dead": true,
+  "fixed_in_same_session": true,
+  "fix_reference": "the guard-fix work in this same session lifted hud_mask_swallow onto the attempt dict in BOTH branches and added it to the projection tuple, and made select_trusted_world_model report its own refusal status instead of the central null; see cited_code_fixes. Those fixes are NOT retro-applied to these cells -- this run's record stays as measured (never-prune)."
+ },
+ "mask_inert_equality_control_rescoped": {
+  "per_arm": {
+   "wm_A1_mask": {
+    "n_provably_no_mask": 7,
+    "provably_no_mask_cells": [
+     "cn04~color01",
+     "lp85~color01",
+     "ls20~color01",
+     "sb26~color01",
+     "sc25~color01",
+     "sk48~color01",
+     "tn36~color01"
+    ],
+    "n_mask_applied": 10,
+    "n_mask_applied_cross_check_over_all_diagnostics": 10,
+    "applied_count_cross_check_agrees": true,
+    "n_mask_applicability_UNKNOWN": 8,
+    "mask_applicability_unknown_cells": [
+     "ar25~color01",
+     "cd82~color01",
+     "dc22~color01",
+     "g50t~color01",
+     "ka59~color01",
+     "m0r0~color01",
+     "re86~color01",
+     "wa30~color01"
+    ],
+    "n_violations_on_provably_no_mask": 5,
+    "violations": [
+     {
+      "sig": "lp85~color01",
+      "game": "lp85",
+      "branch": "plain",
+      "hud_mask_status": "unresolved",
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.0,
+      "treatment": 0.92,
+      "abs_delta": 0.92
+     },
+     {
+      "sig": "sc25~color01",
+      "game": "sc25",
+      "branch": "hidden_state",
+      "hud_mask_status": null,
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.875,
+      "treatment": 0.0,
+      "abs_delta": 0.875
+     },
+     {
+      "sig": "sk48~color01",
+      "game": "sk48",
+      "branch": "hidden_state",
+      "hud_mask_status": null,
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.0,
+      "treatment": 0.125,
+      "abs_delta": 0.125
+     },
+     {
+      "sig": "sb26~color01",
+      "game": "sb26",
+      "branch": "plain",
+      "hud_mask_status": "unresolved",
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.2,
+      "treatment": 0.24,
+      "abs_delta": 0.04
+     },
+     {
+      "sig": "cn04~color01",
+      "game": "cn04",
+      "branch": "hidden_state",
+      "hud_mask_status": null,
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.037037,
+      "treatment": 0.0,
+      "abs_delta": 0.037037
+     }
+    ],
+    "control_holds": false,
+    "control_has_support": true,
+    "largest_violation_abs_delta": 0.92
+   },
+   "wm_A3_both": {
+    "n_provably_no_mask": 7,
+    "provably_no_mask_cells": [
+     "cn04~color01",
+     "lp85~color01",
+     "ls20~color01",
+     "sb26~color01",
+     "sc25~color01",
+     "sk48~color01",
+     "tn36~color01"
+    ],
+    "n_mask_applied": 10,
+    "n_mask_applied_cross_check_over_all_diagnostics": 10,
+    "applied_count_cross_check_agrees": true,
+    "n_mask_applicability_UNKNOWN": 8,
+    "mask_applicability_unknown_cells": [
+     "ar25~color01",
+     "cd82~color01",
+     "dc22~color01",
+     "g50t~color01",
+     "ka59~color01",
+     "m0r0~color01",
+     "re86~color01",
+     "wa30~color01"
+    ],
+    "n_violations_on_provably_no_mask": 3,
+    "violations": [
+     {
+      "sig": "sk48~color01",
+      "game": "sk48",
+      "branch": "hidden_state",
+      "hud_mask_status": null,
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.0,
+      "treatment": 0.625,
+      "abs_delta": 0.625
+     },
+     {
+      "sig": "sb26~color01",
+      "game": "sb26",
+      "branch": "plain",
+      "hud_mask_status": "unresolved",
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.2,
+      "treatment": 0.04,
+      "abs_delta": 0.16
+     },
+     {
+      "sig": "cn04~color01",
+      "game": "cn04",
+      "branch": "hidden_state",
+      "hud_mask_status": null,
+      "hud_mask_reason": "explorer_mask_unresolved",
+      "control": 0.037037,
+      "treatment": 0.148148,
+      "abs_delta": 0.111111
+     }
+    ],
+    "control_holds": false,
+    "control_has_support": true,
+    "largest_violation_abs_delta": 0.625
+   }
+  },
+  "applied_count_cross_check_agrees_in_every_mask_arm": true,
+  "control_holds_in_every_mask_arm": false,
+  "consequence_if_it_fails": "per-cell gated-quantity differences between a mask arm and the control are NOT attributable to the mask: the arms differ on cells the mask provably never touched. Any sign test on that quantity is confounded and must not be read as a mask effect.",
+  "confound_named": "the generator is stochastic and each arm induced its own engines (per-arm LLM response counts differ: see generator_nondeterminism), so a cell's score varies arm-to-arm for reasons that have nothing to do with the treatment",
+  "endpoints_NOT_affected": "the win endpoint and the admission endpoint are decision-level and are reported as set differences, so they are unaffected by score-level nondeterminism; the win was additionally BIT-IDENTICAL in all four arms"
+ },
+ "generator_nondeterminism": {
+  "per_arm": {
+   "wm_A0_control": {
+    "llm_calls_total": 100,
+    "llm_responses_total": 93,
+    "llm_errors_total": 0
+   },
+   "wm_A1_mask": {
+    "llm_calls_total": 99,
+    "llm_responses_total": 91,
+    "llm_errors_total": 0
+   },
+   "wm_A2_gate": {
+    "llm_calls_total": 102,
+    "llm_responses_total": 94,
+    "llm_errors_total": 0
+   },
+   "wm_A3_both": {
+    "llm_calls_total": 97,
+    "llm_responses_total": 89,
+    "llm_errors_total": 0
+   }
+  },
+  "arms_share_identical_response_counts": false,
+  "reading": "different response counts per arm mean different engines were induced per arm; the arms are matched on the CELL, not on the engine, so score-level per-cell comparisons carry generator variance in addition to any treatment effect"
+ },
+ "gate_rejections_rescoped": {
+  "n_rejections": 50,
+  "n_justified_by_MEASURED_low_change_fidelity": 49,
+  "n_UNMEASURABLE_nothing_to_judge": 1,
+  "unmeasurable_detail": [
+   {
+    "arm": "wm_A2_gate",
+    "sig": "sc25~color01",
+    "branch": "hidden_state",
+    "reason": "hidden_state_change_gate_no_changing_transitions",
+    "change_fidelity": 0.0,
+    "spurious_changed_cells": 0,
+    "correct_changed_cells": 0,
+    "control_would_have_admitted": false,
+    "control_incumbent_binary_gate_pass": true,
+    "rejection_justified_by_low_fidelity": true
+   }
+  ],
+  "n_unjustified": 0,
+  "unjustified_detail": [],
+  "analyser_uncorrected_n_justified": 50,
+  "why_this_recount_is_NOT_an_acceptance_gate": "a gate over this partition would be unfalsifiable: the classification and any check of it both read the same rejection-reason string, so mutating the marker list moves both sides together and the gate can never fail (confirmed by mutation M2). Reported as a finding instead of banked as a passed gate.",
+  "n_rejections_that_changed_an_admission_decision": 0,
+  "gate_changed_no_admission_decision": true,
+  "admission_counterfactual_scope": "cross_arm_different_engine",
+  "admission_counterfactual_caveat": "control_would_have_admitted is read from the CONTROL arm's row, which induced a DIFFERENT engine (see generator_nondeterminism: per-arm LLM response counts 93/91/94/89). The in-arm quantity -- legacy_accuracy_would_pass_at_live_threshold, this arm's own engine judged at the threshold the agent ships (1.0) -- is computed by change_gate_decision but was NOT projected onto any cell in this run, so it is unavailable here. REQ-6019 adds it to the projection for the next measurement; this reading is not upgraded retroactively.",
+  "reading": "CROSS-ARM READING (see admission_counterfactual_scope): the change gate rejected engines that the incumbent gate, AS RUN IN THE CONTROL ARM ON ITS OWN ENGINE, had also failed to admit -- so the gate's measured effect on the admission endpoint is nil. Stated in-arm this would be the stronger claim, and the in-arm field is absent from this run's cells, so it is NOT claimed here.",
+  "one_exception_examined": "sc25 is the only cell where the control's own hidden-state binary gate PASSED (heldout_accuracy 0.875, change_fidelity 0.111, 4 correct changed cells) -- and the control still did not admit it, because the trust-energy threshold rejected it. So even there the change gate did not overturn an admission; and the engine it judged was a different engine from the control's (see generator_nondeterminism)."
+ },
+ "arm_integrity_from_rollups": {
+  "wm_A0_control": {
+   "declared": {
+    "hud_mask": false,
+    "change_gate": false
+   },
+   "resolved": {
+    "hud_mask": false,
+    "change_gate": false,
+    "change_gate_hidden_state": false,
+    "trust_metric": "exact"
+   },
+   "resolver_matches_declaration": true,
+   "change_gate_hidden_state_resolved": false,
+   "follow_default_took": true,
+   "shipped_defaults_unchanged": {
+    "SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED": false,
+    "SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED": false,
+    "SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED": null
+   },
+   "server_device": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+   "server_vram_mib": 13452,
+   "vram_summary": {
+    "n_samples": 134,
+    "n_sampler_errors": 0,
+    "min_mib": 13452,
+    "max_mib": 13520,
+    "dropped_below_1gib_mid_run": false
+   },
+   "measurement_wall_s_from_rows": 10222.0
+  },
+  "wm_A1_mask": {
+   "declared": {
+    "hud_mask": true,
+    "change_gate": false
+   },
+   "resolved": {
+    "hud_mask": true,
+    "change_gate": false,
+    "change_gate_hidden_state": false,
+    "trust_metric": "exact"
+   },
+   "resolver_matches_declaration": true,
+   "change_gate_hidden_state_resolved": false,
+   "follow_default_took": true,
+   "shipped_defaults_unchanged": {
+    "SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED": false,
+    "SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED": false,
+    "SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED": null
+   },
+   "server_device": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+   "server_vram_mib": 13452,
+   "vram_summary": {
+    "n_samples": 143,
+    "n_sampler_errors": 0,
+    "min_mib": 13452,
+    "max_mib": 13520,
+    "dropped_below_1gib_mid_run": false
+   },
+   "measurement_wall_s_from_rows": 10821.49
+  },
+  "wm_A2_gate": {
+   "declared": {
+    "hud_mask": false,
+    "change_gate": true
+   },
+   "resolved": {},
+   "resolver_matches_declaration": false,
+   "change_gate_hidden_state_resolved": null,
+   "follow_default_took": null,
+   "shipped_defaults_unchanged": null,
+   "server_device": null,
+   "server_vram_mib": null,
+   "vram_summary": null,
+   "measurement_wall_s_from_rows": null
+  },
+  "wm_A3_both": {
+   "declared": {
+    "hud_mask": true,
+    "change_gate": true
+   },
+   "resolved": {
+    "hud_mask": true,
+    "change_gate": true,
+    "change_gate_hidden_state": true,
+    "trust_metric": "exact"
+   },
+   "resolver_matches_declaration": true,
+   "change_gate_hidden_state_resolved": true,
+   "follow_default_took": true,
+   "shipped_defaults_unchanged": {
+    "SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED": false,
+    "SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED": false,
+    "SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED": null
+   },
+   "server_device": "CONFIRMED_GPU0_BY_PER_PID_RESIDENCY",
+   "server_vram_mib": 13452,
+   "vram_summary": {
+    "n_samples": 130,
+    "n_sampler_errors": 0,
+    "min_mib": 13452,
+    "max_mib": 13520,
+    "dropped_below_1gib_mid_run": false
+   },
+   "measurement_wall_s_from_rows": 9677.18
+  }
+ },
+ "per_arm": {
+  "wm_A0_control": {
+   "n_cells": 25,
+   "n_plain": 14,
+   "n_hidden_state": 11,
+   "n_cell_errors": 0,
+   "n_first_win": 1,
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_planned_gt_0": 0,
+   "planned_cells": [],
+   "n_attempts_total": 26,
+   "llm_calls_total": 100,
+   "llm_responses_total": 93,
+   "llm_errors_total": 0,
+   "gated_quantity_plain_verify_accuracy": {
+    "n": 14,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.2,
+    "mean": 0.022221,
+    "n_exactly_zero": 12,
+    "n_at_or_above_0p5": 0,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.1111,
+     0.2
+    ]
+   },
+   "gated_quantity_hidden_heldout_accuracy": {
+    "n": 11,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.037037,
+    "max": 0.875,
+    "mean": 0.133838,
+    "n_exactly_zero": 5,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.037037,
+     0.125,
+     0.148148,
+     0.25,
+     0.875
+    ]
+   },
+   "change_fidelity_all": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.111111,
+    "mean": 0.00889,
+    "n_exactly_zero": 17,
+    "n_at_or_above_0p5": 0,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.000193,
+     0.001977,
+     0.003521,
+     0.015058,
+     0.022102,
+     0.033565,
+     0.034722,
+     0.111111
+    ]
+   },
+   "hud_mask_status_census": {
+    "disabled": 14,
+    "(absent)": 11
+   },
+   "skip_reason_census": {
+    "world_model_accuracy_below_threshold": 14,
+    "hidden_state_trust_below_threshold": 11
+   },
+   "n_mask_applied": 0
+  },
+  "wm_A1_mask": {
+   "n_cells": 25,
+   "n_plain": 14,
+   "n_hidden_state": 11,
+   "n_cell_errors": 0,
+   "n_first_win": 1,
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_planned_gt_0": 1,
+   "planned_cells": [
+    "lf52~color01"
+   ],
+   "n_attempts_total": 26,
+   "llm_calls_total": 99,
+   "llm_responses_total": 91,
+   "llm_errors_total": 0,
+   "gated_quantity_plain_verify_accuracy": {
+    "n": 14,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.92,
+    "mean": 0.208321,
+    "n_exactly_zero": 10,
+    "n_at_or_above_0p5": 3,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.24,
+     0.8765,
+     0.88,
+     0.92
+    ]
+   },
+   "gated_quantity_hidden_heldout_accuracy": {
+    "n": 11,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.125,
+    "max": 0.625,
+    "mean": 0.156566,
+    "n_exactly_zero": 3,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.125,
+     0.125,
+     0.125,
+     0.185185,
+     0.25,
+     0.25,
+     0.625
+    ]
+   },
+   "change_fidelity_all": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.333333,
+    "mean": 0.030861,
+    "n_exactly_zero": 18,
+    "n_at_or_above_0p5": 0,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.001603,
+     0.007246,
+     0.028906,
+     0.046429,
+     0.136364,
+     0.217647,
+     0.333333
+    ]
+   },
+   "hud_mask_status_census": {
+    "(absent)": 11,
+    "applied": 10,
+    "unresolved": 3,
+    "refused_swallows_dynamics": 1
+   },
+   "skip_reason_census": {
+    "hidden_state_trust_below_threshold": 11,
+    "world_model_accuracy_below_threshold": 11,
+    "no_reachable_plan_after_refinement": 1,
+    "degenerate_goal_predicate": 1,
+    "proposer_failed": 1
+   },
+   "n_mask_applied": 10
+  },
+  "wm_A2_gate": {
+   "n_cells": 25,
+   "n_plain": 14,
+   "n_hidden_state": 11,
+   "n_cell_errors": 0,
+   "n_first_win": 1,
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_planned_gt_0": 0,
+   "planned_cells": [],
+   "n_attempts_total": 26,
+   "llm_calls_total": 102,
+   "llm_responses_total": 94,
+   "llm_errors_total": 0,
+   "gated_quantity_plain_verify_accuracy": {
+    "n": 14,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.96,
+    "mean": 0.076507,
+    "n_exactly_zero": 12,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.1111,
+     0.96
+    ]
+   },
+   "gated_quantity_hidden_heldout_accuracy": {
+    "n": 11,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.875,
+    "mean": 0.138468,
+    "n_exactly_zero": 6,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.125,
+     0.125,
+     0.148148,
+     0.25,
+     0.875
+    ]
+   },
+   "change_fidelity_all": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.138913,
+    "mean": 0.01077,
+    "n_exactly_zero": 20,
+    "n_at_or_above_0p5": 0,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.003298,
+     0.008621,
+     0.055156,
+     0.063257,
+     0.138913
+    ]
+   },
+   "hud_mask_status_census": {
+    "disabled": 14,
+    "(absent)": 11
+   },
+   "skip_reason_census": {
+    "world_model_change_gate_degenerate_engine_no_correct_changed_cells": 11,
+    "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells": 8,
+    "world_model_change_gate_change_fidelity_below_threshold": 3,
+    "hidden_state_change_gate_change_fidelity_below_threshold": 2,
+    "hidden_state_change_gate_no_changing_transitions": 1
+   },
+   "n_mask_applied": 0
+  },
+  "wm_A3_both": {
+   "n_cells": 25,
+   "n_plain": 14,
+   "n_hidden_state": 11,
+   "n_cell_errors": 0,
+   "n_first_win": 1,
+   "first_win_cells": [
+    "vc33~color01"
+   ],
+   "n_planned_gt_0": 0,
+   "planned_cells": [],
+   "n_attempts_total": 26,
+   "llm_calls_total": 97,
+   "llm_responses_total": 89,
+   "llm_errors_total": 0,
+   "gated_quantity_plain_verify_accuracy": {
+    "n": 14,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.02,
+    "max": 0.96,
+    "mean": 0.218871,
+    "n_exactly_zero": 7,
+    "n_at_or_above_0p5": 3,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.04,
+     0.16,
+     0.2,
+     0.28,
+     0.56,
+     0.8642,
+     0.96
+    ]
+   },
+   "gated_quantity_hidden_heldout_accuracy": {
+    "n": 11,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.25,
+    "max": 0.875,
+    "mean": 0.28367,
+    "n_exactly_zero": 1,
+    "n_at_or_above_0p5": 2,
+    "all_values_sorted": [
+     0.0,
+     0.037037,
+     0.125,
+     0.148148,
+     0.185185,
+     0.25,
+     0.25,
+     0.25,
+     0.375,
+     0.625,
+     0.875
+    ]
+   },
+   "change_fidelity_all": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.181818,
+    "mean": 0.008797,
+    "n_exactly_zero": 21,
+    "n_at_or_above_0p5": 0,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.004063,
+     0.006098,
+     0.027944,
+     0.181818
+    ]
+   },
+   "hud_mask_status_census": {
+    "(absent)": 11,
+    "applied": 10,
+    "unresolved": 3,
+    "refused_swallows_dynamics": 1
+   },
+   "skip_reason_census": {
+    "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells": 11,
+    "world_model_change_gate_degenerate_engine_no_correct_changed_cells": 10,
+    "world_model_change_gate_change_fidelity_below_threshold": 4
+   },
+   "n_mask_applied": 10
+  }
+ },
+ "comparisons_vs_control": {
+  "wm_A1_mask": {
+   "gated_quantity_sign_test": {
+    "n_pairs_total": 25,
+    "n_discordant": 13,
+    "n_up": 11,
+    "n_down": 2,
+    "p_two_sided": 0.022461,
+    "p_one_sided_greater": 0.01123,
+    "p_one_sided_less": 0.998291,
+    "min_reachable_two_sided_p": 0.000244,
+    "underpowered_by_construction": false
+   },
+   "gated_quantity_control_dist": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.875,
+    "mean": 0.071333,
+    "n_exactly_zero": 17,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.037037,
+     0.1111,
+     0.125,
+     0.148148,
+     0.2,
+     0.25,
+     0.875
+    ]
+   },
+   "gated_quantity_treatment_dist": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.92,
+    "mean": 0.185549,
+    "n_exactly_zero": 13,
+    "n_at_or_above_0p5": 4,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.125,
+     0.125,
+     0.125,
+     0.185185,
+     0.24,
+     0.25,
+     0.25,
+     0.625,
+     0.8765,
+     0.88,
+     0.92
+    ]
+   },
+   "cells_whose_gated_quantity_moved": [
+    {
+     "sig": "ar25~color01",
+     "game": "ar25",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.25,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "cd82~color01",
+     "game": "cd82",
+     "branch": "hidden_state",
+     "control": 0.125,
+     "treatment": 0.25,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "cn04~color01",
+     "game": "cn04",
+     "branch": "hidden_state",
+     "control": 0.037037,
+     "treatment": 0.0,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.028906
+    },
+    {
+     "sig": "dc22~color01",
+     "game": "dc22",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.125,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "ka59~color01",
+     "game": "ka59",
+     "branch": "hidden_state",
+     "control": 0.25,
+     "treatment": 0.625,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.001603
+    },
+    {
+     "sig": "lf52~color01",
+     "game": "lf52",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.88,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "no_reachable_plan_after_refinement",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "lp85~color01",
+     "game": "lp85",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.92,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "degenerate_goal_predicate",
+     "treatment_hud_mask_status": "unresolved",
+     "treatment_hud_mask_cells": 0,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "m0r0~color01",
+     "game": "m0r0",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.125,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.000193,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "sb26~color01",
+     "game": "sb26",
+     "branch": "plain",
+     "control": 0.2,
+     "treatment": 0.24,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_accuracy_below_threshold",
+     "treatment_hud_mask_status": "unresolved",
+     "treatment_hud_mask_cells": 0,
+     "control_change_fidelity": 0.015058,
+     "treatment_change_fidelity": 0.217647
+    },
+    {
+     "sig": "sc25~color01",
+     "game": "sc25",
+     "branch": "hidden_state",
+     "control": 0.875,
+     "treatment": 0.0,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.111111,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "sk48~color01",
+     "game": "sk48",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.125,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.003521,
+     "treatment_change_fidelity": 0.333333
+    },
+    {
+     "sig": "su15~color01",
+     "game": "su15",
+     "branch": "plain",
+     "control": 0.1111,
+     "treatment": 0.8765,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "proposer_failed",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.136364
+    },
+    {
+     "sig": "wa30~color01",
+     "game": "wa30",
+     "branch": "hidden_state",
+     "control": 0.148148,
+     "treatment": 0.185185,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_trust_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    }
+   ],
+   "n_moved": 13,
+   "admission": {
+    "n_control": 0,
+    "n_treatment": 1,
+    "admitted_only_by_treatment": [
+     "lf52~color01"
+    ],
+    "admitted_only_by_control": [],
+    "mcnemar_sign_test": {
+     "n_pairs_total": 1,
+     "n_discordant": 1,
+     "n_up": 1,
+     "n_down": 0,
+     "p_two_sided": 1.0,
+     "p_one_sided_greater": 0.5,
+     "p_one_sided_less": 1.0,
+     "min_reachable_two_sided_p": 1.0,
+     "underpowered_by_construction": true
+    }
+   },
+   "first_win": {
+    "n_control": 1,
+    "n_treatment": 1,
+    "lost_vs_control": [],
+    "gained_vs_control": [],
+    "regression_clause_holds": true
+   },
+   "n_bit_identical_to_control": 22,
+   "bit_identical_fraction": 0.88
+  },
+  "wm_A2_gate": {
+   "gated_quantity_sign_test": {
+    "n_pairs_total": 25,
+    "n_discordant": 6,
+    "n_up": 2,
+    "n_down": 4,
+    "p_two_sided": 0.6875,
+    "p_one_sided_greater": 0.890625,
+    "p_one_sided_less": 0.34375,
+    "min_reachable_two_sided_p": 0.03125,
+    "underpowered_by_construction": false
+   },
+   "gated_quantity_control_dist": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.875,
+    "mean": 0.071333,
+    "n_exactly_zero": 17,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.037037,
+     0.1111,
+     0.125,
+     0.148148,
+     0.2,
+     0.25,
+     0.875
+    ]
+   },
+   "gated_quantity_treatment_dist": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.96,
+    "mean": 0.10377,
+    "n_exactly_zero": 18,
+    "n_at_or_above_0p5": 2,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.1111,
+     0.125,
+     0.125,
+     0.148148,
+     0.25,
+     0.875,
+     0.96
+    ]
+   },
+   "cells_whose_gated_quantity_moved": [
+    {
+     "sig": "ar25~color01",
+     "game": "ar25",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.25,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_change_fidelity_below_threshold",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.055156
+    },
+    {
+     "sig": "cn04~color01",
+     "game": "cn04",
+     "branch": "hidden_state",
+     "control": 0.037037,
+     "treatment": 0.0,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "ft09~color01",
+     "game": "ft09",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.96,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "disabled",
+     "treatment_hud_mask_cells": 0,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "ka59~color01",
+     "game": "ka59",
+     "branch": "hidden_state",
+     "control": 0.25,
+     "treatment": 0.125,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "re86~color01",
+     "game": "re86",
+     "branch": "hidden_state",
+     "control": 0.037037,
+     "treatment": 0.0,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "sb26~color01",
+     "game": "sb26",
+     "branch": "plain",
+     "control": 0.2,
+     "treatment": 0.0,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "disabled",
+     "treatment_hud_mask_cells": 0,
+     "control_change_fidelity": 0.015058,
+     "treatment_change_fidelity": 0.0
+    }
+   ],
+   "n_moved": 6,
+   "admission": {
+    "n_control": 0,
+    "n_treatment": 0,
+    "admitted_only_by_treatment": [],
+    "admitted_only_by_control": [],
+    "mcnemar_sign_test": {
+     "n_pairs_total": 0,
+     "n_discordant": 0,
+     "n_up": 0,
+     "n_down": 0,
+     "p_two_sided": null,
+     "p_one_sided_greater": null,
+     "p_one_sided_less": null,
+     "min_reachable_two_sided_p": null,
+     "note": "zero discordant pairs -- NO test is possible; this is not a null result"
+    }
+   },
+   "first_win": {
+    "n_control": 1,
+    "n_treatment": 1,
+    "lost_vs_control": [],
+    "gained_vs_control": [],
+    "regression_clause_holds": true
+   },
+   "n_bit_identical_to_control": 0,
+   "bit_identical_fraction": 0.0
+  },
+  "wm_A3_both": {
+   "gated_quantity_sign_test": {
+    "n_pairs_total": 25,
+    "n_discordant": 15,
+    "n_up": 13,
+    "n_down": 2,
+    "p_two_sided": 0.007385,
+    "p_one_sided_greater": 0.003693,
+    "p_one_sided_less": 0.999512,
+    "min_reachable_two_sided_p": 6.1e-05,
+    "underpowered_by_construction": false
+   },
+   "gated_quantity_control_dist": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.875,
+    "mean": 0.071333,
+    "n_exactly_zero": 17,
+    "n_at_or_above_0p5": 1,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.037037,
+     0.1111,
+     0.125,
+     0.148148,
+     0.2,
+     0.25,
+     0.875
+    ]
+   },
+   "gated_quantity_treatment_dist": {
+    "n": 25,
+    "empty": false,
+    "min": 0.0,
+    "median": 0.16,
+    "max": 0.96,
+    "mean": 0.247383,
+    "n_exactly_zero": 8,
+    "n_at_or_above_0p5": 5,
+    "all_values_sorted": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.037037,
+     0.04,
+     0.125,
+     0.148148,
+     0.16,
+     0.185185,
+     0.2,
+     0.25,
+     0.25,
+     0.25,
+     0.28,
+     0.375,
+     0.56,
+     0.625,
+     0.8642,
+     0.875,
+     0.96
+    ]
+   },
+   "cells_whose_gated_quantity_moved": [
+    {
+     "sig": "ar25~color01",
+     "game": "ar25",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.25,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "bp35~color01",
+     "game": "bp35",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.16,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.033565,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "cd82~color01",
+     "game": "cd82",
+     "branch": "hidden_state",
+     "control": 0.125,
+     "treatment": 0.25,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "cn04~color01",
+     "game": "cn04",
+     "branch": "hidden_state",
+     "control": 0.037037,
+     "treatment": 0.148148,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "ft09~color01",
+     "game": "ft09",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.96,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "g50t~color01",
+     "game": "g50t",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.375,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.034722,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "ka59~color01",
+     "game": "ka59",
+     "branch": "hidden_state",
+     "control": 0.25,
+     "treatment": 0.125,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "lf52~color01",
+     "game": "lf52",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.2,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "m0r0~color01",
+     "game": "m0r0",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.25,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.000193,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "sb26~color01",
+     "game": "sb26",
+     "branch": "plain",
+     "control": 0.2,
+     "treatment": 0.04,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_change_fidelity_below_threshold",
+     "treatment_hud_mask_status": "unresolved",
+     "treatment_hud_mask_cells": 0,
+     "control_change_fidelity": 0.015058,
+     "treatment_change_fidelity": 0.027944
+    },
+    {
+     "sig": "sk48~color01",
+     "game": "sk48",
+     "branch": "hidden_state",
+     "control": 0.0,
+     "treatment": 0.625,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.003521,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "su15~color01",
+     "game": "su15",
+     "branch": "plain",
+     "control": 0.1111,
+     "treatment": 0.8642,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "tu93~color01",
+     "game": "tu93",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.28,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_change_fidelity_below_threshold",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.181818
+    },
+    {
+     "sig": "vc33~color01",
+     "game": "vc33",
+     "branch": "plain",
+     "control": 0.0,
+     "treatment": 0.56,
+     "control_skip": "world_model_accuracy_below_threshold",
+     "treatment_skip": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": "applied",
+     "treatment_hud_mask_cells": 64,
+     "control_change_fidelity": 0.001977,
+     "treatment_change_fidelity": 0.0
+    },
+    {
+     "sig": "wa30~color01",
+     "game": "wa30",
+     "branch": "hidden_state",
+     "control": 0.148148,
+     "treatment": 0.185185,
+     "control_skip": "hidden_state_trust_below_threshold",
+     "treatment_skip": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "treatment_hud_mask_status": null,
+     "treatment_hud_mask_cells": null,
+     "control_change_fidelity": 0.0,
+     "treatment_change_fidelity": 0.0
+    }
+   ],
+   "n_moved": 15,
+   "admission": {
+    "n_control": 0,
+    "n_treatment": 0,
+    "admitted_only_by_treatment": [],
+    "admitted_only_by_control": [],
+    "mcnemar_sign_test": {
+     "n_pairs_total": 0,
+     "n_discordant": 0,
+     "n_up": 0,
+     "n_down": 0,
+     "p_two_sided": null,
+     "p_one_sided_greater": null,
+     "p_one_sided_less": null,
+     "min_reachable_two_sided_p": null,
+     "note": "zero discordant pairs -- NO test is possible; this is not a null result"
+    }
+   },
+   "first_win": {
+    "n_control": 1,
+    "n_treatment": 1,
+    "lost_vs_control": [],
+    "gained_vs_control": [],
+    "regression_clause_holds": true
+   },
+   "n_bit_identical_to_control": 0,
+   "bit_identical_fraction": 0.0
+  }
+ },
+ "interaction": {
+  "endpoint": "n_cells_with_induction_attempts_planned_gt_0 (the admission decision)",
+  "A0_control": 0,
+  "A1_mask_only": 1,
+  "A2_gate_only": 0,
+  "A3_both_observed": 0,
+  "A3_additive_prediction": 1,
+  "delta_mask": 1,
+  "delta_gate": 0,
+  "A3_minus_additive_prediction": -1,
+  "fixes_are_additive_on_this_endpoint": false,
+  "cancellation_measurable": false,
+  "cancellation_detected": null,
+  "cancellation_unmeasurable_reason": "requires delta_gate < 0, but the endpoint is a count floored at 0 and A0_control == 0, so delta_gate >= 0 at every reachable outcome; the flag is unreachable-False, not measured-False",
+  "why_this_matters": "the mask can only ADMIT more and the gate can only REJECT more; if A3 returns to the control value while A1 and A2 both moved, a two-arm before/after would have reported a clean null that is in fact two real effects cancelling",
+  "cancellation_detected_is_aggregate_not_per_cell": "this flag is an ARM-LEVEL count comparison. A PER-CELL cancellation is a different and weaker claim, and this run has one: on lf52 the mask admitted an engine and the gate rejected it, so A1 moved and A3 did not. The arm-level flag cannot express that, which is why the per-cell rejection detail is reported separately rather than inferred from this field"
+ },
+ "witnesses_from_analyser": {
+  "mask_application_proof": {
+   "n_claims": 20,
+   "n_with_positive_cells": 20,
+   "all_claims_proved": true,
+   "detail": [
+    {
+     "arm": "wm_A1_mask",
+     "sig": "bp35~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "ft09~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "lf52~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "r11l~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "s5i5~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "sp80~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "su15~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "tr87~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "tu93~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "vc33~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "bp35~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "ft09~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "lf52~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "r11l~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "s5i5~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "sp80~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "su15~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "tr87~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "tu93~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "vc33~color01",
+     "hud_mask_cells": 64,
+     "proof_ok": true
+    }
+   ]
+  },
+  "mask_inert_equality_control": {
+   "n_violations": 11,
+   "n_cells_checked": 15,
+   "holds": false,
+   "detail": [
+    {
+     "arm": "wm_A1_mask",
+     "sig": "ar25~color01",
+     "hud_mask_status": null,
+     "control": 0.0,
+     "treatment": 0.25
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "cd82~color01",
+     "hud_mask_status": null,
+     "control": 0.125,
+     "treatment": 0.25
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "cn04~color01",
+     "hud_mask_status": null,
+     "control": 0.037037,
+     "treatment": 0.0
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "dc22~color01",
+     "hud_mask_status": null,
+     "control": 0.0,
+     "treatment": 0.125
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "ka59~color01",
+     "hud_mask_status": null,
+     "control": 0.25,
+     "treatment": 0.625
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "lp85~color01",
+     "hud_mask_status": "unresolved",
+     "control": 0.0,
+     "treatment": 0.92
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "m0r0~color01",
+     "hud_mask_status": null,
+     "control": 0.0,
+     "treatment": 0.125
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "sb26~color01",
+     "hud_mask_status": "unresolved",
+     "control": 0.2,
+     "treatment": 0.24
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "sc25~color01",
+     "hud_mask_status": null,
+     "control": 0.875,
+     "treatment": 0.0
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "sk48~color01",
+     "hud_mask_status": null,
+     "control": 0.0,
+     "treatment": 0.125
+    },
+    {
+     "arm": "wm_A1_mask",
+     "sig": "wa30~color01",
+     "hud_mask_status": null,
+     "control": 0.148148,
+     "treatment": 0.185185
+    }
+   ],
+   "principle": "on cells where no mask resolved, the mask arm must be identical to the control; a difference means the arm changes something other than the mask"
+  },
+  "gate_rejections": {
+   "n": 50,
+   "n_justified_low_fidelity": 50,
+   "n_where_incumbent_would_have_passed": 2,
+   "detail": [
+    {
+     "arm": "wm_A2_gate",
+     "sig": "ar25~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.055156,
+     "spurious_changed_cells": 295,
+     "correct_changed_cells": 46,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "bp35~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 137,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "cd82~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 5,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "cn04~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "dc22~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 6,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "ft09~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "g50t~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.008621,
+     "spurious_changed_cells": 1942,
+     "correct_changed_cells": 24,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "ka59~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 45,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "lf52~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 3,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "lp85~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 2,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "ls20~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 387,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "m0r0~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 120,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "r11l~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 18,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "re86~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "s5i5~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "sb26~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "sc25~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_no_changing_transitions",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": true,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "sk48~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 136,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "sp80~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.003298,
+     "spurious_changed_cells": 32440,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "su15~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "tn36~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 25,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "tr87~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.063257,
+     "spurious_changed_cells": 125,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "tu93~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.138913,
+     "spurious_changed_cells": 56,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "vc33~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 25,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A2_gate",
+     "sig": "wa30~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "ar25~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 14580,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "bp35~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "cd82~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 2,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "cn04~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "dc22~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 4,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "ft09~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "g50t~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "ka59~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 16,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "lf52~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 2,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "lp85~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.006098,
+     "spurious_changed_cells": 378,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "ls20~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 267,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "m0r0~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "r11l~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 4,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "re86~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "s5i5~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 30,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "sb26~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.027944,
+     "spurious_changed_cells": 1329,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "sc25~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": true,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "sk48~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "sp80~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.004063,
+     "spurious_changed_cells": 31692,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "su15~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "tn36~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 25,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "tr87~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "tu93~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_change_fidelity_below_threshold",
+     "change_fidelity": 0.181818,
+     "spurious_changed_cells": 11,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "vc33~color01",
+     "branch": "plain",
+     "reason": "world_model_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": null,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": null,
+     "rejection_justified_by_low_fidelity": true
+    },
+    {
+     "arm": "wm_A3_both",
+     "sig": "wa30~color01",
+     "branch": "hidden_state",
+     "reason": "hidden_state_change_gate_degenerate_engine_no_correct_changed_cells",
+     "change_fidelity": 0.0,
+     "spurious_changed_cells": 0,
+     "correct_changed_cells": 0,
+     "control_would_have_admitted": false,
+     "control_incumbent_binary_gate_pass": false,
+     "rejection_justified_by_low_fidelity": true
+    }
+   ]
+  },
+  "generator_liveness": {
+   "wm_A0_control": {
+    "llm_calls_total": 100,
+    "llm_responses_total": 93,
+    "llm_errors_total": 0,
+    "generator_answered": true
+   },
+   "wm_A1_mask": {
+    "llm_calls_total": 99,
+    "llm_responses_total": 91,
+    "llm_errors_total": 0,
+    "generator_answered": true
+   },
+   "wm_A2_gate": {
+    "llm_calls_total": 102,
+    "llm_responses_total": 94,
+    "llm_errors_total": 0,
+    "generator_answered": true
+   },
+   "wm_A3_both": {
+    "llm_calls_total": 97,
+    "llm_responses_total": 89,
+    "llm_errors_total": 0,
+    "generator_answered": true
+   }
+  },
+  "device_residency": {
+   "wm_A0_control": {
+    "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+    "vram_mib_at_launch": 13452,
+    "vram_summary": {
+     "n_samples": 134,
+     "n_sampler_errors": 0,
+     "min_mib": 13452,
+     "max_mib": 13520,
+     "dropped_below_1gib_mid_run": false
+    }
+   },
+   "wm_A1_mask": {
+    "verdict": "CONFIRMED_GPU1_BY_PER_PID_RESIDENCY",
+    "vram_mib_at_launch": 13452,
+    "vram_summary": {
+     "n_samples": 143,
+     "n_sampler_errors": 0,
+     "min_mib": 13452,
+     "max_mib": 13520,
+     "dropped_below_1gib_mid_run": false
+    }
+   },
+   "wm_A2_gate": {
+    "verdict": null,
+    "vram_mib_at_launch": null,
+    "vram_summary": null
+   },
+   "wm_A3_both": {
+    "verdict": "CONFIRMED_GPU0_BY_PER_PID_RESIDENCY",
+    "vram_mib_at_launch": 13452,
+    "vram_summary": {
+     "n_samples": 130,
+     "n_sampler_errors": 0,
+     "min_mib": 13452,
+     "max_mib": 13520,
+     "dropped_below_1gib_mid_run": false
+    }
+   }
+  }
+ },
+ "matched_signatures": [
+  "ar25~color01",
+  "bp35~color01",
+  "cd82~color01",
+  "cn04~color01",
+  "dc22~color01",
+  "ft09~color01",
+  "g50t~color01",
+  "ka59~color01",
+  "lf52~color01",
+  "lp85~color01",
+  "ls20~color01",
+  "m0r0~color01",
+  "r11l~color01",
+  "re86~color01",
+  "s5i5~color01",
+  "sb26~color01",
+  "sc25~color01",
+  "sk48~color01",
+  "sp80~color01",
+  "su15~color01",
+  "tn36~color01",
+  "tr87~color01",
+  "tu93~color01",
+  "vc33~color01",
+  "wa30~color01"
+ ],
+ "unmatched_signatures": [],
+ "n_matched_cells_per_arm": 25,
+ "guard_gap_found_by_this_run_and_fixed_same_session": {
+  "found_how": "this run's single plan-discordant cell (lf52) sent the session to read the swallow guard's decision -- and the record was empty: hud_mask_swallow is None in 104 of 104 diagnostics. The failure could be DATED but not EXPLAINED.",
+  "defects_fixed": [
+   "hud_mask_swallow_check's unmeasurable verdict (`no_dynamics_to_swallow`, which leaves `swallows` at its initialised False) was read by both consumers as truthiness, so an unmeasurable verdict applied the mask as if it had been checked and cleared; now requires an affirmative reason == 'ok'",
+   "select_trusted_world_model reported hud_mask_status 'disabled' for its own refusals, indistinguishable from the flag being off, on all 11 hidden-state games",
+   "hud_mask_swallow was computed and discarded (the dead channel this run exhibits); now lifted onto the attempt dict in both branches and added to the projection",
+   "the swallow verdict was unreadable without its corpus; transition-level counts and survival/overlap statistics were added to the record"
+  ],
+  "measured_scope_of_the_fix": "on the measured corpus the fix flips ZERO admissions -- its one on-disk instance (ft09, all 3 seeds in exp6011) has an all-no-op corpus where identity scores 1.0 masked or not, so the correction is to 3 records, not to a metric. The laundering it closes needs an engine erring only inside masked cells.",
+  "no_new_gate_was_added": "neither transition-level statistic separates honest from swallowing masks across the 25 games, so a threshold would have to be fitted in a <0.05 window between two games. The statistics are RECORDED and not gated, and a test asserts that.",
+  "not_retro_applied": "the fixed guard is NOT applied to these 100 cells. This run's record stays as measured; the corrections live in new code plus an append-only corrigendum."
+ },
+ "what_this_run_refutes": {
+  "hypothesis": "the induced-world-model wall on the live scored path is a MEASUREMENT ARTIFACT: HUD/counter cells contaminate the exact-match denominator, the trust score is pinned near the floor as a result, and removing that contamination will open the induce->plan path.",
+  "verdict": "REFUTED",
+  "evidence": "with the mask on, admissions went 0 -> 1 of 25 and that single admission was an engine with change_fidelity 0.0 that then produced no reachable plan. Wins went 1 -> 1 (the same cell, bit-identical, and with zero admissions on it in every arm). Max level 1 -> 1. Zero win-discordant pairs in every arm.",
+  "what_remains": "the wall is induction CAPABILITY -- the generator does not produce engines that predict the changing cells. change_fidelity is 0.0 on essentially every rejected engine in every arm, which is a statement about the engines, not about the measurement of them."
+ },
+ "field_provenance": {
+  "measurement_wall_s": {
+   "principle": "the analyser clock is not the measurement clock; republishing each row's own elapsed_s is what makes a seconds-long analyser pass over a hours-long measurement honest instead of a DURATION_TOO_SHORT signal",
+   "satisfied_by": "sum of cells/*.json elapsed_s over all 100 cells"
+  },
+  "headline.min_reachable_two_sided_p": {
+   "principle": "with n discordant pairs the smallest reachable two-sided p is 2^(1-n); at n=0 no test exists at all, so stating the bound is what stops a zero-discordance result being written up as 'no significant difference'",
+   "satisfied_by": "computed per arm from the win-discordant pair count"
+  },
+  "arm_treatment_evidence": {
+   "principle": "an arm whose rollup is missing is UNMEASURABLE at the resolver, not clean and not broken; proving the treatment from per-cell fields the agent wrote at decision time is what keeps the gap from being papered over in either direction",
+   "satisfied_by": "hud_mask_reason (flag_disabled can never read `resolved`) plus change_gate_hidden_state_enabled, censused per arm from the cells"
+  },
+  "mask_decision_record_coverage": {
+   "principle": "a field computed and discarded is a dead channel: the decision it documents becomes unauditable, which is exactly why this run's guard failure could be dated but not explained",
+   "satisfied_by": "census of hud_mask_swallow and hud_mask_status presence over all 104 diagnostics, split by arm and branch"
+  },
+  "mask_inert_equality_control_rescoped": {
+   "principle": "if a treatment arm differs from control on cells the treatment provably never touched, then no per-cell comparison on that run is attributable to the treatment; scoping the control to PROVABLY-untouched cells is what makes that inference valid instead of pooling in cells whose applicability was never recorded",
+   "satisfied_by": "three-way split of each mask arm's cells into provably-no-mask / applied / applicability-UNKNOWN, with violations counted only on the provable set"
+  },
+  "gate_rejections_rescoped.n_UNMEASURABLE_nothing_to_judge": {
+   "principle": "change_fidelity == 0.0 on a rejection whose reason is `no_changing_transitions` is the field's INITIALISED value, not a measurement; counting it as justified-by-low-fidelity is the same unmeasurable-read-as-clean bug the swallow guard had, one level up in the auditor itself",
+   "satisfied_by": "recount of the analyser's rejection detail, partitioning on the reason string rather than on the fidelity value"
+  },
+  "lf52_laundering_finding.why_the_score_moved_noop_dominance": {
+   "principle": "a score that rises because the denominator lost the only cells that were changing is laundering, not learning; the arithmetic has to be shown against a frozen corpus with a sha256 so the claim traces to data",
+   "satisfied_by": "the frozen lf52 live-episode fixture's own captured swallow-check statistics, cited by sha256, against the observed verify_accuracy"
+  }
+ },
+ "acceptance_gate_every_cell_matched_across_all_four_arms": true,
+ "acceptance_gate_all_arms_have_full_cell_count": true,
+ "acceptance_gate_zero_cell_errors": true,
+ "acceptance_gate_every_arm_treatment_evidenced_per_cell": true,
+ "acceptance_gate_generator_answered_in_every_arm": true,
+ "acceptance_gate_device_confirmed_by_per_pid_residency_where_recorded": true,
+ "acceptance_gate_no_card_dropped_off_bus_where_recorded": true,
+ "acceptance_gate_every_mask_claim_carries_positive_cell_count": true,
+ "acceptance_gate_no_control_win_lost_by_any_treatment_arm": true,
+ "acceptance_gate_shipped_defaults_still_off": true,
+ "acceptance_gate_null_reported_as_untestable_not_as_no_difference": true,
+ "acceptance_gate_mask_applied_count_agrees_across_two_independent_paths": true,
+ "acceptance_gate_passed": true,
+ "unmet_gates": [
+  "acceptance_gate_device_confirmed_by_per_pid_residency_where_recorded__VACUOUS",
+  "acceptance_gate_no_card_dropped_off_bus_where_recorded__VACUOUS",
+  "acceptance_gate_passed_and_none_vacuous"
+ ],
+ "unmet_gates_includes_vacuous_and_composite": true,
+ "gate_vacuity_disclosure": {
+  "acceptance_gate_no_control_win_lost_by_any_treatment_arm": {
+   "vacuous": false,
+   "support": 1,
+   "meaning_if_vacuous": "the control won on zero cells, so no arm COULD have lost a win and the regression clause has no support"
+  },
+  "acceptance_gate_every_mask_claim_carries_positive_cell_count": {
+   "vacuous": false,
+   "support": 20,
+   "meaning_if_vacuous": "the mask applied on zero cells, so the proof is empty"
+  },
+  "acceptance_gate_device_confirmed_by_per_pid_residency_where_recorded": {
+   "vacuous": true,
+   "support": 3,
+   "meaning_if_vacuous": "3 of 4 arms recorded residency; the arm(s) ['wm_A2_gate'] are NOT covered by this gate and their device placement is not claimed"
+  },
+  "acceptance_gate_no_card_dropped_off_bus_where_recorded": {
+   "vacuous": true,
+   "support": 3,
+   "meaning_if_vacuous": "an arm with no VRAM timeseries could have dropped off the bus undetected rather than provably not have done"
+  },
+  "acceptance_gate_shipped_defaults_still_off": {
+   "vacuous": false,
+   "support": 3,
+   "meaning_if_vacuous": "no rollup recorded the shipped defaults"
+  }
+ },
+ "n_vacuous_gates": 2,
+ "vacuous_gates": [
+  "acceptance_gate_device_confirmed_by_per_pid_residency_where_recorded",
+  "acceptance_gate_no_card_dropped_off_bus_where_recorded"
+ ],
+ "acceptance_gate_passed_and_none_vacuous": false,
+ "honest_verdict": "complete_four_arm_live_null_zero_win_discordance_min_reachable_p_1.0_measurement_artifact_hypothesis_refuted_mask_admitted_1_of_25_change_fidelity_zero_engine_that_produced_no_plan",
+ "cited_upstream_artifacts": [
+  {
+   "path": "results/experiment_6011_world_model_change_gate_four_arm.json",
+   "role": "the OFFLINE four-arm matrix this run tests live; also the artifact holding the swallow guard's one on-disk unmeasurable-read-as-clean instance (ft09)",
+   "sha256": "459935b00aa6a521fef663747bc898c5d60770740826b289ad0a46a745ce5597"
+  },
+  {
+   "path": "results/experiment_6012_hidden_state_trust_gate_hole.json",
+   "role": "the hidden-state trust-gate hole that motivated the change gate",
+   "sha256": "86b4bb0ffca1e3b863d9e6ba38ca2cfbd35aca292ff3fcf7020d22efd672f811"
+  },
+  {
+   "path": "results/experiment_6013_hidden_state_change_gate_closure.json",
+   "role": "the hidden-state change-gate closure this run exercises live",
+   "sha256": "55c233916621fa55ac22e10e2bae3d93c7848769694c842e983efa80feb14e63"
+  },
+  {
+   "path": "tests/fixtures/arc_hud_mask_swallow/MANIFEST.json",
+   "role": "frozen real corpora captured by the guard-fix work; source of the lf52 live-corpus no-op-dominance arithmetic",
+   "sha256": "751083175357231a263d502aa9cd20d3c139c7be8082f2c704039ded55a942c1"
+  },
+  {
+   "path": "results/arc_wm_four_arm_20260727/cells_PRE_ISOLATION_FIX_DISCARDED/WHY_DISCARDED.md",
+   "role": "the quarantined pre-isolation cells this analyser does NOT read; kept per never-prune",
+   "sha256": "726afe0b268ef4a86bb9119ae188aa4a70dd7c46abc3c7085444d33c6b49032f"
+  }
+ ],
+ "cited_code_fixes": [
+  {
+   "path": "python/carnot/agentic/arc_executable_world_model.py",
+   "role": "hud_mask_swallow_clean() affirmative-reason requirement + record fields"
+  },
+  {
+   "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
+   "role": "select_trusted_world_model refusal-status visibility"
+  },
+  {
+   "path": "python/carnot/agentic/arc_competition_agent.py",
+   "role": "hud_mask_swallow lifted onto the attempt dict + projection key"
+  }
+ ],
+ "row_files_dir": "results/arc_wm_four_arm_20260727/cells/",
+ "runner": "results/arc_wm_four_arm_20260727/fourarm.py",
+ "analyser": "results/arc_wm_four_arm_20260727/analyse_fourarm.py (imported) + build_live_artifact.py (this builder's additive blocks)",
+ "run_git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+ "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+ "reproducibility_checksum": "9262bef9b4c56f8d903689faf938896675e19afabc071574b2a8c0c64fa672d3"
+}

@@ -21,6 +21,16 @@ import tempfile
 import time
 from typing import Any
 
+# THE CANONICAL GENERATOR PIN, imported rather than re-typed -- the 2026-07-28 operator directive
+# re-pinned the ARC generator from Qwen3.5-9B-MTP to gemma-4-31B-it, and every hardening gate that
+# spelled the old name as a literal kept asserting a model nothing runs.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PYTHON_ROOT = REPO_ROOT / "python"
@@ -62,9 +72,7 @@ SPEC_REFS = [
 TERMINAL_PREFIXES = ("success_", "complete_")
 
 FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
-    "honest_verdict": {
-        "principle": "terminal prefix; package builds is success_/complete_."
-    },
+    "honest_verdict": {"principle": "terminal prefix; package builds is success_/complete_."},
     "submission_package_ready": {
         "principle": (
             "True iff ready for the OPERATOR to submit; the task itself NEVER submits "
@@ -76,9 +84,7 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
             "must fit the ~16GB Kaggle constraint with KV + headroom -- the deployment gate."
         )
     },
-    "inference_substrate": {
-        "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
-    },
+    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts; 0.0001s floor."},
 }
 
 REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
@@ -130,8 +136,8 @@ def _default_gguf_finder() -> list[str]:  # pragma: no cover - local filesystem 
     if env_path and Path(env_path).is_file():
         candidates.append(env_path)
     pattern = (
-        "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/"
-        "snapshots/*/Qwen3.5-9B-Q4_K_M.gguf"
+        f"~/.cache/huggingface/hub/models--unsloth--{ARC_LIVE_GENERATOR_MODEL_ID.split('/')[-1]}/"
+        f"snapshots/*/{ARC_LIVE_GENERATOR_MODEL_FILENAME}"
     )
     candidates.extend(glob.glob(os.path.expanduser(pattern)))
     return sorted(dict.fromkeys(candidates))
@@ -250,12 +256,22 @@ def resolve_agent_config(submitted_config: Mapping[str, Any]) -> JsonDict:
     checks = {
         "submitted_policy_e3": submitted_config.get("policy") == "E3AgentPolicy",
         "submitted_cascade": submitted_config.get("cascade") is True,
-        "model_is_qwen35_mtp": frozen.get("model_id") == "unsloth/Qwen3.5-9B-MTP-GGUF"
-        and frozen.get("repo_substr") == "Qwen3.5-9B-MTP",
-        "model_filename": frozen.get("model_filename") == "Qwen3.5-9B-Q4_K_M.gguf",
+        # Canonical pin, 2026-07-28. Renamed off the dead `qwen35` key name: a check whose NAME
+        # asserts a retired model is unreadable even when its logic is right.
+        "model_is_pinned_generator": frozen.get("model_id") == ARC_LIVE_GENERATOR_MODEL_ID
+        and frozen.get("repo_substr") == ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        "model_filename": frozen.get("model_filename") == ARC_LIVE_GENERATOR_MODEL_FILENAME,
         "mtp_enabled": frozen.get("mtp") is True and frozen.get("spec_type") == "draft-mtp",
         "q8_kv": frozen.get("kv_quant") == "q8_0",
-        "no_think": frozen.get("no_think_prefix") == "/no_think\n",
+        # CANONICAL PIN, not the retired Qwen literal (fixed 2026-07-28, third pass). This read
+        # `== "/no_think\n"` -- a Qwen3 hybrid-thinking control token. Gemma-4 has no such token
+        # and would consume it as literal prompt text, which is why the canonical pin is the EMPTY
+        # string. The consequence was not cosmetic: the LIVE, correctly-configured
+        # `SUBMITTED_AGENT_CONFIG` FAILED this check, so `resolved` was False and every harden
+        # capstone in this family reported `submission_package_ready: False` for a submission that
+        # is in fact correctly configured. A readiness gate that goes red exactly when the thing it
+        # gates is right is worse than no gate -- it trains the reader to ignore it.
+        "no_think": frozen.get("no_think_prefix") == ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
         "n_predict_floor": int(frozen.get("max_tokens") or 0)
         >= int(frozen.get("n_predict_min") or 0)
         >= 2048,
@@ -363,12 +379,7 @@ def estimate_vram(
     draft_model_gb = model_gb if mtp_enabled else 0.0
     kv_bytes_per_value = 1 if kv_quant == "q8_0" else 2
     kv_cache_gb = (
-        KV_LAYERS
-        * int(context_tokens)
-        * KV_EMBEDDING_DIM
-        * 2
-        * kv_bytes_per_value
-        / BYTES_PER_GB
+        KV_LAYERS * int(context_tokens) * KV_EMBEDDING_DIM * 2 * kv_bytes_per_value / BYTES_PER_GB
     )
     total_with_headroom = (
         model_gb * model_copies + kv_cache_gb + RUNTIME_OVERHEAD_GB + REQUIRED_HEADROOM_GB
@@ -459,10 +470,10 @@ def _operator_checklist(package_ready: bool, vram_estimate_gb: float) -> list[st
         ),
         (
             "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and "
-            "carnot-qwen35-9b-mtp-gguf before Save & Run."
+            "carnot-gemma4-31b-it-gguf before Save & Run."
         ),
         (
-            "OPERATOR-CHECK: Verify the rerun log resolves Qwen3.5-9B-MTP, draft-mtp, "
+            f"OPERATOR-CHECK: Verify the rerun log resolves {ARC_LIVE_GENERATOR_REPO_SUBSTR}, no draft-mtp, "
             "q8_0 KV, and the CUDA-12.8 llama-server."
         ),
         (

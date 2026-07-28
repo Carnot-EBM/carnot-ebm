@@ -25,6 +25,7 @@ opening. A null tightens the closure; a positive justifies a live-solve scale-up
 
 USAGE: arc_incontext_pattern_proposal_ab.py [n_games] [K]
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -40,7 +41,9 @@ sys.path.insert(0, str(REPO / "python"))
 
 N_GAMES = int(sys.argv[1]) if len(sys.argv) > 1 else 6
 K = int(sys.argv[2]) if len(sys.argv) > 2 else 4
-M = int(sys.argv[3]) if len(sys.argv) > 3 else 1  # samples per arm per game (denoise LLM stochasticity)
+M = (
+    int(sys.argv[3]) if len(sys.argv) > 3 else 1
+)  # samples per arm per game (denoise LLM stochasticity)
 SEED = 20260628
 
 
@@ -60,7 +63,9 @@ def _banked() -> list[tuple[str, list[int]]]:
         acts: list[int] = []
         for lab in labels:
             try:
-                acts.append(int(json.loads(lab).get("action")) if isinstance(lab, str) else int(lab))
+                acts.append(
+                    int(json.loads(lab).get("action")) if isinstance(lab, str) else int(lab)
+                )
             except Exception:
                 pass
         g = str(d.get("game") or "")
@@ -135,7 +140,11 @@ def _lcs(proposed: list[int], winner: list[int]) -> int:
     dp = [[0] * (n + 1) for _ in range(m + 1)]
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            dp[i][j] = dp[i - 1][j - 1] + 1 if proposed[i - 1] == winner[j - 1] else max(dp[i - 1][j], dp[i][j - 1])
+            dp[i][j] = (
+                dp[i - 1][j - 1] + 1
+                if proposed[i - 1] == winner[j - 1]
+                else max(dp[i - 1][j], dp[i][j - 1])
+            )
     return dp[m][n]
 
 
@@ -158,7 +167,16 @@ def main() -> int:
     proposer = LocalGGUFProposer(
         repo_substr="Qwen3.5-9B-MTP",
         model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=64,
@@ -166,14 +184,19 @@ def main() -> int:
     )
     preconds = [{"resource": "qwen3.5-9b-mtp_gpu_server", "available": _server_ok(proposer)}]
     if not preconds[0]["available"]:
-        _write({
-            "experiment": "arc_incontext_pattern_proposal_ab",
-            "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
-            "honest_verdict": "blocked_incontext_pattern_llm_server_unreachable",
-            "inference_substrate": "live_llm_inference", "verifier_is_oracle": False,
-            "preconditions_checked": preconds, "solve_provenance": "development_proxy",
-            "random_seed": SEED, "duration_s": round(time.time() - started, 2),
-        })
+        _write(
+            {
+                "experiment": "arc_incontext_pattern_proposal_ab",
+                "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
+                "honest_verdict": "blocked_incontext_pattern_llm_server_unreachable",
+                "inference_substrate": "live_llm_inference",
+                "verifier_is_oracle": False,
+                "preconditions_checked": preconds,
+                "solve_provenance": "development_proxy",
+                "random_seed": SEED,
+                "duration_s": round(time.time() - started, 2),
+            }
+        )
         print("BLOCKED: LLM server unreachable")
         return 0
 
@@ -189,7 +212,9 @@ def main() -> int:
         frame = _first_frame_ascii(game)
         # OPERATOR DIRECTIVE 2026-06-28: drop the OBFUSCATED source code; use only the RE'd SEMANTIC
         # solve knowledge (registry win_condition/action_model/gotchas + solve trajectories + dead_ends).
-        lib = build_pattern_library(exclude_game=game, include_source_code=False)  # LOO, semantic-only
+        lib = build_pattern_library(
+            exclude_game=game, include_source_code=False
+        )  # LOO, semantic-only
         pats = retrieve(lib, {"mechanic": game, "text": frame[:200]}, k_pos=3, k_neg=2)
         block = format_incontext_block(pats)
         # M samples per arm, averaged, to denoise LLM stochasticity (a single sample flips run-to-run)
@@ -197,8 +222,11 @@ def main() -> int:
         wo_props = [_ask(proposer, frame, "", K) for _ in range(M)]
         denom = max(1, len(winner))
         rec = {
-            "game": game, "winner_prefix": winner, "samples": M,
-            "with_exemplars_sample": with_props[0], "without_exemplars_sample": wo_props[0],
+            "game": game,
+            "winner_prefix": winner,
+            "samples": M,
+            "with_exemplars_sample": with_props[0],
+            "without_exemplars_sample": wo_props[0],
             "with_positional": round(sum(_positional_match(p, winner) for p in with_props) / M, 3),
             "without_positional": round(sum(_positional_match(p, winner) for p in wo_props) / M, 3),
             "with_leading": round(sum(_leading_match(p, winner) for p in with_props) / M, 3),
@@ -211,8 +239,11 @@ def main() -> int:
         rec["leading_delta"] = round(rec["with_leading"] - rec["without_leading"], 3)
         rec["lcs_delta"] = round(rec["with_lcs_norm"] - rec["without_lcs_norm"], 3)
         cpath.write_text(json.dumps(rec) + "\n")
-        print(f"[{game}] winner={winner} lead_d={rec['leading_delta']} lcs_d={rec['lcs_delta']} "
-              f"pos_d={rec['positional_delta']} (M={M})", flush=True)
+        print(
+            f"[{game}] winner={winner} lead_d={rec['leading_delta']} lcs_d={rec['lcs_delta']} "
+            f"pos_d={rec['positional_delta']} (M={M})",
+            flush=True,
+        )
 
     # aggregate ALL checkpoints (accumulated across chunked runs), not just this run's games
     per_game = []
@@ -221,7 +252,9 @@ def main() -> int:
             per_game.append(json.loads(cp.read_text()))
         except Exception:
             continue
-    scored = [g for g in per_game if g.get("with_exemplars_sample") or g.get("without_exemplars_sample")]
+    scored = [
+        g for g in per_game if g.get("with_exemplars_sample") or g.get("without_exemplars_sample")
+    ]
     # PRIMARY = LEADING (execution-relevant: a wrong action-1 breaks the plan; unbiased). The positional
     # metric is reported but is KNOWN-BIASED: it rewards coincidental digit overlap between degenerate
     # constant-run winners and the LLM's default repeat-guess (adversarial review 2026-06-28), so it
@@ -231,7 +264,11 @@ def main() -> int:
     ci = _bootstrap_ci(lead_deltas, SEED) if lead_deltas else [0.0, 0.0]
     with_mean = round(sum(g["with_leading"] for g in scored) / max(1, len(scored)), 4)
     wo_mean = round(sum(g["without_leading"] for g in scored) / max(1, len(scored)), 4)
-    pos_point = round(sum(g["positional_delta"] for g in scored) / max(1, len(scored)), 4) if scored else 0.0
+    pos_point = (
+        round(sum(g["positional_delta"] for g in scored) / max(1, len(scored)), 4)
+        if scored
+        else 0.0
+    )
     # LCS (degeneracy-robust co-primary): order-respecting, normalized; not inflated by constant-runs
     lcs_deltas = [g.get("lcs_delta", 0.0) for g in scored]
     lcs_point = round(sum(lcs_deltas) / len(lcs_deltas), 4) if lcs_deltas else 0.0
@@ -241,10 +278,24 @@ def main() -> int:
     # SOURCE-CODE obfuscation disclosure (the operator's specific input): how many source-derived patterns
     # carry no transferable semantics because ARC-AGI-3 game source has random/scrubbed identifiers.
     from carnot.agentic.arc_pattern_library import build_pattern_library as _bpl
+
     _src = [p for p in _bpl() if p.source == "source_code"]
-    _empty = sum(1 for p in _src if len(re.findall(r"(?:grid|target|colou?r|match|cell|count|equal|reward|score|level|complete|solved|win|position|move|click|region|fill)", p.text.lower())) < 2)
-    src_obf = {"source_patterns": len(_src), "semantically_empty": _empty,
-               "obfuscated": bool(_src and _empty / len(_src) >= 0.5)}
+    _empty = sum(
+        1
+        for p in _src
+        if len(
+            re.findall(
+                r"(?:grid|target|colou?r|match|cell|count|equal|reward|score|level|complete|solved|win|position|move|click|region|fill)",
+                p.text.lower(),
+            )
+        )
+        < 2
+    )
+    src_obf = {
+        "source_patterns": len(_src),
+        "semantically_empty": _empty,
+        "obfuscated": bool(_src and _empty / len(_src) >= 0.5),
+    }
 
     # "powered" once M>=5 samples/arm AND n>=15 LOO games (denoised + adequate paired n) -- below that the
     # CIs are too wide to call a null vs ambiguity (the earlier n=8/M=3 run was genuinely underpowered).
@@ -252,20 +303,26 @@ def main() -> int:
     if not scored:
         verdict = "complete_incontext_pattern_no_scorable_games_inconclusive"
     elif exemplars_help:
-        verdict = (f"success_incontext_patterns_shift_opening_toward_winner_leading_{with_mean}_vs_{wo_mean}"
-                   f"_delta_{point}_ci_excl_0_lcs_delta_{lcs_point}_proceed_to_live_solve")
+        verdict = (
+            f"success_incontext_patterns_shift_opening_toward_winner_leading_{with_mean}_vs_{wo_mean}"
+            f"_delta_{point}_ci_excl_0_lcs_delta_{lcs_point}_proceed_to_live_solve"
+        )
     elif powered:
         # POWERED NULL on the behavior-derived (RE'd semantic) patterns the operator asked to isolate:
         # neither degeneracy-robust metric's CI excludes 0 (leading {point} CI{ci}; lcs {lcs_point} CI{lcs_ci}).
         # Source-code half tested SEPARATELY remains obfuscation-blocked (disclosure only; excluded here).
-        verdict = (f"complete_incontext_patterns_no_reliable_opening_shift_POWERED_NULL_n{len(scored)}_M{M}"
-                   f"_leading_delta_{point}_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
-                   f"_behavior_patterns_only_src_obfuscation_blocked_{src_obf['obfuscated']}")
+        verdict = (
+            f"complete_incontext_patterns_no_reliable_opening_shift_POWERED_NULL_n{len(scored)}_M{M}"
+            f"_leading_delta_{point}_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
+            f"_behavior_patterns_only_src_obfuscation_blocked_{src_obf['obfuscated']}"
+        )
     else:
         # honest: ambiguous + underpowered + the source-code half is obfuscation-blocked. NOT a clean null.
-        verdict = (f"complete_incontext_patterns_AMBIGUOUS_underpowered_n{len(scored)}_leading_delta_{point}"
-                   f"_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
-                   f"_pos_delta_{pos_point}_src_obfuscated_{src_obf['obfuscated']}")
+        verdict = (
+            f"complete_incontext_patterns_AMBIGUOUS_underpowered_n{len(scored)}_leading_delta_{point}"
+            f"_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
+            f"_pos_delta_{pos_point}_src_obfuscated_{src_obf['obfuscated']}"
+        )
 
     # INFERENCE-SUBSTRATE DISCIPLINE: the per-game CHECKPOINTS are the live_llm_inference units (each ~47s
     # of real GGUF calls, written once across the chunked runs); THIS headline artifact AGGREGATES those 19
@@ -274,40 +331,57 @@ def main() -> int:
     upstream = []
     for cp in sorted(ckpt_dir.glob("*.json")):
         try:
-            upstream.append({"checkpoint": cp.name,
-                             "sha256": hashlib.sha256(cp.read_bytes()).hexdigest()})
+            upstream.append(
+                {"checkpoint": cp.name, "sha256": hashlib.sha256(cp.read_bytes()).hexdigest()}
+            )
         except Exception:
             continue
     art = {
         "experiment": "arc_incontext_pattern_proposal_ab",
         "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
         "honest_verdict": verdict,
-        "question": ("do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed "
-                     "opening prefix toward the banked winning prefix vs a no-exemplar control?"),
+        "question": (
+            "do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed "
+            "opening prefix toward the banked winning prefix vs a no-exemplar control?"
+        ),
         "inference_substrate": "aggregation_from_upstream_artifacts",
-        "inference_substrate_note": ("per-game CHECKPOINTS = live_llm_inference (real GGUF proposer calls, "
-                                     "~47s/game across chunked runs); this headline artifact aggregates them."),
+        "inference_substrate_note": (
+            "per-game CHECKPOINTS = live_llm_inference (real GGUF proposer calls, "
+            "~47s/game across chunked runs); this headline artifact aggregates them."
+        ),
         "cited_upstream_artifacts": upstream,
         "verifier_is_oracle": False,
-        "n_games": len(scored), "K": K, "samples_per_arm": M,
+        "n_games": len(scored),
+        "K": K,
+        "samples_per_arm": M,
         "primary_metric": "leading_match_execution_relevant",
         "co_primary_metric": "lcs_norm_degeneracy_robust",
-        "with_exemplars_mean_leading": with_mean, "without_exemplars_mean_leading": wo_mean,
-        "leading_delta_point": point, "leading_delta_ci95": ci,
-        "lcs_norm_delta_point": lcs_point, "lcs_norm_delta_ci95": lcs_ci,
+        "with_exemplars_mean_leading": with_mean,
+        "without_exemplars_mean_leading": wo_mean,
+        "leading_delta_point": point,
+        "leading_delta_ci95": ci,
+        "lcs_norm_delta_point": lcs_point,
+        "lcs_norm_delta_ci95": lcs_ci,
         "positional_delta_point_BIASED": pos_point,
-        "positional_metric_caveat": ("positional rewards coincidental digit overlap between degenerate "
-                                     "constant-run winners and the LLM default repeat-guess; biased AGAINST "
-                                     "the diversity exemplars induce -- not the headline (adversarial review)."),
+        "positional_metric_caveat": (
+            "positional rewards coincidental digit overlap between degenerate "
+            "constant-run winners and the LLM default repeat-guess; biased AGAINST "
+            "the diversity exemplars induce -- not the headline (adversarial review)."
+        ),
         "source_code_obfuscation": src_obf,
         "exemplars_help": exemplars_help,
         "per_game": per_game,
-        "model_specs": {"generator": "unsloth/Qwen3.5-9B-MTP-GGUF", "kv_quant": "q8_0", "mtp": True},
+        "model_specs": {
+            "generator": "unsloth/Qwen3.5-9B-MTP-GGUF",
+            "kv_quant": "q8_0",
+            "mtp": True,
+        },
         "solve_provenance": "development_proxy",
         # used_env_source: we render the held-out game's OBSERVABLE first frame (the live agent sees it too).
         # read_game_source: the measured A/B arms EXCLUDED source code (include_source_code=False); source is
         # read ONLY to compute the obfuscation-disclosure stat, never injected into the LLM proposer.
-        "used_env_source": True, "read_game_source": False,
+        "used_env_source": True,
+        "read_game_source": False,
         "source_code_used_in_measured_arms": False,
         "interpretation": (
             "HONEST READ (POWERED run, M=5, n=19 LOO games, source-code EXCLUDED per operator 2026-06-28 to "
@@ -331,13 +405,22 @@ def main() -> int:
             "powered null; source patterns = obfuscation-blocked."
         ),
         "prior_failures": [
-            {"experiment_id": "exp4556", "verdict": "verifier_router_no_value_added",
-             "addressed_by": ("router few-shots ONE closest-game recipe; this injects a TOP-K of verified "
-                              "worked+failed PATTERNS (incl. source-code win-conditions) as reasoning "
-                              "exemplars and measures opening-prefix shift on a LOO held-out game."),
-             "retire_if_same_verdict": True},
+            {
+                "experiment_id": "exp4556",
+                "verdict": "verifier_router_no_value_added",
+                "addressed_by": (
+                    "router few-shots ONE closest-game recipe; this injects a TOP-K of verified "
+                    "worked+failed PATTERNS (incl. source-code win-conditions) as reasoning "
+                    "exemplars and measures opening-prefix shift on a LOO held-out game."
+                ),
+                "retire_if_same_verdict": True,
+            },
         ],
-        "cites_upstream": ["exp4556 (router)", "exp4933 (MATM efficiency retrieval)", "exp4697 (in-context prior, unbuilt)"],
+        "cites_upstream": [
+            "exp4556 (router)",
+            "exp4933 (MATM efficiency retrieval)",
+            "exp4697 (in-context prior, unbuilt)",
+        ],
         "preconditions_checked": preconds,
         "random_seed": SEED,
         "duration_s": round(time.time() - started, 2),
@@ -354,16 +437,22 @@ def _bootstrap_ci(deltas, seed, n=1000):
         v = round(float(sum(deltas) / len(deltas)), 4) if deltas else 0.0
         return [v, v]
     rng = random.Random(seed)
-    samp = sorted(sum(deltas[rng.randrange(len(deltas))] for _ in deltas) / len(deltas) for _ in range(n))
+    samp = sorted(
+        sum(deltas[rng.randrange(len(deltas))] for _ in deltas) / len(deltas) for _ in range(n)
+    )
     return [round(samp[int(0.025 * (n - 1))], 4), round(samp[int(0.975 * (n - 1))], 4)]
 
 
 def _write(art: dict) -> None:
     payload = dict(art)
     payload["reproducibility_checksum"] = ""
-    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
-        json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
-    (REPO / "results" / "arc_incontext_pattern_proposal_ab.json").write_text(json.dumps(art, indent=2) + "\n")
+    art["reproducibility_checksum"] = (
+        "sha256:"
+        + hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+    )
+    (REPO / "results" / "arc_incontext_pattern_proposal_ab.json").write_text(
+        json.dumps(art, indent=2) + "\n"
+    )
     print(f"-> results/arc_incontext_pattern_proposal_ab.json")
 
 

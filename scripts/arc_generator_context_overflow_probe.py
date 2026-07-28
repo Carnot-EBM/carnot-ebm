@@ -49,11 +49,22 @@ import json
 import os
 import signal
 import subprocess
+import sys
 import time
 from pathlib import Path
 from urllib import error, request
 
 BIN = Path.home() / ".cache/llama.cpp-master/build/bin/llama-server"
+
+# Canonical MTP-head resolution, imported rather than re-implemented. `_resolve_mtp_head()` knows
+# the three places a head can live (env var, HF cache -- recursively, since upstream nests it under
+# `MTP/` -- and the operator's staging dir) and `_is_mtp_head_file()` is the single definition of
+# "this .gguf is a draft head, not weights". Re-deriving either here is how the two drift apart.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python"))
+from carnot.agentic.arc_executable_world_model import (  # noqa: E402
+    _is_mtp_head_file,
+    _resolve_mtp_head,
+)
 
 
 def resolve_gguf() -> str | None:
@@ -65,11 +76,60 @@ def resolve_gguf() -> str | None:
     return str(hits[0]) if hits else None
 
 
+def mtp_draft_args(model: str) -> tuple[list[str], str]:
+    """The `--spec-type/--model-draft` pair for `model`, or `([], reason)` if MTP is not available.
+
+    WHY THIS IS NOT JUST `--model-draft <model>` (2026-07-28). This function used to be the two
+    literal flags with `model` passed as its own draft, which is correct for a SELF-DRAFTING MTP
+    model (Qwen3.5-9B-MTP carries its `nextn` heads inside the main GGUF) and WRONG for every other
+    model. It is wrong in the worst possible way: llama.cpp does not reject an unusable draft, it
+    warns and then serves normally with speculation SILENTLY DISABLED. /health returns 200,
+    generation is correct, and the only observable difference is tok/s -- so this probe would go on
+    labelling its output "MTP-on" while measuring an MTP-off memory regime.
+
+    That matters here more than in most places, because THIS SCRIPT PRODUCES NUMBERS and its own
+    docstring advertises them as matching the real launch line. VRAM constants get derived from
+    tools of exactly this class. A mislabelled arm here propagates into a guard threshold.
+
+    The live pin is gemma-4-31B-it, whose MTP head is a SEPARATE 491 MiB file
+    (`mtp-gemma-4-31B-it-Q8_0.gguf`, arch `gemma4-assistant`), so self-drafting is not available
+    for it at all. Resolution order mirrors `_ensure_server()`:
+      1. the model self-drafts (its own filename says it is an MTP build) -> draft is the model
+      2. a separate head resolves via the canonical `_resolve_mtp_head()`  -> draft is the head
+      3. neither                                                          -> NO MTP flags, and the
+         caller is told, so the arm can be RELABELLED rather than silently mislabelled.
+    """
+    name = Path(model).name
+    if _is_mtp_head_file(name):
+        return [], f"refusing to use the draft head {name!r} as the main model"
+    if "-mtp" in name.lower() or "_mtp" in name.lower():
+        # A self-drafting MTP build (the Qwen3.5-9B-MTP shape): its own file carries the heads.
+        return ["--spec-type", "draft-mtp", "--model-draft", model], ""
+    head = _resolve_mtp_head()
+    if head and Path(head).exists() and _is_mtp_head_file(Path(head).name):
+        return ["--spec-type", "draft-mtp", "--model-draft", head], ""
+    return [], (
+        f"no MTP draft available for {name!r}: it is not a self-drafting MTP build and no separate "
+        "head was resolved. Launching WITHOUT speculative decoding -- this arm is MTP-OFF and must "
+        "not be reported as MTP-on."
+    )
+
+
 def start_server(model: str, n_ctx: int, port: int, gpu: str) -> subprocess.Popen:
     """Spawn a server with the SAME arguments LocalGGUFProposer._ensure_server uses, changing only
-    -c. Matching the real launch line matters: MTP self-draft doubles the model's KV footprint and
-    q8 KV halves it, so a probe that omitted those flags would be measuring a different memory
-    regime than the agent actually runs in."""
+    -c. Matching the real launch line matters: the MTP draft carries its own KV allocation
+    (measured +1290 MiB at n_ctx 81920 for the gemma-4-31B head) and q8 KV halves the main cache,
+    so a probe that omitted those flags would be measuring a different memory regime than the agent
+    actually runs in.
+
+    THE MTP FLAGS ARE RESOLVED, NOT ASSUMED -- see `mtp_draft_args()`. If no usable draft exists
+    for `model` the pair is dropped and the reason is printed, because an arm silently served with
+    speculation disabled is indistinguishable from an MTP-on arm except by tok/s, and this script
+    exists to produce trustworthy numbers.
+    """
+    draft_args, why_not = mtp_draft_args(model)
+    if why_not:
+        print(f"[overflow-probe] MTP NOT ENGAGED: {why_not}", flush=True)
     args = [
         str(BIN),
         "-m",
@@ -82,10 +142,7 @@ def start_server(model: str, n_ctx: int, port: int, gpu: str) -> subprocess.Pope
         str(port),
         "--host",
         "127.0.0.1",
-        "--spec-type",
-        "draft-mtp",
-        "--model-draft",
-        model,
+        *draft_args,
         "--cache-type-k",
         "q8_0",
         "--cache-type-v",

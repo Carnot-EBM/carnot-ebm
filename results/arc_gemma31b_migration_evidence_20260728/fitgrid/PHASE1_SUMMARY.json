@@ -1,0 +1,111 @@
+{
+  "phase": "PHASE 1 -- what actually fits gemma-4-31B-it Q4_K_M on ONE RTX 3090",
+  "date_utc": "2026-07-28",
+  "model": "unsloth/gemma-4-31B-it-GGUF :: gemma-4-31B-it-Q4_K_M.gguf (17.07 GiB on disk)",
+  "server_build": "~/.cache/llama.cpp-master/build/bin/llama-server b9606 (CUDA-only)",
+  "card": "RTX 3090 GPU-b52387a2-c625-de87-8d34-e6f64e684bab (index 0 at launch)",
+  "usable_vram_mib": {
+    "nvidia_smi_nameplate": 24576,
+    "llama_cpp_reported_total": 24123,
+    "llama_cpp_reported_free": 23858,
+    "note": "all headroom below is computed against the REAL figures, not the nameplate"
+  },
+  "residency_method": "per-PID nvidia-smi --query-compute-apps sampled 1-2s to jsonl for the whole life of every server; card identity PROVEN from nvidia-smi's own pid->gpu_uuid mapping, never from CUDA_VISIBLE_DEVICES",
+  "total_vram_samples_recorded": 1052,
+  "bus_fault_observed_any_cell": false,
+  "exp5833_wedge_observed_any_cell": false,
+
+  "required_context_from_code": {
+    "source": "python/carnot/agentic/arc_executable_world_model.py:_default_induce_n_ctx()",
+    "formula": "ceil(K_slots * (worst_case_prompt_tokens + max_tokens) / 4096) * 4096",
+    "K_slots": 4,
+    "K_slots_source": "_LLAMA_SERVER_DEFAULT_SLOTS; llama-server with no --parallel sets n_parallel=4 AND kv_unified=true (ONE shared pool, not per-slot)",
+    "worst_case_prompt_tokens": 15734,
+    "max_tokens": 4096,
+    "computed_need": 79320,
+    "rounded_n_ctx": 81920,
+    "confirmed_observed": "server /props reported n_ctx=81920, total_slots=4",
+    "pool_must_exceed_81920": false,
+    "pool_must_exceed_81920_note": "at the default max_tokens=4096 the pool does NOT need to exceed 81920. The derivation is coupled and correct: raising CARNOT_ARC_INDUCE_MAX_TOKENS to 8192 auto-raises need to 4*(15734+8192)=95704 -> 98304. The two halves cannot drift.",
+    "k4_admission_ceiling_tokens": 16384,
+    "k4_admission_ceiling_note": "81920/4 - 4096 = 16384 is the largest prompt admitted at K=4, versus the 15734 the pool is sized for: 650 tokens of margin per slot"
+  },
+
+  "fit_grid": [
+    {"n_ctx": 32768, "kv": "f16",  "launched": false, "peak_resident_mib": 23902, "headroom_vs_free": -44,  "headroom_vs_total": 221, "admit": null, "failure": "CUDA error: out of memory during warmup (ggml_cuda_kernel_can_use_pdl); exit -6 SIGABRT"},
+    {"n_ctx": 32768, "kv": "q8_0", "launched": true,  "peak_resident_mib": 21434, "headroom_vs_free": 2424, "headroom_vs_total": 2689, "admit": 200, "prefill_s": 16.9, "prefill_tps": 973.5},
+    {"n_ctx": 49152, "kv": "q8_0", "launched": true,  "peak_resident_mib": 22258, "headroom_vs_free": 1600, "headroom_vs_total": 1865, "admit": 200},
+    {"n_ctx": 65536, "kv": "q8_0", "launched": true,  "peak_resident_mib": 23082, "headroom_vs_free": 776,  "headroom_vs_total": 1041, "admit": 200},
+    {"n_ctx": 73728, "kv": "q8_0", "launched": true,  "peak_resident_mib": 23494, "headroom_vs_free": 364,  "headroom_vs_total": 629,  "admit": 200},
+    {"n_ctx": 81920, "kv": "q8_0", "launched": true,  "peak_resident_mib": 23906, "headroom_vs_free": -48,  "headroom_vs_total": 217,  "admit": 200, "prefill_s": 17.0, "prefill_tps": 969.2, "k4_sustained": "12/12 HTTP 200 over 3 rounds, health 200 between every round and at end"},
+    {"n_ctx": 81920, "kv": "f16",  "launched": false, "peak_resident_mib": 17716, "headroom_vs_free": null, "headroom_vs_total": null, "admit": null, "failure": "exit -11 SIGSEGV during load"},
+    {"n_ctx": 81920, "kv": "q8_0", "mtp": true, "launched": false, "peak_resident_mib": 23874, "headroom_vs_total": 249, "admit": null, "failure": "draft model load: allocating 17459.85 MiB on device 0: cudaMalloc failed: out of memory -> 'unable to allocate CUDA0 buffer' -> exit 1"}
+  ],
+
+  "vram_model": {
+    "equation_mib": "peak = 19786.0 + 0.050293 * n_ctx",
+    "scope": "31B Q4_K_M, q8_0 KV, -ngl 999, MTP OFF, 4 slots, kv_unified",
+    "fit_quality": "5 measured points, residuals ALL exactly 0.0 MiB",
+    "why_context_is_cheap": "gemma-4 is 50/60 sliding-window layers (kv_head=16, dim 256, window 1024) + only 10 full-attention layers (kv_head=4, dim 512). llama.cpp allocates SWA layers at the window size, not n_ctx (--swa-full defaults off), so n_ctx scales the KV of only 10 of 60 layers.",
+    "allocation_timing": "the ENTIRE KV pool is allocated at load. Peak was flat at 23906 MiB across 852 samples of K=4 sustained load -- fit is settled at load time, not runtime."
+  },
+
+  "safe_n_ctx_by_margin_vs_total_24123": {
+    "500_mib": 73728,
+    "1000_mib": 65536,
+    "1500_mib": 53248,
+    "note": "1500 MiB is the margin the project's own _GENERATOR_CUDA_GUARD_MARGIN_MIB uses"
+  },
+
+  "prefill_vs_decode": {
+    "operator_hypothesis": "prefill may dominate decode because induce prompts are long",
+    "verdict": "REFUTED -- decode dominates by roughly 18:1",
+    "k1_prefill": "16466 tokens in 17.0 s @ 969 tok/s",
+    "k4_prefill_per_request_s": [22.7, 31.5, 33.9, 34.1, 35.5, 37.5, 37.8, 39.2, 41.3, 44.9, 47.3, 94.5],
+    "k4_decode_tps_per_slot": [2.42, 2.68, 2.90, 3.52, 3.73, 3.93, 6.22, 6.22, 6.81, 13.40, 13.53, 13.56],
+    "extrapolation_to_a_real_induction": "16.5k prompt + up to 4096 generated tokens: prefill ~17 s, decode 4096 tok at the ~13.5 tok/s single-slot rate ~= 303 s, total ~320 s -- which lands inside the 340-495 s range this session already measured for real ARC inductions, so the split is corroborated by independent data",
+    "consequence_for_phase2": "decode is bandwidth-bound and is ~95% of the cost. Any fallback that moves weights off the card (dense FFN offload to system RAM) attacks the DOMINANT term and should be expected to be very costly, not marginal."
+  },
+
+  "k4_sustained_detail": {
+    "rounds": 3,
+    "requests_per_round": 4,
+    "all_http_200": true,
+    "wall_seconds_per_round": [113, 142, 163],
+    "degradation_note": "round wall time grows 113 -> 142 -> 163 s. Server log shows repeated 'erased invalidated context checkpoint' / 'created context checkpoint N of 32' at ~425 MiB each. These SWA checkpoints did NOT move per-PID VRAM (flat 23906), so they are host-side, but the churn costs throughput on repeat rounds. Worth a Phase-2 look at -ctxcp / --swa-checkpoints.",
+    "overceiling_probe": "the 16466-token worst-case prompt at K=4 returns 4/4 HTTP 500 'Context size has been exceeded.' -- the LOUD failure mode (A), not silent truncation (C). Expected: 4*(16466+4096)=82248 > 81920."
+  },
+
+  "migration_hazards_found": [
+    {
+      "id": "H1_mtp_default_on",
+      "severity": "blocking",
+      "detail": "arc_competition_agent.py:881, :5011 and arc_ige_cell_selector.py:158 all build the proposer with mtp=(os.environ.get('CARNOT_ARC_MTP','1') != '0'), i.e. MTP defaults ON everywhere except scripts/kaggle/submission_kernel/main.py which forces it to 0. With MTP on, llama-server passes --spec-type draft-mtp --model-draft <same gguf> and attempts a SECOND 17459.85 MiB weight load, which cudaMalloc-fails and exits 1. MEASURED, not inferred.",
+      "required_action": "CARNOT_ARC_MTP=0 is mandatory for a 31B on a 24 GB card. gemma-4-31B is not an MTP model anyway."
+    },
+    {
+      "id": "H2_vram_guard_calibrated_for_9B",
+      "severity": "blocking",
+      "detail": "_generator_cuda_min_free_mb() = 10547 + 0.02519*n_ctx + 206.83*slots + 1500. At n_ctx=81920 that demands 14937 MiB free. The 31B actually needs 23906 MiB -- the guard under-predicts by 10469 MiB. It would ADMIT a card with 14937 MiB free and then cudaMalloc-fail, which is exactly the silent-LLM-off degradation its own docstring exists to prevent.",
+      "required_action": "re-derive the three envelope constants for the 31B before migrating. Measured replacement for the mtp-OFF q8_0 shape: peak = 19786.0 + 0.050293*n_ctx."
+    },
+    {
+      "id": "H3_f16_kv_is_not_viable_at_any_useful_ctx",
+      "severity": "high",
+      "detail": "f16 KV OOMs at 32768 (23902 MiB, CUDA OOM in warmup) and SIGSEGVs at 81920. Only q8_0 KV makes the 31B viable on one 3090 at all.",
+      "required_action": "kv_quant='q8_0' must be non-optional for this model. Both live construction sites already pass it; the LocalGGUFProposer dataclass default is still None (f16), so any NEW construction site that omits it gets a config that cannot load."
+    },
+    {
+      "id": "H4_zero_cotenancy_at_81920",
+      "severity": "medium",
+      "detail": "23906 MiB peak leaves 217 MiB against llama.cpp's reported 24123 total, and is 48 MiB ABOVE its reported 23858 free. It only loaded because the card was completely empty (2 MiB). Note the f16/32768 cell OOMed at 23902 MiB -- 4 MiB BELOW the number that succeeded here. That is the width of the cliff.",
+      "required_action": "at 81920 the card is single-tenant. Nothing else -- no CNN dynamics fit, no second server, no compositor -- may share it. If co-tenancy is needed, drop to 73728 (629 MiB) or 65536 (1041 MiB)."
+    }
+  ],
+
+  "caveats": [
+    "The worst-case prompt used here measures 16466 tokens vs the codebase's 15734 constant. It was built by the REAL production induce_prompt() over a 64x64 grid (the largest in ops/arc_solve_registry.yaml), but with RANDOM cell values, which maximizes RLE delta length. It is therefore a CONSERVATIVE over-estimate, not evidence the 15734 constant is stale.",
+    "K=4 was tested with 4 concurrent requests over 3 rounds (~7 min of load). This is not a long-horizon test and does NOT close mode B (many small concurrent prompts over a long horizon), which the codebase's own docstring still lists as open.",
+    "All measurements are MTP OFF except the H1 cell. All are -ngl 999 (full offload), single card, card otherwise empty."
+  ]
+}

@@ -55,9 +55,9 @@ def _config_resolution(ok: bool = True) -> JsonDict:
     return {
         "resolved": ok,
         "blocked_resource": "" if ok else "agent_config",
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -66,7 +66,7 @@ def _config_resolution(ok: bool = True) -> JsonDict:
         "kv_quant": "q8_0",
         "max_tokens": 2560,
         "n_predict_min": 2048,
-        "checks": {"submitted_policy_e3": True, "model_is_qwen35_mtp": ok},
+        "checks": {"submitted_policy_e3": True, "model_is_pinned_generator": ok},
     }
 
 
@@ -76,7 +76,7 @@ def _model_resolution(ok: bool = True) -> JsonDict:
         "blocked_resource": "" if ok else "model_paths",
         "gguf": {
             "path": "/cache/Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
-            "filename": "Qwen3.5-9B-Q4_K_M.gguf" if ok else "",
+            "filename": "gemma-4-31B-it-Q4_K_M.gguf" if ok else "",
             "present": ok,
             "size_bytes": MODEL_BYTES if ok else 0,
             "size_gb": 5.868827 if ok else 0.0,
@@ -265,7 +265,9 @@ def test_scenario_capstone_4942_ready_artifact_is_operator_only_no_submit() -> N
     assert any("OPERATOR" in step for step in artifact["operator_submission_checklist"])
     assert any("experiment_4930" in step for step in artifact["operator_submission_checklist"])
     assert any("FINAL" in step for step in artifact["operator_submission_checklist"])
-    assert any("never submits" in step.lower() for step in artifact["operator_submission_checklist"])
+    assert any(
+        "never submits" in step.lower() for step in artifact["operator_submission_checklist"]
+    )
     assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
     assert mod.artifact_schema_errors(artifact) == []
 
@@ -291,8 +293,9 @@ def test_scenario_capstone_4942_missing_frozen_stack_evidence_blocks() -> None:
     assert artifact["package_builds"] is True
     assert artifact["submits"] is False
     assert artifact["operator_only"] is True
-    assert "blocked until this JSON reports success_submission_package_ready_final_pre_deadline" in (
-        artifact["operator_submission_checklist"][0]
+    assert (
+        "blocked until this JSON reports success_submission_package_ready_final_pre_deadline"
+        in (artifact["operator_submission_checklist"][0])
     )
     assert mod.artifact_schema_errors(artifact) == []
 
@@ -322,13 +325,26 @@ def test_scenario_capstone_4942_not_ready_verdicts_name_failed_gate() -> None:
             "not_ready_frozen_stack_load",
         ),
         ({"frozen_stack_load_check": _stack_load(True, peak=16.25)}, "not_ready_peak_vram"),
-        ({"packaging_requirements_crosscheck": _requirements(False)}, "not_ready_packaging_requirements"),
         (
-            {"ready_package_regression_check": {"ok": False, "regressions": ["submits_still_false"]}},
+            {"packaging_requirements_crosscheck": _requirements(False)},
+            "not_ready_packaging_requirements",
+        ),
+        (
+            {
+                "ready_package_regression_check": {
+                    "ok": False,
+                    "regressions": ["submits_still_false"],
+                }
+            },
             "not_ready_ready_package_regression_submits_still_false",
         ),
         (
-            {"package_build_check": {**_package_build_check(True), "submitted_to_leaderboard": True}},
+            {
+                "package_build_check": {
+                    **_package_build_check(True),
+                    "submitted_to_leaderboard": True,
+                }
+            },
             "not_ready_submission_boundary",
         ),
         (
@@ -383,7 +399,10 @@ def test_scenario_capstone_4942_preconditions_check_required_files(tmp_path: Pat
 
     prior_path.write_text(json.dumps(_prior_4930_ready()), encoding="utf-8")
     ready = mod.check_preconditions(tmp_path)
-    assert mod.read_prior_ready_package(tmp_path)["experiment"] == "experiment_4930_submission_package_harden"
+    assert (
+        mod.read_prior_ready_package(tmp_path)["experiment"]
+        == "experiment_4930_submission_package_harden"
+    )
     assert ready["ok"] is True
     assert ready["spec_has_req_4942"] is True
     assert ready["prior_4930_ready_package_present"] is True
@@ -441,7 +460,10 @@ def test_scenario_capstone_4942_run_paths_write_or_block(tmp_path: Path) -> None
         now=lambda: next(model_ticks),
     )
     assert missing_model["honest_verdict"] == "blocked_model_paths"
-    assert missing_model["ready_package_regression_check"]["checks"]["model_paths_still_resolve"] is False
+    assert (
+        missing_model["ready_package_regression_check"]["checks"]["model_paths_still_resolve"]
+        is False
+    )
     assert missing_model["duration_s"] == 0.25
 
     ready_ticks = iter((100.0, 100.25))

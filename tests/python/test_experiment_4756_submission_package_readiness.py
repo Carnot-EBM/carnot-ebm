@@ -36,7 +36,16 @@ def _write_kernel(root: Path) -> None:
                 "dataset_sources": [
                     "iancblenke/carnot-agent-code",
                     "iancblenke/carnot-llamacpp-mtp-binary",
-                    "iancblenke/carnot-qwen35-9b-mtp-gguf",
+                    # The gemma main-weights dataset. The Qwen one this replaced is retired
+                    # (2026-07-28 operator directive); `REQUIRED_DATASETS` was migrated with
+                    # the module and this fixture was not, so the gate under test was being
+                    # handed a manifest the real kernel-metadata.json no longer writes.
+                    "iancblenke/carnot-gemma4-31b-it-gguf",
+                    # The MTP draft head. Not in REQUIRED_DATASETS -- a missing head is a
+                    # degraded-but-valid scored run (no speculative decoding) rather than a
+                    # blocker -- but the real manifest attaches it, so the fixture should
+                    # look like the real manifest.
+                    "iancblenke/carnot-gemma4-31b-mtp-head",
                 ],
                 "competition_sources": ["arc-prize-2026-arc-agi-3"],
             }
@@ -332,6 +341,4 @@ def test_req_capstone_4756_schema_reports_remaining_guard_branches() -> None:
         package_builds={**artifact["package_builds"], "submitted_to_leaderboard": True},
     )
     build_submitted["reproducibility_checksum"] = mod.payload_checksum(build_submitted)
-    assert "package_builds_submitted_to_leaderboard" in mod.artifact_schema_errors(
-        build_submitted
-    )
+    assert "package_builds_submitted_to_leaderboard" in mod.artifact_schema_errors(build_submitted)

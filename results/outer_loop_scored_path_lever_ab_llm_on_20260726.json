@@ -3,11 +3,11 @@
  "honest_verdict_note": "principle: the self-declared terminal state lets the reconciler classify the run without re-running it, and the terminal prefix stops a substring match on words like 'uninterpretable' from misclassifying a completed measurement as partial. This string is DERIVED from the computed per-lever verdicts, so it cannot disagree with them.",
  "experiment": "outer_loop_scored_path_lever_ab_llm_on",
  "title": "Scored-path (E3AgentPolicy, LLM ON) baseline and per-lever A/B for the two levers shipped 2026-07-25, plus the newly-wired nav-side hazard move-pruner",
- "run_date": "2026-07-27T01:20:27Z",
+ "run_date": "2026-07-28T22:22:11Z",
  "schema": "carnot.scored_path_lever_ab.v1",
  "duration_s": 7837.5,
  "duration_s_note": "principle: real compute takes wall-clock time, and a missing or implausibly short duration is the load-bearing fabrication signal. This is the summed per-cell wall clock of the measurement itself; of it, llm_wall_s_total was spent inside the generator. Cells ran across two concurrent shard processes, so this SUM exceeds the elapsed session time -- it is compute-seconds, not elapsed seconds.",
- "analysis_duration_s": 0.06,
+ "analysis_duration_s": 0.07,
  "measured_llm_wall_s": 5643.1,
  "inference_substrate": "live_llm_inference",
  "inference_substrate_note": "principle: the substrate declaration is what lets the fabrication linter pick the right duration floor. This is full autoregressive generation from a real local GGUF (Qwen3.5-9B-MTP Q4_K_M, llama-server, -ngl 999, GPU 1), driven by the SCORED agent's own induction tier -- not embedding extraction and not aggregation. The 60s live_llm_inference floor therefore applies and is met by orders of magnitude.",
@@ -31,7 +31,7 @@
  "reproducibility_checksum": "16d0249680965429b874c41180fae1bb7f460765f3aebb7768919be4a5ef31ca",
  "reproducibility_checksum_note": "principle: a content hash over the raw rows plus the derived analysis catches silent drift between this artifact and any replication. sha256 over the canonicalised {rows, analysis, companion, companion_rows, alt_budget, alt_budget_rows} payload. SCOPE CHANGED 2026-07-26: the two ROW lists were previously outside this hash (only the derived companion/alt_budget ANALYSIS dicts were in it), so 750 of the 805 published rows -- 93.2% -- were uncovered. A rebuild that mutated all 375 companion rows produced a byte-identical checksum under the old scope. Any checksum change dated 2026-07-26 is THIS SCOPE CHANGE, not a measurement change.",
  "provenance": {
-  "git_head": "412fd8fbbf9f3725c2e754e4aa2fc17a1290d3c5",
+  "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
   "code": [
    {
     "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/analyze_scored_path_lever_ab.py",
@@ -41,9 +41,9 @@
    },
    {
     "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_scored_path_lever_harness.py",
-    "sha256": "11098ad3a176d2dc5f9bd29eb0cca89bfc80f41ca5a76edfa225cef5baebf903",
-    "bytes": 57542,
-    "mtime_utc": "2026-07-27T01:03:13Z"
+    "sha256": "fe0dcc1ed72647e4497433bbb91229061ffcdf5c8fce31f677ff795bf5c982e3",
+    "bytes": 59647,
+    "mtime_utc": "2026-07-28T19:51:46Z"
    },
    {
     "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_hud_row_schema.py",

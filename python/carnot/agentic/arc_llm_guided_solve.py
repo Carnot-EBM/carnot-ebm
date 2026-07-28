@@ -13,6 +13,7 @@ Honest scope: uncertain -- Qwen-9B's spatial reasoning on raw ASCII grids is unp
 is a caution). The measurement on ls20 (navigation-to-goal, the most LLM-tractable tail game) is the test of
 whether the LLM gradient helps at all. Verifier-grounded: the LLM proposes, the env disposes.
 """
+
 from __future__ import annotations
 
 import json
@@ -36,7 +37,10 @@ def _delta_desc(prev: np.ndarray, cur: np.ndarray, max_cells: int = 6) -> str:
     ys, xs = np.where(a != b)
     if len(ys) == 0:
         return "no change"
-    parts = [f"({int(y)},{int(x)}){int(a[y, x])}->{int(b[y, x])}" for y, x in list(zip(ys, xs))[:max_cells]]
+    parts = [
+        f"({int(y)},{int(x)}){int(a[y, x])}->{int(b[y, x])}"
+        for y, x in list(zip(ys, xs))[:max_cells]
+    ]
     more = "" if len(ys) <= max_cells else f" +{len(ys) - max_cells} more"
     return ", ".join(parts) + more
 
@@ -81,8 +85,9 @@ def _prompt(grid: np.ndarray, recent: list[str], avail: list[int], propose_n: in
         f"GRID ({grid.shape[0]}x{grid.shape[1]}, rows top->bottom):\n{_ascii(grid)}\n\n"
         f"AVAILABLE ACTIONS: {avail}  (action 6 = CLICK at x,y; actions 1-5 = buttons whose effect you infer "
         "from the recent moves below).\n"
-        "RECENT MOVES (action -> cells that changed as (row,col)old->new):\n" +
-        ("\n".join(f"  {r}" for r in recent[-8:]) or "  (none yet)") + "\n\n"
+        "RECENT MOVES (action -> cells that changed as (row,col)old->new):\n"
+        + ("\n".join(f"  {r}" for r in recent[-8:]) or "  (none yet)")
+        + "\n\n"
         f"Propose the NEXT {propose_n} actions most likely to advance the level. Think briefly, then output "
         'EXACTLY one line:\nACTIONS_JSON: [{"a":3},{"a":6,"x":4,"y":2}, ...]\n'
     )
@@ -104,7 +109,12 @@ def llm_guided_solve(
     from carnot.agentic.arc_agi3_live_adapter import _levels_completed, _game_action
     from carnot.agentic.arc_graph_explore import rich_action_candidates, _warm
     from carnot.agentic import arc_solver_kit as kit
-    from carnot.agentic.arc_executable_world_model import detect_cell, to_logical, LocalGGUFProposer
+    from carnot.agentic.arc_executable_world_model import (
+        ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        LocalGGUFProposer,
+        detect_cell,
+        to_logical,
+    )
 
     rng = random.Random(seed)
     arc = kit.offline_arcade()
@@ -123,8 +133,17 @@ def llm_guided_solve(
     start_level = _levels_completed(f)
     best_level = start_level
 
-    proposer = LocalGGUFProposer(repo_substr="Qwen3.5-9B-MTP", mtp=False, kv_quant="q8_0",
-                                 no_think_prefix="", max_tokens=512)
+    # Generator pin read from the canonical constant (2026-07-28 switch to gemma-4-31B-it), never
+    # a local literal. mtp=False was already correct here and stays correct: gemma-4-31B has no
+    # MTP heads at all, so this call site needed no MTP fix -- unlike the two live-agent sites,
+    # which defaulted CARNOT_ARC_MTP to "1" and would have double-loaded the weights.
+    proposer = LocalGGUFProposer(
+        repo_substr=ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        mtp=False,
+        kv_quant="q8_0",
+        no_think_prefix="",
+        max_tokens=512,
+    )
     if not proposer._ensure_server():
         return {"game": game, "levels_reached": 0, "error": "llm server failed (no GPU?)"}
 
@@ -165,15 +184,17 @@ def llm_guided_solve(
     while actions < warmup_explore and actions < budget:
         cands = rich_action_candidates(f) if ok(f) else []
         if not cands:
-            f = _warm(env, warmup); continue
+            f = _warm(env, warmup)
+            continue
         c = cands[rng.randrange(min(len(cands), 8))]
         step(int(c.action_id), c.data)
 
     # LLM-guided loop: propose -> execute -> observe, until win or budget/call cap
     while actions < budget and best_level == start_level and llm_calls < max_llm_calls:
         avail = list(getattr(f, "available_actions", []) or range(1, 7))
-        ok_code, text = proposer.generate(_prompt(gp, recent, avail, propose_n),
-                                          required=(), validate=None, tries=1)
+        ok_code, text = proposer.generate(
+            _prompt(gp, recent, avail, propose_n), required=(), validate=None, tries=1
+        )
         llm_calls += 1
         proposed = _parse_actions(text) if ok_code else []
         if not proposed:  # LLM gave nothing usable -> a few salient explores to refresh context

@@ -16,6 +16,17 @@ import sys
 import time
 from typing import Any
 
+# THE CANONICAL GENERATOR PIN, imported rather than re-typed. This module's generator assertions
+# were hardcoded to the retired Qwen3.5-9B-MTP and went stale the moment the 2026-07-28 operator
+# directive re-pinned the live generator to gemma-4-31B-it. Reading the constants means a future
+# switch updates this readiness gate for free instead of leaving it asserting a model nothing runs.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PYTHON_ROOT = REPO_ROOT / "python"
@@ -214,7 +225,7 @@ def audit_env_gate_state(
 
 def _default_gguf_finder() -> list[str]:  # pragma: no cover - filesystem boundary.
     pattern = (
-        "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/"
+        f"~/.cache/huggingface/hub/models--unsloth--{ARC_LIVE_GENERATOR_MODEL_ID.split('/')[-1]}/"
         "snapshots/*/*.gguf"
     )
     return sorted(glob.glob(os.path.expanduser(pattern)))
@@ -255,17 +266,15 @@ def check_preconditions(
     checks: JsonDict = {
         "agents_md_read": (root_path / "AGENTS.md").exists(),
         "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
-        "qwen35_mtp_gguf_cached": bool(ggufs),
-        "qwen35_mtp_gguf_paths": ggufs,
+        "pinned_generator_gguf_cached": bool(ggufs),
+        "pinned_generator_gguf_paths": ggufs,
         "spec_has_req_4754": "REQ-ARC-WMTE-4754" in spec_text,
-        "submission_entrypoint_present": (
-            root_path / SUBMISSION_ENTRYPOINT_RELATIVE_PATH
-        ).exists(),
+        "submission_entrypoint_present": (root_path / SUBMISSION_ENTRYPOINT_RELATIVE_PATH).exists(),
     }
     checks.update(offline)
     checks.update(agent_import)
     required = (
-        "qwen35_mtp_gguf_cached",
+        "pinned_generator_gguf_cached",
         "offline_arcade_ok",
         "make_carnot_agent_import_ok",
         "agents_md_read",
@@ -298,23 +307,47 @@ def frozen_generator_status(
     model_id = str(frozen_map.get("model_id") or "")
     filename = str(frozen_map.get("model_filename") or "")
     cached_match = any(filename and filename in path for path in gguf_paths)
+    # THE MTP EXPECTATION IS READ FROM THE **SCORED** CONSTANT, and that choice is the whole point.
+    #
+    # `SUBMITTED_AGENT_CONFIG` describes the KAGGLE launch, so the only constant it can legitimately
+    # be compared against is `ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT`. The local dev default
+    # (`ARC_LIVE_GENERATOR_MTP_DEFAULT`) is correctly DIFFERENT -- MTP is a net throughput loss on a
+    # 24 GB card that has to offload FFN blocks to fit the head, and a ~1.4x win on the 96 GB scored
+    # card -- so comparing the scored config against the local constant makes this gate red exactly
+    # when the submission is configured correctly. `experiment_4744` already reads the scored
+    # constant here (see its `mtp_matches_model`); this module read a hardcoded OFF, so the two
+    # readiness gates over the SAME config demanded contradictory values and one of them was
+    # guaranteed red no matter how the submission was configured.
+    #
+    # HISTORICAL NOTE, PRESERVED BECAUSE THE PREMISE WAS FALSIFIED THE SAME DAY. An earlier
+    # 2026-07-28 pass hardcoded `mtp is False` / `spec_type is None` here on the stated ground that
+    # "gemma-4-31B-it has no MTP heads, so `--spec-type draft-mtp` would double-load 18.3 GB of
+    # weights and cudaMalloc-fail". That premise is WRONG: this model's MTP head is a SEPARATE
+    # 491 MiB GGUF (`mtp-gemma-4-31B-it-Q8_0.gguf`, whose header declares
+    # `general.architecture = gemma4-assistant`), which is exactly why no `nextn_predict_layers`
+    # key was found inside the MAIN file. Enabling MTP loads the head, not a second copy of the
+    # weights. What survives from that reasoning is the narrower and still-correct warning that
+    # `--model-draft <the main gguf>` IS the double-load, which `_resolve_mtp_head()` now prevents
+    # structurally rather than by leaving MTP permanently off.
+    scored_mtp_on = ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT != "0"
     declared = (
-        model_id == "unsloth/Qwen3.5-9B-MTP-GGUF"
-        and frozen_map.get("repo_substr") == "Qwen3.5-9B-MTP"
-        and frozen_map.get("mtp") is True
-        and frozen_map.get("spec_type") == "draft-mtp"
+        # Re-pinned 2026-07-28: canonical constants, not literals (see the import block above).
+        model_id == ARC_LIVE_GENERATOR_MODEL_ID
+        and frozen_map.get("repo_substr") == ARC_LIVE_GENERATOR_REPO_SUBSTR
+        and frozen_map.get("mtp") is scored_mtp_on
+        and frozen_map.get("spec_type") == ("draft-mtp" if scored_mtp_on else None)
         and frozen_map.get("kv_quant") == "q8_0"
         and frozen_map.get("wheel_fallback_allowed") is False
     )
-    entrypoint_keeps_qwen = (
-        "Qwen3.5-9B" in submission_entrypoint_text
+    entrypoint_keeps_generator = (
+        ARC_LIVE_GENERATOR_REPO_SUBSTR in submission_entrypoint_text
         and "CARNOT_ARC_GGUF_PATH" in submission_entrypoint_text
     )
     return {
-        "intact": bool(declared and cached_match and entrypoint_keeps_qwen),
-        "submitted_config_declares_qwen35_mtp": bool(declared),
+        "intact": bool(declared and cached_match and entrypoint_keeps_generator),
+        "submitted_config_declares_pinned_generator": bool(declared),
         "cached_gguf_matches": bool(cached_match),
-        "submission_entrypoint_resolves_qwen": bool(entrypoint_keeps_qwen),
+        "submission_entrypoint_resolves_generator": bool(entrypoint_keeps_generator),
         "model_id": model_id,
         "model_filename": filename,
     }
@@ -531,7 +564,7 @@ def run(
         live_source_text=agent_source,
     )
     env_gate_state = dict(gate_audit["env_gate_state"])
-    gguf_paths = list(checks.get("qwen35_mtp_gguf_paths") or [])
+    gguf_paths = list(checks.get("pinned_generator_gguf_paths") or [])
     frozen = frozen_generator_status(submitted_config, gguf_paths, submission_source)
     package = submission_package_status(root_path, submitted_config)
 

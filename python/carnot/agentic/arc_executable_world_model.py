@@ -952,6 +952,21 @@ def logical_hud_mask(frame_mask: Any, cell: int) -> Optional[np.ndarray]:
 #     su15          0.7568                       28 -> 1
 #     ...  every other game               0.0000 .. 0.2219   (s5i5 0.2219 is the highest)
 #
+# CORPUS SCOPE OF THE TABLE ABOVE: `collect_transitions(n=60, seed=0)` -- SIXTY actions, not
+# 120. Re-derived 2026-07-28 (REQ-ARC-WMTE-6019) two independent ways, from the frozen
+# fixtures sliced to 60 and from a live re-collect, which agree exactly:
+#
+#     n     lf52 overlap / raw -> surviving      su15 overlap / raw -> surviving
+#     60      1.0000   60 -> 0                     0.7568   28 -> 1   <- reproduces the table
+#     120     1.0000  120 -> 0                     0.7391   51 -> 2
+#
+# n=60 is a strict PREFIX of n=120 (same seed draws the same action sequence; the mask is
+# computed from the reset frame alone, so it is identical), which is why the fixture slice and
+# the live re-collect match. The DECISION is unchanged at either scope and under both
+# `edge_bar_detector` settings: lf52 and su15 are REFUSED at n=60 and at n=120, and lp85's
+# honest mask is refused at neither (16/16 changing transitions survive at n=60, 33/33 at
+# 120). So this is a provenance correction, not a verdict correction -- recorded because a
+# threshold calibrated on an unstated corpus scope cannot be re-derived by a reader.
 # On lf52 the mask makes the corpus DYNAMICS-FREE: nothing changes, so the IDENTITY engine
 # is a perfect model of a game with no mechanics, and it is admitted. That is exactly the
 # laundering an adversarial review flagged in the aggregate ("the mask helps a zero-knowledge
@@ -970,7 +985,93 @@ def logical_hud_mask(frame_mask: Any, cell: int) -> Optional[np.ndarray]:
 # game AND of the least-bad swallowing one. The zero-dynamics case is checked SEPARATELY and
 # unconditionally, because "the corpus has changes and the mask leaves none" is a swallow at
 # any threshold and must not depend on a tunable.
+#
+# CORPUS-SCOPE CORRIGENDUM (2026-07-28, REQ-ARC-WMTE-6017). The table above was measured on
+# ONE corpus shape: RANDOM actions from reset (`collect_transitions`) -- at n=60, per the
+# corpus-scope note above; the n=120 re-capture is a SECOND measurement of the same games, not
+# the table's own corpus (REQ-ARC-WMTE-6019 correction: this paragraph previously said the
+# table was measured at 120, which is the fixture scope, not the table scope). The LIVE path
+# judges a different corpus again -- the current episode's transitions, 25 on lf52 -- and the
+# verdict FLIPS between random-action and live for the same game and the SAME 64-cell mask:
+#
+#     corpus                        raw changing  cells inside/total  overlap  verdict
+#     lf52, 60 random actions (table)    60            60 /  60        1.0000  REFUSED (b)
+#     lf52, 120 random actions          120           120 / 120        1.0000  REFUSED (b)
+#     lf52, live episode (25 rows)       25            25 /  81        0.3086  ok, applied
+#
+# Both records are honest. On the random corpus NOTHING but the counter ever moved, so the
+# corpus cannot tell "the mask covers the game" from "this corpus has no state change" --
+# case (b) below, refused on doubt. On the live corpus 56 of 81 changed cells fall OUTSIDE
+# the mask (23 counter-only ticks are correctly revealed as no-ops, 2 real changes survive),
+# which is positive evidence that the mask does NOT cover lf52's game state. So a verdict is
+# a statement about (mask, corpus), never about the mask alone, and the fields recording the
+# corpus scope below exist so a reviewer can see WHICH corpus produced a verdict instead of
+# reading a game-level property off it.
 HUD_MASK_MAX_CHANGED_CELL_OVERLAP = 0.5
+
+
+def hud_mask_swallow_clean(rec: Optional[dict]) -> bool:
+    """Is this an AFFIRMATIVE clean verdict -- "checked, and the mask is fine"?
+
+    REQ-ARC-WMTE-6017 (2026-07-28). `hud_mask_swallow_check`'s docstring already states the
+    contract: "`swallows=False` with `n_changed_cells_total == 0` is reported as
+    `no_dynamics_to_swallow` -- an unmeasurable verdict, NOT a clean one, so a consumer
+    cannot read 'we checked and it is fine' off a corpus where the check could not fire."
+    Every consumer nonetheless tested `rec.get("swallows")` for truthiness, which reads an
+    UNMEASURABLE verdict as a clean one and applies the mask -- the function documented the
+    trap and its callers walked into it.
+
+    REAL INSTANCE, not hypothetical: ft09, whose classifier resolves a 64-cell mask while its
+    120-action corpus contains ZERO changing transitions (`raw_changing_transitions == 0`).
+    That is `no_dynamics_to_swallow`, the guard cannot fire, and before this helper the mask
+    was applied with `hud_mask_status == "applied"` -- indistinguishable in the record from a
+    mask that had been measured and cleared.
+
+    Clean requires ALL of: the check ran (`checked`), it did not find a swallow, AND its
+    reason is the affirmative `ok`. Anything else -- `no_dynamics_to_swallow`,
+    `no_transitions`, or any future reason a later requirement adds -- is NOT clean, so the
+    default for an unrecognised reason is refuse. That direction is forced by
+    `apply_hud_mask`'s stated asymmetry: over-masking destroys correctness, under-masking
+    only costs efficiency.
+
+    `no_mask` is also not clean, but it is never reached as a refusal: every consumer checks
+    `hud_mask is None` FIRST and reports `disabled`/`unresolved`, which are the honest
+    statuses for "there was nothing to judge".
+    """
+
+    if not isinstance(rec, dict):
+        return False
+    return bool(rec.get("checked")) and not rec.get("swallows") and rec.get("reason") == "ok"
+
+
+def _hud_mask_refusal_status(rec: dict) -> str:
+    """Name the refusal precisely -- REQ-ARC-WMTE-6017.
+
+    Four distinct situations reach a refusal and they are NOT the same claim:
+
+      refused_swallows_dynamics          the mask was MEASURED to cover the dynamics
+      no_transitions                     there was no corpus to judge at all
+      shape_mismatch                     the mask fits NONE of the corpus's grids
+      refused_swallow_check_unmeasurable the corpus has grids the mask fits, but not one
+                                         state-changing transition among them, so the check
+                                         could not fire (`no_dynamics_to_swallow`)
+
+    `no_transitions` and `shape_mismatch` are the SAME STRINGS `score()` already resolved for
+    those cases before this requirement moved the decision earlier. Reusing them is not
+    cosmetic: collapsing them into the new status would delete a diagnostic distinction that
+    already had consumers (`test_arc_world_model_change_gate.py` asserts both), which is the
+    "never remove existing content" failure in code rather than docs. Dropping the mask in the
+    two of them where it USED to be kept is behaviour-neutral: `apply_hud_mask` already
+    returned the grid untouched on a shape mismatch, and an empty corpus grades nothing.
+    """
+
+    if rec.get("swallows"):
+        return "refused_swallows_dynamics"
+    if int(rec.get("n_transitions") or 0) == 0:
+        return "no_transitions"
+    if rec.get("checked") and int(rec.get("n_transitions_shape_matched") or 0) == 0:
+        return "shape_mismatch"
+    return "refused_swallow_check_unmeasurable"
 
 
 def hud_mask_swallow_check(transitions: Sequence["Transition"], mask: Optional[np.ndarray]) -> dict:
@@ -994,26 +1095,68 @@ def hud_mask_swallow_check(transitions: Sequence["Transition"], mask: Optional[n
         "masked_changing_transitions": 0,
         "n_changed_cells_total": 0,
         "n_changed_cells_inside_mask": 0,
+        # ---- REQ-ARC-WMTE-6017 CORPUS SCOPE (2026-07-28) ------------------------------
+        # A verdict is about (mask, corpus). Without these a reader cannot tell whether a
+        # refusal was measured over 120 transitions or over 25, which is exactly the
+        # ambiguity that let lf52's `refused` (120 random actions) and `applied` (25 live
+        # rows) both be true and look contradictory.
+        "n_transitions": 0,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        # ---- REQ-ARC-WMTE-6017 PER-TRANSITION WITNESS ---------------------------------
+        # `changed_cell_overlap` pools CELLS across transitions, so a corpus whose real
+        # changes are few-but-large reads as high overlap while one whose real changes are
+        # many-but-small reads as low -- the summary is dominated by change DENSITY, which
+        # is a property of the corpus, not of the mask. The hazard ("a mechanic observation
+        # was deleted") lives at the TRANSITION level, so the transition-level quantities
+        # are recorded next to the cell-pooled one. Measured spread, live and offline
+        # corpora both: survival 0.0 (tn36) .. 1.0 (lp85, re86, tr87).
+        #
+        # THEY ARE RECORDED, NOT GATED ON -- deliberately, and for the same reason
+        # `invented_changed_cells` below is not a gate condition: on the measured corpora
+        # survival does NOT separate swallowing from honest masks (su15 live 0.153 swallow-
+        # suspect vs vc33 offline 0.208 honest), so any threshold here would be fitted to
+        # the two games it must catch and would tell us nothing about a third. Adding a gate
+        # on this evidence would be the forced-gate failure mode this project keeps naming.
+        "changing_transitions_deleted": 0,
+        "changing_transition_survival": 0.0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
     }
+    rows = list(transitions)
+    # Recorded BEFORE the no-mask return: "we were handed 120 transitions and no mask" and
+    # "we were handed nothing" are different facts, and a record that reported 0 for both
+    # would be a field that cannot distinguish them -- the same dead-channel shape this
+    # requirement is removing elsewhere.
+    rec["n_transitions"] = len(rows)
     if mask is None:
         return rec
-    rows = list(transitions)
     if not rows:
         rec["reason"] = "no_transitions"
         return rec
     m = np.asarray(mask, dtype=bool)
     total = inside = raw_changing = masked_changing = 0
+    shape_matched = shape_skipped = 0
+    per_transition_overlaps: list[float] = []
     for t in rows:
         g0 = np.asarray(t.grid)
         g1 = np.asarray(t.next_grid)
         if g0.shape != g1.shape or g0.shape != m.shape:
+            # Counted, not silently dropped: a check that skipped every transition would
+            # otherwise report `no_dynamics_to_swallow` -- an unmeasurable verdict wearing
+            # the shape of a clean one, which is the defect `hud_mask_swallow_clean` exists
+            # to stop being read as clean.
+            shape_skipped += 1
             continue
+        shape_matched += 1
         ch = g0 != g1
         if not ch.any():
             continue
         raw_changing += 1
-        total += int(ch.sum())
-        inside += int((ch & m).sum())
+        n_ch = int(ch.sum())
+        n_in = int((ch & m).sum())
+        total += n_ch
+        inside += n_in
+        per_transition_overlaps.append(float(n_in / n_ch) if n_ch else 0.0)
         if not np.array_equal(apply_hud_mask(g0, m), apply_hud_mask(g1, m)):
             masked_changing += 1
     rec.update(
@@ -1024,6 +1167,17 @@ def hud_mask_swallow_check(transitions: Sequence["Transition"], mask: Optional[n
             "n_changed_cells_total": total,
             "n_changed_cells_inside_mask": inside,
             "changed_cell_overlap": round(float(inside / total), 6) if total else 0.0,
+            "n_transitions_shape_matched": shape_matched,
+            "n_transitions_skipped_shape_mismatch": shape_skipped,
+            "changing_transitions_deleted": int(raw_changing - masked_changing),
+            "changing_transition_survival": (
+                round(float(masked_changing / raw_changing), 6) if raw_changing else 0.0
+            ),
+            "mean_changed_cell_overlap_per_changing_transition": (
+                round(float(np.mean(per_transition_overlaps)), 6)
+                if per_transition_overlaps
+                else 0.0
+            ),
         }
     )
     if total == 0:
@@ -1174,6 +1328,9 @@ class VerifyResult:
     # unmasked ones (where it reports `no_mask`), so an artifact row always shows whether
     # the guard could have fired and what it measured -- never only when it did fire.
     hud_mask_swallow: dict = field(default_factory=dict)
+    # REQ-ARC-WMTE-6017: "precomputed_by_caller" (the verdict is about the caller's whole
+    # corpus) or "computed_on_this_corpus" (about this verifier's slice only).
+    hud_mask_swallow_source: str = "computed_on_this_corpus"
 
 
 class WorldModelVerifier:
@@ -1219,6 +1376,14 @@ class WorldModelVerifier:
             if hud_mask_swallow is not None
             else hud_mask_swallow_check(self.transitions, self.hud_mask)
         )
+        # REQ-ARC-WMTE-6017: WHOSE corpus produced the verdict. A pre-computed verdict is a
+        # statement about the caller's whole corpus; a self-computed one is about this
+        # verifier's slice only. Both are legitimate (see the pre-computation note above) but
+        # they are different claims, and a reviewer reading a refusal off an artifact cannot
+        # otherwise tell which one they are looking at.
+        self.hud_mask_swallow_source = (
+            "precomputed_by_caller" if hud_mask_swallow is not None else "computed_on_this_corpus"
+        )
         # Resolved once, here, so `score()` cannot drift between the status it reports and
         # the grids it actually compared.
         if not self.hud_mask_enabled:
@@ -1227,13 +1392,22 @@ class WorldModelVerifier:
             # The flag asked for masking and the caller had none to give. This is the
             # explicit record the repair promises instead of a silent no-op.
             self.hud_mask_status = "unresolved"
-        elif self.hud_mask_swallow.get("swallows"):
+        elif not hud_mask_swallow_clean(self.hud_mask_swallow):
             # THE SWALLOW GUARD FIRING. Drop the mask entirely and say so. Degrading this
             # game to unmasked grading is the deliberate choice: an unmasked comparison is
             # merely hard to win, while a swallowed one is scoring engines on a game whose
             # dynamics have been deleted -- under which the IDENTITY engine is optimal.
+            #
+            # REQ-ARC-WMTE-6017: the test used to be `self.hud_mask_swallow.get("swallows")`,
+            # i.e. plain truthiness, which let an UNMEASURABLE verdict
+            # (`no_dynamics_to_swallow`, real instance: ft09's 64-cell mask over a corpus with
+            # zero changing transitions) fall through to `requested` and be APPLIED. The two
+            # refusals get DIFFERENT statuses because they are different claims: one says the
+            # mask was measured and found to cover the dynamics, the other says the corpus
+            # could not measure it at all. Collapsing them would recreate the very
+            # clean-vs-unmeasurable conflation this fix removes.
             self.hud_mask = None
-            self.hud_mask_status = "refused_swallows_dynamics"
+            self.hud_mask_status = _hud_mask_refusal_status(self.hud_mask_swallow)
         else:
             self.hud_mask_status = "requested"
 
@@ -1362,6 +1536,7 @@ class WorldModelVerifier:
                 int(np.asarray(self.hud_mask).sum()) if mask_status == "applied" else 0
             ),
             hud_mask_swallow=dict(self.hud_mask_swallow),
+            hud_mask_swallow_source=str(self.hud_mask_swallow_source),
         )
 
     def offpath_structural_energy(
@@ -1572,6 +1747,14 @@ def change_gate_decision(
         "hud_mask_swallow_guard_fired": bool(
             str(vr.hud_mask_status) == "refused_swallows_dynamics"
         ),
+        # REQ-ARC-WMTE-6017. The SECOND refusal status. `hud_mask_swallow_guard_fired` above
+        # tests one exact string, so a consumer reading only that field would score an
+        # unmeasurable-refusal row as "the guard did not fire" -- true of that field, and
+        # misleading about the row. Both are reported, each naming its own condition.
+        "hud_mask_swallow_refused_unmeasurable": bool(
+            str(vr.hud_mask_status) == "refused_swallow_check_unmeasurable"
+        ),
+        "hud_mask_swallow_source": str(vr.hud_mask_swallow_source),
     }
 
 
@@ -2234,16 +2417,243 @@ class CodexProposer:
         return _codex(refactor_prompt(game, vr), self.timeout)
 
 
-def _resolve_gguf(repo_substr: str) -> Optional[str]:
-    """Find a cached GGUF weight file for an open-weight SOTA model (offline)."""
-    import glob
+# ==============================================================================================
+# THE LIVE ARC GENERATOR (operator directive 2026-07-28). ONE definition, read by every live
+# construction site, so `_proposer()` and `_load_sge_candidate_router()` cannot drift apart and
+# quietly load two different models onto two ports.
+#
+# WHAT CHANGED AND WHY. The generator was Qwen3.5-9B-MTP, pinned there for exactly one reason: an
+# assumed 16 GB Kaggle VRAM ceiling that a 5.9 GB Q4 model fits and an 18.3 GB one does not. The
+# operator has declared that ceiling void ("the Kaggle hardware is 96G since May"), which removes
+# the only constraint that was holding the pin, and directed the switch to gemma-4-31B-it.
+#
+# THE MEASUREMENT BEHIND IT (2026-07-28, 13 games x 3 replicates, Q4_K_M both sides, n_ctx 32768,
+# one model per card, per-arm engine store, no wedge):
+#
+#                  induce_ok    fail-as-zero    survivor-mean    nonzero cells
+#   gemma-4-31B      38/39          0.3843          0.3944            23
+#   Qwen3.6-27B      21/39          0.0627          0.1164             4
+#
+#   matched per-game tally 11-0-2, two-sided sign test p = 0.00098 -- which is EXACTLY the
+#   smallest p reachable at 11 discordant pairs, i.e. the result is as strong as this design can
+#   express. The 31B independently reproduces exp5764 (0.3843 here vs 0.3785 there).
+#
+# READ THE DOMINANT DRIVER HONESTLY: it is LOADABILITY, not subtle induction quality. The 27B
+# failed to emit an importable world_model.py on 18 of 39 attempts. Its survivor mean is therefore
+# survivorship-biased and fail-as-zero is the honest column.
+#
+# NOT AN MTP MODEL. Qwen3.5-9B-MTP carried native multi-token-prediction heads and the live sites
+# defaulted `CARNOT_ARC_MTP` to "1". gemma-4-31B-it declares no `nextn_predict_layers` in its GGUF
+# header at all (checked directly). Leaving the old default would have made `_ensure_server()`
+# emit `--spec-type draft-mtp --model-draft <the same 18.3 GB file>` -- loading the weights TWICE,
+# ~36.6 GB, a guaranteed cudaMalloc failure on a 24 GB card and a 180 s burn ending in a SILENT
+# LLM-off run that still reports itself as the LLM-on scored path. Hence the default flips to "0".
+# The env var still works in both directions for anyone pointing CARNOT_ARC_GGUF_PATH at a real
+# MTP model.
+#
+# ^^^ CORRECTION, 2026-07-28 (SAME DAY, MEASURED -- the paragraph above is WRONG in its premise and
+# is preserved per never-prune because its CONCLUSION about `--model-draft <the main gguf>` is
+# still exactly right and is now enforced mechanically). gemma-4-31B-it DOES have real MTP. The
+# reason the check above found no `nextn_predict_layers` is that for this model family the head is
+# NOT embedded in the main GGUF at all -- it ships as a SEPARATE 491 MiB file
+# (`unsloth/gemma-4-31B-it-GGUF` -> `MTP/mtp-gemma-4-31B-it-Q8_0.gguf`) whose own header declares
+# `general.architecture = gemma4-assistant` and the key `gemma4-assistant.nextn_predict_layers`.
+# Read directly out of the file's GGUF header, not inferred.
+#
+# So the correct statement is: the main GGUF is not SELF-drafting. `--model-draft` must point at
+# the HEAD, never at the main weights. Passing the main file is what produces the double-load the
+# paragraph above describes, so that warning stands -- it is now enforced by `_resolve_mtp_head()`
+# plus the head-absent guard in `_ensure_server()` rather than by leaving MTP permanently off.
+#
+# MEASURED, this session, matched prompt / n_ctx 32768 / q8_0 KV / one model alone on an RTX 3090,
+# using the BINARY THE SUBMISSION ACTUALLY BUNDLES (`iancblenke/carnot-llamacpp-mtp-binary`, which
+# was selected for the retired Qwen MTP path months before gemma-4 MTP existed and therefore could
+# not be assumed to support it):
+#
+#     MTP OFF  35.88 tok/s        MTP ON  50.16 tok/s     -> 1.398x decode, +862 MiB
+#     draft_n_accepted / draft_n = 319/576 (55.4%)        -> speculation is provably DOING work,
+#                                                            not merely logged as initialised
+#
+# THE SILENT-DEGRADATION TRAP THIS ARMS AGAINST. When `--spec-type draft-mtp` is handed a draft the
+# runtime cannot use, llama.cpp does NOT fail. It warns and serves normally with speculation
+# silently DISABLED:
+#     W llama_init_from_model: context type MTP requested but model doesn't contain MTP layers
+#     W common_speculative_init: no implementations specified for speculative decoding
+# -> server UP, /health 200, generation normal, ZERO speedup. The SUCCESS signature is instead:
+#     I common_speculative_impl_draft_mtp: adding speculative implementation 'draft-mtp'
+#     I srv    load_model: speculative decoding context initialized
+# A misconfigured MTP is indistinguishable from a working one EXCEPT by tok/s. Never conclude "MTP
+# is enabled" from a healthy server or an absent error.
+#
+# WHY THE LOCAL DEFAULT STAYS "0" ANYWAY (this is an arithmetic result, not caution). The head is
+# not free and its cost SCALES WITH THE CONTEXT POOL -- measured 862 MiB at n_ctx 32768 and
+# 1290 MiB at n_ctx 81920 (see `_VRAM_MTP_HEAD_*` below). At the shipped n_ctx 81920 a 24 GB 3090
+# must offload ~14 FFN blocks to system RAM to host the MTP-on server versus ~7 for MTP-off, and
+# the measured offload curve costs more decode throughput than MTP buys back:
+#     MTP-off @ 7 offloaded layers  ~= 23.8 tok/s
+#     MTP-on  @ 14 offloaded layers ~= 13.9 tok/s x 1.398 = ~19.4 tok/s   <- NET LOSS locally
+# On the 96 GB Kaggle card no offload is needed at all, so there MTP is a pure ~1.4x win. Hence the
+# split below: "0" is the correct LOCAL default and "1" is the correct SCORED default. They are two
+# different hardware answers to the same question, so they are two named constants rather than one
+# constant somebody has to remember to flip.
+#
+# DO NOT TREAT 1.4x AS A PLANNING CONSTANT. Speculative speedup scales with how predictable the
+# continuation is; the matched prompt above accepted 55.4% of drafted tokens. An earlier
+# measurement on a different prompt reached 1.76x. The defensible range on real induction prompts
+# is ~1.4-1.8x, and 1.4x is the conservative floor an actual measurement supports.
+#
+# MTP IS **NOT** OUTPUT-NEUTRAL HERE, AND THAT IS A MEASURED FACT, NOT A CAVEAT. Speculative
+# decoding is textbook-exact -- the target model verifies every drafted token, so the accepted
+# sequence is supposed to be the one the target would have produced alone. This implementation on
+# this model does not deliver that. From the SAME matched run recorded in
+# `results/arc_gemma31b_migration_evidence_20260728/mtp_shipped_binary_t1/`, at temperature 0,
+# top_k 1, seed 1234, byte-identical prompt, 3 iterations per arm:
+#
+#     MTP ON  -> content_len 1890, identical across all 3 iterations
+#     MTP OFF -> content_len 1917, identical across all 3 iterations
+#
+# So each arm is internally deterministic and the two arms DISAGREE with each other. Both
+# completions begin with the same 60 characters, so this is a divergence part-way through a
+# generation, not two unrelated answers. The likely mechanism is that batched draft verification
+# takes a different kernel/reduction path than single-token decode and the resulting last-bit
+# differences change an argmax at some token; we have not isolated it, and this comment does not
+# claim to have.
+#
+# WHY THIS MATTERS FOR THE SUBMISSION, STATED HONESTLY. Every number backing the gemma-over-Qwen
+# migration -- the 11-0-2 tally, the 0.3843 fail-as-zero score, every induction timing -- was taken
+# MTP-OFF. The scored path launches MTP-ON. No induction-QUALITY A/B has been run in the MTP-on
+# configuration, so the 1.398x is a measured SPEED claim and the quality transfer is an ASSUMPTION.
+# Recorded here as an accepted risk rather than papered over: the operator authorised MTP for the
+# scored run explicitly, the divergence is small and mid-generation rather than structural, and an
+# induction-quality A/B is the correct way to retire the assumption if it ever becomes load-bearing
+# for a headline claim. Do NOT describe MTP as output-neutral anywhere in this codebase; the
+# artifacts say otherwise.
+#
+# NO `/no_think`. That prefix is a Qwen3 hybrid-thinking control token. Gemma-4 has no such token
+# and would consume it as literal prompt text -- the silently-dead-channel defect class this
+# project keeps finding. (The 31B scored 0.3843 in the head-to-head WITH the prefix still present,
+# so it was not load-bearing; that is a reason to remove it cleanly, not a reason to keep it.)
+ARC_LIVE_GENERATOR_REPO_SUBSTR = "gemma-4-31B-it"
+ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/gemma-4-31B-it-GGUF"
+ARC_LIVE_GENERATOR_MODEL_FILENAME = "gemma-4-31B-it-Q4_K_M.gguf"
+# LOCAL default. "0" because at n_ctx 81920 a 24 GB card must offload ~14 FFN blocks to host the
+# MTP-on server and the offload costs more throughput than MTP returns -- see the arithmetic above.
+ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
+# SCORED (Kaggle 96 GB) default. "1" because no offload is needed there, so MTP is a pure ~1.4x
+# decode win, and the bundled `iancblenke/carnot-llamacpp-mtp-binary` was VERIFIED this session to
+# engage `draft-mtp` on the `gemma4-assistant` head (positive marker + 319/576 accepted draft
+# tokens + a matched throughput delta). Operator-authorised 2026-07-28: "when we submit we will
+# want MTP enabled for speed when running on the Kaggle 96G GPU hardware."
+#
+# THIS IS A SEPARATE CONSTANT ON PURPOSE. The scored path and the dev box have DIFFERENT correct
+# answers, and the failure mode of collapsing them into one is asymmetric: an operator who forgets
+# to flip a single shared constant before submitting silently ships the slower configuration, and
+# nothing anywhere reports it -- the run just takes ~1.4x longer per induction. Naming both makes
+# the divergence a fact the tests can pin instead of a step in a runbook.
+ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
+# The MTP head is a SEPARATE FILE, not a section of the main GGUF. Both the filename and the
+# substring are named here because the Kaggle kernel matches by name against an order-undefined
+# `rglob`, and the head and the main model are both `*.gguf` under the same mount root.
+ARC_LIVE_GENERATOR_MTP_HEAD_FILENAME = "mtp-gemma-4-31B-it-Q8_0.gguf"
+ARC_LIVE_GENERATOR_MTP_HEAD_SUBSTR = "mtp-gemma-4-31B-it"
+ARC_LIVE_GENERATOR_MTP_HEAD_ARCH = "gemma4-assistant"  # read from the head GGUF's own header
+ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on gemma-4
 
+
+def _is_mtp_head_file(name: str) -> bool:
+    """True if `name` looks like an MTP DRAFT HEAD rather than a main weights file.
+
+    Exists because the head and the main model are both `*.gguf`, both live under the same
+    HuggingFace repo, and are told apart by NOTHING except their names. Every place that picks "the
+    model" out of a directory listing has to exclude the head, or it can bind 491 MiB of draft
+    head as if it were the 18.3 GB generator -- which loads, serves, and answers nonsense.
+
+    MATCHES THE `mtp-` PREFIX, NOT THE SUBSTRING `"mtp-"` ANYWHERE (fixed 2026-07-28, third pass).
+    The substring form was a false-positive generator on a naming convention this project actually
+    uses: `Qwen3.5-9B-MTP-Q4_K_M.gguf` is a MAIN WEIGHTS file whose name contains "MTP-", and the
+    substring test classified it as a draft head. Consequences, both silent:
+
+      * `_resolve_gguf` filters `if not _is_mtp_head_file(...)`, so for a repo whose weights file
+        is named `...-MTP-<quant>.gguf` it filtered out the only candidate and returned None --
+        i.e. the documented "the retired 9B remains a legitimate CARNOT_ARC_GGUF_PATH override for
+        a genuinely 16GB-class box" escape hatch could not resolve its own model from cache.
+      * Any caller asking "is this a self-drafting MTP build?" got the answer "no, it's a head",
+        which is the exact inversion of the truth for that model.
+
+    Upstream's convention is a PREFIX (`unsloth/gemma-4-31B-it-GGUF` -> `MTP/mtp-gemma-4-31B-it-
+    Q8_0.gguf`), and `ARC_LIVE_GENERATOR_MTP_HEAD_FILENAME` follows it, so the prefix is both the
+    precise test and the documented one. A model whose name merely CONTAINS "-MTP-" is a
+    self-drafting build, not a head.
+    """
+    return Path(name).name.lower().startswith("mtp-")
+
+
+def _resolve_gguf(repo_substr: str) -> Optional[str]:
+    """Find a cached GGUF weight file for an open-weight SOTA model (offline).
+
+    EXCLUDES MTP DRAFT HEADS (2026-07-28). `unsloth/gemma-4-31B-it-GGUF` contains BOTH the main
+    Q4_K_M weights and, under `MTP/`, a 491 MiB `mtp-gemma-4-31B-it-Q8_0.gguf` draft head. The old
+    body did `sorted(d.glob("snapshots/*/*.gguf"))[0]` and survived only by alphabetical luck
+    ("gemma-..." sorts before "mtp-..."), and only for as long as the head stayed in its `MTP/`
+    subdirectory where the non-recursive glob could not see it. Either of those changing -- a
+    rename, a flattened download, an `hf download` of the whole repo -- silently returns the DRAFT
+    HEAD as the generator. Excluding it by name removes the dependence on both accidents.
+    """
     base = Path.home() / ".cache" / "huggingface" / "hub"
     for d in base.glob(f"models--*{repo_substr}*GGUF"):
-        hits = sorted(d.glob("snapshots/*/*.gguf"))
+        hits = sorted(p for p in d.glob("snapshots/*/*.gguf") if not _is_mtp_head_file(p.name))
         if hits:
             return str(hits[0])
     return None
+
+
+def _resolve_mtp_head(head_substr: str = ARC_LIVE_GENERATOR_MTP_HEAD_SUBSTR) -> Optional[str]:
+    """Path to the MTP draft head GGUF, or None if it is not present on this machine.
+
+    RETURNING None IS A FIRST-CLASS ANSWER, not an error path. `_ensure_server()` uses it to decide
+    between "launch with speculative decoding" and "launch without it, and SAY SO". The one thing
+    it must never do is let a caller fall back to the main weights file: `--model-draft <main
+    gguf>` is precisely the configuration that llama.cpp accepts, warns about, and then serves with
+    speculation silently disabled -- a misconfiguration indistinguishable from success except by
+    measuring tok/s.
+
+    Search order, most explicit first:
+      1. `CARNOT_ARC_MTP_GGUF_PATH` -- how the Kaggle kernel hands over the path it resolved from
+         the attached dataset mount. Honoured ONLY if the file exists, so a stale env var pointing
+         at a deleted path degrades to "no head" (MTP off, loudly) rather than to a launch failure.
+      2. The HuggingFace cache, searched RECURSIVELY, because upstream nests the head under an
+         `MTP/` subdirectory inside the snapshot rather than beside the main weights.
+      3. `~/.cache/kaggle_mtp_head_upload/` -- the operator's staging directory for the Kaggle
+         dataset upload, which on this box is where the head actually is.
+    """
+    import os
+
+    env = (os.environ.get("CARNOT_ARC_MTP_GGUF_PATH") or "").strip()
+    if env:
+        return env if Path(env).exists() else None
+    hub = Path.home() / ".cache" / "huggingface" / "hub"
+    roots = list(hub.glob("models--*GGUF")) + [Path.home() / ".cache" / "kaggle_mtp_head_upload"]
+    for root in roots:
+        try:
+            hits = sorted(p for p in root.rglob("*.gguf") if head_substr in p.name)
+        except OSError:  # a directory that does not exist / is unreadable is simply "no head here"
+            continue
+        if hits:
+            return str(hits[0])
+    return None
+
+
+def _mtp_default_on() -> bool:
+    """Whether MTP is on for a generator that was not given an explicit `mtp=`.
+
+    Reads `CARNOT_ARC_MTP` against `ARC_LIVE_GENERATOR_MTP_DEFAULT`, which is the SAME expression
+    both live construction sites in `arc_competition_agent.py` evaluate. It exists so the VRAM
+    arithmetic can ask the question too: the guard has to budget for the head, and before this it
+    had no way to know whether the launch it was sizing would load one.
+    """
+    import os
+
+    return (os.environ.get("CARNOT_ARC_MTP", ARC_LIVE_GENERATOR_MTP_DEFAULT) or "0") != "0"
 
 
 # llama.cpp SERVER, GPU-enforced. PREFER the HIP build (ROCm iGPU gfx1150 / Radeon 890M,
@@ -2281,9 +2691,94 @@ LLAMA_SERVER = _resolve_llama_server()
 # ~6.1 GB, because scripts/kaggle/submission_kernel/main.py forces CARNOT_ARC_MTP=0 there. The
 # mtp-OFF pair is recorded separately below and is the one to reason about for the 16GB-class card.
 # Over-prediction is the safe direction for a guard, so this constant is deliberately the mtp-ON fit.
+#
+# HISTORICAL AS OF 2026-07-28. These two constants describe the Qwen3.5-9B-MTP generator, which the
+# operator directive of that date RETIRED in favour of gemma-4-31B-it (see the GENERATOR SWITCH
+# block below). They are kept -- not deleted -- because they are the provenance of every VRAM
+# number recorded in artifacts before that date, and because the 9B remains a legitimate
+# CARNOT_ARC_GGUF_PATH override for a genuinely 16GB-class box. They are NO LONGER what
+# `_generator_cuda_min_free_mb()` computes with; the gemma-4-31B fit below is.
 _VRAM_MTP_ON_INTERCEPT_MIB = 10547.0  # weights + MTP self-draft copy + fixed overhead
 _VRAM_MTP_ON_PER_CTX_MIB = 0.02519  # q8_0 KV per shared-pool cell
 _VRAM_PER_SLOT_MIB = 206.83  # per llama.cpp slot, independent of n_ctx
+# ---------------------------------------------------------------------------------------------
+# THE MEASURED VRAM ENVELOPE FOR THE CURRENT GENERATOR: gemma-4-31B-it Q4_K_M, mtp OFF (the model
+# is not an MTP model at all -- its GGUF header declares no `nextn_predict_layers`), q8_0 KV, the
+# default 4 llama-server slots. Measured 2026-07-28 on an RTX 3090 as per-PID resident VRAM
+# (`nvidia-smi --query-compute-apps`, joined PID -> GPU UUID -> index, never the env var):
+#
+#     n_ctx 32768, 0 FFN layers on CPU -> 21416 MiB
+#     n_ctx 81920, 0 FFN layers on CPU -> 23888 MiB
+#
+# Two points, so the line below is an EXACT fit with no residual to report -- weaker evidence than
+# the 9-config 9B refit above, and stated as such rather than dressed up. Its per-context slope is
+# 0.0503 MiB/cell, very close to 2x the 9B's 0.02519: this model has roughly double the per-token
+# KV, exactly the case `_default_induce_n_ctx()`'s docstring warned would invalidate the old guard.
+# Leaving the 9B constants in place here would have under-predicted the 31B's footprint by ~9 GB,
+# admitting a card the server then cudaMalloc-fails on -- i.e. the silent-LLM-off fault the guard
+# exists to prevent, re-created by a model swap instead of by an n_ctx change.
+_VRAM_GEMMA31B_PER_CTX_MIB = 0.050293  # (23888 - 21416) / (81920 - 32768)
+_VRAM_GEMMA31B_INTERCEPT_MIB = 18940.7  # 21416 - 0.050293*32768 - 206.83*4
+# ---------------------------------------------------------------------------------------------
+# THE MTP DRAFT-HEAD SURCHARGE. Added when `--spec-type draft-mtp --model-draft <head>` is on.
+#
+# THIS IS NOT A FLAT CONSTANT, AND ASSUMING IT WAS IS THE BUG THIS BLOCK EXISTS TO PREVENT.
+# Measured per-PID residency (`nvidia-smi --query-compute-apps`, PID -> GPU UUID -> index, never
+# the env var), gemma-4-31B-it Q4_K_M + the real 491 MiB `mtp-gemma-4-31B-it-Q8_0.gguf` head,
+# q8_0 KV, one server alone on an RTX 3090:
+#
+#     n_ctx 32768, 0 CPU-FFN layers -> 21402 MiB off / 22264 MiB on -> head costs  862 MiB
+#     n_ctx 81920, 11 CPU-FFN layers -> 21730 MiB off / 23020 MiB on -> head costs 1290 MiB
+#
+# The head is a 491 MiB FILE but carries its own KV allocation proportional to the context pool,
+# so its cost grows with `-c`. A flat 862 (or the ~840 recorded from an earlier single reading)
+# would UNDER-PREDICT the shipped n_ctx 81920 configuration by ~428 MiB -- i.e. admit a card that
+# then cudaMalloc-fails, which is exactly the silent-LLM-off fault the whole guard exists to stop,
+# re-created by an MTP flag instead of by a model swap or an n_ctx change.
+#
+# Two points, so this is an EXACT fit with no residual to report -- stated plainly rather than
+# dressed up. Its slope is ~17% of the main model's per-cell KV, consistent with a small draft
+# head sharing the same pool geometry.
+#
+# THE 81920 PAIR IS NOW PERSISTED, WHICH IT WAS NOT WHEN THESE CONSTANTS WERE FIRST WRITTEN. The
+# 32768 pair was always corroborated by `mtp_shipped_binary_t1/shipped_mtp_{on,off}.json`, but the
+# 81920 readings were taken once off a live `nvidia-smi` and never written down -- an unrecorded
+# number is indistinguishable from a remembered one, and this file asks the reader to trust it as
+# evidence. Re-measured and RECORDED 2026-07-28 at
+# `results/arc_gemma31b_migration_evidence_20260728/vram_81920_residency/`, per-PID residency
+# joined PID -> GPU UUID -> index (never the env var, which only renames devices inside the child):
+#
+#     mtp OFF, 11 CPU-FFN layers -> 21716 MiB   (constant below predicts 21730, error 0.06%)
+#     mtp ON,  11 CPU-FFN layers -> 23010 MiB   -> head surcharge 1294 MiB (fitted 1290, error 0.3%)
+#
+# Both arms landed on GPU-b52387a2 (index 0), and the ON arm's log carries the positive
+# `adding speculative implementation 'draft-mtp'` marker while the OFF arm's does not -- so the
+# surcharge is the cost of speculation ACTUALLY ENGAGING, not of an argument being accepted and
+# silently ignored. The fitted constants are kept unchanged: they now have a re-measurement
+# agreeing to well within the 1500 MiB guard margin, which is stronger than moving them to chase
+# ~14 MiB of run-to-run scatter.
+_VRAM_MTP_HEAD_PER_CTX_MIB = 0.008708  # (1290 - 862) / (81920 - 32768)
+_VRAM_MTP_HEAD_INTERCEPT_MIB = 576.6  # 862 - 0.008708*32768
+# The mtp-OFF arm of the 81920/11-layer measurement above is also an INDEPENDENT CHECK of the base
+# envelope at a point it was never fitted on (11 offloaded layers, a count chosen by the auto-fit
+# rather than by the original sweep): predicted 18940.7 + 0.050293*81920 + 206.83*4 - 195.3*11 =
+# 21740 MiB, measured 21730 MiB, error 0.05%. Recorded here because a two-point fit that also
+# predicts a third, differently-shaped configuration is materially stronger evidence than the
+# two points alone.
+#
+# RE-MEASURED AND PERSISTED 2026-07-28 (same run as the MTP-head surcharge above):
+# `results/arc_gemma31b_migration_evidence_20260728/vram_81920_residency/f13_81920_residency.json`
+# records 21716 MiB for this exact shape. The literal below is kept at the original 21730 because
+# it is the number the envelope was CHECKED against; the re-measurement agrees to 14 MiB (0.06%),
+# which is the point -- it confirms the check rather than replacing it.
+_VRAM_GEMMA31B_11LAYER_81920_CHECK_MIB = 21730
+# VRAM freed per transformer block whose FFN weights are pushed to system RAM via `-ot` (see
+# `_ffn_cpu_override_regex`). Measured at n_ctx 32768 across 0/12/24/40 CPU-FFN layers:
+# 21416 / 19072 / 16728 / 13580 MiB -- dead linear, and cross-checked at n_ctx 81920 (12 layers
+# -> 21544 MiB, predicted 21544). A least-squares slope over those four points is 195.9; the
+# smaller 195.3 is used deliberately, because UNDER-crediting the saving makes the guard demand
+# MORE free VRAM, which is the conservative direction for a guard.
+_VRAM_PER_CPU_FFN_LAYER_MIB = 195.3
 # llama-server with no explicit --parallel: n_parallel=4 AND kv_unified=true (server.cpp:106-110).
 # READ from the source of the local build and CONFIRMED from a running server's own /props
 # (`total_slots: 4`, 2026-07-27). It is the K the shared-pool admission arithmetic has to survive,
@@ -2291,9 +2786,20 @@ _VRAM_PER_SLOT_MIB = 206.83  # per llama.cpp slot, independent of n_ctx
 # queues everything past its own slot count.
 _LLAMA_SERVER_DEFAULT_SLOTS = 4
 # The real `induce_prompt()` for the largest logical grid in ops/arc_solve_registry.yaml (64x64),
-# measured through the server's own /tokenize rather than estimated. The WORST case, not the
+# measured through the model's own tokenizer rather than estimated. The WORST case, not the
 # typical one, because the generated length is unknowable in advance.
-_INDUCE_WORST_CASE_PROMPT_TOKENS = 15734
+#
+# RE-MEASURED 2026-07-28 for the gemma-4-31B generator, because a token count is a property of the
+# TOKENIZER and the old 15734 was measured with Qwen3.5-9B's. Method: build one worst-case
+# `induce_prompt()` (64x64 grids, k=8) and tokenize the SAME string with BOTH GGUFs via
+# `llama_cpp.Llama(model_path=..., vocab_only=True)` -- the .gguf path, never AutoTokenizer on a
+# GGUF repo id (CLAUDE.md GGUF tokenizer rule). Paired result: Qwen 17893 tokens, gemma 17930,
+# ratio 1.00207. So 15734 * 1.00207 = 15767. The two vocabularies are within 0.2% on this prompt
+# shape, which is why `_default_induce_n_ctx()` still returns 81920 -- 4*(15767+4096) = 79452,
+# and the round-up to a 4096 multiple absorbs the difference entirely. The constant moves anyway:
+# a stale tokenizer-derived number that happens not to change the answer today is still a landmine
+# for the next person who changes max_tokens.
+_INDUCE_WORST_CASE_PROMPT_TOKENS = 15767
 # Mirrors LocalGGUFProposer.max_tokens and the CARNOT_ARC_INDUCE_MAX_TOKENS default read at both
 # construction sites in arc_competition_agent.py. Named here so the context-pool derivation and
 # the completion budget cannot drift apart -- see _default_induce_n_ctx().
@@ -2307,8 +2813,27 @@ _INDUCE_DEFAULT_MAX_TOKENS = 4096
 _GENERATOR_CUDA_GUARD_MARGIN_MIB = 1500
 
 
-def _generator_cuda_min_free_mb() -> int:
+def _generator_cuda_min_free_mb(
+    ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
+) -> int:
     """Free VRAM (MiB) the opt-in 3090 generator path requires before it will bind a card.
+
+    `mtp` MUST be the value the server will actually launch with, for exactly the reason
+    `ffn_cpu_layers` must be: the MTP draft head is a real, `n_ctx`-dependent VRAM cost
+    (+1290 MiB at the shipped n_ctx 81920) and a guard blind to it validates a configuration the
+    server is not about to run. It defaults to `_mtp_default_on()` for module-level callers;
+    `_ensure_server()` passes `self.mtp` explicitly, and that is the important case -- a proposer
+    can carry an explicit constructor value the env default knows nothing about.
+
+    `ffn_cpu_layers` MUST be the count that will actually reach the launch argv as `-ot`. It
+    defaults to `_default_ffn_cpu_layers()` for the module-level callers, but `_ensure_server()`
+    passes `self.ffn_cpu_layers` explicitly, and that is the important case: a proposer can carry
+    an EXPLICIT constructor value that the default factory knows nothing about, and even when it
+    does not, the auto-fit re-reads free VRAM and could return a different number at construction
+    time than at launch time. Either way the guard would then be validating a configuration the
+    server is not about to run -- admitting a card on the strength of an offload that never
+    happens is the same cudaMalloc-then-silent-LLM-off failure this guard exists to prevent,
+    reintroduced through the back door by the fix for it.
 
     DERIVED, never a hand-typed literal. It was a literal (13000, commented "loads ~11.5GB") and
     the 2026-07-27 n_ctx 16384 -> 81920 fix raised the real footprint to ~13.4-13.5 GiB WITHOUT
@@ -2320,12 +2845,43 @@ def _generator_cuda_min_free_mb() -> int:
     Computing it from the SAME `_default_induce_n_ctx()` the server is actually launched with means
     an operator raising CARNOT_ARC_INDUCE_N_CTX automatically raises the guard too. Pinned by
     `tests/python/test_arc_generator_vram_guard.py`.
+
+    2026-07-28, THE GENERATOR SWITCH. Two things changed here and both had to, together:
+
+      1. The envelope is now the gemma-4-31B fit, not the Qwen3.5-9B one. The 9B constants
+         under-predict the 31B by ~9 GB; keeping them would have let the guard admit a 3090 that
+         the 31B server then cudaMalloc-fails on, which is the silent-LLM-off fault this function
+         exists to prevent -- caused by a model swap rather than by an n_ctx change.
+      2. It now subtracts the FFN-to-system-RAM credit, because `CARNOT_ARC_FFN_CPU_LAYERS` moves
+         the real footprint by ~195 MiB per layer and a guard that ignores the lever would decline
+         a card the configured server would in fact have fitted on.
+
+    CONSEQUENCE AT THE DEFAULTS, AND THE CORRECTION THAT FOLLOWED. gemma-4-31B at n_ctx 81920 with
+    NO FFN offload predicts 23888 MiB + 1500 MiB margin = 25388 MiB required free, which EXCEEDS a
+    24576 MiB 3090 outright -- the guard becomes unsatisfiable by arithmetic, not by contention.
+
+    This function's first version recorded that as "the correct answer and not a bug", on the
+    stated ground that the iGPU fallback was "slower, but functional and LOUD, never a silent
+    LLM-off". BOTH HALVES OF THAT WERE FALSE, and the second pass of the 2026-07-28 review proved
+    it by measurement rather than argument:
+
+      * NOT FUNCTIONAL. The iGPU HIP build runs gemma-4-31B Q4_K_M at ~2 tok/s decode. Against
+        `max_tokens=4096` and a 600 s timeout, a single induce call cannot finish. `generate()`
+        returns `(False, msg)` and the agent proceeds LLM-OFF while still reporting itself as the
+        LLM-on scored path -- precisely the silent degradation this guard exists to prevent.
+      * NOT LOUD. `_generator_server_and_env()` fell through with no output whatsoever. There is
+        now an actual channel (`GENERATOR_SELECTION_LOG`, mirrored to stderr and copied onto the
+        proposer) and every placement decision writes to it.
+
+    The fix is NOT to weaken this arithmetic -- it is measured and correct. It is that
+    `_default_ffn_cpu_layers()` now AUTO-SELECTS the fewest offload layers that make the card fit
+    whenever the operator has opted into a local CUDA card, so this requirement comes down to meet
+    the hardware instead of the generator silently leaving it. Because that credit is subtracted
+    below, raising the offload lowers what this returns, and the two stay consistent by
+    construction.
     """
-    predicted = (
-        _VRAM_MTP_ON_INTERCEPT_MIB
-        + _VRAM_MTP_ON_PER_CTX_MIB * float(_default_induce_n_ctx())
-        + _VRAM_PER_SLOT_MIB * float(_LLAMA_SERVER_DEFAULT_SLOTS)
-    )
+    layers = _default_ffn_cpu_layers() if ffn_cpu_layers is None else int(ffn_cpu_layers)
+    predicted = _predicted_generator_vram_mib(_default_induce_n_ctx(), layers, mtp)
     return int(predicted + _GENERATOR_CUDA_GUARD_MARGIN_MIB)
 
 
@@ -2343,6 +2899,151 @@ def _cuda_gpu_free_mb(idx: int) -> int:
         return int(lines[idx]) if 0 <= idx < len(lines) else -1
     except Exception:
         return -1
+
+
+def _cuda_gpu_total_mb(idx: int) -> int:
+    """TOTAL VRAM (MiB) on CUDA GPU `idx` via nvidia-smi; -1 if unavailable.
+
+    WHY THIS EXISTS separately from `_cuda_gpu_free_mb`. The retry loop in
+    `_cuda_gpu_has_headroom` waits for a *transient* condition to clear -- a just-crashed
+    process whose VRAM the driver has not reclaimed yet. It is worth 20 s of patience for that.
+    But if the requirement exceeds the card's TOTAL capacity, no amount of waiting can help: the
+    condition is not transient, it is arithmetic. Distinguishing the two needs the total, and
+    that distinction is what turns an 18 s pause-then-silently-degrade into an immediate,
+    explained refusal.
+    """
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.total", "--format=csv,noheader,nounits"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        lines = [ln.strip() for ln in out.stdout.splitlines() if ln.strip()]
+        return int(lines[idx]) if 0 <= idx < len(lines) else -1
+    except Exception:
+        return -1
+
+
+# THE GENERATOR-SELECTION AUDIT LOG. Append-only, module-level, and mirrored to stderr.
+#
+# WHY A MODULE GLOBAL. `_generator_server_and_env()` and `_default_ffn_cpu_layers()` are plain
+# module functions with no instance to hang a record on, and this module has NO logger (deliberately
+# -- it is imported into the Kaggle kernel where logging config is not ours). Yet the decisions they
+# make are exactly the ones that were invisible in the 2026-07-28 review: the guard declined the
+# CUDA card and `_generator_server_and_env()` fell through to the iGPU with ZERO output, despite its
+# docstring asserting the fallback was "functional and LOUD". It was functional. It was not loud.
+#
+# `_ensure_server()` copies this onto the proposer instance (`generator_selection_log`) so an
+# artifact can carry the reason a run was slow, instead of the reason being unrecoverable after the
+# fact. Bounded so a long-lived process cannot grow it without limit.
+GENERATOR_SELECTION_LOG: list[str] = []
+_GENERATOR_SELECTION_LOG_MAX = 200
+_GENERATOR_SELECTION_SEEN: set = set()
+
+
+def _note_generator_selection(msg: str) -> None:
+    """Record + announce a generator-placement decision. Never raises: an audit channel that can
+    break the generator it audits is worse than no audit channel.
+
+    DEDUPED BY MESSAGE TEXT. `_default_ffn_cpu_layers()` is a dataclass `default_factory` and is
+    also re-read by the guard, so a single launch evaluates it several times and an un-deduped
+    channel prints the same paragraph five times before the server even starts. Repetition trains
+    the reader to skip the channel, which defeats the point of adding it. The message text embeds
+    the free-VRAM reading, so a genuinely CHANGED situation still produces a new line.
+    """
+    try:
+        line = f"[carnot.arc.generator] {msg}"
+        if line in _GENERATOR_SELECTION_SEEN:
+            return
+        _GENERATOR_SELECTION_SEEN.add(line)
+        if len(GENERATOR_SELECTION_LOG) < _GENERATOR_SELECTION_LOG_MAX:
+            GENERATOR_SELECTION_LOG.append(line)
+        print(line, file=sys.stderr, flush=True)
+    except Exception:
+        pass
+
+
+def _predicted_generator_vram_mib(
+    n_ctx: int, ffn_cpu_layers: int, mtp: Optional[bool] = None
+) -> float:
+    """Predicted resident VRAM (MiB) for the CURRENT generator at `n_ctx` with `ffn_cpu_layers`
+    FFN blocks in system RAM. The single arithmetic both `_generator_cuda_min_free_mb()` and the
+    auto-fit search below evaluate, so a change to the envelope cannot move one and not the other.
+
+    `mtp` defaults to `_mtp_default_on()` -- the same expression the live construction sites use --
+    so a module-level caller that does not thread it still budgets for the configuration that will
+    actually launch. Pass it explicitly when the answer is known (a proposer instance carries its
+    own `mtp` field, which may differ from the env default).
+    """
+    on = _mtp_default_on() if mtp is None else bool(mtp)
+    head = (_VRAM_MTP_HEAD_INTERCEPT_MIB + _VRAM_MTP_HEAD_PER_CTX_MIB * float(n_ctx)) if on else 0.0
+    return (
+        _VRAM_GEMMA31B_INTERCEPT_MIB
+        + _VRAM_GEMMA31B_PER_CTX_MIB * float(n_ctx)
+        + _VRAM_PER_SLOT_MIB * float(_LLAMA_SERVER_DEFAULT_SLOTS)
+        + head
+        - _VRAM_PER_CPU_FFN_LAYER_MIB * float(max(0, ffn_cpu_layers))
+    )
+
+
+# gemma-4-31B-it has 60 transformer blocks (read from the GGUF tensor table: blk.0..blk.59, three
+# FFN tensors each). Offloading all 60 is the most VRAM the `-ot` lever can free; beyond that the
+# regex simply matches nothing more.
+_GEMMA31B_N_BLOCKS = 60
+# Cap the AUTO-selected offload. The measured table in `_default_ffn_cpu_layers()` shows prefill --
+# which is what the induce path is bound by at a 15767-token worst-case prompt -- degrading 4.7x at
+# 12 layers and 13x at 40. Auto-selecting past this point would trade a silent slow fallback for a
+# silent slow CUDA path, which is not an improvement. If more than this is genuinely needed, the
+# card is too full and the operator should be told rather than accommodated.
+#
+# WAS 24, LOWERED TO 12 (2026-07-28, third pass) BECAUSE 24 CONTRADICTED THE DOCSTRING THAT
+# JUSTIFIES IT. `_default_ffn_cpu_layers()` states in terms: "treat anything past ~12 layers as
+# likely to push real induction into timeout". A cap of 24 let the auto-fit select 23 layers at
+# 21000 MiB free and 24 at 20750 -- i.e. straight through the threshold its own measured table
+# names, into the region the docstring calls a timeout. `_default_induce_timeout_s()` does scale
+# the budget with the layer count (3.8x at 24 layers), but it interpolates a SINGLE-STREAM decode
+# table while the live path runs 4 `kv_unified` slots, so the real per-request rate is lower than
+# that curve and the scaled timeout is not known to cover it. Nothing measured 4-slot decode at
+# 20+ layers, so the honest move is to stop auto-selecting into unmeasured territory rather than
+# to keep a cap justified by a number nobody took.
+#
+# CONSEQUENCE, STATED RATHER THAN DISCOVERED LATER: at the shipped n_ctx 81920 on a 24123 MiB
+# card, MTP-OFF needs 7 layers (fits under this cap) and MTP-ON needs 14 (does NOT). So a LOCAL
+# MTP-on launch now hits the `-1` branch and says loudly that it cannot fit, instead of quietly
+# auto-selecting a 14-layer offload. That is the intended outcome and not a regression: the local
+# MTP-on configuration is independently measured as a NET THROUGHPUT LOSS (a 14-layer offload
+# costs more decode than MTP's 1.398x returns -- see the GENERATOR SWITCH block), which is exactly
+# why `ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0". The cap now enforces that conclusion instead of
+# leaving a path that silently contradicts it. The SCORED path is untouched: the 96 GB card needs
+# no offload at all, and the Kaggle kernel never reaches this code (see `_default_ffn_cpu_layers()`
+# "KAGGLE IS UNAFFECTED").
+_FFN_CPU_AUTOFIT_MAX_LAYERS = 12
+# `LocalGGUFProposer.ffn_cpu_layers` default meaning "nobody chose -- fit it in `__post_init__`,
+# where `self.mtp` is visible". Negative so it can never collide with a real layer count, and
+# distinct from 0 so "the caller explicitly asked for no offload" stays a statement the caller can
+# make. See `LocalGGUFProposer.__post_init__` for why a `default_factory` could not do this job.
+_FFN_CPU_LAYERS_AUTO = -1
+
+
+def _ffn_cpu_layers_to_fit(free_mb: int, n_ctx: int, mtp: Optional[bool] = None) -> int:
+    """Fewest FFN-on-CPU layers that brings the predicted footprint + guard margin under `free_mb`.
+
+    Returns -1 when even `_FFN_CPU_AUTOFIT_MAX_LAYERS` is not enough -- i.e. the card genuinely
+    cannot host this generator and the honest answer is to say so, not to keep offloading until
+    the thing is slower than the fallback it was meant to beat.
+
+    THE POSTCONDITION IS THE POINT, and it is asserted in the tests rather than merely intended:
+    a non-negative return MUST satisfy `_generator_cuda_min_free_mb(n, mtp) <= free_mb`. Both
+    functions evaluate `_predicted_generator_vram_mib` with the same margin, so this holds by
+    construction -- but only for as long as they keep taking the same arguments, which is precisely
+    what broke when `mtp` entered the arithmetic on one side only.
+    """
+    for n in range(0, _FFN_CPU_AUTOFIT_MAX_LAYERS + 1):
+        need = _predicted_generator_vram_mib(n_ctx, n, mtp) + _GENERATOR_CUDA_GUARD_MARGIN_MIB
+        if need <= free_mb:
+            return n
+    return -1
 
 
 # How many times _generator_server_and_env retries the free-VRAM check before conceding to the
@@ -2364,12 +3065,49 @@ _GENERATOR_CUDA_FREE_RETRY_DELAY_S = 2.0
 def _cuda_gpu_has_headroom(idx: int, min_free_mb: int) -> bool:
     """True if GPU `idx` has >= `min_free_mb` free, retrying briefly across
     _GENERATOR_CUDA_FREE_RETRY_ATTEMPTS attempts to survive a just-crashed process's VRAM not yet
-    being reclaimed by the driver (see the constants' docstring above)."""
+    being reclaimed by the driver (see the constants' docstring above).
+
+    TWO FIXES, 2026-07-28, both from the same root cause -- the generator switch raised
+    `_generator_cuda_min_free_mb()` from 14937 MiB (which a 3090 passes) to 25388 MiB (which
+    EXCEEDS a 3090's 24576 MiB total), making the guard unsatisfiable by arithmetic rather than by
+    contention:
+
+      1. SHORT-CIRCUIT THE WAIT. Retrying is for a transient condition. When the requirement
+         exceeds the card's TOTAL capacity, waiting cannot ever help, and the old loop burned
+         10 x 2.0 s = 18 s of deterministic sleep per launch before conceding. Now that case is
+         detected on the first pass and returns immediately.
+      2. SAY WHY. The old function returned a bare False and the caller fell through silently, so
+         a run that lost its CUDA card looked identical to a run that never asked for one. Every
+         refusal now names the card, the requirement, the free amount, and -- when it is the
+         arithmetic case -- the total, which is what tells the reader this is not a busy-card
+         problem they can wait out.
+    """
+    total = _cuda_gpu_total_mb(idx)
+    if 0 < total < min_free_mb:
+        _note_generator_selection(
+            f"CUDA gpu{idx} DECLINED (not transient): the configured generator needs "
+            f"{min_free_mb} MiB free but the card's TOTAL capacity is {total} MiB. No wait can "
+            f"satisfy this. Lower CARNOT_ARC_INDUCE_N_CTX or raise CARNOT_ARC_FFN_CPU_LAYERS."
+        )
+        return False
+    last_free = -1
     for attempt in range(_GENERATOR_CUDA_FREE_RETRY_ATTEMPTS):
-        if _cuda_gpu_free_mb(idx) >= min_free_mb:
+        last_free = _cuda_gpu_free_mb(idx)
+        if last_free >= min_free_mb:
             return True
         if attempt < _GENERATOR_CUDA_FREE_RETRY_ATTEMPTS - 1:
             time.sleep(_GENERATOR_CUDA_FREE_RETRY_DELAY_S)
+    # REPORT the reading we already took. An earlier draft called `_cuda_gpu_free_mb(idx)` again
+    # inside this message, which spawns an extra nvidia-smi subprocess purely to render a log line
+    # -- and, worse, makes the number in the message a DIFFERENT observation from the one that
+    # drove the decision. `test_generator_server_and_env_cuda_retry.py` caught it as an off-by-one
+    # in the probe count, which is the honest symptom of a diagnostic that perturbs what it reports.
+    _note_generator_selection(
+        f"CUDA gpu{idx} DECLINED after "
+        f"{_GENERATOR_CUDA_FREE_RETRY_ATTEMPTS} x {_GENERATOR_CUDA_FREE_RETRY_DELAY_S}s: needs "
+        f"{min_free_mb} MiB free, last saw {last_free} MiB free of {total} MiB total "
+        f"-- another process is holding the card."
+    )
     return False
 
 
@@ -2386,7 +3124,9 @@ def _free_port() -> int:
         return int(s.getsockname()[1])
 
 
-def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
+def _generator_server_and_env(
+    ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
+) -> tuple[Path, Optional[dict]]:
     """Resolve the llama-server binary + launch env for the generator, evaluated at LAUNCH time so the
     3090 guard sees current GPU state.
 
@@ -2400,6 +3140,21 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
          the free-memory guard yields to any conductor job already on the card.
       3. Default: the iGPU HIP build (no conductor contention), else the CUDA build.
     Returns (server_path, env_or_None); env=None means inherit the ambient environment (legacy behavior).
+
+    THE VRAM GUARD IS A **LOCAL-DEV** MECHANISM AND DOES NOT PROTECT THE SCORED RUN. Stated here
+    because the surrounding code repeatedly justifies the guard as preventing "a silent LLM-off run
+    that still reports itself as the LLM-on scored path", and that framing over-claims its reach.
+    Priority 1 returns on `CARNOT_LLAMA_SERVER`, which the Kaggle kernel ALWAYS sets, so on the
+    scored path this function never reaches step 2 -- `_generator_cuda_min_free_mb()`, the auto-fit,
+    and the fit invariant are all skipped. Everything they guarantee applies to this dev box only.
+
+    What that means concretely: if the scored `machine_shape` ever resolved to a 24GB-class card,
+    MTP-on at n_ctx 81920 would need ~25.2 GB and NOTHING in this module would refuse it. The
+    server would cudaMalloc-fail, `_ensure_server()` would burn its retry budget, and the agent
+    would run LLM-off. The scored-side check for that lives in the kernel's own pre-flight probe
+    (`scripts/kaggle/submission_kernel/main.py`), which reads the device's real free VRAM and
+    compares it against `_generator_cuda_min_free_mb()` before launching -- that is the only place
+    the arithmetic reaches the scored hardware.
     """
     import os
 
@@ -2415,10 +3170,34 @@ def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
             idx = int(gpu)
         except ValueError:
             idx = -1
-        if idx >= 0 and _cuda_gpu_has_headroom(idx, _generator_cuda_min_free_mb()):
+        # `ffn_cpu_layers` is threaded through from `_ensure_server()` so the guard budgets for the
+        # offload the server will REALLY launch with -- see `_generator_cuda_min_free_mb()`.
+        layers = _default_ffn_cpu_layers() if ffn_cpu_layers is None else int(ffn_cpu_layers)
+        # ...and `mtp` for the same reason: the draft head is a real, n_ctx-scaled VRAM cost, so a
+        # guard that does not know whether this launch loads one is sizing a different server.
+        mtp_on = _mtp_default_on() if mtp is None else bool(mtp)
+        if idx >= 0 and _cuda_gpu_has_headroom(idx, _generator_cuda_min_free_mb(layers, mtp_on)):
+            _note_generator_selection(
+                f"using the CUDA build pinned to gpu{idx} "
+                f"(ffn_cpu_layers={layers}, n_ctx={_default_induce_n_ctx()}, mtp={mtp_on})."
+            )
             return cuda, dict(os.environ, CUDA_VISIBLE_DEVICES=str(idx))
         # guard tripped (card busy / unavailable / bad idx) -> fall through to the iGPU path,
         # never fight the conductor for the 3090.
+        #
+        # THIS FALL-THROUGH USED TO BE SILENT, and after the 2026-07-28 generator switch it became
+        # the default outcome on a 3090 rather than a rare one. The operator ASKED for a specific
+        # CUDA card and did not get it; that is exactly the kind of thing that must never be
+        # inferred later from a throughput anomaly. `_cuda_gpu_has_headroom` has already logged
+        # WHY it refused; this logs what we are doing about it, and how bad that is, because the
+        # HIP fallback runs this 31B model at ~2 tok/s and will time out every induce call.
+        _note_generator_selection(
+            f"CARNOT_ARC_GENERATOR_CUDA_GPU={gpu!r} was requested but the guard refused it "
+            "(reason logged above). FALLING BACK to the iGPU HIP build. WARNING: measured at "
+            "~2 tok/s decode for gemma-4-31B-it Q4_K_M, which CANNOT complete a "
+            "max_tokens=4096 induce call inside CARNOT_ARC_INDUCE_TIMEOUT -- expect "
+            "generate() to fail and the agent to run LLM-OFF."
+        )
     return (hip if hip.exists() else cuda), None
 
 
@@ -2546,7 +3325,17 @@ def _default_induce_n_ctx() -> int:
 
     OVERRIDE with CARNOT_ARC_INDUCE_N_CTX for a tight-VRAM box or a model with a fatter
     per-token KV than the frozen 9B live generator (this default is sized for that model;
-    a ~3x-larger model's KV would cost ~3x the 1668 MiB). Read via default_factory so the
+    a ~3x-larger model's KV would cost ~3x the 1668 MiB).
+
+    THAT WARNING CAME TRUE ON 2026-07-28 -- recorded rather than deleted, because it is the
+    rare case of a docstring correctly predicting its own obsolescence. The generator was
+    re-pinned to gemma-4-31B-it, whose measured per-cell KV is 0.0503 MiB against the 9B's
+    0.02519, i.e. almost exactly 2x. The POOL SIZE did not need to change (81920 is a token
+    count, and the two tokenizers are within 0.2% on the worst-case induce prompt -- measured
+    paired, 17930 vs 17893) but the VRAM ARITHMETIC did: see `_generator_cuda_min_free_mb()`
+    and the gemma envelope constants. On a 24 GB card this default now resides at 23888 MiB,
+    so `CARNOT_ARC_INDUCE_N_CTX` and the new `CARNOT_ARC_FFN_CPU_LAYERS` are the two levers
+    that make the local 3090 viable at all. Read via default_factory so the
     literal lives in exactly ONE place -- both construction sites in
     arc_competition_agent.py (`_proposer()` and `_load_sge_candidate_router()`) omit n_ctx
     and therefore cannot silently diverge from each other, which is the failure the
@@ -2567,6 +3356,245 @@ def _default_induce_n_ctx() -> int:
     return int(-(-need // 4096) * 4096)
 
 
+def _default_ffn_cpu_layers(mtp: Optional[bool] = None) -> int:
+    """How many transformer blocks' FFN weights to keep in SYSTEM RAM instead of VRAM.
+
+    `mtp` MUST be the value the server will actually launch with whenever the caller knows it.
+    It defaults to `_mtp_default_on()` (the env expression) so a bare module-level call still sizes
+    something sensible, but a `LocalGGUFProposer` passes ITS OWN `self.mtp` via `__post_init__` --
+    and that is the case this parameter exists for. See that method for the failure it removes.
+
+    OPT-IN, DEFAULT 0 -- unset means byte-identical launch args to before this knob existed.
+    Set `CARNOT_ARC_FFN_CPU_LAYERS=<n>` to free VRAM on a card that cannot hold the whole model
+    plus its KV pool (operator directive 2026-07-28: "when running on eGPU locally with llama.cpp
+    we can offload the FFN weights to system RAM to free up VRAM").
+
+    WHY `-ot` AND NOT `-cmoe`/`-ncmoe`. llama-server ships `--cpu-moe` / `--n-cpu-moe`, and they
+    are the obvious-looking answer, but they match MoE expert tensors (`ffn_*_exps`) only.
+    gemma-4-31B-it is DENSE: its GGUF contains `blk.<i>.ffn_{gate,up,down}.weight` and NO
+    `ffn_*_exps` tensor at all (read directly from the GGUF tensor table, 2026-07-28). So both MoE
+    flags are accepted and do NOTHING on this model -- a silent no-op, which is worse than no
+    flag. The dense lever is `--override-tensor` with a regex over the real tensor names.
+
+    MEASURED COST, NOT ASSUMED (RTX 3090, gemma-4-31B-it Q4_K_M, n_ctx 32768, q8_0 KV, fixed
+    238-token prompt / 256-token completion):
+
+        CPU FFN layers |   VRAM  |  freed  | decode tok/s | prefill tok/s
+                     0 |  21416  |    --   |    36.14     |    826.8
+                    12 |  19072  |  -2344  |    15.17     |    177.0
+                    24 |  16728  |  -4688  |     9.81     |    101.4
+                    40 |  13580  |  -7836  |     6.33     |     64.0
+
+    This is a REAL TRADEOFF, not a free win, and the throughput column is the half that matters
+    most for this workload: the first 12 layers cost 58% of decode speed to buy 11% of VRAM, and
+    PREFILL -- which is what the induce path is actually bound by, at a 15767-token worst-case
+    prompt -- degrades 4.7x at 12 layers and 13x at 40. That worst-case prompt costs ~19 s to
+    prefill at full offload and ~246 s at 40 CPU layers, against this proposer's 600 s timeout
+    with 4 concurrent slots. Treat anything past ~12 layers as likely to push real induction into
+    timeout, and prefer lowering `CARNOT_ARC_INDUCE_N_CTX` first if the goal is purely to fit.
+
+    `--no-mmap` does NOT recover the loss (measured 9.69 vs 9.81 tok/s at 24 layers, identical
+    residency), despite llama.cpp printing a hint about mmap when `-ot` is used.
+
+    AUTO-FIT WHEN THE OPERATOR OPTED INTO A LOCAL CUDA CARD (added 2026-07-28, second pass).
+    "Default 0" was correct as a statement about the KNOB and wrong as a shipped configuration,
+    because the generator switch moved the requirement past what a 3090 has:
+
+        gemma-4-31B @ n_ctx 81920, 0 CPU-FFN layers -> 23888 MiB + 1500 margin = 25388 required
+        an RTX 3090 has 24576 MiB TOTAL
+
+    so with `CARNOT_ARC_GENERATOR_CUDA_GPU=0` set -- which the conductor's standing systemd
+    drop-in DOES set -- the guard declined the card unconditionally and the generator fell back to
+    the iGPU HIP build. That fallback was never measured before it became the default; measured
+    here (same 238-token prompt / 256-token completion as the table above) it runs this model at
+    ~2 tok/s decode against a 600 s induce timeout, i.e. every induce call times out, `generate()`
+    returns `(False, msg)`, and the agent runs LLM-OFF while still reporting itself LLM-on. A
+    working local path became a non-working one with no error anywhere.
+
+    So when (a) the env var is UNSET, and (b) `CARNOT_ARC_GENERATOR_CUDA_GPU` names a real CUDA
+    card, this returns the FEWEST layers that make the configured server fit that card, and says
+    so on `GENERATOR_SELECTION_LOG`. Rationale for auto-fitting rather than hard-failing: the
+    operator directive that introduced this knob asked for the local eGPU to be usable, and the
+    smallest offload that fits is strictly better than both alternatives (a 2 tok/s iGPU, or a
+    refusal). It is capped at `_FFN_CPU_AUTOFIT_MAX_LAYERS` so auto-fit can never silently trade a
+    slow fallback for an equally slow CUDA path -- past the cap it returns 0 and lets the guard
+    decline the card loudly.
+
+    KAGGLE IS UNAFFECTED, by construction: the scored kernel sets `CARNOT_LLAMA_SERVER`, which
+    `_generator_server_and_env()` honours at priority 1 and never reaches the CUDA guard, and it
+    does not set `CARNOT_ARC_GENERATOR_CUDA_GPU`. Both conditions must hold for auto-fit to
+    engage, so the 96 GB submission path launches with byte-identical argv to before.
+    """
+    import os
+
+    raw = (os.environ.get("CARNOT_ARC_FFN_CPU_LAYERS") or "").strip()
+    if raw:
+        try:
+            return max(0, int(raw))
+        except ValueError:
+            # A typo must not silently disable the knob the operator thinks they set, nor crash
+            # the live path. We still return 0 -- there is no safe way to guess what they meant --
+            # but the DOCSTRING USED TO CLAIM `_ensure_server` recorded the bad value, and it did
+            # not: `raw` was discarded inside this function before anything could see it. So the
+            # promise is kept here instead, on the audit channel that is mirrored to stderr and
+            # copied onto the proposer. Naming the rejected string is the whole point; "invalid
+            # value" without the value sends the operator looking in the wrong shell.
+            _note_generator_selection(
+                f"CARNOT_ARC_FFN_CPU_LAYERS={raw!r} is not an integer -- IGNORED, the FFN offload "
+                "is DISABLED for this launch (0 layers). Set an integer to enable it."
+            )
+            return 0
+
+    gpu = (os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU") or "").strip()
+    if not gpu:
+        return 0  # no local-CUDA opt-in -> byte-identical legacy argv, no -ot at all
+    try:
+        idx = int(gpu)
+    except ValueError:
+        return 0
+    if idx < 0:
+        return 0
+    free = _cuda_gpu_free_mb(idx)
+    if free < 0:
+        return 0  # no nvidia-smi / no such card: not our problem to guess, the guard will refuse
+    n_ctx = _default_induce_n_ctx()
+    # Budget for the MTP draft head if this launch will load one: at n_ctx 81920 the head adds
+    # 1290 MiB, which is ~7 additional offloaded layers -- an auto-fit blind to it picks a layer
+    # count the guard then rejects, and the card falls through to the ~2 tok/s iGPU for the run's
+    # whole lifetime.
+    #
+    # PREFER THE CALLER'S VALUE OVER THE ENV DEFAULT. `_mtp_default_on()` answers "what would a
+    # proposer that was given no `mtp=` argument do", which is the WRONG question when the proposer
+    # was in fact given one. Dozens of harnesses construct `LocalGGUFProposer(mtp=...)` explicitly,
+    # so sizing the offload from the env default while the server launches with the instance value
+    # is a guaranteed mismatch in whichever direction they differ.
+    mtp_on = _mtp_default_on() if mtp is None else bool(mtp)
+    if _predicted_generator_vram_mib(n_ctx, 0, mtp_on) + _GENERATOR_CUDA_GUARD_MARGIN_MIB <= free:
+        return 0  # full offload already fits -- never pay the throughput cost for nothing
+    needed = _ffn_cpu_layers_to_fit(free, n_ctx, mtp_on)
+    if needed < 0:
+        _note_generator_selection(
+            f"CUDA gpu{idx} has {free} MiB free; even {_FFN_CPU_AUTOFIT_MAX_LAYERS} CPU-FFN layers "
+            f"cannot fit the generator at n_ctx={n_ctx} (mtp={mtp_on}; would still need "
+            f"{_predicted_generator_vram_mib(n_ctx, _FFN_CPU_AUTOFIT_MAX_LAYERS, mtp_on) + _GENERATOR_CUDA_GUARD_MARGIN_MIB:.0f} MiB). "
+            "NOT auto-offloading; the guard will decline this card and the generator will fall "
+            "back to the iGPU HIP build, which runs gemma-4-31B at ~2 tok/s and WILL time out. "
+            "Free the card, lower CARNOT_ARC_INDUCE_N_CTX, or set CARNOT_ARC_MTP=0 (the draft "
+            f"head alone costs {_VRAM_MTP_HEAD_INTERCEPT_MIB + _VRAM_MTP_HEAD_PER_CTX_MIB * n_ctx:.0f} MiB here)."
+        )
+        return 0
+    _note_generator_selection(
+        f"CUDA gpu{idx} has {free} MiB free, generator needs "
+        f"{_predicted_generator_vram_mib(n_ctx, 0, mtp_on) + _GENERATOR_CUDA_GUARD_MARGIN_MIB:.0f} MiB at "
+        f"n_ctx={n_ctx} (mtp={mtp_on}) with no offload -- AUTO-SELECTING "
+        f"CARNOT_ARC_FFN_CPU_LAYERS={needed} "
+        f"(predicted {_predicted_generator_vram_mib(n_ctx, needed, mtp_on):.0f} MiB resident). This costs "
+        "throughput -- see _default_ffn_cpu_layers()'s measured table -- and is taken because the "
+        "alternative is the iGPU fallback at ~2 tok/s, which cannot meet the induce timeout."
+    )
+    return needed
+
+
+# Measured decode throughput (tok/s) vs CPU-FFN layers, RTX 3090 / gemma-4-31B-it Q4_K_M / n_ctx
+# 32768 / q8_0 KV / fixed 238-token prompt / 256-token completion, per-PID residency joined
+# PID -> GPU UUID -> index (card 1 confirmed for every arm).
+#
+# PROVENANCE, and why these are the RE-MEASURED numbers rather than the first sweep's. The first
+# sweep's results file was overwritten by a later n_ctx-81920 run (the script hardcoded its output
+# path), leaving its VRAM column alive only as prose in a docstring -- a traceability gap, not a
+# fabrication. It was re-measured 2026-07-28 to a distinct file
+# (`ffn_offload_results_ctx32768_reemit.json`), which independently reproduced the VRAM column
+# EXACTLY -- 21416 / 19072 / 16728 / 13580 MiB at 0/12/24/40 layers -- confirming the prose.
+#
+# Decode reproduced to within 3% at 0/12/24 layers (36.07 vs 36.14, 15.05 vs 15.17, 9.54 vs 9.81)
+# but the 40-layer arm came in 22% slower (4.91 vs 6.33). That arm is the most CPU-bound of the
+# four by construction, and the re-measurement ran while a concurrent session held the other card
+# and its CPU cores, so the discrepancy is best explained by host contention rather than by either
+# reading being wrong. The SLOWER re-measured values are the ones used here, deliberately: they
+# come from the file that still exists, and for a TIMEOUT a conservative (slower) rate is the safe
+# direction -- it lengthens the budget rather than shortening it.
+_FFN_DECODE_TOK_S_BY_LAYERS = ((0, 36.07), (12, 15.05), (24, 9.54), (40, 4.91))
+# The slowest induce call observed in the 2026-07-28 gemma-4-31B head-to-head (39 runs, 13 games x
+# 3 replicates): mean 383.9 s, median 366.5 s, max 572.0 s. Measured on CUDA, SINGLE-STREAM, at
+# n_ctx 32768 and ZERO FFN offload -- i.e. the fastest configuration we ship, and it still landed
+# within 4.7% of the old 600 s timeout. Nothing about that margin was re-examined when the
+# generator changed from a 9B to a 31B; the 600 s literal was calibrated for the 9B.
+_INDUCE_OBSERVED_MAX_WALL_S = 572.0
+
+
+def _default_induce_timeout_s() -> int:
+    """Per-call induce timeout (s), DERIVED from measured throughput rather than a fixed literal.
+
+    THE PROBLEM WITH THE OLD 600 s LITERAL, in two parts:
+
+      1. It was calibrated for Qwen3.5-9B and never revisited for a model 3.4x its size. The
+         head-to-head's own numbers show the risk: the slowest of 39 real induce calls took
+         572.0 s, 4.7% inside the limit, in the FASTEST configuration we run (single-stream, no
+         offload, n_ctx 32768). The live path runs n_ctx 81920 with 4 `kv_unified` slots, where
+         per-request throughput is lower, so the true headroom is smaller than 4.7% and is not
+         measured.
+      2. The 2026-07-28 FFN auto-fit makes it strictly worse. Offloading FFN blocks to system RAM
+         is what lets a 24 GB card host this generator at all, and it costs 2.4x decode throughput
+         at 12 layers. A timeout that does not account for the offload turns the fix for one
+         silent-LLM-off failure into a cause of another.
+
+    So the timeout scales with the SAME offload setting that slows the generation down. Floored at
+    the historical 600 s so this can never SHORTEN an existing deployment's budget, and the env
+    override is untouched.
+
+    KAGGLE IS UNAFFECTED: the scored kernel runs with zero FFN offload (a 96 GB card needs none),
+    the slowdown factor is 1.0, and this returns the floor -- the same 600 s it always used.
+
+    The counter-argument to simply raising this -- "a longer timeout means a hung call blocks
+    longer" -- is real but much weaker than it looks: a timeout that fires does NOT surface an
+    error, it returns `(False, msg)` and the agent proceeds LLM-OFF while still reporting itself
+    as the LLM-on path. Waiting longer for a real answer beats promptly recording a fake one.
+    """
+    import os
+
+    override = os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT")
+    if override:
+        return int(override)
+    layers = _default_ffn_cpu_layers()
+    # Piecewise-linear interpolation of the measured decode curve. Linear rather than fitted
+    # because four points do not justify a model, and because interpolating BETWEEN measurements
+    # is defensible where extrapolating beyond them is not -- past the last anchor we hold the
+    # final (slowest) rate rather than extending the trend into numbers nobody measured.
+    rate = _FFN_DECODE_TOK_S_BY_LAYERS[-1][1]
+    if layers <= 0:
+        rate = _FFN_DECODE_TOK_S_BY_LAYERS[0][1]
+    else:
+        for (lo_n, lo_r), (hi_n, hi_r) in zip(
+            _FFN_DECODE_TOK_S_BY_LAYERS, _FFN_DECODE_TOK_S_BY_LAYERS[1:]
+        ):
+            if lo_n <= layers <= hi_n:
+                frac = (layers - lo_n) / float(hi_n - lo_n)
+                rate = lo_r + frac * (hi_r - lo_r)
+                break
+    slowdown = _FFN_DECODE_TOK_S_BY_LAYERS[0][1] / max(rate, 1e-6)
+    return int(max(600.0, _INDUCE_OBSERVED_MAX_WALL_S * slowdown))
+
+
+def _ffn_cpu_override_regex(n_cpu_layers: int) -> str:
+    """The `-ot/--override-tensor` pattern that keeps the FFN weights of the FIRST `n_cpu_layers`
+    transformer blocks on the CPU.
+
+    Tensor names are REAL, read out of the gemma-4-31B-it Q4_K_M GGUF tensor table rather than
+    guessed: `blk.<i>.ffn_gate.weight`, `blk.<i>.ffn_up.weight`, `blk.<i>.ffn_down.weight`
+    (60 blocks, three FFN tensors each). The alternation is written out explicitly per index
+    instead of as a numeric range, because llama.cpp's override matcher is a plain regex with no
+    numeric-range support and `blk\\.[0-9]+\\.` would match EVERY block, silently offloading the
+    whole model when the caller asked for twelve layers.
+
+    Returns "" for n_cpu_layers <= 0 so the caller can append nothing at all -- the default path
+    must not gain an argument.
+    """
+    if n_cpu_layers <= 0:
+        return ""
+    idx = "|".join(str(i) for i in range(int(n_cpu_layers)))
+    return rf"blk\.({idx})\.ffn_(gate|up|down)\.weight=CPU"
+
+
 @dataclass
 class LocalGGUFProposer:
     """OFFLINE-LEGAL, DECENTRALIZED, GPU-ENFORCED proposer (CLAUDE.md decentralization
@@ -2581,7 +3609,25 @@ class LocalGGUFProposer:
     NOT TRM and NOT a closed model: an open local LLM (a TRM-class trained model is the
     other local engine)."""
 
-    repo_substr: str = "gemma-4-12B-it"  # lightweight SOTA: fast on GPU for per-game induction
+    # THE DATACLASS DEFAULT IS NOW THE LIVE PIN (2026-07-28, second pass). It used to be
+    # `"gemma-4-12B-it"`, on the stated ground that the ~25 historical `experiment_4xxx/5xxx_*`
+    # modules constructing a bare proposer were measured against the 12B and re-pointing them
+    # "would rewrite what those experiments mean". That argument does not survive contact with the
+    # operator directive, and it was protecting the wrong thing:
+    #
+    #   * The 12B is a THIRD model -- neither the retired Qwen nor the directed gemma-4-31B. A
+    #     default nobody chose is not a preserved measurement, it is an unowned configuration.
+    #   * Historical artifacts already in `results/` are not affected by a default in live code;
+    #     they record what they ran. Never-prune protects the RECORD, not the default that
+    #     produced it. RE-RUNNING one of those modules today under a 12B default would in fact be
+    #     the misleading outcome -- a "current" measurement of a model the project no longer runs.
+    #   * The failure mode is silent in the direction that matters: a bare proposer that quietly
+    #     loads a different model produces plausible-looking induction numbers attributed to the
+    #     live generator.
+    #
+    # Any module that genuinely needs the 12B can still say so explicitly; that is a default, not
+    # a hardcode. Pinned by tests/python/test_arc_generator_migration_defects.py.
+    repo_substr: str = ARC_LIVE_GENERATOR_REPO_SUBSTR
     # SHARED context pool (llama-server -c). 81920 by measurement, env-overridable --
     # see _default_induce_n_ctx() above for the full derivation and the rejected alternatives.
     n_ctx: int = field(default_factory=_default_induce_n_ctx)
@@ -2592,10 +3638,21 @@ class LocalGGUFProposer:
     # Live-submission deploy config (all OPT-IN; defaults preserve legacy behavior). Validated 2026-06-19:
     # Qwen3.5-9B-MTP is the selected ARC live generator (62.5% Layer-B grounding vs DeepSeek-Flash 25%,
     # ~13 tok/s with MTP, 5.9GB Q4 fits 16GB). See docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md.
-    mtp: bool = False  # --spec-type draft-mtp (self-draft via the -MTP- GGUF's nextn heads)
-    kv_quant: Optional[str] = (
-        None  # e.g. "q8_0" -> --cache-type-k/v q8_0 (halves KV, near-lossless)
-    )
+    # `--spec-type draft-mtp` + `--model-draft <the SEPARATE head GGUF>`. Reads the same env
+    # expression the live construction sites read, so a bare proposer and a live one agree.
+    mtp: bool = field(default_factory=_mtp_default_on)
+    # EXPLICIT path to the MTP draft head. None -> `_resolve_mtp_head()` finds it (env var, HF
+    # cache, operator staging dir). The Kaggle kernel sets CARNOT_ARC_MTP_GGUF_PATH from the
+    # attached dataset mount rather than passing this.
+    mtp_model_path: Optional[str] = None
+    # WAS `None` (= f16), WHICH CANNOT LOAD THIS MODEL AT ANY USEFUL CONTEXT. Measured 2026-07-28
+    # on an RTX 3090: gemma-4-31B-it Q4_K_M at n_ctx 32768 with f16 KV OOMs at 23902 MiB, and at
+    # the shipped n_ctx 81920 it SIGSEGVs. q8_0 is what makes the model fit at all (23906 of
+    # 24123 MiB free), and every live construction site already passed it explicitly -- so the
+    # `None` default was reachable ONLY by a caller who omitted the argument, and handed exactly
+    # that caller an unloadable configuration. The default now matches the only value the project
+    # ships. Near-lossless; halves the KV cache.
+    kv_quant: Optional[str] = "q8_0"  # --cache-type-k/v q8_0
     # -ngl: how many transformer layers' weights live on the GPU. 999 = all on GPU (fast, default).
     # Operator prefill-to-RAM lever (2026-06-21): on the shared 16GB eval GPU the LLM (5.9GB MTP-off)
     # coexists with the live per-game CNN dynamics fit (measured 1.45GB peak) + the q8 KV-cache. Full
@@ -2606,6 +3663,16 @@ class LocalGGUFProposer:
     # training. The wall-clock cost is acceptable because the ARC eval has NO time limit (only the 12h
     # Kaggle-notebook cap + the 600 RPM real-env rate limit, neither of which gates internal generation).
     n_gpu_layers: int = 999
+    # OPT-IN dense-FFN offload to system RAM (`-ot`). 0 = byte-identical argv to before the knob
+    # existed. See `_default_ffn_cpu_layers()` for the measured VRAM/throughput tradeoff table and
+    # for why `-cmoe`/`-ncmoe` are the WRONG lever on this dense model (they are silent no-ops).
+    #
+    # THE DEFAULT IS A SENTINEL, NOT A `default_factory`, AND THE DIFFERENCE IS LOAD-BEARING. A
+    # dataclass evaluates default factories with no access to sibling fields, so a factory here
+    # sized the offload against the ENVIRONMENT's `mtp` answer while the server launches with THIS
+    # instance's `mtp`. `_FFN_CPU_LAYERS_AUTO` defers the decision to `__post_init__`, which does
+    # have `self.mtp`. An explicitly-passed value is left exactly as given.
+    ffn_cpu_layers: int = _FFN_CPU_LAYERS_AUTO
     no_think_prefix: str = ""  # e.g. "/no_think\n" -> suppress hybrid-thinking CoT (Qwen3)
     # REQ-ARC-WMTE-5725: OPT-IN. When True, generate()/complete_text() POST to the OpenAI-compatible
     # /v1/chat/completions endpoint (a single user turn) instead of the raw /completion endpoint. The
@@ -2639,6 +3706,35 @@ class LocalGGUFProposer:
     # "content" field was read from the response).
     last_stop_type: str = ""
     last_prompt_truncated: bool = False
+    # The EXACT argv `_ensure_server()` last handed to subprocess.Popen, and the `-ot` value it
+    # derived. Recorded because "the flag reaches the server" is otherwise unfalsifiable from
+    # outside the process: with stderr going to a log file and the launch happening inside a
+    # private method, a silently-dropped argument looks identical to a working one. Empty until
+    # the first launch. Pinned by tests/python/test_arc_ffn_cpu_offload.py.
+    last_launch_argv: tuple = ()
+    last_ffn_cpu_override: str = ""
+    # WHAT `--model-draft` ACTUALLY RECEIVED, and -- when MTP was asked for and not delivered --
+    # why. These exist because a misconfigured MTP is invisible: llama.cpp accepts a draft it
+    # cannot use, warns, and serves normally with speculation silently disabled. "The server is
+    # healthy" is therefore NOT evidence that MTP is engaged, so the launch decision has to be
+    # recorded at the point it is made rather than inferred later from throughput.
+    last_mtp_draft_path: str = ""
+    mtp_disabled_reason: str = ""
+    # DID SPECULATION ACTUALLY ENGAGE, per the RUNTIME'S OWN STDERR -- as opposed to
+    # `last_mtp_draft_path`, which only records what we PASSED. Three-valued:
+    #   True  -> the positive `adding speculative implementation 'draft-mtp'` marker was found
+    #   False -> the server is healthy and the marker is ABSENT, i.e. silently disabled
+    #   None  -> not requested, or stderr was not captured so it cannot be determined
+    # See `_verify_mtp_engaged()` for why "healthy server" is not evidence and None is not False.
+    last_mtp_engaged: Optional[bool] = None
+    mtp_engaged_evidence: str = ""
+    # WHERE THIS GENERATOR ACTUALLY LANDED, and why. Populated by `_ensure_server()` from the
+    # module-level `GENERATOR_SELECTION_LOG`. Before this existed, "the CUDA guard refused the card
+    # and we silently fell back to a ~2 tok/s iGPU" was a control-flow branch with no trace: the
+    # only symptom was an induce timeout much later, which reads as a model problem rather than a
+    # placement problem. An artifact carrying these two fields can distinguish them after the fact.
+    generator_selection_log: list = field(default_factory=list)
+    generator_server_path: str = ""
     # REQ-ARC-WMTE-5717: DEV-ONLY. When True (set by the agent ONLY on the stall/first-contact
     # re-induction path) AND CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED=1, induce() prepends the
     # game-agnostic exploration-playbook exemplars. Default False -> byte-identical induce prompt.
@@ -2681,6 +3777,69 @@ class LocalGGUFProposer:
     observed_server_n_ctx: Optional[int] = None
     reuse_n_ctx_check: str = "not_checked"
     reuse_refusals: list = field(default_factory=list)
+    # ...and the same declared-vs-actual treatment for WHICH MODEL is loaded (2026-07-28). Added
+    # with the generator switch: `repo_substr` is our INTENT, and a stale server from the previous
+    # pin satisfied every prior reuse condition, so the witness could report gemma while the run
+    # induced on Qwen. These record what the running server actually says.
+    observed_server_model_path: Optional[str] = None
+    reuse_model_check: str = "not_checked"
+    # Set by `__post_init__` when it re-fitted `ffn_cpu_layers` because this instance's `mtp`
+    # disagreed with the environment default the dataclass factory had used. Recorded rather than
+    # silently corrected: a re-fit means somebody's mental model of this launch was wrong, and the
+    # artifact should be able to say so.
+    ffn_cpu_layers_refit_note: str = ""
+
+    def __post_init__(self) -> None:
+        """Re-fit `ffn_cpu_layers` from THIS INSTANCE'S `mtp`, not from the environment default.
+
+        THE BUG THIS CLOSES, WHICH IS A SILENT-LLM-OFF BUG AND NOT A TUNING NICETY.
+        `ffn_cpu_layers` is a `default_factory=_default_ffn_cpu_layers`, and a dataclass evaluates
+        its default factories with NO ACCESS to the other fields being constructed. So the
+        auto-fit sized the offload against `_mtp_default_on()` -- the ENVIRONMENT's answer -- while
+        the server this proposer is about to launch uses `self.mtp`, the CONSTRUCTOR's answer.
+        Whenever those two disagree the offload is fitted for the wrong configuration.
+
+        They disagree constantly in practice. Eight-plus harnesses build
+        `LocalGGUFProposer(mtp=os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- note the literal
+        `"1"`, which is NOT the canonical local default of `"0"` -- so with `CARNOT_ARC_MTP` unset
+        the instance gets `mtp=True` while the factory fitted layers for `mtp=False`. Worked
+        through at the shipped n_ctx 81920 on a 24123 MiB card:
+
+            factory fits for mtp=False -> 7 layers, `_generator_cuda_min_free_mb(7, True)` = 25311
+            no re-fit, mtp=True         -> 0 layers, `_generator_cuda_min_free_mb(0, True)` = 26678
+
+        Both exceed what the card has, so the guard declines CUDA, the generator falls back to the
+        iGPU HIP build at ~2 tok/s, every induce call exceeds its timeout, `generate()` returns
+        `(False, msg)`, and the agent proceeds LLM-OFF while still reporting itself as the LLM-on
+        scored path. Re-fitting here makes the two sides agree BY CONSTRUCTION for every call site
+        at once, present and future, instead of requiring each one to be found and corrected.
+
+        WHY A SENTINEL RATHER THAN ALWAYS RE-FITTING. A caller who names `ffn_cpu_layers=` has
+        stated a fact about the launch they want, and silently overriding it would be the same
+        class of error in the other direction -- the tests that pin exact argv for a given layer
+        count depend on the explicit value surviving. `_FFN_CPU_LAYERS_AUTO` (-1) means "nobody
+        chose; fit it", which is what the default factory's result is re-expressed as below.
+
+        KAGGLE IS UNAFFECTED. `_default_ffn_cpu_layers()` returns 0 unless
+        `CARNOT_ARC_GENERATOR_CUDA_GPU` names a real CUDA card, and the scored kernel does not set
+        it. A re-fit of 0 to 0 changes no argv.
+        """
+        if self.ffn_cpu_layers != _FFN_CPU_LAYERS_AUTO:
+            return  # the caller named a value; it is not ours to override
+        try:
+            self.ffn_cpu_layers = _default_ffn_cpu_layers(mtp=self.mtp)
+        except Exception:  # an audit convenience must never break the generator it audits
+            self.ffn_cpu_layers = 0
+            return
+        env_answer_differs = self.mtp != _mtp_default_on()
+        if env_answer_differs:
+            self.ffn_cpu_layers_refit_note = (
+                f"ffn_cpu_layers auto-fitted to {self.ffn_cpu_layers} against THIS proposer's "
+                f"mtp={self.mtp}, which differs from the environment default "
+                f"mtp={_mtp_default_on()}. Sizing it from the environment instead would have "
+                "fitted the offload for a configuration this server is not about to launch."
+            )
+            _note_generator_selection(self.ffn_cpu_layers_refit_note)
 
     def _url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
@@ -2727,7 +3886,27 @@ class LocalGGUFProposer:
             "generator_total_slots_observed": observed_slots,
             "generator_reuse_n_ctx_check": str(self.reuse_n_ctx_check),
             "generator_reuse_refusals": list(self.reuse_refusals),
+            # OBSERVED model identity, alongside the declared repo_substr. Without the observed
+            # value a witness that says "gemma-4-31B-it" is only restating our own configuration.
+            "generator_model_declared": str(self.model_path or self.repo_substr),
+            "generator_model_observed": self.observed_server_model_path,
+            "generator_reuse_model_check": str(self.reuse_model_check),
             "generator_max_tokens": int(self.max_tokens),
+            # MTP: what we ASKED for, versus what the runtime SAID it did. Published as three
+            # separate fields on purpose. `generator_mtp_requested` is our configuration;
+            # `generator_mtp_draft_path` is the argv we built; `generator_mtp_engaged` is the only
+            # one of the three that is EVIDENCE, because it comes from the server's own stderr.
+            # Before this, an artifact could report a fully "MTP-on" run that had speculation
+            # silently disabled -- llama.cpp accepts an unusable draft, warns, and serves normally,
+            # so every other field on this witness looks identical either way.
+            "generator_mtp_requested": bool(self.mtp),
+            "generator_mtp_draft_path": str(self.last_mtp_draft_path),
+            "generator_mtp_engaged": self.last_mtp_engaged,
+            "generator_mtp_evidence": str(self.mtp_engaged_evidence or self.mtp_disabled_reason),
+            # Recorded because a re-fit means the offload was sized against a different `mtp` than
+            # the launch used -- see `LocalGGUFProposer.__post_init__`. Empty in the normal case.
+            "generator_ffn_cpu_layers": int(self.ffn_cpu_layers),
+            "generator_ffn_cpu_layers_refit_note": str(self.ffn_cpu_layers_refit_note),
         }
 
     def _record_completion_diagnostics(self, response: dict) -> None:
@@ -2885,10 +4064,52 @@ class LocalGGUFProposer:
                 return int(candidate)
         return None
 
+    def observed_model_path(self) -> Optional[str]:
+        """The GGUF path the RUNNING server was launched with, or None if unreadable.
+
+        llama.cpp's /props reports it top-level as `model_path` (verified directly against this
+        project's own build, 2026-07-28: the key is present and absolute, while
+        `default_generation_settings` carries only `n_ctx`/`params` and no model field at all).
+        `model_alias` is also present but is a display name, so `model_path` is the load-bearing
+        one. Read defensively -- an unreadable value must degrade to None, never raise.
+        """
+        props = self.server_props()
+        if not props:
+            return None
+        raw = props.get("model_path") or props.get("model") or props.get("model_alias")
+        return str(raw) if isinstance(raw, str) and raw.strip() else None
+
     def observed_total_slots(self) -> Optional[int]:
         props = self.server_props()
         slots = props.get("total_slots") if props else None
         return int(slots) if isinstance(slots, int) and slots > 0 else None
+
+    def _model_path_matches(self, observed: str) -> bool:
+        """Does the running server's GGUF correspond to the one THIS proposer is configured for?
+
+        Two configuration shapes, so two comparisons:
+
+          * An explicit `model_path` (the Kaggle bundle sets `CARNOT_ARC_GGUF_PATH`): compare
+            BASENAMES, not full paths. The same weights legitimately live at different absolute
+            paths in different environments, and a full-path compare would refuse a perfectly good
+            warm server for a directory-layout difference.
+          * Only a `repo_substr` (the local cache path): require the substring to appear in the
+            observed path, case-insensitively. `_resolve_gguf` finds the file by exactly this
+            substring, so anything it would have resolved will match, and a different model's path
+            will not.
+
+        Deliberately permissive about QUANT: a Q4_K_M vs Q5 of the same model differs in quality,
+        not in identity, and refusing across quants would relaunch a second copy of what is
+        substantially the right model. The failure this guards is a DIFFERENT MODEL entirely.
+        """
+        obs = str(observed or "")
+        if not obs:
+            return False
+        if self.model_path:
+            from pathlib import Path as _P
+
+            return _P(obs).name == _P(str(self.model_path)).name
+        return str(self.repo_substr).lower() in obs.lower()
 
     def _reusable(self) -> bool:
         """Is an ALREADY-RUNNING server on our port usable as OUR configured generator?
@@ -2910,7 +4131,30 @@ class LocalGGUFProposer:
         shipped default was sized against would no longer hold.
 
         A server whose /props cannot be read is reused with a WARNING record rather than
-        refused, so a llama.cpp build that does not serve /props does not brick the path."""
+        refused, so a llama.cpp build that does not serve /props does not brick the path.
+
+        THE SECOND HOLE, closed 2026-07-28 with the generator switch. This check compared the
+        context POOL and nothing else -- so a running server was adopted regardless of WHICH MODEL
+        it had loaded. That was near-harmless while exactly one model was ever served on port 8919.
+        It stops being harmless the moment the pin changes: a Qwen3.5-9B server left over from a
+        previous run, on the default port, with n_ctx 81920, satisfies every condition above and
+        gets adopted -- so the run induces with the RETIRED model while `liveness_witness()`
+        faithfully reports `repo_substr` read off `self.repo_substr`, i.e. gemma. That is the exact
+        declared-vs-actual shape described two paragraphs up, in the model dimension instead of the
+        context dimension, and it is most likely to fire precisely during a model transition when
+        stale servers are lying around. Same policy as the n_ctx check: refuse and relaunch on a
+        fresh port (never adopt, never fight for the port), and fail OPEN if /props is unreadable.
+        """
+        observed_model = self.observed_model_path()
+        if observed_model is None:
+            self.reuse_model_check = "unobserved_model_path_unreadable"
+        else:
+            self.observed_server_model_path = observed_model
+            if self._model_path_matches(observed_model):
+                self.reuse_model_check = "match"
+            else:
+                self.reuse_model_check = f"refused_wrong_model observed={observed_model} want={self.model_path or self.repo_substr}"
+                return False
         observed = self.observed_n_ctx()
         if observed is None:
             self.reuse_n_ctx_check = "unobserved_props_unreachable"
@@ -2928,17 +4172,25 @@ class LocalGGUFProposer:
         if self._healthy():
             if self._reusable():
                 return True  # reuse an already-running server (loaded model)
-            # A live server on our port has a SMALLER context pool than this proposer needs.
-            # Do not adopt it and do not fight it for the port -- move to a fresh port and
+            # A live server on our port is unusable: either a SMALLER context pool than this
+            # proposer needs, or (since 2026-07-28) a DIFFERENT MODEL than the one we are pinned
+            # to. Do not adopt it and do not fight it for the port -- move to a fresh port and
             # launch our own, so a stale/foreign server cannot silently degrade this run.
             # Recorded on its OWN channel, NOT via _note_server_failure. A port relaunch is a
             # configuration event, not a generator failure: routing it into n_server_failures
             # would flip llm_on_row_valid to False for a run whose generator then worked
             # perfectly, i.e. over-firing the very gate that has to stay trustworthy.
+            #
+            # The message names WHICH check refused, because the two have different operator
+            # remedies (raise the pool / kill the stale server) and a single generic "unusable"
+            # line would send the reader to the wrong one.
             self.reuse_refusals.append(
-                f"port {self.port} already serves n_ctx={self.observed_server_n_ctx} "
-                f"< required {self.n_ctx}; relaunched on a fresh port "
-                "(reusing it would silently restore the concurrency fault)"
+                f"port {self.port} unusable: model_check={self.reuse_model_check} "
+                f"n_ctx_check={self.reuse_n_ctx_check} "
+                f"(observed model={self.observed_server_model_path}, "
+                f"n_ctx={self.observed_server_n_ctx}; required n_ctx {self.n_ctx}); "
+                "relaunched on a fresh port -- reusing it would silently restore the "
+                "concurrency fault or run the wrong model"
             )
             self.port = _free_port()
         path = self.model_path or _resolve_gguf(
@@ -2946,7 +4198,14 @@ class LocalGGUFProposer:
         )  # explicit path (Kaggle bundle) else cache
         # Resolve the server + launch env at LAUNCH time so the opt-in 3090 guard sees current GPU state
         # (CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> CUDA build pinned to that card iff it has headroom).
-        server, launch_env = _generator_server_and_env()
+        server, launch_env = _generator_server_and_env(self.ffn_cpu_layers, self.mtp)
+        # LIFT the placement decisions onto the instance. `_generator_server_and_env()` and
+        # `_default_ffn_cpu_layers()` are module functions with nowhere to record, so an artifact
+        # could not previously answer "why was this run slow / why was the LLM off": the guard
+        # refusal and the iGPU fall-back existed only as a control-flow branch. Copied (not
+        # aliased) so a later launch cannot retroactively edit what an earlier artifact recorded.
+        self.generator_selection_log = list(GENERATOR_SELECTION_LOG)
+        self.generator_server_path = str(server)
         if not path or not server.exists():
             return False  # GPU enforcement: no CPU fallback
         args = [
@@ -2964,10 +4223,52 @@ class LocalGGUFProposer:
             "--host",
             "127.0.0.1",
         ]
-        if self.mtp:  # native llama.cpp MTP speculative decoding (self-draft)
-            args += ["--spec-type", "draft-mtp", "--model-draft", path]
+        # NATIVE llama.cpp MTP SPECULATIVE DECODING. `--model-draft` MUST be the SEPARATE draft
+        # head GGUF, never `path` (the main weights).
+        #
+        # THIS LINE USED TO READ `--model-draft <path>` -- the main model -- and that is the single
+        # most dangerous configuration in this file, because it does not fail. llama.cpp emits
+        #     W llama_init_from_model: context type MTP requested but model doesn't contain MTP layers
+        #     W common_speculative_init: no implementations specified for speculative decoding
+        # and then serves normally with speculation SILENTLY DISABLED: /health returns 200,
+        # generation is correct, and the only observable difference is tok/s. Directly reproduced
+        # 2026-07-28. So "MTP is on" was unfalsifiable from inside the process, which is why it is
+        # now recorded on the instance instead.
+        #
+        # HEAD ABSENT -> MTP OFF, LOUDLY. If the head cannot be resolved we drop the flags entirely
+        # rather than passing something bogus. Dropping them costs the ~1.4x speedup; passing a
+        # bogus draft costs the same speedup AND leaves a run that believes it had MTP. The
+        # `-- reason --` is written to `mtp_disabled_reason` and to the audit channel, because the
+        # remedy (attach the head dataset / set CARNOT_ARC_MTP_GGUF_PATH) is not guessable from a
+        # missing speedup.
+        self.last_mtp_draft_path = ""
+        self.mtp_disabled_reason = ""
+        if self.mtp:
+            head = self.mtp_model_path or _resolve_mtp_head()
+            if head and Path(head).exists() and _is_mtp_head_file(Path(head).name):
+                args += ["--spec-type", "draft-mtp", "--model-draft", head]
+                self.last_mtp_draft_path = str(head)
+            else:
+                self.mtp_disabled_reason = (
+                    f"mtp=True but no usable MTP draft head was resolved (looked for "
+                    f"{ARC_LIVE_GENERATOR_MTP_HEAD_FILENAME!r}; got {head!r}). Launching WITHOUT "
+                    "speculative decoding rather than passing the main weights as the draft -- "
+                    "llama.cpp would accept that, warn, and serve with speculation silently "
+                    "disabled. Set CARNOT_ARC_MTP_GGUF_PATH, or attach the "
+                    "iancblenke/carnot-gemma4-31b-mtp-head dataset on Kaggle."
+                )
+                _note_generator_selection(self.mtp_disabled_reason)
         if self.kv_quant:  # 8-bit KV cache doubles usable context, near-lossless
             args += ["--cache-type-k", self.kv_quant, "--cache-type-v", self.kv_quant]
+        # OPT-IN dense-FFN offload to system RAM. Appended ONLY when the operator asked for it, so
+        # the default launch argv is unchanged. Recorded on the instance because a flag that is
+        # accepted and silently ignored is worse than no flag: `last_ffn_cpu_override` lets a test
+        # (and an artifact) assert the regex actually reached the process argv, and the server's
+        # own stderr log -- captured a few lines below -- prints `tensor overrides` on the load
+        # path, which is the independent confirmation that it was ACTED on and not just parsed.
+        self.last_ffn_cpu_override = _ffn_cpu_override_regex(self.ffn_cpu_layers)
+        if self.last_ffn_cpu_override:
+            args += ["-ot", self.last_ffn_cpu_override]
         if self.extra_server_args:  # e.g. ("-fit", "off") -- see field docstring
             args += list(self.extra_server_args)
         # env=launch_env: None inherits the ambient env (legacy iGPU path); a dict pins CUDA_VISIBLE_DEVICES.
@@ -3023,6 +4324,7 @@ class LocalGGUFProposer:
         except OSError:
             self._stderr_log_path = None
             _err_sink = subprocess.DEVNULL
+        self.last_launch_argv = tuple(args)
         self._proc = subprocess.Popen(
             args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
         )
@@ -3030,9 +4332,84 @@ class LocalGGUFProposer:
         # a 62GB BF16 GGUF) can take far longer than the 180s the fixed 90-attempt budget allows
         for _ in range(load_wait_attempts):
             if self._healthy():
+                self._verify_mtp_engaged()
                 return True
             time.sleep(2)
         return False
+
+    # The POSITIVE marker llama.cpp prints when `--spec-type draft-mtp` is genuinely wired up. Read
+    # off a real successful launch's stderr (2026-07-28), not guessed:
+    #     I common_speculative_impl_draft_mtp: adding speculative implementation 'draft-mtp'
+    #     I srv    load_model: speculative decoding context initialized
+    # The first is specific to the draft-mtp implementation, so it is the one matched.
+    _MTP_ENGAGED_MARKER = "common_speculative_impl_draft_mtp: adding speculative implementation"
+    # ...and the WARNINGS it prints instead when the draft is accepted but unusable. Matched only to
+    # give the operator the runtime's own words in the failure note; absence of these is NOT
+    # evidence of success (that is the whole trap), so the positive marker is what decides.
+    _MTP_REFUSED_MARKERS = (
+        "context type MTP requested but model doesn't contain MTP layers",
+        "no implementations specified for speculative decoding",
+    )
+
+    def _verify_mtp_engaged(self) -> None:
+        """After the server reports healthy, CHECK ITS OWN STDERR for the MTP positive marker.
+
+        WHY THIS EXISTS, AND WHY ITS ABSENCE WAS THE SHARPEST GAP IN THIS FILE. This module already
+        states the doctrine, twice, in capitals: "never conclude MTP is enabled from a healthy
+        server or an absent error; a misconfigured MTP is indistinguishable from a working one
+        except by tok/s". It then did not apply that doctrine to its OWN server. The only place the
+        marker was ever grepped was `scripts/kaggle/submission_kernel/main.py`'s pre-flight probe --
+        a DIFFERENT process, on a different port, torn down before the agent starts. Inside this
+        class, `last_mtp_draft_path` recorded only what was PASSED to `--model-draft`, which is a
+        fact about our argv and not about the runtime's behaviour: the entire failure mode is that
+        llama.cpp ACCEPTS a draft it cannot use.
+
+        So `mtp=True` + a resolvable head + a healthy server was treated as "MTP is on" by exactly
+        the inference the file forbids. Now `last_mtp_engaged` records what the runtime SAID.
+
+        THREE-VALUED ON PURPOSE. `None` means "could not determine" -- stderr went to DEVNULL
+        because the log directory was unwritable, so there is nothing to read. That is genuinely
+        different from `False` ("we read the log and speculation is NOT engaged"), and collapsing
+        them would either invent a failure or, worse, let an unreadable log read as success. A
+        `False` is written loudly to the audit channel; a `None` is recorded quietly, because a
+        missing log is not evidence of a broken launch.
+
+        NEVER RAISES. An audit channel that can kill the generator it audits is worse than no audit
+        channel -- the whole point is to make a degraded run visible, not to convert it into a
+        crashed one.
+        """
+        if not self.mtp or not self.last_mtp_draft_path:
+            # MTP was not requested, or was already declined with a recorded reason. Nothing to
+            # verify; leave `last_mtp_engaged` at its "not applicable" default of None.
+            return
+        try:
+            log_path = getattr(self, "_stderr_log_path", None)
+            if not log_path or not Path(log_path).exists():
+                self.last_mtp_engaged = None
+                self.mtp_engaged_evidence = (
+                    "server stderr was not captured (log dir unwritable), so whether speculative "
+                    "decoding engaged CANNOT be determined from this launch. Not treated as "
+                    "success: an absent error is exactly what a silently-disabled MTP looks like."
+                )
+                return
+            text = Path(log_path).read_text(errors="replace")
+            if self._MTP_ENGAGED_MARKER in text:
+                self.last_mtp_engaged = True
+                self.mtp_engaged_evidence = self._MTP_ENGAGED_MARKER
+                return
+            self.last_mtp_engaged = False
+            refused = [m for m in self._MTP_REFUSED_MARKERS if m in text]
+            self.mtp_engaged_evidence = (
+                f"MTP was requested with --model-draft {self.last_mtp_draft_path!r} and the server "
+                f"is HEALTHY, but its stderr does NOT contain {self._MTP_ENGAGED_MARKER!r}. "
+                "Speculative decoding is therefore NOT engaged and this run gets no speedup, while "
+                "otherwise behaving exactly like a working one."
+                + (f" The runtime's own warnings: {refused}." if refused else "")
+            )
+            _note_generator_selection(self.mtp_engaged_evidence)
+        except Exception:
+            self.last_mtp_engaged = None
+            self.mtp_engaged_evidence = "mtp verification raised; treated as could-not-determine"
 
     def generate(
         self,

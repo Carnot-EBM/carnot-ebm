@@ -15,14 +15,46 @@ earlier checklist assumed. The real contract:
   * Dependencies come from competition-provided wheels (`--no-index`); internet is OFF.
     The game API is the internal gateway, not the public three.arcprize.org.
 
-Our local Qwen3.5-9B-MTP generator runs OFFLINE via the bundled `llama-server` binary +
-GGUF (attached datasets) — internet-off is fine because that path is a pure disk read +
-local GPU. If the bundled engine is unavailable the agent degrades gracefully to the
-CPU graph-explore cascade (try/except in arc_executable_world_model._induce_and_plan), so
-the submission still plays games even if the LLM tier is unavailable.
+Our local generator runs OFFLINE via the bundled `llama-server` binary + GGUF (attached
+datasets) — internet-off is fine because that path is a pure disk read + local GPU. If the
+bundled engine is unavailable the agent degrades gracefully to the CPU graph-explore cascade
+(try/except in arc_executable_world_model._induce_and_plan), so the submission still plays
+games even if the LLM tier is unavailable.
 
-Attach as datasets: carnot-agent-code, carnot-llamacpp-mtp-binary, carnot-qwen35-9b-mtp-gguf.
+Attach as datasets: carnot-agent-code, carnot-llamacpp-mtp-binary, carnot-gemma4-31b-it-gguf.
 Add the competition as a data source. GPU on. Internet OFF (the gateway is internal).
+
+=========================== 2026-07-28 GENERATOR SWITCH — READ ===========================
+The generator moved from Qwen3.5-9B-MTP (5.9GB Q4) to gemma-4-31B-it (18.3GB Q4) by operator
+directive, on the grounds that the assumed 16GB Kaggle VRAM ceiling that forced the 9B pin is
+void ("the Kaggle hardware is 96G since May"). Head-to-head evidence, 13 games x 3 replicates:
+0.3843 fail-as-zero for the 31B vs 0.0627, matched tally 11-0-2, sign p=0.00098. See the
+ARC_LIVE_GENERATOR_* block in python/carnot/agentic/arc_executable_world_model.py.
+
+TWO THINGS ARE NOT DONE AND WILL BREAK THE NEXT SUBMISSION IF IGNORED:
+
+ 1. THE DATASET DOES NOT EXIST YET. `kernel-metadata.json` now requests
+    `iancblenke/carnot-gemma4-31b-it-gguf`, which the OPERATOR must create and upload (the
+    18.3GB gemma-4-31B-it-Q4_K_M.gguf). Until then the push fails at dataset resolution --
+    deliberately a LOUD failure rather than silently running the old 9B.
+
+ 2. `machine_shape` IS "NvidiaRtxPro6000" AND IS UNVERIFIED BY US. It was chosen on two
+    independent pieces of evidence — the arcprize.org 2026 starter kit names an `rtx6000`
+    accelerator ("Nvidia RTX 6000 (g4-standard-48), Heavy ML; ARC-AGI-3 exclusive"), and a
+    real Kaggle-pulled 3rd-place kernel in THIS competition
+    (external/arc-m1-3rd-forge/kernel-metadata.json, server-assigned id_no 124697453) requests
+    exactly that string alongside a gemma-4-31b model source. But the local kagglesdk CANNOT
+    validate it: kernels_api_service.py documents only NvidiaTeslaT4/P100/Tpu1VmV38 and omits
+    even NvidiaL4, which we have been using successfully — so the SDK's silence is stale
+    documentation, not counter-evidence. Availability is also not allocation: nothing here
+    proves what a requested shape actually delivers. The kernel already prints an
+    `LLM GPU HARDWARE:` nvidia-smi line below; the operator's next submission log settles it.
+    DO NOT submit merely to confirm this — read it off the next real run.
+
+    18.3GB of weights plus an 81920-cell q8 KV pool does NOT fit the 24GB NvidiaL4 this
+    previously requested, so reverting machine_shape without also shrinking the model or the
+    context is a guaranteed OOM.
+==========================================================================================
 """
 
 import os
@@ -85,11 +117,36 @@ os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = "1"
 # reads `_mtp` from that env var, so it does test the real config -- the comment describing the
 # config was simply describing the wrong one, directly above the line that sets it.)
 server = next(iter(inp.rglob("llama-server")), None)
-# match the Qwen GGUF by name so an order-undefined rglob can't bind a stale/second .gguf
-_ggufs = [g for g in inp.rglob("*.gguf") if ("Qwen3.5-9B" in g.name or "Q4_K_M" in g.name)] or list(inp.rglob("*.gguf"))
-gguf = _ggufs[0] if _ggufs else None
-if len(_ggufs) > 1:
-    print(f"LLM TIER WARNING: {len(_ggufs)} GGUFs under /kaggle/input, using {gguf.name}; all={[g.name for g in _ggufs]}", flush=True)
+# Match the generator GGUF by name so an order-undefined rglob can't bind a stale/second .gguf.
+# 2026-07-28: the name arm moved from "Qwen3.5-9B" to "gemma-4-31B" with the generator switch. The
+# `or "Q4_K_M"` fallback arm is deliberately kept LAST and is NOT disambiguating on its own -- it
+# matches any Q4_K_M file, so if two quantized GGUFs are ever attached it picks by rglob order.
+# That is why the len>1 warning below exists and why the resolved name is printed: the attached
+# dataset should contain exactly one .gguf.
+# TWO GGUFs ARE NOW ATTACHED, AND THEY MUST BE TOLD APART EXPLICITLY, NOT BY LUCK.
+# `iancblenke/carnot-gemma4-31b-it-gguf` (18.3 GB main weights) and
+# `iancblenke/carnot-gemma4-31b-mtp-head` (491 MB draft head) both mount under /kaggle/input and
+# both end in `.gguf`. The previous filter was `"gemma-4-31B" in name or "Q4_K_M" in name` over an
+# order-undefined rglob:
+#   * the head is named `mtp-gemma-4-31B-it-Q8_0.gguf`, so it MATCHES the first arm, and
+#   * the `or "Q4_K_M"` arm matches any quantized file at all.
+# So the main model was being selected by rglob order between two files that both matched. Binding
+# the 491 MB head as the generator would load, serve, and answer nonsense -- a silent failure.
+# Now: the head is identified POSITIVELY and excluded from the main-model candidates, and the main
+# model must match its own canonical filename stem.
+_HEAD_SUBSTR = "mtp-gemma-4-31B-it"
+_all_ggufs = list(inp.rglob("*.gguf"))
+_heads = [g for g in _all_ggufs if _HEAD_SUBSTR in g.name]
+_mains = [g for g in _all_ggufs if _HEAD_SUBSTR not in g.name and "gemma-4-31B" in g.name] or [
+    g for g in _all_ggufs if _HEAD_SUBSTR not in g.name
+]
+gguf = _mains[0] if _mains else None
+mtp_head = _heads[0] if _heads else None
+if len(_mains) > 1:
+    print(f"LLM TIER WARNING: {len(_mains)} candidate MAIN GGUFs under /kaggle/input, using {gguf.name}; all={[g.name for g in _mains]}", flush=True)
+if len(_heads) > 1:
+    print(f"LLM TIER WARNING: {len(_heads)} candidate MTP HEAD GGUFs under /kaggle/input, using {mtp_head.name}; all={[g.name for g in _heads]}", flush=True)
+print(f"LLM TIER GGUF RESOLUTION: main={gguf.name if gguf else None} mtp_head={mtp_head.name if mtp_head else None} (all={[g.name for g in _all_ggufs]})", flush=True)
 
 if server and gguf:
     run_server = Path("/kaggle/working/llama-server")
@@ -104,6 +161,18 @@ if server and gguf:
     # free ~5.8GB of VRAM for KV headroom. Speculative decoding is exact, so output quality is
     # unchanged. (The frozen stack's MTP speedup was validated on the iGPU, not the P100.)
     #
+    # SUPERSEDED 2026-07-28 BY THE GENERATOR SWITCH, kept because it is the provenance of every
+    # pre-switch VRAM number: the paragraph below describes Qwen3.5-9B-MTP, and the whole reason
+    # this line exists (MTP loads a second copy of the weights) no longer applies -- gemma-4-31B-it
+    # is not an MTP model, its GGUF declares no nextn_predict_layers, so `--spec-type draft-mtp`
+    # is not something the agent would emit for it anyway. The line stays as belt-and-braces in
+    # case CARNOT_ARC_GGUF_PATH is ever pointed back at a genuine MTP model here.
+    # The CURRENT envelope for the shipped generator (gemma-4-31B-it Q4_K_M, mtp off, q8 KV,
+    # 4 slots, measured on an RTX 3090 2026-07-28) is:
+    #     MiB = 18940.7 + 0.050293*n_ctx + 206.83*slots
+    # i.e. 21416 MiB at n_ctx 32768 and 23888 MiB at n_ctx 81920. The per-cell KV term is ~2x the
+    # 9B's, which is why the local free-VRAM guard had to be refit alongside the model swap.
+    #
     # NOTE FOR ANYONE READING THE VRAM ENVELOPE: because MTP is OFF here, the published envelope
     # (`MiB = 10547 + 0.02519*n_ctx + 206.83*slots`, exp5866) does NOT describe this launch -- it
     # was fit with `--spec-type draft-mtp` ON and over-predicts the scored footprint by ~6.1 GB.
@@ -112,8 +181,85 @@ if server and gguf:
     # ~1668 MiB the mtp-on envelope predicts. Peak residency with 4 concurrent full-budget
     # requests in flight equalled idle residency to the MiB, because llama.cpp preallocates the
     # whole `-c` pool at load.
-    os.environ["CARNOT_ARC_MTP"] = "0"
-    _mtp = os.environ.get("CARNOT_ARC_MTP", "1") != "0"
+    # MTP IS ON FOR THE SCORED RUN (2026-07-28, operator-authorised: "when we submit we will want
+    # MTP enabled for speed when running on the Kaggle 96G GPU hardware"), and it is enabled from
+    # the CANONICAL SCORED CONSTANT rather than a re-typed literal here.
+    #
+    # WHAT CHANGED THE ANSWER. The paragraph preserved above concluded MTP-off on two premises,
+    # both now measured false for this model: (a) that gemma-4-31B has no MTP -- it does, via a
+    # SEPARATE 491 MiB head declaring `gemma4-assistant`; and (b) that enabling it would load the
+    # 18.3 GB weights twice -- it does not, it loads the head, +862 MiB at n_ctx 32768 and
+    # +1290 MiB at 81920. Measured with THE BINARY THIS KERNEL BUNDLES: 35.88 -> 50.16 tok/s
+    # (1.398x), 319/576 drafted tokens accepted.
+    #
+    # WHY A SEPARATE CONSTANT FROM THE LOCAL DEFAULT. On a 24 GB dev 3090 MTP-on forces ~14 FFN
+    # blocks to system RAM to fit, and that offload costs more decode than MTP returns -- a NET
+    # LOSS locally. On the 96 GB scored card no offload is needed, so it is a pure win. Two
+    # different hardware answers, so two named constants; `ARC_LIVE_GENERATOR_MTP_DEFAULT` stays
+    # "0" and is still the right local answer.
+    #
+    # SAFE WHEN THE HEAD IS MISSING. If the mtp-head dataset is not attached, `mtp_head` is None,
+    # we do not set CARNOT_ARC_MTP_GGUF_PATH, and `_ensure_server()` drops the MTP flags entirely
+    # rather than passing the main weights as the draft -- because llama.cpp ACCEPTS that, warns,
+    # and then serves with speculation silently disabled, which is indistinguishable from working
+    # MTP except by tok/s.
+    from carnot.agentic.arc_executable_world_model import (
+        ARC_LIVE_GENERATOR_MTP_DEFAULT,  # noqa: F401  (local default; kept for provenance/audit)
+        ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT,
+    )
+
+    # THE SCORED MTP STATE IS `constant AND head-present`, AND BOTH HALVES ARE LOAD-BEARING.
+    #
+    # This line used to be `os.environ["CARNOT_ARC_MTP"] = "1" if mtp_head else "0"` -- an
+    # UNCONDITIONAL assignment, which made the `os.environ.get(..., SCORED_DEFAULT)` below
+    # structurally unreachable: the key was always set, so the default was never consulted and
+    # `ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT` had ZERO runtime effect in the kernel. Head presence
+    # alone decided. The comment above claimed MTP "is enabled from the canonical scored constant",
+    # which was simply not what the code did.
+    #
+    # Why that mattered rather than being cosmetic: flipping the constant to "0" -- the documented
+    # way to turn scored MTP off -- would NOT have turned it off. It would only have desynced
+    # `SUBMITTED_AGENT_CONFIG["frozen_generator"]["mtp"]` and the exp4744/exp4754 readiness gates
+    # (all three of which DO read the constant) from what the kernel actually launches. The knob
+    # would have reported a change it did not make.
+    #
+    # AND-ing is the honest composition of the two facts. The constant is the OPERATOR'S INTENT
+    # ("we want MTP for the scored run"); head presence is a PHYSICAL PRECONDITION (no head, no
+    # speculation possible -- and drafting against the main weights is the silent-degradation trap,
+    # not a fallback). Either one being false correctly yields MTP off.
+    _scored_mtp_intent = ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT != "0"
+    _mtp = bool(_scored_mtp_intent and mtp_head)
+    os.environ["CARNOT_ARC_MTP"] = "1" if _mtp else "0"
+    if mtp_head:
+        os.environ["CARNOT_ARC_MTP_GGUF_PATH"] = str(mtp_head)
+    if not _scored_mtp_intent:
+        print("LLM TIER: scored MTP is DISABLED by ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT "
+              f"={ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT!r}. Speculative decoding will NOT be "
+              "requested even though a head is present.", flush=True)
+    elif not mtp_head:
+        print("LLM TIER WARNING: MTP head GGUF not found under /kaggle/input -- attach "
+              "iancblenke/carnot-gemma4-31b-mtp-head. Running WITHOUT speculative decoding "
+              "(~1.4x slower decode); NOT falling back to drafting against the main weights, "
+              "which llama.cpp would accept and then silently ignore.", flush=True)
+
+    # PARITY ASSERTION: what this kernel is about to launch must match what the submission
+    # DECLARES it launches. `SUBMITTED_AGENT_CONFIG["frozen_generator"]` is what the readiness
+    # gates (exp4744, exp4754) and the parity test assert against, and it is derived from the
+    # scored constant -- so if the kernel's resolved state ever diverges from it, every one of
+    # those gates is green while describing a different run. Printed rather than raised when the
+    # cause is a missing head: that is a degraded-but-valid scored run, and aborting the whole
+    # evaluation over a lost 1.4x would be a worse outcome than running slower.
+    try:
+        from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG as _SAC
+        _declared_mtp = bool(_SAC.get("frozen_generator", {}).get("mtp"))
+        if _declared_mtp != _mtp:
+            print(f"LLM TIER MTP DECLARED-VS-ACTUAL MISMATCH: SUBMITTED_AGENT_CONFIG declares "
+                  f"mtp={_declared_mtp} but this kernel resolved mtp={_mtp} "
+                  f"(scored_constant={ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT!r}, "
+                  f"head_present={bool(mtp_head)}). The readiness gates describe a configuration "
+                  "this run is NOT using.", flush=True)
+    except Exception as _e:
+        print(f"LLM TIER: could not cross-check declared MTP state ({_e!r})", flush=True)
     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
     # repeating literals here. The old code printed "ctx=16384" and probed with -c 16384 as
     # hardcoded strings; if the agent's own default had moved, the probe would have validated
@@ -137,6 +283,43 @@ if server and gguf:
         print(f"LLM GPU HARDWARE: {_smi.stdout.strip() or _smi.stderr.strip()!r}", flush=True)
     except Exception as _se:
         print(f"LLM GPU HARDWARE: unavailable ({_se!r})", flush=True)
+    # THE FIT CHECK ON THE **SCORED** CARD. `_generator_cuda_min_free_mb()` is the project's VRAM
+    # arithmetic, but on this path it is otherwise NEVER EVALUATED: `_generator_server_and_env()`
+    # returns at priority 1 on CARNOT_LLAMA_SERVER (which this kernel always sets), so the guard,
+    # the auto-fit and the fit invariant all protect the dev box only. Nothing checked whether the
+    # configuration about to launch actually FITS the hardware Kaggle handed us.
+    #
+    # That gap is not hypothetical. `machine_shape` in kernel-metadata.json is a free-form string
+    # the SDK cannot validate locally, so which card the scored run gets is not knowable before it
+    # runs. At n_ctx 81920 with MTP on, the requirement is ~25.2 GB -- more than a 24 GB-class card
+    # HAS. On such a card the server would cudaMalloc-fail, `_ensure_server()` would burn its retry
+    # budget, and the agent would proceed LLM-OFF while still reporting itself as the LLM-on scored
+    # path. This prints the comparison so the failure is legible in the log instead of being
+    # inferred later from a suspiciously low score.
+    #
+    # REPORTS, DOES NOT ABORT. A wrong-but-running submission is worth more than no submission, and
+    # the remedy (a different machine_shape, a lower n_ctx, MTP off) is an operator decision that
+    # cannot be taken from inside the scored run.
+    try:
+        from carnot.agentic.arc_executable_world_model import _generator_cuda_min_free_mb
+        _need = _generator_cuda_min_free_mb(0, _mtp)
+        _free_smi = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free,memory.total", "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=20)
+        _first = (_free_smi.stdout.strip().splitlines() or [""])[0]
+        _free_mb, _total_mb = (int(x.strip()) for x in _first.split(",")[:2])
+        _fits = _need <= _free_mb
+        print(f"LLM TIER VRAM FIT: needs {_need} MiB (n_ctx={_ctx}, mtp={_mtp}, 0 FFN offload), "
+              f"card has {_free_mb} MiB free of {_total_mb} MiB total -> "
+              f"{'FITS' if _fits else 'DOES NOT FIT'}", flush=True)
+        if not _fits:
+            print("LLM TIER VRAM WARNING: the scored card CANNOT hold this configuration. The "
+                  "generator will cudaMalloc-fail and the agent will run LLM-OFF while still "
+                  "reporting itself as the LLM-on scored path. Remedies (operator-side): a larger "
+                  "machine_shape, a lower CARNOT_ARC_INDUCE_N_CTX, or "
+                  "ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT='0'.", flush=True)
+    except Exception as _ve:
+        print(f"LLM TIER VRAM FIT: could not evaluate ({_ve!r})", flush=True)
     print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx={_ctx} "
           f"max_tokens={_maxtok} slots_expected={_LLAMA_SERVER_DEFAULT_SLOTS} "
           f"worst_prompt_tokens={_INDUCE_WORST_CASE_PROMPT_TOKENS} kv=q8_0", flush=True)
@@ -151,8 +334,12 @@ if server and gguf:
         _ngl = os.environ.get("CARNOT_ARC_NGL", "999")
         _args = [str(run_server), "-m", str(gguf), "-ngl", _ngl, "-c", _ctx,
                  "--port", str(_pp), "--host", "127.0.0.1", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0"]
-        if _mtp:
-            _args += ["--spec-type", "draft-mtp", "--model-draft", str(gguf)]
+        # `--model-draft` is the HEAD, never `gguf` (the main weights). This probe used to pass
+        # the main file, i.e. it validated as HEALTHY exactly the configuration in which
+        # speculation is silently disabled -- the measure-one-thing-ship-another shape this whole
+        # probe exists to prevent, inside the probe itself.
+        if _mtp and mtp_head:
+            _args += ["--spec-type", "draft-mtp", "--model-draft", str(mtp_head)]
         _proc = subprocess.Popen(_args, stdout=_err, stderr=_err)
         _ok = False
         for _ in range(150):  # up to ~300s for a cold GPU load
@@ -312,8 +499,33 @@ if server and gguf:
         except Exception:
             _proc.kill()
         _err.close()
+        # MTP ENGAGEMENT MUST BE READ FROM THE POSITIVE MARKER, NOT INFERRED FROM HEALTH.
+        # When `--spec-type draft-mtp` is given a draft the runtime cannot use, llama.cpp does NOT
+        # fail: it warns and serves normally with speculation silently disabled, so /health 200 and
+        # correct output are consistent with MTP being completely off. The ONLY in-log evidence
+        # that speculation is actually wired is the marker below; the only other evidence is a
+        # tok/s delta we cannot measure here without a matched control run. So we assert on the
+        # marker and say plainly when it is absent, rather than letting "healthy" imply "fast".
+        _mtp_log = ""
+        try:
+            _mtp_log = Path("/kaggle/working/llm_probe.err").read_text()
+        except Exception:
+            _mtp_log = ""
+        _mtp_engaged = "adding speculative implementation 'draft-mtp'" in _mtp_log
+        _mtp_degraded = ("doesn't contain MTP layers" in _mtp_log
+                         or "no implementations specified for speculative decoding" in _mtp_log)
+        if _mtp and not _mtp_engaged:
+            print("LLM MTP NOT ENGAGED: --spec-type draft-mtp was requested but the server never "
+                  "logged \"adding speculative implementation 'draft-mtp'\". llama.cpp serves "
+                  "normally in this state with speculation SILENTLY DISABLED, so this is NOT "
+                  f"visible as an error anywhere else. degradation_warnings_seen={_mtp_degraded} "
+                  f"draft={mtp_head}. Expect ~1.4x slower decode than planned.", flush=True)
+        elif _mtp:
+            print("LLM MTP ENGAGED: server logged the draft-mtp speculative implementation "
+                  f"(draft={mtp_head.name if mtp_head else None}).", flush=True)
         if _ok:
             print(f"LLM GENERATOR HEALTHY -- loaded on GPU, /health ok (generator tier ENGAGED); "
+                  f"mtp_requested={_mtp} mtp_engaged={_mtp_engaged}; "
                   f"concurrency: {_conc}", flush=True)
         else:
             _tail = Path("/kaggle/working/llm_probe.err").read_text()[-1000:]
@@ -325,7 +537,9 @@ if server and gguf:
         print(f"LLM PROBE ERROR (non-fatal, agent continues with LLM env set): {_e!r}", flush=True)
 else:
     print("LLM TIER DISABLED: llama-server/gguf NOT FOUND under /kaggle/input -- running CPU graph-explore "
-          f"ONLY (server={server}, gguf={gguf}). Verify the carnot-llamacpp + qwen GGUF datasets are attached.",
+          f"ONLY (server={server}, gguf={gguf}). Verify the carnot-llamacpp-mtp-binary + "
+          "carnot-gemma4-31b-it-gguf datasets are attached (the retired qwen GGUF dataset is no "
+          "longer used; carnot-gemma4-31b-mtp-head is also expected, for speculative decoding).",
           flush=True)
 
 from agents.agent import Agent

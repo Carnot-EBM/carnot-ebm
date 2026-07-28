@@ -23,6 +23,7 @@ games of test changed-cell recall. solve_provenance n/a (no solve claim); verifi
 
 USAGE: arc_poe_world_model_ab.py [n_games] [n_transitions]
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -52,7 +53,10 @@ def _score(engine, heldout):
 
     vr = WorldModelVerifier(list(heldout))
     res = vr.score(engine)
-    return {"cell_recall": round(float(res.cell_recall), 4), "accuracy": round(float(res.accuracy), 4)}
+    return {
+        "cell_recall": round(float(res.cell_recall), 4),
+        "accuracy": round(float(res.accuracy), 4),
+    }
 
 
 def _induce_single_engine(game, train, cell):
@@ -63,7 +67,16 @@ def _induce_single_engine(game, train, cell):
         proposer = LocalGGUFProposer(
             repo_substr="Qwen3.5-9B-MTP",
             model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
-            mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+            # mtp is DELIBERATELY NOT PASSED. This line used to read
+            # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+            # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+            # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+            # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+            # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+            # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+            # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+            # the SAME env var against the canonical constant -- identical override behaviour, correct
+            # default, and one place to change it.
             kv_quant="q8_0",
             no_think_prefix="/no_think\n",
             port=int(os.environ.get("CARNOT_IGE_LLM_PORT", "8919")),
@@ -106,7 +119,9 @@ def main() -> int:
             continue
         changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
         if len(changed) < 6:
-            per_game.append({"game": game, "skipped": f"too_few_changed_transitions_{len(changed)}"})
+            per_game.append(
+                {"game": game, "skipped": f"too_few_changed_transitions_{len(changed)}"}
+            )
             continue
         n = len(trans)
         a, b = int(n * 0.5), int(n * 0.75)
@@ -146,32 +161,40 @@ def main() -> int:
         else:
             single_engine, single_note, single_s = None, "single_engine_disabled_opt_in_flag", None
 
-        per_game.append({
-            "game": game,
-            "n_transitions": n,
-            "n_changed": len(changed),
-            "n_experts": len(pool),
-            "n_kept": int(sum(1 for w in weights if w > 0)),
-            "poe": poe_s,
-            "poe_by_prior": {str(k): v for k, v in poe_by_prior.items()},
-            "maxvote": mv_s,
-            "single_engine": single_s,
-            "single_engine_note": single_note,
-            "consensus_conflict_cells": conflicts,
-            "cells_voted": cells_voted,
-        })
+        per_game.append(
+            {
+                "game": game,
+                "n_transitions": n,
+                "n_changed": len(changed),
+                "n_experts": len(pool),
+                "n_kept": int(sum(1 for w in weights if w > 0)),
+                "poe": poe_s,
+                "poe_by_prior": {str(k): v for k, v in poe_by_prior.items()},
+                "maxvote": mv_s,
+                "single_engine": single_s,
+                "single_engine_note": single_note,
+                "consensus_conflict_cells": conflicts,
+                "cells_voted": cells_voted,
+            }
+        )
 
     scored = [g for g in per_game if "poe" in g]
     poe_recall = _mean([g["poe"]["cell_recall"] for g in scored])
     mv_recall = _mean([g["maxvote"]["cell_recall"] for g in scored])
     single_games = [g for g in scored if g.get("single_engine")]
-    single_recall = _mean([g["single_engine"]["cell_recall"] for g in single_games]) if single_games else None
+    single_recall = (
+        _mean([g["single_engine"]["cell_recall"] for g in single_games]) if single_games else None
+    )
 
     poe_beats_maxvote = bool(scored) and poe_recall > mv_recall
     poe_beats_single = (single_recall is not None) and poe_recall > single_recall
     # per-game win counts (more robust than the mean on a few games)
-    poe_gt_mv_games = sum(1 for g in scored if g["poe"]["cell_recall"] > g["maxvote"]["cell_recall"])
-    poe_lt_mv_games = sum(1 for g in scored if g["poe"]["cell_recall"] < g["maxvote"]["cell_recall"])
+    poe_gt_mv_games = sum(
+        1 for g in scored if g["poe"]["cell_recall"] > g["maxvote"]["cell_recall"]
+    )
+    poe_lt_mv_games = sum(
+        1 for g in scored if g["poe"]["cell_recall"] < g["maxvote"]["cell_recall"]
+    )
     # The consensus mechanism is only TESTED when applying experts actually cast conflicting per-cell votes.
     # If total conflicts == 0 the weighted-product collapses to a single-expert-per-cell rule (== max-vote),
     # so a null does NOT test PoE-World's novelty -> it must NOT retire the lever (adversarial review GAP 1).
@@ -187,8 +210,13 @@ def main() -> int:
         )
     elif poe_beats_maxvote and poe_gt_mv_games >= poe_lt_mv_games:
         single_clause = (
-            f"_and_single_{single_recall}" if poe_beats_single else
-            (f"_but_not_single_{single_recall}" if single_recall is not None else "_single_skipped")
+            f"_and_single_{single_recall}"
+            if poe_beats_single
+            else (
+                f"_but_not_single_{single_recall}"
+                if single_recall is not None
+                else "_single_skipped"
+            )
         )
         verdict = (
             f"success_poe_world_beats_maxvote_cellrecall_{poe_recall}_vs_{mv_recall}"
@@ -248,21 +276,31 @@ def main() -> int:
             "predictive value than max-vote from the same experts: the genuine oracle-distinct contribution. "
             "no_lift WITH conflicts>0 -> consensus was tested and does not beat max-vote -> the lever retires."
         ),
-        "cites_upstream": ["exp4749 (ProductWorldModel)", "exp4677 (programmatic experts)", "arXiv:2505.10819"],
-        "model_specs": {"expert_source": "exact_delta+color_rewrite", "single_engine_generator": "unsloth/Qwen3.5-9B-MTP-GGUF"},
+        "cites_upstream": [
+            "exp4749 (ProductWorldModel)",
+            "exp4677 (programmatic experts)",
+            "arXiv:2505.10819",
+        ],
+        "model_specs": {
+            "expert_source": "exact_delta+color_rewrite",
+            "single_engine_generator": "unsloth/Qwen3.5-9B-MTP-GGUF",
+        },
         "random_seed": SEED,
         "duration_s": round(time.time() - started, 2),
     }
     payload = dict(art)
     payload["reproducibility_checksum"] = ""
-    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
-        json.dumps(payload, sort_keys=True, default=str).encode()
-    ).hexdigest()
+    art["reproducibility_checksum"] = (
+        "sha256:"
+        + hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+    )
     out = REPO / "results" / "arc_poe_world_model_ab.json"
     out.write_text(json.dumps(art, indent=2) + "\n")
     print("\n=== VERDICT:", verdict)
-    print(f"PoE cell_recall={poe_recall}  maxvote={mv_recall}  single={single_recall}  "
-          f"(PoE>maxvote in {poe_gt_mv_games}/{len(scored)} games)")
+    print(
+        f"PoE cell_recall={poe_recall}  maxvote={mv_recall}  single={single_recall}  "
+        f"(PoE>maxvote in {poe_gt_mv_games}/{len(scored)} games)"
+    )
     print(f"-> {out}")
     return 0
 

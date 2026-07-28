@@ -205,7 +205,16 @@ def _make_qwen_proposer(port: int = DEFAULT_QWEN_PORT) -> Any:
     return LocalGGUFProposer(
         repo_substr="Qwen3.5-9B-MTP",
         port=int(port),
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=2560,
@@ -278,8 +287,12 @@ def _preconditions(root: Path, proposer: Any) -> dict[str, Any]:
             object_centric_representation_builder_operator.__name__
             == "object_centric_representation_builder_operator"
         )
-        checks["a1_operator_module"] = "carnot.agentic.arc_solver_kit.object_centric_representation_builder_operator"
-        checks["structural_goal_provider_importable"] = callable(structural_alignment_goal_candidate)
+        checks["a1_operator_module"] = (
+            "carnot.agentic.arc_solver_kit.object_centric_representation_builder_operator"
+        )
+        checks["structural_goal_provider_importable"] = callable(
+            structural_alignment_goal_candidate
+        )
     except Exception as exc:
         checks["a1_operator_importable"] = False
         checks["a1_operator_error"] = repr(exc)[:160]
@@ -465,7 +478,9 @@ def measure_game(arc: Any, proposer: Any, *, budget: int = DEFAULT_BUDGET) -> di
 
 
 def _residual(measurement: Mapping[str, Any], detector_control: Mapping[str, Any]) -> str:
-    diagnostics = measurement.get("structural_goal_diagnostics") or detector_control.get("diagnostics") or {}
+    diagnostics = (
+        measurement.get("structural_goal_diagnostics") or detector_control.get("diagnostics") or {}
+    )
     if not diagnostics or not diagnostics.get("detected"):
         return "object_detector_cannot_resolve_pieces_sprites"
     if int(diagnostics.get("piece_count") or 0) != int(diagnostics.get("goal_count") or 0):
@@ -482,7 +497,9 @@ def build_artifact(
 ) -> dict[str, Any]:
     root_path = Path(root)
     start = time.time() if started_s is None else float(started_s)
-    proposer = proposer or _make_qwen_proposer(port=int(os.environ.get("CARNOT_4712_QWEN_PORT", DEFAULT_QWEN_PORT)))
+    proposer = proposer or _make_qwen_proposer(
+        port=int(os.environ.get("CARNOT_4712_QWEN_PORT", DEFAULT_QWEN_PORT))
+    )
     preconditions = _preconditions(root_path, proposer)
     registry_precheck = _registry_precheck(root_path)
     blocker = _first_blocker(preconditions)
@@ -523,7 +540,9 @@ def build_artifact(
     arc = kit.offline_arcade()
     detector_control = _detector_positive_control(arc)
     measurement = measure_game(arc, proposer, budget=int(budget))
-    lint = _run_command([str(root_path / ".venv" / "bin" / "python"), "scripts/arc_orphan_solver_lint.py"])
+    lint = _run_command(
+        [str(root_path / ".venv" / "bin" / "python"), "scripts/arc_orphan_solver_lint.py"]
+    )
     parity = _run_command(
         [
             str(root_path / ".venv" / "bin" / "python"),
@@ -649,7 +668,20 @@ def main() -> int:
     out = REPO_ROOT / RESULT_RELATIVE_PATH
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({key: artifact[key] for key in ("honest_verdict", "reproduced_levels", "goal_predicate_satisfiable", "l2_plan_reaches_goal")}, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                key: artifact[key]
+                for key in (
+                    "honest_verdict",
+                    "reproduced_levels",
+                    "goal_predicate_satisfiable",
+                    "l2_plan_reaches_goal",
+                )
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 

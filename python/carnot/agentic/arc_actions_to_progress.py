@@ -101,6 +101,18 @@ from typing import Any, Callable, Optional
 #   * CARNOT_ARC_PLAYBOOK_RETRIEVAL / _EXEMPLARS_ENABLED -> arc_competition_agent
 #     _induce_and_plan playbook wiring (retrieval > static > none)
 #   * proposer.max_tokens         -> the n_predict budget an induction gets
+# STALE-ARM WARNING (2026-07-28 generator switch). The "frozen" arm below is named for, and
+# documented as, "the frozen live default" -- and it no longer is. The live generator moved from
+# Qwen3.5-9B-MTP to gemma-4-31B-it, whose `no_think_prefix` is now "" because `/no_think` (and
+# `/think`) are Qwen3 hybrid-thinking control tokens that gemma-4 does not have and will consume
+# as literal prompt text. So on the current stack:
+#   * "frozen" is NOT byte-identical to the live default (it injects a token the live path omits);
+#   * the "frozen" vs "reason" contrast is no longer a think-mode contrast at all -- both prefixes
+#     are inert text on gemma, and the arms still differ in codeonly/max_tokens/tries.
+# The arm values are LEFT UNCHANGED on purpose: past runs of this harness mean what their arm
+# definitions said at the time, and silently re-pointing them would rewrite that record. Anyone
+# re-running the think-mode question on the current generator needs new, gemma-appropriate arms
+# (gemma-4 has no in-band reasoning toggle), not an edit to these.
 ARM_CONFIGS: dict[str, dict[str, Any]] = {
     # --- MTP+reasoning question (re-test of REQ-ARC-WMTE-5714) ---
     "frozen": {

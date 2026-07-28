@@ -151,9 +151,7 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
             "confound guard."
         )
     },
-    "parity_test_green": {
-        "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes."
-    },
+    "parity_test_green": {"principle": "HARD gate -- test_arc_submitted_agent_parity.py passes."},
     "random_seed": {"principle": "determinism precondition for reproducibility."},
     "reproducibility_checksum": {
         "principle": "content-addressed hash catches silent harness/corpus drift on replay."
@@ -195,7 +193,9 @@ def _qwen_cache_path() -> str:
     return str(_resolve_gguf("Qwen3.5-9B-MTP") or "")
 
 
-def _verify_qwen_props(port: int = QWEN_PORT) -> dict[str, Any]:  # pragma: no cover - llama boundary
+def _verify_qwen_props(
+    port: int = QWEN_PORT,
+) -> dict[str, Any]:  # pragma: no cover - llama boundary
     import urllib.request
 
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
@@ -205,7 +205,16 @@ def _verify_qwen_props(port: int = QWEN_PORT) -> dict[str, Any]:  # pragma: no c
         repo_substr=QWEN_MODEL,
         model_path=model_path or None,
         port=int(port),
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=int(os.environ.get("CARNOT_ARC_4727_MAX_TOKENS", "768")),
@@ -231,7 +240,9 @@ def _verify_qwen_props(port: int = QWEN_PORT) -> dict[str, Any]:  # pragma: no c
     }
 
 
-def check_preconditions(root: Path | str = REPO_ROOT, *, qwen_port: int = QWEN_PORT) -> dict[str, Any]:
+def check_preconditions(
+    root: Path | str = REPO_ROOT, *, qwen_port: int = QWEN_PORT
+) -> dict[str, Any]:
     root_path = Path(root)
     checks: dict[str, Any] = {
         "agents_md_read": True,
@@ -300,7 +311,9 @@ def _available_target_games(_root: Path) -> list[str]:  # pragma: no cover - ARC
         from carnot.agentic import arc_solver_kit as kit
 
         arc = kit.offline_arcade()
-        available = {str(getattr(env, "game_id", "")).split("-", 1)[0] for env in arc.get_environments()}
+        available = {
+            str(getattr(env, "game_id", "")).split("-", 1)[0] for env in arc.get_environments()
+        }
         return [game for game in PREFERRED_GAMES if game in available]
     except Exception:
         return []
@@ -337,7 +350,16 @@ def make_qwen_proposer(port: int = QWEN_PORT) -> Any:  # pragma: no cover - llam
         repo_substr=QWEN_MODEL,
         model_path=_qwen_cache_path() or None,
         port=int(port),
-        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        # mtp is DELIBERATELY NOT PASSED. This line used to read
+        # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
+        # project's canonical local default (`ARC_LIVE_GENERATOR_MTP_DEFAULT` is "0"). With
+        # CARNOT_ARC_MTP unset that handed the proposer mtp=True, which at the shipped n_ctx 81920
+        # needs ~14 offloaded FFN layers on a 24 GB card -- past the auto-fit cap, so the VRAM guard
+        # declines CUDA, the generator falls back to the ~2 tok/s iGPU, every induce times out, and
+        # the run proceeds LLM-OFF while still reporting itself LLM-on. Omitting the argument lets
+        # `LocalGGUFProposer.mtp`'s own default factory (`_mtp_default_on()`) answer, which reads
+        # the SAME env var against the canonical constant -- identical override behaviour, correct
+        # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
         max_tokens=int(os.environ.get("CARNOT_ARC_4727_MAX_TOKENS", "768")),
@@ -411,7 +433,9 @@ def measure_game(
     if claimed_level > (start_level or 0) and labels:
         from carnot.agentic import arc_solver_kit as kit
 
-        reproduction = dict(kit.reproduce(game, labels, _apply_action_label, claimed_level=claimed_level))
+        reproduction = dict(
+            kit.reproduce(game, labels, _apply_action_label, claimed_level=claimed_level)
+        )
     diagnostics = dict(getattr(policy, "active_probe_diagnostics", {}) or {})
     return {
         "game": game,
@@ -506,7 +530,9 @@ def _run_check(command: list[str], root: Path, *, timeout_s: int = 240) -> dict[
 
 def run_live_path_lint(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover
     root_path = Path(root)
-    return _run_check([str(root_path / ".venv/bin/python"), "scripts/arc_orphan_solver_lint.py"], root_path)
+    return _run_check(
+        [str(root_path / ".venv/bin/python"), "scripts/arc_orphan_solver_lint.py"], root_path
+    )
 
 
 def run_parity_test(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover
@@ -724,7 +750,10 @@ def run(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - i
         budget=budget,
         explore_budget=explore_budget,
     )
-    passive_public = {"reached_level": int(passive.get("generic_agent_reached_level") or 0), **passive}
+    passive_public = {
+        "reached_level": int(passive.get("generic_agent_reached_level") or 0),
+        **passive,
+    }
     positive_control = synthetic_positive_control()
     active["synthetic_positive_control"] = positive_control
     if not active.get("hypothesis_posterior_built") and positive_control.get("passed"):
@@ -737,7 +766,8 @@ def run(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - i
     live_lint = run_live_path_lint(root_path)
     parity = run_parity_test(root_path)
     success = bool(
-        int(active.get("generic_agent_reached_level") or 0) > int(passive.get("generic_agent_reached_level") or 0)
+        int(active.get("generic_agent_reached_level") or 0)
+        > int(passive.get("generic_agent_reached_level") or 0)
         and active.get("offline_reproduced")
         and int(active.get("reproduced_levels") or 0) >= 1
         and int(active.get("probe_actions_taken") or 0) > 0

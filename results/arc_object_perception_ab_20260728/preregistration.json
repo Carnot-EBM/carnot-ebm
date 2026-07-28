@@ -1,0 +1,66 @@
+{
+  "arms": {
+    "control": "CARNOT_ARC_OBJECT_PERCEPTION unset/0",
+    "treatment": "CARNOT_ARC_OBJECT_PERCEPTION=1"
+  },
+  "declared_outcome_policy": "an honest null is reported plainly as a null; the flag stays default-off either way (operator-only graduation)",
+  "excluded_games": {
+    "dc22": "build_progress_window returned None (no offline L1 window)",
+    "ka59": "build_progress_window raised ValueError: invalid literal for int(): 'C:1'",
+    "sc25": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+    "tn36": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'",
+    "wa30": "build_progress_window raised AttributeError: 'NoneType' has no attribute 'hand_verifier'"
+  },
+  "experiment": "experiment_6018_object_perception_heldout_ab",
+  "floor_rule": "if the primary metric is exactly 0.0 in BOTH arms on EVERY cell, the verdict is unmeasurable_instrument_floor -- an instrument that cannot vary has not measured a null",
+  "generator": "Qwen3.5-9B-MTP GGUF (operator-directed: NOT the 31B, whose 21GB on a 24GB card is the documented cause of the 2026-07-24 wedge)",
+  "min_reachable_two_sided_p_formula": "2 * 0.5**n_discordant, capped at 1.0; 1.0 when n_discordant == 0 (no test possible)",
+  "min_reachable_two_sided_p_if_all_support_games_discordant": 0.0001220703,
+  "n_primary_support_games": 14,
+  "n_replicates_per_game_per_arm": 6,
+  "planned_induce_calls": 240,
+  "primary_metric": "held-out exact-full-grid accuracy (WorldModelVerifier.accuracy on the PROMPT-COMPLEMENT transitions), averaged per game over replicates",
+  "primary_support_games": [
+    "ls20",
+    "s5i5",
+    "tu93",
+    "cn04",
+    "m0r0",
+    "sk48",
+    "ar25",
+    "tr87",
+    "g50t",
+    "re86",
+    "bp35",
+    "sb26",
+    "lf52",
+    "su15"
+  ],
+  "primary_test": "two-sided exact sign test on per-game paired deltas; ties dropped",
+  "prior_data_point": "one Qwen-9B tu93 induce, heldout 0.000 for BOTH arms (ops/verifier_gaps.md 2026-07-24; explicitly not an A/B)",
+  "random_seed": 6018,
+  "requirement": "REQ-ARC-WMTE-5830",
+  "secondary_metrics": [
+    "held-out cell_recall",
+    "held-out change_fidelity",
+    "held-out correct_changed_cells",
+    "held-out spurious_changed_cells",
+    "induce_ok rate",
+    "production tail-split (_split_prefix_heldout) accuracy",
+    "full-window accuracy (the exp5831 quantity, for continuity)",
+    "prompt chars",
+    "generated tokens",
+    "wall seconds"
+  ],
+  "secondary_test": "exact sign-flip permutation test on the same per-game deltas",
+  "train_only_stratum_games": [
+    "r11l",
+    "lp85",
+    "cd82",
+    "sp80",
+    "ft09",
+    "vc33"
+  ],
+  "train_only_stratum_reason": "window has <= 6 transitions so the prompt shows ALL of them; any accuracy on these games is TRAINING accuracy and is reported separately, never as heldout",
+  "written_before_any_llm_call": true
+}

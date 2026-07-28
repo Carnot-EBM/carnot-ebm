@@ -1,0 +1,32 @@
+{
+  "experiment": "experiment_6018_object_perception_heldout_ab",
+  "requirement": "REQ-ARC-WMTE-5830",
+  "honest_verdict": "blocked_precondition_objects_block_importable",
+  "inference_substrate": "live_llm_inference",
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5-9b-mtp_gguf_cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    },
+    {
+      "resource": "conductor_inactive",
+      "available": true,
+      "detail": "systemctl is-active -> 'inactive'"
+    },
+    {
+      "resource": "generator_launchable_or_already_warm",
+      "available": true,
+      "detail": "warm_server_on_port_38883=True cuda_gpu_0_free=10629 need=14937"
+    },
+    {
+      "resource": "objects_block_importable",
+      "available": false
+    },
+    {
+      "resource": "object_perception_flag_default_off",
+      "available": true
+    }
+  ],
+  "duration_s": 0.59
+}

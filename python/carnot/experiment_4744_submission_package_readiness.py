@@ -17,6 +17,21 @@ import sys
 import time
 from typing import Any
 
+# THE CANONICAL GENERATOR PIN. Read, never re-typed: this module's checks were hardcoded to the
+# retired Qwen3.5-9B-MTP and silently went red in production the moment the operator directive of
+# 2026-07-28 moved the pin. Importing the constants means a future switch cannot leave this gate
+# behind again. Imported from the leaf module (`arc_executable_world_model`), not from
+# `arc_competition_agent`, because the latter costs ~590 MB to import and this module is also run
+# as a standalone readiness script.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_MTP_DEFAULT,  # noqa: F401  (local default; kept for provenance/audit)
+    ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT,
+    ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PYTHON_ROOT = REPO_ROOT / "python"
@@ -75,8 +90,10 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
     },
     "frozen_generator_confirmed": {
         "principle": (
-            "the generator wired into SUBMITTED_AGENT_CONFIG is Qwen3.5-9B-MTP (NEVER "
-            "gemma-8919, NEVER the 3090s) -- the frozen-stack guard."
+            "the generator wired into SUBMITTED_AGENT_CONFIG is the CANONICAL pinned "
+            "generator (gemma-4-31B-it as of the 2026-07-28 operator directive; was "
+            "Qwen3.5-9B-MTP before that) -- the frozen-stack guard. NEVER gemma-8919, NEVER "
+            "the 3090s."
         )
     },
     "parity_test_green": {
@@ -84,9 +101,7 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
             "HARD gate -- the validated agent is byte-for-byte the SUBMITTED_AGENT_CONFIG."
         )
     },
-    "verifier_is_oracle": {
-        "principle": "false -- a packaging validation invokes no oracle."
-    },
+    "verifier_is_oracle": {"principle": "false -- a packaging validation invokes no oracle."},
     "random_seed": {"principle": "determinism precondition for reproducibility."},
     "reproducibility_checksum": {
         "principle": "content-addressed hash of the validated package manifest."
@@ -149,15 +164,43 @@ def frozen_generator_config_from_submitted(submitted_config: Mapping[str, Any]) 
     checks = {
         "submitted_policy_e3": submitted_config.get("policy") == "E3AgentPolicy",
         "submitted_cascade": submitted_config.get("cascade") is True,
-        "model_is_qwen35_mtp": raw.get("model_id") == "unsloth/Qwen3.5-9B-MTP-GGUF"
-        and raw.get("repo_substr") == "Qwen3.5-9B-MTP",
-        "mtp_enabled": raw.get("mtp") is True and raw.get("spec_type") == "draft-mtp",
+        # RE-PINNED 2026-07-28 to gemma-4-31B-it, and re-pinned to the CANONICAL CONSTANTS rather
+        # than to a fresh set of string literals. These three checks were hardcoded to the retired
+        # Qwen3.5-9B-MTP, so once `SUBMITTED_AGENT_CONFIG` moved, this gate returned
+        # `confirmed=False` in production while its own unit tests stayed green -- the tests build
+        # SYNTHETIC fixture dicts and never evaluate the live config. A readiness gate that fails
+        # closed on the shipped configuration is not a safety net, it is a permanently-red light
+        # the operator learns to ignore.
+        #
+        # The key name `model_is_qwen35_mtp` is DEAD and has been renamed. Historical artifacts
+        # that recorded it keep their key (never-prune); nothing reads it forward.
+        "model_is_pinned_generator": raw.get("model_id") == ARC_LIVE_GENERATOR_MODEL_ID
+        and raw.get("repo_substr") == ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        # SUPERSEDED 2026-07-28 (same day, measured) -- preserved per never-prune:
+        #   "MTP IS NOW CORRECTLY OFF ... gemma-4-31B-it declares no `nextn_predict_layers`, so
+        #    `--spec-type draft-mtp` would make llama-server load the same 18.3 GB file twice and
+        #    cudaMalloc-fail."
+        # The premise was wrong: this model's MTP head is a SEPARATE 491 MiB GGUF (arch
+        # `gemma4-assistant`), which is why none was found inside the main file. Enabling MTP loads
+        # the head, not a second copy of the weights.
+        #
+        # THE CHECK IS NOW READ AGAINST THE **SCORED** CONSTANT, WHICH IS THE BUG THIS FIXES.
+        # `SUBMITTED_AGENT_CONFIG` describes the KAGGLE launch, and the previous line compared it
+        # to `ARC_LIVE_GENERATOR_MTP_DEFAULT` -- the LOCAL dev-box default. Those two are correctly
+        # DIFFERENT (MTP is a net loss on a 24 GB card that must offload to fit it, and a pure
+        # ~1.4x win on the 96 GB scored card), so comparing the scored config against the local
+        # constant makes the gate red exactly when the submission is configured correctly.
+        "mtp_matches_model": (raw.get("mtp") is True and raw.get("spec_type") == "draft-mtp")
+        if ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT != "0"
+        else (raw.get("mtp") is False and raw.get("spec_type") is None),
         "q8_kv": raw.get("kv_quant") == "q8_0",
-        "n_predict_floor": int(raw.get("max_tokens") or 0) >= int(
-            raw.get("n_predict_min") or 2048
-        )
+        "n_predict_floor": int(raw.get("max_tokens") or 0)
+        >= int(raw.get("n_predict_min") or 2048)
         >= 2048,
-        "no_think": raw.get("no_think_prefix") == "/no_think\n",
+        # `/no_think` is a Qwen3 hybrid-thinking control token. On gemma-4 it is not a token at
+        # all, it is literal prompt text -- so the correct frozen value is the empty string, and
+        # the check is "matches the canonical pin", not "is /no_think".
+        "no_think_matches_model": raw.get("no_think_prefix") == ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
         "binary_not_wheel": raw.get("binary_not_wheel") is True
         and raw.get("wheel_fallback_allowed") is False,
         "free_non_8919_port": raw.get("port_strategy") == "free_non_8919",
@@ -240,8 +283,10 @@ def build_package_manifest(
         "blocked_resources": blocked_resources,
         "model_files": [
             {
-                "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-                "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+                # Canonical pin, not a literal -- see the import block at the top of this
+                # module for why this file no longer re-types the generator identity.
+                "model_id": ARC_LIVE_GENERATOR_MODEL_ID,
+                "filename": ARC_LIVE_GENERATOR_MODEL_FILENAME,
                 "path_env": "CARNOT_ARC_GGUF_PATH",
                 "path": str(model_path) if model_path is not None else "",
                 "present": model_path is not None and model_path.is_file(),
@@ -300,19 +345,23 @@ def _readiness_checklist(
             entrypoint_validation.get("imported") is True
             and entrypoint_validation.get("constructed") is True
             and entrypoint_validation.get("policy_class") == "E3AgentPolicy",
-            str(entrypoint_validation.get("blocked_resource") or "make_carnot_agent -> E3AgentPolicy"),
+            str(
+                entrypoint_validation.get("blocked_resource")
+                or "make_carnot_agent -> E3AgentPolicy"
+            ),
         ),
         _checklist_item(
             "frozen_generator_wired",
             "frozen generator wired",
             frozen_generator_config.get("confirmed") is True,
-            "Qwen3.5-9B-MTP with MTP/q8/no_think/n_predict guard",
+            f"{ARC_LIVE_GENERATOR_REPO_SUBSTR} with mtp/q8/no_think/n_predict guard",
         ),
         _checklist_item(
             "manifest_complete",
             "package manifest complete",
             package_manifest.get("complete") is True,
-            ",".join(package_manifest.get("blocked_resources") or []) or "model,binary,entrypoint present",
+            ",".join(package_manifest.get("blocked_resources") or [])
+            or "model,binary,entrypoint present",
         ),
         _checklist_item(
             "smoke_episode_ran",
@@ -483,7 +532,9 @@ def validate_entrypoint() -> JsonDict:  # pragma: no cover - ARC package boundar
         }
 
 
-def _runtime_frozen_generator_config() -> tuple[JsonDict, JsonDict]:  # pragma: no cover - import boundary.
+def _runtime_frozen_generator_config() -> tuple[
+    JsonDict, JsonDict
+]:  # pragma: no cover - import boundary.
     try:
         from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG
 
@@ -500,7 +551,9 @@ def _runtime_frozen_generator_config() -> tuple[JsonDict, JsonDict]:  # pragma: 
         )
 
 
-def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - filesystem boundary.
+def check_preconditions(
+    root: Path | str = REPO_ROOT,
+) -> JsonDict:  # pragma: no cover - filesystem boundary.
     root_path = Path(root)
     checks: JsonDict = {
         "agents_md_read": (root_path / "AGENTS.md").exists(),
@@ -616,7 +669,9 @@ def run_smoke_episode(
         }
 
 
-def run_parity_test(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - subprocess boundary.
+def run_parity_test(
+    root: Path | str = REPO_ROOT,
+) -> JsonDict:  # pragma: no cover - subprocess boundary.
     root_path = Path(root)
     pytest_bin = root_path / ".venv" / "bin" / "pytest"
     if pytest_bin.exists():

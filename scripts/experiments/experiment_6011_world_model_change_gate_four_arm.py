@@ -189,10 +189,24 @@ PROVENANCE_CODE_PATHS = (
 
 
 def _rel_or_abs(p: Path) -> str:
+    """Repo-relative path if possible, absolute otherwise.
+
+    RESOLVE FIRST -- do not drop this. `REPO` is the RESOLVED repo root, but this
+    environment exposes the repo under two names: the real path and a symlink alias
+    (.../Carnot-EBM/carnot-ebm -> .../ianblenke/carnot). A caller who passes a path
+    built from the alias (e.g. `CARNOT_ARC_E3_DIR=$PWD/...` from a shell sitting in
+    the alias) hands us a string that points at the SAME directory but does not share
+    a textual prefix with REPO, so `relative_to` raises and we silently publish an
+    ABSOLUTE, machine-specific path into `provenance.engine_store` -- changing a
+    published provenance string on a rebuild that should have been a no-op. Resolving
+    the input first collapses both names to the same real path so the comparison
+    works whichever alias the caller used. (Hit for real on 2026-07-28; the rebuild
+    had to be redone.)
+    """
     try:
-        return str(Path(p).relative_to(REPO))
+        return str(Path(p).resolve().relative_to(REPO))
     except ValueError:
-        return str(p)
+        return str(Path(p).resolve())
 
 
 def _provenance(args) -> dict:
@@ -215,7 +229,12 @@ def _provenance(args) -> dict:
         "engine_store": _rel_or_abs(e3.E3_DIR),
         "engine_store_is_frozen_fixtures": e3.E3_DIR.name == "arc_e3_origin_fixtures",
         "rebuild_command": (
-            "CARNOT_ARC_E3_DIR=$PWD/results/arc_e3_origin_fixtures "
+            # NOT $PWD: from the .../Carnot-EBM/carnot-ebm symlink alias, $PWD
+            # yields a path that points at this repo but shares no textual prefix
+            # with the resolved REPO, which used to flip provenance.engine_store to
+            # an absolute path on rebuild. `git rev-parse --show-toplevel` always
+            # yields the canonical root, whichever alias the shell is sitting in.
+            'CARNOT_ARC_E3_DIR="$(git rev-parse --show-toplevel)"/results/arc_e3_origin_fixtures '
             ".venv/bin/python scripts/experiments/"
             "experiment_6011_world_model_change_gate_four_arm.py --out <this file>"
         ),
@@ -681,8 +700,18 @@ def main() -> int:
             json.dumps([r.get("game") for r in rows], sort_keys=True).encode()
         ).hexdigest(),
         "model_specs": "no model invoked; on-disk engines scored against collected transitions",
-        "duration_s": round(time.time() - t0, 3),
-        "measurement_wall_s": round(sum(float(r.get("elapsed_s", 0.0)) for r in rows), 3),
+        # 6 dp, NOT 3. `duration_s` (this process's wall time) and `measurement_wall_s`
+        # (the sum of per-row elapsed_s) are DIFFERENT quantities, but they differ only by
+        # the analyser's own sub-millisecond overhead. Rounded to 3 dp they can land on the
+        # SAME value -- which happened on 2026-07-28 (both 29.22) and tripped
+        # adversarial_verify's TAUTOLOGY check ('two distinct metrics agreeing to >5 sig
+        # figs is more likely a bug than a finding'), a CRITICAL flag that would have
+        # quarantined a perfectly honest artifact via the fabrication gate. The fix is to
+        # stop DESTROYING the information that distinguishes them, not to re-run until the
+        # dice differ and not to exempt the check: at 6 dp the two genuinely-distinct
+        # clocks are visibly distinct, which is the truth the detector needs to see.
+        "duration_s": round(time.time() - t0, 6),
+        "measurement_wall_s": round(sum(float(r.get("elapsed_s", 0.0)) for r in rows), 6),
         "rows": rows,
         "summary": summary,
         **gates,

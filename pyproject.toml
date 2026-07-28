@@ -277,7 +277,68 @@ line-length = 100
 # format would repeat it. Linting them is also meaningless on its own terms: F841 on
 # an unused local inside a model the LLM wrote is a finding about the LLM, not about
 # our code, and the whole point of the snapshot is that it is NOT edited.
-extend-exclude = ["results/arc_e3", "results/arc_e3_origin_fixtures"]
+# 2026-07-28: same reasoning extended to PRESERVED MEASUREMENT HARNESSES. When a
+# session's numbers are preserved into `results/`, the harness that produced them is
+# copied verbatim alongside the data, so the run is re-runnable and not merely
+# re-readable. Reformatting such a harness destroys exactly the property that makes it
+# evidence -- that it is byte-identical to what actually executed. The commit that added
+# this was blocked by two of those rules (E501 on an absolute scratchpad path in a log
+# filename, SIM115 on a deliberately long-lived server log handle that must outlive the
+# `with` block feeding subprocess.Popen).
+#
+# FULL DISCLOSURE OF WHAT THIS EXCLUSION HIDES (audited 2026-07-28 by re-running ruff over
+# the directory with the exclusion off -- 149 errors, not just the two that blocked the
+# commit). It is NOT all style: 40 E501, 35 SIM115, 15 E702, 11 N806, 8 F401, 6 UP045,
+# 5 E401, 5 I001, 4 E701, 2 F841, 2 SIM105 -- and 16 F821 undefined-name, which is a
+# CORRECTNESS class, not a style class. An undefined name in a harness preserved so the
+# run is "re-runnable and not merely re-readable" would suggest it cannot actually run,
+# which would defeat the entire point of preserving it. So the 16 were inspected
+# individually rather than waved through:
+#
+#   ALL 16 ARE FALSE POSITIVES of an exec()-based globals-injection pattern. fitgrid/
+#   phase1b.py:31 and fitgrid/phase1c_mtp.py:16 both do
+#       exec(open(os.path.join(SCRATCH, "fitgrid.py")).read().split("if __name__")[0] ...)
+#   which injects fitgrid.py's definitions into module globals at runtime. The three names
+#   ruff cannot resolve -- `Sampler` (fitgrid.py:63), `http` (fitgrid.py:107) and
+#   `wait_for_card` (fitgrid.py:241) -- are all defined there and are all bound by the time
+#   they are used. Ruff's static analysis cannot see through exec(); that is a limitation of
+#   the linter, not a defect in the harness. The harnesses do run, and did.
+#
+# Everything else in the list is genuinely cosmetic for throwaway measurement code (E702
+# semicolons, N806 non-lowercase locals holding MiB constants, F401 imports kept because the
+# file was copied verbatim). Nothing here is shipped source.
+# The two explicit paths below are kept for clarity, but the GLOB is what actually
+# closes this hole durably. The comment above notes that `results/arc_e3` and
+# `results/arc_e3_origin_fixtures` are distinct directories; the same bug recurred
+# 2026-07-28 with a THIRD name -- the object-perception A/B wrote its per-arm engine
+# stores to `results/arc_object_perception_ab_20260728/e3/<game>__r<N>__<on|off>/`,
+# which neither explicit entry matched, and ruff then reported 7036 findings (4044 of
+# them W293 trailing-whitespace) against 240 LLM-authored world_model.py files. Every
+# future A/B that isolates its engine store under a fresh run directory would hit this
+# again, so the pattern -- not the specific name -- is what must be excluded.
+#
+# ...and `results/**/e3` was STILL not the durable pattern. Within hours the same commit
+# also carried 108 engine files under `results/arc_wm_four_arm_20260727/e3_store/` and 28
+# under `results/arc_object_perception_ab_20260728/e3_positive_control/` -- both engine
+# stores, neither one a directory literally named `e3`, so ruff would have reformatted all
+# 136 of them. Keying on the DIRECTORY name has now failed three times in a row (`arc_e3`
+# -> `arc_e3_origin_fixtures` -> `.../e3` -> `e3_store` / `e3_positive_control`), because
+# the directory is named by whichever experiment wrote it and there is no convention to
+# rely on. The FILE name is the real invariant: every LLM-authored engine this project has
+# ever stored is written as `world_model.py` (verified 2026-07-28 -- all 437 tracked
+# `results/**/world_model.py` are engine stores, across arc_e3, arc_e3_origin_fixtures,
+# arc_e3_seedproto, arc_logo_snapshot, e3_store and e3_positive_control; there is no
+# hand-written counterexample). So exclude the engine FILE, which is also narrower than the
+# directory globs: real analyser code that legitimately lives under `results/` -- e.g.
+# `results/first_win_llm_on_20260727/build_artifact.py`, registered in the artifact
+# freshness index -- keeps being linted, as it should be.
+extend-exclude = [
+    "results/**/world_model.py",
+    "results/**/e3",
+    "results/arc_e3",
+    "results/arc_e3_origin_fixtures",
+    "results/arc_gemma31b_migration_evidence_20260728",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]

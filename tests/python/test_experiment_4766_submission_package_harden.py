@@ -24,9 +24,9 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
     "policy": "E3AgentPolicy",
     "cascade": True,
     "frozen_generator": {
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -40,7 +40,7 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
         "mtp": True,
         "spec_type": "draft-mtp",
         "kv_quant": "q8_0",
-        "no_think_prefix": "/no_think\n",
+        "no_think_prefix": "",
         "max_tokens": 2560,
         "n_predict_min": 2048,
         "port_strategy": "free_non_8919",
@@ -66,7 +66,16 @@ def _write_submission_kernel(root: Path) -> None:
                 "dataset_sources": [
                     "iancblenke/carnot-agent-code",
                     "iancblenke/carnot-llamacpp-mtp-binary",
-                    "iancblenke/carnot-qwen35-9b-mtp-gguf",
+                    # The gemma main-weights dataset. The Qwen one this replaced is retired
+                    # (2026-07-28 operator directive); `REQUIRED_DATASETS` was migrated with
+                    # the module and this fixture was not, so the gate under test was being
+                    # handed a manifest the real kernel-metadata.json no longer writes.
+                    "iancblenke/carnot-gemma4-31b-it-gguf",
+                    # The MTP draft head. Not in REQUIRED_DATASETS -- a missing head is a
+                    # degraded-but-valid scored run (no speculative decoding) rather than a
+                    # blocker -- but the real manifest attaches it, so the fixture should
+                    # look like the real manifest.
+                    "iancblenke/carnot-gemma4-31b-mtp-head",
                 ],
                 "competition_sources": ["arc-prize-2026-arc-agi-3"],
             }
@@ -136,7 +145,7 @@ def _config_resolution(ok: bool = True) -> JsonDict:
 
 
 def _model_resolution(tmp_path: Path, ok: bool = True) -> JsonDict:
-    gguf = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
+    gguf = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
     server = tmp_path / "llama-server"
     gguf.write_text("fixture\n", encoding="utf-8")
     server.write_text("server\n", encoding="utf-8")
@@ -193,12 +202,12 @@ def test_scenario_capstone_4766_resolves_frozen_config_and_paths(tmp_path: Path)
     paths = _model_resolution(tmp_path, ok=True)
 
     assert config["resolved"] is True
-    assert config["checks"]["model_is_qwen35_mtp"] is True
+    assert config["checks"]["model_is_pinned_generator"] is True
     assert config["checks"]["mtp_enabled"] is True
     assert config["checks"]["q8_kv"] is True
     assert config["checks"]["cuda_128_server"] is True
     assert paths["resolved"] is True
-    assert paths["gguf"]["filename"] == "Qwen3.5-9B-Q4_K_M.gguf"
+    assert paths["gguf"]["filename"] == "gemma-4-31B-it-Q4_K_M.gguf"
     assert paths["gguf"]["size_bytes"] == MODEL_BYTES
     assert paths["llama_server"]["cuda_12_8_capable"] is True
 

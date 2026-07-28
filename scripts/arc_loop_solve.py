@@ -345,11 +345,39 @@ def solve_via_tool_loop_lookahead(
     recommendation for per-game RE, same contract as `solve_via_explore`)."""
     from arcengine import GameAction
     from carnot.agentic.arc_agi3_live_adapter import _game_action
-    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+    from carnot.agentic.arc_executable_world_model import (
+        ARC_LIVE_GENERATOR_MTP_DEFAULT,
+        ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+        ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        LocalGGUFProposer,
+    )
     from carnot.agentic.arc_tool_loop_lookahead import ToolLoopLookaheadSession
 
+    # THE GENERATOR PIN, read from the canonical constant rather than a local literal.
+    #
+    # This file is one of the TWO canonical live entrypoints named in CLAUDE.md's "ARC Live-Path
+    # Reachability Discipline", and ops/known-issues.md records that
+    # `solve_via_tool_loop_lookahead()` was wired into it PRECISELY so the tool-loop mechanism
+    # would be reachable from a standing entrypoint. It was missed by the 2026-07-28 generator
+    # switch, which swept `python/carnot/agentic/` and not `scripts/`. The consequence was not
+    # cosmetic: `--mechanism tool_loop_lookahead` kept constructing the RETIRED Qwen3.5-9B with
+    # `mtp=True` -- a live entrypoint quietly running the model the operator directive retired,
+    # on a self-draft path the new model does not even have heads for.
+    #
+    # `mtp` reads ARC_LIVE_GENERATOR_MTP_DEFAULT (a "0"/"1" string, matching the env-var shape the
+    # two arc_competition_agent sites use) instead of a bare `False`, so that a future operator
+    # who re-pins the generator to a genuine MTP model gets self-draft back HERE too, rather than
+    # this site silently staying non-MTP because someone hardcoded the answer for gemma.
+    #
+    # max_tokens=512 is left as-is and is still adequate: this session emits short tool-call
+    # decisions (one action label plus a brief justification per turn), not a full world_model.py
+    # engine -- that is the 4096-token induce path in arc_competition_agent, not this one.
     prop = LocalGGUFProposer(
-        repo_substr="Qwen3.5-9B-MTP", mtp=True, kv_quant="q8_0", no_think_prefix="", max_tokens=512
+        repo_substr=ARC_LIVE_GENERATOR_REPO_SUBSTR,
+        mtp=(ARC_LIVE_GENERATOR_MTP_DEFAULT != "0"),
+        kv_quant="q8_0",
+        no_think_prefix=ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+        max_tokens=512,
     )
     session = ToolLoopLookaheadSession(prop, max_turns=max_turns, seed=seed)
     solver = kit.OfflineSolver(

@@ -44,6 +44,14 @@ def _source() -> JsonDict:
         "heldout_variant_attempts": 100,
         "honest_verdict": "complete_heldout_first_win_0.04_full25_live_flag_resolved",
         "inference_substrate": "live_llm_inference",
+        # DELIBERATELY NOT MIGRATED TO gemma-4-31B-it (2026-07-28). This fixture stands in for the
+        # FROZEN historical artifact exp4928, which was measured on Qwen3.5-9B-MTP and still carries
+        # `model_specs.name == "Qwen3.5-9B-MTP"` on disk; the module under test documents that value
+        # as "the methodology stamp whose absence caused the historical flag". Unlike its sibling
+        # exp4994 the module here has no equality assertion, so migrating this fixture does NOT fail
+        # the test -- it just silently makes the fixture misdescribe the historical record. The
+        # 2026-07-28 generator switch re-pinned the LIVE stack; it does not retroactively change
+        # what a past experiment ran on. Leave this site alone on future generator sweeps.
         "model_specs": {
             "backend": "gpu0_cuda",
             "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
@@ -107,6 +115,8 @@ def test_scenario_capstone_4939_carries_clean_exp4928_full25(tmp_path: Path) -> 
     assert artifact["flag_resolved"] is True
     assert artifact["triggering_rule_if_flagged"] == ""
     assert artifact["positive_control_passed"] is True
+    # Stays Qwen3.5-9B-MTP: this asserts the methodology stamp carried from the FROZEN exp4928
+    # artifact, not the current live generator pin. See the note on `_source()` above.
     assert artifact["model_specs"]["name"] == "Qwen3.5-9B-MTP"
     assert artifact["inference_substrate"] == "live_llm_inference"
     assert artifact["solve_provenance"] == "development_proxy"

@@ -1,0 +1,62 @@
+--- ACTION- sames/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////<|channel>thought
+<channel|>```python
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    World model for ARC-AGI-3 game 'dc22'.
+    
+    Analysis of observed transitions:
+    - The grid contains various colors.
+    - ACTION4 and ACTION3 seem to toggle or shift a specific pattern (colors 2 and 14) 
+      at r38c10 and r39c10.
+    - ACTION1 and ACTION5 seem to move a marker (color 3) along the bottom row (r63).
+    - The transitions are very sparse and localized.
+    - Based on the provided deltas:
+        - ACTION4: r38c10:2x2,14x2; r39c10:2x2,14x2 (Sets cells to 2,2,14,14)
+        - ACTION3: r38c10:14x2,2x2; r39c10:14x2,2x2 (Sets cells to 14,14,2,2)
+        - ACTION1: Moves a '3' at r63 from c1 -> c2.
+        - ACTION5: Moves a '3' at r63 from c2 -> c3.
+    
+    Generalizing:
+    - ACTION1: Move marker (color 3) at r63 right.
+    - ACTION5: Move marker (color 3) at r63 right.
+    - ACTION3/4: Toggle a 2x2 block of colors 2 and 14 at (38, 10).
+    """
+    new_grid = grid.copy()
+    
+    if action == 1 or action == 5:
+        # Find the marker (color 3) on the bottom row
+        row = 63
+        cols = np.where(grid[row] == 3)[0]
+        if len(cols) > 0:
+            curr_col = cols[0]
+            if curr_col + 1 < 64:
+                new_grid[row, curr_col] = 0 # Clear old
+                new_grid[row, curr_col + 1] = 3 # Set new
+                
+    elif action == 4:
+        # Set pattern [2, 2, 14, 14] at r38c10 and r39c10
+        for r in [38, 39]:
+            new_grid[r, 10:12] = 2
+            new_grid[r, 12:14] = 14
+            
+    elif action == 3:
+        # Set pattern [14, 14, 2, 2] at r38c10 and r39c10
+        # Note: The observed delta for ACTION3 also shows r38c8 in one instance.
+        # We'll stick to the most consistent pattern.
+        for r in [38, 39]:
+            new_grid[r, 10:12] = 14
+            new_grid[r, 12:14] = 2
+            
+    return new_grid
+
+def is_level_complete(grid):
+    """
+    The win state is not explicitly provided in the transitions, 
+    but typically involves reaching a specific configuration.
+    Without a WIN STATE grid, we return False.
+    """
+    return False
+
+```

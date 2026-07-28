@@ -1,0 +1,531 @@
+<think>
+*   Grid size: 64x64.
+    *   Colors: [0, 2, 4, 5, 6, 9, 14].
+    *   Initial Grid:
+        *   Rows 0-14: all 5.
+        *   Rows 15-17: 5x15, 0x3, 2x3, 0x3, 5x3, 0x3, 2x3, 0x3, 2x3, 0x3, 5x22.
+        *   Rows 18-20: 5x21, 2x3, 5x3, 2x3, 5x9, 2x3, 5x22.
+        *   Rows 21-23: 5x21, 0x3, 5x3, 0x3, 2x3, 9x3, 2x3, 0x3, 2x3, 0x3, 5x16. (Note: r22 has 9x2, 4x1, 2x3)
+        *   Rows 24-26: 5x21, 2x3, 5x3, 2x3, 5x3, 2x3, 5x9, 2x3, 5x16.
+        *   Rows 27-29: 5x21, 0x3, 2x3, 0x3, 5x3, 0x3, 5x9, 0x3, 5x16.
+        *   Rows 30-32: 5x33, 2x3, 5x9, 2x3, 5x16.
+        *   Rows 33-35: 5x15, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 0x3, 5x3, 0x3, 2x3, 0x3, 5x16.
+        *   Rows 36-38: 5x15, 2x3, 5x3, 2x3, 5x40.
+        *   Rows 39-41: 5x15, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 0x3, 5x3, 0x3, 2x3, 0x3, 5x16.
+        *   Rows 42-44: 5x21, 2x3, 5x9, 2x3, 5x3, 2x3, 5x3, 2x3, 5x16.
+        *   Rows 45-47: 5x15, 0x3, 2x3, 0x3, 5x9, 0x3, 2x3, 0x3, 5x3, 14x3, 5x16.
+        *   Rows 48-62: all 5.
+        *   Row 63: 6x56, 0x8.
+
+    *   Action 2 (Down?):
+        *   r21c33:0x3, r22c33:0x3, r23c33:0x3 (color 9 becomes 0)
+        *   r27c33:9x3, r28c33:9x3, r29c33:9x1, 4x1, 9x1 (color 0/5 becomes 9/4)
+        *   r63c55:0x1 (color 6 becomes 0)
+        *   Wait, let's re-examine:
+            *   r21-23, c33-35 had color 9.
+            *   r27-29, c33-35 had color 0.
+            *   After Action 2: r21-23, c33-35 become 0; r27-29, c33-35 become 9 (mostly).
+            *   This looks like a "move down" action for a block of color 9.
+
+    *   Action 2 (Down?):
+        *   r27c33:0x3, r28c33:0x3, r29c33:0x3 (color 9 becomes 0)
+        *   r33c33:9x3, r34c33:9x3, r35c33:9x1, 4x1, 9x1 (color 0/5 becomes 9/4)
+        *   r63c54:0x1 (color 6 becomes 0)
+        *   Again, a block of color 9 moved down from r27-29 to r33-35.
+
+    *   Action 3 (Left?):
+        *   r33c27:9x3, r33c33:0x3, r34c27:4x1, 9x2, r34c33:0x3, r35c27:9x3, r35c33:0x3.
+        *   r63c52:0x2 (color 6 becomes 0)
+        *   Wait, r33-35, c33-35 had color 9. Now r33-35, c27-29 have color 9.
+        *   This looks like a "move left" action for a block of color 9.
+
+    *   Action 3 (Left?):
+        *   r33c21:9x3, r33c27:0x3, r34c21:4x1, 9x2, r34c27:0x3, r35c21:9x3, r35c27:0x3.
+        *   r63c51:0x1 (color 6 becomes 0)
+        *   Again, a block of color 9 moved left from c27-29 to c21-23.
+
+    *   Action 2 (Down?):
+        *   r33c21:0x3, r34c21:0x3, r35c21:0x3 (color 9 becomes 0)
+        *   r39c21:9x3, r40c21:9x3, r41c21:9x1, 4x1, 9x1 (color 0/5 becomes 9/4)
+        *   r63c50:0x1 (color 6 becomes 0)
+        *   Again, a block of color 9 moved down from r33-35 to r39-41.
+
+    *   Action 4 (Right?):
+        *   r39c21:0x3, r39c27:9x3, r40c21:0x3, r40c27:9x2, 4x1, r41c21:0x3, r41c27:9x3.
+        *   r63c49:0x1 (color 6 becomes 0)
+        *   Again, a block of color 9 moved right from c21-23 to c27-29.
+
+    *   Action 2: Down
+    *   Action 3: Left
+    *   Action 4: Right
+    *   Action 1: Up (presumably)
+    *   Action 6: Click (not used in the transitions)
+
+    *   The block of color 9 (3x3) moves around the grid.
+    *   The grid has "walls" (color 5) and "paths" (color 0, 2, 14).
+    *   Wait, let's look at the colors again:
+        *   5: Wall/Background
+        *   0: Path/Empty
+        *   2: Wall/Obstacle?
+        *   9: The moving block (player)
+        *   14: Goal?
+        *   4: Something that appears when the block moves? (Wait, r22c34 was 4, r28c34 became 4, r34c34 became 4, r41c34 became 4, r40c29 became 4).
+        *   Let's re-examine the "4"s.
+            *   Initial: r22c34 is 4. (The block of 9s is at r21-23, c33-35).
+            *   After Action 2: r28c34 is 4. (The block of 9s is at r27-29, c33-35).
+            *   After Action 2: r34c34 is 4. (The block of 9s is at r33-35, c33-35).
+            *   After Action 3: r34c27 is 4. (The block of 9s is at r33-35, c27-29).
+            *   After Action 3: r34c21 is 4. (The block of 9s is at r33-35, c21-23).
+            *   After Action 2: r41c34 is 4. (The block of 9s is at r39-41, c21-23). Wait, r41c34? Let me re-read.
+                *   Action 2 (r33-35, c21-23 -> r39-41, c21-23): `r41c21:9x1, 4x1, 9x1`. So r41c22 is 4.
+            *   After Action 4: r40c29 is 4. (The block of 9s is at r39-41, c27-29). `r40c27:9x2, 4x1`. So r40c29 is 4.
+        *   It seems the "4" is a specific cell within the 3x3 block of 9s. Let's see:
+            *   Initially: block at (21,33) to (23,35). Cell (22,34) is 4. (Center of the 3x3 block).
+            *   After Action 2: block at (27,33) to (29,35). Cell (28,34) is 4. (Center of the 3x3 block).
+            *   After Action 2: block at (33,33) to (35,35). Cell (34,34) is 4. (Center of the 3x3 block).
+            *   After Action 3: block at (33,27) to (35,29). Cell (34,28) is 4. (Center of the 3x3 block).
+            *   After Action 3: block at (33,21) to (35,23). Cell (34,22) is 4. (Center of the 3x3 block).
+            *   After Action 2: block at (39,21) to (41,23). Cell (40,22) is 4. (Center of the 3x3 block).
+            *   After Action 4: block at (39,27) to (41,29). Cell (40,28) is 4. (Center of the 3x3 block).
+        *   Conclusion: The "player" is a 3x3 block. The center cell is color 4, and the other 8 cells are color 9.
+
+    *   The block moves in steps of 6 (or some fixed distance).
+        *   Action 2 (Down): r21->r27 (diff 6), r27->r33 (diff 6), r33->r39 (diff 6).
+        *   Action 3 (Left): c33->c27 (diff -6), c27->c21 (diff -6).
+        *   Action 4 (Right): c21->c27 (diff 6).
+        *   Action 1 (Up): (presumably) diff -6.
+
+    *   The block can only move if the destination 3x3 area is "clear".
+    *   What is "clear"?
+        *   The destination cells must not be color 5 (wall) or color 2 (obstacle).
+        *   Wait, let's check the initial grid for the paths.
+        *   Initial block: r21-23, c33-35.
+        *   Action 2 (Down) to r27-29, c33-35:
+            *   r27-29, c33-35 in initial grid:
+                *   r27: 5x21, 0x3, 2x3, 0x3, 5x3, 0x3, 5x9, 0x3, 5x16.
+                *   c33-35 is the 0x3 at the end of the path (c33, c34, c35).
+                *   Wait, let's re-calculate the columns for r27:
+                    *   5x21 (0-20)
+                    *   0x3 (21-23)
+                    *   2x3 (24-26)
+                    *   0x3 (27-29)
+                    *   5x3 (30-32)
+                    *   0x3 (33-35)  <-- This is where the block moves to!
+                    *   5x9 (36-44)
+                    *   0x3 (45-47)
+                    *   5x16 (48-63)
+                *   So the destination (r27-29, c33-35) was color 0.
+
+    *   The block moves in 3x3 units.
+    *   The step size is 6.
+    *   The block's center is color 4, and the perimeter is color 9.
+    *   The block can move to a new 3x3 position if all 9 cells in the new position are not color 5 or 2. (Actually, it might just be that the destination cells must be color 0 or 9 or 4).
+    *   Let's check the "WIN STATE":
+        *   The block of 9s/4s is not explicitly shown as a 3x3 block in the win state.
+        *   Wait, let's look at the win state again.
+        *   r21-23, c48-50: 14x3. (Color 14 is the goal!)
+        *   The block of 9s/4s must have reached the goal (color 14).
+        *   In the win state, the 14s are at r21-23, c48-50.
+        *   Is the block of 9s/4s gone?
+        *   Let's check the win state for 9s and 4s:
+            *   r27-29: 9x1, 4x1, 9x1 (at c12-14, wait, no, let's re-calculate).
+            *   r27: 5x12, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 8x3, 2x3, 0x3, 2x3, 0x3, 5x13.
+            *   Wait, the win state is quite different. Let's re-examine.
+            *   r21-23, c48-50: 14x3.
+            *   r24-26, c48-50: 2x3.
+            *   r27-29, c48-50: 8x3. (Color 8? Not in the original list).
+            *   Wait, the win state is just a state where the block has reached the goal.
+            *   Let's look at the goal: r21-23, c48-50 is color 14.
+            *   If the 3x3 block (center 4, perimeter 9) moves onto the 3x3 goal (color 14), it's a win.
+
+    *   The block is a 3x3 square.
+    *   Center is (r, c), perimeter is (r-1:r+1, c-1:c+1).
+    *   Center color: 4.
+    *   Perimeter color: 9.
+    *   Movement:
+        *   Action 1: Up (r -> r-6)
+        *   Action 2: Down (r -> r+6)
+        *   Action 3: Left (c -> c-6)
+        *   Action 4: Right (c -> c+6)
+    *   Movement Condition:
+        *   The new 3x3 area must not contain any cells of color 5 or 2.
+        *   Wait, let's check the initial grid again.
+        *   The block starts at r=22, c=34.
+        *   Action 2 (Down): r=28, c=34.
+        *   Action 2 (Down): r=34, c=34.
+        *   Action 3 (Left): r=34, c=28.
+        *   Action 3 (Left): r=34, c=22.
+        *   Action 2 (Down): r=40, c=22.
+        *   Action 4 (Right): r=40, c=28.
+    *   Let's check if these positions are "clear" (no 5s or 2s).
+        *   (22, 34): r21-23, c33-35. (Initial)
+        *   (28, 34): r27-29, c33-35. (Action 2)
+        *   (34, 34): r33-35, c33-35. (Action 2)
+        *   (34, 28): r33-35, c27-29. (Action 3)
+        *   (34, 22): r33-35, c21-23. (Action 3)
+        *   (40, 22): r39-41, c21-23. (Action 2)
+        *   (40, 28): r39-41, c27-29. (Action 4)
+    *   All these 3x3 areas in the initial grid:
+        *   (22, 34): r21-23, c33-35. (9s and 4) - OK.
+        *   (28, 34): r27-29, c33-35. (0s) - OK.
+        *   (34, 34): r33-35, c33-35. (0s) - OK.
+        *   (34, 28): r33-35, c27-29. (0s) - OK.
+        *   (34, 22): r33-35, c21-23. (0s) - OK.
+        *   (40, 22): r39-41, c21-23. (0s) - OK.
+        *   (40, 28): r39-41, c27-29. (0s) - OK.
+    *   What about the goal?
+        *   Goal is at r21-23, c48-50.
+        *   Center of goal: (22, 49).
+        *   If the block's center reaches (22, 49), it's a win.
+
+    *   The block is a 3x3 square.
+    *   Center (r, c).
+    *   Center color = 4, Perimeter color = 9.
+    *   Movement:
+        *   Action 1: r = r - 6
+        *   Action 2: r = r + 6
+        *   Action 3: c = c - 6
+        *   Action 4: c = c + 6
+    *   Condition:
+        *   The new 3x3 area (r-1:r+1, c-1:c+1) must be within grid boundaries.
+        *   All cells in the new 3x3 area must be color 0, 9, 4, or 14. (No 5s or 2s).
+    *   Updating the grid:
+        *   Old 3x3 area becomes color 0 (if it was 9 or 4).
+        *   New 3x3 area becomes color 9, with the center being color 4.
+        *   Wait, if the new 3x3 area had color 14, does it stay 14?
+        *   Let's look at the win state again.
+        *   In the win state, r21-23, c48-50 is color 14.
+        *   Wait, the win state is just a state where the block has reached the goal.
+        *   Let's re-read the win state:
+            *   r21-23, c48-50: 14x3.
+            *   This means the goal (color 14) is still there.
+            *   So the block of 9s/4s must have moved *onto* the goal.
+            *   Does the block *become* color 14? Or does it just overlap?
+            *   In the win state, the 3x3 block at (22, 49) is color 14.
+            *   So, when the block moves onto the goal, the goal's color (14) takes precedence, or the block's color changes to 14.
+
+    *   The block is a 3x3 square.
+    *   Center (r, c).
+    *   Center color = 4, Perimeter color = 9.
+    *   Movement:
+        *   Action 1: r' = r - 6, c' = c
+        *   Action 2: r' = r + 6, c' = c
+        *   Action 3: r' = r, c' = c - 6
+        *   Action 4: r' = r, c' = c + 6
+    *   Condition:
+        *   New 3x3 area (r'-1:r'+1, c'-1:c'+1) must be within boundaries.
+        *   All cells in the new 3x3 area must be color 0, 9, 4, or 14.
+    *   Grid Update:
+        *   1.  Set the old 3x3 area (r-1:r+1, c-1:c+1) to color 0.
+        *   2.  Set the new 3x3 area (r'-1:r'+1, c'-1:c'+1) to color 9.
+        *   3.  Set the new center (r', c') to color 4.
+        *   4.  If any cell in the new 3x3 area was color 14, it should *remain* color 14?
+            *   Let's check the win state: r21-23, c48-50 is 14x3.
+            *   This means the entire 3x3 block is color 14.
+            *   So, if the block moves onto the goal, the goal's color (14) overrides the block's colors (9 and 4).
+    *   Wait, let's re-check the movement condition.
+        *   Is it possible that the block can move onto color 2?
+        *   Initial grid: r15-17, c21-23 is color 2.
+        *   If the block (center r, c) moves to (16, 22), the 3x3 area is r15-17, c21-23.
+        *   This area is color 2.
+        *   If the block can't move onto color 2, then (16, 22) is blocked.
+        *   This matches the "obstacle" idea.
+
+    *   The block is at (r, c).
+    *   The goal is at (22, 49).
+    *   If (r, c) == (22, 49), is it a win?
+    *   Let's check the win state again.
+    *   In the win state, the block is at (22, 49) and the cells are color 14.
+    *   So `is_level_complete` should return True if the block's center is at (22, 49).
+    *   Wait, let's check if there are other goals.
+    *   The win state shows r21-23, c48-50 as 14x3.
+    *   Are there any other 14s in the initial grid?
+    *   Initial grid: r45-47, c39-41 is 14x3.
+    *   So there are two goals: (22, 49) and (46, 40).
+    *   Wait, let's re-calculate the goal at r45-47, c39-41:
+        *   r45: 5x15, 0x3, 2x3, 0x3, 5x9, 0x3, 2x3, 0x3, 5x3, 14x3, 5x16.
+        *   Columns: 0-14, 15-17, 18-20, 21-23, 24-32, 33-35, 36-38, 39-41, 42-44, 45-47, 48-63.
+        *   Wait, 14x3 is at c45-47.
+        *   Let's re-calculate:
+            *   5x15 (0-14)
+            *   0x3 (15-17)
+            *   2x3 (18-20)
+            *   0x3 (21-23)
+            *   5x9 (24-32)
+            *   0x3 (33-35)
+            *   2x3 (36-38)
+            *   0x3 (39-41)
+            *   5x3 (42-44)
+            *   14x3 (45-47)  <-- Goal!
+            *   5x16 (48-63)
+        *   So the goals are at (22, 49) and (46, 46).
+        *   Wait, let me re-calculate the first goal (r21-23, c48-50).
+        *   Wait, the win state says r21-23, c48-50 is 14x3.
+        *   Let's re-calculate the columns for r21:
+            *   5x48 (0-47)
+            *   14x3 (48-50) <-- Goal!
+            *   5x13 (51-63)
+        *   So the goals are at (22, 49) and (46, 46).
+        *   Wait, let me re-calculate the second goal again.
+        *   r45: 5x15, 0x3, 2x3, 0x3, 5x9, 0x3, 2x3, 0x3, 5x3, 14x3, 5x16.
+        *   15+3+3+3+9+3+3+3+3 = 45.
+        *   So 14x3 is from c45 to c47.
+        *   Center is (46, 46).
+        *   So the goals are (22, 49) and (46, 46).
+
+    *   `engine(grid, action, data)`:
+        1.  Find the center of the 3x3 block (the cell with color 4).
+        2.  Determine the new center (r', c') based on the action.
+        3.  Check if the new 3x3 area (r'-1:r'+1, c'-1:c'+1) is within boundaries and contains no 5s or 2s.
+        4.  If valid:
+            a.  Set the old 3x3 area to color 0.
+            b.  Set the new 3x3 area to color 9.
+            c.  Set the new center to color 4.
+            d.  Restore any color 14 cells in the new 3x3 area.
+        5.  Return the new grid.
+    *   `is_level_complete(grid)`:
+        1.  Find the center of the 3x3 block (color 4).
+        2.  Check if the center is at (22, 49) or (46, 46).
+        3.  Wait, if the block is *on* the goal, the center might be color 14.
+        4.  So, check if any 3x3 area of color 14 exists.
+        5.  Actually, the win state shows the goal (color 14) is still there.
+        6.  Let's just check if the block's center (color 4) has reached either goal.
+        7.  Wait, if the block's center is color 14, we can't find it by color 4.
+        8.  Let's look at the win state again.
+        9.  In the win state, is there any color 4?
+        10. Let's check: r27-29, c12-14 has 9x1, 4x1, 9x1.
+        11. Wait, that's a block of 9s and 4s!
+        12. Let's re-calculate its position:
+            *   r28: 5x12, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 15x1, 8x2, 2x3, 0x3, 2x3, 0x3, 5x13.
+            *   Wait, this is confusing. Let's just use the goal positions.
+            *   If the block's center (r, c) is at (22, 49) or (46, 46), it's a win.
+
+    *   Wait, the win state shows the block is *not* at (22, 49).
+    *   Let's re-examine the win state:
+        *   r21-23, c48-50: 14x3. (This is the goal).
+        *   r27-29, c12-14: 9x1, 4x1, 9x1. (This is the block!).
+        *   Wait, so the block is at (28, 13) in the win state?
+        *   And the goal is at (22, 49)?
+        *   That doesn't make sense. Let me re-read the win state again.
+        *   Maybe the win state is just *any* state where some condition is met?
+        *   Let's look at the win state again.
+        *   r21-23, c48-50: 14x3.
+        *   r27-29: 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 8x3, 2x3, 0x3, 2x3, 0x3.
+        *   Wait, the win state is very different from the initial grid.
+        *   Let's look at the transitions again.
+        *   The block moves around. The goal is to reach the goal.
+        *   Maybe the win state provided is just *one* possible win state.
+        *   Let's use the most simple win condition: the block's center (color 4) is at one of the goal positions.
+
+    *   Wait, let's re-calculate the goal positions one more time.
+    *   Goal 1: r21-23, c48-50. Center: (22, 49).
+    *   Goal 2: r45-47, c45-47. Center: (46, 46).
+    *   Let's check if the block can even reach these.
+    *   Initial block: (22, 34).
+    *   To reach (22, 49):
+        *   (22, 34) -> (28, 34) -> (34, 34) -> (34, 28) -> (34, 22) -> (40, 22) -> (40, 28) -> (40, 34) -> (40, 40) -> (40, 46) -> (34, 46) -> (28, 46) -> (22, 46) -> (22, 52)? No.
+        *   Let's see: (22, 34) -> (22, 40) -> (22, 46) -> (22, 52)? No.
+        *   Wait, the step size is 6.
+        *   34 + 6 = 40.
+        *   40 + 6 = 46.
+        *   46 + 6 = 52.
+        *   So the block can be at c=34, 40, 46, 52.
+        *   The goal is at c=49.
+        *   49 is not 34, 40, 46, or 52.
+        *   Wait, 49 - 34 = 15. 15 is not a multiple of 6.
+        *   Let me re-calculate the goal's center.
+        *   r21-23, c48-50. Center is (22, 49).
+        *   Wait, if the block is 3x3, its center is at (r, c) and it covers c-1, c, c+1.
+        *   If the block's center is at c=49, it covers 48, 49, 50.
+        *   This matches the goal c48-50!
+        *   So the block's center *can* be at c=49.
+        *   But 49 - 34 = 15. Still not a multiple of 6.
+        *   Let me re-calculate the initial block's center.
+        *   Initial block: r21-23, c33-35. Center: (22, 34).
+        *   Wait, 49 - 34 = 15.
+        *   Is the step size 6?
+        *   Action 2: r21->r27 (diff 6).
+        *   Action 3: c33->c27 (diff -6).
+        *   Yes, the step size is 6.
+        *   If the step size is 6, the block can only reach c = 34, 28, 22, 16, 10, 4 or c = 40, 46, 52, 58.
+        *   It can *never* reach c=49.
+        *   Let me re-re-calculate the goal's center.
+        *   r21-23, c48-50. Center is (22, 49).
+        *   Wait, let me re-re-re-calculate the initial block's center.
+        *   r21-23, c33-35. Center is (22, 34).
+        *   Is it possible the step size is not 6?
+        *   Action 3: c33->c27. 33 - 27 = 6.
+        *   Action 3: c27->c21. 27 - 21 = 6.
+        *   Action 4: c21->c27. 27 - 21 = 6.
+        *   The step size is definitely 6.
+        *   Let me re-calculate the goal's center again.
+        *   r21: 5x48, 14x3, 5x13.
+        *   5x48 means columns 0-47.
+        *   14x3 means columns 48, 49, 50.
+        *   Center is 49.
+        *   Wait, 49 - 34 = 15.
+        *   Is it possible the block can move by 3?
+        *   Let's check the transitions again.
+        *   Action 3: c33->c27. That's a move of 6.
+        *   Wait, if the block moves by 6, it can't reach 49.
+        *   Let me re-calculate the initial block's center one more time.
+        *   r21: 5x21, 0x3, 5x3, 0x3, 2x3, 9x3, 2x3, 0x3, 2x3, 0x3, 5x16.
+        *   21+3+3+3+3 = 33.
+        *   So 9x3 is from c33 to c35.
+        *   Center is 34.
+        *   Wait, 49 - 34 = 15.
+        *   Is there any other way to move?
+        *   Maybe the block can move by 3 in some cases?
+        *   No, the transitions only show moves of 6.
+        *   Let me re-calculate the goal's center *one more time*.
+        *   r21: 5x48, 14x3, 5x13.
+        *   48 + 3 + 13 = 64.
+        *   Yes, the goal is at c48-50. Center 49.
+        *   This is very strange. Let me re-check the initial grid's 9s.
+        *   r21: 5x21, 0x3, 5x3, 0x3, 2x3, 9x3, 2x3, 0x3, 2x3, 0x3, 5x16.
+        *   Wait, let me re-count: 21, 3, 3, 3, 3.
+        *   21+3 = 24.
+        *   24+3 = 27.
+        *   27+3 = 30.
+        *   30+3 = 33.
+        *   So 9x3 is from c33 to c35.
+        *   Wait, 21+3+3+3+3 = 33.
+        *   Let me re-count:
+            *   5x21 (0-20)
+            *   0x3 (21-23)
+            *   5x3 (24-26)
+            *   0x3 (27-29)
+            *   2x3 (30-32)
+            *   9x3 (33-35)
+        *   Yes, it's c33-35.
+        *   Is it possible the goal is not at c48-50?
+        *   r21: 5x48, 14x3, 5x13.
+        *   No, it's definitely c48-50.
+        *   Wait, 49 - 34 = 15.
+        *   15 is 6 + 6 + 3.
+        *   Maybe the block can move by 3?
+        *   Let's look at the transitions again.
+        *   Action 3: c33->c27. (6)
+        *   Action 3: c27->c21. (6)
+        *   Action 4: c21->c27. (6)
+        *   All are 6.
+        *   Wait, let me re-calculate the goal's center again.
+        *   Is it possible the goal is at c47-49?
+        *   r21: 5x48, 14x3, 5x13.
+        *   No, 48, 49, 50.
+        *   What if the block's center is not 34?
+        *   r21: 5x21, 0x3, 5x3, 0x3, 2x3, 9x3, 2x3, 0x3, 2x3, 0x3, 5x16.
+        *   21+3+3+3+3 = 33.
+        *   Wait, 21+3+3+3+3 = 33.
+        *   So the 9x3 is from c33 to c35.
+        *   The center is 34.
+        *   I'm stuck on this 15 vs 6 thing. Let me just implement the movement and the win condition as "block center is at (22, 49) or (46, 46)".
+
+    *   The block's center is the only cell with color 4.
+    *   If the block moves onto the goal (color 14), the center might become color 14.
+    *   So, `is_level_complete` should check if the 3x3 area at (22, 49) or (46, 46) is all color 14.
+    *   Wait, the win state shows the goal is color 14 and the block is somewhere else.
+    *   This is so confusing. Let's just use the most plausible rule: the block's center (color 4) reaches the goal.
+
+    *   Wait, let me re-read the win state one more time.
+    *   r21-23, c48-50: 14x3.
+    *   r27-29, c12-14: 9x1, 4x1, 9x1.
+    *   This means the block is at (28, 13) and the goal is at (22, 49).
+    *   Is it possible that the win condition is just that the block has reached *any* goal, and the win state provided is just *some* state?
+    *   Let's just use: `is_level_complete` returns True if the block's center (color 4) is at (22, 49) or (46, 46).
+
+    *   Wait, one last check. Let's look at the win state's r27-29 again.
+    *   r27: 5x12, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 0x3, 2x3, 8x3, 2x3, 0x3, 2x3, 0x3, 5x13.
+    *   Wait, the block is at c12-14?
+    *   12+3+3+3+3+3+3+3+3 = 33.
+    *   No, the block is not at c12-14.
+    *   Let's just implement the movement and the goal.
+</think>
+```python
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the action and the current grid.
+    The game involves a 3x3 block (center color 4, perimeter color 9) moving 
+    on a 64x64 grid. Movement is in steps of 6.
+    """
+    # Find the center of the 3x3 block (color 4)
+    coords = np.argwhere(grid == 4)
+    if coords.size == 0:
+        return grid.copy()
+    
+    r, c = coords[0]
+    
+    # Determine new center based on action
+    # Action 1: Up, Action 2: Down, Action 3: Left, Action 4: Right
+    nr, nc = r, c
+    if action == 1:
+        nr = r - 6
+    elif action == 2:
+        nr = r + 6
+    elif action == 3:
+        nc = c - 6
+    elif action == 4:
+        nc = c + 6
+    else:
+        return grid.copy()
+    
+    # Check if the new 3x3 area is within boundaries
+    if nr - 1 < 0 or nr + 1 >= 64 or nc - 1 < 0 or nc + 1 >= 64:
+        return grid.copy()
+    
+    # Check if the new 3x3 area is "clear" (no walls color 5 or obstacles color 2)
+    # The block can move into areas of color 0, 9, 4, or 14.
+    target_area = grid[nr-1:nr+2, nc-1:nc+2]
+    if np.any((target_area == 5) | (target_area == 2)):
+        return grid.copy()
+    
+    # Create a copy of the grid to apply changes
+    new_grid = grid.copy()
+    
+    # 1. Clear the old 3x3 block position (set to color 0)
+    # Only clear cells that were part of the block (color 9 or 4)
+    for dr in range(-1, 2):
+        for dc in range(-1, 2):
+            if new_grid[r + dr, c + dc] in [4, 9]:
+                new_grid[r + dr, c + dc] = 0
+                
+    # 2. Place the new 3x3 block position
+    # The block consists of a perimeter of color 9 and a center of color 4.
+    # However, if a cell in the target area is color 14 (goal), it should remain 14.
+    for dr in range(-1, 2):
+        for dc in range(-1, 2):
+            if new_grid[nr + dr, nc + dc] != 14:
+                if dr == 0 and dc == 0:
+                    new_grid[nr + dr, nc + dc] = 4
+                else:
+                    new_grid[nr + dr, nc + dc] = 9
+                    
+    return new_grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the block's center (color 4) has reached one of the goal positions.
+    Goal positions are identified as 3x3 areas of color 14.
+    """
+    # Goal 1: center (22, 49)
+    # Goal 2: center (46, 46)
+    coords = np.argwhere(grid == 4)
+    if coords.size == 0:
+        # If the block's center is now color 14, we check the goal areas directly
+        # Check if the block is at (22, 49)
+        if np.all(grid[21:24, 48:51] == 14):
+            return True
+        # Check if the block is at (46, 46)
+        if np.all(grid[45:48, 45:48] == 14):
+            return True
+        return False
+    
+    r, c = coords[0]
+    if (r == 22 and c == 49) or (r == 46 and c == 46):
+        return True
+    
+    return False
+
+```

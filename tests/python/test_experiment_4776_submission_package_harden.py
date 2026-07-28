@@ -13,6 +13,17 @@ from typing import Any
 
 from carnot import experiment_4776_submission_package_harden as mod
 
+# The canonical generator pin, imported rather than re-typed. These names were introduced into
+# this file's assertions by the 2026-07-28 gemma migration but never imported, so every test
+# referencing them died with NameError -- a failure that looks like a broken gate rather than a
+# broken test.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 JsonDict = dict[str, Any]
 REPO = Path(__file__).resolve().parents[2]
@@ -24,9 +35,9 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
     "policy": "E3AgentPolicy",
     "cascade": True,
     "frozen_generator": {
-        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
-        "repo_substr": "Qwen3.5-9B-MTP",
-        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "repo_substr": "gemma-4-31B-it",
+        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -34,7 +45,7 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
         "mtp": True,
         "spec_type": "draft-mtp",
         "kv_quant": "q8_0",
-        "no_think_prefix": "/no_think\n",
+        "no_think_prefix": "",
         "max_tokens": 2560,
         "n_predict_min": 2048,
         "wheel_fallback_allowed": False,
@@ -57,7 +68,9 @@ def _write_repo_preconditions(root: Path, *, with_spec: bool = True) -> None:
     (root / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
     spec = root / "openspec" / "capabilities" / "capstone" / "spec.md"
     spec.parent.mkdir(parents=True, exist_ok=True)
-    spec.write_text("REQ-CAPSTONE-4776\n" if with_spec else "REQ-CAPSTONE-OTHER\n", encoding="utf-8")
+    spec.write_text(
+        "REQ-CAPSTONE-4776\n" if with_spec else "REQ-CAPSTONE-OTHER\n", encoding="utf-8"
+    )
     agent = root / "python" / "carnot" / "agentic" / "arc_competition_agent.py"
     agent.parent.mkdir(parents=True, exist_ok=True)
     agent.write_text("SUBMITTED_AGENT_CONFIG = {}\n", encoding="utf-8")
@@ -103,7 +116,7 @@ def _config_resolution(ok: bool = True) -> JsonDict:
 
 
 def _model_resolution(tmp_path: Path, ok: bool = True) -> JsonDict:
-    gguf = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
+    gguf = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
     server = tmp_path / "llama-server"
     gguf.write_text("fixture\n", encoding="utf-8")
     server.write_text("server\n", encoding="utf-8")
@@ -171,12 +184,12 @@ def test_scenario_capstone_4776_frozen_stack_and_vram_gate_resolve(tmp_path: Pat
     vram = _ready_vram()
 
     assert config["resolved"] is True
-    assert config["checks"]["model_is_qwen35_mtp"] is True
+    assert config["checks"]["model_is_pinned_generator"] is True
     assert config["checks"]["mtp_enabled"] is True
     assert config["checks"]["q8_kv"] is True
     assert config["checks"]["cuda_128_server"] is True
     assert paths["resolved"] is True
-    assert paths["gguf"]["filename"] == "Qwen3.5-9B-Q4_K_M.gguf"
+    assert paths["gguf"]["filename"] == "gemma-4-31B-it-Q4_K_M.gguf"
     assert paths["llama_server"]["cuda_12_8_capable"] is True
     assert vram["fits_16gb"] is True
     assert vram["model_copies"] == 2

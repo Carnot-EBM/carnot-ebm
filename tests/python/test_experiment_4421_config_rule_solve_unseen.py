@@ -22,7 +22,7 @@ def _preconditions() -> dict[str, object]:
 
 def _qwen_proposal() -> dict[str, object]:
     return {
-        "model": "unsloth/Qwen3.5-9B-MTP-GGUF",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
         "n_predict": 2048,
         "no_think": True,
         "raw_sample": "def is_win(controlled_markers, target_markers):",

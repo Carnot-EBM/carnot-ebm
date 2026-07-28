@@ -21,6 +21,16 @@ import tempfile
 import time
 from typing import Any
 
+# THE CANONICAL GENERATOR PIN, imported rather than re-typed. This module's generator assertions
+# were hardcoded to the retired Qwen3.5-9B-MTP and went stale the moment the 2026-07-28 operator
+# directive re-pinned the live generator to gemma-4-31B-it. Reading the constants means a future
+# switch updates this readiness gate for free instead of leaving it asserting a model nothing runs.
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_FILENAME,
+    ARC_LIVE_GENERATOR_MODEL_ID,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR,
+)
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PYTHON_ROOT = REPO_ROOT / "python"
@@ -53,20 +63,43 @@ SPEC_REFS = [
     "SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES",
 ]
 TERMINAL_PREFIXES = ("success_", "passed_", "complete_", "blocked_")
+# THE KAGGLE DATASET SET THE KERNEL MUST ATTACH. Re-pinned 2026-07-28 with the generator switch.
+# This was a genuine PRODUCTION FAILURE, not a stale comment: `datasets_attached` is
+# `REQUIRED_DATASETS.issubset(dataset_sources)`, and kernel-metadata.json now requests
+# `carnot-gemma4-31b-it-gguf`, so the readiness gate reported the submission package as blocked on
+# a dataset the kernel deliberately no longer attaches. Verified failing before this fix
+# (missing: ['iancblenke/carnot-qwen35-9b-mtp-gguf']) and passing after.
+#
+# NOTE FOR THE OPERATOR: the gemma dataset is an 18.3 GB upload that DOES NOT EXIST YET, and only
+# the operator can create it. `SUBMITTED_AGENT_CONFIG["frozen_generator"]["kaggle_dataset_uploaded"]`
+# is False for exactly this reason. This constant naming it is what keeps that from being silently
+# forgotten between here and a submission.
+#
+# ^^^ RESOLVED 2026-07-28 (same day; preserved per never-prune because it records WHY this constant
+# exists). Both datasets have since been created, privately, by the operator:
+#     iancblenke/carnot-gemma4-31b-it-gguf    (17 GB, main weights)
+#     iancblenke/carnot-gemma4-31b-mtp-head   (491 MB, the draft head)
+# `kaggle_dataset_uploaded` is now True. The paragraph above is therefore HISTORY, not a live
+# blocker -- read it as the reason this constant is written out by name rather than as a
+# description of today's state.
+#
+# 2026-07-28 (second pass): the MTP DRAFT HEAD is now a required attachment too. It is a separate
+# 491 MB dataset because the head is a separate GGUF -- gemma-4-31B's MTP is not embedded in the
+# main weights. It is REQUIRED rather than optional because the scored kernel enables MTP, and the
+# failure mode of a missing head is a silent ~1.4x slowdown, not an error: the kernel correctly
+# drops the flags, the run completes, and nothing downstream distinguishes it from a fast run.
+# Making it a gate precondition is the only place that difference becomes visible before submission.
 REQUIRED_DATASETS = {
     "iancblenke/carnot-agent-code",
     "iancblenke/carnot-llamacpp-mtp-binary",
-    "iancblenke/carnot-qwen35-9b-mtp-gguf",
+    "iancblenke/carnot-gemma4-31b-it-gguf",
+    "iancblenke/carnot-gemma4-31b-mtp-head",
 }
 REQUIRED_COMPETITION = "arc-prize-2026-arc-agi-3"
 
 FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
-    "honest_verdict": {
-        "principle": "terminal prefix; a package-ready run is success_/passed_."
-    },
-    "inference_substrate": {
-        "principle": "aggregation_from_upstream_artifacts; 100us floor."
-    },
+    "honest_verdict": {"principle": "terminal prefix; a package-ready run is success_/passed_."},
+    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts; 100us floor."},
     "preconditions_checked": {"principle": "records the GGUF/binary checks."},
     "package_builds": {
         "principle": (
@@ -132,8 +165,8 @@ def _default_gguf_finder() -> list[str]:  # pragma: no cover - local filesystem 
     if env_path and Path(env_path).is_file():
         candidates.append(env_path)
     pattern = (
-        "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/"
-        "snapshots/*/Qwen3.5-9B-Q4_K_M.gguf"
+        f"~/.cache/huggingface/hub/models--unsloth--{ARC_LIVE_GENERATOR_MODEL_ID.split('/')[-1]}/"
+        f"snapshots/*/{ARC_LIVE_GENERATOR_MODEL_FILENAME}"
     )
     candidates.extend(glob.glob(os.path.expanduser(pattern)))
     return sorted(dict.fromkeys(candidates))
@@ -242,12 +275,11 @@ def inspect_requirements(root: Path | str = REPO_ROOT) -> JsonDict:
         "offline_pip_no_index": "--no-index" in source and "arc_agi_3_wheels" in source,
         "arc_agi_wheel": "arc-agi" in source,
         "dotenv_wheel": "python-dotenv" in source,
-        "rerun_gateway_mode": "KAGGLE_IS_COMPETITION_RERUN" in source
-        and "gateway:8001" in source,
+        "rerun_gateway_mode": "KAGGLE_IS_COMPETITION_RERUN" in source and "gateway:8001" in source,
         "agent_framework_copy": "ARC-AGI-3-Agents" in source and "my_agent.py" in source,
         "llama_server_env": "CARNOT_LLAMA_SERVER" in source and "llama-server" in source,
         "gguf_env": "CARNOT_ARC_GGUF_PATH" in source and ".gguf" in source,
-        "qwen35_mtp_resolution": "Qwen3.5-9B" in source or "Q4_K_M" in source,
+        "generator_resolution": ARC_LIVE_GENERATOR_REPO_SUBSTR in source or "Q4_K_M" in source,
         "placeholder_parquet": "submission.parquet" in source
         and "pandas" in source
         and "to_parquet" in source,
@@ -262,12 +294,14 @@ def inspect_requirements(root: Path | str = REPO_ROOT) -> JsonDict:
             "kaggle base image pandas/parquet stack",
             "attached carnot-agent-code dataset",
             "attached llama-server binary dataset",
-            "attached Qwen3.5-9B-MTP GGUF dataset",
+            f"attached {ARC_LIVE_GENERATOR_REPO_SUBSTR} GGUF dataset",
         ],
     }
 
 
-def assemble_submission_package(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - filesystem boundary.
+def assemble_submission_package(
+    root: Path | str = REPO_ROOT,
+) -> JsonDict:  # pragma: no cover - filesystem boundary.
     root_path = Path(root)
     kernel_dir = root_path / KERNEL_RELATIVE_DIR
     try:
@@ -382,7 +416,9 @@ def validate_package(
         "clean_env_smoke_ran": smoke.get("passed") is True,
         "clean_env": smoke.get("clean_env") is True,
         "submitted_to_leaderboard": False,
-        "blocked_resource": str(assembly.get("blocked_resource") or smoke.get("blocked_resource") or ""),
+        "blocked_resource": str(
+            assembly.get("blocked_resource") or smoke.get("blocked_resource") or ""
+        ),
         "assembly": assembly,
         "entrypoint_smoke": smoke,
     }
@@ -427,7 +463,7 @@ def _operator_checklist(package_ready: bool) -> list[str]:
     return [
         f"{prefix} Confirm results/experiment_4756_submission_package_readiness.json is {readiness} and submitted_to_leaderboard is false.",
         f"{prefix} In Kaggle, open kernel iancblenke/carnot-arc-agi3-submission with GPU enabled and internet disabled.",
-        f"{prefix} Attach the ARC-AGI-3 competition plus datasets carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf.",
+        f"{prefix} Attach the ARC-AGI-3 competition plus datasets carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-gemma4-31b-it-gguf.",
         f"{prefix} Save & Run the kernel and wait for the non-rerun submission.parquet output before any external publication step.",
         f"{prefix} Review logs for LLM TIER RESOLVED or LLM GENERATOR HEALTHY, and record any CPU-only degradation before submit.",
         f"{prefix} Submit only through the operator-controlled Kaggle UI or API after the above checks; this experiment never submits.",

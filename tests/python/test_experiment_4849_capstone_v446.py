@@ -84,7 +84,9 @@ def _levelup(*, banked: bool = False) -> JsonDict:
     return {
         "experiment": "experiment_4842_levelup_attempt",
         "honest_verdict": (
-            "success_ka59_new_level_banked" if banked else "complete_ka59_no_new_level_residual_existing_depth"
+            "success_ka59_new_level_banked"
+            if banked
+            else "complete_ka59_no_new_level_residual_existing_depth"
         ),
         "target_game": "ka59",
         "new_levels_banked": 1 if banked else 0,
@@ -211,14 +213,16 @@ def _b1(
 def _package(*, ready: bool = True) -> JsonDict:
     return {
         "experiment": "experiment_4846_submission_package_harden",
-        "honest_verdict": "success_package_builds_vram_gate_green" if ready else "complete_package_not_ready",
+        "honest_verdict": "success_package_builds_vram_gate_green"
+        if ready
+        else "complete_package_not_ready",
         "submission_package_ready": ready,
         "submitted_to_leaderboard": False,
         "operator_only": True,
         "vram_estimate_gb": 15.146,
         "package_builds": {"dry_build_ran": ready, "package_builds": ready},
         "packaging_requirements_crosscheck": {"ok": ready},
-        "agent_config_resolution": {"resolved": ready, "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF"},
+        "agent_config_resolution": {"resolved": ready, "model_id": "unsloth/gemma-4-31B-it-GGUF"},
         "inference_substrate": "aggregation_from_upstream_artifacts",
     }
 

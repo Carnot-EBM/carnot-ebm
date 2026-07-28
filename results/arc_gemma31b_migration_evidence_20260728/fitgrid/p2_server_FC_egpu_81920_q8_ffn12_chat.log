@@ -1,0 +1,20 @@
+0.00.076.216 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.076.222 I device_info:
+0.00.419.862 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
+0.00.419.882 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
+0.00.420.046 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.420.059 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true
+0.00.420.149 I srv          init: running without SSL
+0.00.420.208 I srv          init: using 23 threads for HTTP server
+0.00.420.422 I srv         start: binding port with default address family
+0.00.421.953 I srv  llama_server: loading model
+0.00.421.977 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'
+0.00.422.196 I common_init_result: fitting params to device memory ...
+0.00.422.201 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.05.893.041 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.05.894.833 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.05.914.276 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.05.993.593 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
+0.06.441.062 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.14.123.150 W llama_context: n_ctx_seq (81920) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.14.216.107 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)

@@ -83,8 +83,25 @@ class TestGeneratorServerAndEnvUsesRetry:
         monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
         self._fake_cuda_and_hip_exist(monkeypatch)
 
-        readings = iter([1000, 21000])
+        # The recovered reading must clear the CURRENT requirement, and that requirement moved on
+        # 2026-07-28: the generator is now an 18.3 GB gemma-4-31B rather than a 5.9 GB Qwen3.5-9B,
+        # so `_generator_cuda_min_free_mb()` returns ~24 GB, not the ~13 GB this test was written
+        # against. 21000 would now be a genuine refusal, and the test would be asserting that a
+        # card we cannot fit on gets bound. The point of the test is the RETRY -- that a transient
+        # low reading does not permanently lose the card -- so the low reading stays low and the
+        # recovered one is raised to something that actually fits.
+        #
+        # `_cuda_gpu_total_mb` is stubbed because the real card (24576 MiB) is smaller than the
+        # no-offload requirement (25388 MiB), which correctly short-circuits the retry entirely --
+        # a different code path from the one under test here.
+        readings = iter([1000, 24400])
         monkeypatch.setattr(mod, "_cuda_gpu_free_mb", lambda idx: next(readings))
+        monkeypatch.setattr(mod, "_cuda_gpu_total_mb", lambda idx: 49152)
+        # 12 CPU-FFN layers is the documented escape hatch that makes this generator fit a 24 GB
+        # card at all (25388 -> 23044 MiB required). Pinned explicitly rather than left to the
+        # auto-fit, because the auto-fit reads live free VRAM and would make this test's outcome
+        # depend on which card happens to be idle when the suite runs.
+        monkeypatch.setattr(mod, "_default_ffn_cpu_layers", lambda: 12)
         monkeypatch.setattr(mod.time, "sleep", lambda s: None)
 
         server, env = mod._generator_server_and_env()

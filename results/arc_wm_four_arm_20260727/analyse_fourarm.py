@@ -438,11 +438,44 @@ def _interaction(per_arm: dict, comparisons: dict) -> dict:
         "delta_gate": a2 - a0,
         "A3_minus_additive_prediction": a3 - additive,
         "fixes_are_additive_on_this_endpoint": a3 == additive,
-        "cancellation_detected": bool((a1 - a0) > 0 and (a2 - a0) < 0 and a3 == a0),
+        # REQ-ARC-WMTE-6019: AN EMPTY PASS REGION, named instead of reported as a clean
+        # False. The test needs `delta_gate < 0` -- the gate arm admitting FEWER cells than
+        # control. The endpoint is a COUNT of admitting cells, so it is floored at 0; when
+        # the control admits 0, `delta_gate` cannot be negative at ANY outcome and the flag
+        # is unreachable-False rather than measured-False. That is exactly this run's shape
+        # (A0_control = 0), so a reader taking `cancellation_detected: false` as evidence
+        # would be reading a gate that could not have fired -- and it read as clean while
+        # the artifact's own prose described the gate rejecting precisely the engine the
+        # mask admitted on lf52, which IS a per-cell cancellation.
+        #
+        # Reported as three-valued: None when the arithmetic cannot express the condition,
+        # with the measurability flag and the reason beside it, so an absent measurement is
+        # never a negative finding. Same discipline as `noop_ok_is_vacuous` in
+        # `change_gate_decision` and `hud_mask_swallow_clean`'s affirmative-`ok` rule.
+        "cancellation_measurable": bool(a0 > 0),
+        "cancellation_detected": (
+            bool((a1 - a0) > 0 and (a2 - a0) < 0 and a3 == a0) if a0 > 0 else None
+        ),
+        "cancellation_unmeasurable_reason": (
+            ""
+            if a0 > 0
+            else (
+                "requires delta_gate < 0, but the endpoint is a count floored at 0 and "
+                f"A0_control == {a0}, so delta_gate >= 0 at every reachable outcome; the "
+                "flag is unreachable-False, not measured-False"
+            )
+        ),
         "why_this_matters": (
             "the mask can only ADMIT more and the gate can only REJECT more; if A3 returns "
             "to the control value while A1 and A2 both moved, a two-arm before/after would "
             "have reported a clean null that is in fact two real effects cancelling"
+        ),
+        "cancellation_detected_is_aggregate_not_per_cell": (
+            "this flag is an ARM-LEVEL count comparison. A PER-CELL cancellation is a "
+            "different and weaker claim, and this run has one: on lf52 the mask admitted an "
+            "engine and the gate rejected it, so A1 moved and A3 did not. The arm-level flag "
+            "cannot express that, which is why the per-cell rejection detail is reported "
+            "separately rather than inferred from this field"
         ),
     }
 
