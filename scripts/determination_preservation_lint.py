@@ -190,6 +190,74 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 
+
+class GuardError(RuntimeError):
+    """The guard could not complete its check, so it does not know whether the tree is clean.
+
+    A GUARD MUST FAIL CLOSED. Every path that raises this used to return an empty result or a
+    ``None`` instead, which made the lint print ``OK`` on a tree it had not actually examined --
+    the single failure mode a guard cannot have, and the one this whole file exists to prevent
+    in the artifacts it protects.
+
+    ``main`` catches this and REFUSES the commit with the underlying reason. If the environment
+    is genuinely broken, the correct outcome is a human looking at it, not a silent pass.
+    """
+
+
+# `git show <rev>:<path>` exits 128 both for "that path is not in that revision" (routine and
+# benign -- a newly added artifact has no old side) and for "your repository is broken". Only
+# the first is safe to swallow, so it is matched explicitly and EVERYTHING ELSE fails closed.
+# Both spellings below are real git messages; the second appears when the path exists in the
+# working tree but not in the given revision.
+_GIT_PATH_ABSENT = re.compile(
+    # `git show <rev>:<path>` -- path absent from that revision.
+    r"does not exist in"
+    # `git show :<path>` (the INDEX side) -- both real spellings, captured by running them
+    # rather than guessed. The second is why this list is explicit: "does not exist (neither
+    # on disk nor in the index)" does NOT contain the substring "does not exist in", so the
+    # first alternative alone would have failed closed on a routine absent-from-index path.
+    r"|does not exist \(neither on disk nor in the index\)"
+    r"|exists on disk, but not in"
+    r"|no such path"
+    r"|不存在",
+    re.I,
+)
+
+
+def _git(args: list[str]) -> str:
+    """Run a git command, or raise GuardError. Never returns partial/empty output on failure.
+
+    The pre-widening code did ``subprocess.run(...).stdout`` and ignored ``returncode``
+    entirely. Any git failure -- broken repo, missing binary, bad ref, index lock contention
+    with a concurrent workflow -- yielded an empty file list, which the loop below reads as
+    "nothing changed" and reports as OK.
+    """
+    try:
+        r = subprocess.run(["git", *args], capture_output=True, text=True, cwd=REPO)
+    except OSError as exc:  # git absent / not executable / cwd gone
+        raise GuardError(f"could not execute `git {' '.join(args)}`: {exc}") from exc
+    if r.returncode != 0:
+        raise GuardError(
+            f"`git {' '.join(args)}` failed with exit {r.returncode}: "
+            f"{r.stderr.strip() or '(no stderr)'}"
+        )
+    return r.stdout
+
+
+# Sentinels for the NEW side of a comparison. `None` used to mean all three of "deleted",
+# "unparseable" and "fine, nothing to do", and every one of them was skipped -- so deleting an
+# artifact outright, or overwriting it with corrupt bytes, was indistinguishable from no change.
+class _Missing:
+    """The artifact is not present on this side at all (deleted, or never existed)."""
+
+
+class _Unreadable:
+    """The artifact IS present but could not be read as a JSON object (corrupt / truncated)."""
+
+
+MISSING = _Missing()
+UNREADABLE = _Unreadable()
+
 # The fields whose LOSS changes a gate rather than merely losing history.
 # `flagged_adversarial` is the fabrication gate's own key. The corrigendum family is the
 # documented reason a determination exists -- losing it strands the stamp without its evidence.
@@ -331,6 +399,44 @@ def _is_substantive(value) -> bool:
     return True
 
 
+_AV_MODULE = None
+
+
+def _adversarial_verify():
+    """Import ``adversarial_verify`` once, or raise GuardError.
+
+    THIS USED TO BE A FAIL-OPEN, and the comment excusing it ("a guard must never die on an
+    import") had the principle exactly backwards. What a guard must never do is claim a tree is
+    clean when it could not check. Swallowing the ImportError silently disabled the CANONICAL
+    ENUM half of rule 4 and fell through to the free-form token scan -- i.e. it silently
+    substituted a DIFFERENT, weaker matcher, which is precisely the "drifted copy of a matcher"
+    hazard ``_canonical_substrate_band``'s own docstring is written to prevent.
+
+    Failing closed here cannot deadlock a repair of ``adversarial_verify.py`` itself: the
+    pre-commit hook is scoped ``files: ^results/.*\\.json$``, so a commit that touches only
+    ``scripts/adversarial_verify.py`` never invokes this lint at all.
+
+    Cached in a module global so a sweep over 15k artifacts imports once, and so the repeated
+    ``sys.path.insert`` of the previous implementation (which appended a duplicate entry to
+    ``sys.path`` on EVERY call) is gone.
+    """
+    global _AV_MODULE
+    if _AV_MODULE is None:
+        scripts_dir = str(REPO / "scripts")
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        try:
+            import adversarial_verify as _av
+        except Exception as exc:
+            raise GuardError(
+                f"could not import scripts/adversarial_verify.py ({exc!r}). Rule 4 ranks the "
+                f"enum-governed `inference_substrate` field from THAT module's alias tuples; "
+                f"without it this lint would silently fall back to a weaker prose scan."
+            ) from exc
+        _AV_MODULE = _av
+    return _AV_MODULE
+
+
 def _marker_kind(key: str) -> str | None:
     """The human name of the marker class `key` belongs to, or None if it is not a marker."""
     for pattern, kind in MARKER_PATTERNS:
@@ -348,11 +454,7 @@ def _canonical_substrate_band(raw: str) -> int | None:
     only the leading canonical token. Re-implementing that here is exactly how the two would
     drift, and a drifted copy of a matcher is how this rule got its worst bug (below).
     """
-    try:
-        sys.path.insert(0, str(REPO / "scripts"))
-        import adversarial_verify as _av
-    except Exception:  # pragma: no cover - defensive: a guard must never die on an import
-        return None
+    _av = _adversarial_verify()
     for kind, aliases in (
         ("aggregation", _av.AGGREGATION_SUBSTRATE_ALIASES),
         ("no_llm", _av.NO_LLM_SUBSTRATE_ALIASES),
@@ -495,8 +597,12 @@ def _has_change_note(new: dict, field: str) -> bool:
     return False
 
 
-def _tracked_json_under_results(ref: str | None, all_files: bool) -> list[str]:
-    """Which results/*.json files to check: modified-vs-HEAD, vs a ref, or every tracked one.
+def _tracked_json_under_results(
+    ref: str | None, all_files: bool, staged: bool = False
+) -> list[tuple[str, str | None]]:
+    """Which artifacts to check, as ``(old_path, new_path)`` pairs.
+
+    ``new_path is None`` means the artifact was DELETED on the new side.
 
     THE DEFAULT COMPARES AGAINST ``HEAD`` WITHOUT ``--cached``, DELIBERATELY. A first draft used
     ``git diff --cached --name-only`` for the file list while reading the NEW side from the
@@ -507,22 +613,100 @@ def _tracked_json_under_results(ref: str | None, all_files: bool) -> list[str]:
     Comparing against ``HEAD`` is correct in both contexts: pre-commit stashes unstaged changes
     before running hooks, so the working tree it sees IS the staged content; and a human running
     this on a dirty tree gets every modification, staged or not.
+
+    ``--diff-filter=MDRT``, NOT ``=M`` (2026-07-29 fix). The pre-fix filter considered MODIFIED
+    files only, so the two strictly WORSE ways to lose a determination were invisible:
+
+      * DELETION. Removing ``results/experiment_3946_r11l_first_solve.json`` outright destroys
+        every field the lint protects at once, and scored clean. Worse, ``pre_commit``'s own
+        ``get_staged_files`` uses ``--diff-filter=ACMRTUXB`` -- "everything except for D" -- so
+        a deletion-only commit did not even match this hook's ``files:`` pattern. That second
+        layer is closed by ``always_run: true`` in ``.pre-commit-config.yaml``; this is the
+        first.
+      * RENAME. ``git mv``-ing an artifact and stripping its markers in the same commit showed
+        up under neither the old nor the new path.
+
+    ``T`` (type change) is included because a tracked artifact replaced by a symlink loses its
+    content just as thoroughly; it is compared like a modification and caught as UNREADABLE.
+
+    ``-M`` turns on rename detection. Note that an UNSTAGED rename is not detectable as one --
+    the destination is an untracked file that ``git diff HEAD`` cannot see -- so it presents as a
+    plain deletion and is refused as such. That is the conservative and correct reading: a move
+    the guard cannot follow is indistinguishable from a removal.
+
+    THE DIFF IS NOT CONFINED TO ``results/``, AND THAT IS THE WHOLE POINT OF RENAME DETECTION.
+    A first cut of this fix kept the original ``-- results`` pathspec. Calibrating it against
+    real history showed the cost immediately: commit ``bed0635b6`` ("[outer-loop] Retire
+    fabricated exp2823 TruthfulQA artifact to legacy/fabricated/") MOVED a flagged artifact --
+    ``flagged_adversarial: True`` plus its ``corrigendum_pending`` TAUTOLOGY record -- out of
+    ``results/`` and into ``legacy/fabricated/``, alongside a README and an
+    ``ops/exclusion_manifest.yaml`` entry. The record was preserved perfectly; that is the
+    project's own documented way to retire a fabricated artifact.
+
+    But a pathspec of ``-- results`` makes git report the source half of a cross-directory move
+    as a plain DELETION, because the destination is outside the paths being diffed. So the
+    pathspec version would have refused a careful, deliberate, fully-documented curation --
+    and a guard that refuses honest work gets disabled, which is the same outcome as no guard.
+
+    Diffing the whole tree and filtering on the OLD path instead lets git pair the move up as
+    ``R100``, the content compares equal, and the retirement passes. A move that DROPS a marker
+    on the way out is still refused, which is the behaviour that was actually wanted.
     """
     if all_files:
-        cmd = ["git", "ls-files", "results/*.json"]
-    elif ref:
-        cmd = ["git", "diff", "--name-only", "--diff-filter=M", ref, "HEAD", "--", "results"]
-    else:
-        cmd = ["git", "diff", "--name-only", "--diff-filter=M", "HEAD", "--", "results"]
-    out = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO).stdout
-    return [p for p in out.splitlines() if p.endswith(".json")]
+        out = _git(["ls-files", "results/*.json"])
+        return [(p, p) for p in out.splitlines() if p.endswith(".json")]
+
+    # NOTE: no `-- results` pathspec. See the docstring -- confining the diff makes a move OUT
+    # of results/ (the project's documented `legacy/fabricated/` retirement path) look like a
+    # deletion. The OLD path is filtered below instead, which keeps the scope identical while
+    # letting git pair cross-directory moves up as renames.
+    args = ["diff", "--name-status", "-M", "--diff-filter=MDRT"]
+    if staged:
+        args.append("--cached")
+    args += [ref, "HEAD"] if ref else ["HEAD"]
+
+    pairs: list[tuple[str, str | None]] = []
+    for line in _git(args).splitlines():
+        if not line.strip():
+            continue
+        parts = line.split("\t")
+        status = parts[0]
+        if status.startswith("R") and len(parts) >= 3:
+            old_path, new_path = parts[1], parts[2]
+        elif len(parts) >= 2:
+            old_path = parts[1]
+            new_path = None if status.startswith("D") else parts[1]
+        else:  # pragma: no cover - git does not emit this shape
+            raise GuardError(f"could not parse `git diff --name-status` line: {line!r}")
+        # Scope is defined by where the artifact WAS, not where it ended up. An artifact only
+        # needs to have been JSON under results/ on the OLD side to be worth protecting --
+        # renaming `x.json` to `x.json.bak` is still a loss of the determination it carried.
+        if old_path.startswith("results/") and old_path.endswith(".json"):
+            pairs.append((old_path, new_path))
+    return pairs
 
 
 def _load_at(rev: str, path: str) -> dict | None:
-    """Read a JSON artifact as of `rev`. None when absent or unparseable (not a violation)."""
-    r = subprocess.run(["git", "show", f"{rev}:{path}"], capture_output=True, text=True, cwd=REPO)
+    """Read a JSON artifact as of `rev`. None when genuinely absent there, or unparseable.
+
+    Used for the OLD side only, where "nothing readable was there" means there is nothing for
+    this commit to have destroyed. A git failure that is NOT a plain missing-path is a
+    GuardError: the pre-fix code treated every non-zero exit as "absent", so a broken repo or a
+    bad ref silently emptied the old side of every comparison and the lint reported OK.
+    """
+    try:
+        r = subprocess.run(
+            ["git", "show", f"{rev}:{path}"], capture_output=True, text=True, cwd=REPO
+        )
+    except OSError as exc:
+        raise GuardError(f"could not execute `git show {rev}:{path}`: {exc}") from exc
     if r.returncode != 0:
-        return None
+        if _GIT_PATH_ABSENT.search(r.stderr or ""):
+            return None  # routine: the artifact did not exist at that revision
+        raise GuardError(
+            f"`git show {rev}:{path}` failed with exit {r.returncode}: "
+            f"{r.stderr.strip() or '(no stderr)'}"
+        )
     try:
         d = json.loads(r.stdout)
     except json.JSONDecodeError:
@@ -530,55 +714,291 @@ def _load_at(rev: str, path: str) -> dict | None:
     return d if isinstance(d, dict) else None
 
 
-def _load_now(path: str, ref: str | None) -> dict | None:
-    """Read the NEW side: the working tree (pre-commit) or `HEAD` (auditing a landed commit)."""
+def _load_index(path: str) -> dict | _Missing | _Unreadable:
+    """Read the STAGED content of `path` (``git show :path``) -- the bytes a commit would land.
+
+    Separate from ``_load_at`` because the new side needs MISSING vs UNREADABLE kept apart,
+    which ``_load_at`` deliberately collapses into ``None`` for the old side.
+    """
+    try:
+        r = subprocess.run(["git", "show", f":{path}"], capture_output=True, text=True, cwd=REPO)
+    except OSError as exc:
+        raise GuardError(f"could not execute `git show :{path}`: {exc}") from exc
+    if r.returncode != 0:
+        if _GIT_PATH_ABSENT.search(r.stderr or ""):
+            return MISSING
+        raise GuardError(
+            f"`git show :{path}` failed with exit {r.returncode}: "
+            f"{r.stderr.strip() or '(no stderr)'}"
+        )
+    try:
+        d = json.loads(r.stdout)
+    except json.JSONDecodeError:
+        return UNREADABLE
+    return d if isinstance(d, dict) else UNREADABLE
+
+
+def _load_now(
+    path: str | None, ref: str | None, staged: bool = False
+) -> dict | _Missing | _Unreadable:
+    """Read the NEW side: the working tree (pre-commit) or `HEAD` (auditing a landed commit).
+
+    Returns MISSING (gone) or UNREADABLE (present but not a JSON object) rather than collapsing
+    both into ``None``. The pre-fix code returned ``None`` for both and the caller skipped it,
+    so overwriting a flagged artifact with truncated or corrupt bytes destroyed its
+    determination and scored clean -- the same outcome as deleting it.
+    """
+    if path is None:
+        return MISSING
+    if staged:
+        return _load_index(path)
     if ref:
-        return _load_at("HEAD", path)
+        r = _load_at("HEAD", path)
+        return r if r is not None else MISSING
     p = REPO / path
     if not p.exists():
-        return None
+        return MISSING
     try:
         d = json.loads(p.read_text())
-    except (json.JSONDecodeError, OSError):
-        return None
-    return d if isinstance(d, dict) else None
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return UNREADABLE
+    except OSError as exc:
+        # The file is THERE (p.exists() passed) but cannot be read. That is an environment
+        # fault, not a clean tree, so it must not be swallowed.
+        raise GuardError(f"could not read {path}: {exc}") from exc
+    return d if isinstance(d, dict) else UNREADABLE
 
 
 def _corrigendum_keys(d: dict) -> set[str]:
-    return {k for k in d if CORRIGENDUM_PREFIX in str(k).lower()}
+    """Corrigendum keys that actually CARRY a record.
+
+    SUBSTANTIVE-ONLY, WHICH IS WHAT CLOSES THE EMPTIED-IN-PLACE BYPASS (2026-07-29, second
+    pass). This used to be every key whose name matched, so rule 2's ``old_keys - new_keys``
+    compared NAMES and never values -- and a key is still a key when its value is gone:
+
+        "corrigendum_pending": "TAUTOLOGY: ..."   ->   "corrigendum_pending": null
+
+    destroys the record exactly as thoroughly as deleting the key, and scored CLEAN. Confirmed
+    against this file as shipped, on the real ``experiment_1680_polarfire_smoke_v2.json``.
+
+    Filtering to substantive values makes an emptied key drop out of the NEW side's set while
+    remaining in the OLD side's, so the existing subtraction reports it with no further change.
+    Empty-to-empty stays silent because such a key was never in either set.
+    """
+    return {k for k, v in d.items() if CORRIGENDUM_PREFIX in str(k).lower() and _is_substantive(v)}
 
 
 def _cleared_deliberately(new: dict) -> bool:
-    """A determination may be cleared to False IF an explicit note accompanies it.
+    """A determination may be cleared to False IF an explicit written note accompanies it.
 
     Absent/None is NOT a legitimate clearing -- it is indistinguishable from the accident this
     lint exists to catch. Requiring a note makes the clearing auditable and forces whoever
     clears it to state their reasoning where the next reader will find it.
+
+    THE EXEMPTION USED TO BE TRIVIALLY SATISFIABLE (2026-07-29 fix, flagged by the Layer-2 QA
+    audit). The test was ``any("cleared" in key.lower() and value for key in new)`` -- ANY key
+    whose name merely contains the substring "cleared", with ANY truthy value. Censusing the
+    corpus shows exactly what that admits: ``cache_cleared: true``, ``step1_vram_cleared: true``,
+    ``quota_gate_cleared: true``, ``game_fully_cleared: true`` (an ARC level clear!),
+    ``zombie_already_cleared: true``, ``drc_ioplanning_errors_cleared: [...]``. Every one of
+    those is real, live, in the tree today, and says nothing whatever about a fabrication
+    determination -- yet each would have lifted a quarantine. Not one of the 14 distinct
+    ``*cleared*`` key names in the corpus is a prose note, so tightening this cannot regress a
+    single existing artifact.
+
+    Two requirements now, both cheap to satisfy on purpose and near-impossible to trip by
+    accident:
+
+      1. THE NAME must be note-shaped -- either it contains "note" alongside "cleared", or it
+         is prefixed with the determination field it excuses (``flagged_adversarial_cleared*``).
+         This is the ``*_cleared_note`` convention the module docstring already documents.
+      2. THE VALUE must be a non-empty STRING. A bare ``True`` is not a rationale; the whole
+         point of the exemption is that a human wrote down what they re-verified.
+
+    STILL NOT ENOUGH -- THE NOTE MUST NAME THE FIELD IT EXCUSES (2026-07-29, second pass).
+    Requirement 1 above still accepted ANY key whose name paired "cleared" with "note",
+    regardless of what it was about. Constructed and confirmed against this file as shipped:
+
+        "flagged_adversarial": false,
+        "cache_cleared_note": "VRAM cache cleared between runs to avoid OOM"
+
+    scored CLEAN and lifted the quarantine. A GPU-housekeeping remark is not a retraction of a
+    fabrication determination, and ``cache_cleared`` is a REAL key in this corpus.
+
+    This is the same defect this file's own sibling ``_has_change_note`` had already diagnosed
+    and removed -- its docstring says a field-agnostic note "would silently excuse a substrate
+    downgrade ... the 'guard that does not fire' failure mode in miniature" -- so the two
+    functions disagreed with each other about a rule they both implement. They now agree: the
+    note's NAME must contain the determination field it excuses.
+
+    A corpus census is what makes this safe to tighten: of the 15,284 artifacts in the tree,
+    ZERO carry a key satisfying even the looser pre-fix name test, so no existing artifact
+    changes verdict. The documented convention (``flagged_adversarial_cleared_note``) satisfies
+    the tightened test unchanged.
+
+    The 12-character floor matches ``_has_change_note``'s, for the same reason: a one-word
+    string is not a statement of what was re-verified, and consistency between the two
+    exemptions is worth more than either threshold individually.
     """
-    if new.get(DETERMINATION_FIELD) is not True and DETERMINATION_FIELD in new:
-        return any("cleared" in str(k).lower() and new.get(k) for k in new)
+    # Unwrapped: a principle-annotated stamp is not `is True`, so a raw check here would
+    # treat a still-flagged artifact as cleared. Same defect as rule 1's, same fix.
+    if _unwrap_principle(new.get(DETERMINATION_FIELD)) is True or DETERMINATION_FIELD not in new:
+        return False
+    for key, value in new.items():
+        kl = str(key).lower()
+        if "cleared" not in kl:
+            continue
+        # The note must be ABOUT this determination. "cleared" + "note" in the name is not
+        # enough on its own -- see the docstring's `cache_cleared_note` counterexample.
+        if DETERMINATION_FIELD not in kl:
+            continue
+        if "note" not in kl and not kl.startswith(DETERMINATION_FIELD):
+            continue
+        v = _unwrap_principle(value)
+        if isinstance(v, str) and len(v.strip()) >= 12:
+            return True
     return False
 
 
+def _protected_content(d: dict) -> list[str]:
+    """The names of fields in `d` that this lint exists to preserve. Empty = nothing at stake.
+
+    Used to decide whether a DELETION or a CORRUPTION is this lint's business. Scoping the
+    refusal to artifacts that actually carry a determination, a corrigendum, a marker or a
+    substrate declaration keeps the guard inside its charter: it is the determination-
+    preservation lint, not a blanket ban on ever removing a file from ``results/``. An artifact
+    carrying none of these loses no GATE when it goes -- that is an ordinary never-prune matter
+    for human review, not a mechanical refusal this file can justify.
+    """
+    names: list[str] = []
+    for key, value in d.items():
+        k = str(key)
+        # The live fabrication stamp counts even though a bare `True` is not substantive prose.
+        # REDUNDANT, AND KEPT ONLY FOR EXPLICITNESS -- do not rely on it. Measured: the marker
+        # branch below appends `flagged_adversarial` for a bare True, a wrapped True AND a bare
+        # False (it matches `^flagged_adversarial`, and `_is_substantive` is True for all
+        # three), so this branch cannot change the output of this function in any case. Its
+        # comment used to justify itself with "a bare `True` is not substantive prose", which
+        # is simply false -- `_is_substantive(True)` returns True.
+        #
+        # It is unwrapped anyway so the file has no raw `is True` check left on a field the
+        # project permits to be principle-wrapped; a future edit that narrows the marker
+        # patterns must not silently turn this into a live hole. Mutation testing correctly
+        # reports this line as unkillable, which is the honest status: a defensive no-op.
+        if k == DETERMINATION_FIELD and _unwrap_principle(value) is True:
+            names.append(k)
+            continue
+        if not _is_substantive(value):
+            continue
+        if CORRIGENDUM_PREFIX in k.lower() or _marker_kind(k) or SUBSTRATE_FIELD.match(k):
+            names.append(k)
+    return sorted(set(names))
+
+
 def check(ref: str | None = None, all_files: bool = False) -> list[str]:
+    """Every violation this commit would land, from BOTH the working tree and the index.
+
+    WHY BOTH (2026-07-29, second pass). The default path compares ``HEAD`` against the WORKING
+    TREE, justified by pre-commit stashing unstaged changes so that the tree the hook sees is
+    the staged content. That justification was verified rather than assumed -- a real
+    ``git commit`` through a real installed pre-commit hook does stash, the guard does fire, and
+    the stripping commit is refused. But it makes the guard's correctness depend on an EXTERNAL
+    TOOL's behaviour, and only under one driver:
+
+        strip the fields, `git add` the stripped copy, restore the working tree, then run
+        `python3 scripts/determination_preservation_lint.py`
+
+    reports OK, because the working tree matches HEAD. That invocation is the one this file's
+    own USAGE section documents for auditing, and it is what any future CI job calling the
+    script directly would do.
+
+    The index is not a substitute for the working tree, so this takes the UNION rather than
+    switching: the index is what a commit lands (so it must be checked), while the working tree
+    is what an unstaged in-progress strip lives in (so it must stay checked, and that is what
+    the pre-widening ``--cached`` bug got wrong in the other direction). Under pre-commit the
+    two sides are identical and the union is a no-op with one extra git call.
+    """
+    if ref or all_files:
+        return _check_side(ref, all_files, staged=False)
+    tree = _check_side(None, False, staged=False)
+    seen = set(tree)
+    out = list(tree)
+    for v in _check_side(None, False, staged=True):
+        if v not in seen:
+            seen.add(v)
+            out.append(
+                "[STAGED CONTENT, which is what a commit would land -- it differs from the "
+                f"working tree] {v}"
+            )
+    return out
+
+
+def _check_side(ref: str | None, all_files: bool, staged: bool) -> list[str]:
     base = ref if ref else "HEAD"
     violations: list[str] = []
-    for path in _tracked_json_under_results(ref, all_files):
+    for path, new_path in _tracked_json_under_results(ref, all_files, staged):
         old = _load_at(base, path)
         if old is None:
             continue
-        new = _load_now(path, ref)
-        if new is None:
+        loaded = _load_now(new_path, ref, staged)
+
+        # 0. (2026-07-29 fix) The artifact is GONE, or is no longer readable. Both destroy
+        #    every protected field at once, which is strictly worse than editing one of them
+        #    out -- and both used to be indistinguishable from "no change" and scored clean.
+        if isinstance(loaded, (_Missing, _Unreadable)):
+            stakes = _protected_content(old)
+            if not stakes:
+                continue
+            if isinstance(loaded, _Missing):
+                what = (
+                    f"DELETED (was {path})"
+                    if new_path is None
+                    else f"MOVED to {new_path}, which does not exist"
+                )
+            else:
+                what = (
+                    f"present at {new_path} but NO LONGER READABLE as a JSON object "
+                    f"(truncated or corrupt -- possibly an experiment still mid-write; if so "
+                    f"wait for it, or `git checkout -- {new_path}`, rather than committing it)"
+                )
+            violations.append(
+                f"{path}: {what}. It carried {stakes}, and destroying the whole artifact "
+                f"destroys every one of them at once -- strictly worse than editing one field "
+                f"out, and until 2026-07-29 it was the one way to do it that scored clean. "
+                f"The evidence trail goes with the file (CLAUDE.md never-prune)."
+            )
             continue
+        new = loaded
+
+        # A rename is not itself a violation -- but it must not smuggle a field drop through,
+        # so the rules below compare old-path@base against new-path@working-tree. `label` keeps
+        # the refusal message pointing at BOTH names so the reader can find either one.
+        label = path if new_path == path else f"{path} -> {new_path}"
 
         # 1. The fabrication-gate stamp must not silently vanish.
-        if old.get(DETERMINATION_FIELD) is True and new.get(DETERMINATION_FIELD) is not True:
+        #
+        # UNWRAPPED ON BOTH SIDES (2026-07-29, second pass). This was an `is True` identity
+        # check against the RAW value, so a principle-annotated stamp --
+        #     "flagged_adversarial": {"principle": "...", "value": true}
+        # -- is not `is True`, the OLD side was never recognised as flagged, and flipping it to
+        # a bare `false` WITHOUT any cleared-note scored a clean OK. Confirmed by construction.
+        #
+        # That is precisely origin bug #2 of CLAUDE.md's QA-Layer Authenticity Discipline
+        # (`adversarial_verify.py` reading a wrappable field as a bare string), reproduced in
+        # the guard whose own `_unwrap_principle` docstring cites that bug and says "This lint
+        # must not repeat it". It did. The wrapper convention is pervasive -- 1,699 wrapped
+        # top-level fields across 676 distinct names, including 44 artifacts that wrap
+        # `preconditions_checked`, itself a protected marker -- so this is a live shape even
+        # though no artifact wraps `flagged_adversarial` today.
+        old_det = _unwrap_principle(old.get(DETERMINATION_FIELD))
+        new_det = _unwrap_principle(new.get(DETERMINATION_FIELD))
+        if old_det is True and new_det is not True:
             if _cleared_deliberately(new):
                 pass  # explicit, auditable retraction -- allowed
             else:
                 violations.append(
-                    f"{path}: {DETERMINATION_FIELD} True -> "
-                    f"{new.get(DETERMINATION_FIELD)!r} with no *_cleared_note. This LIFTS a "
+                    f"{label}: {DETERMINATION_FIELD} True -> "
+                    f"{new_det!r} with no *_cleared_note. This LIFTS a "
                     f"quarantine: the fabrication gate keys off this field, so dropping it "
                     f"re-admits the artifact to headline aggregation."
                 )
@@ -586,11 +1006,26 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
         # 2. The corrigendum trail explains WHY a determination exists; losing it strands the
         #    stamp without its evidence, and it is pure history that no re-run supersedes.
         lost = _corrigendum_keys(old) - _corrigendum_keys(new)
-        if lost:
+        # Split the message by HOW the record was lost. Both are refused identically, but the
+        # repair differs: a dropped key is put back, whereas an emptied one usually means a
+        # writer overwrote it with a variable that was unset -- and telling a reader to
+        # "restore" a key they can plainly still see in the file is how a correct refusal gets
+        # dismissed as a false positive.
+        gone = sorted(k for k in lost if k not in new)
+        emptied_corrigenda = sorted(k for k in lost if k in new)
+        if gone:
             violations.append(
-                f"{path}: lost corrigendum record(s) {sorted(lost)}. These document why the "
+                f"{label}: lost corrigendum record(s) {gone}. These document why the "
                 f"artifact was flagged; a re-run's fresh numbers do not supersede a review's "
                 f"recorded judgement (CLAUDE.md never-prune)."
+            )
+        if emptied_corrigenda:
+            violations.append(
+                f"{label}: EMPTIED corrigendum record(s) {emptied_corrigenda} -- the key is "
+                f"still present but its content is gone (null / empty), which destroys the "
+                f"record as completely as deleting it. These document why the artifact was "
+                f"flagged; a re-run's fresh numbers do not supersede a review's recorded "
+                f"judgement (CLAUDE.md never-prune)."
             )
 
         # 3. (2026-07-29 widening) ANY marker field -- a correction, a provenance declaration,
@@ -599,17 +1034,34 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
         #    contain the string "corrigendum", so rule 2 above sailed straight past its
         #    deletion. Reported separately from rule 2 so the two stay individually testable.
         lost_markers: dict[str, list[str]] = {}
+        emptied_markers: dict[str, list[str]] = {}
         # `already_reported` keeps one deletion from producing two refusal lines. Rule 1 owns
         # `flagged_adversarial` when it was True (that message explains the quarantine-lifting
         # consequence, which is the important part); rule 2 owns the corrigendum family. Rule 3
         # still covers `flagged_adversarial: False` being dropped, which rule 1 ignores.
         already_reported = set(lost)
-        if old.get(DETERMINATION_FIELD) is True:
+        if old_det is True:
             already_reported.add(DETERMINATION_FIELD)
         for key, old_value in old.items():
-            if key in new or key in already_reported:
+            if key in already_reported:
                 continue
             if not _is_substantive(old_value):
+                continue
+            # PRESENT-BUT-EMPTIED IS A LOSS TOO (2026-07-29, second pass). This condition used
+            # to be a bare `key in new`, i.e. a pure NAME check, so setting the value to null /
+            # "" / [] kept the key and sailed through while destroying the record just as
+            # completely. Constructed against this file as shipped:
+            #     "solve_provenance": "live_agent_self_discovery"  ->  ""
+            #     "inference_substrate_correction_note": "<hand-written corrigendum>"  ->  ""
+            # scored CLEAN. Rule 4 could not catch it either: an emptied value is unrankable,
+            # and `_strength_rank` returns None for that, which it treats as "not a downgrade".
+            #
+            # Calibrated before shipping, not after: across the last 400 commits (1,804
+            # artifact-pairs) protected fields were DELETED 130 times and EMPTIED exactly 0
+            # times, so this refuses nothing the project has actually ever done while closing
+            # the cheaper of the two ways to do the same damage.
+            emptied = key in new
+            if emptied and _is_substantive(new[key]):
                 continue
             # A DROPPED substrate declaration is the loophole rule 4 cannot see, because rule 4
             # only compares a field that exists on BOTH sides. `inference_substrate*` is caught
@@ -623,12 +1075,20 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
                 "substrate declaration" if SUBSTRATE_FIELD.match(str(key)) else None
             )
             if kind:
-                lost_markers.setdefault(kind, []).append(str(key))
+                (emptied_markers if emptied else lost_markers).setdefault(kind, []).append(str(key))
         for kind, keys in sorted(lost_markers.items()):
             violations.append(
-                f"{path}: lost {kind}(s) {sorted(keys)}. A field whose NAME marks it as a "
+                f"{label}: lost {kind}(s) {sorted(keys)}. A field whose NAME marks it as a "
                 f"review output is not superseded by a re-run's fresh measurements; if it no "
                 f"longer applies, say so explicitly beside it (CLAUDE.md never-prune)."
+            )
+        for kind, keys in sorted(emptied_markers.items()):
+            violations.append(
+                f"{label}: EMPTIED {kind}(s) {sorted(keys)} -- the key is still there but its "
+                f"content is gone (null / empty). That destroys the record as completely as "
+                f"deleting it, so it is refused for the same reason: a review output is not "
+                f"superseded by a re-run's fresh measurements (CLAUDE.md never-prune). If it "
+                f"genuinely no longer applies, replace it with prose saying so."
             )
 
         # 4. (2026-07-29 widening) A substrate / mode declaration that survives but is
@@ -647,7 +1107,7 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
             ov = _unwrap_principle(old_value)
             nv = _unwrap_principle(new[key])
             violations.append(
-                f"{path}: {key} WEAKENED {ov!r} ({_BAND_NAME[old_rank]}) -> {nv!r} "
+                f"{label}: {key} WEAKENED {ov!r} ({_BAND_NAME[old_rank]}) -> {nv!r} "
                 f"({_BAND_NAME[new_rank]}) with no accompanying note. This rewrites the "
                 f"declared provenance of a measurement that already landed; the substrate "
                 f"declaration is what the fabrication gate's duration floors key off."
@@ -662,7 +1122,21 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("files", nargs="*", help="ignored; accepted so pre-commit may pass filenames")
     a = ap.parse_args(argv)
 
-    violations = check(ref=a.ref, all_files=a.all)
+    # FAIL CLOSED. If the check could not run to completion, the honest report is "I do not
+    # know", and for a guard "I do not know" must read as REFUSE. Every one of these paths used
+    # to degrade to an empty result and print OK.
+    try:
+        violations = check(ref=a.ref, all_files=a.all)
+    except GuardError as exc:
+        print("determination-preservation-lint: REFUSING THE COMMIT (the check could not run).")
+        print(f"  {exc}")
+        print(
+            "\n  This is NOT a clean tree -- it is a guard that was unable to look. Fix the\n"
+            "  environment and re-run. If a concurrent process holds the git index, wait for it\n"
+            "  to finish rather than bypassing the hook."
+        )
+        return 1
+
     if not violations:
         print("determination-preservation-lint: OK")
         return 0
