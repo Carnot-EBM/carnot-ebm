@@ -113,10 +113,58 @@ def _set_process_address_space_limit(limit_bytes: int = 32 * 1024**3) -> bool:
     return True
 
 
+def _mutation_check_module():
+    """Import the mutation detector, or None if it is unavailable for any reason.
+
+    Never raises. A guard that can break the test suite it guards will be deleted by the first
+    person it inconveniences, which leaves the record unprotected -- the exact outcome it exists
+    to prevent.
+    """
+    try:
+        sys.path.insert(0, str(repo_root / "scripts"))
+        import test_suite_mutation_check as _m
+
+        return _m
+    except Exception:  # noqa: BLE001 - deliberately total
+        return None
+
+
+def _is_xdist_worker(config) -> bool:
+    """True inside an xdist worker process, where this must NOT run.
+
+    `-n 4` is in `addopts`, so conftest is imported in the controller AND in every worker.
+    Without this check, four workers would each take a baseline and each write the marker, and a
+    worker's "session end" is not the run's end -- the marker would be armed from a partial view
+    while other workers were still writing.
+    """
+    return hasattr(config, "workerinput")
+
+
 def pytest_configure(config) -> None:
     """Set hard address-space limit and keep the RSS watchdog installed."""
     config._carnot_rlimit_as_set = _set_process_address_space_limit()
     config._carnot_memory_watchdog = PytestMemoryWatchdog()
+
+    # ARM THE RECORD-REWRITE INTERLOCK, HOWEVER PYTEST WAS INVOKED (2026-07-29).
+    #
+    # Running this suite REWRITES TRACKED FILES: tests that re-execute a real experiment script
+    # cause it to overwrite its own committed artifact (see
+    # docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md -- 41 tracked files,
+    # including README.md and a paper-v6 section). The pre-commit interlock
+    # (`test_suite_mutation_check.py --gate`) refuses a commit while a pending marker exists, but
+    # ONLY `--run` ever wrote that marker -- so a bare `pytest tests/python/test_arc_*.py ...`,
+    # the invocation behind both recorded incidents, left the interlock disarmed.
+    #
+    # Taking the baseline HERE closes that: the marker is armed from inside pytest, so opting out
+    # requires opting out of pytest. Cost is one `git status --porcelain` per session.
+    config._carnot_mutation_baseline = None
+    if not _is_xdist_worker(config):
+        mod = _mutation_check_module()
+        if mod is not None:
+            try:
+                config._carnot_mutation_baseline = mod.dirty_tracked()
+            except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
+                config._carnot_mutation_baseline = None
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -139,3 +187,31 @@ def pytest_sessionfinish(session, exitstatus) -> None:
     report = _get_memory_watchdog(session.config).finish_session(Path(session.config.rootpath))
     if report is not None:
         warnings.warn(pytest.PytestWarning(report.warning), stacklevel=2)
+
+    # Close the interlock armed in pytest_configure. Any tracked file that is dirty NOW but was
+    # clean at session start was rewritten by this run; record it so the pre-commit gate refuses
+    # to publish it. This only ARMS a marker -- it never reverts a file, because the detector
+    # cannot distinguish a test's write from a human's concurrent edit and auto-reverting has
+    # already destroyed in-flight work twice (see test_suite_mutation_check.backup()).
+    config = session.config
+    baseline = getattr(config, "_carnot_mutation_baseline", None)
+    if baseline is None or _is_xdist_worker(config):
+        return
+    mod = _mutation_check_module()
+    if mod is None:
+        return
+    try:
+        muts = mod.arm_from_pytest(baseline, ["pytest", *sys.argv[1:]])
+    except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
+        return
+    if muts:
+        warnings.warn(
+            pytest.PytestWarning(
+                f"This test run REWROTE {len(muts)} tracked file(s) that were clean before it: "
+                f"{muts[:5]}{' ...' if len(muts) > 5 else ''}. These are the committed research "
+                f"record, not test output. Commits are now blocked until this is resolved -- see "
+                f"`python3 scripts/test_suite_mutation_check.py --check` and "
+                f"`--restore`, or `git checkout -- <paths>`."
+            ),
+            stacklevel=2,
+        )

@@ -67,6 +67,10 @@ def repo(tmp_path, monkeypatch):
     monkeypatch.setattr(tsm, "REPO", r)
     monkeypatch.setattr(tsm, "SNAPSHOT", r / "ops" / ".test_suite_mutation_snapshot.json")
     monkeypatch.setattr(tsm, "PENDING", r / "ops" / ".test_suite_mutation_pending.json")
+    # Without this the tests would write pre-revert backups into the REAL repo's
+    # ops/.test_suite_mutation_backup/ -- a test suite that litters the tree it is checking is
+    # exactly the hazard this module exists to detect.
+    monkeypatch.setattr(tsm, "BACKUP", r / "ops" / ".test_suite_mutation_backup")
     return r, art
 
 
@@ -127,6 +131,52 @@ def test_restore_returns_the_artifact_byte_for_byte(repo):
     assert recovered == ["results/experiment_3946_r11l_first_solve.json"]
     assert art.read_bytes() == before, "restore must be byte-identical, not merely 'close'"
     assert tsm.mutations(baseline) == []
+
+
+def test_restore_backs_a_file_up_before_reverting_it(repo):
+    """A wrong revert must cost a ``cp``, not the work. Origin: it has happened twice.
+
+    ``restore()`` is ``git checkout --``, which is unrecoverable for uncommitted content, and the
+    detector CANNOT tell a test's write from a human's concurrent edit -- both are simply "modified
+    since the snapshot". So editing a tracked file while a wrapped run is in flight gets that edit
+    reverted, silently. Both real occurrences were the same file:
+    ``docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md``, while it was being
+    written (see its own section 3.6 for the first, and section 7b for the second, which happened
+    while validating this very script).
+
+    Authorship is not recoverable in principle, so the fix is not smarter attribution -- it is
+    making the revert survivable. This pins that the PRE-REVERT content is what lands in the
+    backup, which is the only version that is otherwise unrecoverable.
+    """
+    r, art = repo
+    baseline = tsm.snapshot()
+    edited = json.dumps({"experiment": 3946, "hand_written": "do not lose me"}, indent=2) + "\n"
+    art.write_text(edited)
+
+    tsm.restore(tsm.mutations(baseline))
+
+    backed_up = r / "ops" / ".test_suite_mutation_backup" / "results" / art.name
+    assert backed_up.exists(), "the pre-revert content must be recoverable somewhere"
+    assert backed_up.read_text() == edited, (
+        "the backup must hold what was REVERTED, not what was restored -- the committed version "
+        "is already in git and was never at risk"
+    )
+
+
+def test_backup_reports_what_it_could_not_save(repo):
+    """A partial backup must be visible, never silent.
+
+    If a file cannot be copied aside, the revert still has to happen -- leaving the record dirty
+    would be worse. But a shortfall that nobody sees turns a recoverable mistake back into an
+    unrecoverable one, so ``backup()`` returns only the paths it actually saved and the caller
+    reports the difference.
+    """
+    r, _ = repo
+    baseline = tsm.snapshot()
+    # A path git reports but that is not readable as a file: backup must skip it, not raise.
+    assert tsm.backup(["results/does_not_exist.json"]) == []
+    assert tsm.backup([]) == []
+    del baseline, r
 
 
 def test_the_wrapper_writes_a_pending_marker_when_it_does_not_restore(repo):
@@ -242,3 +292,74 @@ def test_a_renamed_tracked_file_is_parsed_as_one_entry_not_two(repo):
     assert not any(p.startswith("ults/") or p.startswith("sults/") for p in muts), (
         "a mangled source path leaked out of the -z parse"
     )
+
+
+# =========================================================================================
+# 2026-07-29: the interlock's worst gap -- it was disarmed by the very invocation that caused
+# both recorded incidents. `--gate` refuses while a pending marker exists, but only `--run`
+# ever wrote that marker, so a bare `pytest tests/python/test_arc_*.py ...` left the gate
+# green on a tree the suite had just rewritten. `arm_from_pytest` is called from
+# tests/python/conftest.py so the marker is armed HOWEVER pytest was invoked.
+# =========================================================================================
+
+
+def test_arm_from_pytest_arms_the_gate_without_the_run_wrapper(repo):
+    """The gap, closed: a rewrite detected outside `--run` must still block the commit."""
+    r, art = repo
+    baseline = tsm.dirty_tracked()
+    assert baseline == {}, "fixture starts clean"
+
+    art.write_text(json.dumps({"experiment": 3946, "duration_s": 9.99}, indent=2) + "\n")
+    muts = tsm.arm_from_pytest(baseline, ["pytest", "tests/python/test_experiment_3946.py"])
+
+    assert muts == ["results/experiment_3946_r11l_first_solve.json"]
+    assert tsm.PENDING.exists(), "the marker is what the pre-commit gate keys off"
+    assert tsm.cmd_gate() == 1, "and the gate must now refuse"
+
+    recorded = json.loads(tsm.PENDING.read_text())
+    assert recorded["modified_tracked_files"] == muts
+    assert "pytest" in recorded["command"], "the marker names the run that caused it"
+
+
+def test_arm_from_pytest_clears_a_stale_marker_on_a_clean_run(repo):
+    """A clean run must DISARM, or one bad run would block commits forever."""
+    r, _ = repo
+    tsm.write_pending(["results/x.json"], ["pytest", "old"])
+    assert tsm.cmd_gate() == 1
+
+    assert tsm.arm_from_pytest(tsm.dirty_tracked(), ["pytest", "new"]) == []
+    assert not tsm.PENDING.exists()
+    assert tsm.cmd_gate() == 0
+
+
+def test_arm_from_pytest_never_reverts_a_file(repo):
+    """Arming is safe; auto-reverting is not, and has destroyed in-flight work twice.
+
+    The detector cannot tell a test's write from a human's concurrent edit, so the hook that
+    runs on EVERY pytest invocation must only record, never restore. If this ever starts
+    reverting, a developer running the suite mid-edit loses their work.
+    """
+    r, art = repo
+    baseline = tsm.dirty_tracked()
+    rewritten = json.dumps({"experiment": 3946, "duration_s": 9.99}, indent=2) + "\n"
+    art.write_text(rewritten)
+
+    tsm.arm_from_pytest(baseline, ["pytest"])
+
+    assert art.read_text() == rewritten, "arm_from_pytest must leave the working tree untouched"
+    assert not tsm.BACKUP.exists(), "and must not have needed the backup path at all"
+
+
+def test_a_file_already_dirty_before_the_run_is_not_blamed_on_it(repo):
+    """In-flight human work must not arm the gate, or the interlock becomes unusable.
+
+    This is the property that makes auto-arming safe to run on every invocation: the baseline
+    is taken at session START, so a file the developer was already editing is excluded.
+    """
+    r, art = repo
+    art.write_text(json.dumps({"experiment": 3946, "duration_s": 1.0}, indent=2) + "\n")
+    baseline = tsm.dirty_tracked()
+    assert "results/experiment_3946_r11l_first_solve.json" in baseline
+
+    assert tsm.arm_from_pytest(baseline, ["pytest"]) == []
+    assert not tsm.PENDING.exists()

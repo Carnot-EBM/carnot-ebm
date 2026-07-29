@@ -192,8 +192,13 @@ ops/.qa_layer_audit_rotation.json
 #                                       `test-suite-mutation-gate` refuses while it is there.
 # Both describe THIS checkout's transient state, so committing either would export one
 # machine's in-flight condition to everyone else. See scripts/test_suite_mutation_check.py.
+#   .test_suite_mutation_backup/        pre-revert copies of every file --restore reverted, so a
+#                                       wrong revert costs a `cp` instead of the work. `git
+#                                       checkout --` is unrecoverable, and the detector cannot
+#                                       tell a test's write from a human's concurrent edit.
 ops/.test_suite_mutation_snapshot.json
 ops/.test_suite_mutation_pending.json
+ops/.test_suite_mutation_backup/
 
 # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
 # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
