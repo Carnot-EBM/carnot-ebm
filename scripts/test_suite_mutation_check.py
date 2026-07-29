@@ -109,15 +109,27 @@ def dirty_tracked() -> dict[str, str]:
     ``-uno`` drops untracked files deliberately. An experiment script writing a BRAND NEW
     artifact is normal, expected work and is not a rewrite of the record; the harm this detects
     is specifically an EXISTING, committed file being changed underneath you.
+
+    RENAME AND COPY ENTRIES NEED EXPLICIT HANDLING, and an earlier draft got this wrong in a way
+    worth recording. Under ``-z``, git emits a rename as TWO NUL-terminated records: ``R  <new>``
+    followed by a bare ``<old>`` with no status prefix. Naively slicing every record as
+    ``code=line[:2], path=line[3:]`` therefore turns the second record into a garbage entry --
+    ``results/x.json`` becomes code ``re`` at path ``ults/x.json``. That is not a harmless
+    cosmetic bug: the garbage path is reported to the operator as a modified file, and
+    ``restore()`` would then ``git checkout`` a path that does not exist. So the loop consumes the
+    source record explicitly when the status code is R or C.
     """
     out: dict[str, str] = {}
-    for line in _git("status", "--porcelain", "-uno", "-z").split("\0"):
+    records = _git("status", "--porcelain", "-uno", "-z").split("\0")
+    i = 0
+    while i < len(records):
+        line = records[i]
+        i += 1
         if len(line) < 4:
             continue
         code, path = line[:2], line[3:]
-        # Rename entries carry "old\0new"; -z already split them, and the tail half arrives as
-        # a bare path with no status code, which the length check above discards. Renames of
-        # tracked artifacts are rare enough that missing one is preferable to mis-parsing.
+        if code[0] in ("R", "C") or code[1] in ("R", "C"):
+            i += 1  # swallow the paired source path; the DESTINATION is what changed
         out[path] = code
     return out
 

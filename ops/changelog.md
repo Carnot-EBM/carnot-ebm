@@ -1,5 +1,74 @@
 # Carnot — Changelog
 
+## 2026-07-29 (outer-loop: the "conductor re-run" was a TEST RUN, and 139 scripts write to a hardcoded absolute path)
+
+TRIGGER: continuation of the survey below. Three findings, each larger than the one before it, and
+all three found by instruments this session built rather than by reading code.
+
+### FINDING 1 — the mechanism is import-and-call, not runpy
+
+Batch-surveying the 3,366 tests/python/test_experiment_*.py in a clean worktree and re-running each
+dirty batch under the audit-hook plugin gives exact per-test attribution. Batch 00 moves 6 tracked
+artifacts and NONE of the six responsible tests uses runpy: each imports the experiment module and
+calls main()/run_experiment(). Static count: 1,696 test files import an experiment_* module, 704 call
+main()/run_experiment(), against 125 that call runpy.run_path at all. The hazard commit's "11" was
+off by orders of magnitude, and a repair scoped to the runpy call sites would have fixed 1 of 39.
+
+### FINDING 2 — 139 scripts write to a HARDCODED ABSOLUTE PATH, so nothing can isolate them
+
+Midway through the survey the CANONICAL repo went dirty on its own:
+results/experiment_3734_fix_harness_and_bounded_train_chunk1.json lost flagged_adversarial,
+corrigendum_pending, corrigendum_note, and the hand-written flagged_adversarial_restoration_note --
+while the survey was running in a /tmp worktree and nothing in the session had touched it. Cause:
+scripts/experiment_3734_fix_harness_and_bounded_train_chunk1.py:11 is
+PROJECT_ROOT = "/home/ianblenke/github.com/ianblenke/carnot". The script writes to the operator's
+canonical checkout BY ABSOLUTE PATH from whatever directory it runs in.
+
+Counted across both spellings in use -- /home/ianblenke/github.com/ianblenke/carnot (104 files) and
+its symlink /home/ianblenke/github.com/Carnot-EBM/carnot-ebm (46) -- 150 files under scripts/
+contain such a literal, 139 of them also write, plus 99 under python/carnot/. No worktree, no
+tmp_path and no CARNOT_RESULTS_DIR can contain this class, because the script never resolves a path.
+Nothing was watching because scripts/canonical_url_lint.py explicitly and CORRECTLY permits the local
+filesystem path -- its rule is about the GitHub URL -- leaving it unguarded as a WRITE TARGET.
+
+Beyond the test question, this is a reproducibility defect: these scripts run correctly on exactly
+one machine, in one directory, for one user. That bears directly on G2, the independent-reproducer
+gate, and on CLAUDE.md's decentralization constraints.
+
+### FINDING 3 — the 2026-07-27 "conductor re-run" was a TEST RUN; 5 of its 7 artifacts reproduced
+
+REQ-ARC-WMTE-5995 attributes the 2026-07-27 stripping of seven artifacts to a conductor re-run.
+Running the tests reproduces it on demand:
+
+  pytest tests/python/test_experiment_1938_nrgpt_loss_probe.py \
+         tests/python/test_experiment_2085_pem_sudoku_eval.py     -> 4 tests PASSED, both stripped
+  pytest tests/python/test_experiment_4162_… test_experiment_4170_…  -> passed, both stripped
+  exp3734                                                            -> leaked via the hardcoded path
+
+Each loses exactly four things: flagged_adversarial: True, corrigendum_pending, corrigendum_note,
+and the flagged_adversarial_restoration_note that the 2026-07-27 REPAIR ITSELF wrote to explain the
+restoration. The suite re-breaks the repair, on green runs, with nothing failing. exp1861 and exp696
+have no test file matching their number and were not attributable this way. All five restored and
+verified byte-identical against HEAD.
+
+REQ-ARC-WMTE-5995's FIX was right -- a commit-time content lint catches the class regardless of the
+writer. Its stated CAUSE was not, and the difference matters: any repair aimed at the conductor's
+write path would have missed all five.
+
+### THE GUARD'S FIRST LIVE CATCH
+
+The widened lint REFUSED the commit that would have published the exp3734 strip, naming all four
+lost fields including the two restoration records the pre-widening form had no pattern for. First
+real incident caught, in the same session that shipped the widening. Every artifact touched during
+this investigation was restored and proven byte-identical by sha256 against HEAD.
+
+### RECOMMENDATION REVISED AGAIN: (D) now, then (F), then (E) -- explicitly NOT (A)
+
+New option (F): replace the 139 hardcoded absolute paths with repo-relative resolution. It comes
+BEFORE (E) because a script that never reads a path cannot be redirected by any configuration
+mechanism, so building (E) first would produce a fix that silently does nothing for 139 scripts.
+(F) is also the only option worth doing even if the test-suite question is dropped entirely.
+
 ## 2026-07-29 (outer-loop: the test suite rewrites the research record — surveyed, and the guard that should have caught it was widened)
 
 TRIGGER: operator standing instruction to iterate unattended toward a submission expected to improve

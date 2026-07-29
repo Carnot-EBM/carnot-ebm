@@ -19695,6 +19695,41 @@ move zero. So the `runpy` mechanism explains 1 of the 39 — a repair aimed only
 would look like a fix while leaving the rest in place. `tests/integration/`, `tests/archive/`,
 `tests/quarantine/` and the ~986 `tests/python/test_*.py` matching neither glob were not surveyed.
 
+**The dominant mechanism is import-and-call, not `runpy`.** Batch-surveying the 3,366
+`tests/python/test_experiment_*.py` and re-running every batch that moved a file under a
+CPython-audit-hook plugin attributes each rewrite to an exact test node. None of the responsible
+tests found so far uses `runpy`: each does `sys.path.insert(0, ".../scripts")`, imports the
+experiment module, calls its `main()` / `run_experiment()`, and asserts the artifact exists. The
+candidate class is **1,696** test files importing an `experiment_*` module, **704** of which call
+`main()`/`run_experiment()` — against 125 that call `runpy.run_path` at all. Any repair scoped to
+the `runpy` call sites is therefore scoped to the wrong thing.
+
+**A SEPARATE AND WORSE DEFECT SURFACED BY THE SAME SURVEY: hardcoded absolute output paths.**
+`scripts/experiment_3734_fix_harness_and_bounded_train_chunk1.py:11` is
+`PROJECT_ROOT = "/home/ianblenke/github.com/ianblenke/carnot"`, so the script writes to the
+operator's canonical checkout BY ABSOLUTE PATH from whatever directory it is executed in. It stripped
+`flagged_adversarial: true` plus the corrigendum plus the 2026-07-27 restoration note from that
+artifact while the survey was running in a `/tmp` worktree. Across both spellings in use (`.../ianblenke/carnot` and its symlink `.../Carnot-EBM/carnot-ebm`),
+**150** files under `scripts/` contain such a literal (**139** of them also write), plus **99**
+under `python/carnot/`. No worktree, no
+`tmp_path`, and no output-directory environment variable can isolate this class, because the script
+never resolves a path at all. `scripts/canonical_url_lint.py` correctly PERMITS the local filesystem
+path — its rule is about the GitHub URL — which is why the path was unguarded as a write target.
+This is also a reproducibility defect independent of testing: an experiment that only runs on one
+machine, in one directory, for one user, cannot satisfy the G2 independent-reproducer gate.
+
+**REQ-ARC-WMTE-5995's ORIGIN DIAGNOSIS IS SUPERSEDED BY MEASUREMENT.** That requirement attributes
+the 2026-07-27 stripping of seven artifacts to "a conductor re-run". Five of the seven are
+reproducible by RUNNING THE TESTS: `pytest tests/python/test_experiment_1938_nrgpt_loss_probe.py
+tests/python/test_experiment_2085_pem_sudoku_eval.py` strips both (4 tests, all PASSED), likewise
+exp4162/exp4170, and exp3734 leaked from a `/tmp` worktree via a hardcoded absolute path. Each loses
+`flagged_adversarial`, `corrigendum_pending`, `corrigendum_note`, and the
+`flagged_adversarial_restoration_note` that the 2026-07-27 repair itself wrote — the suite re-breaks
+the repair on a green run. exp1861 and exp696 have no test file matching their number and were not
+attributable this way. REQ-ARC-WMTE-5995's commit-time enforcement layer remains correct; only its
+stated cause changes, and the change matters because a conductor-side repair would have missed all
+five.
+
 #### SCENARIO-ARC-WMTE-6041-A-RUN-THAT-MOVES-TRACKED-FILES-IS-REPORTED
 
 **Given** a baseline of which tracked files were already dirty
