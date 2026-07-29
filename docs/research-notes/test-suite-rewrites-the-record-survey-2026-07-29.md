@@ -48,12 +48,27 @@ repo was never the test target. `environment_files/` (5.2 MB, gitignored) was co
 worktree — without it the ARC tests abort early with `Game <id> not found in scanned environments`
 and the survey would under-report.
 
-**The editable-install trap.** The venv installs `carnot` in editable mode via
-`__editable__.carnot_ebm-0.1.0b1.pth`, which points at the **canonical** `.../ianblenke/carnot/python`.
-A worktree run would therefore have imported the real repo's package, and any module computing a
-path from `carnot.__file__` would have written into the real repo. Every run set
-`PYTHONPATH=<worktree>/python:<worktree>/scripts/experiments` so `sys.path` order puts the worktree
-first.
+**The editable-install trap — and where this survey did not fully avoid it.** The venv installs
+`carnot` in editable mode via `__editable__.carnot_ebm-0.1.0b1.pth`, which points at the
+**canonical** `.../ianblenke/carnot/python`. A worktree run therefore imports the real repo's
+package unless `sys.path` is reordered, and any module computing a path from `carnot.__file__`
+writes into the real repo. The whole-suite run and the per-batch attribution runs set
+`PYTHONPATH=<worktree>/python:<worktree>/scripts/experiments` to put the worktree first. **The two
+per-file subset harnesses (§3.1, §3.2) did not** — an oversight found while writing this up. Their
+results are nevertheless sound, because they rest on a stronger check than isolation: the canonical
+repo's 31,564 tracked files were sha256-hashed before and after those runs and showed only this
+session's deliberate edits. Isolation was the intended mechanism; the hash comparison is the one
+that actually carries the conclusion.
+
+**Isolation leaked three times anyway, which is itself a result.** Over the whole session, three
+artifacts appeared as modified in the CANONICAL repo while every test run was pointed at a `/tmp`
+worktree: `results/experiment_3734_…json`, `results/experiment_2427_kv260_yosys_v4.json`, and
+`results/experiment_3351_gatemate_latency_benchmark.json`. All three were restored and verified
+byte-identical against `HEAD`. Two are explained by §3.4 (a hardcoded absolute path in the script).
+The third is **not**: `scripts/experiment_3351_gatemate_latency_benchmark.py:9` resolves
+`REPO_ROOT = Path(__file__).resolve().parents[1]`, which is correct and repo-relative. So there is at
+least one leak route this survey did not identify. Treat "the tests were run in a worktree" as a
+mitigation, never as containment.
 
 **The oracle is git, not inference.** After each unit of work, `git status --porcelain -uno` names
 every tracked file that moved. Untracked files are deliberately excluded: an experiment script
@@ -325,6 +340,12 @@ minutes earlier while edits are still landing.
 * Six ARC tests and two experiment tests fail in the worktree for environment reasons. Failures
   short-circuit writes, so each is a potential false negative; the six ARC ones were re-checked in
   the canonical repo (§3.2), the experiment-side ones were not individually re-checked.
+* **Subprocess writers are invisible to per-test attribution.** The audit hook sees only the Python
+  process it is installed in, so a script shelling out to Vivado or yosys is unattributable. Three
+  of batch 01's 16 are in that class.
+* **At least one leak route into the canonical repo is unidentified** (§2, exp3351). Worktree
+  isolation is a mitigation here, not containment; the load-bearing check is the before/after hash
+  of the canonical tree.
 
 ---
 
