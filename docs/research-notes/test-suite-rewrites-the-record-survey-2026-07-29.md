@@ -2,8 +2,10 @@
 
 **Date:** 2026-07-29
 **Author:** outer loop (unattended session; operator asleep)
-**Status:** SURVEY COMPLETE for the stated scope. **NO TEST WAS CHANGED.** The repair is a design
-call left to the operator — options and a recommendation are in §6.
+**Status:** SURVEY COMPLETE for the stated scope — the whole-suite union is 41 tracked files, 28 of
+them attributed to an exact test file (§3.3b). **NO TEST WAS CHANGED.** The repair is a design call
+left to the operator — six options, costed, with a recommendation in §6.
+**Record integrity:** verified byte-identical, §5.
 **Origin:** commit `b3e31d341`, "[outer-loop] HAZARD: running the test suite silently rewrites the
 research record" (diagnosed, not fixed).
 
@@ -224,6 +226,72 @@ one the hazard commit did not list at all: **`README.md`**, which CLAUDE.md's Pu
 Discipline marks operator-curated. Two of the 16 (`experiment_1938_nrgpt_loss_probe.json`,
 `experiment_2085_pem_sudoku_eval.json`) are artifacts from the 2026-07-27 incident — see §3.5.
 
+### 3.3b THE MAPPING — the whole-suite union, 41 files, 28 attributed to an exact test
+
+Running the hazard command in full (`pytest tests/python/test_arc_*.py
+tests/python/test_experiment_*.py`, the configured `-n 4`) in a clean worktree leaves **41 tracked
+files modified** — the hazard commit counted 39, and the composition matches. This is the answer to
+"which tests rewrite which tracked files":
+
+| tracked file rewritten | responsible test file(s) |
+|---|---|
+| `openspec/papers/paper-v6/section-6-limitations.md` | `tests/python/test_experiment_1911.py` |
+| `output/kanele_synth/post_synth.dcp` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_1035_dualgpu_rocm_v3.json` | `tests/python/test_experiment_1035_dualgpu_rocm_v3.py` |
+| `results/experiment_1038_milestone_retro_80.json` | `tests/python/test_experiment_1038_milestone_retro_80.py` |
+| `results/experiment_1081_fpga_scale_benchmark.json` | `tests/python/test_experiment_1081_fpga_scale_benchmark.py` |
+| `results/experiment_1089_milestone_retro_84.json` | `tests/python/test_experiment_1089_milestone_retro_84.py` |
+| `results/experiment_1103_milestone_retro_85.json` | `tests/python/test_experiment_1103_milestone_retro_85.py` |
+| `results/experiment_1593_cdg_repair.json` | `tests/python/test_experiment_1593_cdg_repair.py` |
+| `results/experiment_1747_ebt_mode_collapse_check.json` | `tests/python/test_experiment_1747_diagnostic.py` |
+| `results/experiment_1750_huggingface_retry.json` | `tests/python/test_experiment_1750.py` |
+| `results/experiment_1822_rtl_synth.log` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_1911_phase4_canonical_decision.json` | `tests/python/test_experiment_1911.py` |
+| `results/experiment_1938_nrgpt_loss_probe.json` | `tests/python/test_experiment_1938_nrgpt_loss_probe.py` |
+| `results/experiment_1970_domino_fast_constraints.json` | `tests/python/test_experiment_1970_domino_fast_constraints.py` |
+| `results/experiment_2085_pem_sudoku_eval.json` | `tests/python/test_experiment_2085_pem_sudoku_eval.py` |
+| `results/experiment_2090_crane_humaneval.json` | `tests/python/test_experiment_2090_crane_humaneval.py` |
+| `results/experiment_2097_eqm_eval.json` | `tests/python/test_experiment_2097.py` |
+| `results/experiment_2510_ensemble_v7.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_2521_ensemble_v7.json` | `tests/python/test_experiment_2521_ensemble_v7.py` |
+| `results/experiment_2538_kv260_sd_flash.json` | `tests/python/test_experiment_2538_kv260_sd_flash.py` |
+| `results/experiment_2721_paper_v6_theory_update_v2.json` | `tests/python/test_experiment_2721.py` |
+| `results/experiment_2758_weak_strong_policy_fix_v2.json` | `tests/python/test_experiment_2758.py` |
+| `results/experiment_2824_cross_corpus_verifier_matrix.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_307_jepa_real_training.json` | `tests/python/test_experiment_307_jepa_real_training.py` |
+| `results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3351_gatemate_latency_benchmark.json` | `tests/python/test_experiment_3351_gatemate_latency_benchmark.py` |
+| `results/experiment_3386_fr11_nonforgetting.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3394_kona_global_opt.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3395_energy_based_replay.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_339_session_startup.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3408_kona_global_opt.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3420_kv260_terminal_latency_transcript_v1.json` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3420_kv260_terminal_transcript.log` | *unattributed — subprocess writer, see §3.3* |
+| `results/experiment_3843.json` | `tests/python/test_experiment_3843.py` |
+| `results/experiment_3946_r11l_first_solve.json` | `tests/python/test_experiment_3946_r11l_first_solve.py` |
+| `results/experiment_410_precision_live.json` | `tests/python/test_experiment_431_eorm_jepa_retrain.py` |
+| `results/experiment_4162_sota_ingestion_verifier_moat_guidance.json` | `tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py` |
+| `results/experiment_4170_sota_ingestion_verifier_moat_guidance.json` | `tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py` |
+| `results/experiment_5794_hardware_terminal_action_receipt.json` | `tests/python/test_experiment_5794_hardware_terminal_action_receipt.py` |
+| `results/experiment_5861_attached_board_state_receipts.json` | `tests/python/test_experiment_5861_attached_board_state_receipts.py` |
+| `results/experiment_833_constraint_delta_root_cause.json` | *unattributed — subprocess writer, see §3.3* |
+
+**28 of 41 carry an exact test file.** The 13 unattributed are the subprocess class (a CPython audit
+hook cannot see a child process) plus a tail the last xdist worker had not yet flushed when the
+survey was stopped. Attribution is merged from the whole-suite run's per-worker shards and the
+per-batch attribution runs.
+
+**Two entries deserve individual attention:**
+
+* `results/experiment_410_precision_live.json` is written by
+  `tests/python/test_experiment_431_eorm_jepa_retrain.py` — a test for a *different* experiment.
+  Any repair or audit that pairs `test_experiment_N` with `experiment_N` by name will miss it.
+* `openspec/papers/paper-v6/section-6-limitations.md` — a PAPER section — is written by
+  `tests/python/test_experiment_1911.py`.
+
+---
+
 ### 3.4 The worse finding: 139 scripts write to a HARDCODED absolute path, so nothing can isolate them
 
 Midway through the survey the canonical repo went dirty on its own —
@@ -370,16 +438,37 @@ minutes earlier while edits are still landing.
 ## 5. The record is intact
 
 The canonical repo was hashed with `sha256sum` over all 31,564 tracked files at session start and
-again at the end. The **only** tracked files that differ are the four this session deliberately
-edited (`.gitignore`, `.pre-commit-config.yaml`, `scripts/determination_preservation_lint.py`,
-`tests/python/test_determination_preservation_lint.py`) plus the two new files it added. No
-`results/**`, no `openspec/**`, no `output/**` file changed. The protected evidence directories
-(`results/arc_e3`, `results/arc_logo_snapshot`, `results/arc_e3_origin_fixtures`) were read only.
+again after every survey process had been stopped by explicit PID. **Twelve tracked files differ, and
+all twelve are this session's deliberate edits:**
 
-One test *was* deliberately run against the canonical repo — `test_experiment_3946_r11l_first_solve.py`,
-to dogfood the new detector end to end. It rewrote its artifact, the detector caught it, `--restore`
-put it back, and `sha256` is byte-identical before and after
-(`6834b56cb72129f044a65a980b62ad3f26d02c21f3471bcda0648205750142ac`).
+```
+.gitignore                                            scripts/determination_preservation_lint.py
+.pre-commit-config.yaml                               scripts/pytest_write_audit_plugin.py
+docs/research-notes/…-survey-2026-07-29.md            scripts/test_suite_mutation_check.py
+openspec/capabilities/arc-world-model-trust-energy/   tests/python/test_determination_preservation_lint.py
+ops/changelog.md                                      tests/python/test_pytest_write_audit_plugin.py
+ops/known-issues.md                                   tests/python/test_test_suite_mutation_check.py
+```
+
+**No `results/`, `output/`, or operator-curated public doc changed.** The protected evidence
+directories (`results/arc_e3`, `results/arc_logo_snapshot`, `results/arc_e3_origin_fixtures`) were
+read only. `determination_preservation_lint.py --all` is clean across every tracked
+`results/**/*.json`.
+
+Nine artifacts were deliberately or accidentally rewritten during the investigation and every one was
+restored and proven byte-identical against `HEAD` by sha256: exp3946 (dogfooding the detector),
+exp1938 + exp2085 + exp4162 + exp4170 (reproducing §3.5), exp2427 + exp3351 + exp3734 ×2 (leaks
+per §2/§3.4).
+
+**A note on the verification itself.** The first attempt at the comparison above printed
+"NONE — the research record is byte-identical", and it was wrong: the `diff | grep '^>' | awk` chain
+read `$2` (the sha256 hash) where the path is `$3`, because the `> ` prefix shifts the fields. It
+therefore grepped hashes for `^results/`, matched nothing, and reported all-clear on a check that had
+verified nothing. It was caught only because a file this session *had* edited
+(`openspec/…/spec.md`) was missing from the output. This is the same defect class the whole session
+is about — a check that runs, passes, and inspects the wrong thing — and it is recorded here rather
+than quietly fixed, because "the verification passed" is exactly the claim a reader has no way to
+audit.
 
 ---
 
