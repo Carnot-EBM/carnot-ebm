@@ -4,6 +4,70 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-29 (outer-loop, SURVEYED — OPERATOR DECISION PENDING): running the test suite rewrites the research record
+
+**Status:** the survey the hazard commit (`b3e31d341`) said it had NOT done is now done, and two
+guards shipped. **NO TEST WAS CHANGED** — the repair is an operator design call. Full report:
+`docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`.
+
+**The hazard.** `pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py` left 39 tracked
+files modified that were clean before the run — 36 `results/*.json`/`.log` plus
+`openspec/papers/paper-v6/section-6-limitations.md` and `output/kanele_synth/post_synth.dcp`. These
+artifacts are the input to the fabrication gate, to every capstone aggregation, and to the paper, so
+a green run that deletes a corrigendum or flips an `inference_mode` makes the record disagree with
+what was measured. `git add -A` then publishes it.
+
+**Correction to the hazard commit's hypothesis.** It suspected the `runpy.run_path`-a-real-experiment-
+script class ("123 test files call `runpy.run_path`; 11 target `scripts/experiments/`"). Enumerated
+and run file-by-file in isolated worktrees: **20** test files `runpy` a path naming an experiment
+script (only **2** name a path literally under `scripts/experiments/`), and **exactly one of the 20
+moves a tracked file** — `tests/python/test_experiment_3946_r11l_first_solve.py` rewriting
+`results/experiment_3946_r11l_first_solve.json`, losing `inference_substrate_correction_note`,
+`inference_substrate_original_invalid_value`, `solve_provenance` and `solve_provenance_note`.
+Separately, all **125** `tests/python/test_arc_*.py` run individually move **zero** tracked files.
+So the `runpy` hypothesis explains 1 of the 39, not the bulk — a repair aimed only at the `runpy`
+call sites would look like a fix while leaving ~38 rewrites in place.
+
+**MANDATORY-NEXT-MILESTONE — OPERATOR DECISION.** Four repair options with their costs are in §6 of
+the report. Recommendation (overrulable): take **(D) rely on the guards now**, then **(A) redirect
+the output dir via `CARNOT_RESULTS_DIR` for the single confirmed call site** — cheap and precise now
+that the blast radius is known to be one test, not eleven. **Reject (B) snapshot-and-restore
+outright**: the suite runs `-n 4` by default, so a restore-based fix is racy by construction, and a
+racy guard on the research record is worse than an honest gap. Do NOT bundle the remaining ~38 files
+into the same repair — different mechanism, different answer.
+
+**Shipped this session (no test touched, no existing check weakened):**
+
+1. `scripts/determination_preservation_lint.py` **WIDENED 2 rules -> 4**. It already existed, sat
+   directly in the path of the exp3946 deletion, and **stayed silent** — because
+   `inference_substrate_correction_note` is a corrigendum in substance but its name does not contain
+   the string "corrigendum". A trusted guard that does not fire is worse than no guard. New rule 3
+   refuses dropping any top-level *marker* field (correction / provenance / disclosure /
+   acknowledgment / retraction / review note); new rule 4 refuses **weakening a substrate or mode
+   declaration in place** without a note. Marker patterns were derived by censusing all 31,510
+   distinct top-level keys across the 15,331 `results/**/*.json` files — `correct` is deliberately
+   NOT a pattern (601 artifacts carry `energy_correct`/`n_correct`, which fail-forward re-runs must
+   be free to change). Calibrated over 1,200 commits / 3,232 modified artifact pairs: R3 fires 10x,
+   R4 fires 8x, and **every R4 hit is a genuine instance of the hazard** — including a previously
+   unknown one, `results/experiment_911_drift_probe_tier0i.json` taking `real_model` ->
+   `synthetic_runner` FIVE times in `main`, plus `experiment_307` taking `live_gpu` -> `cpu_training`
+   TWICE. Zero violations across the 8 commits since the lint first shipped.
+2. `scripts/test_suite_mutation_check.py` **NEW** — the broad, shallow half: "did this run modify
+   tracked files, and which?", no opinion about content, so it also covers `openspec/` and `output/`
+   which the lint does not. `--run` wraps a command, `--restore` puts everything back, `--gate` is a
+   pre-commit hook refusing while `ops/.test_suite_mutation_pending.json` exists — so an unattended
+   agent that runs the suite, sees the record move, then `git add -A && git commit`s is stopped
+   rather than publishing.
+3. 32 tests across both guards, replaying the three confirmed incidents as fixtures — including an
+   explicit test that the timestamp class is **deliberately not** the lint's job, so nobody "fixes"
+   that boundary later and starts refusing ordinary fail-forward re-runs.
+
+**Known residual (honest).** Per-file attribution cannot see a rewrite that only occurs when test A
+runs before test B in the same xdist worker, nor a byte-identical overwrite (no git diff today, but
+the same call site turns destructive the moment the script's output changes). `tests/integration/`,
+`tests/archive/`, `tests/quarantine/` and the ~986 `tests/python/test_*.py` matching neither glob
+were not surveyed — the hazard command did not include them.
+
 ### 2026-07-27 (outer-loop, RESOLVED-BY-MEASUREMENT): the "GATEWAY-ACCURATE" charge was a MODEL, wrong ~2x at the median and SIGN-FLIPPED on 6 cells
 
 **Status:** RESOLVED for the local/offline path. The fix is shipped and the corrected number is
