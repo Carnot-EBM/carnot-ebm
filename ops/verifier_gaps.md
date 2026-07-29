@@ -4623,8 +4623,17 @@ therefore cannot matter while nothing is admitted.
 - *Inducer size.* The Qwen3.6-27B -> gemma-4-31B migration made the generator ~6x better and
   banked ZERO additional held-out levels.
 
-**The gate is not broken.** In the same matrix a correct hand-written `base` engine is admitted
-31/33 and `identity` 0/33. It discriminates exactly as designed.
+**CORRECTION (same session).** An earlier draft of this entry claimed "the gate is not broken --
+it admits a correct hand-written `base` 31/33." That was wrong. In 30 of those 33 rows `base` is
+`visible_lookup`, which exp6012's own docstring designates an ATTACK BASELINE and "never the
+must-not-fire control" (a function of the visible grid cannot be right on a hidden-state game).
+On the genuine control -- dc22's hand-written rule -- the LIVE hidden-state gate REJECTS it on
+2/3 rows: that gate is "simultaneously too STRICT on an honest partial model and BLIND to a
+spurious writer" (exp6012 verdict
+`complete_hidden_state_gate_hole_measured_req6011_not_wired_into_that_branch`). So the gate has
+its own real hole. It does NOT rescue the induced engines: at ~0.3% changed-cell recall they are
+not honest partial models being unfairly excluded, and ANY correctly calibrated gate rejects
+them. Only the `identity` rejection (0/33) survives from the original claim.
 
 **What the engines are actually doing** (the discriminating observation): exact-match
 `heldout_accuracy` sits at intermediate values (0.125-0.6) while cell recall on the same rows is

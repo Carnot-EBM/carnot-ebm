@@ -49,9 +49,25 @@ exists as a lever. Computing it directly from `experiment_6012`'s recorded
     median cell_recall 0.0033    max 0.0870    n = 33
     a graded gate at 0.90 / 0.75 / 0.50 / 0.25 / 0.10 admits 0/33 in every case
 
-**6. The gate itself is fine.** In the same matrix a correct hand-written `base` engine is
-admitted in 31/33 rows and the `identity` engine in 0/33. The gate discriminates exactly as
-intended. It is the induced engines that never clear it.
+**6. The gate has its own separate hole — which does NOT rescue the induced engines.** An
+earlier draft of this note claimed "the gate is fine, it admits a correct hand-written `base`
+engine 31/33." That was wrong, and exp6012's own docstring says so. In 30 of those 33 rows
+`base` is `visible_lookup` — a table tabulated from the corpus, which that experiment
+designates an **attack baseline, explicitly "never the must-not-fire control"**, because a
+function of the visible grid cannot be right on a hidden-state game. The genuine control is
+dc22's hand-written rule, and there the measured result is the opposite of my claim: REQ-6011
+admits it 3/3, but **the LIVE hidden-state gate rejects it on 2/3** — that gate is, in
+exp6012's words, "simultaneously too STRICT on an honest partial model and BLIND to a spurious
+writer."
+
+So there are two independent problems, and only one of them is this note's subject. The gate
+hole is real and already logged (exp6012's verdict:
+`complete_hidden_state_gate_hole_measured_req6011_not_wired_into_that_branch`). It does not
+explain the induced engines' rejection, because the induced engines are not honest partial
+models being unfairly excluded — at ~0.3% changed-cell recall, **any** correctly calibrated
+gate rejects them. Fixing the gate hole is worth doing on its own merits; it will not move
+banked levels while induction is where it is. The one claim that survives unchanged is that
+`identity` is rejected 0/33.
 
 ## What the induced world models are actually doing
 
