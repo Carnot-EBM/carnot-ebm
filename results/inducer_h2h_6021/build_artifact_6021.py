@@ -706,7 +706,15 @@ def main() -> int:
                         if st
                         else None
                     ),
-                    "dirty_vs_head": bool(_git("diff", "--name-only", "--", rel)),
+                    # `git diff HEAD`, NOT `git diff` (2026-07-29 fix). Plain `git diff` compares
+                    # the worktree against the INDEX, so any dependency that is `git add`-ed but
+                    # not yet committed reports clean -- which is exactly the state this artifact
+                    # is rebuilt in, because the freshness lint runs as a pre-commit hook and the
+                    # rebuild therefore happens with the triggering code change already staged.
+                    # The field is named `_vs_head` and is read as "does the recorded sha256
+                    # correspond to git_head's tree", so index-relative was both wrong and
+                    # silently self-serving: it made a dirty rebuild look clean.
+                    "dirty_vs_head": bool(_git("diff", "HEAD", "--name-only", "--", rel)),
                 }
             )
         starts = {a: metas.get(a, {}).get("started_iso") for a in ARMS}
@@ -726,7 +734,11 @@ def main() -> int:
             "git_head": _git("rev-parse", "HEAD"),
             "git_head_describes_tree_only_for_clean_files": True,
             "working_tree_dirty_at_build": bool(_git("status", "--porcelain")),
-            "diff_stat_vs_head_for_declared_deps": _git("diff", "--stat", "--", *CODE_DEPS),
+            # `git diff HEAD` for the same reason as `dirty_vs_head` above: a staged-but-
+            # uncommitted dependency must show up here, or this field reports an empty diff
+            # while `working_tree_dirty_at_build` (which uses `git status --porcelain` and DOES
+            # see the index) reports true -- an internally contradictory provenance block.
+            "diff_stat_vs_head_for_declared_deps": _git("diff", "HEAD", "--stat", "--", *CODE_DEPS),
             "dependencies_at_build_time": deps,
             "arm_started_iso": starts,
             "code_identical_across_arms": False,

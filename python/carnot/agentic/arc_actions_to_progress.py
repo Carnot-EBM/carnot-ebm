@@ -124,6 +124,22 @@ ARM_CONFIGS: dict[str, dict[str, Any]] = {
         "retrieval": "0",
         "static": "0",
     },
+    # Byte-identical to "frozen" EXCEPT no_think_prefix, which is "" -- the gemma-4-31B live pin
+    # (`ARC_LIVE_GENERATOR_NO_THINK_PREFIX`, set to "" on 2026-07-28 because `/no_think` is a Qwen3
+    # control token with no gemma-4 equivalent, so on gemma it is a stray literal in the prompt
+    # rather than a thinking switch). Exists so a 31B-vs-9B comparison can run EACH model in its
+    # OWN shipped live configuration instead of forcing the retired Qwen prefix onto gemma; using
+    # "frozen" for a gemma arm silently reintroduces the thinking-budget confound that the
+    # 2026-07-28 head-to-head had to control for.
+    "frozen_gemma_pin": {
+        "desc": "gemma-4-31B live pin: codeonly fence ON, NO /no_think prefix, 4096 n_predict",
+        "codeonly": "1",
+        "no_think_prefix": "",
+        "max_tokens": 4096,
+        "tries": 3,
+        "retrieval": "0",
+        "static": "0",
+    },
     "reason": {
         "desc": "genuine reasoning: codeonly fence OFF + /think, 8192 n_predict",
         "codeonly": "0",
@@ -245,12 +261,66 @@ class ProgressResult:
     hit_induction_cap: bool
     error: Optional[str] = None
     induction_events: list[dict[str, Any]] = field(default_factory=list)
+    # Ordered action trace of the run, in the canonical `_json_action_label` encoding
+    # (`{"action":N}` / `{"action":6,"data":{"x":..,"y":..}}`) that
+    # `arc_solver_kit.reproduce` already parses, plus the sentinel "RESET" for a policy
+    # RESET. WHY THIS EXISTS: `levels_gained` above is read off the LIVE frame counter of
+    # THIS process, which is exactly the "live-recorded trajectory" that CLAUDE.md's "ARC
+    # Solve Reproducibility + Solver-Reuse Discipline" says does NOT count as a banked
+    # level. Without an ordered trace there is nothing to replay, so the reproduction gate
+    # cannot run at all and every claimed level stays `provisional`. Recording it costs one
+    # short string per action and makes the primary metric (banked = reproduced levels)
+    # measurable. Default empty; `to_row` drops it unless asked, so no existing caller's
+    # row shape changes.
+    action_trace: list[str] = field(default_factory=list)
 
-    def to_row(self, *, include_events: bool = False) -> dict[str, Any]:
+    def to_row(
+        self, *, include_events: bool = False, include_trace: bool = False
+    ) -> dict[str, Any]:
         d = asdict(self)
         if not include_events:
             d.pop("induction_events", None)
+        if not include_trace:
+            d.pop("action_trace", None)
         return d
+
+
+def _action_label(kind: Any, data: Any) -> str:
+    """Encode one live-cascade move as a replayable label.
+
+    Deliberately produces the SAME string `arc_game_adapters._json_action_label` produces
+    (compact separators + sorted keys), because that is the encoding
+    `arc_solver_kit._action6_click_from_label` -- and therefore the reproduction gate's
+    out-of-live-bounds ACTION6 check -- knows how to parse. Emitting a different dialect
+    here would still "reproduce" but would silently skip that bounds check, which is the
+    exact gap that let lf52's original L9 route pass offline and 400 live.
+    """
+    payload: dict[str, Any] = {"action": int(kind)}
+    if data:
+        payload["data"] = {str(k): int(v) for k, v in dict(data).items()}
+    import json as _json
+
+    return _json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+
+def replay_apply(env: Any, label: str, frame: Any) -> Any:
+    """`apply` callable for `arc_solver_kit.reproduce` over a `ProgressResult.action_trace`.
+
+    Generic on purpose: the held-out condition forbids per-game adapter knowledge, so the
+    replay must work from the label alone for ANY game. Handles the "RESET" sentinel by
+    resetting the env, so a policy that reset mid-run replays faithfully instead of
+    desynchronizing every subsequent action.
+    """
+    import json as _json
+
+    from arcengine.enums import GameAction
+
+    if label == "RESET":
+        return env.reset()
+    payload = _json.loads(label)
+    action = int(payload["action"])
+    data = payload.get("data")
+    return env.step(getattr(GameAction, f"ACTION{action}"), data=data)
 
 
 def _hand_verifier_fn(game: str) -> Optional[Callable[[Any, Any], Optional[float]]]:
@@ -335,6 +405,7 @@ def run_bounded_progress(
     explore_budget: int = 24,
     variant: int = 0,
     reflect: Optional[str] = None,
+    policy_game_id: Optional[str] = None,
 ) -> ProgressResult:
     """Drive the REAL e3 cascade on ``game`` under ``arm`` for a bounded solve.
 
@@ -354,6 +425,23 @@ def run_bounded_progress(
     cap is enforced so the plan from the LAST permitted induction still executes (we only
     stop before a NEW explore->induce cycle, never mid-plan-execution), so the progress
     signal of every induction we pay for is actually measured.
+
+    ``policy_game_id`` (default None = ``game``, i.e. byte-identical behavior to before
+    this parameter existed) is the identity string handed to ``E3AgentPolicy`` while the
+    ENVIRONMENT keeps running the real ``game``. Passing an anonymized id is the held-out
+    / hidden-game simulation CLAUDE.md's ARC-AGI-3 Generalization-Testing Floor calls for.
+    ``E3AgentPolicy`` derives every piece of per-game prior knowledge it has from
+    ``self.short``: the registry strategy route (``arc_strategy_router.route_for_game``,
+    which reads ``ops/arc_solve_registry.yaml``'s recorded ``mechanic_class``), the
+    transfer-routing recipe (``arc_solve_learning.recommend_approach``),
+    ``HIDDEN_STATE_GAME_IDS`` membership (an 11-game hardcoded list that selects a
+    different world-model trust branch), the ``CLAIMED`` target-level table, the per-game
+    induced-engine store key (``e3.load_engine`` -> ``results/arc_e3/<short>/``), and the
+    game token that goes into the LLM induce prompt. An id the registry has never seen
+    makes ALL of those resolve to their generic defaults -- the state the agent is in on a
+    hidden Kaggle game. The env, the ``_hand_verifier_fn`` progress track and any
+    downstream reproduction gate keep using the REAL ``game``: they are measurement
+    instruments the agent never observes.
     """
     import random
 
@@ -375,13 +463,18 @@ def run_bounded_progress(
     frames: list[Any] = []
     latest: Any = None
     actions = noop = revisit = 0
+    trace: list[str] = []
     seen: set = set()
     start = best = None
     level_up_actions: list[int] = []
     start_hv = best_hv = None
 
     try:
-        pol = E3AgentPolicy(game, proposer=proposer, explore_budget=explore_budget)
+        pol = E3AgentPolicy(
+            policy_game_id if policy_game_id is not None else game,
+            proposer=proposer,
+            explore_budget=explore_budget,
+        )
         arc = kit.offline_arcade()
         env = arc.make(game, scorecard_id=arc.open_scorecard())
         if variant:
@@ -407,11 +500,19 @@ def run_bounded_progress(
             kind, data = pol.next_move(frames, latest)
             if kind == "RESET":
                 latest = env.reset()
+                trace.append("RESET")
             elif kind is None:
                 break
             else:
                 before = latest
                 latest = env.step(getattr(GameAction, f"ACTION{kind}"), data=data)
+                # Record in the SAME canonical encoding `arc_solver_kit.reproduce` parses,
+                # so a banked level can be replay-verified against a fresh env. Recorded
+                # AFTER the step so a step that raises leaves no phantom action in the
+                # trace (the trace must describe what actually happened, not what was
+                # attempted). `data` is normalized to plain ints because the label is
+                # hashed into the reproducibility checksum and must be stable.
+                trace.append(_action_label(kind, data))
                 actions += 1
                 if latest is not None:
                     h = frame_hash(grid_of(latest))
@@ -479,6 +580,7 @@ def run_bounded_progress(
         hit_induction_cap=hit_cap,
         error=err,
         induction_events=events,
+        action_trace=trace,
     )
 
 
