@@ -42,6 +42,22 @@ tracked artifacts, and **none of the six responsible tests uses `runpy`** — ea
 `main()`/`run_experiment()` — versus 125 that call `runpy.run_path` at all, and only 20 that point it
 at an experiment script. The class is orders of magnitude larger than the hazard commit's estimate.
 
+**README.md IS IN THE BLAST RADIUS, AND THE TEST SAYS SO IN ITS OWN NAME.** Per-test attribution of
+batch 01 names `tests/python/test_experiment_209_cleanup.py::test_run_cleanup_rewrites_public_docs_with_provenance_labels`
+(plus 3 siblings, and `test_experiment_1931_hf_publisher.py::test_success_upload`,
+`test_experiment_1750.py::{blocked,success}`) as rewriters of the live **`README.md`**. CLAUDE.md's
+Public Documentation Discipline lists README.md as operator-curated and forbids autonomous-loop
+edits; a PASSING test does it on every suite run, and the hazard commit's list of 39 did not include
+it. Same batch also attributes `openspec/papers/paper-v6/section-6-limitations.md` to
+`test_experiment_1911.py::test_experiment_1911_schema`.
+
+**INSTRUMENT LIMIT, STATED.** Three of batch 01's 16 are UNATTRIBUTED
+(`output/kanele_synth/post_synth.dcp`, `results/experiment_1822_rtl_synth.log`,
+`results/experiment_2510_ensemble_v7.json`). A CPython audit hook only sees writes from the process
+it is installed in, so a script that shells out to Vivado or yosys writes from a CHILD process the
+hook never observes. Those files are visible to `git status` but not to per-test attribution.
+Subprocess writers are a separate class needing a different instrument.
+
 **A WORSE, SEPARATE FINDING — 94 scripts write to a HARDCODED ABSOLUTE PATH.** Midway through the
 survey the canonical repo went dirty on its own: `results/experiment_3734_fix_harness_and_bounded_train_chunk1.json`
 lost `flagged_adversarial: true`, its `corrigendum_pending`/`corrigendum_note`, AND the hand-written
