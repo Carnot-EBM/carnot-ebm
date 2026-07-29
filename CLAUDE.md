@@ -22,6 +22,14 @@ read only if debugging the enforcer):**
 - Verdict Terminal-Prefix → `_verdict_is_untrustworthy()` classifier
 - Exclusion-Manifest Cross-Check → `_ensure_exclusion_manifest_loaded()`
 - ARC Live-Path Reachability → `scripts/arc_orphan_solver_lint.py`
+- Test-Run Record Integrity (Layer 1, 2026-07-29) →
+  `scripts/determination_preservation_lint.py` +
+  `scripts/test_suite_mutation_check.py` +
+  `python/carnot/testing/operator_curated_doc_guard.py` +
+  `scripts/operator_curated_docs_lint.py`. **The prose is NOT
+  reference-only for this one** — rule 1 ("`git status` before `git add -A`
+  after any test run") is a human/agent habit no hook can enforce, because the
+  damage lands at staging time. Read the ACTIVE entry below.
 
 **HISTORICAL / SUPERSEDED (preserved per never-prune; not active guidance):**
 - Codex-Default for Experiments (2026-05) → superseded by Gemini-Default (2026-05-20)
@@ -41,7 +49,13 @@ Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention 
 Documentation Update Rules · Tests Must Run and Assert · QA-Layer Authenticity
 (2026-07-03 — the auditor now has an auditor; Layer 2 AI audit of
 adversarial_verify.py/exclusion_manifest_lint.py/in_process_doc_reconcile.py,
-deliberately no Layer 1 since those files ARE the mechanical-lint layer) ·
+deliberately no Layer 1 since those files ARE the mechanical-lint layer;
+SCOPE-EXTENDED 2026-07-29 to 10 GUARD_TARGETS with an inverted
+"name an input this does NOT catch" prompt) ·
+**Test-Run Record Integrity (2026-07-29 — read this one; the test suite was
+silently rewriting `results/**` and README.md, and the guard meant to stop it
+was green the whole time because its pattern list was narrower than its
+concept. Working rule: `git status` BEFORE `git add -A` after any test run)** ·
 ARC-AGI-3 IS a Live Hidden-Game Discovery Agent (foundational framing — read FIRST for any
 ARC work; the deliverable is the live runtime discovery loop, NOT trained weights or offline
 public-game replays; an offline null may be a corpus artifact).
@@ -424,6 +438,113 @@ and off-by-one/boundary floor errors. Two audit granularities:
   head-slice (the unaddressed limitation the sibling verifier-authenticity
   audit still has for its own `--limit 20`).
 
+**SCOPE EXTENSION 2026-07-29 (append-only — the three original targets above
+are unchanged and still audited).** The 2026-07-29 silent-non-firing incident
+(see "Test-Run Record Integrity Discipline" immediately below) proved that the
+project's *guards* — the pre-commit linters and runtime guards that decide
+whether a record may change — belong in this same QA layer for exactly the
+reason the origin incident named: a bug in them is a bug in the thing that
+decides whether every OTHER result counts. Ten guard files were added as a
+third target class, **`GUARD_TARGETS`**, each carrying a written one-line
+reason it is in scope:
+
+| Guard | Why it is QA-layer |
+|---|---|
+| `scripts/determination_preservation_lint.py` | refuses commits dropping a fabrication-gate determination; its silent non-firing is this discipline's SECOND origin incident |
+| `scripts/test_suite_mutation_check.py` | detects a test run rewriting tracked files; its `--gate` is the only interlock between a green test run and a published rewrite of the record |
+| `scripts/operator_curated_docs_lint.py` | the COMMIT-layer half of the Public Documentation Discipline — it only ever sees files that reach `git add`, which is why it never saw README.md being rewritten on every test run |
+| `python/carnot/testing/operator_curated_doc_guard.py` | the RUNTIME half of the same discipline: fires the moment a test writes an operator-curated doc, naming the writer. Not a pre-commit hook, so a hook-only sweep would never find it — listed explicitly |
+| `scripts/artifact_freshness_lint.py` | decides whether an artifact's numbers may still be cited |
+| `scripts/arc_artifact_lint.py` | decides whether an ARC artifact's inference-substrate declaration is admissible |
+| `scripts/arc_count_integrity_lint.py` | decides whether a reproduced-level count is honest — the ARC headline metric |
+| `scripts/arc_llm_on_liveness_lint.py` | decides whether an ARC row claiming the LLM tier actually had a live generator |
+| `scripts/verifier_authenticity_lint.py` | Layer 1 of the Verifier Authenticity Discipline. Note its sibling Layer-2 audit reviews `python/carnot/verify/*.py`, NOT this linter — so the linter itself was unaudited by anything until now |
+| `scripts/arc_orphan_solver_lint.py` | decides whether an ARC solver is live-path-reachable, i.e. whether the work counts at all |
+
+Guards get a **separate hostile prompt (`PER_GUARD_PROMPT`)**, because the
+question that matters for a guard is INVERTED relative to ordinary logic
+review: not "is this logic wrong" but **"name a real input this check is
+SUPPOSED to catch and DOES NOT."** It leads with silent non-firing and adds
+scope holes, unintentional bypasses, and fail-closed-vs-fail-open.
+
+Both prompts also gained five bug classes drawn from the 2026-07-29 incident:
+**SILENT_NON_FIRING**, **pattern list narrower than its concept**, **untested
+pattern** (a check whose deletion leaves the suite green), **hardcoded absolute
+write target**, and **test mutates tracked state**. `SILENT_NON_FIRING` is its
+own flagged verdict rather than a flavour of `REAL_BUG` because it demands a
+different operator response: `REAL_BUG` means "this logic is wrong, fix it";
+`SILENT_NON_FIRING` means "this logic is right as far as it goes and is
+narrower than the concept it claims to protect — WIDEN it."
+
+**`--check-targets` (the audit applying its own class-B lesson to itself).**
+The target list is the audit's own pattern list, and a pattern list that drifts
+narrower than reality is the exact bug class this discipline hunts. So
+`python scripts/qa_layer_authenticity_audit.py --check-targets` sweeps
+`.pre-commit-config.yaml` AND `python/carnot/testing/` and exits non-zero on
+any guard that is neither audited nor recorded in **`ACKNOWLEDGED_NON_QA_LAYER`**
+with a written reason. A guard cannot drift into the trusted set silently:
+someone has to type the reason it does not need auditing. (`pages_fever_dream_
+lint.py` is currently in that acknowledged set with its gap stated out loud —
+its sibling Layer 2 reviews the PAGE, not the linter.)
+
+**It is WIRED (2026-07-29), because a check nothing calls is the bug class.**
+`--check-targets` shipped with no caller — it ran only when a human remembered
+to type it, which is trust-without-verification one level up from the thing it
+was written to defeat. It is now the `qa-layer-audit-scope-check` pre-commit
+hook, scoped to `.pre-commit-config.yaml` and `python/carnot/testing/**` — the
+two files that can INTRODUCE a guard — so classification is forced at the moment
+a guard is wired, while the author is present to write the reason. It makes no
+LLM call, so it is fast and offline; the audit proper is never wired to
+pre-commit for exactly that reason. Belt-and-braces: `discover_unaudited_guards`
+also runs unconditionally at report-build time and emits a **SCOPE GAP** section
+on every full run, so a gap that somehow escapes the hook still surfaces at the
+next milestone-close. The audit exempts *itself* from this sweep by name, on the
+stated grounds that it is reviewed by its operator rather than by itself.
+
+**Audit-integrity guard (Layer 1.5) correction, 2026-07-29 — load-bearing.**
+The integrity guard voids a flagged verdict whose quoted high-specificity
+evidence is absent from the audited source. Applied naively that would have
+eaten EVERY `SILENT_NON_FIRING` finding, because such a finding is *by
+definition* an input the source does not contain — a reviewer correctly citing
+`results/experiment_3946_r11l_first_solve.json` would have been auto-downgraded
+to `CANNOT_DETERMINE` and the extension would have been decorative. Two
+corrections: (1) `## COUNTEREXAMPLE` and `## MISSED INPUT` sections are exempt
+from the evidence sweep, and both prompts now instruct the reviewer to put
+constructed inputs there; (2) a quoted path that EXISTS in the repo counts as
+evidence. Both only ever un-void, so neither can admit a hallucination —
+hallucinated evidence inside `## FINDINGS` is still caught, and is regression-
+tested. **When extending this audit with any new class that asks the reviewer
+to construct an input the source lacks, check the integrity guard first.**
+
+**Rotation must reset when the target list changes (2026-07-29).** Putting the
+guards first in `all_target_paths()` does NOT get them audited first — the
+offset is persisted across runs, and the ten new guard targets were added at the
+head of the list while `ops/.qa_layer_audit_rotation.json` held `{"offset": 45}`
+against a 168-unit corpus. At the conductor's `--limit 20`, the entire
+newly-covered guard surface — added that day because of a live incident — would
+have sat unaudited for roughly seven milestone-closes, while
+`all_target_paths()`'s own docstring asserted the opposite in plain words. The
+state file now carries a `units_signature` (unit count + hash of the labels, NOT
+the bodies — editing a function must not throw away rotation progress, or an
+actively-developed file re-audits its own head slice forever); a missing,
+malformed, or mismatched signature resolves the offset to 0. **Ordering
+expresses the priority; the signature enforces it — when you add a target, both
+halves are required.** Fail-safe direction is deliberately toward MORE auditing:
+re-reviewing some units is cheap, a whole new guard surface never being looked
+at is the failure this discipline is about.
+
+**Every prompt must cover every bug class (2026-07-29).** The five classes are
+named in `BUG_CLASS_MARKERS` and `test_every_prompt_covers_every_bug_class`
+fails the build if any prompt omits one. This exists because the extension
+shipped with `PER_GUARD_PROMPT` — used by the ONLY targets that are themselves
+guards — carrying neither class D's write-target framing nor class E at all,
+under a constant whose comment claimed it was "shared by every prompt in this
+file". The deliverable was committing its own class-B bug: a scope claimed wider
+than the implementation. Demonstrated concretely, not theoretically — an audit
+fixture that wrote into `results/` on every run drew eight findings from that
+prompt and not one mentioned the write. Prompts phrase a class however suits
+their target, but must use the canonical name while doing it.
+
 Output: `ops/qa_layer_authenticity_audit_report.md`, structured markdown
 with per-unit verdicts (`CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE |
 NEEDS_REDESIGN`). Reuses the same **audit-integrity guard (Layer 1.5)** as
@@ -457,6 +578,16 @@ milestone's audit to catch a preventable gap.
    `--backfill` dry-run sanity check before committing (per the pattern
    established fixing the four origin-incident bugs).
 
+**How to apply (operator) — `## MISSED INPUT`, added 2026-07-29.** The report
+now hoists a **MISSED INPUTS** section ABOVE the flagged list, aggregated from
+every verdict that survived the integrity guard. Read it first. Each line names
+a concrete input a guard does not catch, which means each line is
+simultaneously the fix AND the regression test, already written for you — the
+`inference_substrate_correction_note` line would have been exactly the test the
+widened `determination_preservation_lint.py` was missing. A `SILENT_NON_FIRING`
+verdict is actioned by WIDENING the pattern/scope and adding that input as a
+test case, not by rewriting the check's logic.
+
 **How to apply (agent-side, when writing NEW checks in this layer).** When
 adding a check to `adversarial_verify.py` / `exclusion_manifest_lint.py` /
 `in_process_doc_reconcile.py` that reads a field or pattern-matches free
@@ -478,10 +609,51 @@ text:
 - Write the regression test for the exact incident/counterexample that
   motivated the check, not just a synthetic happy-path case.
 
+**How to apply (agent-side) — additional rules for GUARD files, 2026-07-29.**
+When writing or extending anything in `GUARD_TARGETS` (a check that decides
+whether a record may change):
+
+- **Never let a pattern list be narrower than the concept it names.** If the
+  check protects "corrigenda", it must not match only the literal
+  `corrigendum` — the field that was actually destroyed was
+  `inference_substrate_correction_note`. Before shipping, write down the
+  CONCEPT in one sentence, then ask what real corpus keys satisfy the concept
+  and miss the pattern. The artifact corpus has ~31,510 distinct top-level
+  keys; a fixed field list will not cover it.
+- **Prove each pattern is under test by deleting it.** Run
+  `test_suite_mutation_check.py`, or delete the pattern by hand and re-run the
+  suite. If the suite stays GREEN, that pattern is decorative — usually because
+  a second rule double-covers it, so the named rule could be silently removed.
+  This is how the `correction` marker was found to be untested by the very
+  incident test named for it.
+- **Decide fail-closed vs fail-open explicitly, and say which in a comment.**
+  A guard that returns "clean" when `git` fails, when the file list is empty,
+  or when a diff filter excludes the interesting case, is a guard that is
+  trusted and silent — the worst state a guard can be in.
+- **Never hardcode an absolute write target** (`PROJECT_ROOT =
+  "/home/ianblenke/github.com/ianblenke/carnot"`). Derive from
+  `Path(__file__)` or `python/carnot/paths.py`. Note `canonical_url_lint.py`
+  deliberately PERMITS that literal (its rule is about the GitHub URL, not the
+  filesystem), so nothing was watching it as a write target — a real gap
+  between two guards, and independently a **G2 reproducibility defect**: a
+  fresh clone writes into the operator's checkout.
+- **When you add a guard, add it to `GUARD_TARGETS` or to
+  `ACKNOWLEDGED_NON_QA_LAYER` with a reason.** `--check-targets` will refuse
+  otherwise. Writing the reason down IS the control.
+
 **Cross-references:**
 
 - 2026-07-03 operator question ("shouldn't the adversarial agent be
   catching these?") — origin
+- 2026-07-29 operator directive ("also update the adversarial model to ensure
+  it enforces this") — the scope extension to `GUARD_TARGETS` above; see
+  CLAUDE.md "Test-Run Record Integrity Discipline" for the full incident
+- `scripts/determination_preservation_lint.py` — the guard whose silent
+  non-firing is the 2026-07-29 second origin incident; now audited
+- `scripts/test_suite_mutation_check.py` — the mutation detector; now audited
+- `python/carnot/testing/operator_curated_doc_guard.py` +
+  `scripts/operator_curated_docs_lint.py` — the runtime and commit halves of
+  the operator-curated-doc defense; both now audited
 - `scripts/qa_layer_authenticity_audit.py` — Layer 2 adversarial AI
 - `ops/qa_layer_authenticity_audit_report.md` — per-milestone audit output
 - `ops/.qa_layer_audit_rotation.json` — rotation state for the
@@ -500,6 +672,266 @@ text:
   — origin bug #3's exemplar incident
 - exp5178 (`results/experiment_5178_hidden_state_verifier_pilot_v474.json`)
   — origin bug #4's exemplar incident
+
+## Test-Run Record Integrity Discipline (MANDATORY)
+
+**Origin:** 2026-07-29. The operator directed:
+
+> "add guards now, fix paths, centralize output centralization, and prevent
+>  tests from rewriting the README.md going forward"
+
+and then, on seeing Layer 1 land:
+
+> "also update the adversarial model to ensure it enforces this."
+
+The triggering discovery: **the test suite silently rewrites the research
+record.** A single test run modified **41 tracked files**. Concretely:
+
+1. `results/experiment_3946_r11l_first_solve.json` LOST a hand-written
+   corrigendum field (`inference_substrate_correction_note`) AND its
+   `solve_provenance` declaration — the field the ARC Live-Path Reachability
+   Discipline exists to enforce.
+2. `results/experiment_307_jepa_real_training.json` had `inference_mode`
+   flipped `live_gpu` → `cpu_training` — a substrate claim silently downgraded
+   in the historical record.
+3. **`README.md` was in the blast radius** — an operator-curated document per
+   the Public Documentation Discipline.
+4. The **2026-07-27 incident** in which 7 fabrication-gate stamps were stripped,
+   at the time blamed on a "conductor re-run," was in fact **a test run**. Five
+   of the seven reproduced on demand.
+
+**The second origin — a guard that was trusted and silent.**
+`scripts/determination_preservation_lint.py` ALREADY EXISTED, and its entire
+purpose was to refuse any commit that drops a `flagged_adversarial` or
+`corrigendum*` record. **It did not fire.** The destroyed field was named
+`inference_substrate_correction_note` — a corrigendum in substance that the
+guard's literal `corrigendum` pattern did not match. Nothing downstream could
+distinguish "checked and clean" from "checked with the wrong pattern."
+
+Mutation testing on the WIDENED lint then found the same shape twice more:
+deleting the `correction` marker pattern left the suite **GREEN** (the pattern
+its own incident regression test is NAMED for was never actually under test),
+and blanking half the rule-1/rule-2 dedup left it **GREEN** too. Coverage that
+exists on paper and does not bite.
+
+**The rule.**
+
+1. **After ANY test run: `git status` BEFORE `git add -A`.** Revert anything
+   you did not deliberately change, and verify byte-identity (`git diff`
+   empty, or a checksum comparison) before committing. `git add -A` after a
+   test run, without looking, is how the record gets rewritten. This is not a
+   suggestion — it is the working rule, and it is the step that would have
+   stopped every incident above.
+2. **A test must never write tracked state.** Not `results/**`, not
+   `openspec/**`, not `output/**`, not `ops/**`, not an operator-curated doc.
+   A test that needs to exercise a writer points it at `tmp_path`. A test that
+   imports an experiment module and calls `main()` is the standard vector —
+   **1,696 test files import an experiment module and 704 call it** (figure as
+   stated in the 2026-07-29 operator directive; a later grep put it nearer
+   2,305 importers, so treat it as "thousands, the dominant test shape" rather
+   than a number to re-verify — the point is the vector, not the count).
+3. **Operator-curated documents must never be written by a test or by an
+   autonomous task.** The protected set is
+   `python/carnot/testing/operator_curated_doc_guard.py:OPERATOR_CURATED_PATHS`
+   — **that tuple is the single source of truth, not any list written out in
+   prose.** It currently holds 16 entries, and includes several a reader would
+   not guess from the Public Documentation Discipline's table: `NOTICE`,
+   `LICENSE`, `docs/research-log.md`, `docs/tutorial.md`, `docs/concepts.md`,
+   `docs/api-reference.md`, and `docs/arxiv-paper/main.tex`. It is duplicated
+   byte-identically in `scripts/operator_curated_docs_lint.py`, and
+   `tests/python/test_operator_curated_doc_guard.py` asserts the two copies stay
+   equal, so consult either — but consult the code, not this paragraph.
+
+   *This rule shipped, for several hours, enumerating eight of those sixteen and
+   calling it "the protected set".* That is precisely the class-B failure the
+   discipline exists to name: a pattern list narrower than its concept, in the
+   contract that defines the concept. An agent reading the short version would
+   have concluded a test may write `docs/api-reference.md` (it may not — the
+   guard raises), and a maintainer "aligning" the guard to the contract would
+   have silently dropped eight protected files. Recorded rather than quietly
+   corrected, because a discipline that commits its own bug class and hides the
+   fact is worth less than one that shows the failure mode is easy. (The Public
+   Documentation Discipline names an overlapping set; that rule forbade
+   autonomous *edits* and did not anticipate a *test* as the writer.)
+4. **No hardcoded absolute write targets.** `PROJECT_ROOT =
+   "/home/ianblenke/github.com/ianblenke/carnot"` appeared in **139 scripts and
+   99 files under `python/carnot/`** *as measured 2026-07-29 (operator
+   directive)*. **That count is deliberately historical and will not
+   reproduce** — the `python/carnot/paths.py` migration was in flight the same
+   day and is driving it toward zero (a same-day re-measure already showed the
+   quoted literal gone from `scripts/` entirely). Do not read a lower number
+   later as evidence the rule was wrong; read it as the migration working. The
+   rule is not "139 files are broken", it is "an absolute path baked into
+   source is a defect" — no worktree, no env var, and no `tmp_path` fixture can
+   isolate a process that writes there, and a fresh clone writes into the
+   operator's checkout instead of failing, which is independently a G2
+   reproducibility defect. Derive the root from `Path(__file__)` or
+   `python/carnot/paths.py`. Note that
+   `canonical_url_lint.py` correctly PERMITS that literal — its rule is about
+   the GitHub URL, not the filesystem — so nothing in the project was watching
+   it as a *write target*: a genuine gap between two guards.
+5. **A guard's pattern list must not be narrower than the concept it claims to
+   protect, and every pattern must be proven under test by deleting it.** See
+   the QA-Layer Authenticity Discipline's agent-side rules above for the
+   mechanics.
+
+**Why this matters more than an ordinary bug class.** Two compounding reasons.
+
+*First:* the research record is the deliverable. Every headline claim, every
+G-gate, every `flagged_adversarial` quarantine, and every corrigendum the
+project has ever written down lives in `results/**`. A test run that silently
+edits it does not fail — it passes, green, and the damage lands in the next
+`git add -A`. The 2026-07-27 misattribution is the proof of how invisible this
+is: the project investigated the wrong cause entirely and closed the
+investigation, while the real mechanism kept running on every test invocation.
+This is also a **never-prune violation executed by machine**: the corrigendum
+that vanished from exp3946 was written by hand, precisely to correct the
+record, and a test deleted it.
+
+*Second, and this is the QA-Layer Discipline's own thesis restated:* **a guard
+that is trusted and silent is worse than no guard.** With no guard, someone
+eventually looks. With `determination_preservation_lint.py` green on every
+commit, the project had positive evidence that corrigenda were being preserved
+— evidence that was false. Layer 1 cannot detect its own blind spots, because
+the blind spot is the pattern list it uses to look. That asymmetry is exactly
+what Layer 2 exists for, and why the fix to this incident was not only to
+widen the lint but to put the lint itself under adversarial audit.
+
+**Three-layer adversarial defense (shipped 2026-07-29), same structure as the
+Verifier Authenticity, Adversarial Landing-Page, and QA-Layer disciplines:**
+
+**Layer 1 — mechanical, commit-time and run-time.** Four guards, unlike the
+QA-Layer discipline's deliberate zero:
+
+- `scripts/determination_preservation_lint.py` (pre-commit
+  `determination-preservation-lint`) — refuses a commit that drops a
+  fabrication-gate determination. **Widened 2026-07-29 from 2 rules to 4**,
+  because the 2-rule version is the origin incident.
+- `scripts/test_suite_mutation_check.py` (pre-commit
+  `test-suite-mutation-gate`, plus `--check` for interactive use) — detects a
+  test run having rewritten tracked files, and doubles as the mutation-testing
+  harness that proves a guard's patterns actually bite.
+- `python/carnot/testing/operator_curated_doc_guard.py` — the RUNTIME half:
+  wired through `tests/python/conftest.py`, it fires at the moment a test
+  writes an operator-curated doc and names the writer. This is the only layer
+  that can attribute the write to a specific test.
+- `scripts/operator_curated_docs_lint.py` (pre-commit
+  `operator-curated-docs-lint`) — the COMMIT half. Note its structural limit:
+  it only ever sees files that reach `git add`, which is exactly why it never
+  saw README.md being rewritten on every test run.
+
+**Layer 2 — adversarial AI audit.** All four guards above are now
+`GUARD_TARGETS` in `scripts/qa_layer_authenticity_audit.py`, reviewed with the
+inverted `PER_GUARD_PROMPT` ("name a real input this is SUPPOSED to catch and
+DOES NOT") and the five new bug classes. **Validated against the incident:** run
+against the pre-widening two-rule lint recovered from git, the audit returned
+`SILENT_NON_FIRING` in both of two independent runs, naming
+`inference_substrate_correction_note` verbatim in one and locating the exact
+letting-through line — *"it treats `corrigendum` as the whole concept."* It also
+surfaced five further real gaps in the old lint that nobody had asked about,
+including a fail-open on `git` failure. See the QA-Layer Authenticity
+Discipline above for the full mechanism.
+
+**Layer 3 — this CLAUDE.md rule.** The contract. The planner reads CLAUDE.md
+as required input on every plan generation and agents read it as project
+context, so a task that adds a test, adds a guard, or touches an experiment
+module carries these constraints at design time rather than discovering them
+at the next incident.
+
+**How to apply (operator).**
+
+1. Run `.venv/bin/python scripts/test_suite_mutation_check.py --check` after
+   any local test run, before staging. It reports which tracked files a test
+   touched.
+2. `git status`, then `git checkout --` anything you did not deliberately
+   change. Confirm with `git diff` before `git add`.
+
+   **STOP — read this before executing step 2 literally. Under concurrent
+   workflows, `--check` output is a SUPERSET of what your test run did, and
+   `git checkout --` on the reported list is itself a data-loss event of exactly
+   the class "Never Stash — Always Commit-First" exists to prevent.** The
+   `already_dirty` baseline in `ops/.test_suite_mutation_snapshot.json` is
+   SHARED MUTABLE STATE with a single timestamp; anything another workflow
+   modified *after* that snapshot was taken is indistinguishable, to this tool,
+   from something your tests rewrote. Observed 2026-07-29: a snapshot with 7
+   baseline entries reported ~75 paths, the bulk of them a concurrent
+   migration's uncommitted in-flight work, under the heading "To undo:
+   `git checkout -- <paths>`". Executing that as written would have destroyed
+   another agent's session.
+
+   So: **re-snapshot immediately before your own test run**, revert only paths
+   you can attribute to it, and never blanket-`git checkout --` the reported
+   list. When in doubt, commit-first (the standing rule) and inspect the diff
+   afterwards — a superfluous `[outer-loop]` commit costs nothing; a
+   `git checkout` over someone else's work is unrecoverable.
+3. When the Layer-2 audit reports a `## MISSED INPUT` line for one of these
+   guards, treat it as a widening task with the test already specified — see
+   the QA-Layer discipline's operator instructions.
+4. If a historical artifact HAS been silently rewritten, restore it from git
+   rather than re-deriving it (never-prune), and record the incident. Do not
+   assume the cause is the conductor: check whether a test run explains it,
+   which the 2026-07-27 investigation did not.
+
+**How to apply (agent-side).**
+
+- **Never `git add -A` after running tests without reading `git status`
+  first.** If files under `results/**`, `openspec/**`, `output/**`, `ops/**`,
+  or any operator-curated doc appear and you did not intend them, revert them
+  and verify byte-identity. Say so in your report.
+- **Never write a test that calls an experiment's `main()` against the real
+  project root.** Point it at `tmp_path`, or refactor the writer to take an
+  output directory. If neither is possible, the test does not get written — a
+  test that mutates the record is not a test, it is an unattributed edit.
+- **Never write to an operator-curated document from a test or an autonomous
+  task**, for any reason, including "regenerating" it. If a task appears to
+  require it, emit `honest_verdict: blocked_public_doc_operator_curated` per
+  the Public Documentation Discipline.
+- **Never introduce a hardcoded absolute path as a write target.** Use
+  `python/carnot/paths.py`.
+- **`results/arc_e3`, `results/arc_logo_snapshot`, and
+  `results/arc_e3_origin_fixtures` are EVIDENCE** — read them, never write
+  them.
+- When you add or widen a guard, add its incident input as a regression test
+  AND verify by deletion that the pattern is actually under test.
+
+**Cross-references:**
+
+- 2026-07-29 operator directives ("add guards now, fix paths…" / "also update
+  the adversarial model to ensure it enforces this") — origin
+- 2026-07-27 stamp-stripping incident (misattributed to a conductor re-run;
+  actually a test run, 5 of 7 reproduced on demand) — the misdiagnosis this
+  discipline explains
+- `results/experiment_3946_r11l_first_solve.json` — lost
+  `inference_substrate_correction_note` + `solve_provenance`; the exemplar
+- `results/experiment_307_jepa_real_training.json` — `inference_mode` flipped
+  `live_gpu` → `cpu_training`; the substrate-claim exemplar
+- `scripts/determination_preservation_lint.py` — Layer 1; the guard whose
+  silent non-firing is the second origin
+- `scripts/test_suite_mutation_check.py` — Layer 1 detector + mutation harness
+- `python/carnot/testing/operator_curated_doc_guard.py` +
+  `tests/python/conftest.py` — Layer 1 runtime attribution. Its
+  `OPERATOR_CURATED_PATHS` (16 entries) is the **single source of truth for the
+  protected set** — never an enumeration written out in prose, here or anywhere
+- `scripts/operator_curated_docs_lint.py` — Layer 1 commit-time; holds a
+  byte-identical copy of that tuple, equality asserted by
+  `tests/python/test_operator_curated_doc_guard.py`
+- `python/carnot/paths.py` — the centralized root, superseding the 139+99
+  hardcoded absolute paths measured 2026-07-29 (that count is historical and
+  falling; see rule 4)
+- `scripts/qa_layer_authenticity_audit.py` — Layer 2 (`GUARD_TARGETS`,
+  `PER_GUARD_PROMPT`, `SILENT_NON_FIRING`, `--check-targets`)
+- CLAUDE.md "QA-Layer Authenticity Discipline" — the parent discipline whose
+  scope this incident extended; read its 2026-07-29 SCOPE EXTENSION
+- CLAUDE.md "Public Documentation Discipline" — the operator-curated set; this
+  rule adds the *test* as a writer that rule did not anticipate
+- CLAUDE.md "Documentation Update Rules" / "Never remove existing content" —
+  the never-prune rule a test run was violating by machine
+- CLAUDE.md "Tests Must Run and Assert" — the sibling test-quality rule
+- CLAUDE.md "Never Stash — Always Commit-First" — the sibling
+  don't-lose-transient-state rule; note it is NOT a licence to `git add -A`
+  blindly after a test run, which is the failure this rule addresses
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor" — the
+  fabrication gate whose stamps were the thing being stripped
 
 ## Canonical Repository URL Discipline (MANDATORY)
 
