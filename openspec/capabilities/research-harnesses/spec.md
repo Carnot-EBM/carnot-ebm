@@ -290,6 +290,33 @@ Any harness or analyser that reports an ARC efficiency or per-game score SHALL:
 Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
 DT-COMPOSITION 2026-05-08).
 
+### REQ-HARNESS-6040: Unattended Writers Of Never-Prune Records Must Merge
+
+Any unattended writer (systemd timer, cron, conductor task) that updates a
+durable never-prune status record MUST merge its fields over the existing
+record rather than replacing the file wholesale.
+
+Origin: on 2026-07-29 the daily-prep timer's bare
+`write_text(json.dumps({...six keys}))` on `ops/arc-daily-prep-status.json`
+deleted the seven submission-trail keys the file also carried, including
+`submission_ref` and `prior_submission_scores` — the leaderboard score-by-date
+history. Because the writer is unattended the loss was silent, and the
+conductor's routine `git add -A` would have published the deletion.
+
+A writer subject to this requirement MUST additionally:
+
+- Retire, never delete, any field that describes a superseded artifact
+  version. Such fields move to an append-only history list so the record stays
+  never-prune-compliant while no longer describing the current version.
+- Keep cumulative fields (histories that are not per-version facts) live rather
+  than retiring them alongside per-version fields.
+- Tolerate a corrupt or unreadable prior record without blocking its primary
+  job.
+
+The merge MUST be implemented as a pure function so it is testable without the
+writer's network side effects, and its tests MUST be written against the
+actual record that was destroyed rather than a synthetic example.
+
 ## Scenarios
 
 ### SCENARIO-HARNESS-5940-1: A Reset Before A Level-Up Costs Score
@@ -461,6 +488,30 @@ at most zero by exact node id
 **Then** HUBO direct evaluation MUST succeed without QUBO reduction at
 production scale (n≥128).
 
+### SCENARIO-HARNESS-6040-1: A New Prep Must Not Destroy The Submission Trail
+
+**Given** `ops/arc-daily-prep-status.json` records `submission_ref` 54768046,
+`submitted_at`, and `prior_submission_scores` for kernel version 9
+**When** the unattended daily-prep timer writes a fresh status for version 10
+**Then** no prior key is dropped without being archived
+**And** `prior_submission_scores` remains live, because it is cumulative rather
+than a per-version fact
+
+### SCENARIO-HARNESS-6040-2: A Fresh Version Must Not Look Already-Submitted
+
+**Given** the prior record carries `submitted: true` for kernel version 9
+**When** a status for version 10 is written
+**Then** the per-version submission fields are moved into an append-only
+`submission_history` entry naming version 9
+**And** they are absent from the live record, so the unsubmitted version 10 is
+not readable as already submitted
+
+### SCENARIO-HARNESS-6040-3: Re-Prepping The Same Version Keeps Its Record
+
+**Given** the prior record describes kernel version 9 and is submitted
+**When** version 9 is re-prepped
+**Then** its own submission fields stay live and no history entry is created
+
 ### SCENARIO-HARNESS-SAMPLER-2: Future SpecAnn Proposals Rebut Rejection
 
 **Given** a future Phase 3 planning proposal recommends SpecAnn or Spectral
@@ -490,4 +541,5 @@ applies.
 | REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`; planned `python/carnot/reporting/prd_gap_agent_failure_table_v495_5452.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`); planned (`results/experiment_5452_prd_gap_agent_failure_table_v495.json`) |
 | REQ-HARNESS-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
 | REQ-HARNESS-5940 | Implemented (`scripts/arc_gateway_rescore.py`, `scripts/arc_gateway_exact_attribution.py`, `scripts/arc_leaderboard_eval.py` per-level reset instrumentation) | Implemented (`tests/python/test_arc_gateway_rescore.py`, `results/outer_loop_arc_gateway_rescore_20260726.json`) |
+| REQ-HARNESS-6040 | Implemented (`scripts/kaggle/prep_daily_submission.py:_merge_prep_status`) | Implemented (`tests/python/test_prep_daily_status_merge.py`, `ops/arc-daily-prep-status.json`) |
 | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
