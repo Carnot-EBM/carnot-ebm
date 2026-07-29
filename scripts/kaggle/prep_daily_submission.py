@@ -30,7 +30,7 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
@@ -41,6 +41,54 @@ KERNEL_DIR = REPO / "scripts" / "kaggle" / "submission_kernel"
 STAGE = Path("/tmp/cac_stage_daily")
 # ops files the live agent reads at runtime (registry of banked solves + router ledger)
 OPS_FILES = ["arc_solve_registry.yaml", "arc_router_ledger.json"]
+
+
+# Fields that describe a SUBMISSION rather than a prep. They belong to the kernel version that
+# was submitted, so when a new version is prepped they are retired into history rather than left
+# beside a fresh, unsubmitted prep where they would read as "this one is already submitted".
+_SUBMISSION_FIELDS = (
+    "submitted",
+    "submitted_at",
+    "submission_ref",
+    "submission_status_at_check",
+    "local_gate_result_at_submit",
+)
+
+
+def _merge_prep_status(prior: dict, fresh: dict) -> dict:
+    """Merge a fresh prep record over the durable status file, preserving everything else.
+
+    WHY THIS EXISTS. `ops/arc-daily-prep-status.json` is a never-prune record. Beside the six
+    prep fields this script computes, it carries the submission trail -- `submission_ref`,
+    `submitted_at`, `local_gate_result_at_submit`, and `prior_submission_scores`, which is the
+    actual leaderboard score-by-date history. The original code wrote the file with a bare
+    `write_text(json.dumps({...six keys}))`, which DELETED all of it. Because this script runs
+    from an unattended systemd timer, the destruction was silent, and the next `git add -A`
+    (the conductor's normal path) would have published it. Recovery required knowing to look in
+    one specific commit.
+
+    A plain `{**prior, **fresh}` fixes the deletion but introduces a subtler lie: the previous
+    version's `submitted: true` would sit next to a brand-new, unsubmitted kernel version and
+    read as though THIS prep had been submitted. So on a version change the submission fields
+    are moved into an append-only `submission_history` (kept, per never-prune) and cleared from
+    the live record. `prior_submission_scores` is deliberately NOT retired -- it is a cumulative
+    score history, not a per-version fact.
+    """
+    merged = {**prior, **fresh}
+    changed_version = prior.get("kernel_version") not in (None, fresh.get("kernel_version"))
+    if changed_version and prior.get("submitted"):
+        history = list(merged.get("submission_history") or [])
+        history.append(
+            {
+                k: prior[k]
+                for k in ("kernel_version", "prepped_at", "note", *_SUBMISSION_FIELDS)
+                if k in prior
+            }
+        )
+        merged["submission_history"] = history
+        for key in _SUBMISSION_FIELDS:
+            merged.pop(key, None)
+    return merged
 
 
 def kaggle(*args: str, check: bool = False) -> subprocess.CompletedProcess:
@@ -59,8 +107,15 @@ def stage_dataset() -> None:
         sys.exit(f"ABORT: dataset download failed: {r.stderr[-300:]}")
     print("[stage] overlaying repo python/carnot (excluding *.so/__pycache__/*.cover) ...")
     subprocess.run(
-        ["rsync", "-a", "--exclude=*.so", "--exclude=__pycache__", "--exclude=*.pyc",
-         f"{REPO / 'python' / 'carnot'}/", f"{STAGE / 'python' / 'carnot'}/"],
+        [
+            "rsync",
+            "-a",
+            "--exclude=*.so",
+            "--exclude=__pycache__",
+            "--exclude=*.pyc",
+            f"{REPO / 'python' / 'carnot'}/",
+            f"{STAGE / 'python' / 'carnot'}/",
+        ],
         check=True,
     )
     for f in OPS_FILES:
@@ -84,17 +139,23 @@ def stage_dataset() -> None:
     # string-check MAX_ACTIONS and the .so leak -- neither validates that the agent actually imports
     # and constructs. Catch the catastrophic-zero case at bundle time, before a scored slot is spent.
     smoke = subprocess.run(
-        [sys.executable, "-c",
-         "import sys; sys.path.insert(0, %r); "
-         "import carnot.agentic.arc_competition_agent as m; "
-         "cls = m.make_carnot_agent(type('S', (), {'MAX_ACTIONS': 80})); "
-         "assert isinstance(cls, type), 'make_carnot_agent did not return a class'; "
-         "print('agent import+build smoke OK')" % str(STAGE / "python")],
-        capture_output=True, text=True,
+        [
+            sys.executable,
+            "-c",
+            "import sys; sys.path.insert(0, %r); "
+            "import carnot.agentic.arc_competition_agent as m; "
+            "cls = m.make_carnot_agent(type('S', (), {'MAX_ACTIONS': 80})); "
+            "assert isinstance(cls, type), 'make_carnot_agent did not return a class'; "
+            "print('agent import+build smoke OK')" % str(STAGE / "python"),
+        ],
+        capture_output=True,
+        text=True,
     )
     if smoke.returncode != 0:
-        sys.exit("ABORT: staged agent failed import+build smoke (would be 0 on every eval game):\n"
-                 f"{smoke.stdout[-400:]}\n{smoke.stderr[-1000:]}")
+        sys.exit(
+            "ABORT: staged agent failed import+build smoke (would be 0 on every eval game):\n"
+            f"{smoke.stdout[-400:]}\n{smoke.stderr[-1000:]}"
+        )
     print("[stage] agent import+build smoke passed.")
 
     (STAGE / "dataset-metadata.json").write_text(
@@ -114,12 +175,20 @@ def latest_kernel_version() -> str:
 
 
 def prep() -> None:
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%MZ")
     stage_dataset()
 
     print(f"[prep] re-versioning dataset ({stamp}) ...")
-    r = kaggle("datasets", "version", "-p", str(STAGE), "-m",
-               f"daily refresh {stamp}: latest banked solvers", "--dir-mode", "zip")
+    r = kaggle(
+        "datasets",
+        "version",
+        "-p",
+        str(STAGE),
+        "-m",
+        f"daily refresh {stamp}: latest banked solvers",
+        "--dir-mode",
+        "zip",
+    )
     print(r.stdout[-300:] or r.stderr[-300:])
     if "error" in (r.stderr or "").lower() and "being created" not in (r.stdout or ""):
         print("[prep] WARNING: dataset version may have failed; continuing to kernel push")
@@ -157,23 +226,45 @@ def prep() -> None:
     # can prep but cannot push-notify or submit (those need an agent / are operator-only), so
     # it records readiness here; the watchdog surfaces it and the operator approves the submit.
     status_path = REPO / "ops" / "arc-daily-prep-status.json"
-    status_path.write_text(json.dumps({
-        "prepped_at": stamp,
-        "kernel_version": kver,
-        "save_run": status,
-        "parquet_ok": parquet_ok,
-        "ready_for_operator_submit": ready,
-        "submit_command": f".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}",
-    }, indent=2))
+    # MERGE, never replace. This file is a never-prune record: alongside the six prep fields
+    # written here it carries the SUBMISSION history -- `submission_ref`, `submitted_at`,
+    # `local_gate_result_at_submit`, and `prior_submission_scores` (the actual leaderboard
+    # score-by-date trail). A bare `write_text(json.dumps({...6 keys}))` destroyed all of it on
+    # 2026-07-29: the file is written by an unattended systemd timer, so the loss was silent
+    # and would have been published by the next `git add -A`. Recovering it needed a specific
+    # commit (bc2623761) that nobody would have known to look for.
+    prior: dict = {}
+    if status_path.exists():
+        try:
+            prior = json.loads(status_path.read_text())
+        except (json.JSONDecodeError, OSError):
+            prior = {}  # a corrupt/unreadable prior must not block the prep; start fresh
+
+    merged = _merge_prep_status(
+        prior,
+        {
+            "prepped_at": stamp,
+            "kernel_version": kver,
+            "save_run": status,
+            "parquet_ok": parquet_ok,
+            "ready_for_operator_submit": ready,
+            "submit_command": f".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}",
+        },
+    )
+    status_path.write_text(json.dumps(merged, indent=2, sort_keys=True) + "\n")
 
     print("\n=== DAILY PREP RESULT ===")
     print(f"  dataset: re-versioned ({stamp})")
-    print(f"  kernel:  v{kver}  save-run={status}  submission.parquet={'OK' if parquet_ok else 'MISSING'}")
+    print(
+        f"  kernel:  v{kver}  save-run={status}  submission.parquet={'OK' if parquet_ok else 'MISSING'}"
+    )
     print(f"  status file: {status_path}")
     print(f"  READY FOR OPERATOR-APPROVED SUBMIT: {'YES' if ready else 'NO — investigate above'}")
     if ready:
         print("\n  To submit (operator approval), run:")
-        print(f"    .venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}")
+        print(
+            f"    .venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}"
+        )
     sys.exit(0 if ready else 1)
 
 
@@ -194,8 +285,10 @@ def submit_only(kver: str, message: str, force: bool = False) -> None:
         print("[submit] running the local submission gate (refuses on regression)...")
         rc = subprocess.run([sys.executable, str(gate), "--check"], cwd=str(REPO)).returncode
         if rc != 0:
-            sys.exit(f"[submit] BLOCKED by the local gate (exit {rc}) -- the current config is a local "
-                     f"regression. Fix it (or re-run with --force to override). NOT submitting.")
+            sys.exit(
+                f"[submit] BLOCKED by the local gate (exit {rc}) -- the current config is a local "
+                f"regression. Fix it (or re-run with --force to override). NOT submitting."
+            )
         print("[submit] gate PASSED -- proceeding to submit.")
 
     from kaggle import api
@@ -209,18 +302,25 @@ def submit_only(kver: str, message: str, force: bool = False) -> None:
         kernel_version=str(kver),
     )
     print("SUBMITTED:", res)
-    print("[submit] reminder: on a CONFIRMED leaderboard improvement, refresh the gate baseline with "
-          "`.venv/bin/python scripts/kaggle/arc_local_submission_gate.py --update-baseline`.")
+    print(
+        "[submit] reminder: on a CONFIRMED leaderboard improvement, refresh the gate baseline with "
+        "`.venv/bin/python scripts/kaggle/arc_local_submission_gate.py --update-baseline`."
+    )
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="stage + guards only; no Kaggle writes")
-    ap.add_argument("--submit-only", action="store_true", help="operator-approved submit of latest kernel")
+    ap.add_argument(
+        "--submit-only", action="store_true", help="operator-approved submit of latest kernel"
+    )
     ap.add_argument("--kver", default=None, help="kernel version to submit (with --submit-only)")
     ap.add_argument("--message", default=None, help="submission message")
-    ap.add_argument("--force", action="store_true",
-                    help="bypass the local submission gate (only when knowingly accepting a regression)")
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="bypass the local submission gate (only when knowingly accepting a regression)",
+    )
     a = ap.parse_args()
 
     if a.dry_run:
@@ -230,7 +330,7 @@ def main() -> None:
     if a.submit_only:
         if not a.kver:
             sys.exit("--submit-only requires --kver N")
-        msg = a.message or f"carnot daily {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
+        msg = a.message or f"carnot daily {datetime.now(UTC).strftime('%Y-%m-%d')}"
         submit_only(a.kver, msg, force=a.force)
         return
     prep()
