@@ -4643,6 +4643,20 @@ dynamics they behave like the identity engine, which the gate correctly rejects.
 capability is not a more permissive verifier; it is an inducer (or a supervision/representation)
 that gets *changed* cells right at all.
 
+**ERROR CLASS (measured same session, from exp6012's recorded per-row cell counts).** The 33
+rows split into two structural modes that want OPPOSITE corrections, so an undifferentiated
+"make the inducer better" is unlikely to move both:
+- *Mode A, the no-op world model* (12/33; ar25, ka59, re86, cd82-on-changed-frames):
+  `correct_changed_cells = 0` AND `spurious_changed_cells = 0` -- it predicts nothing ever
+  changes. Identity in all but name, which is exactly why exact-match accuracy looks
+  respectable while changed-cell recall is zero.
+- *Mode B, the runaway writer* (21/33; cn04, dc22, g50t, m0r0, sc25, sk48, wa30): it writes
+  3x-10x MORE changed cells than reality contains (cn04@1: 4346 true vs 33021 spurious; g50t@0:
+  1504 vs 14612; sc25@0: 453 vs 4687), and `noop_hallucination_rate` reaches 1.0 -- on frames
+  where reality did nothing it invents a change every time.
+Mode B is directly addressable by a change-magnitude prior or a sparsity constraint on predicted
+writes, and that is cheap to test. Mode A looks like failure to extract action semantics at all.
+
 **Priority: HIGH, and it reframes the ARC roadmap.** Every admission-side or retention-side
 proposal is downstream of this and should be deprioritised until changed-cell recall moves off
 the floor. Cheapest next discriminating step, CPU-only over existing fixtures: on a game where a
