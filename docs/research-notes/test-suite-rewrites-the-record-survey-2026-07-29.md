@@ -142,8 +142,23 @@ estimate.** Static count over `tests/python/`:
 
 Not all 704 write — the test name is the tell (`test_main_writes_artifact`,
 `test_run_experiment_writes_artifact_with_required_fields`), and many only exercise helpers. The
-batch survey is what separates the two, and its per-batch results are in
-`ops/known-issues.md`'s entry as they land.
+batch survey is what separates the two.
+
+**Per-batch results (250 files each, alphabetical; the run was still in progress when this document
+was written — stated rather than rounded up):**
+
+| batch | test files | tracked files moved |
+|---|---:|---:|
+| `expbatch_00` | 250 | 6 |
+| `expbatch_01` | 250 | 16 |
+| `expbatch_02` | 250 | 3 |
+| **so far** | **750** | **25** |
+
+Batch 01's 16 include the two NON-`results/` files from the original hazard —
+`openspec/papers/paper-v6/section-6-limitations.md` and `output/kanele_synth/post_synth.dcp` — and
+one the hazard commit did not list at all: **`README.md`**, which CLAUDE.md's Public Documentation
+Discipline marks operator-curated. Two of the 16 (`experiment_1938_nrgpt_loss_probe.json`,
+`experiment_2085_pem_sudoku_eval.json`) are artifacts from the 2026-07-27 incident — see §3.5.
 
 ### 3.4 The worse finding: 139 scripts write to a HARDCODED absolute path, so nothing can isolate them
 
@@ -239,6 +254,21 @@ not name. The writer is not the conductor and not usually a script the conductor
 test suite, running on a developer's or an agent's machine, in the ordinary course of checking that
 nothing is broken. Any repair that targets the conductor's write path would have missed all five.
 All five artifacts were restored and verified byte-identical against `HEAD`.
+
+### 3.6 A note on why `--restore` is opt-in, learned the hard way during this session
+
+To measure the §3.4 class empirically, this session ran a background collector that polled the
+canonical repo for leaks and called `test_suite_mutation_check.py --check --restore` on whatever it
+found. It worked — and it also reverted an in-progress edit to *this document*, because a file the
+author is editing is indistinguishable, at the git layer, from a file a test rewrote. The edit was
+reconstructed and the collector was killed by explicit PID.
+
+That is not a bug in the tool; it is the reason the tool is shaped the way it is. `--check` alone is
+strictly read-only, `--restore` must be asked for by name, and there is a test
+(`test_the_detector_never_edits_anything_unless_asked`) that pins it. The lesson for anyone wiring
+this into automation: **never run `--restore` on a schedule against a tree someone is working in.**
+Snapshot, run the thing, restore once, and take the baseline immediately before the run — not
+minutes earlier while edits are still landing.
 
 ---
 
