@@ -480,3 +480,26 @@ def test_one_deletion_produces_one_refusal_line(repo):
     violations = dpl.check()
     stamp_lines = [v for v in violations if "flagged_adversarial" in v]
     assert len(stamp_lines) == 1, f"the stamp was reported {len(stamp_lines)} times: {stamp_lines}"
+
+
+def test_a_dropped_substrate_declaration_is_refused_too(repo):
+    """The loophole rule 4 cannot see: DELETING the declaration instead of weakening it.
+
+    Rule 4 only compares a field present on both sides, and a bare ``inference_mode`` -- the exact
+    field the exp307 incident touched -- matches no marker pattern. So an artifact could have had
+    its declaration flipped `live_gpu -> cpu_training` and been refused, while deleting the field
+    outright sailed through. Absent is strictly WORSE than weaker: `adversarial_verify.py` treats a
+    missing declaration as the strict default `live_llm_inference` and applies the 60s duration
+    floor to something that may have run in milliseconds.
+    """
+    r, _ = repo
+    art = r / "results" / "experiment_506_thing.json"
+    art.write_text(json.dumps({"experiment": 506, "inference_mode": "live_gpu"}, indent=2) + "\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed 506")
+
+    art.write_text(json.dumps({"experiment": 506}, indent=2) + "\n")
+    violations = dpl.check()
+    assert any("inference_mode" in v for v in violations), (
+        "deleting a substrate declaration must be at least as refused as weakening it"
+    )

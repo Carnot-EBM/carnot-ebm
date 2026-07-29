@@ -219,3 +219,26 @@ def test_the_live_repo_has_no_unresolved_suite_mutation(repo, monkeypatch):
     assert tsm.cmd_gate() == 0, (
         "a test run rewrote tracked files and they were not restored -- see the marker file"
     )
+
+
+def test_a_renamed_tracked_file_is_parsed_as_one_entry_not_two(repo):
+    """``git status --porcelain -z`` emits a rename as TWO records: ``R  <new>`` then a bare ``<old>``.
+
+    An earlier draft sliced every record as ``code=line[:2], path=line[3:]``, which turned the
+    unprefixed source record into a garbage entry -- ``results/x.json`` became code ``re`` at path
+    ``ults/x.json``. That garbage would be reported to the operator as a modified file and handed
+    to ``git checkout`` by ``--restore``, which cannot restore a path that does not exist. Pinned
+    here so the parse cannot casually regress.
+    """
+    r, art = repo
+    baseline = tsm.snapshot()
+    _git(r, "mv", str(art.relative_to(r)), "results/experiment_3946_renamed.json")
+
+    muts = tsm.mutations(baseline)
+
+    assert muts == ["results/experiment_3946_renamed.json"], (
+        f"a rename must yield exactly the destination path, got {muts}"
+    )
+    assert not any(p.startswith("ults/") or p.startswith("sults/") for p in muts), (
+        "a mangled source path leaked out of the -z parse"
+    )

@@ -95,7 +95,7 @@ worktree:
 
 **So the `runpy` hypothesis explains 1 of the 39 files, not the bulk.** That is a real correction to
 the hazard commit, and it matters: a repair aimed only at the `runpy` call sites would have left
-~38 rewrites in place while looking like a fix.
+~38 rewrites in place while looking like a fix. §3.3 identifies what the bulk actually is.
 
 ### 3.2 All 125 `test_arc_*.py` files, individually: zero tracked-file movement
 
@@ -107,9 +107,138 @@ before its write would be a false negative, so all six were re-run **in the cano
 `scripts/test_suite_mutation_check.py --restore --run`. Result: 67 passed, 2 failed for unrelated
 content-drift reasons, and **no tracked file was modified**.
 
-### 3.3 The `test_experiment_*.py` bulk
+### 3.3 The bulk is `import the module and call main()`, not `runpy`
 
-<!-- FILLED IN BELOW -->
+The 3,366 `tests/python/test_experiment_*.py` files were run in 14 batches of 250 in a clean
+worktree, `git status` after each; every batch that moved a tracked file was then re-run under the
+audit-hook plugin for exact per-test attribution.
+
+Batch 00 (the alphabetically-first 250 files) moved **6** tracked artifacts, and the plugin named the
+responsible test for every one:
+
+| test | artifact rewritten |
+|---|---|
+| `test_experiment_1035_dualgpu_rocm_v3.py::test_main_writes_well_formed_artifact` | `results/experiment_1035_dualgpu_rocm_v3.json` |
+| `test_experiment_1038_milestone_retro_80.py::TestMainEntryPoint::test_main_writes_artifact` | `results/experiment_1038_milestone_retro_80.json` |
+| `test_experiment_1081_fpga_scale_benchmark.py::test_run_experiment_writes_artifact_with_required_fields` (and `::test_run_experiment_marks_board_unreachable_when_ping_fails`) | `results/experiment_1081_fpga_scale_benchmark.json` |
+| `test_experiment_1089_milestone_retro_84.py::TestMainEntryPoint::test_main_writes_artifact` | `results/experiment_1089_milestone_retro_84.json` |
+| `test_experiment_1103_milestone_retro_85.py::TestMainEntryPoint::test_main_writes_artifact` | `results/experiment_1103_milestone_retro_85.json` |
+| `test_experiment_1593_cdg_repair.py::test_main` | `results/experiment_1593_cdg_repair.json` |
+
+**None of these uses `runpy`.** Every one does `sys.path.insert(0, ".../scripts")`, `import
+experiment_NNNN_… as expNNNN`, then calls the module's `main()` / `run_experiment()` and asserts the
+artifact exists. `runpy.run_path` was a red herring: it is one way to execute the script, and the
+overwhelmingly more common way is a plain import-and-call.
+
+**The candidate class is therefore three orders of magnitude larger than the hazard commit's
+estimate.** Static count over `tests/python/`:
+
+| class | files |
+|---|---|
+| import an `experiment_*` module | **1,696** |
+| …and call `main()` / `run_experiment()` | **704** |
+| call `runpy.run_path` (any target) | 125 |
+| …with an experiment-script target | 20 |
+
+Not all 704 write — the test name is the tell (`test_main_writes_artifact`,
+`test_run_experiment_writes_artifact_with_required_fields`), and many only exercise helpers. The
+batch survey is what separates the two, and its per-batch results are in
+`ops/known-issues.md`'s entry as they land.
+
+### 3.4 The worse finding: 139 scripts write to a HARDCODED absolute path, so nothing can isolate them
+
+Midway through the survey the canonical repo went dirty on its own —
+`results/experiment_3734_fix_harness_and_bounded_train_chunk1.json` lost `flagged_adversarial: true`,
+its `corrigendum_pending` / `corrigendum_note`, AND the hand-written
+`flagged_adversarial_restoration_note` recording that this same artifact had already been stripped
+once on 2026-07-27 and restored. Nothing in this session had touched it, and the survey was running
+in a `/tmp` worktree.
+
+The cause is line 11 of `scripts/experiment_3734_fix_harness_and_bounded_train_chunk1.py`:
+
+```python
+PROJECT_ROOT = "/home/ianblenke/github.com/ianblenke/carnot"
+```
+
+The script does not resolve its output path relative to anything. It writes to the operator's
+canonical checkout **by absolute path**, from whatever directory it is executed in. Worktree
+isolation cannot contain it. `tmp_path` cannot contain it. A `CARNOT_RESULTS_DIR` env var cannot
+contain it, because the script never asks. A CI runner executing it writes to a path that does not
+exist on that machine — or, on this machine, to the live research record.
+
+**Scale, counted mechanically:**
+
+| | files |
+|---|---:|
+| `scripts/**/*.py` containing a literal absolute repo path | **150** |
+| …of those, that also open-for-write / `write_text` / `json.dump` | **139** |
+| `python/carnot/**/*.py` containing a literal absolute repo path | **99** |
+
+Two spellings are in use and both must be counted: `/home/ianblenke/github.com/ianblenke/carnot`
+(104 files) and `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm` (46 files), the latter being a
+symlink to the former. An earlier count in this document said 104/94/36 because it grepped only the
+first spelling — `scripts/experiment_2427_kv260_yosys_v4.py`, caught leaking live during this
+survey, uses the second.
+
+**Nothing was watching for this.** `scripts/canonical_url_lint.py` explicitly and correctly PERMITS
+the local filesystem path — its rule is about the project's canonical *GitHub URL*, and it lists
+`/home/ianblenke/github.com/ianblenke/carnot/...` under "Permitted (these are NOT canonical-URL
+violations — leave alone)". That exemption is right for URLs and leaves the path completely
+unguarded as a *write target*.
+
+**Three consequences, in increasing order of importance:**
+
+1. It partially invalidates this survey's own negatives. A hardcoded-path script writing during a
+   worktree run shows up in the CANONICAL repo, not in the worktree's `git status` — so
+   "this test moved nothing" is a false negative for that class. The §3.1 and §3.2 results are
+   unaffected (the canonical repo was hashed immediately after both and showed only this session's
+   deliberate edits), but §3.3's per-batch negatives carry this caveat.
+2. It defeats repair options (A) and (E) for this class. Both work by making the output path
+   configurable; a script that never reads a path cannot be redirected. These 94 need the literal
+   replaced with a repo-relative resolution before any path-based repair means anything.
+3. **It is a reproducibility defect independent of the test suite.** These scripts only work on one
+   machine, in one directory, for one user. That bears directly on G2 — the independent-reproducer
+   gate — and on CLAUDE.md's decentralization constraints: an experiment nobody else can run is not
+   an experiment anyone else can check.
+
+**The guard caught it.** The widened lint refused the commit that would have published the exp3734
+strip, naming all four lost fields including the two restoration records that the pre-widening form
+had no pattern for. The artifact was restored and verified byte-identical against `HEAD`
+(`bb8b6b1ae8d324b4ea16b5de5e20bb8d20d32b92d80d5008a2a4eccd2ca62d02`). That is the first live catch,
+on a real incident, of exactly the class the widening was written for — and it happened during the
+session that shipped it.
+
+### 3.5 The 2026-07-27 "conductor re-run" was a TEST RUN — 5 of its 7 artifacts reproduced on demand
+
+REQ-ARC-WMTE-5995 records that on 2026-07-27 something stripped `flagged_adversarial: True` from
+seven artifacts (exp1861, exp1938, exp2085, exp3734, exp4162, exp4170, exp696), six of which also
+lost their corrigendum records. The diagnosis written at the time was "a conductor re-run overwrote
+the artifact in place."
+
+That diagnosis appears to be wrong. Running the tests reproduces it on demand:
+
+| command | artifacts stripped | result |
+|---|---|---|
+| `pytest tests/python/test_experiment_1938_nrgpt_loss_probe.py tests/python/test_experiment_2085_pem_sudoku_eval.py` | exp1938, exp2085 | **4 tests PASSED** |
+| `pytest tests/python/test_experiment_4162_… tests/python/test_experiment_4170_…` | exp4162, exp4170 | passed |
+| (leaked into the canonical repo from a `/tmp` worktree via the hardcoded path in §3.4) | exp3734 | — |
+
+**Five of the seven, reproduced.** Each loses exactly the same four things: `flagged_adversarial:
+True`, `corrigendum_pending`, `corrigendum_note`, and — the tell — the hand-written
+`flagged_adversarial_restoration_note` that the 2026-07-27 repair itself wrote into the artifact to
+explain the restoration. The suite is re-breaking the repair. The remaining two (exp1861, exp696)
+have no test file matching their experiment number and could not be attributed this way.
+
+**Every one of these runs was GREEN.** Nothing failed, nothing warned; the quarantine was lifted on
+five artifacts by a passing test suite.
+
+**What this changes.** REQ-ARC-WMTE-5995's *fix* was right — a commit-time content lint catches the
+class regardless of who wrote the file — but its *reasoning* ("the conductor does not write these
+files; the experiment SCRIPT does, and there are thousands of them") was right for a reason it did
+not name. The writer is not the conductor and not usually a script the conductor invoked: it is the
+test suite, running on a developer's or an agent's machine, in the ordinary course of checking that
+nothing is broken. Any repair that targets the conductor's write path would have missed all five.
+All five artifacts were restored and verified byte-identical against `HEAD`.
 
 ---
 
@@ -165,8 +294,8 @@ environment variable (e.g. `CARNOT_RESULTS_DIR`), and have the test point it at 
 and the scripts are written by many agents over many months with no shared convention — a script
 that ignores the variable silently reverts to writing the real path, and nothing tells you.
 
-**(B) Snapshot-and-restore around the `runpy` call.** A fixture reads the artifact, runs the script,
-writes the original bytes back. *Keeps* full execution and needs no change to any script. *Costs*
+**(B) Snapshot-and-restore around the call.** A fixture reads the artifact, runs the script, writes
+the original bytes back. *Keeps* full execution and needs no change to any script. *Costs*
 correctness under `-n 4`: two workers touching the same artifact interleave, and the restore races.
 It also leaves a window in which the record on disk is wrong, which is exactly the window a
 concurrent `git add -A` would capture.
@@ -179,20 +308,45 @@ loss of coverage, and it is the option the hazard commit flagged as the one to t
 and loses no coverage, but it is detection rather than prevention: the record still gets rewritten
 on every suite run, and the guards' job is to stop the rewrite from being *committed*.
 
-**Recommendation: (D) now, then (A) for the single confirmed call site.**
+**(E) Make the artifact PATH the thing under test, once, centrally.** Every writing script resolves
+its output through one shared helper (`scripts/experiment_template.py` already exists and most
+scripts already import it) that consults a `CARNOT_RESULTS_DIR` env var; a repo-level autouse
+fixture points that var at `tmp_path` for the whole suite. One helper change plus one fixture, and
+scripts that bypass the helper are findable mechanically (grep for a literal `results/` open) rather
+than one at a time.
 
-The reasoning is the survey's own headline. The blast radius of the `runpy` class turned out to be
-**one test and one artifact**, not eleven and thirty-nine. Options (A)–(C) were all scoped against
-the assumption of a broad, structural problem across many call sites; against one call site, (A) is
-cheap, precise, and loses nothing — add a `CARNOT_RESULTS_DIR` honoured by
-`scripts/experiments/experiment_3946_r11l_first_solve.py`, point the test at `tmp_path`, and keep
-asserting on the artifact the script actually produced.
+**(F) Replace the 139 hardcoded absolute paths with repo-relative resolution.** Independent of, and
+prerequisite to, (A)/(E) for that class — see §3.4. Also fixes a reproducibility defect that has
+nothing to do with tests: these scripts run correctly on exactly one machine.
 
-(B) should be rejected outright: the suite runs `-n 4` by default, so a restore-based fix is racy by
-construction, and a racy guard on the research record is worse than an honest gap.
+**Recommendation: (D) now, then (F), then (E) — NOT (A).**
 
-The remaining ~38 files are a different mechanism (§3.3) and want a different answer; do not bundle
-them into the same repair.
+**This recommendation was revised mid-survey, and the revision is the point.** The first draft of
+this document recommended (A) on the strength of §3.1: the `runpy` class is exactly one test and one
+artifact, so a targeted per-script fix looked cheap and precise. §3.3 then found that `runpy` is a
+red herring. The real mechanism is `import the experiment module and call main()`, the candidate
+class is **704 test files**, and every artifact-writing test found so far is in it. (A) does not
+survive that: a per-script `CARNOT_RESULTS_DIR` opt-in across hundreds of scripts written by many
+agents with no shared convention is precisely the "a script that ignores the variable silently
+reverts to writing the real path, and nothing tells you" failure it was already noted to carry —
+tolerable for one script, not for hundreds.
+
+(E) is (A) done once instead of hundreds of times, and it converts the residual risk from *silent*
+to *mechanically findable*.
+
+(B) should be rejected outright regardless: the suite runs `-n 4` by default, so a restore-based fix
+is racy by construction, and a racy guard on the research record is worse than an honest gap.
+
+(F) comes before (E) because it is the harder constraint and it changes what (E) can even reach: a
+script that writes to a hardcoded absolute path is unreachable by any configuration mechanism, so
+building (E) first would produce a fix that silently does nothing for 139 scripts. (F) is also the
+only one of the six that is worth doing even if the test-suite question is abandoned entirely — an
+experiment that only runs on one machine in one directory cannot be independently reproduced, which
+is the G2 gate.
+
+(D) is the right first move under any of these because it is already shipped, costs nothing, and
+loses no coverage — and because it stays correct while (F) and (E) are being built and after they
+land, for whatever scripts bypass the helper.
 
 ---
 

@@ -442,7 +442,17 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
                 continue
             if not _is_substantive(old_value):
                 continue
-            kind = _marker_kind(key)
+            # A DROPPED substrate declaration is the loophole rule 4 cannot see, because rule 4
+            # only compares a field that exists on BOTH sides. `inference_substrate*` is caught
+            # by the marker patterns, but a bare `inference_mode` -- the exact field the exp307
+            # incident touched -- matches no marker pattern, so deleting it outright would have
+            # escaped every rule while flipping it merely weaker was refused. Absent is strictly
+            # worse than weaker: the linter's strict default then reads the artifact as
+            # `live_llm_inference` and applies the 60s floor to something that may have run in
+            # milliseconds.
+            kind = _marker_kind(key) or (
+                "substrate declaration" if SUBSTRATE_FIELD.match(str(key)) else None
+            )
             if kind:
                 lost_markers.setdefault(kind, []).append(str(key))
         for kind, keys in sorted(lost_markers.items()):
