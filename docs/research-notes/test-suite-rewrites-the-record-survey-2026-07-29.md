@@ -154,6 +154,37 @@ was written — stated rather than rounded up):**
 | `expbatch_02` | 250 | 3 |
 | **so far** | **750** | **25** |
 
+**Batch 01, attributed per test** (the audit-hook plugin, merged across xdist workers):
+
+| test node | file rewritten |
+|---|---|
+| `test_experiment_209_cleanup.py::test_run_cleanup_rewrites_public_docs_with_provenance_labels` (+3 siblings, and `test_experiment_1931_hf_publisher.py::test_success_upload`, `test_experiment_1750.py::{test_experiment_1750_blocked,_success}`) | **`README.md`** |
+| `test_experiment_1911.py::test_experiment_1911_schema` | `openspec/papers/paper-v6/section-6-limitations.md`, `results/experiment_1911_phase4_canonical_decision.json` |
+| `test_experiment_1747_diagnostic.py::test_main` | `results/experiment_1747_ebt_mode_collapse_check.json` |
+| `test_experiment_1750.py::{test_experiment_1750_blocked,test_experiment_1750_success}` | `results/experiment_1750_huggingface_retry.json` |
+| `test_experiment_1938_nrgpt_loss_probe.py::test_experiment_1938_nrgpt_loss_probe` | `results/experiment_1938_nrgpt_loss_probe.json` |
+| `test_experiment_1970_domino_fast_constraints.py::test_domino_fast_constraints` | `results/experiment_1970_domino_fast_constraints.json` |
+| `test_experiment_2085_pem_sudoku_eval.py::test_run_experiment` | `results/experiment_2085_pem_sudoku_eval.json` |
+| `test_experiment_2090_crane_humaneval.py::test_main` | `results/experiment_2090_crane_humaneval.json` |
+| `test_experiment_2097.py::test_experiment_2097_evaluates_eqm_vs_pem` | `results/experiment_2097_eqm_eval.json` |
+| `test_experiment_2521_ensemble_v7.py::test_run_experiment_creates_deliverable` | `results/experiment_2521_ensemble_v7.json` |
+| `test_experiment_2538_kv260_sd_flash.py::test_experiment_2538_produces_valid_artifact` | `results/experiment_2538_kv260_sd_flash.json` |
+| *(unattributed — see below)* | `output/kanele_synth/post_synth.dcp`, `results/experiment_1822_rtl_synth.log`, `results/experiment_2510_ensemble_v7.json` |
+
+**`README.md` is rewritten by a test that says so in its own name.**
+`test_run_cleanup_rewrites_public_docs_with_provenance_labels` runs `experiment_209_cleanup`'s
+public-docs rewriter against the live `README.md`. CLAUDE.md's Public Documentation Discipline lists
+`README.md` as operator-curated and forbids the autonomous loop from editing it; a passing test does
+it on every suite run. The hazard commit's list of 39 did not include it.
+
+**Three files are unattributed, and that is a stated limit of the instrument, not an oversight.** A
+CPython audit hook only sees writes made by the Python process it is installed in. A script that
+shells out — Vivado for `output/kanele_synth/post_synth.dcp`, yosys for
+`results/experiment_1822_rtl_synth.log` — writes from a CHILD process the hook never observes. Those
+three are visible to `git status` (which is why they appear in the batch total) but not to per-test
+attribution. Anyone extending this survey should treat subprocess writers as a separate class
+requiring a different instrument (e.g. an `strace`/`fanotify` layer, or wrapping `subprocess.run`).
+
 Batch 01's 16 include the two NON-`results/` files from the original hazard —
 `openspec/papers/paper-v6/section-6-limitations.md` and `output/kanele_synth/post_synth.dcp` — and
 one the hazard commit did not list at all: **`README.md`**, which CLAUDE.md's Public Documentation
