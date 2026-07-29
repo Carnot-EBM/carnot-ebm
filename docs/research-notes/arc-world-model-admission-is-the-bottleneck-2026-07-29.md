@@ -102,6 +102,42 @@ case). That weakens point 5 as a statement about *freshly induced* engines speci
 It does not weaken the chain, because points 3 and 4 are measured on fresh live inductions:
 71% of fresh rounds score exactly 0.0, and 12 of 17 attempts had no accepted round.
 
+## The error class, characterised (the question this note originally deferred)
+
+The note first ended by asking "what error class is this?" and calling it a cheap CPU-only
+follow-up. It is cheap enough to have done immediately, from the `correct_changed_cells` /
+`spurious_changed_cells` / `noop_hallucination_rate` already recorded per row in exp6012. The
+33 rows split cleanly into two structural failure modes, neither of which is "close but
+imperfect":
+
+**Mode A — the no-op world model (12/33 rows; ar25, ka59, re86, and cd82 on changed frames).**
+`correct_changed_cells = 0` and `spurious_changed_cells = 0`. The engine predicts that nothing
+changes, ever. It is the identity engine in all but name — which is why it scores respectably
+on exact-match accuracy (most cells genuinely do not change) and zero on changed-cell recall.
+
+**Mode B — the runaway writer (21/33 rows; cn04, dc22, g50t, m0r0, sc25, sk48, wa30).** The
+engine does write, but wildly over-writes:
+
+| game | true changed cells | correct | spurious | spurious / true |
+|---|---|---|---|---|
+| cn04@1 | 4346 | 600 | 33021 | **7.6x** |
+| g50t@0 | 1504 | 168 | 14612 | **9.7x** |
+| sc25@0 | 453 | 28 | 4687 | **10.3x** |
+| sk48@0 | 2817 | 515 | 7714 | 2.7x |
+| wa30@1 | 722 | 18 | 2200 | 3.0x |
+
+It invents between 3x and 10x more changed cells than reality contains. And
+`noop_hallucination_rate` reaches **1.0** on cn04@0 — on frames where reality did nothing, the
+engine invents a change every single time. (cd82 is a mixture: no-op on changed frames like
+Mode A, but hallucinating at 0.44-0.55 on no-op frames. It is counted in Mode A on the
+changed-cell criterion and flagged here rather than forced into one bucket.)
+
+This matters for what to try next. The two modes want opposite corrections — Mode A needs the
+inducer to predict *any* dynamics at all, Mode B needs it *constrained* from over-writing — so
+a single undifferentiated "make the inducer better" intervention is unlikely to move both. A
+change-magnitude prior or a sparsity constraint on predicted writes addresses Mode B directly
+and is cheap to test; Mode A looks like a failure to extract the action semantics at all.
+
 ## The next question worth asking
 
 Not "how do we admit more engines" but **"why does induction produce a world model that is
